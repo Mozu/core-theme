@@ -4,9 +4,16 @@ _ReSharper.*
 packages/
 *.suo
 *.user
-Volusion.SiteBuilder.UX.Admin/Scripts/ext/
 .sass-cache/
 .DS_Store
-Volusion.SiteBuilder.UX.Admin/Scripts/docs/
-Volusion.SiteBuilder.UX/App_Data/[Ll]og.txt
-Volusion.SiteBuilder.UX.Themes/Themes/**/Resources/Scripts-Built/
+Mozu.SiteBuilder.UX.Admin/Scripts/ext/
+Mozu.SiteBuilder.UX.Admin/Scripts/docs/
+Mozu.SiteBuilder.UX/App_Data/[Ll]og.txt
+Mozu.SiteBuilder.UX.Themes/Themes/**/Resources/Scripts-Built/
+
+# damn compass
+Mozu.SiteBuilder.UX.Admin/Scripts/resources/css/taco.css
+Mozu.SiteBuilder.UX.Admin/Scripts/resources/images/icons-*
+Mozu.SiteBuilder.UX.Admin/Scripts/resources/images/picker-*
+Mozu.SiteBuilder.UX.Admin/Scripts/resources/images/align-*
+Mozu.SiteBuilder.UX.Admin/Scripts/resources/images/card-*
