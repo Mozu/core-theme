@@ -1,0 +1,5 @@
+﻿<div {% data_attributes Model%} >
+	<h2 {% data_attributes Model.Title %}>{{Model.Title}}</h2>
+    <div {% data_attributes Model.body %}>{{Model.body}}</div>
+</div>
+

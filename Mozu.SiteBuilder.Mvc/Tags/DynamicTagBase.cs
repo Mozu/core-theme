@@ -1,0 +1,146 @@
+﻿// -----------------------------------------------------------------------
+// <copyright file="ComplexEmptyTag.cs" company="Microsoft">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace Mozu.SiteBuilder.Mvc.Tags
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using NDjango.Interfaces;
+    using System.Web.Mvc;
+    using System.Web.Routing;
+    using System.Reflection;
+    using System.Web;
+    using Mozu.SiteBuilder.Mvc.Extensions;
+
+    //todo remove reflection... get cache of name params 
+    public abstract class DynamicTagBase : SimpleTagBase
+    {
+        
+        protected override ArgumentCollection.ParseStrategy ArguemntParserStrategy
+        {
+            get
+            {
+                return ArgumentCollection.Strategies.MultiMapsWithOutPut;
+            }
+        }
+
+        protected override string ProcessTag(HtmlHelper html, ArgumentCollection arguments, ref IContext context)
+        {
+            Html = html;
+            Arguments = arguments;
+            Context = context;
+
+            var parmamSets = this.GetType().GetMethods().Where(x => x.Name == "Process").Select(x => x.GetParameters()).Where(x => x.Length  == arguments.Count);
+
+            List<object> pVals = new List<object>();
+            foreach (var parms in parmamSets)
+            {
+                if (IsParamMatch(arguments, pVals, parms))
+                {
+                    return Invoke(html, arguments, ref context, pVals );
+                }
+                else
+                {
+                    pVals.Clear();
+                }
+            }
+
+            throw new RenderingError("failed to find matching Process method for", new Microsoft.FSharp.Core.FSharpOption<Exception>(null));
+
+        }
+        
+
+        private string Invoke(HtmlHelper html, ArgumentCollection arguemnts, ref IContext context, List<object> pVals)
+        {
+            var t = this.GetType();
+            var tag = (DynamicTagBase)Activator.CreateInstance(t);
+            tag.Context = context;
+            tag.Html = html;
+            tag.Arguments = arguemnts;
+            object ret = null;
+            try
+            {
+                //todo : speed up relection by adding a  deleget getter to the types
+                ret = t.InvokeMember("Process", System.Reflection.BindingFlags.InvokeMethod, null, tag, pVals.ToArray());
+            }
+            catch (TargetInvocationException tex)
+            {
+                var ex = tex.InnerException;
+                var tagName = t.GetCustomAttributes(typeof(NDjango.Interfaces.NameAttribute), false).OfType<NDjango.Interfaces.NameAttribute>().Select(x => x.Name).FirstOrDefault();
+                var args = string.Join(" ", arguemnts.Select(x => x.TokenValue).ToArray());
+                string msg = string.Format("error running tag {0} {1}", tagName, args);
+                throw new InvalidOperationException(msg, ex);
+            }
+            catch (Exception ex)
+            {
+                var tagName = t.GetCustomAttributes(typeof(NDjango.Interfaces.NameAttribute), false).OfType<NDjango.Interfaces.NameAttribute>().Select(x => x.Name).FirstOrDefault();
+                var args = string.Join(" ", arguemnts.Select(x => x.TokenValue).ToArray());
+                string msg = string.Format("error running tag {0} {1}", tagName, args);
+                throw new InvalidOperationException(msg, ex);
+            }
+            context = tag.Context;
+            return ret == null ? string.Empty : ret.ToString();
+        }
+
+        private static bool IsParamMatch(ArgumentCollection arguemnts, List<object> pVals, System.Reflection.ParameterInfo[] parms)
+        {
+            if (arguemnts.Count !=  parms.Length)
+            {
+                return false;
+            }
+            bool isMatch = true;
+            for (int i = 0; i < parms.Length; i++)
+            {
+                TagArgument arg;
+                if (arguemnts.TryGetArgument(parms[i].Name, out arg))
+                {
+                    pVals.Add(arg.Value);
+                }
+                else
+                {
+                    
+                    arg = arguemnts[i];
+                    if ( arg.ArgumentType == TagArgument.ArgumentTypes.ValueArgument && 
+                        parms[i].ParameterType.IsAssignableFrom(arg.Value.GetType()))
+                    {
+                        pVals.Add(arg.Value);
+                    }
+                    else
+                    {
+                        isMatch = false;
+                        break;
+                    }
+
+                }
+            }
+            return isMatch;
+        }
+
+        
+
+        public HtmlHelper Html
+        {
+            get;
+            set;
+        }
+        public ArgumentCollection Arguments
+        {
+            get;
+            set;
+        }
+
+        public IContext Context
+        {
+            get;
+            set;
+        }
+        
+        
+    }
+
+}

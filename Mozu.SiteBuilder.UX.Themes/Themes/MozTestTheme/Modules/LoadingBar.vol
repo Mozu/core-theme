@@ -1,0 +1,4 @@
+<div class="mz-loading-bar">
+    Loading, brah
+</div>
+{% require_script "modules/loading-bars" %}

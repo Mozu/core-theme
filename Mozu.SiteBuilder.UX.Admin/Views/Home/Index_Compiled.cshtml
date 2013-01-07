@@ -1,0 +1,35 @@
+﻿@using System.Configuration
+@{
+    Layout = "";
+    var assFile = typeof(Mozu.SiteBuilder.UX.Admin.Api.ProductApi).Assembly.Location;
+    var ver = System.Diagnostics.FileVersionInfo.GetVersionInfo(assFile);
+    var cdn = @ConfigurationManager.AppSettings["admin.cdn"];
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MOZU-ADMIN</title>
+    @*<base href="@Url.Content("~/")"  />*@
+    <link rel="stylesheet" type="text/css" href="@cdn@Url.Content("~/Scripts/resources/css/taco.css")?ver=@ver.FileVersion" />
+    <link href="@cdn@Url.Content("~/Scripts/resources/css/ExtUx/css/CheckHeader.css")" rel="stylesheet" type="text/css" />
+    @Html.Partial("admininlinejson")
+    <script type="text/javascript" src="@cdn@Url.Content("~/Scripts/resources/lib/history-bundled.js")"></script>
+    <script type="text/javascript" src="@cdn@Url.Content("~/Scripts/resources/lib/tinymce/jscripts/tiny_mce/tiny_mce_src.js")"></script>
+    <script type="text/javascript" src="@cdn@Url.Content("~/Scripts/build/all-classes.js")?ver=@ver.FileVersion"></script>
+    <script src="@cdn@Url.Content("~/Scripts/ext/locale/" + ViewData["extlocalefile"])"></script>
+
+    <script type="text/javascript">
+
+        Ext.Ajax.timeout = 120000;
+
+        Ext.Loader.setConfig({
+            enabled: false
+        });
+
+    </script>
+</head>
+
+<body></body>
+
+</html>
+

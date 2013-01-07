@@ -1,0 +1,23 @@
+$color-errortext: $color-neutral-mid;
+
+.#{$vprefix}view-error {
+	text-align: center;
+	font-size: 1.8em;
+	margin-top: 50px;
+	h1 {
+		color: $color-errortext;
+		font-size: 6em;
+		font-weight: normal;
+		line-height: 0.9em;
+		display: inline-block;
+		margin-bottom: 15px;
+		border-bottom: 4px solid $color-errortext;
+	}
+	h2 {
+		color: $color-errortext;
+		font-size: 1.6em;
+	}
+	p {
+		color: $color-errortext;
+	}
+}

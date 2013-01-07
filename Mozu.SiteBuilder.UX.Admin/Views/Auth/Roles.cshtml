@@ -1,0 +1,47 @@
+﻿@model List<Tuple<Mozu.Tenant.Contracts.Site, int>>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/generic.cshtml";
+}
+
+<div class="rolesContainer">
+    <h2>Vnext Launchpad</h2>
+    <div class="rolesWrapper">
+        @foreach (var item in Model)
+        {
+            Model.Count();
+            <div class="role">
+                <div class="deleteRole">
+                    <a href="javascript:;" onclick="DeleteRole(this,@item.Item1.Id,@item.Item2)">&times;</a>
+                </div>
+                <div class="roleTitle">
+                    <a class="nextgen" href="ChangeRole?id=@item.Item1.Id">@item.Item1.Name</a>
+                </div>
+                
+                <div class="roleType">
+                    (@(item.Item2 == 1 ? "Super Admin" : "Admin"))
+                </div>
+                @*<code>Url: http://@(item.Item1.AssignedDomain !=null ? item.Item1.AssignedDomain.FullName :"[n/a]")</code>*@
+                <code>TenantId: @item.Item1.TenantId</code>
+                <code>Site: @item.Item1.Id</code>
+             
+            </div>
+        }
+    </div>
+</div><!-- #rolesContainer -->
+
+<script>
+    function DeleteRole(elm, site, role) {
+        if (confirm('do you really want to remove this site from your available sites')) {
+            $.ajax({
+                url: "DeleteRole",
+                data: { siteId: site, roleId: role },
+                success: function (result) {
+                    // alert('bing');
+                    $(elm).parents('.role').remove();
+
+                }
+            });
+        }
+    }
+</script>

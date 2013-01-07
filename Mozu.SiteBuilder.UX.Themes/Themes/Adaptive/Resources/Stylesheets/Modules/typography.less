@@ -1,0 +1,42 @@
+﻿body {
+	font: {{themeSettings.globalFont|settingtype:"font"|default:"14px Tahoma, sans-serif"|description:'Site Font'}};
+	color: {{themeSettings.textColor|settingtype:'color'|default:'#333333'|description:'Text Color'}};
+}
+a {
+	color: {{themeSettings.linkColor|settingtype:'color'|default:'#4F4F4F'|description:'Link Color'}};
+	&:visited {
+		color: {{themeSettings.linkVisited|settingtype:'color'|default:'#3F3F3F'|description:'Link Visited Color'}};
+	}
+	&:hover {
+		color: {{themeSettings.linkHover|settingtype:'color'|default:'#666666'|description:'Link Hover Color'}};
+	}
+}
+.mz-page-header {
+	color: {{themeSettings.headlineColor|settingtype:'color'|default:'#444444'|description:'Headline Color'}};
+	font: {{themeSettings.headlineFont|settingtype:'font'|default:'bold 21px Tahoma, sans-serif'|description:'Headline Font'}};
+}
+
+.mz-page-headernote {
+    margin-left: 133px;
+	font-weight: normal;
+}
+
+.mz-auxiliary-text {
+	font-size: 12px;
+}
+
+.mz-strikethrough {
+	text-decoration: line-through;
+}
+
+
+/* Smartphones (portrait and landscape) ----------- */
+ 
+@media only screen and (min-width : 320px) and (max-width : 480px) {
+    .mz-page-headernote {
+		display: block;
+		margin-left: 0;
+		margin-top: 10px;
+		}
+}
+

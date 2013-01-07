@@ -1,0 +1,99 @@
+﻿{% block Init %}{%endblock Init%}
+<!doctype html>
+
+{% comment %}
+The comment tag lets you write comments that will be visible when editing the template file, but don't appear in the rendered HTML. It's essentially just an "ignore this" tag.
+{% endcomment %}
+
+{% comment %}
+The conditional statements below detect if visitor is on a particular
+version of IE and adds the appropriate classes to the HTML element. You can then target
+these browsers in your CSS without hacks, like:
+.thing {
+  padding: 10px;
+}
+.ie6 .thing {
+  padding: 12px;
+}
+
+no-js:
+The Modernizr library we're using will replace the class "no-js" with "js" if javascript 
+available. Again you can use this as a way to make sensible fallbacks if javascript
+is not available.
+{% endcomment %}
+
+
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js ie9" lang="en"> <![endif]-->
+<!--[if (gt IE 9)|(!IE) ]><!--> 
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+{% block HeadTag %}
+{% include "Modules/HeadTag" %}
+{% endblock HeadTag %}
+
+{% comment %}
+The below require_script tag does not render anything in the place it's actually inserted; it instead adds the script to a list of scripts which are then included at the end of the page by RequireJS.
+Use require_script to load AMD modules that are wrapped in define() or require() function calls.
+{% endcomment %}
+
+
+<body class="{{templateVariables.BodyTagClasses }}" {% data_attributes SiteContext %} >
+
+  <div class="mj-main-container" id="mz-main-container">
+
+   <header class="site-header">
+
+    <h1 class="mj-store-brand">
+      <img src="/resources/images/logo.png" alt="" class="mj-store-logo">
+    </h1>
+    <div class="mj-canopy-wrap"> <a href="#">Sign In</a> <a href="#">View Cart(1)</a></div>
+    <span class="mj-tagline">Because all clothes should be black</span>
+    {% include "Modules/SearchBox" %} 
+  </header>
+
+  <nav class="mj-site-nav">
+    <ul class="mj-site-nav-ul">
+      <li class="mj-site-nav-li"><a href="#" class="mj-site-nav-a">stuff</a></li>
+      <li class="mj-site-nav-li"><a href="#" class="mj-site-nav-a">stuff</a></li>
+      <li class="mj-site-nav-li"><a href="#" class="mj-site-nav-a">stuff</a></li>
+      <li class="mj-site-nav-li"><a href="#" class="mj-site-nav-a">stuff</a></li>
+      <li class="mj-site-nav-li"><a href="#" class="mj-site-nav-a">stuff</a></li>
+    </ul>
+  </nav>
+
+  <div role="main" id="mz-content-section" class="{{templateVariables.ArticleClasses }} mj-content-area">
+
+		<!-- {% block BreadcrumbsContainer %}
+            {% include "Modules/Breadcrumbs" %}
+            {% endblock BreadcrumbsContainer %} -->
+
+            {% block BodyContent %}
+            {% dropzone "body" %}
+            {% endblock BodyContent %}
+
+            {% dropzone "body-bottom" %}
+
+          </div>
+
+          <footer class="mj-site-footer">
+            <p>Copyright Gothdum Style | All Rights Reserved</p>
+          </footer>
+        </div>
+
+        {% block TrailingScripts %}
+        {% include "Modules/TrailingScripts" %}
+        {% endblock TrailingScripts %}
+        
+        <script>
+        if (document.querySelector(".mj-home-page")) {
+          document.querySelector("body").setAttribute("class", "mj-home-page-wrap");
+        };    
+
+        </script>
+
+      </body>
+      </html>

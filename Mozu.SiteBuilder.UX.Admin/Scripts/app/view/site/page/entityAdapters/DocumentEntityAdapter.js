@@ -1,0 +1,15 @@
+﻿/**
+ * @class Taco.view.site.page.entityAdapters.DocumentEntityAdapter
+ */
+Ext.define('Taco.view.site.page.entityAdapters.DocumentEntityAdapter', {
+	extend: 'Taco.view.site.page.entityAdapters.BaseEntityAdapter',
+	modelName:'Taco.model.CmsDocument',
+	getStore:function(){
+		return this.editor.cmsDocs;
+	},
+	
+
+	getId: function() {
+		return this.pageProps.pageContext.collectionId + "_" + this.pageProps.pageContext.documentId;
+	}
+});

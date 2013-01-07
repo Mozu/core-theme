@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\Tools\Theme.xsd">
+  <name>Cantaloupe2</name>
+  <author>Volusion</author>
+  <extends>Core3</extends>
+  <isDesktop>true</isDesktop>
+  <isMobile>false</isMobile>
+</theme>

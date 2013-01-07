@@ -1,0 +1,339 @@
+@mixin taco-navmenu {
+
+  .#{$vprefix}viewport-nav {
+    background-color: $color-neutral-mid-lighter;
+
+    .#{$vprefix}primary-menu-trigger {
+      border-right: 1px solid $color-grid-border;
+      font-size: 0px;
+      line-height: 0px;
+      overflow: hidden;
+      text-indent: -10000px;
+      @include box-shadow(1px 0px $color-neutral-white);
+      @include icons-sprite(icon-primarymenu);
+      @include single-transition(background-color, 0.4s);
+
+      &.expanded {
+        background-color: $color-primary-menu-background-dark;
+        @include icons-sprite(icon-primarymenu-selected);
+      }
+    }
+
+    .#{$vprefix}breadcrumb {
+
+      .#{$vprefix}icon {
+        border-right: 1px solid $color-grid-border;
+        color: $color;
+        display: inline-block;
+        height: 35px;
+        padding: 10px 15px 0px 50px;
+        position: relative;
+        vertical-align: top;
+        @include box-shadow(1px 0px $color-neutral-white);
+
+        &::before {
+          content: "";
+          display: block;
+          height: 35px;
+          left: 8px;
+          position: absolute;
+          top: 0px;
+          width: 35px;
+        }
+        // TODO: replace these light icons with dark icons, which should be larger
+        &.#{$vprefix}icon-dashboard::before {
+          @include icons-sprite(icon-dashboard-large);
+        }
+        &.#{$vprefix}icon-store::before {
+          @include icons-sprite(icon-store-large);
+        }
+        &.#{$vprefix}icon-catalog::before {
+          @include icons-sprite(icon-catalog-large);
+        }
+        &.#{$vprefix}icon-marketing::before {
+          @include icons-sprite(icon-marketing-large);
+        }
+        &.#{$vprefix}icon-website::before {
+          @include icons-sprite(icon-website-large);
+        }
+        &.#{$vprefix}icon-settings::before {
+          @include icons-sprite(icon-settings-large);
+        }
+      }
+
+      ul {
+        display: inline-block;
+        height: 35px;
+        vertical-align: top;
+
+        li {
+          display: inline-block;
+          vertical-align: top;
+
+          a {
+            color: $color;
+            display: inline-block;
+            font-size: 14px;
+            height: 35px;
+            padding: 12px 10px 0px;
+            position: relative;
+
+            &::before {
+              content: "";
+              display: block;
+              height: 35px;
+              left: 0px;
+              position: absolute;
+              top: 0px;
+              width: 1px;
+              @include background-image(linear-gradient(top, $color-neutral-mid-lighter 25%, $color-grid-border 55%, $color-neutral-mid-lighter 85%));
+            }
+          }
+
+          &:nth-of-type(1) {
+
+            a {
+              border-left: 1px solid $color-neutral-white;
+              padding-left: 15px;
+
+              &::before {
+                content: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .#{$vprefix}primary-menu-ct {
+    opacity: 0;
+    @include background(linear-gradient(top, $color-primary-menu-background-dark, $color-primary-menu-background-mid));
+    @include outer-shadow(0.4, 2px, 3px, 3px);
+  }
+  .#{$vprefix}primary-menu {
+    font-size: 15px;
+    line-height: 1.2em;
+    
+    li.#{$vprefix}menu-item {
+      cursor: pointer;
+      padding: 12px 0px 12px 56px;
+      position: relative;
+      width: 280px;
+      @include box-shadow(inset 0px -1px rgba(255, 255, 255, 0.1));
+
+      a.#{$vprefix}menu-item-link {
+        color: $color-neutral-white;
+
+        &.#{$vprefix}icon::before {
+          content: "";
+          display: block;
+          height: 42px;
+          left: 7px;
+          position: absolute;
+          top: 0px;
+          width: 42px;
+        }
+        &.#{$vprefix}icon-dashboard::before {
+          @include icons-sprite(icon-dashboard);
+        }
+        &.#{$vprefix}icon-store::before {
+          @include icons-sprite(icon-store);
+        }
+        &.#{$vprefix}icon-catalog::before {
+          @include icons-sprite(icon-catalog);
+        }
+        &.#{$vprefix}icon-marketing::before {
+          @include icons-sprite(icon-marketing);
+        }
+        &.#{$vprefix}icon-website::before {
+          @include icons-sprite(icon-website);
+        }
+        &.#{$vprefix}icon-settings::before {
+          @include icons-sprite(icon-settings);
+        }
+      }
+
+      &.#{$vprefix}menu-item-hover {
+        background-color: rgba(255, 255, 255, 0.1);
+
+        a.#{$vprefix}icon-dashboard::before {
+          @include icons-sprite(icon-dashboard-selected);
+        }
+        a.#{$vprefix}icon-store::before {
+          @include icons-sprite(icon-store-selected);
+        }
+        a.#{$vprefix}icon-catalog::before {
+          @include icons-sprite(icon-catalog-selected);
+        }
+        a.#{$vprefix}icon-marketing::before {
+          @include icons-sprite(icon-marketing-selected);
+        }
+        a.#{$vprefix}icon-website::before {
+          @include icons-sprite(icon-website-selected);
+        }
+        a.#{$vprefix}icon-settings::before {
+          @include icons-sprite(icon-settings-selected);
+        }
+      }
+
+      &.#{$vprefix}menu-item-active {
+        a.#{$vprefix}menu-item-link {
+          color: $color-action-primary-background;
+        }
+      }
+
+      ul {
+        font-size: 13px;
+        line-height: 1.2308em;
+        margin-left: -5px;
+
+        li {
+          display: inline-block;
+          margin: 4px 0px 1px;
+          padding: 0px 7px 0px 5px;
+          @include box-shadow(inset -1px 0px rgba(255, 255, 255, 0.4));
+
+          a {
+            color: $color-neutral-white;
+          }
+
+          &:nth-last-of-type(1) {
+            @include box-shadow(none);
+          }
+
+          &.#{$vprefix}submenu-item-active {
+            a {
+              color: $color-action-primary-background;
+            }
+          }
+        }
+      }
+      
+      // &> div {
+      //   overflow: hidden;
+
+      //   &> a {
+      //     width: 50px;
+      //     height: 50px;
+      //     padding: 2px;
+      //     margin: 2px;
+      //     padding-top: 16px;
+      //     display: block;
+      //     color: white;
+      //     white-space: nowrap;
+          
+      //     text-indent: 55px;
+      //     text-decoration: none;
+      //     @include border-radius;
+      //     @include outer-shadow(0);
+      //     @include single-transition(box-shadow);
+          
+      //     &.active {
+      //       // @include outer-shadow;
+      //     }
+          
+      //     &.selected {
+      //       // background-color: $color-neutral-dark !important;
+      //       // @include outer-shadow(0.3, 10px, 0, 1px);
+      //     }
+
+      //     &.#{$vprefix}icon-mozulogo {
+      //       @include icons-sprite(icon-mozulogo-mini);
+      //     }
+      //   }
+
+      //   &.collapsed .#{$vprefix}icon-collapse {
+      //     text-indent: -5000px;
+      //     @include icons-sprite(icon-expand);
+      //     @include transition(all 0.5s);
+      //   }
+
+      //   &.expanded .#{$vprefix}icon-collapse {
+      //     text-indent: -5000px;
+      //     margin-left: 95px;
+      //     @include transform(rotate(180deg));
+
+      //   }
+
+      //   & > a.selected, & > a.active {
+      //     color: $color-action-link;
+      //   }
+
+      //   &#menu-Collapse {
+      //     background-color: red;
+      //   }
+      // }
+
+
+      // ul {
+      //   position: fixed;
+      //   background: rgba(255,255,255,1);
+      //   top: -5000px;
+      //   left: -5000px;
+      //   padding: 0;
+      //   margin: 0;
+      //   z-index: 90;
+      //   width: 170px;
+      //   overflow: visible;
+      //   @include outer-shadow;
+      //   @include border-radius;
+        
+      //   li {
+      //     padding: 0;
+      //     margin: 0;
+          
+      //     a {
+      //       //border: 5px solid transparent;
+      //       margin: 5px;
+      //       padding: 7px 11px;
+      //       display: block;
+      //       //width: 100%;
+      //       text-decoration: none;
+      //       color: $color-neutral-darker;
+      //       font-size: 0.8em;
+      //       font-weight: bold;
+      //       @include border-radius;
+            
+            
+      //       &:hover {
+      //         color: $color-highlighted-foreground;
+      //         text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+      //         background-color: $color-highlighted-background;
+      //       }
+      //     }
+      //   }
+
+      //   &:before, &:after {
+      //     border-top: 7px solid transparent;
+      //     border-bottom: 7px solid transparent;
+      //     border-right: 8px solid $color-neutral-dark;
+      //     border-left: 0;
+      //     height: 0;
+      //     width: 0;
+      //     top: 13px;
+      //     left: -8px;
+      //     content: "";
+      //     position: absolute;
+      //   }
+
+      //   &:after {
+      //     border-right: 8px solid white;
+      //     left: -7px;
+      //   }
+      // }
+    }
+
+    // &.expanded {
+    //   li.#{$vprefix}menu-item > div > a {
+    //     &.#{$vprefix}icon-mozulogo {
+    //       font-size: 0px;
+    //       line-height: 0px;
+    //       text-indent: -10000px;
+    //       width: 150px;
+    //       @include icons-sprite(icon-mozulogo-full);
+    //     }
+    //   }
+    // }
+  }
+}

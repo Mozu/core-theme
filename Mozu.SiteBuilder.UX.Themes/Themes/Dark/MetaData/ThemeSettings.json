@@ -1,0 +1,115 @@
+﻿[{
+    "id": "section1",
+	"text": "Foobar",
+    "items": [{
+        "defaultValue": "foo1",
+        "id": "field1",
+        "mode": "textbox",
+        "text": "Field 1 (Core 2)",
+        "itemType": "field",
+        "visible": true
+    }, {
+		"id": "color-page-title",
+		"itemType": "field",
+        "mode": "color",
+        "text": "Page Title (Core 2)",
+        "defaultValue": "#000000",
+	}, {
+        "id": "body-background-image",
+        "itemType": "field",
+        "mode": "backgroundImage",
+        "text": "Body Background (Core)",
+        "defaultValue": "blank.gif"
+    }, {
+        "defaultValue": "foo2",
+        "id": "field2",
+        "mode": "textbox",
+        "text": "Field 2 (Core 2)",
+        "itemType": "field",
+        "visible": true
+    }, {
+        "id": "group1",
+        "items": [{
+            "id": "field3",
+            "mode": "select",
+            "text": "My foos (Core 2)",
+            "itemType": "field",
+			"defaultValue": "foo2",
+            "values": [{
+                "display": "Foo1",
+                "value": "foo1"
+            }, {
+                "display": "Foo2",
+                "value": "foo2"
+            }, {
+                "display": "Foo3",
+                "value": "foo3"
+            }]
+        }],
+        "itemType": "group"
+    }],
+    "itemType": "section"
+}, {
+    "id": "section2",
+	"text": "Section 2 (Core 2)",
+    "items": [{
+        "defaultValue": "bluesky",
+		"id": "preset1",
+		"presetTriggerText": "+ Custom color settings",
+        "mode": "color",
+		"presetTriggerGroup": "group69",
+        "text": "Preset 1 (Core 2)",
+        "itemType": "preset",
+        "visible": true,
+		"presetValues": [{
+			"id": "zenburn",
+			"display": "Zenburn",
+			"values": [{
+				"id": "main-title",
+				"value": "#000000"
+			}, {
+				"id": "sub-title",
+				"value": "#FF0000"
+			}]
+		}, {
+			"id": "bluesky",
+			"display": "Blue Sky",
+			"values": [{
+				"id": "main-title",
+				"value": "#0000FF"
+			}, {
+				"id": "sub-title",
+				"value": "#00FFFF"
+			}]
+		}, {
+			"id": "redsky",
+			"display": "Red Sky",
+			"values": [{
+				"id": "main-title",
+				"value": "#FF0000"
+			}, {
+				"id": "sub-title",
+				"value": "#C0C0C0"
+			}]
+		}]
+    }, {
+        "id": "group69",
+		"collapsed": true,
+        "items": [{
+			"id": "main-title",
+			"itemType": "field",
+			"mode": "color",
+			"text": "Page Title (Core 2)",
+			"defaultValue": "#0000FF",
+		}, {
+			"id": "sub-title",
+			"itemType": "field",
+			"mode": "color",
+			"text": "Sub Title (Core 2)",
+			"defaultValue": "#00FFFF",
+		}],
+        "itemType": "group"
+    }],
+    "itemType": "section"
+}]
+

@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/generic.cshtml";
+}
+
+@Html.Partial("mozuheader")
+
+<div class="registerContainer">
+
+    <form  method="POST">
+
+        <table>
+            <tr>
+                <td>
+                    <label for="sitename">Choose Your Shop URL (You can change this at any time)</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.TextBox("sitename", null, new { style="width: 320px", required="required", pattern="^([.a-zA-Z0-9-]+)$", placeholder="Letters, numbers, and periods only" })
+                    .@System.Configuration.ConfigurationManager.AppSettings["dnszone"]
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ValidationMessage("sitename" )
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="emailaddress">E-mail</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.TextBox("emailaddress" , null, new { type="email" , required="required"} )
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ValidationMessage("emailaddress" )
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="password">Password <em>(minimum 6 character and at least 1 uppercase letter)</em></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Password("password", null, new { required = "required", pattern = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser.PasswordRegex, placeholder = "minimum 6 character and at least 1 uppercase letter" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ValidationMessage("password")
+                </td>
+           </tr>
+            <tr>
+                <td align="right">
+                    <input id="submitButton" type="submit" class="prtyButton" value="Sign Up"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

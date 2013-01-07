@@ -1,0 +1,26 @@
+﻿{% if SiteContext.Navigation.Secondary %}
+<div class="mz-left-nav-wrap">
+    <h3 class="mz-category-subhead">Subcategories of {{Model.name}}</h3>
+    <nav class="mz-side-nav-wrap">
+        <ul class="mz-category-list">
+            {% for link in SiteContext.Navigation.Secondary %}
+            <li class="mz-category-list-li">
+                <a class="mz-category-list-link mz-utility-link" href="{{link.url}}">{{link.name}}</a>
+                {% if link.items %}
+                <ul class="mz-category-list-sub">
+                    {% endif %}
+                    {% for sublink in link.items %}
+                    <li class="mz-category-list-li-sub">
+                        <a class="mz-category-list-link mz-utility-link" href="{{sublink.url}}">{{sublink.name}}</a>
+                    </li>
+                    {% endfor %}
+                    {% if link.items %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% dropzone "body-bottom-left" %} 
+</div>
+{% endif %}

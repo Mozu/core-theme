@@ -1,0 +1,162 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.Serialization;
+
+namespace Mozu.SiteBuilder.UX.Admin.Api.Models
+{
+    public class PagingParamaters
+    {
+        public string  id {get;set;}
+        
+        public int? NumericId
+        {
+            get
+            {
+                int tmp;
+                if (int.TryParse(id, out tmp))
+                {
+                    return tmp;
+                }
+                return null;
+            }
+        }
+        public int? pageIndex {get;set;}
+        public int? startIndex {get;set;}
+        public int? pageSize{get;set;}
+        public SortingCollection sort { get; set; }
+
+        public string productCode { get; set; }
+    }
+
+    public class FilterCollection : List<FilterCollectionItem>
+    {
+        public FilterCollection() : base() { }
+        public FilterCollection(IEnumerable<FilterCollectionItem> col)
+            : base(col)
+        { }
+        public string query { get; set; }
+
+        public bool TryGetValue<T>(string id, out T outValue)
+        {
+            object val = this.Where(x => string.Equals(x.property, id, StringComparison.OrdinalIgnoreCase)).Select(x => x.value).FirstOrDefault();
+            if (val != null)
+            {
+                if (typeof(T) == typeof(string))
+                {
+                    outValue=  (T)(object)val.ToString();
+                    return true;
+
+                }
+                if (typeof(T) == typeof(int))
+                {
+                    if (val is int)
+                    {
+                        outValue = (T)val;
+                        return true;
+                    }
+                    int res;
+                    if (int.TryParse(val.ToString(), out res))
+                    {
+                        outValue = (T)(object)res;
+                        return true;
+                    }
+
+                }
+                if (typeof(T) == typeof(bool))
+                {
+                    if (val is bool)
+                    {
+                        outValue = (T)val;
+                        return true;
+                    }
+                    bool res;
+                    if (bool.TryParse(val.ToString(), out res))
+                    {
+                        outValue = (T)(object)res;
+                        return true;
+                    }
+                }
+            }
+            outValue = default(T);
+            return false;
+        }
+
+        public T GetValue<T>(string id, T defaultValue = default (T))
+        {
+            T val;
+            if (TryGetValue(id, out val))
+            {
+                return val;
+            }
+            return defaultValue;
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public TVal Get<TEntity, TVal>(Expression<Func<TEntity, TVal>> expression)
+        {
+            var memberExpression = expression.Body as MemberExpression;
+            if (memberExpression == null)
+                throw new InvalidOperationException("Expression is not a member");
+
+            var attribute = memberExpression.Member.GetCustomAttributes(typeof (DataMemberAttribute), false).Cast<DataMemberAttribute>().FirstOrDefault();
+            if (attribute == null)
+                throw new InvalidOperationException("DataMemberAttribute doesn't exist on " + memberExpression.Member.Name);
+
+            var value = this.Where(x => string.Equals(x.property, attribute.Name, StringComparison.OrdinalIgnoreCase)).Select(x => x.value).FirstOrDefault();
+
+            return value == null ? default(TVal) : (TVal) value;
+        }
+    }
+
+    public class SortingCollectionItem
+    {
+        public string property
+        { get; set; }
+        public string direction
+        {
+            get;set;
+        }
+        public bool IsAscending 
+        {
+            get{
+                return direction != "DESC";
+            }
+        }
+        
+    }
+    public class SortingCollection : List<SortingCollectionItem>
+    {
+
+    }
+    public class FilterCollectionItem
+    {
+        public FilterCollectionItem ()
+        {
+            comparison = "eq";
+        }
+        public string property
+        { get; set; }
+
+        public object  value
+        {
+            get;set;
+        }
+        public string field
+        {
+            get { return this.property; }
+            set { this.property = value; }
+        }
+        public string type
+        {
+            get;
+            set;
+        }
+        public string comparison
+        {
+            get;
+            set;
+        }
+    }
+}

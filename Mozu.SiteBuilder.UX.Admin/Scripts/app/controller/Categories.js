@@ -1,0 +1,42 @@
+/**
+* @class Taco.controller.Categories
+* @author Jason Cochran
+* The Category controller
+*/
+Ext.define('Taco.controller.Categories', {
+    extend: 'Taco.core.Controller',
+    requires:['Taco.view.category.Edit'],
+    editorView: 'Taco.view.category.SimpleEditor',
+    listView: null,
+    models: ['Category'],
+    views: ['category.Index', 'category.Index'],
+    stores: ['Categories'],
+    modelName: 'Taco.model.Category',
+
+    init: function () {
+
+        var me = this;
+        this.control({
+            'contentheader': {
+                newcategory: function () {
+                    me.loadEditor();
+                }
+            }
+        });
+    },
+
+    index: function () {
+        this.createContentView('Taco.view.category.Index');
+    },
+
+    edit: function (params) {
+        var id = isNaN(params) ? ("id" in params ? params.id : params.args[0]) : params;
+        this.createContentView('Taco.view.category.Index', {editRecordId: id});
+    },
+
+    createEditor: function (id) {
+        return Ext.create('Taco.view.category.Edit', id ? {
+            recordId: id
+        } : {});
+    }
+});

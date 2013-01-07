@@ -1,0 +1,8 @@
+{
+	"id": "horizontal_rule",
+	"displayName": "Horizontal Rule",
+	"displayTemplate": "core/horizontalrule/template",
+	"icon": "/admin/scripts/resources/images/AddPhotos.png",
+	"editView": "Taco.view.site.widget.HorizontalRule",
+	"properties": []
+}

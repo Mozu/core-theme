@@ -1,0 +1,113 @@
+﻿/**
+ * @class Taco.model.CustomerAccount
+ */
+Ext.define('Taco.model.CustomerAccount', {
+    extend: 'Taco.core.data.Model',
+    requires: ['Taco.model.Address'],
+    fields: [{
+        "name": "id",
+        "type": "int"
+    }, {
+        "name": "createdOn",
+        "type": "date",
+        "dateFormat": "MS"
+    }, {
+        "name": "userId",
+        "type": "string"
+    }, {
+        "name": "acceptsMarketing",
+        "type": "bool"
+    }, {
+        "name": "orderSummary",
+        "type": "Taco.model.OrderSummary"
+    }, {
+        "name": "firstName",
+        "type": "string",
+        "mapping": "primaryBillingContact.firstName"
+    }, {
+        "name": "lastName",
+        "type": "string",
+        "mapping": "primaryBillingContact.lastName"
+    }, {
+        "name": "email",
+        "type": "string",
+        "mapping": "primaryBillingContact.email"
+    }, {
+        "name": "address1",
+        "type": "string",
+        "mapping": "primaryBillingContact.address.address1"
+    }, {
+        "name": "address2",
+        "type": "string",
+        "mapping": "primaryBillingContact.address.address2"
+    }, {
+        "name": "address3",
+        "type": "string",
+        "mapping": "primaryBillingContact.address.address3"
+    }, {
+        "name": "cityOrTown",
+        "type": "string",
+        "mapping": "primaryBillingContact.address.cityOrTown"
+    }, {
+        "name": "stateOrProvince",
+        "type": "string",
+        "mapping": "primaryBillingContact.address.stateOrProvince"
+    }, {
+        "name": "countryCode",
+        "type": "string",
+        "mapping": "primaryBillingContact.address.countryCode"
+    }, {
+        "name": "postalOrZipCode",
+        "type": "string",
+        "mapping": "primaryBillingContact.address.postalOrZipCode"
+    }, {
+        "name": "companyOrOrganization",
+        "type": "string",
+        "mapping": "primaryBillingContact.companyOrOrganization"
+    }, {
+        "name": "phoneNumber",
+        "type": "string",
+        "mapping": "primaryBillingContact.phoneNumbers.home"
+    }, {
+        "name": "totalOrders",
+        "type": "int",
+        "mapping": "orderSummary.orderCount"
+    }, {
+        "name": "spent",
+        "type": "number",
+        "mapping": "orderSummary.totalOrderAmount.amount"
+    }, {
+        "name": "lastOrderedOn",
+        "type": "date",
+        "mapping": "orderSummary.lastOrderedOn",
+        "dateFormat": "MS"
+    }, {
+        "name": "groups",
+        "type": "auto"
+    }, {
+        "name": "notes",
+        "type": "auto"
+    }, {
+        "name": "addresses"
+    }],
+
+    proxy: {
+        type: 'ajaxproxy',
+        api: {
+            read: '/admin/app/customers/list',
+            create: '/admin/app/customers/create',
+            update: '/admin/app/customers/edit',
+            destroy: '/admin/app/customers/delete'
+        },
+        reader: {
+            type: 'json',
+            root: 'items',
+            successProperty: 'success',
+            messageProperty: "message"
+        },
+        writer: {
+            allowSingle: false,
+            type: 'json'
+        }
+    }
+});

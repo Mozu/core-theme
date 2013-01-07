@@ -1,0 +1,11 @@
+/**
+ * @class Taco.store.Orders
+ */
+
+    Ext.define('Taco.store.Orders', {
+        extend: 'Ext.data.Store',
+        model: 'Taco.model.Order',
+        pageSize: 50,
+        remoteSort: true,
+        remoteFilter: true
+    });

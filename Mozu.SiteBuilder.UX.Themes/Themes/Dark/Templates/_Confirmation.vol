@@ -1,0 +1,181 @@
+﻿{% extends "default" %}
+
+{% block Init %}
+	{% setTemplateVariables BodyTagClasses="checkout-confirmation" %}
+{% endblock Init%}
+
+{% block BodyContent %}
+
+<div id="order-confirmation">
+	<h2>Order Confirmation</h2>
+
+	<p class="desc">Thank you for your order!  You will receive email confirmation&hellip;</p>
+
+	<table id="purchase-details">
+		<thead>
+			<tr>
+				<td colspan="2">Order#: <strong>{{ Model.orderNumber }}</strong></td>
+			</tr>
+		</thead>
+		{# TODO: Make template for Order by Check #}
+		<tbody>
+			<tr>
+				<td colspan="2"><hr></td>
+			</tr>
+			{% if Model.payment.paymentType == "CreditCard" %}
+			<tr>
+				<td class="field-label">Billing Name:</td>
+				<td>{{ Model.payment.firstName }} {{ Model.payment.lastName }}</td>
+			</tr>
+			<tr>
+				<td class="field-label">Billing Address:</td>
+				<td>{{ Model.payment.address1 }}</td>
+			</tr>
+				{% if Model.payment.address2 %}
+			<tr>
+				<td></td>
+				<td>{{ Model.payment.address2 }}</td>
+			</tr>
+				{% endif %}
+			<tr>
+				<td></td>
+				<td>{{ Model.payment.cityOrTown }}, {{ Model.payment.stateOrProvince }} {{ Model.payment.postalOrZipCode }}</td>
+			</tr>
+			<tr>
+				<td class="field-label">Phone:</td>
+				<td>{{ Model.payment.phone }}</td>
+			</tr>
+			<tr>
+				<td class="field-label">Email:</td>
+				<td>{{ Model.payment.email }}</td>
+			</tr>
+			<tr>
+				<td colspan="2"><hr></td>
+			</tr>
+			<tr>
+				<td class="field-label">Payment Type:</td>
+				<td>{{ Model.payment.paymentType }}</td>
+			</tr>
+			<tr>
+				<td class="field-label">Credit Card #:</td>
+				<td>{{ Model.payment.cardNumberPartOrMask }}</td>
+			</tr>
+			{% comment %} {# this isn't returned by the services #}
+			<tr>
+				<td class="field-label">Expiration:</td>
+				<td>{{ Model.payment.cardExpireMonth }}.{{ Model.payment.cardExpireYear }}</td>
+			</tr>
+			{% endcomment %}
+			{% else %} {# "Pay by Check" #}
+			<tr>
+				<td class="field-label">Payment Type:</td>
+				<td>{{ Model.payment.paymentType }}</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="field-label"><strong>Mail check to:</strong></td>
+				<td>&lt;Company Name&gt;</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>&lt;999 Street Address&gt;</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>&lt;City, State, Zip&gt;</td>
+			</tr>
+			{% endif %}
+			<tr>
+				<td></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="field-label">Ship to:</td>
+				<td>{{ Model.shipment.firstName }} {{ Model.shipment.lastName }}</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>{{ Model.shipment.address1 }}</td>
+			</tr>
+			{% if Model.shipment.address2 %}
+			<tr>
+				<td></td>
+				<td>{{ Model.shipment.address2 }}</td>
+			</tr>
+			{% endif %}
+			<tr>
+				<td></td>
+				<td>{{ Model.shipment.cityOrTown }}, {{ Model.shipment.stateOrProvince }} {{ Model.shipment.postalOrZipCode }}</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="field-label">Shipping Method:</td>
+				<td><strong>{{ Model.shippingMethod }}</strong></td>
+			</tr>
+		</tbody>
+	</table><!-- #purchase-details-->
+
+	<h3>Order Summary</h3>
+	<table id="order-summary">
+	    <thead>
+	        <tr>
+	            <th>Item #</th>
+	            <th>Description</th>
+	            <th>Qty</th>
+	            <th>Unit Price</th>
+	            <th>Total Price</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+            {% for item in Model.items %}
+	        <tr class="item-row">
+	            <td>&lt; 99999 &gt;</td>
+	            <td>{{ item.productName }}</td>
+	            <td>{{ item.quantity }}</td>
+	            <td>{{ item.unitPrice|currency }}</td>
+	            <td>{{ item.subTotal|currency }}</td>
+	        </tr>
+            {% endfor %}
+	    </tbody>
+	    <tfoot>
+	        <tr>
+	            <td colspan="3">
+	                Comments:<br>
+	                {{ Model.comments }}
+                </td>
+	            <td colspan="2">
+	                <table>
+	                    <tr>
+	                        <td>Subtotal:</td>
+	                        <td>{{ Model.subTotal|currency }}</td>
+	                    </tr>
+	                    <tr>
+	                        <td>Coupon/Discount:</td>
+	                        <td>{{ Model.discountTotal|currency }}</td>
+	                    </tr>
+	                    <tr>
+	                        <td>Tax:</td>
+	                        <td>{{ Model.taxTotal|currency }}</td>
+	                    </tr>
+	                    <tr>
+	                        <td>Shipping & Handling:</td>
+	                        <td>{{ Model.shippingTotal|currency }}</td>
+	                    </tr>
+	                    <tr>
+	                        <td>Total:</td>
+	                        <td>{{ Model.total|currency }}</td>
+	                    </tr>
+	                </table>
+	            </td>
+	        </tr>
+	    </tfoot>
+	</table>
+</div><!-- #order-confirmation -->
+
+{% endblock BodyContent %}

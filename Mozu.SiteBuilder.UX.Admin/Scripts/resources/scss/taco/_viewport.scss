@@ -1,0 +1,230 @@
+@mixin taco-viewport {
+  .#{$prefix}body {
+    background-color: $color-neutral-lightest;
+  }
+  .#{$vprefix}viewport-header {
+    @include box-shadow(0px -1px 6px $color-neutral-black);
+  }
+
+  // simple grids
+  .#{$vprefix}simplegrid {
+    width: 100%;
+
+    // styles below affect both header and body views
+    .#{$vprefix}simplegrid-checkbox {
+      background-repeat: no-repeat;
+      border: 0px none;
+      display: inline-block;
+      font-size: 16px;
+      height: 16px;
+      overflow: hidden;
+      width: 16px;
+      @include icons-sprite(icon-checkbox);
+
+      &.#{$vprefix}simplegrid-checkbox-checked {
+        @include icons-sprite(icon-checkbox-selected);
+      }
+    }
+
+    .#{$vprefix}simplegrid-cell {
+      border: 0px none $color-grid-border;
+      font-size: 14px;
+      line-height: 1.5em;
+      overflow: hidden;
+      padding: 10px 14px;
+      vertical-align: middle;
+
+      &.#{$vprefix}simplegrid-cell-align-left {
+        text-align: left;
+      }
+
+      &.#{$vprefix}simplegrid-cell-align-center {
+        text-align: center;
+      }
+
+      &.#{$vprefix}simplegrid-cell-align-right {
+        text-align: right;
+      }
+
+      &.#{$vprefix}check-column {
+        width: 44px;
+      }
+
+      &.#{$vprefix}actions-column {
+        width: 200px;
+      }
+    }
+
+    // styles below affect body view only
+    .#{$vprefix}simplegrid-row {
+      border-left: 1px solid $color-grid-border;
+      border-right: 1px solid $color-grid-border;
+
+      .#{$vprefix}simplegrid-cell {
+        background-color: $color-grid-row;
+
+        &.#{$vprefix}simplegrid-cell-editing {
+          background-color: $color-highlighted-background-light !important;
+          padding-bottom: 4px;
+          padding-top: 4px;
+          z-index: 101;
+
+          .#{$prefix}form-field {
+            opacity: 1;
+          }
+
+          .innards {
+            display: none;
+          }
+        }
+      }
+
+      // first body row
+      &:nth-last-of-type(1) {
+        border-bottom: 1px solid $color-grid-border;
+      }
+      // even-numbered body rows
+      &:nth-of-type(2n) {
+        .#{$vprefix}simplegrid-cell {
+          background-color: $color-grid-row-alt;
+        }
+      }
+
+      &:hover {
+        .#{$vprefix}simplegrid-cell {
+          background-color: $color-neutral-white;
+        }
+      }
+
+      &.#{$vprefix}simplegrid-row-selected {
+        .#{$vprefix}simplegrid-cell {
+          background-color: $color-highlighted-background-light;
+        }
+      }
+
+      &.#{$vprefix}simplegrid-row-editing {
+        .#{$vprefix}actions-column * {
+          visibility: hidden;
+        }
+      }
+    }
+
+    // styles below affect header view only
+    .#{$vprefix}simplegrid-column-header-row {
+        border: 1px solid $color-grid-border;
+
+      // <th> cell in header view
+      // to target column headers specifically, use simplegrid-column-header
+      .#{$vprefix}simplegrid-cell {
+        background-color: #edeae6;
+        border-color: $color-grid-border;
+        border-style: none;
+        border-width: 0px;
+        cursor: default;
+        font-size: 16px;
+
+        .edit {
+          background-color: crimson;
+          font-size: 0px;
+          height: 16px;
+          overflow: hidden;
+          position: absolute;
+          right: 2px;
+          text-indent: -10000px;
+          top: 12px;
+          visibility: hidden;
+          width: 16px;
+        }
+
+        &.#{$vprefix}simplegrid-cell-align-right {
+          .edit {
+            left: 2px;
+            right: auto;
+          }
+        }
+
+        &:hover {
+          .edit {
+            visibility: visible;
+          }
+        }
+      }
+    }
+
+    // styles below affect specific simple grids
+    &.#{$vprefix}simplegrid-products {
+      width: 100%;
+
+      .#{$vprefix}simplegrid-cell {
+        left: 0px;
+        position: relative;
+        @include single-transition(left, 0.4s, ease-in-out);
+
+        &[data-index="price"] {
+          width: 120px;
+        }
+        &[data-index="productCode"] {
+          width: 180px;
+        }
+        &[data-index="stockOnHand"] {
+          width: 120px;
+        }
+        &[data-index="isActive"] {
+          width: 160px;
+        }
+        &.#{$vprefix}being-hidden {
+          background-color: $color-highlighted-background-light;
+          color: rgba(0, 0, 0, 0);
+          z-index: 2;
+
+          * {
+            visibility: hidden;
+          }
+        }
+        &.#{$vprefix}valid-drop {
+        }
+      }
+    }
+  }
+  .#{$vprefix}simplegrid-column-edit-actions {
+    background-color: #555;
+    border-color: $color-grid-border;
+    border-style: solid solid none;
+    border-width: 1px 1px 0px;
+    border-radius: 6px 6px 0px 0px;
+
+    a {
+      margin-right: 10px;
+    }
+  }
+  .#{$vprefix}simplegrid-row-edit-actions {
+    a {
+      margin-right: 10px;
+    }
+  }
+
+  // .#{$prefix}dd-drag-proxy {
+  //   max-height: 300px;
+  //   overflow: hidden;
+  // }
+  .#{$prefix}dd-drag-ghost {
+    background-color: transparent;
+    border: 0px none;
+
+    > .#{$vprefix}simplegrid-cell {
+      background-color: $color-grid-row;
+      display: block;
+      font-size: 14px;
+      line-height: 1.5em;
+      padding: 10px 14px;
+
+      &:nth-of-type(2n+1) {
+        background-color: $color-grid-row-alt;
+      }
+      &.#{$vprefix}simplegrid-column-header {
+        background-color: $color-neutral-light;
+        font-size: 16px;
+      }
+    }
+  }
+}

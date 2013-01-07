@@ -1,0 +1,71 @@
+
+// Grayscale fonts
+$color-dark-ultra: rgb(50, 0, 0);    // #323232
+$color-dark: rgb(80, 0, 0);          // #505050
+$color-mid-dark: rgb(100, 0, 0);   // #646464
+$color-mid: rgb(126, 0, 0);         // #7E7E7E
+$color-mid-light: rgb(146, 0, 0);   // #929292
+$color-light: rgb(160, 0, 0);       // #A0A0A0
+$color-light-mid: rgb(192, 0, 0);   // #C0C0C0
+$color-light-ultra: rgb(215, 0, 0); // #D7D7D7
+$color-light-ultra-ultra: rgb(230, 0, 0); // #E6E6E6
+$color-240: rgb(240, 0, 0); // #F0F0F0
+$color-250: rgb(250, 0, 250); // #FAFAFA
+
+// Messages
+$color-status: rgb(0, 255, 204); // #CCFFCC
+$color-warning: rgb(0, 255, 204); // #FFFFCC
+$color-error: rgb(0, 204, 204); // #FFCCCC
+
+
+
+
+// Styleguide Colors
+$color-neutral-white: rgb(255, 255, 255);
+$color-neutral-lightest: rgb(242, 240, 237);
+$color-neutral-light: rgb(237, 234, 230);
+$color-neutral-mid-lighter: rgb(230, 226, 217);
+$color-neutral-mid-light: rgb(215, 213, 210);
+$color-neutral-mid: rgb(192, 192, 192);
+$color-neutral-dark: rgb(154, 154, 154);
+$color-neutral-darker: rgb(124, 123, 122);
+$color-neutral-darkest: rgb(94, 92, 90);
+$color-neutral-black: rgb(0, 0, 0);
+
+$color-highlighted-background: rgb(112, 210, 219);
+$color-highlighted-background-light: rgb(189, 249, 255);
+$color-highlighted-foreground: #FFF;
+$color-highlited-outline: $color-neutral-dark;
+
+$color-action-primary-background: rgb(255, 156, 51);
+$color-action-primary-background-hover: adjust-lightness($color-action-primary-background, 4);
+$color-action-primary-background-active: adjust-lightness($color-action-primary-background, -6);
+$color-action-background-disabled: $color-neutral-light;
+$color-action-primary-foreground: #FFF;
+$color-action-primary-outline: adjust-lightness($color-action-primary-background, -10);
+
+$color-action-background: $color-neutral-light;
+$color-action-background-hover: adjust-lightness($color-action-background, 2);
+$color-action-background-active: adjust-lightness($color-action-background, -3);
+$color-action-background-disabled: $color-neutral-light;
+$color-action-foreground: $color-neutral-darkest;
+$color-action-outline: $color-neutral-dark;
+
+$color-action-link: adjust-lightness($color-highlighted-background, -15);
+
+$color-grid-row: rgb(250, 248, 245);
+$color-grid-row-alt: rgb(242, 240, 237);
+$color-grid-border: rgb(153, 150, 145);
+
+$color-primary-menu-background-mid: rgb(97, 96, 94);
+$color-primary-menu-background-dark: rgb(76, 73, 66);
+
+// Fonts
+$font-page-title: bold 30px $font-family;
+$font-section-title: bold 24px $font-family;
+$font-main-instructions: bold 18px $font-family;
+$font-navigation-labels: bold 16px $font-family;
+$font-message: italic 14px $font-family;
+$font-control-label: bold 14px $font-family;
+$font-body-copy: normal 14px $font-family;
+$font-body-copy-small: normal 12px $font-family;

@@ -1,0 +1,415 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FE9DA6F5-3477-48A3-8314-572CE5C308FB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mozu.SiteBuilder.UX.Models</RootNamespace>
+    <AssemblyName>Mozu.SiteBuilder.UX.Models</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CI|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\CI\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\Mozu.SiteBuilder.UX.Models.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Demo|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Demo\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\Mozu.SiteBuilder.UX.Models.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Dev\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\Mozu.SiteBuilder.UX.Models.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.3.0.0-beta\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.3.0.0-beta\lib\net40\Autofac.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.WebApi, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.WebApi.3.0.0-beta\lib\net40\Autofac.Integration.WebApi.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.2.2.0\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.3.4.6.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\FSharp.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.PowerPack, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\FSharp.PowerPack.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.PowerPack.Compatibility, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
+    </Reference>
+    <Reference Include="Jolt">
+      <HintPath>..\packages\Jolt.1.0.0\lib\net40\Jolt.dll</HintPath>
+    </Reference>
+    <Reference Include="Jolt.Testing.GeneratedTypes">
+      <HintPath>..\packages\Jolt.1.0.0\lib\net40\Jolt.Testing.GeneratedTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.AdminUser.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13003.1\lib\Mozu.AdminUser.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Cart.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Cart.Contracts.0.0.12339.5\lib\Mozu.Cart.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Content.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Content.Contracts.1.0.12346.1\lib\Mozu.Content.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.0.0.12356.1\lib\Mozu.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Core.Api, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Api.0.0.12356.1\lib\Mozu.Core.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Core.Api.Client, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Api.Client.0.0.12356.2\lib\Mozu.Core.Api.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Core.Api.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Api.Contracts.0.0.13003.1\lib\Mozu.Core.Api.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Customer.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Customer.Contracts.0.0.12355.1\lib\Mozu.Customer.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.CustomShippingRates.Contracts">
+      <HintPath>..\packages\Mozu.CustomShippingRates.Contracts.0.0.12339.6\lib\Mozu.CustomShippingRates.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.PaymentService.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.0.12354.3\lib\Mozu.PaymentService.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.0.12354.1\lib\Mozu.SiteSettings.General.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.0.12355.1\lib\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.SiteSettings.Shipping.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.SiteSettings.Shipping.Contracts.1.0.12342.1\lib\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Tenant.Contracts">
+      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.12361.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.User.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.User.Contracts.1.0.12355.1\lib\Mozu.User.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="NDjango.Core40, Version=0.9.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\NDjango.Core40.dll</HintPath>
+    </Reference>
+    <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NSubstitute">
+      <HintPath>..\packages\NSubstitute.1.4.3.0\lib\NET40\NSubstitute.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin\ThemeSettings\ConfigurationField.cs" />
+    <Compile Include="Admin\ThemeSettings\ConfigurationFieldValue.cs" />
+    <Compile Include="Admin\ThemeSettings\ConfigurationItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Admin\ThemeSettings\FieldValue.cs" />
+    <Compile Include="Admin\ThemeSettings\RuntimeFieldValue.cs" />
+    <Compile Include="Admin\ThemeSettings\SettingConfiguration.cs" />
+    <Compile Include="Admin\ThemeSettings\SettingValue.cs" />
+    <Compile Include="Checkout\AvailableShippingMethods.cs" />
+    <Compile Include="Checkout\CheckoutActionInformation.cs" />
+    <Compile Include="Checkout\CheckoutInformation.cs" />
+    <Compile Include="Checkout\CheckoutModel.cs" />
+    <Compile Include="Checkout\CheckoutPage.cs" />
+    <Compile Include="Checkout\CommentInformation.cs" />
+    <Compile Include="Checkout\ContactInformation.cs" />
+    <Compile Include="Checkout\CouponInformation.cs" />
+    <Compile Include="Checkout\OrderInformation.cs" />
+    <Compile Include="Checkout\OrderItemInformation.cs" />
+    <Compile Include="Checkout\OrderStatus.cs" />
+    <Compile Include="Checkout\PaymentApiModel.cs" />
+    <Compile Include="Checkout\PaymentInformation.cs" />
+    <Compile Include="Checkout\ShipmentInformation.cs" />
+    <Compile Include="Checkout\AddressInformation.cs" />
+    <Compile Include="Checkout\ShippingMethodInformation.cs" />
+    <Compile Include="Checkout\StepStatus.cs" />
+    <Compile Include="Checkout\SubmitInformation.cs" />
+    <Compile Include="Customers\Account.cs" />
+    <Compile Include="Customers\Address.cs" />
+    <Compile Include="Customers\Contact.cs" />
+    <Compile Include="Customers\CurrencyAmount.cs" />
+    <Compile Include="Customers\CustomerAccount.cs" />
+    <Compile Include="Customers\CustomerAccountContact.cs" />
+    <Compile Include="Customers\CustomerAccountNote.cs" />
+    <Compile Include="Customers\CustomerGroup.cs" />
+    <Compile Include="Customers\OrderSummary.cs" />
+    <Compile Include="Customers\PasswordInfo.cs" />
+    <Compile Include="Customers\Phone.cs" />
+    <Compile Include="Customers\User.cs" />
+    <Compile Include="IStartUpTask.cs" />
+    <Compile Include="Messages.cs" />
+    <Compile Include="Navigation\NavigationNode.cs" />
+    <Compile Include="Navigation\NavigationRuntimeNode.cs" />
+    <Compile Include="Navigation\NavigationSet.cs" />
+    <Compile Include="Navigation\NavigationTreeNode.cs" />
+    <Compile Include="CmsPageContext.cs" />
+    <Compile Include="ICaseInsensitiveNamingContainer.cs" />
+    <Compile Include="IEditableContext.cs" />
+    <Compile Include="JsonExtensions.cs" />
+    <Compile Include="ModelBase.cs" />
+    <Compile Include="ModelMetaData\MozuModelMetadataProvider.cs" />
+    <Compile Include="Orders\AppliedDiscount.cs" />
+    <Compile Include="Orders\AvailableActionsInfo.cs" />
+    <Compile Include="Orders\Category.cs" />
+    <Compile Include="Orders\Discount.cs" />
+    <Compile Include="Orders\ItemDiscountContext.cs" />
+    <Compile Include="Orders\Measurement.cs" />
+    <Compile Include="Orders\Order.cs" />
+    <Compile Include="Orders\OrderItem.cs" />
+    <Compile Include="Orders\OrderNote.cs" />
+    <Compile Include="Orders\PackageMeasurements.cs" />
+    <Compile Include="Orders\PaymentReference.cs" />
+    <Compile Include="Orders\PaymentTransaction.cs" />
+    <Compile Include="Orders\PaymentTransactionInteraction.cs" />
+    <Compile Include="Orders\PaymentCardReference.cs" />
+    <Compile Include="Orders\Product.cs" />
+    <Compile Include="Orders\ProductOption.cs" />
+    <Compile Include="Orders\ProductPrice.cs" />
+    <Compile Include="Orders\ProductStock.cs" />
+    <Compile Include="Orders\Shipment.cs" />
+    <Compile Include="Orders\ShippingPrice.cs" />
+    <Compile Include="Orders\ShopperNotes.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Response.cs" />
+    <Compile Include="Settings\IPBlock.cs" />
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Settings\TimeZone.cs" />
+    <Compile Include="StartUpTask.cs" />
+    <Compile Include="StoreFront\Cart\Cart.cs" />
+    <Compile Include="StoreFront\Cart\CartItem.cs" />
+    <Compile Include="StoreFront\Cart\CartItemPrice.cs" />
+    <Compile Include="StoreFront\Cart\CartSummary.cs" />
+    <Compile Include="StoreFront\Cart\Fee.cs" />
+    <Compile Include="StoreFront\Cart\Product.cs" />
+    <Compile Include="StoreFront\Cart\ProductOption.cs" />
+    <Compile Include="StoreFront\Catalog\AttributeValueDateTime.cs" />
+    <Compile Include="StoreFront\Catalog\AttributeValueDecimal.cs" />
+    <Compile Include="StoreFront\Catalog\AttributeValueInteger.cs" />
+    <Compile Include="StoreFront\Catalog\AttributeValueString.cs" />
+    <Compile Include="StoreFront\Catalog\BaseProductAttribute.cs" />
+    <Compile Include="StoreFront\Catalog\BaseProductAttributeValue.cs" />
+    <Compile Include="StoreFront\Catalog\Category.cs" />
+    <Compile Include="StoreFront\Catalog\ConfiguredProduct.cs" />
+    <Compile Include="StoreFront\Catalog\Price.cs" />
+    <Compile Include="StoreFront\Catalog\Product.cs" />
+    <Compile Include="StoreFront\Catalog\ProductAttribute.cs" />
+    <Compile Include="StoreFront\Catalog\ProductAttributeValue.cs" />
+    <Compile Include="StoreFront\Catalog\ProductCollection.cs" />
+    <Compile Include="StoreFront\Catalog\ProductImage.cs" />
+    <Compile Include="StoreFront\Catalog\ProductImageCollection.cs" />
+    <Compile Include="StoreFront\Catalog\ProductOption.cs" />
+    <Compile Include="StoreFront\Catalog\ProductOptionSelection.cs" />
+    <Compile Include="StoreFront\Catalog\ProductOptionValue.cs" />
+    <Compile Include="StoreFront\Catalog\ProductPurchasableState.cs" />
+    <Compile Include="StoreFront\Catalog\ProductSearchResult.cs" />
+    <Compile Include="StoreFront\Catalog\UnitOfMeasure.cs" />
+    <Compile Include="Admin\CMS\Document.cs" />
+    <Compile Include="Admin\CMS\DocumentProperty.cs" />
+    <Compile Include="Admin\CMS\WidgetPreviewContext.cs" />
+    <Compile Include="StoreFront\CMS\CmsDocumentBase.cs" />
+    <Compile Include="StoreFront\CMS\CmsExtensions.cs" />
+    <Compile Include="StoreFront\CMS\Constants.cs" />
+    <Compile Include="StoreFront\CMS\Document.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="StoreFront\CMS\Facet.cs" />
+    <Compile Include="StoreFront\CMS\ImageUrl.cs" />
+    <Compile Include="StoreFront\CMS\PageDefault.cs" />
+    <Compile Include="StoreFront\CMS\PageTypeDefinition.cs" />
+    <Compile Include="StoreFront\CMS\Post.cs" />
+    <Compile Include="StoreFront\CMS\WidgetDefintion.cs" />
+    <Compile Include="StoreFront\CMS\WidgetInstance.cs" />
+    <Compile Include="StoreFront\CMS\WidgetLocationContext.cs" />
+    <Compile Include="StoreFront\CMS\ICmsTypeHelper.cs" />
+    <Compile Include="StoreFront\Email\ResetPasswordEmailMessage.cs" />
+    <Compile Include="Users\Behavior.cs" />
+    <Compile Include="Users\Role.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="StoreFront\Navigation\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Admin\ThemeSettings\mockcorethemesettingsconfig.json" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

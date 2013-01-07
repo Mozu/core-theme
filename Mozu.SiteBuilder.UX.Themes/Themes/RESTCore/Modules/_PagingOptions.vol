@@ -1,0 +1,15 @@
+﻿<div class="mz-paging-wrap">
+	<form class="mz-paging-form">
+		<label>Sort by:</label>
+		<select name="sortBy" class="mz-paging-sorting">
+			{% for item in Model.paging.sorts %}
+				<option {{item.selected|yesno:"selected, , "}} value="{{item.value}}">{{item.text}}</option>
+			{%endfor%}
+		</select>
+		<select class="mz-paging-pagesize" name="itemsPerPage">
+			{% for item in Model.paging.pageSizes %}
+				<option {{item.selected|yesno:"selected, , "}} value="{{item.value}}" >{{item.text}}</option>
+			{%endfor%}
+		</select>
+	</form>  
+</div>

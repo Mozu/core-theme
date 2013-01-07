@@ -1,0 +1,16 @@
+﻿<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+        
+    <meta name="description" content="{{ PageContext.MetaDescription }}">
+
+    <title>{{ PageContext.MetaTitle }} {{templateVariables.MetaTitle}} </title>
+
+        {% block StyleSheets %}
+            {{ "/resources/stylesheets/storefront.less"|stylesheet_tag:"default" }}
+        {% endblock StyleSheets %}
+
+        {% block HeaderScripts %}
+        <script src="/resources/scripts/vendor/modernizr-respond.min.js"></script>
+    {% endblock HeaderScripts %}
+</head>

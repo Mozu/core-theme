@@ -1,0 +1,289 @@
+/**
+ * @class  Taco.view.account.Users
+ */
+
+	Ext.define('Taco.view.account.Users', {
+		extend: 'Taco.core.ux.content.Container',
+	    requires: ['Taco.store.Roles','Taco.store.AccountUsers','Taco.view.account.Navigation','Taco.core.ux.Panel','Taco.view.account.Overview'],
+
+	    initComponent: function () {
+	        var me = this;
+
+	        me.header = {
+	            title: 'My Account'
+	        };
+
+			me.store = Ext.create('Taco.store.AccountUsers', {
+				autoLoad: true
+			});
+			me.roles = Ext.create('Taco.store.Roles', {
+				autoLoad: true
+			});
+
+			me.navigation = Ext.create('Taco.view.account.Navigation');
+
+			me.addform = Ext.create('Ext.form.Panel', {
+	            layout: { type: 'hbox', align: 'middle' },
+	            hidden: true,
+	            defaults: {
+	                xtype: 'container',
+	                layout: { type: 'vbox', align: 'left' },
+	                cls: Taco.baseCSSPrefix + 'toolbar-form-cell'
+	            },
+	            items: [{
+	            	width: 400,
+	                defaults: {
+	                	layout: 'vbox'
+	                },
+	                items: [{
+	                	xtype: 'label',
+	                	html: 'Email'
+	                }, {
+	                	xtype: 'textfield',
+	                	name: 'email'
+	                }]
+	            }, {
+	            	width: 200,
+	                layout: {
+	                	type: 'vbox'
+	            	},
+	                items: [{
+	                	xtype: 'label',
+	                	html: '&nbsp;'
+	                }, {
+	                    xtype: 'selectfield',
+	                    name: 'accessLevel',
+	                    mode: 'local',
+	                    valueField: 'id',
+	                    displayField: 'name',
+	                    allowBlank: false,
+	                    emptyText: 'Select access',
+	                    store: me.roles
+	                }]
+	            }, {
+	                width: 300,
+	                layout: { type: 'hbox', align: 'center' },
+	                items: [{
+	                    xtype: 'secondaryaction',
+	                    text: 'Cancel',
+	                    margin: '5 15 5 15',
+	                    click: function () {
+	                        me.addbutton.show();
+	                        me.addform.hide();
+	                    },
+	                    scope: this
+	                }, {
+	                    xtype: 'secondarybutton',
+	                    text: 'Send Invite',
+	                    listeners: {
+	                        click: {
+	                            element: 'el',
+	                            fn: function () {
+	                                var form = me.addform.getForm();
+	                                me.fireEvent('adduser', form.getFieldValues());
+	                                form.reset();
+	                            },
+	                            scope: this
+	                        }
+	                    }
+	                }]
+	            }]
+	        });
+
+			me.addbutton = Ext.widget('secondarybutton', {
+				text: '+ Add new User',
+				listeners: {
+					click: {
+						element: 'el',
+                        fn: function () {
+                            me.addform.show();
+                            me.addbutton.hide();
+                        },
+                        scope: this
+					}
+				}
+			});
+
+			me.rolesEditor = Ext.widget('selectfield', {
+                name: 'accessLevel',
+                mode: 'local',
+                valueField: 'id',
+                displayField: 'name',
+                allowBlank: false,
+                store: me.roles
+            });
+            
+			var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', { clicksToEdit: 1 });
+            cellEditing.on('edit', function (editor, e) {
+
+            	me.updateUserAccountRole({
+            		newRole: e.record.get('roleId'),
+            		oldRole: e.record.raw.roleId,
+            		userId: e.record.get('id')
+            	});
+            });
+
+			me.basegrid = Ext.create('Taco.core.ux.BaseGrid', {
+				store: me.store,
+				layout: 'fit',
+				width: 942,
+                hiddenColumns: ['name','siteName'],
+				columns: [{
+                    xtype: 'gridcolumn',
+                    dataIndex: 'email',
+                    text: 'Email',
+                    width: 400
+                }, {
+                    xtype: 'templatecolumn',
+                    dataIndex: 'roleId',
+                    text: 'Access Level',
+                    width: 200,
+                    tpl: '{role}',
+                    editor: me.rolesEditor
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'activity',
+                    text: 'Activity',
+                    width: 300,
+                    renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+                    	return value == "Pending" ? value + ' <a href="#" class="resend-user-invite">Resend</a>' : value;
+                    }
+                }, {
+                	xtype: 'actioncolumn',
+                	iconCls: 'taco-action-delete',
+                	width: 40
+                }],
+
+            	plugins: [cellEditing],
+
+				dockedItems: [{
+	                xtype: 'toolbar',
+	                dock: 'bottom',
+	                weight: 101,
+	                layout: { type: 'hbox', align: 'stretch' },
+	                cls: Taco.baseCSSPrefix + 'toolbar-form',
+	                items: [me.addbutton, me.addform]
+	            }]
+			});
+
+			me.items = Ext.create('Taco.core.ux.Panel', {
+			    layout: { type: 'fit' },
+                flex:1,
+	            items: [me.basegrid]
+			});
+
+	        Ext.apply(me.body, {
+	            layout: { type: 'vbox', align: 'stretch' },
+	            items: [ me.navigation, me.items ]
+	        });
+
+	        me.callParent(arguments);
+	        me.store.load();
+
+	        me.on({
+	            'adduser': {
+	                fn: me.createInvite,
+	                scope: me
+	            },
+	            'deleteuser': {
+	            	fn: me.deleteuser,
+	            	scope: me
+	            }
+	        });
+            basegridview = me.basegrid.view;
+            basegridview.mon(basegridview, 'itemclick', me.onItemClick, me);
+	    },
+
+	    updateUserAccountRole: function (updateInfo) {
+	    	var me = this;
+
+	    	Ext.Ajax.request({
+                url: '/admin/app/account/users/updaterole',
+                method: 'POST',
+                jsonData: updateInfo,
+
+                success: function (response) {
+                	me.store.load();
+                	if (console) console.log('successfully updated role')
+                },
+                failure: function (response) {
+                	if (console) console.log('error updating role');
+                }
+            });
+	    },
+
+	    createInvite: function (values) {
+	        var me = this;
+
+	        if (!(values.email) || !(values.accessLevel)) {
+	            return false;
+	        }
+
+			var invite = Ext.create('Taco.model.AccountUser', {
+	            email: values.email,
+	            roleId: values.accessLevel
+	        });
+
+	        Ext.Ajax.request({
+                url: '/admin/app/account/invitations/create',
+                jsonData: invite.data,
+                success: function (response) {
+
+                	var res = Ext.JSON.decode(response.responseText);
+                	if (res.success) {
+                		me.store.load();
+                	} else {
+                		Ext.Msg.alert('Error', 'There was a problem inviting the user: ' + res.message);
+                	}
+                },
+                failure: function (response) {
+                	console.log('error');
+                }
+            });
+	    },
+
+        onItemClick: function (view, record, elm, index, e) {
+            if (e.target.className === 'resend-user-invite') {
+                e.preventDefault();
+
+                Ext.Ajax.request({
+	                url: '/admin/app/account/invitations/resend',
+	                jsonData: record.data,
+	                success: function (response) {
+
+	                	var res = Ext.JSON.decode(response.responseText);
+	                	if (res.success) {
+	                		e.target.style.display = "none"; // hide the link?
+	                	} else {
+	                		Ext.Msg.alert('Error', 'There was a problem resending the invite: ' + res.message);
+	                	}
+	                },
+	                failure: function (response) {
+	                	console.log('error');
+	                }
+	            });
+            } else if (e.target.className.indexOf('taco-action-delete') >= 0) {
+            	// todo: fix! this sucks, but the actions column on basegrid wasn't working as expected for me. allow this hack for now
+	        	var me = this;
+
+            	Ext.Ajax.request({
+	                url: '/admin/app/account/' + Ext.util.Inflector.pluralize(record.data.type) + '/delete',
+	                jsonData: record.data,
+	                success: function (response) {
+
+	                	var res = Ext.JSON.decode(response.responseText);
+	                	if (res.success) {
+	                		me.store.load();
+	                	} else {
+	                		Ext.Msg.alert('Error', 'There was a problem deleting the user/invite: ' + res.message);
+	                	}
+	                },
+	                failure: function (response) {
+	                	console.log('error');
+	                }
+	            });
+
+            }
+        }
+	});
+

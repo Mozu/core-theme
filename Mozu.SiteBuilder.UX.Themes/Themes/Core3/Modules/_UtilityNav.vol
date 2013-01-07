@@ -1,0 +1,27 @@
+﻿ <nav class="mz-utility-nav-wrap">
+ 	<ul class="mz-utility-nav">
+ 		{%if user.email %}
+ 		<li class="mz-utility-nav-item">
+ 			<div id="mz-logged-in-notice">
+ 				Welcome, <a href="/myaccount" class="mz-utility-link">{{user.firstName|default:user.email}}</a>! (<a href="javascript:;" data-mz-action="logout" class="mz-utility-link mz-logout">Log Out</a>)
+ 			</div>
+            {% comment %}
+                The below require_script tag does not render anything in the place it's actually inserted; it instead adds the script to a list of scripts which are then included at the end of the page by RequireJS.
+                Use require_script to load AMD modules that are wrapped in define() or require() function calls.
+            {% endcomment %}
+            {% require_script "modules/login-links" %}
+ 		</li>
+ 		{%else%}
+ 		<li class="mz-utility-nav-item mz-mini-modal-parent">
+ 			<a href="javascript:;" data-mz-action="login" class="mz-utility-link mz-login">Sign In</a>
+            {% include "LoginModal" %}
+        </li>
+         {%endif%}
+         <li class="mz-utility-nav-item">
+         	<a class="mz-utility-link" href="/cart">
+         		<!-- <i class="icon-shopping-cart"></i> -->
+         		View Cart (<span class="mz-cart-item-indicator" id="my-cart-count">{{siteContext.catalog.cartAbstract.itemCount|default:0}}</span>)
+         	</a>
+         </li>
+     </ul>
+ </nav>

@@ -1,0 +1,79 @@
+﻿{
+    "id": "SHIRT",
+    "name": "Oxford Shirt",
+    "fullDescription": "It's an oxford shirt. <strong>This description contains HTML and \"double quotes\".</strong>",
+    "isPurchasable": false,
+    "price": {
+        "basePrice": 20,
+        "salePrice": 15.99,
+        "hasSalePrice": true,
+        "offerPrice": 15.99
+    },
+    "_links": {
+        "self": {
+            "href": "/resources/scripts/fixtures/RESTProduct.json"
+        },
+        "curie": {
+            "name": "mz",
+            "href": "http://mozu/api/rels/{rel}",
+            "templated": true
+        },
+        "addtocart": {
+            "href": "/resources/scripts/fixtures/RESTCart.json"
+        }
+    },
+    _embedded: {
+        "mz:option": [
+            {
+                "id": 1000,
+                "name": "Shirt Size",
+                "values": [
+                    {
+                        "id": 1201,
+                        "value": "S"
+                    },
+                    {
+                        "id": 1202,
+                        "value": "M"
+                    },
+                    {
+                        "id": 1203,
+                        "value": "L"
+                    },
+                    {
+                        "id": 1204,
+                        "value": "XL"
+                    }
+                ]
+                "_links": {
+                    "self": "/resources/scripts/fixtures/RESTProduct.json"
+                {
+            },
+            { 
+                "id": 1002,
+                "name": "Shirt Color",
+                "values": [
+                    {
+                        "id": 1301,
+                        "value": "Gingham"
+                    },
+                    {
+                        "id": 1302,
+                        "value": "Boxspring"
+                    },
+                    {
+                        "id": 1303,
+                        "value": "Houndstooth"
+                    },
+                    {
+                        "id": 1304,
+                        "value": "Opalescent"
+                    }
+                ]
+                "_links": {
+                    "self": "/resources/scripts/fixtures/RESTProduct.json"
+                {
+            }
+        ]
+    }   
+}

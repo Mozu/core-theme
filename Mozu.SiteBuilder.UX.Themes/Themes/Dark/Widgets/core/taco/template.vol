@@ -1,0 +1,1 @@
+﻿<div {% data_attributes Model%} ><div {% data_attributes Model.body %} style="border: 1px solid #999; background: black; color: white; font-size: 24px; padding: 75px; text-align:center; font-weight: bold;">TACO</div></div>

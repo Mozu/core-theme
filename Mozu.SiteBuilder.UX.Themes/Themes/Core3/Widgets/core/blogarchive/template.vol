@@ -1,0 +1,4 @@
+﻿<div {% data_attributes Model%} >
+  <h2 class="widget-title">Blog Archive</h2>
+  {% html_action "archive" "blogs" with viewname="archive" count=Model.config.displayCount config=Model.config sort=Model.config.sort as_parameter %}
+</div>

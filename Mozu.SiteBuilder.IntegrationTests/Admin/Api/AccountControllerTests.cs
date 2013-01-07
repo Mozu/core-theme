@@ -1,0 +1,195 @@
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
+using System.Threading.Tasks;
+using Mozu.AdminUser.Contracts.Clients;
+using Mozu.Core;
+using Mozu.Core.Api.Contracts;
+using Mozu.PaymentService.Contracts.Clients.Public;
+using Mozu.Provisioning.Contracts.Clients;
+using Mozu.Tenant.Contracts.Clients;
+using NSubstitute;
+using NUnit.Framework;
+using Should;
+using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core;
+using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Security;
+using Mozu.SiteBuilder.UX.Admin.Api;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
+using Mozu.User.Contracts;
+using Mozu.User.Contracts.Clients;
+using Role = Mozu.Core.Api.Contracts.Role;
+using User = Mozu.Core.Api.Contracts.User;
+using AccountApi = Mozu.SiteBuilder.UX.Admin.Api.AccountController;
+using IAuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.IAuthTicketWebApiClient;
+using IInvitationWebApiClient = Mozu.AdminUser.Contracts.Clients.IInvitationWebApiClient;
+using IRoleWebApiClient = Mozu.AdminUser.Contracts.Clients.IRoleWebApiClient;
+
+namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
+{
+    [TestFixture]
+    public class AccountControllerTests
+    {
+        private IAdminUserWebApiClient _userWebApiClient;
+        private IRoleWebApiClient _roleWebApiClient;
+        private IAuthTicketWebApiClient _authTicketWebApiClient;
+        private ITenantsWebApiClient _tenantsWebApiClient;
+        private IAuthenticationHelper _authenticationHelper;
+        private ISitesWebApiClient _sitesWebApiClient;
+        private IInvitationWebApiClient _invitationWebApiClient;
+        private IMerchantSignUpWebApiClient _merchantSignUpWebApiClient;
+        private IAdminUserWebApiClient _adminUserWebApiClient;
+        private ISiteBuilderContext _siteBuilderContext;
+
+        [SetUp]
+        public void SetUp()
+        {
+            // HOLY DEPENDENCIES!?!?!
+            _userWebApiClient = Substitute.For<IAdminUserWebApiClient>();
+            _roleWebApiClient = Substitute.For<IRoleWebApiClient>();
+            _authTicketWebApiClient = Substitute.For<IAuthTicketWebApiClient>();
+            _tenantsWebApiClient = Substitute.For<ITenantsWebApiClient>();
+            _authenticationHelper = Substitute.For<IAuthenticationHelper>();
+            _sitesWebApiClient = Substitute.For<ISitesWebApiClient>();
+            _invitationWebApiClient = Substitute.For<IInvitationWebApiClient>();
+            //_merchantSignUpWebApiClient = Substitute.For<IMerchantServiceWebApiClient>();
+            _adminUserWebApiClient = Substitute.For<IAdminUserWebApiClient>();
+            _siteBuilderContext = Substitute.For<ISiteBuilderContext>();
+        }
+
+        [Test, Ignore("Has dependency on 'SiteBuilderContext.Current'. Can this be replaced with injected instance?")]
+        public void GetAccount_should_return_mapped_user()
+        {
+            var id = Guid.NewGuid().ToString("n");
+            var api = GetApi();
+
+            var account = api.GetAccount();
+
+            account.Items.First().Id.ShouldEqual(id);
+        }
+
+        [Test]
+        public void GetRoles_should_returned_mapped_roles_from_Roles_service()
+        {
+            var serviceRoles = new[] { new Role { Id = 123 }, new Role { Id = 234 } };
+            _roleWebApiClient.With(x => x.GetRoles(), new RoleCollection { Items = serviceRoles.ToList() });
+
+            var api = GetApi();
+            var roles = api.GetRoles();
+
+            roles.Items.First().Id.ShouldEqual(serviceRoles.First().Id);
+            roles.Items.Last().Id.ShouldEqual(serviceRoles.Last().Id);
+        }
+
+        [Test]
+        public void GetRoles_should_only_call_service_once_per_AccountApi_instance()
+        {
+            var serviceRoles = new[] { new Role { Id = 345 }, new Role { Id = 456 } };
+            _roleWebApiClient.With(x => x.GetRoles(), new RoleCollection { Items = serviceRoles.ToList() });
+
+            var api = GetApi();
+
+            api.GetRoles();
+            api.GetRoles();
+            api.GetRoles();
+
+            _roleWebApiClient.Received(1).GetRoles();
+        }
+
+        [Test]
+        public void Logoff_should_delegate_to_AuthenticationHelper()
+        {
+            var api = GetApi();
+            api.Logoff();
+
+            _authenticationHelper.Received(1).LogOut();
+        }
+
+        [Test]
+        public void GetUser_by_id_should_return_mapped_user()
+        {
+            var id = Guid.NewGuid().ToString("n");
+            _userWebApiClient.With(x => x.GetUser(id, null), new Mozu.Core.Api.Contracts.User { Id = id });
+
+            var api = GetApi();
+
+            var user = api.GetUser(id);
+            user.Id.ShouldEqual(id);
+        }
+
+        [Test]
+        public void GetUser_should_return_null_if_response_is_not_successful()
+        {
+            _userWebApiClient.WithAny(x => x.GetUser(null, null), null, msg => msg.StatusCode = HttpStatusCode.NotFound);
+
+            var api = GetApi();
+
+            var user = api.GetUser("whatever");
+
+            user.ShouldBeNull();
+        }
+
+        [Test]
+        public void DeleteInvitation_should_delegate_to_InvitationWebApiClient()
+        {
+            var invitation = new UX.Admin.Api.Models.Account.Invitation { Id = "dsaklfjadsfkjf" };
+            var api = GetApi();
+
+            _invitationWebApiClient.With(x => x.DeclineInvitation(invitation.Id), TestResponse.Void);
+
+            api.DeleteInvitation(invitation);
+
+            _invitationWebApiClient.Received(1).DeclineInvitation(invitation.Id);
+        }
+
+        [Test]
+        public void ResendInvitation_should_delegate_to_InvitationWebApiClient()
+        {
+            var invitation = new UX.Admin.Api.Models.Account.Invitation { Id = "dsaklfjadsfkjf" };
+            var api = GetApi();
+
+            _invitationWebApiClient.With(x => x.ResubmitInvitation(invitation.Id), TestResponse.Void);
+
+            api.ResendInvitation(invitation);
+
+            _invitationWebApiClient.Received(1).ResubmitInvitation(invitation.Id);
+        }
+
+        [Test]
+        public void GetCurrentUser_should_return_user_if_found_by_token_UserId()
+        {
+            var expectedId = "youzer eye dee";
+            _authenticationHelper.GetCurrentProfileToken().Returns(new ProfileToken { UserId = expectedId });
+            _userWebApiClient.With(x => x.GetUser(expectedId, null), new Mozu.Core.Api.Contracts.User { Id = expectedId });
+
+            var api = GetApi();
+
+            var user = api.GetCurrentUser();
+
+            user.ShouldNotBeNull();
+            user.Id.ShouldEqual(expectedId);
+        }
+
+        [Test]
+        public void GetCurrentUser_should_return_new_Unauthenticated_User_if_NotFound()
+        {
+            _authenticationHelper.GetCurrentProfileToken().Returns(new ProfileToken());
+            _userWebApiClient.WithAny(x => x.GetUser(null, null), null, msg => msg.StatusCode = HttpStatusCode.NotFound);
+
+            var api = GetApi();
+
+            var user = api.GetCurrentUser();
+
+            user.ShouldNotBeNull();
+            user.IsAuthenticated.ShouldBeFalse();
+        }
+
+        private AccountApi GetApi()
+        {
+            return new AccountApi(_userWebApiClient, _roleWebApiClient, _authTicketWebApiClient, _tenantsWebApiClient, _authenticationHelper,
+                _sitesWebApiClient, _invitationWebApiClient, _merchantSignUpWebApiClient, _adminUserWebApiClient, _siteBuilderContext);
+        }
+    }
+}

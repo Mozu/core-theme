@@ -1,0 +1,33 @@
+﻿<nav class="mz-site-nav-wrapper">
+    <ul data-mz-role="sitemenu" class="mz-site-nav">
+        {%for link in SiteContext.Navigation.Primary %}
+            <li data-mz-role="sitemenu-item" class="mz-site-nav-item">
+                <a class="mz-site-nav-link" href="{{link.url}}">{{link.name}}</a>
+                {% if link.items %}
+                    <div data-mz-role="sitemenu-slideout-l2" class="mz-site-nav-slideout mz-l2 mz-zero-height">
+                        <ul data-mz-role="sitemenu-subnav" class="mz-site-nav-sub">
+                            {% for sublink in link.items %}
+                                <li data-mz-role="sitemenu-item" class="mz-site-nav-item">
+                                    <a class="mz-site-nav-link" href="{{sublink.url}}">{{sublink.name}}</a>
+                                    {% if sublink.items %}
+                                        <div data-mz-role="sitemenu-slideout-l3" class="mz-site-nav-slideout mz-l3">
+                                            <ul data-mz-role="sitemenu-subnav" class="mz-site-nav-sub">
+                                                {% for subsublink in sublink.items %}
+                                                    <li data-mz-role="sitemenu-item" class="mz-site-nav-item">
+                                                        <a class="mz-site-nav-link" href="{{subsublink.url}}">{{subsublink.name}}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </li>
+        {%endfor%}
+    </ul>
+    {% require_script "modules/jquery-sitemenu" %}
+</nav>
+    

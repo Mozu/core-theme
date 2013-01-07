@@ -1,0 +1,1 @@
+.\jsduck-4.3.2.exe -o docs_json --export=full --ignore-global ext/ext-debug-w-comments.js ext/src app

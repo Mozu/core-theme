@@ -1,0 +1,108 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
+using Mozu.Reference.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Models.Settings;
+using DC= Mozu.SiteSettings.General.Contracts;
+using Mozu.SiteSettings.General.Contracts.Clients;
+using IPBlock = Mozu.SiteBuilder.UX.Models.Settings.IPBlock;
+
+namespace Mozu.SiteBuilder.UX.Admin
+{
+    public interface IGeneralSettingWrapper
+    {
+        GeneralSettings ReadSettings();
+
+        IEnumerable<IPBlock> GetIPBlocks();
+
+        IEnumerable<TimeZone> GetTimeZones();
+
+        void UpdateIPBlockCollection(GeneralSettings settingsToSave, IEnumerable<int?> existingBlockIds);
+
+        void DeleteAllIPBlocks(IEnumerable<int?> existingBlockIds);
+
+        GeneralSettings UpdateGeneralSettings(GeneralSettings settingsToSave);
+    }
+
+    public class GeneralSettingWrapper : IGeneralSettingWrapper
+    {
+        private readonly IReferenceDataWebApiClient _referenceDataWebApiClient;
+        private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
+        IProvisioningWebApiClient _provisioningWebApiClient;
+
+        public GeneralSettingWrapper(IReferenceDataWebApiClient referenceDataWebApiClient, IGeneralSettingsWebApiClient generalSettingsWebApiClient, IProvisioningWebApiClient provisioningWebApiClient)
+        {
+            _referenceDataWebApiClient = referenceDataWebApiClient;
+            _generalSettingsWebApiClient = generalSettingsWebApiClient;
+            _provisioningWebApiClient = provisioningWebApiClient;
+        }
+
+        public GeneralSettings ReadSettings()
+        {
+            Mozu.SiteSettings.General.Contracts.GeneralSettings generalSettings = null;
+            var res = _generalSettingsWebApiClient.GetGeneralSettings(null).Result;
+            if (res.HasException && res.ResponseMessage != null && res.ResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                generalSettings = new Mozu.SiteSettings.General.Contracts.GeneralSettings();
+                _provisioningWebApiClient.CreateSite(new Mozu.Core.Api.Contracts.SiteProvisionMessage());
+                
+            }
+            else
+            {
+                generalSettings = res.ReadAsAsync().Result;
+            }
+            
+
+            return Mapper.Map<GeneralSettings>(generalSettings);
+        }
+
+        public IEnumerable<IPBlock> GetIPBlocks()
+        {
+            var ipBlocks = _generalSettingsWebApiClient.GetIPBlocks().Result.ReadAsAsync().Result;
+            return ipBlocks.Items.Select(Mapper.Map<IPBlock>);
+        }
+
+        public IEnumerable<TimeZone> GetTimeZones()
+        {
+            var timeZones = _referenceDataWebApiClient.GetTimeZones().Result.ReadAsAsync().Result;
+
+            return timeZones.Items.Select(Mapper.Map<TimeZone>);
+        }
+
+        public void UpdateIPBlockCollection(GeneralSettings settingsToSave, IEnumerable<int?> existingBlockIds)
+        {
+            var settings = Mapper.Map<DC.GeneralSettings>(settingsToSave);
+            var ipBlocks = settings.IPBlocks.Items;
+            foreach (var block in ipBlocks)
+            {
+                if (block.Id > 0)
+                    _generalSettingsWebApiClient.UpdateIPBlock(block, block.Id).Result.ReadAsAsync();
+                else
+                    _generalSettingsWebApiClient.CreateIPBlock(block).Result.ReadAsAsync();
+            }
+
+            var deletableBlocks = settingsToSave.IPBlocks.Select(x => x.Id).Where(x => x != 0).ToArray();
+            foreach (var ipBlockId in existingBlockIds)
+            {
+                if (!deletableBlocks.Contains(ipBlockId))
+                    _generalSettingsWebApiClient.DeleteIPBlock(ipBlockId).Result.ReadAsAsync();
+            }
+        }
+
+        public void DeleteAllIPBlocks(IEnumerable<int?> existingBlockIds)
+        {
+            foreach (var ipBlockId in existingBlockIds)
+            {
+                _generalSettingsWebApiClient.DeleteIPBlock(ipBlockId).Result.ReadAsAsync();
+            }
+        }
+
+        public GeneralSettings UpdateGeneralSettings(GeneralSettings settingsToSave)
+        {
+            var settings = Mapper.Map<DC.GeneralSettings>(settingsToSave);
+            var updateGeneralSettings = _generalSettingsWebApiClient.UpdateGeneralSettings(settings).Result.ReadAsAsync();
+
+            return Mapper.Map<GeneralSettings>(updateGeneralSettings.Result);
+        }
+    }
+}

@@ -1,0 +1,1 @@
+define(["jquery"],function(e){e("#mz-error-detail-link").click(function(){e("#mz-error-detail").toggleClass("mz-expanded")})});

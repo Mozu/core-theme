@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+  <xs:element name="settings" nillable="true" type="ConfigurationItemCollection" />
+  <xs:complexType name="ConfigurationItemCollection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="items" type="ArrayOfChoice2" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfChoice2">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="1" maxOccurs="1" name="item" nillable="true" type="ConfigurationItem" />
+      <xs:element minOccurs="1" maxOccurs="1" name="section" nillable="true" type="ConfigurationItemSection" />
+      <xs:element minOccurs="1" maxOccurs="1" name="group" nillable="true" type="ConfigurationItemGroup" />
+      <xs:element minOccurs="1" maxOccurs="1" name="setting" nillable="true" type="ConfigurationItemField" />
+      <xs:element minOccurs="1" maxOccurs="1" name="preset" nillable="true" type="ConfigurationItemPreset" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="ConfigurationItem">
+    <xs:sequence>
+      
+      <xs:element minOccurs="0" maxOccurs="1" name="items" type="ArrayOfChoice1" />
+      <xs:element minOccurs="0" maxOccurs="1" name="values" type="ArrayOfConfigurationFieldValue" />
+      <xs:element minOccurs="0" maxOccurs="1" name="presetValues" type="ArrayOfPresetValue" />
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="collapsed" type="xs:boolean" />
+    <xs:attribute name="visible" type="xs:boolean"  />
+    <xs:attribute name="inherit" type="xs:string" />
+    <xs:attribute name="type" type="settingType" />
+    <xs:attribute name="label" type="xs:string" />
+    <xs:attribute name="defaultValue" type="xs:string" />
+    <xs:attribute name="presetTriggerGroup" type="xs:string" />
+    <xs:attribute name="itemType" type="xs:string" />
+    <xs:attribute name="presetTriggerText" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="settingType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="select"></xs:enumeration>
+      <xs:enumeration value="color"></xs:enumeration>
+      <xs:enumeration value="font"></xs:enumeration>
+      <xs:enumeration value="backgroundImage"></xs:enumeration>
+      <xs:enumeration value="radio"></xs:enumeration>
+      <xs:enumeration value="checkbox"></xs:enumeration>
+      <xs:enumeration value="textbox"></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ArrayOfChoice1">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="1" maxOccurs="1" name="section" nillable="true" type="ConfigurationItemSection" />
+      <xs:element minOccurs="1" maxOccurs="1" name="group" nillable="true" type="ConfigurationItemGroup" />
+      <xs:element minOccurs="1" maxOccurs="1" name="item" nillable="true" type="ConfigurationItem" />
+      <xs:element minOccurs="1" maxOccurs="1" name="setting" nillable="true" type="ConfigurationItemField" />
+      <xs:element minOccurs="1" maxOccurs="1" name="preset" nillable="true" type="ConfigurationItemPreset" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="ConfigurationItemSection">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ConfigurationItem" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ConfigurationItemGroup">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ConfigurationItem" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ConfigurationItemField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ConfigurationItem" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ConfigurationItemPreset">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ConfigurationItem" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfConfigurationFieldValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="option" nillable="true" type="ConfigurationFieldValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ConfigurationFieldValue">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="value" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfPresetValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="item" nillable="true" type="PresetValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PresetValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="values" type="ArrayOfFieldValue" />
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="display" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="ArrayOfFieldValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="item" nillable="true" type="FieldValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FieldValue">
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="value" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="ConfigurationFieldValue" nillable="true" type="ConfigurationFieldValue" />
+  <xs:element name="FieldValue" nillable="true" type="FieldValue" />
+  <xs:element name="ConfigurationItem" nillable="true" type="ConfigurationItem" />
+  <xs:element name="ConfigurationItemGroup" nillable="true" type="ConfigurationItemGroup" />
+  <xs:element name="ConfigurationItemField" nillable="true" type="ConfigurationItemField" />
+  <xs:element name="ConfigurationItemPreset" nillable="true" type="ConfigurationItemPreset" />
+  <xs:element name="ConfigurationItemSection" nillable="true" type="ConfigurationItemSection" />
+  <xs:element name="PresetValue" nillable="true" type="PresetValue" />
+</xs:schema>

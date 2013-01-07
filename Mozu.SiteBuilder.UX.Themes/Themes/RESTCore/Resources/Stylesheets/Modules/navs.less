@@ -1,0 +1,83 @@
+﻿
+
+/* Canopy Site Nav ------------------------------- */
+.mz-utility-nav-wrap {
+	float: right;
+	clear: both;
+	padding: 10px 20px;
+
+}
+.mz-utility-nav {	
+	color: white;
+	font-size: 11px;
+}
+.mz-utility-nav-item {
+	float: left;
+	margin: 0;
+	padding: 0 10px;
+	text-align: right;
+}
+.mz-utility-nav-item:last-child {
+	padding-right: 0;
+	text-align:right;
+}
+
+/* Main Site Nav ------------------------------- */
+.mz-site-nav-wrapper {
+	width: 100%;
+	position: absolute;
+	left: 0;
+	bottom: 0px;
+	background: #333;
+	overflow: hidden;
+
+	.mz-site-nav-item {
+		float:left;
+	}
+	.mz-site-nav-link {
+		color: {{themeSettings.siteNavColor|settingtype:'color'|default:'#C5C5C5'|description:'Site Navigation Color'}};
+		text-decoration: none;
+		font: {{themeSettings.siteNavFont|settingtype:'font'|default:'14px Tahoma, sans-serif'|description:'Site Navigation Font'}};
+		display: inline-block;
+		padding: 10px 15px;
+		position: relative;
+		&:visited {
+			color: {{themeSettings.siteNavColor}};
+		}
+		&:hover {
+			background-color: #555;
+			color: {{themeSettings.siteNavHoverColor|settingtype:'color'|default:'#C9C9C9'|description:'Site Navigation Link Hover'}};
+		}
+	}
+
+	.no-cssanimations .mz-site-nav-a:hover {
+		text-decoration: underline;
+	}
+
+	.mz-site-nav-slideout {
+		display:none
+	}
+
+	.mz-site-nav-sub {
+		// TODO: complete nav
+	}
+}
+
+
+/* SubCategory List -------------- */
+.mz-left-nav-wrap {
+	width: 180px;
+	float: left;
+	margin-right: 30px;
+}
+.mz-category-subhead {
+	margin-top: 12px;
+}
+.mz-category-list-item {
+	margin: 0 0 8px 0;
+}
+
+.mz-category-list-sub {
+	padding-left: 16px;
+	margin-top: 5px;
+}

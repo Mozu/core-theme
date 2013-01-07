@@ -1,0 +1,2515 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Mozu.SiteBuilder.UX.Admin.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == ''">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3AC84F6C-74E6-4767-A80E-9FC022037F70}</ProjectGuid>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mozu.SiteBuilder.UX.Admin</RootNamespace>
+    <AssemblyName>Mozu.SiteBuilder.UX.Admin</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\Volusion.SiteBuilder\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <ExtVersion>4.1.abc</ExtVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>3</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <!-- Customizable Output Directory Opt-In for TFS Build (web application projects) -->
+  <PropertyGroup Condition="$(TeamBuildOutDir) != ''">
+    <OutDir>$(TeamBuildOutDir)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CI|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Mozu.SiteBuilder.UX.Admin.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Demo|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Mozu.SiteBuilder.UX.Admin.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.3.0.0-beta\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.3.0.0-beta\lib\net40\Autofac.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.Mvc4.3.0.0-beta\lib\net40\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.WebApi">
+      <HintPath>..\packages\Autofac.WebApi.3.0.0-beta\lib\net40\Autofac.Integration.WebApi.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.2.2.0\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="dotless.Core, Version=1.3.1.0, Culture=neutral, PublicKeyToken=96b446c9e63eae34, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\dotless.1.3.1.0\lib\dotless.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.3.4.6.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\FSharp.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.PowerPack, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\FSharp.PowerPack.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.PowerPack.Compatibility, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
+    </Reference>
+    <Reference Include="Jolt, Version=0.4.4478.17179, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jolt.1.0.0\lib\net40\Jolt.dll</HintPath>
+    </Reference>
+    <Reference Include="Jolt.Testing.GeneratedTypes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6adcb4232d754f0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jolt.1.0.0\lib\net40\Jolt.Testing.GeneratedTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Json">
+      <HintPath>..\packages\JsonValue.0.6.0\lib\40\Microsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.AdminUser.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13003.1\lib\Mozu.AdminUser.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Cart.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Cart.Contracts.0.0.12339.5\lib\Mozu.Cart.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Content.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Content.Contracts.1.0.12346.1\lib\Mozu.Content.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.0.0.12356.1\lib\Mozu.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Core.Api, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Api.0.0.12356.1\lib\Mozu.Core.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Core.Api.Client, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Api.Client.0.0.12356.2\lib\Mozu.Core.Api.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Core.Api.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Api.Contracts.0.0.13003.1\lib\Mozu.Core.Api.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Customer.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Customer.Contracts.0.0.12355.1\lib\Mozu.Customer.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.CustomShippingRates.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.CustomShippingRates.Contracts.0.0.12339.6\lib\Mozu.CustomShippingRates.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Order.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Order.Contracts.0.0.12338.2\lib\Mozu.Order.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.PaymentService.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.0.12354.3\lib\Mozu.PaymentService.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.0.0.12356.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Provisioning.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Provisioning.Contracts.1.0.12356.1\lib\Mozu.Provisioning.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Reference.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Reference.Contracts.1.0.12341.1\lib\Mozu.Reference.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.0.0.12361.1\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.0.12354.1\lib\Mozu.SiteSettings.General.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.0.12355.1\lib\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.SiteSettings.Shipping.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.SiteSettings.Shipping.Contracts.1.0.12342.1\lib\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Tenant.Contracts">
+      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.12361.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.User.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.User.Contracts.1.0.12355.1\lib\Mozu.User.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.UspsShippingAdmin.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.UspsShippingAdmin.Contracts.0.0.12354.1\lib\Mozu.UspsShippingAdmin.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="NDjango.Core40, Version=0.9.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\NDjango.Core40.dll</HintPath>
+    </Reference>
+    <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NSubstitute">
+      <HintPath>..\packages\NSubstitute.1.4.3.0\lib\NET40\NSubstitute.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Api\AddressController.cs" />
+    <Compile Include="Api\ApiAuthorizeAttribute.cs" />
+    <Compile Include="Api\BaseController.cs" />
+    <Compile Include="Api\BehaviorCategoriesController.cs" />
+    <Compile Include="Api\BehaviorsController.cs" />
+    <Compile Include="Api\CategoryController.cs" />
+    <Compile Include="Api\CmsDocumentController.cs" />
+    <Compile Include="Api\CustomersController.cs" />
+    <Compile Include="Api\DiscountController.cs" />
+    <Compile Include="Api\FileManagementController.cs" />
+    <Compile Include="Api\GeneralSettingController.cs" />
+    <Compile Include="Api\IApiController.cs" />
+    <Compile Include="Api\ImageController.cs" />
+    <Compile Include="Api\InventoryProductController.cs" />
+    <Compile Include="Api\LocalizationApi.cs" />
+    <Compile Include="Api\ModelMapping\CheckoutMapping.cs" />
+    <Compile Include="Api\ModelMapping\CustomerMapping.cs" />
+    <Compile Include="Api\ModelMapping\DiscountMapping.cs" />
+    <Compile Include="Api\ModelMapping\FileManagementModelMapping.cs" />
+    <Compile Include="Api\ModelMapping\NavigationMapping.cs" />
+    <Compile Include="Api\ModelMapping\GeneralSettingsMapping.cs" />
+    <Compile Include="Api\ModelMapping\OrderMapping.cs" />
+    <Compile Include="Api\ModelMapping\ShippingMapping.cs" />
+    <Compile Include="Api\ModelMapping\TaxMapping.cs" />
+    <Compile Include="Api\ModelMapping\UserMapping.cs" />
+    <Compile Include="Api\Models\Account\AccountInformation.cs" />
+    <Compile Include="Api\Models\Account\AccountUser.cs" />
+    <Compile Include="Api\Models\Account\Invitation.cs" />
+    <Compile Include="Api\Models\Account\PasswordInfo.cs" />
+    <Compile Include="Api\Models\Account\Role.cs" />
+    <Compile Include="Api\Models\Account\UserSystemData.cs" />
+    <Compile Include="Api\Models\Checkout\GatewayCredentialFieldDefinition.cs" />
+    <Compile Include="Api\Models\Checkout\GatewayDefinition.cs" />
+    <Compile Include="Api\Models\Checkout\PreAuthorizationDefinition.cs" />
+    <Compile Include="Api\Models\Checkout\PreAuthorizeTransactionTypeDataContract.cs" />
+    <Compile Include="Api\Models\Checkout\Setting.cs" />
+    <Compile Include="Api\Models\Navigation\NavigationNode.cs" />
+    <Compile Include="Api\Models\Cms\Document.cs" />
+    <Compile Include="Api\Models\Cms\DocumentProperty.cs" />
+    <Compile Include="Api\Models\Discount\CouponCode.cs" />
+    <Compile Include="Api\Models\Discount\Discount.cs" />
+    <Compile Include="Api\Models\Feature.cs" />
+    <Compile Include="Api\Models\FileManagement\FileManagementFile.cs" />
+    <Compile Include="Api\Models\FileManagement\FileManagementFolder.cs" />
+    <Compile Include="Api\Models\FilterCollection.cs" />
+    <Compile Include="Api\GlobalErrorHandler.cs" />
+    <Compile Include="Api\MetaDataController.cs" />
+    <Compile Include="Api\ModelMapping\CategoryMapping.cs" />
+    <Compile Include="Api\ModelMapping\OptionMapping.cs" />
+    <Compile Include="Api\ModelMapping\ProductMapping.cs" />
+    <Compile Include="Api\Models\AutoCompleteField.cs" />
+    <Compile Include="Api\Models\Category\Category.cs" />
+    <Compile Include="Api\Models\Category\CategoryTreeNode.cs" />
+    <Compile Include="Api\Models\Metadata\ModelDescription.cs" />
+    <Compile Include="Api\Models\Navigation\NavigationSet.cs" />
+    <Compile Include="Api\Models\Options\Option.cs" />
+    <Compile Include="Api\Models\Options\ProductOption.cs" />
+    <Compile Include="Api\Models\Options\ProductProperty.cs" />
+    <Compile Include="Api\Models\Options\ProductVariant.cs" />
+    <Compile Include="Api\Models\Pages\PageCreateType.cs" />
+    <Compile Include="Api\Models\Checkout\CheckoutSettings.cs" />
+    <Compile Include="Api\Models\Checkout\CustomerCheckoutSettings.cs" />
+    <Compile Include="Api\Models\Checkout\GatewayAccount.cs" />
+    <Compile Include="Api\Models\Checkout\GatewayCredentialFieldValue.cs" />
+    <Compile Include="Api\Models\Checkout\OrderProcessingSettings.cs" />
+    <Compile Include="Api\Models\Checkout\PaymentSetting.cs" />
+    <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
+    <Compile Include="Api\Models\ProductModels\ProductListItem.cs" />
+    <Compile Include="Api\Models\Response.cs" />
+    <Compile Include="Api\Models\Account\User.cs" />
+    <Compile Include="Api\Models\Shipping\FlatPerCartShippingRate.cs" />
+    <Compile Include="Api\Models\Shipping\FlatPerItemShippingRate.cs" />
+    <Compile Include="Api\Models\Shipping\SharedShippingMethod.cs" />
+    <Compile Include="Api\Models\Shipping\SharedShippingMethodLocalizedContent.cs" />
+    <Compile Include="Api\Models\Shipping\ShippingClass.cs" />
+    <Compile Include="Api\Models\Shipping\ShippingMethod.cs" />
+    <Compile Include="Api\Models\Shipping\ShippingMethodLocalizedContent.cs" />
+    <Compile Include="Api\Models\Shipping\SiteShippingMethod.cs" />
+    <Compile Include="Api\Models\Shipping\SiteShippingMethodLocalizedContent.cs" />
+    <Compile Include="Api\Models\Shipping\SiteShippingOriginAddress.cs" />
+    <Compile Include="Api\Models\Shipping\ShippingRate.cs" />
+    <Compile Include="Api\Models\Shipping\ShippingRateLocalizedContent.cs" />
+    <Compile Include="Api\Models\Shipping\ShippingRatePrice.cs" />
+    <Compile Include="Api\Models\Shipping\SiteShippingRegion.cs" />
+    <Compile Include="Api\Models\Shipping\SiteShippingSettings.cs" />
+    <Compile Include="Api\Models\Shipping\TargetedShippingMethod.cs" />
+    <Compile Include="Api\Models\Shipping\UspsConfiguration.cs" />
+    <Compile Include="Api\Models\Tax\TaxRate.cs" />
+    <Compile Include="Api\Models\Testing\Site.cs" />
+    <Compile Include="Api\NavigationController.cs" />
+    <Compile Include="Api\OpeationHandlers\FilterCollectionRequestHandler.cs" />
+    <Compile Include="Api\OpeationHandlers\PagingParamatersRequestHandlers.cs" />
+    <Compile Include="Api\OptionsController.cs" />
+    <Compile Include="Api\OrderController.cs" />
+    <Compile Include="Api\PageTypeDefinitionController.cs" />
+    <Compile Include="Api\CheckoutSettingsController.cs" />
+    <Compile Include="Api\RolesController.cs" />
+    <Compile Include="Api\PermissionsController.cs" />
+    <Compile Include="Api\ProductController.cs" />
+    <Compile Include="Api\AccountController.cs" />
+    <Compile Include="Api\ProductOptionsController.cs" />
+    <Compile Include="Api\ProductPropertyController.cs" />
+    <Compile Include="Api\ProductVariationController.cs" />
+    <Compile Include="Api\ShippingController.cs" />
+    <Compile Include="Api\SiteDirectoryController.cs" />
+    <Compile Include="Api\TaxController.cs" />
+    <Compile Include="Api\TestingController.cs" />
+    <Compile Include="Api\ThemeSettingController.cs" />
+    <Compile Include="Api\WidgetDefinitionController.cs" />
+    <Compile Include="Configuration\ApplicationBootstrapper.cs" />
+    <Compile Include="Configuration\ConfigurationModule.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\StartupTasks\MappingConfigurationStartupTask.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImgController.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Filters\SiteBuilderAuthorizeAttribute.cs" />
+    <Compile Include="GeneralSettingHelper.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\.sencha\app\build-impl.xml" />
+    <Content Include="Scripts\.sencha\app\plugin.xml" />
+    <Content Include="Scripts\.sencha\workspace\plugin.xml" />
+    <Content Include="Scripts\app\controller\Errors.js" />
+    <Content Include="Scripts\app\controller\Roles.js" />
+    <Content Include="Scripts\app\core\layout\Toolbar.js" />
+    <Content Include="Scripts\app\core\ux\DragSource.js" />
+    <Content Include="Scripts\app\core\ux\form\EditorLayout.js" />
+    <Content Include="Scripts\app\core\ux\form\EditorWrapper.js" />
+    <Content Include="Scripts\app\core\ux\form\FullEditor.js" />
+    <Content Include="Scripts\app\core\ux\form\ModalEditor.js" />
+    <Content Include="Scripts\app\core\ux\form\Tasks.js" />
+    <Content Include="Scripts\app\controller\Analytics.js" />
+    <Content Include="Scripts\app\core\data\AjaxProxy.js" />
+    <Content Include="Scripts\app\core\data\ReadAheadProxy.js" />
+    <Content Include="Scripts\app\core\data\StoreManager.js" />
+    <Content Include="Scripts\app\core\layout\VFlex.js" />
+    <Content Include="Scripts\app\core\layout\HFlex.js" />
+    <Content Include="Scripts\app\core\util\TextSelection.js" />
+    <Content Include="Scripts\app\core\ux\form\CurrencyField.js" />
+    <Content Include="Scripts\app\core\ux\modal\ContentContainer.js" />
+    <Content Include="Scripts\app\core\ux\simplegrid\Body.js" />
+    <Content Include="Scripts\app\core\ux\simplegrid\Grid.js" />
+    <Content Include="Scripts\app\core\ux\simplegrid\Header.js" />
+    <Content Include="Scripts\app\core\ux\tinymce\WindowManager.js" />
+    <Content Include="Scripts\app\locale\Strings.js" />
+    <None Include="Scripts\app\mocks\behaviors.json" />
+    <Content Include="Scripts\app\model\Behavior.js" />
+    <Content Include="Scripts\app\model\LocalizedString.js" />
+    <Content Include="Scripts\app\model\SimplegridColumn.js" />
+    <Content Include="Scripts\app\store\Behaviors.js" />
+    <Content Include="Scripts\app\store\Orders.js" />
+    <Content Include="Scripts\app\view\role\Edit.js" />
+    <Content Include="Scripts\app\view\role\Form.js" />
+    <Content Include="Scripts\app\view\role\Index.js" />
+    <Content Include="Scripts\app\view\error\Http404.js" />
+    <Content Include="Scripts\app\view\error\Index.js" />
+    <Content Include="Scripts\app\view\error\Http500.js" />
+    <Content Include="Scripts\app\view\option\Edit2.js" />
+    <Content Include="Scripts\app\view\option\EditModal.js" />
+    <Content Include="Scripts\app\view\option\Form.js" />
+    <Content Include="Scripts\app\view\themeSettings\Group.js" />
+    <Content Include="Scripts\app\view\themeSettings\Section.js" />
+    <Content Include="Scripts\app\view\themes\ThemeView.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\build.xml" />
+    <Content Include="Scripts\build\all-classes.js" />
+    <Content Include="Scripts\build\index.html" />
+    <Content Include="Scripts\ext\ext-all-debug-w-comments.js" />
+    <Content Include="Scripts\ext\ext-all-debug.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-af.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-bg.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-ca.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-cs.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-da.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-de.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-el_GR.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-en.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-en_GB.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-es.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-et.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-fa.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-fi.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-fr.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-fr_CA.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-gr.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-he.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-hr.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-hu.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-id.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-it.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-ja.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-ko.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-lt.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-lv.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-mk.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-nl.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-no_NB.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-no_NN.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-pl.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-pt.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-pt_BR.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-pt_PT.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-ro.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-ru.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-sk.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-sl.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-sr.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-sr_RS.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-sv_SE.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-th.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-tr.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-ukr.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-vn.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-zh_CN.js" />
+    <Content Include="Scripts\ext\locale\ext-lang-zh_TW.js" />
+    <Content Include="Scripts\ext\resources\themes\images\default\boundlist\trigger-arrow.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\box\corners-blue.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\box\corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\box\l-blue.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\box\l.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\box\r-blue.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\box\r.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\box\tb-blue.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\box\tb.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn-group\btn-group-default-framed-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn-group\btn-group-default-framed-notitle-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn-group\btn-group-default-framed-notitle-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn-group\btn-group-default-framed-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-disabled-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-disabled-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-disabled-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-focus-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-focus-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-focus-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-over-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-over-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-over-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-pressed-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-pressed-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-pressed-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-disabled-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-disabled-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-disabled-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-focus-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-focus-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-focus-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-over-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-over-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-over-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-pressed-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-pressed-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-pressed-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-disabled-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-disabled-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-disabled-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-focus-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-focus-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-focus-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-over-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-over-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-over-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-pressed-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-pressed-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-pressed-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-disabled-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-disabled-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-focus-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-focus-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-focus-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-over-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-over-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-over-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-pressed-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-pressed-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-pressed-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-disabled-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-disabled-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-focus-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-focus-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-focus-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-over-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-over-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-over-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-pressed-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-pressed-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-pressed-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-disabled-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-disabled-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-focus-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-focus-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-focus-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-over-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-over-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-over-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-pressed-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-pressed-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-pressed-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\button\arrow.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\button\btn.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\button\group-cs.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\button\group-lr.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\button\group-tb.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow-b-noline.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow-b.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow-bo.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow-light.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow-noline.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow-o.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\datepicker\datepicker-footer-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\datepicker\datepicker-footer-bg.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\datepicker\datepicker-header-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\datepicker\datepicker-header-bg.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\dd\drop-add.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\dd\drop-no.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\dd\drop-yes.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\editor\tb-sprite.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form-invalid-tip\form-invalid-tip-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form-invalid-tip\form-invalid-tip-default-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form-invalid-tip\form-invalid-tip-default-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form-invalid-tip\form-invalid-tip-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\checkbox.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\clear-trigger.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\date-trigger.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\error-tip-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\exclamation.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\radio.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\search-trigger.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\spinner-small.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\spinner.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\text-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\trigger-square.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\trigger-tpl.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\form\trigger.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\arrow-left-white.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\arrow-right-white.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\cell-special-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\cell-special-bg.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\cell-special-selected-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\cell-special-selected-bg.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\checked.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\col-move-bottom.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\col-move-top.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\column-header-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\column-header-bg.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\column-header-over-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\column-header-over-bg.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\columns.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\dd-insert-arrow-left.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\dd-insert-arrow-left.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\dd-insert-arrow-right.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\dd-insert-arrow-right.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\dirty.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\done.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\drop-no.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\drop-yes.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\footer-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid-blue-hd.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid-blue-split.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid-hrow.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid-loading.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid-split.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid-vista-hd.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid3-hd-btn.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid3-hrow-over.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid3-hrow.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid3-rowheader.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\group-by.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\group-collapse.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\group-expand-sprite.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\group-expand.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\hd-pop.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\hmenu-asc.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\hmenu-desc.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\hmenu-lock.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\hmenu-lock.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\hmenu-unlock.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\hmenu-unlock.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\invalid_line.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\loading.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\mso-hd.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\nowait.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-first-disabled.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-first.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-last-disabled.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-last.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-next-disabled.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-next.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-prev-disabled.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-prev.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\pick-button.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\property-cell-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\property-cell-selected-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\refresh-disabled.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\refresh.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\row-check-sprite.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\row-expand-sprite.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\row-over.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\row-sel.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\sort-hd.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\sort_asc.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\sort_desc.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\unchecked.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\grid\wait.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\layout\mini-bottom.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\layout\mini-left.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\layout\mini-right.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\layout\mini-top.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\menu\checked.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\menu\group-checked.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\menu\item-over.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\menu\menu-item-active-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\menu\menu-item-active-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\menu\menu-item-active-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\menu\menu-parent.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\menu\menu.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\menu\unchecked.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-bottom-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-bottom-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-bottom-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-bottom-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-bottom-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-bottom-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-left-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-left-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-left-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-right-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-right-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-right-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-top-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-top-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-top-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-left-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-left-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-left-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-right-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-right-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-right-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-top-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-top-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-top-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-left-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-right-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-top-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel\panel-default-framed-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\panel\panel-default-framed-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\progress\progress-default-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\blue-loading.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\calendar.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\glass-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\hd-sprite.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\icon-error.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\icon-info.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\icon-question.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\icon-warning.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\large-loading.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\left-btn.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\loading-balls.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\right-btn.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\shadow-c.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\shadow-lr.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\shadow.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\shared\warning.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\e-handle-dark.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\e-handle.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\ne-handle-dark.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\ne-handle.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\nw-handle-dark.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\nw-handle.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\s-handle-dark.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\s-handle.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\se-handle-dark.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\se-handle.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\square.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\sw-handle-dark.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\sizer\sw-handle.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-bg.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-thumb.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-thumb.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-v-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-v-bg.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-v-thumb.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-v-thumb.png" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab-bar\scroll-left.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab-bar\scroll-right.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab-bar\tab-bar-default-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-active-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-active-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-active-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-disabled-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-disabled-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-disabled-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-over-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-over-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-over-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-close.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-active-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-active-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-active-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-disabled-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-disabled-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-disabled-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-over-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-over-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-over-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tip\tip-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tip\tip-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\toolbar\more.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\toolbar\scroll-left.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\toolbar\scroll-right.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\toolbar\toolbar-default-bg.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tools\tool-sprite-tpl.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tools\tool-sprites.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tools\tools-sprites-trans.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\arrows.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-above.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-add.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-append.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-below.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-between.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-no.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-over.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-under.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-yes.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-end-minus-nl.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-end-minus.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-end-plus-nl.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-end-plus.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-end.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-line.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-minus-nl.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-minus.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-plus-nl.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-plus.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\folder-open.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\folder.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\leaf.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\loading.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\tree\s.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\util\splitter\mini-bottom.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\util\splitter\mini-left.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\util\splitter\mini-right.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\util\splitter\mini-top.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-bottom-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-bottom-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-bottom-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-bottom-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-left-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-left-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-right-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-right-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-top-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-top-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-left-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-left-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-right-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-right-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-top-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-top-sides.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window\window-default-corners.gif" />
+    <Content Include="Scripts\ext\resources\themes\images\default\window\window-default-sides.gif" />
+    <Content Include="Scripts\ext\ux\IFrame.js" />
+    <Content Include="Scripts\index.html" />
+    <Content Include="Scripts\jsduck-4.3.2.exe" />
+    <Content Include="Scripts\makedocsasjson.bat" />
+    <Content Include="Scripts\resources\images\align-s0f469144e6.png" />
+    <Content Include="Scripts\resources\images\background-alpha.png" />
+    <Content Include="favicon.ico" />
+    <Content Include="Scripts\resources\images\card-s44a9b55566.png" />
+    <Content Include="Scripts\resources\images\icons-s80aae54550.png" />
+    <Content Include="Scripts\resources\images\icons\icon-catalog-large.png" />
+    <Content Include="Scripts\resources\images\icons\icon-customers-large.png" />
+    <Content Include="Scripts\resources\images\icons\icon-dashboard-large.png" />
+    <Content Include="Scripts\resources\images\icons\icon-marketing-large.png" />
+    <Content Include="Scripts\resources\images\icons\icon-mozulogo-full.png" />
+    <Content Include="Scripts\resources\images\icons\icon-mozulogo-mini.png" />
+    <Content Include="Scripts\resources\images\icons\icon-mozulogo-wallis.png" />
+    <Content Include="Scripts\resources\images\icons\icon-primarymenu-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-primarymenu.png" />
+    <Content Include="Scripts\resources\images\icons\icon-settings-large.png" />
+    <Content Include="Scripts\resources\images\icons\icon-store-large.png" />
+    <Content Include="Scripts\resources\images\icons\icon-store-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-store.png" />
+    <Content Include="Scripts\resources\images\icons\icon-website-large.png" />
+    <Content Include="Scripts\resources\images\icons\icon-website-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-website.png" />
+    <Content Include="Scripts\resources\images\indicator.mp3" />
+    <Content Include="Scripts\resources\images\loading.gif" />
+    <Content Include="Scripts\resources\images\picker-sa04364cd82.png" />
+    <Content Include="Scripts\resources\images\temp\image-gallery-carousel.png" />
+    <Content Include="Scripts\resources\images\temp\image-gallery-grid.png" />
+    <Content Include="Scripts\resources\images\temp\image-gallery-slider.png" />
+    <Content Include="Scripts\app\controller\Account.js" />
+    <Content Include="Scripts\app\controller\Orders.js" />
+    <Content Include="Scripts\app\controller\Email.js" />
+    <Content Include="Scripts\app\controller\PaymentAndCheckout.js" />
+    <Content Include="Scripts\app\controller\Themes.js" />
+    <Content Include="Scripts\app\controller\Customers.js" />
+    <Content Include="Scripts\app\core\layout\Auto.js" />
+    <Content Include="Scripts\app\core\util\RangeFilter.js" />
+    <Content Include="Scripts\app\core\ux\ColorPicker.js" />
+    <Content Include="Scripts\app\core\ux\CustomerGroupComboBox.js" />
+    <Content Include="Scripts\app\core\ux\form\BackgroundImageField.js" />
+    <Content Include="Scripts\app\core\ux\form\BackgroundImagePicker.js" />
+    <Content Include="Scripts\app\core\ux\form\BoxSelectField.js" />
+    <Content Include="Scripts\app\core\ux\form\FontField.js" />
+    <Content Include="Scripts\app\core\ux\form\FontPicker.js" />
+    <Content Include="Scripts\app\core\ux\form\Form.js" />
+    <Content Include="Scripts\app\core\ux\form\ImageField.js" />
+    <Content Include="Scripts\app\core\ux\form\Interface.js" />
+    <Content Include="Scripts\make.bat" />
+    <Content Include="Scripts\.sencha\app\sencha.cfg" />
+    <Content Include="Scripts\.sencha\workspace\sencha.cfg" />
+    <Content Include="Scripts\app\mocks\orders.json" />
+    <Content Include="Scripts\app\model\AccountInformation.js" />
+    <Content Include="Scripts\app\model\AccountUser.js" />
+    <Content Include="Scripts\app\model\Address.js" />
+    <Content Include="Scripts\app\model\CustomerGroup.js" />
+    <Content Include="Scripts\app\model\OrderItem.js" />
+    <Content Include="Scripts\app\model\OrderNote.js" />
+    <Content Include="Scripts\app\model\OrderSummary.js" />
+    <Content Include="Scripts\app\model\Order.js" />
+    <Content Include="Scripts\app\model\CustomerAccount.js" />
+    <Content Include="Scripts\app\model\CustomerAccountNote.js" />
+    <Content Include="Scripts\app\model\CustomerGroupComboBox.js" />
+    <Content Include="Scripts\app\model\GeneralSettings.js" />
+    <Content Include="Scripts\app\model\PaymentReference.js" />
+    <Content Include="Scripts\app\model\PaymentTransaction.js" />
+    <Content Include="Scripts\app\model\Role.js" />
+    <Content Include="Scripts\app\model\GatewayDefinitions.js" />
+    <Content Include="Scripts\app\model\PaymentAndCheckout.js" />
+    <Content Include="Scripts\app\model\Shipment.js" />
+    <Content Include="Scripts\app\model\ShopperNotes.js" />
+    <Content Include="Scripts\app\store\AccountUsers.js" />
+    <Content Include="Scripts\app\store\OrderNotes.js" />
+    <Content Include="Scripts\app\store\CustomerAccountNotes.js" />
+    <Content Include="Scripts\app\store\CustomerGroupComboBox.js" />
+    <Content Include="Scripts\app\store\CustomerGroups.js" />
+    <Content Include="Scripts\app\store\Customers.js" />
+    <Content Include="Scripts\app\store\GatewayDefinitions.js" />
+    <Content Include="Scripts\app\store\Roles.js" />
+    <Content Include="Scripts\app\store\ThemeListing.js" />
+    <Content Include="Scripts\app\view\account\AccountInformation.js" />
+    <Content Include="Scripts\app\view\account\Billing.js" />
+    <Content Include="Scripts\app\view\account\Navigation.js" />
+    <Content Include="Scripts\app\view\account\Overview.js" />
+    <Content Include="Scripts\app\view\account\Users.js" />
+    <Content Include="Scripts\app\view\address\AddressForm.js" />
+    <Content Include="Scripts\app\view\customers\AddressPanel.js" />
+    <Content Include="Scripts\app\view\customers\Edit.js" />
+    <Content Include="Scripts\app\view\customers\GroupsForm.js" />
+    <Content Include="Scripts\app\view\customers\Index.js" />
+    <Content Include="Scripts\app\core\ux\modal\Helper.js" />
+    <Content Include="Scripts\app\view\customers\ItemBrowser.js" />
+    <Content Include="Scripts\app\view\customers\SearchForm.js" />
+    <Content Include="Scripts\app\view\email\Edit.js" />
+    <Content Include="Scripts\app\view\email\Index.js" />
+    <Content Include="Scripts\app\view\fileManagement\MultiFileAssociatorGooder.js" />
+    <Content Include="Scripts\app\view\inventory\QuantityEdit.js" />
+    <Content Include="Scripts\app\view\order\Grid.js" />
+    <Content Include="Scripts\app\view\order\modal\Address.js" />
+    <Content Include="Scripts\app\view\order\Edit.js" />
+    <Content Include="Scripts\app\view\order\Index.js" />
+    <Content Include="Scripts\app\view\order\modal\ShipmentAction.js" />
+    <Content Include="Scripts\app\view\order\modal\PaymentAction.js" />
+    <Content Include="Scripts\app\view\paymentAndCheckout\FieldDescription.js" />
+    <Content Include="Scripts\app\view\paymentAndCheckout\Index.js" />
+    <Content Include="Scripts\app\view\paymentAndCheckout\RadioList.js" />
+    <Content Include="Scripts\app\view\paymentAndCheckout\StandaloneAccordion.js" />
+    <Content Include="Scripts\app\view\product\edit\InventoryControl.js" />
+    <Content Include="Scripts\app\view\site\page\entityAdapters\BaseEntityAdapter.js" />
+    <Content Include="Scripts\app\view\site\page\entityAdapters\CategoryEntityAdapter.js" />
+    <Content Include="Scripts\app\view\site\page\entityAdapters\DocumentEntityAdapter.js" />
+    <Content Include="Scripts\app\view\site\page\entityAdapters\ExternalLinkEntityAdapter.js" />
+    <Content Include="Scripts\app\view\site\page\entityAdapters\ProductEntityAdapter.js" />
+    <Content Include="Scripts\app\controller\GeneralSettings.js" />
+    <Content Include="Scripts\app\controller\Inventory.js" />
+    <Content Include="Scripts\app\model\IpRange.js" />
+    <Content Include="Scripts\app\model\TimeZone.js" />
+    <Content Include="Scripts\app\model\InventoryProduct.js" />
+    <Content Include="Scripts\app\store\InventoryProducts.js" />
+    <Content Include="Scripts\app\store\IpRanges.js" />
+    <Content Include="Scripts\app\store\TimeZones.js" />
+    <Content Include="Scripts\app\view\generalSettings\Index.js" />
+    <Content Include="Scripts\app\model\ThemeListing.js" />
+    <Content Include="Scripts\app\view\inventory\Index.js" />
+    <Content Include="Scripts\app\view\inventory\ItemBrowser.js" />
+    <Content Include="Scripts\app\view\product\edit\Inline.js" />
+    <Content Include="Scripts\app\view\site\navigation\ExternalLinkEditor.js" />
+    <Content Include="Scripts\app\view\site\navigation\Themes.js" />
+    <EmbeddedResource Include="Api\datagen.txt" />
+    <Content Include="Scripts\resources\images\align\align-center-selected.png" />
+    <Content Include="Scripts\resources\images\align\align-center.png" />
+    <Content Include="Scripts\resources\images\align\align-justified-selected.png" />
+    <Content Include="Scripts\resources\images\align\align-justified.png" />
+    <Content Include="Scripts\resources\images\align\align-left-selected.png" />
+    <Content Include="Scripts\resources\images\align\align-left.png" />
+    <Content Include="Scripts\resources\images\align\align-right-selected.png" />
+    <Content Include="Scripts\resources\images\align\align-right.png" />
+    <Content Include="Scripts\resources\images\card\card-gridview-selected.png" />
+    <Content Include="Scripts\resources\images\card\card-gridview.png" />
+    <Content Include="Scripts\resources\images\card\card-tileview-selected.png" />
+    <Content Include="Scripts\resources\images\card\card-tileview.png" />
+    <Content Include="Scripts\resources\images\fabric-2.png" />
+    <Content Include="Scripts\resources\images\file-icon.png" />
+    <Content Include="Scripts\resources\images\icons\icon-addfolder.png" />
+    <Content Include="Scripts\resources\images\icons\icon-addfolder_hover.png" />
+    <Content Include="Scripts\resources\images\icons\icon-calendar.png" />
+    <Content Include="Scripts\resources\images\icons\icon-checkbox-disabled.png" />
+    <Content Include="Scripts\resources\images\icons\icon-checkbox-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-checkbox.png" />
+    <Content Include="Scripts\resources\images\icons\icon-collapse.png" />
+    <Content Include="Scripts\resources\images\icons\icon-expand.png" />
+    <Content Include="Scripts\resources\images\icons\icon-folder.png" />
+    <Content Include="Scripts\resources\images\icons\icon-folder_hover.png" />
+    <Content Include="Scripts\resources\images\icons\icon-gridsettings-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-gridsettings.png" />
+    <Content Include="Scripts\resources\images\icons\icon-gridsettings_active.png" />
+    <Content Include="Scripts\resources\images\icons\icon-gridsettings_hover.png" />
+    <Content Include="Scripts\resources\images\icons\icon-jumpout.png" />
+    <Content Include="Scripts\resources\images\icons\icon-jumpout_active.png" />
+    <Content Include="Scripts\resources\images\icons\icon-jumpout_hover.png" />
+    <Content Include="Scripts\resources\images\icons\icon-modal-x.png" />
+    <Content Include="Scripts\resources\images\icons\icon-newfile.png" />
+    <Content Include="Scripts\resources\images\icons\icon-newfile_active.png" />
+    <Content Include="Scripts\resources\images\icons\icon-newfile_hover.png" />
+    <Content Include="Scripts\resources\images\icons\icon-radio-disabled.png" />
+    <Content Include="Scripts\resources\images\icons\icon-radio-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-radio.png" />
+    <Content Include="Scripts\resources\images\icons\icon-remove.png" />
+    <Content Include="Scripts\resources\images\icons\icon-removecolumn.png" />
+    <Content Include="Scripts\resources\images\icons\icon-remove_active.png" />
+    <Content Include="Scripts\resources\images\icons\icon-remove_hover.png" />
+    <Content Include="Scripts\resources\images\icons\icon-search_active.png" />
+    <Content Include="Scripts\resources\images\icons\icon-search_hover.png" />
+    <Content Include="Scripts\resources\images\icons\icon-sort-asc.png" />
+    <Content Include="Scripts\resources\images\icons\icon-sort-desc.png" />
+    <Content Include="Scripts\resources\images\icons\icon-sortcolumn-asc.png" />
+    <Content Include="Scripts\resources\images\icons\icon-sortcolumn-desc.png" />
+    <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-category.png" />
+    <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-home.png" />
+    <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-page.png" />
+    <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-product.png" />
+    <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-shortcut.png" />
+    <Content Include="Scripts\resources\images\icons\icon-trash_active.png" />
+    <Content Include="Scripts\resources\images\icons\icon-vee.png" />
+    <Content Include="Scripts\resources\images\icons\icon-widgethandle.png" />
+    <Content Include="Scripts\resources\images\picker\date.png" />
+    <Content Include="Scripts\resources\lib\html9responsiveboilerstrap.js" />
+    <Content Include="Scripts\resources\scss\compass_init.rb" />
+    <Content Include="Scripts\resources\scss\config.rb" />
+    <Content Include="Scripts\app\controller\Discounts.js" />
+    <Content Include="Scripts\app\controller\FileManagement.js" />
+    <Content Include="Scripts\app\controller\Shipping.js" />
+    <Content Include="Scripts\app\controller\Tax.js" />
+    <Content Include="Scripts\app\controller\Themesettings.js" />
+    <Content Include="Scripts\app\core\ux\form\ColorField.js" />
+    <Content Include="Scripts\app\core\ux\modal\Mini.js" />
+    <Content Include="Scripts\app\core\ux\TilePanel.js" />
+    <Content Include="Scripts\app\core\ux\TileView.js" />
+    <Content Include="Scripts\app\core\ux\form\FlexBox.js" />
+    <Content Include="Scripts\app\core\ux\form\ToggleGroup.js" />
+    <Content Include="Scripts\app\core\ux\GridPager.js" />
+    <Content Include="Scripts\app\core\ux\FileDragDroppable.js" />
+    <Content Include="Scripts\app\core\ux\form\UnitField.js" />
+    <Content Include="Scripts\app\core\ux\form\DateTime.js" />
+    <Content Include="Scripts\app\core\ux\form\FileInputButton.js" />
+    <Content Include="Scripts\app\core\ux\BaseCardPanel.js" />
+    <Content Include="Scripts\app\core\ux\ItemBrowser.js" />
+    <Content Include="Scripts\app\core\ux\IndentedTreeColumn.js" />
+    <Content Include="Scripts\app\core\ux\CountrySelector.js" />
+    <Content Include="Scripts\app\core\AppState.js" />
+    <Content Include="Scripts\app\core\ContentView.js" />
+    <Content Include="Scripts\app\core\StateManager.js" />
+    <Content Include="Scripts\app\core\ux\form\RemovableColumn.js" />
+    <Content Include="Scripts\app\core\ux\form\TextAlignment.js" />
+    <Content Include="Scripts\app\core\ux\modal\ContentWithActions.js" />
+    <Content Include="Scripts\app\core\ux\Panel.js" />
+    <Content Include="Scripts\app\core\ux\PanelDD.js" />
+    <Content Include="Scripts\app\core\ux\MultiImageField.js" />
+    <Content Include="Scripts\usagereport.js" />
+    <Content Include="Tests\Chalupa\Core.js" />
+    <Content Include="Tests\integration\product-basic-edit-save.js" />
+    <Content Include="Tests\MozuTestSuite.html" />
+    <Content Include="Tests\MozuTestSuite.js" />
+    <Content Include="Tests\sanity-test.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\010-sencha_touch_1.x\011_tabs.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\010_map.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\011_carousel.t.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\011_carousel.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\012_form.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\013_buttons.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\014_events.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\015_nested_list.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\016_contact_list.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\017_tabs.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\photos\1.jpg" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\photos\2.jpg" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\photos\3.jpg" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\photos\4.jpg" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\020-sencha_touch_2.x\photos\5.jpg" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\browse-desktop.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\browse-mobile.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples-touch\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\010-basics\010_basic_assertions.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\010-basics\020_async_code.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\010-basics\030_global_variables.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\010-basics\040_todo_tests.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\010-basics\050_wait_for.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\010-basics\060_bdd.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\010-basics\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\010-basics\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\011-basic-browser\010_text_selection.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\011-basic-browser\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\011-basic-browser\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\020-extjs-general\010_ext-bug.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\020-extjs-general\015_ext-combo.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\020-extjs-general\020_ext-custom-combo.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\020-extjs-general\030_ext-resize.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\020-extjs-general\040_ext-window.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\020-extjs-general\050_ext-ajax.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\020-extjs-general\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\020-extjs-general\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\021-extjs-drag-drop\010_drag-drop.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\021-extjs-drag-drop\020_dd-tree.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\021-extjs-drag-drop\030_ext-calendar.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\021-extjs-drag-drop\cat.jpg" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\021-extjs-drag-drop\cat2.jpg" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\021-extjs-drag-drop\cats.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\021-extjs-drag-drop\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\021-extjs-drag-drop\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\022-extjs-form\010_basic_form.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\022-extjs-form\020_checkboxes.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\022-extjs-form\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\022-extjs-form\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\023-extjs-grid\010_basic.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\023-extjs-grid\011_waitfor_grid.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\023-extjs-grid\020_mouseover.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\023-extjs-grid\030_sel_model.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\023-extjs-grid\040_editing.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\023-extjs-grid\041_editing_with_row_editor.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\023-extjs-grid\050_resizing.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\023-extjs-grid\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\023-extjs-grid\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\023-extjs-grid\Your.Test.Class.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\024-extjs-crud\010_crud.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\024-extjs-crud\crud\create-tasks.aspx" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\024-extjs-crud\crud\delete-tasks.aspx" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\024-extjs-crud\crud\get-dependencies.aspx" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\024-extjs-crud\crud\get-tasks.aspx" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\024-extjs-crud\crud\update-tasks.aspx" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\024-extjs-crud\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\024-extjs-crud\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\app.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\app.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\app\controller\Users.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\app\model\User.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\app\store\Users.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\app\view\user\Edit.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\app\view\user\List.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\test-harness.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\test-harness.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\tests\010_sanity.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\tests\011_usermodel.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\tests\012_userlist_view.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\tests\013_useredit_view.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\tests\014_app.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\026-extjs3\010_ext-resize.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\026-extjs3\020_ext-window.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\026-extjs3\030_ext-grid.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\026-extjs3\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\026-extjs3\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\040-jquery\010_hello_world.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\040-jquery\020_jquery_ui.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\040-jquery\020_jquery_ui_selectable.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\040-jquery\030_monkey.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\040-jquery\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\040-jquery\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\050-prototypejs\hello_world.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\050-prototypejs\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\050-prototypejs\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\050-prototypejs\prototype.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\060-nodejs-browsers\010_sanity.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\060-nodejs-browsers\020_basic.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\060-nodejs-browsers\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\060-nodejs-browsers\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\060-nodejs-browsers\lib\YourTestClass.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\060-nodejs-browsers\preload\preload.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\100-standardpkg-page-redirect\010_page_redirect.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\100-standardpkg-page-redirect\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\100-standardpkg-page-redirect\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\100-standardpkg-page-redirect\redirect_to.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\100-standardpkg-page-redirect\redirect_to.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\100-standardpkg-page-redirect\source_page.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\100-standardpkg-page-redirect\source_page.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\browse-all-desktop.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\browse-all-desktop.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\events\010_sanity.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\events\020_basics.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\events\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\events\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\events\preload.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\synopsys\010_sanity.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\synopsys\020_basics.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\synopsys\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\synopsys\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\synopsys\preload.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\ExtX\Reference\Slot.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Sch\data\FilterableNodeStore.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Sch\data\mixin\FilterableTreeStore.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Sch\mixin\FilterableTreeView.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Content\Manager.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Content\Manager\Browser.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Content\Manager\NodeJS.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Content\Preset.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Content\Resource.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Content\Resource\CSS.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Content\Resource\JavaScript.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser.std.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\Automation.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\Automation\PhantomJS.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\Automation\Selenium.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\ExtJS.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\FeatureSupport.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\FeatureSupport.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\Model\Assertion.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\Model\TestFile.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\Model\TestTreeStore.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\SenchaTouch.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\AssertionGrid.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\AssertionGrid.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\Center.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\Center.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\ExtHeader.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\ExtViewport.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\FilterableTreeView.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\Header.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\Header.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\MouseVisualizer.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\MouseVisualizer.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\ResultPanel.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\ResultPanel.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\TestGrid.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\TestGrid.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\VersionField.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\Viewport.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI\Viewport.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI_Mobile\MainPanel.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI_Mobile\MainPanel.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI_Mobile\ResultList.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI_Mobile\ResultList.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI_Mobile\ResultSummaryButton.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI_Mobile\ResultSummaryButton.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI_Mobile\TestList.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Browser\UI_Mobile\TestList.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\NodeJS.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Report\JSON.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Harness\Report\JUnit.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Result.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Result\Assertion.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Result\Diagnostic.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Role\CanStyleOutput.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Role\ConsoleReporter.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Role\Ident.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Role\StorableIdent.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ActionRegistry.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ActionTarget.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\Click.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\Done.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\DoubleClick.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\DoubleTap.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\Drag.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\Eval.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\LongPress.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\MouseDown.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\MouseUp.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\MoveCursor.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\MoveCursorTo.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\RightClick.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\Role\HasTarget.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\Swipe.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\Tap.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\Type.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Action\Wait.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\BDD.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Browser.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Browser.std.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Date.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Element.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ExtJS.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ExtJS.std.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ExtJSCore.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ExtJS\Ajax.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ExtJS\Component.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ExtJS\DataView.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ExtJS\Element.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ExtJS\FormField.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ExtJS\Grid.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ExtJS\Observable.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\ExtJS\Store.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Function.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\jQuery.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\More.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\SenchaTouch.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Simulate\Event.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Simulate\Keyboard.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Simulate\KeyCodes.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Simulate\Mouse.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\TextSelection.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Test\Todo.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Util\Queue.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Util\Serializer.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\lib\Siesta\Util\XMLNode.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\css\siesta-all.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\css\siesta-touch-all.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\arrow_in.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\arrow_out.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\arrow_rotate_anticlockwise.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\bodybg.gif" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\book.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\book_48.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\bryntum-logo-64.jpg" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\bug-todo.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\bug.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\bug32.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\button_play_all.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\button_play_checked.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\button_play_red.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\cart.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\checked.gif" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\checkmark32.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\clock_48.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\clock_check.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\cross.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\cursor-arrow.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\cursor-hand-press.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\cursor-hand.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\document_16.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\flag-red.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\folder_green.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\folder_red.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\folder_yellow.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\gear.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\group.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\hourglass.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\key_down.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\key_press.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\key_up.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\lightning.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\lightning32.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\logo.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\logo_small2.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\monitor.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\mouse.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\mouse_click.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\mouse_context.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\mouse_doubleclick.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\mouse_down.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\mouse_move.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\mouse_out.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\mouse_over.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\mouse_scroll.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\mouse_up.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\ok-todo.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\ok.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\Play.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\PlayAll.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\PlayButton.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\PlayButtonBlue.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\PlayButtonRed.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\PlayRed.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\spinner.gif" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\Stop.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\StopButton.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\stop_2.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\stop_on_error.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\text_align_left.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\to_do_list.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\to_do_list_small.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\trigger-groups.gif" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\trigger-leafs.gif" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\unchecked.gif" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\video.png" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shAutoloader.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushAppleScript.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushAS3.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushBash.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushColdFusion.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushCpp.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushCSharp.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushCss.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushDelphi.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushDiff.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushErlang.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushGroovy.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushJava.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushJavaFX.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushJScript.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushPerl.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushPhp.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushPlain.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushPowerShell.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushPython.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushRuby.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushSass.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushScala.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushSql.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushVb.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shBrushXml.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shCore.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\scripts\shLegacy.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\src\shAutoloader.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\src\shCore.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\src\shLegacy.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shCore.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shCoreDefault.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shCoreDjango.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shCoreEclipse.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shCoreEmacs.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shCoreFadeToGrey.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shCoreMDUltra.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shCoreMidnight.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shCoreRDark.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shThemeDefault.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shThemeDjango.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shThemeEclipse.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shThemeEmacs.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shThemeFadeToGrey.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shThemeMDUltra.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shThemeMidnight.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\styles\shThemeRDark.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\brushes\sass.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\brushes_tests.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\001_basic.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\002_brushes.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\003_script_tag.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\004_url_parsing.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\005_no_gutter.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\006_pad_line_numbers.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\007_collapse.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\007_collapse_interaction.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\008_first_line.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\009_class_name.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\010_highlight.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\011_smart_tabs.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\012_server_side.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\013_html_script.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\cases\014_legacy.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\commonjs_tests.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\js\jquery-1.4.2.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\js\qunit.css" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\js\qunit.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\syntaxhighlighter_tests.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\theme_tests.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\siesta-all.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\siesta-nodejs-all.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\siesta-touch-all.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\010_sanity.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\020_test.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\021_assertions_1.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\021_begin_async.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\030_test_more.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\031_test_more_chain.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\040_keyevent_simulation.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\041_keyevent_simulation2.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\042_keyevent_simulation3.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\043_special_keys.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\044_text_selection.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\050_mouse_click.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\050_mouse_click_jquery.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\051_mouse_overout.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\051_mouse_overout_with_span.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\052_mouse_move.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\053_mouse_click_options.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\054_mouse_click_not_visible.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\060_element.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\061_element_wait_for_selectors.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\062_element_wait_for_event.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\063_hashchange.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\070_chaining_with_actions.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\071_chain_click.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\072_chaining_arguments.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\073_chaining_arguments2.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\074_chaining_eval.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\080_exception_parsing.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\100_util_queue.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\110_util_serializer.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\120_util_xml_node.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\201_function.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\300_iframe_events.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\500_extjs_observable.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\501_extjs_combo_autocomplete.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\502_extjs_component.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\502_extjs_wait_for_cq.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\503_extjs_dataview.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\504_extjs_element.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\505_extjs_grid.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\506_extjs_observable.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\507_form_checkbox.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\510_extjs_require_singleton.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\530_extjs_composite_query.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\540_extjs_type.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\550_extjs_store.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\601_siesta_ui.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\601_siesta_ui_failing.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\601_siesta_ui_line_number.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\601_siesta_ui_passing.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\602_siesta_ui_recursive_self.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\603_siesta_ui.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\604_siesta_ui2.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\701_sencha_touch_form.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\800_async_start_test.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\801_camelcased_startTest.t.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\blank.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\data\Normal.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\data\Singleton.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\index-no-ui.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\index.html" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\index.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\lib\Siesta\Test\AssertionsTranslator.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\lib\Siesta\Test\Self.js" />
+    <Content Include="Tests\siesta-1.1.5-standard\tests\lib\Siesta\Test\Self\ExtJS.js" />
+    <Content Include="Tests\speed-test.t.js" />
+    <Content Include="Tests\unit\app-state-matches-uri.t.js" />
+    <Content Include="Tests\unit\grid-action-buttons.js" />
+    <Content Include="Tests\unit\treelist-row-is-draggable.t.js" />
+    <Content Include="Views\Home\Index_Compiled.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\themes\base\jquery.ui.accordion.css" />
+    <Content Include="Content\themes\base\jquery.ui.all.css" />
+    <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
+    <Content Include="Content\themes\base\jquery.ui.button.css" />
+    <Content Include="Content\themes\base\jquery.ui.core.css" />
+    <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
+    <Content Include="Content\themes\base\jquery.ui.dialog.css" />
+    <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
+    <Content Include="Content\themes\base\jquery.ui.resizable.css" />
+    <Content Include="Content\themes\base\jquery.ui.selectable.css" />
+    <Content Include="Content\themes\base\jquery.ui.slider.css" />
+    <Content Include="Content\themes\base\jquery.ui.tabs.css" />
+    <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Log4Net.config" />
+    <Content Include="Scripts\resources\fonts\journal-webfont.eot">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\journal-webfont.svg" />
+    <Content Include="Scripts\resources\fonts\journal-webfont.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\journal-webfont.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\css\ExtUx\css\CheckHeader.css" />
+    <Content Include="Scripts\resources\css\ExtUx\css\GroupTabPanel.css" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\border.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\bottom2.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\checked.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\down2.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\left2.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\right2.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\tab-collapsed.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\tab-first.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\tab-last.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\tab-scroller-menu.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\top2.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\unchecked.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\images\up2.gif" />
+    <Content Include="Scripts\resources\css\ExtUx\css\ItemSelector.css" />
+    <Content Include="Scripts\resources\css\ExtUx\css\LiveSearchGridPanel.css" />
+    <Content Include="Scripts\resources\css\ExtUx\css\TabScrollerMenu.css" />
+    <Content Include="Scripts\resources\css\taco.css" />
+    <Content Include="Scripts\resources\css\taco\widgets\tfs2609084916238200047.css" />
+    <Content Include="Scripts\resources\fonts\myriadwebpro-bold-webfont.eot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\myriadwebpro-bold-webfont.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\myriadwebpro-bold-webfont.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\myriadwebpro-italic-webfont.eot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\myriadwebpro-italic-webfont.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\myriadwebpro-italic-webfont.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\myriadwebpro-webfont.eot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\myriadwebpro-webfont.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\myriadwebpro-webfont.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\myriadwebpro-bold-webfont.svg" />
+    <Content Include="Scripts\resources\fonts\myriadwebpro-italic-webfont.svg" />
+    <Content Include="Scripts\resources\fonts\myriadwebpro-webfont.svg" />
+    <Content Include="Scripts\resources\scss\core\_core.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\core\_reset.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\layout\_layout.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\mixins\_background-gradient.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\mixins\_color-by-background.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\mixins\_frame.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\mixins\_inner-border.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\mixins\_reset-extras.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\mixins\_theme-background-image.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\_tinymce_fixes.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\widgets\_fieldgroup.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\widgets\_form.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\widgets\_shim.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\_messages.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\mixins\_css3.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\widgets\_actions.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\widgets\_grid.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\widgets\_modal.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\widgets\_tree.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\_colors.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\_content.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\_dashboard.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\_header.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\_navmenu.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\_sprites.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\util\_dragdrop.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\util\_focus.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\util\_messagebox.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\util\_resizable.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\util\_scroller.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\util\_splitter.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\util\_tool.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_boundlist.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_btn-group.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_button.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_compass.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_core.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_focus.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_form.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_grid.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_htmleditor.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_layout.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_loadmask.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_menu.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_panel.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_pickers.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_progress-bar.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_qtip.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_tabs.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_toolbar.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_tree.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\variables\_window.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\form\_all.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\form\_checkbox.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\form\_checkboxgroup.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\form\_field.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\form\_fieldset.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\form\_file.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\form\_htmleditor.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\form\_triggerfield.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_boundlist.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_btn-group.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_button.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_colorpicker.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_datepicker.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_drawcomponent.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_form.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_grid.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_html.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_loadmask.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_menu.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_messages.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_panel.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_progress-bar.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_qtip.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\widgets\_quickadder.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_slider.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_tab.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_tabbar.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_toolbar.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_tree.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_viewport.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\widgets\_window.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\_all.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\_core.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\_functions.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\_mixins.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\_taco-all.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\_variables.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\_webfonts.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\resources\scss\_widgets.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Scripts\app\core\ux\picker\DateTime.js" />
+    <Content Include="Scripts\resources\images\AddPhotos.png" />
+    <Content Include="Scripts\resources\images\fabric.png" />
+    <Content Include="Scripts\resources\images\icons\icon-accounts-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-accounts.png" />
+    <Content Include="Scripts\resources\images\icons\icon-apps.png" />
+    <Content Include="Scripts\resources\images\icons\icon-catalog-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-catalog.png" />
+    <Content Include="Scripts\resources\images\icons\icon-columns-hover.png" />
+    <Content Include="Scripts\resources\images\icons\icon-columns.png" />
+    <Content Include="Scripts\resources\images\icons\icon-dashboard-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-dashboard.png" />
+    <Content Include="Scripts\resources\images\icons\icon-deselectedoverlay.png" />
+    <Content Include="Scripts\resources\images\icons\icon-draghandle.png" />
+    <Content Include="Scripts\resources\images\icons\icon-eye.png" />
+    <Content Include="Scripts\resources\images\icons\icon-eye_hover.png" />
+    <Content Include="Scripts\resources\images\icons\icon-gridview.png" />
+    <Content Include="Scripts\resources\images\icons\icon-infinitybig.png" />
+    <Content Include="Scripts\resources\images\icons\icon-infinitysmall.png" />
+    <Content Include="Scripts\resources\images\icons\icon-listview.png" />
+    <Content Include="Scripts\resources\images\icons\icon-marketing-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-marketing.png" />
+    <Content Include="Scripts\resources\images\icons\icon-paper.png" />
+    <Content Include="Scripts\resources\images\icons\icon-paper_hover.png" />
+    <Content Include="Scripts\resources\images\icons\icon-sales-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-sales.png" />
+    <Content Include="Scripts\resources\images\icons\icon-search.png" />
+    <Content Include="Scripts\resources\images\icons\icon-selectedoverlay.png" />
+    <Content Include="Scripts\resources\images\icons\icon-settings-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-settings.png" />
+    <Content Include="Scripts\resources\images\icons\icon-sites-selected.png" />
+    <Content Include="Scripts\resources\images\icons\icon-sites.png" />
+    <Content Include="Scripts\resources\images\icons\icon-sliderbig.png" />
+    <Content Include="Scripts\resources\images\icons\icon-slidersmall.png" />
+    <Content Include="Scripts\resources\images\icons\icon-support.png" />
+    <Content Include="Scripts\resources\images\icons\icon-trash.png" />
+    <Content Include="Scripts\resources\images\icons\icon-trash_hover.png" />
+    <Content Include="Scripts\resources\lib\history-bundled.js" />
+    <Content Include="Scripts\resources\lib\history.adapter.native.js" />
+    <Content Include="Scripts\resources\lib\history.html4.js" />
+    <Content Include="Scripts\resources\lib\history.js" />
+    <Content Include="Scripts\resources\lib\json2.js" />
+    <Content Include="Scripts\resources\lib\utils.rb" />
+    <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controller\Catalog.js" />
+    <Content Include="Scripts\app\controller\Categories.js" />
+    <Content Include="Scripts\app\controller\WidgetDefinitions.js" />
+    <Content Include="Scripts\app\controller\Dashboard.js" />
+    <Content Include="Scripts\app\controller\Message.js" />
+    <Content Include="Scripts\app\controller\Navigation.js" />
+    <Content Include="Scripts\app\controller\Options.js" />
+    <Content Include="Scripts\app\controller\Products.js" />
+    <Content Include="Scripts\app\controller\Sites.js" />
+    <Content Include="Scripts\app\controller\Testing.js" />
+    <Content Include="Scripts\app\core\Controller.js" />
+    <Content Include="Scripts\app\core\util\CTemplate.js" />
+    <Content Include="Scripts\app\core\EventChain.js" />
+    <Content Include="Scripts\app\core\FormPanel.js" />
+    <Content Include="Scripts\app\core\data\Model.js" />
+    <Content Include="Scripts\app\core\PageView.js" />
+    <Content Include="Scripts\app\core\util\GetsTextFormat.js" />
+    <Content Include="Scripts\app\core\util\FileUploadEvent.js" />
+    <Content Include="Scripts\app\core\util\Protectable.js" />
+    <Content Include="Scripts\app\core\util\UploadManager.js" />
+    <Content Include="Scripts\app\core\ux\action\Action.js" />
+    <Content Include="Scripts\app\core\ux\action\GridAction.js" />
+    <Content Include="Scripts\app\core\ux\action\DirtyButton.js" />
+    <Content Include="Scripts\app\core\ux\action\Primary.js" />
+    <Content Include="Scripts\app\core\ux\action\PrimaryButton.js" />
+    <Content Include="Scripts\app\core\ux\action\Secondary.js" />
+    <Content Include="Scripts\app\core\ux\action\SecondaryButton.js" />
+    <Content Include="Scripts\app\core\ux\action\TreeListAction.js" />
+    <Content Include="Scripts\app\core\ux\BoxReorderer.js" />
+    <Content Include="Scripts\app\core\ux\CategoryComboBox.js" />
+    <Content Include="Scripts\app\core\ux\CellEditing.js" />
+    <Content Include="Scripts\app\core\ux\CellEditor.js" />
+    <Content Include="Scripts\app\core\ux\CheckColumn.js" />
+    <Content Include="Scripts\app\core\ux\ComponentColumn.js" />
+    <Content Include="Scripts\app\core\ux\ComplexDataView.js" />
+    <Content Include="Scripts\app\core\ux\form\BoxSelect.js" />
+    <Content Include="Scripts\app\core\ux\form\FieldGroup.js" />
+    <Content Include="Scripts\app\core\ux\form\TextFieldColumn.js" />
+    <Content Include="Scripts\app\core\ux\form\Step.js" />
+    <Content Include="Scripts\app\core\ux\form\StepContainer.js" />
+    <Content Include="Scripts\app\core\ux\Hint.js" />
+    <Content Include="Scripts\app\core\ux\HtmlEditor.js" />
+    <Content Include="Scripts\app\core\ux\IconList.js" />
+    <Content Include="Scripts\app\core\ux\ClassHandledDragDrop.js" />
+    <Content Include="Scripts\app\core\ux\content\Body.js" />
+    <Content Include="Scripts\app\core\ux\content\Container.js" />
+    <Content Include="Scripts\app\core\ux\content\Header.js" />
+    <Content Include="Scripts\app\core\ux\BaseGrid.js" />
+    <Content Include="Scripts\app\core\ux\CardPanel.js" />
+    <Content Include="Scripts\app\core\ux\form\Module.js" />
+    <Content Include="Scripts\app\core\ux\IconSizeSlider.js" />
+    <Content Include="Scripts\app\core\ux\DragHandleColumn.js" />
+    <Content Include="Scripts\app\core\ux\EditPanel.js" />
+    <Content Include="Scripts\app\core\ux\DragDropZone.js" />
+    <Content Include="Scripts\app\core\ux\FilterableDataView.js" />
+    <Content Include="Scripts\app\core\ux\form\Editor.js" />
+    <Content Include="Scripts\app\core\ux\form\ItemSelector.js" />
+    <Content Include="Scripts\app\core\ux\form\Linker.js" />
+    <Content Include="Scripts\app\core\ux\form\MultiSelect.js" />
+    <Content Include="Scripts\app\core\ux\form\SelectField.js" />
+    <Content Include="Scripts\app\core\ux\form\SlugField.js" />
+    <Content Include="Scripts\app\core\ux\GenEditor.js" />
+    <Content Include="Scripts\app\core\ux\ListGridToggle.js" />
+    <Content Include="Scripts\app\core\ux\modal\Alert.js" />
+    <Content Include="Scripts\app\core\ux\modal\Confirmation.js" />
+    <Content Include="Scripts\app\core\ux\modal\Content.js" />
+    <Content Include="Scripts\app\core\ux\modal\Cover.js" />
+    <Content Include="Scripts\app\core\ux\modal\Drawer.js" />
+    <Content Include="Scripts\app\core\ux\modal\Modal.js" />
+    <Content Include="Scripts\app\core\ux\OptionComboBox.js" />
+    <Content Include="Scripts\app\core\ux\OptionValueGrid.js" />
+    <Content Include="Scripts\app\core\ux\QuickAdder.js" />
+    <Content Include="Scripts\app\core\ux\SimpleEditor.js" />
+    <Content Include="Scripts\app\core\ux\TabPanel.js" />
+    <Content Include="Scripts\app\core\ux\TextFilter.js" />
+    <Content Include="Scripts\app\core\ux\tinymce\TinyMCE.js" />
+    <Content Include="Scripts\app\core\ux\TreeList.js" />
+    <Content Include="Scripts\app\mocks\categories.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\app\mocks\countries.json" />
+    <Content Include="Scripts\app\mocks\navigation.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\app\mocks\shippingorigin.json" />
+    <Content Include="Scripts\app\model\ActiveRateProvider.js" />
+    <Content Include="Scripts\app\model\Category.js" />
+    <Content Include="Scripts\app\model\CategoryComboBox.js" />
+    <Content Include="Scripts\app\model\CategoryTreeNode.js" />
+    <Content Include="Scripts\app\model\CmsDocument.js" />
+    <Content Include="Scripts\app\model\CountryComboBox.js" />
+    <Content Include="Scripts\app\model\CouponCode.js" />
+    <Content Include="Scripts\app\model\Discount.js" />
+    <Content Include="Scripts\app\model\DomesticShippingRate.js" />
+    <Content Include="Scripts\app\model\FileManagementFile.js" />
+    <Content Include="Scripts\app\model\FileManagementFolder.js" />
+    <Content Include="Scripts\app\model\InternationalShippingRate.js" />
+    <Content Include="Scripts\app\model\NavigationTreeNode.js" />
+    <Content Include="Scripts\app\model\PageTypeDefinition.js" />
+    <Content Include="Scripts\app\model\ProductComboBox.js" />
+    <Content Include="Scripts\app\model\SelectedShippingMethod.js" />
+    <Content Include="Scripts\app\model\ShippingClass.js" />
+    <Content Include="Scripts\app\model\ShippingRate.js" />
+    <Content Include="Scripts\app\model\SiteShippingOriginAddress.js" />
+    <Content Include="Scripts\app\model\SiteDirectoryNode.js" />
+    <Content Include="Scripts\app\model\SiteShippingRegion.js" />
+    <Content Include="Scripts\app\model\SiteShippingSettings.js" />
+    <Content Include="Scripts\app\model\StateComboBox.js" />
+    <Content Include="Scripts\app\model\TargetedShippingMethod.js" />
+    <Content Include="Scripts\app\model\TaxRate.js" />
+    <Content Include="Scripts\app\model\ThemeFont.js" />
+    <Content Include="Scripts\app\model\Navigation.js" />
+    <Content Include="Scripts\app\model\NavigationItem.js" />
+    <Content Include="Scripts\app\model\Option.js" />
+    <Content Include="Scripts\app\model\OptionComboBox.js" />
+    <Content Include="Scripts\app\model\OptionValue.js" />
+    <Content Include="Scripts\app\model\Product.js" />
+    <Content Include="Scripts\app\model\ProductImageDocument.js" />
+    <Content Include="Scripts\app\model\ProductOption.js" />
+    <Content Include="Scripts\app\model\ProductOptionValue.js" />
+    <Content Include="Scripts\app\model\ProductProperty.js" />
+    <Content Include="Scripts\app\model\ProductVariation.js" />
+    <Content Include="Scripts\app\model\User.js" />
+    <Content Include="Scripts\app\model\UspsConfiguration.js" />
+    <Content Include="Scripts\app\model\UspsSharedShippingMethod.js" />
+    <Content Include="Scripts\app\model\WidgetDefinition.js" />
+    <Content Include="Scripts\app\store\Categories.js" />
+    <Content Include="Scripts\app\store\CategoriesTree.js" />
+    <Content Include="Scripts\app\store\CategoryComboBox.js" />
+    <Content Include="Scripts\app\store\CmsDocuments.js" />
+    <Content Include="Scripts\app\store\NavigationTreeNodes.js" />
+    <Content Include="Scripts\app\store\States.js" />
+    <Content Include="Scripts\app\store\CountryComboBox.js" />
+    <Content Include="Scripts\app\store\Discounts.js" />
+    <Content Include="Scripts\app\store\DomesticShippingRates.js" />
+    <Content Include="Scripts\app\store\FileManagementFiles.js" />
+    <Content Include="Scripts\app\store\FileManagementFolders.js" />
+    <Content Include="Scripts\app\store\InternationalShippingRates.js" />
+    <Content Include="Scripts\app\store\ProductComboBox.js" />
+    <Content Include="Scripts\app\store\SelectedShippingMethods.js" />
+    <Content Include="Scripts\app\store\ShippingClasses.js" />
+    <Content Include="Scripts\app\store\SiteDirectoryNodes.js" />
+    <Content Include="Scripts\app\store\SiteShippingRegions.js" />
+    <Content Include="Scripts\app\store\StateComboBox.js" />
+    <Content Include="Scripts\app\store\TargetedShippingMethods.js" />
+    <Content Include="Scripts\app\store\TaxRates.js" />
+    <Content Include="Scripts\app\store\ThemeFonts.js" />
+    <Content Include="Scripts\app\store\TempPages.js" />
+    <Content Include="Scripts\app\store\UspsConfigurations.js" />
+    <Content Include="Scripts\app\store\UspsSharedShippingMethods.js" />
+    <Content Include="Scripts\app\store\WidgetDefinitions.js" />
+    <Content Include="Scripts\app\store\Navigation.js" />
+    <Content Include="Scripts\app\store\OptionComboBox.js" />
+    <Content Include="Scripts\app\store\Options.js" />
+    <Content Include="Scripts\app\store\ProductOptions.js" />
+    <Content Include="Scripts\app\store\ProductOptionValues.js" />
+    <Content Include="Scripts\app\store\Products.js" />
+    <Content Include="Scripts\app\store\shared\BaseStore.js" />
+    <Content Include="Scripts\app\store\shared\TreeStore.js" />
+    <Content Include="Scripts\app\view\catalog\Index.js" />
+    <Content Include="Scripts\app\view\category\Basic.js" />
+    <Content Include="Scripts\app\view\category\Edit.js" />
+    <Content Include="Scripts\app\view\category\Index.js" />
+    <Content Include="Scripts\app\view\discounts\Edit.js" />
+    <Content Include="Scripts\app\view\discounts\Index.js" />
+    <Content Include="Scripts\app\view\fileManagement\TilePanel.js" />
+    <Content Include="Scripts\app\view\fileManagement\Savable.js" />
+    <Content Include="Scripts\app\view\fileManagement\folderTree.js" />
+    <Content Include="Scripts\app\view\fileManagement\GridPanel.js" />
+    <Content Include="Scripts\app\view\fileManagement\Index.js" />
+    <Content Include="Scripts\app\view\fileManagement\MultiFileAssociator.js" />
+    <Content Include="Scripts\app\view\fileManagement\UpdateBar.js" />
+    <Content Include="Scripts\app\view\image\Uploader.js" />
+    <Content Include="Scripts\app\view\image\UploadItem.js" />
+    <Content Include="Scripts\app\view\image\UploadModal.js" />
+    <Content Include="Scripts\app\view\NotifierBar.js" />
+    <Content Include="Scripts\app\view\dashboard\Index.js" />
+    <Content Include="Scripts\app\view\Header.js" />
+    <Content Include="Scripts\app\view\navigation\PrimaryMenu.js" />
+    <Content Include="Scripts\app\view\navigation\PrimaryMenuItem.js" />
+    <Content Include="Scripts\app\view\navigation\PrimarySubMenu.js" />
+    <Content Include="Scripts\app\view\navigation\PrimarySubMenuItem.js" />
+    <Content Include="Scripts\app\view\navigation\SecondaryMenu.js" />
+    <Content Include="Scripts\app\view\option\ConfigurableEdit.js" />
+    <Content Include="Scripts\app\view\option\preview\DropDown.js" />
+    <Content Include="Scripts\app\view\option\preview\RadioButtons.js" />
+    <Content Include="Scripts\app\view\option\preview\TextField.js" />
+    <Content Include="Scripts\app\view\option\Edit.js" />
+    <Content Include="Scripts\app\view\option\Index.js" />
+    <Content Include="Scripts\app\view\option\TempValueEditor.js" />
+    <Content Include="Scripts\app\view\option\valueEditor\MultiValue.js" />
+    <Content Include="Scripts\app\view\option\valueEditor\TextField.js" />
+    <Content Include="Scripts\app\view\productOption\edit.js" />
+    <Content Include="Scripts\app\view\product\Edit.js" />
+    <Content Include="Scripts\app\view\product\edit\Basic.js" />
+    <Content Include="Scripts\app\view\product\edit\ConfigurableOptions.js" />
+    <Content Include="Scripts\app\view\product\edit\ConfigurableOptionsGrid.js" />
+    <Content Include="Scripts\app\view\product\edit\ProductOptions.js" />
+    <Content Include="Scripts\app\view\product\edit\ProductOption.js" />
+    <Content Include="Scripts\app\view\product\edit\ProductProperties.js" />
+    <Content Include="Scripts\app\view\product\edit\Seo.js" />
+    <Content Include="Scripts\app\view\product\edit\Shipping.js" />
+    <Content Include="Scripts\app\view\product\edit\Categories.js" />
+    <Content Include="Scripts\app\view\product\edit\StandaloneOptions.js" />
+    <Content Include="Scripts\app\view\product\edit\Widgets.js" />
+    <Content Include="Scripts\app\view\product\Index.js" />
+    <Content Include="Scripts\app\view\shipping\CountrySelector.js" />
+    <Content Include="Scripts\app\view\shipping\CustomRateEditor.js" />
+    <Content Include="Scripts\app\view\shipping\CustomRateField.js" />
+    <Content Include="Scripts\app\view\shipping\Index.js" />
+    <Content Include="Scripts\app\view\shipping\OriginEditor.js" />
+    <Content Include="Scripts\app\view\shipping\OriginField.js" />
+    <Content Include="Scripts\app\view\shipping\OriginStaticField.js" />
+    <Content Include="Scripts\app\view\shipping\UspsConfigurationEditor.js" />
+    <Content Include="Scripts\app\view\site\CreateModal.js" />
+    <Content Include="Scripts\app\view\site\navigation\Tree.js" />
+    <Content Include="Scripts\app\view\site\navigation\WidgetNav.js" />
+    <Content Include="Scripts\app\view\site\page\Creator.js" />
+    <Content Include="Scripts\app\view\site\page\dataViews\Blog.js" />
+    <Content Include="Scripts\app\view\site\page\dataViews\Meta.js" />
+    <Content Include="Scripts\app\view\site\page\FieldNodeProcessor.js" />
+    <Content Include="Scripts\app\view\site\page\hint\Element.js" />
+    <Content Include="Scripts\app\view\site\page\hint\Hint.js" />
+    <Content Include="Scripts\app\view\site\page\hint\Widget.js" />
+    <Content Include="Scripts\app\view\site\page\hint\Zone.js" />
+    <Content Include="Scripts\app\view\site\page\inlineeditors\InlineImage.js" />
+    <Content Include="Scripts\app\view\site\page\inlineeditors\InlineTags.js" />
+    <Content Include="Scripts\app\view\site\page\inlineeditors\InlineText.js" />
+    <Content Include="Scripts\app\view\site\page\inlineeditors\InlineHtml.js" />
+    <Content Include="Scripts\app\view\site\page\Edit.js" />
+    <Content Include="Scripts\app\view\site\page\EditSurface.js" />
+    <Content Include="Scripts\app\view\site\page\Shim.js" />
+    <Content Include="Scripts\app\view\site\page\SiteDirectory.js" />
+    <Content Include="Scripts\app\view\site\page\WidgetDragZone.js" />
+    <Content Include="Scripts\app\view\site\page\WidgetDropZone.js" />
+    <Content Include="Scripts\app\view\site\page\WidgetWindow.js" />
+    <Content Include="Scripts\app\view\site\Toolbox.js" />
+    <Content Include="Scripts\app\view\site\widget\BlogArchive.js" />
+    <Content Include="Scripts\app\view\site\widget\ColumnDivider.js" />
+    <Content Include="Scripts\app\view\site\widget\Editor.js" />
+    <Content Include="Scripts\app\view\site\widget\AddThis.js" />
+    <Content Include="Scripts\app\view\site\widget\FacebookComments.js" />
+    <Content Include="Scripts\app\view\site\widget\FeaturedProducts.js" />
+    <Content Include="Scripts\app\view\site\widget\HorizontalRule.js" />
+    <Content Include="Scripts\app\view\site\widget\ImagesGallery.js" />
+    <Content Include="Scripts\app\view\site\widget\JasonImage.js" />
+    <Content Include="Scripts\app\view\site\widget\RecentBlogPosts.js" />
+    <Content Include="Scripts\app\view\site\widget\TagCollection.js" />
+    <Content Include="Scripts\app\view\tax\Index.js" />
+    <Content Include="Scripts\app\view\testing\EditAddressTest.js" />
+    <Content Include="Scripts\app\view\testing\Shim.js" />
+    <Content Include="Scripts\app\view\testing\StandaloneOption.js" />
+    <Content Include="Scripts\app\view\themeSettings\Index.js" />
+    <Content Include="Scripts\app\view\themes\Index.js" />
+    <Content Include="Scripts\app\view\Viewport.js" />
+    <Content Include="Scripts\ux\IFrame.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Scripts\app\mocks\products.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\app\mocks\states.json" />
+    <Content Include="Scripts\app\mocks\themefonts.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Modules\" />
+    <Folder Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\plugins\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\.project" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj">
+      <Project>{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}</Project>
+      <Name>Volusion.SiteBuilder.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mozu.SiteBuilder.UX.Models\Mozu.SiteBuilder.UX.Models.csproj">
+      <Project>{FE9DA6F5-3477-48A3-8314-572CE5C308FB}</Project>
+      <Name>Volusion.SiteBuilder.UX.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Configs\AppSettings.CI.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Configs\AppSettings.Dev.config" />
+    <Content Include="Configs\AppSettings.Demo.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Scripts\resources\scss\taco\_sites.scss">
+      <Compile>False&gt;</Compile>
+      <Minify>True</Minify>
+    </Content>
+    <Content Include="Log4Net.CI.config" />
+    <Content Include="Log4Net.Demo.config" />
+    <Content Include="Log4Net.Debug.config" />
+    <Content Include="Log4Net.Release.config" />
+    <Content Include="Scripts\resources\scss\taco\_errors.scss" />
+    <Content Include="Scripts\resources\scss\taco\_viewport.scss" />
+    <Content Include="Scripts\makedocs.bat" />
+    <None Include="Properties\PublishProfiles\demo.pubxml" />
+    <None Include="Scripts\app\locale\lang-de.csv" />
+    <None Include="Scripts\app\locale\lang-en.csv" />
+    <None Include="Scripts\resources\scss\taco\widgets\_checkout.scss" />
+    <None Include="Scripts\resources\scss\taco\widgets\_standaloneAccordion.scss" />
+    <None Include="Scripts\resources\scss\taco\widgets\_themes.scss" />
+    <None Include="Scripts\app\mocks\discounts.json" />
+    <Content Include="Web.CI.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Demo.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Auth\Index.cshtml" />
+    <Content Include="Views\Shared\generic.cshtml" />
+    <None Include="Scripts\app\mocks\GatewayDefinitions.json" />
+    <None Include="Scripts\app\mocks\InventoryProducts.json" />
+    <Content Include="Views\Auth\Register.cshtml" />
+    <Content Include="Views\Auth\Roles.cshtml" />
+    <None Include="Scripts\app\mocks\PaymentAndCheckout.json" />
+    <None Include="Scripts\app\mocks\themesettings.json" />
+    <Content Include="Views\Auth\ForgotPassword.cshtml" />
+    <Content Include="Views\Auth\ResetPassword.cshtml" />
+    <Content Include="Views\Auth\NewAccountInvitation.cshtml" />
+    <Content Include="Views\Home\AdminInlineJson.cshtml" />
+    <Content Include="Web.Dev.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Auth\MozuHeader.cshtml" />
+    <Content Include="Tests\siesta-1.1.5-standard\Changes" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\data\updateUsers.json" />
+    <Content Include="Tests\siesta-1.1.5-standard\examples\025-extjs-mvc\data\users.json" />
+    <Content Include="Tests\siesta-1.1.5-standard\package.json" />
+    <Content Include="Tests\siesta-1.1.5-standard\README.md" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\images\button_play_checked.xcf" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\config.rb" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shCore.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shCoreDefault.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shCoreDjango.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shCoreEclipse.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shCoreEmacs.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shCoreFadeToGrey.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shCoreMDUltra.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shCoreMidnight.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shCoreRDark.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shThemeDefault.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shThemeDjango.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shThemeEclipse.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shThemeEmacs.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shThemeFadeToGrey.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shThemeMDUltra.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shThemeMidnight.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\shThemeRDark.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\compass\_theme_template.scss" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\LGPL-LICENSE" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\MIT-LICENSE" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\webrick.rb" />
+    <Content Include="Tests\siesta-1.1.5-standard\resources\syntaxhighlighter_3.0.83\tests\webrick.sh" />
+    <Content Include="Tests\siesta-1.1.5-standard\Siesta Standard - End User License Agreement.pdf" />
+    <Content Include="Views\Home\TestHarnes.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj">
+      <Project>{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}</Project>
+      <Name>Mozu.SiteBuilder.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mozu.SiteBuilder.UX.Models\Mozu.SiteBuilder.UX.Models.csproj">
+      <Project>{FE9DA6F5-3477-48A3-8314-572CE5C308FB}</Project>
+      <Name>Mozu.SiteBuilder.UX.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+
+       Other similar extension points exist, see Microsoft.Common.targets.
+
+  <Target Name="BeforeBuild">
+
+  </Target>
+
+  <Target Name="AfterBuild">
+
+  </Target> -->
+  <Target Name="AfterCompile">
+    <Exec Command="attrib $(ProjectDir)\Scripts\build\*.* -R" IgnoreExitCode="true" />
+    <Exec Command="attrib $(ProjectDir)\Scripts\resources\images\*.* -R" IgnoreExitCode="true" />
+    <Exec Command="attrib $(ProjectDir)\Scripts\resources\images\*.* -R" IgnoreExitCode="true" />
+    <Exec Command="robocopy \\tfs-build01.ads.volusion.com\software\ext\ext-4.1.3\extjs-4.1.3 $(ProjectDir)\Scripts\ext /e /xd docs examples resources locale welcome builds /xf ext-all*.js" WorkingDirectory="$(ProjectDir)\Scripts" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="sencha compile -classpath=ext\src,app,ux,js page   -in index.html -yui -out build/index.html" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="C:\Ruby193\bin\ruby C:\Ruby193\bin\compass clean" WorkingDirectory="$(ProjectDir)\Scripts\resources\scss" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="compass compile" WorkingDirectory="$(ProjectDir)\Scripts\resources\scss" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="C:\Ruby193\bin\ruby C:\Ruby193\bin\compass compile" WorkingDirectory="$(ProjectDir)\Scripts\resources\scss" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+  </Target>
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+</Project>

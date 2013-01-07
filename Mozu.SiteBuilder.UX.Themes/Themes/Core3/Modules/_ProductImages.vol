@@ -1,0 +1,19 @@
+
+<div data-mz-role="productimages-container" class="mz-product-images">
+	{% if Model.images.Count > 0 %}
+
+	<figure data-mz-role="productimages-main" class="mz-product-image-main">
+		<img class="mz-product-image-main-link" {% data_attributes Model.images.Main %} src="{{ Model.images.Main.src }}" />
+	</figure>	
+	<figure class="mz-product-image-thumb">
+		{% for image in Model.images %}
+			<a data-mz-role="productimages-link" class="mz-product-image-thumb-link" href="{{ image.src }}">
+				<img class="mz-product-image-thumb-img" {% data_attributes image %} src="{{ image.src }}" />
+			</a>
+		{% endfor %}
+	</figure>
+	{% else %}
+	<span class="mz-no-image-message">[NO IMAGE FOUND]</span>
+	{% endif %}
+</div>
+
