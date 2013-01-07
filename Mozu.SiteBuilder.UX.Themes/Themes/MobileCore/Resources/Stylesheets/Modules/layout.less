@@ -1,0 +1,16 @@
+﻿
+html {
+	height: 100%;
+}
+body {
+	background-color: {{themeSettings.siteBackgroundColor|settingtype:'color'|default:'#E5E5E5'|description:'Site Background'}};
+	margin: 0 auto;
+}
+
+.mz-layout-container  {
+	background: {{themeSettings.contentBackgroundColor|settingtype:'color'|default:'#FFFFFF'|description:'Content Background'}};
+}
+
+.mz-layout-right, .mz-column {
+	margin-top: @gutter;
+}

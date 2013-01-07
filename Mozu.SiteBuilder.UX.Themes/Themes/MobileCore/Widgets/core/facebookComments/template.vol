@@ -1,0 +1,25 @@
+﻿
+<div {% data_attributes Model %} >
+	{%if PageContext.PageType != "blog"  %}
+		{%if  SiteContext.IsEditMode %}
+			<table  width="100%">
+				<tr>
+					<td>
+						<img height="50" width="50" src="https://fbcdn-profile-a.akamaihd.net/static-ak/rsrc.php/v2/yo/r/UlIqmHJn-SK.gif" />
+					</td>
+					<td>
+						&nbsp;[FACE BOOK COMMENTS]<br />
+						theme:{{Model.config.theme}}<br />
+						post count:{{Model.config.count}}<br />
+						
+					</td>
+				</tr>
+
+			</table>
+		{% else %}
+			{% require_script "modules/facebook-tools" %}
+			<div class="fb-comments" data-href="{{ SiteContext.PageContext.CanonicalUrl }}" data-num-posts="{{ Model.config.count|default:10 }}" data-colorscheme="{{ Model.config.theme }}" data-width="{{ Model.config.width }}"></div>
+		{%endif%}
+	
+	{% endif %}
+</div>

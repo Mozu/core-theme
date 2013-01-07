@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Mozu.SiteBuilder.Mvc.Filters
+{
+    [NDjango.ParserNodes.Description("converts a string into an ITemplate")]
+    [NDjango.Interfaces.Name("stylesheet_tag")]
+    public class Stylesheet:  NDjango.Interfaces.IFilterWithContext 
+    {
+        public object PerformWithParamAndContext(object value, object parameter, NDjango.Interfaces.IContext context)
+        {
+            var ctx = context.tryfind("SiteContext").Value as ISiteBuilderContext;
+            var theme = ctx.Theme.Id;
+            var ts = ctx.ThemeSettingsRepository.GetTimeStamp();
+            return string.Format("<link rel=\"stylesheet\" href=\"{0}?t={1}&dt={2}\"  type=\"text/css\">", value, theme, ts.Ticks .ToString( "X2"));
+                
+            
+
+        }
+
+        public object DefaultValue
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public object PerformWithParam(object value, object parameter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object Perform(object value)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

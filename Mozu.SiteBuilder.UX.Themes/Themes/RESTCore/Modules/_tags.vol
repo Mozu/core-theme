@@ -1,0 +1,10 @@
+﻿<ul align="{{ViewData.config.alignment|default:"left"}}">
+  {% for tag in Model %}
+    {%if ViewData.config.displayAll == "all"  or forloop.counter0 < ViewData.config.displayCount|default:10 %}
+	    <li style="list-style: none;"><a class="tag" href="/blogs/Tagged/{{tag.name}}">{{tag.name}} ({{tag.count}})</a></li>
+	  {% endif %}
+	
+{% endfor %}
+</ul>
+
+

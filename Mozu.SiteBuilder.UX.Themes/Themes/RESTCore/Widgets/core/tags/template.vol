@@ -1,0 +1,4 @@
+﻿<h2 class="block-title">Tags</h2>
+{% for tag in Model.tags %}
+	<a class="tag" href="{{tag.url}}">{{tag.name}}</a>&nbsp;&nbsp;
+{% endfor %}

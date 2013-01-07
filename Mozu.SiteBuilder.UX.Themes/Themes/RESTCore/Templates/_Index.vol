@@ -1,0 +1,7 @@
+﻿{% extends "default" %}
+
+{% block BodyContent %}
+
+	{% dropzone "body" %}
+
+{% endblock BodyContent%}

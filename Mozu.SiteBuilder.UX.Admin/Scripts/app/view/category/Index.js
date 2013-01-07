@@ -1,0 +1,331 @@
+/**
+ * @class Taco.view.category.Index
+ */
+Ext.define('Taco.view.category.Index', {
+    extend: 'Taco.core.ux.content.Container',
+    requires: ['Taco.core.ux.TreeList', 'Taco.core.FormPanel', 'Taco.store.CategoriesTree'],
+
+    setHidden: function (records) {
+        var me = this;
+
+        Ext.each(records, function (item, index, list) {
+            var hiddenCls = '';
+            if (item.get("isHidden")) {
+                hiddenCls = "taco-row-hidden";
+            }
+            item.set("cls", item.get("cls") == hiddenCls ? '' : hiddenCls);
+
+            if (item.childNodes.length > 0) {
+                me.setHidden(item.childNodes);
+            }
+        });
+    },
+
+    initComponent: function () {
+        var me = this;
+
+        me.header = {
+            title: 'Categories',
+            actions: [{
+                xtype: 'primarybutton',
+                text: 'Create New Category',
+                onClick: function () {
+                    //this.findParentByType('contentheader').fireEvent('newcategory');
+                    me.launchEditor();
+                    Taco.app.StateManager.addState('categories/create', {
+                        controller: 'categories',
+                        action: 'edit'
+                    });
+                }
+            }]
+        };
+
+        me.store = Taco.core.data.StoreManager.getOrCreate({ type: 'Taco.store.CategoriesTree' , autoLoad:true});
+      //  me.store = { type: 'Taco.store.CategoriesTree' };
+        me.store.on("load", function(s, node, records, successful, eOpts) {
+            me.setHidden(records);
+        });
+
+        me.treelist = Ext.create('Taco.core.ux.TreeList', {
+            store: me.store,
+            columns: [{
+                xtype: 'treecolumn',
+                text: 'Name',
+                flex: 1,
+                checkboxText:'',
+                dataIndex: 'name',
+                renderer: function (value) {
+                    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
+                }
+            }, {
+                text: 'Products',
+                flex: 1,
+                dataIndex: 'productCount'
+            }],
+
+            actions: [{
+                tooltip: 'Toggle Hidden',
+                iconCls: 'taco-action-hide',
+                eventName: 'hidecategory'
+            }, {
+                tooltip: 'Duplicate Category',
+                iconCls: 'taco-action-addsub',
+                eventName: 'duplicatecategory'
+            }, {
+                tooltip: 'Delete',
+                iconCls: 'taco-action-delete',
+                eventName: 'deletecategory'
+            }],
+
+            dockedItems: [{
+                xtype: 'quickadder',
+                helperText: 'Click to add a new category'
+            }, {
+                xtype: 'toolbar',
+                cls: 'taco-secondary-actions',
+                dock: 'top',
+                items: [this.notifier, '->',
+                {
+                    xtype: 'button',
+                    text: 'Expand All',
+                    handler: function () {
+                        this.findParentByType('treelist').expandAll();
+                    }
+                }, '-',
+                {
+                    xtype: 'button',
+                    text: 'Collapse All',
+                    handler: function () {
+                        this.findParentByType('treelist').collapseAll();
+                    }
+                }]
+            }],
+
+            listeners: {
+                hidecategory: function (list, index) {
+                    var model = list.store.getAt(index),
+                        row = Ext.get(list.all.elements[index]),
+                        hiddenCls = 'taco-row-hidden';
+
+                    var hidden = !model.get("isHidden");
+
+                    model.set("isHidden", hidden);
+                    model.set("cls", model.get("cls") == hiddenCls ? '' : hiddenCls);
+                    console.log(model);
+
+                    model.save({
+                        success: function (m) {
+                            Taco.app.fireEvent('setmessage', 'Category visibility changed.', 'status', list);
+                        },
+                        failure: function (m) {
+                            var msg;
+                            model.set("cls", (hidden) ? '' : hiddenCls);
+
+                            if (m.exceptions && m.exceptions.length > 0) {
+                                msg = m.exceptions[0].error;
+                            }
+
+                            Taco.app.fireEvent('setmessage', 'Category visibility change failed. This probably because it has children with different visibility settings.', 'error', list);
+                        }
+                    });
+                },
+
+                itemmove: function (node, oldParent, newParent, index, options) {
+                    var me = this;
+                    me.setLoading(true);
+                    me.getStore().sync({
+                        success: function (m) {
+                            me.setLoading(false);
+                            me.fireEvent('setmessage', 'Item moved successfully', 'status', m);
+                        },
+                        failure: function (m) {
+                            me.setLoading(false);
+                            me.fireEvent('setmessage', 'Item move failed', 'error', m);
+                        }
+                    });
+                },
+
+                duplicatecategory: function (list, index) {
+                    var me = this;
+                    var model = list.store.getAt(index);
+                    me.setLoading(true);
+
+                    model.duplicate({
+                        success: function (copy) {
+                            model.parentNode.appendChild(copy);
+
+                            me.getStore().sync({
+                                success: function (m) {
+                                    me.setLoading(false);
+                                    me.fireEvent('setmessage', 'Category copied.', 'status', copy);
+                                },
+
+                                failure: function (m) {
+                                    me.setLoading(false);
+                                    me.fireEvent('setmessage', 'Category creation failed.', 'error', m);
+                                }
+                            });
+                        },
+                        failure: function (m, operation) {
+                            me.setLoading(false);
+                            me.fireEvent('setmessage', 'Category creation failed.', 'error', model);
+                        }
+                    });
+                },
+
+                deletecategory: function (list, index, index2, actionEl, e, model) {
+                    Ext.create('Taco.core.ux.modal.Confirmation', {
+                        autoShow: true,
+                        text: 'Are you sure you want to delete this category?',
+
+                        listeners: {
+                            confirm: function () {
+                                model.remove();
+                                this.setLoading(true);
+                                this.getStore().sync({
+                                    success: function () {
+                                        this.setLoading(false);
+                                    },
+
+                                    failure: function () {
+                                        this.setLoading(false);
+                                    },
+                                    scope: this
+                                });
+                            },
+                            scope: this
+                        }
+                    });
+                }
+            }
+        });
+
+        Ext.apply(me.body, {
+            layout: 'fit',
+            items: [me.treelist]
+        });
+
+        me.callParent(arguments);
+
+        this.down('quickadder').on({
+            commit: function (quickAdder, newCategoryName) {
+                var newNode, root = this.getRootNode();
+
+                newNode = root.insertBefore({
+                    name: newCategoryName
+                }, root.firstChild);
+
+                this.setLoading(true);
+
+                if (this.autoSync) {
+                    this.store.sync({
+                        callback: function () {
+                            this.setLoading(false);
+                        },
+                        success: function () {
+                            this.fireEvent('setmessage', 'category created', 'status');
+                        },
+                        failure: function (batch) {
+                            newNode.remove();
+                            if (batch.exceptions && batch.exceptions.length > 0) {
+                                this.fireEvent('setmessage', batch.exceptions[0].error, 'error');
+                            }
+                            else {
+                                this.fireEvent('setmessage', 'failed to add category', 'error');
+                            }
+                        },
+                        scope: this
+                    });
+                }
+                this.view.el.scrollTo('top', 0, true);
+            },
+            scope: this.treelist
+        });
+
+        var treeview = me.treelist.down('treeview');
+        treeview.mon(treeview, 'itemclick', me.onItemClick, me);
+
+    },
+    onNavigate: function (newState) {
+        // navigation events that i can totes handle include: 
+        var md = newState.getMetaData();
+        if (md.controller && md.controller === "categories" && md.action === "edit") {
+            this.launchEditor(md.args[0]);
+            return false;
+        }
+    }
+
+    ,
+    launchEditor: function (record, suppressAddState) {
+        var me = this,
+            editorView, recordId;
+
+        if (record && record.getId) {
+            recordId = record.getId();
+
+        }
+        else {
+            recordId = record;
+        }
+        editorView = Ext.create('Taco.view.category.Edit', {
+            logicalParent: me,
+            listeners: {
+                cancel: function () {
+                    editorView.destroy();
+                    Taco.core.StateManager.addState('categories');
+                    if (me.isDirty) {
+                        me.store.load();
+                        me.isDirty = false;
+                    }
+                },
+                save: function () {
+                    me.isDirty = true;
+                },
+                create: function (newRecord) {
+                    me.isDirty = true;
+                    editorView.destroy();
+                    Taco.app.StateManager.addState('categories/create', {
+                        controller: 'categories',
+                        action: 'edit'
+                    });
+                    me.launchEditor(newRecord);
+                },
+                copyrecord: function (newRecord) {
+                    var id = newRecord.getId() || -1;
+                    editorView.destroy();
+                    me.isDirty = true;
+                    Taco.app.StateManager.addState('categories/edit/' + id, {
+                        controller: 'categories',
+                        action: 'edit',
+                        id: id
+                    });
+                    me.launchEditor(newRecord);
+
+                },
+                deleterecord: function () {
+                    me.isDirty = true;
+                }
+            },
+
+            recordId: recordId
+        });
+
+        Taco.app.contentView.add(editorView);
+
+    },
+
+    onItemClick: function (view, record, elm, index, e) {
+        console.log(e.target);
+        if (e.target.className === 'taco-launch-editor') {
+            e.preventDefault();
+            this.launchEditor(record);
+            Taco.app.StateManager.addState('categories/edit/' + record.getId(), {
+                controller: 'categories',
+                action: 'edit',
+                id: record.getId()
+            });
+        }
+    }
+
+});
+

@@ -1,0 +1,14 @@
+
+@mixin taco-dashboard {
+  
+  .taco-dashboard-object {
+    float: left;
+    height: 200px;
+    width: 200px;
+    border: 1px dashed $color-neutral-dark;
+    padding: 30px;
+    margin: 15px;
+    @include border-radius;
+  }
+  
+}

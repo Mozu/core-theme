@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\Tools\ThemeSettings.xsd">
+  <items>
+    <section id="color" label="Color" visible="true">
+      <items>
+        <setting id="breadcrumbColor" type="color" label="Breadcrumb Color" defaultValue="#555555"/>
+        <setting id="siteBackgroundColor" type="color" label="Site Background" defaultValue="#E5E5E5"/>
+        <setting id="contentBackgroundColor" type="color" label="Content Background" defaultValue="#FFFFFF"/>
+        <setting id="siteNavColor" type="color" label="Site Navigation Color" defaultValue="#C5C5C5"/>
+        <setting id="siteNavHoverColor" type="color" label="Site Navigation Link Hover" defaultValue="#C9C9C9"/>
+        <setting id="headerBackground" type="color" label="Header Background Color" defaultValue="#777777"/>
+        <setting id="storeNameColor" type="color" label="Store Name Color" defaultValue="#FEFEFE"/>
+        <setting id="textColor" type="color" label="Text Color" defaultValue="#333333"/>
+        <setting id="linkColor" type="color" label="Link Color" defaultValue="#4F4F4F"/>
+        <setting id="linkVisited" type="color" label="Link Visited Color" defaultValue="#3F3F3F"/>
+        <setting id="linkHover" type="color" label="Link Hover Color" defaultValue="#666666"/>
+        <setting id="headlineColor" type="color" label="Headline Color" defaultValue="#444444"/>
+      </items>
+    </section>
+    <section id="General" label="General" visible="true">
+      <items>
+        <setting id="thumbnailSize" type="select" label="Thumbnail Size" defaultValue="50px">
+          <values>
+            <option value="80px">80px</option>
+            <option value="70px">70px</option>
+            <option value="50px">50px</option>
+            <option value="40px">40px</option>
+            <option value="30px">30px</option>
+          </values>
+        </setting>
+        <setting id="gutterWidth" type="select" label="Gutter Width" defaultValue="8px">
+          <values>
+            <option value="12px">12px</option>
+            <option value="10px">10px</option>
+            <option value="8px">8px</option>
+            <option value="6px">6px</option>
+            <option value="4px">4px</option>
+          </values>
+        </setting>
+      </items>
+    </section>
+    <section id="font" label="Font" visible="true">
+      <items>
+        <setting id="siteNavFont" type="font" label="Site Navigation Font" defaultValue="14px Tahoma, sans-serif"/>
+        <setting id="storeNameFont" type="font" label="Store Name Font" defaultValue="bold 30px Tahoma, sans-serif"/>
+        <setting id="globalFont" type="font" label="Site Font" defaultValue="16px Tahoma, sans-serif"/>
+        <setting id="headlineFont" type="font" label="Headline Font" defaultValue="bold 21px Tahoma, sans-serif"/>
+      </items>
+    </section>
+
+
+    <section id="js" label="JavaScript" visible="true">
+      <items>
+        <setting id="useOptimizedJs" type="select" label="Use Optimized JS Files" defaultValue="true">
+          <values>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </values>
+        </setting>
+      </items>
+    </section>
+  </items>
+</settings>

@@ -1,0 +1,30 @@
+﻿{
+  "items": [{
+    "productName": "Beer Glass",
+    "productCode": "xx001",
+    "optionValues": null,
+    "stockOnHand": "10",
+    "inventoryHandling": 0
+  }, {
+    "productName": "Champagne Flute",
+    "productCode": "xx002",
+    "optionValues": null,
+    "stockOnHand": null,
+    "inventoryHandling": 0
+  }, {
+    "productName": "Coffee Mug",
+    "productCode": "xx003-a",
+    "optionValues": "Black, Tall",
+    "stockOnHand": 12,
+    "inventoryHandling": 1
+  }, {
+    "productName": "Coffee Mug",
+    "productCode": "xx003-b",
+    "optionValues": "Blue, Tall",
+    "stockOnHand": 8,
+    "inventoryHandling": 2
+  }],
+  "message": "Some message",
+  "success": true,
+  "total": 4
+}

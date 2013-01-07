@@ -1,0 +1,47 @@
+@mixin taco-messages {
+
+	.#{$vprefix}notifierbar {
+		position: fixed;
+		background: #fff;
+		background-image: -webkit-linear-gradient(-83deg, #ffffff 0%,#f1f1f1 50%,#ececec 53%,#f8f8f8 100%);
+		width: 75%;
+		left: 12.5%;
+		top: -100%;
+		z-index: 99999;
+		opacity: 0;
+		padding: 3em 1em 1em 1em;
+		@include border-radius(0.6em);
+		@include outer-shadow(1, 0.5em, 0, 0.1em);
+
+
+		ul {
+			list-style-type: none;
+			li {
+				font-size: 12pt;
+				margin: 0.4em 0;
+			}
+		}
+
+		a.#{$vprefix}notifierbar-dismiss {
+			display: block;
+			text-align: center;
+			font-size: 12pt;
+			color: $color-neutral-dark;
+			text-decoration: none;
+				&:hover {
+					text-decoration: underline;
+				}
+		}
+
+	}
+
+	.#{$vprefix}content-messages.status, .#{$vprefix}message-status {
+		background-color: $color-status;
+	}
+	.#{$vprefix}content-messages.warning, .#{$vprefix}message-warning {
+		background-color: $color-warning;
+	}
+	.#{$vprefix}content-messages.error, .#{$vprefix}message-error {
+		background-color: $color-error;
+	}
+}

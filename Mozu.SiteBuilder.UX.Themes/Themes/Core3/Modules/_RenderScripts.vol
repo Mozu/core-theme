@@ -1,0 +1,13 @@
+﻿
+<script src="/resources/scripts/require.js"></script><script>
+    require.config({
+        baseUrl: "/resources/scriptsbuilt",
+        paths: {
+            jquery: "http://code.jquery.com/jquery.min"
+        },
+        priority: ['jquery']
+    });
+</script>
+<script type="text/javascript">
+    require(['pages/common'], function() { require([{{Model}}]) } );
+</script>

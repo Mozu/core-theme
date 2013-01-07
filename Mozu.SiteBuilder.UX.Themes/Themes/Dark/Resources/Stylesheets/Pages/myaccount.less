@@ -1,0 +1,250 @@
+﻿#my-account {
+
+  a {
+    color: #08C;
+  }
+
+  input {
+    display: inline;
+  }
+
+  h3 {
+    font-size: 15px;
+    margin: 1.5em 0 0.5em;
+  }
+
+  .modal {
+    padding: 15px;
+    display: none;
+
+    h3 {
+      margin-top: 0;
+    }
+
+    label {
+      color: #7f7f7f;
+    }
+
+    .action-bar {
+      text-align: right;
+      margin-top: 20px;
+
+      * {
+        margin-left: 8px;
+      }
+    }
+  }
+
+  .modal-mask {
+    display: none;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  #personal-info {
+    margin-bottom: 5px;
+
+    form {
+      display: inline;
+    }
+
+    #edit-email {
+      display: none;
+
+      input[type='submit'] {
+        vertical-align: 2px;
+      }
+    }
+
+    #change-password-modal {
+      width: 400px;
+      margin: -111px 0 0 -200px;
+      padding: 15px;
+
+      input {
+        display: block;
+        width: 95%;
+      }
+    }
+  }
+
+  input[name='send-news-and-specials'] {
+    vertical-align: -2px;
+  }
+
+  #billing-address {
+    #toggle-shipping-addresses {
+      line-height: 2.2;
+    }
+  }
+
+  #shipping-addresses {
+    overflow: hidden; // *** Ensure parent container completely includes floated children in layout
+    display: none;
+    margin-top: 20px;
+    padding: 15px 0;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+
+    .shipping-address {
+      position: relative;
+      float: left;
+      height: 115px;
+      margin: 0 15px 25px 0;
+      padding-right: 65px; // *** Need to fit edit/delete icon in UR corner
+
+      h4 {
+        font-size: 13px;
+        line-height: 1;
+        margin: 0 0 8px;
+      }
+
+      .actions span {
+        display: none;
+      }
+
+      &:hover span {
+        background-color: #888;
+        color: white;
+        font-family: monospace;
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 3px 8px;
+
+        &:hover {
+          cursor: pointer;
+          background-color: #aaa;
+        }
+
+        & + span {
+          right: 26px;
+        }
+      }
+    }
+
+    #add-new-shipping-address {
+      clear: left;
+    }
+
+    .modal {
+      margin: -260px 0 0 -296px;
+
+      h3 {
+        margin-top: 0;
+
+        span + span {
+          display: none;
+        }
+      }
+
+      input[type="submit"] + input[type="submit"] {
+        display: none;
+      }
+
+      &.edit-mode {
+        h3 span {
+          display: none;
+
+          & + span {
+            display: inline;
+          }
+        }
+
+        input[type="submit"] {
+          display: none;
+
+          & + input[type="submit"] {
+            display: inline;
+          }
+        }
+      }
+
+      td {
+        &+ td {
+          padding-left: 15px;
+        }
+
+        input, select {
+          width: 120px;
+          display: block;
+        }
+
+        &[colspan="4"] {
+          padding-left: 0;
+
+          input {
+            width: 99%;
+          }
+        }
+
+        &[colspan="2"] {
+          input, select {
+            width: 265px;
+          }
+        }
+
+        label {
+          line-height: 1.8;
+        }
+      }
+    }
+  }
+
+  #your-orders {
+    table {
+      width: 100%;
+
+      td {
+        border-collapse: collapse;
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 25%;
+
+        & + td {
+          padding: 20px;
+          width: 75%;
+        }
+      }
+
+      span {
+        display: block;
+      }
+
+      .order-date {
+        font-weight: bold;
+      }
+
+      .order-image {
+        width: 50px;
+        float: left;
+        padding-right: 12px;
+        height: 100%;
+
+        // *** This is for mockup purposes only and should be removed in production
+        .placeholder-image {
+          width: 50px;
+          height: 50px;
+          background-color: #ccc;
+        }
+        // ***
+      }
+
+      .order-description {
+        .item-title {
+          font-weight: bold;
+        }
+      }
+
+      // tr + tr .order-date {
+      //   padding-top: 15px;
+      // }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+
+@mixin taco-sites {
+    .#{$vprefix}toolbox {
+        
+        .#{$vprefix}treelist {
+
+            .#{$vprefix}shit {
+                background-color: $color-neutral-white !important;
+                font-size: 18px;
+                & > div {
+                    & > img {
+                        display: none;
+                    }
+                    padding: 14px 0px 7px;
+                }
+                &:after {
+                    background-color: $color-neutral-white;
+                    content: "Root";
+                    display: block;
+                    font-size: 0px;
+                    height: 40px;
+                    left: auto;
+                    line-height: 0px;
+                    margin: -40px 0px 0px -36px;
+                    position: absolute;
+                    top: auto;
+                    width: 36px;
+                }
+            }
+
+            tbody tr {
+
+                .#{$prefix}tree-icon-inline {
+                    height: 24px;
+                    width: 24px;
+                }
+
+                .#{$vprefix}nav-node-group {
+                    display: none;
+                }
+
+				.#{$vprefix}nav-node-folder,
+                .#{$vprefix}nav-node-category {
+                    @include icons-sprite(icon-toolbox-nav-category);
+                }
+
+				.#{$vprefix}nav-node-blog,
+                .#{$vprefix}nav-node-page,
+                .#{$vprefix}nav-node-systempage {
+                    @include icons-sprite(icon-toolbox-nav-page);
+                }
+
+                .#{$vprefix}nav-node-link {
+                    @include icons-sprite(icon-toolbox-nav-shortcut);
+                }
+                .#{$vprefix}nav-node-product {
+                    @include icons-sprite(icon-toolbox-nav-product);
+                }
+
+                .#{$vprefix}draghandle {
+                    @include single-transition(opacity);
+                    opacity: 1;
+                }
+
+                &:not(:hover) .#{$vprefix}draghandle {
+                    opacity: 0;
+                }
+
+                &:nth-child(3) .#{$prefix}tree-icon {
+                    @include icons-sprite(icon-toolbox-nav-home);
+                }
+            }
+        }
+    }
+}

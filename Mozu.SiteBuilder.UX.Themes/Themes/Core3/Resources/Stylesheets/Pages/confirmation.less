@@ -1,0 +1,85 @@
+﻿.mz-order-confirmation {
+  padding: 10px;
+
+  .mz-desc {
+    padding: 1em;
+  }
+
+  h3 {
+    margin-top: 1.5em;
+  }
+
+  table {
+    width: 600px;
+  }
+
+  .mz-purchase-details {
+    margin-top: 1em;
+
+    thead {
+      font-size: 16px;
+    }
+
+    .mz-field-interstitial {
+      padding: 5px;
+      vertical-align: middle;
+
+      hr {
+        border-style: dashed;
+        border-color: #999;
+        border-bottom: 0;
+      }
+    }
+
+    .mz-field-label {
+      padding: 1px 0;
+      width: 120px;
+    }
+  }
+
+  @table-border: 1px solid #999;
+  #mz-order-summary {
+    border: @table-border;
+    border-collapse: collapse;
+    margin: 3px 0 1em;
+
+    .mz-bold-row {
+      font-weight: bold;
+    }
+
+    thead {
+      background-color: #CCC;
+    }
+
+    .mz-item-row td {
+      .mz-bold-row;
+    }
+
+    td, th {
+      padding: 5px;
+      border: @table-border;
+      font-weight: normal;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    table { // Inner <table>
+      width: 99%;
+
+      tr:last-child td {
+        .mz-bold-row;
+      }
+
+      td {
+        text-align: right;
+        width: 67%;
+        padding: 1px;
+        border: 0;
+
+        & + td {
+          width: 33%;
+        }
+      }
+    }
+  }
+}

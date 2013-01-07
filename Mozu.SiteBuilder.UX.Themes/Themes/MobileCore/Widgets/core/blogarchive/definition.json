@@ -1,0 +1,8 @@
+{
+	"id": "blog_archive",
+	"displayName": "Blog Archive",
+	"displayTemplate": "core/blogarchive/template",
+	"icon": "/admin/scripts/resources/images/AddPhotos.png",
+	"editView": "Taco.view.site.widget.BlogArchive",
+	"properties": []
+}

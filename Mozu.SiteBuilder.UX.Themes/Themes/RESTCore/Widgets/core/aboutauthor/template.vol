@@ -1,0 +1,6 @@
+﻿<h2 class="widget-title">About Me</h2>
+{% if Model.text|length < 1%}
+	<div {% data_attributes text %}>Tell people about yourself. Keep it short and informative.</div>
+{% else %}
+	<div {% data_attributes text %}>{{Model.text}}</div>
+{% endif %}

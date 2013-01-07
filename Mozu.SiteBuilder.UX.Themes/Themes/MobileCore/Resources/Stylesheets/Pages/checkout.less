@@ -1,0 +1,316 @@
+﻿.mz-checkout-loading {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.mz-checkout-form {
+
+	.mz-form-field-cell {
+		position: relative;
+		.mz-validation-message {
+			position: absolute;
+			left: 0;
+			bottom: 0;
+		}
+		+ .mz-form-field-cell {
+			padding-bottom: @gutter + 10px;
+		}
+	}
+    label + .mz-validation-message {
+        margin-top: 0px;
+    }
+
+    .mz-panel {
+        .mz-inner-panel {
+            padding: @gutter 0;
+
+            input[type="text"], input[type="password"] {
+                line-height: 1.5em;
+                width: 100%;
+				box-sizing: border-box;
+            }
+        }
+
+        .mz-panel-header {
+            color: white;
+            font-weight: normal;
+            padding: 5px 10px;
+            margin-bottom: 0;
+            background-color: #666;
+            font-size: 20px;
+            line-height: 24px;
+
+            button {
+                float: right;
+                height: 21px;
+                font-size: 14px;
+            }
+        }
+
+        h4 {
+            color: #666;
+            margin: 1em 0 0.5em;
+        }
+
+        .mz-desc {
+            color: #666;
+            margin: 0 0 @gutter;
+            font-weight: bold;
+        }
+        label {
+
+            padding: 2px;
+            display: block;
+
+            .mz-shipping-price {
+                margin-left: 10px;
+            }
+
+            .mz-required-field {
+                color: red;
+            }
+
+            &.mz-inline {
+                input[type=radio], input[type=checkbox] {
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin-top: 0;
+                }
+            }
+        }
+
+        .mz-completed-summary {
+            display: none;
+            padding: 0 0 20px 20px;
+
+            > span {
+                display: block;
+            }
+
+            &.mz-inline > span {
+                display: inline;
+            }
+        }
+
+        .mz-same-as-shipping-summary {
+            display: block;
+        }
+
+        .mz-edit-button {
+            display: none;
+        }
+
+        .mz-next-step {
+            position: relative;
+            padding: 10px;
+            text-align: right;
+
+            button {
+                padding: 5px 50px;
+            }
+
+            .mz-loading-bar {
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 10px;
+            }
+        }
+
+        &.mz-stepstatus-complete {
+            .mz-edit-button, .mz-completed-summary {
+                display: block;
+            }
+
+            .mz-form-fields, .mz-next-step {
+                display: none;
+            }
+        }
+
+        &.mz-stepstatus-new {
+            .mz-inner-panel {
+                height: 1px;
+                overflow-y: hidden;
+                visibility: hidden;
+                margin: 0;
+            }
+        }
+
+        &.mz-stepstatus-submitting {
+            input, button, select {
+                .opacity(0.5);
+            }
+
+            .mz-next-step {
+                margin-right: 40px;
+
+                .mz-loading-bar {
+                    display: block;
+                }
+
+                button {
+                    visibility: hidden;
+                }
+            }
+        }
+
+        .mz-order-summary {
+            @row-border: 1px solid #999;
+            padding: 10px 15px 0;
+            background-color: #ddd;
+
+            > table {
+                width: 100%;
+            }
+
+            td {
+                padding: 10px 0;
+            }
+
+            tbody + tbody {
+                border-top: @row-border; // little trick to add top borders to all but the top row
+            }
+
+            .mz-cost-summary, .mz-total {
+                font-size: 16px;
+            }
+
+            .mz-cost-summary table td {
+                padding: 5px;
+            }
+
+            .mz-total {
+                font-weight: bold;
+
+                td {
+                    padding: 10px 5px;
+                }
+            }
+
+            th, td {
+                text-align: left;
+                width: 250px;
+
+                & + th, & + td {
+                    text-align: center;
+                    width: auto;
+                }
+            }
+
+            .mz-line-item-desc {
+                text-align: right;
+            }
+
+            .mz-line-item-summary {
+                text-align: right;
+
+                table {
+                    float: right;
+
+                    td {
+                        text-align: right;
+                    }
+                }
+            }
+        }
+
+        .mz-discounted {
+            td {
+                padding-bottom: 3px;
+            }
+
+            .mz-item-price {
+                text-decoration: line-through;
+            }
+        }
+
+        .mz-discount {
+            td {
+                text-align: left;
+                padding-top: 0;
+                color: darken(#08C,10%);
+                font-weight: bold;
+
+                .mz-discount-name {
+                    font-weight: normal;
+                }
+            }
+        }
+    }
+
+    .mz-create-account-fields {
+        margin-top: 1em;
+        padding-left: 15px;
+
+        input {
+            display: block;
+            width: 80%;
+            margin-top: 5px;
+        }
+    }
+
+    .mz-order-summary-panel {
+        h3 {
+            margin-bottom: 0;
+        }
+    }
+    // .panel
+    .mz-coupon-code-container {
+        margin: 1em auto;
+		overflow: auto;
+        position: relative;
+
+        input {
+            width: 100%;
+			box-sizing: border-box;
+        }
+
+        button {
+			float: right;
+            width: 80px;
+            vertical-align: top;
+            padding: 5px 0;
+			margin: 5px 0 0;
+        }
+
+        .mz-loading-bar {
+            display: none;
+        }
+
+        &.mz-submitting-coupon {
+            button {
+                visibility: hidden;
+            }
+
+            input {
+                .opacity(0.5);
+            }
+
+            .mz-loading-bar {
+                display: inline-block;
+                vertical-align: top;
+                height: 10px;
+                margin-left: -45px;
+            }
+        }
+    }
+
+    .mz-order-comments {
+        width: 100%;
+		box-sizing: border-box;
+        height: 100px;
+        resize: vertical;
+    }
+
+    .mz-column.affix {
+        position: fixed;
+        margin-left: 455px;
+        top: 0;
+    }
+}
+
+.mz-checkout-reviewpanel {
+    .mz-panel-wrap {
+        min-height: 190px;
+    }
+}

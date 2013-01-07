@@ -1,0 +1,164 @@
+﻿using AutoMapper;
+//using Volusion.ProductAdmin.Contracts;
+//using DC = Volusion.ProductAdmin.Contracts;
+using Mozu.Core.Api.Contracts;
+using Mozu.ProductAdmin.Contracts;
+using DC = Mozu.ProductAdmin.Contracts;
+using System.Collections.Generic;
+using System.Linq;
+using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
+
+namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
+{
+    public class ProductMapping : Profile
+    {
+        public override string ProfileName
+        {
+            get
+            {
+                return this.GetType().FullName;
+            }
+        }
+        protected override void Configure()
+        {
+
+            var NULLCONTENTE = new DC.ProductLocalizedContent();
+            var NULLPRICE = new DC.ProductPrice();
+            
+           
+
+
+            Mapper.CreateMap<DC.Product, Product>()
+                .ForMember(x => x.ContentLocaleCode,
+                           op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).LocaleCode))
+                //.ForMember(x => x.FreeShipping, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).FreeShipping))
+                .ForMember(x => x.MetaTagDescription,
+                           op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).MetaTagDescription))
+                .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).MetaTagKeywords))
+                .ForMember(x => x.MetaTagTitle, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).MetaTagTitle))
+                .ForMember(x => x.ProductFullDescription,
+                           op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductFullDescription))
+                .ForMember(x => x.ProductImages, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductImages))
+                .ForMember(x => x.ProductName, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductName))
+                .ForMember(x => x.ProductShortDescription,
+                           op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductShortDescription))
+                .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).SEOFriendlyUrl))
+                .ForMember(x => x.ListPrice, op => op.MapFrom(x => (x.Price ?? NULLPRICE).ListPrice))
+                .ForMember(x => x.ISOCurrencyCode, op => op.MapFrom(x => (x.Price ?? NULLPRICE).ISOCurrencyCode))
+                .ForMember(x=> x.InventoryHandling ,op=> op.ResolveUsing( InventoryHandlingResolver))
+                 .ForMember(x => x.ParentProductCode , op => op.MapFrom(x => x.BaseProductCode ))
+                .ForMember(x => x.OptionValues , op => op.ResolveUsing(OptionValuesResolver ))
+                .ForMember(x => x.Price, op => op.MapFrom(x => (x.Price ?? NULLPRICE).Price))
+                .ForMember(x => x.SalePrice, op => op.MapFrom(x => (x.Price ?? NULLPRICE).SalePrice))
+                .ForMember (x=> x.ManageStock , op=> op.MapFrom (x=> x.ManageStock.GetValueOrDefault (false)))
+                .ForMember(x => x.PackageHeight, op => op.MapFrom(x => (x.PackageHeight == null) ? null : x.PackageHeight.Value))
+                .ForMember(x => x.PackageLength, op => op.MapFrom(x => (x.PackageLength == null) ? null : x.PackageLength.Value))
+                .ForMember(x => x.PackageWidth, op => op.MapFrom(x => (x.PackageWidth == null) ? null : x.PackageWidth.Value))
+                .ForMember(x => x.PackageWeight, op => op.MapFrom(x => (x.PackageWeight == null) ? null : x.PackageWeight.Value))
+                .ForMember(x => x.CategoryIds, op => op.MapFrom(x => (x.ProductCategories == null ? null : x.ProductCategories.Where(pc => pc.CategoryId != 1).Select(pc => pc.CategoryId).ToList())));
+               
+
+ //.ForMember(x => x.TaxAmount, op => op.MapFrom(x => (x.Price ?? NULLPRICE).TaxAmount));
+            Mapper.CreateMap<Models.ProductModels.ProductLocalizedImage, DC.ProductLocalizedImage>()
+                .ForMember(x => x.Sequence, op => op.Ignore());
+
+            Mapper.CreateMap<DC.ProductLocalizedImage, Models.ProductModels.ProductLocalizedImage>();
+
+            Mapper.CreateMap<Models.ProductModels.StockOnHandAdjustment, DC.StockOnHandAdjustment>();
+            Mapper.CreateMap<DC.StockOnHandAdjustment, Models.ProductModels.StockOnHandAdjustment>();
+
+            Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>();
+            Mapper.CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>();
+
+            Mapper.CreateMap<Product, DC.Product>()
+                .ForMember(x => x.ProductCategories, op => op.MapFrom(x => x.CategoryIds == null ? null : x.CategoryIds.Select(pc => new ProductCategory() { CategoryId = pc })))
+                //.ForMember(x => x.ProductType , op=> op.MapFrom ( x=> string.IsNullOrEmpty ( x.ProductType ) ? "Simple": x.ProductType ))
+                .ForMember(x => x.Content, op => op.ResolveUsing(ContentResolver))
+                .ForMember(x=>x.IsTaxable , op=> op.MapFrom( x=> x.IsTaxable.GetValueOrDefault( false )))
+                .ForMember(x => x.IsActive , op => op.MapFrom(x => x.IsActive.GetValueOrDefault( true)))
+                .ForMember (x=> x.IsBackOrderAllowed , op=> op.MapFrom ( x=> x.InventoryHandling.GetValueOrDefault(0) == 1 ))
+                .ForMember(x => x.IsHiddenWhenOutOfStock , op => op.MapFrom(x => x.InventoryHandling.GetValueOrDefault(0) == 2))
+                .ForMember(x => x.ManageStock, op => op.MapFrom(x => x.ManageStock.GetValueOrDefault(false)))
+                .ForMember(x => x.PackageHeight, op => op.MapFrom(x => new Measurement { Unit = "in", Value = x.PackageHeight }))
+                .ForMember(x => x.PackageLength, op => op.MapFrom(x => new Measurement { Unit = "in", Value = x.PackageLength }))
+                .ForMember(x => x.PackageWidth, op => op.MapFrom(x => new Measurement { Unit = "in", Value = x.PackageWidth }))
+                .ForMember(x => x.PackageWeight, op => op.MapFrom(x => new Measurement {Unit ="lbs" , Value=x.PackageWeight }))
+                .ForMember(x => x.Price, op => op.ResolveUsing(PriceResolver));
+                
+        }
+        object OptionValuesResolver (DC.Product p)
+        {
+            if (p.VariationOptions != null && p.VariationOptions.Count > 0)
+            {
+                return string.Join(", ", p.VariationOptions.Select(x => x.AttributeValueInternal));
+            }
+            return null;
+        }
+        object InventoryHandlingResolver(DC.Product p)
+        {
+            
+            if (p.ManageStock.GetValueOrDefault(false) == false)
+            {
+                return 0;
+            }
+            if (p.IsBackOrderAllowed.GetValueOrDefault(false))
+            {
+                return 1;
+            }
+            if (p.IsHiddenWhenOutOfStock.GetValueOrDefault(false))
+            {
+                return 2;
+            }
+            else
+            {
+                return 3;
+            }
+        }
+        
+        DC.ProductPrice PriceResolver(Product p)
+        {
+            if (p == null)
+                return null;
+            return new DC.ProductPrice()
+            {
+                ISOCurrencyCode = string.IsNullOrEmpty (p.ISOCurrencyCode) ? "USD" : p.ISOCurrencyCode  ,
+                //IsTaxAmountPercent = p.IsTaxAmountPercent,
+                ListPrice = p.ListPrice,
+                Price = p.Price,
+                //ProductId = p.ProductId,
+                SalePrice = p.SalePrice,
+                //TaxAmount = p.TaxAmount
+            };
+        }
+        DC.ProductLocalizedContent ContentResolver ( Product p )
+        {
+            if (p == null)
+                return null;
+
+            var cnt= new DC.ProductLocalizedContent()
+            {
+                //ContentLocaleCode = string.IsNullOrEmpty(p.ContentLocaleCode) ? "en-US" : p.ContentLocaleCode,
+               
+               // FreeShipping = p.FreeShipping,
+                MetaTagDescription = p.MetaTagDescription,
+                MetaTagKeywords = p.MetaTagKeywords,
+                MetaTagTitle = p.MetaTagTitle,
+                ProductFullDescription = p.ProductFullDescription,
+                //ProductId = p.ProductId,
+                ProductImages = Mapper.Map<List<ProductLocalizedImage>>(p.ProductImages),
+                ProductName = p.ProductName,
+                ProductShortDescription = p.ProductShortDescription,
+                SEOFriendlyUrl = p.SEOFriendlyUrl
+            };
+            if (cnt.ProductImages != null)
+            {
+                for (int i = 0; i < cnt.ProductImages.Count; i++)
+                {
+                    cnt.ProductImages[i].ImageId = cnt.ProductImages[i].ImageId.GetValueOrDefault(i);
+
+                }
+            }
+            return cnt;
+        }
+    }
+}

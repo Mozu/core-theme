@@ -1,0 +1,10 @@
+﻿<form id="mz-global-search-form" class="mz-global-search-form" action="/Search">
+	<input placeholder="Search" type="search" class="mz-site-searchbox"  value="{{SiteContext.SearchContext.Query}}" name="query" />
+	<select class="mz-select mz-search-categories" name="categoryId">
+		<option value="">All</option>
+		{% for cat in SiteContext.CatalogContext.RootCategories %}
+		<option value="{{cat.Id}}" {% if cat.Id == SiteContext.SearchContext.CategoryId  %} selected="selected" {%endif%}>{{cat.Name}}</option>
+		{% endfor %}
+	</select>
+	<button class="mz-site-search-button mz-button" type="submit">Go</button>
+</form>

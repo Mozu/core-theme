@@ -1,0 +1,12 @@
+[bB]in/
+[oO]bj/
+_ReSharper.*
+packages/
+*.suo
+*.user
+Volusion.SiteBuilder.UX.Admin/Scripts/ext/
+.sass-cache/
+.DS_Store
+Volusion.SiteBuilder.UX.Admin/Scripts/docs/
+Volusion.SiteBuilder.UX/App_Data/[Ll]og.txt
+Volusion.SiteBuilder.UX.Themes/Themes/**/Resources/Scripts-Built/

@@ -1,0 +1,68 @@
+﻿.mini-modal {
+	display: none;
+	position: absolute;
+	right: -20%;
+	background-color: #CCC;
+	width: 275px;
+	padding: 15px;
+	border-radius: 8px;
+	box-shadow: -4px 4px 12px #666;
+	z-index: 100;
+
+	.css-arrow-up {
+		@arrow-size: 20px;
+
+		display: block;
+		width: 0;
+		height: 0;
+		border: 0 solid transparent;
+		border-bottom: @arrow-size solid #CCC;
+		border-left-width: @arrow-size;
+		border-right-width: @arrow-size;
+		position: absolute;
+		top: -@arrow-size;
+		right: @arrow-size;
+	}
+
+	.hbox-sliding-window {
+        overflow: hidden;
+
+        form {
+            margin: 0;
+            position: relative;
+
+            &.forgot-password {
+                display: none;
+            }
+
+            label.large-text {
+                font-size: 16px;
+                text-align: left;
+            }
+        }
+    }
+
+	input[type='email'], input[type='password'], input[type='text'] {
+		display: block;
+		width: 95%;
+	}
+
+	a {
+		color: #19D;
+		text-shadow: 0 0 20px #EEE;
+		padding: 0 2px;
+	}
+
+	.last-row {
+		margin-top: 15px;
+
+		input {
+			margin: 0 0 0 10px;
+			padding: 4px 10px;
+		}
+	}
+}
+
+.mini-modal-parent {
+    position: relative;
+}

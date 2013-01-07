@@ -1,0 +1,10 @@
+{
+	"id": "nivo",
+	"displayName": "Nivo Slider",
+	"displayTemplate": "core/slider/template",
+	"maxWidth": 920,
+	"maxHeight": 275,
+	"minWidth": 920,
+	"minHeight": 275,
+	"icon": "http://icons.iconarchive.com/icons/danzakuduro/english-movies-3/72/Air-Bud-v2-icon.png"
+}

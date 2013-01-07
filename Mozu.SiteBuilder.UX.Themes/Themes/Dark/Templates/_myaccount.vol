@@ -1,0 +1,313 @@
+﻿{% extends "default" %}
+
+{% block Init %}
+	{% setTemplateVariables BodyTagClasses="my-account" %}
+{% endblock Init%}
+
+{% block BodyContent %}
+
+<div id="my-account" class="mz-my-account-wrap">
+
+	<h2 class="mz-details-head">Your Account</h2>
+
+    {% with Model.primaryBillingContact as contact %}
+    <div id="personal-info">
+        <span id="display-email">
+            <strong>{{ contact.Email|default:"No email found" }}</strong> (<a href="javascript:;" id="change-email">Change email</a>)
+        </span>
+        <span id="edit-email">
+            <form>
+                <input type="email" name="newEmail" value='{{ contact.Email|default:"No email found" }}'>
+                <input type="hidden" name="oldEmail" value='{{ contact.Email|default:"No email found" }}'>
+                <input type="submit" value="Save">
+            </form>
+        </span>
+        | (<a href="javascript:;" id="change-password">Change password</a>)
+        <div class="modal" id="change-password-modal">
+            <h3>Change Password</h3>
+            <form>
+                <label>
+                    Old Password
+                    <input type="password" name="oldPassword">
+                </label>
+                <label>
+                    New Password
+                    <input type="password" name="newPassword">
+                </label>
+                <label>
+                    Confirm New Password
+                    <input type="password" name="confirmPassword">
+                </label>
+            </form>
+            <div class="action-bar">
+                <a href="javascript:;" class="close-modal">Cancel</a>
+                <button>Save</button>
+            </div>
+        </div>
+        <div class="modal-mask"></div>
+    </div>
+    <div>
+        <label>
+            <input type="checkbox" name="send-news-and-specials">
+            Please keep me up to date on store news and specials
+        </label>
+    </div>
+    
+    <div id="billing-address">
+        <h3>Billing and Shipping Address</h3>
+        <div>{{ contact.FirstName }} {{ contact.MiddleNameOrInitial }} {{ contact.LastNameOrSurname }}</div>
+        
+        {% with contact.Address as address %}
+        <div>{{ address.Address1 }}</div>
+        {% if address.Address2 %}<div>{{ address.Address2 }}</div>{% endif %}
+        {% if address.Address3 %}<div>{{ address.Address3 }}</div>{% endif %}
+        <div>{{ address.CityOrTown }}, {{ address.StateOrProvince }} {{ address.PostalOrZipCode }}</div>
+        <div>{{ address.CountryCode }}</div>
+        {% endwith %}
+        
+        <div>{% firstof contact.PhoneNumber.Home contact.PhoneNumber.Work contact.PhoneNumber.Mobile %}</div>
+        {% endwith %}
+        <div id="toggle-shipping-addresses">
+            <a href="javascript:;">
+                <span>Add/Edit Shipping Addresses</span>
+                <span style="display: none;">Hide addresses</span>
+            </a>
+        </div>
+    </div>
+    
+    <div id="shipping-addresses">
+        {% for shipping in Model.contacts %}
+        {% if not shipping.IsPrimary %}
+        {% with shipping.Contact as contact %}
+        <div class="shipping-address" data-shipping-address-json='{% json_attribute shipping %}'>
+            <div class="actions">
+                <span class="edit" data-modal-container="#shipping-addresses">E</span>
+                <span class="delete">D</span>
+            </div>
+            <h4>Shipping Address</h4>
+            <div>
+                {{ contact.FirstName }}
+                {{ contact.MiddleNameOrInitial }}
+                {{ contact.LastNameOrSurname }}
+            </div>
+            {% with contact.Address as address %}
+            <div>{{ address.Address1 }}</div>
+            {% if address.Address2 %}<div>{{ address.Address2 }}</div>{% endif %}
+            {% if address.Address3 %}<div>{{ address.Address3 }}</div>{% endif %}
+            <div>{{ address.CityOrTown }}, {{ address.StateOrProvince }} {{ address.PostalOrZipCode }}</div>
+            <div>{{ address.CountryCode }}</div>
+            {% endwith %}
+            {% with contact.PhoneNumbers as phone %}
+            {% if phone.home or phone.work or phone.mobile %}<div>{% firstof phone.home phone.work phone.mobile %}</div>{% endif %}
+            {% endwith %}
+        </div>
+        {% endwith %}
+        {% endif %}
+        {% endfor %}
+        <div id="add-new-shipping-address">
+            <a href="javascript:;" data-modal-container="#shipping-addresses">Add New Shipping Address</a>
+        </div>
+        <div id="shipping-address-modal" class="modal">
+            <h3><span>Add New</span><span>Edit</span> Shipping Address</h3>
+            <form>
+                <input type="hidden" name="id">
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <label>
+                                First
+                                <input name="firstName">
+                            </label>
+                        </td>
+                        <td colspan="2">
+                            <label>
+                                Last
+                                <input name="lastName">
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <label>
+                                Address Line 1
+                                <input name="address1">
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <label>
+                                Address Line 2
+                                <input name="address2">
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>
+                                City
+                                <input name="cityOrTown">
+                            </label>
+                        </td>
+                        <td>
+                            <label>
+                                State
+                                <select name="stateOrProvince">
+                                    <option value="AK">AK</option>
+                                    <option value="AL">AL</option>
+                                    <option value="AR">AR</option>
+                                    <option value="AZ">AZ</option>
+                                    <option value="CA">CA</option>
+                                    <option value="CO">CO</option>
+                                    <option value="CT">CT</option>
+                                    <option value="DC">DC</option>
+                                    <option value="DE">DE</option>
+                                    <option value="FL">FL</option>
+                                    <option value="GA">GA</option>
+                                    <option value="HI">HI</option>
+                                    <option value="IA">IA</option>
+                                    <option value="ID">ID</option>
+                                    <option value="IL">IL</option>
+                                    <option value="IN">IN</option>
+                                    <option value="KS">KS</option>
+                                    <option value="KY">KY</option>
+                                    <option value="LA">LA</option>
+                                    <option value="MA">MA</option>
+                                    <option value="MD">MD</option>
+                                    <option value="ME">ME</option>
+                                    <option value="MI">MI</option>
+                                    <option value="MN">MN</option>
+                                    <option value="MO">MO</option>
+                                    <option value="MS">MS</option>
+                                    <option value="MT">MT</option>
+                                    <option value="NC">NC</option>
+                                    <option value="ND">ND</option>
+                                    <option value="NE">NE</option>
+                                    <option value="NH">NH</option>
+                                    <option value="NJ">NJ</option>
+                                    <option value="NM">NM</option>
+                                    <option value="NV">NV</option>
+                                    <option value="NY">NY</option>
+                                    <option value="OH">OH</option>
+                                    <option value="OK">OK</option>
+                                    <option value="OR">OR</option>
+                                    <option value="PA">PA</option>
+                                    <option value="RI">RI</option>
+                                    <option value="SC">SC</option>
+                                    <option value="SD">SD</option>
+                                    <option value="TN">TN</option>
+                                    <option value="TX">TX</option>
+                                    <option value="UT">UT</option>
+                                    <option value="VA">VA</option>
+                                    <option value="VT">VT</option>
+                                    <option value="WA">WA</option>
+                                    <option value="WI">WI</option>
+                                    <option value="WV">WV</option>
+                                    <option value="WY">WY</option>
+                                </select>
+                            </label>
+                        </td>
+                        <td>
+                            <label>
+                                Zip code
+                                <input name="postalOrZipCode">
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>
+                                Country
+                                <select name="countryCode">
+                                    <option value="United States">United States</option>
+                                    <option value="Canada">Canada</option>
+                                    <option value="United Kingdom">United Kingdom</option>
+                                    <option value="Australia">Australia</option>
+                                    <option value="Dominican Republic">Dominican Republic</option>
+                                    <option value="Haiti">Haiti</option>
+                                    <option value="Costa Rica">Costa Rica</option>
+                                    <option value="Cuba">Cuba</option>
+                                    <option value="British Virgin Islands">British Virgin Islands</option>
+                                    <option value="India">India</option>
+                                    <option value="Pakistan">Pakistan</option>
+                                    <option value="Israel">Israel</option>
+                                    <option value="Spain">Spain</option>
+                                    <option value="Portugal">Portugal</option>
+                                    <option value="Germany">Germany</option>
+                                    <option value="France">France</option>
+                                    <option value="Switzerland">Switzerland</option>
+                                    <option value="Mexipan">Mexipan</option>
+                                    <option value="People's Republic of China">People's Republic of China</option>
+                                    <option value="South Korea">South Korea</option>
+                                    <option value="Taiwan">Taiwan</option>
+                                </select>
+                            </label>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>
+                                Phone Number
+                                <input type="phone" name="phone-number">
+                            </label>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <label>
+                                Company
+                                <input name="companyOrOrganization">
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+                <div class="action-bar">
+                    <a href="javascript:;" class="close-modal">Cancel</a>
+                    <input type="submit" value="Create" class="create">
+                    <input type="submit" value="Save" class="edit">
+                </div>
+            </form>
+        </div>
+        <div class="modal-mask"></div>
+    </div>
+    
+    <div id="your-orders">
+        <h3>Your Orders</h3>
+        <table>
+			{% for order in Model.orders %}
+            <tr>
+                <td valign="top">
+                    <span class="order-date">{{ order.submittedDate|date:"l, F j, Y" }}</span>
+                    <span>Order Number: {{ order.orderNumber }}</span>
+                    <span>Order Total: {{ order.total|currency }}</span>
+					{% if order.shippingDate %}
+                    <span>Shipped: {{ order.shippingDate|date:"l, F j, Y" }}</span>
+					{% else %}
+					<span>Shipped: <em>Not shipped</em></span>
+					{% endif %}
+                </td>
+                <td>
+					{% for item in order.items %}
+					
+                    <span class="order-image">
+						<img src="{{ item.product.imagePath }}?50" />
+                    </span>
+                    <span class="order-description">
+                        <span class="item-title">{{ item.productName }}</span>
+                        <span class="item-summary">Qty: {{ item.quantity }}, Price: {{ item.unitPrice|currency }}, Subtotal: {{ item.subTotal|currency }}
+                    </span>
+					{% endfor %}
+                </td>
+            </tr>
+			{% endfor %}
+        </table>
+    </div>
+
+</div><!-- #my-account -->
+
+{% require_script "Pages/myaccount.js" %}
+
+{% endblock BodyContent %}
+

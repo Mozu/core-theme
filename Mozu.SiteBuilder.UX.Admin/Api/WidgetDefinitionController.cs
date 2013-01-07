@@ -1,0 +1,29 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.ServiceModel;
+using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using System.ServiceModel.Web;
+
+namespace Mozu.SiteBuilder.UX.Admin.Api
+{
+    [ServiceContract]
+    public class WidgetDefinitionController : BaseController
+    {
+        private readonly IWidgetProvider _widgetProvider;
+
+        public WidgetDefinitionController(IWidgetProvider widgetProvider)
+        {
+            _widgetProvider = widgetProvider;
+        }
+
+        [WebGet(UriTemplate = "/list")]
+        public Response<List<WidgetDefintion>> List(PagingParamaters pagingParams, FilterCollection extFilter )
+        {
+            var defs = _widgetProvider.GetWidgets();
+
+            return List(defs.ToList());
+        }
+    }
+}

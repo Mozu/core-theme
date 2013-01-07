@@ -1,0 +1,9 @@
+﻿<div class="mz-product-item-wrap">
+	<a class="mz-product-image-a" href="{{prod.url}}">
+		<img src="{{prod.images.main.resize.100.src}} mz-product-image-a" />
+	</a>
+	<div class="mz-product-info-wrap">
+		<a class="mz-product-title-a" href="{{prod.url}}">{{prod.ProductName}}</a>
+		{% html_partial "modules/PriceStack" %}
+	</div>
+</div>

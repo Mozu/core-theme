@@ -1,0 +1,75 @@
+﻿[{
+    "id": "dashboard",
+    "label": "Dashboard",
+    "address": "/admin/dashboard",
+    "icon": "dashboard"
+}, {
+    "id": "store",
+    "label": "Store",
+    "address": "/admin/orders",
+    "icon": "store",
+    "items": [{
+        "id": "orders",
+        "label": "Orders",
+        "address": "/admin/orders"
+    }, {
+        "id": "customers",
+        "label": "Customers",
+        "address": "/admin/customers"
+    }, {
+        "id": "generalsettings",
+        "label": "Settings",
+        "address": "/admin/generalsettings"
+    }]
+}, {
+    "id": "catalog",
+    "label": "Catalog",
+    "address": "/admin/products",
+    "icon": "catalog",
+    "items": [{
+        "id": "products",
+        "label": "Products",
+        "address": "/admin/products"
+    }, {
+        "id": "categories",
+        "label": "Categories",
+        "address": "/admin/categories"
+    }, {
+        "id": "attributes",
+        "label": "Attributes",
+        "address": "/admin/options"
+    }]
+}, {
+    "id": "marketing",
+    "label": "Marketing",
+    "address": "/admin/email",
+    "icon": "marketing",
+    "items": [{
+        "id": "discounts",
+        "label": "Discounts",
+        "address": "/admin/discounts"
+    }, {
+        "id": "promotions",
+        "label": "Promotions",
+        "address": "/admin/email"
+    }, {
+        "id": "campaigns",
+        "label": "Campaigns",
+        "address": "/admin/email"
+    }]
+}, {
+    "id": "reports",
+    "label": "Reports",
+    "address": "/admin/dashboard",
+    "icon": "settings"
+}, {
+    "id": "sites",
+    "label": "Edit Website",
+    "address": "/admin/sites/pages",
+    "icon": "website"
+}, {
+    "id": "fileManagement",
+    "label": "File Manager",
+    "address": "/admin/fileManagement",
+    "icon": "settings"
+}]

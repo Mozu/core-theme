@@ -1,0 +1,14 @@
+{
+  "UserCreatable": false,
+  "DefaultValues": {
+    "contentCollection": "widgets",
+    "documentType": "widget",
+    "items": []
+  },
+  "DisplayName": "widgetbase",
+  "DocumentType": "widget",
+  "EntityType": "widget",
+  "Icon": "",
+  "Id": "widget",
+  "Template": ""
+}

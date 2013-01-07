@@ -1,0 +1,32 @@
+﻿
+.mz-content-section {
+	min-height: 400px;
+	overflow: hidden;
+	padding: 20px 0;
+	position: relative;
+
+}
+.homepagetext {
+	margin: 20px 0;
+	.box-column(3, 30px);
+	&>p {
+		margin-top: 0;
+	}
+}
+.mz-image-wrap img {
+	max-width: 100%;
+	height: auto;
+}
+@media only screen and (max-width : 620px) {
+	.homepagetext {
+		.box-column(2, 30px);
+	}
+}
+@media only screen and (max-width : 480px) {
+	.mz-content-section {
+		padding: 20px;
+	}
+	.homepagetext {
+		.box-column(1, 30px);
+	}
+}

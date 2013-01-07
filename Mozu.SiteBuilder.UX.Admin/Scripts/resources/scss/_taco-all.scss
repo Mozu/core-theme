@@ -1,0 +1,38 @@
+
+// Import all the image sprites first
+@import 'taco/sprites';
+
+// Import all the colors 
+@import 'taco/colors';
+
+// Import all mixins
+@import 'taco/mixins/css3';
+
+
+// set some variables to limit IE compilation
+$supports-gradients: true;
+
+@import 'taco/content';
+@import 'taco/viewport';
+@import 'taco/header';
+@import 'taco/navmenu';
+@import 'taco/messages';
+@import 'taco/dashboard';
+@import 'taco/sites';
+@import 'taco/errors';
+
+// tinyMCE fixes
+@import 'taco/tinymce_fixes';
+
+// Import widgets
+@import 'taco/widgets/actions';
+@import 'taco/widgets/fieldgroup';
+@import 'taco/widgets/form';
+@import 'taco/widgets/grid';
+@import 'taco/widgets/modal';
+@import 'taco/widgets/shim';
+@import 'taco/widgets/tree';
+@import 'taco/widgets/themes';
+@import 'taco/widgets/checkout';
+@import 'taco/widgets/quickadder';
+@import 'taco/widgets/standaloneAccordion';

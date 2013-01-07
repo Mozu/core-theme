@@ -1,0 +1,23 @@
+<div data-mz-role="productimages-container" class="mz-product-images-container mz-mobile-optimized">
+    <div data-mz-role="productimages-main">
+        {% if Model.images.Count > 0 %}
+            <ul>
+                <li class="mz-product-image-main">
+                    <img class="mz-product-image-main-link mz-product-image" {% data_attributes Model.images.Main %} src="{{ Model.images.Main.src }}" />
+                </li>
+                {% for image in Model.images %}
+                    {% if image.src != Model.images.Main.src %}
+                        <li class="mz-product-image-additional">
+                            <img class="mz-product-image-additional-link mz-product-image" src="{{ image.src }}">
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="mz-product-images-sliderpos" data-mz-role="productimages-bullets">
+        {% for image in Model.images %}
+            <em id="mz-product-images-sliderbullet">&bull;</em>
+        {% endfor %}
+    </div>
+</div>

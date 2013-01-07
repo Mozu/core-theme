@@ -1,0 +1,8 @@
+{
+	"id": "tag_collection",
+	"displayName": "Tag Collection",
+	"displayTemplate": "core/tagcollection/template",
+	"icon": "/admin/scripts/resources/images/AddPhotos.png",
+	"editView": "Taco.view.site.widget.TagCollection",
+	"properties": []
+}

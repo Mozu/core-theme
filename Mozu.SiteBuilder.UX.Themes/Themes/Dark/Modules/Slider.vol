@@ -1,0 +1,6 @@
+﻿<div class="mj-hero-banner">
+    <div class="slider-wrapper theme-bar">
+        <div id="slider" class="nivoSlider"><img src="/resources/images/hero-bannner-1.jpg" alt="" data-thumb="/resources/images/hero-bannner-1.jpg" /> <img src="/resources/images/hero-bannner-3.jpg" alt="" data-thumb="/resources/images/hero-bannner-3.jpg" /> <img src="/resources/images/hero-bannner-2.jpg" alt="" data-thumb="/resources/images/hero-bannner-2.jpg" /> <img src="/resources/images/hero-bannner-4.jpg" alt="" data-thumb="/resources/images/hero-bannner-4.jpg" /></div>
+    </div>
+</div>
+{% require_script "modules/slider"  %}

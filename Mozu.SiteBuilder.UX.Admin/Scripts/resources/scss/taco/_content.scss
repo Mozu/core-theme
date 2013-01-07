@@ -1,0 +1,104 @@
+@mixin taco-content {
+  
+  .#{$vprefix}content-container {
+
+    .#{$vprefix}content-header {
+      padding: 14px 28px 7px;
+      z-index: 2;
+      @include box-shadow(rgba(0,0,0,0) 0 -5px 10px 0px);
+      @include transition(box-shadow 1s ease);
+
+      
+      h1 {
+        color: $color-neutral-darkest;
+        font: $font-page-title;
+        float: left;
+        display: inline;
+      }
+
+      p {
+        color: $color-neutral-darkest;
+        font: $font-message;
+        padding-top: 7px;
+      }
+      
+      .#{$vprefix}action {
+        float: none;
+        margin-left: 1em;
+      }
+    }
+    
+    &.#{$vprefix}content-scrolled .#{$vprefix}content-header {
+      @include box-shadow(rgba(0,0,0,1) 0 -5px 10px 0px);
+    }
+    
+    .#{$vprefix}content-body {
+      padding: 7px 28px;
+
+      .#{$prefix}table-layout-cell {
+        vertical-align: top;
+      }
+    }
+  }
+
+  /* why */
+  em {
+	font-style: italic;
+  }
+  
+  
+  /* Let's get this party started */
+  ::-webkit-scrollbar {
+      width: 5px;
+  }
+   
+  /* Track */
+  ::-webkit-scrollbar-track {
+      //-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+      -webkit-border-radius: 10px;
+      border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+      -webkit-border-radius: 5px;
+      border-radius: 5px;
+      background: rgba(0,0,0,0.1); 
+      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+  }
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(255,0,0,0); 
+  }
+
+  .widget-source {
+	box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
+	color: #505050;
+	height: 38px !important;
+	margin: 10px !important;
+	padding: 10px !important;
+	text-align: center;
+	width: 90%;
+	@include background(linear-gradient(rgba(255, 255, 255, 1), rgba(239, 239, 239, 1)));
+	@include border-radius(5px);
+  }
+  .dropzone-shim {
+	@include transition;
+  }
+  .dropzone-shim-hover {
+	background-color: #CFC;
+  }
+  .#{$vprefix}reorderable-widget {
+	background-color: #FFF;
+	border: 1px solid #CCC;
+	color: #333;
+	@include border-radius(2px);
+  }
+
+  .#{$vprefix}reorderable-placeholder {
+	background-color: #FFF;
+	border: 1px solid #CCC;
+	color: #333;
+	@include border-radius(2px);
+  }
+  
+}

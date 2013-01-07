@@ -1,0 +1,11 @@
+﻿<script>
+    var require = {
+        baseUrl: "/resources/scripts-built",
+        paths: {
+            jquery: "http://code.jquery.com/jquery"
+        },
+        priority: ['jquery']
+    };
+</script>
+<script src="/resources/scripts/require.js"></script>
+<script type="text/javascript">require(['resources/scripts-built/pages/common.js'], function() { require([{{Model}}]) } );</script>

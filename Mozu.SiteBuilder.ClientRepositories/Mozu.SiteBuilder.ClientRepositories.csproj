@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1D2722EB-6D2B-4B0E-BA82-15C8139CBDB0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Volusion.SiteBuilder.ClientRepositories</RootNamespace>
+    <AssemblyName>Volusion.SiteBuilder.ClientRepositories</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <!-- Customizable Output Directory Opt-In for TFS Build (non-web application projects) -->
+  <PropertyGroup Condition="$(TeamBuildOutDir) != '' ">
+    <OutputPath>$(TeamBuildOutDir)\$(MSBuildProjectName)</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=2.5.2.830, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.2.5.2.830\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration">
+      <HintPath>..\packages\Autofac.2.5.2.830\lib\NET40\Autofac.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc">
+      <HintPath>..\packages\Autofac.Mvc3.2.5.2.830\lib\NET40\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityDataModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebApi.OData.0.6.0\lib\40-Full\EntityDataModel.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Spatial, Version=4.99.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebApi.OData.0.6.0\lib\40-Full\Microsoft.Data.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Json, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\JsonValue.0.6.0\lib\40\Microsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Net.Http.Formatting, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\HttpClient.0.6.0\lib\40\Microsoft.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Runtime.Serialization.Internal, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebApi.0.6.0\lib\40-Full\Microsoft.Runtime.Serialization.Internal.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Server.Common, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebApi.0.6.0\lib\40-Full\Microsoft.Server.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ServiceModel.Internal, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebApi.0.6.0\lib\40-Full\Microsoft.ServiceModel.Internal.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.0.5\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.OData, Version=4.99.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebApi.OData.0.6.0\lib\40-Full\System.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>..\packages\HttpClient.0.6.0\lib\40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Volusion.Api.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Volusion.Api.Contracts.1.0.12017.10\lib\Volusion.Api.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Volusion.Attribute.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Volusion.Attribute.Contracts.1.0.11362.4\lib\Volusion.Attribute.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Volusion.ContentService.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Volusion.ContentService.Contracts.1.0.12016.1\lib\Volusion.ContentService.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Volusion.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Volusion.Core.1.0.12013.1\lib\Volusion.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Volusion.PlatformService.Contracts">
+      <HintPath>..\packages\Volusion.PlatformService.Contracts.1.0.12018.5\lib\Volusion.PlatformService.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Volusion.ProductService.DataContracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Volusion.ProductService.DataContracts.1.0.12026.2\lib\Volusion.ProductService.DataContracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Volusion.UserService.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Volusion.UserService.Contracts.0.0.0.3\lib\net40\Volusion.UserService.Contracts.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin\AttributeGroupRepository.cs" />
+    <Compile Include="Admin\AttributeRepository.cs" />
+    <Compile Include="Admin\AttributeSetRepository.cs" />
+    <Compile Include="Admin\MockRepositories\MockRepositoryBase.cs" />
+    <Compile Include="Admin\MockRepositories\MockRolesRepository.cs" />
+    <Compile Include="Admin\MockRepositories\MockUserAuthTicketRepository.cs" />
+    <Compile Include="Admin\MockRepositories\MockUserRepository.cs" />
+    <Compile Include="Authentication\IUserAuthTicketServiceClient.cs" />
+    <Compile Include="Admin\ServiceClients\UserAuthTicketServiceClient.cs" />
+    <Compile Include="Authentication\IRolesRepository.cs" />
+    <Compile Include="Admin\ServiceClients\UserServiceClient.cs" />
+    <Compile Include="Cms\IDocumentRepository.cs" />
+    <Compile Include="Cms\IDocumentTypeRepository.cs" />
+    <Compile Include="IResourceUriMappingProvider.cs" />
+    <Compile Include="JsonResourceUriMappingProvider.cs" />
+    <Compile Include="ResourceUriMapping.cs" />
+    <Compile Include="ResourceUriResolver.cs" />
+    <Compile Include="Admin\ServiceClients\ICatalogServiceClient.cs" />
+    <Compile Include="Admin\ServiceClients\IContentLocaleServiceClient.cs" />
+    <Compile Include="Admin\ServiceClients\IStorefrontServiceClient.cs" />
+    <Compile Include="IResourceUriResolver.cs" />
+    <Compile Include="RestClient.cs" />
+    <Compile Include="Admin\IAttributeGroupRepository.cs" />
+    <Compile Include="Admin\IAttributeSetRepository.cs" />
+    <Compile Include="Admin\MockRepositories\MockAttributeGroupRepository.cs" />
+    <Compile Include="Admin\MockRepositories\MockAttributeSetRepository.cs" />
+    <Compile Include="Admin\RestTenantRepository.cs" />
+    <Compile Include="Admin\ServiceClients\StoreFrontServiceClient.cs" />
+    <Compile Include="Admin\IAttributeRepository.cs" />
+    <Compile Include="Admin\IProductRepository.cs" />
+    <Compile Include="Admin\MockRepositories\MockCategoryRepository.cs" />
+    <Compile Include="Admin\MockRepositories\MockRestAttributeRepository.cs" />
+    <Compile Include="Admin\MockRepositories\MockRestProductRepository.cs" />
+    <Compile Include="Admin\ServiceClients\CatalogServiceClient.cs" />
+    <Compile Include="Admin\RestProductRepository.cs" />
+    <Compile Include="Admin\IProductSetsRepository.cs" />
+    <Compile Include="Admin\IRestRepositoryConfiguration.cs" />
+    <Compile Include="IRepository.cs" />
+    <Compile Include="Admin\IWebSiteRepository.cs" />
+    <Compile Include="Admin\RestBaseRepository.cs" />
+    <Compile Include="Admin\RestProductSetsRepository.cs" />
+    <Compile Include="Admin\ServiceClients\ContentLocaleServiceClient.cs" />
+    <Compile Include="Admin\RestRepositoryConfiguration.cs" />
+    <Compile Include="Admin\RestWebSiteRepository.cs" />
+    <Compile Include="Configuration\AutofacModule.cs" />
+    <Compile Include="MediaTypeFormatters\JsonNetMediaTypeFormatter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Admin\ServiceClients\CategoryServiceClient.cs" />
+    <Compile Include="ServiceClient\IRepositoryServiceClient.cs" />
+    <Compile Include="ServiceClient\ServiceClientBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Admin\crud\" />
+    <Folder Include="SiteConfig\" />
+    <Folder Include="StoreFront\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Volusion.SiteBuilder.Mvc\Volusion.SiteBuilder.Mvc.csproj">
+      <Project>{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}</Project>
+      <Name>Volusion.SiteBuilder.Mvc</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="VersionSeed.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

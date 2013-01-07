@@ -1,0 +1,87 @@
+﻿{% extends "default" %}
+{% setTemplateVariables BodyTagClasses="cart" %}
+
+{% block Init %}
+{% require_script "pages/cart" %}
+{% endblock Init%}
+
+{% block BodyContent %}
+
+
+<div id="mz-layout-container" class="mz-layout-container mz-cart-page mz-content-inner-wrap">
+	<h1 class="mz-page-header">Your Cart</h1>
+
+
+	<form method="post" action="/cart/checkout" id="mz-cart-form" data-cart="{% json_attribute Model %}">
+		<table class="mz-table mz-cart-items mz-mobile-optimized">
+			<tbody data-bind="foreach: items">
+                <tr class="mz-cart-product-row">
+                    <td class="mz-cart-product-item">
+                        <div class="mz-cart-item-info">
+                            <span class="mz-cart-item-image-wrap">
+						        <img class="mz-cart-item-image" data-bind="visible: product.imagePath, attr: { src: product.imagePath + '?max=50' }" />
+                            </span>
+                            <span class="mz-cart-item-title" data-bind="text: product.name"></span>
+                            <span class="mz-cart-item-code">Code: <strong data-bind="text: product.productCode"></strong></span>
+                            <dl class="mz-cart-item-options" data-bind="visible: product.options.length > 0, foreach: product.options">
+                                <dt data-bind="text: optionName + ':'"></dt>
+								<dd data-bind="text: optionValue"></dd>
+							</dl>
+                            <span class="mz-cart-product-remove">
+                                <a href="javascript:;" data-bind="click: remove" class="mz-product-delete mz-icon mz-i-close-sm">X</a>
+                            </span>
+                        </div>
+                        <div class="mz-cart-item-config-wrap">
+                            <span class="mz-cart-price-container">
+                                <span class="mz-cart-price mz-strikethrough" data-bind="visible: priceIsModified, currencyText: unitPrice().baseAmount"></span>
+                                <span class="mz-cart-price mz-updated-price" data-bind="css: { 'mz-updated-price': !priceIsModified }, currencyText: unitPrice().finalAmount"></span>                
+                            </span>
+                            <span class="mz-cart-item-times">&times;</span>
+                            <span class="mz-cart-item-quantity">
+                                <input type="tel" data-bind="value: quantity">
+                            </span>
+                            <span class="mz-cart-item-equals">=</span>
+                            <span class="mz-cart-item-total" data-bind="currencyText: total"></span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+			<tbody data-bind="visible: isEmpty">
+				<tr align="center">
+					<td>
+						You have no items in your cart.
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td>
+						<!-- This is unimplemented for alpha. -->
+						{% if not Model.HasDiscount %}
+						<div id="mz-cart-coupon-form" class="mz-coupon-wrap" style="display:none">
+							Coupon code: <input {% if Model.Items.Count == 0 %} disabled="disabled" {% endif %} style="width: 100px;" id="mz-cart-coupon-code" type="text" />&nbsp;
+							<input id="mz-cart-apply-coupon-button" {% if Model.Items.Count == 0 %} disabled="disabled" {% endif %} type="button" value="Apply" />
+						</div>
+						{% else %}{% endif %}
+					</td>
+                 </tr>
+                <tr>
+					<td align="right"><em class="mz-auxiliary-text">Tax &amp; Shipping Calculated at Checkout</em></td>
+				</tr>
+				<tr class="mz-cart-total-row">
+                    <td>
+                        <span class="mz-cart-total-label">Order Total:</span>
+                        <span class="mz-cart-total-wrap"><strong><span id="mz-cart-total" class="mz-cart-total" data-bind="currencyText: total"></span></strong></span>
+                    </td>
+				</tr>
+				<tr>
+					<td align ="right">
+						<input type="hidden" name="Id" value="{{ Model.Id }}" />
+						<button id="checkout" class="mz-button mz-btn-checkout mz-btn-cta"  {% if Model.Items.Count == 0 %} disabled="disabled" {% endif %} type="submit">Proceed to Checkout</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</div>
+{% endblock BodyContent %}

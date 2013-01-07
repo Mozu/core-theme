@@ -1,0 +1,39 @@
+.mz-error-head {
+	background: transparent url('/resources/images/mozu-error.png') no-repeat top left;
+	padding-left: 120px;
+	font-size: 36px;
+	height: 90px;
+	padding-top: 30px;
+	margin-bottom: 0;
+}
+.mz-error-subhead {
+	font-size: 18px;
+	color: #999;
+	display: block;
+	margin-top: 10px;
+}
+.mz-error-text {
+	font-size: 16px;
+	color: #f33;
+	display: block;
+	margin-top: 10px;
+}
+
+
+.mz-error-detail-expander {
+	display: block;
+}
+
+.mz-error-detail {
+	.box-shadow(inset 0 0 22px rgba(0,0,0,0.25));
+	padding: 30px 40px;
+	.border-radius(5px);
+	.transition(all 1s);
+	.opacity(0);
+	height: 1px;
+	overflow: scroll;
+	&.mz-expanded {
+		height: 400px;
+		.opacity(100); 
+	}
+}

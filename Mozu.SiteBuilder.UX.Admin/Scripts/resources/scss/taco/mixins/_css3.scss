@@ -1,0 +1,72 @@
+
+@mixin outer-shadow ($strength: 0.3, $radius: 5px, $x: 0, $y: 0) {
+  box-shadow: $x $y $radius rgba(0,0,0,$strength);
+  -moz-box-shadow: $x $y $radius rgba(0,0,0,$strength);
+  -webkit-box-shadow: $x $y $radius rgba(0,0,0,$strength);
+  -o-box-shadow: $x $y $radius rgba(0,0,0,$strength);
+  -ms-box-shadow: $x $y $radius rgba(0,0,0,$strength);
+}
+
+@mixin inner-shadow ($strength: 0.3, $radius: 5px, $x: 0, $y: 0) {
+  box-shadow: $x $y $radius rgba(0,0,0,$strength) inset;
+  -moz-box-shadow: $x $y $radius rgba(0,0,0,$strength) inset;
+  -webkit-box-shadow: $x $y $radius rgba(0,0,0,$strength) inset;
+  -o-box-shadow: $x $y $radius rgba(0,0,0,$strength) inset;
+  -ms-box-shadow: $x $y $radius rgba(0,0,0,$strength) inset;
+}
+
+ @mixin facade-transitions($speed: 0.3s, $easing: ease-in-out) {
+    transition: box-shadow $speed $easing, transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
+    -webkit-transition: -webkit-box-shadow $speed $easing, -webkit-transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
+    -moz-transition: -moz-box-shadow $speed $easing, -moz-transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
+    -o-transition: -o-box-shadow $speed $easing, -o-transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
+  }
+
+@mixin flexbox ($direction: row, $wrap: nowrap, $justify: flex-start, $alignItems: stretch, $alignContent: stretch) {
+  // display: box;
+  // display: -moz-box;
+  // display: -webkit-box;
+  // display: -o-box;
+  // box-pack: $pack;
+  // box-align: $align;
+  // -moz-box-pack: $pack;
+  // -moz-box-align: $align;
+  // -webkit-box-pack: $pack;
+  // -webkit-box-align: $align;
+  // -o-box-pack: $pack;
+  // -o-box-align: $align;
+  display: -webkit-flex;
+  -webkit-flex-direction: $direction;
+  -webkit-flex-wrap: $wrap;
+  -webkit-justify-content: $justify;
+  -webkit-align-items: $alignItems;
+  -webkit-align-content: $alignContent;
+}
+
+@mixin flex ($grow: 0, $shrink: 1, $basis: auto) {
+  -webkit-flex: $grow $shrink $basis;
+}
+
+@mixin no-select {
+    user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: -moz-none;
+    -webkit-user-select: none;
+    
+    cursor:default;
+}
+
+@mixin important-no-border-radius {
+    //we need to hard code this so we can declare !important
+    -moz-border-radius: 0 !important;
+    -webkit-border-radius: 0 !important;
+    -o-border-radius: 0 !important;
+    -ms-border-radius: 0 !important;
+    -khtml-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+.#{$vprefix}no-select {
+	@include no-select;
+}

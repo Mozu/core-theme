@@ -1,0 +1,19 @@
+
+
+@mixin taco-messagepanel {
+	
+	##{$vprefix}system-message-panel-body {
+		@include single-transition(background-color);
+	}
+	
+	.#{$vprefix}content-messages.status {
+		background-color: #cfc;
+	}
+	.#{$vprefix}content-messages.warning {
+		background-color: #ffc;
+	}
+	.#{$vprefix}content-messages.error {
+		background-color: #fcc;
+	}
+   
+}

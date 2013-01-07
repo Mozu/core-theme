@@ -1,0 +1,1 @@
+define(["jquery","knockout","modules/models-cart"],function(e,t,n){var r=e("#mz-cart-form"),i=new n.Cart(r.data("cart"));window.cartVM=i,t.applyBindings(i,r[0]),r.on("blur",".mz-cart-item-quantity input",function(){setTimeout(function(){i.updateItems()},50)})});

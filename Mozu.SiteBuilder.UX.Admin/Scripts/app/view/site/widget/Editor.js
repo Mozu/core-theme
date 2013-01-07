@@ -1,0 +1,75 @@
+/**
+ * @class Taco.view.site.widget.Editor
+ */
+Ext.define('Taco.view.site.widget.Editor', {
+    extend: 'Taco.core.ux.modal.ContentWithActions',
+    autoSize: true,
+    /**
+     * @cfg {String} configName
+     * The name of the widget config on the CMS Document
+     */
+    configName: 'widget_configuration',
+
+    primaryText: 'OK',
+    widgetEditData: null,
+
+    constructor: function (cfg) {
+        if (cfg.widgetEditData && cfg.widgetEditData.document) {
+            this.widgetConfig = JSON.parse(cfg.widgetEditData.document.getItem(cfg.configName || this.configName));
+            // Init the config if necessary
+            if (!this.widgetConfig) {
+                this.widgetConfig = cfg.initWidgetConfig ? cfg.initWidgetConfig() : this.initWidgetConfig();
+            }
+        }
+        this.callParent(arguments);
+    },
+
+    initComponent: function () {
+        this.form = Ext.create('Ext.form.Panel', {
+            bubbleEvents: ['dirtychange', 'validitychange'],
+            cls: 'taco-widget-form',
+            items: this.items,
+            border: false,
+            trackResetOnLoad: true
+        });
+
+        this.items = [this.form];
+
+        this.callParent(arguments);
+
+        this.on({
+            save: this.onSave,
+            scope: this
+        });
+
+        this.form.getForm().setValues(this.widgetConfig);
+        this.form.getForm().trackResetOnLoad = false;
+    },
+
+    /**
+     * Initializes the default values if the widget has no data yet
+     * @return {Object} Default widget config to be loaded into the form.
+     */
+    initWidgetConfig: function () {
+        return {};
+    },
+
+    /**
+     * Builds the config object that will be saved to the widget.
+     * @return {Object} New widget config to be saved.
+     */
+    buildWidgetConfig: function () {
+        return this.form.getValues();
+    },
+
+    /**
+     * Runs after the save button is clicked. Hides modal and fires
+     * the 'aftersave' event
+     */
+    onSave: function () {
+        var config = this.buildWidgetConfig();
+        this.widgetEditData.document.setItem(this.configName, config, true);
+        this.fireEvent('aftersave', this.widgetEditData);
+        this.hide();
+    }
+});

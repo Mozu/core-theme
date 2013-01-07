@@ -1,0 +1,371 @@
+﻿/**
+ * @class Taco.view.order.Edit
+ */
+Ext.define('Taco.view.order.Edit', {
+    extend: 'Taco.core.ux.content.Container',
+    requires: ['Taco.core.ux.BaseGrid', 'Taco.model.Order', 'Taco.model.OrderNote', 'Taco.store.OrderNotes', 'Taco.view.order.modal.Address', 'Taco.view.order.modal.PaymentAction', 'Taco.view.order.modal.ShipmentAction', 'Taco.model.PaymentAndCheckout', 'Ext.grid.feature.Grouping'],
+
+    model: 'Taco.model.Order',
+
+    initComponent: function (eOpts) {
+        var me = this,
+            dataTpl, dataCmp, internalNotes;
+
+        this.paymentFlow = {
+            authorize: 'placement',
+            capture: 'shipment'
+        };
+
+        this.notesStore = Ext.create('Taco.store.OrderNotes');
+
+        this.data = this.recordId.getData(true);
+        console.log("order data object", this.data);
+
+        this.header = {
+            title: 'Order #' + this.recordId.get('orderNumber') + ' <span style="font-size: 0.5em; font-weight: normal;">(' + this.recordId.getId() + ')</span>'
+        };
+
+        dataTpl = new Ext.XTemplate(
+            '<tpl for=".">',
+                '<div class="taco-orderform-customer-data">',
+                    '<div class="taco-orderform-header">',
+                        '<div>',
+                            '<div class="status order-status">{orderStatus}</div>',
+                            '<div class="order-total">{total:usMoney}</div>',
+                        '</div><div class="customer-info">',
+                            '<div>{createDate:date("F j, Y g:i a")}</div>',
+                                '<div><label>Customer ID:</label>',
+                                '<span class="value">{customerAccountId}</span>',
+                            '</div><div>',
+                                '<label>IP address:</label>',
+                                '<span class="value">{ipAddress}</span>',
+                            '</div>',
+                        '</div>',
+                    '</div><div class="taco-orderform-merchant-actions">',
+                        '<div class="order-authorization">',
+                            '<div class="status payment-status">{paymentStatus}</div>',
+                            '<div>',
+                                '<tpl for="payment"><tpl for="card">',
+                                    '<label>{paymentOrCardType}</label>',
+                                    '<span class="value">{cardNumberPartOrMask}</span>',
+                                '</tpl></tpl>',
+                            '</div><div>',
+                                '<tpl for="paymentTransactions">',
+                                    '<label>Authorization id:</label>',
+                                    '<span class="value">{id}</span>',
+                                '</tpl>',
+                            '</div><div>',
+                                '<a href="#">Change payment method</a>',
+                            '</div><div class="payment-flow-action">',
+                                '<tpl if="this.hasAction(availablePaymentActions, \'receivecheck\')">',
+                                    '<a href="#" data-editor="paymentAction">Receive {total:usMoney}</a>',
+                                '<tpl elseif="this.hasAction(availablePaymentActions, \'capture\')">',
+                                    '<a href="#" data-editor="paymentAction">Capture {total:usMoney}</a>',
+                                '</tpl>',
+                            '</div>',
+                        '</div><div class="order-shipping">',
+                            '<div class="status shipping-status">{fulfillmentStatus}</div>',
+                            '<tpl for="shipment">',
+                                '<div>{shippingMethodCode}</div>',
+                            '</tpl><div class="payment-flow-action">',
+                                '<tpl if="this.hasAction(availableShipmentActions, \'Ship\')">',
+                                    '<a href="#" data-editor="shipmentAction">Ship all items</a>',
+                                '</tpl>',
+                            '</div>',
+                        '</div>',
+                    '</div><div class="taco-orderform-addresses">',
+                        '<div class="order-address order-address-billing">',
+                            '<div class="order-address-header">',
+                                '<label>Billing to</label>',
+                                // '<a href="#" data-editor="billingAddress">Edit</a>',
+                            '</div>',
+                            '<tpl for="payment"><tpl for="card"><tpl for="billingAddress">',
+                                '<div class="order-address-body">',
+                                    '<div>{firstName} {lastName}</div>',
+                                    '<div class="order-address-data"><tpl for="address">',
+                                        '<div>{address1}</div>',
+                                        '<div>{address2}</div>',
+                                        '<div>{address3}</div>',
+                                        '<div>{cityOrTown} {stateOrProvince} {postalOrZipCode}</div>',
+                                        '<div>{countryCode}</div>',
+                                    '</tpl></div>',
+                                    '<div><a href="mailto:{email}">{email}</a></div>',
+                                    '<tpl foreach="phoneNumbers">',
+                                        '<div>{.}</div>',
+                                    '</tpl>',
+                                '</div>',
+                            '</tpl></tpl></tpl>',
+                        '</div><div class="order-address order-address-shipping">',
+                            '<div class="order-address-header">',
+                                '<label>Shipping to</label>',
+                                '<a href="#" data-editor="shippingAddress">Edit</a>',
+                            '</div>',
+                            '<tpl for="shipment"><tpl for="shippingAddress">',
+                                '<div class="order-address-body">',
+                                    '<div>{firstName} {lastName}</div>',
+                                    '<div class="order-address-data"><tpl for="address">',
+                                        '<div>{address1}</div>',
+                                        '<div>{address2}</div>',
+                                        '<div>{address3}</div>',
+                                        '<div>{cityOrTown} {stateOrProvince} {postalOrZipCode}</div>',
+                                        '<div>{countryCode}</div>',
+                                    '</tpl></div>',
+                                    '<div><a href="mailto:{email}">{email}</a></div>',
+                                    '<tpl foreach="phoneNumbers">',
+                                        '<div>{.}</div>',
+                                    '</tpl>',
+                                '</div>',
+                            '</tpl></tpl>',
+                        '</div>',
+                    '</div>',
+                '</div>',
+                '<div class="taco-orderform-heading">Order Details</div>',
+                '<div class="taco-orderform-customer-note">',
+                    '<label>Customer note:</label>',
+                    '<span class="value">{shopperNotes}</span>',
+                '</div><table class="taco-orderform-cart-contents taco-flextable">',
+                    '<thead><tr class="row">',
+                        '<th width="35%" title="Item" data-type="text">Item</th>',
+                        '<th width="15%" title="Price" data-type="number">Price</th>',
+                        '<th width="20%" title="Price after discount" data-type="number">Price after discount</th>',
+                        '<th width="15%" title="Quantity" data-type="number">Quantity</th>',
+                        '<th width="15%" title="Title" data-type="number">Total</th>',
+                    '</tr></thead>',
+                    '<tbody><tpl for="items">',
+                        '<tr class="row">',
+                            '<td width="35%" title="{product.name}" data-type="text"><tpl for="product">',
+                                '{name}<br />{productCode}',
+                            '</tpl></td>',
+                            '<td width="15%" title="{product.price.price:usMoney}" data-type="number">{product.price.price:usMoney}</td>',
+                            '<td width="20%" title="{product.price.salePrice:usMoney}" data-type="number">{product.price.salePrice:usMoney}</td>',
+                            '<td width="15%" title="{quantity}" data-type="number">{quantity}</td>',
+                            '<td width="15%" title="{subTotal:usMoney}" data-type="number">{total:usMoney}</td>',
+                        '</tr>',
+                    '</tbody></tpl>',
+                '</table>',
+                '<ul class="taco-orderform-totals">',
+                    '<li class="subtotal">',
+                        '<label>Subtotal:</label>',
+                        '<span class="value">{[Ext.util.Format.usMoney(values.subTotal - values.discountTotal)]}</span>',
+                    '</li><li class="tax-total">',
+                        '<label>Tax:</label>',
+                        '<span class="value">{taxTotal:usMoney}</span>',
+                    '</li><li class="shipping-total">',
+                        '<label>Shipping:</label>',
+                        '<span class="value">{shippingTotal:usMoney}</span>',
+                    '</li><li class="grand-total">',
+                        '<label>Total:</label>',
+                        '<span class="value">{total:usMoney}</span>',
+                    '</li>',
+                '</ul>',
+                '<div class="taco-orderform-heading">Internal Notes</div>',
+            '</tpl>',
+            {
+                hasAction: function (available, action) {
+                    return Ext.Array.contains(available, action);
+                }
+            }
+        );
+
+        dataCmp = Ext.create('Ext.Component', {
+            data: this.data,
+            tpl: dataTpl,
+            listeners: {
+                scope: this,
+                click: {
+                    element: 'el',
+                    fn: function (e, t) {
+                        var editor = t.getAttribute('data-editor');
+
+                        if (!Ext.isEmpty(editor)) {
+                            this.beginEditor(editor);
+                        }
+                    }
+                }
+            }
+        });
+
+        internalNotes = Ext.create('Ext.Container', {
+            xtype: 'container',
+            cls: Taco.baseCSSPrefix + 'orderform-internal-notes',
+            items: [{
+                xtype: 'container',
+                cls: 'note-form',
+                items: [{
+                    xtype: 'textarea',
+                    grow: true,
+                    emptyText: 'add a note',
+                    allowOnlyWhitespace: false,
+                    width: '100%'
+                }, {
+                    xtype: 'button',
+                    text: 'Add note',
+                    handler: function (button, e) {
+                        me.fireEvent('addnote', button, e);
+                    }
+                }]
+            }, {
+                xtype: 'gridpanel',
+                store: this.notesStore,
+                hideHeaders: true,
+                viewConfig: {
+                    stripeRows: false
+                },
+                features: [{
+                    ftype: 'grouping',
+                    collapsible: false,
+                    groupHeaderTpl: ['{groupValue:this.formatName}', {
+                        formatName: function (name) {
+                            return Ext.Date.format(name, 'F j, Y');
+                        }
+                    }]
+                }],
+                columns: [{
+                    xtype: 'datecolumn',
+                    dataIndex: 'createDate',
+                    text: 'Timestamp',
+                    align: 'right',
+                    format: 'h:i a',
+                    width: 140
+                }, {
+                    dataIndex: 'text',
+                    text: 'Note',
+                    flex: 5
+                }, {
+                    dataIndex: 'createByName',
+                    text: 'Author',
+                    flex: 1
+                }]
+            }]
+        });
+
+        this.tplComponents = [dataCmp];
+
+        Ext.apply(me.body, {
+            items: [dataCmp, internalNotes],
+            layout: { type: 'auto' },
+            cls: Taco.baseCSSPrefix + 'content-body ' + Taco.baseCSSPrefix + 'orderform'
+        });
+
+        this.callParent(arguments);
+
+        this.notesStore.getProxy().setExtraParam('orderId', this.data.id);
+        this.notesStore.load({
+            callback: function () { console.log('notesStore loaded'); }
+        });
+
+        window.foster = this.notesStore;
+
+        this.on({
+            addnote: {
+                fn: this.addNote,
+                scope: this
+            }
+        });
+    },
+
+    addNote: function (button) {
+        var me = this,
+            ta = button.up('container').down('textarea'),
+            text;
+
+        if (ta.isValid()) {
+            text = ta.getValue();
+        } else {
+            return;
+        }
+
+        this.notesStore.add({ text: text });
+    },
+
+    beginEditor: function (fieldName) {
+        var me = this,
+            modalClass = false,
+            url, key;
+
+        switch (fieldName) {
+            case 'billingAddress':
+            case 'shippingAddress':
+                modalClass = 'Taco.view.order.modal.Address';
+                break;
+            case 'paymentAction':
+                if (this.data.paymentStatus === 'AwaitingCheck') {
+                    modalClass = 'Taco.view.order.modal.PaymentAction';
+                } else {
+                    url = 'paymentaction';
+                    key = 'capture';
+                }
+                break;
+            case 'shipmentAction':
+                if (this.data.fulfillmentStatus === 'NotFulfilled') {
+                    modalClass = 'Taco.view.order.modal.ShipmentAction';
+                } else {
+                    url = 'shipmentaction';
+                    key = 'Ship';
+                }
+            default:
+                break;
+        }
+
+        if (modalClass) {
+            Ext.destroy(this.modal);
+            this.modal = Ext.create(modalClass, {
+                data: this.data,
+                field: fieldName,
+                listeners: {
+                    'updatetemplate': {
+                        fn: this.updateTemplate,
+                        scope: this
+                    },
+                    'takeajaxaction': {
+                        fn: this.takeAjaxAction,
+                        scope: this
+                    }
+                }
+            });
+        } else {
+            this.takeAjaxAction(url, key);
+        }
+    },
+
+    takeAjaxAction: function (urlFragment, key) {
+        var me = this,
+            currentlyValidKeys = ['receivecheck', 'capture', 'Ship'];
+
+        console.log(key, currentlyValidKeys);
+        if (!Ext.Array.contains(currentlyValidKeys, key)) { return; }
+
+        Ext.Ajax.request({
+            url: '/admin/app/order/' + urlFragment,
+            method: "GET",
+            params: {
+                orderId: me.data.id,
+                action: key
+            },
+            success: function (response) {
+                var res = Ext.JSON.decode(response.responseText),
+                    instance;
+
+                if (Ext.isEmpty(res.items)) return;
+
+                if (res.items.id === me.data.id) {
+                    instance = Ext.create('Taco.model.Order', res.items);
+                    me.updateTemplate(instance.getData());
+                    instance.destroy();
+                }
+            },
+            failure: function (response) {
+                console.log('failure');
+            }
+        });
+    },
+
+    updateTemplate: function (data) {
+        var me = this;
+
+        console.log('updatetemplate called');
+        Ext.Array.each(this.tplComponents, function (cmp) {
+            cmp.update(data);
+        }, this);
+    }
+});

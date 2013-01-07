@@ -1,0 +1,31 @@
+﻿body {
+	font: {{themeSettings.globalFont|settingtype:"font"|default:"16px Tahoma, sans-serif"|description:'Site Font'}};
+	font-size: 16px;
+	color: {{themeSettings.textColor|settingtype:'color'|default:'#333333'|description:'Text Color'}};
+}
+a {
+	color: {{themeSettings.linkColor|settingtype:'color'|default:'#4F4F4F'|description:'Link Color'}};
+	&:visited {
+		color: {{themeSettings.linkVisited|settingtype:'color'|default:'#3F3F3F'|description:'Link Visited Color'}};
+	}
+	&:hover {
+		color: {{themeSettings.linkHover|settingtype:'color'|default:'#666666'|description:'Link Hover Color'}};
+	}
+}
+.mz-page-header {
+	color: {{themeSettings.headlineColor|settingtype:'color'|default:'#444444'|description:'Headline Color'}};
+	font: {{themeSettings.headlineFont|settingtype:'font'|default:'bold 21px Tahoma, sans-serif'|description:'Headline Font'}};
+}
+
+.mz-page-headernote {
+    display: block;
+	font-weight: normal;
+}
+
+.mz-auxiliary-text {
+	font-size: 12px;
+}
+
+.mz-strikethrough {
+	text-decoration: line-through;
+}

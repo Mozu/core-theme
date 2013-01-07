@@ -1,0 +1,17 @@
+{
+  "DefaultValues": {
+    "contentCollection": "pages",
+    "items": [
+      {
+        "key": "page_type",
+        "value": "webpage"
+      }
+    ]
+  },
+  "DisplayName": "Blank Page",
+  "DocumentType": "web_page",
+  "EntityType": "webpage",
+  "Icon": "",
+  "Id": "blank_page1",
+  "Template": "blankpage"
+}

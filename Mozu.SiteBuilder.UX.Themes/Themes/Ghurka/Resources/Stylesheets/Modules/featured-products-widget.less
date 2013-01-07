@@ -1,0 +1,73 @@
+﻿.mz-featured-products-widget-wrap {
+	overflow: hidden;
+	padding-top: 30px;
+	position: relative;
+	&:before {
+		content: "Featured Items";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		border-bottom: 1px dashed #999;
+		padding-bottom: 2px;
+		font-weight: 700;
+
+	}
+
+	.mz-featured-product-image img {
+		width: 100%;
+		height: auto;
+	.border-radius(5px);
+	}
+	.mz-product-price {
+		display: block;
+	}
+}
+.mz-featured-products-widget {
+	width: 22%;
+	margin-right: 2.5%;
+	float: left;
+}
+.mz-featured-products-widget:last-child{
+	margin-right: 0;
+}
+.mz-featured-product-caption {
+	margin-top: 10px;
+}
+.mz-featured-products-link {
+	font-weight: 700;
+	display: block;
+	text-decoration: none;
+}
+.mz-featured-product-image {
+	position: relative;
+	.box-shadow(0 0 0);
+		&:before, &:after {
+			content: "";
+			bottom: 15px;
+			box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+			height: 20%;
+			left: 10px;
+			max-height: 100px;
+			max-width: 300px;
+			.transform(rotate(-3deg));
+			width: 50%;
+			position: absolute;
+			z-index: -2;
+		}
+		&:after {
+			left: auto;
+			right: 10px;
+			.transform(rotate(3deg));
+		}
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+ 
+@media only screen and (max-width : 480px) {
+	.mz-featured-products-widget {
+		float: none;
+		width: auto;
+		margin:0 0 30px 0;
+	}
+}
