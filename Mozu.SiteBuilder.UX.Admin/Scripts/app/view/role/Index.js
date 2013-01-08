@@ -1,4 +1,4 @@
-﻿
+
 
 /**
  * @class  Taco.view.account.Roles
@@ -55,6 +55,15 @@ Ext.define('Taco.view.role.Index', {
         this.callParent(arguments);
 
         this.store.load();
+
+        this.on({
+            afterrender: function () {
+                if (this.record) {
+                    this.launchLoadedEditor(this.record);
+                }
+            },
+            scope: this
+        });
     },
 
     addState: function (record) {

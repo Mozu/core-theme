@@ -19,6 +19,8 @@ Ext.define('Taco.core.ux.form.Form', {
     savableState: false,
     formCfg: null,
     trackResetOnLoad: true,
+    createTitle: 'Create',
+    editTitle: 'Edit',
 
     initComponent: function () {
 
@@ -103,7 +105,10 @@ Ext.define('Taco.core.ux.form.Form', {
 
         this.validateModel();
 
-        this.getHeader().hide();
+        this.on({
+            afterrender: function () { this.getHeader().hide() },
+            scope: this
+        });
 
         this.saveTasks.on({
             complete: function () {
@@ -248,7 +253,7 @@ Ext.define('Taco.core.ux.form.Form', {
 
         Ext.each(this.stores, function (store) {
             if (store.isDirty()) {
-                isDirty = ture;
+                isDirty = true;
                 return false;
             }
         }, this);

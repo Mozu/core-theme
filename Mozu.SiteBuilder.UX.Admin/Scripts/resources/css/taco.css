@@ -413,10 +413,11 @@ input, textarea, select {
 /* line 86, ../scss/core/_core.scss */
 .x-css-shadow {
   position: absolute;
-  -webkit-border-radius: 5px 5px;
   -moz-border-radius: 5px 5px;
-  -ms-border-radius: 5px 5px;
+  -webkit-border-radius: 5px 5px;
   -o-border-radius: 5px 5px;
+  -ms-border-radius: 5px 5px;
+  -khtml-border-radius: 5px 5px;
   border-radius: 5px 5px;
 }
 
@@ -800,7 +801,6 @@ tr.x-container:before {
   padding: 2px;
   border: 1px solid;
   border-color: #cbb9b9;
-  background: #eeeaea;
 }
 /* line 49, ../scss/widgets/_loadmask.scss */
 .x-mask-msg div {
@@ -837,7 +837,7 @@ tr.x-container:before {
  *
  * @member Global_CSS
  */
-/* line 770, icons/*.png */
+/* line 573, icons */
 .icons-sprite, .taco-draghandle, .x-grid-row-selected .taco-datalist-selection, .x-grid-row-selected .taco-datalist-deselection, .x-action-col-cell img.taco-action-hide, .x-action-col-cell img.taco-action-addsub, .x-action-col-cell img.taco-action-delete, .x-action-col-cell img.taco-action-remove, .x-column-header-last.taco-controls-column .x-column-header-trigger, .x-column-header-last.taco-controls-column .x-column-header-open .x-column-header-trigger, .taco-treelist-add, .taco-slider-icon-small, .taco-slider-icon-big, .taco-inventorycontrolgrid .taco-infinitestock, .taco-inventorycontrolgrid .taco-stock-container .taco-stock-makeinfinite, .taco-removablecolumn .taco-removablecolumn-delete, .taco-foldertree.x-tree-arrows .x-tree-elbow, .taco-foldertree.x-tree-arrows .x-tree-elbow-end, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus, .taco-viewport-nav .taco-primary-menu-trigger, .taco-viewport-nav .taco-primary-menu-trigger.expanded, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-dashboard::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-store::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-catalog::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-marketing::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-website::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-settings::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-dashboard::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-store::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-catalog::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-marketing::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-website::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-settings::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-dashboard::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-store::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-catalog::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-marketing::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-website::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-settings::before, .taco-masthead .taco-mozulogo, .taco-modal .taco-close, .x-panel .taco-thumbnail-item .actions .action.download, .x-panel .taco-thumbnail-item .actions .action.delete, .x-panel .taco-thumbnail-item .actions .action.duplicate, .x-panel .taco-thumbnail-item .actions .action.remove, .x-item-selected .taco-datalist-selection, .x-item-selected .taco-datalist-deselection, .taco-option-value-view .taco-option-value-row:before, .x-field .x-form-checkbox,
 .x-grid-cell-inner .x-tree-checkbox,
 .x-menu .x-menu-item-unchecked .x-menu-item-icon,
@@ -850,7 +850,7 @@ tr.x-container:before {
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-category, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-blog,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-page,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-systempage, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-link, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-product, .taco-toolbox .taco-treelist tbody tr:nth-child(3) .x-tree-icon, .taco-simplegrid .taco-simplegrid-checkbox, .taco-simplegrid .taco-simplegrid-checkbox.taco-simplegrid-checkbox-checked {
-  background: url('../images/icons-s9da7318382.png') no-repeat;
+  background: url('../images/icons-sa7b1edbec6.png') no-repeat;
 }
 
 /* line 70, ../scss/taco/mixins/_css3.scss */
@@ -891,14 +891,16 @@ tr.x-container:before {
 
 /* line 2, ../scss/taco/_tinymce_fixes.scss */
 .mceEditor {
-  -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -ms-box-sizing: content-box;
   box-sizing: content-box;
 }
 /* line 5, ../scss/taco/_tinymce_fixes.scss */
 .mceEditor * {
-  -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -ms-box-sizing: content-box;
   box-sizing: content-box;
 }
 /* line 9, ../scss/taco/_tinymce_fixes.scss */
@@ -913,10 +915,10 @@ tr.x-container:before {
   display: none !important;
 }
 
-/* line 42, picker/*.png */
+/* line 27, picker */
 .picker-sprite, .taco-date-field .x-form-date-trigger,
 .taco-date-field .x-form-trigger-wrap-focus .x-form-date-trigger {
-  background: url('../images/picker-sa04364cd82.png') no-repeat;
+  background: url('../images/picker-s39763e1d24.png') no-repeat;
 }
 
 /* line 3, ../scss/util/_dragdrop.scss */
@@ -1456,8 +1458,9 @@ tr.x-container:before {
 /* line 113, ../scss/layout/_layout.scss */
 .x-accordion-hd {
   background: #eee5e5 !important;
-  -webkit-box-shadow: inset 0 0 0 0 #eee5e5;
   -moz-box-shadow: inset 0 0 0 0 #eee5e5;
+  -webkit-box-shadow: inset 0 0 0 0 #eee5e5;
+  -o-box-shadow: inset 0 0 0 0 #eee5e5;
   box-shadow: inset 0 0 0 0 #eee5e5;
 }
 /* line 117, ../scss/layout/_layout.scss */
@@ -1504,8 +1507,9 @@ tr.x-container:before {
 /* line 160, ../scss/layout/_layout.scss */
 .x-accordion-hd-sibling-expanded {
   border-top-color: #cbb9b9 !important;
-  -webkit-box-shadow: inset 0 1px 0 0 #f9f8f8;
   -moz-box-shadow: inset 0 1px 0 0 #f9f8f8;
+  -webkit-box-shadow: inset 0 1px 0 0 #f9f8f8;
+  -o-box-shadow: inset 0 1px 0 0 #f9f8f8;
   box-shadow: inset 0 1px 0 0 #f9f8f8;
 }
 
@@ -2622,10 +2626,11 @@ tr.x-container:before {
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-btn-default-small {
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
   padding: 2px 2px 2px 2px;
   border-width: 1px;
@@ -2636,6 +2641,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
   background-image: -moz-linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
   background-image: -o-linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
+  background-image: -ms-linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
   background-image: linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
 }
 
@@ -2776,6 +2782,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: -moz-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: -o-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
+  background-image: -ms-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
 }
 
@@ -2788,6 +2795,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: -moz-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: -o-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
+  background-image: -ms-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
 }
 
@@ -2801,6 +2809,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
   background-image: -moz-linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
   background-image: -o-linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
+  background-image: -ms-linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
   background-image: linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
 }
 
@@ -2813,6 +2822,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
   background-image: -moz-linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
   background-image: -o-linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
+  background-image: -ms-linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
   background-image: linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
 }
 /* line 858, ../scss/widgets/_button.scss */
@@ -2837,10 +2847,11 @@ tr.x-container:before {
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-btn-default-medium {
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -2851,6 +2862,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
   background-image: -moz-linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
   background-image: -o-linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
+  background-image: -ms-linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
   background-image: linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
 }
 
@@ -2876,8 +2888,7 @@ tr.x-container:before {
 }
 
 /* line 665, ../scss/widgets/_button.scss */
-.x-btn-default-medium-icon button,
-.x-btn-default-medium-icon a {
+.x-btn-default-medium-icon button, .x-btn-default-medium-icon a {
   padding: 0;
 }
 /* line 669, ../scss/widgets/_button.scss */
@@ -2897,8 +2908,7 @@ tr.x-container:before {
 }
 
 /* line 687, ../scss/widgets/_button.scss */
-.x-btn-default-medium-icon-text-left button,
-.x-btn-default-medium-icon-text-left a {
+.x-btn-default-medium-icon-text-left button, .x-btn-default-medium-icon-text-left a {
   height: 24px;
 }
 /* line 690, ../scss/widgets/_button.scss */
@@ -2922,8 +2932,7 @@ tr.x-container:before {
 }
 
 /* line 713, ../scss/widgets/_button.scss */
-.x-btn-default-medium-icon-text-right button,
-.x-btn-default-medium-icon-text-right a {
+.x-btn-default-medium-icon-text-right button, .x-btn-default-medium-icon-text-right a {
   height: 24px;
 }
 /* line 716, ../scss/widgets/_button.scss */
@@ -2991,6 +3000,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: -moz-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: -o-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
+  background-image: -ms-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
 }
 
@@ -3003,6 +3013,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: -moz-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: -o-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
+  background-image: -ms-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
 }
 
@@ -3016,6 +3027,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
   background-image: -moz-linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
   background-image: -o-linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
+  background-image: -ms-linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
   background-image: linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
 }
 
@@ -3028,6 +3040,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
   background-image: -moz-linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
   background-image: -o-linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
+  background-image: -ms-linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
   background-image: linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
 }
 /* line 858, ../scss/widgets/_button.scss */
@@ -3052,10 +3065,11 @@ tr.x-container:before {
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-btn-default-large {
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -3066,6 +3080,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
   background-image: -moz-linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
   background-image: -o-linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
+  background-image: -ms-linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
   background-image: linear-gradient(top, #ffffff, #f9f9f9 48%, #e2e2e2 52%, #e7e7e7);
 }
 
@@ -3091,8 +3106,7 @@ tr.x-container:before {
 }
 
 /* line 665, ../scss/widgets/_button.scss */
-.x-btn-default-large-icon button,
-.x-btn-default-large-icon a {
+.x-btn-default-large-icon button, .x-btn-default-large-icon a {
   padding: 0;
 }
 /* line 669, ../scss/widgets/_button.scss */
@@ -3112,8 +3126,7 @@ tr.x-container:before {
 }
 
 /* line 687, ../scss/widgets/_button.scss */
-.x-btn-default-large-icon-text-left button,
-.x-btn-default-large-icon-text-left a {
+.x-btn-default-large-icon-text-left button, .x-btn-default-large-icon-text-left a {
   height: 32px;
 }
 /* line 690, ../scss/widgets/_button.scss */
@@ -3137,8 +3150,7 @@ tr.x-container:before {
 }
 
 /* line 713, ../scss/widgets/_button.scss */
-.x-btn-default-large-icon-text-right button,
-.x-btn-default-large-icon-text-right a {
+.x-btn-default-large-icon-text-right button, .x-btn-default-large-icon-text-right a {
   height: 32px;
 }
 /* line 716, ../scss/widgets/_button.scss */
@@ -3206,6 +3218,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: -moz-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: -o-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
+  background-image: -ms-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
 }
 
@@ -3218,6 +3231,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: -moz-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: -o-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
+  background-image: -ms-linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
   background-image: linear-gradient(top, #f9edee, #f7e4e6 48%, #e2d5d6 52%, #e7d8d8);
 }
 
@@ -3231,6 +3245,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
   background-image: -moz-linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
   background-image: -o-linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
+  background-image: -ms-linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
   background-image: linear-gradient(top, #cfcfcf, #d4d4d4 48%, #d9acae 52%, #dcb4b6);
 }
 
@@ -3243,6 +3258,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
   background-image: -moz-linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
   background-image: -o-linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
+  background-image: -ms-linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
   background-image: linear-gradient(top, #f8f8f8, #f2f2f2 48%, #dbdbdb 52%, #e0e0e0);
 }
 /* line 858, ../scss/widgets/_button.scss */
@@ -3267,10 +3283,11 @@ tr.x-container:before {
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-btn-default-toolbar-small {
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
   padding: 2px 2px 2px 2px;
   border-width: 1px;
@@ -3300,8 +3317,7 @@ tr.x-container:before {
 }
 
 /* line 665, ../scss/widgets/_button.scss */
-.x-btn-default-toolbar-small-icon button,
-.x-btn-default-toolbar-small-icon a {
+.x-btn-default-toolbar-small-icon button, .x-btn-default-toolbar-small-icon a {
   padding: 0;
 }
 /* line 669, ../scss/widgets/_button.scss */
@@ -3321,8 +3337,7 @@ tr.x-container:before {
 }
 
 /* line 687, ../scss/widgets/_button.scss */
-.x-btn-default-toolbar-small-icon-text-left button,
-.x-btn-default-toolbar-small-icon-text-left a {
+.x-btn-default-toolbar-small-icon-text-left button, .x-btn-default-toolbar-small-icon-text-left a {
   height: 16px;
 }
 /* line 690, ../scss/widgets/_button.scss */
@@ -3346,8 +3361,7 @@ tr.x-container:before {
 }
 
 /* line 713, ../scss/widgets/_button.scss */
-.x-btn-default-toolbar-small-icon-text-right button,
-.x-btn-default-toolbar-small-icon-text-right a {
+.x-btn-default-toolbar-small-icon-text-right button, .x-btn-default-toolbar-small-icon-text-right a {
   height: 16px;
 }
 /* line 716, ../scss/widgets/_button.scss */
@@ -3415,6 +3429,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: -moz-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: -o-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
+  background-image: -ms-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
 }
 
@@ -3427,6 +3442,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: -moz-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: -o-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
+  background-image: -ms-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
 }
 
@@ -3440,6 +3456,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
   background-image: -moz-linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
   background-image: -o-linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
+  background-image: -ms-linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
   background-image: linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
 }
 
@@ -3470,10 +3487,11 @@ tr.x-container:before {
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-btn-default-toolbar-medium {
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -3503,8 +3521,7 @@ tr.x-container:before {
 }
 
 /* line 665, ../scss/widgets/_button.scss */
-.x-btn-default-toolbar-medium-icon button,
-.x-btn-default-toolbar-medium-icon a {
+.x-btn-default-toolbar-medium-icon button, .x-btn-default-toolbar-medium-icon a {
   padding: 0;
 }
 /* line 669, ../scss/widgets/_button.scss */
@@ -3524,8 +3541,7 @@ tr.x-container:before {
 }
 
 /* line 687, ../scss/widgets/_button.scss */
-.x-btn-default-toolbar-medium-icon-text-left button,
-.x-btn-default-toolbar-medium-icon-text-left a {
+.x-btn-default-toolbar-medium-icon-text-left button, .x-btn-default-toolbar-medium-icon-text-left a {
   height: 24px;
 }
 /* line 690, ../scss/widgets/_button.scss */
@@ -3549,8 +3565,7 @@ tr.x-container:before {
 }
 
 /* line 713, ../scss/widgets/_button.scss */
-.x-btn-default-toolbar-medium-icon-text-right button,
-.x-btn-default-toolbar-medium-icon-text-right a {
+.x-btn-default-toolbar-medium-icon-text-right button, .x-btn-default-toolbar-medium-icon-text-right a {
   height: 24px;
 }
 /* line 716, ../scss/widgets/_button.scss */
@@ -3618,6 +3633,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: -moz-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: -o-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
+  background-image: -ms-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
 }
 
@@ -3630,6 +3646,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: -moz-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: -o-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
+  background-image: -ms-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
 }
 
@@ -3643,6 +3660,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
   background-image: -moz-linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
   background-image: -o-linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
+  background-image: -ms-linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
   background-image: linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
 }
 
@@ -3673,10 +3691,11 @@ tr.x-container:before {
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-btn-default-toolbar-large {
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -3706,8 +3725,7 @@ tr.x-container:before {
 }
 
 /* line 665, ../scss/widgets/_button.scss */
-.x-btn-default-toolbar-large-icon button,
-.x-btn-default-toolbar-large-icon a {
+.x-btn-default-toolbar-large-icon button, .x-btn-default-toolbar-large-icon a {
   padding: 0;
 }
 /* line 669, ../scss/widgets/_button.scss */
@@ -3727,8 +3745,7 @@ tr.x-container:before {
 }
 
 /* line 687, ../scss/widgets/_button.scss */
-.x-btn-default-toolbar-large-icon-text-left button,
-.x-btn-default-toolbar-large-icon-text-left a {
+.x-btn-default-toolbar-large-icon-text-left button, .x-btn-default-toolbar-large-icon-text-left a {
   height: 32px;
 }
 /* line 690, ../scss/widgets/_button.scss */
@@ -3752,8 +3769,7 @@ tr.x-container:before {
 }
 
 /* line 713, ../scss/widgets/_button.scss */
-.x-btn-default-toolbar-large-icon-text-right button,
-.x-btn-default-toolbar-large-icon-text-right a {
+.x-btn-default-toolbar-large-icon-text-right button, .x-btn-default-toolbar-large-icon-text-right a {
   height: 32px;
 }
 /* line 716, ../scss/widgets/_button.scss */
@@ -3821,6 +3837,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: -moz-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: -o-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
+  background-image: -ms-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
 }
 
@@ -3833,6 +3850,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: -moz-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: -o-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
+  background-image: -ms-linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
   background-image: linear-gradient(top, #f7e6e7, #f4dedf 48%, #ded0d0 52%, #e4d2d2);
 }
 
@@ -3846,6 +3864,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
   background-image: -moz-linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
   background-image: -o-linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
+  background-image: -ms-linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
   background-image: linear-gradient(top, #d2d2d2, #d8d8d8 48%, #dcb0b3 52%, #deb9bb);
 }
 
@@ -3902,10 +3921,11 @@ tr.x-container:before {
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-btn-group-default-framed {
-  -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
+  -webkit-border-radius: 2px;
   -o-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -khtml-border-radius: 2px;
   border-radius: 2px;
   padding: 1px 1px 1px 1px;
   border-width: 1px;
@@ -3916,8 +3936,9 @@ tr.x-container:before {
 /* line 60, ../scss/widgets/_btn-group.scss */
 .x-btn-group-default-framed {
   border-color: #c9c9c9;
-  -webkit-box-shadow: #eeeeee 0 1px 0px 0 inset, #eeeeee 0 -1px 0px 0 inset, #eeeeee -1px 0 0px 0 inset, #eeeeee 1px 0 0px 0 inset;
   -moz-box-shadow: #eeeeee 0 1px 0px 0 inset, #eeeeee 0 -1px 0px 0 inset, #eeeeee -1px 0 0px 0 inset, #eeeeee 1px 0 0px 0 inset;
+  -webkit-box-shadow: #eeeeee 0 1px 0px 0 inset, #eeeeee 0 -1px 0px 0 inset, #eeeeee -1px 0 0px 0 inset, #eeeeee 1px 0 0px 0 inset;
+  -o-box-shadow: #eeeeee 0 1px 0px 0 inset, #eeeeee 0 -1px 0px 0 inset, #eeeeee -1px 0 0px 0 inset, #eeeeee 1px 0 0px 0 inset;
   box-shadow: #eeeeee 0 1px 0px 0 inset, #eeeeee 0 -1px 0px 0 inset, #eeeeee -1px 0 0px 0 inset, #eeeeee 1px 0 0px 0 inset;
 }
 
@@ -3932,9 +3953,15 @@ tr.x-container:before {
   background: #dfd6d6;
   -moz-border-radius-topleft: 2px;
   -webkit-border-top-left-radius: 2px;
+  -o-border-top-left-radius: 2px;
+  -ms-border-top-left-radius: 2px;
+  -khtml-border-top-left-radius: 2px;
   border-top-left-radius: 2px;
   -moz-border-radius-topright: 2px;
   -webkit-border-top-right-radius: 2px;
+  -o-border-top-right-radius: 2px;
+  -ms-border-top-right-radius: 2px;
+  -khtml-border-top-right-radius: 2px;
   border-top-right-radius: 2px;
 }
 
@@ -3976,6 +4003,7 @@ tr.x-container:before {
   background-image: -webkit-linear-gradient(top, #605351, #4d4241);
   background-image: -moz-linear-gradient(top, #605351, #4d4241);
   background-image: -o-linear-gradient(top, #605351, #4d4241);
+  background-image: -ms-linear-gradient(top, #605351, #4d4241);
   background-image: linear-gradient(top, #605351, #4d4241);
 }
 
@@ -4095,6 +4123,7 @@ table.x-datepicker-inner th {
   background-image: -webkit-linear-gradient(top, #f9f4f4, #ecdcdd);
   background-image: -moz-linear-gradient(top, #f9f4f4, #ecdcdd);
   background-image: -o-linear-gradient(top, #f9f4f4, #ecdcdd);
+  background-image: -ms-linear-gradient(top, #f9f4f4, #ecdcdd);
   background-image: linear-gradient(top, #f9f4f4, #ecdcdd);
   cursor: default;
 }
@@ -4176,6 +4205,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   background-image: -webkit-linear-gradient(top, #eceaea, #e3e1e1 49%, #dddada 51%, #dfdddd);
   background-image: -moz-linear-gradient(top, #eceaea, #e3e1e1 49%, #dddada 51%, #dfdddd);
   background-image: -o-linear-gradient(top, #eceaea, #e3e1e1 49%, #dddada 51%, #dfdddd);
+  background-image: -ms-linear-gradient(top, #eceaea, #e3e1e1 49%, #dddada 51%, #dfdddd);
   background-image: linear-gradient(top, #eceaea, #e3e1e1 49%, #dddada 51%, #dfdddd);
   text-align: center;
 }
@@ -4530,14 +4560,16 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   background-image: -webkit-linear-gradient(top, #f7efef, #ebd7d7);
   background-image: -moz-linear-gradient(top, #f7efef, #ebd7d7);
   background-image: -o-linear-gradient(top, #f7efef, #ebd7d7);
+  background-image: -ms-linear-gradient(top, #f7efef, #ebd7d7);
   background-image: linear-gradient(top, #f7efef, #ebd7d7);
   margin: 0px;
   border: 1px solid #dfc2c2;
   cursor: pointer;
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
 }
 
@@ -4652,6 +4684,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   background-image: -webkit-linear-gradient(top, #f9f9f9, #e3e4e6);
   background-image: -moz-linear-gradient(top, #f9f9f9, #e3e4e6);
   background-image: -o-linear-gradient(top, #f9f9f9, #e3e4e6);
+  background-image: -ms-linear-gradient(top, #f9f9f9, #e3e4e6);
   background-image: linear-gradient(top, #f9f9f9, #e3e4e6);
 }
 
@@ -4675,6 +4708,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   border-top: 0 none;
   border-bottom: 0 none;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  color: null;
   font: normal 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   background-image: none;
   background-color: #c5c5c5;
@@ -4682,6 +4716,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   background-image: -webkit-linear-gradient(top, #f9f9f9, #e3e4e6);
   background-image: -moz-linear-gradient(top, #f9f9f9, #e3e4e6);
   background-image: -o-linear-gradient(top, #f9f9f9, #e3e4e6);
+  background-image: -ms-linear-gradient(top, #f9f9f9, #e3e4e6);
   background-image: linear-gradient(top, #f9f9f9, #e3e4e6);
 }
 
@@ -4723,6 +4758,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   background-image: -webkit-linear-gradient(top, #f9f2f2, #f9f2f2 39%, #f2e5e5 40%, #f2e5e5);
   background-image: -moz-linear-gradient(top, #f9f2f2, #f9f2f2 39%, #f2e5e5 40%, #f2e5e5);
   background-image: -o-linear-gradient(top, #f9f2f2, #f9f2f2 39%, #f2e5e5 40%, #f2e5e5);
+  background-image: -ms-linear-gradient(top, #f9f2f2, #f9f2f2 39%, #f2e5e5 40%, #f2e5e5);
   background-image: linear-gradient(top, #f9f2f2, #f9f2f2 39%, #f2e5e5 40%, #f2e5e5);
 }
 
@@ -4786,6 +4822,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 }
 /* line 199, ../scss/widgets/_grid.scss */
 .x-grid-row .x-grid-cell {
+  color: null;
   font: normal 15px/19px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   background-color: white;
   border-color: #ededed;
@@ -4910,6 +4947,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   background-image: -webkit-linear-gradient(left, #f6f6f6, #e9e9e9);
   background-image: -moz-linear-gradient(left, #f6f6f6, #e9e9e9);
   background-image: -o-linear-gradient(left, #f6f6f6, #e9e9e9);
+  background-image: -ms-linear-gradient(left, #f6f6f6, #e9e9e9);
   background-image: linear-gradient(left, #f6f6f6, #e9e9e9);
 }
 
@@ -4940,6 +4978,7 @@ browsers will do whacky things with it.
   background-image: -webkit-linear-gradient(left, #eeebea, #e2dddd);
   background-image: -moz-linear-gradient(left, #eeebea, #e2dddd);
   background-image: -o-linear-gradient(left, #eeebea, #e2dddd);
+  background-image: -ms-linear-gradient(left, #eeebea, #e2dddd);
   background-image: linear-gradient(left, #eeebea, #e2dddd);
 }
 
@@ -5161,8 +5200,7 @@ browsers will do whacky things with it.
 /* IE6, IE7, and all IE Quirks mode need line-height to be the same as checkbox height or the header/row height will be too tall */
 /* line 576, ../scss/widgets/_grid.scss */
 .x-quirks .x-ie .x-grid-row-checker,
-.x-quirks .x-ie .x-column-header-checkbox .x-column-header-text, .x-ie7m .x-grid-row-checker,
-.x-ie7m .x-column-header-checkbox .x-column-header-text {
+.x-quirks .x-ie .x-column-header-checkbox .x-column-header-text, .x-ie7m .x-grid-row-checker, .x-ie7m .x-column-header-checkbox .x-column-header-text {
   line-height: 14px;
 }
 
@@ -6086,12 +6124,14 @@ textarea.x-form-invalid-field {
 /* line 49, ../scss/widgets/form/_triggerfield.scss */
 .x-form-trigger-wrap-focus .x-form-trigger-over {
   background-position: -68px 0;
+  border-bottom-color: null;
 }
 
 /* line 58, ../scss/widgets/form/_triggerfield.scss */
 .x-form-trigger-click,
 .x-form-trigger-wrap-focus .x-form-trigger-click {
   background-position: -34px 0;
+  border-bottom-color: null;
 }
 
 /* line 66, ../scss/widgets/form/_triggerfield.scss */
@@ -6105,9 +6145,15 @@ textarea.x-form-invalid-field {
 .x-pickerfield-open .x-form-field {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
+  -ms-border-bottom-left-radius: 0;
+  -khtml-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
+  -ms-border-bottom-right-radius: 0;
+  -khtml-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
@@ -6115,12 +6161,21 @@ textarea.x-form-invalid-field {
 .x-pickerfield-open-above .x-form-field {
   -moz-border-radius-bottomleft: 3px;
   -webkit-border-bottom-left-radius: 3px;
+  -o-border-bottom-left-radius: 3px;
+  -ms-border-bottom-left-radius: 3px;
+  -khtml-border-bottom-left-radius: 3px;
   border-bottom-left-radius: 3px;
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
+  -o-border-top-left-radius: 0;
+  -ms-border-top-left-radius: 0;
+  -khtml-border-top-left-radius: 0;
   border-top-left-radius: 0;
   -moz-border-radius-topright: 0;
   -webkit-border-top-right-radius: 0;
+  -o-border-top-right-radius: 0;
+  -ms-border-top-right-radius: 0;
+  -khtml-border-top-right-radius: 0;
   border-top-right-radius: 0;
 }
 
@@ -6481,8 +6536,8 @@ textarea.x-form-invalid-field {
 
 /* line 117, ../scss/widgets/_panel.scss */
 .x-ie9m .x-window-header-vertical .x-window-header-text-container {
-  background: gainsboro;
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1), progid:DXImageTransform.Microsoft.Chroma(color='gainsboro');
+  background: #dcdcdc;
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1), progid:DXImageTransform.Microsoft.Chroma(color='#dcdcdc');
 }
 
 /* line 124, ../scss/widgets/_panel.scss */
@@ -6544,9 +6599,11 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -moz-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -o-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+  background-image: -ms-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
-  -webkit-box-shadow: #fbf9f9 0 1px 0px 0 inset;
   -moz-box-shadow: #fbf9f9 0 1px 0px 0 inset;
+  -webkit-box-shadow: #fbf9f9 0 1px 0px 0 inset;
+  -o-box-shadow: #fbf9f9 0 1px 0px 0 inset;
   box-shadow: #fbf9f9 0 1px 0px 0 inset;
 }
 
@@ -6588,34 +6645,100 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -moz-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -o-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+  background-image: -ms-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+}
+
+/* line 432, ../scss/widgets/_panel.scss */
+.x-panel-collapsed .x-panel-header-default-top {
+  -moz-border-radius-bottomleft: null;
+  -webkit-border-bottom-left-radius: null;
+  -o-border-bottom-left-radius: null;
+  -ms-border-bottom-left-radius: null;
+  -khtml-border-bottom-left-radius: null;
+  border-bottom-left-radius: null;
+  -moz-border-radius-bottomright: null;
+  -webkit-border-bottom-right-radius: null;
+  -o-border-bottom-right-radius: null;
+  -ms-border-bottom-right-radius: null;
+  -khtml-border-bottom-right-radius: null;
+  border-bottom-right-radius: null;
+}
+/* line 436, ../scss/widgets/_panel.scss */
+.x-panel-collapsed .x-panel-header-default-right {
+  -moz-border-radius-topleft: null;
+  -webkit-border-top-left-radius: null;
+  -o-border-top-left-radius: null;
+  -ms-border-top-left-radius: null;
+  -khtml-border-top-left-radius: null;
+  border-top-left-radius: null;
+  -moz-border-radius-bottomleft: null;
+  -webkit-border-bottom-left-radius: null;
+  -o-border-bottom-left-radius: null;
+  -ms-border-bottom-left-radius: null;
+  -khtml-border-bottom-left-radius: null;
+  border-bottom-left-radius: null;
+}
+/* line 440, ../scss/widgets/_panel.scss */
+.x-panel-collapsed .x-panel-header-default-bottom {
+  -moz-border-radius-topleft: null;
+  -webkit-border-top-left-radius: null;
+  -o-border-top-left-radius: null;
+  -ms-border-top-left-radius: null;
+  -khtml-border-top-left-radius: null;
+  border-top-left-radius: null;
+  -moz-border-radius-topright: null;
+  -webkit-border-top-right-radius: null;
+  -o-border-top-right-radius: null;
+  -ms-border-top-right-radius: null;
+  -khtml-border-top-right-radius: null;
+  border-top-right-radius: null;
+}
+/* line 444, ../scss/widgets/_panel.scss */
+.x-panel-collapsed .x-panel-header-default-left {
+  -moz-border-radius-topright: null;
+  -webkit-border-top-right-radius: null;
+  -o-border-top-right-radius: null;
+  -ms-border-top-right-radius: null;
+  -khtml-border-top-right-radius: null;
+  border-top-right-radius: null;
+  -moz-border-radius-bottomright: null;
+  -webkit-border-bottom-right-radius: null;
+  -o-border-bottom-right-radius: null;
+  -ms-border-bottom-right-radius: null;
+  -khtml-border-bottom-right-radius: null;
+  border-bottom-right-radius: null;
 }
 
 /* line 450, ../scss/widgets/_panel.scss */
 .x-panel-header-default-top {
-  -webkit-box-shadow: #fbf9f9 0 1px 0px 0 inset;
   -moz-box-shadow: #fbf9f9 0 1px 0px 0 inset;
+  -webkit-box-shadow: #fbf9f9 0 1px 0px 0 inset;
+  -o-box-shadow: #fbf9f9 0 1px 0px 0 inset;
   box-shadow: #fbf9f9 0 1px 0px 0 inset;
 }
 
 /* line 454, ../scss/widgets/_panel.scss */
 .x-panel-header-default-right {
-  -webkit-box-shadow: #fbf9f9 -1px 0 0px 0 inset;
   -moz-box-shadow: #fbf9f9 -1px 0 0px 0 inset;
+  -webkit-box-shadow: #fbf9f9 -1px 0 0px 0 inset;
+  -o-box-shadow: #fbf9f9 -1px 0 0px 0 inset;
   box-shadow: #fbf9f9 -1px 0 0px 0 inset;
 }
 
 /* line 458, ../scss/widgets/_panel.scss */
 .x-panel-header-default-bottom {
-  -webkit-box-shadow: #fbf9f9 0 -1px 0px 0 inset;
   -moz-box-shadow: #fbf9f9 0 -1px 0px 0 inset;
+  -webkit-box-shadow: #fbf9f9 0 -1px 0px 0 inset;
+  -o-box-shadow: #fbf9f9 0 -1px 0px 0 inset;
   box-shadow: #fbf9f9 0 -1px 0px 0 inset;
 }
 
 /* line 462, ../scss/widgets/_panel.scss */
 .x-panel-header-default-left {
-  -webkit-box-shadow: #fbf9f9 1px 0 0px 0 inset;
   -moz-box-shadow: #fbf9f9 1px 0 0px 0 inset;
+  -webkit-box-shadow: #fbf9f9 1px 0 0px 0 inset;
+  -o-box-shadow: #fbf9f9 1px 0 0px 0 inset;
   box-shadow: #fbf9f9 1px 0 0px 0 inset;
 }
 
@@ -6650,9 +6773,11 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -moz-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -o-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+  background-image: -ms-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
-  -webkit-box-shadow: #fbf9f9 0 1px 0px 0 inset;
   -moz-box-shadow: #fbf9f9 0 1px 0px 0 inset;
+  -webkit-box-shadow: #fbf9f9 0 1px 0px 0 inset;
+  -o-box-shadow: #fbf9f9 0 1px 0px 0 inset;
   box-shadow: #fbf9f9 0 1px 0px 0 inset;
 }
 
@@ -6694,15 +6819,17 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -moz-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -o-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+  background-image: -ms-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-panel-default-framed {
-  -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
+  -webkit-border-radius: 4px;
   -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -khtml-border-radius: 4px;
   border-radius: 4px;
   padding: 4px 4px 4px 4px;
   border-width: 1px;
@@ -6714,15 +6841,27 @@ textarea.x-form-invalid-field {
 .x-panel-header-default-framed-top {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
+  -ms-border-top-left-radius: 4px;
+  -khtml-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
+  -ms-border-top-right-radius: 4px;
+  -khtml-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
+  -ms-border-bottom-right-radius: 0;
+  -khtml-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0;
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
+  -ms-border-bottom-left-radius: 0;
+  -khtml-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   padding: 4px 5px 4px 5px;
   border-width: 1px 1px 0 1px;
@@ -6733,6 +6872,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -moz-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -o-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+  background-image: -ms-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
 }
 
@@ -6740,15 +6880,27 @@ textarea.x-form-invalid-field {
 .x-panel-header-default-framed-right {
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
+  -o-border-top-left-radius: 0;
+  -ms-border-top-left-radius: 0;
+  -khtml-border-top-left-radius: 0;
   border-top-left-radius: 0;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
+  -ms-border-top-right-radius: 4px;
+  -khtml-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
+  -ms-border-bottom-right-radius: 4px;
+  -khtml-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
+  -ms-border-bottom-left-radius: 0;
+  -khtml-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   padding: 5px 4px 5px 4px;
   border-width: 1px 1px 1px 0;
@@ -6759,6 +6911,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -moz-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -o-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+  background-image: -ms-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
 }
 
@@ -6766,15 +6919,27 @@ textarea.x-form-invalid-field {
 .x-panel-header-default-framed-bottom {
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
+  -o-border-top-left-radius: 0;
+  -ms-border-top-left-radius: 0;
+  -khtml-border-top-left-radius: 0;
   border-top-left-radius: 0;
   -moz-border-radius-topright: 0;
   -webkit-border-top-right-radius: 0;
+  -o-border-top-right-radius: 0;
+  -ms-border-top-right-radius: 0;
+  -khtml-border-top-right-radius: 0;
   border-top-right-radius: 0;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
+  -ms-border-bottom-right-radius: 4px;
+  -khtml-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
+  -ms-border-bottom-left-radius: 4px;
+  -khtml-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
   padding: 4px 5px 4px 5px;
   border-width: 0 1px 1px 1px;
@@ -6785,6 +6950,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -moz-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -o-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+  background-image: -ms-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
 }
 
@@ -6792,15 +6958,27 @@ textarea.x-form-invalid-field {
 .x-panel-header-default-framed-left {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
+  -ms-border-top-left-radius: 4px;
+  -khtml-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-topright: 0;
   -webkit-border-top-right-radius: 0;
+  -o-border-top-right-radius: 0;
+  -ms-border-top-right-radius: 0;
+  -khtml-border-top-right-radius: 0;
   border-top-right-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
+  -ms-border-bottom-right-radius: 0;
+  -khtml-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0;
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
+  -ms-border-bottom-left-radius: 4px;
+  -khtml-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
   padding: 5px 4px 5px 4px;
   border-width: 1px 0 1px 1px;
@@ -6811,34 +6989,39 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -moz-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -o-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+  background-image: -ms-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
 }
 
 /* line 415, ../scss/widgets/_panel.scss */
 .x-panel-header-default-framed-top {
-  -webkit-box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
   -moz-box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
+  -webkit-box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
+  -o-box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
   box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
 }
 
 /* line 419, ../scss/widgets/_panel.scss */
 .x-panel-header-default-framed-right {
-  -webkit-box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset;
   -moz-box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset;
+  -webkit-box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset;
+  -o-box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset;
   box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset;
 }
 
 /* line 423, ../scss/widgets/_panel.scss */
 .x-panel-header-default-framed-bottom {
-  -webkit-box-shadow: #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
   -moz-box-shadow: #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
+  -webkit-box-shadow: #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
+  -o-box-shadow: #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
   box-shadow: #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 -1px 0 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
 }
 
 /* line 427, ../scss/widgets/_panel.scss */
 .x-panel-header-default-framed-left {
-  -webkit-box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
   -moz-box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
+  -webkit-box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
+  -o-box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
   box-shadow: #fbf9f9 0 1px 0px 0 inset, #fbf9f9 0 -1px 0px 0 inset, #fbf9f9 1px 0 0px 0 inset;
 }
 
@@ -6864,10 +7047,11 @@ textarea.x-form-invalid-field {
 
 /* line 484, ../scss/widgets/_panel.scss */
 .x-panel-header-default-framed-collapsed {
-  -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
+  -webkit-border-radius: 4px;
   -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -khtml-border-radius: 4px;
   border-radius: 4px;
 }
 
@@ -6875,15 +7059,27 @@ textarea.x-form-invalid-field {
 .x-panel-header-default-framed-collapsed-top {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
+  -ms-border-top-left-radius: 4px;
+  -khtml-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
+  -ms-border-top-right-radius: 4px;
+  -khtml-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
+  -ms-border-bottom-right-radius: 4px;
+  -khtml-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
+  -ms-border-bottom-left-radius: 4px;
+  -khtml-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
   padding: 4px 5px 4px 5px;
   border-width: 1px;
@@ -6894,6 +7090,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -moz-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -o-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+  background-image: -ms-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
 }
 
@@ -6901,15 +7098,27 @@ textarea.x-form-invalid-field {
 .x-panel-header-default-framed-collapsed-right {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
+  -ms-border-top-left-radius: 4px;
+  -khtml-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
+  -ms-border-top-right-radius: 4px;
+  -khtml-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
+  -ms-border-bottom-right-radius: 4px;
+  -khtml-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
+  -ms-border-bottom-left-radius: 4px;
+  -khtml-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
   padding: 5px 4px 5px 4px;
   border-width: 1px;
@@ -6920,6 +7129,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -moz-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -o-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+  background-image: -ms-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
 }
 
@@ -6927,15 +7137,27 @@ textarea.x-form-invalid-field {
 .x-panel-header-default-framed-collapsed-bottom {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
+  -ms-border-top-left-radius: 4px;
+  -khtml-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
+  -ms-border-top-right-radius: 4px;
+  -khtml-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
+  -ms-border-bottom-right-radius: 4px;
+  -khtml-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
+  -ms-border-bottom-left-radius: 4px;
+  -khtml-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
   padding: 4px 5px 4px 5px;
   border-width: 1px;
@@ -6946,6 +7168,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -moz-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -o-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+  background-image: -ms-linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: linear-gradient(top, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
 }
 
@@ -6953,15 +7176,27 @@ textarea.x-form-invalid-field {
 .x-panel-header-default-framed-collapsed-left {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
+  -ms-border-top-left-radius: 4px;
+  -khtml-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
+  -ms-border-top-right-radius: 4px;
+  -khtml-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
+  -ms-border-bottom-right-radius: 4px;
+  -khtml-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
+  -ms-border-bottom-left-radius: 4px;
+  -khtml-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
   padding: 5px 4px 5px 4px;
   border-width: 1px;
@@ -6972,6 +7207,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -moz-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: -o-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
+  background-image: -ms-linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
   background-image: linear-gradient(right, #ece7e7, #e5dede 45%, #d5c6c5 46%, #d5c6c5 50%, #dacfcf 51%, #e5dcdc);
 }
 
@@ -7015,10 +7251,11 @@ textarea.x-form-invalid-field {
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-tip {
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
   padding: 2px 2px 2px 2px;
   border-width: 1px;
@@ -7132,8 +7369,9 @@ textarea.x-form-invalid-field {
 /* line 137, ../scss/widgets/_qtip.scss */
 .x-form-invalid-tip {
   border-color: #a1311f;
-  -webkit-box-shadow: #d87166 0 1px 0px 0 inset, #d87166 0 -1px 0px 0 inset, #d87166 -1px 0 0px 0 inset, #d87166 1px 0 0px 0 inset;
   -moz-box-shadow: #d87166 0 1px 0px 0 inset, #d87166 0 -1px 0px 0 inset, #d87166 -1px 0 0px 0 inset, #d87166 1px 0 0px 0 inset;
+  -webkit-box-shadow: #d87166 0 1px 0px 0 inset, #d87166 0 -1px 0px 0 inset, #d87166 -1px 0 0px 0 inset, #d87166 1px 0 0px 0 inset;
+  -o-box-shadow: #d87166 0 1px 0px 0 inset, #d87166 0 -1px 0px 0 inset, #d87166 -1px 0 0px 0 inset, #d87166 1px 0 0px 0 inset;
   box-shadow: #d87166 0 1px 0px 0 inset, #d87166 0 -1px 0px 0 inset, #d87166 -1px 0 0px 0 inset, #d87166 1px 0 0px 0 inset;
 }
 
@@ -7154,10 +7392,11 @@ textarea.x-form-invalid-field {
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-form-invalid-tip-default {
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
   padding: 4px 4px 4px 4px;
   border-width: 1px;
@@ -7334,10 +7573,11 @@ textarea.x-form-invalid-field {
   position: relative;
   border-width: 1px;
   border-style: solid;
-  -webkit-border-radius: 0;
   -moz-border-radius: 0;
-  -ms-border-radius: 0;
+  -webkit-border-radius: 0;
   -o-border-radius: 0;
+  -ms-border-radius: 0;
+  -khtml-border-radius: 0;
   border-radius: 0;
   overflow: hidden;
   height: 20px;
@@ -7349,10 +7589,11 @@ textarea.x-form-invalid-field {
   overflow: hidden;
   position: absolute;
   width: 0;
-  -webkit-border-radius: 0;
   -moz-border-radius: 0;
-  -ms-border-radius: 0;
+  -webkit-border-radius: 0;
   -o-border-radius: 0;
+  -ms-border-radius: 0;
+  -khtml-border-radius: 0;
   border-radius: 0;
   border-right: 1px solid;
   border-top: 1px solid;
@@ -7394,6 +7635,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #d9caca, #c3acac 50%, #b89e9e 51%, #ae8f8f);
   background-image: -moz-linear-gradient(top, #d9caca, #c3acac 50%, #b89e9e 51%, #ae8f8f);
   background-image: -o-linear-gradient(top, #d9caca, #c3acac 50%, #b89e9e 51%, #ae8f8f);
+  background-image: -ms-linear-gradient(top, #d9caca, #c3acac 50%, #b89e9e 51%, #ae8f8f);
   background-image: linear-gradient(top, #d9caca, #c3acac 50%, #b89e9e 51%, #ae8f8f);
 }
 /* line 103, ../scss/widgets/_progress-bar.scss */
@@ -7402,7 +7644,7 @@ textarea.x-form-invalid-field {
 }
 /* line 107, ../scss/widgets/_progress-bar.scss */
 .x-progress-default .x-progress-text-back {
-  color: dimgrey;
+  color: #696969;
 }
 
 /* line 6, ../scss/widgets/_toolbar.scss */
@@ -7518,6 +7760,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #eceaea, #e5e2e2);
   background-image: -moz-linear-gradient(top, #eceaea, #e5e2e2);
   background-image: -o-linear-gradient(top, #eceaea, #e5e2e2);
+  background-image: -ms-linear-gradient(top, #eceaea, #e5e2e2);
   background-image: linear-gradient(top, #eceaea, #e5e2e2);
 }
 
@@ -7575,18 +7818,20 @@ textarea.x-form-invalid-field {
 
 /* line 48, ../scss/widgets/_window.scss */
 .x-window-collapsed .x-window-header-vertical {
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 /* line 51, ../scss/widgets/_window.scss */
 .x-window-collapsed .x-window-header-horizontal {
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 /* line 56, ../scss/widgets/_window.scss */
@@ -7613,13 +7858,15 @@ textarea.x-form-invalid-field {
 /* line 122, ../scss/widgets/_window.scss */
 .x-window-default {
   border-color: #b5b5b5;
-  -webkit-border-radius: 5px 5px;
   -moz-border-radius: 5px 5px;
-  -ms-border-radius: 5px 5px;
+  -webkit-border-radius: 5px 5px;
   -o-border-radius: 5px 5px;
+  -ms-border-radius: 5px 5px;
+  -khtml-border-radius: 5px 5px;
   border-radius: 5px 5px;
-  -webkit-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
   -moz-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
+  -webkit-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
+  -o-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
   box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
 }
 
@@ -7627,20 +7874,32 @@ textarea.x-form-invalid-field {
 .x-window-default {
   -moz-border-radius-topleft: 5px;
   -webkit-border-top-left-radius: 5px;
+  -o-border-top-left-radius: 5px;
+  -ms-border-top-left-radius: 5px;
+  -khtml-border-top-left-radius: 5px;
   border-top-left-radius: 5px;
   -moz-border-radius-topright: 5px;
   -webkit-border-top-right-radius: 5px;
+  -o-border-top-right-radius: 5px;
+  -ms-border-top-right-radius: 5px;
+  -khtml-border-top-right-radius: 5px;
   border-top-right-radius: 5px;
   -moz-border-radius-bottomright: 5px;
   -webkit-border-bottom-right-radius: 5px;
+  -o-border-bottom-right-radius: 5px;
+  -ms-border-bottom-right-radius: 5px;
+  -khtml-border-bottom-right-radius: 5px;
   border-bottom-right-radius: 5px;
   -moz-border-radius-bottomleft: 5px;
   -webkit-border-bottom-left-radius: 5px;
+  -o-border-bottom-left-radius: 5px;
+  -ms-border-bottom-left-radius: 5px;
+  -khtml-border-bottom-left-radius: 5px;
   border-bottom-left-radius: 5px;
   padding: 4px 4px 4px 4px;
   border-width: 1px;
   border-style: solid;
-  background-color: gainsboro;
+  background-color: #dcdcdc;
 }
 
 /* line 141, ../scss/widgets/_window.scss */
@@ -7671,187 +7930,287 @@ textarea.x-form-invalid-field {
 .x-window-header-default-top {
   -moz-border-radius-topleft: 5px;
   -webkit-border-top-left-radius: 5px;
+  -o-border-top-left-radius: 5px;
+  -ms-border-top-left-radius: 5px;
+  -khtml-border-top-left-radius: 5px;
   border-top-left-radius: 5px;
   -moz-border-radius-topright: 5px;
   -webkit-border-top-right-radius: 5px;
+  -o-border-top-right-radius: 5px;
+  -ms-border-top-right-radius: 5px;
+  -khtml-border-top-right-radius: 5px;
   border-top-right-radius: 5px;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
+  -ms-border-bottom-right-radius: 0;
+  -khtml-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0;
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
+  -ms-border-bottom-left-radius: 0;
+  -khtml-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   padding: 4px 5px 0 5px;
   border-width: 1px 1px 0 1px;
   border-style: solid;
-  background-color: gainsboro;
+  background-color: #dcdcdc;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-window-header-default-right {
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
+  -o-border-top-left-radius: 0;
+  -ms-border-top-left-radius: 0;
+  -khtml-border-top-left-radius: 0;
   border-top-left-radius: 0;
   -moz-border-radius-topright: 5px;
   -webkit-border-top-right-radius: 5px;
+  -o-border-top-right-radius: 5px;
+  -ms-border-top-right-radius: 5px;
+  -khtml-border-top-right-radius: 5px;
   border-top-right-radius: 5px;
   -moz-border-radius-bottomright: 5px;
   -webkit-border-bottom-right-radius: 5px;
+  -o-border-bottom-right-radius: 5px;
+  -ms-border-bottom-right-radius: 5px;
+  -khtml-border-bottom-right-radius: 5px;
   border-bottom-right-radius: 5px;
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
+  -ms-border-bottom-left-radius: 0;
+  -khtml-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   padding: 5px 4px 5px 0;
   border-width: 1px 1px 1px 0;
   border-style: solid;
-  background-color: gainsboro;
+  background-color: #dcdcdc;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-window-header-default-bottom {
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
+  -o-border-top-left-radius: 0;
+  -ms-border-top-left-radius: 0;
+  -khtml-border-top-left-radius: 0;
   border-top-left-radius: 0;
   -moz-border-radius-topright: 0;
   -webkit-border-top-right-radius: 0;
+  -o-border-top-right-radius: 0;
+  -ms-border-top-right-radius: 0;
+  -khtml-border-top-right-radius: 0;
   border-top-right-radius: 0;
   -moz-border-radius-bottomright: 5px;
   -webkit-border-bottom-right-radius: 5px;
+  -o-border-bottom-right-radius: 5px;
+  -ms-border-bottom-right-radius: 5px;
+  -khtml-border-bottom-right-radius: 5px;
   border-bottom-right-radius: 5px;
   -moz-border-radius-bottomleft: 5px;
   -webkit-border-bottom-left-radius: 5px;
+  -o-border-bottom-left-radius: 5px;
+  -ms-border-bottom-left-radius: 5px;
+  -khtml-border-bottom-left-radius: 5px;
   border-bottom-left-radius: 5px;
   padding: 0 5px 4px 5px;
   border-width: 0 1px 1px 1px;
   border-style: solid;
-  background-color: gainsboro;
+  background-color: #dcdcdc;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-window-header-default-left {
   -moz-border-radius-topleft: 5px;
   -webkit-border-top-left-radius: 5px;
+  -o-border-top-left-radius: 5px;
+  -ms-border-top-left-radius: 5px;
+  -khtml-border-top-left-radius: 5px;
   border-top-left-radius: 5px;
   -moz-border-radius-topright: 0;
   -webkit-border-top-right-radius: 0;
+  -o-border-top-right-radius: 0;
+  -ms-border-top-right-radius: 0;
+  -khtml-border-top-right-radius: 0;
   border-top-right-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
+  -ms-border-bottom-right-radius: 0;
+  -khtml-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0;
   -moz-border-radius-bottomleft: 5px;
   -webkit-border-bottom-left-radius: 5px;
+  -o-border-bottom-left-radius: 5px;
+  -ms-border-bottom-left-radius: 5px;
+  -khtml-border-bottom-left-radius: 5px;
   border-bottom-left-radius: 5px;
   padding: 5px 0px 5px 4px;
   border-width: 1px 0 1px 1px;
   border-style: solid;
-  background-color: gainsboro;
+  background-color: #dcdcdc;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-window-header-default-collapsed-top {
   -moz-border-radius-topleft: 5px;
   -webkit-border-top-left-radius: 5px;
+  -o-border-top-left-radius: 5px;
+  -ms-border-top-left-radius: 5px;
+  -khtml-border-top-left-radius: 5px;
   border-top-left-radius: 5px;
   -moz-border-radius-topright: 5px;
   -webkit-border-top-right-radius: 5px;
+  -o-border-top-right-radius: 5px;
+  -ms-border-top-right-radius: 5px;
+  -khtml-border-top-right-radius: 5px;
   border-top-right-radius: 5px;
   -moz-border-radius-bottomright: 5px;
   -webkit-border-bottom-right-radius: 5px;
+  -o-border-bottom-right-radius: 5px;
+  -ms-border-bottom-right-radius: 5px;
+  -khtml-border-bottom-right-radius: 5px;
   border-bottom-right-radius: 5px;
   -moz-border-radius-bottomleft: 5px;
   -webkit-border-bottom-left-radius: 5px;
+  -o-border-bottom-left-radius: 5px;
+  -ms-border-bottom-left-radius: 5px;
+  -khtml-border-bottom-left-radius: 5px;
   border-bottom-left-radius: 5px;
   padding: 4px 5px 4px 5px;
   border-width: 1px;
   border-style: solid;
-  background-color: gainsboro;
+  background-color: #dcdcdc;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-window-header-default-collapsed-right {
   -moz-border-radius-topleft: 5px;
   -webkit-border-top-left-radius: 5px;
+  -o-border-top-left-radius: 5px;
+  -ms-border-top-left-radius: 5px;
+  -khtml-border-top-left-radius: 5px;
   border-top-left-radius: 5px;
   -moz-border-radius-topright: 5px;
   -webkit-border-top-right-radius: 5px;
+  -o-border-top-right-radius: 5px;
+  -ms-border-top-right-radius: 5px;
+  -khtml-border-top-right-radius: 5px;
   border-top-right-radius: 5px;
   -moz-border-radius-bottomright: 5px;
   -webkit-border-bottom-right-radius: 5px;
+  -o-border-bottom-right-radius: 5px;
+  -ms-border-bottom-right-radius: 5px;
+  -khtml-border-bottom-right-radius: 5px;
   border-bottom-right-radius: 5px;
   -moz-border-radius-bottomleft: 5px;
   -webkit-border-bottom-left-radius: 5px;
+  -o-border-bottom-left-radius: 5px;
+  -ms-border-bottom-left-radius: 5px;
+  -khtml-border-bottom-left-radius: 5px;
   border-bottom-left-radius: 5px;
   padding: 5px 4px 5px 4px;
   border-width: 1px;
   border-style: solid;
-  background-color: gainsboro;
+  background-color: #dcdcdc;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-window-header-default-collapsed-bottom {
   -moz-border-radius-topleft: 5px;
   -webkit-border-top-left-radius: 5px;
+  -o-border-top-left-radius: 5px;
+  -ms-border-top-left-radius: 5px;
+  -khtml-border-top-left-radius: 5px;
   border-top-left-radius: 5px;
   -moz-border-radius-topright: 5px;
   -webkit-border-top-right-radius: 5px;
+  -o-border-top-right-radius: 5px;
+  -ms-border-top-right-radius: 5px;
+  -khtml-border-top-right-radius: 5px;
   border-top-right-radius: 5px;
   -moz-border-radius-bottomright: 5px;
   -webkit-border-bottom-right-radius: 5px;
+  -o-border-bottom-right-radius: 5px;
+  -ms-border-bottom-right-radius: 5px;
+  -khtml-border-bottom-right-radius: 5px;
   border-bottom-right-radius: 5px;
   -moz-border-radius-bottomleft: 5px;
   -webkit-border-bottom-left-radius: 5px;
+  -o-border-bottom-left-radius: 5px;
+  -ms-border-bottom-left-radius: 5px;
+  -khtml-border-bottom-left-radius: 5px;
   border-bottom-left-radius: 5px;
   padding: 4px 5px 4px 5px;
   border-width: 1px;
   border-style: solid;
-  background-color: gainsboro;
+  background-color: #dcdcdc;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-window-header-default-collapsed-left {
   -moz-border-radius-topleft: 5px;
   -webkit-border-top-left-radius: 5px;
+  -o-border-top-left-radius: 5px;
+  -ms-border-top-left-radius: 5px;
+  -khtml-border-top-left-radius: 5px;
   border-top-left-radius: 5px;
   -moz-border-radius-topright: 5px;
   -webkit-border-top-right-radius: 5px;
+  -o-border-top-right-radius: 5px;
+  -ms-border-top-right-radius: 5px;
+  -khtml-border-top-right-radius: 5px;
   border-top-right-radius: 5px;
   -moz-border-radius-bottomright: 5px;
   -webkit-border-bottom-right-radius: 5px;
+  -o-border-bottom-right-radius: 5px;
+  -ms-border-bottom-right-radius: 5px;
+  -khtml-border-bottom-right-radius: 5px;
   border-bottom-right-radius: 5px;
   -moz-border-radius-bottomleft: 5px;
   -webkit-border-bottom-left-radius: 5px;
+  -o-border-bottom-left-radius: 5px;
+  -ms-border-bottom-left-radius: 5px;
+  -khtml-border-bottom-left-radius: 5px;
   border-bottom-left-radius: 5px;
   padding: 5px 4px 5px 4px;
   border-width: 1px;
   border-style: solid;
-  background-color: gainsboro;
+  background-color: #dcdcdc;
 }
 
 /* line 180, ../scss/widgets/_window.scss */
 .x-window-header-default-top {
-  -webkit-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
   -moz-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
+  -webkit-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
+  -o-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
   box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
 }
 
 /* line 184, ../scss/widgets/_window.scss */
 .x-window-header-default-right {
-  -webkit-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset;
   -moz-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset;
+  -webkit-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset;
+  -o-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset;
   box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset;
 }
 
 /* line 188, ../scss/widgets/_window.scss */
 .x-window-header-default-bottom {
-  -webkit-box-shadow: #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
   -moz-box-shadow: #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
+  -webkit-box-shadow: #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
+  -o-box-shadow: #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
   box-shadow: #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 -1px 0 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
 }
 
 /* line 192, ../scss/widgets/_window.scss */
 .x-window-header-default-left {
-  -webkit-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
   -moz-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
+  -webkit-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
+  -o-box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
   box-shadow: #f7f3f3 0 1px 0px 0 inset, #f7f3f3 0 -1px 0px 0 inset, #f7f3f3 1px 0 0px 0 inset;
 }
 
@@ -7862,7 +8221,7 @@ textarea.x-form-invalid-field {
 
 /* line 2, ../scss/util/_messagebox.scss */
 .x-message-box .x-window-body {
-  background-color: gainsboro;
+  background-color: #dcdcdc;
   border: none;
 }
 
@@ -7920,6 +8279,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #ece9e9, #e0dddd);
   background-image: -moz-linear-gradient(top, #ece9e9, #e0dddd);
   background-image: -o-linear-gradient(top, #ece9e9, #e0dddd);
+  background-image: -ms-linear-gradient(top, #ece9e9, #e0dddd);
   background-image: linear-gradient(top, #ece9e9, #e0dddd);
   font-size: 15px;
 }
@@ -8076,15 +8436,27 @@ textarea.x-form-invalid-field {
 .x-tab-default-top {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
+  -ms-border-top-left-radius: 4px;
+  -khtml-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
+  -ms-border-top-right-radius: 4px;
+  -khtml-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
+  -ms-border-bottom-right-radius: 0;
+  -khtml-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0;
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
+  -ms-border-bottom-left-radius: 0;
+  -khtml-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   padding: 3px 3px 0 3px;
   border-width: 1px 1px 0 1px;
@@ -8095,6 +8467,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #e9dcdc, #f0e3e3 25%, #f6e8e8 45%);
   background-image: -moz-linear-gradient(top, #e9dcdc, #f0e3e3 25%, #f6e8e8 45%);
   background-image: -o-linear-gradient(top, #e9dcdc, #f0e3e3 25%, #f6e8e8 45%);
+  background-image: -ms-linear-gradient(top, #e9dcdc, #f0e3e3 25%, #f6e8e8 45%);
   background-image: linear-gradient(top, #e9dcdc, #f0e3e3 25%, #f6e8e8 45%);
 }
 
@@ -8102,15 +8475,27 @@ textarea.x-form-invalid-field {
 .x-tab-default-bottom {
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
+  -o-border-top-left-radius: 0;
+  -ms-border-top-left-radius: 0;
+  -khtml-border-top-left-radius: 0;
   border-top-left-radius: 0;
   -moz-border-radius-topright: 0;
   -webkit-border-top-right-radius: 0;
+  -o-border-top-right-radius: 0;
+  -ms-border-top-right-radius: 0;
+  -khtml-border-top-right-radius: 0;
   border-top-right-radius: 0;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
+  -ms-border-bottom-right-radius: 4px;
+  -khtml-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
+  -ms-border-bottom-left-radius: 4px;
+  -khtml-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
   padding: 0 3px 3px 3px;
   border-width: 0 1px 1px 1px;
@@ -8121,6 +8506,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(bottom, #e9dcdc, #f0e3e3 25%, #f6e8e8 45%);
   background-image: -moz-linear-gradient(bottom, #e9dcdc, #f0e3e3 25%, #f6e8e8 45%);
   background-image: -o-linear-gradient(bottom, #e9dcdc, #f0e3e3 25%, #f6e8e8 45%);
+  background-image: -ms-linear-gradient(bottom, #e9dcdc, #f0e3e3 25%, #f6e8e8 45%);
   background-image: linear-gradient(bottom, #e9dcdc, #f0e3e3 25%, #f6e8e8 45%);
 }
 
@@ -8213,8 +8599,9 @@ textarea.x-form-invalid-field {
 
 /* line 124, ../scss/widgets/_tab.scss */
 .x-tab-default-top {
-  -webkit-box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   -moz-box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  -webkit-box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  -o-box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   border-bottom: 1px solid #cbb9b9 !important;
 }
@@ -8247,12 +8634,14 @@ textarea.x-form-invalid-field {
 
 /* line 163, ../scss/widgets/_tab.scss */
 .x-tab-default-bottom {
-  -webkit-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   -moz-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  -webkit-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  -o-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   border-top: 1px solid #cbb9b9 !important;
-  -webkit-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   -moz-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  -webkit-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  -o-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
 }
 /* line 178, ../scss/widgets/_tab.scss */
@@ -8286,6 +8675,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #f3ebeb, #faf3f3);
   background-image: -moz-linear-gradient(top, #f3ebeb, #faf3f3);
   background-image: -o-linear-gradient(top, #f3ebeb, #faf3f3);
+  background-image: -ms-linear-gradient(top, #f3ebeb, #faf3f3);
   background-image: linear-gradient(top, #f3ebeb, #faf3f3);
 }
 /* line 203, ../scss/widgets/_tab.scss */
@@ -8342,6 +8732,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #f4e4e3, #f8eaea 25%, #faf0f0 45%);
   background-image: -moz-linear-gradient(top, #f4e4e3, #f8eaea 25%, #faf0f0 45%);
   background-image: -o-linear-gradient(top, #f4e4e3, #f8eaea 25%, #faf0f0 45%);
+  background-image: -ms-linear-gradient(top, #f4e4e3, #f8eaea 25%, #faf0f0 45%);
   background-image: linear-gradient(top, #f4e4e3, #f8eaea 25%, #faf0f0 45%);
 }
 
@@ -8353,6 +8744,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(bottom, #f4e4e3, #f8eaea 25%, #faf0f0 45%);
   background-image: -moz-linear-gradient(bottom, #f4e4e3, #f8eaea 25%, #faf0f0 45%);
   background-image: -o-linear-gradient(bottom, #f4e4e3, #f8eaea 25%, #faf0f0 45%);
+  background-image: -ms-linear-gradient(bottom, #f4e4e3, #f8eaea 25%, #faf0f0 45%);
   background-image: linear-gradient(bottom, #f4e4e3, #f8eaea 25%, #faf0f0 45%);
 }
 
@@ -8373,6 +8765,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #ffffff, #fcfafa 25%, #f6e8e8 45%);
   background-image: -moz-linear-gradient(top, #ffffff, #fcfafa 25%, #f6e8e8 45%);
   background-image: -o-linear-gradient(top, #ffffff, #fcfafa 25%, #f6e8e8 45%);
+  background-image: -ms-linear-gradient(top, #ffffff, #fcfafa 25%, #f6e8e8 45%);
   background-image: linear-gradient(top, #ffffff, #fcfafa 25%, #f6e8e8 45%);
 }
 
@@ -8384,6 +8777,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(bottom, #ffffff, #fcfafa 25%, #f6e8e8 45%);
   background-image: -moz-linear-gradient(bottom, #ffffff, #fcfafa 25%, #f6e8e8 45%);
   background-image: -o-linear-gradient(bottom, #ffffff, #fcfafa 25%, #f6e8e8 45%);
+  background-image: -ms-linear-gradient(bottom, #ffffff, #fcfafa 25%, #f6e8e8 45%);
   background-image: linear-gradient(bottom, #ffffff, #fcfafa 25%, #f6e8e8 45%);
 }
 
@@ -8406,6 +8800,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(top, #f3ebeb, #faf3f3);
   background-image: -moz-linear-gradient(top, #f3ebeb, #faf3f3);
   background-image: -o-linear-gradient(top, #f3ebeb, #faf3f3);
+  background-image: -ms-linear-gradient(top, #f3ebeb, #faf3f3);
   background-image: linear-gradient(top, #f3ebeb, #faf3f3);
 }
 
@@ -8419,6 +8814,7 @@ textarea.x-form-invalid-field {
   background-image: -webkit-linear-gradient(bottom, #f3ebeb, #faf3f3);
   background-image: -moz-linear-gradient(bottom, #f3ebeb, #faf3f3);
   background-image: -o-linear-gradient(bottom, #f3ebeb, #faf3f3);
+  background-image: -ms-linear-gradient(bottom, #f3ebeb, #faf3f3);
   background-image: linear-gradient(bottom, #f3ebeb, #faf3f3);
 }
 
@@ -8777,13 +9173,16 @@ a.x-tab-close-btn:hover {
 
 /* line 6, ../scss/widgets/_drawcomponent.scss */
 .x-surface {
-  display: -moz-inline-stack;
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
   display: inline-block;
   vertical-align: middle;
   *vertical-align: auto;
-  zoom: 1;
-  *display: inline;
   overflow: hidden;
+}
+/* line 7, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
+.x-surface {
+  *display: inline;
 }
 
 /* line 11, ../scss/widgets/_drawcomponent.scss */
@@ -8904,10 +9303,11 @@ svg, vml {
 }
 /* line 18, ../scss/taco/widgets/_grid.scss */
 .x-panel .x-grid-body:last-child {
-  -webkit-border-radius: 0 0 3px 3px;
   -moz-border-radius: 0 0 3px 3px;
-  -ms-border-radius: 0 0 3px 3px;
+  -webkit-border-radius: 0 0 3px 3px;
   -o-border-radius: 0 0 3px 3px;
+  -ms-border-radius: 0 0 3px 3px;
+  -khtml-border-radius: 0 0 3px 3px;
   border-radius: 0 0 3px 3px;
 }
 
@@ -8921,10 +9321,14 @@ svg, vml {
   background-color: #faf8f5;
   font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   vertical-align: middle;
-  -webkit-transition: background-color 0.2s;
-  -moz-transition: background-color 0.2s;
-  -o-transition: background-color 0.2s;
-  transition: background-color 0.2s;
+  -moz-transition-property: background-color;
+  -webkit-transition-property: background-color;
+  -o-transition-property: background-color;
+  transition-property: background-color;
+  -moz-transition-duration: 0.2s;
+  -webkit-transition-duration: 0.2s;
+  -o-transition-duration: 0.2s;
+  transition-duration: 0.2s;
 }
 /* line 34, ../scss/taco/widgets/_grid.scss */
 .x-grid-row .x-grid-cell.x-grid-cell-selected {
@@ -8962,8 +9366,9 @@ svg, vml {
   color: #5e5c5a;
   font: bold 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   font-weight: bold;
-  -webkit-box-shadow: 0px 1px 0px white inset;
   -moz-box-shadow: 0px 1px 0px white inset;
+  -webkit-box-shadow: 0px 1px 0px white inset;
+  -o-box-shadow: 0px 1px 0px white inset;
   box-shadow: 0px 1px 0px white inset;
 }
 /* line 75, ../scss/taco/widgets/_grid.scss */
@@ -8975,19 +9380,21 @@ svg, vml {
 }
 /* line 80, ../scss/taco/widgets/_grid.scss */
 .x-column-header:nth-of-type(1) {
-  -webkit-border-radius: 3px 0px 0px 0px;
   -moz-border-radius: 3px 0px 0px 0px;
-  -ms-border-radius: 3px 0px 0px 0px;
+  -webkit-border-radius: 3px 0px 0px 0px;
   -o-border-radius: 3px 0px 0px 0px;
+  -ms-border-radius: 3px 0px 0px 0px;
+  -khtml-border-radius: 3px 0px 0px 0px;
   border-radius: 3px 0px 0px 0px;
 }
 /* line 83, ../scss/taco/widgets/_grid.scss */
 .x-column-header:nth-last-of-type(1) {
   border-right: 0 none;
-  -webkit-border-radius: 0px 3px 0px 0px;
   -moz-border-radius: 0px 3px 0px 0px;
-  -ms-border-radius: 0px 3px 0px 0px;
+  -webkit-border-radius: 0px 3px 0px 0px;
   -o-border-radius: 0px 3px 0px 0px;
+  -ms-border-radius: 0px 3px 0px 0px;
+  -khtml-border-radius: 0px 3px 0px 0px;
   border-radius: 0px 3px 0px 0px;
 }
 /* line 87, ../scss/taco/widgets/_grid.scss */
@@ -9017,7 +9424,7 @@ svg, vml {
   width: 36px;
   margin: 2px 4px 0;
   text-indent: -9999px;
-  background-position: 0 -685px;
+  background-position: 0 -727px;
 }
 
 /* line 118, ../scss/taco/widgets/_grid.scss */
@@ -9026,13 +9433,13 @@ svg, vml {
 }
 /* line 121, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-selected .taco-datalist-selection {
-  background-position: 0 -421px;
+  background-position: 0 -2024px;
   position: static;
   margin: 6px 0 0 10px;
 }
 /* line 126, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-selected .taco-datalist-deselection {
-  background-position: 0 -395px;
+  background-position: 0 -701px;
   position: static;
   margin: 6px 0 0 10px;
 }
@@ -9043,8 +9450,9 @@ svg, vml {
   max-height: 47px;
   overflow: hidden;
   width: 62px;
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
@@ -9061,63 +9469,68 @@ svg, vml {
   margin: 2px 4px 0;
   border: 0px solid transparent;
   opacity: 0;
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
-  -webkit-transition: opacity 0.2s;
-  -moz-transition: opacity 0.2s;
-  -o-transition: opacity 0.2s;
-  transition: opacity 0.2s;
+  -moz-transition-property: opacity;
+  -webkit-transition-property: opacity;
+  -o-transition-property: opacity;
+  transition-property: opacity;
+  -moz-transition-duration: 0.2s;
+  -webkit-transition-duration: 0.2s;
+  -o-transition-duration: 0.2s;
+  transition-duration: 0.2s;
 }
 /* line 154, ../scss/taco/widgets/_grid.scss */
 .x-action-col-cell img.taco-action-hide {
-  background-position: 0 -2212px;
+  background-position: 0 -1159px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-action-col-cell img.taco-action-hide:hover, .x-action-col-cell img.taco-action-hide.icon-jumpout_hover, .x-action-col-cell img.taco-action-hide.icon-jumpout-hover {
-  background-position: 0 -2236px;
+  background-position: 0 -1207px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-action-col-cell img.taco-action-hide:active, .x-action-col-cell img.taco-action-hide.icon-jumpout_active, .x-action-col-cell img.taco-action-hide.icon-jumpout-active {
-  background-position: 0 -2326px;
+  background-position: 0 -1183px;
 }
 /* line 157, ../scss/taco/widgets/_grid.scss */
 .x-action-col-cell img.taco-action-addsub {
-  background-position: 0 -2365px;
+  background-position: 0 -1545px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-action-col-cell img.taco-action-addsub:hover, .x-action-col-cell img.taco-action-addsub.icon-newfile_hover, .x-action-col-cell img.taco-action-addsub.icon-newfile-hover {
-  background-position: 0 -2389px;
+  background-position: 0 -1593px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-action-col-cell img.taco-action-addsub:active, .x-action-col-cell img.taco-action-addsub.icon-newfile_active, .x-action-col-cell img.taco-action-addsub.icon-newfile-active {
-  background-position: 0 -2469px;
+  background-position: 0 -1569px;
 }
 /* line 160, ../scss/taco/widgets/_grid.scss */
 .x-action-col-cell img.taco-action-delete {
-  background-position: 0 -2302px;
+  background-position: 0 -2638px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-action-col-cell img.taco-action-delete:hover, .x-action-col-cell img.taco-action-delete.icon-trash_hover, .x-action-col-cell img.taco-action-delete.icon-trash-hover {
-  background-position: 0 -2278px;
+  background-position: 0 -2686px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-action-col-cell img.taco-action-delete:active, .x-action-col-cell img.taco-action-delete.icon-trash_active, .x-action-col-cell img.taco-action-delete.icon-trash-active {
-  background-position: 0 -2413px;
+  background-position: 0 -2662px;
 }
 /* line 163, ../scss/taco/widgets/_grid.scss */
 .x-action-col-cell img.taco-action-remove {
-  background-position: 0 -2188px;
+  background-position: 0 -1783px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-action-col-cell img.taco-action-remove:hover, .x-action-col-cell img.taco-action-remove.icon-remove_hover, .x-action-col-cell img.taco-action-remove.icon-remove-hover {
-  background-position: 0 -2164px;
+  background-position: 0 -1831px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-action-col-cell img.taco-action-remove:active, .x-action-col-cell img.taco-action-remove.icon-remove_active, .x-action-col-cell img.taco-action-remove.icon-remove-active {
-  background-position: 0 -2493px;
+  background-position: 0 -1807px;
 }
 
 /* line 167, ../scss/taco/widgets/_grid.scss */
@@ -9129,10 +9542,11 @@ svg, vml {
 .x-grid-header-ct {
   background: #edeae6;
   border-color: #999691;
-  -webkit-border-radius: 3px 3px 0px 0px;
   -moz-border-radius: 3px 3px 0px 0px;
-  -ms-border-radius: 3px 3px 0px 0px;
+  -webkit-border-radius: 3px 3px 0px 0px;
   -o-border-radius: 3px 3px 0px 0px;
+  -ms-border-radius: 3px 3px 0px 0px;
+  -khtml-border-radius: 3px 3px 0px 0px;
   border-radius: 3px 3px 0px 0px;
 }
 
@@ -9145,19 +9559,19 @@ svg, vml {
 .x-column-header-last.taco-controls-column .x-column-header-trigger {
   display: block !important;
   width: 32px;
-  background-position: 0 -1875px;
+  background-position: 0 -975px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-column-header-last.taco-controls-column .x-column-header-trigger:hover, .x-column-header-last.taco-controls-column .x-column-header-trigger.icon-gridsettings_hover, .x-column-header-last.taco-controls-column .x-column-header-trigger.icon-gridsettings-hover {
-  background-position: 0 -1791px;
+  background-position: 0 -1059px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-column-header-last.taco-controls-column .x-column-header-trigger:active, .x-column-header-last.taco-controls-column .x-column-header-trigger.icon-gridsettings_active, .x-column-header-last.taco-controls-column .x-column-header-trigger.icon-gridsettings-active {
-  background-position: 0 -2122px;
+  background-position: 0 -1017px;
 }
 /* line 187, ../scss/taco/widgets/_grid.scss */
 .x-column-header-last.taco-controls-column .x-column-header-open .x-column-header-trigger {
-  background-position: 0 -2080px;
+  background-position: 0 -933px;
 }
 
 /* line 192, ../scss/taco/widgets/_grid.scss */
@@ -9168,11 +9582,11 @@ svg, vml {
   right: 0px;
   top: 0px;
   width: 32px;
-  background-position: 0 -2629px;
+  background-position: 0 -100px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .taco-treelist-add:hover, .taco-treelist-add.icon-addfolder_hover, .taco-treelist-add.icon-addfolder-hover {
-  background-position: 0 -2587px;
+  background-position: 0 -142px;
 }
 
 /* line 202, ../scss/taco/widgets/_grid.scss */
@@ -9204,8 +9618,9 @@ svg, vml {
   border-style: solid solid none;
   border-width: 1px 1px 0px;
   padding: 0px;
-  -webkit-box-shadow: 0 1px 0 white inset;
   -moz-box-shadow: 0 1px 0 white inset;
+  -webkit-box-shadow: 0 1px 0 white inset;
+  -o-box-shadow: 0 1px 0 white inset;
   box-shadow: 0 1px 0 white inset;
 }
 /* line 232, ../scss/taco/widgets/_grid.scss */
@@ -9218,13 +9633,15 @@ svg, vml {
   background: none #edeae6;
   border-color: #999691;
   padding: 7px;
-  -webkit-border-radius: 0px 0px 3px 3px;
   -moz-border-radius: 0px 0px 3px 3px;
-  -ms-border-radius: 0px 0px 3px 3px;
+  -webkit-border-radius: 0px 0px 3px 3px;
   -o-border-radius: 0px 0px 3px 3px;
+  -ms-border-radius: 0px 0px 3px 3px;
+  -khtml-border-radius: 0px 0px 3px 3px;
   border-radius: 0px 0px 3px 3px;
-  -webkit-box-shadow: 0 1px 0 white inset;
   -moz-box-shadow: 0 1px 0 white inset;
+  -webkit-box-shadow: 0 1px 0 white inset;
+  -o-box-shadow: 0 1px 0 white inset;
   box-shadow: 0 1px 0 white inset;
 }
 /* line 245, ../scss/taco/widgets/_grid.scss */
@@ -9236,10 +9653,11 @@ svg, vml {
   margin: 2px;
   text-align: center;
   display: inline-block;
-  -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
+  -webkit-border-radius: 6px;
   -o-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -khtml-border-radius: 6px;
   border-radius: 6px;
 }
 /* line 255, ../scss/taco/widgets/_grid.scss */
@@ -9256,12 +9674,12 @@ svg, vml {
 
 /* line 266, ../scss/taco/widgets/_grid.scss */
 .taco-slider-icon-small {
-  background-position: 0 -778px;
+  background-position: 0 -2289px;
 }
 
 /* line 269, ../scss/taco/widgets/_grid.scss */
 .taco-slider-icon-big {
-  background-position: 0 -818px;
+  background-position: 0 -2269px;
 }
 
 /* line 280, ../scss/taco/widgets/_grid.scss */
@@ -9274,54 +9692,60 @@ svg, vml {
   width: 26px;
   top: 0px;
   border-right: 0;
-  -webkit-box-shadow: 0 1px 0 white inset;
   -moz-box-shadow: 0 1px 0 white inset;
+  -webkit-box-shadow: 0 1px 0 white inset;
+  -o-box-shadow: 0 1px 0 white inset;
   box-shadow: 0 1px 0 white inset;
 }
 /* line 293, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group .x-form-cb-checked .x-form-radio {
-  -webkit-box-shadow: none;
   -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
   box-shadow: none;
 }
 /* line 299, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(1) .x-form-radio {
-  background: url('../images/card-s44a9b55566.png') 0 -48px;
-  -webkit-border-radius: 3px 0px 0px 3px;
+  background: url('../images/card-sfe62e23dd0.png') 0 -24px;
   -moz-border-radius: 3px 0px 0px 3px;
-  -ms-border-radius: 3px 0px 0px 3px;
+  -webkit-border-radius: 3px 0px 0px 3px;
   -o-border-radius: 3px 0px 0px 3px;
+  -ms-border-radius: 3px 0px 0px 3px;
+  -khtml-border-radius: 3px 0px 0px 3px;
   border-radius: 3px 0px 0px 3px;
 }
 /* line 304, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(1) .x-form-cb-checked .x-form-radio {
-  background: url('../images/card-s44a9b55566.png') 0 -72px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
-  background: url('../images/card-s44a9b55566.png') 0 -72px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/card-s44a9b55566.png') 0 -72px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/card-s44a9b55566.png') 0 -72px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/card-s44a9b55566.png') 0 -72px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/card-sfe62e23dd0.png') 0 0, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
+  background: url('../images/card-sfe62e23dd0.png') 0 0, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/card-sfe62e23dd0.png') 0 0, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/card-sfe62e23dd0.png') 0 0, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/card-sfe62e23dd0.png') 0 0, -ms-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/card-sfe62e23dd0.png') 0 0, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
   background-color: #70d2db;
 }
 /* line 311, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(2) .x-form-radio {
-  background: url('../images/card-s44a9b55566.png') 0 0;
+  background: url('../images/card-sfe62e23dd0.png') 0 -72px;
 }
 /* line 315, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(2) .x-form-cb-checked .x-form-radio {
-  background: url('../images/card-s44a9b55566.png') 0 -24px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
-  background: url('../images/card-s44a9b55566.png') 0 -24px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/card-s44a9b55566.png') 0 -24px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/card-s44a9b55566.png') 0 -24px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/card-s44a9b55566.png') 0 -24px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/card-sfe62e23dd0.png') 0 -48px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
+  background: url('../images/card-sfe62e23dd0.png') 0 -48px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/card-sfe62e23dd0.png') 0 -48px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/card-sfe62e23dd0.png') 0 -48px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/card-sfe62e23dd0.png') 0 -48px, -ms-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/card-sfe62e23dd0.png') 0 -48px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
   background-color: #70d2db;
 }
 /* line 322, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-last-of-type(1) .x-form-radio {
   border-right: 1px solid #5e5c5a;
-  -webkit-border-radius: 0px 3px 3px 0px;
   -moz-border-radius: 0px 3px 3px 0px;
-  -ms-border-radius: 0px 3px 3px 0px;
+  -webkit-border-radius: 0px 3px 3px 0px;
   -o-border-radius: 0px 3px 3px 0px;
+  -ms-border-radius: 0px 3px 3px 0px;
+  -khtml-border-radius: 0px 3px 3px 0px;
   border-radius: 0px 3px 3px 0px;
 }
 
@@ -9394,7 +9818,7 @@ svg, vml {
   display: block;
   margin: 0 auto;
   width: 25px;
-  background-position: 0 -669px;
+  background-position: 0 -1121px;
   background-color: #ffffff;
 }
 /* line 404, ../scss/taco/widgets/_grid.scss */
@@ -9433,7 +9857,7 @@ svg, vml {
   margin: 18px 2px 0;
   height: 22px;
   border: 1px solid #d7d5d2;
-  background-position: 0 -721px;
+  background-position: 0 -1137px;
 }
 /* line 440, ../scss/taco/widgets/_grid.scss */
 .taco-inventorycontrolgrid .taco-stock-container .taco-stock-makeinfinite:hover {
@@ -9444,13 +9868,15 @@ svg, vml {
 .x-menu {
   background-color: white;
   overflow: visible;
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
-  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+  -o-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
 }
 /* line 454, ../scss/taco/widgets/_grid.scss */
@@ -9484,8 +9910,9 @@ svg, vml {
 .x-menu .x-panel-header.x-panel-header-default {
   background-color: transparent;
   background-image: none;
-  -webkit-box-shadow: none;
   -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
   box-shadow: none;
 }
 /* line 484, ../scss/taco/widgets/_grid.scss */
@@ -9576,8 +10003,8 @@ svg, vml {
 
 /* line 564, ../scss/taco/widgets/_grid.scss */
 .taco-removablecolumn .x-column-header-text {
-  -webkit-transition: all 1s;
   -moz-transition: all 1s;
+  -webkit-transition: all 1s;
   -o-transition: all 1s;
   transition: all 1s;
 }
@@ -9591,9 +10018,9 @@ svg, vml {
   text-indent: -9999px;
   top: 14px;
   width: 15px;
-  background-position: 0 -2350px;
-  -webkit-transition: all 1s;
+  background-position: 0 -1855px;
   -moz-transition: all 1s;
+  -webkit-transition: all 1s;
   -o-transition: all 1s;
   transition: all 1s;
 }
@@ -9648,8 +10075,9 @@ svg, vml {
 .taco-flextable tr.row > th {
   background-color: #edeae6;
   text-shadow: 0px 1px white;
-  -webkit-box-shadow: 0px 1px white inset;
   -moz-box-shadow: 0px 1px white inset;
+  -webkit-box-shadow: 0px 1px white inset;
+  -o-box-shadow: 0px 1px white inset;
   box-shadow: 0px 1px white inset;
 }
 /* line 627, ../scss/taco/widgets/_grid.scss */
@@ -9690,46 +10118,49 @@ svg, vml {
 .taco-foldertree.x-tree-arrows .x-tree-elbow, .taco-foldertree.x-tree-arrows .x-tree-elbow-end {
   height: 24px;
   width: 34px;
-  background-position: 0 -2734px;
+  background-position: 0 -885px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow.icon-folder-hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end.icon-folder-hover {
-  background-position: 0 -2758px;
+  background-position: 0 -909px;
 }
 /* line 35, ../scss/taco/widgets/_tree.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end:hover {
   background-color: #9a9a9a !important;
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
 }
 /* line 40, ../scss/taco/widgets/_tree.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow-plus, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus {
   height: 24px;
   width: 34px;
-  background-position: 0 -2734px;
+  background-position: 0 -885px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus.icon-folder-hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus.icon-folder-hover {
-  background-position: 0 -2758px;
+  background-position: 0 -909px;
 }
 /* line 45, ../scss/taco/widgets/_tree.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus:hover {
   background-color: #9a9a9a !important;
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
 }
 /* line 51, ../scss/taco/widgets/_tree.scss */
 .taco-foldertree .x-panel-body {
-  -webkit-border-radius: 0px 0px 3px 3px;
   -moz-border-radius: 0px 0px 3px 3px;
-  -ms-border-radius: 0px 0px 3px 3px;
+  -webkit-border-radius: 0px 0px 3px 3px;
   -o-border-radius: 0px 0px 3px 3px;
+  -ms-border-radius: 0px 0px 3px 3px;
+  -khtml-border-radius: 0px 0px 3px 3px;
   border-radius: 0px 0px 3px 3px;
 }
 
@@ -9771,19 +10202,24 @@ svg, vml {
   line-height: 0px;
   overflow: hidden;
   text-indent: -10000px;
-  -webkit-box-shadow: 1px 0px white;
   -moz-box-shadow: 1px 0px white;
+  -webkit-box-shadow: 1px 0px white;
+  -o-box-shadow: 1px 0px white;
   box-shadow: 1px 0px white;
-  background-position: 0 -2552px;
-  -webkit-transition: background-color 0.4s;
-  -moz-transition: background-color 0.4s;
-  -o-transition: background-color 0.4s;
-  transition: background-color 0.4s;
+  background-position: 0 -1700px;
+  -moz-transition-property: background-color;
+  -webkit-transition-property: background-color;
+  -o-transition-property: background-color;
+  transition-property: background-color;
+  -moz-transition-duration: 0.4s;
+  -webkit-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  transition-duration: 0.4s;
 }
 /* line 16, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-primary-menu-trigger.expanded {
   background-color: #4c4942;
-  background-position: 0 -2517px;
+  background-position: 0 -1665px;
 }
 /* line 24, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon {
@@ -9794,8 +10230,9 @@ svg, vml {
   padding: 10px 15px 0px 50px;
   position: relative;
   vertical-align: top;
-  -webkit-box-shadow: 1px 0px white;
   -moz-box-shadow: 1px 0px white;
+  -webkit-box-shadow: 1px 0px white;
+  -o-box-shadow: 1px 0px white;
   box-shadow: 1px 0px white;
 }
 /* line 34, ../scss/taco/_navmenu.scss */
@@ -9810,27 +10247,27 @@ svg, vml {
 }
 /* line 44, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-dashboard::before {
-  background-position: 0 -1357px;
+  background-position: 0 -582px;
 }
 /* line 47, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-store::before {
-  background-position: 0 -1576px;
+  background-position: 0 -2349px;
 }
 /* line 50, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-catalog::before {
-  background-position: 0 -1917px;
+  background-position: 0 -258px;
 }
 /* line 53, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-marketing::before {
-  background-position: 0 -1203px;
+  background-position: 0 -1251px;
 }
 /* line 56, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-website::before {
-  background-position: 0 -1126px;
+  background-position: 0 -2760px;
 }
 /* line 59, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-settings::before {
-  background-position: 0 -1280px;
+  background-position: 0 -2050px;
 }
 /* line 64, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb ul {
@@ -9865,6 +10302,7 @@ svg, vml {
   background-image: -webkit-linear-gradient(top, #e6e2d9 25%, #999691 55%, #e6e2d9 85%);
   background-image: -moz-linear-gradient(top, #e6e2d9 25%, #999691 55%, #e6e2d9 85%);
   background-image: -o-linear-gradient(top, #e6e2d9 25%, #999691 55%, #e6e2d9 85%);
+  background-image: -ms-linear-gradient(top, #e6e2d9 25%, #999691 55%, #e6e2d9 85%);
   background-image: linear-gradient(top, #e6e2d9 25%, #999691 55%, #e6e2d9 85%);
 }
 /* line 95, ../scss/taco/_navmenu.scss */
@@ -9886,14 +10324,15 @@ svg, vml {
   background: -webkit-linear-gradient(top, #4c4942, #61605e);
   background: -moz-linear-gradient(top, #4c4942, #61605e);
   background: -o-linear-gradient(top, #4c4942, #61605e);
+  background: -ms-linear-gradient(top, #4c4942, #61605e);
   background: linear-gradient(top, #4c4942, #61605e);
   box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.4);
   -webkit-box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.4);
   -o-box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.4);
   -ms-box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.4);
-  -webkit-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear, left 0s linear;
   -moz-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear, left 0s linear;
+  -webkit-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear, left 0s linear;
   -o-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear, left 0s linear;
   transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear, left 0s linear;
 }
@@ -9901,9 +10340,8 @@ svg, vml {
 .taco-primary-menu-ct.x-hide-offsets {
   margin-top: 0px;
   opacity: 0;
-  -webkit-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear, left 0s linear;
-  -webkit-transition-delay: 0s, 0s, 0.2s, 0.2s;
   -moz-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear 0.2s, left 0s linear 0.2s;
+  -webkit-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear 0.2s, left 0s linear 0.2s;
   -o-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear 0.2s, left 0s linear 0.2s;
   transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear 0.2s, left 0s linear 0.2s;
 }
@@ -9919,8 +10357,9 @@ svg, vml {
   padding: 12px 0px 12px 56px;
   position: relative;
   width: 280px;
-  -webkit-box-shadow: inset 0px -1px rgba(255, 255, 255, 0.1);
   -moz-box-shadow: inset 0px -1px rgba(255, 255, 255, 0.1);
+  -webkit-box-shadow: inset 0px -1px rgba(255, 255, 255, 0.1);
+  -o-box-shadow: inset 0px -1px rgba(255, 255, 255, 0.1);
   box-shadow: inset 0px -1px rgba(255, 255, 255, 0.1);
 }
 /* line 134, ../scss/taco/_navmenu.scss */
@@ -9939,27 +10378,27 @@ svg, vml {
 }
 /* line 146, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-dashboard::before {
-  background-position: 0 -1392px;
+  background-position: 0 -659px;
 }
 /* line 149, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-store::before {
-  background-position: 0 -1611px;
+  background-position: 0 -2426px;
 }
 /* line 152, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-catalog::before {
-  background-position: 0 -1952px;
+  background-position: 0 -335px;
 }
 /* line 155, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-marketing::before {
-  background-position: 0 -1084px;
+  background-position: 0 -1328px;
 }
 /* line 158, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-website::before {
-  background-position: 0 -1161px;
+  background-position: 0 -2837px;
 }
 /* line 161, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-settings::before {
-  background-position: 0 -958px;
+  background-position: 0 -2127px;
 }
 /* line 166, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover {
@@ -9967,27 +10406,27 @@ svg, vml {
 }
 /* line 169, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-dashboard::before {
-  background-position: 0 -1238px;
+  background-position: 0 -617px;
 }
 /* line 172, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-store::before {
-  background-position: 0 -1434px;
+  background-position: 0 -2384px;
 }
 /* line 175, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-catalog::before {
-  background-position: 0 -1833px;
+  background-position: 0 -293px;
 }
 /* line 178, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-marketing::before {
-  background-position: 0 -1042px;
+  background-position: 0 -1286px;
 }
 /* line 181, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-website::before {
-  background-position: 0 -1000px;
+  background-position: 0 -2795px;
 }
 /* line 184, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-settings::before {
-  background-position: 0 -1315px;
+  background-position: 0 -2085px;
 }
 /* line 190, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-active a.taco-menu-item-link {
@@ -10004,8 +10443,9 @@ svg, vml {
   display: inline-block;
   margin: 4px 0px 1px;
   padding: 0px 7px 0px 5px;
-  -webkit-box-shadow: inset -1px 0px rgba(255, 255, 255, 0.4);
   -moz-box-shadow: inset -1px 0px rgba(255, 255, 255, 0.4);
+  -webkit-box-shadow: inset -1px 0px rgba(255, 255, 255, 0.4);
+  -o-box-shadow: inset -1px 0px rgba(255, 255, 255, 0.4);
   box-shadow: inset -1px 0px rgba(255, 255, 255, 0.4);
 }
 /* line 206, ../scss/taco/_navmenu.scss */
@@ -10014,8 +10454,9 @@ svg, vml {
 }
 /* line 210, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item ul li:nth-last-of-type(1) {
-  -webkit-box-shadow: none;
   -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
   box-shadow: none;
 }
 /* line 215, ../scss/taco/_navmenu.scss */
@@ -10033,6 +10474,7 @@ svg, vml {
   background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0.3) 100%), url(/admin/Scripts/resources/images/fabric-2.png);
   background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0.3) 100%), url(/admin/Scripts/resources/images/fabric-2.png);
   background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0.3) 100%), url(/admin/Scripts/resources/images/fabric-2.png);
+  background: -ms-linear-gradient(top, rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0.3) 100%), url(/admin/Scripts/resources/images/fabric-2.png);
   background: linear-gradient(top, rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0.3) 100%), url(/admin/Scripts/resources/images/fabric-2.png);
 }
 /* line 13, ../scss/taco/_header.scss */
@@ -10047,18 +10489,19 @@ svg, vml {
   overflow: hidden;
   text-indent: -10000px;
   width: 150px;
-  background-position: 0 -447px;
+  background-position: 0 -1395px;
 }
 
 /* line 5, ../scss/taco/_content.scss */
 .taco-content-container .taco-content-header {
   padding: 14px 28px 7px;
   z-index: 2;
-  -webkit-box-shadow: rgba(0, 0, 0, 0) 0 -5px 10px 0px;
   -moz-box-shadow: rgba(0, 0, 0, 0) 0 -5px 10px 0px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0) 0 -5px 10px 0px;
+  -o-box-shadow: rgba(0, 0, 0, 0) 0 -5px 10px 0px;
   box-shadow: rgba(0, 0, 0, 0) 0 -5px 10px 0px;
-  -webkit-transition: box-shadow 1s ease;
   -moz-transition: box-shadow 1s ease;
+  -webkit-transition: box-shadow 1s ease;
   -o-transition: box-shadow 1s ease;
   transition: box-shadow 1s ease;
 }
@@ -10082,8 +10525,9 @@ svg, vml {
 }
 /* line 31, ../scss/taco/_content.scss */
 .taco-content-container.taco-content-scrolled .taco-content-header {
-  -webkit-box-shadow: black 0 -5px 10px 0px;
   -moz-box-shadow: black 0 -5px 10px 0px;
+  -webkit-box-shadow: black 0 -5px 10px 0px;
+  -o-box-shadow: black 0 -5px 10px 0px;
   box-shadow: black 0 -5px 10px 0px;
 }
 /* line 35, ../scss/taco/_content.scss */
@@ -10141,18 +10585,20 @@ em {
   background: -webkit-linear-gradient(#ffffff, #efefef);
   background: -moz-linear-gradient(#ffffff, #efefef);
   background: -o-linear-gradient(#ffffff, #efefef);
+  background: -ms-linear-gradient(#ffffff, #efefef);
   background: linear-gradient(#ffffff, #efefef);
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 
 /* line 84, ../scss/taco/_content.scss */
 .dropzone-shim {
-  -webkit-transition: all 1s;
   -moz-transition: all 1s;
+  -webkit-transition: all 1s;
   -o-transition: all 1s;
   transition: all 1s;
 }
@@ -10167,10 +10613,11 @@ em {
   background-color: #FFF;
   border: 1px solid #CCC;
   color: #333;
-  -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
+  -webkit-border-radius: 2px;
   -o-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -khtml-border-radius: 2px;
   border-radius: 2px;
 }
 
@@ -10179,10 +10626,11 @@ em {
   background-color: #FFF;
   border: 1px solid #CCC;
   color: #333;
-  -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
+  -webkit-border-radius: 2px;
   -o-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -khtml-border-radius: 2px;
   border-radius: 2px;
 }
 
@@ -10200,10 +10648,11 @@ em {
   width: 25em;
   max-width: 50em;
   padding: 28px;
-  -webkit-border-radius: 0.6em;
   -moz-border-radius: 0.6em;
-  -ms-border-radius: 0.6em;
+  -webkit-border-radius: 0.6em;
   -o-border-radius: 0.6em;
+  -ms-border-radius: 0.6em;
+  -khtml-border-radius: 0.6em;
   border-radius: 0.6em;
   box-shadow: 0 0.7em 3.5em rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0 0.7em 3.5em rgba(0, 0, 0, 0.3);
@@ -10238,13 +10687,15 @@ em {
 /* line 45, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-content.taco-auto-size .taco-content-body {
   border: 0;
-  -webkit-box-shadow: none;
   -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
   box-shadow: none;
-  -webkit-border-radius: 0;
   -moz-border-radius: 0;
-  -ms-border-radius: 0;
+  -webkit-border-radius: 0;
   -o-border-radius: 0;
+  -ms-border-radius: 0;
+  -khtml-border-radius: 0;
   border-radius: 0;
 }
 /* line 53, ../scss/taco/widgets/_modal.scss */
@@ -10287,7 +10738,7 @@ em {
   overflow: hidden;
   text-indent: -5000px;
   cursor: pointer;
-  background-position: 0 0;
+  background-position: 0 -1370px;
 }
 /* line 112, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-mini-modal:before {
@@ -10376,6 +10827,7 @@ em {
   background: -webkit-radial-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
   background: -moz-radial-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
   background: -o-radial-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
+  background: -ms-radial-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
   background: radial-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
 }
 
@@ -10384,8 +10836,8 @@ em {
   display: block !important;
   left: 288px;
   position: absolute;
-  -webkit-transition: all 1s;
   -moz-transition: all 1s;
+  -webkit-transition: all 1s;
   -o-transition: all 1s;
   transition: all 1s;
 }
@@ -10403,8 +10855,8 @@ em {
   min-width: 0px;
   overflow: hidden;
   -webkit-flex: 0 1 0%;
-  -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
+  -webkit-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
 }
@@ -10452,13 +10904,15 @@ em {
   background-color: white;
   border: 0px none;
   padding: 0px;
-  -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
+  -webkit-border-radius: 6px;
   -o-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -khtml-border-radius: 6px;
   border-radius: 6px;
-  -webkit-box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
+  -o-box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
 }
 /* line 274, ../scss/taco/widgets/_modal.scss */
@@ -10467,10 +10921,11 @@ em {
   background-color: white;
   border: 0px none;
   padding: 14px;
-  -webkit-border-radius: 6px 6px 0px 0px;
   -moz-border-radius: 6px 6px 0px 0px;
-  -ms-border-radius: 6px 6px 0px 0px;
+  -webkit-border-radius: 6px 6px 0px 0px;
   -o-border-radius: 6px 6px 0px 0px;
+  -ms-border-radius: 6px 6px 0px 0px;
+  -khtml-border-radius: 6px 6px 0px 0px;
   border-radius: 6px 6px 0px 0px;
 }
 /* line 280, ../scss/taco/widgets/_modal.scss */
@@ -10489,10 +10944,11 @@ em {
   border-style: dashed none none;
   border-width: 1px 0px 0px;
   margin-top: 1px;
-  -webkit-border-radius: 0px 0px 6px 6px;
   -moz-border-radius: 0px 0px 6px 6px;
-  -ms-border-radius: 0px 0px 6px 6px;
+  -webkit-border-radius: 0px 0px 6px 6px;
   -o-border-radius: 0px 0px 6px 6px;
+  -ms-border-radius: 0px 0px 6px 6px;
+  -khtml-border-radius: 0px 0px 6px 6px;
   border-radius: 0px 0px 6px 6px;
 }
 
@@ -10501,8 +10957,9 @@ em {
   from {
     background-color: #ff9c33;
     border-color: #ff9c33;
-    -webkit-box-shadow: 0 0 0 #ff8300;
     -moz-box-shadow: 0 0 0 #ff8300;
+    -webkit-box-shadow: 0 0 0 #ff8300;
+    -o-box-shadow: 0 0 0 #ff8300;
     box-shadow: 0 0 0 #ff8300;
   }
 
@@ -10510,8 +10967,9 @@ em {
   50% {
     background-color: #ff8300;
     border-color: #ff8300;
-    -webkit-box-shadow: 0 0 3px #ff8300;
     -moz-box-shadow: 0 0 3px #ff8300;
+    -webkit-box-shadow: 0 0 3px #ff8300;
+    -o-box-shadow: 0 0 3px #ff8300;
     box-shadow: 0 0 3px #ff8300;
   }
 
@@ -10519,8 +10977,9 @@ em {
   to {
     background-color: #ff9c33;
     border-color: #ff9c33;
-    -webkit-box-shadow: 0 0 0 #ff8300;
     -moz-box-shadow: 0 0 0 #ff8300;
+    -webkit-box-shadow: 0 0 0 #ff8300;
+    -o-box-shadow: 0 0 0 #ff8300;
     box-shadow: 0 0 0 #ff8300;
   }
 }
@@ -10536,14 +10995,16 @@ button.taco-action {
   color: #5e5c5a;
   background-color: #edeae6;
   cursor: pointer;
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
   text-shadow: 0 1px 1px white;
-  -webkit-box-shadow: 0 1px 0 white inset;
   -moz-box-shadow: 0 1px 0 white inset;
+  -webkit-box-shadow: 0 1px 0 white inset;
+  -o-box-shadow: 0 1px 0 white inset;
   box-shadow: 0 1px 0 white inset;
   user-select: none;
   -o-user-select: none;
@@ -10564,8 +11025,9 @@ button.taco-action:hover:not(:disabled) {
 /* line 51, ../scss/taco/widgets/_actions.scss */
 button.taco-action:active:not(:disabled) {
   background-color: #e7e3dd;
-  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -o-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 /* line 56, ../scss/taco/widgets/_actions.scss */
@@ -10579,8 +11041,9 @@ button.taco-action.taco-action-primary:not(:disabled) {
   color: white;
   border-color: #ff8300;
   text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
 }
 /* line 68, ../scss/taco/widgets/_actions.scss */
@@ -10590,8 +11053,9 @@ button.taco-action.taco-action-primary:not(:disabled):hover {
 /* line 72, ../scss/taco/widgets/_actions.scss */
 button.taco-action.taco-action-primary:not(:disabled):active {
   background-color: #ff8d14;
-  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -o-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 /* line 78, ../scss/taco/widgets/_actions.scss */
@@ -10619,8 +11083,9 @@ button.taco-action.loading {
 /* line 98, ../scss/taco/widgets/_actions.scss */
 .x-form-file-btn:hover .x-btn-center:active {
   background-color: #ff8d14;
-  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -o-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 /* line 105, ../scss/taco/widgets/_actions.scss */
@@ -10641,16 +11106,18 @@ button.taco-action.loading {
   color: white;
   border-color: #ff8300;
   text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
-  -webkit-transition: all 0.3s ease-in-out, left 0s ease, top 0s ease;
   -moz-transition: all 0.3s ease-in-out, left 0s ease, top 0s ease;
+  -webkit-transition: all 0.3s ease-in-out, left 0s ease, top 0s ease;
   -o-transition: all 0.3s ease-in-out, left 0s ease, top 0s ease;
   transition: all 0.3s ease-in-out, left 0s ease, top 0s ease;
   user-select: none;
@@ -10679,10 +11146,11 @@ button.taco-action.loading {
   z-index: 99999;
   opacity: 0;
   padding: 3em 1em 1em 1em;
-  -webkit-border-radius: 0.6em;
   -moz-border-radius: 0.6em;
-  -ms-border-radius: 0.6em;
+  -webkit-border-radius: 0.6em;
   -o-border-radius: 0.6em;
+  -ms-border-radius: 0.6em;
+  -khtml-border-radius: 0.6em;
   border-radius: 0.6em;
   box-shadow: 0 0.1em 0.5em black;
   -moz-box-shadow: 0 0.1em 0.5em black;
@@ -10735,10 +11203,11 @@ button.taco-action.loading {
   border: 1px dashed #9a9a9a;
   padding: 30px;
   margin: 15px;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 
@@ -10747,10 +11216,11 @@ button.taco-action.loading {
   background-color: #edeae6;
   font-size: 16px;
   padding: 20px 20px 0;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 /* line 9, ../scss/taco/widgets/_fieldgroup.scss */
@@ -10808,10 +11278,10 @@ button.taco-action.loading {
   position: absolute;
   top: 0px;
   width: 3px;
-  -webkit-transform: rotate(45deg);
   -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
   -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
 /* line 62, ../scss/taco/widgets/_fieldgroup.scss */
@@ -10825,10 +11295,10 @@ button.taco-action.loading {
   position: absolute;
   top: 0px;
   width: 3px;
-  -webkit-transform: rotate(-45deg);
   -moz-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
   -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
 /* line 75, ../scss/taco/widgets/_fieldgroup.scss */
@@ -10925,25 +11395,28 @@ a:hover {
   text-decoration: none;
   border: 1px solid #9a9a9a;
   text-shadow: 0 1px 0 white;
-  -webkit-box-shadow: 0 1px 0 white inset;
   -moz-box-shadow: 0 1px 0 white inset;
+  -webkit-box-shadow: 0 1px 0 white inset;
+  -o-box-shadow: 0 1px 0 white inset;
   box-shadow: 0 1px 0 white inset;
 }
 /* line 46, ../scss/taco/widgets/_form.scss */
 .taco-tabs .taco-tab-actions .taco-action:first-child {
   border-right: 0;
-  -webkit-border-radius: 5px 0 0 5px;
   -moz-border-radius: 5px 0 0 5px;
-  -ms-border-radius: 5px 0 0 5px;
+  -webkit-border-radius: 5px 0 0 5px;
   -o-border-radius: 5px 0 0 5px;
+  -ms-border-radius: 5px 0 0 5px;
+  -khtml-border-radius: 5px 0 0 5px;
   border-radius: 5px 0 0 5px;
 }
 /* line 51, ../scss/taco/widgets/_form.scss */
 .taco-tabs .taco-tab-actions .taco-action:nth-last-child(2) {
-  -webkit-border-radius: 0 5px 5px 0;
   -moz-border-radius: 0 5px 5px 0;
-  -ms-border-radius: 0 5px 5px 0;
+  -webkit-border-radius: 0 5px 5px 0;
   -o-border-radius: 0 5px 5px 0;
+  -ms-border-radius: 0 5px 5px 0;
+  -khtml-border-radius: 0 5px 5px 0;
   border-radius: 0 5px 5px 0;
 }
 /* line 55, ../scss/taco/widgets/_form.scss */
@@ -10951,8 +11424,9 @@ a:hover {
   background: #70d2db;
   color: white;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3) inset;
   -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3) inset;
+  -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3) inset;
+  -o-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3) inset;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3) inset;
 }
 /* line 61, ../scss/taco/widgets/_form.scss */
@@ -10966,25 +11440,27 @@ a:hover {
   width: 21px;
   height: 21px;
   line-height: 21px;
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  -o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  -webkit-border-radius: 25px;
   -moz-border-radius: 25px;
-  -ms-border-radius: 25px;
+  -webkit-border-radius: 25px;
   -o-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -khtml-border-radius: 25px;
   border-radius: 25px;
-  -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
+  -webkit-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
 }
 /* line 77, ../scss/taco/widgets/_form.scss */
 .taco-tabs .taco-tab-actions .taco-action:hover span {
-  -webkit-transform: scale(1.2);
   -moz-transform: scale(1.2);
-  -ms-transform: scale(1.2);
+  -webkit-transform: scale(1.2);
   -o-transform: scale(1.2);
+  -ms-transform: scale(1.2);
   transform: scale(1.2);
 }
 /* line 82, ../scss/taco/widgets/_form.scss */
@@ -11013,10 +11489,11 @@ a:hover {
   padding: 1em;
   width: 300px;
   background: #d7d5d2;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 /* line 110, ../scss/taco/widgets/_form.scss */
@@ -11186,18 +11663,19 @@ a:hover {
   margin: 10px 0px 10px 10px;
   position: relative;
   vertical-align: top;
-  -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 40px rgba(0, 0, 0, 0.02) inset;
   -moz-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 40px rgba(0, 0, 0, 0.02) inset;
+  -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 40px rgba(0, 0, 0, 0.02) inset;
+  -o-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 40px rgba(0, 0, 0, 0.02) inset;
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 40px rgba(0, 0, 0, 0.02) inset;
-  -webkit-transition: all 1s;
   -moz-transition: all 1s;
+  -webkit-transition: all 1s;
   -o-transition: all 1s;
   transition: all 1s;
 }
 /* line 202, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item * {
-  -webkit-transition: all 1s;
   -moz-transition: all 1s;
+  -webkit-transition: all 1s;
   -o-transition: all 1s;
   transition: all 1s;
 }
@@ -11212,23 +11690,24 @@ a:hover {
   position: absolute;
   width: 70%;
   z-index: -1;
-  -webkit-box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
+  -o-box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
   box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
-  -webkit-transform: skew(-15deg) rotate(-6deg);
   -moz-transform: skew(-15deg) rotate(-6deg);
-  -ms-transform: skew(-15deg) rotate(-6deg);
+  -webkit-transform: skew(-15deg) rotate(-6deg);
   -o-transform: skew(-15deg) rotate(-6deg);
+  -ms-transform: skew(-15deg) rotate(-6deg);
   transform: skew(-15deg) rotate(-6deg);
 }
 /* line 220, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item:after {
   left: auto;
   right: 10px;
-  -webkit-transform: skew(15deg) rotate(6deg);
   -moz-transform: skew(15deg) rotate(6deg);
-  -ms-transform: skew(15deg) rotate(6deg);
+  -webkit-transform: skew(15deg) rotate(6deg);
   -o-transform: skew(15deg) rotate(6deg);
+  -ms-transform: skew(15deg) rotate(6deg);
   transform: skew(15deg) rotate(6deg);
 }
 /* line 226, ../scss/taco/widgets/_form.scss */
@@ -11252,13 +11731,14 @@ a:hover {
   padding: 2px 30px;
   position: absolute;
   top: 15px;
-  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  -webkit-transform: rotate(-45deg);
   -moz-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
   -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
 /* line 250, ../scss/taco/widgets/_form.scss */
@@ -11288,8 +11768,8 @@ a:hover {
 .x-panel .taco-thumbnail-item .actions {
   position: absolute;
   visibility: hidden;
-  -webkit-transition: all 0s ease-in-out;
   -moz-transition: all 0s ease-in-out;
+  -webkit-transition: all 0s ease-in-out;
   -o-transition: all 0s ease-in-out;
   transition: all 0s ease-in-out;
 }
@@ -11301,63 +11781,64 @@ a:hover {
   height: 24px;
   margin-top: 2px;
   width: 36px;
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
-  -webkit-transition: background-position 0s linear;
   -moz-transition: background-position 0s linear;
+  -webkit-transition: background-position 0s linear;
   -o-transition: background-position 0s linear;
   transition: background-position 0s linear;
 }
 /* line 282, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item .actions .action.download {
-  background-position: 0 -2212px;
+  background-position: 0 -1159px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.download:hover, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout_hover, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout-hover {
-  background-position: 0 -2236px;
+  background-position: 0 -1207px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.download:active, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout_active, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout-active {
-  background-position: 0 -2326px;
+  background-position: 0 -1183px;
 }
 /* line 285, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item .actions .action.delete {
-  background-position: 0 -2302px;
+  background-position: 0 -2638px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.delete:hover, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash_hover, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash-hover {
-  background-position: 0 -2278px;
+  background-position: 0 -2686px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.delete:active, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash_active, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash-active {
-  background-position: 0 -2413px;
+  background-position: 0 -2662px;
 }
 /* line 288, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item .actions .action.duplicate {
-  background-position: 0 -2365px;
+  background-position: 0 -1545px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.duplicate:hover, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile_hover, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile-hover {
-  background-position: 0 -2389px;
+  background-position: 0 -1593px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.duplicate:active, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile_active, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile-active {
-  background-position: 0 -2469px;
+  background-position: 0 -1569px;
 }
 /* line 291, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item .actions .action.remove {
-  background-position: 0 -2188px;
+  background-position: 0 -1783px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.remove:hover, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove_hover, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove-hover {
-  background-position: 0 -2164px;
+  background-position: 0 -1831px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.remove:active, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove_active, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove-active {
-  background-position: 0 -2493px;
+  background-position: 0 -1807px;
 }
 /* line 298, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item:hover.draggable .container {
@@ -11390,20 +11871,25 @@ a:hover {
   overflow: hidden;
   vertical-align: top;
   width: 120px;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   -o-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   -ms-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -webkit-transition: "height,width" 1s;
-  -moz-transition: "height,width" 1s;
-  -o-transition: "height,width" 1s;
-  transition: "height,width" 1s;
+  -moz-transition-property: height,width;
+  -webkit-transition-property: height,width;
+  -o-transition-property: height,width;
+  transition-property: height,width;
+  -moz-transition-duration: 1s;
+  -webkit-transition-duration: 1s;
+  -o-transition-duration: 1s;
+  transition-duration: 1s;
 }
 /* line 335, ../scss/taco/widgets/_form.scss */
 .taco-datalist-item p {
@@ -11438,8 +11924,9 @@ a:hover {
   padding: 2px;
   height: 21px;
   width: 21px;
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  -o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   cursor: pointer;
 }
@@ -11459,8 +11946,9 @@ a:hover {
   background-color: #ff9c33;
   color: white;
   border-color: #ff8300;
-  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
 }
 
@@ -11517,11 +12005,11 @@ a:hover {
 
 /* line 424, ../scss/taco/widgets/_form.scss */
 .x-item-selected .taco-datalist-selection {
-  background-position: 0 -421px;
+  background-position: 0 -2024px;
 }
 /* line 428, ../scss/taco/widgets/_form.scss */
 .x-item-selected .taco-datalist-deselection {
-  background-position: 0 -395px;
+  background-position: 0 -701px;
 }
 
 /* line 434, ../scss/taco/widgets/_form.scss */
@@ -11549,16 +12037,18 @@ a:hover {
   float: left;
   position: absolute;
   overflow: hidden;
-  -webkit-border-radius: 5px 0 0 5px;
   -moz-border-radius: 5px 0 0 5px;
-  -ms-border-radius: 5px 0 0 5px;
+  -webkit-border-radius: 5px 0 0 5px;
   -o-border-radius: 5px 0 0 5px;
+  -ms-border-radius: 5px 0 0 5px;
+  -khtml-border-radius: 5px 0 0 5px;
   border-radius: 5px 0 0 5px;
   text-shadow: 0 1px 0 white;
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #edeae6), color-stop(100%, #d7d5d2));
   background: -webkit-linear-gradient(#edeae6, #d7d5d2);
   background: -moz-linear-gradient(#edeae6, #d7d5d2);
   background: -o-linear-gradient(#edeae6, #d7d5d2);
+  background: -ms-linear-gradient(#edeae6, #d7d5d2);
   background: linear-gradient(#edeae6, #d7d5d2);
   user-select: none;
   -o-user-select: none;
@@ -11580,10 +12070,11 @@ a:hover {
   margin: 1em 0 2em;
   min-height: 14px;
   overflow: hidden;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 /* line 476, ../scss/taco/widgets/_form.scss */
@@ -11596,10 +12087,11 @@ a:hover {
   margin-bottom: 0px;
   margin-top: -2em;
   padding-bottom: 0.5em;
-  -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
+  -webkit-border-radius: 0px;
   -o-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -khtml-border-radius: 0px;
   border-radius: 0px;
 }
 /* line 486, ../scss/taco/widgets/_form.scss */
@@ -11648,13 +12140,14 @@ a:hover {
   margin-left: 1em;
   margin-right: 1.5em;
   padding: 2em;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
-  -webkit-transition: all 1s;
   -moz-transition: all 1s;
+  -webkit-transition: all 1s;
   -o-transition: all 1s;
   transition: all 1s;
   text-shadow: 0 1px 0 white;
@@ -11670,8 +12163,8 @@ a:hover {
 }
 /* line 529, ../scss/taco/widgets/_form.scss */
 .taco-form-module .taco-form-module-disabled.taco-status-animating {
-  -webkit-transition: none;
   -moz-transition: none;
+  -webkit-transition: none;
   -o-transition: none;
   transition: none;
 }
@@ -11709,26 +12202,28 @@ a:hover {
 /* line 560, ../scss/taco/widgets/_form.scss */
 .taco-form-module .taco-form {
   overflow: hidden;
-  -webkit-transition: height 0.6s ease-in-out;
   -moz-transition: height 0.6s ease-in-out;
+  -webkit-transition: height 0.6s ease-in-out;
   -o-transition: height 0.6s ease-in-out;
   transition: height 0.6s ease-in-out;
 }
 /* line 566, ../scss/taco/widgets/_form.scss */
 .taco-form-module .taco-form .x-grid-header-ct,
 .taco-form-module .taco-form .x-panel .x-grid-body:last-child {
-  -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
+  -webkit-border-radius: 0px;
   -o-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -khtml-border-radius: 0px;
   border-radius: 0px;
 }
 /* line 571, ../scss/taco/widgets/_form.scss */
 .taco-form-module .taco-form .x-column-header:nth-of-type(1), .taco-form-module .taco-form .x-column-header:nth-last-of-type(1) {
-  -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
+  -webkit-border-radius: 0px;
   -o-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -khtml-border-radius: 0px;
   border-radius: 0px;
 }
 /* line 576, ../scss/taco/widgets/_form.scss */
@@ -11787,10 +12282,11 @@ a:hover {
   -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   -o-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   -ms-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 /* line 628, ../scss/taco/widgets/_form.scss */
@@ -11799,14 +12295,15 @@ a:hover {
 }
 /* line 632, ../scss/taco/widgets/_form.scss */
 .taco-upload-preview .taco-uploading-images img.taco-complete {
-  -webkit-box-shadow: 0 0px 5px yellow;
   -moz-box-shadow: 0 0px 5px yellow;
+  -webkit-box-shadow: 0 0px 5px yellow;
+  -o-box-shadow: 0 0px 5px yellow;
   box-shadow: 0 0px 5px yellow;
 }
 /* line 635, ../scss/taco/widgets/_form.scss */
 .taco-upload-preview .taco-uploading-images img.taco-complete.taco-complete-fade {
-  -webkit-transition: all 1s;
   -moz-transition: all 1s;
+  -webkit-transition: all 1s;
   -o-transition: all 1s;
   transition: all 1s;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
@@ -11824,18 +12321,21 @@ a:hover {
   overflow: hidden;
   width: 90px;
   margin: -26px 0 10px 10px;
-  -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
+  -webkit-border-radius: 6px;
   -o-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -khtml-border-radius: 6px;
   border-radius: 6px;
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #5e5c5a), color-stop(100%, #5e5c5a));
   background: -webkit-linear-gradient(#5e5c5a, #5e5c5a);
   background: -moz-linear-gradient(#5e5c5a, #5e5c5a);
   background: -o-linear-gradient(#5e5c5a, #5e5c5a);
+  background: -ms-linear-gradient(#5e5c5a, #5e5c5a);
   background: linear-gradient(#5e5c5a, #5e5c5a);
-  -webkit-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
   -moz-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  -webkit-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  -o-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
   box-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 /* line 655, ../scss/taco/widgets/_form.scss */
@@ -11843,15 +12343,17 @@ a:hover {
   border: 0;
   height: 8px;
   max-width: 86px;
-  -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
+  -webkit-border-radius: 4px;
   -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -khtml-border-radius: 4px;
   border-radius: 4px;
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #cedae2), color-stop(60%, #4a90c9), color-stop(60%, #157fd6), color-stop(100%, #0878d3));
   background: -webkit-linear-gradient(#cedae2, #4a90c9 60%, #157fd6 60%, #0878d3);
   background: -moz-linear-gradient(#cedae2, #4a90c9 60%, #157fd6 60%, #0878d3);
   background: -o-linear-gradient(#cedae2, #4a90c9 60%, #157fd6 60%, #0878d3);
+  background: -ms-linear-gradient(#cedae2, #4a90c9 60%, #157fd6 60%, #0878d3);
   background: linear-gradient(#cedae2, #4a90c9 60%, #157fd6 60%, #0878d3);
 }
 
@@ -11859,10 +12361,11 @@ a:hover {
 .taco-preview-area {
   padding: 20px;
   border: 2px solid #9a9a9a;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
   -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
@@ -11873,6 +12376,7 @@ a:hover {
   background: -webkit-linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
   background: -moz-linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
   background: -o-linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
+  background: -ms-linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
   background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
 }
 /* line 678, ../scss/taco/widgets/_form.scss */
@@ -11898,14 +12402,17 @@ a:hover {
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
   background-image: -o-linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  background-image: -ms-linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
   background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
-  -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
+  -webkit-border-radius: 10px;
   -o-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -khtml-border-radius: 10px;
   border-radius: 10px;
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
 }
 /* line 700, ../scss/taco/widgets/_form.scss */
@@ -11962,15 +12469,17 @@ a:hover {
   -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
   -o-box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
   -ms-box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-  -webkit-border-radius: 16px;
   -moz-border-radius: 16px;
-  -ms-border-radius: 16px;
+  -webkit-border-radius: 16px;
   -o-border-radius: 16px;
+  -ms-border-radius: 16px;
+  -khtml-border-radius: 16px;
   border-radius: 16px;
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #9a9a9a), color-stop(100%, #5e5c5a));
   background: -webkit-linear-gradient(#9a9a9a, #5e5c5a);
   background: -moz-linear-gradient(#9a9a9a, #5e5c5a);
   background: -o-linear-gradient(#9a9a9a, #5e5c5a);
+  background: -ms-linear-gradient(#9a9a9a, #5e5c5a);
   background: linear-gradient(#9a9a9a, #5e5c5a);
 }
 /* line 755, ../scss/taco/widgets/_form.scss */
@@ -12025,7 +12534,7 @@ a:hover {
   font-weight: bold;
   border: 0;
   color: #7c7b7a;
-  @inlude transition;
+@inlude transition;
 }
 /* line 809, ../scss/taco/widgets/_form.scss */
 .taco-option-value-view .taco-option-value-row input:focus {
@@ -12064,10 +12573,11 @@ a:hover {
   padding-left: 1px;
   opacity: 0;
   cursor: pointer;
-  -webkit-border-radius: 26px;
   -moz-border-radius: 26px;
-  -ms-border-radius: 26px;
+  -webkit-border-radius: 26px;
   -o-border-radius: 26px;
+  -ms-border-radius: 26px;
+  -khtml-border-radius: 26px;
   border-radius: 26px;
   text-shadow: 0 -1px 1px #9a9a9a;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -12079,9 +12589,10 @@ a:hover {
   background: -webkit-linear-gradient(#9a9a9a, #5e5c5a);
   background: -moz-linear-gradient(#9a9a9a, #5e5c5a);
   background: -o-linear-gradient(#9a9a9a, #5e5c5a);
+  background: -ms-linear-gradient(#9a9a9a, #5e5c5a);
   background: linear-gradient(#9a9a9a, #5e5c5a);
-  -webkit-transition: all 1s;
   -moz-transition: all 1s;
+  -webkit-transition: all 1s;
   -o-transition: all 1s;
   transition: all 1s;
 }
@@ -12097,7 +12608,7 @@ a:hover {
   position: absolute;
   display: block;
   margin: -4px 0 0 -29px;
-  background-position: 0 -685px;
+  background-position: 0 -727px;
 }
 /* line 870, ../scss/taco/widgets/_form.scss */
 .taco-option-value-view .taco-option-value-row:first-child {
@@ -12126,6 +12637,7 @@ a:hover {
   background-image: -webkit-linear-gradient(top, #efefef 0%, #cccccc 100%);
   background-image: -moz-linear-gradient(top, #efefef 0%, #cccccc 100%);
   background-image: -o-linear-gradient(top, #efefef 0%, #cccccc 100%);
+  background-image: -ms-linear-gradient(top, #efefef 0%, #cccccc 100%);
   background-image: linear-gradient(top, #efefef 0%, #cccccc 100%);
   margin: 0;
   padding: 2px 5px;
@@ -12148,10 +12660,11 @@ a:hover {
   color: transparent !important;
   background-color: black;
   border: 0;
-  -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
+  -webkit-border-radius: 4px;
   -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -khtml-border-radius: 4px;
   border-radius: 4px;
 }
 
@@ -12164,10 +12677,11 @@ a:hover {
   font: bold 31px/25px "Courier New";
   text-align: center;
   border: 0;
-  -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
+  -webkit-border-radius: 4px;
   -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -khtml-border-radius: 4px;
   border-radius: 4px;
   background-position: center center;
   background-size: cover;
@@ -12177,8 +12691,9 @@ a:hover {
 .taco-image-field {
   margin: 5px 5px 15px 5px;
   background-color: white;
-  -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25), 0 0 40px rgba(0, 0, 0, 0.02) inset;
   -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25), 0 0 40px rgba(0, 0, 0, 0.02) inset;
+  -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25), 0 0 40px rgba(0, 0, 0, 0.02) inset;
+  -o-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25), 0 0 40px rgba(0, 0, 0, 0.02) inset;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25), 0 0 40px rgba(0, 0, 0, 0.02) inset;
 }
 /* line 948, ../scss/taco/widgets/_form.scss */
@@ -12199,23 +12714,24 @@ a:hover {
   position: absolute;
   width: 70%;
   z-index: -1;
-  -webkit-box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
+  -o-box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
   box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
-  -webkit-transform: skew(-15deg) rotate(-6deg);
   -moz-transform: skew(-15deg) rotate(-6deg);
-  -ms-transform: skew(-15deg) rotate(-6deg);
+  -webkit-transform: skew(-15deg) rotate(-6deg);
   -o-transform: skew(-15deg) rotate(-6deg);
+  -ms-transform: skew(-15deg) rotate(-6deg);
   transform: skew(-15deg) rotate(-6deg);
 }
 /* line 971, ../scss/taco/widgets/_form.scss */
 .taco-image-field:after {
   left: auto;
   right: 5px;
-  -webkit-transform: skew(15deg) rotate(6deg);
   -moz-transform: skew(15deg) rotate(6deg);
-  -ms-transform: skew(15deg) rotate(6deg);
+  -webkit-transform: skew(15deg) rotate(6deg);
   -o-transform: skew(15deg) rotate(6deg);
+  -ms-transform: skew(15deg) rotate(6deg);
   transform: skew(15deg) rotate(6deg);
 }
 
@@ -12226,45 +12742,56 @@ a:hover {
   height: 24px;
   opacity: 0.8;
   border-right: 0;
-  background: url('../images/align-s0f469144e6.png') 0 0;
-  -webkit-box-shadow: 0 1px 0 white inset;
+  background: url('../images/align-s9a2c88727e.png') 0 -24px;
   -moz-box-shadow: 0 1px 0 white inset;
+  -webkit-box-shadow: 0 1px 0 white inset;
+  -o-box-shadow: 0 1px 0 white inset;
   box-shadow: 0 1px 0 white inset;
   background-color: #edeae6;
 }
 /* line 1007, ../scss/taco/widgets/_form.scss */
 .taco-field-alignment table:nth-child(-n+4).x-form-cb-checked .x-form-radio {
-  background: url('../images/align-s0f469144e6.png') 0 -72px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
-  background: url('../images/align-s0f469144e6.png') 0 -72px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -72px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -72px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -72px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 0, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
+  background: url('../images/align-s9a2c88727e.png') 0 0, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 0, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 0, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 0, -ms-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 0, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
   background-color: #70d2db;
-  -webkit-box-shadow: none;
   -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
   box-shadow: none;
 }
 /* line 1019, ../scss/taco/widgets/_form.scss */
 .taco-field-alignment table:first-child .x-form-radio {
   -moz-border-radius-topleft: 3px;
   -webkit-border-top-left-radius: 3px;
+  -o-border-top-left-radius: 3px;
+  -ms-border-top-left-radius: 3px;
+  -khtml-border-top-left-radius: 3px;
   border-top-left-radius: 3px;
   -moz-border-radius-bottomleft: 3px;
   -webkit-border-bottom-left-radius: 3px;
+  -o-border-bottom-left-radius: 3px;
+  -ms-border-bottom-left-radius: 3px;
+  -khtml-border-bottom-left-radius: 3px;
   border-bottom-left-radius: 3px;
-  background: url('../images/align-s0f469144e6.png') 0 -48px;
+  background: url('../images/align-s9a2c88727e.png') 0 -120px;
   background-color: #edeae6;
 }
 /* line 1027, ../scss/taco/widgets/_form.scss */
 .taco-field-alignment table:first-child.x-form-cb-checked .x-form-radio {
-  background: url('../images/align-s0f469144e6.png') 0 -144px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
-  background: url('../images/align-s0f469144e6.png') 0 -144px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -144px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -144px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -144px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 -96px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
+  background: url('../images/align-s9a2c88727e.png') 0 -96px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 -96px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 -96px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 -96px, -ms-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 -96px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
   background-color: #70d2db;
-  -webkit-box-shadow: none;
   -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
   box-shadow: none;
 }
 /* line 1039, ../scss/taco/widgets/_form.scss */
@@ -12272,23 +12799,31 @@ a:hover {
   border-right: 1px solid #5e5c5a;
   -moz-border-radius-topright: 3px;
   -webkit-border-top-right-radius: 3px;
+  -o-border-top-right-radius: 3px;
+  -ms-border-top-right-radius: 3px;
+  -khtml-border-top-right-radius: 3px;
   border-top-right-radius: 3px;
   -moz-border-radius-bottomright: 3px;
   -webkit-border-bottom-right-radius: 3px;
+  -o-border-bottom-right-radius: 3px;
+  -ms-border-bottom-right-radius: 3px;
+  -khtml-border-bottom-right-radius: 3px;
   border-bottom-right-radius: 3px;
-  background: url('../images/align-s0f469144e6.png') 0 -24px;
+  background: url('../images/align-s9a2c88727e.png') 0 -168px;
   background-color: #edeae6;
 }
 /* line 1048, ../scss/taco/widgets/_form.scss */
 .taco-field-alignment table:last-child.x-form-cb-checked .x-form-radio {
-  background: url('../images/align-s0f469144e6.png') 0 -96px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
-  background: url('../images/align-s0f469144e6.png') 0 -96px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -96px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -96px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -96px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 -144px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
+  background: url('../images/align-s9a2c88727e.png') 0 -144px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 -144px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 -144px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 -144px, -ms-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
+  background: url('../images/align-s9a2c88727e.png') 0 -144px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
   background-color: #70d2db;
-  -webkit-box-shadow: none;
   -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
   box-shadow: none;
 }
 
@@ -12359,7 +12894,7 @@ a:hover {
 .x-menu .x-menu-item-unchecked .x-menu-item-icon,
 .x-grid-table .x-grid-row-checker,
 .x-grid-header-ct .x-column-header-checkbox .x-column-header-text {
-  background-position: 0 -2437px;
+  background-position: 0 -409px;
 }
 
 /* line 1154, ../scss/taco/widgets/_form.scss */
@@ -12368,17 +12903,17 @@ a:hover {
 .x-menu .x-menu-item-checked .x-menu-item-icon,
 .x-grid-table .x-grid-row-selected .x-grid-row-checker,
 .x-grid-header-ct .x-grid-hd-checker-on .x-column-header-text {
-  background-position: 0 -1743px;
+  background-position: 0 -393px;
 }
 
 /* line 1157, ../scss/taco/widgets/_form.scss */
 .x-field .x-form-radio {
-  background-position: 0 -1759px;
+  background-position: 0 -1767px;
 }
 
 /* line 1160, ../scss/taco/widgets/_form.scss */
 .x-form-cb-checked .x-form-radio {
-  background-position: 0 -1703px;
+  background-position: 0 -1751px;
 }
 
 /* line 1163, ../scss/taco/widgets/_form.scss */
@@ -12406,13 +12941,15 @@ a:hover {
   padding: 5px;
   height: 33px;
   border: 1px solid silver;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
-  -webkit-box-shadow: 0 1px 0 0 white;
   -moz-box-shadow: 0 1px 0 0 white;
+  -webkit-box-shadow: 0 1px 0 0 white;
+  -o-box-shadow: 0 1px 0 0 white;
   box-shadow: 0 1px 0 0 white;
 }
 /* line 1186, ../scss/taco/widgets/_form.scss */
@@ -12424,8 +12961,9 @@ a:hover {
 .x-border-box .x-form-text.x-form-focus,
 .x-border-box .x-field-default-toolbar .x-form-text.x-form-focus {
   border-color: #70d2db;
-  -webkit-box-shadow: 0 0 2px #70d2db;
   -moz-box-shadow: 0 0 2px #70d2db;
+  -webkit-box-shadow: 0 0 2px #70d2db;
+  -o-box-shadow: 0 0 2px #70d2db;
   box-shadow: 0 0 2px #70d2db;
 }
 /* line 1195, ../scss/taco/widgets/_form.scss */
@@ -12440,8 +12978,9 @@ a:hover {
 .x-border-box .x-form-invalid .x-form-text,
 .x-border-box .x-form-invalid .x-field-default-toolbar .x-form-text {
   border-color: #ff9c33;
-  -webkit-box-shadow: 0 0 2px #ff9c33;
   -moz-box-shadow: 0 0 2px #ff9c33;
+  -webkit-box-shadow: 0 0 2px #ff9c33;
+  -o-box-shadow: 0 0 2px #ff9c33;
   box-shadow: 0 0 2px #ff9c33;
 }
 
@@ -12459,8 +12998,9 @@ a:hover {
   color: #5e5c5a;
   background-color: #edeae6;
   text-shadow: 0 1px 1px white;
-  -webkit-box-shadow: 0 1px 0 white inset;
   -moz-box-shadow: 0 1px 0 white inset;
+  -webkit-box-shadow: 0 1px 0 white inset;
+  -o-box-shadow: 0 1px 0 white inset;
   box-shadow: 0 1px 0 white inset;
 }
 
@@ -12564,8 +13104,9 @@ a:hover {
 
 /* line 1319, ../scss/taco/widgets/_form.scss */
 .x-boxselect input, .x-boxselect .x-form-focus {
-  -webkit-box-shadow: none;
   -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
   box-shadow: none;
   background: none;
   border: none;
@@ -12588,10 +13129,11 @@ a:hover {
 
 /* line 1335, ../scss/taco/widgets/_form.scss */
 .x-boxselect-item {
-  -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
+  -webkit-border-radius: 4px;
   -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -khtml-border-radius: 4px;
   border-radius: 4px;
   background-color: #76CFDB;
   border: 1px solid #76CFDB;
@@ -12613,10 +13155,10 @@ a:hover {
   top: 50%;
   width: 8px;
   z-index: 10;
-  -webkit-transform: rotate(-45deg);
   -moz-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
   -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
 
@@ -12699,10 +13241,10 @@ a:hover {
   top: 50%;
   width: 8px;
   z-index: 11;
-  -webkit-transform: rotate(45deg);
   -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
   -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
 
@@ -12713,7 +13255,7 @@ a:hover {
 
 /* line 1436, ../scss/taco/widgets/_form.scss */
 .taco-boxselect .x-form-trigger {
-  background-position: 0 -798px;
+  background-position: 0 -1101px;
   border: 0 none;
   height: 20px;
   margin: 8px 0 0 6px;
@@ -12738,13 +13280,15 @@ a:hover {
 .x-datepicker {
   background: #FFF;
   padding: 10px;
-  -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
+  -webkit-border-radius: 2px;
   -o-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -khtml-border-radius: 2px;
   border-radius: 2px;
-  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+  -o-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
   overflow: visible;
 }
@@ -12821,10 +13365,11 @@ a:hover {
   font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   text-align: center;
   padding: 0;
-  -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
+  -webkit-border-radius: 2px;
   -o-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -khtml-border-radius: 2px;
   border-radius: 2px;
 }
 /* line 1564, ../scss/taco/widgets/_form.scss */
@@ -12869,20 +13414,22 @@ a:hover {
   padding: 4px 4px 3px;
   width: 40px;
   margin: 0 3px;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 /* line 1609, ../scss/taco/widgets/_form.scss */
 .x-datepicker .taco-datepicker-time span {
   cursor: pointer;
   padding: 3px;
-  -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
+  -webkit-border-radius: 2px;
   -o-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -khtml-border-radius: 2px;
   border-radius: 2px;
 }
 /* line 1614, ../scss/taco/widgets/_form.scss */
@@ -12932,13 +13479,15 @@ a:hover {
 /* line 1649, ../scss/taco/widgets/_form.scss */
 .taco-form-note-box {
   background-color: #EEECEA;
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
-  -webkit-box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.05) inset;
   -moz-box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.05) inset;
+  -webkit-box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.05) inset;
+  -o-box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.05) inset;
   box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.05) inset;
 }
 
@@ -12961,8 +13510,9 @@ a:hover {
 /* line 1666, ../scss/taco/widgets/_form.scss */
 .taco-floating-formpanel {
   background-color: white;
-  -webkit-box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.2);
+  -o-box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.2);
 }
 /* line 1670, ../scss/taco/widgets/_form.scss */
@@ -12971,8 +13521,9 @@ a:hover {
   border-style: dashed;
   border-width: 0px 0px 1px !important;
   padding: 5px 5px 10px;
-  -webkit-box-shadow: none;
   -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
   box-shadow: none;
 }
 /* line 1677, ../scss/taco/widgets/_form.scss */
@@ -13060,18 +13611,21 @@ a:hover {
   padding: 15px 24px 13px;
   text-align: center;
   text-decoration: none !important;
-  -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
+  -webkit-border-radius: 4px;
   -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -khtml-border-radius: 4px;
   border-radius: 4px;
-  -webkit-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.5);
+  -o-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.5);
   box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.5);
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #d7d5d2));
   background: -webkit-linear-gradient(#ffffff, #d7d5d2);
   background: -moz-linear-gradient(#ffffff, #d7d5d2);
   background: -o-linear-gradient(#ffffff, #d7d5d2);
+  background: -ms-linear-gradient(#ffffff, #d7d5d2);
   background: linear-gradient(#ffffff, #d7d5d2);
 }
 /* line 1757, ../scss/taco/widgets/_form.scss */
@@ -13155,10 +13709,11 @@ a:hover {
 }
 /* line 1832, ../scss/taco/widgets/_form.scss */
 .taco-orderform .taco-orderform-cart-items .x-grid-header-ct, .taco-orderform .taco-orderform-cart-items .x-grid-body {
-  -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
+  -webkit-border-radius: 0px;
   -o-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -khtml-border-radius: 0px;
   border-radius: 0px;
 }
 /* line 1838, ../scss/taco/widgets/_form.scss */
@@ -13334,21 +13889,22 @@ a:hover {
   border: 1px solid transparent;
   border-collapse: separate;
   border-spacing: 0;
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
   border-radius: 3px;
-  -webkit-transition: border 0.3s ease-out;
   -moz-transition: border 0.3s ease-out;
+  -webkit-transition: border 0.3s ease-out;
   -o-transition: border 0.3s ease-out;
   transition: border 0.3s ease-out;
 }
 /* line 62, ../scss/taco/widgets/_shim.scss */
 .taco-site-editor .taco-shim .taco-hint-widget > table > tbody > tr > td {
   opacity: 0;
-  -webkit-transition: background 0.3s ease-out;
   -moz-transition: background 0.3s ease-out;
+  -webkit-transition: background 0.3s ease-out;
   -o-transition: background 0.3s ease-out;
   transition: background 0.3s ease-out;
 }
@@ -13364,8 +13920,8 @@ a:hover {
   height: 100%;
   opacity: 1;
   border: 1px dashed transparent;
-  -webkit-transition: border 0.3s ease-out;
   -moz-transition: border 0.3s ease-out;
+  -webkit-transition: border 0.3s ease-out;
   -o-transition: border 0.3s ease-out;
   transition: border 0.3s ease-out;
 }
@@ -13382,7 +13938,7 @@ a:hover {
 }
 /* line 92, ../scss/taco/widgets/_shim.scss */
 .taco-site-editor .taco-shim .taco-hint-widget > table .taco-hint-actions .taco-widgethandle {
-  background-position: 0 -2874px;
+  background-position: 0 -2879px;
   display: block;
   font-size: 0px;
   height: 11px;
@@ -13429,8 +13985,8 @@ a:hover {
   border: 1px solid transparent;
   cursor: pointer;
   position: absolute;
-  -webkit-transition: border 0.3s ease-out;
   -moz-transition: border 0.3s ease-out;
+  -webkit-transition: border 0.3s ease-out;
   -o-transition: border 0.3s ease-out;
   transition: border 0.3s ease-out;
 }
@@ -13542,28 +14098,32 @@ a:hover {
 /* line 43, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-folder,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-category {
-  background-position: 0 -197px;
+  background-position: 0 -2518px;
 }
 /* line 49, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-blog,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-page,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-systempage {
-  background-position: 0 -221px;
+  background-position: 0 -2566px;
 }
 /* line 53, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-link {
-  background-position: 0 -125px;
+  background-position: 0 -2614px;
 }
 /* line 56, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-product {
-  background-position: 0 -149px;
+  background-position: 0 -2590px;
 }
 /* line 60, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr .taco-draghandle {
-  -webkit-transition: opacity 1s;
-  -moz-transition: opacity 1s;
-  -o-transition: opacity 1s;
-  transition: opacity 1s;
+  -moz-transition-property: opacity;
+  -webkit-transition-property: opacity;
+  -o-transition-property: opacity;
+  transition-property: opacity;
+  -moz-transition-duration: 1s;
+  -webkit-transition-duration: 1s;
+  -o-transition-duration: 1s;
+  transition-duration: 1s;
   opacity: 1;
 }
 /* line 65, ../scss/taco/_sites.scss */
@@ -13572,7 +14132,7 @@ a:hover {
 }
 /* line 69, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr:nth-child(3) .x-tree-icon {
-  background-position: 0 -173px;
+  background-position: 0 -2542px;
 }
 
 /* line 11, ../scss/taco/widgets/_themes.scss */
@@ -13711,10 +14271,11 @@ a:hover {
 .taco-theme-settings .taco-theme-section {
   border: 1px solid #5e5c5a;
   margin-top: 1em;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 /* line 169, ../scss/taco/widgets/_themes.scss */
@@ -13739,10 +14300,11 @@ a:hover {
   line-height: 20px;
   color: silver;
   border: 1px solid silver;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 /* line 191, ../scss/taco/widgets/_themes.scss */
@@ -13763,10 +14325,11 @@ a:hover {
   margin: 4px;
   padding: 4px;
   background-color: #edeae6;
-  -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
+  -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 /* line 209, ../scss/taco/widgets/_themes.scss */
@@ -13821,8 +14384,9 @@ a:hover {
 
 /* line 5, ../scss/taco/_viewport.scss */
 .taco-viewport-header {
-  -webkit-box-shadow: 0px -1px 6px black;
   -moz-box-shadow: 0px -1px 6px black;
+  -webkit-box-shadow: 0px -1px 6px black;
+  -o-box-shadow: 0px -1px 6px black;
   box-shadow: 0px -1px 6px black;
 }
 
@@ -13839,11 +14403,11 @@ a:hover {
   height: 16px;
   overflow: hidden;
   width: 16px;
-  background-position: 0 -2437px;
+  background-position: 0 -409px;
 }
 /* line 24, ../scss/taco/_viewport.scss */
 .taco-simplegrid .taco-simplegrid-checkbox.taco-simplegrid-checkbox-checked {
-  background-position: 0 -1743px;
+  background-position: 0 -393px;
 }
 /* line 29, ../scss/taco/_viewport.scss */
 .taco-simplegrid .taco-simplegrid-cell {
@@ -13961,10 +14525,18 @@ a:hover {
 .taco-simplegrid.taco-simplegrid-products .taco-simplegrid-cell {
   left: 0px;
   position: relative;
-  -webkit-transition: left 0.4s ease-in-out;
-  -moz-transition: left 0.4s ease-in-out;
-  -o-transition: left 0.4s ease-in-out;
-  transition: left 0.4s ease-in-out;
+  -moz-transition-property: left;
+  -webkit-transition-property: left;
+  -o-transition-property: left;
+  transition-property: left;
+  -moz-transition-duration: 0.4s;
+  -webkit-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  -moz-transition-timing-function: ease-in-out;
+  -webkit-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
 }
 /* line 163, ../scss/taco/_viewport.scss */
 .taco-simplegrid.taco-simplegrid-products .taco-simplegrid-cell[data-index="price"] {
