@@ -58,6 +58,36 @@
         "address": "/admin/email"
     }]
 }, {
+    "id": "settings",
+    "label": "Settings",
+    "address": "/admin/generalsettings",
+    "icon": "settings",
+    "items": [{
+        "id": "emailsettings",
+        "label": "Email",
+        "address": "/admin/email"
+    }, {
+        "id": "paymentcheckout",
+        "label": "Payment/Checkout",
+        "address": "/admin/paymentAndCheckout"
+    }, {
+        "id": "tax",
+        "label": "Tax",
+        "address": "/admin/tax"
+    }, {
+        "id": "shipping",
+        "label": "Shipping",
+        "address": "/admin/shipping"
+    }, {
+        "id": "themes",
+        "label": "Themes",
+        "address": "/admin/themes"
+    }, {
+        "id": "themesettings",
+        "label": "Theme Settings",
+        "address": "/admin/themesettings"
+    }]
+}, {
     "id": "reports",
     "label": "Reports",
     "address": "/admin/dashboard",
