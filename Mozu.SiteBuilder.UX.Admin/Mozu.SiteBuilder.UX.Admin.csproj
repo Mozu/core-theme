@@ -480,6 +480,7 @@
     <Content Include="Scripts\app\model\SimplegridColumn.js" />
     <Content Include="Scripts\app\store\Behaviors.js" />
     <Content Include="Scripts\app\store\Orders.js" />
+    <Content Include="Scripts\app\view\role\BehaviorsForm.js" />
     <Content Include="Scripts\app\view\role\Edit.js" />
     <Content Include="Scripts\app\view\role\Form.js" />
     <Content Include="Scripts\app\view\role\Index.js" />

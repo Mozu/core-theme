@@ -27,7 +27,7 @@ Ext.define('Taco.view.role.Form', {
             labelSeperator: '',
             width: 250,
             name: 'name'
-        }];
+        }, Ext.create('Taco.view.role.BehaviorsForm')];
     },
 
     loadStore: function () {
