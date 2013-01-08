@@ -7,7 +7,8 @@ Ext.define('Taco.model.Role', {
     requires: ['Taco.model.Behavior'],
     fields: [
         { name: 'id',   type: 'int' },
-        { name: 'name', type: 'string' }
+        { name: 'name', type: 'string' },
+        { name: 'isEditable', type: 'boolean'}
     ],
 
     idProperty: 'id',
@@ -23,7 +24,7 @@ Ext.define('Taco.model.Role', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/app/account/roles/list',
+            read: '/admin/app/roles',
             create: '/admin/app/account/roles/create',
             update: '/admin/app/account/roles/edit',
             destroy: '/admin/app/account/roles/delete'
