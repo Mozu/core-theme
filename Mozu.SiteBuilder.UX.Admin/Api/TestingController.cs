@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/list")]
-        public Task<Response<List<DGD>>> TestList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<DGD>>> GetTestList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var items = g_testData.Skip(pagingParams.pageIndex.GetValueOrDefault(0)).Take(pagingParams.pageSize.GetValueOrDefault(1000)).ToList();
 
@@ -183,6 +183,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
+        [WebGet(UriTemplate = "/theme/list")]
+        public Task<Response<List<ThemeDTO>>> GetListThemes()
+        {
+            List<ThemeDTO> themes = _themeRepository.GetAll().Select<ITheme, ThemeDTO>(t => new ThemeDTO(t)).ToList();
+
+            return List(themes);
+        }
+
         [WebInvoke(UriTemplate = "/theme/update")]
         public Task<Response<List<ThemeDTO>>> UpdateTheme(List<ThemeDTO> themes)
         {
@@ -233,7 +241,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/tenant/list")]
-        public Task<Response<List<Tenant.Contracts.Tenant >>> TenantList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<Tenant.Contracts.Tenant >>> GetTenantList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             string filter = null;
             TenantCollection tenants = null;
