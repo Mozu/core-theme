@@ -15,6 +15,10 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
         Role UpdateRole(Role role);
 
+        RoleBehavior GetRoleBehavior(int? id);
+
+        RoleBehavior UpdateRoleBehavior(RoleBehavior roleBehavior);
+
         List<Behavior> GetBehaviors();
 
         Behavior GetBehavior(int? id);

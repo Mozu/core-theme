@@ -15,6 +15,25 @@ namespace Mozu.SiteBuilder.UX.Models.Users
 
         [DataMember(Name = "id")]
         public int Id { get; set; }
+
+        [DataMember(Name = "isEditable")]
+        public bool IsEditable { get; set; }
+    }
+
+    [DataContract]
+    public class RoleBehavior : ModelBase
+    {
+        [DataMember(Name = "id")]
+        public int Id { get; set; }
+
+        [DataMember(Name = "roleId")]
+        public int RoleId { get; set; }
+
+        [DataMember(Name = "name")]
+        public string Name { get; set; }
+
+        [DataMember(Name = "children")]
+        public List<int> Children { get; set; }
     }
 
     [DataContract]
@@ -67,7 +86,7 @@ namespace Mozu.SiteBuilder.UX.Models.Users
                 Id = category.Id,
                 Name = category.Name,
                 Cls = "behavior-category",
-                Items = category.Categories.Select(c => BuildNode(c, categories, behaviors)).Concat(category.Behaviors.Select(CreateBehavior)).ToList(),
+                Children = category.Categories.Select(c => BuildNode(c, categories, behaviors)).Concat(category.Behaviors.Select(CreateBehavior)).ToList(),
             };
         }
 
@@ -99,8 +118,8 @@ namespace Mozu.SiteBuilder.UX.Models.Users
             [DataMember(Name = "selected")]
             public bool Selected { get; set; }
 
-            [DataMember(Name = "items")]
-            public List<BehaviorTreeNode> Items { get; set; }
+            [DataMember(Name = "children")]
+            public List<BehaviorTreeNode> Children { get; set; }
         }
     }
 }

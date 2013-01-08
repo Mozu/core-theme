@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Threading.Tasks;
+using System.Web.Http;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -8,6 +10,37 @@ using Mozu.SiteBuilder.UX.Models.Users;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
+    [ServiceContract]
+    public class RoleBehaviorsController : BaseController
+    {
+        private readonly IPermissionsRepository _permissionsRepository;
+
+        public RoleBehaviorsController(IPermissionsRepository permissionsRepository)
+        {
+            _permissionsRepository = permissionsRepository;
+        }
+
+        [WebGet(UriTemplate = "/read/{roleId}")]
+        public Task<Response<RoleBehavior>> GetRoleBehaviors(int roleId)
+        {
+            var roleBehavior = _permissionsRepository.GetRoleBehavior(roleId);
+
+            var response = roleBehavior == null ? EmptySingle<RoleBehavior>() : Single(roleBehavior);
+
+            return Task.Factory.StartNew(() => response);
+        }
+
+        [WebInvoke(UriTemplate = "/edit", Method = "POST")]
+        public Task<Response<RoleBehavior>> EditRoleBehaviors([FromBody] RoleBehavior roleBehavior)
+        {
+            var behavior = _permissionsRepository.UpdateRoleBehavior(roleBehavior);
+
+            var response = behavior == null ? EmptySingle<RoleBehavior>() : Single(behavior);
+
+            return Task.Factory.StartNew(() => response);
+        }
+    }
+
     [ServiceContract]
     public class RolesController : BaseController
     {

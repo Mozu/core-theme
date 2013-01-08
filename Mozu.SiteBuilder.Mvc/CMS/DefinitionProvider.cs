@@ -67,7 +67,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             // TODO: check for 0-bytes files.
 
             using (var stream = definitionFile.Open())
+            {
+                if (stream.Length == 0)
+                    return new T();
+
                 return (T) _serializer.ReadObject(stream);
+            }
         }
     }
 }
