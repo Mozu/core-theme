@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             _productClient.With(x => x.AddProduct(Arg.Any<MozuProduct>()), serverProduct);
 
-            var response = api.CreateProduct(request);
+            var response = api.CreateProduct(request).Result;
 
             response.Items.First().ProductCode.ShouldEqual(products.First().ProductCode);
             response.Items.Last().ProductCode.ShouldEqual(products.Last().ProductCode);
@@ -58,7 +58,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             _productClient.With(x => x.DeleteProduct(Arg.Any<string>()), TestResponse.Void);
 
-            var response = api.DeleteProduct(request);
+            var response = api.DeleteProduct(request).Result;
 
             _productClient.Received(1).DeleteProduct(products[0].ProductCode);
             _productClient.Received(1).DeleteProduct(products[1].ProductCode);
@@ -78,7 +78,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             _productClient.With(x => x.GetProducts(pagingParams.startIndex, pagingParams.pageSize, null, null, null), new ProductCollection { Items = products });
 
-            var response = api.GetProductList(pagingParams, extFilter);
+            var response = api.GetProductList(pagingParams, extFilter).Result;
 
             response.Success.ShouldBeTrue();
             response.Total.ShouldEqual(0);
@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             _productClient.With(x => x.UpdateProduct(Arg.Any<MozuProduct>(), Arg.Any<string>()), product1, product2);
 
-            var response = api.EditProduct(request);
+            var response = api.EditProduct(request).Result;
 
             response.Success.ShouldBeTrue();
             response.Total.ShouldEqual(products.Count);

@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [WebGet(UriTemplate = "/list")]
-        public Response<List<PageCreateType>> List(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<PageCreateType>>> List(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var singlePageTypes = new string[] { "homepage" };
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using DC = Mozu.ProductAdmin.Contracts;
 //using DC = Volusion.Attribute.Contracts.Administration;
 using Mozu.ProductAdmin.Contracts.Clients;
@@ -75,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [WebInvoke(UriTemplate = "/edit")]
-        public Response<List<ProductOption>> EditProductOption(List<ProductOption> options)
+        public Task<Response<List<ProductOption>>> EditProductOption(List<ProductOption> options)
         {
             var prod = _productClient.GetProductByProductCode (options.First().productCode, null).Result.ReadAsSync();
 
@@ -111,7 +112,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/createValue?id={id}")]
-        public Response<List<ProductOptionValue>> CreateProductOptionValue(List<ProductOptionValue> optionValues, int? id = null)
+        public Task<Response<List<ProductOptionValue>>> CreateProductOptionValue(List<ProductOptionValue> optionValues, int? id = null)
         {
             var attSets = new Dictionary<int, DC.AttributeSet>();
             var vmsGroups = optionValues.GroupBy(x => x.option_id);
@@ -164,8 +165,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             return EmptyList<ProductOptionValue>();
         }
+
         [WebInvoke(UriTemplate = "/editValue?id={id}")]
-        public Response<List<ProductOptionValue>> EditProductOptionValue(List<ProductOptionValue> optionValues)
+        public Task<Response<List<ProductOptionValue>>> EditProductOptionValue(List<ProductOptionValue> optionValues)
         {
             var dms = Mapper.Map<List<DC.ProductOptionValue>>(optionValues);
             var prodCode = optionValues[0].productCode;
@@ -205,7 +207,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/listValue")]
-        public Response<List<ProductOptionValue>> GetProductOptionValueList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<ProductOptionValue>>> GetProductOptionValueList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var productCode = extFilter.GetValue<string>("productCode");
             var optionId = extFilter.GetValue<int>("option_id");
@@ -225,7 +227,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [WebGet(UriTemplate = "/list")]
-        public Response<List<ProductOption>> GetProductOptionList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<ProductOption>>> GetProductOptionList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             // TODO: Need to switch this to ProductCode
             var productCode = extFilter.GetValue<string>("productCode");

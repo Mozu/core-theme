@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using AutoMapper;
+using MR = Mozu.SiteBuilder.UX.Models.Users;
 using SB = Mozu.SiteBuilder.UX.Models.Customers;
 using AC = Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using CS = Mozu.Customer.Contracts;
@@ -55,9 +56,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<AP.User, AC.LoginUser >();
             Mapper.CreateMap<AC.LoginUser, AP.User>();
-
-            Mapper.CreateMap<AC.Role, AP.Role>();
-            Mapper.CreateMap<AP.Role, AC.Role>().ForMember(x => x.Behaviors, m => m.MapFrom(x => x.Behaviors.Select(y => y.Id).ToList()));
 
             Mapper.CreateMap<AC.Invitation, US.Invitation>();
             Mapper.CreateMap<US.Invitation, AC.Invitation>();

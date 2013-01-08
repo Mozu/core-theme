@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -54,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/create")]
-        public Response<List<Discount>> CreateDiscount(List<Discount> discounts)
+        public Task<Response<List<Discount>>> CreateDiscount(List<Discount> discounts)
         {
             var responseList = new List<Discount>();
 
@@ -71,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         [ApiAuthorize]
         [WebGet(UriTemplate = "/read")]
-        public Response<List<Discount>> ReadDiscount(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<Discount>>> ReadDiscount(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             if (pagingParams.id == null)
             {
@@ -103,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/edit?id={id}")]
-        public Response<List<Discount>> EditDiscount(List<Discount> discountList, int? id = null)
+        public Task<Response<List<Discount>>> EditDiscount(List<Discount> discountList, int? id = null)
         {
 
             var retList =
@@ -117,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/delete")]
-        public Response<Discount> DeleteProduct(List<Discount> discounts)
+        public Task<Response<Discount>> DeleteProduct(List<Discount> discounts)
         {
             foreach (var d in discounts)
             {
@@ -128,7 +129,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/generatecoupon")]
-        public Response<CouponCode> GenerateCoupon(PagingParamaters pagingParams)
+        public Task<Response<CouponCode>> GenerateCoupon(PagingParamaters pagingParams)
         {
             var coupon = _discountWebClient.GenerateRandomCoupon().Result.ReadAsAsync().Result;
 
@@ -136,7 +137,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/targetedshippingmethods/read")]
-        public Response<List<TargetedShippingMethod>> GetTargetedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<TargetedShippingMethod>>> GetTargetedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var res = _siteShippingSettingsClient.GetShippingMethods().Result.ReadAsAsync().Result;
             var methods = res.Select(siteShippingMethod => new TargetedShippingMethod { Code = siteShippingMethod.Code, Name = siteShippingMethod.Content.Name }).ToList();
@@ -185,7 +186,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/selectedshippingmethods/read")]
-        public Response<List<TargetedShippingMethod>> GetSelectedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<TargetedShippingMethod>>> GetSelectedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var res = _siteShippingSettingsClient.GetShippingMethods().Result.ReadAsAsync().Result;
             var methods = res.Select(siteShippingMethod => new TargetedShippingMethod {Code = siteShippingMethod.Code, Name = siteShippingMethod.Content.Name}).ToList();

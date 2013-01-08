@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using System.ServiceModel.Web;
@@ -32,13 +33,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/create")]
-        public Response<List<ProductOption>> CreateProductOption(List<ProductOption> options)
+        public Task<Response<List<ProductOption>>> CreateProductOption(List<ProductOption> options)
         {
             return EditProductOption(options);
         }
 
         [WebInvoke(UriTemplate = "/edit")]
-        public Response<List<ProductOption>> EditProductOption(List<ProductOption> options)
+        public Task<Response<List<ProductOption>>> EditProductOption(List<ProductOption> options)
         {
             var attSets = new Dictionary<string, DC.AttributeSet>();
             foreach (var vm in options)
@@ -93,7 +94,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
         
         [WebGet(UriTemplate = "/listValue")]
-        public Response<List<ProductPropertyValue>> GetProductOptionValueList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<ProductPropertyValue>>> GetProductOptionValueList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var productCode = extFilter.GetValue<string>("productCode");
             var optionId = extFilter.GetValue<int>("option_id");
@@ -104,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
         
         [WebGet(UriTemplate = "/list")]
-        public Response<List< ProductProperty >> GetProductOptionList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<ProductProperty>>> GetProductOptionList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var productCode = extFilter.GetValue<string>("productCode");
             var dmOption = _productClient.GetProductAttributes(productCode, 0, 25, "AttributeDetails,AttributeValueDetails").Result.ReadAsSync();

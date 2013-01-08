@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using Mozu.ProductAdmin.Contracts.Clients;
 using System.ServiceModel.Web;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
@@ -26,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/autocomplete/?query={query}&value={productIdsString}")]
-        public Response<List<AutoCompleteField<string>>> SearchByName(string query, FilterCollection extFilter, string productIdsString)
+        public Task<Response<List<AutoCompleteField<string>>>> SearchByName(string query, FilterCollection extFilter, string productIdsString)
         {
             var filter = string.Empty;
 
@@ -56,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/create?id={id}")]
-        public Response<List<Product>> CreateProduct(List<Product> products)
+        public Task<Response<List<Product>>> CreateProduct(List<Product> products)
         {
             var retList = (from vm in products
                            select Mapper.Map<DC.Product>(vm) into dm
@@ -68,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/edit?id={id}")]
-        public Response<List<Product>> EditProduct(List<Product> products, int? id = null)
+        public Task<Response<List<Product>>> EditProduct(List<Product> products, int? id = null)
         {
             var retList = (from vm in products
                            select Mapper.Map<DC.Product>(vm) into dm
@@ -81,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [WebInvoke(Method = "POST", UriTemplate = "/delete")]
-        public Response<Product> DeleteProduct(List<Product> products)
+        public Task<Response<Product>> DeleteProduct(List<Product> products)
         {
             foreach (var vm in products)
             {
@@ -92,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/duplicate/?id={id}")]
-        public Response<Product> DuplicateProduct(string id)
+        public Task<Response<Product>> DuplicateProduct(string id)
         {
             // NOTE: id == ProductCode
             var origProd = _productClient.GetProductByProductCode(id,null).Result.ReadAsSync();
@@ -111,7 +112,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/list")]
-        public Response<List<Product>> GetProductList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<Product>>> GetProductList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {

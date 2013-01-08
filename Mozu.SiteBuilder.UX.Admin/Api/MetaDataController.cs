@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.ServiceModel.Web;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -13,8 +14,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class MetaDataController : BaseController
     {
         static Lazy<List<ModelDescription>> g_desc = new Lazy<List<ModelDescription>>(CreateModelDescriptions, true);
+
         [WebGet(UriTemplate = "/list?id={id}&page={pageIndex}&start={startIndex}&limit={pageSize}")]
-        public Response<List<ModelDescription>> GetOptionList(string id = null, int pageIndex = 1, int startIndex = 0, int pageSize = 25)
+        public Task<Response<List<ModelDescription>>> GetOptionList(string id = null, int pageIndex = 1, int startIndex = 0, int pageSize = 25)
         {
             List<ModelDescription> mds = null;
             if (!string.IsNullOrEmpty (id ))
@@ -27,6 +29,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             return List(mds);
         }
+
         static List<ModelDescription> CreateModelDescriptions()
         {
             var modelModels = typeof (Mozu.SiteBuilder.UX.Models.Settings.IPBlock )

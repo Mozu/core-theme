@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Threading.Tasks;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -19,7 +20,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/")]
-        public Response<List<Behavior>> GetAll()
+        public Task<Response<List<Behavior>>> GetAll()
         {
             var behaviors = _permissionsRepository.GetBehaviors();
 
@@ -27,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/behavior/{id}")]
-        public Response<Behavior> Get(int? id)
+        public Task<Response<Behavior>> Get(int? id)
         {
             var behavior = _permissionsRepository.GetBehavior(id);
 

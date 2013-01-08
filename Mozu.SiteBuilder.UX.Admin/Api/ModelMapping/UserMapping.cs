@@ -15,14 +15,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
+            Mapper.CreateMap<Behavior, Core.Api.Contracts.Behavior>().ForMember(x => x.OperationIds, m => m.Ignore());
+            Mapper.CreateMap<Core.Api.Contracts.Behavior, Behavior>().ForMember(x => x.Category, m => m.Ignore());
+
             Mapper.CreateMap<Role, Core.Api.Contracts.Role>();
             Mapper.CreateMap<Core.Api.Contracts.Role, Role>();
 
-            Mapper.CreateMap<Behavior, Core.Api.Contracts.Behavior>();
-            Mapper.CreateMap<Core.Api.Contracts.Behavior, Behavior>();
-
             Mapper.CreateMap<BehaviorCategory, Core.Api.Contracts.BehaviorCategory>();
-            Mapper.CreateMap<Core.Api.Contracts.BehaviorCategory, BehaviorCategory>();
+            Mapper.CreateMap<Core.Api.Contracts.BehaviorCategory, BehaviorCategory>()
+                  .ForMember(x => x.Behaviors, m => m.Ignore());
         }
     }
 }

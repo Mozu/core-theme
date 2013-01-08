@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Threading.Tasks;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -32,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns>List of SettingConfiguration</returns>
         [WebGet(UriTemplate = "/config/read")]
-        public Response<List<ConfigurationItem>> ReadConfiguration()
+        public Task<Response<List<ConfigurationItem>>> ReadConfiguration()
         {
             var config = _sbContext.Theme.Configuration.ToList();
             return List(config);
@@ -42,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns>List of field values</returns>
         [WebGet(UriTemplate = "/instance/read")]
-        public Response<List<FieldValue>> ReadInstance()
+        public Task<Response<List<FieldValue>>> ReadInstance()
         {
             var values = _themeSettingsRepository.GetInstanceValues();
             return List(values);
@@ -54,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="values">Field values to persist</param>
         /// <returns>List of FieldValue></returns>
         [WebInvoke(Method = "POST", UriTemplate = "/instance/save")]
-        public Response<List<FieldValue>> SaveInstance(List<FieldValue> values)
+        public Task<Response<List<FieldValue>>> SaveInstance(List<FieldValue> values)
         {
             var retval = _themeSettingsRepository.SaveInstanceValues(values);
             return List(retval);

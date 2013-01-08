@@ -21,6 +21,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
             AutoMapper.Mapper.AddProfile<GeneralSettingsMapping>();
             AutoMapper.Mapper.AddProfile<UX.Admin.Api.ModelMapping.GeneralSettingsMapping>();
             AutoMapper.Mapper.AddProfile<UX.Admin.Api.ModelMapping.NavigationMapping>();
+            AutoMapper.Mapper.AddProfile<UX.Admin.Api.ModelMapping.UserMapping>();
             AutoMapper.Mapper.AddProfile<NavigationMapping>();
             AutoMapper.Mapper.AddProfile<OptionMapping>();
             AutoMapper.Mapper.AddProfile<TaxMapping>();
@@ -36,8 +37,8 @@ namespace Mozu.SiteBuilder.IntegrationTests
         [Test, Explicit("This test is used for troubleshooting mapping profiles.")]
         public void Mappings_should_be_valid()
         {
-            AutoMapper.Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.ProductMapping>();
-            AutoMapper.Mapper.AssertConfigurationIsValid(new UX.Areas.StoreFront.ModelMapping.ProductMapping().ProfileName);
+            AutoMapper.Mapper.AddProfile<UX.Admin.Api.ModelMapping.UserMapping>();
+            AutoMapper.Mapper.AssertConfigurationIsValid(new UX.Admin.Api.ModelMapping.UserMapping().ProfileName);
         }
     }
 }

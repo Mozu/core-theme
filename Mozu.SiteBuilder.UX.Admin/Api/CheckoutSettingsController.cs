@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Threading.Tasks;
 using AutoMapper;
 using System.Linq;
 using Mozu.PaymentService.Contracts.Clients.Public;
@@ -40,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns></returns>
         [WebGet(UriTemplate = "/read")]
-        public Response<Setting> GetSettings()
+        public Task<Response<Setting>> GetSettings()
         {
             var res = _checkoutSettingsWebApiClient.GetCheckoutSettings().Result;
             //if (! res.ResponseMessage .IsSuccessStatusCode )
@@ -63,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="setting">The checkout settings</param>
         /// <returns>The active checkout settings</returns>
         [WebInvoke(UriTemplate = "/update")]
-        public Response<Setting> UpdateSettings(Setting settingReq)
+        public Task<Response<Setting>> UpdateSettings(Setting settingReq)
         {
             var cSetting = ConvertToContract(settingReq);
             var ret = _checkoutSettingsWebApiClient.UpdateCheckoutSettings(cSetting).Result.ReadAsSync();
@@ -75,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns>Array of gateway definitions</returns>
         [WebGet(UriTemplate = "/definition/read")]
-        public Response<List<GatewayDefinition>> GetDefinitions()
+        public Task<Response<List<GatewayDefinition>>> GetDefinitions()
         {
 
             var def = _checkoutSettingsWebApiClient.GetGatewayDefinitions().Result.ReadAsSync();

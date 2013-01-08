@@ -2,6 +2,7 @@
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Threading.Tasks;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Users;
@@ -19,13 +20,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/role/{id}")]
-        public Response<Role> Role(int? id)
+        public Task<Response<Role>> Role(int? id)
         {
             return Single(_permissionsRepository.GetRole(id));
         }
 
         [WebGet(UriTemplate = "/roles")]
-        public Response<List<Role>> Roles(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<Role>>> Roles(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             return List(_permissionsRepository.GetRoles().ToList());
         }
@@ -51,13 +52,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }*/
 
         [WebGet(UriTemplate = "/behavior/{id}")]
-        public Response<Behavior> Behaviors(int? id)
+        public Task<Response<Behavior>> Behaviors(int? id)
         {
             return Single(_permissionsRepository.GetBehavior(id));
         }
 
         [WebGet(UriTemplate = "/behaviors")]
-        public Response<List<Behavior>> GetBehaviors(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<Behavior>>> GetBehaviors(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             return List(_permissionsRepository.GetBehaviors().ToList());
         }
