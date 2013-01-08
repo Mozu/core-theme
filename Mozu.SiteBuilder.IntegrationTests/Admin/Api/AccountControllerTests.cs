@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var id = Guid.NewGuid().ToString("n");
             var api = GetApi();
 
-            var account = api.GetAccount();
+            var account = api.GetAccount().Result;
 
             account.Items.First().Id.ShouldEqual(id);
         }
@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             _roleWebApiClient.With(x => x.GetRoles(), new RoleCollection { Items = serviceRoles.ToList() });
 
             var api = GetApi();
-            var roles = api.GetRoles();
+            var roles = api.GetRoles().Result;
 
             roles.Items.First().Id.ShouldEqual(serviceRoles.First().Id);
             roles.Items.Last().Id.ShouldEqual(serviceRoles.Last().Id);

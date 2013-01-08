@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using DC = Mozu.ProductAdmin.Contracts;
 //using DC = Volusion.Attribute.Contracts.Administration;
 using Mozu.ProductAdmin.Contracts.Clients;
@@ -26,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/create?id={id}")]
-        public Response<List<Option>> CreateOption(Option option, int? id = null)
+        public Task<Response<List<Option>>> CreateOption(Option option, int? id = null)
         {
             var dm = Mapper.Map<DC.Attribute>(option);
             
@@ -38,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
          [WebInvoke(UriTemplate = "/createValue?id={id}")]
-        public Response<List<OptionValue>> CreateOptionValue(List<OptionValue> optionValue, int? id = null)
+        public Task<Response<List<OptionValue>>> CreateOptionValue(List<OptionValue> optionValue, int? id = null)
         {
             var rets = new List<OptionValue>();
             foreach (var vm in optionValue)
@@ -53,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(rets, 1);
         }
          [WebInvoke(UriTemplate = "/editValue?id={id}")]
-         public Response<List<OptionValue>> EditOptionValue(List<OptionValue> optionValue, int? id = null)
+         public Task<Response<List<OptionValue>>> EditOptionValue(List<OptionValue> optionValue, int? id = null)
          {
              var rets = new List<OptionValue>();
 
@@ -70,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          }
 
          [WebInvoke(UriTemplate = "/deleteValue?id={id}")]
-         public Response<List<OptionValue>> DeleteOptionValue(List<OptionValue> optionValues, int? id = null)
+         public Task<Response<List<OptionValue>>> DeleteOptionValue(List<OptionValue> optionValues, int? id = null)
          {
             // List<OptionValue> ret = new List<OptionValue>();
              foreach (var vm in optionValues)
@@ -82,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          }
 
          [WebInvoke(UriTemplate = "/delete?id={id}")]
-         public Response<OptionValue> DeleteOption(Option option, int? id = null)
+         public Task<Response<OptionValue>> DeleteOption(Option option, int? id = null)
          {
              var dm = Mapper.Map<DC.Attribute>(option);
              var res = _attClient.DeleteAttribute(dm.Id).Result;
@@ -91,12 +92,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                  throw res.ReadException();
              }
              return EmptySingle<OptionValue>(res.ResponseMessage.IsSuccessStatusCode);
-             //return EmptyList<OptionValue>(res.ResponseMessage.IsSuccessStatusCode);
-
          }
 
          [WebGet(UriTemplate = "/listValue")]
-         public Response<List<OptionValue>> GetOptionValueList(PagingParamaters pagingParams, FilterCollection extFilter)
+         public Task<Response<List<OptionValue>>> GetOptionValueList(PagingParamaters pagingParams, FilterCollection extFilter)
          {
              int tmp;
              var optionId = extFilter.TryGetValue("option_id", out tmp) ? (int?)tmp: null;
@@ -114,7 +113,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          }
         
         [WebInvoke(UriTemplate = "/edit?id={id}")]
-        public Response<List<Option>> EditOption(Option option, int? id = null)
+        public Task<Response<List<Option>>> EditOption(Option option, int? id = null)
         {
             var dm = Mapper.Map<DC.Attribute>(option);
             var ret = _attClient.UpdateAttribute(dm, dm.Id).Result.ReadAsSync();
@@ -123,7 +122,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/autocomplete/?query={query}")]
-        public Response<List<AutoCompleteField<int?>>> SearchByName(string query, FilterCollection extFilter)
+        public Task<Response<List<AutoCompleteField<int?>>>> SearchByName(string query, FilterCollection extFilter)
         {
             var filter = CreateFilter(extFilter, query);
             var res = _attClient.GetAttributesCollection(null, null, "InternalName", "LocalizedContent", filter).Result.ReadAsSync();
@@ -144,7 +143,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
         
         [WebGet(UriTemplate = "/list?query={query}")]
-        public Response<List<Option>> GetOptionList(PagingParamaters pagingParams, FilterCollection extFilter, string query)
+        public Task<Response<List<Option>>> GetOptionList(PagingParamaters pagingParams, FilterCollection extFilter, string query)
         {
             if (pagingParams.NumericId != null )
             {

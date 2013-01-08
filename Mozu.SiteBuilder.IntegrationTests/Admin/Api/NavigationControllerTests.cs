@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             var api = GetApi();
 
-            var results = api.Search(new PagingParamaters(), new FilterCollection());
+            var results = api.Search(new PagingParamaters(), new FilterCollection()).Result;
 
             results.Items.ShouldNotBeEmpty();
             results.Items.Count.ShouldEqual(products.Items.Count + categories.Items.Count);
@@ -120,7 +120,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             _navigationRepository.GetSet().Returns(new NavigationSet());
             var api = GetApi();
 
-            var result = api.Create(nodes);
+            var result = api.Create(nodes).Result;
 
             _navigationRepository.Received(1).SaveSet(Arg.Is<NavigationSet>(set => set.Nodes.All(node => nodeNames.Contains(node.Name))));
             result.Items.Select(x => x.Name).ShouldEqual(nodeNames);
@@ -138,7 +138,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             var api = GetApi();
 
-            var response = api.Read(null);
+            var response = api.Read(null).Result;
 
             response.ShouldNotBeNull();
             response.Items.Select(x => x.Name).ShouldEqual(new[]{ "Navigation", "Non-Linked Pages", "System Pages" });
@@ -163,7 +163,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             var api = GetApi();
 
-            var response = api.Read(id);
+            var response = api.Read(id).Result;
 
             response.Items.ShouldNotBeEmpty();
             response.Items.All(x => x.Leaf).ShouldBeTrue();

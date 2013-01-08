@@ -188,7 +188,7 @@
     </Reference>
     <Reference Include="Mozu.Core.Api.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.Contracts.0.0.13003.1\lib\Mozu.Core.Api.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.Contracts.0.0.13008.1\lib\Mozu.Core.Api.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Customer.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -355,7 +355,6 @@
     <Compile Include="Api\Models\Account\AccountUser.cs" />
     <Compile Include="Api\Models\Account\Invitation.cs" />
     <Compile Include="Api\Models\Account\PasswordInfo.cs" />
-    <Compile Include="Api\Models\Account\Role.cs" />
     <Compile Include="Api\Models\Account\UserSystemData.cs" />
     <Compile Include="Api\Models\Checkout\GatewayCredentialFieldDefinition.cs" />
     <Compile Include="Api\Models\Checkout\GatewayDefinition.cs" />

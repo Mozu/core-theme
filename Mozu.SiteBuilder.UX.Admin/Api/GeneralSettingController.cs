@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Settings;
@@ -19,7 +20,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/read")]
-        public Response<List<GeneralSettings>> GetSettings()
+        public Task<Response<List<GeneralSettings>>> GetSettings()
         {
             var settings = _wrapper.ReadSettings();
 
@@ -27,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/save")]
-        public Response<GeneralSettings> Save(GeneralSettings settingsToSave)
+        public Task<Response<GeneralSettings>> Save(GeneralSettings settingsToSave)
         {
             var existingBlockIds = _wrapper.GetIPBlocks().Select(x => x.Id).ToList();
             var savedSettings = _wrapper.UpdateGeneralSettings(settingsToSave);
@@ -41,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/timezones/read")]
-        public Response<List<TimeZone>> GetTimeZones(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<TimeZone>>> GetTimeZones(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var results = _wrapper.GetTimeZones().ToList();
 
@@ -49,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/ipranges/read")]
-        public Response<List<IPBlock>> GetIpRanges(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<IPBlock>>> GetIpRanges(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var results = _wrapper.GetIPBlocks().ToList();
 

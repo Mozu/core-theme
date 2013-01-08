@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return str.Split  ( new string[]{_STRINGSPLITDELIM}, StringSplitOptions.None );
         //}
         [WebGet(UriTemplate = "/read/?node={id}")]
-        public Response<List<NavigationTreeNode>> Read(string id)
+        public Task<Response<List<NavigationTreeNode>>> Read(string id)
         {
             var resItems = new List<NavigationTreeNode>();
             var navSet = _navRepo.GetSet();
@@ -132,7 +132,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/search/?query={query}")]
-        public Response<List<NavigationTreeNode>> Search(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<NavigationTreeNode>>> Search(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             if (!string.IsNullOrEmpty(extFilter.query))
                 extFilter.Add(new FilterCollectionItem {value = extFilter.query});
@@ -163,7 +163,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/delete")]
-        public Response<List<NavigationTreeNode>> Delete(List<NavigationTreeNode> items)
+        public Task<Response<List<NavigationTreeNode>>> Delete(List<NavigationTreeNode> items)
         {
             NavigationSet  navSet = null;
             List<Task> tasks = new List<Task>();
@@ -208,7 +208,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return SuccessWithTotal<List<NavigationTreeNode>>(0);
         }
         [WebInvoke(UriTemplate = "/create")]
-        public Response<List<NavigationTreeNode>> Create(List<NavigationTreeNode> items)
+        public Task<Response<List<NavigationTreeNode>>> Create(List<NavigationTreeNode> items)
         {
             var navSet = _navRepo.GetSet();
             if (items.Any(x => x.Name == "reset"))
@@ -228,7 +228,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/update")]
-        public Response<List<NavigationTreeNode>> Edit(List<NavigationTreeNode> items)
+        public Task<Response<List<NavigationTreeNode>>> Edit(List<NavigationTreeNode> items)
         {
             
             var catNodes = items.Where(x => x.NodeType == "category").ToList();

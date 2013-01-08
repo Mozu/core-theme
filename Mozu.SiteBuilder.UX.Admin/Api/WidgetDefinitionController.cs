@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -19,7 +20,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/list")]
-        public Response<List<WidgetDefintion>> GetWidgets(PagingParamaters pagingParams, FilterCollection extFilter )
+        public Task<Response<List<WidgetDefintion>>> GetWidgets(PagingParamaters pagingParams, FilterCollection extFilter )
         {
             var defs = _widgetProvider.GetWidgets();
 

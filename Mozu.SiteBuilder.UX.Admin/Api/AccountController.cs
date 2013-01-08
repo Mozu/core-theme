@@ -17,6 +17,7 @@ using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.PaymentService.Contracts.Clients.Public;
 using Mozu.Provisioning.Contracts;
+using Mozu.SiteBuilder.UX.Models.Users;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -28,7 +29,6 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 //using DC = Mozu.Core.Api.Contracts;
 using PasswordInfo = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.PasswordInfo;
-using Role = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.Role;
 using AdminUser2 = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
 using Invitation = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.Invitation;
 using System.Text;
@@ -79,14 +79,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         
         [WebInvoke(UriTemplate = "/logoff")]
-        public Response<List<AdminUser2>> Logoff()
+        public Task<Response<List<AdminUser2>>> Logoff()
         {
             _authHelper.LogOut();
             return List(new List<AdminUser2>());
         }
         
         [WebGet(UriTemplate = "/list")]
-        public Response<List<AdminUser2>> GetUsers(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<AdminUser2>>> GetUsers(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             List<Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Core.Api.Contracts.User>>> tasks= new System.Collections.Generic.List<Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Core.Api.Contracts.User>>>();
             if (pagingParams.id != null)
@@ -143,7 +143,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        public Response<List<AdminUser2>> GetAccount()
+        public Task<Response<List<AdminUser2>>> GetAccount()
         {
             LightweightUserClaims lwU = _authHelper.GetCurrentUser();
             var ctx = Mvc.SiteBuilderContext.Current;
@@ -153,7 +153,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/roles/list")]
-        public Response<List<Role>> GetRoles()
+        public Task<Response<List<Role>>> GetRoles()
         {
             var list = Roles.Select(Mapper.Map<Role>).ToList();
             return List(list);
@@ -214,7 +214,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return null;
         }
 
-        public Response<List<Tuple<Site, int>>> Register(LoginUser user)
+        public Task<Response<List<Tuple<Site, int>>>> Register(LoginUser user)
         {
             //var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
             //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
@@ -273,7 +273,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-        public Response<List<Tuple<Site, int>>> VolusionLogIn(LoginUser user)
+        public Task<Response<List<Tuple<Site, int>>>> VolusionLogIn(LoginUser user)
         {
             try
             {
@@ -386,7 +386,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
        
 
         [WebInvoke(Method = "POST", UriTemplate = "/users/delete")]
-        public Response<AccountUser> DeleteUser(AccountUser accountUser)
+        public Task<Response<AccountUser>> DeleteUser(AccountUser accountUser)
         {
             _adminUserWebApiClient.RemoveUserRole(accountUser.Id, accountUser.RoleId).Result.ReadAsAsync();
 
@@ -394,7 +394,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/invitations/delete")]
-        public Response<Invitation> DeleteInvitation(Invitation invitation)
+        public Task<Response<Invitation>> DeleteInvitation(Invitation invitation)
         {
             _invitationWebApiClient.DeclineInvitation(invitation.Id).Result.ReadAsAsync();
 
@@ -402,7 +402,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/invitations/create")]
-        public Response<Invitation> CreateInvitation(Invitation invitation)
+        public Task<Response<Invitation>> CreateInvitation(Invitation invitation)
         {
             try
             {
@@ -418,7 +418,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/users/list")]
-        public Response<List<AccountUser>> GetAccountUsers()
+        public Task<Response<List<AccountUser>>> GetAccountUsers()
         {
             var admins = _adminUserWebApiClient.Get(null, null, null).Result.ReadAsAsync().Result.Items;
             var invites = _invitationWebApiClient.GetInvitations(null).Result.ReadAsAsync().Result.Items;
@@ -436,7 +436,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/invitations/resend")]
-        public Response<Invitation> ResendInvitation(Invitation invitation)
+        public Task<Response<Invitation>> ResendInvitation(Invitation invitation)
         {
             _invitationWebApiClient.ResubmitInvitation(invitation.Id).Result.ReadAsAsync();
 
@@ -444,7 +444,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/users/updaterole")]
-        public Response<AccountUserRoleUpdate> UpdateAccountUser(AccountUserRoleUpdate info)
+        public Task<Response<AccountUserRoleUpdate>> UpdateAccountUser(AccountUserRoleUpdate info)
         {
             try
             {
@@ -461,7 +461,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/password/update")]
-        public Response<AdminUser2> ChangePassword(PasswordInfo passwordInfo)
+        public Task<Response<AdminUser2>> ChangePassword(PasswordInfo passwordInfo)
         {
             try
             {
@@ -482,7 +482,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/information/read")]
-        public Response<AccountInformation> GetAccountInformation()
+        public Task<Response<AccountInformation>> GetAccountInformation()
         {
             var currentUser = _authHelper.GetCurrentUser();
 
@@ -490,7 +490,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/information/update")]
-        public Response<AccountInformation> UpdateAccountInformation(AccountInformation accountInformation)
+        public Task<Response<AccountInformation>> UpdateAccountInformation(AccountInformation accountInformation)
         {
             try
             {

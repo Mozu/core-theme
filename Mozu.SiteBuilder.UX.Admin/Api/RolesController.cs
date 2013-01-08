@@ -25,9 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var roleBehavior = _permissionsRepository.GetRoleBehavior(roleId);
 
-            var response = roleBehavior == null ? EmptySingle<RoleBehavior>() : Single(roleBehavior);
-
-            return Task.Factory.StartNew(() => response);
+            return roleBehavior == null ? EmptySingle<RoleBehavior>() : Single(roleBehavior);
         }
 
         [WebInvoke(UriTemplate = "/edit", Method = "POST")]
@@ -35,9 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var behavior = _permissionsRepository.UpdateRoleBehavior(roleBehavior);
 
-            var response = behavior == null ? EmptySingle<RoleBehavior>() : Single(behavior);
-
-            return Task.Factory.StartNew(() => response);
+            return behavior == null ? EmptySingle<RoleBehavior>() : Single(behavior);
         }
     }
 
@@ -52,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/")]
-        public Response<List<Role>> GetAll()
+        public Task<Response<List<Role>>> GetAll()
         {
             var roles = _permissionsRepository.GetRoles();
 
@@ -60,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/role/{id}")]
-        public Response<Role> GetRole(int? id)
+        public Task<Response<Role>> GetRole(int? id)
         {
             var role = _permissionsRepository.GetRole(id);
 
@@ -68,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/create", Method = "POST")]
-        public Response<Role> Create(Role role)
+        public Task<Response<Role>> Create(Role role)
         {
             var addedRole = _permissionsRepository.AddRole(role);
 
@@ -76,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/update", Method = "POST")]
-        public Response<Role> Update(Role role)
+        public Task<Response<Role>> Update(Role role)
         {
             var updatedRole = _permissionsRepository.UpdateRole(role);
 
@@ -84,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/delete", Method = "POST")]
-        public Response<Role> Delete(Role role)
+        public Task<Response<Role>> Delete(Role role)
         {
             _permissionsRepository.DeleteRole(role);
 
@@ -92,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/tree")]
-        public Response<BehaviorTree> GetTree()
+        public Task<Response<BehaviorTree>> GetTree()
         {
             var tree = _permissionsRepository.GetBehaviorTree();
 

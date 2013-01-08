@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using Mozu.ProductAdmin.Contracts.Clients;
@@ -26,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/edit?id={id}")]
-        public Response<List<Product>> EditProduct(List<Product> products, int? id = null)
+        public Task<Response<List<Product>>> EditProduct(List<Product> products, int? id = null)
         {
             
             
@@ -44,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(products);
         }
         [WebGet(UriTemplate = "/list")]
-        public Response<List<Product>> GetProductList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<Product>>> GetProductList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {

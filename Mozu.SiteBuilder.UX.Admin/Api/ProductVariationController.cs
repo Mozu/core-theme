@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using DC = Mozu.ProductAdmin.Contracts;
 //using DC = Volusion.Attribute.Contracts.Administration;
 using Mozu.ProductAdmin.Contracts.Clients;
@@ -35,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
         
         [WebInvoke(UriTemplate = "/edit")]
-        public Response<List<ProductVariation>> EditProductVariants(List<ProductVariation> variants)
+        public Task<Response<List<ProductVariation>>> EditProductVariants(List<ProductVariation> variants)
         {
             if (variants.Count > 0)
             {
@@ -53,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
         
         [WebGet(UriTemplate = "/list")]
-        public Response<List<ProductVariation>, VariantMetaData> GetProductVariants(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<ProductVariation>, VariantMetaData>> GetProductVariants(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var productCode = extFilter.GetValue<string>("productCode");
             

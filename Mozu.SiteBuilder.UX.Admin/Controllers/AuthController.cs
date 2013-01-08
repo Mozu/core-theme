@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             
             // If the user authenticates, redirect them to the admin app
-            var res = _accountApi.VolusionLogIn(login);
+            var res = _accountApi.VolusionLogIn(login).Result;
 
             if(res.Success)
             {
@@ -163,7 +163,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             }
 
             // If the user authenticates, redirect them to the admin app
-            var res = _accountApi.VolusionLogIn(user);
+            var res = _accountApi.VolusionLogIn(user).Result;
 
             if (res.Success)
             {

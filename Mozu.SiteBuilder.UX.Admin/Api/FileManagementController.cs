@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/file/list")]
-        public Response<List<FileManagementFile>> FileList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<FileManagementFile>>> FileList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             List<FileManagementFile> vm = null;
             int totalCount = 0;
@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/file/create")]
-        public Response<List<FileManagementFile>> CreateFile(List<FileManagementFile> files)
+        public Task<Response<List<FileManagementFile>>> CreateFile(List<FileManagementFile> files)
         {
             List<FileManagementFile> vmList = new List<FileManagementFile>();
             foreach (var file in files)
@@ -134,7 +134,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/file/delete")]
-        public Response<FileManagementFile> DeleteFile(List<FileManagementFile> files)
+        public Task<Response<FileManagementFile>> DeleteFile(List<FileManagementFile> files)
         {
             bool b = true;
             foreach ( var file in files)
@@ -148,7 +148,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "f/ile/upload/{docid}")]
-        public Response<string> UploadContent(HttpRequestMessage request,string docid)
+        public Task<Response<string>> UploadContent(HttpRequestMessage request,string docid)
         {
             //todo add session id 
             var streamProvider = new MultipartFormDataStreamProvider(System.IO.Path.GetTempPath());
@@ -173,7 +173,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
          [WebGet(UriTemplate = "/folder/list")]
-        public Response<List<FileManagementFolder>> FolderList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<FileManagementFolder>>> FolderList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var folderId = extFilter.GetValue <string>("folderid");
 
@@ -189,7 +189,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/folder/create")]
-         public Response<List<FileManagementFolder>> CreateFolder(List<FileManagementFolder> folders)
+         public Task<Response<List<FileManagementFolder>>> CreateFolder(List<FileManagementFolder> folders)
         {
             List<FileManagementFolder> vms = new List<FileManagementFolder>();
             foreach (var fldr in folders)
@@ -215,7 +215,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/file/edit")]
-        public Response<List<FileManagementFile>> EditFile(FileManagementFile[] files)
+        public Task<Response<List<FileManagementFile>>> EditFile(FileManagementFile[] files)
         {
             var vms = new List<FileManagementFile>();
             foreach (var file in files)
@@ -235,7 +235,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
          [WebInvoke(UriTemplate = "/folder/edit")]
-        public Response<List<FileManagementFolder>> EditFolder(List<FileManagementFolder> fldrs)
+        public Task<Response<List<FileManagementFolder>>> EditFolder(List<FileManagementFolder> fldrs)
         {
             var vms = new List<FileManagementFolder>();
             foreach (var fldr in fldrs)
@@ -256,10 +256,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
              return List(vms);
         }
 
-          [WebInvoke(UriTemplate = "/folder/delete")]
-        public Response<FileManagementFolder> DeleteFolder(List<FileManagementFolder> fldrs)
+        [WebInvoke(UriTemplate = "/folder/delete")]
+        public Task<Response<FileManagementFolder>> DeleteFolder(List<FileManagementFolder> fldrs)
         {
-
             bool success = true;
             foreach (var fldr in fldrs)
             {

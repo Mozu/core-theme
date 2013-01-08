@@ -4,6 +4,7 @@ using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
@@ -14,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         [ApiAuthorize]
         [WebGet(UriTemplate = "/read")]
-        public Response<List<KeyValuePair<string, string>>> GetStrings()
+        public Task<Response<List<KeyValuePair<string, string>>>> GetStrings()
         {
             var lang = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
             var list = new List<KeyValuePair<string, string>>();

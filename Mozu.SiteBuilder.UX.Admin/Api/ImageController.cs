@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -43,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/document/create")]
-        public Response<ProductImageDocument> CreateDocument(ProductImageDocument doc)
+        public Task<Response<ProductImageDocument>> CreateDocument(ProductImageDocument doc)
         {
             //var properties = new List<DC.PropertyValue>
             //{ 
@@ -116,7 +117,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/{docid}/create")]
-        public Response<string> CreateImage(HttpRequestMessage request, string docid)
+        public Task<Response<string>> CreateImage(HttpRequestMessage request, string docid)
         {
             if (!request.Content.IsMimeMultipartContent())
             {

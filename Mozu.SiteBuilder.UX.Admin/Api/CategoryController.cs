@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Threading.Tasks;
 using AutoMapper;
 //using Volusion.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts;
@@ -29,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/read")]
-        public Response<List<Category>> GetCategories(PagingParamaters pagingParams)
+        public Task<Response<List<Category>>> GetCategories(PagingParamaters pagingParams)
         {
             if (pagingParams.id == null)
             {
@@ -46,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/autocomplete/?query={query}&value={categoryIdsString}")]
-        public Response<List<AutoCompleteField<int>>> SearchByName(string query, FilterCollection extFilter, string categoryIdsString)
+        public Task<Response<List<AutoCompleteField<int>>>> SearchByName(string query, FilterCollection extFilter, string categoryIdsString)
         {
             var allCategories = _categoriesClient.GetCategories(0, 600, null, null, null).Result.ReadAsSync().Items
                     //.Where(x => x.IsSystemDefault == false && x.Content != null && x.Content.Name != null)
@@ -119,7 +120,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/update")]
-        public Response<Category> UpdateCategory(Category category)
+        public Task<Response<Category>> UpdateCategory(Category category)
         {
             var updatedCategory = _categoriesClient.UpdateCategory(Mapper.Map<Contracts.Category>(category), category.Id, false).Result.ReadAsAsync().Result;
 
@@ -127,7 +128,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/create")]
-        public Response<Category> CreateCategory(Category category)
+        public Task<Response<Category>> CreateCategory(Category category)
         {
             var createdCategory = _categoriesClient.AddCategory(Mapper.Map<Contracts.Category>(category)).Result.ReadAsAsync().Result;
 
@@ -135,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/delete/?force={force}")]
-        public Response<Category> DeleteCategory(Category category, bool force)
+        public Task<Response<Category>> DeleteCategory(Category category, bool force)
         {
             // Always force deletion of children for now
             _categoriesClient.DeleteCategoryById(category.Id, true).Wait();
@@ -143,7 +144,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/duplicate/?id={id}")]
-        public Response<Category> DuplicateCategory(int id)
+        public Task<Response<Category>> DuplicateCategory(int id)
         {
             var originalCategory = _categoriesClient.GetCategory(id).Result.ReadAsAsync().Result;
             originalCategory.Id = -1;
@@ -157,7 +158,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/tree/read/?id={id}")]
-        public Response<List<CategoryTreeNode>> ReadChildTreeNodes(int? id)
+        public Task<Response<List<CategoryTreeNode>>> ReadChildTreeNodes(int? id)
         {
             id = id ?? 0;
 
@@ -203,7 +204,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/tree/duplicate/?id={id}")]
-        public Response<CategoryTreeNode> DuplicateTreeNode(int id)
+        public Task<Response<CategoryTreeNode>> DuplicateTreeNode(int id)
         {
             var originalCategory = _categoriesClient.GetCategory(id).Result.ReadAsAsync().Result;
             originalCategory.Id = -1;
@@ -218,7 +219,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/tree/delete/?force={force}")]
-        public Response<CategoryTreeNode> DeleteTreeNode(List<CategoryTreeNode> nodes, bool force)
+        public Task<Response<CategoryTreeNode>> DeleteTreeNode(List<CategoryTreeNode> nodes, bool force)
         {
             // NOTE: Ugh... so the proxy has a weird "feature" when we are dealing with treestore
             // where everything needs to come in as an array
@@ -232,7 +233,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/tree/create")]
-        public Response<CategoryTreeNode> CreateTreeNode(List<CategoryTreeNode> nodes)
+        public Task<Response<CategoryTreeNode>> CreateTreeNode(List<CategoryTreeNode> nodes)
         {
             var node = nodes[0];
 
@@ -261,7 +262,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/tree/update")]
-        public Response<List<CategoryTreeNode>> UpdateTreeNode(List<CategoryTreeNode> nodes)
+        public Task<Response<List<CategoryTreeNode>>> UpdateTreeNode(List<CategoryTreeNode> nodes)
         {
            // var nodeResults = new List<CategoryTreeNode>();
 

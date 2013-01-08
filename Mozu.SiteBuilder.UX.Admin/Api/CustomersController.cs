@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Threading.Tasks;
 using Mozu.Customer.Contracts;
 using Mozu.SiteBuilder.Mvc.Customers;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -28,14 +29,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/search")]
-        public Response<List<CustomerAccount>> AdvancedSearch(PagingParamaters pagingParameters, FilterCollection extFilter)
+        public Task<Response<List<CustomerAccount>>> AdvancedSearch(PagingParamaters pagingParameters, FilterCollection extFilter)
         {
             // todo : hook up search pieces and create filter
             return List(_customerRepository.GetAll(0, 1, null).ToList());
         }
 
         [WebGet(UriTemplate = "/list")]
-        public Response<List<CustomerAccount>> List(PagingParamaters pagingParameters, FilterCollection extFilter)
+        public Task<Response<List<CustomerAccount>>> List(PagingParamaters pagingParameters, FilterCollection extFilter)
         {
             var filter = GetCustomerSearchFilter(extFilter);
 
@@ -50,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/edit/{id}")]
-        public Response<CustomerAccount> Edit(int? id)
+        public Task<Response<CustomerAccount>> Edit(int? id)
         {
             var customer = _customerRepository.Get(id);
 
@@ -58,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/autocomplete/?query={query}&value={groupIds}")]
-        public Response<List<AutoCompleteField<string>>> Search(string query, FilterCollection extFilter, string groupIds)
+        public Task<Response<List<AutoCompleteField<string>>>> Search(string query, FilterCollection extFilter, string groupIds)
         {
             var groups = _customerRepository.GetCustomerGroups(x => x.ToLower().Contains(query.ToLower()));
 
@@ -66,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/notes/list")]
-        public Response<List<CustomerAccountNote>> GetNotes(PagingParamaters pagingParameters, FilterCollection extFilter)
+        public Task<Response<List<CustomerAccountNote>>> GetNotes(PagingParamaters pagingParameters, FilterCollection extFilter)
         {
             var customerAccountId = extFilter.Get<CustomerAccount, int>(x => x.Id);
             var notes = _customerRepository.GetCustomerNotes(customerAccountId, pagingParameters.startIndex, pagingParameters.pageSize);
@@ -75,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/notes/create")]
-        public Response<CustomerAccountNote> CreateNote(CustomerAccountNote customerAccountNote, FilterCollection extFilter)
+        public Task<Response<CustomerAccountNote>> CreateNote(CustomerAccountNote customerAccountNote, FilterCollection extFilter)
         {
             var customerAccountId = extFilter.Get<CustomerAccount, int?>(x => x.Id);
             var customerNote = _customerRepository.CreateCustomerNote(customerAccountNote, customerAccountId);
@@ -84,7 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/groups/list")]
-        public Response<List<CustomerGroup>> GetGroups(PagingParamaters pagingParamaters, FilterCollection extFilter)
+        public Task<Response<List<CustomerGroup>>> GetGroups(PagingParamaters pagingParamaters, FilterCollection extFilter)
         {
             var filter = GetGroupsSearchFilter(extFilter);
 
@@ -94,18 +95,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/groups/update")]
-        public Response<CustomerGroup> UpdateGroup(CustomerGroup group)
+        public Task<Response<CustomerGroup>> UpdateGroup(CustomerGroup group)
         {
             // TODO: This is required for models that are stored in a TreeList. Right now, to leverage
             //       checkboxes and drag and drop, a TreeList is being used for these in the UI.
-            var response = Single(@group);
+            var response = Single(@group, message: "Groups cannot be updated at this time.");
 
-            response.Message = "Groups cannot be updated at this time.";
             return response;
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/groups/create")]
-        public Response<CustomerGroup> CreateGroup(CustomerGroup newGroup)
+        public Task<Response<CustomerGroup>> CreateGroup(CustomerGroup newGroup)
         {
             var group = _customerGroupsRepository.Create(newGroup);
 
@@ -113,7 +113,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/groups/delete")]
-        public Response<CustomerGroup> DeleteGroup(CustomerGroup group)
+        public Task<Response<CustomerGroup>> DeleteGroup(CustomerGroup group)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "/groups/{customerId}/update")]
-        public Response<List<CustomerGroup>> UpdateCustomerGroups(List<CustomerGroup> customerGroups, int? customerId)
+        public Task<Response<List<CustomerGroup>>> UpdateCustomerGroups(List<CustomerGroup> customerGroups, int? customerId)
         {
             if (!customerId.HasValue)
                 return Message<List<CustomerGroup>>(false, "customerId is missing. This value is required.");
