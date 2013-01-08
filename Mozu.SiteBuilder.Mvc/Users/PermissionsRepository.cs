@@ -77,12 +77,11 @@ namespace Mozu.SiteBuilder.Mvc.Users
         public RoleBehavior GetRoleBehavior(int? id)
         {
             var role = GetRole(id);
-            var behaviors = GetBehaviors().Where(b => role.Behaviors.Select(x => (int?)x.Id).Contains(id));
 
             return new RoleBehavior
             {
                 Id = role.Id,
-                Children = behaviors.Select(b => b.Id).ToList(),
+                Children = role.Behaviors.Select(x => x.Id).ToList(),
             };
         }
 
