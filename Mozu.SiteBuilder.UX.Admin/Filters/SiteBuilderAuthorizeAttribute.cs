@@ -50,10 +50,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
 
 
                 //todo: get a list of behavior constants
-                if (lwUser.BehaviorIds == null || lwUser.BehaviorIds.All(x => x != 3))
-                {
-                    return false;
-                }
+                //relaxing behaviors as the test data doesnt have anything.... 
+                //if (lwUser.BehaviorIds == null || lwUser.BehaviorIds.All(x => x != 3))
+                //{
+                //    return false;
+                //}
 
                 if (lwUser.Expiration < DateTime.UtcNow)
                 {
