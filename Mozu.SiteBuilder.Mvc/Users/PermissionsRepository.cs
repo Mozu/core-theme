@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Web.Http;
 using AutoMapper;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models.Users;
@@ -55,7 +58,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
         public void DeleteRole(Role role)
         {
-            throw new System.NotImplementedException();
+            _rolesWebApiClient.DeleteRole(role.Id).Result.ReadAsAsync();
         }
 
         public Role UpdateRole(Role role)
@@ -69,6 +72,32 @@ namespace Mozu.SiteBuilder.Mvc.Users
             var updatedRole = response.ReadAsAsync().Result;
 
             return Mapper.Map<Role>(updatedRole);
+        }
+
+        public RoleBehavior GetRoleBehavior(int? id)
+        {
+            var role = GetRole(id);
+            var behaviors = GetBehaviors().Where(b => role.Behaviors.Select(x => (int?)x.Id).Contains(id));
+
+            return new RoleBehavior
+            {
+                Id = role.Id,
+                Children = behaviors.Select(b => b.Id).ToList(),
+            };
+        }
+
+        public RoleBehavior UpdateRoleBehavior(RoleBehavior roleBehavior)
+        {
+            var role = GetRole(roleBehavior.Id);
+            var behaviors = GetBehaviors().Where(b => roleBehavior.Children.Contains(b.Id));
+
+            if (role == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            role.Behaviors.Clear();
+            role.Behaviors.AddRange(behaviors);
+
+            return roleBehavior;
         }
 
         public List<Behavior> GetBehaviors()
