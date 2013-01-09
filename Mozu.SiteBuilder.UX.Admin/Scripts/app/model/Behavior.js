@@ -6,11 +6,15 @@ Ext.define('Taco.model.Behavior', {
         name: 'id',
         type: 'string',
         useNull: true
-    }, {
-        name: 'name',
-        type: 'string',
-        useNull: true
-    },
+        }, {
+            name: 'name',
+            type: 'string',
+            useNull: true
+        },
+        {
+            name: 'checked',
+            type: 'boolean'
+        },
         {
             name: 'roleId',
             type: 'int',
@@ -30,6 +34,7 @@ Ext.define('Taco.model.Behavior', {
             successProperty: 'success'
         },
         writer: {
+            allowSingle: false,
             type: 'json'
         }
     }
