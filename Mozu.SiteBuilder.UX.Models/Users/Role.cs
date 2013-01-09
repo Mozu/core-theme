@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -57,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Models.Users
         public int Id { get; set; }
 
         [DataMember(Name = "name")]
-        public string Name { get; set; }
+        public string Name { get; set;   }
 
         public int ParentCategoryId { get; set; }
 
@@ -69,6 +70,9 @@ namespace Mozu.SiteBuilder.UX.Models.Users
     [DataContract]
     public class BehaviorTree : ModelBase
     {
+        private const string BehaviorCategoryCls = "behavior-category";
+        private const string BehaviorCls = "behavior";
+
         public BehaviorTree(IEnumerable<BehaviorCategory> categories, IEnumerable<Behavior> behaviors)
         {
             Nodes = (from c in categories
@@ -85,7 +89,7 @@ namespace Mozu.SiteBuilder.UX.Models.Users
             {
                 Id = category.Id,
                 Name = category.Name,
-                Cls = "behavior-category",
+                Cls = BehaviorCategoryCls,
                 Children = category.Categories.Select(c => BuildNode(c, categories, behaviors)).Concat(category.Behaviors.Select(CreateBehavior)).ToList(),
             };
         }
@@ -94,7 +98,7 @@ namespace Mozu.SiteBuilder.UX.Models.Users
         {
             return new BehaviorTreeNode
             {
-                Cls = "behavior",
+                Cls = BehaviorCls,
                 Name = behavior.Name,
                 Id = behavior.Id,
             };
@@ -120,6 +124,40 @@ namespace Mozu.SiteBuilder.UX.Models.Users
 
             [DataMember(Name = "children")]
             public List<BehaviorTreeNode> Children { get; set; }
+        }
+
+        public BehaviorTree Assign(RoleBehavior roleBehavior)
+        {
+            foreach (var node in Nodes)
+            {
+                TrySelectNode(node, roleBehavior.Children);
+            }
+
+            return this;
+        }
+
+        private static void TrySelectNode(BehaviorTreeNode node, ICollection<int> behaviors)
+        {
+            switch (node.Cls)
+            {
+                case BehaviorCategoryCls:
+                {
+                    foreach (var child in node.Children)
+                    {
+                        TrySelectNode(child, behaviors);
+                    }
+                    return;
+                }
+                case BehaviorCls:
+                {
+                    node.Selected = behaviors.Contains(node.Id);
+                    return;
+                }
+                default:
+                {
+                    throw new InvalidOperationException();
+                }
+            }
         }
     }
 }
