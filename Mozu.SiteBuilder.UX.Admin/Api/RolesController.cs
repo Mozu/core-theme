@@ -7,7 +7,7 @@ using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Users;
-
+using System.Linq;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [ServiceContract]
@@ -23,11 +23,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "/read")]
         public Task<Response<List<Mozu.SiteBuilder.UX.Models.Users.BehaviorTree.BehaviorTreeNode >>> GetRoleBehaviors( FilterCollection extFilter)
         {
+            int roleId = extFilter.GetValue("roleId", 0);
             var roleBehavior = _permissionsRepository.GetRoleBehavior(extFilter.GetValue("roleId",0));
 
             var tree = _permissionsRepository.GetBehaviorTree();
+        
+            tree.Nodes.ForEach( x =>  x.Children.ForEach(y => y.RoleId = roleId));
 
-            return tree == null ? EmptyList<BehaviorTree.BehaviorTreeNode>() : this.List(tree.Assign(roleBehavior).Nodes);
+            return  this.List(tree.Assign(roleBehavior).Nodes);
         }
 
         [WebInvoke(UriTemplate = "/edit", Method = "POST")]
