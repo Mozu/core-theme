@@ -14,7 +14,7 @@ namespace Mozu.SiteBuilder.UX
     public class MvcApplication : System.Web.HttpApplication
     {
 
-        public override void Init()
+        protected void Application_Start()
         {
             ApplicationBootstrapper.Bootstrap();
         }

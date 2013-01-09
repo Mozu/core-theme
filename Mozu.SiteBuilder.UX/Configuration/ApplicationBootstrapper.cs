@@ -64,7 +64,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
            // ValueProviderFactories.Factories.Add(new JsonNetValueProviderFactory());
 
 			DependencyResolver.SetResolver(_resolver);
-            new RoutingConfigurationStartupTask().RegisterRoutes(RouteTable.Routes);
+           // StartUpTaskRunner.Start(DependencyResolver.Current.GetServices<IStartUpTask>());
+		    new RoutingConfigurationStartupTask().Execute();
 		}
 
 	    private static void InitLogging()
