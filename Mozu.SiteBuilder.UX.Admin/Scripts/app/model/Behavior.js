@@ -14,8 +14,17 @@ Ext.define('Taco.model.Behavior', {
 
     proxy: {
         type: 'ajaxproxy',
+        forTreeStore: true,
         api: {
-            read: '/admin/Scripts/app/mocks/behaviors.json'
+            read: '/admin/app/rolebehaviors/read/369'
+        },
+        reader: {
+            type: 'json',
+            root: 'items',
+            successProperty: 'success'
+        },
+        writer: {
+            type: 'json'
         }
     }
 })

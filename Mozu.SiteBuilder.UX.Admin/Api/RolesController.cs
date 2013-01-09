@@ -21,13 +21,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/read/{roleId}")]
-        public Task<Response<BehaviorTree>> GetRoleBehaviors(int roleId)
+        public Task<Response<List<Mozu.SiteBuilder.UX.Models.Users.BehaviorTree.BehaviorTreeNode >>> GetRoleBehaviors(int roleId)
         {
             var roleBehavior = _permissionsRepository.GetRoleBehavior(roleId);
 
             var tree = _permissionsRepository.GetBehaviorTree();
 
-            return tree == null ? EmptySingle<BehaviorTree>() : Single(tree.Assign(roleBehavior));
+            return tree == null ? EmptyList<BehaviorTree.BehaviorTreeNode>() : this.List(tree.Assign(roleBehavior).Nodes);
         }
 
         [WebInvoke(UriTemplate = "/edit", Method = "POST")]
