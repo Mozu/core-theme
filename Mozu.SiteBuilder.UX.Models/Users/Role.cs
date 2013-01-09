@@ -126,8 +126,8 @@ namespace Mozu.SiteBuilder.UX.Models.Users
             [DataMember(Name = "cls")]
             public string Cls { get; set; }
 
-            [DataMember(Name = "selected")]
-            public bool Selected { get; set; }
+            [DataMember(Name = "checked", EmitDefaultValue = false)]
+            public bool? Selected { get; set; }
 
             [DataMember(Name = "items")]
             public List<BehaviorTreeNode> Children { get; set; }

@@ -21,7 +21,8 @@ Ext.define('Taco.model.Behavior', {
         type: 'ajaxproxy',
         forTreeStore: true,
         api: {
-            read: '/admin/app/rolebehaviors/read'
+            read: '/admin/app/rolebehaviors/read',
+            update: '/admin/app/rolebehaviors/edit'
         },
         reader: {
             type: 'json',
