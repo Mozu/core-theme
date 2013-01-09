@@ -433,6 +433,7 @@
     <Compile Include="Api\TaxController.cs" />
     <Compile Include="Api\TestingController.cs" />
     <Compile Include="Api\ThemeSettingController.cs" />
+    <Compile Include="Api\WebToolsController.cs" />
     <Compile Include="Api\WidgetDefinitionController.cs" />
     <Compile Include="Configuration\ApplicationBootstrapper.cs" />
     <Compile Include="Configuration\ConfigurationModule.cs">
