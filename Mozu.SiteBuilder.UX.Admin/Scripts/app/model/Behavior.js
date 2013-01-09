@@ -10,13 +10,18 @@ Ext.define('Taco.model.Behavior', {
         name: 'name',
         type: 'string',
         useNull: true
-    }],
+    },
+        {
+            name: 'roleId',
+            type: 'int',
+            useNull: true
+        }],
 
     proxy: {
         type: 'ajaxproxy',
         forTreeStore: true,
         api: {
-            read: '/admin/app/rolebehaviors/read/369'
+            read: '/admin/app/rolebehaviors/read'
         },
         reader: {
             type: 'json',

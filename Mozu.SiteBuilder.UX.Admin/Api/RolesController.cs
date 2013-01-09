@@ -20,10 +20,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _permissionsRepository = permissionsRepository;
         }
 
-        [WebGet(UriTemplate = "/read/{roleId}")]
-        public Task<Response<List<Mozu.SiteBuilder.UX.Models.Users.BehaviorTree.BehaviorTreeNode >>> GetRoleBehaviors(int roleId)
+        [WebGet(UriTemplate = "/read")]
+        public Task<Response<List<Mozu.SiteBuilder.UX.Models.Users.BehaviorTree.BehaviorTreeNode >>> GetRoleBehaviors( FilterCollection extFilter)
         {
-            var roleBehavior = _permissionsRepository.GetRoleBehavior(roleId);
+            var roleBehavior = _permissionsRepository.GetRoleBehavior(extFilter.GetValue("roleId",0));
 
             var tree = _permissionsRepository.GetBehaviorTree();
 
@@ -31,11 +31,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "/edit", Method = "POST")]
-        public Task<Response<RoleBehavior>> EditRoleBehaviors([FromBody] RoleBehavior roleBehavior)
+        public Task<Response<List<RoleBehavior>>> EditRoleBehaviors([FromBody] List<RoleBehavior> behaviors)
         {
-            var behavior = _permissionsRepository.UpdateRoleBehavior(roleBehavior);
+            List<RoleBehavior> retList = new List<RoleBehavior>();
+            foreach (var beh in behaviors)
+            {
+                retList.Add(_permissionsRepository.UpdateRoleBehavior(beh));
+            }
 
-            return behavior == null ? EmptySingle<RoleBehavior>() : Single(behavior);
+            return this.List<RoleBehavior>(retList);
         }
     }
 
