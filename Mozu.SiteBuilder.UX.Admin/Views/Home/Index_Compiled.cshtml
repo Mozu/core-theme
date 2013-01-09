@@ -1,7 +1,7 @@
 ﻿@using System.Configuration
 @{
     Layout = "";
-    var assFile = typeof(Mozu.SiteBuilder.UX.Admin.Api.ProductApi).Assembly.Location;
+    var assFile = typeof(Mozu.SiteBuilder.UX.Admin.Api.AccountController ).Assembly.Location;
     var ver = System.Diagnostics.FileVersionInfo.GetVersionInfo(assFile);
     var cdn = @ConfigurationManager.AppSettings["admin.cdn"];
 }

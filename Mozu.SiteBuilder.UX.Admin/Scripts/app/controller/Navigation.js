@@ -7,7 +7,7 @@
 Ext.define('Taco.controller.Navigation', {
     extend: 'Taco.core.Controller',
     stores: ['Navigation'],
-
+    requires:['Taco.store.Navigation','Taco.model.Navigation'],
     views: ['navigation.PrimaryMenu', 'navigation.PrimaryMenuItem'],
 
     refs: [{

@@ -60,7 +60,7 @@ window.console = window.console || {
 Ext.application({
     name: 'Taco',
     autoCreateViewport: false,
-    appFolder: '/admin/Scripts/app',
+    //appFolder: '/admin/Scripts/app',
     requires: [
             'Taco.locale.Strings'
             , 'Taco.store.LocalizedStrings'
