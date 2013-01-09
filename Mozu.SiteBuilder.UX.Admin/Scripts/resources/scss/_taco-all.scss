@@ -1,16 +1,5 @@
-
-// Import all the image sprites first
-@import 'taco/sprites';
-
-// Import all the colors 
-@import 'taco/colors';
-
 // Import all mixins
 @import 'taco/mixins/css3';
-
-
-// set some variables to limit IE compilation
-$supports-gradients: true;
 
 @import 'taco/content';
 @import 'taco/viewport';
@@ -32,6 +21,7 @@ $supports-gradients: true;
 @import 'taco/widgets/modal';
 @import 'taco/widgets/shim';
 @import 'taco/widgets/tree';
+@import 'taco/widgets/panel';
 @import 'taco/widgets/themes';
 @import 'taco/widgets/checkout';
 @import 'taco/widgets/quickadder';

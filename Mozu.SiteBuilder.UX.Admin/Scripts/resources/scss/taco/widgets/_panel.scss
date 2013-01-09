@@ -1,0 +1,15 @@
+$panel-header-color: $color-neutral-darkest;
+.#{$prefix}panel-header.#{$prefix}panel-header-default {
+	background-image: none !important;
+	background-color: transparent !important;
+	border-style: dashed;
+	border-color: $color-neutral-mid;
+	border-bottom-width: 1px !important;
+	@include box-shadow(none);
+}
+.#{$prefix}panel-header img.#{$prefix}tool-expand-top, .#{$prefix}panel-header img.#{$prefix}tool-collapse-top {
+	@include icons-sprite('icon-panelcollapse');
+}
+.#{$prefix}panel-header img.#{$prefix}tool-expand-bottom, .#{$prefix}panel-header img.#{$prefix}tool-collapse-bottom {
+	@include icons-sprite('icon-panelexpand');
+}
