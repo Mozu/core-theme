@@ -87,7 +87,6 @@ namespace Mozu.SiteBuilder.UX.Models.Users
 
             return new BehaviorTreeNode
             {
-                Id = category.Id,
                 Name = category.Name,
                 Cls = BehaviorCategoryCls,
                 Children = category.Categories.Select(c => BuildNode(c, categories, behaviors)).Concat(category.Behaviors.Select(CreateBehavior)).ToList(),
@@ -100,7 +99,7 @@ namespace Mozu.SiteBuilder.UX.Models.Users
             {
                 Cls = BehaviorCls,
                 Name = behavior.Name,
-                Id = behavior.Id,
+                BehaviorId = behavior.Id,
             };
         }
 
@@ -110,8 +109,13 @@ namespace Mozu.SiteBuilder.UX.Models.Users
         [DataContract]
         public class BehaviorTreeNode : ModelBase
         {
+            public BehaviorTreeNode()
+            {
+                Id = Guid.NewGuid().ToString("n");
+            }
+
             [DataMember(Name = "id")]
-            public int Id { get; set; }
+            public string Id { get; private set; }
 
             [DataMember(Name = "name")]
             public string Name { get; set; }
@@ -124,6 +128,9 @@ namespace Mozu.SiteBuilder.UX.Models.Users
 
             [DataMember(Name = "children")]
             public List<BehaviorTreeNode> Children { get; set; }
+
+            [DataMember(Name = "behaviorId", EmitDefaultValue = false)]
+            public int? BehaviorId { get; set; }
         }
 
         public BehaviorTree Assign(RoleBehavior roleBehavior)
@@ -150,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Models.Users
                 }
                 case BehaviorCls:
                 {
-                    node.Selected = behaviors.Contains(node.Id);
+                    node.Selected = behaviors.Select(x => (int?)x).Contains(node.BehaviorId);
                     return;
                 }
                 default:
