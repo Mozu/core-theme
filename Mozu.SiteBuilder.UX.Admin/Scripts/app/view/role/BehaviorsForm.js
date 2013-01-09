@@ -5,7 +5,7 @@
 
 Ext.define('Taco.view.role.BehaviorsForm', {
     extend: 'Taco.core.ux.form.Form',
-
+    requires: ['Taco.store.Behaviors'],
     initComponent: function () {
         this.store = Ext.create('Taco.store.Behaviors');
         this.buildFormComponents();
@@ -19,7 +19,7 @@ Ext.define('Taco.view.role.BehaviorsForm', {
             Ext.create('Taco.core.ux.TreeList', {
                 store: this.store,
                 columns: [{
-                    name: 'treecolumn',
+                    xtype: 'treecolumn',
                     text: 'Name',
                     flex: 1,
                     dataIndex: 'name'
