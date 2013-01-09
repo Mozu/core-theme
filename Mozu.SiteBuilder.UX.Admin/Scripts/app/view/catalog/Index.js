@@ -33,7 +33,6 @@ Ext.define('Taco.view.catalog.Index', {
         simplegrid = Ext.create('Taco.core.ux.simplegrid.Grid', {
             store: this.store,
             cls: 'taco-simplegrid-products',
-            itemSelector: 'tr.taco-simplegrid-row',
             columns: [{
                 dataIndex: 'productName',
                 text: 'Product',

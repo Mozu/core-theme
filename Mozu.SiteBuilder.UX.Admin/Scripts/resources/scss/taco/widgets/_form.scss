@@ -25,6 +25,26 @@
       text-decoration: underline;
     }
   }
+
+  .#{$vprefix}formeditor {
+
+    .#{$vprefix}formeditor {
+      border: 1px solid $color-grid-border;
+      @include border-radius(4px);
+
+      > .#{$prefix}panel-header {
+        border: 0px none;
+        padding: 14px;
+        @include background(none transparent);
+        @include box-shadow(none);
+
+        .#{$prefix}panel-header-text {
+          color: $color;
+          font-weight: normal;
+        }
+      }
+    }
+  }
   
   .#{$vprefix}tabs {
     

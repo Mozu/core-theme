@@ -5,6 +5,9 @@ Ext.define('Taco.core.ux.form.Form', {
     extend: 'Ext.form.Panel',
     alias: 'widget.formeditor2',
     requires: ['Taco.core.ux.form.Tasks', 'Taco.core.ux.form.StepContainer'],
+
+    componentCls: Taco.baseCSSPrefix + 'formeditor',
+
     model: '',
     storeType: '',
     records: null,
@@ -105,10 +108,18 @@ Ext.define('Taco.core.ux.form.Form', {
 
         this.validateModel();
 
-        this.on({
-            afterrender: function () { this.getHeader().hide() },
-            scope: this
-        });
+        // this.on({
+        //     afterrender: {
+        //         fn: function () {
+        //             var header = this.getHeader();
+
+        //             if (header) {
+        //                 header.hide();
+        //             }
+        //         },
+        //         scope: this
+        //     }
+        // });
 
         this.saveTasks.on({
             complete: function () {
