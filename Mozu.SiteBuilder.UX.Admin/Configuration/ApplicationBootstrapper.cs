@@ -177,7 +177,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
                 {
                     var uri = @"http://65.vnextdev.com:666/admin/" + x.RouteTemplate;
 
-                    return string.Format(@"<tr><td><a href=""{0}"">{0}</a></td></tr>", uri);
+                    return string.Format(@"<tr><td><a href=""{0}"">{0}</a></td><td>{1}</td><td>{2}</td></tr>",
+                        uri,
+                        string.Join(", ", x.Defaults.Select(d => d.Key + "=" + d.Value)),
+                        string.Join(", ", x.Constraints.Select(c => c.Key + "=" + string.Join(";", (c.Value as System.Web.Http.Routing.HttpMethodConstraint).AllowedMethods)))
+                        );
 
                 })).Concat(new [] { "</table></body></html>"}));*/
 
