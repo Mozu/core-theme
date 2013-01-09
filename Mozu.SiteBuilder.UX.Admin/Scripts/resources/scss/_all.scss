@@ -4,6 +4,8 @@
 $include-default: true !default;
 $include-default-uis: true !default;
 
+@import 'taco-overrides';
+
 @import 'functions';
 @import 'variables';
 @import 'mixins';
@@ -29,7 +31,6 @@ $include-default-uis: true !default;
 //widgets
 @import 'widgets';
 
-@import 'taco-all';
 
 @if $scope-reset-css {
     .#{$prefix}reset {
@@ -116,3 +117,5 @@ $include-default-uis: true !default;
     @include extjs-html;
 }
 
+
+@import 'taco-all';

@@ -60,12 +60,4 @@ $color-grid-border: rgb(153, 150, 145);
 $color-primary-menu-background-mid: rgb(97, 96, 94);
 $color-primary-menu-background-dark: rgb(76, 73, 66);
 
-// Fonts
-$font-page-title: bold 30px $font-family;
-$font-section-title: bold 24px $font-family;
-$font-main-instructions: bold 18px $font-family;
-$font-navigation-labels: bold 16px $font-family;
-$font-message: italic 14px $font-family;
-$font-control-label: bold 14px $font-family;
-$font-body-copy: normal 14px $font-family;
-$font-body-copy-small: normal 12px $font-family;
+$base-color: $color-neutral-mid-lighter;
