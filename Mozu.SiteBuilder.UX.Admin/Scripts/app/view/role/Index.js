@@ -18,7 +18,6 @@ Ext.define('Taco.view.role.Index', {
             autoLoad: true
         });
         
-
         this.navigation = Ext.create('Taco.view.account.Navigation');
 
         this.grid = Ext.create('Taco.core.ux.BaseGrid', {

@@ -6,13 +6,15 @@
 Ext.define('Taco.view.role.BehaviorsForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.store.Behaviors'],
+    roleId: 0,
+
     initComponent: function () {
-        this.store = Ext.create('Taco.store.Behaviors',
-            {
-                filters: [{
-                    property: 'roleId',
-                    value:369}]
-            });
+        this.store = Ext.create('Taco.store.Behaviors', {
+            filters: [{
+                property: 'roleId',
+                value: this.roleId
+            }]
+        });
         this.buildFormComponents();
         this.callParent(arguments);
     },
