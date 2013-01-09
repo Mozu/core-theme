@@ -6,8 +6,10 @@
   $platformTypeVerticalAdjustment: 20px;
 
 
-  // *** Hide selected themes in the unpublished container, and vice versa
+  // *** Hide published (selected) themes in the unpublished container, and vice versa
   .#{$vprefix}themes-container {
+    overflow: hidden; // *** Give container layout when all children are floated
+
     .#{$vprefix}theme-swatch.x-item-selected {
       display: none;
     }
@@ -28,6 +30,10 @@
     font-weight: normal;
     margin: 15px 0;
     color: $color-neutral-darkest;
+
+    &:first-child {
+      margin-top: 10px;
+    }
   }
 
   .#{$vprefix}theme-swatch {
