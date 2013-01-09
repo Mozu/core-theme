@@ -13,6 +13,10 @@
         "label": "Orders",
         "address": "/admin/orders"
     }, {
+        "id": "phoneorders",
+        "label": "Phone Orders",
+        "address": "/admin/phoneorders"
+    }, {
         "id": "customers",
         "label": "Customers",
         "address": "/admin/customers"
