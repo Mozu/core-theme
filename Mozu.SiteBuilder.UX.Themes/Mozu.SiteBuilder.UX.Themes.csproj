@@ -137,15 +137,15 @@
     </Reference>
     <Reference Include="FSharp.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0\lib\net40\FSharp.Core.dll</HintPath>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\FSharp.Core.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.PowerPack, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
+    <Reference Include="FSharp.PowerPack">
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\FSharp.PowerPack.dll</HintPath>
       <Private>True</Private>
-      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0\lib\net40\FSharp.PowerPack.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.PowerPack.Compatibility, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
+    <Reference Include="FSharp.PowerPack.Compatibility">
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
       <Private>True</Private>
-      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0\lib\net40\FSharp.PowerPack.Compatibility.dll</HintPath>
     </Reference>
     <Reference Include="Jolt">
       <HintPath>..\packages\Jolt.1.0.0\lib\net40\Jolt.dll</HintPath>
@@ -205,10 +205,10 @@
       <HintPath>..\packages\Mozu.User.Contracts.1.0.12338.1\lib\Mozu.User.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40">
-      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0\lib\net40\NDjango.Core40.dll</HintPath>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\NDjango.Core40.dll</HintPath>
     </Reference>
     <Reference Include="NDjangoFilters.NDjangoExtension40">
-      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0\lib\net40\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -276,6 +276,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Volusion.NDjango.Nuget">
       <HintPath>..\packages\Volusion.NDjango.Nuget.1.0\lib\net40\Volusion.NDjango.Nuget.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
   </ItemGroup>
   <ItemGroup>
