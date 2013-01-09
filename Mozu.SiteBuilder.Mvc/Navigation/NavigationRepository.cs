@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Client;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Models.Navigation;
@@ -52,7 +55,15 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             {
                 Serializer.WriteObject(stream, navigation);
                 stream.Position = 0;
-                using (var updateTask = _docWebApiClient.UpdateDocumentContent(NavigationContentCollection, documentId/*, stream*/))
+                ServiceClientBase svc = (ServiceClientBase)_docWebApiClient;
+                IServiceClientMessageHandler handler = svc.Handler;
+              
+                var relpath = NavigationContentCollection + "/" + documentId;
+                
+
+          
+             
+                using (var updateTask =  handler.SendAsync<StreamContent, Stream>("PUT", relpath,stream, svc.ServiceId, svc.Options) )//_docWebApiClient.UpdateDocumentContent(NavigationContentCollection, documentId/*, stream*/))
                 {
                     if (updateTask.Result.HasException)
                         throw updateTask.Result.ReadException();
@@ -75,7 +86,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 {
                     return set;
                 }
-
+                //var resp = _docWebApiClient.GetDocumentContent(NavigationContentCollection, docId).Result;
+                //if (resp.ResponseMessage.IsSuccessStatusCode)
+                //{
+                    
+                //}
                 using (var content = _docWebApiClient.GetDocumentContent(NavigationContentCollection, docId).Result.ResponseMessage.Content)
                 using (var stream = content.ReadAsStreamAsync().Result)
                 {
@@ -132,6 +147,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     }
 
                     return null;
+                }
+                else
+                {
+                    _docId = document.Id;
                 }
             }
             return _docId;

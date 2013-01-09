@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.UX.StartupTasks
 
 		public void RegisterRoutes(RouteCollection routes)
 		{
-            routes.Clear();
+           // routes.Clear();
 
 			// Ignore text, html, files.
 			routes.IgnoreRoute("{file}.txt");
