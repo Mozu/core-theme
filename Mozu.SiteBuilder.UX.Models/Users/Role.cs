@@ -87,6 +87,7 @@ namespace Mozu.SiteBuilder.UX.Models.Users
 
             return new BehaviorTreeNode
             {
+                Id= "cat"+category.Id ,
                 Name = category.Name,
                 Cls = BehaviorCategoryCls,
                 Children = category.Categories.Select(c => BuildNode(c, categories, behaviors)).Concat(category.Behaviors.Select(CreateBehavior)).ToList(),
@@ -97,6 +98,7 @@ namespace Mozu.SiteBuilder.UX.Models.Users
         {
             return new BehaviorTreeNode
             {
+                Id= behavior.Id.ToString(),
                 Cls = BehaviorCls,
                 Name = behavior.Name,
                 BehaviorId = behavior.Id,
@@ -111,11 +113,12 @@ namespace Mozu.SiteBuilder.UX.Models.Users
         {
             public BehaviorTreeNode()
             {
-                Id = Guid.NewGuid().ToString("n");
+                
+             //   Id = Guid.NewGuid().ToString("n");
             }
-
+            
             [DataMember(Name = "id")]
-            public string Id { get; private set; }
+            public string Id { get;  set; }
 
             [DataMember(Name = "name")]
             public string Name { get; set; }
@@ -126,11 +129,28 @@ namespace Mozu.SiteBuilder.UX.Models.Users
             [DataMember(Name = "selected")]
             public bool Selected { get; set; }
 
-            [DataMember(Name = "children")]
+            [DataMember(Name = "items")]
             public List<BehaviorTreeNode> Children { get; set; }
 
             [DataMember(Name = "behaviorId", EmitDefaultValue = false)]
             public int? BehaviorId { get; set; }
+
+            [DataMember(Name = "roleId", EmitDefaultValue = false)]
+            public int? RoleId { get; set; }
+
+            [DataMember(Name = "expanded", EmitDefaultValue = false)]
+            public bool Expanded { get { return true; } }
+
+            [DataMember(Name = "loaded", EmitDefaultValue = false)]
+            public bool loaded { get { return true; } }
+            
+
+            [DataMember(Name = "leaf ", EmitDefaultValue = false)]
+            public bool IsLeaf
+            {
+                get { return BehaviorId.GetValueOrDefault(-1) > 0; }
+            }
+
         }
 
         public BehaviorTree Assign(RoleBehavior roleBehavior)
