@@ -5,13 +5,13 @@
 
 Ext.define('Taco.view.role.Form', {
     extend: 'Taco.core.ux.form.Form',
-
+    requires:['Taco.view.role.BehaviorsForm'],
     editTitle: 'Edit Role Bitch',
     createTitle: 'Create a Role, Bitch',
 
     initComponent: function () {
 
-        this.stores = Ext.create('Taco.store.Behaviors');
+        //this.stores = Ext.create('Taco.store.Behaviors');
 
         this.buildFormComponents();
 
@@ -31,8 +31,8 @@ Ext.define('Taco.view.role.Form', {
     },
 
     loadStore: function () {
-        var fnCleanupLoad,
-            store = this.stores[0];
+        //var fnCleanupLoad,
+        //    store = this.stores[0];
 
 
     }

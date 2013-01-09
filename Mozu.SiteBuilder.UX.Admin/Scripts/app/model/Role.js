@@ -13,13 +13,7 @@ Ext.define('Taco.model.Role', {
 
     idProperty: 'id',
 
-    hasMany: {
-        model: 'Taco.model.Behavior',
-        name: 'behaviors',
-        primaryKey: 'id',
-        foreignKey: 'role_id',
-        autoLoad: true
-    },
+  
 
     proxy: {
         type: 'ajaxproxy',

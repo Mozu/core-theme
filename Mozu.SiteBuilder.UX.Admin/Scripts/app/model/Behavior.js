@@ -4,7 +4,7 @@ Ext.define('Taco.model.Behavior', {
 
     fields: [{
         name: 'id',
-        type: 'int',
+        type: 'string',
         useNull: true
     }, {
         name: 'name',
