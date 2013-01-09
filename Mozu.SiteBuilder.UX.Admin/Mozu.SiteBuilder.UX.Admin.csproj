@@ -940,6 +940,8 @@
     <Content Include="Scripts\resources\images\icons\icon-mozulogo-full.png" />
     <Content Include="Scripts\resources\images\icons\icon-mozulogo-mini.png" />
     <Content Include="Scripts\resources\images\icons\icon-mozulogo-wallis.png" />
+    <Content Include="Scripts\resources\images\icons\icon-panelcollapse.png" />
+    <Content Include="Scripts\resources\images\icons\icon-panelexpand.png" />
     <Content Include="Scripts\resources\images\icons\icon-primarymenu-selected.png" />
     <Content Include="Scripts\resources\images\icons\icon-primarymenu.png" />
     <Content Include="Scripts\resources\images\icons\icon-settings-large.png" />
@@ -2412,7 +2414,9 @@
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <None Include="Scripts\app\locale\lang-de.csv" />
     <None Include="Scripts\app\locale\lang-en.csv" />
+    <Content Include="Scripts\resources\scss\_taco-overrides.scss" />
     <None Include="Scripts\resources\scss\taco\widgets\_checkout.scss" />
+    <Content Include="Scripts\resources\scss\taco\widgets\_panel.scss" />
     <None Include="Scripts\resources\scss\taco\widgets\_standaloneAccordion.scss" />
     <None Include="Scripts\resources\scss\taco\widgets\_themes.scss" />
     <None Include="Scripts\app\mocks\discounts.json" />
