@@ -8,6 +8,7 @@ Ext.define('Taco.core.ux.simplegrid.Grid', {
 
     autoEl: { tag: 'table' },
     baseCls: Taco.baseCSSPrefix + 'simplegrid',
+    itemSelector: 'tr.taco-simplegrid-row',
 
     cellCls: Taco.baseCSSPrefix + 'simplegrid-cell',
 
