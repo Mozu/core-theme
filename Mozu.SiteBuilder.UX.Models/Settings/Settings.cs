@@ -7,6 +7,13 @@ using System.Text.RegularExpressions;
 namespace Mozu.SiteBuilder.UX.Models.Settings
 {
     [DataContract]
+    public class WebmasterToolsSettings : ModelBase
+    {
+        [DataMember(Name = "metaTag")]
+        public string MetaTag { get; set; }
+    }
+
+    [DataContract]
     public class PaymentSettings
     {
         [DataMember(Name = "supportedCards")]
