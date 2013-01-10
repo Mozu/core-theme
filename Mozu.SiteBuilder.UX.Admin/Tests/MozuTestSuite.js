@@ -310,6 +310,27 @@ Harness.start(
                     }
                 ]*/
             }, {
+                group: 'Views',
+                expanded: false,
+                items: [
+                    {
+                        group: 'General Settings',
+                        expanded: false,
+                        items: [
+                            {
+                                url: "unit/disabling-google-analytics-disables-ua-field.js",
+                                waitForAppReady: true,
+                                title: "Disabling Google Analytics Disables UA Field"
+                            },
+                            {
+                                url: "enabling-robots-txt-override-enabled-robots-field.js",
+                                waitForAppReady: true,
+                                title: "Enabling Robots.txt override Enables Robots Override Textarea"
+                            }
+                        ]
+                    }
+                ]
+            }, {
                 url: "unit/app-state-matches-uri.t.js",
                 waitForAppReady: true,
                 // separateContext: true,
