@@ -1,6 +1,6 @@
 @mixin taco-viewport {
   .#{$prefix}body {
-    background-color: $color-neutral-lightest;
+    background-color: $color-neutral-white; // old: $color-neutral-lightest
   }
   .#{$vprefix}viewport-header {
     @include box-shadow(0px -1px 6px $color-neutral-black);
@@ -122,6 +122,7 @@
         border-width: 0px;
         cursor: default;
         font-size: 16px;
+        position: relative;
 
         .edit {
           background-color: crimson;
