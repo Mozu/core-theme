@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
             builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>();
 
-            builder.RegisterType<MozuReferenceWebApiClient>().As<IReferenceDataWebApiClient>();
+            builder.RegisterType<ReferenceDataWebApiClient>().As<IReferenceDataWebApiClient>();
 
             builder.RegisterType<RoutableShippingWebApiClient>().As<IShippingWebApiClient>();
             builder.RegisterType<ShippingClassWebApiClient>().As<IShippingClassWebApiClient>();
