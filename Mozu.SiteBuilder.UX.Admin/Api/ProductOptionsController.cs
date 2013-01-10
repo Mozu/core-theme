@@ -7,11 +7,9 @@ using DC = Mozu.ProductAdmin.Contracts;
 //using DC = Volusion.Attribute.Contracts.Administration;
 using Mozu.ProductAdmin.Contracts.Clients;
 using System.ServiceModel.Web;
-using System.Net.Http;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Options;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using AutoMapper;
-using Mozu.ProductAdmin.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {

@@ -5,7 +5,6 @@ using Mozu.Core.Extensions;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Filters;
 using AccountApi = Mozu.SiteBuilder.UX.Admin.Api.AccountController;
 
@@ -18,7 +17,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
         private readonly ISitesWebApiClient _sitesWebApiClient;
-        private DjangoMozuViewEngine _viewEngine;
 
         public HomeController( AccountApi accountApi, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ISitesWebApiClient sitesWebApiClient)
         {

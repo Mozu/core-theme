@@ -179,7 +179,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 {
                     return ret;
                 }
-                bool contentGet = false;
                 //var rm = new HttpResponseMessage()
                 //             {
                                  

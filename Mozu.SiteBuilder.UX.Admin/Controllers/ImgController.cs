@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Web;
@@ -176,8 +175,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 Tuple<string, Stream> tpl = null;
                 try
                 {
-                    string filename = null;
-
                     tpl = GetFromFSCache(collection, documentId);
                     if (tpl == null)
                     {
@@ -196,10 +193,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                         }
 
                     }
-                }
-                catch (Exception ee)
-                {
-                    throw;
                 }
                 finally
                 {
