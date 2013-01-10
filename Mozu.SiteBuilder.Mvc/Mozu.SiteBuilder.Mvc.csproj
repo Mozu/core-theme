@@ -206,7 +206,7 @@
     </Reference>
     <Reference Include="Mozu.Reference.Contracts">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Reference.Contracts.1.0.12341.1\lib\Mozu.Reference.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Reference.Contracts.1.0.13008.2\lib\Mozu.Reference.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
