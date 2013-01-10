@@ -212,14 +212,14 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.0.0.12339.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.0.0.12356.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.0.0.12339.2\lib\Mozu.ProductRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.0.0.12342.1\lib\Mozu.ProductRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Customer.Contracts">
-      <HintPath>..\packages\Mozu.Customer.Contracts.0.0.12338.1\lib\Mozu.Customer.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Customer.Contracts.0.0.12355.1\lib\Mozu.Customer.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Reference.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
