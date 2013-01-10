@@ -283,11 +283,6 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Volusion.NDjango.Nuget">
-      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\net40\Volusion.NDjango.Nuget.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
