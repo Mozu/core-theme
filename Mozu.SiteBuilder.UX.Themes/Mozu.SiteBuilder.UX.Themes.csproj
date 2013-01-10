@@ -171,29 +171,29 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Cart.Contracts.0.0.12339.5\lib\Mozu.Cart.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Content.Contracts">
-      <HintPath>..\packages\Mozu.Content.Contracts.1.0.12346.1\lib\Mozu.Content.Contracts.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Mozu.Content.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Content.Contracts.1.0.13010.1\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.0.0.12356.1\lib\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.0.0.13010.1\lib\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.0.0.12356.1\lib\Mozu.Core.Api.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.0.0.13010.2\lib\Mozu.Core.Api.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Client, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.Client.0.0.12356.2\lib\Mozu.Core.Api.Client.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.Client.0.0.13004.1\lib\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.Api.Contracts.0.0.13008.2\lib\Mozu.Core.Api.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Customer.Contracts">
-      <HintPath>..\packages\Mozu.Customer.Contracts.0.0.12355.1\lib\Mozu.Customer.Contracts.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Mozu.Customer.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Customer.Contracts.0.0.13007.1\lib\Mozu.Customer.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.CustomShippingRates.Contracts">
       <HintPath>..\packages\Mozu.CustomShippingRates.Contracts.0.0.12339.6\lib\Mozu.CustomShippingRates.Contracts.dll</HintPath>
@@ -207,9 +207,9 @@
     <Reference Include="Mozu.Tenant.Contracts">
       <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.12361.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.User.Contracts">
-      <HintPath>..\packages\Mozu.User.Contracts.1.0.12355.1\lib\Mozu.User.Contracts.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Mozu.User.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.User.Contracts.1.0.13007.1\lib\Mozu.User.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40">
       <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.10\lib\NDjango.Core40.dll</HintPath>

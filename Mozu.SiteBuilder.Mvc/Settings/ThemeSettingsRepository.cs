@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         {
             var doc = _docWebApiClient.Get("settings", id, null, null).Result.ReadAsSync();
             doc.Set("title", DateTime.Now.Ticks.ToString());
-            var res  = _docWebApiClient.Update("settings", id, null, doc).Result;
+            var res  = _docWebApiClient.Update("settings", id, doc).Result;
             if (res.HasException )
             {
                 throw res.ReadException();
@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             {
                 _serializer.WriteObject(stream, values);
                 stream.Position = 0;
-                using (var updateTask = _docWebApiClient.UpdateDocumentContent("settings", documentId/*, stream*/))
+                using (var updateTask = _docWebApiClient.UpdateDocumentContent("settings", documentId, stream ))
                 {
                     if (updateTask.Result.HasException)
                         throw updateTask.Result.ReadException();

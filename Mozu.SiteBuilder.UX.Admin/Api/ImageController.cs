@@ -136,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             using(var fs = fileinfo.OpenRead())
             {
-                result = _docRepo.UpdateDocumentContent("files", docid/*, fs*/).Result.ResponseMessage;                
+                result = _docRepo.UpdateDocumentContent("files", docid, fs).Result.ResponseMessage;                
             }
 
             return Message<string>(result.IsSuccessStatusCode, "File uploaded");

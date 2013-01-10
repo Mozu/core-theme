@@ -164,7 +164,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             using(var fs = fileinfo.OpenRead())
             {
-                result = _docClient.UpdateDocumentContent("files", docid/*, fs*/).Result.ResponseMessage;                
+                result = _docClient.UpdateDocumentContent("files", docid , fs).Result.ResponseMessage;                
             }
 
             return Message<string>(result.IsSuccessStatusCode, "File uploaded");
@@ -223,7 +223,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var dm = _docClient.Get("files", file.id, null, CmsConstants.Documents.doc_state_active ).Result.ReadAsSync();
                 dm.Name = file.name;
                 dm.FolderId = file.folderId;
-                var ret = _docClient.Update ( "files", dm.Id, CmsConstants.Documents.doc_state_active, dm).Result.ReadAsSync();
+                var ret = _docClient.Update ( "files", dm.Id,  dm).Result.ReadAsSync();
 
                 var vm = Mapper.Map<FileManagementFile>(ret);
                 vms.Add(vm);
