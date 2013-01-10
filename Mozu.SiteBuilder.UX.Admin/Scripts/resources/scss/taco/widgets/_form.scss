@@ -29,19 +29,38 @@
   .#{$vprefix}formeditor {
 
     .#{$vprefix}formeditor {
-      border: 1px solid $color-grid-border;
-      @include border-radius(4px);
 
       > .#{$prefix}panel-header {
-        border: 0px none;
-        padding: 14px;
+        border-color: $color-grid-border;
+        border-style: none none dashed;
+        border-width: 0px 0px 1px !important;
+        padding: 14px 14px 7px;
         @include background(none transparent);
         @include box-shadow(none);
 
         .#{$prefix}panel-header-text {
           color: $color;
+          font-size: 18px;
           font-weight: normal;
+          line-height: 1em;
         }
+      }
+
+      > .#{$prefix}panel-body {
+        border-top: 1px dashed $color-neutral-white;
+      }
+    }
+  }
+
+  .#{$vprefix}formeditor-links {
+    background-color: $color-neutral-lightest;
+
+    ul {
+      margin: 7px 21px;
+      position: fixed;
+
+      li {
+        margin-top: 14px;
       }
     }
   }
