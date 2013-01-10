@@ -93,6 +93,96 @@ Ext.define('Taco.view.generalsettings.Index', {
             items: [me.timeZoneSelect, me.timeFormatSelect]
         });
 
+        me.analytics = Ext.create('Ext.form.Panel', {
+            title: 'Google Analytics',
+            titleCollapse: true,
+            collapsible: true,
+            collapsed: true,
+            collapseMode: 'header',
+            header: {
+                border: '0 0 0 0'
+            },
+            defaults: {
+                labelAlign: 'top',
+                width: 450,
+                margin: '0 0 15 15'
+            },
+            items: [
+                {
+                    xtype: 'textfield',
+                    itemId: 'googleAnalyticsId',
+                    name: 'googleAnalyticsId',
+                    fieldLabel: "User Account (UA#)",
+                    value: me.settings.googleAnalyticsId,
+                    disabled: !me.settings.googleAnalyticsEnabled
+                },
+                {
+                    xtype: 'checkbox',
+                    name: 'googleAnalyticsEnabled',
+                    boxLabel: 'Enable Google Analytics on your storefront',
+                    boxLabelAlign: 'after',
+                    checked: me.settings.googleAnalyticsEnabled,
+                    listeners: {
+                        change: function (cmp, isChecked) {
+                            me.analytics.getComponent('googleAnalyticsId').setDisabled(!isChecked);
+                        }
+                    }
+                },
+                {
+                    xtype: 'checkbox',
+                    name: 'googleAnalyticsEcomEnabled',
+                    boxLabel: 'Enable <a target="_blank" href="https://developers.google.com/analytics/devguides/collection/gajs/gaTrackingEcommerce">Google Analytics eCommerce transaction tracking</a>',
+                    boxLabelAlign: 'after',
+                    checked: me.settings.googleAnalyticsEcomEnabled
+                }
+            ],
+            listeners: {
+                dirtychange: me.onFormStateChange,
+                scope: me
+            }
+        });
+
+        me.robots = Ext.create('Ext.form.Panel', {
+            title: 'BEEP BOOP RO BOTS',
+            titleCollapse: true,
+            collapsible: true,
+            collapsed: true,
+            collapseMode: 'header',
+            header: {
+                border: '0 0 0 0'
+            },
+            defaults: {
+                labelAlign: 'top',
+                width: 450,
+                margin: '0 0 15 15'
+            },
+            items: [
+                {
+                    xtype: 'textarea',
+                    name: 'robotsOverride',
+                    itemId: 'robotsOverride',
+                    fieldLabel: "ROBOTS.TXT Contents",
+                    value: me.settings.robotsOverrideEnabled ? me.settings.robotsOverride : 'User-agent: *',
+                    disabled: !me.settings.robotsOverrideEnabled
+                },
+                {
+                    xtype: 'checkbox',
+                    name: 'robotsOverrideEnabled',
+                    boxLabel: 'Override the site default ROBOTS.TXT',
+                    boxLabelAlign: 'after',
+                    checked: me.settings.robotsOverrideEnabled,
+                    listeners: {
+                        change: function (cmp, isChecked) {
+                            me.robots.getComponent('robotsOverride').setDisabled(!isChecked);
+                        }
+                    }
+                }
+            ],
+            listeners: {
+                dirtychange: me.onFormStateChange,
+                scope: me
+            }
+        });
         me.about = Ext.create('Ext.form.Panel', {
             title: 'About My Website',
             titleCollapse: true,
@@ -283,10 +373,10 @@ Ext.define('Taco.view.generalsettings.Index', {
             }
         });
 
-        me.sections = [me.about, me.notifications];
+        me.sections = [me.about, me.notifications, me.analytics, me.robots];
 
         me.body = {
-            items: [me.about, me.ipAddresses, me.notifications]
+            items: [me.about, me.ipAddresses, me.notifications, me.analytics, me.robots]
         };
 
         me.callParent(arguments);
