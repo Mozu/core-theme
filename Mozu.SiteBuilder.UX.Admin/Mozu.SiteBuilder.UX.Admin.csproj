@@ -488,13 +488,17 @@
     <Content Include="Scripts\app\locale\Strings.js" />
     <None Include="Scripts\app\mocks\behaviors.json" />
     <Content Include="Scripts\app\model\Behavior.js" />
+    <Content Include="Scripts\app\model\CartItem.js" />
+    <Content Include="Scripts\app\model\Cart.js" />
     <Content Include="Scripts\app\model\LocalizedString.js" />
     <Content Include="Scripts\app\model\RuntimeProduct.js" />
     <Content Include="Scripts\app\model\RuntimeProductSearchResult.js" />
     <Content Include="Scripts\app\model\SimplegridColumn.js" />
     <Content Include="Scripts\app\store\Behaviors.js" />
+    <Content Include="Scripts\app\store\CartItems.js" />
     <Content Include="Scripts\app\store\Orders.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
+    <Content Include="Scripts\app\view\phoneOrder\CartSection.js" />
     <Content Include="Scripts\app\view\phoneOrder\Index.js" />
     <Content Include="Scripts\app\view\role\BehaviorsForm.js" />
     <Content Include="Scripts\app\view\role\Edit.js" />
