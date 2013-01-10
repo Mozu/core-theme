@@ -325,6 +325,7 @@
     <Compile Include="CMS\PageTypeProvider.cs" />
     <Compile Include="CMS\ProvisionHelper.cs" />
     <Compile Include="CMS\ISessionDocumentStore.cs" />
+    <Compile Include="CMS\WebToolsRepository.cs" />
     <Compile Include="CMS\WidgetProvider.cs" />
     <Compile Include="Configuration\AutofacModule.cs" />
     <Compile Include="Customers\AccountContactRepository.cs" />
