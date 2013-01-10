@@ -6,11 +6,22 @@ using System.Text.RegularExpressions;
 
 namespace Mozu.SiteBuilder.UX.Models.Settings
 {
+    public interface IWebToolsSetting
+    {
+    }
+
     [DataContract]
-    public class WebmasterToolsSettings : ModelBase
+    public class WebmasterToolsSettings : ModelBase, IWebToolsSetting
     {
         [DataMember(Name = "metaTag")]
         public string MetaTag { get; set; }
+    }
+
+    [DataContract]
+    public class RobotsTxtSettings : ModelBase, IWebToolsSetting
+    {
+        [DataMember(Name = "content")]
+        public string Content { get; set; }
     }
 
     [DataContract]
