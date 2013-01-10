@@ -210,6 +210,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.ProductAdmin.Contracts.0.0.12356.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
+    <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.0.0.12342.1\lib\Mozu.ProductRuntime.Contracts.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.Provisioning.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Provisioning.Contracts.1.0.12356.1\lib\Mozu.Provisioning.Contracts.dll</HintPath>
@@ -391,6 +395,7 @@
     <Compile Include="Api\Models\Checkout\GatewayCredentialFieldValue.cs" />
     <Compile Include="Api\Models\Checkout\OrderProcessingSettings.cs" />
     <Compile Include="Api\Models\Checkout\PaymentSetting.cs" />
+    <Compile Include="Api\Models\PhoneOrder\RuntimeProduct.cs" />
     <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
     <Compile Include="Api\Models\ProductModels\ProductListItem.cs" />
     <Compile Include="Api\Models\Response.cs" />
@@ -421,6 +426,7 @@
     <Compile Include="Api\OrderController.cs" />
     <Compile Include="Api\PageTypeDefinitionController.cs" />
     <Compile Include="Api\CheckoutSettingsController.cs" />
+    <Compile Include="Api\PhoneOrderController.cs" />
     <Compile Include="Api\RolesController.cs" />
     <Compile Include="Api\PermissionsController.cs" />
     <Compile Include="Api\ProductController.cs" />

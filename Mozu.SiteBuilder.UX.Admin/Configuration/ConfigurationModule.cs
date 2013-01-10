@@ -79,6 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             builder.RegisterType<RoleWebApiClient>().As<IRoleWebApiClient>();
             builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
+            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductRuntime.Contracts.Clients.ProductRuntimeWebApiClient).Assembly);
         }
 
 
