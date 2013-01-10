@@ -385,7 +385,6 @@
     <Content Include="Themes\Cantaloupe2\Resources\Images\orangeBanner.jpg" />
     <Content Include="Themes\Core3\MetaData\example.build.js" />
     <Content Include="Themes\Core3\Resources\Images\mozu-error.png" />
-    <Content Include="Themes\Core3\Resources\Scripts\depend.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-cart.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\images-gallery.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\loading-bars.js" />
