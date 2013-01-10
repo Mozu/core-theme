@@ -119,6 +119,7 @@ Ext.define('Taco.view.generalsettings.Index', {
                 {
                     xtype: 'checkbox',
                     name: 'googleAnalyticsEnabled',
+                    itemId: 'googleAnalyticsEnabled',
                     boxLabel: 'Enable Google Analytics on your storefront',
                     boxLabelAlign: 'after',
                     checked: me.settings.googleAnalyticsEnabled,
@@ -168,6 +169,7 @@ Ext.define('Taco.view.generalsettings.Index', {
                 {
                     xtype: 'checkbox',
                     name: 'robotsOverrideEnabled',
+                    itemId: 'robotsOverrideEnabled',
                     boxLabel: 'Override the site default ROBOTS.TXT',
                     boxLabelAlign: 'after',
                     checked: me.settings.robotsOverrideEnabled,
