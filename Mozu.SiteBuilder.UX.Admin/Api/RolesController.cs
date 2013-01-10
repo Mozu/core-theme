@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public Task<Response<List<Mozu.SiteBuilder.UX.Models.Users.BehaviorTree.BehaviorTreeNode >>> GetRoleBehaviors( FilterCollection extFilter)
         {
             int roleId = extFilter.GetValue("roleId", 0);
-            var roleBehavior = _permissionsRepository.GetRoleBehavior(extFilter.GetValue("roleId",0));
+            var roleBehavior = _permissionsRepository.GetRoleBehavior(roleId);
 
             var tree = _permissionsRepository.GetBehaviorTree();
         
@@ -36,13 +36,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "/edit", Method = "POST")]
         public Task<Response<List<RoleBehavior>>> EditRoleBehaviors([FromBody] List<RoleBehavior> behaviors)
         {
-            List<RoleBehavior> retList = new List<RoleBehavior>();
+            var serverRole = _permissionsRepository.GetRole(behaviors.First().RoleId);
+
+            
+
+            
             foreach (var beh in behaviors)
             {
-                retList.Add(_permissionsRepository.UpdateRoleBehavior(beh));
+                var foundBeh = serverRole.Behaviors.FirstOrDefault(x=> x.Id ==beh.Id);
+                if (foundBeh == null && beh.IsGranted.GetValueOrDefault(false))
+                {
+                    foundBeh= new Behavior()
+                                  {
+                                      Id = beh.Id 
+                                  };
+                    serverRole.Behaviors.Add(foundBeh);
+                }
+                else
+                {
+                    serverRole.Behaviors.Remove(foundBeh);
+                }
+                
+                
             }
 
-            return this.List<RoleBehavior>(retList);
+            _permissionsRepository.UpdateRole(serverRole);
+
+
+            return this.List<RoleBehavior>(behaviors);
         }
     }
 

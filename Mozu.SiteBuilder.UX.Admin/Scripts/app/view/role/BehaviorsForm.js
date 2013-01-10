@@ -15,6 +15,7 @@ Ext.define('Taco.view.role.BehaviorsForm', {
                 value: this.roleId
             }]
         });
+        this.stores = [this.store];
         this.buildFormComponents();
         this.callParent(arguments);
     },
