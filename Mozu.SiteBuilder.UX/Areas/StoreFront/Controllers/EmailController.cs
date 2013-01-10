@@ -174,7 +174,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         	var v = Page("email", emailTypeInfo.CmsDoc );
             object cmdContent = null;
         	var vr = v as ViewResult;
-			if (vr !=null && !(vr is HttpNotFoundResult))
+			if (vr !=null)
 			{
 				//ViewData["content"] = vr.Model;
 			    cmdContent = vr.Model;

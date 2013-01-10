@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.UX.Controllers;
 using Newtonsoft.Json.Linq;
-using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Localization;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers

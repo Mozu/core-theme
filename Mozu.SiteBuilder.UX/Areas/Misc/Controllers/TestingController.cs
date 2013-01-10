@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -12,13 +8,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
     public class TestingController : Mozu.SiteBuilder.UX.Controllers.BaseController
     {
-
-        ISiteBuilderContext SiteContext;
-        public TestingController(ISiteBuilderContext sbContext)
-        {
-            SiteContext = sbContext;
-        }
-
         ISitesWebApiClient WSRepo;
         public TestingController(ISitesWebApiClient  wsRepo )
         {

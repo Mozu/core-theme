@@ -8,12 +8,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
 	public class ScriptController : BaseController
 	{
-        ISiteBuilderContext SiteContext;
-        public ScriptController(ISiteBuilderContext sbContext)
-        {
-            SiteContext = sbContext;
-        }
-
 		public ActionResult Add(string scriptName)
 		{
 			var scripts = (List<string>) SiteBuilderContext.Current["scripts"];

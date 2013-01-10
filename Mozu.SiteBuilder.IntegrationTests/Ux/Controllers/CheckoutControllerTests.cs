@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web.Mvc;
+using NSubstitute;
 using NUnit.Framework;
 using Should;
 using Mozu.SiteBuilder.Mvc;
@@ -12,7 +13,6 @@ using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteBuilder.UX.Configuration;
 using Mozu.SiteBuilder.UX.Models.Checkout;
-using Mozu.SiteBuilder.UX.Models.Orders;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Ux.Controllers
 {
@@ -20,24 +20,21 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Controllers
     public class CheckoutControllerTests
     {
         private IOrderService orderService;
-        private Mozu.SiteBuilder.UX.Models.Orders.Order order;
+        private OrderInformation order;
 
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
             var profile = new OrderMapping();
             AutoMapper.Mapper.AddProfile(profile);
-            //AutoMapper.Mapper.AssertConfigurationIsValid(profile.ProfileName);
         }
 
         [SetUp]
         public void SetUp()
         {
-            order = new Mozu.SiteBuilder.UX.Models.Orders.Order();
-
-            var orderServiceMock = new NUnit.Mocks.DynamicMock(typeof (IOrderService));
-            orderServiceMock.SetReturnValue("GetOrder", order);
-            orderService = orderServiceMock.MockInstance as IOrderService;
+            order = new OrderInformation();
+            orderService = Substitute.For<IOrderService>();
+            orderService.GetOrder(Arg.Any<string>()).Returns(order);
         }
 
         [Test, Ignore("Lots of underlying features changed since this test was first written. It probably needs to be removed and other parts tested. I'm not even sure it's a useful test any longer.")]

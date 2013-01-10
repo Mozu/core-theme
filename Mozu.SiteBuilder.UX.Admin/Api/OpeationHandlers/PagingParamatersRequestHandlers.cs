@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Web;
-using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -30,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers
 
                 return true;
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 return false;
             }

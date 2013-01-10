@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
-using System.Threading.Tasks;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts;
-using Mozu.PaymentService.Contracts.Clients.Public;
 using Mozu.Provisioning.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
-using Mozu.Core.Api.Contracts.Client;
-using Mozu.Core;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
-using Mozu.SiteBuilder.UX.Admin.Api;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
-using Mozu.User.Contracts;
-using Mozu.User.Contracts.Clients;
 using Role = Mozu.Core.Api.Contracts.Role;
-using User = Mozu.Core.Api.Contracts.User;
 using AccountApi = Mozu.SiteBuilder.UX.Admin.Api.AccountController;
 using IAuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.IAuthTicketWebApiClient;
 using IInvitationWebApiClient = Mozu.AdminUser.Contracts.Clients.IInvitationWebApiClient;
@@ -39,7 +29,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private IAuthenticationHelper _authenticationHelper;
         private ISitesWebApiClient _sitesWebApiClient;
         private IInvitationWebApiClient _invitationWebApiClient;
-        private IMerchantSignUpWebApiClient _merchantSignUpWebApiClient;
+        //private IMerchantSignUpWebApiClient _merchantSignUpWebApiClient;
         private IAdminUserWebApiClient _adminUserWebApiClient;
         private ISiteBuilderContext _siteBuilderContext;
 
@@ -189,7 +179,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private AccountApi GetApi()
         {
             return new AccountApi(_userWebApiClient, _roleWebApiClient, _authTicketWebApiClient, _tenantsWebApiClient, _authenticationHelper,
-                _sitesWebApiClient, _invitationWebApiClient, _merchantSignUpWebApiClient, _adminUserWebApiClient, _siteBuilderContext);
+                _sitesWebApiClient, _invitationWebApiClient, /*_merchantSignUpWebApiClient*/null, _adminUserWebApiClient, _siteBuilderContext);
         }
     }
 }

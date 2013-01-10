@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,11 +8,9 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.Content.Contracts.Clients;
 using DC = Mozu.Content.Contracts;
 using System;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
-using Mozu.Content.Contracts;
 using Mozu.SiteBuilder.Mvc.CMS;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api

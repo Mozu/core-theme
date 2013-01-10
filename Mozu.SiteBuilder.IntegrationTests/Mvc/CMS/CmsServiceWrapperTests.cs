@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using NSubstitute;
+using NUnit.Framework;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -15,6 +16,17 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.CMS
         private ICmsTypeHelper _cmsTypeHelper;
         private IFolderWebApiClient _folderWebApiClient;
         private IFacetsWebApiClient _facetsWebApiClient;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _documentWebApiClient = Substitute.For<IDocumentWebApiClient>();
+            _apiContext = Substitute.For<IApiContext>();
+            _provisingHelper = Substitute.For<IProvisioningHelper>();
+            _cmsTypeHelper = Substitute.For<ICmsTypeHelper>();
+            _folderWebApiClient = Substitute.For<IFolderWebApiClient>();
+            _facetsWebApiClient = Substitute.For<IFacetsWebApiClient>();
+        }
 
         [Test, Ignore("TODO: Write tests for this fixture")]
         public void TEST()
