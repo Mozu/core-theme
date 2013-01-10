@@ -386,7 +386,6 @@
     <Content Include="Themes\Core3\MetaData\example.build.js" />
     <Content Include="Themes\Core3\Resources\Images\mozu-error.png" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-cart.js" />
-    <Content Include="Themes\Core3\Resources\Scripts\Modules\images-gallery.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\loading-bars.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\login-links.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\tagcloud.js" />
@@ -406,7 +405,6 @@
     <Content Include="Themes\Core3\Resources\Scripts\Modules\actions-processor.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\animatemodals.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\knockout-plus.js" />
-    <Content Include="Themes\Core3\Resources\Scripts\Modules\ko-component.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-product.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\product-images.js" />
     <Content Include="Themes\Core3\Resources\Scripts\nls\fr\messages-checkout.js" />
