@@ -40,10 +40,6 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <!-- Customizable Output Directory Opt-In for TFS Build (non-web application projects) -->
-  <PropertyGroup Condition="$(TeamBuildOutDir) != '' ">
-    <OutputPath>$(TeamBuildOutDir)\$(MSBuildProjectName)</OutputPath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CI|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\CI\</OutputPath>
@@ -97,6 +93,10 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <!-- Customizable Output Directory Opt-In for TFS Build (non-web application projects) -->
+  <PropertyGroup Condition="$(TeamBuildOutDir) != '' ">
+    <OutputPath>$(TeamBuildOutDir)\$(MSBuildProjectName)</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac">
@@ -202,6 +202,7 @@
     <Reference Include="Mozu.Provisioning.Contracts">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Provisioning.Contracts.1.0.12356.1\lib\Mozu.Provisioning.Contracts.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="Mozu.Reference.Contracts">
       <SpecificVersion>False</SpecificVersion>
