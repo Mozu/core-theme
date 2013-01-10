@@ -188,11 +188,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public AdminUser2 GetCurrentUser()
         {
             var token = _authHelper.GetCurrentProfileToken();
-
+            
             if (token != null && !string.IsNullOrEmpty(token.UserId))
             {
                 var res = _usersRepo.GetUser(token.UserId, null).Result;
-                if (res.ResponseMessage != null && res.ResponseMessage.StatusCode != HttpStatusCode.NotFound)
+                if (!res.HasException && res.ResponseMessage != null && res.ResponseMessage.StatusCode != HttpStatusCode.NotFound)
                 {
                     return Mapper.Map<AdminUser2>(res.ReadAsAsync().Result);
                 }
