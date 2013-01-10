@@ -177,7 +177,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 //hack for roeder....
                 //d.Properties.ForEach(x => ToPropertyValue(new AVM.DocumentProperty() { Key = x.PropertyType, Value = x.Value }, x));
 
-                tasks.Add(_docRepo.Update(doc.CollectionName, doc.DocumentId, null, d).ContinueWith < DC.Document>(x => x.Result.ReadAsSync ()));
+                tasks.Add(_docRepo.Update(doc.CollectionName, doc.DocumentId , d).ContinueWith < DC.Document>(x => x.Result.ReadAsSync ()));
             }
             return tasks;
 
@@ -185,7 +185,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetList(CmsListRequest request)
         {
-            return _docRepo.List( request.Collection, request.ToFilterString (), request.Recurse,  CmsConstants.Documents.doc_state_active , request.ToSortString (), request.PageSize, request.StartIndex );
+            return _docRepo.List( request.Collection, request.ToFilterString (), null, request.Recurse,  CmsConstants.Documents.doc_state_active , request.ToSortString (), request.PageSize, request.StartIndex );
         }
         public Task <ServiceClientResponse<DC.Document>> GetByPath ( string contentCollection , string name, string folderPath )
         {
@@ -353,7 +353,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetList(string contentCollection = null, string filter = null, bool? recurseFolders = null, string status = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0)
         {
-            return _docRepo.List(contentCollection, filter, recurseFolders, status, sortBy, pageSize, startIndex);
+            return _docRepo.List(contentCollection, filter, null, recurseFolders, status, sortBy, pageSize, startIndex);
         }
 
 
