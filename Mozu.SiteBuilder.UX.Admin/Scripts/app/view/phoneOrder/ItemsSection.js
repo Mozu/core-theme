@@ -1,11 +1,10 @@
 ﻿/**
- * @class Taco.view.phoneOrder.CartSection
+ * @class Taco.view.phoneOrder.ItemsSection
  * @author James Zetlen
  */
-Ext.define('Taco.view.phoneOrder.CartSection', {
+Ext.define('Taco.view.phoneOrder.ItemsSection', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.core.ux.simplegrid.Grid'],
-  
     title: 'Cart',
     tbar: [
         {
@@ -35,22 +34,30 @@ Ext.define('Taco.view.phoneOrder.CartSection', {
     ],
     initComponent: function () {
         var me = this;
+        Ext.define('fakeProduct', {
+            extend: 'Ext.data.Model',
+            fields: ['fakeName']
+        });
 
+
+        var fakeProductStore = Ext.create('Ext.data.Store', {
+            model: 'fakeProduct',
+            data: [
+                { fakeName: 'one' },
+                { fakeName: 'two' },
+                { fakeName: 'three' }
+            ]
+        });
         this.items = [
             {
                 xtype: 'simplegrid',
-
-        Ext.applyIf(this, {
-            items: [{
-                xtype: 'simplegrid',
-                store: fakeProductStore,
+                store: Taco.core.data.StoreManager.getOrCreate({ type: 'Taco.store.OrderItems', clearFilters: true, clearSort: true }),
                 columns: [{
                     dataIndex: 'fakeName',
                     text: 'Product',
                     editable: false
                 }]
-            }]
-        });
+            }];
 
         this.callParent(arguments);
     }

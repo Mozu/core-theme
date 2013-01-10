@@ -58,6 +58,14 @@ Ext.define('Taco.model.OrderItem', {
         "useNull": true
     }],
 
+    associations: [
+        {
+            type: 'hasOne',
+            model: 'Taco.model.Product',
+            foreignKey: 'product'
+        }
+    ],
+
     proxy: {
         type: 'ajaxproxy',
         api: {

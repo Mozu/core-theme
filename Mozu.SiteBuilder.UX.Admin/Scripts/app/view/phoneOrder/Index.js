@@ -4,29 +4,16 @@
  */
 Ext.define('Taco.view.phoneOrder.Index', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Taco.core.ux.form.Form', 'Taco.view.phoneOrder.CartSection'],
+    requires: ['Taco.core.ux.form.Form', 'Taco.view.phoneOrder.ItemsSection'],
 
     header: {
         title: 'Phone Orders'
     },
 
     initComponent: function () {
-        var me = this,
-            fakeProductStore;
+        var me = this;
 
-        Ext.define('fakeProduct', {
-            extend: 'Ext.data.Model',
-            fields: ['fakeName']
-        });
-
-        fakeProductStore = Ext.create('Ext.data.Store', {
-            model: 'fakeProduct',
-            data: [
-                { fakeName: 'one' },
-                { fakeName: 'two' },
-                { fakeName: 'three' }
-            ]
-        });
+        var itemsSection = Ext.create('Taco.view.phoneOrder.ItemsSection');
 
         this.form = Ext.create('Taco.core.ux.form.Form', {
             manageHeight: false,
@@ -49,18 +36,7 @@ Ext.define('Taco.view.phoneOrder.Index', {
                         { boxLabel: 'New', name: 'customerStatus', inputValue: 1 }
                     ]
                 }]
-            }, {
-                title: 'Cart',
-                items: [{
-                    xtype: 'simplegrid',
-                    store: fakeProductStore,
-                    columns: [{
-                        dataIndex: 'fakeName',
-                        text: 'Product',
-                        editable: false
-                    }]
-                }]
-            }, {
+            }, itemsSection, {
                 title: 'Shipping',
                 bodyCls: Taco.baseCSSPrefix + 'flexform',
                 items: [{
