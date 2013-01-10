@@ -35,6 +35,9 @@ namespace Mozu.SiteBuilder.UX.Models.Users
 
         [DataMember(Name = "children")]
         public List<int> Children { get; set; }
+
+        [DataMember(Name = "checked")]
+        public bool? IsGranted { get; set; }
     }
 
     [DataContract]
