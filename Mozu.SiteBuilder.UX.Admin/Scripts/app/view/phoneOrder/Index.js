@@ -4,7 +4,7 @@
  */
 Ext.define('Taco.view.phoneOrder.Index', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Taco.core.ux.form.Form', 'Taco.core.ux.simplegrid.Grid'],
+    requires: ['Taco.core.ux.form.Form', 'Taco.view.phoneOrder.CartSection'],
 
     header: {
         title: 'Phone Orders'
