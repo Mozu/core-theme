@@ -348,12 +348,10 @@
     <Content Include="Themes\RESTCore\Resources\Scripts\Modules\images-gallery.js" />
     <Content Include="Themes\RESTCore\Resources\Scripts\Modules\jquery-sitemenu.js" />
     <Content Include="Themes\RESTCore\Resources\Scripts\Modules\knockout-plus.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\knockout-viewmodel.js" />
     <Content Include="Themes\RESTCore\Resources\Scripts\Modules\loading-bars.js" />
     <Content Include="Themes\RESTCore\Resources\Scripts\Modules\login-links.js" />
     <Content Include="Themes\RESTCore\Resources\Scripts\Modules\mixin-events.js" />
     <Content Include="Themes\RESTCore\Resources\Scripts\Modules\models-cart.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\models-checkout.js" />
     <Content Include="Themes\RESTCore\Resources\Scripts\Modules\models-product.js" />
     <Content Include="Themes\RESTCore\Resources\Scripts\Modules\product-images.js" />
     <Content Include="Themes\RESTCore\Resources\Scripts\Modules\tagcloud.js" />
