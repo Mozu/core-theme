@@ -11,7 +11,8 @@
         test.ok(settingsUI, "Settings UI successfully created");
         var gaCheckbox = settingsUI.analytics.getComponent('googleAnalyticsEnabled');
         test.ok(gaCheckbox, "GA checkbox exists");
-        test.ok(gaCheckbox.getValue(), "GA checkbox checked");        var gaUAField = settingsUI.analytics.getComponent('googleAnalyticsId');
+        test.ok(gaCheckbox.getValue(), "GA checkbox checked");
+        var gaUAField = settingsUI.analytics.getComponent('googleAnalyticsId');
         test.ok(gaUAField, "GA UA field exists");
         test.ok(!gaUAField.isDisabled(), "GA UA field is enabled")
         test.diag("Unchecking checkbox");

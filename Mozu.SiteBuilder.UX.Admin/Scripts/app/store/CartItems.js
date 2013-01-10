@@ -1,10 +1,10 @@
 ﻿/**
- * @class Taco.store.AccountUsers
+ * @class Taco.store.OrderItems
  */
 
 
-Ext.define('Taco.store.CartItems', {
+Ext.define('Taco.store.OrderItems', {
     extend: 'Ext.data.Store',
-    model: 'Taco.model.CartItem'
+    model: 'Taco.model.OrderItem'
 });
 

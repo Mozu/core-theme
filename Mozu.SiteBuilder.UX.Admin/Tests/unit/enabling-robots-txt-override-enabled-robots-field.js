@@ -8,7 +8,7 @@
                 robotsOverrideEnabled: true
             }
         });
-        test.isaOk(settingsUI, 'Taco.view.generalsettings.Index', "Settings UI successfully created");
+        test.isaOk(settingsUI, Taco.view.generalsettings.Index, "Settings UI successfully created");
         var robotsCheckbox = settingsUI.robots.getComponent('robotsOverrideEnabled');
         test.ok(robotsCheckbox, "Robots checkbox exists");
         test.ok(robotsCheckbox.getValue(), "Robots checkbox checked");
