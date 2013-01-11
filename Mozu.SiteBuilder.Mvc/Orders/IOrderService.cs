@@ -27,6 +27,6 @@ namespace Mozu.SiteBuilder.Mvc.Orders
 
         void CreateAccount(SubmitInformation submitInformation, string orderId);
 
-        string GetMerchantId();
+        //string GetMerchantId();
     }
 }

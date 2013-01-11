@@ -180,13 +180,13 @@ namespace Mozu.SiteBuilder.Mvc.Orders
             _orderWebApiClient = new OrderWebApiClient(new ServiceClientMessageHandler2(apiContext));
         }
 
-        public string GetMerchantId()
+        /*public string GetMerchantId()
         {
             var checkoutSettings = _checkoutSettingsWebApiClient.GetCheckoutSettings().Result.ReadAsAsync().Result;
             //todo:mozu rename return checkoutSettings.PaymentServiceMerchantId;
 
             return "fart";
-        }
+        }*/
 
         public ContactInformation GetOrderContact(ProfileToken  profileToken)
         {

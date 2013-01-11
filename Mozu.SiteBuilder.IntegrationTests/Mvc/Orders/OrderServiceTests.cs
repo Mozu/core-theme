@@ -148,18 +148,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Orders
             pairs.Select(x => x.Value).ShouldEqual(new [] { "USA", "CAN" }); // TODO: There should be friendly names, this is just the rule right now...
         }
 
-        [Test]
-        public void GetMerchantId_should_come_from_checkoutSettings()
-        {
-            var id = Guid.NewGuid().ToString("n");
-            var service = GetOrderService();
-            _checkoutSettingsWebApiClient.With(x => x.GetCheckoutSettings(), new CheckoutSettings {  });
-
-            var merchId = service.GetMerchantId();
-
-            merchId.ShouldEqual(id);
-        }
-
         [TestCase(0, "abc", "")]
         [TestCase(0, "abc", "    ")]
         [TestCase(0, "abc", null)]

@@ -157,7 +157,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin
 
             var timeZones = wrapper.GetTimeZones();
 
-            CollectionAssert.AreEqual(timeZones.Select(x => x.TimeZoneId), zones.Select(x => x.Id));
+            CollectionAssert.AreEqual(timeZones.Select(x => x.Id), zones.Select(x => x.Id));
         }
 
         [Test]

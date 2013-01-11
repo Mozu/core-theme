@@ -52,25 +52,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IAuthTicketWebApiClient _authTicketRepo;
         private ITenantsWebApiClient _tenantClient;
         private readonly IAuthenticationHelper _authHelper;
-        private readonly ISitesWebApiClient _siteClient;
-        private const int VOLUSIONTENANTID = 0;
-        private const int VOLUSIONSITEID = 0;
+        private readonly IUniversalSiteApiClient _siteClient;
         private  IInvitationWebApiClient _invitationWebApiClient;
         private List<ApiRole> roles;
         private readonly  IAdminUserWebApiClient _adminUserWebApiClient;
         private ISiteBuilderContext _siteBuilderContext;
 
-        public AccountController(IAdminUserWebApiClient user, IRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, ISitesWebApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext)
+        public AccountController(IAdminUserWebApiClient user, IRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext)
         {
             _usersRepo = user;
             _rolesRepo = role;
             _authTicketRepo = auth;
             _tenantClient = tenantsClient;
             _authHelper = authHelper;
-            _siteClient = new SitesWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
+            _siteClient = siteClient;
 
 
-            // _siteClient = siteClient;
             _merchantSignUpWebApiClient = merchantSignUpWebApiClient;
             _adminUserWebApiClient = adminUserWebApiClient;
             _invitationWebApiClient = invitationWebApiClient;
@@ -163,9 +160,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             get
             {
+                if (roles != null)
+                    return roles;
+
                 var task = _rolesRepo.GetRoles();
                 var response = task.Result;
-                return (roles ?? (roles = response.ReadAsAsync().Result.Items));
+                return roles = response.ReadAsAsync().Result.Items;
             }
         }
 
