@@ -29,14 +29,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/search")]
-        public Task<Response<List<CustomerAccount>>> AdvancedSearch(PagingParamaters pagingParameters, FilterCollection extFilter)
+        public Task<Response<List<CustomerAccount>>> GetAdvancedSearch(PagingParamaters pagingParameters, FilterCollection extFilter)
         {
             // todo : hook up search pieces and create filter
             return List(_customerRepository.GetAll(0, 1, null).ToList());
         }
 
         [WebGet(UriTemplate = "/list")]
-        public Task<Response<List<CustomerAccount>>> List(PagingParamaters pagingParameters, FilterCollection extFilter)
+        public Task<Response<List<CustomerAccount>>> GetList(PagingParamaters pagingParameters, FilterCollection extFilter)
         {
             var filter = GetCustomerSearchFilter(extFilter);
 
@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/edit/{id}")]
-        public Task<Response<CustomerAccount>> Edit(int? id)
+        public Task<Response<CustomerAccount>> GetEdit(int? id)
         {
             var customer = _customerRepository.Get(id);
 
@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "/autocomplete/?query={query}&value={groupIds}")]
-        public Task<Response<List<AutoCompleteField<string>>>> Search(string query, FilterCollection extFilter, string groupIds)
+        public Task<Response<List<AutoCompleteField<string>>>> GetSearch(string query, FilterCollection extFilter, string groupIds)
         {
             var groups = _customerRepository.GetCustomerGroups(x => x.ToLower().Contains(query.ToLower()));
 
