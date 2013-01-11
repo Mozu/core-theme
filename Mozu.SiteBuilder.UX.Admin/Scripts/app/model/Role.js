@@ -1,5 +1,6 @@
 /**
  * @class Taco.model.Role
+ * The Roles model
  */
 
 Ext.define('Taco.model.Role', {
@@ -13,15 +14,13 @@ Ext.define('Taco.model.Role', {
 
     idProperty: 'id',
 
-  
-
     proxy: {
         type: 'ajaxproxy',
         api: {
             read: '/admin/app/roles',
-            create: '/admin/app/account/roles/create',
-            update: '/admin/app/account/roles/edit',
-            destroy: '/admin/app/account/roles/delete'
+            create: '/admin/app/roles/create',
+            update: '/admin/app/roles/update',
+            destroy: '/admin/app/roles/delete'
         },
         reader: {
             type: 'json',

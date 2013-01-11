@@ -70,6 +70,10 @@ Ext.define('Taco.core.ux.form.Form', {
             this.stores = [this.stores];
         }
 
+        if (this.store && this.store.isStore) {
+            this.stores.push(this.store);
+        }
+
         Ext.each(this.items, function (item) {
             if (!item.isFormEditor) {
                 return;
@@ -191,7 +195,12 @@ Ext.define('Taco.core.ux.form.Form', {
 
     save: function () {
         console.log('do save!');
-        //debugger;
+        
+
+        Ext.each(this.editors, function (editor) {
+            editor.addSaveTasks(this.saveTasks);
+        }, this);
+
         this.addSaveTasks(this.saveTasks);
         this.saveTasks.execute();
         this.fireEvent('savesuccess');
@@ -257,6 +266,17 @@ Ext.define('Taco.core.ux.form.Form', {
 
     isDirty: function () {
         var isDirty = this.callParent(arguments);
+
+        if (isDirty) {
+            return true;
+        }
+
+        Ext.each(this.editors, function (editor) {
+            if (editor.isDirty()) {
+                isDirty = true;
+                return false;
+            }
+        });
 
         if (isDirty) {
             return true;

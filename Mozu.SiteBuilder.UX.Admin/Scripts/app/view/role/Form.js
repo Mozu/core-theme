@@ -11,13 +11,9 @@ Ext.define('Taco.view.role.Form', {
 
     initComponent: function () {
 
-        //this.stores = Ext.create('Taco.store.Behaviors');
-
         this.buildFormComponents();
 
         this.callParent(arguments);
-
-        this.loadStore();
     },
 
     buildFormComponents: function () {
@@ -30,12 +26,5 @@ Ext.define('Taco.view.role.Form', {
         }, Ext.create('Taco.view.role.BehaviorsForm', {
             roleId: this.record.getId()
         })];
-    },
-
-    loadStore: function () {
-        //var fnCleanupLoad,
-        //    store = this.stores[0];
-
-
     }
 });
