@@ -59,13 +59,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "/create?id={id}")]
         public Task<Response<List<Product>>> CreateProduct(List<Product> products)
         {
-            var retList = (from vm in products
-                           select Mapper.Map<DC.Product>(vm) into dm
-                           let ret = _productClient.AddProduct(dm).Result.ReadAsAsync().Result
-                           select ret ?? dm into ret
+            var retList = (from viewModel in products
+                           select Mapper.Map<DC.Product>(viewModel) into dataModel
+                           let ret = TryAddProduct(dataModel)
+                           select ret ?? dataModel into ret
                            select Mapper.Map<Product>(ret)).ToList();
 
             return List(retList);
+        }
+
+        private DC.Product TryAddProduct(DC.Product product)
+        {
+            var result = _productClient.AddProduct(product).Result;
+            
+            // TODO: should probably do something about these errors
+            if (result.HasException)
+            {
+                return null;
+            }
+            else
+            {
+                return result.ReadAsAsync().Result;
+            }
         }
 
         [WebInvoke(UriTemplate = "/edit?id={id}")]
