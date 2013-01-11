@@ -51,6 +51,9 @@ namespace Mozu.SiteBuilder.Mvc
 
         public void Load(HttpContextBase ctx, ICookieProvider cookieProvider)
         {
+            this.LocaleCode = "en-US";
+            this.CurrencyCode = "usd";
+
             HttpRequestBase req = null;
             try
             {
@@ -99,6 +102,7 @@ namespace Mozu.SiteBuilder.Mvc
             }
             this.SiteId = int.Parse(System.Configuration.ConfigurationManager.AppSettings["default-site"]);
             this.TenantId = int.Parse(System.Configuration.ConfigurationManager.AppSettings["default-tenant"]);
+            
         }
 
         static Site LookupSiteByDomain(string host)
