@@ -174,8 +174,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 Mutex mutex = null;
                 Tuple<string, Stream> tpl = null;
                 try
-                {
-                    tpl = GetFromFSCache(collection, documentId);
+                {                    tpl = GetFromFSCache(collection, documentId);
                     if (tpl == null)
                     {
                         var mutexName = (_appCtx.SiteId + ";" + collection + ";" + documentId).ToLowerInvariant();

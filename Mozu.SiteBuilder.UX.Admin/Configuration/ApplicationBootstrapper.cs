@@ -29,6 +29,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.Tenant.Contracts.Clients;
 using Volusion.SiteBuilder.UX.Models;
+using Mozu.Core.Api;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
@@ -142,6 +143,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             typeof(IApiController).Assembly.GetTypes().Where(t => typeof(IApiController).IsAssignableFrom(t) && !t.IsInterface).ToList()
                 .ForEach(t =>
                 {
+                    
+                 
+
                     var name = t.Name.ToLower();
                     var routeMembers = t.GetMethods().Where(m => m.IsPublic);
 

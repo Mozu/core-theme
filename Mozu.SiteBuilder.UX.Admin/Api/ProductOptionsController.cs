@@ -10,7 +10,6 @@ using System.ServiceModel.Web;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Options;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using AutoMapper;
-
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [ServiceContract]
