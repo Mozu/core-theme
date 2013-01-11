@@ -48,16 +48,16 @@ Ext.define('Taco.view.phoneOrder.ItemsSection', {
                 { fakeName: 'three' }
             ]
         });
-        this.items = [
-            {
-                xtype: 'simplegrid',
-                store: Taco.core.data.StoreManager.getOrCreate({ type: 'Taco.store.OrderItems', clearFilters: true, clearSort: true }),
-                columns: [{
-                    dataIndex: 'fakeName',
-                    text: 'Product',
-                    editable: false
-                }]
-            }];
+        this.items = [{
+            xtype: 'simplegrid',
+            // store: Taco.core.data.StoreManager.getOrCreate({ type: 'Taco.store.OrderItems', clearFilters: true, clearSort: true }),
+            store: fakeProductStore,
+            columns: [{
+                dataIndex: 'fakeName',
+                text: 'Product',
+                editable: false
+            }]
+        }];
 
         this.callParent(arguments);
     }
