@@ -1,5 +1,3 @@
-
-
 /**
  * @class  Taco.view.account.Roles
  * The Roles grid view
@@ -17,7 +15,7 @@ Ext.define('Taco.view.role.Index', {
         this.store = Ext.create('Taco.store.Roles', {
             autoLoad: true
         });
-        
+
         this.navigation = Ext.create('Taco.view.account.Navigation');
 
         this.grid = Ext.create('Taco.core.ux.BaseGrid', {
@@ -37,8 +35,6 @@ Ext.define('Taco.view.role.Index', {
                 }
             }]
         });
-
-        //this.items = [this.grid];
         
         this.body = {
             layout: {

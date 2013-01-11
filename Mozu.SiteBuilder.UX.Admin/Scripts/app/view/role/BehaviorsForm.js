@@ -20,6 +20,15 @@ Ext.define('Taco.view.role.BehaviorsForm', {
         this.callParent(arguments);
     },
 
+    addSaveTasks: function (tasks) {
+        tasks.add({
+            key: 'sync-behavior-store',
+            store: this.store
+        });
+
+        return tasks;
+    },
+
     buildFormComponents: function () {
         console.log('store',this.store);
         window.st = this.store;
