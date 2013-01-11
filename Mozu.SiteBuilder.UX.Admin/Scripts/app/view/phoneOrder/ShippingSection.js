@@ -58,7 +58,8 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
             }]
         }, {
             xtype: 'formflexbox',
-            width: 200,
+            width: 400,
+            padding: '0 20',
             defaults: {
                 xtype: 'textfield',
                 labelAlign: 'top',
@@ -67,6 +68,7 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
             items: [{
                 xtype: 'radiogroup',
                 fieldLabel: 'Shipping Method',
+                width: 360,
                 columns: 1,
                 vertical: true,
                 items: [

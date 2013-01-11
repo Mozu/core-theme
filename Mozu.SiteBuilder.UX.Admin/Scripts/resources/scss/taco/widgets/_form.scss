@@ -1025,7 +1025,7 @@
 
   .#{$vprefix}field-alignment {
     
-    $align-map: sprite-map('align/*.png');
+    $align-map: sprite-map('align/*.png'); /* go home syntax highlighting, you're drunk */
     $gradient-selected: linear-gradient(top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 20%);
     
     table:nth-child(-n+4) {
@@ -1674,10 +1674,10 @@
   }
 
   .#{$vprefix}form-flexbox {
-    @include flexbox(row, wrap, space-between);
+    @include flexbox(row, wrap, space-between, stretch, flex-start);
 
     &.#{$vprefix}form-flexbox-start {
-      @include flexbox(row, wrap, flex-start);
+      @include flexbox(row, wrap, flex-start, stretch, flex-start);
     }
 
     .#{$prefix}clear {
