@@ -197,7 +197,7 @@
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.0.0.12361.1\lib\Mozu.ProductRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.0.0.13010.1\lib\Mozu.ProductRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Provisioning.Contracts">
       <SpecificVersion>False</SpecificVersion>

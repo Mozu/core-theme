@@ -8,6 +8,7 @@ using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Configuration;
+using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Configuration;
 using Mozu.SiteBuilder.Mvc.Mobile;
@@ -79,7 +80,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             builder.RegisterType<RoleWebApiClient>().As<IRoleWebApiClient>();
             builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductRuntime.Contracts.Clients.ProductRuntimeWebApiClient).Assembly);
+            // builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductRuntime.Contracts.Clients.ProductRuntimeWebApiClient).Assembly);
+            builder.Register(c => new ProductRuntimeWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductRuntimeWebApiClient>().InstancePerLifetimeScope();
+            builder.Register(c => new ProductSearchWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductSearchWebApiClient>().InstancePerLifetimeScope();
         }
 
 

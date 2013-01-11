@@ -70,10 +70,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List<string>(ss.Suggestions);
         }
 
-        [WebGet(UriTemplate = "/productsearch?q={query}")]
-        public Task<Response<List<RuntimeProductContract>>> GetProductSearch(string query)
+        [WebGet(UriTemplate = "/productsearch?q={q}")]
+        public Task<Response<List<RuntimeProductContract>>> GetProductSearch(string q)
         {
-            ServiceClientResponse<RuntimeProductSearchResultContract> res = _searchClient.Search(query, null, null, null, null, null, null, null, null, null).Result;
+            ServiceClientResponse<RuntimeProductSearchResultContract> res = _searchClient.Search(q, null, null, null, null, null, null, null, null, null).Result;
 
             RuntimeProductSearchResultContract r = res.ReadAsSync();
             // var product = Mapper.Map<CatalogProduct>(prod);
