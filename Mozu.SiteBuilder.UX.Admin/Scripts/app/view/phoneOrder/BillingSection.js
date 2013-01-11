@@ -58,7 +58,8 @@ Ext.define('Taco.view.phoneOrder.BillingSection', {
             }]
         }, {
             xtype: 'formflexbox',
-            width: 360,
+            width: 400,
+            padding: '0 20',
             defaults: {
                 xtype: 'textfield',
                 labelAlign: 'top',
@@ -68,6 +69,14 @@ Ext.define('Taco.view.phoneOrder.BillingSection', {
                 name: 'creditCardNumber',
                 fieldLabel: 'Credit Card',
                 width: 360
+            }, {
+                name: 'expirationDate',
+                fieldLabel: 'Expiration Date',
+                width: 170
+            }, {
+                name: 'securityCode',
+                fieldLabel: 'Security Code',
+                width: 170
             }]
         }];
 

@@ -254,8 +254,6 @@ Ext.define('Taco.view.order.Edit', {
             callback: function () { console.log('notesStore loaded'); }
         });
 
-        window.foster = this.notesStore;
-
         this.on({
             addnote: {
                 fn: this.addNote,
