@@ -10,12 +10,27 @@ using Autofac;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
 using Mozu.Core;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.Mvc
 {
+    public interface IUniversalSiteApiClient : ISitesWebApiClient
+    {
+    }
+
+    public class UniversalSiteApiClient : SitesWebApiClient, IUniversalSiteApiClient
+    {
+        private const int VOLUSIONSITEID = 0;
+        private const int VOLUSIONTENANTID = 0;
+
+        public UniversalSiteApiClient() : base(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }))
+        {
+        }
+    }
+
     public class SiteBuilderApiContext : MozuServiceApiContext
     {
         internal const string CONTEXT_KEY = "V:STORECTX";

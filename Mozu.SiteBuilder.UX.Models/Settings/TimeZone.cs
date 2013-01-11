@@ -6,7 +6,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     public class TimeZone
     {
         [DataMember(Name = "name")]
-        public string TimeZoneId { get; set; }
+        public string Id { get; set; }
 
         [DataMember(Name = "offset")]
         public double Offset { get; set; }

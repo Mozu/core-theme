@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private IAuthTicketWebApiClient _authTicketWebApiClient;
         private ITenantsWebApiClient _tenantsWebApiClient;
         private IAuthenticationHelper _authenticationHelper;
-        private ISitesWebApiClient _sitesWebApiClient;
+        private IUniversalSiteApiClient _sitesWebApiClient;
         private IInvitationWebApiClient _invitationWebApiClient;
         //private IMerchantSignUpWebApiClient _merchantSignUpWebApiClient;
         private IAdminUserWebApiClient _adminUserWebApiClient;
@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             _authTicketWebApiClient = Substitute.For<IAuthTicketWebApiClient>();
             _tenantsWebApiClient = Substitute.For<ITenantsWebApiClient>();
             _authenticationHelper = Substitute.For<IAuthenticationHelper>();
-            _sitesWebApiClient = Substitute.For<ISitesWebApiClient>();
+            _sitesWebApiClient = Substitute.For<IUniversalSiteApiClient>();
             _invitationWebApiClient = Substitute.For<IInvitationWebApiClient>();
             //_merchantSignUpWebApiClient = Substitute.For<IMerchantServiceWebApiClient>();
             _adminUserWebApiClient = Substitute.For<IAdminUserWebApiClient>();

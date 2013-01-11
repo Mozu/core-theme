@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IPciSettingsProvider _pciSettingsProvider;
         private readonly OrderStatusProvider _orderStatusProvider = new OrderStatusProvider();
 
-        private static string _merchantId;
+        //private static string _merchantId;
         private const string CookieName = "order";
 
         public CheckoutController(IOrderService orderService, IAuthenticationHelper authHelper, ICookieProvider cookieProvider, IPciSettingsProvider pciSettingsProvider)
@@ -33,10 +33,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _pciSettingsProvider = pciSettingsProvider;
         }
 
-        public string MerchantId
+        /*public string MerchantId
         {
             get { return _merchantId ?? (_merchantId = _orderService.GetMerchantId()); }
-        }
+        }*/
 
         public ActionResult Index()
         {
@@ -222,7 +222,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     {
                         Base = _pciSettingsProvider.GetPaymentApiBase(),
                     },
-                    MerchantId = _orderService.GetMerchantId(),
+                    //MerchantId = _orderService.GetMerchantId(),
                 };
 
                 return page.WithOrder(order);
