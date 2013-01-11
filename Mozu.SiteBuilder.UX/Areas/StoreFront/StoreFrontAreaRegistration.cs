@@ -86,7 +86,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
             "StoreFront_LocCollection",
             "localization/collections/{keys}",
             new { controller = "Localization", action = "collections" });
-           
+
+            context.MapRoute(
+            "StoreFront_Sitemap",
+            "sitemap.xml",
+            new { controller = "Sitemap", action = "Index" });
+
         }
     }
 }
