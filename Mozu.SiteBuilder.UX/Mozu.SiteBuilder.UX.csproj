@@ -369,6 +369,7 @@
     <Compile Include="Areas\StoreFront\Controllers\MyAccountController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\NavigationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\SearchController.cs" />
+    <Compile Include="Areas\StoreFront\Controllers\SitemapController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\WidgetsController.cs" />
     <Compile Include="Areas\StoreFront\ModelMapping\CustomerMapping.cs" />
     <Compile Include="Areas\StoreFront\ModelMapping\OrderMapping.cs" />
