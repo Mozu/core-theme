@@ -17,7 +17,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
         private readonly ISitesWebApiClient _sitesWebApiClient;
-
         public HomeController( AccountApi accountApi, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ISitesWebApiClient sitesWebApiClient)
         {
             _authenticationHelper = authHelper;

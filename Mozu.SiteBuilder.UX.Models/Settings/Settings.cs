@@ -91,38 +91,21 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [Obsolete("Theme doesn't mean what it used to mean. You probably want DesktopTheme.")]
         public string Theme { get { return _theme; } set { _theme = value; } }
 
+
+         [DataMember(Name = "mobileTheme")]
+        public string MobileTheme { get; set; }
+
+
+         [DataMember(Name="googleAnalyticsCode")]
+         public string GoogleAnalyticsCode { get; set; }
+
+
         public string DesktopTheme
         {
-            get
-            {
-                if (_theme != null && _theme.Contains(";"))
-                    return _theme.Split(';').First();
-                else
-                    return _theme;
-            }
-            set
-            {
-                // regex replace the contents of Theme leading up to ';'
-                if (_theme != null)
-                    _theme = Regex.Replace(_theme, ".+;?", value);
-                else
-                    _theme = value;
-            }
+            get { return _theme; }
+            set { _theme = value; }
         }
 
-        public string MobileTheme {
-            get
-            {
-                if (_theme != null && _theme.Contains(";"))
-                    return _theme.Split(';')[1];
-                else
-                    return null;
-            }
-            set
-            {
-                _theme = String.Format("{0};{1}", DesktopTheme, value);
-            }
-        }
-
+       
     }
 }
