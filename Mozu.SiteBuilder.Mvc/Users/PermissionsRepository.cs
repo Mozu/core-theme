@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.AdminUser.Contracts.Clients;
@@ -19,19 +21,19 @@ namespace Mozu.SiteBuilder.Mvc.Users
             _behaviorWebApiClient = behaviorWebApiClient;
         }
 
-        public List<Role> GetRoles()
+        public Task<List<Role>> GetRoles()
         {
             var response = _rolesWebApiClient.GetRoles().Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
-                return new List<Role>(0);
+                return InTask(new List<Role>(0));
 
             var roles = response.ReadAsAsync().Result;
 
-            return Mapper.Map<List<Role>>(roles.Items);
+            return InTask(Mapper.Map<List<Role>>(roles.Items));
         }
 
-        public Role GetRole(int? id)
+        public Task<Role> GetRole(int? id)
         {
             var response = _rolesWebApiClient.GetRole(id).Result;
 
@@ -40,10 +42,10 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
             var role = response.ReadAsAsync().Result;
 
-            return Mapper.Map<Role>(role);
+            return InTask(Mapper.Map<Role>(role));
         }
 
-        public Role AddRole(Role role)
+        public Task<Role> AddRole(Role role)
         {
             var mapped = Mapper.Map<Core.Api.Contracts.Role>(role);
             var response = _rolesWebApiClient.CreateRole(mapped).Result;
@@ -53,15 +55,15 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
             var newRole = response.ReadAsAsync().Result;
 
-            return Mapper.Map<Role>(newRole);
+            return InTask(Mapper.Map<Role>(newRole));
         }
 
-        public void DeleteRole(Role role)
+        public Task<StreamContent> DeleteRole(Role role)
         {
-            _rolesWebApiClient.DeleteRole(role.Id).Result.ReadAsAsync();
+            return _rolesWebApiClient.DeleteRole(role.Id).Result.ReadAsAsync();
         }
 
-        public Role UpdateRole(Role role)
+        public Task<Role> UpdateRole(Role role)
         {
             var mapped = Mapper.Map<Core.Api.Contracts.Role>(role);
             var response = _rolesWebApiClient.UpdateRole(mapped, role.Id).Result;
@@ -71,47 +73,50 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
             var updatedRole = response.ReadAsAsync().Result;
 
-            return Mapper.Map<Role>(updatedRole);
+            return InTask(Mapper.Map<Role>(updatedRole));
         }
 
-        public RoleBehavior GetRoleBehavior(int? id)
+        public Task<RoleBehavior> GetRoleBehavior(int? id)
         {
-            var role = GetRole(id);
+            var role = GetRole(id).Result;
 
-            return new RoleBehavior
+            return InTask(new RoleBehavior
             {
                 Id = role.Id,
                 Children = role.Behaviors.Select(x => x.Id).ToList(),
-            };
+            });
         }
 
-        public RoleBehavior UpdateRoleBehavior(RoleBehavior roleBehavior)
+        public Task<RoleBehavior> UpdateRoleBehavior(RoleBehavior roleBehavior)
         {
-            var role = GetRole(roleBehavior.Id);
-            var behaviors = GetBehaviors().Where(b => roleBehavior.Children.Contains(b.Id));
+            var roleTask = GetRole(roleBehavior.Id);
+            var behaviorsTask = GetBehaviors();
 
-            if (role == null)
+            if (roleTask == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var behaviors = behaviorsTask.Result.Where(b => roleBehavior.Children.Contains(b.Id));
+            var role = roleTask.Result;
 
             role.Behaviors.Clear();
             role.Behaviors.AddRange(behaviors);
 
-            return roleBehavior;
+            return InTask(roleBehavior);
         }
 
-        public List<Behavior> GetBehaviors()
+        public Task<List<Behavior>> GetBehaviors()
         {
             var response = _behaviorWebApiClient.GetBehaviors().Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
-                return new List<Behavior>(0);
+                return InTask(new List<Behavior>(0));
 
             var behaviors = response.ReadAsAsync().Result;
 
-            return Mapper.Map<List<Behavior>>(behaviors.Items);
+            return InTask(Mapper.Map<List<Behavior>>(behaviors.Items));
         }
 
-        public Behavior GetBehavior(int? id)
+        public Task<Behavior> GetBehavior(int? id)
         {
             var response = _behaviorWebApiClient.GetBehavior(id).Result;
 
@@ -120,22 +125,22 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
             var behavior = response.ReadAsAsync().Result;
 
-            return Mapper.Map<Behavior>(behavior);
+            return InTask(Mapper.Map<Behavior>(behavior));
         }
 
-        public List<BehaviorCategory> GetCategories()
+        public Task<List<BehaviorCategory>> GetCategories()
         {
             var response = _behaviorWebApiClient.GetCategories().Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
-                return new List<BehaviorCategory>(0);
+                return InTask(new List<BehaviorCategory>(0));
 
             var behaviorCategories = response.ReadAsAsync().Result;
 
-            return Mapper.Map<List<BehaviorCategory>>(behaviorCategories.Items);
+            return InTask(Mapper.Map<List<BehaviorCategory>>(behaviorCategories.Items));
         }
 
-        public BehaviorCategory GetCategory(int? id)
+        public Task<BehaviorCategory> GetCategory(int? id)
         {
             var response = _behaviorWebApiClient.GetCategory(id).Result;
 
@@ -144,15 +149,20 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
             var behaviorCategory = response.ReadAsAsync().Result;
 
-            return Mapper.Map<BehaviorCategory>(behaviorCategory);
+            return InTask(Mapper.Map<BehaviorCategory>(behaviorCategory));
         }
 
-        public BehaviorTree GetBehaviorTree()
+        public Task<BehaviorTree> GetBehaviorTree()
         {
             var categories = GetCategories();
             var behaviors = GetBehaviors();
 
-            return new BehaviorTree(categories, behaviors);
+            return InTask(new BehaviorTree(categories.Result, behaviors.Result));
+        }
+
+        private static Task<T> InTask<T>(T thing)
+        {
+            return Task.Factory.StartNew(() => thing);
         }
     }
 }
