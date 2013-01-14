@@ -17,13 +17,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _webToolsRepository = webToolsRepository;
         }
 
-        [WebGet(UriTemplate = "/webmasterTools")]
+        [WebGet(UriTemplate = "webmasterTools")]
         public Task<Response<WebmasterToolsSettings>> GetWebmasterTools()
         {
             return Single(_webToolsRepository.Get<WebmasterToolsSettings>());
         }
 
-        [WebInvoke(UriTemplate = "/webmasterTools", Method = "POST")]
+        [WebInvoke(UriTemplate = "webmasterTools", Method = "POST")]
         public Task<Response<WebmasterToolsSettings>> UpdateWebmasterTools(WebmasterToolsSettings settings)
         {
             _webToolsRepository.Save(settings);
@@ -31,13 +31,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single(settings);
         }
 
-        [WebGet(UriTemplate = "/robotsTxt")]
+        [WebGet(UriTemplate = "robotsTxt")]
         public Task<Response<RobotsTxtSettings>> GetRobotsTxt()
         {
             return Single(_webToolsRepository.Get<RobotsTxtSettings>());
         }
 
-        [WebInvoke(UriTemplate = "/robotsTxt", Method = "POST")]
+        [WebInvoke(UriTemplate = "robotsTxt", Method = "POST")]
         public Task<Response<RobotsTxtSettings>> UpdateRobotsTxt(RobotsTxtSettings settings)
         {
             _webToolsRepository.Save(settings);

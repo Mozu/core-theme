@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Returns the active checkout settings
         /// </summary>
         /// <returns></returns>
-        [WebGet(UriTemplate = "/read")]
+        [WebGet(UriTemplate = "read")]
         public Task<Response<Setting>> GetSettings()
         {
             var res = _checkoutSettingsWebApiClient.GetCheckoutSettings().Result;
@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <param name="setting">The checkout settings</param>
         /// <returns>The active checkout settings</returns>
-        [WebInvoke(UriTemplate = "/update")]
+        [WebInvoke(UriTemplate = "update")]
         public Task<Response<Setting>> UpdateSettings(Setting settingReq)
         {
             var cSetting = ConvertToContract(settingReq);
@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Returns the PCIaaS gateway definitions
         /// </summary>
         /// <returns>Array of gateway definitions</returns>
-        [WebGet(UriTemplate = "/definition/read")]
+        [WebGet(UriTemplate = "definition/read")]
         public Task<Response<List<GatewayDefinition>>> GetDefinitions()
         {
 

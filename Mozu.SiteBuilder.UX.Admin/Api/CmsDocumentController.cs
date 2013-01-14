@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/delete")]
+        [WebInvoke(Method = "POST", UriTemplate = "delete")]
         public Task<Response<List<AVM.Document>>> Delete(List<AVM.Document> docs)
         {
             var tasks = _cmsService.Delete(docs).ToArray ();
@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
        
         
-        [WebInvoke(Method = "POST", UriTemplate = "/create")]
+        [WebInvoke(Method = "POST", UriTemplate = "create")]
         public Task<Response<List<AVM.Document>>> Create(List<AVM.Document> docs)
         {
             var tasks = _cmsService.Create(docs);
@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(response);
         }
        
-        [WebInvoke(Method = "POST", UriTemplate = "/update")]
+        [WebInvoke(Method = "POST", UriTemplate = "update")]
         public Task<Response<List<AVM.Document>>> Update(List<AVM.Document> docs )
         {
             var tasks = _cmsService.Update(docs).ToArray();
@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(docs);
         }
 
-        [WebGet(UriTemplate = "/read")]
+        [WebGet(UriTemplate = "read")]
         public Task<Response<List<AVM.Document>>> ReadDocument( PagingParamaters pagingParams)
         {
             DC.PagedCollection<DC.Document> results = null;

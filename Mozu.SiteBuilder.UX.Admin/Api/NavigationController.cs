@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //{
         //    return str.Split  ( new string[]{_STRINGSPLITDELIM}, StringSplitOptions.None );
         //}
-        [WebGet(UriTemplate = "/read/?node={id}")]
+        [WebGet(UriTemplate = "read/?node={id}")]
         public Task<Response<List<NavigationTreeNode>>> Read(string id)
         {
             var resItems = new List<NavigationTreeNode>();
@@ -131,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return this.List<NavigationTreeNode>( resItems );
         }
 
-        [WebGet(UriTemplate = "/search/?query={query}")]
+        [WebGet(UriTemplate = "search/?query={query}")]
         public Task<Response<List<NavigationTreeNode>>> Search(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             if (!string.IsNullOrEmpty(extFilter.query))
@@ -162,7 +162,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(results);
         }
 
-        [WebInvoke(UriTemplate = "/delete")]
+        [WebInvoke(UriTemplate = "delete")]
         public Task<Response<List<NavigationTreeNode>>> Delete(List<NavigationTreeNode> items)
         {
             NavigationSet  navSet = null;
@@ -207,7 +207,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             return SuccessWithTotal<List<NavigationTreeNode>>(0);
         }
-        [WebInvoke(UriTemplate = "/create")]
+        [WebInvoke(UriTemplate = "create")]
         public Task<Response<List<NavigationTreeNode>>> Create(List<NavigationTreeNode> items)
         {
             var navSet = _navRepo.GetSet();
@@ -227,7 +227,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return this.List<NavigationTreeNode>(items);
         }
 
-        [WebInvoke(UriTemplate = "/update")]
+        [WebInvoke(UriTemplate = "update")]
         public Task<Response<List<NavigationTreeNode>>> Edit(List<NavigationTreeNode> items)
         {
             

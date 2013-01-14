@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             provHeler.ProvisionCms();
         }
 
-        [WebGet(UriTemplate = "/file/list")]
+        [WebGet(UriTemplate = "file/list")]
         public Task<Response<List<FileManagementFile>>> FileList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             List<FileManagementFile> vm = null;
@@ -90,7 +90,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(vm, totalCount);
         }
 
-        [WebInvoke(UriTemplate = "/file/create")]
+        [WebInvoke(UriTemplate = "file/create")]
         public Task<Response<List<FileManagementFile>>> CreateFile(List<FileManagementFile> files)
         {
             List<FileManagementFile> vmList = new List<FileManagementFile>();
@@ -133,7 +133,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(vmList);
         }
 
-        [WebInvoke(UriTemplate = "/file/delete")]
+        [WebInvoke(UriTemplate = "file/delete")]
         public Task<Response<FileManagementFile>> DeleteFile(List<FileManagementFile> files)
         {
             bool b = true;
@@ -172,7 +172,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-         [WebGet(UriTemplate = "/folder/list")]
+         [WebGet(UriTemplate = "folder/list")]
         public Task<Response<List<FileManagementFolder>>> FolderList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var folderId = extFilter.GetValue <string>("folderid");
@@ -188,7 +188,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
              return List(vm);
         }
 
-        [WebInvoke(UriTemplate = "/folder/create")]
+        [WebInvoke(UriTemplate = "folder/create")]
          public Task<Response<List<FileManagementFolder>>> CreateFolder(List<FileManagementFolder> folders)
         {
             List<FileManagementFolder> vms = new List<FileManagementFolder>();
@@ -214,7 +214,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(vms);
         }
 
-        [WebInvoke(UriTemplate = "/file/edit")]
+        [WebInvoke(UriTemplate = "file/edit")]
         public Task<Response<List<FileManagementFile>>> EditFile(FileManagementFile[] files)
         {
             var vms = new List<FileManagementFile>();
@@ -234,7 +234,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-         [WebInvoke(UriTemplate = "/folder/edit")]
+         [WebInvoke(UriTemplate = "folder/edit")]
         public Task<Response<List<FileManagementFolder>>> EditFolder(List<FileManagementFolder> fldrs)
         {
             var vms = new List<FileManagementFolder>();
@@ -256,7 +256,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
              return List(vms);
         }
 
-        [WebInvoke(UriTemplate = "/folder/delete")]
+        [WebInvoke(UriTemplate = "folder/delete")]
         public Task<Response<FileManagementFolder>> DeleteFolder(List<FileManagementFolder> fldrs)
         {
             bool success = true;

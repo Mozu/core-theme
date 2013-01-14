@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
         const  string STRINGSPLITDELIM = "^^";
 
-        [WebGet(UriTemplate = "/read/?id={id}")]
+        [WebGet(UriTemplate = "read/?id={id}")]
         public Task<Response<List<SiteDirectoryNode>>> Read(string id)
         {
             var resItems = new List<SiteDirectoryNode>();

@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _discountWebClient = discountWebClient;
         }
 
-        [WebInvoke(UriTemplate = "/create")]
+        [WebInvoke(UriTemplate = "create")]
         public Task<Response<List<Discount>>> CreateDiscount(List<Discount> discounts)
         {
             var responseList = new List<Discount>();
@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [ApiAuthorize]
-        [WebGet(UriTemplate = "/read")]
+        [WebGet(UriTemplate = "read")]
         public Task<Response<List<Discount>>> ReadDiscount(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             if (pagingParams.id == null)
@@ -103,7 +103,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(Mapper.Map<Discount>(disc));
         }
 
-        [WebInvoke(UriTemplate = "/edit?id={id}")]
+        [WebInvoke(UriTemplate = "edit?id={id}")]
         public Task<Response<List<Discount>>> EditDiscount(List<Discount> discountList, int? id = null)
         {
 
@@ -117,7 +117,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(retList);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/delete")]
+        [WebInvoke(Method = "POST", UriTemplate = "delete")]
         public Task<Response<Discount>> DeleteProduct(List<Discount> discounts)
         {
             foreach (var d in discounts)
@@ -128,7 +128,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single(default(Discount), discounts.Count);
         }
 
-        [WebGet(UriTemplate = "/generatecoupon")]
+        [WebGet(UriTemplate = "generatecoupon")]
         public Task<Response<CouponCode>> GenerateCoupon(PagingParamaters pagingParams)
         {
             var coupon = _discountWebClient.GenerateRandomCoupon().Result.ReadAsAsync().Result;
@@ -136,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single(new CouponCode {Code = coupon});
         }
 
-        [WebGet(UriTemplate = "/targetedshippingmethods/read")]
+        [WebGet(UriTemplate = "targetedshippingmethods/read")]
         public Task<Response<List<TargetedShippingMethod>>> GetTargetedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var res = _siteShippingSettingsClient.GetShippingMethods().Result.ReadAsAsync().Result;
@@ -185,7 +185,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(methods);
         }
 
-        [WebGet(UriTemplate = "/selectedshippingmethods/read")]
+        [WebGet(UriTemplate = "selectedshippingmethods/read")]
         public Task<Response<List<TargetedShippingMethod>>> GetSelectedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var res = _siteShippingSettingsClient.GetShippingMethods().Result.ReadAsAsync().Result;

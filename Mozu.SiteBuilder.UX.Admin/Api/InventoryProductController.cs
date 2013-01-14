@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _productClient = productClient;
         }
 
-        [WebInvoke(UriTemplate = "/edit?id={id}")]
+        [WebInvoke(UriTemplate = "edit?id={id}")]
         public Task<Response<List<Product>>> EditProduct(List<Product> products, int? id = null)
         {
             
@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             return List(products);
         }
-        [WebGet(UriTemplate = "/list")]
+        [WebGet(UriTemplate = "list")]
         public Task<Response<List<Product>>> GetProductList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             if (pagingParams.id != null)

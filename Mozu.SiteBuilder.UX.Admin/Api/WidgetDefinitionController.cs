@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _widgetProvider = widgetProvider;
         }
 
-        [WebGet(UriTemplate = "/list")]
+        [WebGet(UriTemplate = "list")]
         public Task<Response<List<WidgetDefintion>>> GetWidgets(PagingParamaters pagingParams, FilterCollection extFilter )
         {
             var defs = _widgetProvider.GetWidgets();

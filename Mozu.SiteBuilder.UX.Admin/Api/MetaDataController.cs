@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         static Lazy<List<ModelDescription>> g_desc = new Lazy<List<ModelDescription>>(CreateModelDescriptions, true);
 
-        [WebGet(UriTemplate = "/list?id={id}&page={pageIndex}&start={startIndex}&limit={pageSize}")]
+        [WebGet(UriTemplate = "list?id={id}&page={pageIndex}&start={startIndex}&limit={pageSize}")]
         public Task<Response<List<ModelDescription>>> GetOptionList(string id = null, int pageIndex = 1, int startIndex = 0, int pageSize = 25)
         {
             List<ModelDescription> mds = null;

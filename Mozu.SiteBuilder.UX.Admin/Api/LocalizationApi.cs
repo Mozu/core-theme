@@ -14,7 +14,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class LocalizationController : BaseController
     {
         [ApiAuthorize]
-        [WebGet(UriTemplate = "/read")]
+        [WebGet(UriTemplate = "read")]
         public Task<Response<List<KeyValuePair<string, string>>>> GetStrings()
         {
             var lang = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;

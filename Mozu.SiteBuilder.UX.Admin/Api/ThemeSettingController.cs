@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Returns the merged core and theme configurations
         /// </summary>
         /// <returns>List of SettingConfiguration</returns>
-        [WebGet(UriTemplate = "/config/read")]
+        [WebGet(UriTemplate = "config/read")]
         public Task<Response<List<ConfigurationItem>>> ReadConfiguration()
         {
             var config = _sbContext.Theme.Configuration.ToList();
@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Returns the current settings for the core and theme
         /// </summary>
         /// <returns>List of field values</returns>
-        [WebGet(UriTemplate = "/instance/read")]
+        [WebGet(UriTemplate = "instance/read")]
         public Task<Response<List<FieldValue>>> ReadInstance()
         {
             var values = _themeSettingsRepository.GetInstanceValues();
@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <param name="values">Field values to persist</param>
         /// <returns>List of FieldValue></returns>
-        [WebInvoke(Method = "POST", UriTemplate = "/instance/save")]
+        [WebInvoke(Method = "POST", UriTemplate = "instance/save")]
         public Task<Response<List<FieldValue>>> SaveInstance(List<FieldValue> values)
         {
             var retval = _themeSettingsRepository.SaveInstanceValues(values);

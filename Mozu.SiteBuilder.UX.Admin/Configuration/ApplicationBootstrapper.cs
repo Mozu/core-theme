@@ -140,110 +140,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
         public static void InitAPI()
         {
             var routes = GlobalConfiguration.Configuration.Routes;
+          //  Mozu.Core.Api.HttpRouteCollectionExtensions.MapHttpRoute();
             typeof(IApiController).Assembly.GetTypes().Where(t => typeof(IApiController).IsAssignableFrom(t) && !t.IsInterface).ToList()
                 .ForEach(t =>
                 {
-                    
-                 
-
                     var name = t.Name.ToLower();
-                    var routeMembers = t.GetMethods().Where(m => m.IsPublic);
-
-                    foreach (var method in routeMembers)
-                    {
-                        var wia = method.GetCustomAttributes(false).OfType<WebInvokeAttribute>().FirstOrDefault();
-
-                        if (wia != null)
-                        {
-                            var controllerName = name.Substring(0, name.LastIndexOf("controller"));
-                            var routeTemplate = string.Join("/", "app", controllerName, LocalPathFromRelativeUri(wia.UriTemplate));
-
-                            routes.MapHttpRoute(method.Name + "-" + controllerName, routeTemplate,
-                                new { controller = controllerName, action = method.Name },
-                                new { httpMethod = new System.Web.Http.Routing.HttpMethodConstraint(HttpMethod.Post) });
-                        }
-
-                        var wga = method.GetCustomAttributes(false).OfType<WebGetAttribute>().FirstOrDefault();
-
-                        if (wga != null)
-                        {
-                            var controllerName = name.Substring(0, name.LastIndexOf("controller"));
-                            var routeTemplate = string.Join("/", "app", controllerName, LocalPathFromRelativeUri(wga.UriTemplate));
-
-                            routes.MapHttpRoute(method.Name + "-" + controllerName, routeTemplate,
-                                new { controller = controllerName, action = method.Name },
-                                new { httpMethod = new System.Web.Http.Routing.HttpMethodConstraint(HttpMethod.Get) });
-                        }
-                    }
+                    var routePrefix = "app/" + name.Substring(0, name.LastIndexOf("controller"));
+                    routes.MapHttpRoute(t, routePrefix);               
                 });
-
-            /*File.WriteAllLines(@"C:\routes.html", new[] { "<html><body><table>" }.Concat(routes.Select(x =>
-                {
-                    var uri = @"http://65.vnextdev.com:666/admin/" + x.RouteTemplate;
-
-                    return string.Format(@"<tr><td><a href=""{0}"">{0}</a></td><td>{1}</td><td>{2}</td></tr>",
-                        uri,
-                        string.Join(", ", x.Defaults.Select(d => d.Key + "=" + d.Value)),
-                        string.Join(", ", x.Constraints.Select(c => c.Key + "=" + string.Join(";", (c.Value as System.Web.Http.Routing.HttpMethodConstraint).AllowedMethods)))
-                        );
-
-                })).Concat(new [] { "</table></body></html>"}));*/
-
 
             GlobalConfiguration.Configuration.Filters.Add(new GlobalErrorHandler());
 
             GlobalConfiguration.Configuration.BindParameter(typeof(FilterCollection), new FilterCollectionRequestHandler());
             GlobalConfiguration.Configuration.BindParameter(typeof(PagingParamaters), new PagingParamatersRequestHandlers());
 
-            //GlobalConfiguration.Configuration.Filters.Add(new TenantSiteHeadersResolverActionFilter());
-
-            //var apiBootStrapper = _container.Resolve<Mozu.Core.Api.APIBootStrapper>();
-            //var config = apiBootStrapper.Init(_container);
-
-            //config.EnableTestClient = true;
-            //config.EnableHelpPage = true;
-            //config.ErrorHandlers = (handlers, endpoint, descriptions) => handlers.Add(new GlobalErrorHandler());
-            //var apiRequestHandler = config.RequestHandlers ;
-            //var parentCi = config.CreateInstance;
-
-            //    config.RequestHandlers =  ( col, endpoint, operationDesc )=>{
-            //        apiRequestHandler(col, endpoint, operationDesc);
-            //        col.Add(new FilterCollectionRequestHandler());
-            //        col.Add(new PagingParamatersRequestHandlers());
-
-
-            //        var authorizeAttribute = operationDesc.Attributes.OfType<ApiAuthorizeAttribute>().FirstOrDefault();
-            //        if (authorizeAttribute != null)
-            //        {
-            //            col.Add(new AuthOperationHandler(authorizeAttribute));
-            //        }
-            //        else
-            //        {
-            //            if( !operationDesc.DeclaringContract.ContractType.GetCustomAttributes(false ).OfType< AllowAnonymousAttribute>().Any())
-            //            {
-            //                col.Add(new AuthOperationHandler(new ApiAuthorizeAttribute()));
-            //            }
-            //        }
-            //    };
-
-            //    config.TrailingSlashMode = TrailingSlashMode.Ignore;
-            //    config.MaxReceivedMessageSize = 1024 * 1024 * 10;
-            //    config.TransferMode = System.ServiceModel.TransferMode.Streamed;
-            //    config.Formatters.Remove(config.Formatters.XmlFormatter);
-
-            //    RouteTable.Routes.SetDefaultHttpConfiguration(config);
-
-            //    typeof(IApiController).Assembly.GetTypes().Where(t => typeof(IApiController).IsAssignableFrom(t) && !t.IsInterface).ToList()
-            //        .ForEach(t => {
-            //            var routePrefix = "app/" + t.Name.ToLower().Replace("api", "");
-            //            var webApiRoute = new WebApiRoute(routePrefix, new HttpServiceHostFactory { Configuration = config }, t);
-            //            RouteTable.Routes.Add(webApiRoute);
-            //        });
-
-            //    // Non conventional routes - File names or paths could be changed to be nicer
-            //    RouteTable.Routes.MapServiceRoute<OptionsApi>("app/option", config);
-            //    RouteTable.Routes.MapServiceRoute<ProductOptionsApi>("app/productOption", config);
-            //    RouteTable.Routes.MapServiceRoute<FileManagementApi>("app/fileMangment", config);
         }
 
         private static void RegisterRoutes()

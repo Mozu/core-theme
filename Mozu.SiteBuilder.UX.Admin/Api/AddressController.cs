@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _accountContactRepository = accountContactRepository;
         }
 
-        [WebGet(UriTemplate = "/read/accountcontact/?id={id}")]
+        [WebGet(UriTemplate = "read/accountcontact/?id={id}")]
         public Task<Response<CustomerAccountContact>> GetAccountContact(int? customerAccountId, int? contactId)
         {
             var accountContact = _accountContactRepository.Get(customerAccountId, contactId);
@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single(accountContact);
         }
 
-        [WebGet(UriTemplate = "/read/{customerId}")]
+        [WebGet(UriTemplate = "read/{customerId}")]
         public Task<Response<List<CustomerAccountContact>>> Read(PagingParamaters pagingParams, FilterCollection extFilter, int? customerId)
         {
             var addresses = _accountContactRepository.GetAll(customerId);
@@ -36,14 +36,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(addresses.ToList());
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/update/{customerId}")]
+        [WebInvoke(Method = "POST", UriTemplate = "update/{customerId}")]
         public Task<Response<CustomerAccountContact>> Update(CustomerAccountContact contact, int? customerId)
         {
             var updatedAccountContact = _accountContactRepository.Update(contact, customerId);
             return Single(updatedAccountContact);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/create/{customerId}")]
+        [WebInvoke(Method = "POST", UriTemplate = "create/{customerId}")]
         public Task<Response<CustomerAccountContact>> Create(CustomerAccountContact accountContact, int? customerId)
         {
             var newAccountContact = _accountContactRepository.Create(accountContact, customerId);
@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single(newAccountContact);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/delete/{customerId}/?force={force}")]
+        [WebInvoke(Method = "POST", UriTemplate = "delete/{customerId}/?force={force}")]
         public Task<Response<CustomerAccountContact>> Delete(CustomerAccountContact contact, int? customerId, bool force)
         {
             if (force)
@@ -62,7 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single(contact);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/duplicate/{customerId}")]
+        [WebInvoke(Method = "POST", UriTemplate = "duplicate/{customerId}")]
         public Task<Response<CustomerAccountContact>> Duplicate(CustomerAccountContact accountContact, int? customerId)
         {
             var duplicate = _accountContactRepository.Duplicate(accountContact);

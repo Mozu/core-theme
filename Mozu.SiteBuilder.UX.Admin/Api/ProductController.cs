@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _productClient = productClient;
         }
 
-        [WebGet(UriTemplate = "/autocomplete/?query={query}&value={productIdsString}")]
+        [WebGet(UriTemplate = "autocomplete/?query={query}&value={productIdsString}")]
         public Task<Response<List<AutoCompleteField<string>>>> SearchByName(string query, FilterCollection extFilter, string productIdsString)
         {
             var filter = string.Empty;
@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(retList);
         }
 
-        [WebInvoke(UriTemplate = "/create?id={id}")]
+        [WebInvoke(UriTemplate = "create?id={id}")]
         public Task<Response<List<Product>>> CreateProduct(List<Product> products)
         {
             var retList = (from viewModel in products
@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        [WebInvoke(UriTemplate = "/edit?id={id}")]
+        [WebInvoke(UriTemplate = "edit?id={id}")]
         public Task<Response<List<Product>>> EditProduct(List<Product> products, int? id = null)
         {
             var retList = (from vm in products
@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-        [WebInvoke(Method = "POST", UriTemplate = "/delete")]
+        [WebInvoke(Method = "POST", UriTemplate = "delete")]
         public Task<Response<Product>> DeleteProduct(List<Product> products)
         {
             foreach (var vm in products)
@@ -107,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return SuccessWithTotal<Product>(products.Count);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/duplicate/?id={id}")]
+        [WebInvoke(Method = "POST", UriTemplate = "duplicate/?id={id}")]
         public Task<Response<Product>> DuplicateProduct(string id)
         {
             // NOTE: id == ProductCode
@@ -126,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single(Mapper.Map<Product>(newProd));
         }
 
-        [WebGet(UriTemplate = "/list")]
+        [WebGet(UriTemplate = "list")]
         public Task<Response<List<Product>>> GetProductList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             if (pagingParams.id != null)
