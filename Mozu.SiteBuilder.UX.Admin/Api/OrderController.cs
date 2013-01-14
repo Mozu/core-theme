@@ -195,10 +195,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "create")]
-        public Task<Response<OrderAdmin.Order>> CreateOrder(OrderAdmin.Order order)
+        public async Task<Response<List<OrderAdmin.Order>>> CreateOrder(List<OrderAdmin.Order> orders)
         {
-            var response = _orderWebApiClient.CreateOrder(Mapper.Map<Mozu.Order.Contracts.Order>(order)).Result.ReadAsSync();
-            return Single(Mapper.Map<OrderAdmin.Order>(response));
+            var retOrders = new List<OrderAdmin.Order>();
+            foreach (var order in orders)
+            {
+                var so = Mapper.Map<Mozu.Order.Contracts.Order>(order);
+                var response = await _orderWebApiClient.CreateOrder(so);
+                var ret = await response.ReadAsAsync();
+                retOrders.Add(Mapper.Map<OrderAdmin.Order>(ret));
+            }
+            return List2<OrderAdmin.Order>  (retOrders);
         }
 
         [WebInvoke(UriTemplate = "delete/?orderId={orderId}")]
