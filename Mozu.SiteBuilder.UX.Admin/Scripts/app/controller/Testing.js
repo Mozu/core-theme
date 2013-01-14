@@ -6,6 +6,7 @@
 
 Ext.define('Taco.controller.Testing', {
     extend: 'Taco.core.Controller',
+    requires: ['Taco.model.Order', 'Taco.model.OrderItem'],
 
     statics: {
         returnString: function (str) {
@@ -16,11 +17,78 @@ Ext.define('Taco.controller.Testing', {
 
         newSequentialEditingId: (function(){
             var editingIds = 0;
-            return function () {
+            return function() {
                 return 'editing-' + editingIds++;
-            }
+            };
         }())
     },
+
+
+    order : function() {
+        var order, orderItemStore, itemArray = [];
+        
+        orderItemStore = Ext.create('Ext.data.Store', {
+            model: 'Taco.model.OrderItem'
+        });
+        order = Ext.create('Taco.model.Order', {
+            
+        });
+
+       
+       
+        
+        orderItemStore.add(
+           {
+               quantity: 1,
+               product: {
+                   productCode: 'jersy1',
+                   price: {
+                       price: 60
+                   }
+               }
+           });
+        
+        orderItemStore.add(
+           {
+               quantity: 1,
+               product: {
+                   productCode: 'tshirt2',
+                   price: {
+                       price: 15
+                   }
+               }
+           });
+        
+        orderItemStore.add(
+           {
+               quantity: 1,
+               product: {
+                   productCode: 'shirt4',
+                   price: {
+                       price: 20
+                   }
+               }
+           });
+        
+        orderItemStore.each(function (i) { itemArray.push(i.getData()); });
+        order.set('items',itemArray);
+        
+        debugger;
+
+        order.save( { 
+            success: function(record, operation) {
+                debugger;
+            },
+            failure: function(record, operation)
+            {
+                debugger;
+            }
+        });
+        
+
+//getData
+    },
+
 
     myAccount: function () {
         window.location = '/admin/account';
