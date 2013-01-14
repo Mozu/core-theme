@@ -1,32 +1,34 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Mozu.SiteBuilder.UX.Models.Users;
 
 namespace Mozu.SiteBuilder.Mvc.Users
 {
     public interface IPermissionsRepository
     {
-        List<Role> GetRoles();
+        Task<List<Role>> GetRoles();
 
-        Role GetRole(int? id);
+        Task<Role> GetRole(int? id);
 
-        Role AddRole(Role role);
+        Task<Role> AddRole(Role role);
 
-        void DeleteRole(Role role);
+        Task<StreamContent> DeleteRole(Role role);
 
-        Role UpdateRole(Role role);
+        Task<Role> UpdateRole(Role role);
 
-        RoleBehavior GetRoleBehavior(int? id);
+        Task<RoleBehavior> GetRoleBehavior(int? id);
 
-        RoleBehavior UpdateRoleBehavior(RoleBehavior roleBehavior);
+        Task<RoleBehavior> UpdateRoleBehavior(RoleBehavior roleBehavior);
 
-        List<Behavior> GetBehaviors();
+        Task<List<Behavior>> GetBehaviors();
 
-        Behavior GetBehavior(int? id);
+        Task<Behavior> GetBehavior(int? id);
 
-        List<BehaviorCategory> GetCategories();
+        Task<List<BehaviorCategory>> GetCategories();
 
-        BehaviorCategory GetCategory(int? id);
+        Task<BehaviorCategory> GetCategory(int? id);
 
-        BehaviorTree GetBehaviorTree();
+        Task<BehaviorTree> GetBehaviorTree();
     }
 }

@@ -22,13 +22,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "role/{id}")]
         public Task<Response<Role>> Role(int? id)
         {
-            return Single(_permissionsRepository.GetRole(id));
+            return Single(_permissionsRepository.GetRole(id).Result);
         }
 
         [WebGet(UriTemplate = "roles")]
         public Task<Response<List<Role>>> Roles(PagingParamaters pagingParams, FilterCollection extFilter)
         {
-            return List(_permissionsRepository.GetRoles().ToList());
+            return List(_permissionsRepository.GetRoles().Result.ToList());
         }
 
         /*[WebInvoke(UriTemplate = "role/create", Method = "POST")]
@@ -54,13 +54,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "behavior/{id}")]
         public Task<Response<Behavior>> Behaviors(int? id)
         {
-            return Single(_permissionsRepository.GetBehavior(id));
+            return Single(_permissionsRepository.GetBehavior(id).Result);
         }
 
         [WebGet(UriTemplate = "behaviors")]
         public Task<Response<List<Behavior>>> GetBehaviors(PagingParamaters pagingParams, FilterCollection extFilter)
         {
-            return List(_permissionsRepository.GetBehaviors().ToList());
+            return List(_permissionsRepository.GetBehaviors().Result.ToList());
         }
     }
 }

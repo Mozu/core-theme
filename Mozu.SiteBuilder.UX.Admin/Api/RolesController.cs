@@ -24,9 +24,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public Task<Response<List<Mozu.SiteBuilder.UX.Models.Users.BehaviorTree.BehaviorTreeNode >>> GetRoleBehaviors( FilterCollection extFilter)
         {
             int roleId = extFilter.GetValue("roleId", 0);
-            var roleBehavior = _permissionsRepository.GetRoleBehavior(roleId);
+            var roleBehavior = _permissionsRepository.GetRoleBehavior(roleId).Result;
 
-            var tree = _permissionsRepository.GetBehaviorTree();
+            var tree = _permissionsRepository.GetBehaviorTree().Result;
         
             tree.Nodes.ForEach( x =>  x.Children.ForEach(y => y.RoleId = roleId));
 
@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "edit", Method = "POST")]
         public Task<Response<List<RoleBehavior>>> EditRoleBehaviors([FromBody] List<RoleBehavior> behaviors)
         {
-            var serverRole = _permissionsRepository.GetRole(behaviors.First().RoleId);
+            var serverRole = _permissionsRepository.GetRole(behaviors.First().RoleId).Result;
 
             
 
@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "")]
         public Task<Response<List<Role>>> GetAll()
         {
-            var roles = _permissionsRepository.GetRoles();
+            var roles = _permissionsRepository.GetRoles().Result;
 
             return roles.IsNullOrEmpty() ? EmptyList<Role>() : List(roles);
         }
@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "role/{id}")]
         public Task<Response<Role>> GetRole(int? id)
         {
-            var role = _permissionsRepository.GetRole(id);
+            var role = _permissionsRepository.GetRole(id).Result;
 
             return role == null ? EmptySingle<Role>(false) : Single(role);
         }
@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "create", Method = "POST")]
         public Task<Response<Role>> Create(Role role)
         {
-            var addedRole = _permissionsRepository.AddRole(role);
+            var addedRole = _permissionsRepository.AddRole(role).Result;
 
             return addedRole == null ? EmptySingle<Role>(false) : Single(addedRole);
         }
@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "update", Method = "POST")]
         public Task<Response<Role>> Update(Role role)
         {
-            var updatedRole = _permissionsRepository.UpdateRole(role);
+            var updatedRole = _permissionsRepository.UpdateRole(role).Result;
 
             return updatedRole == null ? EmptySingle<Role>(false) : Single(updatedRole);
         }
@@ -120,7 +120,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "tree")]
         public Task<Response<BehaviorTree>> GetTree()
         {
-            var tree = _permissionsRepository.GetBehaviorTree();
+            var tree = _permissionsRepository.GetBehaviorTree().Result;
 
             return Single(tree);
         }
