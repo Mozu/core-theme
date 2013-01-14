@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _taxClient = taxClient;
         }
 
-        [WebInvoke(UriTemplate = "/create")]
+        [WebInvoke(UriTemplate = "create")]
         public Task<Response<List<TaxRate>>> Create(List<TaxRate> vms)
         {
             var retList = (from vm in vms select Mapper.Map<DC.TaxRate >(vm) into dm let ret = _taxClient.AddRate (dm).Result.ReadAsSync() select ret ?? dm into ret select Mapper.Map<TaxRate >(ret)).ToList();
@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(retList);
         }
 
-        [WebInvoke(UriTemplate = "/edit")]
+        [WebInvoke(UriTemplate = "edit")]
         public Task<Response<List<TaxRate>>> Edit(List<TaxRate> vms)
         {
             var retList = (from vm in vms select Mapper.Map<DC.TaxRate>(vm) into dm select _taxClient.UpdateRate (dm, dm.CountryCode , dm.StateCode ).Result.ReadAsSync() into ret select Mapper.Map<TaxRate >(ret)).ToList();
@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(retList);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/delete")]
+        [WebInvoke(Method = "POST", UriTemplate = "delete")]
         public Task<Response<TaxRate>> Delete(List<TaxRate> vms)
         {
             foreach (var vm in vms)
@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return SuccessWithTotal<TaxRate>(vms.Count);
         }
 
-        [WebGet(UriTemplate = "/list")]
+        [WebGet(UriTemplate = "list")]
         public Task<Response<List<TaxRate>>> GetTaxRates(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var res = _taxClient.FindRates(pagingParams.startIndex, pagingParams.pageSize).Result.ReadAsSync();

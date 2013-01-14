@@ -32,13 +32,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _productClient = productClient;
         }
 
-        [WebInvoke(UriTemplate = "/create")]
+        [WebInvoke(UriTemplate = "create")]
         public Task<Response<List<ProductOption>>> CreateProductOption(List<ProductOption> options)
         {
             return EditProductOption(options);
         }
 
-        [WebInvoke(UriTemplate = "/edit")]
+        [WebInvoke(UriTemplate = "edit")]
         public Task<Response<List<ProductOption>>> EditProductOption(List<ProductOption> options)
         {
             var attSets = new Dictionary<string, DC.AttributeSet>();
@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return val;
         }
         
-        [WebGet(UriTemplate = "/listValue")]
+        [WebGet(UriTemplate = "listValue")]
         public Task<Response<List<ProductPropertyValue>>> GetProductOptionValueList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var productCode = extFilter.GetValue<string>("productCode");
@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(res);
         }
         
-        [WebGet(UriTemplate = "/list")]
+        [WebGet(UriTemplate = "list")]
         public Task<Response<List<ProductProperty>>> GetProductOptionList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var productCode = extFilter.GetValue<string>("productCode");

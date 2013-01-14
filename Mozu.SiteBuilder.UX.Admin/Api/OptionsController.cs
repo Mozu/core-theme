@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _attClient = attClient;
         }
 
-        [WebInvoke(UriTemplate = "/create?id={id}")]
+        [WebInvoke(UriTemplate = "create?id={id}")]
         public Task<Response<List<Option>>> CreateOption(Option option, int? id = null)
         {
             var dm = Mapper.Map<DC.Attribute>(option);
@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(vmRet);
         }
 
-         [WebInvoke(UriTemplate = "/createValue?id={id}")]
+         [WebInvoke(UriTemplate = "createValue?id={id}")]
         public Task<Response<List<OptionValue>>> CreateOptionValue(List<OptionValue> optionValue, int? id = null)
         {
             var rets = new List<OptionValue>();
@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
             return List(rets, 1);
         }
-         [WebInvoke(UriTemplate = "/editValue?id={id}")]
+         [WebInvoke(UriTemplate = "editValue?id={id}")]
          public Task<Response<List<OptionValue>>> EditOptionValue(List<OptionValue> optionValue, int? id = null)
          {
              var rets = new List<OptionValue>();
@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
              return List(rets, 1);
          }
 
-         [WebInvoke(UriTemplate = "/deleteValue?id={id}")]
+         [WebInvoke(UriTemplate = "deleteValue?id={id}")]
          public Task<Response<List<OptionValue>>> DeleteOptionValue(List<OptionValue> optionValues, int? id = null)
          {
             // List<OptionValue> ret = new List<OptionValue>();
@@ -82,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
              return EmptyList<OptionValue>();
          }
 
-         [WebInvoke(UriTemplate = "/delete?id={id}")]
+         [WebInvoke(UriTemplate = "delete?id={id}")]
          public Task<Response<OptionValue>> DeleteOption(Option option, int? id = null)
          {
              var dm = Mapper.Map<DC.Attribute>(option);
@@ -94,7 +94,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
              return EmptySingle<OptionValue>(res.ResponseMessage.IsSuccessStatusCode);
          }
 
-         [WebGet(UriTemplate = "/listValue")]
+         [WebGet(UriTemplate = "listValue")]
          public Task<Response<List<OptionValue>>> GetOptionValueList(PagingParamaters pagingParams, FilterCollection extFilter)
          {
              int tmp;
@@ -112,7 +112,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
               return List(res2, (int) res.TotalCount);
          }
         
-        [WebInvoke(UriTemplate = "/edit?id={id}")]
+        [WebInvoke(UriTemplate = "edit?id={id}")]
         public Task<Response<List<Option>>> EditOption(Option option, int? id = null)
         {
             var dm = Mapper.Map<DC.Attribute>(option);
@@ -121,7 +121,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(dmr);
         }
 
-        [WebGet(UriTemplate = "/autocomplete/?query={query}")]
+        [WebGet(UriTemplate = "autocomplete/?query={query}")]
         public Task<Response<List<AutoCompleteField<int?>>>> SearchByName(string query, FilterCollection extFilter)
         {
             var filter = CreateFilter(extFilter, query);
@@ -142,7 +142,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return EmptyList<AutoCompleteField<int?>>();
         }
         
-        [WebGet(UriTemplate = "/list?query={query}")]
+        [WebGet(UriTemplate = "list?query={query}")]
         public Task<Response<List<Option>>> GetOptionList(PagingParamaters pagingParams, FilterCollection extFilter, string query)
         {
             if (pagingParams.NumericId != null )

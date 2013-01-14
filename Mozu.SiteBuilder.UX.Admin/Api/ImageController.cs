@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //Provision();
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/document/create")]
+        [WebInvoke(Method = "POST", UriTemplate = "document/create")]
         public Task<Response<ProductImageDocument>> CreateDocument(ProductImageDocument doc)
         {
             //var properties = new List<DC.PropertyValue>
@@ -111,7 +111,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single(doc);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/{docid}/create")]
+        [WebInvoke(Method = "POST", UriTemplate = "{docid}/create")]
         public Task<Response<string>> CreateImage(HttpRequestMessage request, string docid)
         {
             if (!request.Content.IsMimeMultipartContent())

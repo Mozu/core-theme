@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _permissionsRepository = permissionsRepository;
         }
 
-        [WebGet(UriTemplate = "/")]
+        [WebGet(UriTemplate = "")]
         public Task<Response<List<Behavior>>> GetAll()
         {
             var behaviors = _permissionsRepository.GetBehaviors();
@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return behaviors.IsNullOrEmpty() ? EmptyList<Behavior>() : List(behaviors);
         }
 
-        [WebGet(UriTemplate = "/behavior/{id}")]
+        [WebGet(UriTemplate = "behavior/{id}")]
         public Task<Response<Behavior>> Get(int? id)
         {
             var behavior = _permissionsRepository.GetBehavior(id);

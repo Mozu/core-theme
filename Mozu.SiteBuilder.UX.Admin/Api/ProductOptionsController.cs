@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _productClient = productClient;
         }
 
-        [WebInvoke(UriTemplate = "/create")]
+        [WebInvoke(UriTemplate = "create")]
         public Response<List<ProductOption>> CreateProductOption(List<ProductOption> options)
         {
             throw new NotImplementedException();
@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         
 
-        [WebInvoke(UriTemplate = "/delete")]
+        [WebInvoke(UriTemplate = "delete")]
         private Response<List<ProductOption>> DeletePO  ( List<ProductOption> options)
         {
             bool success = true;
@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [WebInvoke(UriTemplate = "/edit")]
+        [WebInvoke(UriTemplate = "edit")]
         public Task<Response<List<ProductOption>>> EditProductOption(List<ProductOption> options)
         {
             var prod = _productClient.GetProductByProductCode (options.First().productCode, null).Result.ReadAsSync();
@@ -108,7 +108,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return attSet;
         }
 
-        [WebInvoke(UriTemplate = "/createValue?id={id}")]
+        [WebInvoke(UriTemplate = "createValue?id={id}")]
         public Task<Response<List<ProductOptionValue>>> CreateProductOptionValue(List<ProductOptionValue> optionValues, int? id = null)
         {
             var attSets = new Dictionary<int, DC.AttributeSet>();
@@ -163,7 +163,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return EmptyList<ProductOptionValue>();
         }
 
-        [WebInvoke(UriTemplate = "/editValue?id={id}")]
+        [WebInvoke(UriTemplate = "editValue?id={id}")]
         public Task<Response<List<ProductOptionValue>>> EditProductOptionValue(List<ProductOptionValue> optionValues)
         {
             var dms = Mapper.Map<List<DC.ProductOptionValue>>(optionValues);
@@ -203,7 +203,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return val;
         }
 
-        [WebGet(UriTemplate = "/listValue")]
+        [WebGet(UriTemplate = "listValue")]
         public Task<Response<List<ProductOptionValue>>> GetProductOptionValueList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var productCode = extFilter.GetValue<string>("productCode");
@@ -223,7 +223,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-        [WebGet(UriTemplate = "/list")]
+        [WebGet(UriTemplate = "list")]
         public Task<Response<List<ProductOption>>> GetProductOptionList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             // TODO: Need to switch this to ProductCode

@@ -19,31 +19,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _permissionsRepository = permissionsRepository;
         }
 
-        [WebGet(UriTemplate = "/role/{id}")]
+        [WebGet(UriTemplate = "role/{id}")]
         public Task<Response<Role>> Role(int? id)
         {
             return Single(_permissionsRepository.GetRole(id));
         }
 
-        [WebGet(UriTemplate = "/roles")]
+        [WebGet(UriTemplate = "roles")]
         public Task<Response<List<Role>>> Roles(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             return List(_permissionsRepository.GetRoles().ToList());
         }
 
-        /*[WebInvoke(UriTemplate = "/role/create", Method = "POST")]
+        /*[WebInvoke(UriTemplate = "role/create", Method = "POST")]
         public Response<Role> CreateRole(Role role)
         {
             return Single(_permissionsRepository.AddRole(role));
         }
 
-        [WebInvoke(UriTemplate = "/role/update", Method = "POST")]
+        [WebInvoke(UriTemplate = "role/update", Method = "POST")]
         public Response<Role> UpdateRole(Role role)
         {
             return Single(_permissionsRepository.UpdateRole(role));
         }
 
-        [WebInvoke(UriTemplate = "/role/delete", Method = "POST")]
+        [WebInvoke(UriTemplate = "role/delete", Method = "POST")]
         public Response<Role> DeleteRole(Role role)
         {
             _permissionsRepository.DeleteRole(role);
@@ -51,13 +51,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return EmptySingle<Role>();
         }*/
 
-        [WebGet(UriTemplate = "/behavior/{id}")]
+        [WebGet(UriTemplate = "behavior/{id}")]
         public Task<Response<Behavior>> Behaviors(int? id)
         {
             return Single(_permissionsRepository.GetBehavior(id));
         }
 
-        [WebGet(UriTemplate = "/behaviors")]
+        [WebGet(UriTemplate = "behaviors")]
         public Task<Response<List<Behavior>>> GetBehaviors(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             return List(_permissionsRepository.GetBehaviors().ToList());

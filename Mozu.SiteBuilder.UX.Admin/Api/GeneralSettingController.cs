@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _wrapper = wrapper;
         }
 
-        [WebGet(UriTemplate = "/read")]
+        [WebGet(UriTemplate = "read")]
         public Task<Response<List<GeneralSettings>>> GetSettings()
         {
             var settings = _wrapper.ReadSettings();
@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(settings);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/save")]
+        [WebInvoke(Method = "POST", UriTemplate = "save")]
         public Task<Response<GeneralSettings>> Save(GeneralSettings settingsToSave)
         {
             var existingBlockIds = _wrapper.GetIPBlocks().Select(x => x.Id).ToList();
@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single(Mapper.Map<GeneralSettings>(savedSettings));
         }
 
-        [WebGet(UriTemplate = "/timezones/read")]
+        [WebGet(UriTemplate = "timezones/read")]
         public Task<Response<List<TimeZone>>> GetTimeZones(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var results = _wrapper.GetTimeZones().ToList();
@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(results);
         }
 
-        [WebGet(UriTemplate = "/ipranges/read")]
+        [WebGet(UriTemplate = "ipranges/read")]
         public Task<Response<List<IPBlock>>> GetIpRanges(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var results = _wrapper.GetIPBlocks().ToList();

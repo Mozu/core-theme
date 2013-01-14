@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _productClient = productClient;
         }
         
-        [WebInvoke(UriTemplate = "/edit")]
+        [WebInvoke(UriTemplate = "edit")]
         public Task<Response<List<ProductVariation>>> EditProductVariants(List<ProductVariation> variants)
         {
             if (variants.Count > 0)
@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return EmptyList<ProductVariation>();
         }
         
-        [WebGet(UriTemplate = "/list")]
+        [WebGet(UriTemplate = "list")]
         public Task<Response<List<ProductVariation>, VariantMetaData>> GetProductVariants(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var productCode = extFilter.GetValue<string>("productCode");

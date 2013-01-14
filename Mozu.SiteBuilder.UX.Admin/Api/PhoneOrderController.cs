@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _orderClient = orderClient;
         }
 
-        [WebGet(UriTemplate = "/productX/{productCode}")]
+        [WebGet(UriTemplate = "productX/{productCode}")]
         public Task<Response<RuntimeProductContract>> GetProductRaw(string productCode)
         {
             ServiceClientResponse<RuntimeProductContract> res = _productClient.GetProduct(productCode, null, null, null).Result;
@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single<RuntimeProductContract>(prod);
         }
 
-        [WebGet(UriTemplate = "/product/{productCode}")]
+        [WebGet(UriTemplate = "product/{productCode}")]
         public Task<Response<RuntimeProductDTO>> GetProduct(string productCode)
         {
             ServiceClientResponse<RuntimeProductContract> res = _productClient.GetProduct(productCode, null, null, null).Result;
@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single<RuntimeProductDTO>(product);
         }
 
-        [WebGet(UriTemplate = "/productsuggest?q={query}")]
+        [WebGet(UriTemplate = "productsuggest?q={query}")]
         public Task<Response<List<string>>> GetSuggestProduct(string query)
         {
             ServiceClientResponse<SearchSuggestionContract> res = _searchClient.Suggest(query, null).Result;
@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List<string>(ss.Suggestions);
         }
 
-        [WebGet(UriTemplate = "/productsearch?q={q}")]
+        [WebGet(UriTemplate = "productsearch?q={q}")]
         public Task<Response<List<RuntimeProductContract>>> GetProductSearch(string q)
         {
             ServiceClientResponse<RuntimeProductSearchResultContract> res = _searchClient.Search(q, null, null, null, null, null, null, null, null, null).Result;
@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List<RuntimeProductContract>(r.Items);
         }
 
-        [WebInvoke(Method="POST",UriTemplate = "/order/stuffit")]
+        [WebInvoke(Method="POST",UriTemplate = "order/stuffit")]
         public Task<Response<OrderDTO>> StuffAnOrderIntoABox(OrderDTO order)
         {
             var o = new OrderContract();

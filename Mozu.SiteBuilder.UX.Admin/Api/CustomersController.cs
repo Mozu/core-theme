@@ -28,14 +28,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _customerGroupsRepository = customerGroupsRepository;
         }
 
-        [WebGet(UriTemplate = "/search")]
+        [WebGet(UriTemplate = "search")]
         public Task<Response<List<CustomerAccount>>> GetAdvancedSearch(PagingParamaters pagingParameters, FilterCollection extFilter)
         {
             // todo : hook up search pieces and create filter
             return List(_customerRepository.GetAll(0, 1, null).ToList());
         }
 
-        [WebGet(UriTemplate = "/list")]
+        [WebGet(UriTemplate = "list")]
         public Task<Response<List<CustomerAccount>>> GetList(PagingParamaters pagingParameters, FilterCollection extFilter)
         {
             var filter = GetCustomerSearchFilter(extFilter);
@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(customers.ToList());
         }
 
-        [WebGet(UriTemplate = "/edit/{id}")]
+        [WebGet(UriTemplate = "edit/{id}")]
         public Task<Response<CustomerAccount>> GetEdit(int? id)
         {
             var customer = _customerRepository.Get(id);
@@ -58,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single(customer);
         }
 
-        [WebGet(UriTemplate = "/autocomplete/?query={query}&value={groupIds}")]
+        [WebGet(UriTemplate = "autocomplete/?query={query}&value={groupIds}")]
         public Task<Response<List<AutoCompleteField<string>>>> GetSearch(string query, FilterCollection extFilter, string groupIds)
         {
             var groups = _customerRepository.GetCustomerGroups(x => x.ToLower().Contains(query.ToLower()));
@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(groups.Select(x => new AutoCompleteField<string> { Display = x, Value = x }).ToList());
         }
 
-        [WebGet(UriTemplate = "/notes/list")]
+        [WebGet(UriTemplate = "notes/list")]
         public Task<Response<List<CustomerAccountNote>>> GetNotes(PagingParamaters pagingParameters, FilterCollection extFilter)
         {
             var customerAccountId = extFilter.Get<CustomerAccount, int>(x => x.Id);
@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(notes);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/notes/create")]
+        [WebInvoke(Method = "POST", UriTemplate = "notes/create")]
         public Task<Response<CustomerAccountNote>> CreateNote(CustomerAccountNote customerAccountNote, FilterCollection extFilter)
         {
             var customerAccountId = extFilter.Get<CustomerAccount, int?>(x => x.Id);
@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single(customerNote);
         }
 
-        [WebGet(UriTemplate = "/groups/list")]
+        [WebGet(UriTemplate = "groups/list")]
         public Task<Response<List<CustomerGroup>>> GetGroups(PagingParamaters pagingParamaters, FilterCollection extFilter)
         {
             var filter = GetGroupsSearchFilter(extFilter);
@@ -94,7 +94,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(groups);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/groups/update")]
+        [WebInvoke(Method = "POST", UriTemplate = "groups/update")]
         public Task<Response<CustomerGroup>> UpdateGroup(CustomerGroup group)
         {
             // TODO: This is required for models that are stored in a TreeList. Right now, to leverage
@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return response;
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/groups/create")]
+        [WebInvoke(Method = "POST", UriTemplate = "groups/create")]
         public Task<Response<CustomerGroup>> CreateGroup(CustomerGroup newGroup)
         {
             var group = _customerGroupsRepository.Create(newGroup);
@@ -112,7 +112,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single(group);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/groups/delete")]
+        [WebInvoke(Method = "POST", UriTemplate = "groups/delete")]
         public Task<Response<CustomerGroup>> DeleteGroup(CustomerGroup group)
         {
             try
@@ -132,7 +132,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "/groups/{customerId}/update")]
+        [WebInvoke(Method = "POST", UriTemplate = "groups/{customerId}/update")]
         public Task<Response<List<CustomerGroup>>> UpdateCustomerGroups(List<CustomerGroup> customerGroups, int? customerId)
         {
             if (!customerId.HasValue)

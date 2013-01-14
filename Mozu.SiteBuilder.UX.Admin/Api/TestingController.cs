@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _themeRepository = themeRepository;
         }
 
-        [WebGet(UriTemplate = "/list")]
+        [WebGet(UriTemplate = "list")]
         public Task<Response<List<DGD>>> GetTestList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var items = g_testData.Skip(pagingParams.pageIndex.GetValueOrDefault(0)).Take(pagingParams.pageSize.GetValueOrDefault(1000)).ToList();
@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [WebGet(UriTemplate = "/Files?id={id}")]
+        [WebGet(UriTemplate = "Files?id={id}")]
         public Task<Response<List<Node>>> GetAllNode(string id)
         {
             if (id == null)
@@ -183,7 +183,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        [WebGet(UriTemplate = "/theme/list")]
+        [WebGet(UriTemplate = "theme/list")]
         public Task<Response<List<ThemeDTO>>> GetListThemes()
         {
             List<ThemeDTO> themes = _themeRepository.GetAll().Select<ITheme, ThemeDTO>(t => new ThemeDTO(t)).ToList();
@@ -191,7 +191,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(themes);
         }
 
-        [WebInvoke(UriTemplate = "/theme/update")]
+        [WebInvoke(UriTemplate = "theme/update")]
         public Task<Response<List<ThemeDTO>>> UpdateTheme(List<ThemeDTO> themes)
         {
             ThemeDTO newDesktop = themes.LastOrDefault(t => t.IsSelectedDesktop);
@@ -240,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return this.List(returnedThemesList.ToList());
         }
 
-        [WebGet(UriTemplate = "/tenant/list")]
+        [WebGet(UriTemplate = "tenant/list")]
         public Task<Response<List<Tenant.Contracts.Tenant >>> GetTenantList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             string filter = null;
@@ -279,7 +279,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         ITenantsWebApiClient _tenantClient;
-        [WebInvoke(UriTemplate = "/changeSiteList")]
+        [WebInvoke(UriTemplate = "changeSiteList")]
         public Task<Response<List<Site>>> GetChangeSiteList(Site site)
         {
             int? tenantId = site.tenantId;
@@ -290,7 +290,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-        [WebInvoke(UriTemplate = "/setSiteContextFromTenant")]
+        [WebInvoke(UriTemplate = "setSiteContextFromTenant")]
         public Task<Response<List<Site>>> SetSiteContextFromTenant(Mozu.Tenant.Contracts.Tenant tenant)
         {
             var sites = _tenantClient.GetSites(tenant.Id).Result.ReadAsSync();
@@ -306,7 +306,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //ctx.SiteName = site.name;
         }
 
-        [WebInvoke(UriTemplate = "/setSiteContext")]
+        [WebInvoke(UriTemplate = "setSiteContext")]
         public Task<Response<List<Site>>> SetSiteContext(Site site)
         {
             var ctx  = SiteBuilderContext.Current;
