@@ -242,7 +242,7 @@ namespace Mozu.SiteBuilder.Mvc
 
         public UX.Models.Admin.ThemeSettings.RuntimeConfigurationFieldCollection ThemeSettings
         {
-            get { return _themeSettingsRepo.Value.GetRuntimeValues(); }
+            get { return _themeSettingsRepo.Value.GetRuntimeValues().Result; }
         }
         
 

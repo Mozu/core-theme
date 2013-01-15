@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.Serialization.Json;
+using System.Threading.Tasks;
 using Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -44,11 +46,11 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             _cache = cache;
         }
         
-        public List<FieldValue> SaveInstanceValues(List<FieldValue> values)
+        public async Task<List<FieldValue>> SaveInstanceValues(List<FieldValue> values)
         {
             var id = GetOrCreateCmsDocumentId();
 
-            UpdateSettings(values, id);
+            await UpdateSettings(values, id);
             VersionCmsDocument(id);
             return values;
         }
@@ -64,17 +66,18 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             }
         }
 
-        private void UpdateSettings(List<FieldValue> values, string documentId)
+        private async Task<StreamContent> UpdateSettings(List<FieldValue> values, string documentId)
         {
             using (var stream = new MemoryStream())
             {
                 _serializer.WriteObject(stream, values);
                 stream.Position = 0;
-                using (var updateTask = _docWebApiClient.UpdateDocumentContent("settings", documentId, stream ))
-                {
-                    if (updateTask.Result.HasException)
-                        throw updateTask.Result.ReadException();
-                }
+
+                var result = await _docWebApiClient.UpdateDocumentContent("settings", documentId, stream);
+                if (result.HasException)
+                    throw result.ReadException();
+
+                return result.ReadAsAsync().Result;
             }
         }
 
@@ -126,35 +129,34 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             return document.Id;
         }
 
-        public List<FieldValue> GetInstanceValues()
+        public async Task<List<FieldValue>> GetInstanceValues()
         {
             var id = GetOrCreateCmsDocumentId();
-            string key = typeof (List<FieldValue>) + id;
+            var key = typeof (List<FieldValue>) + id;
 
-            List<FieldValue> ret = _cache[key] as List<FieldValue>;
+            var ret = _cache[key] as List<FieldValue>;
             if (ret != null )
             {
                 return ret;
             }
-            using (
-                var content = _docWebApiClient.GetDocumentContent("settings", id).Result.ResponseMessage.Content )
+
+            using (var content = _docWebApiClient.GetDocumentContent("settings", id).Result.ResponseMessage.Content)
+            using (var stream = await content.ReadAsStreamAsync())
             {
-                using (var stream = content.ReadAsStreamAsync().Result)
-                {
-                    stream.Position = 0;
-                    var values = _serializer.ReadObject(stream) as List<FieldValue>;
-                    _cache[key] = values;
-                    return values;
-                }
+                stream.Position = 0;
+                var values = _serializer.ReadObject(stream) as List<FieldValue>;
+                _cache[key] = values;
+                return values;
             }
         }
 
         private RuntimeConfigurationFieldCollection _runtimeValues;
-        public RuntimeConfigurationFieldCollection GetRuntimeValues()
+
+        public async Task<RuntimeConfigurationFieldCollection> GetRuntimeValues()
         {
             if (_runtimeValues == null)
             {
-                var values = this.GetInstanceValues();
+                var values = await this.GetInstanceValues();
                 var dic = new Dictionary<string, RuntimeConfigurationField>(StringComparer.OrdinalIgnoreCase);
                 
                 var configFile = _siteContext.Theme.Configuration;

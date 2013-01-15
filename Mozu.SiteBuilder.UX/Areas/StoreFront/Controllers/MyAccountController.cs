@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using Mozu.Core;
@@ -60,59 +61,59 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [SiteBuilderAuthorize()]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var account = _customerRepository.GetByUserId(UserId);
+            var account = _customerRepository.GetByUserId(UserId).Result;
 
             var filter = string.Format("OrderStatus ne \"New\" and CustomerAccountId eq \"{0}\" and OrderNumber ne null", account.Id);
 
-            var orders = _orderWebApiClient.GetOrders(0, 25, null, filter).Result.ReadAsAsync().Result;
+            var orders = await _orderWebApiClient.GetOrders(0, 25, null, filter).Result.ReadAsAsync();
 
             account.Orders = Mapper.Map<List<Models.Orders.Order>>(orders.Items);
 
             return View("myaccount", account);
         }
 
-        public ActionResult GetAccount()
+        public async Task<ActionResult> GetAccount()
         {
-            var res = _customerRepository.GetByUserId(UserId);
+            var res = await _customerRepository.GetByUserId(UserId);
 
             return new JsonDCResult { Data = res };
         }
 
         [HttpPost]
         // TODO: Do we need this? If so, do we trust the account ID that's passed in?
-        public ActionResult Update(CustomerAccount account)
+        public async Task<ActionResult> Update(CustomerAccount account)
         {
-            var res = _customerRepository.Update(account, account.Id);
+            var res = await _customerRepository.Update(account, account.Id);
 
             return new JsonDCResult { Data = res };
         }
 
         [HttpPost]
-        public ActionResult UpdateCustomerContact(CustomerAccountContact contact)
+        public async Task<ActionResult> UpdateCustomerContact(CustomerAccountContact contact)
         {
-            var account = _customerRepository.GetByUserId(UserId);
+            var account = await _customerRepository.GetByUserId(UserId);
 
-            var res = _accountContactRepository.Update(contact, account.Id).Result;
+            var res = await _accountContactRepository.Update(contact, account.Id);
 
             return new JsonDCResult { Data = res };
         }
 
         [HttpPost]
-        public ActionResult AddCustomerContact(CustomerAccountContact contact)
+        public async Task<ActionResult> AddCustomerContact(CustomerAccountContact contact)
         {
-            var account = _customerRepository.GetByUserId(UserId);
+            var account = await _customerRepository.GetByUserId(UserId);
 
-            var res = _accountContactRepository.Create(contact, account.Id).Result;
+            var res = await _accountContactRepository.Create(contact, account.Id);
 
             return new JsonDCResult { Data = res };
         }
 
         [HttpPost]
-        public ActionResult DeleteCustomerContact(CustomerAccountContact contact)
+        public async Task<ActionResult> DeleteCustomerContact(CustomerAccountContact contact)
         {
-            var account = _customerRepository.GetByUserId(UserId);
+            var account = await _customerRepository.GetByUserId(UserId);
 
             _accountContactRepository.Delete(contact, account.Id);
 
@@ -120,23 +121,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateEmail(string email)
+        public async Task<ActionResult> UpdateEmail(string email)
         {
             var userId = UserId;
-            var u = _userWebApiClient.GetUser(userId).Result.ReadAsAsync().Result;
+            var user = await _userWebApiClient.GetUser(userId).Result.ReadAsAsync();
 
-            u.EmailAddress = email;
+            user.EmailAddress = email;
 
-            var res = _userWebApiClient.UpdateUser(u, userId).Result.ReadAsAsync().Result;
+            var res = await _userWebApiClient.UpdateUser(user, userId).Result.ReadAsAsync();
 
             return new JsonDCResult { Data = email };
         }
 
         [HttpPost]
-        public ActionResult ChangePassword(PasswordInfo info)
+        public async Task<ActionResult> ChangePassword(PasswordInfo info)
         {
             var passwordInfo = new Mozu.User.Contracts.PasswordInfo { NewPassword = info.NewPassword, OldPassword = info.OldPassword };
-            var res = _userWebApiClient.ChangePassword(passwordInfo, UserId).Result.ReadAsAsync();
+            var res = await _userWebApiClient.ChangePassword(passwordInfo, UserId).Result.ReadAsAsync();
 
             return new JsonDCResult { Data = true };
         }

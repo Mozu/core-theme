@@ -193,7 +193,7 @@ namespace Mozu.SiteBuilder.Mvc.Orders
             if (profileToken == null)
                 return null;
 
-            var customerAccount = _customerRepository.GetByUserId(profileToken.UserId);
+            var customerAccount = _customerRepository.GetByUserId(profileToken.UserId).Result;
             if (customerAccount == null)
                 return GetContactInformationFromProfile(profileToken);
 

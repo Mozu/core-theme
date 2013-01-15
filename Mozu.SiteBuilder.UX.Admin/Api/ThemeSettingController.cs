@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "instance/read")]
         public Task<Response<List<FieldValue>>> ReadInstance()
         {
-            var values = _themeSettingsRepository.GetInstanceValues();
+            var values = _themeSettingsRepository.GetInstanceValues().Result;
             return List(values);
         }
 
@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "instance/save")]
         public Task<Response<List<FieldValue>>> SaveInstance(List<FieldValue> values)
         {
-            var retval = _themeSettingsRepository.SaveInstanceValues(values);
+            var retval = _themeSettingsRepository.SaveInstanceValues(values).Result;
             return List(retval);
         }
     }
