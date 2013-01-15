@@ -45,7 +45,8 @@ namespace Mozu.SiteBuilder.Mvc.Customers
         public IEnumerable<string> GetCustomerGroups(Predicate<string> predicate)
         {
             // TODO: Refactor this
-            return _customerGroupsRepository.GetAll(null, null, null).Where(group => predicate(group.Name)).Select(g => g.Name);
+            var groups = _customerGroupsRepository.GetAll(null, null, null).Result;
+            return groups.Where(group => predicate(group.Name)).Select(g => g.Name);
         }
 
         public SB.CustomerAccount Update(SB.CustomerAccount customerAccount, int? customerId)

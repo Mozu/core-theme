@@ -1,16 +1,18 @@
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Mozu.SiteBuilder.UX.Models.Customers;
 
 namespace Mozu.SiteBuilder.Mvc.Customers
 {
     public interface ICustomerGroupsRepository
     {
-        List<CustomerGroup> GetAll(string filter, int? startIndex, int? pageSize);
+        Task<List<CustomerGroup>> GetAll(string filter, int? startIndex, int? pageSize);
 
-        CustomerGroup Create(CustomerGroup customerGroup);
+        Task<CustomerGroup> Create(CustomerGroup customerGroup);
 
-        void Delete(CustomerGroup customerGroup);
+        Task<StreamContent> Delete(CustomerGroup customerGroup);
 
-        CustomerGroup AssignGroupToCustomer(int customerId, int customerGroupId);
+        Task<CustomerGroup> AssignGroupToCustomer(int customerId, int customerGroupId);
     }
 }

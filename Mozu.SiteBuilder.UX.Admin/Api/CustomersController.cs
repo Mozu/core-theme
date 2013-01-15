@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var filter = GetGroupsSearchFilter(extFilter);
 
-            var groups = _customerGroupsRepository.GetAll(filter, pagingParamaters.startIndex, pagingParamaters.pageSize);
+            var groups = _customerGroupsRepository.GetAll(filter, pagingParamaters.startIndex, pagingParamaters.pageSize).Result;
 
             return List(groups);
         }
@@ -107,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "groups/create")]
         public Task<Response<CustomerGroup>> CreateGroup(CustomerGroup newGroup)
         {
-            var group = _customerGroupsRepository.Create(newGroup);
+            var group = _customerGroupsRepository.Create(newGroup).Result;
 
             return Single(group);
         }
@@ -141,7 +141,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (customerGroups == null || !customerGroups.Any())
                 return EmptyList<CustomerGroup>();
 
-            var groups = customerGroups.Select(x => _customerGroupsRepository.AssignGroupToCustomer(customerId.Value, x.Id));
+            var groups = customerGroups.Select(x => _customerGroupsRepository.AssignGroupToCustomer(customerId.Value, x.Id).Result);
 
             return List(groups.ToList());
         }

@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Customers
         {
             var repository = GetRepository();
 
-            var groups = repository.GetAll("", null, 0);
+            var groups = repository.GetAll("", null, 0).Result;
 
             groups[0].Id.ShouldEqual(_allCustomerGroups[0].Id);
             groups[0].Name.ShouldEqual(_allCustomerGroups[0].Name);
@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Customers
         {
             var repository = GetRepository();
 
-            var group = repository.Create(new UX.Models.Customers.CustomerGroup());
+            var group = repository.Create(new UX.Models.Customers.CustomerGroup()).Result;
 
             group.Name.ShouldEqual(_createdCustomerGroup.Name);
             group.Id.ShouldEqual(_createdCustomerGroup.Id);
