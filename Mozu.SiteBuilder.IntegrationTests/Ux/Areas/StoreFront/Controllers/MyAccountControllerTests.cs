@@ -55,11 +55,11 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
 
             var customerAccount = new CustomerAccount { Id = id };
             _orderWebApiClient.With(x => x.GetOrders(0, 25, null, expectedFilter), new OrderCollection { Items = orders });
-            _customerRepository.GetByUserId(Guid.Empty.ToString("n")).Returns(customerAccount);
+            _customerRepository.With(x => x.GetByUserId(Guid.Empty.ToString("n")), customerAccount);
 
             var controller = GetController();
 
-            var result = controller.Index() as ViewResult;
+            var result = controller.Index().Result as ViewResult;
             var model = result.Model as CustomerAccount;
 
             model.ShouldNotBeNull();
@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
             var controller = GetController();
             _userWebApiClient.WithAny(x => x.ChangePassword(null, null), TestResponse.Void);
 
-            var result = controller.ChangePassword(new PasswordInfo()) as JsonDCResult;
+            var result = controller.ChangePassword(new PasswordInfo()).Result as JsonDCResult;
             Assert.That(result.Data, Is.True);
         }
 
@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
             _lightweightUser.UserId = Guid.NewGuid().ToString("n");
             var contact = new CustomerAccountContact();
 
-            _customerRepository.GetByUserId(_lightweightUser.UserId).Returns(new CustomerAccount { Id = id });
+            _customerRepository.With(x => x.GetByUserId(_lightweightUser.UserId), new CustomerAccount { Id = id });
             controller.DeleteCustomerContact(contact);
 
             _accountContactRepository.Received(1).Delete(contact, id);
@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
             var controller = GetController();
             var email = "test_user@volusion.com";
 
-            var result = controller.UpdateEmail(email) as JsonDCResult;
+            var result = controller.UpdateEmail(email).Result as JsonDCResult;
 
             _userWebApiClient.Received(1).UpdateUser(Arg.Is<Mozu.Core.Api.Contracts.User>(x => x.EmailAddress == email), _lightweightUser.UserId);
             result.Data.ShouldEqual(email);
@@ -112,9 +112,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
 
             _accountContactRepository.With(x => x.Update(Arg.Any<CustomerAccountContact>(), Arg.Any<int?>()), updatedContact);
 
-            _customerRepository.GetByUserId(_lightweightUser.UserId).Returns(new CustomerAccount { Id = id });
+            _customerRepository.With(x => x.GetByUserId(_lightweightUser.UserId), new CustomerAccount { Id = id });
 
-            var result = controller.UpdateCustomerContact(contact) as JsonDCResult;
+            var result = controller.UpdateCustomerContact(contact).Result as JsonDCResult;
 
             _accountContactRepository.Received(1).Update(contact, id);
             result.Data.ShouldBeSameAs(updatedContact);
@@ -128,9 +128,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
             var account = new CustomerAccount { Id = id };
             var updatedAccount = new CustomerAccount();
 
-            _customerRepository.Update(account, account.Id).Returns(updatedAccount);
+            _customerRepository.With(x => x.Update(account, account.Id), updatedAccount);
 
-            var result = controller.Update(account) as JsonDCResult;
+            var result = controller.Update(account).Result as JsonDCResult;
 
             _customerRepository.Received(1).Update(account, id);
             result.Data.ShouldBeSameAs(updatedAccount);
@@ -144,11 +144,10 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
             var createdContact = new CustomerAccountContact();
             var customerAccount = new CustomerAccount { Id = 58008 };
 
-            _customerRepository.GetByUserId(_lightweightUser.UserId).Returns(customerAccount);
-            //_accountContactRepository.Create(contact, customerAccount.Id).Returns(createdContact);
+            _customerRepository.With(x => x.GetByUserId(_lightweightUser.UserId), customerAccount);
             _accountContactRepository.With(x => x.Create(contact, customerAccount.Id), createdContact);
 
-            var result = controller.AddCustomerContact(contact) as JsonDCResult;
+            var result = controller.AddCustomerContact(contact).Result as JsonDCResult;
 
             result.Data.ShouldBeSameAs(createdContact);
         }
@@ -159,9 +158,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
             var controller = GetController();
             var account = new CustomerAccount();
 
-            _customerRepository.GetByUserId(_lightweightUser.UserId).Returns(account);
+            _customerRepository.With(x => x.GetByUserId(_lightweightUser.UserId), account);
 
-            var result = controller.GetAccount() as JsonDCResult;
+            var result = controller.GetAccount().Result as JsonDCResult;
 
             result.Data.ShouldBeSameAs(account);
         }

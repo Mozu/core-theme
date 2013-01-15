@@ -85,7 +85,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Customers
         {
             var repository = GetRepository();
 
-            var customerAccounts = repository.GetAll(startIndex, pageSize, filter, sortBy, responseGroups).ToArray();
+            var customerAccounts = repository.GetAll(startIndex, pageSize, filter, sortBy, responseGroups).Result.ToArray();
 
             customerAccounts.Count().ShouldEqual(2);
             customerAccounts.Select(x => x.Id).ShouldNotContain(7226); // OrderSummary is missing
@@ -97,7 +97,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Customers
         {
             var repository = GetRepository();
 
-            var customerAccount = repository.Get(1001);
+            var customerAccount = repository.Get(1001).Result;
 
             customerAccount.Id.ShouldEqual(_account.Id);
             customerAccount.PrimaryBillingContact.FirstName.ShouldEqual(_account.PrimaryBillingContact.FirstName);
@@ -113,7 +113,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Customers
             var collection = new CustomerAccountCollection { Items = new List<CustomerAccount> { _account } };
             _customerAccountWebApiClient.With(x => x.GetCustomerAccounts(null, null, null, null, filter), collection);
 
-            var customerAccount = repository.GetByUserId(id);
+            var customerAccount = repository.GetByUserId(id).Result;
 
             _customerAccountWebApiClient.Received(1).GetCustomerAccounts(null, null, null, null, filter);
             customerAccount.Id.ShouldEqual(_account.Id);
