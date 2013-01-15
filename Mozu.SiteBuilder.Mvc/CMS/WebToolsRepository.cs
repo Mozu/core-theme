@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -8,13 +7,6 @@ using Mozu.Content.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
-    public interface IWebToolsRepository
-    {
-        Task<StreamContent> SaveWebmasterToolsFile(string localFileName);
-
-        Stream GetWebMasterToolsFile(string fileName);
-    }
-
     public class WebToolsRepository : IWebToolsRepository
     {
         public const string ContentCollection = "settings";
@@ -28,9 +20,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             _cmsServiceWrapper = cmsServiceWrapper;
         }
 
-        public async Task<StreamContent> SaveWebmasterToolsFile(string localFileName)
+        public async Task<StreamContent> SaveWebmasterToolsFile(string localFileName, string fileName)
         {
-            var documentId = GetOrCreateDocumentId("google-site-verification");
+            var documentId = GetOrCreateDocumentId(fileName);
             var file = new FileInfo(localFileName);
 
             using (Stream fs = file.OpenRead())
@@ -42,7 +34,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Stream GetWebMasterToolsFile(string fileName)
         {
-            var documentId = GetOrCreateDocumentId("google-site-verification");
+            var documentId = GetOrCreateDocumentId(fileName);
 
             var result = _documentWebApiClient.GetDocumentContent(ContentCollection, documentId).Result.ReadAsAsync().Result;
 
@@ -66,6 +58,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             var document = new Document
             {
                 Name = name,
+                ContentMimeType = "text/html",
                 DocumentType = "document",
                 ContentCollection = ContentCollection,
             };

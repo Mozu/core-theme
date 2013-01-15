@@ -158,11 +158,11 @@
     </Reference>
     <Reference Include="Mozu.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.0.0.13010.1\lib\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.0.0.13015.2\lib\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.0.0.13011.1\lib\Mozu.Core.Api.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.0.0.13015.1\lib\Mozu.Core.Api.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Client, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -322,6 +322,7 @@
     <Compile Include="CMS\ICmsServiceWrapper.cs" />
     <Compile Include="CMS\IDocumentTypeHelper.cs" />
     <Compile Include="CMS\IPageTypeProvider.cs" />
+    <Compile Include="CMS\IWebToolsRepository.cs" />
     <Compile Include="CMS\IWidgetProvider.cs" />
     <Compile Include="CMS\PageTypeProvider.cs" />
     <Compile Include="CMS\ProvisionHelper.cs" />

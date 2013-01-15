@@ -37,7 +37,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
 
                 var file = streamProvider.FileData.First();
-                var fileResult = _webToolsRepository.SaveWebmasterToolsFile(file.LocalFileName);
+                var fileName = file.Headers.ContentDisposition.FileName.Replace("\"", "");
+                var fileResult = _webToolsRepository.SaveWebmasterToolsFile(file.LocalFileName, fileName);
 
                 return await (fileResult != null && !fileResult.IsFaulted
                         ? Message2<string>(true, "File uploaded")
