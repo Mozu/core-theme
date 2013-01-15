@@ -430,7 +430,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             foreach (var theme in _sbContext.Theme.Stack)
             {
                 string stem = "resources/" + pathinfo;
-                var file = ViewEngines.Engines.OfType<DjangoMozuViewEngine>().First().PathProvider.GetFile(stem) as MozuVirtualFile;
+                
+                // var file = ViewEngines.Engines.OfType<DjangoMozuViewEngine>().First().PathProvider.GetFile(stem) as MozuVirtualFile;
+                var file = (new DjangoMozuViewEngine()).PathProvider.GetFile(stem) as MozuVirtualFile;
                 if (file != null && file.Exists)
                 {
                     return new MozuVirtualFileResult(stem, contentType, file);

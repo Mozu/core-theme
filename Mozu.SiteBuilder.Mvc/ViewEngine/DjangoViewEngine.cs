@@ -17,14 +17,15 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         public DjangoMozuViewEngine()
         {
             this.TemplateManagerProvider = new NDjango.TemplateManagerProvider().WithLoader(this);
+
+            this.VirtualPathProvider = new MozuVirtualPathProvider(this);
         }
 
-        
+        // TODO: are these constructors redundant? 
         public DjangoMozuViewEngine(Func<TemplateManagerProvider, NDjango.TemplateManagerProvider> setup) : this()
         {
             TemplateManagerProvider = setup(TemplateManagerProvider).WithLoader(this);
             
-            this.VirtualPathProvider = new MozuVirtualPathProvider(this);
             this.TemplateManger = this.TemplateManagerProvider.GetNewManager();
             //server = HttpContext.Current.Server;
         }
@@ -262,7 +263,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             var vpath = path;
             if (path.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1)
             {
-                vpath = "layouts/" + path;
+                vpath = "layouts/" + "_" + path;
             }
             if ( Path.GetExtension( vpath )== "")
             {
@@ -282,7 +283,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
            // var vpath = path.StartsWith("~/themes/") ? path : GetLayoutPath(path);
             if (path.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1)
             {
-                path = "layouts/" + path;
+                path = "layouts/" + "_" + path;
             }
             if (Path.GetExtension(path) == "")
             {
