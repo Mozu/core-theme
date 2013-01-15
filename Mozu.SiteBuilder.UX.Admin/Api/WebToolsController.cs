@@ -1,6 +1,12 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Settings;
@@ -17,21 +23,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _webToolsRepository = webToolsRepository;
         }
 
-        [WebGet(UriTemplate = "webmasterTools")]
-        public Task<Response<WebmasterToolsSettings>> GetWebmasterTools()
-        {
-            return Single(_webToolsRepository.Get<WebmasterToolsSettings>());
-        }
-
         [WebInvoke(UriTemplate = "webmasterTools", Method = "POST")]
-        public Task<Response<WebmasterToolsSettings>> UpdateWebmasterTools(WebmasterToolsSettings settings)
+        public async Task<Response<string>> UpdateWebmasterTools()
         {
-            _webToolsRepository.Save(settings);
+            if (!Request.Content.IsMimeMultipartContent())
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
-            return Single(settings);
+            var streamProvider = new MultipartFormDataStreamProvider(Path.GetTempPath());
+
+            Task<Response<string>> result;
+            try
+            {
+                await Request.Content.ReadAsMultipartAsync(streamProvider);
+
+                var file = streamProvider.FileData.First();
+                var fileResult = _webToolsRepository.SaveWebmasterToolsFile(file.LocalFileName);
+
+                return await (fileResult != null && !fileResult.IsFaulted
+                        ? Message2<string>(true, "File uploaded")
+                        : Message2<string>(false, "Failed to upload file"));
+            }
+            catch (Exception ex)
+            {
+                result = Message2<string>(false, ex.Message);
+            }
+
+            return await result;
         }
 
-        [WebGet(UriTemplate = "robotsTxt")]
+        /*[WebGet(UriTemplate = "robotsTxt")]
         public Task<Response<RobotsTxtSettings>> GetRobotsTxt()
         {
             return Single(_webToolsRepository.Get<RobotsTxtSettings>());
@@ -43,6 +63,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _webToolsRepository.Save(settings);
 
             return Single(settings);
-        }
+        }*/
     }
 }

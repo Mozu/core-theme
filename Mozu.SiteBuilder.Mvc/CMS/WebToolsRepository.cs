@@ -2,19 +2,17 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Serialization.Json;
+using System.Threading.Tasks;
 using Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
-using Mozu.Core.Api.Contracts.Client;
-using Mozu.SiteBuilder.UX.Models.Settings;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
     public interface IWebToolsRepository
     {
-        T Get<T>() where T : IWebToolsSetting;
+        Task<StreamContent> SaveWebmasterToolsFile(string localFileName);
 
-        void Save<T>(T setting) where T : IWebToolsSetting;
+        Stream GetWebMasterToolsFile(string fileName);
     }
 
     public class WebToolsRepository : IWebToolsRepository
@@ -24,57 +22,35 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         private readonly IDocumentWebApiClient _documentWebApiClient;
         private readonly ICmsServiceWrapper _cmsServiceWrapper;
 
-        private static Type[] _knownTypes = new[] { typeof(string) };
-
         public WebToolsRepository(IDocumentWebApiClient documentWebApiClient, ICmsServiceWrapper cmsServiceWrapper)
         {
             _documentWebApiClient = documentWebApiClient;
             _cmsServiceWrapper = cmsServiceWrapper;
         }
 
-        public T Get<T>() where T : IWebToolsSetting
+        public async Task<StreamContent> SaveWebmasterToolsFile(string localFileName)
         {
-            var documentId = GetOrCreateDocumentId(typeof(T));
+            var documentId = GetOrCreateDocumentId("google-site-verification");
+            var file = new FileInfo(localFileName);
 
-            using (var content = _documentWebApiClient.GetDocumentContent(ContentCollection, documentId).Result.ResponseMessage.Content)
-            using (var stream = content.ReadAsStreamAsync().Result)
+            using (Stream fs = file.OpenRead())
             {
-                var serializer = new DataContractJsonSerializer(typeof(T), _knownTypes);
-
-                stream.Position = 0;
-
-                var o = (T) serializer.ReadObject(stream);
-
-                return o;
+                var task = _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId, fs);
+                return await task.Result.ReadAsAsync();
             }
         }
 
-        public void Save<T>(T setting) where T : IWebToolsSetting
+        public Stream GetWebMasterToolsFile(string fileName)
         {
-            var documentId = GetOrCreateDocumentId(typeof(T));
+            var documentId = GetOrCreateDocumentId("google-site-verification");
 
-            using (var stream = new MemoryStream())
-            {
-                var serializer = new DataContractJsonSerializer(typeof (T), _knownTypes);
+            var result = _documentWebApiClient.GetDocumentContent(ContentCollection, documentId).Result.ReadAsAsync().Result;
 
-                serializer.WriteObject(stream, setting);
-                stream.SetLength(stream.Position);
-
-                var svc = (ServiceClientBase)_documentWebApiClient;
-                var relpath = ContentCollection + "/" + documentId;
-
-                //using (var updateTask = _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId))
-                using (var updateTask = svc.Handler.SendAsync<StreamContent, Stream>("POST", relpath, stream, svc.ServiceId, svc.Options))
-                {
-                    if (updateTask.Result.HasException)
-                        throw updateTask.Result.ReadException();
-                }
-            }
+            return result.ReadAsStreamAsync().Result;
         }
 
-        private string GetOrCreateDocumentId(Type type)
+        private string GetOrCreateDocumentId(string name)
         {
-            var name = type.Name.ToLower();
             var task = _cmsServiceWrapper.GetByPath(ContentCollection, name, "");
 
             if (task.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
