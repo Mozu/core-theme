@@ -8,6 +8,6 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     {
         Task<StreamContent> SaveWebmasterToolsFile(string localFileName, string fileName);
 
-        Stream GetWebMasterToolsFile(string fileName);
+        Task<Stream> GetWebMasterToolsFile(string fileName);
     }
 }

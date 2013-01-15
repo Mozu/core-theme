@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Mozu.SiteBuilder.Mvc;
@@ -40,9 +41,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //return View();
         }
 
-        public ActionResult GoogleSiteVerification(string hash)
+        public async Task<ActionResult> GoogleSiteVerification(string hash)
         {
-            var fileStream = _webToolsRepository.GetWebMasterToolsFile(string.Format("google{0}.html", hash));
+            var fileStream = await _webToolsRepository.GetWebMasterToolsFile(string.Format("google{0}.html", hash));
 
             return File(fileStream, "text/html");
         }
