@@ -89,6 +89,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             });
         }
 
+        public async Task<Response<T>> Message2<T>(bool success, string message)
+        {
+            return await Message<T>(success, message);
+        }
+
         public Task<Response<T>> Message<T>(bool success, string message)
         {
             return Task<Response<T>>.Factory.StartNew(() => new Response<T>

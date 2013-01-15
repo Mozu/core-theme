@@ -23,6 +23,12 @@ namespace Mozu.SiteBuilder.UX.StartupTasks
 		public void RegisterRoutes(RouteCollection routes)
 		{
            // routes.Clear();
+		    routes.MapRoute(
+                "GoogleSiteVerification",
+                "google{hash}.html",
+                new { controller = "Home", action="GoogleSiteVerification" },
+                new { hash = @"[a-f0-9]{16}"}
+		        );
 
 			// Ignore text, html, files.
 			routes.IgnoreRoute("{file}.txt");
