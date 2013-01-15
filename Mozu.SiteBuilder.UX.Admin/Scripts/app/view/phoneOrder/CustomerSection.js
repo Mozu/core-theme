@@ -1,5 +1,5 @@
-﻿﻿/**
- * @class Taco.view.phoneOrder.CustomerForm
+﻿/**
+ * @class Taco.view.phoneOrder.CustomerSection
  * @author Michael Speed Elder
  * Date: 1/8/13
  * Time: 5:01 PM
@@ -19,14 +19,15 @@ Ext.define("Taco.view.phoneOrder.CustomerSection", {
 
     initComponent: function () {
         var me = this;
+
         Ext.define("Fuckyou", {
             extend: "Ext.data.Model",
             fields: [
                 { name: "firstName", type: "string" }
             ]
         });
+
         me.fixture = Ext.create("Ext.data.Store", {
-            //data: ["Michael Elder", "Chris Missal", "Foster Hersey", "Thomas Phipps", "Travis Johnson", "Jimmy Sanford", "James Zetlen"]
             model: "Fuckyou",
             data: [
                 { firstName: "Michael" },
@@ -38,6 +39,7 @@ Ext.define("Taco.view.phoneOrder.CustomerSection", {
                 { firstName: "Thom" }
             ]
         });
+
         me.radiogroup = Ext.create("Ext.form.RadioGroup", {
                 cls: Taco.baseCSSPrefix + "customer-radiogroup",
                 columns: 1,
@@ -48,7 +50,9 @@ Ext.define("Taco.view.phoneOrder.CustomerSection", {
                     { boxLabel: 'New', name: 'customerStatus', inputValue: 2 }
                 ]
             });
+
         me.searchform = Ext.create("Taco.view.customers.SearchForm");
+
         me.boxselect = Ext.create("Taco.core.ux.form.BoxSelect", {
             name: 'boxsearch',
             width: 600,
@@ -84,72 +88,75 @@ Ext.define("Taco.view.phoneOrder.CustomerSection", {
 //                }
 //            }
         });
+
         me.partition = Ext.create("Ext.Container", {
             layout: {
                 type: "hbox",
                 align: "stretchmax"
             },
             items: [
-                me.radiogroup, {
-                cls: Taco.baseCSSPrefix + "customer-section-card-container",
-                xtype: "container",
-                height: "100%",
-                layout: "card",
-                flex: 1,
-                defaults: {
-                    componentCls: Taco.baseCSSPrefix + "customer-section-card"
-                },
-                defaultType: "container",
-                items: [{
-                    xtype: "component",
-                    cls: Taco.baseCSSPrefix + "anonymous-transaction",
-                    autoEl: {
-                        tag: "h3",
-                        html: "This is an anonymous transaction"
-                    }
-                }, {
-                    defaultType: "component",
-                    items: [
-                        {
-                            autoEl: {
-                                tag: "h3",
-                                html: "Lookup an existing customer"
-                            }
-                            // TODO: Find example of textinput —> filter
-                        }
-                        , me.boxselect
-                    ]
-                }, {
-                    defaultType: "component",
+                me.radiogroup,
+                {
+                    cls: Taco.baseCSSPrefix + "customer-section-card-container",
+                    xtype: "container",
+                    height: "100%",
+                    layout: "card",
+                    flex: 1,
                     defaults: {
-                        width: "75%",
-                        labelAlign: 'top',
-                        labelSeparator: ""
+                        componentCls: Taco.baseCSSPrefix + "customer-section-card"
                     },
+                    defaultType: "container",
                     items: [{
+                        xtype: "component",
+                        cls: Taco.baseCSSPrefix + "anonymous-transaction",
                         autoEl: {
                             tag: "h3",
-                            html: "Create a new customer"
+                            html: "This is an anonymous transaction"
                         }
                     }, {
-                        xtype: 'textfield',
-                        name: 'email',
-                        fieldLabel: 'Email'
+                        defaultType: "component",
+                        items: [
+                            {
+                                autoEl: {
+                                    tag: "h3",
+                                    html: "Lookup an existing customer"
+                                }
+                            }
+                            , me.boxselect
+                        ]
                     }, {
-                        xtype: 'textfield',
-                        name: 'password',
-                        fieldLabel: 'Password',
-                        value: me.generateRandomPassword()
+                        defaultType: "component",
+                        defaults: {
+                            width: "75%",
+                            labelAlign: 'top',
+                            labelSeparator: ""
+                        },
+                        items: [{
+                            autoEl: {
+                                tag: "h3",
+                                html: "Create a new customer"
+                            }
+                        }, {
+                            xtype: 'textfield',
+                            name: 'email',
+                            fieldLabel: 'Email',
+                            cls: Taco.baseCSSPrefix + 'no-margin-label'
+                        }, {
+                            xtype: 'textfield',
+                            name: 'password',
+                            fieldLabel: 'Password',
+                            value: me.generateRandomPassword()
+                        }]
                     }]
-                    // html: "<h3>Create a new customer</h3>" // TODO: Make into formflexbox and create fields: email, password
-                }]
-            }]
+                }
+            ]
         });
 
         this.items = [me.partition];
 
         this.callParent( arguments );
 
+        // *** Listen for changes to RadioGroup selection
         this.mon(
             me.radiogroup,
             "change",

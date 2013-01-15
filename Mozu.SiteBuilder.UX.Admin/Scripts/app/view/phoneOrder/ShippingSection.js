@@ -22,39 +22,39 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
             items: [{
                 name: 'firstName',
                 fieldLabel: 'First Name',
-                width: 200
+                cls: Taco.baseCSSPrefix + "flex-width-200 " + Taco.baseCSSPrefix + "no-margin-label"
             }, {
                 name: 'lastName',
                 fieldLabel: 'Last Name',
-                width: 200
+                cls: Taco.baseCSSPrefix + "flex-width-200 " + Taco.baseCSSPrefix + "no-margin-label"
             }, {
                 name: 'companyOrOrganization',
                 fieldLabel: 'Company',
-                width: 200
+                cls: Taco.baseCSSPrefix + "flex-width-200"
             }, {
                 name: 'phoneNumbers',
                 fieldLabel: 'Phone',
-                width: 200
+                cls: Taco.baseCSSPrefix + "flex-width-200"
             }, {
                 name: 'address1',
                 fieldLabel: 'Address Line 1',
-                width: 420
+                cls: Taco.baseCSSPrefix + "flex-width-420"
             }, {
                 name: 'address2',
                 fieldLabel: 'Address Line 2',
-                width: 420
+                cls: Taco.baseCSSPrefix + "flex-width-420"
             }, {
                 name: 'cityOrTown',
                 fieldLabel: 'City',
-                width: 200
+                cls: Taco.baseCSSPrefix + "flex-width-200"
             }, {
                 name: 'stateOrProvince',
                 fieldLabel: 'State',
-                width: 90
+                cls: Taco.baseCSSPrefix + "flex-width-90"
             }, {
                 name: 'postalOrZipCode',
                 fieldLabel: 'ZIP Code',
-                width: 90
+                cls: Taco.baseCSSPrefix + "flex-width-90"
             }]
         }, {
             xtype: 'formflexbox',
@@ -67,7 +67,7 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
             items: [{
                 xtype: 'radiogroup',
                 fieldLabel: 'Shipping Method',
-                width: 360,
+                cls: Taco.baseCSSPrefix + "flex-width-360 " + Taco.baseCSSPrefix + "no-margin-label",
                 columns: 1,
                 vertical: true,
                 items: [

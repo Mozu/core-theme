@@ -21,44 +21,40 @@ Ext.define('Taco.view.phoneOrder.BillingSection', {
             defaults: {
                 xtype: 'textfield',
                 labelAlign: 'top',
-                labelSeparator: ''
+                labelSeparator: '',
+                cls: Taco.baseCSSPrefix + "flex-width-200"
             },
             items: [{
                 name: 'firstName',
-                fieldLabel: 'First Name',
-                width: 200
+                fieldLabel: 'First Name'
             }, {
                 name: 'lastName',
-                fieldLabel: 'Last Name',
-                width: 200
+                fieldLabel: 'Last Name'
             }, {
                 name: 'companyOrOrganization',
-                fieldLabel: 'Company',
-                width: 200
+                fieldLabel: 'Company'
             }, {
                 name: 'phoneNumbers',
-                fieldLabel: 'Phone',
-                width: 200
+                fieldLabel: 'Phone'
             }, {
                 name: 'address1',
                 fieldLabel: 'Address Line 1',
-                width: 420
+                cls: Taco.baseCSSPrefix + "flex-width-420"
             }, {
                 name: 'address2',
                 fieldLabel: 'Address Line 2',
-                width: 420
+                cls: Taco.baseCSSPrefix + "flex-width-420"
             }, {
                 name: 'cityOrTown',
-                fieldLabel: 'City',
-                width: 200
+                fieldLabel: 'City'
             }, {
                 name: 'stateOrProvince',
                 fieldLabel: 'State',
-                width: 90
+                cls: Taco.baseCSSPrefix + "flex-width-90"
             }, {
                 name: 'postalOrZipCode',
                 fieldLabel: 'ZIP Code',
-                width: 90
+                cls: Taco.baseCSSPrefix + "flex-width-90"
             }]
         }, {
             xtype: 'formflexbox',
@@ -72,15 +68,15 @@ Ext.define('Taco.view.phoneOrder.BillingSection', {
             items: [{
                 name: 'creditCardNumber',
                 fieldLabel: 'Credit Card',
-                width: 360
+                cls: Taco.baseCSSPrefix + "flex-width-360"
             }, {
                 name: 'expirationDate',
                 fieldLabel: 'Expiration Date',
-                width: 170
+                cls: Taco.baseCSSPrefix + "flex-width-170"
             }, {
                 name: 'securityCode',
                 fieldLabel: 'Security Code',
-                width: 170
+                cls: Taco.baseCSSPrefix + "flex-width-170"
             }]
         }];
 
