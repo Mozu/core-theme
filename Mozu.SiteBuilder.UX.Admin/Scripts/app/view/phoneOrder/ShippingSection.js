@@ -61,7 +61,6 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
             width: 400,
             padding: '0 20',
             defaults: {
-                xtype: 'textfield',
                 labelAlign: 'top',
                 labelSeparator: ''
             },
