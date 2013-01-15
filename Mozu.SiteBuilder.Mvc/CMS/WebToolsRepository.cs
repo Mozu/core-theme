@@ -27,33 +27,33 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
             using (Stream fs = file.OpenRead())
             {
-                var task = _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId, fs);
+                var task = _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId.Result, fs);
                 return await task.Result.ReadAsAsync();
             }
         }
 
-        public Stream GetWebMasterToolsFile(string fileName)
+        public async Task<Stream> GetWebMasterToolsFile(string fileName)
         {
-            var documentId = GetOrCreateDocumentId(fileName);
+            var documentId = await GetOrCreateDocumentId(fileName);
 
-            var result = _documentWebApiClient.GetDocumentContent(ContentCollection, documentId).Result.ReadAsAsync().Result;
+            var result = _documentWebApiClient.GetDocumentContent(ContentCollection, documentId).Result.ReadAsAsync();
 
-            return result.ReadAsStreamAsync().Result;
+            return await result.Result.ReadAsStreamAsync();
         }
 
-        private string GetOrCreateDocumentId(string name)
+        private async Task<string> GetOrCreateDocumentId(string name)
         {
-            var task = _cmsServiceWrapper.GetByPath(ContentCollection, name, "");
+            var task = await _cmsServiceWrapper.GetByPath(ContentCollection, name, "");
 
-            if (task.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                return CreateDocument(name);
+            if (task.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                return await CreateDocument(name);
 
-            var document = task.Result.ReadAsAsync().Result;
+            var document = task.ReadAsAsync().Result;
 
-            return document == null ? CreateDocument(name) : document.Id;
+            return document == null ? await CreateDocument(name) : document.Id;
         }
 
-        private string CreateDocument(string name)
+        private async Task<string> CreateDocument(string name)
         {
             var document = new Document
             {
@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 ContentCollection = ContentCollection,
             };
 
-            var response = _documentWebApiClient.Create(ContentCollection, document).Result;
+            var response = await _documentWebApiClient.Create(ContentCollection, document);
 
             if (response.HasException)
                 throw response.ReadException();
