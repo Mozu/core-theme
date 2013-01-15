@@ -66,15 +66,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             //Mapper.AssertConfigurationIsValid();
 
-            Mapper.CreateMap<Mozu.Content.Contracts.Document, Mvc.Models.CMS.Admin.Document>()
-                .ForMember(x => x.Items, m => m.MapFrom(x => x.Properties));
-            Mapper.CreateMap<Mvc.Models.CMS.Admin.Document, Mozu.Content.Contracts.Document>()
-                .ForMember(x => x.Properties, m => m.MapFrom(x => x.Items));
-
-            Mapper.CreateMap<Mozu.Content.Contracts.PropertyValue, Mvc.Models.CMS.Admin.DocumentProperty>()
-                .ForMember(x => x.Key, m => m.MapFrom(x => x.PropertyType));
-            Mapper.CreateMap<Mvc.Models.CMS.Admin.DocumentProperty, Mozu.Content.Contracts.PropertyValue>()
-                .ForMember(x => x.PropertyType, m => m.MapFrom(x => x.Key));
+            // moved to CmsPagesMapping in MVC project.
+            //Mapper.CreateMap<Mozu.Content.Contracts.Document, Mvc.Models.CMS.Admin.Document>()
+            //    .ForMember(x => x.Items, m => m.MapFrom(x => x.Properties));
+            //Mapper.CreateMap<Mvc.Models.CMS.Admin.Document, Mozu.Content.Contracts.Document>()
+            //    .ForMember(x => x.Properties, m => m.MapFrom(x => x.Items));
+            //
+            //Mapper.CreateMap<Mozu.Content.Contracts.PropertyValue, Mvc.Models.CMS.Admin.DocumentProperty>()
+            //    .ForMember(x => x.Key, m => m.MapFrom(x => x.PropertyType));
+            //Mapper.CreateMap<Mvc.Models.CMS.Admin.DocumentProperty, Mozu.Content.Contracts.PropertyValue>()
+            //    .ForMember(x => x.PropertyType, m => m.MapFrom(x => x.Key));
         }
     }
 }
