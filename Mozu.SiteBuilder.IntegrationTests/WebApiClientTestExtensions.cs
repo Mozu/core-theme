@@ -12,9 +12,6 @@ namespace Mozu.SiteBuilder.IntegrationTests
     {
         public static TEntity With<TTasker, TEntity>(this TTasker self, Func<TTasker, Task<TEntity>> func, TEntity entity)
         {
-            /*var testResponse = new TestResponse<TEntity>(entity);
-            func(self).Returns(testResponse.Task.Result);
-            return entity;*/
             func(self).Returns(Task<TEntity>.Factory.StartNew(() => entity));
             return entity;
         }

@@ -20,34 +20,32 @@ namespace Mozu.SiteBuilder.Mvc.Customers
             _customerAccountWebApiClient = customerAccountWebApiClient;
         }
 
-        public List<CustomerGroup> GetAll(string filter, int? startIndex, int? pageSize)
+        public async Task<List<CustomerGroup>> GetAll(string filter, int? startIndex, int? pageSize)
         {
-            var groupCollection = _customerGroupsWebApiClient.GetCustomerGroups(startIndex, pageSize, null, filter).Result.ReadAsAsync().Result;
+            var groupCollection = await _customerGroupsWebApiClient.GetCustomerGroups(startIndex, pageSize, null, filter).Result.ReadAsAsync();
 
             return groupCollection.Items.Select(g => new CustomerGroup { Id = g.Id, Name = g.Name }).ToList();
         }
 
-        public CustomerGroup Create(CustomerGroup customerGroup)
+        public async Task<CustomerGroup> Create(CustomerGroup customerGroup)
         {
             var group = Mapper.Map<Mozu.Customer.Contracts.CustomerGroup>(customerGroup);
-            var newGroup = _customerGroupsWebApiClient.AddCustomerGroup(@group).Result.ReadAsAsync().Result;
+            var newGroup = await _customerGroupsWebApiClient.AddCustomerGroup(@group).Result.ReadAsAsync();
 
             return Mapper.Map<CustomerGroup>(newGroup);
         }
 
-        public void Delete(CustomerGroup customerGroup)
+        public async Task<StreamContent> Delete(CustomerGroup customerGroup)
         {
-            var deleteCustomerGroup = _customerGroupsWebApiClient.DeleteCustomerGroup(customerGroup.Id);
-            var result = deleteCustomerGroup.Result;
-            var task = result.ReadAsAsync();
-            Task.WaitAll(task);
+            var result = await _customerGroupsWebApiClient.DeleteCustomerGroup(customerGroup.Id);
+            return result.ReadAsAsync().Result;
         }
 
-        public CustomerGroup AssignGroupToCustomer(int customerId, int customerGroupId)
+        public async Task<CustomerGroup> AssignGroupToCustomer(int customerId, int customerGroupId)
         {
-            var group = _customerGroupsWebApiClient.GetCustomerGroup(customerGroupId).Result.ReadAsAsync();
+            var group = await _customerGroupsWebApiClient.GetCustomerGroup(customerGroupId).Result.ReadAsAsync();
 
-            _customerAccountWebApiClient.AddCustomerAccountGroup(new CustomerAccountGroup { Id = customerGroupId }, customerId).Result.ReadAsAsync();
+            await _customerAccountWebApiClient.AddCustomerAccountGroup(new CustomerAccountGroup { Id = customerGroupId }, customerId).Result.ReadAsAsync();
 
             return Mapper.Map<CustomerGroup>(group);
         }
