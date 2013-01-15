@@ -12,6 +12,10 @@ Ext.define('Taco.view.phoneOrder.BillingSection', {
         var me = this;
 
         this.items = [{
+            xtype: "checkbox",
+            boxLabel: "Same as shipping",
+            width: "100%"
+        }, {
             xtype: 'formflexbox',
             width: 420,
             defaults: {
