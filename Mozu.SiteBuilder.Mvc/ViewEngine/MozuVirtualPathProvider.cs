@@ -77,8 +77,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         bool IsLocal(string virtualPath)
         {
-            string theme = virtualPath.Split('/')[2];
-            return !theme.Contains(':');
+            return true;
+            // string theme = virtualPath.Split('/')[2];
+            // return !theme.Contains(':');
         }
         //string MapPath(string virtualPath)
         //{
@@ -86,16 +87,26 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         //}
         string MapLocalPath(string virtualPath)
         {
-            var pathParts = virtualPath.Replace("\\", "/").Split('/');
-            if (pathParts.Length < 3)
-            {
-                throw new InvalidOperationException(string.Format("invalid path [{0}]", virtualPath));
-            }
+            // TODO: obviously this is a hack, we shouldn't be hard-coding this but for some reason,
+            // the code depending on us thinks virtual paths are rooted inside the current theme
+            if (virtualPath.IndexOf("~/") == 0)
+                virtualPath = virtualPath.Replace("~/", "/");
+            else
+                virtualPath = "/Themes/Core3/" + virtualPath;
 
-            string theme = pathParts[2];
+
+            // wtf? 
+            // var pathParts = virtualPath.Replace("\\", "/").Split('/');
+            
+            //if (pathParts.Length < 3)
+            //{
+            //    throw new InvalidOperationException(string.Format("invalid path [{0}]", virtualPath));
+            //}
+            //
+            //string theme = pathParts[2];
             //{dev:name}
 
-            string path = _themeRoot + "/Mozu.SiteBuilder.UX.Themes/" + virtualPath.Substring(1);
+            string path = _themeRoot + "/Mozu.SiteBuilder.UX.Themes/" + virtualPath.TrimStart('/');
             return path;
 
         }
