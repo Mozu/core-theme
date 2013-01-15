@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _orderClient = orderClient;
         }
 
-        [WebGet(UriTemplate = "productX/{productCode}")]
+        [WebGet(UriTemplate = "product/{productCode}")]
         public Task<Response<RuntimeProductContract>> GetProductRaw(string productCode)
         {
             ServiceClientResponse<RuntimeProductContract> res = _productClient.GetProduct(productCode, null, null, null).Result;
