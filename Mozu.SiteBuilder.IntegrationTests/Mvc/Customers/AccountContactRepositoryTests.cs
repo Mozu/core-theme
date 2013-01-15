@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Customers
         {
             var repository = GetRepository();
 
-            var contact = repository.Get(123, 12);
+            var contact = repository.Get(123, 12).Result;
 
             contact.Id.ShouldEqual(_customer.Id);
             contact.Contact.FirstName.ShouldEqual(_customer.Contact.FirstName);
@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Customers
         {
             var repository = GetRepository();
 
-            var contacts = repository.GetAll(1234);
+            var contacts = repository.GetAll(1234).Result;
 
             contacts.Count().ShouldEqual(_allCustomers.Items.Count());
             CollectionAssert.AreEquivalent(contacts.Select(x => x.Id), _allCustomers.Items.Select(x => x.Id));
@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Customers
         {
             var repository = GetRepository();
 
-            var contact = repository.Update(new UX.Models.Customers.CustomerAccountContact(), 1337);
+            var contact = repository.Update(new UX.Models.Customers.CustomerAccountContact(), 1337).Result;
 
             contact.Id.ShouldEqual(_updatedCustomer.Id);
             contact.Contact.LastNameOrSurname.ShouldEqual(_updatedCustomer.Contact.LastNameOrSurname);
@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Customers
         {
             var repository = GetRepository();
 
-            var contact = repository.Create(new UX.Models.Customers.CustomerAccountContact(), 666);
+            var contact = repository.Create(new UX.Models.Customers.CustomerAccountContact(), 666).Result;
 
             contact.Id.ShouldEqual(_createdCustomer.Id);
             contact.Contact.CompanyOrOrganization.ShouldEqual(_createdCustomer.Contact.CompanyOrOrganization);

@@ -110,8 +110,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
             var contact = new CustomerAccountContact();
             var updatedContact = new CustomerAccountContact();
 
-            _accountContactRepository.Update(Arg.Any<CustomerAccountContact>(), Arg.Any<int?>())
-                .Returns(updatedContact);
+            _accountContactRepository.With(x => x.Update(Arg.Any<CustomerAccountContact>(), Arg.Any<int?>()), updatedContact);
 
             _customerRepository.GetByUserId(_lightweightUser.UserId).Returns(new CustomerAccount { Id = id });
 
@@ -146,7 +145,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
             var customerAccount = new CustomerAccount { Id = 58008 };
 
             _customerRepository.GetByUserId(_lightweightUser.UserId).Returns(customerAccount);
-            _accountContactRepository.Create(contact, customerAccount.Id).Returns(createdContact);
+            //_accountContactRepository.Create(contact, customerAccount.Id).Returns(createdContact);
+            _accountContactRepository.With(x => x.Create(contact, customerAccount.Id), createdContact);
 
             var result = controller.AddCustomerContact(contact) as JsonDCResult;
 

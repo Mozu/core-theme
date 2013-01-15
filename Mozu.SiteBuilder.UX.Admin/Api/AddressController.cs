@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "read/accountcontact/?id={id}")]
         public Task<Response<CustomerAccountContact>> GetAccountContact(int? customerAccountId, int? contactId)
         {
-            var accountContact = _accountContactRepository.Get(customerAccountId, contactId);
+            var accountContact = _accountContactRepository.Get(customerAccountId, contactId).Result;
 
             return Single(accountContact);
         }
@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "read/{customerId}")]
         public Task<Response<List<CustomerAccountContact>>> Read(PagingParamaters pagingParams, FilterCollection extFilter, int? customerId)
         {
-            var addresses = _accountContactRepository.GetAll(customerId);
+            var addresses = _accountContactRepository.GetAll(customerId).Result;
 
             return List(addresses.ToList());
         }
@@ -39,14 +39,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "update/{customerId}")]
         public Task<Response<CustomerAccountContact>> Update(CustomerAccountContact contact, int? customerId)
         {
-            var updatedAccountContact = _accountContactRepository.Update(contact, customerId);
+            var updatedAccountContact = _accountContactRepository.Update(contact, customerId).Result;
             return Single(updatedAccountContact);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "create/{customerId}")]
         public Task<Response<CustomerAccountContact>> Create(CustomerAccountContact accountContact, int? customerId)
         {
-            var newAccountContact = _accountContactRepository.Create(accountContact, customerId);
+            var newAccountContact = _accountContactRepository.Create(accountContact, customerId).Result;
 
             return Single(newAccountContact);
         }
@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "duplicate/{customerId}")]
         public Task<Response<CustomerAccountContact>> Duplicate(CustomerAccountContact accountContact, int? customerId)
         {
-            var duplicate = _accountContactRepository.Duplicate(accountContact);
+            var duplicate = _accountContactRepository.Duplicate(accountContact).Result;
 
             return Single(duplicate);
         }

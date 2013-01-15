@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
 
@@ -19,32 +18,32 @@ namespace Mozu.SiteBuilder.Mvc.Customers
             _customerAccountWebApiClient = customerAccountWebApiClient;
         }
 
-        public SB.CustomerAccountContact Get(int? customerAccountId, int? contactId)
+        public async Task<SB.CustomerAccountContact> Get(int? customerAccountId, int? contactId)
         {
-            var result = _customerAccountWebApiClient.GetCustomerAccountContact(customerAccountId, contactId).Result.ReadAsAsync().Result;
+            var result = await _customerAccountWebApiClient.GetCustomerAccountContact(customerAccountId, contactId).Result.ReadAsAsync();
 
             return Mapper.Map<SB.CustomerAccountContact>(result);
         }
 
-        public IEnumerable<SB.CustomerAccountContact> GetAll(int? customerId)
+        public async Task<IEnumerable<SB.CustomerAccountContact>> GetAll(int? customerId)
         {
-            var result = _customerAccountWebApiClient.GetCustomerAccountContacts(customerId, 0, 25, null, null).Result.ReadAsAsync().Result;
+            var result = await _customerAccountWebApiClient.GetCustomerAccountContacts(customerId, 0, 25, null, null).Result.ReadAsAsync();
 
             return Mapper.Map<List<SB.CustomerAccountContact>>(result.Items);
         }
 
-        public SB.CustomerAccountContact Update(SB.CustomerAccountContact accountContact, int? customerAccountId)
+        public async Task<SB.CustomerAccountContact> Update(SB.CustomerAccountContact accountContact, int? customerAccountId)
         {
             var newAccountContact = Mapper.Map<CustomerAccountContact>(accountContact);
-            var result = _customerAccountWebApiClient.UpdateCustomerAccountContact(newAccountContact, customerAccountId, accountContact.Id).Result.ReadAsAsync().Result;
+            var result = await _customerAccountWebApiClient.UpdateCustomerAccountContact(newAccountContact, customerAccountId, accountContact.Id).Result.ReadAsAsync();
 
             return Mapper.Map<SB.CustomerAccountContact>(result);
         }
 
-        public SB.CustomerAccountContact Create(SB.CustomerAccountContact accountContact, int? customerAccountId)
+        public async Task<SB.CustomerAccountContact> Create(SB.CustomerAccountContact accountContact, int? customerAccountId)
         {
             var newAccountContact = Mapper.Map<CustomerAccountContact>(accountContact);
-            var result = _customerAccountWebApiClient.AddCustomerAccountContact(newAccountContact, customerAccountId).Result.ReadAsAsync().Result;
+            var result = await _customerAccountWebApiClient.AddCustomerAccountContact(newAccountContact, customerAccountId).Result.ReadAsAsync();
 
             return Mapper.Map<SB.CustomerAccountContact>(result);
         }
@@ -55,7 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
             //_customerAccountWebApiClient.DeleteCustomerAccountContact(customerAccountId, accountContact.Id).Result.ReadAsAsync();
         }
 
-        public SB.CustomerAccountContact Duplicate(SB.CustomerAccountContact accountContact)
+        public Task<SB.CustomerAccountContact> Duplicate(SB.CustomerAccountContact accountContact)
         {
             throw new NotImplementedException();
         }

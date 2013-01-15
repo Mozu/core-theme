@@ -94,7 +94,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var account = _customerRepository.GetByUserId(UserId);
 
-            var res = _accountContactRepository.Update(contact, account.Id);
+            var res = _accountContactRepository.Update(contact, account.Id).Result;
 
             return new JsonDCResult { Data = res };
         }
@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var account = _customerRepository.GetByUserId(UserId);
 
-            var res = _accountContactRepository.Create(contact, account.Id);
+            var res = _accountContactRepository.Create(contact, account.Id).Result;
 
             return new JsonDCResult { Data = res };
         }
