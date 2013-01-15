@@ -1,0 +1,34 @@
+﻿@mixin taco-phoneOrders {
+
+  // *** Customer section
+  .#{$vprefix}customer-section {
+
+    h3 {
+      font-size: 20px;
+      font-weight: normal;
+    }
+
+    .#{$vprefix}customer-radiogroup td {
+      vertical-align: top;
+    }
+
+    .#{$vprefix}customer-section-card-container {
+      margin-left: 24px;
+      padding-left: 18px;
+      border-left: 1px solid #ccc;
+    }
+    
+    .#{$vprefix}customer-section-card {
+
+      label {
+        margin: 12px 0 0;
+      }
+    }
+
+    .#{$vprefix}anonymous-transaction {
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAIAAAADnC86AAAAs0lEQVRYhcXWuw2AMBADUEN7+0+YGdLTICFQILmPjXvryZ231hqiMbNwd/9F7b0H4aSK2OK8GoFLVDdcpfrgQtUB16qrcLm6BDPUOUxSJzBP/YKp6ivMVsewQB3AGvUJy9QbrFQvWKyesF4FsP+iIvO5MqqZBeGkitjivBqBS1Q3XKX64ELVAdeqq3C5ugQz1DlMUicwT/2CqeorzFbHsEAdwBr1CcvUG6xUL1isnrBeBXAArQd4GuWueBEAAAAASUVORK5CYII=);
+      padding-top: 28px;
+      text-align: center;
+    }
+  }
+}

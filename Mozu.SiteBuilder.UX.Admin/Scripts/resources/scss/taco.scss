@@ -55,6 +55,7 @@ $include-default: false;
 @include taco-checkout;
 @include taco-viewport;
 @include taco-standaloneAccordion;
+@include taco-phoneOrders;
 
 // This line changes the location of your images when creating UIs to be relative instead of within the ExtJS directory.
 // You MUST set this to true/string value if you are creating new UIs + supporting legacy browsers.
