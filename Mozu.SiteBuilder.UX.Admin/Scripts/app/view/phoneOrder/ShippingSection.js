@@ -8,6 +8,9 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
     bodyCls: Taco.baseCSSPrefix + 'flexform',
     title: 'Shipping',
 
+    createTitle: 'Shipping',
+    editTitle: 'Shipping',
+
     initComponent: function () {
         var me = this;
 

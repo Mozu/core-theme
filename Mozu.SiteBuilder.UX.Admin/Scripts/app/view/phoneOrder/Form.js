@@ -1,25 +1,32 @@
 
 /**
- * @class Taco.view.phoneOrder.Index
+ * @class Taco.view.phoneOrder.Form
  * @author Michael Speed Elder
  */
 Ext.define('Taco.view.phoneOrder.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.core.ux.form.Form',
-               'Taco.view.phoneOrder.CustomerSection',
-               'Taco.view.phoneOrder.ItemsSection',
-               'Taco.view.phoneOrder.ShippingSection',
-               'Taco.view.phoneOrder.BillingSection'],
-    title: 'Phone Orders',
-    manageHeight: false,
+       'Taco.view.phoneOrder.CustomerSection',
+       'Taco.view.phoneOrder.ItemsSection',
+       'Taco.view.phoneOrder.ShippingSection',
+       'Taco.view.phoneOrder.BillingSection'
+    ],
+
+    title: 'Create Phone Order',
     width: 860,
+    manageHeight: false,
     defaults: {
         xtype: 'formeditor2',
         frameHeader: false,
         manageHeight: false,
+        width: 860,
         margin: '0 0 14 0',
         bodyPadding: '14 0 14 14'
     },
+
+    createTitle: 'Create Phone Order',
+    editTitle: 'Create Phone Order',
+
     initComponent: function () {
         var me = this,
             customerSection, itemsSection, shippingSection, billingSection;

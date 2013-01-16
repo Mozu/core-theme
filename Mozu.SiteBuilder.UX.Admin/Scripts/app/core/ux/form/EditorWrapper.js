@@ -122,7 +122,7 @@
     },
 
     /**
-     * Gets the form fromt he editor
+     * Gets the form from the editor
      * @return {Taco.core.ux.form.Form} This form is responsible for the form UI as well as the processing of records
      */
     getForm: function () {

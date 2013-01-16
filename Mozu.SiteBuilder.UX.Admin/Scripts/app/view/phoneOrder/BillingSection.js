@@ -8,53 +8,62 @@ Ext.define('Taco.view.phoneOrder.BillingSection', {
     bodyCls: Taco.baseCSSPrefix + 'flexform',
     title: 'Billing',
 
+    createTitle: 'Billing',
+    editTitle: 'Billing',
+
     initComponent: function () {
         var me = this;
 
         this.items = [{
-            xtype: "checkbox",
-            boxLabel: "Same as shipping",
-            width: "100%"
+            xtype: 'checkbox',
+            name: 'useShippingAddress',
+            fieldLabel: '',
+            boxLabel: 'Same as shipping address',
+            width: '100%'
         }, {
             xtype: 'formflexbox',
             width: 420,
             defaults: {
                 xtype: 'textfield',
                 labelAlign: 'top',
-                labelSeparator: '',
-                cls: Taco.baseCSSPrefix + "flex-width-200"
+                labelSeparator: ''
             },
             items: [{
                 name: 'firstName',
-                fieldLabel: 'First Name'
+                fieldLabel: 'First Name',
+                width: 200
             }, {
                 name: 'lastName',
-                fieldLabel: 'Last Name'
+                fieldLabel: 'Last Name',
+                width: 200
             }, {
                 name: 'companyOrOrganization',
-                fieldLabel: 'Company'
+                fieldLabel: 'Company',
+                width: 200
             }, {
                 name: 'phoneNumbers',
-                fieldLabel: 'Phone'
+                fieldLabel: 'Phone',
+                width: 200
             }, {
                 name: 'address1',
                 fieldLabel: 'Address Line 1',
-                cls: Taco.baseCSSPrefix + "flex-width-420"
+                width: 420
             }, {
                 name: 'address2',
                 fieldLabel: 'Address Line 2',
-                cls: Taco.baseCSSPrefix + "flex-width-420"
+                width: 420
             }, {
                 name: 'cityOrTown',
-                fieldLabel: 'City'
+                fieldLabel: 'City',
+                width: 200
             }, {
                 name: 'stateOrProvince',
                 fieldLabel: 'State',
-                cls: Taco.baseCSSPrefix + "flex-width-90"
+                width: 90
             }, {
                 name: 'postalOrZipCode',
                 fieldLabel: 'ZIP Code',
-                cls: Taco.baseCSSPrefix + "flex-width-90"
+                width: 90
             }]
         }, {
             xtype: 'formflexbox',
@@ -68,15 +77,15 @@ Ext.define('Taco.view.phoneOrder.BillingSection', {
             items: [{
                 name: 'creditCardNumber',
                 fieldLabel: 'Credit Card',
-                cls: Taco.baseCSSPrefix + "flex-width-360"
+                width: 360
             }, {
                 name: 'expirationDate',
                 fieldLabel: 'Expiration Date',
-                cls: Taco.baseCSSPrefix + "flex-width-170"
+                width: 170
             }, {
                 name: 'securityCode',
                 fieldLabel: 'Security Code',
-                cls: Taco.baseCSSPrefix + "flex-width-170"
+                width: 170
             }]
         }];
 
