@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using AutoMapper;
 using Mozu.Reference.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models.Settings;
@@ -58,7 +59,16 @@ namespace Mozu.SiteBuilder.UX.Admin
 
         public IEnumerable<IPBlock> GetIPBlocks()
         {
-            var ipBlocks = _generalSettingsWebApiClient.GetIPBlocks().Result.ReadAsAsync().Result;
+            var none = Enumerable.Empty<IPBlock>();
+            var task = _generalSettingsWebApiClient.GetIPBlocks();
+            if (task.IsFaulted)
+                return none;
+
+            var result = task.Result;
+            if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                return none;
+
+            var ipBlocks = result.ReadAsAsync().Result;
             return ipBlocks.Items.Select(Mapper.Map<IPBlock>);
         }
 

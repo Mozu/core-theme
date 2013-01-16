@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public string MobileTheme { get; set; }
 
 
-         [DataMember(Name="googleAnalyticsCode")]
+         [DataMember(Name = "googleAnalyticsId")]
          public string GoogleAnalyticsCode { get; set; }
 
 
