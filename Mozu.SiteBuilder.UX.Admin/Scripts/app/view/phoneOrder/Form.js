@@ -25,7 +25,9 @@ Ext.define('Taco.view.phoneOrder.Form', {
             customerSection, itemsSection, shippingSection, billingSection;
 
         customerSection = Ext.create('Taco.view.phoneOrder.CustomerSection');
-        itemsSection = Ext.create('Taco.view.phoneOrder.ItemsSection');
+        itemsSection = Ext.create('Taco.view.phoneOrder.ItemsSection', {
+            store: this.record.items()
+        });
         shippingSection = Ext.create('Taco.view.phoneOrder.ShippingSection');
         billingSection = Ext.create('Taco.view.phoneOrder.BillingSection');
 

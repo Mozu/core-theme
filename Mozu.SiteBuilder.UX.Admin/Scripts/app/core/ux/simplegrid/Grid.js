@@ -273,6 +273,7 @@ Ext.define('Taco.core.ux.simplegrid.Grid', {
         fields.each(function (field) {
             field.show();
         });
+        this.enable();
     },
 
     onRowEditEnd: function (action) {
@@ -301,7 +302,8 @@ Ext.define('Taco.core.ux.simplegrid.Grid', {
     },
 
     onColEditEnd: function (action) {
-        var btn = this.actions.down('dirtybutton');
+        var me = this,
+            btn = this.actions.down('dirtybutton');
 
         this.editors.each(function (field) {
             var record, col, dataIndex, newValue, btn;
