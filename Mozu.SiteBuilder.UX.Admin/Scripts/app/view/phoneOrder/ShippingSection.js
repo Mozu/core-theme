@@ -28,52 +28,53 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
             items: [{
                 name: 'firstName',
                 fieldLabel: 'First Name',
-                cls: Taco.baseCSSPrefix + "flex-width-200 " + Taco.baseCSSPrefix + "no-margin-label"
+                width: 200
             }, {
                 name: 'lastName',
                 fieldLabel: 'Last Name',
-                cls: Taco.baseCSSPrefix + "flex-width-200 " + Taco.baseCSSPrefix + "no-margin-label"
+                width: 200
             }, {
                 name: 'companyOrOrganization',
                 fieldLabel: 'Company',
-                cls: Taco.baseCSSPrefix + "flex-width-200"
+                width: 200
             }, {
                 name: 'phoneNumbers',
                 fieldLabel: 'Phone',
-                cls: Taco.baseCSSPrefix + "flex-width-200"
+                width: 200
             }, {
                 name: 'address1',
                 fieldLabel: 'Address Line 1',
-                cls: Taco.baseCSSPrefix + "flex-width-420"
+                width: 420
             }, {
                 name: 'address2',
                 fieldLabel: 'Address Line 2',
-                cls: Taco.baseCSSPrefix + "flex-width-420"
+                width: 420
             }, {
                 name: 'cityOrTown',
                 fieldLabel: 'City',
-                cls: Taco.baseCSSPrefix + "flex-width-200"
+                width: 200
             }, {
                 name: 'stateOrProvince',
                 fieldLabel: 'State',
-                cls: Taco.baseCSSPrefix + "flex-width-90"
+                width: 90
             }, {
                 name: 'postalOrZipCode',
                 fieldLabel: 'ZIP Code',
-                cls: Taco.baseCSSPrefix + "flex-width-90"
+                width: 90
             }]
         }, {
             xtype: 'formflexbox',
             width: 400,
             padding: '0 20',
             defaults: {
+                xtype: 'textfield',
                 labelAlign: 'top',
                 labelSeparator: ''
             },
             items: [{
                 xtype: 'radiogroup',
                 fieldLabel: 'Shipping Method',
-                cls: Taco.baseCSSPrefix + "flex-width-360 " + Taco.baseCSSPrefix + "no-margin-label",
+                width: 360,
                 columns: 1,
                 vertical: true,
                 items: [
@@ -83,8 +84,6 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
                 ]
             }]
         }];
-
-        console.log('record', this.record);
 
         this.callParent(arguments);
     }
