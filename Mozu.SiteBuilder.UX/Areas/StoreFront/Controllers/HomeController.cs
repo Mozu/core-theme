@@ -47,5 +47,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             return File(fileStream, "text/html");
         }
+
+        public async Task<ActionResult> RobotsTxt()
+        {
+            var content = await _webToolsRepository.GetRobotsContent();
+
+            return Content(content, "text/plain");
+        }
     }
 }
