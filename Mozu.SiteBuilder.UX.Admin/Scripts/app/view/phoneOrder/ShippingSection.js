@@ -4,6 +4,7 @@
  */
 Ext.define('Taco.view.phoneOrder.ShippingSection', {
     extend: 'Taco.core.ux.form.Form',
+    requires: ['Taco.model.Shipment'],
 
     bodyCls: Taco.baseCSSPrefix + 'flexform',
     title: 'Shipping',
@@ -13,6 +14,8 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
 
     initComponent: function () {
         var me = this;
+
+        this.record = Ext.create('Taco.model.Shipment');
 
         this.items = [{
             xtype: 'formflexbox',
@@ -80,6 +83,8 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
                 ]
             }]
         }];
+
+        console.log('record', this.record);
 
         this.callParent(arguments);
     }
