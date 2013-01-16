@@ -23,6 +23,12 @@ namespace Mozu.SiteBuilder.UX.StartupTasks
 		public void RegisterRoutes(RouteCollection routes)
 		{
            // routes.Clear();
+
+            routes.MapRoute(
+                "Robots",
+                "robots.txt",
+                new { controller = "Home", action = "RobotsTxt" });
+
 		    routes.MapRoute(
                 "GoogleSiteVerification",
                 "google{hash}.html",

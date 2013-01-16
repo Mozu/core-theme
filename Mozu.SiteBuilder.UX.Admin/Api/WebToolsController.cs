@@ -48,18 +48,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return await result;
         }
 
-        /*[WebGet(UriTemplate = "robotsTxt")]
-        public Task<Response<RobotsTxtSettings>> GetRobotsTxt()
-        {
-            return Single(_webToolsRepository.Get<RobotsTxtSettings>());
-        }
-
         [WebInvoke(UriTemplate = "robotsTxt", Method = "POST")]
         public Task<Response<RobotsTxtSettings>> UpdateRobotsTxt(RobotsTxtSettings settings)
         {
-            _webToolsRepository.Save(settings);
+            _webToolsRepository.SaveRobotsContent(settings);
 
             return Single(settings);
-        }*/
+        }
     }
 }
