@@ -205,7 +205,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var ret = await response.ReadAsAsync();
                 retOrders.Add(Mapper.Map<OrderAdmin.Order>(ret));
             }
-            return List2<OrderAdmin.Order>  (retOrders);
+            return await List(retOrders);
         }
 
         [WebInvoke(UriTemplate = "delete/?orderId={orderId}")]

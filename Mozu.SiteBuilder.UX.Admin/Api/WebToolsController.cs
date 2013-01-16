@@ -29,20 +29,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
-            var streamProvider = new MultipartFormDataStreamProvider(Path.GetTempPath());
-
             Task<Response<string>> result;
             try
             {
-                await Request.Content.ReadAsMultipartAsync(streamProvider);
+                var provider = await Request.Content.ReadAsMultipartAsync(new MultipartFormDataStreamProvider(Path.GetTempPath()));
 
-                var file = streamProvider.FileData.First();
+                var file = provider.FileData.First();
                 var fileName = file.Headers.ContentDisposition.FileName.Replace("\"", "");
-                var fileResult = _webToolsRepository.SaveWebmasterToolsFile(file.LocalFileName, fileName);
+                await _webToolsRepository.SaveWebmasterToolsFile(file.LocalFileName, fileName);
 
-                return await (fileResult != null && !fileResult.IsFaulted
-                        ? Message2<string>(true, "File uploaded")
-                        : Message2<string>(false, "Failed to upload file"));
+                return await Message2<string>(true, "File uploaded");
             }
             catch (Exception ex)
             {

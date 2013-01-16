@@ -153,7 +153,7 @@ using Mozu.SiteBuilder.UX.Models.Navigation;
             {
                 if (_ns == null)
                 {
-                    _ns = _navRepo.Value.GetSet().Nodes.Map<List<NavigationRuntimeNode>>();
+                    _ns = _navRepo.Value.GetSet().Result.Nodes.Map<List<NavigationRuntimeNode>>();
                     _ns.ForEach(x => x.Items = _ns.Where(child => child.ParentId == x.Id).ToList());
 
                 }

@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public Task<Response<List<NavigationTreeNode>>> Read(string id)
         {
             var resItems = new List<NavigationTreeNode>();
-            var navSet = _navRepo.GetSet();
+            var navSet = _navRepo.GetSet().Result;
             var parts = NavigationNode.SplitParts(id ?? "root");
             if (parts[0] == "root")
             {
@@ -140,13 +140,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // TODO: currently using 'sw' (starts with), but we'll want to change to 'cont' (contains)
             var productFilter = GetSearchFilter(extFilter, "ProductCode cont \"{0}\" or Content.ProductName cont \"{0}\"");
             var categoryFilter = GetSearchFilter(extFilter, "Content.Name cont \"{0}\"");
-            var request = new CmsListRequest
+            /*var request = new CmsListRequest
             {
                 Filters = GetPagesFilter(extFilter, "Name sw \"{0}\""),
                 Collection = "pages",
                 StartIndex = 0,
                 PageSize = 25,
-            };
+            };*/
 
             var productSearch = _prodService.GetProducts(0, 25, null, null, productFilter).Result.ReadAsAsync();
             var categorySearch = _catClient.GetCategories(0, 25, null, categoryFilter, null ).Result.ReadAsAsync();
@@ -186,7 +186,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         {
                             if ( navSet == null )
                             {
-                                navSet = _navRepo.GetSet ();
+                                navSet = _navRepo.GetSet().Result;
                             }
                             int idx = navSet.Nodes.FindIndex  (x=> x.Id == item.Id );
                             if ( idx > -1)
@@ -210,7 +210,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "create")]
         public Task<Response<List<NavigationTreeNode>>> Create(List<NavigationTreeNode> items)
         {
-            var navSet = _navRepo.GetSet();
+            var navSet = _navRepo.GetSet().Result;
             if (items.Any(x => x.Name == "reset"))
             {
                 navSet = NavigationSet.Default;
@@ -244,7 +244,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var pageNodes = items.Where(x => x.NodeType == "page" || x.NodeType == "link" || x.NodeType == "blog").ToList();
             //var blogNode = items.Where(x => x.NodeType == "blog").ToList();
             CategoryPagedCollection catCol = null;
-            var navSet = _navRepo.GetSet();
+            var navSet = _navRepo.GetSet().Result;
             //tempfix can't track this down.
             foreach (var navigationTreeNode in navSet.Nodes)
             {
