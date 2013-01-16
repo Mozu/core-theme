@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -11,6 +12,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 {
     public class WebToolsRepository : IWebToolsRepository
     {
+        private const string DefaultRobotsTxt = @"User-agent: *
+Disallow: /admin/";
+
         public const string ContentCollection = "settings";
 
         private readonly IDocumentWebApiClient _documentWebApiClient;
@@ -56,10 +60,20 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public async Task<string> GetRobotsContent()
         {
-            var documentId = GetOrCreateDocumentId("robots.txt");
-            var result = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId.Result);
+            try
+            {
+                var documentId = GetOrCreateDocumentId("robots.txt");
+                var result = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId.Result);
 
-            return await StringFromStreamContent(result.ReadAsAsync());
+                if (result.HasException || !result.ResponseMessage.IsSuccessStatusCode)
+                    return DefaultRobotsTxt;
+
+                return await StringFromStreamContent(result.ReadAsAsync());
+            }
+            catch (Exception)
+            {
+                return DefaultRobotsTxt;
+            }
         }
 
         private static async Task<string> StringFromStreamContent(Task<StreamContent> streamContent)

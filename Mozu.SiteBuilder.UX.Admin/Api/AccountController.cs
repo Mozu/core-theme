@@ -372,13 +372,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var roles = rolesTask.ResponseMessage.IsSuccessStatusCode ? rolesTask.ReadAsSync() : new Core.Api.Contracts.RoleCollection() { Items = new List<Core.Api.Contracts.Role>() };
 
+#pragma warning disable 612, 618 // remove when TenantId is replaced
             var siteIds = roles.Items.Select(x => (int?)x.TenantId);
+#pragma warning restore 612, 618
 
             var sites = _siteClient.GetSites(0, int.MaxValue, null, string.Join(" or ", siteIds.Select(x => "id eq " + x))).Result.ReadAsSync();
 
+#pragma warning disable 612, 618 // remove when TenantId is replaced
             var res = roles.Items.Select(role =>
                         new Tuple<Site, int>(sites.Items.FirstOrDefault(site => site.Id == role.TenantId), role.Id))
                 .Where(x => x.Item1 != null).OrderByDescending(x => x.Item1.TenantId).ToList();
+#pragma warning restore 612, 618
             return res;
         }
 
