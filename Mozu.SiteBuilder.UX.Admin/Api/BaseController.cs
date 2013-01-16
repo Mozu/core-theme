@@ -42,16 +42,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             });
         }
 
-        public Response<List<T>> List2<T>(List<T> list, int? total = null)
-        {
-            return new Response<List<T>>
-            {
-                Items = list,
-                Success = true,
-                Total = total ?? (list == null ? 0 : list.Count),
-            };
-        }
-
         public Task<Response<List<T>>> EmptyList<T>()
         {
             return List(default(List<T>));
@@ -87,11 +77,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Success = true,
                 Total = total,
             });
-        }
-
-        public async Task<Response<T>> Message2<T>(bool success, string message)
-        {
-            return await Message<T>(success, message);
         }
 
         public Task<Response<T>> Message<T>(bool success, string message)
