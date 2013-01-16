@@ -5,7 +5,12 @@
 Ext.define('Taco.view.phoneOrder.ItemsSection', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.core.ux.simplegrid.Grid', 'Taco.model.Product', 'Taco.model.OrderItem'],
+
     title: 'Cart',
+
+    createTitle: 'Cart',
+    editTitle: 'Cart',
+
     addFromSkuField: function () {
         var me = this,
             sku = me.skuField.getValue(),

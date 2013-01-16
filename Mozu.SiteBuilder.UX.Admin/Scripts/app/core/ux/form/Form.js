@@ -127,7 +127,6 @@ Ext.define('Taco.core.ux.form.Form', {
 
         this.saveTasks.on({
             complete: function () {
-                console.log('fucking complete bitch!');
                 this.fireEvent('savesuccess', this);
             },
             scope: this

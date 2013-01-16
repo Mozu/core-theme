@@ -17,6 +17,9 @@ Ext.define("Taco.view.phoneOrder.CustomerSection", {
     cls: Taco.baseCSSPrefix + 'customer-section',
     title: "Customer",
 
+    createTitle: "Customer",
+    editTitle: "Customer",
+
     initComponent: function () {
         var me = this;
 

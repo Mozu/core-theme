@@ -56,11 +56,15 @@
     background-color: $color-neutral-lightest;
 
     ul {
-      margin: 7px 21px;
       position: fixed;
+      width: 180px;
+      @include box-shadow(0px 3px 5px -3px rgba(0, 0, 0, 0.5));
 
       li {
-        margin-top: 14px;
+        border-top: 1px solid #ddd;
+        font-size: 15px;
+        padding: 7px 14px;
+        @include box-shadow(inset 0px 1px $color-neutral-white);
       }
     }
   }
