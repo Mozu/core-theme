@@ -106,6 +106,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         {
             var nodes = new List<NavigationTreeNode> { new NavigationTreeNode { Name = "reset" } };
             var api = GetApi();
+            _navigationRepository.With(x => x.GetSet(), null);
 
             api.Create(nodes);
 
@@ -117,7 +118,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         {
             var nodeNames = new[] { "diet", "coke", "pepsi", "water" };
             var nodes = nodeNames.Select(x => new NavigationTreeNode { Name = x }).ToList();
-            _navigationRepository.GetSet().Returns(new NavigationSet());
+            _navigationRepository.With(x => x.GetSet(), new NavigationSet());
             var api = GetApi();
 
             var result = api.Create(nodes).Result;
@@ -130,7 +131,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         [Test]
         public void Read_without_id_should_return_root_NavigationSet()
         {
-            _navigationRepository.GetSet().Returns(new NavigationSet());
+            _navigationRepository.With(x => x.GetSet(), new NavigationSet());
             _categoryWebApiClient.WithAny(x => x.GetChildCategories(null), new CategoryCollection { Items = new List<Category> { new Category { ParentCategoryId = 12 } } });
 
             WithCmsList("pages", new Document { Id = "home" }, new Document { Id = "contact" }, new Document { Id = "404" });
@@ -153,7 +154,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         public void Read_with_folder_id_should_return_pages_with_expected_properties()
         {
             var id = "folder^^things^^123";
-            _navigationRepository.GetSet().Returns(new NavigationSet());
+            _navigationRepository.With(x => x.GetSet(), new NavigationSet());
             var pages = new List<Document>
                 {
                     new Document { ContentCollection = "scauses", Id = Guid.NewGuid().ToString("n"), Name = "Dropbox", Properties = new List<PropertyValue>() },
@@ -201,7 +202,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
                 }).ToList();
             var products = new ProductCollection { Items = nodes.Select(x => new Product { ProductCode = NavigationNode.SplitParts(x.Id)[1] }).ToList() };
 
-            _navigationRepository.GetSet().Returns(new NavigationSet());
+            _navigationRepository.With(x => x.GetSet(), new NavigationSet());
             _productWebApiClient.WithAny(x => x.GetProducts(null, null, null, null, null), products);
             _productWebApiClient.WithAny(x => x.UpdateProduct(null, null), new Product());
 

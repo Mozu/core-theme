@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Runtime.Serialization.Json;
+using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
@@ -37,47 +38,46 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             get { return serializer; }
         }
 
-        public NavigationSet GetSet()
+        public async Task<NavigationSet> GetSet()
         {
-            return ReadNavigation() ?? NavigationSet.Default;
+            return await ReadNavigation() ?? NavigationSet.Default;
         }
 
-        public void SaveSet(NavigationSet set)
+        public async Task<bool> SaveSet(NavigationSet set)
         {
-            var docId = GetNavMetaDocumentId();
+            var docId = GetNavMetaDocumentId().Result;
 
-            UpdateNavigation(set, docId);
+            return await UpdateNavigation(set, docId);
         }
 
-        private void UpdateNavigation(NavigationSet navigation, string documentId)
+        private async Task<bool> UpdateNavigation(NavigationSet navigation, string documentId)
         {
             using (var stream = new MemoryStream())
             {
                 Serializer.WriteObject(stream, navigation);
                 stream.Position = 0;
-                ServiceClientBase svc = (ServiceClientBase)_docWebApiClient;
-                IServiceClientMessageHandler handler = svc.Handler;
-              
-                var relpath = NavigationContentCollection + "/" + documentId;
-                
+                var svc = (ServiceClientBase) _docWebApiClient;
+                var handler = svc.Handler;
 
-          
-             
-                using (var updateTask =  handler.SendAsync<StreamContent, Stream>("PUT", relpath,stream, svc.ServiceId, svc.Options) )//_docWebApiClient.UpdateDocumentContent(NavigationContentCollection, documentId/*, stream*/))
-                {
-                    if (updateTask.Result.HasException)
-                        throw updateTask.Result.ReadException();
-                }
+                var relpath = NavigationContentCollection + "/" + documentId;
+
+
+                var updateTask = await handler.SendAsync<StreamContent, Stream>("PUT", relpath, stream, svc.ServiceId, svc.Options); //_docWebApiClient.UpdateDocumentContent(NavigationContentCollection, documentId/*, stream*/))
+
+                if (updateTask.HasException)
+                    throw updateTask.ReadException();
+
+                return true;
             }
         }
 
 
 
-        private NavigationSet ReadNavigation()
+        private async Task<NavigationSet> ReadNavigation()
         {
             try
             {
-                var docId = GetNavMetaDocumentId();
+                var docId = GetNavMetaDocumentId().Result;
                 //var document = _docWebApiClient.FindByName(NavigationContentCollection, "navigation", null, null, CmsConstants.Documents.doc_state_active).Result.ReadAsSync();
 
                 string key = typeof(NavigationSet) + docId;
@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     if (set == null || set.Nodes == null)
                     {
                         set = NavigationSet.Default;
-                        UpdateNavigation(set, docId);
+                        await UpdateNavigation(set, docId);
                     }
                     _cache[key] = set;
                     return set;
@@ -116,12 +116,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         string _docId;
 
-        public string GetNavMetaDocumentId()
+        public async Task<string> GetNavMetaDocumentId()
         {
             if (_docId == null)
             {
-                var document =
-                    _cmsService.GetByPath(NavigationContentCollection, NavigationFileName, null).Result.ReadAsSync();
+                var document = _cmsService.GetByPath(NavigationContentCollection, NavigationFileName, null).Result.ReadAsSync();
 
                 if (document == null)
                 {
@@ -132,7 +131,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                                           ContentCollection = NavigationContentCollection,
                                       };
 
-                    var response = _docWebApiClient.Create(document.ContentCollection, document).Result;
+                    var response = await _docWebApiClient.Create(document.ContentCollection, document);
 
                     if (response.HasException)
                     {
