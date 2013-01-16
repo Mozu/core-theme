@@ -500,6 +500,7 @@
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\phoneOrder\BillingSection.js" />
     <Content Include="Scripts\app\view\phoneOrder\CustomerSection.js" />
+    <Content Include="Scripts\app\view\phoneOrder\Form.js" />
     <Content Include="Scripts\app\view\phoneOrder\ShippingSection.js" />
     <Content Include="Scripts\app\view\phoneOrder\ItemsSection.js" />
     <Content Include="Scripts\app\view\phoneOrder\Index.js" />

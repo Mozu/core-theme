@@ -10,15 +10,15 @@ Ext.define('Taco.view.phoneOrder.ItemsSection', {
         var me = this;
 
         me.tbar = [
-            {
-                xtype: 'textfield',
-                fieldLabel: 'SKU',
+        {
+            xtype: 'textfield',
+            fieldLabel: 'SKU',
                 name: 'sku',
                 id: 'sku'
-            },
-            {
-                xtype: 'button',
-                text: 'Add',
+        },
+        {
+            xtype: 'button',
+            text: 'Add',
                 disabled: false,
                 onClick: function () {
                     var sku = Ext.getCmp("sku").getValue();
@@ -39,21 +39,16 @@ Ext.define('Taco.view.phoneOrder.ItemsSection', {
                         }
                     });
                 }
-            },
-            {
-                xtype: 'button',
-                text: 'Configure',
-                disabled: true
-            },
-            {
-                xtype: 'button',
-                text: 'Search'
-            },
-            '->',
-            {
-                xtype: 'button',
-                text: 'Clear'
-            }
+        },
+        {
+            xtype: 'button',
+            text: 'Search'
+        },
+        '->',
+        {
+            xtype: 'button',
+            text: 'Clear All'
+        }
         ];
 
         Ext.define('fakeOrderItem', {
