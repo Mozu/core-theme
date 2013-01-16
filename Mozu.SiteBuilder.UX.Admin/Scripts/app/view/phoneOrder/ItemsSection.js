@@ -4,40 +4,66 @@
  */
 Ext.define('Taco.view.phoneOrder.ItemsSection', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.core.ux.simplegrid.Grid', 'Taco.model.Product'],
+    requires: ['Taco.core.ux.simplegrid.Grid', 'Taco.model.Product', 'Taco.model.OrderItem'],
     title: 'Cart',
+    addFromSkuField: function () {
+        var me = this,
+            sku = me.skuField.getValue(),
+            quantity = me.quantityField.getValue();
+        var Product = Ext.ModelManager.getModel('Taco.model.Product');
+        Product.load(sku, {
+            bypassCache: true,
+            success: function(p) {
+                if (p !== null)
+                {
+                    // TODO: check whether this product is already added and update quantity instead.
+                    var orderitem = Ext.create('Taco.model.OrderItem', {
+                        product: p,
+                        quantity: quantity || 1
+                    });
+                    me.store.add(orderitem);
+                    me.skuField.reset();
+                    me.quantityField.reset();
+                }
+            }
+        });
+    },
+    onSpecialKey: function (cmp, e) {
+        if (e.getKey() === e.ENTER) {
+            this.addFromSkuField();
+        }
+    },
     initComponent: function () {
         var me = this;
 
-        me.tbar = [
-        {
-            xtype: 'textfield',
+        me.skuField = Ext.create('Ext.form.field.Text', {
             fieldLabel: 'SKU',
-                name: 'sku',
-                id: 'sku'
-        },
+            name: 'sku',
+            listeners: {
+                specialkey: me.onSpecialKey,
+                scope: me
+            }
+        }),
+
+        me.quantityField = Ext.create('Ext.form.field.Text', {
+            fieldLabel: 'Qty',
+            name: 'quantity',
+            listeners: {
+                specialkey: me.onSpecialKey,
+                scope: me
+            }
+        });
+
+        me.tbar = [
+            me.skuField,
+            me.quantityField,
         {
             xtype: 'button',
             text: 'Add',
                 disabled: false,
-                onClick: function () {
-                    var sku = Ext.getCmp("sku").getValue();
-
-                    var Product = Ext.ModelManager.getModel('Taco.model.Product');
-                    Product.load(sku, {
-                        bypassCache: true,
-                        success: function(p) {
-                            if (p !== null)
-                            {
-                                // TODO: check whether this product is already added and update quantity instead.
-                                var orderitem = Ext.create('fakeOrderItem', {
-                                    product: p,
-                                    quantity: 1
-                                });
-                                me.store.add(orderitem);
-                            }
-                        }
-                    });
+                listeners: {
+                    click: me.addFromSkuField,
+                    scope: me
                 }
         },
         {
@@ -47,23 +73,18 @@ Ext.define('Taco.view.phoneOrder.ItemsSection', {
         '->',
         {
             xtype: 'button',
-            text: 'Clear All'
+            text: 'Clear All',
+            onClick: function () {
+                me.store.removeAll();
+            }
         }
         ];
 
-        Ext.define('fakeOrderItem', {
-            extend: 'Ext.data.Model',
-            fields: [
-                { name: "product", type: "auto" },
-                { name: "quantity", type: "int" }
-            ]
-        });
-
-        // this store is like a cart. It contains the items we will add to our order.
-        me.store = Ext.create('Ext.data.Store', {
-            model: 'fakeOrderItem',
-            data: []
-        });
+        //// this store is like a cart. It contains the items we will add to our order.
+        //me.store = Ext.create('Ext.data.Store', {
+        //    model: 'fakeOrderItem',
+        //    data: []
+        //});
 
         // this store, or "repository", will allow us to do searches for products (apply filters and .load()).
         me.repo = Taco.core.data.StoreManager.getOrCreate({ type: 'Taco.store.Products', clearFilters:true , clearSort:true });
@@ -80,5 +101,7 @@ Ext.define('Taco.view.phoneOrder.ItemsSection', {
         }];
 
         this.callParent(arguments);
+
+        window.poGrid = me.items.get(0);
     }
 });

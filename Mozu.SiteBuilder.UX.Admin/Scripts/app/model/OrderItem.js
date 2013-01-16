@@ -22,7 +22,7 @@ Ext.define('Taco.model.OrderItem', {
         "useNull": true
     }, {
         "name": "quantity",
-        "type": "auto",
+        "type": "int",
         "useNull": true
     }, {
         "name": "subTotal",
@@ -62,7 +62,11 @@ Ext.define('Taco.model.OrderItem', {
         {
             type: 'hasOne',
             model: 'Taco.model.Product',
-            foreignKey: 'product'
+            name: 'product'
+        },
+        {
+            type: 'belongsTo',
+            model: 'Taco.model.Order'
         }
     ],
 

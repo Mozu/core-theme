@@ -156,6 +156,25 @@ Ext.define('Taco.model.Order', {
         "type": "auto"
     }],
 
+    associations: [
+        //{
+        //    type: 'hasMany',
+        //    model: 'Taco.model.ShopperNotes',
+        //    name: "shopperNotes"
+        //},
+        //{
+        //    type: 'hasMany',
+        //    model: 'Taco.model.OrderNote',
+        //    name: "notes"
+        //},
+        {
+            type: 'hasMany',
+            model: 'Taco.model.OrderItem',
+            name: "items"
+        }
+    ],
+
+
     proxy: {
         type: 'ajaxproxy',
         api: {
