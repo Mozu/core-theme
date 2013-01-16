@@ -52,5 +52,10 @@ namespace Mozu.SiteBuilder.Mvc
         /// Otherwise returns null.
         /// </summary>
         ITheme MobileTheme { get; }
+
+        /// <summary>
+        /// Returns the currently set GoogleAnalyticsCode or null if not set.
+        /// </summary>
+        string GoogleAnalyticsCode { get; }
     }
 }
