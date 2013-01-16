@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Autofac;
@@ -10,6 +11,7 @@ using Autofac.Integration.Mvc;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Logging;
+using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Cms;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Mobile;
@@ -20,6 +22,8 @@ using Mozu.SiteBuilder.Mvc.Theme.Exceptions;
 using Mozu.SiteBuilder.Mvc.Theme.Repositories;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
+using Mozu.SiteSettings.General.Contracts;
+using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using IApiContext = Mozu.Core.IApiContext;
@@ -39,6 +43,7 @@ namespace Mozu.SiteBuilder.Mvc
 		//[ThreadStatic] private static ISiteBuilderContext g_sc;
 	    private Lazy<IThemeSettingsRepository> _themeSettingsRepo;
 	    private readonly IApiContext _apiContext;
+	    private readonly IGeneralSettingsWebApiClient _generalSettings;
 	    Lazy<ISettingsRepository> _settings;
 	    private readonly Lazy<ICatalogContext> _catContext;
         private readonly ICookieProvider _cookieProvider;
@@ -54,8 +59,9 @@ namespace Mozu.SiteBuilder.Mvc
         /// </summary>
         private readonly ITheme _cookieTheme = null;
         Lazy<INavigationRuntimeFactory> _nav;
+        private Lazy<string> _googleAnalyticsCode;
 
-        public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<INavigationRuntimeFactory> navFac, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository)
+	    public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<INavigationRuntimeFactory> navFac, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings)
 		{
 			PageContext = new PageContext();
            
@@ -67,7 +73,8 @@ namespace Mozu.SiteBuilder.Mvc
             _catContext = catContext;
             _themeSettingsRepo = themeRepo;
             _apiContext = apiContext;
-            this.SiteId = _apiContext.SiteId;
+	        _generalSettings = generalSettings;
+	        this.SiteId = _apiContext.SiteId;
             this.TenantId = _apiContext.TenantId;
 
             // attempt to look up theme by value of "SBTHEME".
@@ -109,7 +116,21 @@ namespace Mozu.SiteBuilder.Mvc
                 }
             });
 
-          
+	        _googleAnalyticsCode = new Lazy<string>(() =>
+	            {
+
+	                try
+	                {
+	                    var task = _generalSettings.GetGeneralSettings(null);
+	                    var generalSettingsResult = task.Result.ReadAsAsync().Result;
+
+                        return generalSettingsResult.GoogleAnalyticsCode;
+	                }
+	                catch (Exception)
+	                {
+	                    return null;
+	                }
+	            });
 		}
         
 		public static ISiteBuilderContext Current
@@ -291,7 +312,12 @@ namespace Mozu.SiteBuilder.Mvc
             get { return _mobileTheme.Value; }
         }
 
-        /// <summary>
+	    public string GoogleAnalyticsCode
+	    {
+            get { return _googleAnalyticsCode.Value; }
+	    }
+
+	    /// <summary>
         /// TODO: Why is this public?
         /// </summary>
         public IThemeSettingsRepository ThemeSettingsRepository
