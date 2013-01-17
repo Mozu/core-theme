@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 
 namespace Mozu.SiteBuilder.Mvc.Cms
 {
@@ -34,41 +36,46 @@ namespace Mozu.SiteBuilder.Mvc.Cms
        [DataMember(Name = "documentId")]
        public string DocumentId { get; set; }
 
-       List<string> _widgetCreationTags;
-       List<string> _widgetQuery;
-       [DataMember(Name = "widgetQuery")]
-       public List<string> WidgetQuery
-       {
-           get
-           {
-               if (_widgetQuery == null)
-               {
-                   _widgetQuery = new List<string>();
-               }
-               return _widgetQuery;
-           }
-           set
-           {
-               _widgetQuery = value;
-           }
-       }
+       public string Template { get; set; }
 
-       [DataMember(Name = "widgetCreationTags")]
-       public List<string> WidgetCreationTags
-       {
-           get
-           {
-               if (_widgetCreationTags == null)
-               {
-                   _widgetCreationTags = new List<string>();
-               }
-               return _widgetCreationTags;
-           }
-           set
-           {
-               _widgetCreationTags = value;
-           }
-       }
+
+       public string PageId { get; set; }
+
+       //List<string> _widgetCreationTags;
+       //List<string> _widgetQuery;
+       //[DataMember(Name = "widgetQuery")]
+       //public List<string> WidgetQuery
+       //{
+       //    get
+       //    {
+       //        if (_widgetQuery == null)
+       //        {
+       //            _widgetQuery = new List<string>();
+       //        }
+       //        return _widgetQuery;
+       //    }
+       //    set
+       //    {
+       //        _widgetQuery = value;
+       //    }
+       //}
+
+       //[DataMember(Name = "widgetCreationTags")]
+       //public List<string> WidgetCreationTags
+       //{
+       //    get
+       //    {
+       //        if (_widgetCreationTags == null)
+       //        {
+       //            _widgetCreationTags = new List<string>();
+       //        }
+       //        return _widgetCreationTags;
+       //    }
+       //    set
+       //    {
+       //        _widgetCreationTags = value;
+       //    }
+       //}
 
        string _canonicalUrl;
        [DataMember(Name = "canonicalUrl")]
@@ -93,7 +100,13 @@ namespace Mozu.SiteBuilder.Mvc.Cms
        }
 
 
-       [IgnoreDataMember ()]
-       public List<WidgetInstance> Widgets { get; set; }
+       [DataMember(Name = "wpc")]
+       public WidgetPageContext WidgetContext  { get; set; }
+
+      
+
+
+
+
    }
  }

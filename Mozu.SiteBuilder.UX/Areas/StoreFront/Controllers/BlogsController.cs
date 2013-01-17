@@ -56,10 +56,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
         protected override void OnResultExecuting(ResultExecutingContext filterContext)
         {
-            if (filterContext.ParentActionViewContext == null)
-            {
-                this.SiteContext.PageContext.WidgetCreationTags.Add("blog");
-            }
+            
             base.OnResultExecuting(filterContext);
         }
         //

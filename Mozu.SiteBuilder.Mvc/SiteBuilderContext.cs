@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.Mvc
             _themeSettingsRepo = themeRepo;
             _apiContext = apiContext;
 	        _generalSettings = generalSettings;
-	        this.SiteId = _apiContext.SiteId;
+	        this.SiteId = (int)_apiContext.SiteId;
             this.TenantId = _apiContext.TenantId;
 
             // attempt to look up theme by value of "SBTHEME".

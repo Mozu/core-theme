@@ -5,6 +5,6 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 {
     public interface IWidgetProvider
     {
-        IEnumerable<WidgetDefintion> GetWidgets();
+        IEnumerable<WidgetDefinition> GetWidgets();
     }
 }

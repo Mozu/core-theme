@@ -258,7 +258,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var siteTicket = repo.CreateAuthTicketForSite(new Core.Api.Contracts.UserTokenInfo { AccessToken = ticket.AccessToken }).Result.ReadAsSync();
             _authHelper.SetCurrentUser(siteTicket);
             var lwU = Mozu.Core.LightweightUserClaims.Parse(siteTicket.AccessToken);
-            Mvc.SiteBuilderContext.Current.SiteId = lwU.SiteId;
+            Mvc.SiteBuilderContext.Current.SiteId = (int)lwU.SiteId;
             Mvc.SiteBuilderContext.Current.TenantId = site.TenantId;
             Mvc.SiteBuilderContext.Current.Save();
             return site;

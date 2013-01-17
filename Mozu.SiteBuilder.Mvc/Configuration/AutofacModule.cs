@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<MozuVirtualPathProvider>();
             builder.RegisterType<WidgetProvider>().As<IWidgetProvider>();
             builder.RegisterType<Document>();
-            builder.RegisterType<WidgetInstance >();
+           // builder.RegisterType<WidgetInstanceData >();
             builder.RegisterType<CmsProperty>();
             builder.RegisterType<Blog >();
             builder.RegisterType<Post >();

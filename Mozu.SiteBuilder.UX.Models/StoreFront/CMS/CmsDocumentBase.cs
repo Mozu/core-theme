@@ -173,7 +173,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
 
         public virtual ModelMetadata GetModelMetadata()
         {
-            var mmd = ModelMetadataProviders.Current.GetMetadataForType(() => this, typeof(WidgetInstance));
+            var mmd = ModelMetadataProviders.Current.GetMetadataForType(() => this, typeof(CmsDocumentBase));
            
             mmd.AdditionalValues["data-attribute-name"] = "data-editing-widget";
             mmd.AdditionalValues["documentId"] = this.Id;

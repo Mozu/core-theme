@@ -60,8 +60,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             SiteContext.PageContext.PageType = "product";
             SiteContext.PageContext.ProductCode = productCode;
 
-            SiteContext.PageContext.WidgetCreationTags.Add ("product-" + productCode);
-            SiteContext.PageContext.WidgetQuery.Add ("product");
+            //SiteContext.PageContext.WidgetCreationTags.Add ("product-" + productCode);
+            //SiteContext.PageContext.WidgetQuery.Add ("product");
 
 
             return View("product", product);
@@ -141,8 +141,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
             var cat = catList.Where(x => x.CategoryId == categoryId.GetValueOrDefault (-1)).FirstOrDefault();
-            SiteContext.PageContext.WidgetCreationTags.Add("category-" + categoryId );
-            SiteContext.PageContext.WidgetQuery.Add("category");
+            //SiteContext.PageContext.WidgetCreationTags.Add("category-" + categoryId );
+            //SiteContext.PageContext.WidgetQuery.Add("category");
 
             if (cat == null)
             {
