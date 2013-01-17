@@ -61,11 +61,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
                 var relpath = NavigationContentCollection + "/" + documentId;
 
+                var task = _docWebApiClient.UpdateDocumentContent(NavigationContentCollection, documentId, stream);
+              //  var updateTask = handler.SendAsync<StreamContent, Stream>("PUT", relpath, stream, svc.ServiceId, svc.Options); //_docWebApiClient.UpdateDocumentContent(NavigationContentCollection, documentId/*, stream*/))
 
-                var updateTask = handler.SendAsync<StreamContent, Stream>("PUT", relpath, stream, svc.ServiceId, svc.Options); //_docWebApiClient.UpdateDocumentContent(NavigationContentCollection, documentId/*, stream*/))
-
-                if (updateTask.Result.HasException)
-                    throw updateTask.Result.ReadException();
+                if (task.Result.HasException)
+                    throw task.Result.ReadException();
             }
         }
 
