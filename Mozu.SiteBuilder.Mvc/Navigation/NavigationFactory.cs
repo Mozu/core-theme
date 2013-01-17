@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Threading.Tasks;
 using Mozu.ProductRuntime.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
@@ -152,12 +153,13 @@ using Mozu.SiteBuilder.UX.Models.Navigation;
             get
             {
                 if (_ns == null)
-                {
-                    _ns = _navRepo.Value.GetSet().Result.Nodes.Map<List<NavigationRuntimeNode>>();
-                    _ns.ForEach(x => x.Items = _ns.Where(child => child.ParentId == x.Id).ToList());
+            {
+                var task = _navRepo.Value.GetSet();
+                _ns = task.Nodes.Map<List<NavigationRuntimeNode>>();
+                _ns.ForEach(x => x.Items = _ns.Where(child => child.ParentId == x.Id).ToList());
 
-                }
-                return _ns;
+            }
+            return _ns;
             }
         }
         const string _STRINGSPLITDELIM = "^^";
