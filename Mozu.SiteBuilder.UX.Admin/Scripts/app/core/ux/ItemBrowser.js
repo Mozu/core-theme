@@ -88,7 +88,7 @@ Ext.define('Taco.core.ux.ItemBrowser', {
                     xtype: 'togglegroup',
                     columns: 2,
                     vertical: false,
-                    margin: '0 0 0 14',
+                    margin: '0 5 0 10',
                     items: [
                         { name: 'cardselect', inputValue: '0', fieldCls: 'toggle-gridview', checked: true },
                         { name: 'cardselect', inputValue: '1', fieldCls: 'toggle-iconview' }

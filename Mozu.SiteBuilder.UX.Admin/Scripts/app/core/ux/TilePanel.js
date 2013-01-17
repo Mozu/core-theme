@@ -14,7 +14,11 @@ Ext.define('Taco.core.ux.TilePanel', {
     imageField: 'thumbnail',
     nameField: 'name',
     overflowY: 'auto',
+    editable: true,
     isDragable:true,
+    getSelectionModel: function() {
+        return this.view.getSelectionModel.apply(this.view, arguments);
+    },
 
     initComponent: function () {
         var me = this;
@@ -78,8 +82,8 @@ Ext.define('Taco.core.ux.TilePanel', {
 
     onItemClick: function (v, record, item, index, e, eOpts) {
         var me = this,
-            handled= false,
-            dom = Ext.fly(e.getTarget());
+            handled = false,
+            dom = Ext.get(e.getTarget());
 
         Ext.Array.each(me.actions, function (action) {
             if (dom.hasCls(action.iconCls)) {
@@ -88,7 +92,7 @@ Ext.define('Taco.core.ux.TilePanel', {
             }
         });
 
-        if (dom.hasCls(me.editorTriggerCls)) {
+        if (me.editable && dom.hasCls(me.editorTriggerCls)) {
             handled = true;
             me.fireEvent('edit', v, record, item, index, e, eOpts);
         }

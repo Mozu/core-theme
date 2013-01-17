@@ -4,17 +4,15 @@
  */
 Ext.define('Taco.view.phoneOrder.ItemsSection', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.core.ux.simplegrid.Grid', 'Taco.model.Product', 'Taco.model.OrderItem'],
+    requires: ['Taco.core.ux.simplegrid.Grid', 'Taco.model.Product', 'Taco.model.OrderItem', 'Taco.view.phoneOrder.ProductPicker'],
 
     title: 'Cart',
 
     createTitle: 'Cart',
     editTitle: 'Cart',
 
-    addFromSkuField: function () {
-        var me = this,
-            sku = me.skuField.getValue(),
-            quantity = me.quantityField.getValue();
+    addItem: function (sku, quantity, cb) {
+        var me = this;
         var Product = Ext.ModelManager.getModel('Taco.model.Product');
         Product.load(sku, {
             bypassCache: true,
@@ -27,10 +25,19 @@ Ext.define('Taco.view.phoneOrder.ItemsSection', {
                         quantity: quantity || 1
                     });
                     me.store.add(orderitem);
-                    me.skuField.reset();
-                    me.quantityField.reset();
+                    cb&&cb();
+                    
                 }
             }
+        });
+    },
+    addFromSkuField: function () {
+        var me = this,
+            sku = me.skuField.getValue(),
+            quantity = me.quantityField.getValue();
+        me.addItem(sku, quantity, function () {
+            me.skuField.reset();
+            me.quantityField.reset();
         });
     },
     onSpecialKey: function (cmp, e) {
@@ -73,7 +80,31 @@ Ext.define('Taco.view.phoneOrder.ItemsSection', {
         },
         {
             xtype: 'button',
-            text: 'Search'
+            text: 'Search',
+            handler: function () {
+                var productModal = Ext.create('Taco.core.ux.modal.ContentWithActions', {
+                    autoShow: true,
+                    autoSize: true,
+                    isValid: true,
+                    isDirty: true,
+                    width: 700,
+                    title: 'Select Product',
+                    listeners: {
+                        save: function () {
+                            var theModal = this;
+                            var p = this.down('#productpicker').getSelectedProduct();
+                            me.addItem(p.get('productCode'), 1, function () {
+                                theModal.hide();
+                            });
+                        }
+                    },
+                    items: [
+                        Ext.create('Taco.view.phoneOrder.ProductPicker', {
+                            itemId: 'productpicker'
+                        })
+                    ]
+                });
+            }
         },
         '->',
         {
