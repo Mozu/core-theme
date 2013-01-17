@@ -38,19 +38,19 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             get { return serializer; }
         }
 
-        public async Task<NavigationSet> GetSet()
+        public NavigationSet GetSet()
         {
-            return await ReadNavigation() ?? NavigationSet.Default;
+            return (ReadNavigation()) ?? NavigationSet.Default;
         }
 
-        public async Task<bool> SaveSet(NavigationSet set)
+        public void SaveSet(NavigationSet set)
         {
-            var docId = GetNavMetaDocumentId().Result;
+            var docId = GetNavMetaDocumentId();
 
-            return await UpdateNavigation(set, docId);
+            UpdateNavigation(set, docId);
         }
 
-        private async Task<bool> UpdateNavigation(NavigationSet navigation, string documentId)
+        private void UpdateNavigation(NavigationSet navigation, string documentId)
         {
             using (var stream = new MemoryStream())
             {
@@ -62,22 +62,20 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 var relpath = NavigationContentCollection + "/" + documentId;
 
 
-                var updateTask = await handler.SendAsync<StreamContent, Stream>("PUT", relpath, stream, svc.ServiceId, svc.Options); //_docWebApiClient.UpdateDocumentContent(NavigationContentCollection, documentId/*, stream*/))
+                var updateTask = handler.SendAsync<StreamContent, Stream>("PUT", relpath, stream, svc.ServiceId, svc.Options); //_docWebApiClient.UpdateDocumentContent(NavigationContentCollection, documentId/*, stream*/))
 
-                if (updateTask.HasException)
-                    throw updateTask.ReadException();
-
-                return true;
+                if (updateTask.Result.HasException)
+                    throw updateTask.Result.ReadException();
             }
         }
 
 
 
-        private async Task<NavigationSet> ReadNavigation()
+        private NavigationSet ReadNavigation()
         {
             try
             {
-                var docId = GetNavMetaDocumentId().Result;
+                var docId = GetNavMetaDocumentId();
                 //var document = _docWebApiClient.FindByName(NavigationContentCollection, "navigation", null, null, CmsConstants.Documents.doc_state_active).Result.ReadAsSync();
 
                 string key = typeof(NavigationSet) + docId;
@@ -100,7 +98,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     if (set == null || set.Nodes == null)
                     {
                         set = NavigationSet.Default;
-                        await UpdateNavigation(set, docId);
+                        UpdateNavigation(set, docId);
                     }
                     _cache[key] = set;
                     return set;
@@ -116,7 +114,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         string _docId;
 
-        public async Task<string> GetNavMetaDocumentId()
+        public string GetNavMetaDocumentId()
         {
             if (_docId == null)
             {
@@ -131,7 +129,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                                           ContentCollection = NavigationContentCollection,
                                       };
 
-                    var response = await _docWebApiClient.Create(document.ContentCollection, document);
+                    var response = _docWebApiClient.Create(document.ContentCollection, document).Result;
 
                     if (response.HasException)
                     {

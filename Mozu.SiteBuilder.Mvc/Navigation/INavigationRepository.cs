@@ -5,10 +5,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 {
     public interface INavigationRepository
     {
-        Task<NavigationSet> GetSet();
+        NavigationSet GetSet();
 
-        Task<bool> SaveSet(NavigationSet set);
-
-        Task<string> GetNavMetaDocumentId();
+        void SaveSet(NavigationSet set);
     }
 }

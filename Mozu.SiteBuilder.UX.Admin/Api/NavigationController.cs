@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public Task<Response<List<NavigationTreeNode>>> Read(string id)
         {
             var resItems = new List<NavigationTreeNode>();
-            var navSet = _navRepo.GetSet().Result;
+            var navSet = _navRepo.GetSet();
             var parts = NavigationNode.SplitParts(id ?? "root");
             if (parts[0] == "root")
             {
@@ -186,7 +186,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         {
                             if ( navSet == null )
                             {
-                                navSet = _navRepo.GetSet().Result;
+                                navSet = _navRepo.GetSet();
                             }
                             int idx = navSet.Nodes.FindIndex  (x=> x.Id == item.Id );
                             if ( idx > -1)
@@ -210,7 +210,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "create")]
         public Task<Response<List<NavigationTreeNode>>> Create(List<NavigationTreeNode> items)
         {
-            var navSet = _navRepo.GetSet().Result;
+            var navSet = _navRepo.GetSet();
             if (items.Any(x => x.Name == "reset"))
             {
                 navSet = NavigationSet.Default;
@@ -244,7 +244,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var pageNodes = items.Where(x => x.NodeType == "page" || x.NodeType == "link" || x.NodeType == "blog").ToList();
             //var blogNode = items.Where(x => x.NodeType == "blog").ToList();
             CategoryPagedCollection catCol = null;
-            var navSet = _navRepo.GetSet().Result;
+            var navSet = _navRepo.GetSet();
             //tempfix can't track this down.
             foreach (var navigationTreeNode in navSet.Nodes)
             {
