@@ -15,15 +15,20 @@ namespace Mozu.SiteBuilder.UX.Controllers
     {
         public BaseController()//( IComponentContext container)
         {
-
+            
             //SiteContext = container.Resolve<ISiteBuilderContext>();
         }
+
 
         //public IComponentContext ServiceLocator
         //{
         //    get;
         //    set;
         //}
+
+        
+
+
 
         protected override void Execute(RequestContext requestContext)
         {

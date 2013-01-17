@@ -252,7 +252,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             {
                 _authenticationHelper.SetCurrentUser(ticket);
                 _sbc.TenantId = tenantId;
-                _sbc.SiteId = _authenticationHelper.GetCurrentUser().SiteId;
+                _sbc.SiteId = (int)_authenticationHelper.GetCurrentUser().SiteId;
                 _sbc.Save();
                 return this.Redirect(url);
             }
@@ -288,7 +288,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                             };
             _authenticationHelper.SetCurrentUser(ticket);
             _sbc.TenantId = tenantId;
-            _sbc.SiteId = _authenticationHelper.GetCurrentUser().SiteId;
+            _sbc.SiteId = (int)_authenticationHelper.GetCurrentUser().SiteId;
             _sbc.Save();
 
             return this.Redirect(url);

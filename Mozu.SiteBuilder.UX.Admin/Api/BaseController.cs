@@ -87,5 +87,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Message = message,
             });
         }
+        public Response<T> Message3<T>(bool success, string message)
+        {
+           return  new Response<T>
+                {
+                    Success = success,
+                    Message = message,
+                };
+        }
     }
 }

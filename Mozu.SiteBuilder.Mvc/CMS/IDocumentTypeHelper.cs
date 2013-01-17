@@ -104,7 +104,7 @@ using System.Collections;
 
         }
 
-        public WidgetDefintion GetWidgetDefintion(string id)
+        public WidgetDefinition GetWidgetDefintion(string id)
         {
             return _widgetProvider.GetWidgets().FirstOrDefault(x => string.Equals(x.Id, id, StringComparison.OrdinalIgnoreCase));
         }

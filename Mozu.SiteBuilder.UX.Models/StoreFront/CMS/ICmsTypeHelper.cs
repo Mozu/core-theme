@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.CMS
         Mozu.Content.Contracts.DocumentType GetDocumentType(string name);
         Mozu.Content.Contracts.PropertyType GetPropertyType(string name);
         IEnumerable<PageTypeDefinition> GetPageTypeDefinitions();
-        WidgetDefintion GetWidgetDefintion(string id);
+        WidgetDefinition GetWidgetDefintion(string id);
         PageTypeDefinition GetPageTypeDefinition(string id);
     }
 }

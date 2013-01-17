@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="WidgetDefintion.cs" company="Microsoft">
+// <copyright file="WidgetDefinition.cs" company="Microsoft">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -10,8 +10,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
-    [DataContract(Name ="widgetDefintion")]
-    public class WidgetDefintion
+    [DataContract(Name = "widgetDefinition")]
+    public class WidgetDefinition
     {
         [DataMember ( Name="id")]
         [XmlAttribute("id")]

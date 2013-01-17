@@ -28,11 +28,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ContentCollection ))
                 
                 .ConstructUsingServiceLocator();
-            Mapper.CreateMap<DC.Document, VM.WidgetInstance >()
-                .ForMember(x => x.DocumentType, op => op.MapFrom(x => x.DocumentType))
-                .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ContentCollection))
-                .AfterMap((x, y) => y.Init())
-                .ConstructUsingServiceLocator();
+            //Mapper.CreateMap<DC.Document, VM.WidgetInstance >()
+            //    .ForMember(x => x.DocumentType, op => op.MapFrom(x => x.DocumentType))
+            //    .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ContentCollection))
+            //    .AfterMap((x, y) => y.Init())
+           //     .ConstructUsingServiceLocator();
             Mapper.CreateMap<DC.Document, VM.Blog >()
                 .ForMember(x => x.DocumentType, op => op.MapFrom(x => x.DocumentType))
                 .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ContentCollection))

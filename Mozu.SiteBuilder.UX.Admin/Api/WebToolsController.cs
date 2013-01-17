@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var fileName = file.Headers.ContentDisposition.FileName.Replace("\"", "");
                 await _webToolsRepository.SaveWebmasterToolsFile(file.LocalFileName, fileName);
 
-                return await Message<string>(true, "File uploaded");
+                return Message3<string>(true, "File uploaded");
             }
             catch (Exception ex)
             {

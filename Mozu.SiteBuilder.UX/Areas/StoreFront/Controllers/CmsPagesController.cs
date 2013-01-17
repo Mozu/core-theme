@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
                 //CreatePage("Page Not Found", "404_page", "404");
-                this.SiteContext.PageContext.WidgetCreationTags.Add("404");
+                //this.SiteContext.PageContext.WidgetCreationTags.Add("404");
                 res = Page("pages", "404");
             }
 
@@ -131,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 res = Page("pages", "home");
             }
-            this.SiteContext.PageContext.WidgetCreationTags.Add("home");
+            //this.SiteContext.PageContext.WidgetCreationTags.Add("home");
             ViewResult vr = res as ViewResult;
             vr.ViewName = "index";
 
@@ -155,7 +155,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var vm = Mapper.Map<DC.Document, VM.Document>(doc);
             var pc = this.SiteContext.PageContext;
 
-            pc.WidgetCreationTags.Add(doc.ToWidgetStem());
+            //pc.WidgetCreationTags.Add(doc.ToWidgetStem());
             pc.CollectionId = collection;
             pc.DocumentId = doc.Id;
             pc.Title = vm.Properties.GetValue("title") as string;

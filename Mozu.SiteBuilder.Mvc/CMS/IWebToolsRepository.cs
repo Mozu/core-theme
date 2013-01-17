@@ -7,11 +7,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 {
     public interface IWebToolsRepository
     {
-        Task<StreamContent> SaveWebmasterToolsFile(string localFileName, string fileName);
+        Task<bool> SaveWebmasterToolsFile(string localFileName, string fileName);
 
         Task<Stream> GetWebMasterToolsFile(string fileName);
 
-        Task<StreamContent> SaveRobotsContent(RobotsTxtSettings settings);
+        Task<bool> SaveRobotsContent(RobotsTxtSettings settings);
 
         Task<string> GetRobotsContent();
     }

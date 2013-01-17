@@ -26,17 +26,66 @@ Disallow: /admin/";
             _cmsServiceWrapper = cmsServiceWrapper;
         }
 
-        public async Task<StreamContent> SaveWebmasterToolsFile(string localFileName, string fileName)
+        public async Task<bool> SaveWebmasterToolsFile(string localFileName, string fileName)
         {
-            var documentId = GetOrCreateDocumentId(fileName);
-            var file = new FileInfo(localFileName);
 
-            using (Stream fs = file.OpenRead())
+            var documentId = await GetOrCreateDocumentId(fileName);
+         
+            using (var stream = File.OpenRead(localFileName))
             {
-                var task = _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId.Result, fs);
-                return await task.Result.ReadAsAsync();
+                var result  = await _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId, stream);
+                if (result.HasException)
+                {
+                    throw result.ReadException();
+                }
+                return true;
             }
+        
+           
+
         }
+
+
+        //    string docID = null;
+        //    var getDocTask  = await _cmsServiceWrapper.GetByPath(ContentCollection, fileName, "");
+        //    if (getDocTask.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+        //    {
+        //        var document = new Document
+        //                           {
+        //                               Name = fileName,
+        //                               //ContentMimeType = "text/html",
+        //                               DocumentType = "document",
+        //                               ContentCollection = ContentCollection,
+        //                           };
+
+        //         var docCreateTask = await _documentWebApiClient.Create(ContentCollection, document);
+        //        docID = docCreateTask.ReadAsSync().Id;
+
+
+        //    }
+        //    else
+        //    {
+        //        docID = getDocTask.ReadAsSync().Id;
+        //    }
+
+            
+        //    var file = new FileInfo(localFileName);
+
+          
+
+        //    using (Stream fs = file.OpenRead())
+        //    {
+        //        var x = await  _documentWebApiClient.UpdateDocumentContent(ContentCollection, docID, fs);
+
+        //        if (x.HasException)
+        //        {
+        //            throw x.ReadException();
+        //        }
+        //        return true;
+
+
+        //    }
+        //}
 
         public async Task<Stream> GetWebMasterToolsFile(string fileName)
         {
@@ -47,15 +96,22 @@ Disallow: /admin/";
             return await result.Result.ReadAsStreamAsync();
         }
 
-        public async Task<StreamContent> SaveRobotsContent(RobotsTxtSettings settings)
+        public async Task<bool> SaveRobotsContent(RobotsTxtSettings settings)
         {
-            var documentId = GetOrCreateDocumentId("robots.txt");
+            var documentId = await  GetOrCreateDocumentId("robots.txt");
+         
             var content = Encoding.ASCII.GetBytes(settings.Content);
 
             var stream = new MemoryStream(content);
 
-            var task = _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId.Result, stream);
-            return await task.Result.ReadAsAsync();
+            var task = await _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId, stream);
+
+            if (task.HasException)
+            {
+                throw task.ReadException();
+            }
+            return true;
+
         }
 
         public async Task<string> GetRobotsContent()
@@ -89,11 +145,10 @@ Disallow: /admin/";
             var task = await _cmsServiceWrapper.GetByPath(ContentCollection, name, "");
 
             if (task.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            {
                 return await CreateDocument(name);
-
-            var document = task.ReadAsAsync().Result;
-
-            return document == null ? await CreateDocument(name) : document.Id;
+            }
+            return task.ReadAsSync().Id;
         }
 
         private async Task<string> CreateDocument(string name)
@@ -108,10 +163,7 @@ Disallow: /admin/";
 
             var response = await _documentWebApiClient.Create(ContentCollection, document);
 
-            if (response.HasException)
-                throw response.ReadException();
-
-            //if (response.ResponseMessage.IsSuccessStatusCode)
+           
 
             return response.ReadAsSync().Id;
         }
