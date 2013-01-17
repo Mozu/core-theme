@@ -29,7 +29,7 @@ Disallow: /admin/";
         public async Task<bool> SaveWebmasterToolsFile(string localFileName, string fileName)
         {
 
-            var documentId = await GetOrCreateDocumentId(fileName);
+            var documentId = await GetOrCreateDocumentId(fileName, "text/html");
          
             using (var stream = File.OpenRead(localFileName))
             {
@@ -89,16 +89,18 @@ Disallow: /admin/";
 
         public async Task<Stream> GetWebMasterToolsFile(string fileName)
         {
-            var documentId = await GetOrCreateDocumentId(fileName);
+            var documentId = await GetOrCreateDocumentId(fileName, "text/html");
 
-            var result = _documentWebApiClient.GetDocumentContent(ContentCollection, documentId).Result.ReadAsAsync();
+            var blah = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId);
 
-            return await result.Result.ReadAsStreamAsync();
+            var stream = blah.ResponseMessage.Content.ReadAsStreamAsync().Result;
+
+            return stream;
         }
 
         public async Task<bool> SaveRobotsContent(RobotsTxtSettings settings)
         {
-            var documentId = await  GetOrCreateDocumentId("robots.txt");
+            var documentId = await  GetOrCreateDocumentId("robots.txt", "text/plain");
          
             var content = Encoding.ASCII.GetBytes(settings.Content);
 
@@ -118,7 +120,7 @@ Disallow: /admin/";
         {
             try
             {
-                var documentId = GetOrCreateDocumentId("robots.txt");
+                var documentId = GetOrCreateDocumentId("robots.txt", "text/plain");
                 var result = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId.Result);
 
                 if (result.HasException || !result.ResponseMessage.IsSuccessStatusCode)
@@ -140,23 +142,23 @@ Disallow: /admin/";
             return await reader.ReadToEndAsync();
         }
 
-        private async Task<string> GetOrCreateDocumentId(string name)
+        private async Task<string> GetOrCreateDocumentId(string name, string mimeType)
         {
             var task = await _cmsServiceWrapper.GetByPath(ContentCollection, name, "");
 
             if (task.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
-                return await CreateDocument(name);
+                return await CreateDocument(name, mimeType);
             }
             return task.ReadAsSync().Id;
         }
 
-        private async Task<string> CreateDocument(string name)
+        private async Task<string> CreateDocument(string name, string mimeType)
         {
             var document = new Document
             {
                 Name = name,
-                //ContentMimeType = "text/html",
+                ContentMimeType = mimeType,
                 DocumentType = "document",
                 ContentCollection = ContentCollection,
             };

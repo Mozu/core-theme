@@ -409,9 +409,9 @@ Ext.define('Taco.view.generalsettings.Index', {
                             //window.top.fff = form.getFields();
                             form.submit({
                                 url: "/admin/app/webtools/webmasterTools",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
+                                headers: [
+                                    { "Accept": "application/json" }
+                                ],
                                 waitMsg: "Uploading your file...",
                                 success: function (form, action) {
                                     console.log("form/action", form, action);
