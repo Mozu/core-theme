@@ -1,4 +1,8 @@
-﻿Ext.define('Taco.core.ux.form.ModalEditor', {
+﻿/**
+ * @class Taco.core.ux.form.ModalEditor
+ */
+
+Ext.define('Taco.core.ux.form.ModalEditor', {
     extend: 'Taco.core.ux.modal.Content',
     mixins: {
         editorwrapper: 'Taco.core.ux.form.EditorWrapper'

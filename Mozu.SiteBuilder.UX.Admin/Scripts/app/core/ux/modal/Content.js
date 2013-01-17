@@ -39,7 +39,7 @@ Ext.define('Taco.core.ux.modal.Content', {
         this.callParent(arguments);
 
         //Ext.getBody().addListener('resize', this.setPosition, this);
-        Taco.app.viewPort.on({
+        this.mon(Taco.app.viewPort,{
             resize: {
                 fn: me.setPosition,
                 scope: me
