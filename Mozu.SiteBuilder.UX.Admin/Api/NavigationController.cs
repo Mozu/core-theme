@@ -19,7 +19,7 @@ using Mozu.ProductAdmin.Contracts;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     //ALL MAGIC STRINGS... 
-    [ServiceContract]
+      [ServiceContract]
     public class NavigationController : BaseController
     {
             // ICmsTypeHelper _cmsTypeHelper;
@@ -44,6 +44,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _prodService = prodService;
             _navRepo = navRepo;
         }
+
+          public Task<Response<List<NavigationTreeNode>>> Read(string node)
+          {
+              return GetRead(node);
+          }
         //const  string _STRINGSPLITDELIM = "^^";
         //static string JoinParts ( params object[] parts )
         //{
@@ -53,12 +58,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //{
         //    return str.Split  ( new string[]{_STRINGSPLITDELIM}, StringSplitOptions.None );
         //}
-        [WebGet(UriTemplate = "read/?node={id}")]
-        public Task<Response<List<NavigationTreeNode>>> Read(string id)
+        [WebGet(UriTemplate = "read/?node={node}" )]
+        public Task<Response<List<NavigationTreeNode>>> GetRead(string node)
         {
             var resItems = new List<NavigationTreeNode>();
             var navSet = _navRepo.GetSet();
-            var parts = NavigationNode.SplitParts(id ?? "root");
+            var parts = NavigationNode.SplitParts(node ?? "root");
             if (parts[0] == "root")
             {
                 ProcessRoot(resItems, navSet);
@@ -100,13 +105,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 resItems.AddRange(cats.Items.Select(x => x.Map<NavigationTreeNode>()));
                 resItems.AddRange(prods.Items.Select(x =>
                                                          {
-                                                             var node = x.Map<NavigationTreeNode>();
-                                                             node.Id = NavigationNode.JoinParts(node.Id, parts[1]);
-                                                             return node;
+                                                             var node2 = x.Map<NavigationTreeNode>();
+                                                             node2.Id = NavigationNode.JoinParts(node2.Id, parts[1]);
+                                                             return node2;
                                                          }));
                 ;
 
-                foreach (var nn in navSet.Nodes.Where(x => x.ParentId == id))
+                foreach (var nn in navSet.Nodes.Where(x => x.ParentId == node))
                 {
                     var tn = nn.Map<NavigationTreeNode>();
                     if (tn.Index.GetValueOrDefault(int.MaxValue) < resItems.Count)
@@ -121,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                foreach (var nn in navSet.Nodes.Where(x => x.ParentId == id))
+                foreach (var nn in navSet.Nodes.Where(x => x.ParentId == node))
                 {
                     var tn = nn.Map<NavigationTreeNode>();
                     resItems.Add(tn);
