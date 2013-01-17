@@ -198,6 +198,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                            };
             }
 
+            return new ContentResult()
+                       {
+                           Content = ""
+                       };
           
             var zoneWidgets = _context.PageContext.WidgetContext.RuntimeData.Where(_ => string.Equals(_.ZoneId, zoneId, StringComparison.OrdinalIgnoreCase)).OrderBy( x=> x.Index ).ToList();
 
