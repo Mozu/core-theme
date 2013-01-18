@@ -101,9 +101,7 @@ Disallow: /admin/";
         public async Task<bool> SaveRobotsContent(RobotsTxtSettings settings)
         {
             var documentId = await  GetOrCreateDocumentId("robots.txt", "text/plain");
-         
             var content = Encoding.ASCII.GetBytes(settings.Content);
-
             var stream = new MemoryStream(content);
 
             var task = await _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId, stream);
@@ -118,28 +116,17 @@ Disallow: /admin/";
 
         public async Task<string> GetRobotsContent()
         {
-            try
-            {
-                var documentId = GetOrCreateDocumentId("robots.txt", "text/plain");
-                var result = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId.Result);
+            var documentId = await GetOrCreateDocumentId("robots.txt", "text/plain");
+            var result = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId);
 
-                if (result.HasException || !result.ResponseMessage.IsSuccessStatusCode)
-                    return DefaultRobotsTxt;
-
-                return await StringFromStreamContent(result.ReadAsAsync());
-            }
-            catch (Exception)
-            {
+            if (result.HasException || !result.ResponseMessage.IsSuccessStatusCode)
                 return DefaultRobotsTxt;
-            }
-        }
 
-        private static async Task<string> StringFromStreamContent(Task<StreamContent> streamContent)
-        {
-            var result = streamContent.Result.ReadAsStreamAsync();
-            var reader = new StreamReader(result.Result);
+            var stream = result.ResponseMessage.Content.ReadAsStreamAsync().Result;
 
-            return await reader.ReadToEndAsync();
+            var reader = new StreamReader(stream);
+
+            return reader.ReadToEnd();
         }
 
         private async Task<string> GetOrCreateDocumentId(string name, string mimeType)
