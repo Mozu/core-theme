@@ -6,26 +6,36 @@ using Mozu.SiteBuilder.Mvc.Navigation;
 using System.Xml;
 using System.IO;
 using System.Text;
+using Mozu.SiteBuilder.Mvc;
+using System.Threading.Tasks;
+using Mozu.Tenant.Contracts;
+using Mozu.Tenant.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     public class SitemapController : Controller
     {
         INavigationRepository _nav;
+        INavigationRuntimeFactory _navFac;
+        ISiteBuilderContext _sbctx;
 
-        public SitemapController(INavigationRepository navigationRepository)
+        public SitemapController(INavigationRepository navigationRepository, INavigationRuntimeFactory navFac, ISiteBuilderContext sbctx)
         {
             _nav = navigationRepository;
+            _navFac = navFac;
+            _sbctx = sbctx;
         }
 
         // GET: /sitemap.xml
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var set = _nav.GetSet();
+            var primaryNav = _navFac.Primary;
+            string domain = (await GetSitePrimaryDomain()).TrimEnd('/');
 
+            //SiteBuilderContext.Current.PageContext.CanonicalUrl
 
-            int[] categories = new int[] { 2000, 20001 };
-            string[] pages = new string[] { "home" };
             string[] products = new string[] { "bike1" };
 
             // TODO: all these urls should be absolute paths.
@@ -35,19 +45,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 new XElement(ns + "urlset",
                     new XComment("oh hai, im fixin ur sitemaps"),
                     new XElement(ns + "url",
-                        new XElement(ns + "loc", "/"),
+                        new XElement(ns + "loc", domain + "/"),
                         new XElement(ns + "priority", 1.0)),
-                    from c in categories
+                    from node in primaryNav
+                    let url = node.Url.TrimStart('/')
                     select new XElement(ns + "url",
-                        new XElement(ns + "loc", "/category/" + c),
-                        new XElement(ns + "priority", 0.5)),
-                    from p in pages
-                    select new XElement(ns + "url",
-                        new XElement(ns + "loc", "/pages/" + p),
-                        new XElement(ns + "priority", 0.5)),
-                    from pr in products
-                    select new XElement(ns + "url",
-                        new XElement(ns + "loc", "/product/" + pr),
+                        new XElement(ns + "loc", domain + "/" + url),
                         new XElement(ns + "priority", 0.5))
                 )
             );
@@ -57,6 +60,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 doc.Save(w);
                 return Content(w.ToString(), "application/xml");
+            }
+        }
+
+        /// <summary>
+        /// Gets the primary domain name for the current SiteContext.
+        /// </summary>
+        private async Task<string> GetSitePrimaryDomain()
+        {
+            int siteId = _sbctx.SiteId;
+
+            // we have to use the service client to lookup a Site object by id
+            var client = new SitesWebApiClient(new ServiceClientMessageHandler2(new ApiContext()));
+            Site site = await client.GetSite(siteId).Result.ReadAsAsync();
+
+            if (site != null)
+            {
+                Domain primary = site.Domains.FirstOrDefault(d => d.IsPrimary) ?? site.Domains.FirstOrDefault();
+                if (primary != null)
+                    return primary.FullName;
+                else
+                    return null;
+            }
+            else
+            {
+                return null;
             }
         }
 

@@ -209,14 +209,6 @@ namespace Mozu.SiteBuilder.Mvc
 
             _cookieProvider.SaveResponseCookie(COOKIENAME,cookie);
         }
-        static Site LookupSiteByDomain(string host)
-        {
-            var client = new SitesWebApiClient(new ServiceClientMessageHandler2(new ApiContext()));
-            var sites =client.GetSites(0, 1, null, "domainname eq " + host ).Result.ReadAsSync();
-            return sites.Items.FirstOrDefault();
-
-        }
-       
 
         // <add key="default-tenant" value="139"/>
   //  <add key="default-site" value="9001"/>
