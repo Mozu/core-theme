@@ -456,6 +456,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Parameters.xml" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
     <Content Include="Scripts\.sencha\workspace\plugin.xml" />
@@ -1164,6 +1165,7 @@
     <Content Include="Scripts\app\core\ux\PanelDD.js" />
     <Content Include="Scripts\app\core\ux\MultiImageField.js" />
     <Content Include="Scripts\usagereport.js" />
+    <Content Include="SetParameters.xml" />
     <Content Include="Tests\Chalupa\Core.js" />
     <Content Include="Tests\integration\product-basic-edit-save.js" />
     <Content Include="Tests\MozuTestSuite.html" />

@@ -7,7 +7,7 @@
     <parameter
       name="physicalPath"
       description="Physical Path Location"
-      defaultValue="d:/mozu/sites/services/Mozu.Content.WebApi"
+      defaultValue="d:/mozu/sites/Dev/Mozu.Content.WebApi"
       tags="">
       <parameterEntry
         kind="DeploymentObjectAttribute"
