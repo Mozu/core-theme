@@ -283,7 +283,7 @@
                 token = 'products/edit/',
                 editorView;
 
-            editorView = Ext.create('Taco.view.product.Edit', {
+            editorView = Ext.create('Taco.view.product.Edit-DEPRECATED', {
                 logicalParent: me,
                 listeners: {
                     cancel: function () {
