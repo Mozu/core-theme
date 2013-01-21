@@ -507,7 +507,6 @@
     <Content Include="Scripts\app\view\phoneOrder\ShippingSection.js" />
     <Content Include="Scripts\app\view\phoneOrder\ItemsSection.js" />
     <Content Include="Scripts\app\view\phoneOrder\Index.js" />
-    <Content Include="Scripts\app\view\product\Edit.js" />
     <Content Include="Scripts\app\view\role\BehaviorsForm.js" />
     <Content Include="Scripts\app\view\role\Edit.js" />
     <Content Include="Scripts\app\view\role\Form.js" />
