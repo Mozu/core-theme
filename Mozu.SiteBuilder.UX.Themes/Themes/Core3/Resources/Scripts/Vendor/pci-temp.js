@@ -56,7 +56,9 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
         receiveMessage,
         has_postMessage = window.postMessage && navigator.userAgent.indexOf("Opera") === -1,
 
-        framePath = "/Assets/pci_receiver.html?&parenturl=" + encodeURIComponent(location.href) + "&parentdomain=" + encodeURIComponent(location.protocol + '//' + location.host),
+        getFramePath = function () {
+            return settings.get("framePath") + "?&parenturl=" + encodeURIComponent(location.href) + "&parentdomain=" + encodeURIComponent(location.protocol + '//' + location.host)
+        },
 
         messageOriginIsLegit = function (e) {
             var regex = /^https?:\/\/[^/]+/i;
@@ -110,7 +112,7 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
         _postMessage = has_postMessage ? function (data, windowObject) {
             windowObject.postMessage(data, removeTrailingSlash(settings.get('apiBase')));
         } : function (data, windowObject) {
-            var locationToGoTo = (removeTrailingSlash(settings.get('apiBase')) + framePath).replace(/#.*$/, '') + '#' + (+new Date) + (cache_bust++) + '&' + data;
+            var locationToGoTo = (removeTrailingSlash(settings.get('apiBase')) + getFramePath()).replace(/#.*$/, '') + '#' + (+new Date) + (cache_bust++) + '&' + data;
             windowObject.location = locationToGoTo;
         },
 
@@ -131,7 +133,7 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
             _receiver.style.left = "-9999px";
             _receiver.style.width = "1px";
             _receiver.style.height = "1px";
-            _receiver.src = removeTrailingSlash(settings.get('apiBase')) + framePath;
+            _receiver.src = removeTrailingSlash(settings.get('apiBase')) + getFramePath();
 
             document.getElementsByTagName('body')[0].appendChild(_receiver);
         },
@@ -139,7 +141,8 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
     DEFAULTS = {
         maskPattern: "^(\\d+?)\\d{4}$",
         maskCharacter: "*",
-        apiBase: window.location.protocol + "//pci." + window.location.hostname.replace('www.', '')
+        apiBase: window.location.protocol + "//pci." + window.location.hostname.replace('www.', ''),
+        framePath: "/Assets/pci_receiver.html"
     },
 
     events = {

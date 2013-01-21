@@ -312,6 +312,9 @@
                         self.pciProcessor.applyMask();
                         PaymentSection.prototype.submit.apply(self);
                     }
+                },
+                settings: {
+                    framePath: "/../Assets/pci_receiver.html"
                 }
             });
 
