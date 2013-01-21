@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+  <parameters >
+    <parameter name="applicationPool" defaultValue="Mozu.Content.WebApi" >
+      <parameterEntry kind="DeploymentObjectAttribute" scope="application"
+                      match="application/@applicationPool" />
+    </parameter>
+    <parameter
+      name="physicalPath"
+      description="Physical Path Location"
+      defaultValue="d:/mozu/sites/services/Mozu.Content.WebApi"
+      tags="">
+      <parameterEntry
+        kind="DeploymentObjectAttribute"
+        scope="application"
+        match="application/@physicalPath" />
+    </parameter>
+  </parameters>
