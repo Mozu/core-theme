@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,6 +18,11 @@ using Autofac;
 using Autofac.Core;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
+using Mozu.Core.Api.Configuration;
+using Mozu.Core.Api.Descriptor;
+using Mozu.Core.Api.ErrorHandler;
+using Mozu.Core.Api.Filters.Exception;
+using Mozu.Core.Api.Testing;
 using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.PaymentService.Contracts.Clients.Public;
@@ -149,11 +155,69 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
                     routes.MapHttpRoute(t, routePrefix);               
                 });
 
-            GlobalConfiguration.Configuration.Filters.Add(new GlobalErrorHandler());
+            routes.MapHttpRoute<DescriptorController>("def");
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new HackApiHttpActionSelector());
+            GlobalConfiguration.Configuration.Filters.Add(new ApiExceptionFilter(
+                                                              new ExceptionResponseBuilderCollection { IncludeExceptionDetails = true },
+                                                              new ApiExceptionFilterLogger { IsErrorLoggingEnabled = false  }));
+
+
+            //GlobalConfiguration.Configuration.Filters.Add(new GlobalErrorHandler());
 
             GlobalConfiguration.Configuration.BindParameter(typeof(FilterCollection), new FilterCollectionRequestHandler());
             GlobalConfiguration.Configuration.BindParameter(typeof(PagingParamaters), new PagingParamatersRequestHandlers());
 
+        }
+
+
+
+        public class HackApiHttpActionSelector : ApiControllerActionSelector
+        {
+            private System.Collections.Hashtable _inits = new Hashtable();
+
+            public override HttpActionDescriptor SelectAction(HttpControllerContext controllerContext)
+            {
+                if (!_inits.Contains(controllerContext.ControllerDescriptor))
+                {
+                    lock (_inits)
+                    {
+                        if (!_inits.Contains(controllerContext.ControllerDescriptor))
+                        {
+                            var all = this.GetActionMapping(controllerContext.ControllerDescriptor).SelectMany(x => x).ToList();
+
+
+                            foreach (var item in all)
+                            {
+                                var wge = item.GetCustomAttributes<WebGetAttribute>().FirstOrDefault();
+                                if (wge != null)
+                                {
+                                    if (!item.SupportedHttpMethods.Any(x => x.Method == "GET"))
+                                    {
+                                        item.SupportedHttpMethods.Add(HttpMethod.Get);
+                                    }
+                                }
+                                var wie = item.GetCustomAttributes<WebInvokeAttribute>().FirstOrDefault();
+                                if (wie != null)
+                                {
+                                    var meth = wie.Method;
+                                    meth = string.IsNullOrEmpty(meth) ? "POST" : meth;
+                                    if (!item.SupportedHttpMethods.Any(x => x.Method == meth))
+                                    {
+                                        item.SupportedHttpMethods.Add(new HttpMethod(meth));
+                                    }
+                                }
+                            }
+                            _inits.Add(controllerContext.ControllerDescriptor, true);
+
+                        }
+                    }
+                }
+
+                return base.SelectAction(controllerContext);
+
+            }
         }
 
         private static void RegisterRoutes()
@@ -170,6 +234,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             routes.MapRoute("img3", "img/{collection}/{documentId}",
                     new { action = "Index", controller = "img" });
+
+            routes.Insert(0, new Route("apitest/index", new TestClientIndexRouteHandler()));
 
             //routes.MapRoute(
             //    "Default", // Route name
