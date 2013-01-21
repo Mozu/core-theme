@@ -73,15 +73,12 @@ Ext.define('Taco.controller.Testing', {
         orderItemStore.each(function (i) { itemArray.push(i.getData()); });
         order.set('items',itemArray);
         
-        debugger;
 
         order.save( { 
-            success: function(record, operation) {
-                debugger;
+            success: function (record, operation) {
             },
             failure: function(record, operation)
             {
-                debugger;
             }
         });
         
