@@ -23,6 +23,6 @@
       <parameterEntry
         kind="DeploymentObjectAttribute"
         scope="application"
-        match="application/@'IIS Web Application Name'" />
+        match="application/@*[name()='IIS Web Application Name']" />
     </parameter>
   </parameters>
