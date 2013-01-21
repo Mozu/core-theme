@@ -677,17 +677,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Stripes2\theme.xml" />
-    <Content Include="web.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Tools\ThemeSettings.xsd">
@@ -844,24 +833,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core3\Resources\Stylesheets\Modules\image-gallery.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="web.CI.config">
-      <DependentUpon>web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="web.Demo.config">
-      <DependentUpon>web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="web.Dev.config">
-      <DependentUpon>web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core3\Templates\_error.vol" />
@@ -1063,12 +1034,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core3\Resources\Stylesheets\textonly.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Mozu.SiteBuilder.UX\Mozu.SiteBuilder.UX.csproj">
-      <Project>{64e108c3-ddb5-4fa8-8c17-778f64b028ba}</Project>
-      <Name>Mozu.SiteBuilder.UX</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
