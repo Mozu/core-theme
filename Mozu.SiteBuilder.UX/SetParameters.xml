@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<parameters>
+  <setParameter name="IIS Web Application Name" value="Services/Mozu.Content.WebApi" />
+  <setParameter name="physicalPath" value="d:/mozu/sites/services/Mozu.Content.WebApi/" />
+  <setParameter name="applicationPool" value="Mozu.Content.WebApi"/>
+</parameters>
