@@ -10,3 +10,9 @@
 {% else %}
 {% debug_all_scripts %}
 {% endif %}
+
+{% if 1 %}
+
+{% endif %}
+
+    {% include "Modules/GoogleAnalyticsTrackingCode" %}

@@ -288,6 +288,9 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
     </Compile>
+    <Content Include="Themes\Core3\Modules\_GoogleAnalyticsTrackingCode.vol">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Themes\RESTCore\Resources\Scripts\Fixtures\RESTProduct.json" />
     <Content Include="Morrissey\morrissey.js" />
     <Content Include="Morrissey\src\lyrically.js" />
