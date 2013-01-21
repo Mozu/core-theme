@@ -75,6 +75,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.Clients.CheckoutSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Reference.Contracts.Clients.ReferenceDataWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.General.Contracts.Clients.GeneralSettingsWebApiClient).Assembly);
+            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.User.Contracts.Clients.IUserWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.CheckoutSettings ).Assembly);
             builder.RegisterType<SiteBuilderContext>().As<ISiteBuilderContext>().InstancePerHttpRequest().As<IEditableContext>().InstancePerHttpRequest();
