@@ -180,7 +180,7 @@
 {% endblock BodyContent %}
 
 {% block AdditionalGoogleAnalyticsTracking %}
-	
+	{% if not SiteContext.GoogleAnalyticsEcommerceEnabled %}
 	_gaq.push(['_addTrans',
 		'{{ Model.orderNumber }}',							// transaction ID - required
 		'{{ siteContext.settings.general.websiteName }}',	// affiliation or store name
@@ -204,6 +204,7 @@
 	{% endfor %}
 
 	_gaq.push(['_trackTrans']);
+	{% endif %}
 
 {% endblock AdditionalGoogleAnalyticsTracking %}
 
