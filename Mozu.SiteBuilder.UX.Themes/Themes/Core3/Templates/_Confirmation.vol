@@ -2,6 +2,7 @@
 
 {% block Init %}
 	{% setTemplateVariables BodyTagClasses="checkout-confirmation" %}
+	{% setTemplateVariables IsConfirmationPage="true" %}
 {% endblock Init%}
 
 {% block BodyContent %}
@@ -177,3 +178,35 @@
 </div><!-- #order-confirmation -->
 
 {% endblock BodyContent %}
+
+{% block AdditionalGoogleAnalyticsTracking %}
+	
+	_gaq.push(['_addTrans',
+		'{{ Model.orderNumber }}',							// transaction ID - required
+		'{{ siteContext.settings.general.websiteName }}',	// affiliation or store name
+		'{{ Model.total }}',								// total - required
+		'{{ Model.taxTotal }}',								// tax
+		'{{ Model.shippingTotal }}',						// shipping
+		'{{ Model.shipment.cityOrTown }}',					// city
+		'{{ Model.shipment.stateOrProvince }}',				// state or province
+		'USA'												// country
+	]);
+
+	{% for item in Model.items %}
+	_gaq.push(['_addItem',
+		'{{ Model.orderNumber }}',		// transaction ID - required
+		'{{ item.productCode }}',		// SKU/code - required
+		'{{ item.productName }}',		// product name
+		'',								// category or variation
+		'{{ item.unitPrice }}',			// unit price - required
+		'{{ item.quantity }}',			// quantity - required
+	]);
+	{% endfor %}
+
+	_gaq.push(['_trackTrans']);
+
+{% endblock AdditionalGoogleAnalyticsTracking %}
+
+		
+		
+		
