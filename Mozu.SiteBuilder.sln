@@ -25,7 +25,7 @@ Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 7
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://tfs.ads.volusion.com:8080/tfs/vnext
+		SccTeamFoundationServer = http://tfs:8080/tfs/vnext
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = Mozu.SiteBuilder.Mvc\\Mozu.SiteBuilder.Mvc.csproj
 		SccProjectName1 = Mozu.SiteBuilder.Mvc

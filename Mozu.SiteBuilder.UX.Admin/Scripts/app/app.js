@@ -268,7 +268,6 @@ Ext.application({
     },
     doTheNeedful: function (state) {
 
-        //debugger;
 
         if (Taco.showViewPort === false) {
             return;
