@@ -99,6 +99,11 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
          [DataMember(Name = "googleAnalyticsId")]
          public string GoogleAnalyticsCode { get; set; }
 
+        [DataMember(Name = "googleAnalyticsEnabled")]
+         public bool GoogleAnalyticsEnabled { get; set; }
+
+        [DataMember(Name = "googleAnalyticsEcommerceEnabled")]
+        public bool GoogleAnalyticsEcommerceEnabled { get; set; }
 
         public string DesktopTheme
         {

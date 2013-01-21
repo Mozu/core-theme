@@ -57,5 +57,7 @@ namespace Mozu.SiteBuilder.Mvc
         /// Returns the currently set GoogleAnalyticsCode or null if not set.
         /// </summary>
         string GoogleAnalyticsCode { get; }
+        bool GoogleAnalyticsEnabled { get; }
+        bool GoogleAnalyticsEcommerceEnabled { get; }
     }
 }
