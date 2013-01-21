@@ -60,6 +60,8 @@ namespace Mozu.SiteBuilder.Mvc
         private readonly ITheme _cookieTheme = null;
         Lazy<INavigationRuntimeFactory> _nav;
         private Lazy<string> _googleAnalyticsCode;
+	    private Lazy<bool> _googleAnalyticsEnabled;
+	    private Lazy<bool> _googleAnalyticsEcommerceEnabled;
 
 	    public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<INavigationRuntimeFactory> navFac, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings)
 		{
@@ -116,23 +118,28 @@ namespace Mozu.SiteBuilder.Mvc
                 }
             });
 
-	        _googleAnalyticsCode = new Lazy<string>(() =>
-	            {
+	        _googleAnalyticsCode = new Lazy<string>(() => GetGeneralSettingValue(x => x.GoogleAnalyticsCode));
 
-	                try
-	                {
-	                    var task = _generalSettings.GetGeneralSettings(null);
-	                    var generalSettingsResult = task.Result.ReadAsAsync().Result;
-
-                        return generalSettingsResult.GoogleAnalyticsCode;
-	                }
-	                catch (Exception)
-	                {
-	                    return null;
-	                }
-	            });
+            // TODO: Uncomment when properties are added by services team.
+            //_googleAnalyticsEnabled = new Lazy<bool>(() => GetGeneralSettingValue(x => x.GoogleAnalyticsEnabled));
+            //_googleAnalyticsEcommerceEnabled = new Lazy<bool>(() => GetGeneralSettingValue(x => x.GoogleAnalyticsEcommerceEnabled));
 		}
         
+        private T GetGeneralSettingValue<T>(Func<GeneralSettings, T> expression)
+        {
+            try
+            {
+                var task = _generalSettings.GetGeneralSettings(null);
+                var generalSettingsResult = task.Result.ReadAsAsync().Result;
+
+                return expression(generalSettingsResult);
+            }
+            catch (Exception)
+            {
+                return default(T);
+            }
+        }
+
 		public static ISiteBuilderContext Current
 		{
 			get
@@ -307,6 +314,16 @@ namespace Mozu.SiteBuilder.Mvc
 	    public string GoogleAnalyticsCode
 	    {
             get { return _googleAnalyticsCode.Value; }
+	    }
+
+	    public bool GoogleAnalyticsEnabled
+	    {
+            get { return _googleAnalyticsEnabled.Value; }
+	    }
+	    
+	    public bool GoogleAnalyticsEcommerceEnabled
+	    {
+            get { return _googleAnalyticsEcommerceEnabled.Value; }
 	    }
 
 	    /// <summary>
