@@ -1,7 +1,7 @@
 /**
- * @class Taco.view.product.Edit
+ * @class Taco.view.product.Edit-DEPRECATED
  */
-Ext.define('Taco.view.product.Edit', {
+Ext.define('Taco.view.product.Edit-DEPRECATED', {
     extend: 'Taco.core.ux.form.Editor',
     alias: 'widget.productedit',
     requires: ['Taco.core.ux.CategoryComboBox',

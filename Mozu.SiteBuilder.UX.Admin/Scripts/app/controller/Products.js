@@ -6,7 +6,7 @@
 
 Ext.define('Taco.controller.Products', {
     extend: 'Taco.core.Controller',
-    requires:['Taco.view.product.Edit'],
+    requires:['Taco.view.product.Edit-DEPRECATED'],
     editorView: 'Taco.view.category.SimpleEditor',
     listView: null,
     models: ['Taco.model.Product'],
@@ -26,7 +26,7 @@ Ext.define('Taco.controller.Products', {
             id: 0
         });
         me.getTacoStoreProductsStore().insert(0, [data]);
-        me.createContentView('Taco.view.product.Edit', {
+        me.createContentView('Taco.view.product.Edit-DEPRECATED', {
             data: data,
             store: me.getTacoStoreProductsStore()
         });
