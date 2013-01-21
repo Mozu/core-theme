@@ -120,9 +120,8 @@ namespace Mozu.SiteBuilder.Mvc
 
 	        _googleAnalyticsCode = new Lazy<string>(() => GetGeneralSettingValue(x => x.GoogleAnalyticsCode));
 
-            // TODO: Uncomment when properties are added by services team.
-            //_googleAnalyticsEnabled = new Lazy<bool>(() => GetGeneralSettingValue(x => x.GoogleAnalyticsEnabled));
-            //_googleAnalyticsEcommerceEnabled = new Lazy<bool>(() => GetGeneralSettingValue(x => x.GoogleAnalyticsEcommerceEnabled));
+            _googleAnalyticsEnabled = new Lazy<bool>(() => GetGeneralSettingValue(x => /*x.GoogleAnalyticsEnabled*/ false));
+            _googleAnalyticsEcommerceEnabled = new Lazy<bool>(() => GetGeneralSettingValue(x => /*x.GoogleAnalyticsEcommerceEnabled*/ false));
 		}
         
         private T GetGeneralSettingValue<T>(Func<GeneralSettings, T> expression)
