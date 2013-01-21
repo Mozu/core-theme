@@ -14,4 +14,15 @@
         scope="application"
         match="application/@physicalPath" />
     </parameter>
+
+    <parameter
+      name="IIS Web Application Name"
+      description="The fully-pathed name of this application in IIS."
+      defaultValue="RiaSiteBuilder"
+      tags="">
+      <parameterEntry
+        kind="DeploymentObjectAttribute"
+        scope="application"
+        match="application/@IIS Web Application Name" />
+    </parameter>
   </parameters>
