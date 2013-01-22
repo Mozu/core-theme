@@ -24,38 +24,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             var NULLCONTENTE = new DC.ProductLocalizedContent();
             var NULLPRICE = new DC.ProductPrice();
-            
-           
+
+
 
 
             Mapper.CreateMap<DC.Product, Product>()
-                .ForMember(x => x.ContentLocaleCode,
-                           op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).LocaleCode))
+                  .ForMember(x => x.ContentLocaleCode,
+                             op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).LocaleCode))
                 //.ForMember(x => x.FreeShipping, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).FreeShipping))
-                .ForMember(x => x.MetaTagDescription,
-                           op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).MetaTagDescription))
-                .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).MetaTagKeywords))
-                .ForMember(x => x.MetaTagTitle, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).MetaTagTitle))
-                .ForMember(x => x.ProductFullDescription,
-                           op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductFullDescription))
-                .ForMember(x => x.ProductImages, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductImages))
-                .ForMember(x => x.ProductName, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductName))
-                .ForMember(x => x.ProductShortDescription,
-                           op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductShortDescription))
-                .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).SEOFriendlyUrl))
-                .ForMember(x => x.ListPrice, op => op.MapFrom(x => (x.Price ?? NULLPRICE).ListPrice))
-                .ForMember(x => x.ISOCurrencyCode, op => op.MapFrom(x => (x.Price ?? NULLPRICE).ISOCurrencyCode))
-                .ForMember(x=> x.InventoryHandling ,op=> op.ResolveUsing( InventoryHandlingResolver))
-                 .ForMember(x => x.ParentProductCode , op => op.MapFrom(x => x.BaseProductCode ))
-                .ForMember(x => x.OptionValues , op => op.ResolveUsing(OptionValuesResolver ))
-                .ForMember(x => x.Price, op => op.MapFrom(x => (x.Price ?? NULLPRICE).Price))
-                .ForMember(x => x.SalePrice, op => op.MapFrom(x => (x.Price ?? NULLPRICE).SalePrice))
-                .ForMember (x=> x.ManageStock , op=> op.MapFrom (x=> x.ManageStock.GetValueOrDefault (false)))
-                .ForMember(x => x.PackageHeight, op => op.MapFrom(x => (x.PackageHeight == null) ? null : x.PackageHeight.Value))
-                .ForMember(x => x.PackageLength, op => op.MapFrom(x => (x.PackageLength == null) ? null : x.PackageLength.Value))
-                .ForMember(x => x.PackageWidth, op => op.MapFrom(x => (x.PackageWidth == null) ? null : x.PackageWidth.Value))
-                .ForMember(x => x.PackageWeight, op => op.MapFrom(x => (x.PackageWeight == null) ? null : x.PackageWeight.Value))
-                .ForMember(x => x.CategoryIds, op => op.MapFrom(x => (x.ProductCategories == null ? null : x.ProductCategories.Where(pc => pc.CategoryId != 1).Select(pc => pc.CategoryId).ToList())));
+                  .ForMember(x => x.MetaTagDescription,
+                             op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).MetaTagDescription))
+                  .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).MetaTagKeywords))
+                  .ForMember(x => x.MetaTagTitle, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).MetaTagTitle))
+                  .ForMember(x => x.ProductFullDescription,
+                             op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductFullDescription))
+                  .ForMember(x => x.ProductImages, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductImages))
+                  .ForMember(x => x.ProductName, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductName))
+                  .ForMember(x => x.ProductShortDescription,
+                             op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductShortDescription))
+                  .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).SEOFriendlyUrl))
+                  .ForMember(x => x.ListPrice, op => op.MapFrom(x => (x.Price ?? NULLPRICE).ListPrice))
+                  .ForMember(x => x.ISOCurrencyCode, op => op.MapFrom(x => (x.Price ?? NULLPRICE).ISOCurrencyCode))
+                  .ForMember(x => x.InventoryHandling, op => op.ResolveUsing(InventoryHandlingResolver))
+                  .ForMember(x => x.ParentProductCode, op => op.MapFrom(x => x.BaseProductCode))
+                  .ForMember(x => x.OptionValues, op => op.ResolveUsing(OptionValuesResolver))
+                  .ForMember(x => x.Price, op => op.MapFrom(x => (x.Price ?? NULLPRICE).Price))
+                  .ForMember(x => x.SalePrice, op => op.MapFrom(x => (x.Price ?? NULLPRICE).SalePrice))
+                  .ForMember(x => x.ManageStock, op => op.MapFrom(x => x.ManageStock.GetValueOrDefault(false)))
+                  .ForMember(x => x.PackageHeight, op => op.MapFrom(x => (x.PackageHeight == null) ? null : x.PackageHeight.Value))
+                  .ForMember(x => x.PackageLength, op => op.MapFrom(x => (x.PackageLength == null) ? null : x.PackageLength.Value))
+                  .ForMember(x => x.PackageWidth, op => op.MapFrom(x => (x.PackageWidth == null) ? null : x.PackageWidth.Value))
+                  .ForMember(x => x.PackageWeight, op => op.MapFrom(x => (x.PackageWeight == null) ? null : x.PackageWeight.Value));
+                //.ForMember(x => x.CategoryIds, op => op.MapFrom(x => (x.ProductInSites().ProductCategories == null ? null : x.ProductCategories.Where(pc => pc.CategoryId != 1).Select(pc => pc.CategoryId).ToList())));
                
 
  //.ForMember(x => x.TaxAmount, op => op.MapFrom(x => (x.Price ?? NULLPRICE).TaxAmount));
@@ -71,11 +71,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>();
 
             Mapper.CreateMap<Product, DC.Product>()
-                .ForMember(x => x.ProductCategories, op => op.MapFrom(x => x.CategoryIds == null ? null : x.CategoryIds.Select(pc => new ProductCategory() { CategoryId = pc })))
+               // .ForMember(x => x.ProductCategories, op => op.MapFrom(x => x.CategoryIds == null ? null : x.CategoryIds.Select(pc => new ProductCategory() { CategoryId = pc })))
                 //.ForMember(x => x.ProductType , op=> op.MapFrom ( x=> string.IsNullOrEmpty ( x.ProductType ) ? "Simple": x.ProductType ))
                 .ForMember(x => x.Content, op => op.ResolveUsing(ContentResolver))
                 .ForMember(x=>x.IsTaxable , op=> op.MapFrom( x=> x.IsTaxable.GetValueOrDefault( false )))
-                .ForMember(x => x.IsActive , op => op.MapFrom(x => x.IsActive.GetValueOrDefault( true)))
+                //.ForMember(x => x.IsActive , op => op.MapFrom(x => x.IsActive.GetValueOrDefault( true)))
                 .ForMember (x=> x.IsBackOrderAllowed , op=> op.MapFrom ( x=> x.InventoryHandling.GetValueOrDefault(0) == 1 ))
                 .ForMember(x => x.IsHiddenWhenOutOfStock , op => op.MapFrom(x => x.InventoryHandling.GetValueOrDefault(0) == 2))
                 .ForMember(x => x.ManageStock, op => op.MapFrom(x => x.ManageStock.GetValueOrDefault(false)))

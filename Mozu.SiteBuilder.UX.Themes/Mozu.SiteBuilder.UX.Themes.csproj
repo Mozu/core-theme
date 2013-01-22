@@ -8,7 +8,7 @@
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{525FB9FF-4022-4C41-88D7-E5B49613B7FE}</ProjectGuid>
-    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mozu.SiteBuilder.UX.Themes</RootNamespace>
@@ -204,6 +204,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.PaymentService.Contracts.1.0.12354.3\lib\Mozu.PaymentService.Contracts.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.0.0.13009.2\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Tenant.Contracts">
       <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.12361.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
@@ -657,6 +661,22 @@
     <Content Include="Themes\MobileCore\Widgets\core\tags\definition.json" />
     <Content Include="Themes\MobileCore\Widgets\core\tags\template.vol" />
     <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\mobile-base.less" />
+    <Content Include="web.config" />
+    <None Include="web.CI.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Demo.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Dev.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mozu.SiteBuilder.UX\Mozu.SiteBuilder.UX.csproj">
