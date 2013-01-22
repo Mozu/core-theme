@@ -51,7 +51,7 @@
 
         if (!this.form && this.formCls) {
             this.formCfg = Ext.applyIf({
-                record: this.record,
+                record: this.record
             }, this.formCfg);
 
             this.form = Ext.create(this.formCls, this.formCfg);
@@ -105,7 +105,10 @@
                 this.updateTitle(newTitle);
             },
             afterrender: function () {
-                this.form.getHeader().hide();
+                var header = this.form.getHeader();
+                if( header ) {
+                    header.hide();
+                }
             },
             scope: this
         });
