@@ -23,8 +23,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "read")]
         public Task<Response<List<Mozu.SiteBuilder.UX.Models.Users.BehaviorTree.BehaviorTreeNode >>> GetRoleBehaviors( FilterCollection extFilter)
         {
-            int roleId = extFilter.GetValue("roleId", 0);
-            var roleBehavior = _permissionsRepository.GetRoleBehavior(roleId).Result;
+            int roleId = extFilter.GetValue("roleId", -1);
+            RoleBehavior roleBehavior = null;
+            if (roleId > -1)
+            {
+                roleBehavior = _permissionsRepository.GetRoleBehavior(roleId).Result;
+            }
+            else
+            {
+                roleBehavior = new RoleBehavior(){ Children = new List<int>(), RoleId=-1};
+            }
+            
 
             var tree = _permissionsRepository.GetBehaviorTree().Result;
         
