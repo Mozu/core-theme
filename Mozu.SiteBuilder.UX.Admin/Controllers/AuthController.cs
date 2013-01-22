@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Mozu.Tenant.Contracts;
 using Mozu.SiteBuilder.Mvc;
@@ -49,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(LoginUser login)
+        public async Task<ActionResult> Login(LoginUser login)
         {
             if (string.IsNullOrEmpty(login.EmailAddress  ) || string.IsNullOrEmpty(login.Password))
             {
@@ -63,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             
             // If the user authenticates, redirect them to the admin app
-            var res = _accountApi.VolusionLogIn(login).Result;
+            var res = await _accountApi.VolusionLogIn(login);
 
             if(res.Success)
             {
@@ -78,13 +79,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 }
                 else
                 {
-                    var site = _accountApi.ChangeSite(res.Items.First().Item1.Id );
-                    if ( site != null )
+                    var site = await _accountApi.ChangeSite(res.Items.First().Item1.Id );
+                    if (site != null)
                     {
                         //todo look in config;
-                        
-                        return RedirctDomain( site , site.TenantId, "/admin", _authenticationHelper.GetCurrentTicket());
-
+                        return RedirctDomain(site, site.TenantId, "/admin", _authenticationHelper.GetCurrentTicket());
                     }
                 }
                 
@@ -96,8 +95,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             return View("Index");
         }
-
-        
 
         public ActionResult ForgotPassword()
         {
@@ -151,7 +148,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             return View(user);
         }
         [HttpPost ]
-        public ActionResult NewAccountInvitation(LoginUser user, FormCollection form)
+        public async Task<ActionResult> NewAccountInvitation(LoginUser user, FormCollection form)
         {
 
             if (string.IsNullOrEmpty(user.Password ))
@@ -163,7 +160,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             }
 
             // If the user authenticates, redirect them to the admin app
-            var res = _accountApi.VolusionLogIn(user).Result;
+            var res = await _accountApi.VolusionLogIn(user);
 
             if (res.Success)
             {
@@ -173,7 +170,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 }
                 else
                 {
-                    var site = _accountApi.ChangeSite(res.Items.First().Item1.Id);
+                    var site = await _accountApi.ChangeSite(res.Items.First().Item1.Id);
                     if (site != null)
                     {
                         return RedirctDomain(site, site.TenantId, "/admin", _authenticationHelper.GetCurrentTicket());
@@ -214,11 +211,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ResetPassword(LoginUser user , FormCollection col)
+        public async Task<ActionResult> ResetPassword(LoginUser user , FormCollection col)
         {
             _accountApi.UpdateForgottenPassword(user);
-            return Login(user);
-           
+            return await Login(user);
         }
 
         public ActionResult DeleteRole ( int siteId, int roleId)
@@ -231,14 +227,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                        };
         }
 
-        public ActionResult ChangeRole(int id)
+        public async Task<ActionResult> ChangeRole(int id)
         {
-            var site = _accountApi.ChangeSite(id);
+            var site = await _accountApi.ChangeSite(id);
             if (site != null)
             {
                 //todo: look in config
                 return RedirctDomain(site,site.TenantId, "/admin" , _authenticationHelper.GetCurrentTicket());
-      
             }
             ModelState.AddModelError("General", "Authentication failed!");
             return View("Login");

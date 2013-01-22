@@ -15,8 +15,10 @@
 //using ShippingClass = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.ShippingClass;
 //using ShippingRate = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.ShippingRate;
 
+////using Volusion.UspsShippingAdmin.WebApi.Clients;
 
-////commenting out until shipping rate api finds a home
+////using Mozu.ShippingRuntime.Contracts.Clients;
+////using Volusion.UspsShippingAdmin.Contracts.Clients;
 
 //namespace Mozu.SiteBuilder.UX.Admin.Api
 //{

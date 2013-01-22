@@ -27,9 +27,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             });
         }
 
+        public Response<T> Single2<T>(T single, int? total = null, string message = null)
+        {
+            return new Response<T>
+            {
+                Items = single,
+                Success = true,
+                Total = total ?? 1,
+            };
+        }
+
         public Task<Response<List<T>>> List<T>(T single, int? total = null)
         {
-            return List(new List<T> { single }, total);
+            return List(new List<T> {single}, total);
+        }
+
+        public Response<List<T>> List2<T>(T single, int? total = null)
+        {
+            return new Response<List<T>>
+                {
+                    Items = new List<T> { single },
+                    Success = true,
+                    Total = total ?? 0,
+                };
         }
 
         public Task<Response<List<T>>> List<T>(List<T> list, int? total = null)
@@ -40,6 +60,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Success = true,
                 Total = total ?? (list == null ? 0 : list.Count),
             });
+        }
+
+        public Response<List<T>> List2<T>(List<T> list, int? total = null)
+        {
+            return new Response<List<T>>
+                {
+                    Items = list,
+                    Success = true,
+                    Total = total ?? (list == null ? 0 : list.Count),
+                };
         }
 
         public Task<Response<List<T>>> EmptyList<T>()

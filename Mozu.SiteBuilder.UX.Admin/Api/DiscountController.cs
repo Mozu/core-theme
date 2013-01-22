@@ -5,17 +5,18 @@
 //using System.ServiceModel.Web;
 //using System.Threading.Tasks;
 //using AutoMapper;
+//using Mozu.ProductAdmin.Contracts;
 //using Mozu.ProductAdmin.Contracts.Clients;
 //using Mozu.SiteBuilder.UX.Admin.Api.Models;
 //using System.Collections.Generic;
 //using Mozu.SiteBuilder.UX.Admin.Api.Models.Discount;
-//using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
 //using Mozu.SiteBuilder.UX.Admin.Filters;
 //using Mozu.SiteSettings.Shipping.Contracts.Clients;
 //using Mozu.ShippingRuntime.Contracts.Clients;
 ////using Volusion.UspsShippingAdmin.WebApi.Clients;
 //using Discount = Mozu.SiteBuilder.UX.Admin.Api.Models.Discount.Discount;
-////commenting out until shipping rates finds a home
+//using TargetedShippingMethod = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.TargetedShippingMethod;
+
 //namespace Mozu.SiteBuilder.UX.Admin.Api
 //{
 //    [ServiceContract]
@@ -55,7 +56,7 @@
 //        }
 
 //        [WebInvoke(UriTemplate = "create")]
-//        public Task<Response<List<Discount>>> CreateDiscount(List<Discount> discounts)
+//        public async Task<Response<List<Discount>>> CreateDiscount(List<Discount> discounts)
 //        {
 //            var responseList = new List<Discount>();
 
@@ -63,16 +64,16 @@
 //            {
 //                var response =
 //                    _discountWebClient.CreateDiscount(Mapper.Map<Mozu.ProductAdmin.Contracts.Discount>(discount)).Result.
-//                        ReadAsSync();
+//                        ReadAsAsync();
 //                responseList.Add(Mapper.Map<Discount>(response));
 //            }
 
-//            return List(responseList);
+//            return await List(responseList);
 //        }
 
 //        [ApiAuthorize]
 //        [WebGet(UriTemplate = "read")]
-//        public Task<Response<List<Discount>>> ReadDiscount(PagingParamaters pagingParams, FilterCollection extFilter)
+//        public async Task<Response<List<Discount>>> ReadDiscount(PagingParamaters pagingParams, FilterCollection extFilter)
 //        {
 //            if (pagingParams.id == null)
 //            {
@@ -90,56 +91,55 @@
 //                    filter = string.Format("content.name cont \"{0}\"", name);
 //                }
 
-//                var discountList = _discountWebClient.GetDiscounts(null, null, null, filter, null).Result.ReadAsSync();
+//                var discountList = await _discountWebClient.GetDiscounts(null, null, null, filter, null).Result.ReadAsAsync();
 
 //                var discounts = discountList.Items.Select(Mapper.Map<Discount>).ToList();
 
-//                return List(discounts);
+//                return List2(discounts);
 //            }
 
+//            var disc = await _discountWebClient.GetDiscount(pagingParams.NumericId).Result.ReadAsAsync();
 
-//            var disc = _discountWebClient.GetDiscount(pagingParams.NumericId).Result.ReadAsSync();
-
-//            return List(Mapper.Map<Discount>(disc));
+//            return List2(Mapper.Map<Discount>(disc));
 //        }
 
 //        [WebInvoke(UriTemplate = "edit?id={id}")]
-//        public Task<Response<List<Discount>>> EditDiscount(List<Discount> discountList, int? id = null)
+//        public async Task<Response<List<Discount>>> EditDiscount(List<Discount> discountList, int? id = null)
 //        {
+//            var retList = new List<Discount>();
 
-//            var retList =
-//                discountList.Select(
-//                    discount =>
-//                    _discountWebClient.UpdateDiscount(Mapper.Map<Mozu.ProductAdmin.Contracts.Discount>(discount),
-//                                                      discount.DiscountId).Result.ReadAsAsync().Result).Select(
-//                                                          Mapper.Map<Discount>).ToList();
+//            foreach (var discount in discountList)
+//            {
+//                var task = await _discountWebClient.UpdateDiscount(Mapper.Map<ProductAdmin.Contracts.Discount>(discount), discount.DiscountId);
+//                retList.Add(Mapper.Map<Discount>(task.ReadAsSync()));
+//            }
 
-//            return List(retList);
+//            return List2(retList);
 //        }
 
 //        [WebInvoke(Method = "POST", UriTemplate = "delete")]
-//        public Task<Response<Discount>> DeleteProduct(List<Discount> discounts)
+//        public async Task<Response<Discount>> DeleteProduct(List<Discount> discounts)
 //        {
 //            foreach (var d in discounts)
 //            {
-//                _discountWebClient.DeleteDiscount(d.DiscountId).Wait();
+//                await _discountWebClient.DeleteDiscount(d.DiscountId);
 //            }
 
-//            return Single(default(Discount), discounts.Count);
+//            return Single2(default(Discount), discounts.Count);
 //        }
 
 //        [WebGet(UriTemplate = "generatecoupon")]
-//        public Task<Response<CouponCode>> GenerateCoupon(PagingParamaters pagingParams)
+//        public async Task<Response<CouponCode>> GenerateCoupon(PagingParamaters pagingParams)
 //        {
-//            var coupon = _discountWebClient.GenerateRandomCoupon().Result.ReadAsAsync().Result;
+//            var coupon = await _discountWebClient.GenerateRandomCoupon().Result.ReadAsAsync();
 
-//            return Single(new CouponCode {Code = coupon});
+//            return Single2(new CouponCode {Code = coupon});
 //        }
 
 //        [WebGet(UriTemplate = "targetedshippingmethods/read")]
-//        public Task<Response<List<TargetedShippingMethod>>> GetTargetedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
+//        public async Task<Response<List<TargetedShippingMethod>>> GetTargetedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
 //        {
-//            var res = _siteShippingSettingsClient.GetShippingMethods().Result.ReadAsAsync().Result;
+//            var res = await _siteShippingSettingsClient.GetShippingMethods().Result.ReadAsAsync();
 //            var methods = res.Select(siteShippingMethod => new TargetedShippingMethod { Code = siteShippingMethod.Code, Name = siteShippingMethod.Content.Name }).ToList();
 
 //            /*
@@ -182,16 +182,16 @@
 //            }
 //            */
 
-//            return List(methods);
+//            return List2(methods);
 //        }
 
 //        [WebGet(UriTemplate = "selectedshippingmethods/read")]
-//        public Task<Response<List<TargetedShippingMethod>>> GetSelectedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
+//        public async Task<Response<List<TargetedShippingMethod>>> GetSelectedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
 //        {
-//            var res = _siteShippingSettingsClient.GetShippingMethods().Result.ReadAsAsync().Result;
+//            var res = await _siteShippingSettingsClient.GetShippingMethods().Result.ReadAsAsync();
 //            var methods = res.Select(siteShippingMethod => new TargetedShippingMethod {Code = siteShippingMethod.Code, Name = siteShippingMethod.Content.Name}).ToList();
 
-//            return List(methods);
+//            return List2(methods);
 //        }
 //    }
 //}

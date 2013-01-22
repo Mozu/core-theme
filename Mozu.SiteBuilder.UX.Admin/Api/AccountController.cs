@@ -14,10 +14,10 @@ using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
 using Mozu.Core;
+using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.PaymentService.Contracts.Clients.Public;
 using Mozu.Provisioning.Contracts;
-using Mozu.SiteBuilder.UX.Models.Users;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -38,6 +38,7 @@ using InvitationWebApiClient = Mozu.AdminUser.Contracts.Clients.InvitationWebApi
 using ApiRole = Mozu.Core.Api.Contracts.Role;
 using AuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.AuthTicketWebApiClient;
 using IAuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.IAuthTicketWebApiClient;
+using Role = Mozu.SiteBuilder.UX.Models.Users.Role;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -78,6 +79,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "logoff")]
         public Task<Response<List<AdminUser2>>> Logoff()
         {
+            //var ticket = _authHelper.GetCurrentTicket();
+            //_authTicketRepo.DeleteUserAuthTicket(ticket.RefreshToken).Result.ReadAsSync();
             _authHelper.LogOut();
             return List(new List<AdminUser2>());
         }
@@ -248,30 +251,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return true;
         }
 
-        public Site ChangeSite(int siteId)
+        public async Task<Site> ChangeSite(int siteId)
         {
-
             var site = _siteClient.GetSite(siteId).Result.ReadAsSync();
             var repo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = siteId, TenantId = site.TenantId }));
             var ticket = _authHelper.GetCurrentTicket();
-            ticket = repo.RefreshUserAuthTicket(ticket.RefreshToken).Result.ReadAsSync();
-            var siteTicket = repo.CreateAuthTicketForSite(new Core.Api.Contracts.UserTokenInfo { AccessToken = ticket.AccessToken }).Result.ReadAsSync();
-            _authHelper.SetCurrentUser(siteTicket);
-            var lwU = Mozu.Core.LightweightUserClaims.Parse(siteTicket.AccessToken);
-            Mvc.SiteBuilderContext.Current.SiteId = (int)lwU.SiteId;
-            Mvc.SiteBuilderContext.Current.TenantId = site.TenantId;
-            Mvc.SiteBuilderContext.Current.Save();
+
+            ticket = await repo.RefreshUserAuthTicket(ticket.RefreshToken).Result.ReadAsAsync();
+            ticket = await repo.CreateAuthTicketForSite(new UserTokenInfo {AccessToken = ticket.AccessToken}).Result.ReadAsAsync();
+            _authHelper.SetCurrentUser(ticket);
+
+            var lwU = Mozu.Core.LightweightUserClaims.Parse(ticket.AccessToken);
+            _siteBuilderContext.SiteId = (int)lwU.SiteId;
+            _siteBuilderContext.TenantId = site.TenantId;
+            _siteBuilderContext.Save();
             return site;
         }
-
-
-
-
-
-
-
-
-
 
         public Task<Response<List<Tuple<Site, int>>>> VolusionLogIn(LoginUser user)
         {
@@ -372,22 +367,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var roles = rolesTask.ResponseMessage.IsSuccessStatusCode ? rolesTask.ReadAsSync() : new Core.Api.Contracts.RoleCollection() { Items = new List<Core.Api.Contracts.Role>() };
 
-#pragma warning disable 612, 618 // remove when TenantId is replaced
             var siteIds = roles.Items.Select(x => (int?)x.TenantId);
-#pragma warning restore 612, 618
 
             var sites = _siteClient.GetSites(0, int.MaxValue, null, string.Join(" or ", siteIds.Select(x => "id eq " + x))).Result.ReadAsSync();
 
-#pragma warning disable 612, 618 // remove when TenantId is replaced
             var res = roles.Items.Select(role =>
                         new Tuple<Site, int>(sites.Items.FirstOrDefault(site => site.Id == role.TenantId), role.Id))
                 .Where(x => x.Item1 != null).OrderByDescending(x => x.Item1.TenantId).ToList();
-#pragma warning restore 612, 618
             return res;
         }
-
-
-       
 
         [WebInvoke(Method = "POST", UriTemplate = "users/delete")]
         public Task<Response<AccountUser>> DeleteUser(AccountUser accountUser)
