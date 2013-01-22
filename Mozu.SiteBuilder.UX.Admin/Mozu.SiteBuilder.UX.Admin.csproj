@@ -1638,6 +1638,7 @@
     <Content Include="Tests\unit\enabling-robots-txt-override-enabled-robots-field.js" />
     <Content Include="Tests\unit\disabling-google-analytics-disables-ua-field.js" />
     <Content Include="Tests\unit\grid-action-buttons.js" />
+    <Content Include="Tests\unit\roles\edit-form.t.js" />
     <Content Include="Tests\unit\treelist-row-is-draggable.t.js" />
     <Content Include="Views\Home\Index_Compiled.cshtml">
       <SubType>Code</SubType>
