@@ -495,6 +495,7 @@
     <None Include="Scripts\app\mocks\behaviors.json" />
     <Content Include="Scripts\app\model\Behavior.js" />
     <Content Include="Scripts\app\model\CartItem.js" />
+    <Content Include="Scripts\app\model\ProductInSiteInfo.js" />
     <Content Include="Scripts\app\model\LocalizedString.js" />
     <Content Include="Scripts\app\model\RuntimeProduct.js" />
     <Content Include="Scripts\app\model\RuntimeProductSearchResult.js" />
