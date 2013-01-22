@@ -383,9 +383,7 @@
     <Compile Include="StoreFront\CMS\CmsDocumentBase.cs" />
     <Compile Include="StoreFront\CMS\CmsExtensions.cs" />
     <Compile Include="StoreFront\CMS\Constants.cs" />
-    <Compile Include="StoreFront\CMS\Document.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    <Compile Include="StoreFront\CMS\Document.cs" />
     <Compile Include="StoreFront\CMS\Facet.cs" />
     <Compile Include="StoreFront\CMS\ImageUrl.cs" />
     <Compile Include="StoreFront\CMS\PageDefault.cs" />
