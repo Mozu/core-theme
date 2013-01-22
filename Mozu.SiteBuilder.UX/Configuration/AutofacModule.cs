@@ -107,210 +107,210 @@ namespace Mozu.SiteBuilder.UX.Configuration
            // builder.RegisterType<MozuServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
 		}
 
-	    private class MozuServiceClientMessageHandler : IServiceClientMessageHandler
-	    {
-	        public static object NULLOBJECT = new object();
-	        private IApiContext _ctx;
-            private readonly IStorefrontCache _cache;
-            private ServiceClientMessageHandler _volusionApiWebClientFactory;
+        //private class MozuServiceClientMessageHandler : IServiceClientMessageHandler
+        //{
+        //    public static object NULLOBJECT = new object();
+        //    private IApiContext _ctx;
+        //    private readonly IStorefrontCache _cache;
+        //    private ServiceClientMessageHandler _volusionApiWebClientFactory;
 
-            public MozuServiceClientMessageHandler(IApiContext ctx, IStorefrontCache cache)
-	        {
-	            _ctx = ctx;
-	            _cache = cache;
-                _volusionApiWebClientFactory = new ServiceClientMessageHandler2(ctx);
-	        }
+        //    public MozuServiceClientMessageHandler(IApiContext ctx, IStorefrontCache cache)
+        //    {
+        //        _ctx = ctx;
+        //        _cache = cache;
+        //        _volusionApiWebClientFactory = new ServiceClientMessageHandler2(ctx);
+        //    }
 
-            bool BypassCache ( ConfigOptions options)
-            {
-                object  byPassCache = false;
-                if ( options != null &&  options.ExtendedProperties != null && options.ExtendedProperties is IDictionary <string,object> && ((IDictionary<string,object >)options.ExtendedProperties ).TryGetValue( "bypassCache" , out byPassCache ))
-                {
-                    return (bool) byPassCache;
-                }
-                return false;
-            }
+        //    bool BypassCache ( ConfigOptions options)
+        //    {
+        //        object  byPassCache = false;
+        //        if ( options != null &&  options.ExtendedProperties != null && options.ExtendedProperties is IDictionary <string,object> && ((IDictionary<string,object >)options.ExtendedProperties ).TryGetValue( "bypassCache" , out byPassCache ))
+        //        {
+        //            return (bool) byPassCache;
+        //        }
+        //        return false;
+        //    }
 
-	        public Task<ServiceClientResponse<T>> SendAsync<T>(string verb, string relpath, string serviceId, ConfigOptions options)
-            {
-                var key = verb + "|" + relpath + "|" + serviceId + "|" + _ctx.SiteId;
-                object obj = _cache[key];
+        //    public Task<ServiceClientResponse<T>> SendAsync<T>(string verb, string relpath, string serviceId, ConfigOptions options)
+        //    {
+        //        var key = verb + "|" + relpath + "|" + serviceId + "|" + _ctx.SiteId;
+        //        object obj = _cache[key];
 
 
-                if (obj != null && !BypassCache(options ))
-                {
-                    if ( obj == NULLOBJECT)
-                    {
-                        obj = null;
-                    }
-                    var ret = new ServiceClientResponse<T>()
-                    {
-                        HasException = false,
-                        ReadAsSync = () => (T)obj,
-                        ReadAsAsync = () =>
-                            {
-                                var tSource = new TaskCompletionSource<T>();
-                                tSource.SetResult((T)obj);
-                                return tSource.Task;
+        //        if (obj != null && !BypassCache(options ))
+        //        {
+        //            if ( obj == NULLOBJECT)
+        //            {
+        //                obj = null;
+        //            }
+        //            var ret = new ServiceClientResponse<T>()
+        //            {
+        //                HasException = false,
+        //                ReadAsSync = () => (T)obj,
+        //                ReadAsAsync = () =>
+        //                    {
+        //                        var tSource = new TaskCompletionSource<T>();
+        //                        tSource.SetResult((T)obj);
+        //                        return tSource.Task;
 
-                            },
-                        ResponseMessage = new HttpResponseMessage()
-                        {
-                            StatusCode = HttpStatusCode.OK
-                        }
-                    };
+        //                    },
+        //                ResponseMessage = new HttpResponseMessage()
+        //                {
+        //                    StatusCode = HttpStatusCode.OK
+        //                }
+        //            };
 
-                    var scrSource = new TaskCompletionSource<ServiceClientResponse<T>>();
-                    scrSource.SetResult(ret);
-                    return scrSource.Task;
+        //            var scrSource = new TaskCompletionSource<ServiceClientResponse<T>>();
+        //            scrSource.SetResult(ret);
+        //            return scrSource.Task;
                   
                    
-                }
+        //        }
 
-                var relTask = _volusionApiWebClientFactory.SendAsync<T>(verb, relpath, serviceId, options);
-                return relTask.ContinueWith(x => this.SendAsync1Callback<T>(x, key));
+        //        var relTask = _volusionApiWebClientFactory.SendAsync<T>(verb, relpath, serviceId, options);
+        //        return relTask.ContinueWith(x => this.SendAsync1Callback<T>(x, key));
 
                 
-            }
+        //    }
 
-            private ServiceClientResponse<T> SendAsync1Callback<T>(Task<ServiceClientResponse<T>> task, string key)
-            {
-                var ret = task.Result;
-                if (!ret.ResponseMessage.IsSuccessStatusCode)
-                {
-                    return ret;
-                }
-                //var rm = new HttpResponseMessage()
-                //             {
+        //    private ServiceClientResponse<T> SendAsync1Callback<T>(Task<ServiceClientResponse<T>> task, string key)
+        //    {
+        //        var ret = task.Result;
+        //        if (!ret.ResponseMessage.IsSuccessStatusCode)
+        //        {
+        //            return ret;
+        //        }
+        //        //var rm = new HttpResponseMessage()
+        //        //             {
                                  
-                //             }
-                var copy = new ServiceClientResponse<T>()
-                {
-                    HasException = ret.HasException,
-                    ReadAsAsync = () => ret.ReadAsAsync ().ContinueWith( innerTask =>
-                        {
-                            var g = innerTask.Result;
-                            _cache[key] = (object)g ?? NULLOBJECT;
-                            return g;
-                        })
+        //        //             }
+        //        var copy = new ServiceClientResponse<T>()
+        //        {
+        //            HasException = ret.HasException,
+        //            ReadAsAsync = () => ret.ReadAsAsync ().ContinueWith( innerTask =>
+        //                {
+        //                    var g = innerTask.Result;
+        //                    _cache[key] = (object)g ?? NULLOBJECT;
+        //                    return g;
+        //                })
                         
-                    ,
+        //            ,
 
-                    ReadAsSync = () =>
-                    {
-                        var g = ret.ReadAsSync();
-                        _cache[key] = (object)g ?? NULLOBJECT;
-                        return g;
-                    },
-                    ResponseMessage = ret.ResponseMessage,
-                    ReadException = () => ret.ReadException()
-                };
+        //            ReadAsSync = () =>
+        //            {
+        //                var g = ret.ReadAsSync();
+        //                _cache[key] = (object)g ?? NULLOBJECT;
+        //                return g;
+        //            },
+        //            ResponseMessage = ret.ResponseMessage,
+        //            ReadException = () => ret.ReadException()
+        //        };
 
-                return copy;
-            }
+        //        return copy;
+        //    }
 
-            public Task<ServiceClientResponse<T>> SendAsync<T, S>(string verb, string relpath, S sval, string serviceId, ConfigOptions options)
-            {
-                string key = null;
-                object obj = null;
-                if ( !(sval is System.IO.Stream) )
-                {
-                    try
-                    {
-                        var json = Newtonsoft.Json.JsonConvert.SerializeObject(sval);
+        //    public Task<ServiceClientResponse<T>> SendAsync<T, S>(string verb, string relpath, S sval, string serviceId, ConfigOptions options)
+        //    {
+        //        string key = null;
+        //        object obj = null;
+        //        if ( !(sval is System.IO.Stream) )
+        //        {
+        //            try
+        //            {
+        //                var json = Newtonsoft.Json.JsonConvert.SerializeObject(sval);
 
-                        key = verb + "|" + relpath + "|" + json + "|" + serviceId + "|" + _ctx.SiteId;
-                        obj = _cache[key];
-                    }
-                    catch(Exception e)
-                    {
-                        key = null;
-                        System.Diagnostics.Debug.Write(e.ToString());
-                    }
-                }
+        //                key = verb + "|" + relpath + "|" + json + "|" + serviceId + "|" + _ctx.SiteId;
+        //                obj = _cache[key];
+        //            }
+        //            catch(Exception e)
+        //            {
+        //                key = null;
+        //                System.Diagnostics.Debug.Write(e.ToString());
+        //            }
+        //        }
                 
                 
                  
 
 
 
-                if (obj != null  && !BypassCache(options ))
-                {
-                    if (obj == NULLOBJECT)
-                    {
-                        obj = null;
-                    }
-                    var ret = new ServiceClientResponse<T>()
-                    {
-                        HasException = false,
-                        ReadAsSync = () => (T)obj,
-                        ReadAsAsync = () =>
-                        {
-                            var tSource = new TaskCompletionSource<T>();
-                            tSource.SetResult((T)obj);
-                            return tSource.Task;
+        //        if (obj != null  && !BypassCache(options ))
+        //        {
+        //            if (obj == NULLOBJECT)
+        //            {
+        //                obj = null;
+        //            }
+        //            var ret = new ServiceClientResponse<T>()
+        //            {
+        //                HasException = false,
+        //                ReadAsSync = () => (T)obj,
+        //                ReadAsAsync = () =>
+        //                {
+        //                    var tSource = new TaskCompletionSource<T>();
+        //                    tSource.SetResult((T)obj);
+        //                    return tSource.Task;
 
-                        },
-                        ResponseMessage = new HttpResponseMessage()
-                        {
-                            StatusCode = HttpStatusCode.OK
-                        }
-                    };
+        //                },
+        //                ResponseMessage = new HttpResponseMessage()
+        //                {
+        //                    StatusCode = HttpStatusCode.OK
+        //                }
+        //            };
 
-                    var scrSource = new TaskCompletionSource<ServiceClientResponse<T>>();
-                    scrSource.SetResult(ret);
-                    return scrSource.Task;
-
-
-                }
+        //            var scrSource = new TaskCompletionSource<ServiceClientResponse<T>>();
+        //            scrSource.SetResult(ret);
+        //            return scrSource.Task;
 
 
-                var relTask = _volusionApiWebClientFactory.SendAsync<T, S>(verb, relpath,sval, serviceId, options);
-                return relTask.ContinueWith(x => this.SendAsync2Callback<T, S>(x, key));
+        //        }
 
-            }
 
-            private ServiceClientResponse<T1> SendAsync2Callback<T1, T2>(Task<ServiceClientResponse<T1>> task, string key)
-            {
-                var ret = task.Result;
-                if (!ret.ResponseMessage.IsSuccessStatusCode)
-                {
-                    return ret;
-                }
-                var copy = new ServiceClientResponse<T1>()
-                {
-                    HasException = ret.HasException,
-                    ReadAsAsync = () => ret.ReadAsAsync().ContinueWith(innerTask =>
-                    {
-                        var g = innerTask.Result;
-                        if (key != null)
-                        {
-                            _cache[key] = (object) g ?? NULLOBJECT;
-                        }
-                        return g;
-                    })
+        //        var relTask = _volusionApiWebClientFactory.SendAsync<T, S>(verb, relpath,sval, serviceId, options);
+        //        return relTask.ContinueWith(x => this.SendAsync2Callback<T, S>(x, key));
 
-                    ,
-                    ReadAsSync = () =>
-                    {
-                        var g = ret.ReadAsSync();
-                        if (key != null)
-                        {
-                            _cache[key] = (object) g ?? NULLOBJECT;
-                        }
-                        return g;
-                    },
-                    ResponseMessage = ret.ResponseMessage,
-                    ReadException = () => ret.ReadException()
-                };
+        //    }
 
-                return copy;
-            }
+        //    private ServiceClientResponse<T1> SendAsync2Callback<T1, T2>(Task<ServiceClientResponse<T1>> task, string key)
+        //    {
+        //        var ret = task.Result;
+        //        if (!ret.ResponseMessage.IsSuccessStatusCode)
+        //        {
+        //            return ret;
+        //        }
+        //        var copy = new ServiceClientResponse<T1>()
+        //        {
+        //            HasException = ret.HasException,
+        //            ReadAsAsync = () => ret.ReadAsAsync().ContinueWith(innerTask =>
+        //            {
+        //                var g = innerTask.Result;
+        //                if (key != null)
+        //                {
+        //                    _cache[key] = (object) g ?? NULLOBJECT;
+        //                }
+        //                return g;
+        //            })
 
-            public string GetBaseUrlById(string serviceId)
-            {
-                return ((IServiceClientMessageHandler) _volusionApiWebClientFactory).GetBaseUrlById(serviceId);
-            }
-        }
+        //            ,
+        //            ReadAsSync = () =>
+        //            {
+        //                var g = ret.ReadAsSync();
+        //                if (key != null)
+        //                {
+        //                    _cache[key] = (object) g ?? NULLOBJECT;
+        //                }
+        //                return g;
+        //            },
+        //            ResponseMessage = ret.ResponseMessage,
+        //            ReadException = () => ret.ReadException()
+        //        };
+
+        //        return copy;
+        //    }
+
+        //    public string GetBaseUrlById(string serviceId)
+        //    {
+        //        return ((IServiceClientMessageHandler) _volusionApiWebClientFactory).GetBaseUrlById(serviceId);
+        //    }
+        //}
 	}
 }
