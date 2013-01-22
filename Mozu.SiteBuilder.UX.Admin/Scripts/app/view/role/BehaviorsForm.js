@@ -34,15 +34,14 @@ Ext.define('Taco.view.role.BehaviorsForm', {
         window.st = this.store;
         this.items = [
             Ext.create('Taco.core.ux.TreeList', {
+                enableRowReorder: false,
+                disableSelection: true,
                 store: this.store,
                 columns: [{
                     xtype: 'treecolumn',
                     text: 'Name',
                     flex: 1,
                     dataIndex: 'name'
-                }, {
-                    text: 'cls',
-                    dataIndex: 'cls'
                 }]
             })
         ];

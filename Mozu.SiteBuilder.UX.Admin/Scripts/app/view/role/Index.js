@@ -12,9 +12,11 @@ Ext.define('Taco.view.role.Index', {
             title: 'Roles'
         };
 
-        this.store = Ext.create('Taco.store.Roles', {
-            autoLoad: true
-        });
+        if (!this.store) {
+            this.store = Ext.create('Taco.store.Roles', {
+                autoLoad: true
+            });
+        }
 
         this.navigation = Ext.create('Taco.view.account.Navigation');
 
@@ -47,6 +49,19 @@ Ext.define('Taco.view.role.Index', {
             ]
         };
 
+        this.header = {
+            title: 'Roles',
+            actions:  [{
+                xtype: 'primarybutton',
+                text: 'Create New Role',
+                click: function () {
+                    this.launchEditor();
+                    Taco.app.StateManager.addState('roles/create');
+                },
+                scope: this
+            }]
+        };
+
         this.callParent(arguments);
 
         this.store.load();
@@ -76,12 +91,13 @@ Ext.define('Taco.view.role.Index', {
         this.launchLoadedEditor(record);
     },
 
-    launchLoadedEditor: function (record) {
+    launchLoadedEditor: function (record, formCfg) {
         var store = this.store,
             editorView;
 
         editorView = Ext.create('Taco.view.role.Edit', {
             logicalParent: this,
+            formCfg: formCfg,
             listeners: {
                 cancel: function () {
                     editorView.destroy();
@@ -101,10 +117,11 @@ Ext.define('Taco.view.role.Index', {
         Taco.app.contentView.add(editorView);
     },
 
-    onItemClick: function (view, record, item, index, e) {
+    onItemClick: function (view, record, item, index, e, eOpts) {
         if (!e.target.className === 'taco-launch-editor') {
             return;
         }
+
         e.preventDefault();
         this.addState(record);
         this.launchEditor(record);

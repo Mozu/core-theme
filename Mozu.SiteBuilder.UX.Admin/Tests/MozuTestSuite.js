@@ -21,7 +21,7 @@ Harness.configure({
 Harness.start(
     {
         group: "Admin Application (Integration tests)",
-        expanded: false,
+        expanded: true,
         items: [
             {
                 group: 'Dashboard',
@@ -210,6 +210,19 @@ Harness.start(
                                 title: 'Click submenu navigation'
                             }
                         ]*/
+                    }
+                ]
+            }, {
+                group: 'Account',
+                expanded: true,
+                items: [
+                    {
+                        group: 'Roles',
+                        expanded: true,
+                        items: [{
+                            url: 'unit/roles/edit-form.t.js',
+                            title: 'Form Test?'
+                        }]
                     }
                 ]
             }
