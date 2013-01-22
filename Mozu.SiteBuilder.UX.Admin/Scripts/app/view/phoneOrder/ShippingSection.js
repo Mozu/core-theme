@@ -4,7 +4,7 @@
  */
 Ext.define('Taco.view.phoneOrder.ShippingSection', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.model.Shipment'],
+    requires: ['Taco.model.Shipment', 'Taco.model.Address'],
 
     bodyCls: Taco.baseCSSPrefix + 'flexform',
     title: 'Shipping',
@@ -38,7 +38,7 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
                 fieldLabel: 'Company',
                 width: 200
             }, {
-                name: 'phoneNumbers',
+                name: 'phoneNumber',
                 fieldLabel: 'Phone',
                 width: 200
             }, {
@@ -48,6 +48,10 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
             }, {
                 name: 'address2',
                 fieldLabel: 'Address Line 2',
+                width: 420
+            }, {
+                name: 'address3',
+                fieldLabel: 'Address Line 3',
                 width: 420
             }, {
                 name: 'cityOrTown',
@@ -83,6 +87,19 @@ Ext.define('Taco.view.phoneOrder.ShippingSection', {
                     { boxLabel: 'FedEx', name: 'shippingMethod', inputValue: 'fedex' }
                 ]
             }]
+        }, {
+            xtype: 'button',
+            width: 80,
+            height: 30,
+            text: 'click me',
+            handler: function () {
+                var values = me.getValues(),
+                    address;
+
+                address = Ext.create('Taco.model.Address', values);
+
+                console.log(address);
+            }
         }];
 
         this.callParent(arguments);
