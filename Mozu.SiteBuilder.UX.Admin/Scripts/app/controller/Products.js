@@ -6,13 +6,13 @@
 
 Ext.define('Taco.controller.Products', {
     extend: 'Taco.core.Controller',
-    requires:['Taco.view.product.Edit-DEPRECATED'],
+    requires:['Taco.view.product.Edit'],
     editorView: 'Taco.view.category.SimpleEditor',
     listView: null,
     models: ['Taco.model.Product'],
     stores: ['Taco.store.Products'],
     views: ['product.Index'],
-    modelName: 'Taco.model.Product',
+    modelName: 'Product',
 
 
     index: function () {
@@ -26,19 +26,20 @@ Ext.define('Taco.controller.Products', {
             id: 0
         });
         me.getTacoStoreProductsStore().insert(0, [data]);
-        me.createContentView('Taco.view.product.Edit-DEPRECATED', {
+        me.createContentView('Taco.view.product.Edit', {
             data: data,
             store: me.getTacoStoreProductsStore()
         });
 
     },
 
-    edit: function (params) {
-            var me=this,id = params.id || params;
+    edit1: function (params) {
+            var me = this,
+                id = params.id || params;
             
             Taco.model.Product.load(id, {
                 success: function (record, o) {
-                    me.createContentView('Taco.view.product.Index', { editRecordId: record });
+                    me.createContentView('Taco.view.product.Index', { record: record });
                 }
             });
         }

@@ -244,6 +244,10 @@
                     window.open('/product/' + record.getId() + ((record.get('isActive'))? '':'?iseditmode=true'   ), 'preview');
                 }
             });
+
+            if( this.record && this.record.isModel ) {
+                this.launchLoadedEditor( this.record );
+            }
         },
 
         onGlobalModelSave: function (model) {
@@ -283,7 +287,7 @@
                 token = 'products/edit/',
                 editorView;
 
-            editorView = Ext.create('Taco.view.product.Edit-DEPRECATED', {
+            editorView = Ext.create('Taco.view.product.Edit', {
                 logicalParent: me,
                 listeners: {
                     cancel: function () {
@@ -328,7 +332,7 @@
                         Taco.app.StateManager.addState('products');
                     }
                 },
-                recordId: record
+                record: record
             });
 
             Taco.app.contentView.add(editorView);
