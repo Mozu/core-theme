@@ -145,6 +145,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
         public void LogOut()
         {
+            SetCurrentUser(null);
             var cookie = new HttpCookie("")
             {
                 Expires = DateTime.MinValue,

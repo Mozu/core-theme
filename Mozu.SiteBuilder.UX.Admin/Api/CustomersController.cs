@@ -32,7 +32,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<CustomerAccount>>> GetAdvancedSearch(PagingParamaters pagingParameters, FilterCollection extFilter)
         {
             // todo : hook up search pieces and create filter
-            return await List(_customerRepository.GetAll(0, 1, null).Result.ToList());
+            var customerAccounts = await _customerRepository.GetAll(0, 1, null);
+            return List2(customerAccounts.ToList());
         }
 
         [WebGet(UriTemplate = "list")]
@@ -58,12 +59,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return await Single(customer);
         }
 
-        [WebGet(UriTemplate = "autocomplete/?query={query}&value={groupIds}")]
-        public async Task<Response<List<AutoCompleteField<string>>>> GetSearch(string query, FilterCollection extFilter, string groupIds)
+        [WebGet(UriTemplate = "autocomplete/?query={query}")]
+        public async Task<Response<List<AutoCompleteField<string>>>> GetSearch(string query)
         {
             var groups = await _customerRepository.GetCustomerGroups(x => x.ToLower().Contains(query.ToLower()));
 
-            return await List(groups.Select(x => new AutoCompleteField<string> { Display = x, Value = x }).ToList());
+            return List2(groups.Select(x => new AutoCompleteField<string> { Display = x, Value = x }).ToList());
         }
 
         [WebGet(UriTemplate = "notes/list")]
@@ -72,16 +73,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var customerAccountId = extFilter.Get<CustomerAccount, int>(x => x.Id);
             var notes = await _customerRepository.GetCustomerNotes(customerAccountId, pagingParameters.startIndex, pagingParameters.pageSize);
 
-            return await List(notes);
+            return List2(notes);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "notes/create")]
         public async Task<Response<CustomerAccountNote>> CreateNote(CustomerAccountNote customerAccountNote, FilterCollection extFilter)
         {
-            var customerAccountId = extFilter.Get<CustomerAccount, int?>(x => x.Id);
+            var customerAccountId = extFilter.Get<CustomerAccount, int>(x => x.Id);
             var customerNote = await _customerRepository.CreateCustomerNote(customerAccountNote, customerAccountId);
 
-            return await Single(customerNote);
+            return Single2(customerNote);
         }
 
         [WebGet(UriTemplate = "groups/list")]
@@ -91,7 +92,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var groups = await _customerGroupsRepository.GetAll(filter, pagingParamaters.startIndex, pagingParamaters.pageSize);
 
-            return await List(groups);
+            return List2(groups);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "groups/update")]
@@ -109,7 +110,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var group = await _customerGroupsRepository.Create(newGroup);
 
-            return await Single(group);
+            return Single2(group);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "groups/delete")]
@@ -138,14 +139,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<CustomerGroup>>> UpdateCustomerGroups(List<CustomerGroup> customerGroups, int? customerId)
         {
             if (!customerId.HasValue)
-                return await Message<List<CustomerGroup>>(false, "customerId is missing. This value is required.");
+                return Message3<List<CustomerGroup>>(false, "customerId is missing. This value is required.");
 
             if (customerGroups == null || !customerGroups.Any())
-                return await EmptyList<CustomerGroup>();
+                return Message3<List<CustomerGroup>>(false, "No groups to update.");
 
-            var groups = customerGroups.Select(x => _customerGroupsRepository.AssignGroupToCustomer(customerId.Value, x.Id).Result);
+            var groups = new List<CustomerGroup>();
+            foreach (var customerGroup in customerGroups)
+            {
+                var result = await _customerGroupsRepository.AssignGroupToCustomer(customerId.Value, customerGroup.Id);
+                groups.Add(result);
+            }
 
-            return await List(groups.ToList());
+            return List2(groups);
         }
 
         private static string GetCustomerSearchFilter(FilterCollection extFilter)
