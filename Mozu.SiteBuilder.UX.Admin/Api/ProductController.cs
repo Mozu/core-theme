@@ -173,7 +173,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         sb.Append("CategoryId");
                         break;
                     case "isactive":
-                        sb.Append(PropertyGuy.Convert(x => x.IsActive));
+                        sb.Append("IsActive");
                         break;
                     case "productname":
                     case "name":
@@ -225,7 +225,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         sb.AppendFormat("CategoryId {1} {0}", filter.value, filter.comparison);
                         break;
                     case "isactive":
-                        sb.AppendFormat("{2} {1} {0}", filter.value, filter.comparison, PropertyGuy.Convert(x => x.IsActive));
+                        sb.AppendFormat("{2} {1} {0}", filter.value, filter.comparison, "IsActive");
                         break;
                     case "productname":
                     case "name":

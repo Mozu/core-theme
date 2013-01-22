@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.RegisterType<RoutableShippingWebApiClient>().As<IShippingWebApiClient>();
             builder.RegisterType<ShippingClassWebApiClient>().As<IShippingClassWebApiClient>();
-            builder.RegisterType<ShippingRateWebApiClient>().As<IShippingRateWebApiClient>();
+           // builder.RegisterType<ShippingRateWebApiClient>().As<IShippingRateWebApiClient>();
             builder.RegisterType<ShippingSettingsWebApiClient>().As<IShippingSettingsWebApiClient>();
             builder.RegisterType<UspsShippingSharedWebApiClient>().As<IUspsShippingSharedWebApiClient>();
             builder.RegisterType<UspsShippingInstanceWebApiClient>().As<IUspsShippingInstanceWebApiClient>();

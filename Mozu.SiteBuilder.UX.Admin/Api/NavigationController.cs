@@ -311,13 +311,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 int oldParentId = -1;
                 if (node.IdParts.Length == 3 && int.TryParse(node.IdParts[2], out oldParentId))
                 {
-                    prod.ProductCategories = prod.ProductCategories.Where(x => x.CategoryId != oldParentId).ToArray();
+                   // prod.ProductInSites.First().ProductCategories = prod.ProductInSites.
+                    prod.ProductInSites.First().ProductCategories = prod.ProductInSites.First().ProductCategories.Where(x => x.CategoryId != oldParentId).ToArray();
+                    //prod.ProductCategories = prod.ProductCategories.Where(x => x.CategoryId != oldParentId).ToArray();
                 }
 
 
                 if (NavigationNode.SplitParts(node.ParentId)[0] == "category")
                 {
-                    prod.ProductCategories = prod.ProductCategories.Union(new ProductCategory[] {new ProductCategory() {CategoryId = int.Parse(NavigationNode.SplitParts(node.ParentId)[1])}}).ToArray();
+                    prod.ProductInSites.First().ProductCategories = prod.ProductInSites.First().ProductCategories.Union(new ProductCategory[] { new ProductCategory() { CategoryId = int.Parse(NavigationNode.SplitParts(node.ParentId)[1]) } }).ToArray();
 
 
                 }
