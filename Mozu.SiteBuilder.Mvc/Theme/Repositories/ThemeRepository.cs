@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Repositories
         /// <summary>
         /// Public constructor.
         /// </summary>
-        /// <param name="viewEngine"></param>
+        /// <param name="themeProvider"></param>
         public ThemeRepository(IThemeMetaDataProvider themeProvider)
         {
             _themeProvider = themeProvider;
@@ -38,6 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Repositories
         /// </summary>
         public void Initialize()
         {
+           
             using (ThemeFactory fac = new ThemeFactory())
             {
                 foreach (IThemeMetaData meta in _themeProvider.GetThemes())
@@ -75,7 +76,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Repositories
         {
             try
             {
-                return GetTheme(name);
+                return GetTheme(name ?? DEFAULT_THEME);
             }
             catch (ThemeNotFoundException)
             {

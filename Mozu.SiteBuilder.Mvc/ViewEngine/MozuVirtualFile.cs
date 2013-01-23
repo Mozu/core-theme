@@ -6,7 +6,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
     public abstract class MozuVirtualFile : VirtualFile
     {
-        public MozuVirtualFile ( string virtualPath ) : base ( virtualPath ) { }
+        public MozuVirtualFile(string virtualPath) : base(virtualPath) { }
 
         public abstract DateTime GetLastWriteTime();
 
@@ -15,12 +15,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             get;
         }
     }
-    
+
     public class MozuVirtualFileSystemFile : MozuVirtualFile
     {
         private string virtualPath;
-     
-        public override  bool Exists
+
+        public override bool Exists
         {
             get { return File.Exists(this.MappedPath); }
         }
@@ -39,9 +39,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             set;
         }
 
-        public override  DateTime GetLastWriteTime()
+        public override DateTime GetLastWriteTime()
         {
-            return File.GetLastWriteTime(MappedPath); 
+            return File.GetLastWriteTime(MappedPath);
         }
 
         public override System.IO.Stream Open()
@@ -54,17 +54,17 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
     {
         private string virtualPath;
 
-        public override  bool Exists
+        public override bool Exists
         {
-            get { return Content != null ; }
+            get { return Content != null; }
         }
 
-        public MozuVirtualMongoFile(string virtualPath , DateTime? lastWriteTime = null , byte[] content= null )
-            : base(virtualPath  )
+        public MozuVirtualMongoFile(string virtualPath, DateTime? lastWriteTime = null, byte[] content = null)
+            : base(virtualPath)
         {
             this.virtualPath = virtualPath;
             this.Content = content;
-            this.LastWriteTime = lastWriteTime.HasValue ? lastWriteTime.Value : DateTime.MaxValue; 
+            this.LastWriteTime = lastWriteTime.HasValue ? lastWriteTime.Value : DateTime.MaxValue;
         }
 
         public DateTime LastWriteTime

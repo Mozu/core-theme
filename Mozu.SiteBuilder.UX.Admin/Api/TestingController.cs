@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -121,16 +122,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string Author { get; set; }
 
             [DataMember(Name = "isDesktop")]
-            public bool IsDesktop { get; set; }
+            public bool? IsDesktop { get; set; }
 
             [DataMember(Name = "isMobile")]
-            public bool IsMobile { get; set; }
+            public bool? IsMobile { get; set; }
 
             [DataMember(Name = "isSelectedDesktop")]
-            public bool IsSelectedDesktop { get; set; }
+            public bool? IsSelectedDesktop { get; set; }
 
             [DataMember(Name = "isSelectedMobile")]
-            public bool IsSelectedMobile { get; set; }
+            public bool? IsSelectedMobile { get; set; }
 
             public Thumbnail Thumbnail { get; set; }
 
@@ -147,6 +148,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     // however, we don't want this field set, so this is a no-op.
                 }
             }
+
+            //constructor for jser.
+            public ThemeDTO()
+            {}
 
             /// <summary>
             /// Copy constructor
@@ -191,11 +196,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(themes);
         }
 
-        [WebInvoke(UriTemplate = "theme/update")]
-        public Task<Response<List<ThemeDTO>>> UpdateTheme(List<ThemeDTO> themes)
+        [WebInvoke(UriTemplate = "theme/update" , Method="POST")]
+        public Task<Response<List<ThemeDTO>>> UpdateTheme( HttpRequestMessage msg )
         {
-            ThemeDTO newDesktop = themes.LastOrDefault(t => t.IsSelectedDesktop);
-            ThemeDTO newMobile = themes.LastOrDefault(t => t.IsSelectedMobile);
+            List<ThemeDTO> themes = msg.Content.ReadAsAsync<List<ThemeDTO>>().Result;
+            ThemeDTO newDesktop = themes.LastOrDefault(t => t.IsSelectedDesktop.Value);
+            ThemeDTO newMobile = themes.LastOrDefault(t => t.IsSelectedMobile.Value );
 
             var settings = _generalSettingsWebApiClient.ReadSettings();
 

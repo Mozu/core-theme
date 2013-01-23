@@ -30,12 +30,12 @@ namespace Mozu.SiteBuilder.Mvc.Theme
         /// <summary>
         /// Indicated whether this theme is intended to be used for desktop display.
         /// </summary>
-        public bool IsDesktop { get; set; }
+        public bool? IsDesktop { get; set; }
 
         /// <summary>
         /// Indicated whether this theme is intended to be used for mobile display.
         /// </summary>
-        public bool IsMobile { get; set; }
+        public bool? IsMobile { get; set; }
 
         /// <summary>
         /// If this theme inherits from another theme, contains the inherited theme.

@@ -16,7 +16,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
     class DjangoMozuView : IView, IViewDataContainer, IViewPathContainer
     {
-        
+
         internal string viewPath;
 
         public DjangoMozuView(ITemplateManager manager, string viewPath)
@@ -46,22 +46,22 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         public void Render(ViewContext viewContext, System.IO.TextWriter writer)
         {
             ViewData = viewContext.ViewData;
-            
+
             var requestContext = new Dictionary<string, object>(viewContext.ViewData);
             var authenticationHelper = new AuthenticationHelper(new CookieProvider(viewContext.HttpContext));
             var gcu = authenticationHelper.GetCurrentUser();
             var profile = authenticationHelper.GetCurrentProfileToken();
             HtmlHelper html;
             var user = new Mozu.SiteBuilder.UX.Models.Customers.User()
-                           {
-                               Email = profile != null ? profile.EmailAddress : null,
-                               FirstName = profile != null ? profile.FirstName : null,
-                               LastName = profile != null ? profile.LastName : null,
-                               UserId = gcu.UserId,
-                               IsAuthenticated = !gcu.IsAnonymous && gcu.IsAuthenticated,
-                               IsAnonymous = gcu.IsAnonymous 
-                           };
-            requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"] = (System.Collections.Hashtable) viewContext.HttpContext.Items["templateVariables"] ?? new System.Collections.Hashtable(StringComparer.OrdinalIgnoreCase);
+            {
+                Email = profile != null ? profile.EmailAddress : null,
+                FirstName = profile != null ? profile.FirstName : null,
+                LastName = profile != null ? profile.LastName : null,
+                UserId = gcu.UserId,
+                IsAuthenticated = !gcu.IsAnonymous && gcu.IsAuthenticated,
+                IsAnonymous = gcu.IsAnonymous
+            };
+            requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"] = (System.Collections.Hashtable)viewContext.HttpContext.Items["templateVariables"] ?? new System.Collections.Hashtable(StringComparer.OrdinalIgnoreCase);
             requestContext["Html"] = requestContext["html"] = html = new HtmlHelper(viewContext, this);
             requestContext["ViewData"] = requestContext["viewData"] = viewContext.ViewData;
             requestContext["Model"] = requestContext["model"] = viewContext.ViewData.Model;
@@ -122,7 +122,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 var result = ViewEngines.Engines.FindPartialView(_html.ViewContext.Controller.ControllerContext, path);
                 if (result.View != null)
                 {
-                    return ((DjangoMozuView )result.View).viewPath;
+                    return ((DjangoMozuView)result.View).viewPath;
                 }
                 return path;
 
