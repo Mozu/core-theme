@@ -117,6 +117,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
             Mapper.CreateMap<OrderItem, Models.Checkout.OrderItemInformation>()
                 .ForMember(x => x.ProductName, m => m.ResolveUsing(x => x.Product.Name))
+                .ForMember(x => x.ProductCode, m => m.ResolveUsing(x => x.Product.ProductCode))
                 .ForMember(x => x.Quantity, m => m.ResolveUsing(x => x.Quantity ?? 0))
                 .ForMember(x => x.SubTotal, m => m.ResolveUsing(x => x.SubTotal ?? 0m))
                 .ForMember(x => x.Total, m => m.ResolveUsing(x => x.Total ?? 0m))
