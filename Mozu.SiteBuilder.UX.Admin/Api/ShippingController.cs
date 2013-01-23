@@ -26,7 +26,7 @@
 //    public class ShippingController : BaseController
 //    {
 //        private readonly IShippingClassWebApiClient _shippingClassClient;
-//        private readonly IShippingRateWebApiClient _shippingRateClient;
+//        private readonly ICustomTableBasedRatesWebApiClient _shippingRateClient;
 //        private readonly IShippingSettingsWebApiClient _siteShippingSettingsClient;
 //        private readonly IUspsShippingSharedWebApiClient _uspsShippingSharedClient;
 //        private readonly IUspsShippingInstanceWebApiClient _uspsShippingInstanceClient;
@@ -65,13 +65,13 @@
 //            _uspsShippingInstanceClient = uspsShippingInstanceClient;
 
 //            // TODO: Temp???
-//             Provision(apiCtx);
+//            Provision(apiCtx);
 //        }
-//        static HashSet<string> g_provisioned = new HashSet<string>(); 
+//        static HashSet<string> g_provisioned = new HashSet<string>();
 //        private void Provision(IApiContext ctx)
 //        {
 //            string key = ctx.TenantId + "|" + ctx.SiteId;
-//            if ( g_provisioned.Contains(key))
+//            if (g_provisioned.Contains(key))
 //            {
 //                return;
 //            }
@@ -110,22 +110,23 @@
 //                {
 //                    if (activeRate == null)
 //                    {
-//                        var customRateProvider = _siteShippingSettingsClient.CreateActiveRateProvider(new Mozu.Core.Api.Contracts.Feature {Id = 1, Name = "customrates"}).Result.ReadAsAsync().Result;
+//                        var customRateProvider = _siteShippingSettingsClient.CreateActiveRateProvider(new Mozu.Core.Api.Contracts.Feature { Id = 1, Name = "customrates" }).Result.ReadAsAsync().Result;
 //                        //var uspsRateProvider = _siteShippingSettingsClient.CreateActiveRateProvider(new Mozu.Core.Api.Contracts.Feature {Id = 2, Name = "uspsrates"}).Result.ReadAsAsync().Result;
 //                    }
 //                }
 //                g_provisioned.Add(key);
-                   
+
 //            }
 //        }
 
 //        [WebGet(UriTemplate = "methodsync/?id={id}")]
 //        public Task<Response<string>> SyncMethods(string id)
 //        {
-//            if(id == "custom")
+//            if (id == "custom")
 //            {
 //                var custom = _shippingRateClient.SyncronizeShippingRatesToSiteSettingsShippingMethods(null, null).Result.ReadAsAsync().Result;
-//            } else
+//            }
+//            else
 //            {
 //                var usps = _uspsShippingInstanceClient.SyncronizeUspsShippingMethodsToSiteSettingsShippingRates().Result.ReadAsAsync().Result;
 //            }
@@ -140,7 +141,7 @@
 
 //            Feature feature = null;
 
-//            if(activeRateProvider != null)
+//            if (activeRateProvider != null)
 //            {
 //                feature = new Feature
 //                {
@@ -227,7 +228,7 @@
 
 //            var rates = _shippingRateClient.GetShippingRates(0, 100, null, "shippingclassid eq " + GetRateClassId("Custom rates")).Result.ReadAsSync();
 
-//            if(rates.Items != null)
+//            if (rates.Items != null)
 //            {
 //                var customRates = Mapper.Map<List<ShippingRate>>(rates.Items.ToList());
 //                domesticRates = customRates.Where(shippingRate => !shippingRate.IsInternational).ToList();
@@ -243,10 +244,10 @@
 
 //            var rates = _shippingRateClient.GetShippingRates(0, 100, null, "shippingclassid eq " + GetRateClassId("Custom rates")).Result.ReadAsSync();
 
-//            if(rates.Items != null)
+//            if (rates.Items != null)
 //            {
 //                var customRates = Mapper.Map<List<ShippingRate>>(rates.Items.ToList());
-//                intlRates = customRates.Where(shippingRate => shippingRate.IsInternational).ToList(); 
+//                intlRates = customRates.Where(shippingRate => shippingRate.IsInternational).ToList();
 //            }
 
 //            return List(intlRates, 1);
@@ -264,7 +265,7 @@
 //                {
 //                    bool val;
 
-//                    if(bool.TryParse(isInternational, out val))
+//                    if (bool.TryParse(isInternational, out val))
 //                    {
 //                        filter = (val) ? "isinternational eq true" : "isinternational ne true";
 //                    }
@@ -296,7 +297,7 @@
 //            {
 //                res = Mapper.Map<UspsConfiguration>(_uspsShippingInstanceClient.GetUspsConfiguration().Result.ReadAsAsync().Result);
 //            }
-//            catch(Exception)
+//            catch (Exception)
 //            {
 //                // Ugh... if a config doesn't exist it throws an error. Return null.    
 //            }
@@ -337,9 +338,9 @@
 
 //            try
 //            {
-//                origin = Mapper.Map<SiteShippingOriginAddress>(_siteShippingSettingsClient.GetShippingOriginAddress().Result.ReadAsSync());    
+//                origin = Mapper.Map<SiteShippingOriginAddress>(_siteShippingSettingsClient.GetShippingOriginAddress().Result.ReadAsSync());
 //            }
-//            catch(Exception)
+//            catch (Exception)
 //            {
 //                // This throws a stupid exception when an address doesn't exist. Return null
 //            }

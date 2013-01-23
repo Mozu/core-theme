@@ -25,20 +25,20 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         ISiteBuilderContext _sbContext;
         private DjangoMozuViewEngine _viewEngine;
         private IThemeSettingsRepository _themeSettingsRepository;
-        public ResourceController ( ISiteBuilderContext sbContext , IThemeSettingsRepository themeSettingsRepository , DjangoMozuViewEngine viewEngine )
+        public ResourceController(ISiteBuilderContext sbContext, IThemeSettingsRepository themeSettingsRepository, DjangoMozuViewEngine viewEngine)
         {
             _themeSettingsRepository = themeSettingsRepository;
             _sbContext = sbContext;
             _viewEngine = viewEngine;
         }
-       
+
         //
         // GET: /Resource/
-        [ClientCacheHeaders( ConfigKey = "stylesheets")]
+        [ClientCacheHeaders(ConfigKey = "stylesheets")]
         public ActionResult Stylesheets(string pathinfo)
         {
 
-          
+
             if (Path.GetExtension(pathinfo) == ".less")
             {
                 return Less(pathinfo, true); // TODO: set debug to false later
@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var res = Content("stylesheets/" + pathinfo, "text/css");
             if (res is MozuVirtualFileResult)
             {
-                ((MozuVirtualFileResult)res).Transform = new LessTransFormer(pathinfo, debug, this._sbContext, this._themeSettingsRepository, _viewEngine  ).Transform;
+                ((MozuVirtualFileResult)res).Transform = new LessTransFormer(pathinfo, debug, this._sbContext, this._themeSettingsRepository, _viewEngine).Transform;
             }
 
             return res;
@@ -101,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             public void Debug(string message, params object[] args)
             {
-                System.Diagnostics.Debug.WriteLine(String.Format(DebugTemplate, string.Join ( " -- ", args)));
+                System.Diagnostics.Debug.WriteLine(String.Format(DebugTemplate, string.Join(" -- ", args)));
             }
 
             public void Error(string message, params object[] args)
@@ -119,7 +119,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 System.Diagnostics.Debug.WriteLine(String.Format(WarnTemplate, string.Join(" -- ", args)));
             }
         }
-        class MyLessPlugin: dotless.Core.Plugins.VisitorPlugin
+        class MyLessPlugin : dotless.Core.Plugins.VisitorPlugin
         {
 
             public override dotless.Core.Plugins.VisitorPluginType AppliesTo
@@ -132,41 +132,48 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 visitDeeper = true;
                 if (node is dotless.Core.Parser.Tree.Value)
                 {
+                    int f = 0;
                 }
                 if (node is dotless.Core.Parser.Tree.Variable)
                 {
                     var inNode = (Variable)node;
                     if (inNode.Name == "@headingsColor")
                     {
-                    var rule = Env.FindVariable(inNode.Name);
+                        var rule = Env.FindVariable(inNode.Name);
                         var parser = new dotless.Core.Parser.Parser();
-                      //  var resRs = parser.Parse("lighten(@orange, 15%)", "xxx");
-                        
+                        //  var resRs = parser.Parse("lighten(@orange, 15%)", "xxx");
+
                     }
-                    node = new MyVariable( inNode.Name );
+                    node = new MyVariable(inNode.Name);
+
+
+                    int f = 2;
                 }
                 return node;
-                
+
             }
 
             public Env Env { get; set; }
         }
-        class MyVariable:dotless.Core.Parser.Tree.Variable
+        class MyVariable : dotless.Core.Parser.Tree.Variable
         {
-            public MyVariable(string name):base(name)
-            {}
+            public MyVariable(string name)
+                : base(name)
+            { }
             public override Node Evaluate(Env env)
             {
                 string name = this.Name;
                 if (name.StartsWith("@@"))
                 {
-                    Node node = new MyVariable (name.Substring(1)).Evaluate(env) ;
+                    Node node = new MyVariable(name.Substring(1)).Evaluate(env);
                     name = '@' + ((node is TextNode) ? (node as TextNode).Value : node.ToCSS(env));
                 }
-                
+
                 Rule rule = env.FindVariable(name);
                 if (Name == "headingsColor" || Name == "@headingsColor")
                 {
+
+                    int f = 0;
                 }
 
                 if (rule == null)
@@ -176,9 +183,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 return rule.Value.Evaluate(env);
             }
 
-            
+
         }
-       
+
         class LessTransFormer
         {
             bool _debug;
@@ -194,8 +201,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             private IThemeSettingsRepository _themeSettingsRepository;
             private ISiteBuilderContext _siteContext;
             private DjangoMozuViewEngine _viewEngine;
-           
-            public LessTransFormer(string path, bool debug, ISiteBuilderContext siteContext, IThemeSettingsRepository themeSettingsRepository,DjangoMozuViewEngine viewEngine)
+
+            public LessTransFormer(string path, bool debug, ISiteBuilderContext siteContext, IThemeSettingsRepository themeSettingsRepository, DjangoMozuViewEngine viewEngine)
             {
                 _siteContext = siteContext;
                 _debug = debug;
@@ -219,8 +226,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 }
             }
 
-          
-          
+
+
             public ISiteBuilderContext SiteContext
             {
                 get { return _siteContext; }
@@ -232,26 +239,26 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 var sr = new StreamReader(str);
                 var template = sr.ReadToEnd();
 
-                
+
                 template = this.ProcessSettingsVariables(template);
                 var factory = new EngineFactory();
 
-                factory.Configuration.Logger = typeof (LessLogger);
+                factory.Configuration.Logger = typeof(LessLogger);
                 factory.Configuration.MinifyOutput = !_debug;
-                factory.Configuration.LessSource = typeof (MyLessFileReader);
+                factory.Configuration.LessSource = typeof(MyLessFileReader);
 
-                var reader = new MyLessFileReader(this,_viewEngine);
+                var reader = new MyLessFileReader(this, _viewEngine);
 
 
                 var parser = new dotless.Core.Parser.Parser()
-                                 {
-                                     Importer =
-                                         new dotless.Core.Importers.Importer(reader)
-                                 };
+                {
+                    Importer =
+                        new dotless.Core.Importers.Importer(reader)
+                };
 
                 var tree = parser.Parse(template, _path);
 
-                var env = new dotless.Core.Parser.Infrastructure.Env {Compress = !_debug};
+                var env = new dotless.Core.Parser.Infrastructure.Env { Compress = !_debug };
                 //env.AddPlugin(new MyLessPlugin() { Env = env });
                 // var rs = new dotless.Core.Parser.Tree.Ruleset()
                 // env.Frames.Push( new dotless.Core.Parser.Tree.Ruleset);
@@ -267,9 +274,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             }
 
-            public  string ProcessSettingsVariables(string template)
+            public string ProcessSettingsVariables(string template)
             {
-                if ( template.IndexOf( "{{") > -0 )
+                if (template.IndexOf("{{") > -0)
                 {
                     return g_regex.Replace(template, Evaluator);
                 }
@@ -298,7 +305,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             //    {
             //        var settings  = _themeSettingsRepository.GetRuntimeValues();
             //        _variableDictionary  = new  Dictionary<string, string>();
-                    
+
             //        foreach (var item in settings.Items)
             //        {
             //            foreach (var field in item.Fields.Where( x=> x.Usage == "style"))
@@ -314,14 +321,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
 
             //    return _regex.Replace(ret,Evaluator);
-                
+
             //}
         }
         class MyLessFileReader : dotless.Core.Input.IFileReader
         {
             private LessTransFormer lessTransFormer;
             private DjangoMozuViewEngine _viewEngine;
-            public MyLessFileReader(LessTransFormer lessTransFormer , DjangoMozuViewEngine viewEngine)
+            public MyLessFileReader(LessTransFormer lessTransFormer, DjangoMozuViewEngine viewEngine)
             {
                 this.SiteContext = lessTransFormer.SiteContext;
                 this.lessTransFormer = lessTransFormer;
@@ -335,8 +342,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             // public ResourceController Controller { get; set; }
             public string GetFileContents(string fileName)
             {
-                
-                foreach (var theme in SiteContext.Theme.Stack )
+
+                // foreach (var theme in SiteContext.ThemeInfo.Stack )
                 {
                     string stem = fileName;
                     var file = _viewEngine.PathProvider.GetFile(stem) as MozuVirtualFile;
@@ -344,8 +351,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     {
                         using (var stream = file.Open())
                         {
-                            var ret =  new StreamReader(stream).ReadToEnd();
-                            return  this.lessTransFormer.ProcessSettingsVariables(ret);
+                            var ret = new StreamReader(stream).ReadToEnd();
+                            return this.lessTransFormer.ProcessSettingsVariables(ret);
                         }
 
                     }
@@ -365,19 +372,19 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             public byte[] GetBinaryFileContents(string fileName)
             {
-                foreach (var theme in SiteContext.Theme.Stack)
+                // foreach (var theme in SiteContext.ThemeInfo.Stack)
                 {
-                    string stem =  fileName;
-                    var file = ViewEngines.Engines.OfType<DjangoMozuViewEngine>().First().PathProvider.GetFile(stem) as MozuVirtualFile;
+                    string stem = fileName;
+                    var file = _viewEngine.PathProvider.GetFile(stem) as MozuVirtualFile;
                     if (file != null && file.Exists)
                     {
                         using (var stream = file.Open())
                         {
-                            byte[] data = new byte[ stream.Length];
-                            stream.Read(data, 0 , data.Length );
+                            byte[] data = new byte[stream.Length];
+                            stream.Read(data, 0, data.Length);
                             return data;
 
-                            
+
                         }
 
                     }
@@ -427,12 +434,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         ActionResult GetFileResult(string pathinfo, string contentType)
         {
-            foreach (var theme in _sbContext.Theme.Stack)
+            // foreach (var theme in _sbContext.ThemeInfo.Stack)
             {
                 string stem = "resources/" + pathinfo;
-                
-                // var file = ViewEngines.Engines.OfType<DjangoMozuViewEngine>().First().PathProvider.GetFile(stem) as MozuVirtualFile;
-                var file = (new DjangoMozuViewEngine()).PathProvider.GetFile(stem) as MozuVirtualFile;
+                var file = _viewEngine.PathProvider.GetFile(stem) as MozuVirtualFile; 
                 if (file != null && file.Exists)
                 {
                     return new MozuVirtualFileResult(stem, contentType, file);
@@ -495,7 +500,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 dic["." + mimeMatch.Key] = mimeMatch.Value;
             }
-           
+
             foreach (var keyName in Registry.ClassesRoot.GetSubKeyNames())
             {
                 RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(keyName, false);

@@ -27,9 +27,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             // get a VirtualDirectory for the current theme.
             // TODO: massive break of abstraction
             // TODO: this model does not allow themes to inherit their ancestors widgets and page types.
-            var baseDirectory = _virtualPathProvider.GetDirectory("~/Themes/" + _sbCtx.Theme.Name);
+            var widgetDirectory = _virtualPathProvider.GetDirectory(folderName);
 
-            var widgetDirectory = baseDirectory.Directories.Cast<VirtualDirectory>().FirstOrDefault(d => string.Equals(d.Name, folderName, StringComparison.OrdinalIgnoreCase));
+          //  var widgetDirectory = baseDirectory.Directories.Cast<VirtualDirectory>().FirstOrDefault(d => string.Equals(d.Name, folderName, StringComparison.OrdinalIgnoreCase));
             if (widgetDirectory == null)
                 return Enumerable.Empty<T>();
 
