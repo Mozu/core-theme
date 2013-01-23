@@ -339,6 +339,8 @@
     <Content Include="Themes\Cantaloupe2\MetaData\cantilop-thumb.jpg" />
     <Content Include="Themes\Cantaloupe2\MetaData\ThemeSettings.xml" />
     <Content Include="Themes\Cantaloupe2\theme.xml" />
+    <Content Include="Themes\Core3\Resources\Scripts\Modules\context-parser.js" />
+    <Content Include="Themes\Core3\Resources\Scripts\Vendor\jquery-cookie.js" />
     <Content Include="Themes\RESTCore\MetaData\build.js" />
     <Content Include="Themes\RESTCore\MetaData\core3_thumb.jpg" />
     <Content Include="Themes\RESTCore\MetaData\example.build.js" />

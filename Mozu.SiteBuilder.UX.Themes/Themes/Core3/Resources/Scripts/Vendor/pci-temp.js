@@ -116,9 +116,12 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
             windowObject.location = locationToGoTo;
         },
 
-        request = function (url, body, httpVerb, merchantId) {
+        postMessageDelimiter = '|||||',
+
+        request = function (url, body, httpVerb, merchantId, siteId, tenantId) {
+            var messageBody = Array.prototype.slice.call(arguments).join(postMessageDelimiter);
             var requestCallback = function () {
-                _postMessage(url + '|||||' + body + '|||||' + httpVerb + '|||||' + merchantId, _receiver.contentWindow || _receiver);
+                _postMessage(messageBody, _receiver.contentWindow || _receiver);
             };
 
             w.requestCallback = requestCallback;
@@ -436,7 +439,7 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
             // run the request!
             var requestUri = (cardID) ? apiCall.update.uri(cardID) : apiCall.save.uri();
             var requestMethod = (cardID) ? apiCall.update.method : apiCall.save.method;
-            request(requestUri, payload, requestMethod, settings.get('merchantID'));
+            request(requestUri, payload, requestMethod, settings.get('merchantID'), settings.get('siteId'), settings.get('tenantId'));
             return true;
         } else {
             // fields haven't changed, so just run success function
