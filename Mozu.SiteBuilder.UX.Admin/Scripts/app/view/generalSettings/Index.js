@@ -128,16 +128,19 @@ Ext.define('Taco.view.generalsettings.Index', {
                     listeners: {
                         change: function (cmp, isChecked) {
                             me.analytics.getComponent('googleAnalyticsId').setDisabled(!isChecked);
+                            me.analytics.getComponent('googleAnalyticsEcomEnabled').setDisabled(!isChecked);
                         }
                     }
                 },
                 {
                     xtype: 'checkbox',
                     name: 'googleAnalyticsEcomEnabled',
+                    itemId: 'googleAnalyticsEcomEnabled',
                     boxLabel: 'Enable <a target="_blank" href="https://developers.google.com/analytics/devguides/collection/gajs/gaTrackingEcommerce">Google Analytics eCommerce transaction tracking</a>',
                     boxLabelAlign: 'after',                    inputValue: true,
                     uncheckedValue: false,
-                    checked: me.settings.googleAnalyticsEcomEnabled
+                    checked: me.settings.googleAnalyticsEcomEnabled,
+                    disabled: !me.settings.googleAnalyticsEnabled
                 }
             ],
             listeners: {

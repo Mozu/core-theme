@@ -11,6 +11,6 @@
 {% debug_all_scripts %}
 {% endif %}
 
-{% if not SiteContext.GoogleAnalyticsEnabled %}
+{% if SiteContext.GoogleAnalyticsEnabled %}
     {% include "Modules/GoogleAnalyticsTrackingCode" %}
 {% endif %}

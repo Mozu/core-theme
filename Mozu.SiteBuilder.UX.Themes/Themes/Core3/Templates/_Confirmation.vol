@@ -181,7 +181,7 @@
 
 {% block TrailingScripts %}
 	{{ block.super }}
-	{% if not SiteContext.GoogleAnalyticsEcommerceEnabled %}
+	{% if SiteContext.GoogleAnalyticsEnabled and SiteContext.GoogleAnalyticsEcommerceEnabled %}
 	<script>
 	_gaq.push(['_addTrans',
 		'{{ Model.orderNumber }}',						
@@ -206,8 +206,8 @@
 	{% endfor %}
 
 	_gaq.push(['_trackTrans']);
-	{% endif %}
 	</script>
+	{% endif %}
 
 {% endblock TrailingScripts %}
 
