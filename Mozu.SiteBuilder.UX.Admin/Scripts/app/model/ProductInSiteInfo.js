@@ -111,8 +111,9 @@ Ext.define('Taco.model.ProductInSiteInfo', {
         {
             "type": "belongsTo",
             "model": "Taco.model.Product",
-            "name": "product",
-            "foreignKey": "productInSites"
+            "getterName": "getProduct",
+            "setterName": "setProduct",
+            "foreignKey": "productCode"
         }
     ],
 
