@@ -1,6 +1,6 @@
 ﻿define(
-    ["jquery", "modules/knockout-plus", "pciaas", "modules/knockout-viewmodel", "i18n!nls/messages-checkout", "i18n!nls/messages", "modules/actions-processor"],
-    function ($, ko, PCIaaS, ViewModelPrototype, msg, genericMsg, processActions) {
+    ["jquery", "modules/knockout-plus", "pciaas", "modules/knockout-viewmodel", "i18n!nls/messages-checkout", "i18n!nls/messages", "modules/actions-processor", "modules/context-parser"],
+    function ($, ko, PCIaaS, ViewModelPrototype, msg, genericMsg, processActions, MozuContext) {
 
         function mapFromServer(serverRes) {
             return $.extend(serverRes, serverRes.model);
@@ -314,7 +314,9 @@
                     }
                 },
                 settings: {
-                    framePath: "/../Assets/pci_receiver.html"
+                    framePath: "/../Assets/pci_receiver.html",
+                    siteId: MozuContext.site,
+                    tenantId: MozuContext.tenant
                 }
             });
 

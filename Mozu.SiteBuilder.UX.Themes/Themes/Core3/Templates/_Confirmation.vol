@@ -179,34 +179,37 @@
 
 {% endblock BodyContent %}
 
-{% block AdditionalGoogleAnalyticsTracking %}
+{% block TrailingScripts %}
+	{{ block.super }}
 	{% if not SiteContext.GoogleAnalyticsEcommerceEnabled %}
+	<script>
 	_gaq.push(['_addTrans',
-		'{{ Model.orderNumber }}',							// transaction ID - required
-		'{{ siteContext.settings.general.websiteName }}',	// affiliation or store name
-		'{{ Model.total }}',								// total - required
-		'{{ Model.taxTotal }}',								// tax
-		'{{ Model.shippingTotal }}',						// shipping
-		'{{ Model.shipment.cityOrTown }}',					// city
-		'{{ Model.shipment.stateOrProvince }}',				// state or province
-		'USA'												// country
+		'{{ Model.orderNumber }}',						
+		'{{ siteContext.settings.general.websiteName }}',
+		'{{ Model.total }}',							
+		'{{ Model.taxTotal }}',					
+		'{{ Model.shippingTotal }}',		
+		'{{ Model.shipment.cityOrTown }}',
+		'{{ Model.shipment.stateOrProvince }}',			
+		'USA'
 	]);
 
 	{% for item in Model.items %}
 	_gaq.push(['_addItem',
-		'{{ Model.orderNumber }}',		// transaction ID - required
-		'{{ item.productCode }}',		// SKU/code - required
-		'{{ item.productName }}',		// product name
-		'',								// category or variation
-		'{{ item.unitPrice }}',			// unit price - required
-		'{{ item.quantity }}',			// quantity - required
+		'{{ Model.orderNumber }}',	
+		'{{ item.productCode }}',
+		'{{ item.productName }}',
+		'',
+		'{{ item.unitPrice }}',
+		'{{ item.quantity }}',
 	]);
 	{% endfor %}
 
 	_gaq.push(['_trackTrans']);
 	{% endif %}
+	</script>
 
-{% endblock AdditionalGoogleAnalyticsTracking %}
+{% endblock TrailingScripts %}
 
 		
 		
