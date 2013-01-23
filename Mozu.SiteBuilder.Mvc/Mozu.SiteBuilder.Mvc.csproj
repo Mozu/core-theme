@@ -94,10 +94,6 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <!-- Customizable Output Directory Opt-In for TFS Build (non-web application projects) -->
-  <PropertyGroup Condition="$(TeamBuildOutDir) != '' ">
-    <OutputPath>$(TeamBuildOutDir)\$(MSBuildProjectName)</OutputPath>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.0.0-beta\lib\net40\Autofac.dll</HintPath>
