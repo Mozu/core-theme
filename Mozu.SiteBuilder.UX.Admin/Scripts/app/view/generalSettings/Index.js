@@ -122,6 +122,8 @@ Ext.define('Taco.view.generalsettings.Index', {
                     itemId: 'googleAnalyticsEnabled',
                     boxLabel: 'Enable Google Analytics on your storefront',
                     boxLabelAlign: 'after',
+                    inputValue: true,
+                    uncheckedValue: false,
                     checked: me.settings.googleAnalyticsEnabled,
                     listeners: {
                         change: function (cmp, isChecked) {
@@ -133,7 +135,8 @@ Ext.define('Taco.view.generalsettings.Index', {
                     xtype: 'checkbox',
                     name: 'googleAnalyticsEcomEnabled',
                     boxLabel: 'Enable <a target="_blank" href="https://developers.google.com/analytics/devguides/collection/gajs/gaTrackingEcommerce">Google Analytics eCommerce transaction tracking</a>',
-                    boxLabelAlign: 'after',
+                    boxLabelAlign: 'after',                    inputValue: true,
+                    uncheckedValue: false,
                     checked: me.settings.googleAnalyticsEcomEnabled
                 }
             ],
@@ -172,7 +175,8 @@ Ext.define('Taco.view.generalsettings.Index', {
                     itemId: 'robotsOverrideEnabled',
                     boxLabel: 'Override the site default ROBOTS.TXT',
                     boxLabelAlign: 'after',
-                    checked: me.settings.robotsOverrideEnabled,
+                    checked: me.settings.robotsOverrideEnabled,                    inputValue: true,
+                    uncheckedValue: false,
                     listeners: {
                         change: function (cmp, isChecked) {
                             me.robots.getComponent('robotsOverride').setDisabled(!isChecked);
