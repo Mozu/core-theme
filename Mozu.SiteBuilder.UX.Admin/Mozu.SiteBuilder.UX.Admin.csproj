@@ -471,7 +471,6 @@
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
     <Content Include="Scripts\app\core\Model.js" />
     <Content Include="Scripts\app\core\context\TaContext.js" />
-	<Content Include="Scripts\app\core\ux\ScrollSpy.js" />
     <Content Include="Scripts\app\core\ux\DragSource.js" />
     <Content Include="Scripts\app\core\ux\form\EditorLayout.js" />
     <Content Include="Scripts\app\core\ux\form\EditorWrapper.js" />
