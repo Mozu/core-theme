@@ -24,6 +24,9 @@ namespace Mozu.SiteBuilder.UX.Models.Checkout
         [DataMember(Name = "productName")]
         public string ProductName { get; set; }
 
+        [DataMember(Name = "productCode")]
+        public string ProductCode { get; set; }
+
         [DataMember(Name = "quantity")]
         public int Quantity { get; set; }
 
