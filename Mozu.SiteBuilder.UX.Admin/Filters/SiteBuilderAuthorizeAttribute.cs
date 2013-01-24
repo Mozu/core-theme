@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
                     throw new ArgumentNullException("httpContext");
                 }
 
-                var authHelper = new AuthenticationHelper(new CookieProvider(httpContext));
+                var authHelper = new AuthenticationHelper(httpContext, new CookieProvider(httpContext));
 
                 var lwUser = httpContext.User as Mozu.Core.LightweightUserClaims;
 

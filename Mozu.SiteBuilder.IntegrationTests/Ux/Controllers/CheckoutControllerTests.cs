@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Controllers
 
         private CheckoutController GetController()
         {
-            return new CheckoutController(orderService, new AuthenticationHelper(), new CookieProvider(), new PciSettingsProvider());
+            return new CheckoutController(orderService, new AuthenticationHelper(null), new CookieProvider(), new PciSettingsProvider());
         }
     }
 }

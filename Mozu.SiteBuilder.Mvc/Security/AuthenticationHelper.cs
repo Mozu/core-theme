@@ -28,10 +28,11 @@ namespace Mozu.SiteBuilder.Mvc.Security
     public class AuthenticationHelper : IAuthenticationHelper
     {
         //public static String COOKIENAME = "sbAuth";
-        
+        private HttpContextBase _httpContext;
 
-        public AuthenticationHelper(ICookieProvider provider = null , string cookieName = null )
+        public AuthenticationHelper(HttpContextBase httpContext, ICookieProvider provider = null, string cookieName = null)
         {
+            _httpContext = httpContext;
             CookieName = cookieName ?? System.Configuration.ConfigurationManager.AppSettings["authCookieName"];
             CookieProvider = provider;
         }
@@ -67,11 +68,11 @@ namespace Mozu.SiteBuilder.Mvc.Security
             }
 
             Thread.CurrentPrincipal = id;
-            if (HttpContext.Current != null)
+            if (_httpContext != null)
             {
-                HttpContext.Current.Items["ticket"] = ticket;
-                HttpContext.Current.User = id;
-                HttpContext.Current.Items["profileToken"] = pt;
+                _httpContext.Items["ticket"] = ticket;
+                _httpContext.User = id;
+                _httpContext.Items["profileToken"] = pt;
             }
 
             if (ticket == null)
@@ -83,9 +84,9 @@ namespace Mozu.SiteBuilder.Mvc.Security
         public UserAuthTicket GetCurrentTicket ()
         {
             UserAuthTicket ticket = null;
-            if (HttpContext.Current != null)
+            if (_httpContext != null)
             {
-                ticket = (UserAuthTicket) HttpContext.Current.Items["ticket"];
+                ticket = (UserAuthTicket) _httpContext.Items["ticket"];
             }
             return ticket ?? GetTicketFromRequest();
 
@@ -93,14 +94,14 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
         public ProfileToken GetCurrentProfileToken()
         {
-            return HttpContext.Current.Items["profileToken"] as ProfileToken;
+            return _httpContext.Items["profileToken"] as ProfileToken;
         }
 
         public LightweightUserClaims GetCurrentUser()
         {
             IPrincipal principal = null;
 
-            var context = HttpContext.Current;
+            var context = _httpContext;
             if (context != null)
                 principal = context.User;
 

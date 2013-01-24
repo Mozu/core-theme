@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     {
         System.Collections.Generic.IEnumerable<System.Threading.Tasks.Task<Tuple<Mozu.Content.Contracts.Document, Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Mozu.Content.Contracts.Document>>>> Create(System.Collections.Generic.IEnumerable<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document> docs);
         System.Collections.Generic.IEnumerable<System.Threading.Tasks.Task<Tuple<bool, Mozu.Core.Api.Contracts.Client.ServiceClientResponse<StreamContent>>>> Delete(System.Collections.Generic.IEnumerable<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document> docs);
-        System.Threading.Tasks.Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Mozu.Content.Contracts.Document>> GetByPath(string contentCollection, string name, string folderPath);
+        System.Threading.Tasks.Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Mozu.Content.Contracts.Document>> GetByPath(string contentCollection, string name, string folderPath = null);
 
         Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> Get(string contentCollection, string id, bool activeVersion = true);
         Task<Tuple<Mozu.Content.Contracts.FolderTree, ServiceClientResponse<Mozu.Content.Contracts.FolderTree>>> GetFolderTree(string collection, string parentId = null, int? levels = null);

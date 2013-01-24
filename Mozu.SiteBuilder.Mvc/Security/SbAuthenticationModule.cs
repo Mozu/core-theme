@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
         void OnAuthenticate(object sender, EventArgs e)
         {
-            var helper =  new AuthenticationHelper(new CookieProvider ());
+            var helper =  new AuthenticationHelper( new HttpContextWrapper( HttpContext.Current) , new CookieProvider ());
             var ticket = helper.GetTicketFromRequest();
             helper.SetCurrentUser(ticket);
         }

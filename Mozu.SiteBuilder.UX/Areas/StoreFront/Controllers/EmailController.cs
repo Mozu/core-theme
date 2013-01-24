@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Mozu.Core.Messaging.Contracts.Notification;
 using Newtonsoft.Json;
@@ -110,10 +111,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //
         // GET: /StoreFront/Email/
 
-        public ActionResult Preview(string id)
+        public async  Task<ActionResult> Preview(string id)
         {
             string emailTempalte = id;
-            var res = Page("email", emailTempalte);
+            var res = await Page("email", emailTempalte);
             if (res is HttpNotFoundResult)
             {
                 var reqDocs = new List<Mvc.Models.CMS.Admin.Document>(){
@@ -138,7 +139,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //_cmsService.Create ( )
                 //CreatePage("home page", "home", "home");
 
-                res = Page("email", emailTempalte);
+                res = await Page("email", emailTempalte);
             }
             ViewResult vr = res as ViewResult;
             vr.ViewName = "email/" + emailTempalte;
@@ -148,7 +149,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public ActionResult  Render()
+        public async Task<ActionResult>  Render()
         {
         	string topic;
         	string innerPayload;
@@ -171,7 +172,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         	}
 
 
-        	var v = Page("email", emailTypeInfo.CmsDoc );
+        	var v = await  Page("email", emailTypeInfo.CmsDoc );
             object cmdContent = null;
         	var vr = v as ViewResult;
 			if (vr !=null)

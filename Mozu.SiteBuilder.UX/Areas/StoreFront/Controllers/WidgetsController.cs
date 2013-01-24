@@ -197,12 +197,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                Content = "<!--sof " + zoneId + "-->"
                            };
             }
-
-            return new ContentResult()
-                       {
-                           Content = ""
-                       };
-          
+            if (_context.PageContext == null || _context.PageContext.WidgetContext == null || _context.PageContext.WidgetContext.RuntimeData == null)
+            {
+                return new ContentResult()
+                           {
+                               Content = ""
+                           };
+            }
             var zoneWidgets = _context.PageContext.WidgetContext.RuntimeData.Where(_ => string.Equals(_.ZoneId, zoneId, StringComparison.OrdinalIgnoreCase)).OrderBy( x=> x.Index ).ToList();
 
             //StringBuilder sb = new StringBuilder();

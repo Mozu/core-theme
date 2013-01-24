@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Mozu.Content.Contracts;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc;
 using System.Web.Routing;
+using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Autofac;
 using Mozu.SiteBuilder.UX.Models.Checkout;
@@ -26,10 +31,73 @@ namespace Mozu.SiteBuilder.UX.Controllers
         //    set;
         //}
 
-        
+
+        public async Task<bool> AsyncInitWidgetData()
+        {
+            var wctx = SiteContext.PageContext.WidgetContext;
+            if (wctx == null)
+            {
+                return false;
+            }
+            Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> pageTask = null;
+            Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> templateTask = null;
+            Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> siteTemplateTask = null;
+            List<Task<ServiceClientResponse<Mozu.Content.Contracts.Document>>> tasks = new List<Task<ServiceClientResponse<Document>>>();
+            if (wctx.PageId != null && wctx.Page == null)
+            {
+                pageTask = CmsService.Get("pages", wctx.PageId);
+                tasks.Add(pageTask);
+            }
+            if (wctx.TemplateId != null && wctx.Template == null)
+            {
+                templateTask = CmsService.Get("templates", wctx.PageId);
+                tasks.Add(templateTask);
+            }
+            if (wctx.SiteTemplateId != null && wctx.SiteTemplate == null)
+            {
+                siteTemplateTask = CmsService.Get("templates", wctx.PageId);
+                tasks.Add(siteTemplateTask);
+            }
+            if (wctx.PageName  != null && wctx.Page == null)
+            {
+                pageTask = CmsService.GetByPath("pages", wctx.PageName);
+                tasks.Add(pageTask);
+            }
+            if (wctx.TemplateName != null && wctx.Template == null)
+            {
+                templateTask = CmsService.Get("templates", wctx.TemplateName);
+                tasks.Add(templateTask);
+            }
+            if (wctx.SiteTemplateName != null && wctx.SiteTemplate == null)
+            {
+                siteTemplateTask = CmsService.Get("templates", wctx.SiteTemplateName);
+                tasks.Add(siteTemplateTask);
+            }
+
+           
+            await Task.WhenAll(tasks.ToArray());
+            if (pageTask != null && pageTask.Result.ResponseMessage.IsSuccessStatusCode)
+            {
+                wctx.Page = pageTask.Result.ReadAsSync();
+            }
+            if (templateTask != null && templateTask.Result.ResponseMessage.IsSuccessStatusCode)
+            {
+                wctx.Template  = templateTask.Result.ReadAsSync();
+            }
+            if (siteTemplateTask != null && siteTemplateTask.Result.ResponseMessage.IsSuccessStatusCode)
+            {
+                wctx.SiteTemplate = siteTemplateTask.Result.ReadAsSync();
+            }
+            
+
+            wctx.Initialized = true;
+            return true;
 
 
+        }
 
+
+       
         protected override void Execute(RequestContext requestContext)
         {
            // var isEditMode = ;
@@ -58,23 +126,24 @@ namespace Mozu.SiteBuilder.UX.Controllers
                 _sc = value;
             }
         }
-        //protected override ViewResult View(IView view, object model)
-        //{
-        //    return base.View(view, model);
-        //}
 
-        //protected override ViewResult View(IView view, object model)
-        //{
-        //    if (model != null)
-        //    {
-        //        base.ViewData.Model = model;
-        //    }
-        //    ViewResult result = new ViewResult();
-        //    result.View = view;
-        //    result.ViewData = base.ViewData;
-        //    result.TempData = base.TempData;
-        //    return result;
-        //}
+        private ICmsServiceWrapper _cmsService;
+        public ICmsServiceWrapper CmsService
+        {
+            get
+            {
+                if (_cmsService == null)
+                {
+                    _cmsService = DependencyResolver.Current.GetService<ICmsServiceWrapper>();
+                }
+                return _cmsService;
+            }
+            set
+            {
+                _cmsService = value;
+            } 
+        }
+   
 
         public RouteValueDictionary DjangoTemplateTagArguments
         {
