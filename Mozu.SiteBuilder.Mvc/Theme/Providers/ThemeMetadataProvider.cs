@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
         private const string METADATA_FILE_NAME = "theme.xml";
         private readonly NameValueCollection _config;
 
-        private VirtualPathProvider _pathProvider;
+     
         private XmlSchemaSet _metadataValidationSchema;
         private XmlSchemaSet _settingsValidationSchema;
 
@@ -38,12 +38,8 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
         public ThemeMetadataProvider(System.Collections.Specialized.NameValueCollection config = null )
         {
             _config = config ?? System.Configuration.ConfigurationManager.AppSettings;
-            // _pathProvider = System.Web.Mvc.ViewEngines.Engines.OfType<DjangoVolusionViewEngine>().First().PathProvider;
-
-            // TODO: This is very cheesy, but we avoid Autofac hell trying to inject the DjanjoVolusionViewEngine
-            // and <code>System.Web.Mvc.ViewEngines</code> is not necessarily set up at this point.
-            // We need a beter way to get at the VirtualPathProvider and avoid the ViewEngine entirely.
-          // 
+        
+         
 
             // set up XSD validation for theme.xml. We will call .Validate() as we load documents.
             _metadataValidationSchema = new XmlSchemaSet();
@@ -54,7 +50,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
             _settingsValidationSchema = new XmlSchemaSet();
             _settingsValidationSchema.Add("", XmlReader.Create(GetResource("ThemeSettings.xsd")));
 
-            _pathProvider = new MozuVirtualPathProvider(new DjangoMozuViewEngine());
+       
         }
 
         private Stream GetResource( string resourceName)

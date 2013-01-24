@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Mozu.SiteBuilder.UX.Controllers;
-
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using DC = Mozu.Content.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 
@@ -62,11 +62,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
-        public ActionResult NotFound()
+        public async Task<ActionResult> NotFound()
         {
             
 
-            var res = Page("pages", "404");
+            var res = await Page("pages", "404");
             if (res is HttpNotFoundResult)
             {
                 var ptd = _cmsTypeHelper.GetPageTypeDefinitions ().First  ( x=> x.DefaultValues != null && (string)x.DefaultValues.GetValue(CmsConstants.Widgets.page_type )== "404");
@@ -83,13 +83,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     }
                 };
 
-                var task = _cmsService.Create ( reqDocs).First ();
-                task.Wait ();
+                var task = await _cmsService.Create ( reqDocs).First ();
+                
 
 
                 //CreatePage("Page Not Found", "404_page", "404");
                 //this.SiteContext.PageContext.WidgetCreationTags.Add("404");
-                res = Page("pages", "404");
+                res = await Page("pages", "404");
             }
 
 
@@ -100,11 +100,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //
         // GET: /StoreFront/Details/5
         [HttpGet]
-        public ActionResult Home()
+        public async Task<ActionResult> Home()
         {
 
-            
-            var res = Page("pages", "home");
+
+            var res = await Page("pages", "home");
             if (res is HttpNotFoundResult)
             {
                 var ptd = _cmsTypeHelper.GetPageTypeDefinitions().First(x => x.DefaultValues != null && (string)x.DefaultValues.GetValue(CmsConstants.Widgets.page_type) == "homepage");
@@ -129,7 +129,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //_cmsService.Create ( )
                 //CreatePage("home page", "home", "home");
 
-                res = Page("pages", "home");
+                res = await Page("pages", "home");
             }
             //this.SiteContext.PageContext.WidgetCreationTags.Add("home");
             ViewResult vr = res as ViewResult;
@@ -142,7 +142,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //
         // GET: /StoreFront/Details/5
         [HttpGet]
-        public ActionResult Page(string collection, string pageName)
+        public async Task<ActionResult> Page(string collection, string pageName)
         {
             
 
@@ -163,9 +163,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             pc.MetaTitle = vm.Properties.GetValue("meta_title") as string;
             pc.PageType = (string)(vm.Properties.GetValue("page_type")) ?? "cmspage";
 
+            
 
 
             var template = ((string)(vm.Properties.GetValue("template")) ?? this.HttpContext.Request["template"] ?? "page");
+            
+            
+            pc.WidgetContext = new WidgetPageContext()
+                                   {
+                                       Page = doc,
+                                       TemplateName = template,
+                                       SiteTemplateName = "default"
+                                   };
+
 
             var vr =ViewEngines.Engines.FindView(this.ControllerContext, template, null);
             if ( vr.View == null)
@@ -174,8 +184,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var result = View(vr.View , vm);
-
-
+            var x = false;
+            x = await this.AsyncInitWidgetData();
 
 
             return result;
@@ -188,20 +198,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //
         // GET: /StoreFront/Create
 
-        public ActionResult Create(string collection, string pageName)
-        {
-            var doc = new DC.Document()
-            {
-                Id = Guid.NewGuid().ToString(),
-                DocumentType = "web_page",
-                Properties = new List<DC.PropertyValue>(),
-                Name = pageName
-            };
+        //public ActionResult Create(string collection, string pageName)
+        //{
+        //    var doc = new DC.Document()
+        //    {
+        //        Id = Guid.NewGuid().ToString(),
+        //        DocumentType = "web_page",
+        //        Properties = new List<DC.PropertyValue>(),
+        //        Name = pageName
+        //    };
 
-            _docRepo.Create(collection, doc).Wait();
-            return RedirectToRoute("StoreFront_pages", new { pageName = pageName });
+        //    _docRepo.Create(collection, doc).Wait();
+        //    return RedirectToRoute("StoreFront_pages", new { pageName = pageName });
 
-        }
+        //}
 
 
 

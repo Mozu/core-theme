@@ -6,6 +6,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Nuget", ".Nuget", "{4A444F2C-F257-4506-833E-5D54CEA03683}"
 	ProjectSection(SolutionItems) = preProject
 		NuGet.Config = NuGet.Config
+		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.Mvc", "Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj", "{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}"
