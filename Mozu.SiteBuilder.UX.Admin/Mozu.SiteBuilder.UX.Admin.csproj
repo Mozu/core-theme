@@ -489,7 +489,6 @@
     <Content Include="Scripts\app\core\ux\simplegrid\Body.js" />
     <Content Include="Scripts\app\core\ux\simplegrid\Grid.js" />
     <Content Include="Scripts\app\core\ux\simplegrid\Header.js" />
-    <Content Include="Scripts\app\core\ux\tab\Tab.js" />
     <Content Include="Scripts\app\core\ux\tab\Panel.js" />
     <Content Include="Scripts\app\core\ux\tinymce\WindowManager.js" />
     <Content Include="Scripts\app\locale\Strings.js" />
