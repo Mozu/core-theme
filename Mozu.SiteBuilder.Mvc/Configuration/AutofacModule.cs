@@ -1,25 +1,20 @@
 ﻿using System;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
-using Mozu.Core.Configuration;
 using Mozu.ProductAdmin.Contracts.Clients;
-using Mozu.Provisioning.Contracts.Clients;
 using Mozu.Reference.Contracts.Clients;
 using Mozu.ShippingRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteSettings.Shipping.Contracts.Clients;
-using Mozu.Tenant.Contracts.Clients;
-using Mozu.User.Contracts.Clients;
 using Mozu.UspsShippingAdmin.Contracts.Clients;
-using AuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.AuthTicketWebApiClient;
-using IAuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.IAuthTicketWebApiClient;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
-    using System.Web.Mvc;
     using Autofac;
+    using Mozu.Core.Logging;
     using Mozu.SiteBuilder.Mvc;
+    using Mozu.SiteBuilder.Mvc.Logging;
     using Mozu.SiteBuilder.Mvc.Models.CMS;
     using Mozu.SiteBuilder.Mvc.Security;
     using Mozu.SiteBuilder.Mvc.Theme.Providers;
@@ -60,6 +55,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<UspsShippingSharedWebApiClient>().As<IUspsShippingSharedWebApiClient>();
             builder.RegisterType<UspsShippingInstanceWebApiClient>().As<IUspsShippingInstanceWebApiClient>();
             builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>();
+
+            builder.RegisterType<NullLoggingService>().As<ILoggingService>();
         }
     }
 }

@@ -350,6 +350,8 @@
     <Compile Include="JsonNetValueProviderFactory.cs" />
     <Compile Include="Localization\ILocalizationRepository.cs" />
     <Compile Include="Localization\LocalizationRepository.cs" />
+    <Compile Include="Logging\NullLogger.cs" />
+    <Compile Include="Logging\NullLoggingService.cs" />
     <Compile Include="Mobile\FiftyOneDegreesMobileDetectionProvider.cs" />
     <Compile Include="Mobile\IMobileDetectionProvider.cs" />
     <Compile Include="Mobile\NoOpMobileDetectionProvider.cs" />
