@@ -9,13 +9,13 @@ using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
+using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.OldProduct;
 using MozuProduct = Mozu.ProductAdmin.Contracts.Product;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 {
     [TestFixture]
-    public class ProductControllerTests
+    public class OldProductControllerTests
     {
         private IProductWebApiClient _productClient;
 
@@ -108,9 +108,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             response.Items.Last().ProductCode.ShouldEqual(products.Last().ProductCode);
         }
 
-        private ProductController GetApi()
+        private OldProductController GetApi()
         {
-            return new ProductController(_productClient);
+            return new OldProductController(_productClient);
         }
     }
 }

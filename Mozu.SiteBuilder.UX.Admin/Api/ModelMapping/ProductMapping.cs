@@ -3,9 +3,10 @@
 //using DC = Volusion.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts;
 using Mozu.ProductAdmin.Contracts;
-using DC = Mozu.ProductAdmin.Contracts;
 using System.Collections.Generic;
 using System.Linq;
+using DC = Mozu.ProductAdmin.Contracts;
+using OldProduct = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.OldProduct;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
@@ -22,27 +23,40 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         protected override void Configure()
         {
 
-            var NULLCONTENTE = new DC.ProductLocalizedContent();
+            var NULLCONTENT = new DC.ProductLocalizedContent();
             var NULLPRICE = new DC.ProductPrice();
 
 
-
-
             Mapper.CreateMap<DC.Product, Product>()
+                .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.ProductCode))
+                .ForMember(x => x.BaseProductCode, op => op.MapFrom(dc => dc.BaseProductCode))
+                .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))
+                .ForMember(x => x.ShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
+                .ForMember(x => x.FullDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
+                .ForMember(x => x.StockOnHand, op => op.MapFrom(dc => dc.StockOnHand))
+                .ForMember(x => x.IsHiddenWhenOutOfStock, op => op.MapFrom(dc => dc.IsHiddenWhenOutOfStock))
+                .ForMember(x => x.IsBackOrderAllowed, op => op.MapFrom(dc => dc.IsBackOrderAllowed))
+                .ForMember(x => x.PackageWeight, op => op.MapFrom(dc => dc.PackageWeight == null ? null : dc.PackageWeight.Value))
+                .ForMember(x => x.PackageHeight, op => op.MapFrom(dc => dc.PackageHeight == null ? null : dc.PackageHeight.Value))
+                .ForMember(x => x.PackageLength, op => op.MapFrom(dc => dc.PackageLength == null ? null : dc.PackageLength.Value))
+                .ForMember(x => x.PackageWidth, op => op.MapFrom(dc => dc.PackageWidth == null ? null : dc.PackageWidth.Value));
+
+
+            Mapper.CreateMap<DC.Product, OldProduct>()
                   .ForMember(x => x.ContentLocaleCode,
-                             op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).LocaleCode))
+                             op => op.MapFrom(x => (x.Content ?? NULLCONTENT).LocaleCode))
                 //.ForMember(x => x.FreeShipping, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).FreeShipping))
                   .ForMember(x => x.MetaTagDescription,
-                             op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).MetaTagDescription))
-                  .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).MetaTagKeywords))
-                  .ForMember(x => x.MetaTagTitle, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).MetaTagTitle))
+                             op => op.MapFrom(x => (x.Content ?? NULLCONTENT).MetaTagDescription))
+                  .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).MetaTagKeywords))
+                  .ForMember(x => x.MetaTagTitle, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).MetaTagTitle))
                   .ForMember(x => x.ProductFullDescription,
-                             op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductFullDescription))
-                  .ForMember(x => x.ProductImages, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductImages))
-                  .ForMember(x => x.ProductName, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductName))
+                             op => op.MapFrom(x => (x.Content ?? NULLCONTENT).ProductFullDescription))
+                  .ForMember(x => x.ProductImages, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).ProductImages))
+                  .ForMember(x => x.ProductName, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).ProductName))
                   .ForMember(x => x.ProductShortDescription,
-                             op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).ProductShortDescription))
-                  .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).SEOFriendlyUrl))
+                             op => op.MapFrom(x => (x.Content ?? NULLCONTENT).ProductShortDescription))
+                  .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).SEOFriendlyUrl))
                   .ForMember(x => x.ListPrice, op => op.MapFrom(x => (x.Price ?? NULLPRICE).ListPrice))
                   .ForMember(x => x.ISOCurrencyCode, op => op.MapFrom(x => (x.Price ?? NULLPRICE).ISOCurrencyCode))
                   .ForMember(x => x.InventoryHandling, op => op.ResolveUsing(InventoryHandlingResolver))
@@ -70,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>();
             Mapper.CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>();
 
-            Mapper.CreateMap<Product, DC.Product>()
+            Mapper.CreateMap<OldProduct, DC.Product>()
                // .ForMember(x => x.ProductCategories, op => op.MapFrom(x => x.CategoryIds == null ? null : x.CategoryIds.Select(pc => new ProductCategory() { CategoryId = pc })))
                 //.ForMember(x => x.ProductType , op=> op.MapFrom ( x=> string.IsNullOrEmpty ( x.ProductType ) ? "Simple": x.ProductType ))
                 .ForMember(x => x.Content, op => op.ResolveUsing(ContentResolver))
@@ -115,7 +129,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             }
         }
         
-        DC.ProductPrice PriceResolver(Product p)
+        DC.ProductPrice PriceResolver(OldProduct p)
         {
             if (p == null)
                 return null;
@@ -130,7 +144,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //TaxAmount = p.TaxAmount
             };
         }
-        DC.ProductLocalizedContent ContentResolver ( Product p )
+        DC.ProductLocalizedContent ContentResolver ( OldProduct p )
         {
             if (p == null)
                 return null;

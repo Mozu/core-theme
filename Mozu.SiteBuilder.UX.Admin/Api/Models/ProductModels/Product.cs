@@ -1,0 +1,122 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
+namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
+{
+    /// <summary>
+    /// Represents an editable product.
+    /// See http://vconfluence.ads.volusion.com/display/Product/Product+-+v1#Product-v1-ProductDetails
+    /// </summary>
+    [DataContract]
+    public class Product
+    {
+        #region General
+        /// <summary>
+        /// The user-specified identifier of this product.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "productCode")]
+        public string ProductCode { get; set; }
+
+        /// <summary>
+        /// The parent product code, if any.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "baseProductCode")]
+        public string BaseProductCode { get; set; }
+
+        /// <summary>
+        /// The product name.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name="productName")]
+        public string ProductName { get; set; }
+
+        /// <summary>
+        /// The product short description.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name="shortDescription")]
+        public string ShortDescription { get; set; }
+
+        /// <summary>
+        /// The product full description.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "fullDescription")]
+        public string FullDescription { get; set; }
+
+
+        // TODO: photos
+
+        // TODO: price
+        #endregion
+        
+        #region Inventory
+        // TODO: track inventory
+
+        /// <summary>
+        /// Quantity of inventory.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "stockOnHand")]
+        public int? StockOnHand { get; set; }
+
+        /// <summary>
+        /// Hide when out of stock.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name="isHiddenWhenOutOfStock")]
+        public bool? IsHiddenWhenOutOfStock { get; set; }
+
+        // TODO: (boolean) show out of stock message selected
+
+        /// <summary>
+        /// Allow back-orders.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name="isBackOrderAllowed")]
+        public bool? IsBackOrderAllowed { get; set; }
+
+        // TODO: low stock threshold
+
+        #endregion
+
+        #region Extras
+
+        // TODO: Extras
+
+        #endregion
+
+        #region Properties
+
+        // TODO: Properties
+
+        #endregion
+
+        #region Shipping
+        /// <summary>
+        /// The shipping weight.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "packageWeight")]
+        public decimal? PackageWeight { get; set; }
+
+        /// <summary>
+        /// The package length.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "packageLength")]
+        public decimal? PackageLength { get; set; }
+
+        /// <summary>
+        /// The package width.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "packageWidth")]
+        public decimal? PackageWidth { get; set; }
+
+        /// <summary>
+        /// The package height.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "packageHeight")]
+        public decimal? PackageHeight { get; set; }
+
+        #endregion
+
+        /// <summary>
+        /// A collection of site-specific overrides for this product.
+        /// </summary>
+        public IList<ProductInSiteInfo> ProductInSites { get; set; }
+    }
+}
