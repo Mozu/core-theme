@@ -176,13 +176,13 @@ Ext.define('Taco.core.ux.form.Form', {
 
     addSaveTasks: function (tasks) {
         tasks.add([{
-            key: this.buildTaskKey('updaterecord'),
+            key: 'update-record',
             updateRecord: this.record,
             updateForm: this
         }, {
-            key: this.buildTaskKey('saverecord'),
+            key: 'save-record',
             saveRecord: this.record,
-            dependencies: this.buildTaskKey('updaterecord')
+            dependencies: 'update-record'
         }]);
 
         return tasks;
@@ -193,16 +193,12 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     save: function () {
-        console.log('do save!');
-        
-
         Ext.each(this.editors, function (editor) {
             editor.addSaveTasks(this.saveTasks);
         }, this);
 
         this.addSaveTasks(this.saveTasks);
         this.saveTasks.execute();
-        this.fireEvent('savesuccess');
     },
 
     loadEditor: function () {
@@ -318,7 +314,10 @@ Ext.define('Taco.core.ux.form.Form', {
      * @return {Boolean} True for edit mode, false for create mode
      */
     isEdit: function () {
-        return this.record && !this.record.phantom;
+        if (!this.isCreate) {
+            this.isCreate = !(this.record && !this.record.phantom);
+        }
+        return !this.isCreate;
     },
 
     showHint: function (config) {

@@ -61,6 +61,16 @@
                     }
                 });
             };
+
+        } else if (task.updateForeignKey) {
+            task.fn = function (tasks) {
+                var id = task.record.getId();
+
+                Ext.each(task.store.getUpdatedRecords(), function (record) {
+                    record.set(task.updateForeignKey, id);
+                });
+                tasks.callback();
+            }
         } else if (task.store) {
             task.fn = function (tasks) {
                 if (!task.store.getNewRecords().length && !task.store.getUpdatedRecords().length && !task.store.getRemovedRecords().length) {

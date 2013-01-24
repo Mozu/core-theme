@@ -6,8 +6,8 @@
 Ext.define('Taco.view.role.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires:['Taco.view.role.BehaviorsForm'],
-    editTitle: 'Edit Role Bitch',
-    createTitle: 'Create a Role, Bitch',
+    editTitle: 'Edit Role',
+    createTitle: 'Create a Role',
 
     initComponent: function () {
 
@@ -17,11 +17,9 @@ Ext.define('Taco.view.role.Form', {
     },
 
     buildFormComponents: function () {
-        if (!this.store) {
-            this.store = Ext.create('Taco.view.role.BehaviorsForm', {
-                roleId: this.record ? this.record.getId() : null
-            });
-        }
+        this.behaviorsForm = Ext.create('Taco.view.role.BehaviorsForm', {
+            roleId: (this.record && this.isEdit()) ? this.record.getId() : -1
+        });
 
         this.items = [{
             xtype: 'textfield',
@@ -31,6 +29,6 @@ Ext.define('Taco.view.role.Form', {
             name: 'name',
             fieldLabel: 'Name',
             emptyText: 'Enter a role name'
-        }, this.store];
+        }, this.behaviorsForm];
     }
 });

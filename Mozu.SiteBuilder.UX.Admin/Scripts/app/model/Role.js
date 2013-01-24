@@ -7,7 +7,7 @@ Ext.define('Taco.model.Role', {
     extend: 'Taco.core.data.Model',
     requires: ['Taco.model.Behavior'],
     fields: [
-        { name: 'id',   type: 'int' },
+        { name: 'id',   type: 'int', nullable: true },
         { name: 'name', type: 'string' },
         { name: 'isEditable', type: 'boolean'}
     ],
