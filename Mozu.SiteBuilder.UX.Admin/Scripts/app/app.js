@@ -70,7 +70,7 @@ Ext.application({
             , 'Taco.view.Viewport'
             , 'Taco.core.util.UploadManager'
             , 'Taco.core.StateManager'
-            , 'Ext.util.Cookies'       
+            , 'Ext.util.Cookies'
             , 'Taco.core.layout.Auto'
             , 'Taco.core.layout.HFlex'
             , 'Taco.core.layout.VFlex'

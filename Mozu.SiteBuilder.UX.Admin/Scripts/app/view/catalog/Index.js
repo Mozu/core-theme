@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
-    // requires: [],
+    requires: ['Taco.core.ux.tab.Panel'],
 
     header: {
         title: 'TabPanel Testing'
@@ -13,26 +13,26 @@ Ext.define('Taco.view.catalog.Index', {
         var me = this,
             tp;
 
-        tp = Ext.create('Ext.tab.Panel', {
-            componentCls: Taco.baseCSSPrefix + 'tabpanel',
-            tabBar: {
-                plain: true,
-                margin: '0 0 0 160',
-                items: [{
-                    xtype: 'tab',
-                    text: 'Add',
-                    closable: false,
-                    handler: function (tab) { console.log(tab, ' was clicked'); }
-                }]
-            },
-            lbar: {
-                xtype: 'component',
-                width: 160,
-                html: 'sidebar'
-            },
-            defaults: {
-                overflowY: 'auto'
-            },
+        tp = Ext.create('Taco.core.ux.tab.Panel', {
+            // componentCls: Taco.baseCSSPrefix + 'tabpanel',
+            // tabBar: {
+            //     plain: true,
+            //     items: [{
+            //         xtype: 'tab',
+            //         text: 'Add',
+            //         closable: false,
+            //         handler: function (tab) { console.log(tab); }
+            //     }]
+            // },
+            // lbar: {
+            //     xtype: 'component',
+            //     width: 160,
+            //     html: 'sidebar'
+            // },
+            // defaults: {
+            //     closable: true,
+            //     overflowY: 'auto'
+            // },
             items: [{
                 title: 'One',
                 defaults: {
