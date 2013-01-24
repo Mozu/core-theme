@@ -12,7 +12,7 @@ Ext.define('Taco.core.ux.ScrollSpy', {
      * @cfg scrollSpyOffset
      * Vertical pixel offset to adjust when scrollspy events fire.
      */
-    scrollSpyOffset: 10,
+    scrollSpyOffset: 20,
 
     /**
      * Recalculates offsets of child items.
@@ -23,7 +23,7 @@ Ext.define('Taco.core.ux.ScrollSpy', {
         this.offsets = [];
         var scrollOffset = this.scrollingContainer.getScroll().top;
         this.items.each(function (item) {
-            me.offsets.push(item.getEl().getPosition().top + scrollOffset);
+            me.offsets.push(item.getPosition()[1] + scrollOffset);
         });
     },
     
@@ -36,12 +36,13 @@ Ext.define('Taco.core.ux.ScrollSpy', {
         var scrollOffset = this.scrollingContainer.getScroll().top + this.scrollSpyOffset;
         var maxScrollHeight = this.scrollingContainer.getAttribute('scrollHeight') - this.scrollingContainer.getComputedHeight();
         var i;
+        var offsets = this.offsets;
         if (scrollOffset >= maxScrollHeight) { // always last one in the list
             newTarget = this.items.last();
         } else {
 
-            for (i = this.offsets.length; i >= 0; i++) {
-                if (scrollOffset >= this.offsets[i] && (!offsets[i + 1] || scrollTop <= offsets[i + 1])) {
+            for (i = offsets.length; i >= 0; i--) {
+                if (scrollOffset >= offsets[i] && (!offsets[i + 1] || scrollOffset <= offsets[i + 1])) {
                     newTarget = this.items.get(i);
                     break;
                 }
@@ -55,6 +56,20 @@ Ext.define('Taco.core.ux.ScrollSpy', {
 
     },
 
+    /**
+     * @private
+     */
+    initScrollSpy: function () {
+        var containerEl = this.getEl();
+        var scrollingContainer = this.scrollingContainer = containerEl.isScrollable() ? containerEl :
+            this.findParentBy(function (p) {
+                return p.getEl().isScrollable();
+            }).getEl();
+        this.refreshScrollSpyOffsets();
+        this.mon(scrollingContainer, 'scroll', this.onSpiedScroll, this);
+        this.onSpiedScroll();
+    },
+        
 
     constructor: function () {
         this.callParent(arguments);
@@ -67,14 +82,7 @@ Ext.define('Taco.core.ux.ScrollSpy', {
              */
              'scrollspy'
         );
-        var containerEl = this.getEl();
-        var scrollingContainer = this.scrollingContainer = containerEl.isScrollable() ?  containerEl :
-            this.findParentBy(function (p) {
-                return p.getEl().isScrollable();
-            }).getEl();
-        this.refreshScrollSpyOffsets();
-        this.mon(scrollingContainer, 'scroll', this.onSpiedScroll, this);
-        this.onSpiedScroll();
+        this.on('boxready', this.initScrollSpy, this);
     }
 
 });

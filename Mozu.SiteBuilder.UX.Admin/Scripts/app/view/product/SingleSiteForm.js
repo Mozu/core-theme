@@ -16,7 +16,11 @@ Ext.define('Taco.view.product.SingleSiteForm', {
         'Taco.view.product.subform.Merchandising',
         'Taco.view.product.subform.SEO'
     ],
-    mixins: ['Taco.core.ux.ScrollSpy'],
+    mixins: {
+        scrollspy: 'Taco.core.ux.ScrollSpy'
+    },
+    scrollSpyOffset: 150,
+    id: "productSingleSiteForm",
     title: 'MySite', // *** For tab title
 
     initComponent: function () {
@@ -42,6 +46,11 @@ Ext.define('Taco.view.product.SingleSiteForm', {
             Ext.create('Taco.view.product.subform.SEO')
         ];
 
-        this.callParent( arguments );
+        this.callParent(arguments);
+    },
+    constructor: function () {
+        this.callParent(arguments);
+        // ExtJs does not call mixin constructors, because it is bad and should feel bad
+        this.mixins.scrollspy.constructor.call(this);
     }
 });
