@@ -16,6 +16,7 @@ Ext.define('Taco.view.product.SingleSiteForm', {
         'Taco.view.product.subform.Merchandising',
         'Taco.view.product.subform.SEO'
     ],
+    mixins: ['Taco.core.ux.ScrollSpy'],
     title: 'MySite', // *** For tab title
 
     initComponent: function () {
