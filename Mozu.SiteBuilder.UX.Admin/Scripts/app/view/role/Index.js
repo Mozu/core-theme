@@ -24,6 +24,7 @@ Ext.define('Taco.view.role.Index', {
             store: this.store,
             listeners: {
                 itemclick: this.onItemClick,
+                deleterole: this.onDeleteRole,
                 scope: this
             },
             layout: 'fit',
@@ -35,7 +36,13 @@ Ext.define('Taco.view.role.Index', {
                 renderer: function (value) {
                     return '<a href="#" class="taco-launch-editor">' + value + '</a>';
                 }
+            }],
+            actions: [{
+                tooltip: 'Delete',
+                iconCls: 'taco-action-delete',
+                eventName: 'deleterole'
             }]
+
         });
         
         this.body = {
@@ -55,7 +62,9 @@ Ext.define('Taco.view.role.Index', {
                 xtype: 'primarybutton',
                 text: 'Create New Role',
                 click: function () {
-                    this.launchEditor();
+                    var record = new Taco.model.Role();
+                    record.set('roledId', null);
+                    this.launchEditor(record);
                     Taco.app.StateManager.addState('roles/create');
                 },
                 scope: this
@@ -104,6 +113,7 @@ Ext.define('Taco.view.role.Index', {
                     Taco.core.StateManager.addState('roles');
                 },
                 aftersave: function (editor, record, isEdit) {
+                    debugger;
                     if (!isEdit) {
                         store.add(record);
                     }
@@ -118,12 +128,28 @@ Ext.define('Taco.view.role.Index', {
     },
 
     onItemClick: function (view, record, item, index, e, eOpts) {
-        if (!e.target.className === 'taco-launch-editor') {
+        if (e.target.className !== 'taco-launch-editor') {
             return;
         }
 
         e.preventDefault();
         this.addState(record);
         this.launchEditor(record);
+    },
+
+    onDeleteRole: function (view, index, idx, action, e, record) {
+        Ext.create('Taco.core.ux.modal.Confirmation', {
+            autoShow: true,
+            content: {
+                html: 'Are you sure you want to delete this role?'
+            },
+            listeners: {
+                confirm: function () {
+                    this.store.remove(record);
+                    this.store.sync();
+                },
+                scope: this
+            }
+        })
     }
 });
