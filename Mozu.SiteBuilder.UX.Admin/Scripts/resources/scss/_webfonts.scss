@@ -14,26 +14,26 @@
 }
 
 @font-face {
-    font-family: 'MyriadWebProBold';
-    src: url('../fonts/myriadwebpro-bold-webfont.eot');
-    src: url('../fonts/myriadwebpro-bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/myriadwebpro-bold-webfont.woff') format('woff'),
-         url('../fonts/myriadwebpro-bold-webfont.ttf') format('truetype'),
-         url('../fonts/myriadwebpro-bold-webfont.svg#MyriadWebProBold') format('svg');
-    font-weight: normal;
+    font-family: 'MyriadWebProRegular';
+    src: url('../fonts/myriadpro-semibold-webfont.eot');
+    src: url('../fonts/myriadpro-semibold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/myriadpro-semibold-webfont.woff') format('woff'),
+         url('../fonts/myriadpro-semibold-webfont.ttf') format('truetype'),
+         url('../fonts/myriadpro-semibold-webfont.svg#myriadprosemibold') format('svg');
+    font-weight: bold;
     font-style: normal;
 
 }
 
 @font-face {
-    font-family: 'MyriadWebProItalic';
+    font-family: 'MyriadWebProRegular';
     src: url('../fonts/myriadwebpro-italic-webfont.eot');
     src: url('../fonts/myriadwebpro-italic-webfont.eot?#iefix') format('embedded-opentype'),
          url('../fonts/myriadwebpro-italic-webfont.woff') format('woff'),
          url('../fonts/myriadwebpro-italic-webfont.ttf') format('truetype'),
          url('../fonts/myriadwebpro-italic-webfont.svg#MyriadWebProItalic') format('svg');
     font-weight: normal;
-    font-style: normal;
+    font-style: italic;
 
 }
 
