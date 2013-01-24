@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 {
     [DataContract]
-    public class Product
+    public class OldProduct
     {    
         [DataMember(EmitDefaultValue = false, Name = "parentProductCode")]
         public string ParentProductCode { get; set; }

@@ -396,8 +396,10 @@
     <Compile Include="Api\Models\Checkout\OrderProcessingSettings.cs" />
     <Compile Include="Api\Models\Checkout\PaymentSetting.cs" />
     <Compile Include="Api\Models\PhoneOrder\RuntimeProduct.cs" />
+    <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
+    <Compile Include="Api\Models\ProductModels\Product.cs" />
     <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
-    <Compile Include="Api\Models\ProductModels\ProductListItem.cs" />
+    <Compile Include="Api\Models\ProductModels\ProductInSiteInfo.cs" />
     <Compile Include="Api\Models\Response.cs" />
     <Compile Include="Api\Models\Account\User.cs" />
     <Compile Include="Api\Models\Shipping\FlatPerCartShippingRate.cs" />
@@ -420,6 +422,7 @@
     <Compile Include="Api\Models\Tax\TaxRate.cs" />
     <Compile Include="Api\Models\Testing\Site.cs" />
     <Compile Include="Api\NavigationController.cs" />
+    <Compile Include="Api\OldProductController.cs" />
     <Compile Include="Api\OpeationHandlers\FilterCollectionRequestHandler.cs" />
     <Compile Include="Api\OpeationHandlers\PagingParamatersRequestHandlers.cs" />
     <Compile Include="Api\OptionsController.cs" />
@@ -427,9 +430,11 @@
     <Compile Include="Api\PageTypeDefinitionController.cs" />
     <Compile Include="Api\CheckoutSettingsController.cs" />
     <Compile Include="Api\PhoneOrderController.cs" />
+    <Compile Include="Api\ProductController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Api\RolesController.cs" />
     <Compile Include="Api\PermissionsController.cs" />
-    <Compile Include="Api\ProductController.cs" />
     <Compile Include="Api\AccountController.cs" />
     <Compile Include="Api\ProductOptionsController.cs" />
     <Compile Include="Api\ProductPropertyController.cs" />
@@ -471,6 +476,7 @@
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
     <Content Include="Scripts\app\core\Model.js" />
     <Content Include="Scripts\app\core\context\TaContext.js" />
+    <Content Include="Scripts\app\core\ux\ScrollSpy.js" />
     <Content Include="Scripts\app\core\ux\DragSource.js" />
     <Content Include="Scripts\app\core\ux\form\EditorLayout.js" />
     <Content Include="Scripts\app\core\ux\form\EditorWrapper.js" />
