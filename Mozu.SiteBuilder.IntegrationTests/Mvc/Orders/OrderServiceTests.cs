@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mozu.Core.Settings;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
@@ -32,7 +33,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Orders
         private IAuthTicketWebApiClient _authTicketWebApiClient;
         private IAuthenticationHelper _authenticationHelper;
         private ICustomerRepository _customerRepository;
-
+        private ISettings _settings;
         private string _orderId;
         private List<SiteShippingRegion> _siteShippingRegions;
 
@@ -50,7 +51,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Orders
             _customerRepository = Substitute.For<ICustomerRepository>();
 
             _orderId = Guid.NewGuid().ToString("n");
-
+            _settings = Substitute.For<ISettings>();
             _siteShippingRegions = new List<SiteShippingRegion>
                 {
                     new SiteShippingRegion { ISOCountryCode = "USA" },
@@ -321,7 +322,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Orders
                                                            _shippingSettingsWebApiClient, _cartWebApiClient,
                                                            _checkoutSettingsWebApiClient, _apiContext,
                                                            _authTicketWebApiClient, _authenticationHelper,
-                                                           _customerRepository);
+                                                           _customerRepository, _settings);
         }
     }
 }

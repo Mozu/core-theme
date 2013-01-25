@@ -21,7 +21,7 @@ Ext.define('Taco.core.AppState', {
         })(),
         
        
-        
+        contextRE:RegExp('[tcs]{1}[0-9]+'),
         beginSlashRE: /^\//,
         endSlashRE: /\/$/,
         defaultParams: {
@@ -41,16 +41,23 @@ Ext.define('Taco.core.AppState', {
         *
         */
         parseUri: function (uri) {
-            var query, sections, controller, action;
+            var query, sections, controller, action, ctx, appCtx = Taco.app.context;
 
             
             uri = uri.split('?');
             sections = Ext.Array.clean(uri[0].split('/'));
+            if (sections.length > 0 && this.self.contextRE.test(sections[0])) {
+                ctx = sections.shift();
+            } else {
+                ctx = 't' + appCtx.tenatId;
+            }
+            
             controller = sections.shift() || this.defaultParams.controller;
             action = sections.shift() || this.defaultParams.action;
             sections.push(Ext.Object.fromQueryString(uri[1] || '', true));
 
             return {
+                ctx:ctx,
                 controller: controller,
                 action: action, 
                 args: sections

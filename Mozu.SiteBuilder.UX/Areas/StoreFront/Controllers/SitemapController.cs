@@ -2,6 +2,8 @@
 using System.Web.Mvc;
 using System.Linq;
 using System.Xml.Linq;
+using Mozu.Core.Api.Client;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using System.Xml;
 using System.IO;
@@ -20,12 +22,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         INavigationRepository _nav;
         INavigationRuntimeFactory _navFac;
         ISiteBuilderContext _sbctx;
+        private readonly ISitesWebApiClient _sitesWebApi;
 
-        public SitemapController(INavigationRepository navigationRepository, INavigationRuntimeFactory navFac, ISiteBuilderContext sbctx)
+        public SitemapController(INavigationRepository navigationRepository, INavigationRuntimeFactory navFac, ISiteBuilderContext sbctx , ISitesWebApiClient sitesWebApi
+ 
+            )
         {
             _nav = navigationRepository;
             _navFac = navFac;
             _sbctx = sbctx;
+            _sitesWebApi = sitesWebApi;
         }
 
         // GET: /sitemap.xml
@@ -71,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             int siteId = _sbctx.SiteId;
 
             // we have to use the service client to lookup a Site object by id
-            var client = new SitesWebApiClient(new ServiceClientMessageHandler2(new ApiContext()));
+            var client = _sitesWebApi;
             Site site = await client.GetSite(siteId).Result.ReadAsAsync();
 
             if (site != null)

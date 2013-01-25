@@ -11,6 +11,7 @@ using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
@@ -23,27 +24,30 @@ namespace Mozu.SiteBuilder.Mvc
 
     public class UniversalSiteApiClient : SitesWebApiClient, IUniversalSiteApiClient
     {
+        private readonly ISettings _setting;
         private const int VOLUSIONSITEID = 0;
         private const int VOLUSIONTENANTID = 0;
 
-        public UniversalSiteApiClient() : base(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }))
-        {
-        }
+        public UniversalSiteApiClient(ISettings setting)
+            : base(new ServiceClientMessageHandler(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }, setting))
+
+    {
+        _setting = setting;
+    }
     }
 
     public class SiteBuilderApiContext : MozuServiceApiContext
     {
+        private readonly ISettings _settings;
         internal const string CONTEXT_KEY = "V:STORECTX";
         internal const string COOKIENAME = "SBCONTEXT";
 
-        public SiteBuilderApiContext(System.Web.HttpContextBase context, Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper authHelper, ICookieProvider cookieProvider)
+        public SiteBuilderApiContext(System.Web.HttpContextBase context, Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper authHelper, ICookieProvider cookieProvider , ISettings settings )
             : base()
         {
+            _settings = settings;
 
 
-            //this.CurrencyCode = "usd";
-            ////booh for now.
-            //this.UserClaims = authHelper.GetCurrentUser();
             Load(context, cookieProvider);
         }
 
@@ -105,9 +109,9 @@ namespace Mozu.SiteBuilder.Mvc
             
         }
 
-        static Site LookupSiteByDomain(string host)
+        Site LookupSiteByDomain(string host )
         {
-            var client = new SitesWebApiClient(new ServiceClientMessageHandler2(new ApiContext()));
+            var client = new SitesWebApiClient(new ServiceClientMessageHandler(new ApiContext(), _settings ));
             var sites = client.GetSites(0, 1, null, "domainname eq " + host).Result.ReadAsSync();
             return sites.Items.FirstOrDefault();
 
