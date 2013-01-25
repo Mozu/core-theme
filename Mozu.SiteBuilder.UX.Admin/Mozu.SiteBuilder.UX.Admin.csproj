@@ -492,6 +492,7 @@
     <Content Include="Scripts\app\store\LocalizedStrings.js" />
     <Content Include="Scripts\app\store\Orders.js" />
     <Content Include="Scripts\app\store\RuntimeProductSearch.js" />
+    <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\phoneOrder\BillingSection.js" />
     <Content Include="Scripts\app\view\phoneOrder\ProductPicker.js" />
@@ -2570,7 +2571,7 @@
     <Content Include="Scripts\app\view\dashboard\Index.js" />
     <Content Include="Scripts\app\view\Header.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenu.js" />
-    <Content Include="Scripts\app\view\navigation\PrimaryMenuItem.js" />
+    <Content Include="Scripts\app\view\navigation\ContextSwitcher.js" />
     <Content Include="Scripts\app\view\navigation\PrimarySubMenu.js" />
     <Content Include="Scripts\app\view\navigation\PrimarySubMenuItem.js" />
     <Content Include="Scripts\app\view\navigation\SecondaryMenu.js" />

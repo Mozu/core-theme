@@ -1,5 +1,7 @@
 /**
  * @class Taco.view.navigation.PrimaryMenu
+ * @author Jimmy Sanford
+ * 
  */
 Ext.define('Taco.view.navigation.PrimaryMenu', {
     extend: 'Ext.container.Container',
@@ -38,18 +40,6 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         });
 
         this.add(this.view);
-
-        // record = this.store.getById(this.recordId);
-
-        // if (!record) {
-        //     return;
-        // }
-
-        // Ext.each(record.data.items, function (storeItem) {
-        //     this.add(Ext.create('Taco.view.navigation.PrimaryMenuItem', {
-        //         data: storeItem
-        //     }));
-        // }, this);
     },
 
     /**
