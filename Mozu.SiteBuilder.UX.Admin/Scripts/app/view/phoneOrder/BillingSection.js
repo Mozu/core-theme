@@ -4,6 +4,7 @@
  */
 Ext.define('Taco.view.phoneOrder.BillingSection', {
     extend: 'Taco.core.ux.form.Form',
+    requires: ['Taco.core.ux.form.FlexBox'],
 
     bodyCls: Taco.baseCSSPrefix + 'flexform',
     title: 'Billing',

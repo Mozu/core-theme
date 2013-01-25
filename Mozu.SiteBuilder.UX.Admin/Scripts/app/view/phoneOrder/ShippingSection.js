@@ -4,7 +4,7 @@
  */
 Ext.define('Taco.view.phoneOrder.ShippingSection', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.model.Shipment', 'Taco.model.Address'],
+    requires: ['Taco.model.Shipment', 'Taco.model.Address', 'Taco.core.ux.form.FlexBox'],
 
     bodyCls: Taco.baseCSSPrefix + 'flexform',
     title: 'Shipping',
