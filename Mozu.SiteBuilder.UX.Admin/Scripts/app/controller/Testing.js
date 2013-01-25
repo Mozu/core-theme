@@ -6,7 +6,7 @@
 
 Ext.define('Taco.controller.Testing', {
     extend: 'Taco.core.Controller',
-    requires: ['Taco.model.Order', 'Taco.model.OrderItem'],
+    requires: ['Taco.model.Order', 'Taco.model.OrderItem', 'Taco.model.Product'],
 
     statics: {
         returnString: function (str) {
@@ -23,6 +23,41 @@ Ext.define('Taco.controller.Testing', {
         }())
     },
 
+
+    foster: function() {
+        var p = Ext.create('Taco.model.Product', {
+            productCode: "foster123",
+            productName: "foster",
+            price: 10
+        });
+
+        this.createContentView('Taco.core.ux.content.Container', {
+
+            header: {
+                title: "Foster"
+            },
+
+            body: {
+                layout: 'auto',
+                items: [{
+                    xtype: 'button',
+                    text: "Click for Foster",
+                    handler: function() {
+                        p.phantom = true;
+                        p.save( { 
+                            success: function (record, operation) {
+                                alert("success");
+                            },
+                            failure: function(record, operation)
+                            {
+                                alert("fail");
+                            }
+                        });
+                    }
+                }]
+            }
+        });
+    },
 
     order : function() {
         var order, orderItemStore, itemArray = [];
