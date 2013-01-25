@@ -1,13 +1,31 @@
 ﻿Ext.define('Taco.core.context.TaContext', {
     extend: 'Ext.util.Observable',
-    requires: ['Taco.core.AppState'],
+    requires: ['Taco.core.context.SiteCollection', 'Taco.core.context.Site'],
 
-    singleton: true,
     currentSiteId: -1,
-    siteCollections:[],
+    siteCollections:null,
     currentSiteCollectionId:-1,
-    constructor: function() {
+    
+    constructor: function (config) {
         var me = this;
+        me.siteCollections = Ext.Array.clone(me.siteCollections | []);
+        config = Ext.apply({}, config);
+        Ext.apply(me, config);
+
+        me.callParent([config]);
+
+        me.init(config);
+       
+        
+
+        
+    },
+    init: function (data) {
+        var me = this;
+        Ext.each(data.siteCollections, function(sc,idx) {
+            me.siteCollections[idx] = Ext.create('Taco.core.context.SiteCollection', sc);
+
+        });
     },
     setCurrentSite: function (id) {
         var me = this, newSite = me.findSite(id), newCol = newSite!= null ? newSite.siteCollection: null;
@@ -30,7 +48,7 @@
     },
     setCurrentSiteCollection: function (id) {
         var me = this, newCol, curSite = me.getCurrentSite();
-        Ext.forEach(me.siteCollections, function (sc) {
+        Ext.each(me.siteCollections, function (sc) {
             if (sc.id === id) {
                 newCol = sc;
             }
@@ -50,14 +68,14 @@
         return true;
     },
     getCurrentSiteCollection: function () {
-        return this.findSite(this.currentSiteId);
+        return this.findSiteCollection(this.currentSiteCollectionId);
     },
     getCurrentSite:function() {
-        return this.findSite(this.currentSiteCollectionId);
+        return this.findSite(this.currentSiteId);
     },
     findSiteCollection: function (id) {
         var me=this,foundCol;
-        Ext.forEach(me.siteCollections, function (sc) {
+        Ext.each(me.siteCollections, function (sc) {
             if (sc.id === id) {
                 foundCol=sc;
             }
@@ -66,8 +84,8 @@
     },
     findSite: function (id) {
         var foundSite, me = this;
-        Ext.forEach(me.siteCollections, function (sc) {
-            Ext.forEach(sc.sites, function (site) {
+        Ext.each(me.siteCollections, function (sc) {
+            Ext.each(sc.sites, function (site) {
                 if (id === site.id) {
                     foundSite = site;
                 }

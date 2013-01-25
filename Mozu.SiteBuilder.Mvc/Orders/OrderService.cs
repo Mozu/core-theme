@@ -8,6 +8,7 @@ using Mozu.Cart.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
+using Mozu.Core.Settings;
 using Mozu.Order.Contracts;
 using Mozu.Order.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts;
@@ -37,8 +38,9 @@ namespace Mozu.SiteBuilder.Mvc.Orders
         private readonly IAuthTicketWebApiClient _authTicketWebApiClient;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly ICustomerRepository _customerRepository;
+        private readonly ISettings _setting;
 
-        public OrderService(IOrderWebApiClient orderWebApiClient, IUserWebApiClient userWebApiClient, IShippingSettingsWebApiClient shippingSettingsWebApiClient, ICartWebApiClient cartWebApiClient, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, IApiContext apiContext, IAuthTicketWebApiClient authTicketWebApiClient, IAuthenticationHelper authenticationHelper, ICustomerRepository customerRepository)
+        public OrderService( IOrderWebApiClient orderWebApiClient, IUserWebApiClient userWebApiClient, IShippingSettingsWebApiClient shippingSettingsWebApiClient, ICartWebApiClient cartWebApiClient, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, IApiContext apiContext, IAuthTicketWebApiClient authTicketWebApiClient, IAuthenticationHelper authenticationHelper, ICustomerRepository customerRepository, ISettings setting)
         {
             _orderWebApiClient = orderWebApiClient;
             _userWebApiClient = userWebApiClient;
@@ -49,6 +51,7 @@ namespace Mozu.SiteBuilder.Mvc.Orders
             _authTicketWebApiClient = authTicketWebApiClient;
             _authenticationHelper = authenticationHelper;
             _customerRepository = customerRepository;
+            _setting = setting;
         }
 
         public OrderInformation GetOrder(string orderId)
@@ -177,7 +180,7 @@ namespace Mozu.SiteBuilder.Mvc.Orders
                 LocaleCode = _apiContext.LocaleCode,
             };
 
-            _orderWebApiClient = new OrderWebApiClient(new ServiceClientMessageHandler2(apiContext));
+            _orderWebApiClient = new OrderWebApiClient(new ServiceClientMessageHandler(apiContext, _setting));
         }
 
         /*public string GetMerchantId()

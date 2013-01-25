@@ -16,6 +16,7 @@ using Mozu.Core.Api.Client;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Settings;
 using Mozu.PaymentService.Contracts.Clients.Public;
 using Mozu.Provisioning.Contracts;
 using Mozu.Tenant.Contracts;
@@ -58,8 +59,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private List<ApiRole> roles;
         private readonly  IAdminUserWebApiClient _adminUserWebApiClient;
         private ISiteBuilderContext _siteBuilderContext;
+        private readonly ISettings _settings;
 
-        public AccountController(IAdminUserWebApiClient user, IRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext)
+        public AccountController(IAdminUserWebApiClient user, IRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings )
         {
             _usersRepo = user;
             _rolesRepo = role;
@@ -73,6 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _adminUserWebApiClient = adminUserWebApiClient;
             _invitationWebApiClient = invitationWebApiClient;
             _siteBuilderContext = siteBuilderContext;
+            _settings = settings;
         }
 
         
@@ -245,7 +248,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             // NOTE: This replaces the above code, I think, I need to double check and test though... - CM
             var userClaims = new LightweightUserClaims { UserId = user.UserId };
-            var roleThing = new RoleWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = site.Id, TenantId = site.TenantId, UserClaims = userClaims }));
+            
+            var roleThing = new RoleWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = site.Id, TenantId = site.TenantId, UserClaims = userClaims }, _settings ));
             roleThing.DeleteRole(roleId);
 
             return true;
@@ -254,7 +258,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Site> ChangeSite(int siteId)
         {
             var site = _siteClient.GetSite(siteId).Result.ReadAsSync();
-            var repo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = siteId, TenantId = site.TenantId }));
+            var repo = new AuthTicketWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = siteId, TenantId = site.TenantId }, _settings ));
             var ticket = _authHelper.GetCurrentTicket();
 
             ticket = await repo.RefreshUserAuthTicket(ticket.RefreshToken).Result.ReadAsAsync();
@@ -288,7 +292,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         //ticket = _usersRepo.CreateUserAuthTicket().Result.ReadAsSync();
                         _authHelper.SetCurrentUser(ulr.AuthTicket );
                         var user1=_authHelper.GetCurrentUser();
-                        _invitationWebApiClient = new InvitationWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = user.SiteId.GetValueOrDefault(0), TenantId = user.TenantId.GetValueOrDefault(0), UserClaims = user1 }));
+                        _invitationWebApiClient = new InvitationWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = user.SiteId.GetValueOrDefault(0), TenantId = user.TenantId.GetValueOrDefault(0), UserClaims = user1 }, _settings ));
                                                      
                         
                         var ci = _invitationWebApiClient.ConfirmInvitation(user.Invitation).Result;
