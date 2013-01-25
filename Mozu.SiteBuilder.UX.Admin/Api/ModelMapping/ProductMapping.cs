@@ -42,33 +42,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PackageWidth, op => op.MapFrom(dc => dc.PackageWidth == null ? null : dc.PackageWidth.Value));
 
 
-            Mapper.CreateMap<DC.Product, OldProduct>()
-                  .ForMember(x => x.ContentLocaleCode,
-                             op => op.MapFrom(x => (x.Content ?? NULLCONTENT).LocaleCode))
-                //.ForMember(x => x.FreeShipping, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).FreeShipping))
-                  .ForMember(x => x.MetaTagDescription,
-                             op => op.MapFrom(x => (x.Content ?? NULLCONTENT).MetaTagDescription))
-                  .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).MetaTagKeywords))
-                  .ForMember(x => x.MetaTagTitle, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).MetaTagTitle))
-                  .ForMember(x => x.ProductFullDescription,
-                             op => op.MapFrom(x => (x.Content ?? NULLCONTENT).ProductFullDescription))
-                  .ForMember(x => x.ProductImages, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).ProductImages))
-                  .ForMember(x => x.ProductName, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).ProductName))
-                  .ForMember(x => x.ProductShortDescription,
-                             op => op.MapFrom(x => (x.Content ?? NULLCONTENT).ProductShortDescription))
-                  .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).SEOFriendlyUrl))
-                  .ForMember(x => x.ListPrice, op => op.MapFrom(x => (x.Price ?? NULLPRICE).ListPrice))
-                  .ForMember(x => x.ISOCurrencyCode, op => op.MapFrom(x => (x.Price ?? NULLPRICE).ISOCurrencyCode))
-                  .ForMember(x => x.InventoryHandling, op => op.ResolveUsing(InventoryHandlingResolver))
-                  .ForMember(x => x.ParentProductCode, op => op.MapFrom(x => x.BaseProductCode))
-                  .ForMember(x => x.OptionValues, op => op.ResolveUsing(OptionValuesResolver))
-                  .ForMember(x => x.Price, op => op.MapFrom(x => (x.Price ?? NULLPRICE).Price))
-                  .ForMember(x => x.SalePrice, op => op.MapFrom(x => (x.Price ?? NULLPRICE).SalePrice))
-                  .ForMember(x => x.ManageStock, op => op.MapFrom(x => x.ManageStock.GetValueOrDefault(false)))
-                  .ForMember(x => x.PackageHeight, op => op.MapFrom(x => (x.PackageHeight == null) ? null : x.PackageHeight.Value))
-                  .ForMember(x => x.PackageLength, op => op.MapFrom(x => (x.PackageLength == null) ? null : x.PackageLength.Value))
-                  .ForMember(x => x.PackageWidth, op => op.MapFrom(x => (x.PackageWidth == null) ? null : x.PackageWidth.Value))
-                  .ForMember(x => x.PackageWeight, op => op.MapFrom(x => (x.PackageWeight == null) ? null : x.PackageWeight.Value));
+            //Mapper.CreateMap<DC.Product, OldProduct>()
+            //      .ForMember(x => x.ContentLocaleCode,
+            //                 op => op.MapFrom(x => (x.Content ?? NULLCONTENT).LocaleCode))
+            //    //.ForMember(x => x.FreeShipping, op => op.MapFrom(x => (x.Content ?? NULLCONTENTE).FreeShipping))
+            //      .ForMember(x => x.MetaTagDescription,
+            //                 op => op.MapFrom(x => (x.Content ?? NULLCONTENT).MetaTagDescription))
+            //      .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).MetaTagKeywords))
+            //      .ForMember(x => x.MetaTagTitle, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).MetaTagTitle))
+            //      .ForMember(x => x.ProductFullDescription,
+            //                 op => op.MapFrom(x => (x.Content ?? NULLCONTENT).ProductFullDescription))
+            //      .ForMember(x => x.ProductImages, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).ProductImages))
+            //      .ForMember(x => x.ProductName, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).ProductName))
+            //      .ForMember(x => x.ProductShortDescription,
+            //                 op => op.MapFrom(x => (x.Content ?? NULLCONTENT).ProductShortDescription))
+            //      .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(x => (x.Content ?? NULLCONTENT).SEOFriendlyUrl))
+            //      .ForMember(x => x.ListPrice, op => op.MapFrom(x => (x.Price ?? NULLPRICE).ListPrice))
+            //      .ForMember(x => x.ISOCurrencyCode, op => op.MapFrom(x => (x.Price ?? NULLPRICE).ISOCurrencyCode))
+            //      .ForMember(x => x.InventoryHandling, op => op.ResolveUsing(InventoryHandlingResolver))
+            //      .ForMember(x => x.ParentProductCode, op => op.MapFrom(x => x.BaseProductCode))
+            //      .ForMember(x => x.OptionValues, op => op.ResolveUsing(OptionValuesResolver))
+            //      .ForMember(x => x.Price, op => op.MapFrom(x => (x.Price ?? NULLPRICE).Price))
+            //      .ForMember(x => x.SalePrice, op => op.MapFrom(x => (x.Price ?? NULLPRICE).SalePrice))
+            //      .ForMember(x => x.ManageStock, op => op.MapFrom(x => x.ManageStock.GetValueOrDefault(false)))
+            //      .ForMember(x => x.PackageHeight, op => op.MapFrom(x => (x.PackageHeight == null) ? null : x.PackageHeight.Value))
+            //      .ForMember(x => x.PackageLength, op => op.MapFrom(x => (x.PackageLength == null) ? null : x.PackageLength.Value))
+            //      .ForMember(x => x.PackageWidth, op => op.MapFrom(x => (x.PackageWidth == null) ? null : x.PackageWidth.Value))
+            //      .ForMember(x => x.PackageWeight, op => op.MapFrom(x => (x.PackageWeight == null) ? null : x.PackageWeight.Value));
                 //.ForMember(x => x.CategoryIds, op => op.MapFrom(x => (x.ProductInSites().ProductCategories == null ? null : x.ProductCategories.Where(pc => pc.CategoryId != 1).Select(pc => pc.CategoryId).ToList())));
                
 
@@ -137,7 +137,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             {
                 ISOCurrencyCode = string.IsNullOrEmpty (p.ISOCurrencyCode) ? "USD" : p.ISOCurrencyCode  ,
                 //IsTaxAmountPercent = p.IsTaxAmountPercent,
-                ListPrice = p.ListPrice,
+                //ListPrice = p.ListPrice,
                 Price = p.Price,
                 //ProductId = p.ProductId,
                 SalePrice = p.SalePrice,
@@ -154,15 +154,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ContentLocaleCode = string.IsNullOrEmpty(p.ContentLocaleCode) ? "en-US" : p.ContentLocaleCode,
                
                // FreeShipping = p.FreeShipping,
-                MetaTagDescription = p.MetaTagDescription,
-                MetaTagKeywords = p.MetaTagKeywords,
-                MetaTagTitle = p.MetaTagTitle,
+                //MetaTagDescription = p.MetaTagDescription,
+                //MetaTagKeywords = p.MetaTagKeywords,
+                //MetaTagTitle = p.MetaTagTitle,
                 ProductFullDescription = p.ProductFullDescription,
                 //ProductId = p.ProductId,
                 ProductImages = Mapper.Map<List<ProductLocalizedImage>>(p.ProductImages),
                 ProductName = p.ProductName,
                 ProductShortDescription = p.ProductShortDescription,
-                SEOFriendlyUrl = p.SEOFriendlyUrl
+         //       SEOFriendlyUrl = p.SEOFriendlyUrl
             };
             if (cnt.ProductImages != null)
             {

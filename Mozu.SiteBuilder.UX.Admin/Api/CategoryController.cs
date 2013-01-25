@@ -4,6 +4,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using AutoMapper;
 //using Volusion.ProductAdmin.Contracts;
+using Mozu.Core.Api.Contracts;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -34,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (pagingParams.id == null)
             {
-                var cats = _categoriesClient.GetCategories(0, 600, null, null, null).Result.ReadAsAsync().Result;
+                var cats = _categoriesClient.GetCategories(startIndex:0,pageSize:600 ).Result.ReadAsAsync().Result;
 
                 var categories = Mapper.Map<List<Category>>(cats.Items);
 

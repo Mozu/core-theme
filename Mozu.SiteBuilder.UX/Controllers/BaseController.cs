@@ -65,12 +65,12 @@ namespace Mozu.SiteBuilder.UX.Controllers
             }
             if (wctx.TemplateName != null && wctx.Template == null)
             {
-                templateTask = CmsService.Get("templates", wctx.TemplateName);
+                templateTask = CmsService.GetByPath("templates", wctx.TemplateName);
                 tasks.Add(templateTask);
             }
             if (wctx.SiteTemplateName != null && wctx.SiteTemplate == null)
             {
-                siteTemplateTask = CmsService.Get("templates", wctx.SiteTemplateName);
+                siteTemplateTask = CmsService.GetByPath("templates", wctx.SiteTemplateName);
                 tasks.Add(siteTemplateTask);
             }
 
