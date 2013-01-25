@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
@@ -9,8 +10,8 @@ using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
-using ProductContract = Mozu.ProductAdmin.Contracts.Product;
-using ProductDTO = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
+using DC = Mozu.ProductAdmin.Contracts;
+using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -25,12 +26,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "list")]
-        public Task<Response<List<ProductDTO>>> GetProductList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public Task<Response<List<Product>>> GetProductList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {
-                ProductContract prod = _productClient.GetProductByProductCode(pagingParams.id, null).Result.ReadAsSync();
-                return List(Mapper.Map<ProductDTO>(prod));
+                DC.Product prod = _productClient.GetProductByProductCode(pagingParams.id, null).Result.ReadAsSync();
+                return List(Mapper.Map<Product>(prod));
             }
 
             string filter = OldProductController.CreateFilter(extFilter);
@@ -38,7 +39,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             ProductCollection res = _productClient.GetProducts(pagingParams.startIndex, pagingParams.pageSize, sort, null, filter).Result.ReadAsAsync().Result;
 
-            return List(Mapper.Map<List<ProductDTO>>(res.Items), (int)res.TotalCount);
+            return List(Mapper.Map<List<Product>>(res.Items), (int)res.TotalCount);
+        }
+
+        [WebInvoke(UriTemplate = "create")]
+        public Task<Response<List<Product>>> CreateProduct(List<Product> products)
+        {
+            List<Product> createdProducts = new List<Product>(products.Count);
+            foreach (Product p in products)
+            {
+                DC.Product dataModel = Mapper.Map<DC.Product>(p);
+
+                DC.Product returned;
+                try
+                {
+                    returned = _productClient.AddProduct(dataModel).Result.ReadAsAsync().Result;
+                }
+                catch
+                {
+                    // TODO: should probably do something about these errors
+                    continue;
+                }
+                createdProducts.Add(Mapper.Map<Product>(returned));
+            }
+
+            return List(createdProducts);
+        }
+
+        [WebInvoke(UriTemplate = "edit?id={id}")]
+        public Task<Response<List<Product>>> EditProduct(List<Product> products, int? id = null)
+        {
+            List<Product> updatedProducts = new List<Product>(products.Count);
+            foreach (Product p in products)
+            {
+                DC.Product dataModel = Mapper.Map<DC.Product>(p);
+                DC.Product ret = _productClient.UpdateProduct(dataModel, dataModel.ProductCode).Result.ReadAsAsync().Result;
+                updatedProducts.Add(Mapper.Map<Product>(ret));
+            }
+
+            return List(updatedProducts);
         }
     }
 }

@@ -45,7 +45,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         // TODO: photos
 
-        // TODO: price
+        /// <summary>
+        /// The list price.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "listPrice")]
+        public decimal? ListPrice { get; set; }
+
+        /// <summary>
+        /// The price.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "price")]
+        public decimal? Price { get; set; }
+
+        /// <summary>
+        /// The sale price.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "salePrice")]
+        public decimal? SalePrice { get; set; }
+
         #endregion
         
         #region Inventory
