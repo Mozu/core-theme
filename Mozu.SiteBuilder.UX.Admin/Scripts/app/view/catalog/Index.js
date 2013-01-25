@@ -14,25 +14,6 @@ Ext.define('Taco.view.catalog.Index', {
             tp;
 
         tp = Ext.create('Taco.core.ux.tab.Panel', {
-            // componentCls: Taco.baseCSSPrefix + 'tabpanel',
-            // tabBar: {
-            //     plain: true,
-            //     items: [{
-            //         xtype: 'tab',
-            //         text: 'Add',
-            //         closable: false,
-            //         handler: function (tab) { console.log(tab); }
-            //     }]
-            // },
-            // lbar: {
-            //     xtype: 'component',
-            //     width: 160,
-            //     html: 'sidebar'
-            // },
-            // defaults: {
-            //     closable: true,
-            //     overflowY: 'auto'
-            // },
             items: [{
                 title: 'One',
                 defaults: {

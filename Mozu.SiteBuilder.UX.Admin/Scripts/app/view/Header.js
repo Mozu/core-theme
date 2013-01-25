@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.Header', {
     extend: 'Ext.container.Container',
-    requires: ['Taco.view.navigation.PrimaryMenu', 'Taco.view.navigation.SecondaryMenu', 'Taco.core.ux.action.Action'],
+    requires: ['Taco.view.navigation.PrimaryMenu', 'Taco.view.navigation.ContextSwitcher', 'Taco.view.navigation.SecondaryMenu', 'Taco.core.ux.action.Action'],
 
     autoEl: {
         tag: 'header',
@@ -13,7 +13,7 @@ Ext.define('Taco.view.Header', {
 
     initComponent: function () {
         var me = this,
-            primaryMenuTrigger, breadcrumb;
+            primaryMenuTrigger, breadcrumb, contextSwitcherTrigger;
 
         primaryMenuTrigger = Ext.create('Taco.core.ux.action.Action', {
             xtype: 'action',
@@ -35,12 +35,37 @@ Ext.define('Taco.view.Header', {
                 tag: 'div',
                 cls: Taco.baseCSSPrefix + 'breadcrumb'
             },
+            flex: 1,
             tpl: [
                 '<a href="{address}" class="taco-icon taco-icon-{icon}">{label}</a>',
                 '<ul><tpl for="items">',
                     '<li><a href="{address}">{label}</a></li>',
                 '</tpl></ul>'
             ]
+        });
+
+        contextSwitcherTrigger = Ext.create('Taco.core.ux.form.SelectField', {
+            name: 'context',
+            fieldLabel: 'Context',
+            hideLabel: true,
+            mode: 'local',
+            valueField: 'storedValue',
+            displayField: 'displayValue',
+            store: Ext.create('Ext.data.ArrayStore', {
+                fields: [{
+                    name: 'storedValue',
+                    type: 'int'
+                }, {
+                    name: 'displayValue',
+                    type: 'string'
+                }],
+                data: [
+                    [0, 'Tenant'],
+                    [1, 'SiteCollection0'],
+                    [2, 'Site0']
+                ]
+            }),
+            value: 0
         });
 
         this.primaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {
@@ -82,7 +107,7 @@ Ext.define('Taco.view.Header', {
                 align: 'middle'
             },
             height: 35,
-            items: [primaryMenuTrigger, breadcrumb]
+            items: [primaryMenuTrigger, breadcrumb, contextSwitcherTrigger]
         }];
 
         this.callParent(arguments);
