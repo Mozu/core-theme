@@ -15,7 +15,8 @@ Ext.define('Taco.view.product.subform.Inventory', {
             value: 56
         }, {
             fieldLabel: 'When out of stock',
-            value: 'Show'
+            value: 'Show',
+            cls: Taco.baseCSSPrefix + 'flex-field-spacing'
         }];
 
         this.callParent( arguments );

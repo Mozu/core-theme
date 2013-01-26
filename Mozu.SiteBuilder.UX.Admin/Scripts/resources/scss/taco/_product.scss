@@ -1,0 +1,20 @@
+﻿@mixin taco-product {
+  .#{$vprefix}product-admin-form {
+
+    .#{$vprefix}formeditor .x-panel-header {
+      margin-top: 24px;
+    }
+  }
+
+  .#{$vprefix}product-admin-subform {
+    padding: 0 14px;
+
+    label {
+      margin-top: 16px;
+    }
+
+    .#{$vprefix}flex-field-spacing {
+      margin-left: 20px;
+    }
+  }
+}

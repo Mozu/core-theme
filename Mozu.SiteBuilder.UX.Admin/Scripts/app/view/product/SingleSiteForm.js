@@ -20,18 +20,18 @@ Ext.define('Taco.view.product.SingleSiteForm', {
         scrollspy: 'Taco.core.ux.ScrollSpy'
     },
     scrollSpyOffset: 150,
-    id: "productSingleSiteForm",
-    title: 'MySite', // *** For tab title
+    // id: "productSingleSiteForm",
+    title: 'Single Site Admin', // *** For tab title
+
+    bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'single-site-admin-form'],
 
     initComponent: function () {
-
         this.items = [
             {
                 xtype: 'combobox',
                 fieldLabel: 'Status',
                 labelAlign: 'top',
                 allowBlank: false,
-                autoSelect: true,
                 forceSelection: true,
                 store: ['Hide in website', 'Show on website'],
                 value: 'Hide in website'

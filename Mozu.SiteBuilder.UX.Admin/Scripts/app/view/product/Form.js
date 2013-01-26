@@ -12,6 +12,8 @@ Ext.define('Taco.view.product.Form', {
     initComponent: function () {
         this.tabpanel = Ext.create("Ext.tab.Panel", {
             items: [
+                Ext.create("Taco.view.product.SingleSiteForm"),
+                Ext.create("Taco.view.product.SingleSiteForm"),
                 Ext.create("Taco.view.product.SingleSiteForm")
             ]
         });
