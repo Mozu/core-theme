@@ -64,30 +64,30 @@ Ext.application({
     requires: [
             'Taco.core.context.TaContext',
             'Taco.locale.Strings',
-            , 'Taco.store.LocalizedStrings'
-            , 'Taco.core.data.StoreManager'
-            , 'Taco.core.data.ReadAheadProxy'
-            , 'Taco.core.data.AjaxProxy'
-            , 'Taco.view.Viewport'
-            , 'Taco.core.util.UploadManager'
-            , 'Taco.core.StateManager'
-            , 'Ext.util.Cookies'
-            , 'Taco.core.layout.Auto'
-            , 'Taco.core.layout.HFlex'
-            , 'Taco.core.layout.VFlex'
-            , 'Taco.core.ux.IconList'
-            , 'Taco.core.ux.CardPanel'
-            , 'Taco.core.ux.CellEditing'
-            , 'Taco.view.Header'
-            , 'Ext.state.CookieProvider'
-            , 'Ext.draw.Component'
-            , 'Ext.layout.container.Form'
-            , 'Ext.layout.container.Column'
-            , 'Ext.layout.container.Accordion'
-            , 'Ext.layout.container.Absolute'
-            , 'Ext.form.field.Radio'
+             'Taco.store.LocalizedStrings',
+             'Taco.core.data.StoreManager',
+             'Taco.core.data.ReadAheadProxy',
+             'Taco.core.data.AjaxProxy',
+             'Taco.view.Viewport',
+            'Taco.core.util.UploadManager',
+            'Taco.core.StateManager',
+            'Ext.util.Cookies',
+            'Taco.core.layout.Auto',
+            'Taco.core.layout.HFlex',
+            'Taco.core.layout.VFlex',
+            'Taco.core.ux.IconList',
+            'Taco.core.ux.CardPanel',
+            'Taco.core.ux.CellEditing',
+            'Taco.view.Header',
+            'Ext.state.CookieProvider',
+            'Ext.draw.Component',
+            'Ext.layout.container.Form',
+            'Ext.layout.container.Column',
+            'Ext.layout.container.Accordion',
+            'Ext.layout.container.Absolute',
+            'Ext.form.field.Radio'
 
-        ],
+    ],
     controllers: [
             'Analytics',
             'Dashboard',
@@ -119,49 +119,8 @@ Ext.application({
     stores: ['Taco.store.LocalizedStrings'],
     context:null,
     constructor: function (config) {
-       
-        this.context= Ext.create('Taco.core.context.TaContext', {
-            tenantId: 4,
-            siteCollections:
-            [
-                {
-                    id: 1,
-                    name: 'Shoe Collection',
-                    sites: [
-                        {
-                            id: 2000,
-                            name: 'Lady Shoe Store',
-                            stagingHost: 'http://food.com/',
-                            defaultHost: 'http://food2.com/'
-                        },
-                        {
-                            id: 2002,
-                            name: 'Boot Store',
-                            stagingHost: 'http://food.com/',
-                            defaultHost: 'http://food2.com/'
-                        }
-                    ]
-                },
-                {
-                    id: 2,
-                    name: 'Food Collection',
-                    sites: [
-                        {
-                            id: 2003,
-                            name: 'Green Food Store',
-                            stagingHost: 'http://food.com/',
-                            defaultHost: 'http://food2.com/'
-                        },
-                        {
-                            id: 2004,
-                            name: 'Vegitable Store',
-                            stagingHost: 'http://food.com/',
-                            defaultHost: 'http://food2.com/'
-                        }
-                    ]
-                }
-            ]
-        });
+
+        this.context = Ext.create('Taco.core.context.TaContext', Taco.User.taContext);
 
 
         Ext.override(Ext.data.AbstractStore, {

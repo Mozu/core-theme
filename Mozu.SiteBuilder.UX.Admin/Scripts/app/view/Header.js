@@ -44,28 +44,35 @@ Ext.define('Taco.view.Header', {
             ]
         });
 
+        
         contextSwitcherTrigger = Ext.create('Taco.core.ux.form.SelectField', {
             name: 'context',
             fieldLabel: 'Context',
             hideLabel: true,
             mode: 'local',
-            valueField: 'storedValue',
-            displayField: 'displayValue',
-            store: Ext.create('Ext.data.ArrayStore', {
-                fields: [{
-                    name: 'storedValue',
-                    type: 'int'
-                }, {
-                    name: 'displayValue',
-                    type: 'string'
-                }],
-                data: [
-                    [0, 'Tenant'],
-                    [1, 'SiteCollection0'],
-                    [2, 'Site0']
-                ]
-            }),
-            value: 0
+            valueField: 'urlToken',
+            displayField: 'name',
+            width:300,
+            store: Taco.app.context.getStore(),
+            value: Taco.app.context.getCurrentContext().urlToken,
+            listeners:{
+                change: function(field, newValue, oldValue, eOpts) {
+                    var recordId = field.store.find('urlToken', newValue),
+                        record = field.store.getAt(recordId);
+             
+                    Taco.app.context.setCurrentContext(record.raw);
+                    console.log(newValue, oldValue);
+                },
+                scope:me
+        }
+        });
+        Taco.app.context.on('contextChange', function (taContext, curContext) {
+            if (contextSwitcherTrigger.getValue() != curContext.urlToken) {
+                contextSwitcherTrigger.suspendEvents(false);
+                contextSwitcherTrigger.setValue(curContext.urlToken);
+                contextSwitcherTrigger.resumeEvents();
+            }
+            
         });
 
         this.primaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {

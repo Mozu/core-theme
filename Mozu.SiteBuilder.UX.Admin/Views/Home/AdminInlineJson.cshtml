@@ -11,7 +11,7 @@
             var siteRoles = (List<Mozu.Core.Api.Contracts.Role>)ViewData["siteRoles"];
             var siteRolesJson = Newtonsoft.Json.JsonConvert.SerializeObject(siteRoles);
             var siteJson = Newtonsoft.Json.JsonConvert.SerializeObject(site);
-            
+            var taContext = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["taContext"]);
             var extPath = WebConfigurationManager.AppSettings["extPath"];
             var dashboardInstructionsLoc = WebConfigurationManager.AppSettings["admin.dashboardInstructions.loc"];
             var dashboardInstructions = "";
@@ -36,7 +36,7 @@
         testHarnessMode:@((Context.Request["testHarnessMode"]=="true").ToString().ToLowerInvariant() ),
         adminAppPath: window.location.protocol + "//" + window.location.host + '@Url.Content("~")',
         adminRelPath:'@Url.Content("~")',
-        User : { id: '@user.Id'  , email: '@user.EmailAddress', sites: @Html.Raw(siteRolesJson), name: '@user.FirstName @user.LastName'.trim() },
+        User : { id: '@user.Id'  , taContext: @Html.Raw(taContext) , email: '@user.EmailAddress', sites: @Html.Raw(siteRolesJson), name: '@user.FirstName @user.LastName'.trim() },
         siteInfo : @Html.Raw(siteJson),
         apiVersion: '@ver.FileVersion',
         dashBoardInstructions :  @Html.Raw(string.IsNullOrEmpty(dashboardInstructions) ? "'tbd'": dashboardInstructions) ,

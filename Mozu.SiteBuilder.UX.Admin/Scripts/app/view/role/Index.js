@@ -108,12 +108,12 @@ Ext.define('Taco.view.role.Index', {
             logicalParent: this,
             formCfg: formCfg,
             listeners: {
-                cancel: function () {
+                cancel: function () { 
                     editorView.destroy();
                     Taco.core.StateManager.addState('roles');
                 },
                 aftersave: function (editor, record, isEdit) {
-                    debugger;
+                    
                     if (!isEdit) {
                         store.add(record);
                     }
