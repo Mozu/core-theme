@@ -70,7 +70,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             lock (productRepo)
             {
                 if (productRepo.Count == 0)
-                    InitializeRepoWithMockData(productRepo);
+                {
+                    int siteIdToOverride = _ctx.SiteId.HasValue ? _ctx.SiteId.Value : 0;
+                    InitializeRepoWithMockData(productRepo, siteIdToOverride);
+                }
             }
 
             if (pagingParams.id != null)
@@ -148,7 +151,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Initializes some mock product data for the ui team's delight.
         /// </summary>
-        private static void InitializeRepoWithMockData(List<DC.Product> repo)
+        private static void InitializeRepoWithMockData(List<DC.Product> repo, int siteIdToOverride)
         {
             DC.Product p1 = new DC.Product
             {
@@ -165,6 +168,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 },
                 ProductInSites = new List<DC.ProductInSiteInfo> {
                     new DC.ProductInSiteInfo {
+                        SiteId = siteIdToOverride,
                         IsContentOverridden = true,
                         Content = new DC.ProductLocalizedContent {
                                 ProductName = "KT Super Deluxe"
