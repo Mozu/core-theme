@@ -78,6 +78,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         // TODO: categories
 
         #region SEO
+
+        /// <summary>
+        /// The HTML metatag title.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "metaTagTitle")]
+        public string MetaTagTitle { get; set; }
+
+        /// <summary>
+        /// The HTML metatag description.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name="metaTagDescription")]
+        public string MetaTagDescription { get; set; }
+
+        /// <summary>
+        /// The HTML metatag keywords.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "metaTagKeywords")]
+        public string MetaTagKeywords { get; set; }
+
+        /// <summary>
+        /// An SEO friendly URL.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false)]
+        public string SEOFriendlyUrl { get; set; }
+
         #endregion
 
 
