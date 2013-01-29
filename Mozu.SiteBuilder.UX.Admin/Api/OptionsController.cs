@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -124,37 +125,39 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "autocomplete/?query={query}")]
         public Task<Response<List<AutoCompleteField<int?>>>> SearchByName(string query, FilterCollection extFilter)
         {
-            var filter = CreateFilter(extFilter, query);
-            var res = _attClient.GetAttributesCollection(null, null, "InternalName", "LocalizedContent", filter).Result.ReadAsSync();
+            throw new NotImplementedException();
+            //var filter = CreateFilter(extFilter, query);
+            //var res = _attClient.GetAttributesCollection(null, null, "InternalName", "LocalizedContent", filter).Result.ReadAsSync();
 
-            if(res.Items != null)
-            {
-                var fields = res.Items.Select(option => new AutoCompleteField<int?>
-                {
-                    Display = option.InternalName,
-                    Value = option.Id,
-                    IsConfigurable = option.IsConfigurable 
-                }).ToList();
+            //if(res.Items != null)
+            //{
+            //    var fields = res.Items.Select(option => new AutoCompleteField<int?>
+            //    {
+            //        Display = option.InternalName,
+            //        Value = option.Id,
+            //        IsConfigurable = option.IsConfigurable 
+            //    }).ToList();
 
-                return List(fields);
-            }
+            //    return List(fields);
+            //}
 
-            return EmptyList<AutoCompleteField<int?>>();
+            //return EmptyList<AutoCompleteField<int?>>();
         }
         
         [WebGet(UriTemplate = "list?query={query}")]
         public Task<Response<List<Option>>> GetOptionList(PagingParamaters pagingParams, FilterCollection extFilter, string query)
         {
-            if (pagingParams.NumericId != null )
-            {
-                var prod = _attClient.GetAttribute(pagingParams.NumericId, "LocalizedContent,ProductCount").Result.ReadAsSync();
-                return List(Mapper.Map<Option>(prod));
-            }
+            throw new NotImplementedException();
+            //if (pagingParams.NumericId != null )
+            //{
+            //    var prod = _attClient.GetAttribute(pagingParams.NumericId, "LocalizedContent,ProductCount").Result.ReadAsSync();
+            //    return List(Mapper.Map<Option>(prod));
+            //}
 
-            var filter = CreateFilter(extFilter, query);
-            var res = _attClient.GetAttributesCollection(pagingParams.startIndex, pagingParams.pageSize, "InternalName", "LocalizedContent,ProductCount", filter).Result.ReadAsSync();
+            //var filter = CreateFilter(extFilter, query);
+            //var res = _attClient.GetAttributesCollection(pagingParams.startIndex, pagingParams.pageSize, "InternalName", "LocalizedContent,ProductCount", filter).Result.ReadAsSync();
 
-            return List(Mapper.Map<List<Option>>(res.Items), (int) res.TotalCount);
+            //return List(Mapper.Map<List<Option>>(res.Items), (int) res.TotalCount);
         }
 
         private static string CreateFilter(FilterCollection extFilter, string query )
