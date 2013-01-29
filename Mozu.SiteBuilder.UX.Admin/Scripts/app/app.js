@@ -123,7 +123,6 @@ Ext.application({
 
         this.context = Ext.create('Taco.core.context.TaContext', Taco.User.taContext);
 
-        debugger;
         Ext.override(Ext.data.AbstractStore, {
             constructor: function () {
                 this.callParent(arguments);
