@@ -25,12 +25,6 @@ Ext.define('Taco.controller.Testing', {
 
 
     foster: function() {
-        var p = Ext.create('Taco.model.Product', {
-            productCode: "foster123",
-            productName: "foster",
-            price: 10
-        });
-
         this.createContentView('Taco.core.ux.content.Container', {
 
             header: {
@@ -41,18 +35,48 @@ Ext.define('Taco.controller.Testing', {
                 layout: 'auto',
                 items: [{
                     xtype: 'button',
-                    text: "Click for Foster",
+                    text: "Click to create a Foster",
                     handler: function() {
+                        var randomInteger = Math.round(1 + Math.random() * 1000),
+                            p = Ext.create('Taco.model.Product', {
+                              productCode: "foster" + randomInteger,
+                              productName: "foster" + "(" + randomInteger + ")",
+                              price: 10
+                            });
+
+
                         p.phantom = true;
                         p.save( { 
                             success: function (record, operation) {
-                                alert("success");
+                                alert("successfully created " + record.getId());
                             },
                             failure: function(record, operation)
                             {
                                 alert("fail");
                             }
                         });
+                    }
+                },
+                {
+                    xtype: 'box',
+                    autoEl: 'hr'
+                },
+                {
+                    xtype: 'button',
+                    text: "Click to get a Foster",
+                    handler: function() {
+                        var productCode = window.prompt("Enter foster code", "foster123");
+
+                        Taco.model.Product.load(productCode, { 
+                            success: function (record, operation) {
+                                alert("successfully got " + record.getId());
+                            },
+                            failure: function(record, operation)
+                            {
+                                alert("fail");
+                            }
+                        });
+
                     }
                 }]
             }
