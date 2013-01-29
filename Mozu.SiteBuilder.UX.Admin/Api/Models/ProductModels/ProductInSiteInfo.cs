@@ -25,7 +25,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Represents whether the content information is overridden from the global data.
         /// </summary>
-        public bool isContentOverride { get; set; }
+        [DataMember(EmitDefaultValue = false, Name = "isContentOverriden")]
+        public bool isContentOverriden { get; set; }
 
         /// <summary>
         /// The product name.
@@ -53,7 +54,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Represents whether the price information is overridden from the global data.
         /// </summary>
-        public bool isPriceOverride { get; set; }
+        [DataMember(EmitDefaultValue = false, Name = "isPriceOverridden")]
+        public bool IsPriceOverriden { get; set; }
 
         /// <summary>
         /// The list price.
@@ -100,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// An SEO friendly URL.
         /// </summary>
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(EmitDefaultValue = false, Name="seoFriendlyUrl")]
         public string SEOFriendlyUrl { get; set; }
 
         #endregion

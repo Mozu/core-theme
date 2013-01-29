@@ -8,6 +8,7 @@ using System.Linq;
 using DC = Mozu.ProductAdmin.Contracts;
 using OldProduct = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.OldProduct;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
+using ProductInSiteInfo = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductInSiteInfo;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -33,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))
                 .ForMember(x => x.ShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
                 .ForMember(x => x.FullDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
-              //.ForMember(x => x.ListPrice, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).ListPrice))
+                //.ForMember(x => x.ListPrice, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).ListPrice))
                 .ForMember(x => x.Price, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).Price))
                 .ForMember(x => x.SalePrice, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).SalePrice))
                 .ForMember(x => x.StockOnHand, op => op.MapFrom(dc => dc.StockOnHand))
@@ -42,8 +43,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PackageWeight, op => op.MapFrom(dc => dc.PackageWeight == null ? null : dc.PackageWeight.Value))
                 .ForMember(x => x.PackageHeight, op => op.MapFrom(dc => dc.PackageHeight == null ? null : dc.PackageHeight.Value))
                 .ForMember(x => x.PackageLength, op => op.MapFrom(dc => dc.PackageLength == null ? null : dc.PackageLength.Value))
-                .ForMember(x => x.PackageWidth, op => op.MapFrom(dc => dc.PackageWidth == null ? null : dc.PackageWidth.Value));
-
+                .ForMember(x => x.PackageWidth, op => op.MapFrom(dc => dc.PackageWidth == null ? null : dc.PackageWidth.Value))
+                .ForMember(x => x.ProductInSites, op => op.MapFrom(dc => dc.ProductInSites));
 
             Mapper.CreateMap<Product, DC.Product>()
                 .ForMember(dc => dc.ProductCode, op => op.MapFrom(p => p.ProductCode))
@@ -69,6 +70,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PackageLength, op => op.MapFrom(x => new Measurement { Unit = "in", Value = x.PackageLength }))
                 .ForMember(x => x.PackageWidth, op => op.MapFrom(x => new Measurement { Unit = "in", Value = x.PackageWidth }))
                 .ForMember(x => x.PackageWeight, op => op.MapFrom(x => new Measurement { Unit = "lbs", Value = x.PackageWeight }));
+
+            Mapper.CreateMap<DC.ProductInSiteInfo, ProductInSiteInfo>()
+                .ForMember(x => x.isContentOverriden, op => op.MapFrom(dc => dc.IsContentOverridden))
+                .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))
+                .ForMember(x => x.ShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
+                .ForMember(x => x.FullDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
+                .ForMember(x => x.IsPriceOverriden, op => op.MapFrom(dc => dc.IsPriceOverridden))
+                .ForMember(x => x.Price, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).Price))
+                .ForMember(x => x.SalePrice, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).SalePrice))
+                ;
+
 
             Mapper.CreateMap<DC.Product, OldProduct>()
                   .ForMember(x => x.ContentLocaleCode,
