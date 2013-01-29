@@ -14,6 +14,7 @@
         this.initWrapper();
 
         this.body = {
+            layout: 'fit',
             items: [this.form]
         };
 
