@@ -1,5 +1,6 @@
 ﻿@mixin taco-product {
   .#{$vprefix}product-admin-form {
+    padding-bottom: 200px;
 
     .#{$vprefix}formeditor .x-panel-header {
       margin-top: 24px;
@@ -19,28 +20,52 @@
   }
 
   .#{$vprefix}override-container {
-    display: -webkit-flex;
-    -webkit-justify-content: flex-start;
-    -webkit-flex-wrap: wrap;
-    -webkit-flex-direction: row;
-    position: relative;
-    margin-top: 25px;
-    // background-color: #E2CCA3;
-
-    border: 1px dashed orange;
-    padding: 10px 20px;
-    // margin-left: -20px;
-    // width: 100%;
+    $overrideOffset: 14px;
+    // border: 1px dashed orange;
+    // padding: 0 $overrideOffset $overrideOffset;
+    // margin-left: -$overrideOffset;
 
     &.active {
-      padding: 10px 20px;
-      margin-left: -20px;
+      position: relative;
+      margin-top: 25px;
+
       border: 1px dashed orange;
+      margin-left: -$overrideOffset;
+
+      .x-container {
+        padding: 0 $overrideOffset $overrideOffset;
+      }
+
+      .#{$vprefix}override-checkbox {
+        display: block;
+      }
+    }
+
+    // *** For the subitems
+    .x-container {
+      display: -webkit-flex;
+      -webkit-justify-content: flex-start;
+      -webkit-flex-wrap: wrap;
+      -webkit-flex-direction: row;
+    }
+
+    .x-mask {
+      background-color: #f1f0ec;
+      // opacity: 0.4;
+    }
+
+    // *** Raise opacity of subitems and their labels
+    .x-item-disabled {
+      .x-form-field, .x-form-item-label, .x-form-cb-label {
+        opacity: 1
+      }
     }
 
     .#{$vprefix}override-checkbox {
-      background-color: white;
-      outline: 5px solid white;
+      display: none; // *** Hide checkbox when not in an .active container
+      z-index: 10000; // *** Arbitrary value
+      background-color: #f1f0ec;
+      outline: 5px solid #f1f0ec;
       //padding: 0 12px;
       position: absolute;
       top: -14px;
