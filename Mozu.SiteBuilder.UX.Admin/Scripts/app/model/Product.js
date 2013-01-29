@@ -6,7 +6,7 @@
 
 Ext.define('Taco.model.Product', {
     extend: 'Taco.core.data.Model',
-    requires: ['Taco.model.ProductOption', 'Taco.model.ProductVariation'],
+    requires: ['Taco.model.ProductOption', 'Taco.model.ProductVariation', 'Ext.data.association.HasMany', 'Taco.model.ProductInSiteInfo'],
     "fields":
   [
     {
@@ -175,8 +175,10 @@ Ext.define('Taco.model.Product', {
     idProperty: 'productCode',
     hasMany: [
         {
-            "name": "productInSites",
+            "model":'Taco.model.ProductInSiteInfo',
+            "name": "productInSitesStore",
             "type": "Taco.model.ProductInSiteInfo",
+            associationKey:'productInSites',
             "foreignKey": "productCode"
         }
     ],
