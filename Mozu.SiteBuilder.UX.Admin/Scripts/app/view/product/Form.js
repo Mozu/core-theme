@@ -6,15 +6,19 @@
 Ext.define('Taco.view.product.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
-        'Taco.view.product.SingleSiteForm'
+        'Taco.view.product.GlobalForm',
+        'Taco.view.product.SiteForm'
     ],
 
     initComponent: function () {
         this.tabpanel = Ext.create("Ext.tab.Panel", {
             items: [
-                Ext.create("Taco.view.product.SingleSiteForm"),
-                Ext.create("Taco.view.product.SingleSiteForm"),
-                Ext.create("Taco.view.product.SingleSiteForm")
+                Ext.create("Taco.view.product.GlobalForm"),
+                Ext.create("Taco.view.product.SiteForm"),
+                Ext.create("Taco.view.product.SiteForm", {
+                    title: "Site Form w/ Overrides",
+                    allowOverrides: true
+                })
             ]
         });
 
