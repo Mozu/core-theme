@@ -1,8 +1,11 @@
 /**
  * @class Taco.core.ux.tab.Panel
+ * @author Jimmy Sanford
+ * 
  */
 Ext.define('Taco.core.ux.tab.Panel', {
     extend: 'Ext.panel.Panel',
+    requires: ['Taco.core.ux.tab.Tab'],
     alias: 'widget.formtabpanel',
 
     componentCls: Taco.baseCSSPrefix + 'form-tab-panel',
@@ -76,20 +79,11 @@ Ext.define('Taco.core.ux.tab.Panel', {
         var tabs = [];
 
         this.items.each(function (item, index) {
-            var tab = Ext.create('Ext.Component', {
-                xtype: 'component',
-                componentCls: Taco.baseCSSPrefix + 'form-tab',
+            var tab = Ext.create('Taco.core.ux.tab.Tab', {
                 card: item,
-                html: item.title,
-                listeners: {
-                    click: {
-                        scope: this,
-                        element: 'el',
-                        fn: function () {
-                            this.setActiveItem(index);
-                        }
-                    }
-                }
+                text: item.title,
+                activeCls: this.activeTabCls,
+                invalidCls: this.invalidTabCls
             });
             Ext.apply(item, { tab: tab });
             tabs.push(tab);
@@ -99,26 +93,30 @@ Ext.define('Taco.core.ux.tab.Panel', {
     },
 
     onCardActivate: function (card) {
+        var tab = card.tab;
+
         card.addCls(this.activeItemCls);
-        card.tab.addCls(this.activeTabCls);
+        tab.addCls(tab.activeCls);
 
         return card;
     },
 
     onCardDeactivate: function (card) {
+        var tab = card.tab;
+
         card.removeCls(this.activeItemCls);
-        card.tab.removeCls(this.activeTabCls);
+        tab.removeCls(tab.activeCls);
 
         return card;
     },
 
     onCardValidityChange: function (form, valid) {
-        var panel = form.owner;
+        var tab = form.owner.tab;
 
         if (valid) {
-            panel.tab.removeCls(this.invalidTabCls);
+            tab.removeCls(tab.invalidCls);
         } else {
-            panel.tab.addCls(this.invalidTabCls);
+            tab.addCls(tab.invalidCls);
         }
 
         return valid;
