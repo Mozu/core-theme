@@ -106,6 +106,13 @@ Harness.start({
         text: "Taco.showViewPort=false;"
     }],
     items: [{
+        group: 'Forms',
+        expanded: true,
+        items: [{
+            url: 'unit/form/model-binds.t.js',
+            title: 'Cascading Model Binding'
+        }]
+    }, {
         group: 'Grids',
         expanded: true,
         items: [{
