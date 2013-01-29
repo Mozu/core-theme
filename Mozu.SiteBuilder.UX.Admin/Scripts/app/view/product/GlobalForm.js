@@ -16,10 +16,10 @@ Ext.define('Taco.view.product.GlobalForm', {
     mixins: {
         scrollspy: 'Taco.core.ux.ScrollSpy'
     },
+
     scrollSpyOffset: 150,
     // id: "productSingleSiteForm",
     title: 'Global', // *** For tab title
-
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'global-admin-form'],
 
     constructor: function () {
@@ -45,10 +45,6 @@ Ext.define('Taco.view.product.GlobalForm', {
             Ext.create('Taco.view.product.subform.Extras'),
             Ext.create('Taco.view.product.subform.Shipping')
         ];
-
-        // *** For readability purposes
-        this.style = this.style || {};
-        this.style["padding-bottom"] = '200px';
 
         this.callParent( arguments );
     }
