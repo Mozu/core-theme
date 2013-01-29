@@ -24,6 +24,7 @@ Ext.define('Taco.core.AppState', {
         
         beginSlashRE: /^\//,
         endSlashRE: /\/$/,
+        contextRE: RegExp('^[tcs]:{1}[0-9]+'),
         defaultParams: {
             controller: 'dashboard',
             action: 'index'
@@ -40,16 +41,16 @@ Ext.define('Taco.core.AppState', {
         * *    args: String[] <div class="sub-desc">An array of arguments to the action. The last argument is always a key-value parse of the query string. Usually just two args: the ID of the model to bind to the action view, and the query parameters.</div>
         *
         */
-        parseUri: function (uri) {
-            var query, sections, controller, action, ctx, contextR=RegExp('[tcs]{1}[0-9]+'), appCtx = Taco.app.context;
+        parseMetaData: function (uri) {
+            var query, sections, controller, action, ctx, appCtx = Taco.app.context;
 
             
             uri = uri.split('?');
             sections = Ext.Array.clean(uri[0].split('/'));
-            if (sections.length > 0 && contextR.test(sections[0])) {
+            if (sections.length > 0 && this.contextRE.test(sections[0])) {
                 ctx = sections.shift();
             } else {
-                ctx = 't' + appCtx.tenatId;
+                ctx = Taco.app.context.getCurrent().urlToken;
             }
             
             controller = sections.shift() || this.defaultParams.controller;
@@ -62,6 +63,15 @@ Ext.define('Taco.core.AppState', {
                 action: action, 
                 args: sections
             };
+        },
+        
+        fixupUrl: function (uri) {
+            uri = uri.replace(this.baseUriRE, '').replace(this.beginSlashRE, '').replace(this.endSlashRE, '');
+          
+            if (! this.contextRE.test(uri) ) {
+                uri = Taco.app.context.getCurrent().urlToken + '/' + uri;
+            }
+            return uri;
         }
     },
 
@@ -98,8 +108,8 @@ Ext.define('Taco.core.AppState', {
         */
         'deactivate'
         );
-        this.uri = this.uri.replace(this.self.baseUriRE, '').replace(this.self.beginSlashRE, '').replace(this.self.endSlashRE, '');
-        this.metaData = Ext.apply(this.self.parseUri(this.uri), this.metaData || {});
+        this.uri = this.self.fixupUrl(this.uri);
+        this.metaData = Ext.apply(this.self.parseMetaData(this.uri), this.metaData || {});
 
         // set a sequential-ish state ID.
         this.metaData._stateid = Number((new Date().getTime().toString()) + Math.round(Math.random() * 100000));

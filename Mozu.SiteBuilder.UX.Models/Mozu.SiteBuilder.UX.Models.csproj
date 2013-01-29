@@ -272,6 +272,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CMS\WidgetPageContext.cs" />
+    <Compile Include="Admin\TaContext.cs" />
     <Compile Include="Admin\ThemeSettings\ConfigurationField.cs" />
     <Compile Include="Admin\ThemeSettings\ConfigurationFieldValue.cs" />
     <Compile Include="Admin\ThemeSettings\ConfigurationItem.cs">

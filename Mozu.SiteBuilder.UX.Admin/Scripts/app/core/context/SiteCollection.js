@@ -1,8 +1,11 @@
 ﻿Ext.define('Taco.core.context.SiteCollection', {
     //extend: 'Ext.util.Observable',
-    
+    urlToken: null,
+    contextType: 'c',
+    name: '',
     id: -1,
-    sites:null,
+    sites: null,
+    
     constructor: function (config) {
         var me = this;
         me.sites = Ext.Array.clone(me.sites | []);
@@ -13,7 +16,7 @@
         
 
 
-        
+        me.urlToken = me.contextType +':'+ me.id;
         
         Ext.each(me.sites, function (site, idx) {
             site.siteCollection = me;
@@ -23,6 +26,16 @@
         
 
         
+    },
+    getSiteId: function () {
+        if (this.sites.length == 1) {
+            return this.sites[0].getSiteId();
+        }
+        return null;
+
+    },
+    getSiteGroupId: function () {
+        return this.id;
     }
     
 });
