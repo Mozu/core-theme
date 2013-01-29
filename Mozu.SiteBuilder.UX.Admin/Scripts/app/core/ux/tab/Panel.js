@@ -7,6 +7,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
     componentCls: Taco.baseCSSPrefix + 'form-tab-panel',
     defaults: {
+        bubbleEvents: ['activate', 'deactivate', 'validitychange'],
         closable: true,
         header: false,
         overflowY: 'auto'
@@ -15,7 +16,10 @@ Ext.define('Taco.core.ux.tab.Panel', {
         type: 'card'
     },
 
-    navigation: true,
+    activeItemCls: Taco.baseCSSPrefix + 'form-card-active',
+    activeTabCls: Taco.baseCSSPrefix + 'form-tab-active',
+    invalidTabCls: Taco.baseCSSPrefix + 'form-tab-invalid',
+    navigation: false,
 
     initComponent: function () {
         var me = this,
@@ -46,17 +50,36 @@ Ext.define('Taco.core.ux.tab.Panel', {
         this.lbar = lbar;
         this.tbar = tbar;
 
-        this.tbar.add(this.buildTabs());
-        delete tabs;
+        if (this.navigation) {
+            this.lbar.add(this.initNavigation());
+        }
+
+        this.tbar.add(this.initTabs());
+
+        this.on({
+            activate: this.onCardActivate,
+            deactivate: this.onCardDeactivate,
+            validitychange: this.onCardValidityChange,
+            scope: this
+        });
     },
 
-    buildTabs: function () {
+    initNavigation: function () {
+        var links = [];
+
+
+
+        return links;
+    },
+
+    initTabs: function () {
         var tabs = [];
 
         this.items.each(function (item, index) {
-            tabs.push({
+            var tab = Ext.create('Ext.Component', {
                 xtype: 'component',
                 componentCls: Taco.baseCSSPrefix + 'form-tab',
+                card: item,
                 html: item.title,
                 listeners: {
                     click: {
@@ -68,14 +91,44 @@ Ext.define('Taco.core.ux.tab.Panel', {
                     }
                 }
             });
+            Ext.apply(item, { tab: tab });
+            tabs.push(tab);
         }, this);
 
         return tabs;
+    },
+
+    onCardActivate: function (card) {
+        card.addCls(this.activeItemCls);
+        card.tab.addCls(this.activeTabCls);
+
+        return card;
+    },
+
+    onCardDeactivate: function (card) {
+        card.removeCls(this.activeItemCls);
+        card.tab.removeCls(this.activeTabCls);
+
+        return card;
+    },
+
+    onCardValidityChange: function (form, valid) {
+        var panel = form.owner;
+
+        if (valid) {
+            panel.tab.removeCls(this.invalidTabCls);
+        } else {
+            panel.tab.addCls(this.invalidTabCls);
+        }
+
+        return valid;
     },
 
     setActiveItem: function (newCard) {
         var layout = this.getLayout();
 
         layout.setActiveItem(newCard);
+
+        return newCard;
     }
 });

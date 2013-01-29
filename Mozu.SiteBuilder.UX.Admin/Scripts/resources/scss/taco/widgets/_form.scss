@@ -1980,9 +1980,11 @@
       border-style: solid solid solid none;
       border-width: 1px 1px 1px 0px;
       color: $color-neutral-white;
+      cursor: pointer;
       display: inline-block;
       height: 40px;
       padding: 11px 28px;
+      position: relative;
 
       &:nth-of-type(1) {
         border-left-style: solid;
@@ -1992,6 +1994,10 @@
       &:nth-last-of-type(1) {
         @include border-radius(0px 3px 3px 0px);
       }
+    }
+
+    .#{$vprefix}form-tab-active {
+      background-color: rgb(94, 110, 125);
     }
   }
 

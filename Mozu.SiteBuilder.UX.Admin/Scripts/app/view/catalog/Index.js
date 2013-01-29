@@ -14,32 +14,33 @@ Ext.define('Taco.view.catalog.Index', {
             tp;
 
         tp = Ext.create('Taco.core.ux.tab.Panel', {
+            navigation: true,
             items: [{
+                xtype: 'form',
                 title: 'One',
                 defaults: {
-                    margin: '0 0 10 0',
-                    style: { backgroundColor: '#cfc' },
+                    xtype: 'textfield',
+                    labelAlign: 'top',
+                    labelSeparator: '',
+                    msgTarget: 'under'
                 },
                 items: [{
-                    xtype: 'component',
-                    height: 600,
-                    html: 'lorem'
+                    name: 'firstName',
+                    fieldLabel: 'First Name',
+                    validator: function (value) {
+                        var msg = "That's not a real first name.";
+
+                        return (value === 'the' ? msg : true);
+                    }
                 }, {
-                    xtype: 'component',
-                    height: 600,
-                    html: 'ipsum'
+                    name: 'lastName',
+                    fieldLabel: 'Last Name'
                 }, {
-                    xtype: 'component',
-                    height: 600,
-                    html: 'dolor'
+                    name: 'address1',
+                    fieldLabel: 'Address Line 1'
                 }, {
-                    xtype: 'component',
-                    height: 600,
-                    html: 'sit'
-                }, {
-                    xtype: 'component',
-                    height: 600,
-                    html: 'amet'
+                    name: 'address2',
+                    fieldLabel: 'Address Line 2'
                 }]
             }, {
                 title: 'Two',
