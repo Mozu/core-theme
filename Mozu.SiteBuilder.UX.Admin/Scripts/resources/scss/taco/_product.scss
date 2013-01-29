@@ -17,4 +17,34 @@
       margin-left: 20px;
     }
   }
+
+  .#{$vprefix}override-container {
+    display: -webkit-flex;
+    -webkit-justify-content: flex-start;
+    -webkit-flex-wrap: wrap;
+    -webkit-flex-direction: row;
+    position: relative;
+    margin-top: 25px;
+    // background-color: #E2CCA3;
+
+    border: 1px dashed orange;
+    padding: 10px 20px;
+    // margin-left: -20px;
+    // width: 100%;
+
+    &.active {
+      padding: 10px 20px;
+      margin-left: -20px;
+      border: 1px dashed orange;
+    }
+
+    .#{$vprefix}override-checkbox {
+      background-color: white;
+      outline: 5px solid white;
+      //padding: 0 12px;
+      position: absolute;
+      top: -14px;
+      right: 100px;
+    }
+  }
 }
