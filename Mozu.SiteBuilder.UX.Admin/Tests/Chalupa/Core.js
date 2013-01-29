@@ -8,6 +8,10 @@
         Taco.app.initViewPort();
     },
 
+    waitForRender: function (t, component, afterRender) {
+        t.waitFor(function () {return component.rendered}, afterRender);
+    },
+
     getRoleStore: function () {
         return Ext.create('Ext.data.Store', {
             fields: [
