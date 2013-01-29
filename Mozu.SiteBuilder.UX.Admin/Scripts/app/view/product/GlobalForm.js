@@ -22,6 +22,12 @@ Ext.define('Taco.view.product.GlobalForm', {
 
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'global-admin-form'],
 
+    constructor: function () {
+        this.callParent( arguments );
+        // ExtJS does not call mixin constructors, because it is bad and should feel bad
+        this.mixins.scrollspy.constructor.call(this);
+    },
+
     initComponent: function () {
         this.items = [
             {
@@ -45,11 +51,5 @@ Ext.define('Taco.view.product.GlobalForm', {
         this.style["padding-bottom"] = '200px';
 
         this.callParent( arguments );
-    },
-
-    constructor: function () {
-        this.callParent( arguments );
-        // ExtJS does not call mixin constructors, because it is bad and should feel bad
-        this.mixins.scrollspy.constructor.call(this);
     }
 });
