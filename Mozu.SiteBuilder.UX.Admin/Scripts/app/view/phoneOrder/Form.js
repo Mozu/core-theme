@@ -5,7 +5,7 @@
  */
 Ext.define('Taco.view.phoneOrder.Form', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.core.ux.form.Form',
+    requires: [
        'Taco.view.phoneOrder.CustomerSection',
        'Taco.view.phoneOrder.ItemsSection',
        'Taco.view.phoneOrder.ShippingSection',

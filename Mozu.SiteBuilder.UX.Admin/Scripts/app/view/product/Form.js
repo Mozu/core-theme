@@ -7,7 +7,8 @@ Ext.define('Taco.view.product.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Taco.view.product.GlobalForm',
-        'Taco.view.product.SiteForm'
+        'Taco.view.product.SiteForm',
+        'Ext.tab.Panel'
     ],
 
     initComponent: function () {

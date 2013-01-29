@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.model.OrderItem', {
     extend: 'Taco.core.data.Model',
-
+    requires:['Ext.data.association.HasOne'],
     fields: [{
         "name": "id",
         "type": "string",
