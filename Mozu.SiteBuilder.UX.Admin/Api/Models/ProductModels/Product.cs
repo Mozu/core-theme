@@ -131,6 +131,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         #endregion
 
+        // TODO: SEO
+
         /// <summary>
         /// A collection of site-specific overrides for this product.
         /// </summary>

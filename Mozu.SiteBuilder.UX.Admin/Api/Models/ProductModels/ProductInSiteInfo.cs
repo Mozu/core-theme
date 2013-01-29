@@ -21,19 +21,65 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "isActive")]
         public bool IsActive { get; set; }
 
-        #region Price
-        /// <summary>
-        /// Represents whether the price information is overridden from the global data.
-        /// </summary>
-        public bool isPriceOverride { get; set; }
-        #endregion
-
         #region Content
         /// <summary>
         /// Represents whether the content information is overridden from the global data.
         /// </summary>
         public bool isContentOverride { get; set; }
+
+        /// <summary>
+        /// The product name.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "productName")]
+        public string ProductName { get; set; }
+
+        /// <summary>
+        /// The product short description.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "shortDescription")]
+        public string ShortDescription { get; set; }
+
+        /// <summary>
+        /// The product full description.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "fullDescription")]
+        public string FullDescription { get; set; }
+
+        // TODO: images
+
         #endregion
+
+        #region Price
+        /// <summary>
+        /// Represents whether the price information is overridden from the global data.
+        /// </summary>
+        public bool isPriceOverride { get; set; }
+
+        /// <summary>
+        /// The list price.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "listPrice")]
+        public decimal? ListPrice { get; set; }
+
+        /// <summary>
+        /// The price.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "price")]
+        public decimal? Price { get; set; }
+
+        /// <summary>
+        /// The sale price.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "salePrice")]
+        public decimal? SalePrice { get; set; }
+
+        #endregion
+
+        // TODO: categories
+
+        #region SEO
+        #endregion
+
 
     }
 }
