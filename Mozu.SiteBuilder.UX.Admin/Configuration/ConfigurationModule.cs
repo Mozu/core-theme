@@ -13,7 +13,9 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Configuration;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Api = Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.User.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin.MockServices;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
@@ -83,6 +85,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             // builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductRuntime.Contracts.Clients.ProductRuntimeWebApiClient).Assembly);
             builder.Register(c => new ProductRuntimeWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductRuntimeWebApiClient>().InstancePerLifetimeScope();
             builder.Register(c => new ProductSearchWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductSearchWebApiClient>().InstancePerLifetimeScope();
+
+            // TODO: This binding will be unnecessary once the ProductWebApiClient (and its matching service) works.
+            builder.RegisterType<InMemoryProductWebApiClient>().As<IMoreAwesomeProductWebApiClient>();
         }
 
 
