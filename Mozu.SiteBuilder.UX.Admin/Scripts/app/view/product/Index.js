@@ -246,7 +246,13 @@
             });
 
             if( this.record && this.record.isModel ) {
-                this.launchLoadedEditor( this.record );
+                this.on({
+                    afterrender: function () {
+                        this.launchLoadedEditor( this.record );        
+                    },
+                    scope: this
+                });
+                
             }
         },
 

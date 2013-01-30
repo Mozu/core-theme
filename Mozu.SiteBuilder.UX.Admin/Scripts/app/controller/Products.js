@@ -32,30 +32,30 @@ Ext.define('Taco.controller.Products', {
         } else {
             this.createContentView('Taco.view.product.Index');
         }
-    },
+    }
 
-    create: function (args) {
-        var me = this;
+    // create: function (args) {
+    //     var me = this;
 
-        var data = Ext.create('Taco.model.Product', {
-            id: 0
-        });
-        me.getTacoStoreProductsStore().insert(0, [data]);
-        me.createContentView('Taco.view.product.Edit', {
-            data: data,
-            store: me.getTacoStoreProductsStore()
-        });
+    //     var data = Ext.create('Taco.model.Product', {
+    //         id: 0
+    //     });
+    //     me.getTacoStoreProductsStore().insert(0, [data]);
+    //     me.createContentView('Taco.view.product.Edit', {
+    //         data: data,
+    //         store: me.getTacoStoreProductsStore()
+    //     });
 
-    },
+    // },
 
-    edit1: function (params) {
-            var me = this,
-                id = params.id || params;
+    // edit1: function (params) {
+    //         var me = this,
+    //             id = params.id || params;
             
-            Taco.model.Product.load(id, {
-                success: function (record, o) {
-                    me.createContentView('Taco.view.product.Index', { record: record });
-                }
-            });
-        }
+    //         Taco.model.Product.load(id, {
+    //             success: function (record, o) {
+    //                 me.createContentView('Taco.view.product.Index', { record: record });
+    //             }
+    //         });
+    //     }
 });
