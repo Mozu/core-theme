@@ -93,17 +93,20 @@ Ext.define('Taco.model.ProductInSiteInfo', {
         {
             "name": "isContentOverridden",
             "type": "boolean",
-            "useNull": false
+            "useNull": false,
+            defaultValue: false
         },
         {
             "name": "isPriceOverridden",
             "type": "boolean",
-            "useNull": false
+            "useNull": false,
+            defaultValue: false
         },
         {
             "name": "isSeoOverridden",
             "type": "boolean",
-            "useNull": false
+            "useNull": false,
+            defaultValue: false
         }
     ],
     idProperty: "siteId",

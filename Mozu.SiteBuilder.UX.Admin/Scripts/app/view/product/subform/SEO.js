@@ -13,7 +13,7 @@ Ext.define('Taco.view.product.subform.SEO', {
         this.defaults.width = '100%';
 
         this.items = [{
-            xtype: 'override',
+            xtype: 'productoverride',
             items: [{
                 fieldLabel: 'Meta Title'
             }, {
