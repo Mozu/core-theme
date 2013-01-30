@@ -31,9 +31,8 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
         if (this.navigation) {
             lbar = Ext.create('Ext.Container', {
-                xtype: 'component',
                 width: 160,
-                html: 'sidebar'
+                items: []
             });
         }
 
@@ -57,7 +56,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
             this.lbar.add(this.initNavigation());
         }
 
-        this.tbar.add(this.initTabs());
+        this.tbar.add(this.initTabs(this.items));
 
         this.on({
             activate: this.onCardActivate,
@@ -70,15 +69,19 @@ Ext.define('Taco.core.ux.tab.Panel', {
     initNavigation: function () {
         var links = [];
 
-
+        links.push({
+            xtype: 'component',
+            width: 160,
+            html: 'sidebar'
+        });
 
         return links;
     },
 
-    initTabs: function () {
+    initTabs: function (items) {
         var tabs = [];
 
-        this.items.each(function (item, index) {
+        items.each(function (item, index) {
             var tab = Ext.create('Taco.core.ux.tab.Tab', {
                 card: item,
                 text: item.title,
@@ -90,6 +93,21 @@ Ext.define('Taco.core.ux.tab.Panel', {
         }, this);
 
         return tabs;
+    },
+
+    onAdd: function (card, position) {
+        var tab;
+
+        if (this.rendered && this.tbar) {
+            tab = this.tbar.add({
+                xtype: 'formtab',
+                card: card,
+                text: card.title,
+                activeCls: this.activeTabCls,
+                invalidCls: this.invalidTabCls
+            });
+            Ext.apply(card, { tab: tab });
+        }
     },
 
     onCardActivate: function (card) {

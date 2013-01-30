@@ -6,6 +6,7 @@
 
 Ext.define('Taco.view.product.SiteForm', {
     extend: 'Taco.core.ux.form.Form',
+    alias: 'widget.productsiteform',
     requires: [
         'Taco.view.product.subform.General',
         'Taco.view.product.subform.Inventory',
@@ -16,10 +17,9 @@ Ext.define('Taco.view.product.SiteForm', {
         'Taco.view.product.subform.Merchandising',
         'Taco.view.product.subform.SEO'
     ],
-    mixins: {
-        scrollspy: 'Taco.core.ux.ScrollSpy'
-    },
-
+    // mixins: {
+    //     scrollspy: 'Taco.core.ux.ScrollSpy' // TODO: resolve JS error with this and getEl()
+    // },
     scrollSpyOffset: 150,
     // id: "productSingleSiteForm",
     title: 'Site Form', // *** For tab title
@@ -66,6 +66,6 @@ Ext.define('Taco.view.product.SiteForm', {
     constructor: function () {
         this.callParent(arguments);
         // ExtJs does not call mixin constructors, because it is bad and should feel bad
-        this.mixins.scrollspy.constructor.call(this);
+        // this.mixins.scrollspy.constructor.call(this); // TODO: uncomment this when scrollspy works
     }
 });
