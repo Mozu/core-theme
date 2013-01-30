@@ -10,6 +10,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
     public class ProductInSiteInfo
     {
         /// <summary>
+        /// The product these overrides belong to.
+        /// </summary>
+        public string ProductCode { get; set; }
+
+        /// <summary>
         /// The site identifier these overrides belong to.
         /// </summary>
         [DataMember(EmitDefaultValue = false, Name = "siteId")]
@@ -26,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// Represents whether the content information is overridden from the global data.
         /// </summary>
         [DataMember(EmitDefaultValue = false, Name = "isContentOverriden")]
-        public bool isContentOverriden { get; set; }
+        public bool IsContentOverridden { get; set; }
 
         /// <summary>
         /// The product name.
@@ -82,6 +87,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         #region SEO
 
         /// <summary>
+        /// Represents whether the SEO information is overridden from the global data.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "isSEOContentOverridden")]
+        public bool IsSEOContentOverridden { get; set; }
+
+        /// <summary>
         /// The HTML metatag title.
         /// </summary>
         [DataMember(EmitDefaultValue = false, Name = "metaTagTitle")]
@@ -106,7 +117,5 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         public string SEOFriendlyUrl { get; set; }
 
         #endregion
-
-
     }
 }

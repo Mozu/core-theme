@@ -4,18 +4,14 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Caching;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.Core;
-using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
-using ProductInSiteInfo = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
+using ProductInSiteInfo = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductInSiteInfo;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -65,13 +61,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             // res = _productClient.GetProducts(pagingParams.startIndex, pagingParams.pageSize, sort, null, filter).Result.ReadAsAsync().Result;
 
-            return List(Mapper.Map<List<ProductInSiteInfo>>(product.ProductInSites), product.ProductInSites.Count);
+            List<ProductInSiteInfo> returned = Mapper.Map<List<ProductInSiteInfo>>(product.ProductInSites);
+
+            // inject ProductCode into the return object. ExtJS needs this.
+            returned.Each(pisi => pisi.ProductCode = productCode);
+
+            return List(returned, returned.Count);
         }
 
         [WebInvoke(UriTemplate = "create")]
-        public Task<Response<List<Product>>> CreateProductInSiteInfo(List<Product> products)
+        public Task<Response<List<ProductInSiteInfo>>> CreateProductInSiteInfo(List<ProductInSiteInfo> pisos)
         {
-            throw new NotImplementedException();
+            List<ProductInSiteInfo> returned = new List<ProductInSiteInfo>();
+
+            foreach (ProductInSiteInfo piso in pisos)
+            {
+                DC.ProductInSiteInfo dcpiso = Mapper.Map<DC.ProductInSiteInfo>(piso);
+
+                // TODO: service call should go here
+                DC.Product p = ProductController.GetProduct(piso.ProductCode, _ctx);
+                if (p == null)
+                    throw new ArgumentException("Product not found: " + piso.ProductCode);
+                p.ProductInSites.Add(dcpiso);
+
+                var returnedPisi = Mapper.Map<ProductInSiteInfo>(dcpiso);
+                
+                // inject ProductCode into the return object. ExtJS needs this.
+                returnedPisi.ProductCode = piso.ProductCode;
+
+                returned.Add(returnedPisi);
+            }
+
+            return List<ProductInSiteInfo>(returned);
         }
 
 
