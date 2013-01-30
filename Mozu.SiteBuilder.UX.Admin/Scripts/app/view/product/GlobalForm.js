@@ -14,6 +14,7 @@ Ext.define('Taco.view.product.GlobalForm', {
         'Taco.view.product.subform.Extras',
         'Taco.view.product.subform.Shipping'
     ],
+    persisteChangesToModel: true,
 
     scrollSpyOffset: 150,
 
