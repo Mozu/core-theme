@@ -58,7 +58,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
             this.setOverride(this.productInSiteInfo.get(this.overrideFieldName), false);
 
             this.product.on({
-                changed: this.onProductChange,
+                afteredit: this.onProductChange,
                 scope: this
             });
         } else {
@@ -68,7 +68,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
         }
     },
 
-    onProductChange: function (record) {
+    onProductChange: function ( record, modifiedFieldNames ) {
         // Check to see if global product record is being used on the form
         if (record !== this.record) {
             return;

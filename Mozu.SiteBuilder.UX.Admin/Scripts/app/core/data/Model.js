@@ -18,9 +18,12 @@ Ext.define('Taco.core.data.Model', {
         return me.callParent(arguments);
     },
 
-    //setProxy: function () {
-    //    console.log('set proxy');
-    //},
+    
+    afterEdit: function (modifiedFieldNames) {
+        this.callParent(arguments);
+        this.fireEvent('afteredit', this, modifiedFieldNames);
+    },
+    
 
 
     getMessage: function () {
