@@ -98,7 +98,24 @@ namespace Mozu.SiteBuilder.UX.Admin
 
         private void RegisterMvcRoutes(RouteCollection routes)
         {
-            // Ignore text, html, files.
+
+
+            RouteTable.Routes.MapRoute("img", "img/{collection}/{documentId}",
+                   new { action = "Index", controller = "img" });
+            RouteTable.Routes.MapRoute("download", "download/{collection}/{documentId}",
+                     new { action = "Download", controller = "img" });
+
+            RouteTable.Routes.IgnoreRoute("scripts/{*.pathInfo}");
+
+            RouteTable.Routes.MapRoute("auth", "auth/{action}",
+                new { action = "Index", controller = "auth" });
+
+            RouteTable.Routes.MapRoute("login", "auth",
+                new { action = "Index", controller = "auth" });
+
+            RouteTable.Routes.MapRoute("RIA", "{*url}",
+                new { action = "Index", controller = "home" });
+
             routes.IgnoreRoute("{file}.txt");
             routes.IgnoreRoute("{file}.htm");
             routes.IgnoreRoute("{file}.html");
@@ -110,19 +127,7 @@ namespace Mozu.SiteBuilder.UX.Admin
             routes.MapRoute("img3", "img/{collection}/{documentId}",
                     new { action = "Index", controller = "img" });
 
-            routes.Insert(0, new Route("apitest/index", new TestClientIndexRouteHandler()));
-
-            routes.MapRoute(
-                "Default", // Route name
-                "{controller}/{action}/{id}", // URL with parameters
-                new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
-            );
-
-            routes.MapRoute(
-                "Locale", // Route name
-                "{controller}/{action}", // URL with parameters
-                new { controller = "Home", action = "Locale" } // Parameter defaults
-            );
+            //routes.Insert(0, new Route("apitest/index", new TestClientIndexRouteHandler()));
         }
 
         class HackApiHttpActionSelector : ApiControllerActionSelector
