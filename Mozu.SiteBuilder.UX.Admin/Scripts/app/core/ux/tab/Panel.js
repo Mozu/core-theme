@@ -9,12 +9,12 @@ Ext.define('Taco.core.ux.tab.Panel', {
     alias: 'widget.formtabpanel',
 
     componentCls: Taco.baseCSSPrefix + 'form-tab-panel',
-    defaults: {
-        bubbleEvents: ['activate', 'deactivate', 'validitychange'],
-        closable: true,
-        header: false,
-        overflowY: 'auto'
-    },
+    // defaults: {
+    //     bubbleEvents: ['activate', 'deactivate', 'validitychange'],
+    //     closable: true,
+    //     header: false,
+    //     overflowY: 'auto'
+    // },
     layout: {
         type: 'card'
     },
@@ -28,6 +28,8 @@ Ext.define('Taco.core.ux.tab.Panel', {
         var me = this,
             lbar,
             tbar;
+
+        this.defaults = this.setDefaults;
 
         if (this.navigation) {
             lbar = Ext.create('Ext.Container', {
@@ -140,11 +142,30 @@ Ext.define('Taco.core.ux.tab.Panel', {
         return valid;
     },
 
+    onRemove: function (card, autoDestroy) {
+        var tab = card.tab;
+
+        if (this.rendered && this.tbar) {
+            this.tbar.remove(tab);
+        }
+    },
+
     setActiveItem: function (newCard) {
         var layout = this.getLayout();
 
         layout.setActiveItem(newCard);
 
         return newCard;
+    },
+
+    setDefaults: function (item) {
+        var defaults = {
+            bubbleEvents: Ext.Array.merge(item.bubbleEvents || [], ['activate', 'add', 'deactivate', 'remove', 'validitychange']),
+            closable: true,
+            header: false,
+            overflowY: 'auto'
+        };
+
+        return defaults;
     }
 });
