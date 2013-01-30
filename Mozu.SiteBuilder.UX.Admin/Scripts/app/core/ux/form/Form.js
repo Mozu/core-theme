@@ -3,10 +3,10 @@
  */
 Ext.define('Taco.core.ux.form.Form', {
     extend: 'Ext.form.Panel',
-    alias: 'widget.formeditor2',
+    alias: 'widget.formform',
     requires: ['Taco.core.ux.form.Tasks', 'Taco.core.ux.form.StepContainer'],
 
-    componentCls: Taco.baseCSSPrefix + 'formeditor',
+    componentCls: Taco.baseCSSPrefix + 'formform',
 
     model: '',
     storeType: '',
@@ -15,10 +15,10 @@ Ext.define('Taco.core.ux.form.Form', {
     mixins: {
         formInterface: 'Taco.core.ux.form.Interface'
     },
-    editor: null,
-    isFormEditor: true,
-    isEditorContainer: false,
-    editors: null,
+    form: null,
+    isFormForm: true,
+    isFormContainer: false,
+    forms: null,
     savableState: false,
     formCfg: null,
     trackResetOnLoad: true,
@@ -27,7 +27,7 @@ Ext.define('Taco.core.ux.form.Form', {
 
     initComponent: function () {
 
-        var editorCfg = {
+        var formCfg = {
             record: this.record
         };
 
@@ -75,30 +75,34 @@ Ext.define('Taco.core.ux.form.Form', {
         }
 
         Ext.each(this.items, function (item) {
-            if (!item.isFormEditor) {
+            if (!item.isFormForm) {
                 return;
             }
-            Ext.applyIf(item, editorCfg);
+            // Don't override models that have already been set manually
+            if (item.record && item.record.isModel) {
+                return;
+            }
+            Ext.applyIf(item, formCfg);
         }, this);
 
-        Ext.each(this.editors, function (editor) {
-            if (typeof editor === 'string') {
-                editor = Ext.create(editor, editorCfg);
+        Ext.each(this.forms, function (form) {
+            if (typeof form === 'string') {
+                form = Ext.create(form, formCfg);
             }
-            this.items.push(editor);
+            this.items.push(form);
         }, this);
 
         this.saveTasks = Ext.create('Taco.core.ux.form.Tasks');
 
         this.callParent(arguments);
 
-        this.editors = [];
+        this.forms = [];
 
         this.trackFields();
 
-        //this.editors = editors;
+        //this.forms = forms;
 
-        this.loadEditor();
+        this.loadForm();
 
         this.on({
             change: this.savableStateCheck,
@@ -134,29 +138,29 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     checkFields: function (container, cmp) {
-        if (container !== this && container.up('[isFormEditor]') !== this) {
+        if (container !== this && container.up('[isFormForm]') !== this) {
             return;
         }
         this.trackFields();
     },
 
     trackFields: function () {
-        Ext.each(this.query('[isFormEditor],[isFormField]'), function (cmp) {
-            if(cmp.isTrackedField || cmp.up('[isFormEditor]') !== this) {
+        Ext.each(this.query('[isFormForm],[isFormField]'), function (cmp) {
+            if(cmp.isTrackedField || cmp.up('[isFormForm]') !== this) {
                 return;
             }
 
             this.relayEvents(cmp, ['change']);
             cmp.isTrackedField = true;
 
-            if (!cmp.isFormEditor) {
+            if (!cmp.isFormForm) {
                 return;
             }
 
             this.relayEvents(cmp, ['savablestatechange']);
 
-            this.isEditorContainer = true;
-            this.editors.push(cmp);
+            this.isFormContainer = true;
+            this.forms.push(cmp);
         }, this);
     },
 
@@ -193,32 +197,38 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     save: function () {
-        Ext.each(this.editors, function (editor) {
-            editor.addSaveTasks(this.saveTasks);
+        Ext.each(this.forms, function (form) {
+            form.addSaveTasks(this.saveTasks);
         }, this);
 
         this.addSaveTasks(this.saveTasks);
         this.saveTasks.execute();
     },
 
-    loadEditor: function () {
-        if (!this.record) {
+    loadForm: function (record, noCascade) {
+        if (!record) {
+            record = this.record;
+        }
+
+        if (!record) {
             return;
         }
 
-        if (!this.fireEvent('beforeload', this, this.record)) {
+        if (!this.fireEvent('beforeload', this, record)) {
             return;
         }
 
-        this.loadRecord(this.record);
+        this.loadRecord(record);
 
-        Ext.each(this.editors, function (editor) {
-            editor.loadEditor();
-        });
+        if (!noCascade) {
+            Ext.each(this.forms, function (form) {
+                form.loadForm(record);
+            });
+        }
 
         this.initTitle();
 
-        this.fireEvent('afterload', this, this.record);
+        this.fireEvent('afterload', this, record);
     },
 
     initTitle: function () {
@@ -249,13 +259,13 @@ Ext.define('Taco.core.ux.form.Form', {
 
     //  TODO: Refactor to Update Record
     /**
-     * Updates the model bound to the form and calls update() on each editor in editors.
+     * Updates the model bound to the form and calls update() on each form in forms.
      */
     update: function () {
         this.getForm().updateRecord(this.record);
 
-        Ext.each(this.editors, function (editor) {
-            editor.update();
+        Ext.each(this.forms, function (form) {
+            form.update();
         });
     },
 
@@ -266,8 +276,8 @@ Ext.define('Taco.core.ux.form.Form', {
             return true;
         }
 
-        Ext.each(this.editors, function (editor) {
-            if (editor.isDirty()) {
+        Ext.each(this.forms, function (form) {
+            if (form.isDirty()) {
                 isDirty = true;
                 return false;
             }
@@ -366,7 +376,7 @@ Ext.define('Taco.core.ux.form.Form', {
         fields = this.query('[isFormField]');
 
         Ext.each(fields, function (field) {
-            if(field.up('[isFormEditor]') !== this) {
+            if(field.up('[isFormForm]') !== this) {
                 return;
             }
 
