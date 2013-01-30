@@ -1,46 +1,146 @@
-﻿using Mozu.SiteBuilder.Mvc;
+﻿using System.Reflection;
+using Autofac;
+using Mozu.Core.Api;
+using Mozu.Core.Logging;
+using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Configuration;
 using System.Web.Routing;
 using System.Web.Mvc;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using System.Web;
 using System;
+using System.IO;
+using Mozu.Tenant.Contracts.Clients;
+using Volusion.SiteBuilder.UX.Models;
 
 namespace Mozu.SiteBuilder.UX
 {
-    // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
-    // visit http://go.microsoft.com/?LinkId=9394801
-
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : WebApiApplicationBase
     {
-
-        protected void Application_Start()
+        protected override void PreApplicationStart()
         {
-            ApplicationBootstrapper.Bootstrap();
+            LogStartupMessage<MvcApplication>("Mozu.SiteBuilder.UX");
         }
-        protected void Application_BeginRequest (object sender, System.EventArgs e )
-        {
 
-           
+        protected override void InitializeLoggingServiceFactory()
+        {
+            // No additional hooks needed here, just use base implementation
+            base.InitializeLoggingServiceFactory();
         }
+
+        protected override void InitializeAutoMapperProfiles()
+        {
+            // No additional hooks needed here, just use base implementation
+            base.InitializeAutoMapperProfiles();
+        }
+
+        protected override void AddMessageHandlers()
+        {
+            // No additional hooks needed here, just use base implementation
+            base.AddMessageHandlers();
+        }
+
+        protected override void InitializeContainerFactory(Core.Configuration.AutofacContainerFactory containerFactory)
+        {
+            containerFactory.UsingAssembly(Assembly.Load("Mozu.Core.Api"))
+                .UsingAssembly(typeof(ISitesWebApiClient).Assembly)
+                .UsingAssembly(typeof(IStartUpTask).Assembly)
+                .UsingAssembly(typeof(IPermissionsRepository).Assembly)
+                .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc"))
+                .UsingAssembly(Assembly.GetExecutingAssembly())
+                ;
+        }
+
+        protected override void ApplicationStart()
+        {
+            RegisterMvcRoutes(RouteTable.Routes);
+        }
+
+        private void RegisterMvcRoutes(RouteCollection routes)
+        {
+            // Content Routes
+
+            routes.MapRoute("resources",
+                "resources/{action}/{*pathInfo}",
+                new { controller = "Resource", Action = "script", pathInfo = UrlParameter.Optional });
+
+            routes.MapRoute("legacyContent",
+                 "v/{*pathInfo}",
+                 new { controller = "Resource", Action = "LegacyStoreContent", pathInfo = UrlParameter.Optional });
+
+            // Ignore text, html, files.
+            routes.IgnoreRoute("{file}.txt");
+            routes.IgnoreRoute("{file}.htm");
+            routes.IgnoreRoute("{file}.html");
+
+            // Ignore axd files such as assest, image, sitemap etc
+            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+            routes.MapRoute(
+                "Default", // Route name
+                "{controller}/{action}/{id}", // URL with parameters
+                new { controller = "home", action = "Index", area = "StoreFront", id = UrlParameter.Optional } // Parameter defaults
+            );
+            routes.IgnoreRoute("favicon.ico");
+
+            // Web Tools routes
+
+            routes.MapRoute(
+                "Robots",
+                "robots.txt",
+                new { controller = "Home", action = "RobotsTxt" });
+
+            routes.MapRoute(
+                "GoogleSiteVerification",
+                "google{hash}.html",
+                new { controller = "Home", action = "GoogleSiteVerification" },
+                new { hash = @"[a-f0-9]{16}" }
+                );
+
+            // RIA Routes
+
+            routes.MapRoute("img", "img/{collection}/{documentId}",
+                    new { action = "Index", controller = "img" });
+            routes.MapRoute("download", "download/{collection}/{documentId}",
+                     new { action = "Download", controller = "img" });
+
+            routes.IgnoreRoute("scripts/{*.pathInfo}");
+
+            routes.MapRoute("auth", "auth/{action}",
+                new { action = "Index", controller = "auth" });
+
+            routes.MapRoute("login", "auth",
+                new { action = "Index", controller = "auth" });
+
+            routes.MapRoute("RIA", "{*url}",
+                new { action = "Index", controller = "home" });
+        }
+
+        protected override void RegisterControllerRoutes()
+        {
+            // Just fallback to base class
+            base.RegisterControllerRoutes();
+        }
+
         protected void Application_EndRequest()
         {
             if (Context.Response.StatusCode == 404)
             {
-                if ( Context.Request.RawUrl.IndexOf ("favicon" , StringComparison.OrdinalIgnoreCase )>-1)
-                {
-                    return ;
-                }
-                if (System.IO.Path.GetExtension(Context.Request.Path).Length > 0)
+                if (Context.Request.RawUrl.IndexOf ("favicon" , StringComparison.OrdinalIgnoreCase ) > -1)
                 {
                     return;
                 }
-                if ( Context.Request.RawUrl.IndexOf ( "404") > -1 )
+                if (Path.GetExtension(Context.Request.Path).Length > 0)
                 {
-                    return ;
+                    return;
+                }
+                if (Context.Request.RawUrl.IndexOf("404") > -1)
+                {
+                    return;
                 }
 
-                Context.Response.RedirectToRoute ("StoreFront_404");
+                Context.Response.RedirectToRoute("StoreFront_404");
             }
         }
     }
