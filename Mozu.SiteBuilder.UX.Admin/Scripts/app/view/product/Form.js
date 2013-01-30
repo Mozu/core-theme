@@ -13,22 +13,45 @@ Ext.define('Taco.view.product.Form', {
 
     layout: 'fit',
 
-    initComponent: function () {
+    isSingleSite: true,
+
+    initComponent: function() {
+
+        this.inSitesStore = this.record.productInSitesStore();
+
+        this.stores = [this.inSitesStore];
+
+        this.globalForm = Ext.create('Taco.view.product.GlobalForm', {
+            record: this.record
+        });
+
+        this.siteForms = [];
+
+        this.isSingleSite = this.singleSiteCheck();
+
+        this.inSitesStore.data.each(function (info) {
+            this.siteForms.push(Ext.create('Taco.view.product.SiteForm', {
+                title: 'SiteID: ' + info.get('siteId'),
+                isSingleSite: this.isSingleSite,
+                record: info
+            }));
+        }, this);
+
+        var items = this.siteForms.slice(0);
+
+        items.unshift(this.globalForm);
+
         this.tabpanel = Ext.create('Taco.core.ux.tab.Panel', {
             navigation: true,
-            items: [{
-                xtype: 'productglobalform'
-            }, {
-                xtype: 'productsiteform'
-            }, {
-                xtype: 'productsiteform',
-                title: 'Site Form w/ Overrides',
-                allowOverrides: true
-            }]
+            items: items
         });
 
         this.items = [this.tabpanel];
 
-        this.callParent( arguments );
+        this.callParent(arguments);
+    },
+
+    singleSiteCheck: function () {
+        return this.inSitesStore.data.length === 1;
     }
 });

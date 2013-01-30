@@ -17,17 +17,13 @@ Ext.define('Taco.view.product.SiteForm', {
         'Taco.view.product.subform.Merchandising',
         'Taco.view.product.subform.SEO'
     ],
-    // mixins: {
-    //     scrollspy: 'Taco.core.ux.ScrollSpy' // TODO: resolve JS error with this and getEl()
-    // },
-    scrollSpyOffset: 150,
     // id: "productSingleSiteForm",
     title: 'Site Form', // *** For tab title
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'single-site-admin-form'],
 
     initComponent: function () {
         this.defaults = this.defaults || {};
-        this.defaults.allowOverrides = this.allowOverrides;
+        this.defaults.isSingleSite = this.isSingleSite;
 
         this.items = [
             {
@@ -52,7 +48,7 @@ Ext.define('Taco.view.product.SiteForm', {
         this.callParent(arguments);
 
         // *** Enable override frames where applicable
-        if( this.allowOverrides ) {
+        if(!this.isSingleSite) {
             // *** Get an array of all Override Containers (containers with xtype: override)
             var overrides = this.query('override');
 
@@ -61,11 +57,5 @@ Ext.define('Taco.view.product.SiteForm', {
                 overrideContainer.addCls('active').disable( true );
             });
         }
-    },
-
-    constructor: function () {
-        this.callParent(arguments);
-        // ExtJs does not call mixin constructors, because it is bad and should feel bad
-        // this.mixins.scrollspy.constructor.call(this); // TODO: uncomment this when scrollspy works
     }
 });
