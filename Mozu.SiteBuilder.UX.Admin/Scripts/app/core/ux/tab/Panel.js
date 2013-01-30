@@ -9,9 +9,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
     alias: 'widget.formtabpanel',
 
     componentCls: Taco.baseCSSPrefix + 'form-tab-panel',
-    layout: {
-        type: 'card'
-    },
+    layout: { type: 'card' },
 
     activeItemCls: Taco.baseCSSPrefix + 'form-card-active',
     activeTabCls: Taco.baseCSSPrefix + 'form-tab-active',
@@ -25,6 +23,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
         if (this.navigation) {
             lbar = Ext.create('Ext.Container', {
+                componentCls: Taco.baseCSSPrefix + 'form-card-nav',
                 width: 160,
                 items: []
             });
@@ -47,10 +46,16 @@ Ext.define('Taco.core.ux.tab.Panel', {
         this.tbar = tbar;
 
         if (this.navigation) {
-            this.lbar.add(this.initNavigation());
+            this.updateNavigation();
         }
 
         this.tbar.add(this.initTabs(this.items));
+    },
+
+    getActiveItem: function () {
+        var layout = this.getLayout();
+
+        return layout.getActiveItem();
     },
 
     initCard: function (card) {
@@ -67,18 +72,6 @@ Ext.define('Taco.core.ux.tab.Panel', {
             validitychange: this.onCardValidityChange,
             scope: this
         });
-    },
-
-    initNavigation: function () {
-        var links = [];
-
-        links.push({
-            xtype: 'component',
-            width: 160,
-            html: 'sidebar'
-        });
-
-        return links;
     },
 
     initTabs: function (items) {
@@ -120,6 +113,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
         card.addCls(this.activeItemCls);
         tab.addCls(tab.activeCls);
+        this.updateNavigation();
 
         return card;
     },
@@ -159,5 +153,36 @@ Ext.define('Taco.core.ux.tab.Panel', {
         layout.setActiveItem(newCard);
 
         return newCard;
+    },
+
+    scrollCard: function (card, item) {
+        var cardEl = card.body || card.getEl(),
+            itemEl = item.getEl();
+
+        cardEl.scrollBy(0, itemEl.getY() - cardEl.getY(), true);
+    },
+
+    updateNavigation: function () {
+        var card = this.getActiveItem(),
+            links = [];
+
+        card.items.each(function (item) {
+            links.push({
+                xtype: 'component',
+                componentCls: Taco.baseCSSPrefix + 'form-card-nav-link',
+                target: item,
+                html: item.title,
+                listeners: {
+                    click: {
+                        scope: this,
+                        element: 'el',
+                        fn: function () { this.scrollCard(card, item); }
+                    }
+                }
+            });
+        }, this);
+
+        this.lbar.removeAll();
+        this.lbar.add(links);
     }
 });
