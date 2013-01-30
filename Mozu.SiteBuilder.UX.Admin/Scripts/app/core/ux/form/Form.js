@@ -232,7 +232,7 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     initTitle: function () {
-        var tplInput = (this.isEdit() ? this.editTitle : this.createTitle) || this.title,
+        var tplInput = this.title || (this.isEdit() ? this.editTitle : this.createTitle),
             data = Ext.applyIf({
                 record: this.record
             }, this.titleData),
