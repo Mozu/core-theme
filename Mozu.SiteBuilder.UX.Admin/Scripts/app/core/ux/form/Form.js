@@ -24,6 +24,7 @@ Ext.define('Taco.core.ux.form.Form', {
     trackResetOnLoad: true,
     createTitle: 'Create',
     editTitle: 'Edit',
+    persisteChangesToModel: false,
 
     initComponent: function () {
 
@@ -105,7 +106,16 @@ Ext.define('Taco.core.ux.form.Form', {
         this.loadForm();
 
         this.on({
-            change: this.savableStateCheck,
+            change: function (field, newValue) {
+                this.savableStateCheck();
+                
+                if (!this.persisteChangesToModel) {
+                    return;
+                }
+
+                this.record.set(field.name, newValue);
+
+            },
             validitychange: this.savableStateCheck,
             dirtychange: this.savableStateCheck,
             add: this.checkFields,
