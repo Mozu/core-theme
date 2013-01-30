@@ -13,7 +13,9 @@ Ext.define('Taco.model.Behavior', {
         },
         {
             name: 'checked',
-            type: 'boolean'
+            type: 'boolean',
+            useNull: true,
+            defaultValue:null
         },
         {
             name: 'roleId',
