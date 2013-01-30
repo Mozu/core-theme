@@ -44,7 +44,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PackageHeight, op => op.MapFrom(dc => dc.PackageHeight == null ? null : dc.PackageHeight.Value))
                 .ForMember(x => x.PackageLength, op => op.MapFrom(dc => dc.PackageLength == null ? null : dc.PackageLength.Value))
                 .ForMember(x => x.PackageWidth, op => op.MapFrom(dc => dc.PackageWidth == null ? null : dc.PackageWidth.Value))
-                .ForMember(x => x.ProductInSites, op => op.MapFrom(dc => dc.ProductInSites));
+                .ForMember(x => x.MetaTagTitle, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagTitle))
+                .ForMember(x => x.MetaTagDescription, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagDescription))
+                .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
+                .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
+                .ForMember(x => x.ProductInSites, op => op.MapFrom(dc => dc.ProductInSites))
+                ;
 
             Mapper.CreateMap<Product, DC.Product>()
                 .ForMember(dc => dc.ProductCode, op => op.MapFrom(p => p.ProductCode))
@@ -69,18 +74,54 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PackageHeight, op => op.MapFrom(x => new Measurement { Unit = "in", Value = x.PackageHeight }))
                 .ForMember(x => x.PackageLength, op => op.MapFrom(x => new Measurement { Unit = "in", Value = x.PackageLength }))
                 .ForMember(x => x.PackageWidth, op => op.MapFrom(x => new Measurement { Unit = "in", Value = x.PackageWidth }))
-                .ForMember(x => x.PackageWeight, op => op.MapFrom(x => new Measurement { Unit = "lbs", Value = x.PackageWeight }));
+                .ForMember(x => x.PackageWeight, op => op.MapFrom(x => new Measurement { Unit = "lbs", Value = x.PackageWeight }))
+                ;
 
             Mapper.CreateMap<DC.ProductInSiteInfo, ProductInSiteInfo>()
-                .ForMember(x => x.isContentOverriden, op => op.MapFrom(dc => dc.IsContentOverridden))
+                .ForMember(x => x.SiteId, op => op.MapFrom(dc => dc.SiteId))
+                .ForMember(x => x.IsContentOverridden, op => op.MapFrom(dc => dc.IsContentOverridden))
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))
                 .ForMember(x => x.ShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
                 .ForMember(x => x.FullDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
                 .ForMember(x => x.IsPriceOverriden, op => op.MapFrom(dc => dc.IsPriceOverridden))
                 .ForMember(x => x.Price, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).Price))
                 .ForMember(x => x.SalePrice, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).SalePrice))
+                .ForMember(x => x.IsSEOContentOverridden, op => op.MapFrom(dc => dc.IsSEOContentOverridden))
+                .ForMember(x => x.MetaTagTitle, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagTitle))
+                .ForMember(x => x.MetaTagDescription, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagDescription))
+                .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
+                .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
                 ;
 
+            Mapper.CreateMap<ProductInSiteInfo, DC.ProductInSiteInfo>()
+                .ForMember(dc => dc.IsContentOverridden, op => op.MapFrom(piso => piso.IsContentOverridden))
+                .ForMember(dc => dc.Content, op => op.MapFrom(piso =>
+                    new DC.ProductLocalizedContent
+                    {
+                        ProductName = piso.ProductName,
+                        ProductShortDescription = piso.ShortDescription,
+                        ProductFullDescription = piso.FullDescription
+                    }
+                ))
+                .ForMember(dc => dc.Price, op => op.MapFrom(p =>
+                    new DC.ProductPrice
+                    {
+                        ISOCurrencyCode = "USD",
+                        // ListPrice = p.ListPrice,
+                        Price = p.Price,
+                        SalePrice = p.SalePrice
+                    }
+                ))
+                .ForMember(dc => dc.SEOContent, op => op.MapFrom(piso =>
+                    new DC.ProductLocalizedSEOContent
+                    {
+                        MetaTagTitle = piso.MetaTagTitle,
+                        MetaTagDescription = piso.MetaTagDescription,
+                        MetaTagKeywords = piso.MetaTagKeywords,
+                        SEOFriendlyUrl = piso.SEOFriendlyUrl
+                    }
+                ))
+                ;
 
             Mapper.CreateMap<DC.Product, OldProduct>()
                   .ForMember(x => x.ContentLocaleCode,
