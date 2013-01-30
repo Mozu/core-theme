@@ -60,8 +60,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _ctx = ctx;
         }
 
+        public override Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Web.Http.Controllers.HttpControllerContext controllerContext, System.Threading.CancellationToken cancellationToken)
+        {
+            return base.ExecuteAsync(controllerContext, cancellationToken);
+        }
+
         [WebGet(UriTemplate = "list")]
-        public Task<Response<List<Product>>> GetProductList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public Task<Response<List<Product>>> Blargh([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             // our in-memory product repository
             List<DC.Product> productRepo = ProductRepository;
