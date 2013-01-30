@@ -30,7 +30,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class ProductInSiteInfoController : BaseController
     {
         private readonly IProductWebApiClient _productClient;
-        private IApiContext _ctx;
 
         /// <summary>
         /// Public constructor.
@@ -51,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return EmptyList<ProductInSiteInfo>();
             }
 
-            DC.Product product = _productClient.GetProductByProductCode(pagingParams.id, null).Result.ReadAsSync();
+            DC.Product product = _productClient.GetProductByProductCode(pagingParams.id, null).Result.ReadAsAsync().Result;
 
             if (pagingParams.id != null)
             {
@@ -60,6 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List(Mapper.Map<ProductInSiteInfo>(pisi));
             }
 
+            // TODO: we don't do anything with these
             string filter = OldProductController.CreateFilter(extFilter);
             string sort = OldProductController.CreateSort(pagingParams);
 
@@ -74,24 +74,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "create")]
-        public Task<Response<List<ProductInSiteInfo>>> CreateProductInSiteInfo(List<ProductInSiteInfo> pisos)
+        public Task<Response<List<ProductInSiteInfo>>> CreateProductInSiteInfo(List<ProductInSiteInfo> pisis)
         {
             List<ProductInSiteInfo> returned = new List<ProductInSiteInfo>();
 
-            foreach (ProductInSiteInfo piso in pisos)
+            foreach (ProductInSiteInfo pisi in pisis)
             {
-                DC.ProductInSiteInfo dcpiso = Mapper.Map<DC.ProductInSiteInfo>(piso);
+                DC.ProductInSiteInfo dcpisi = Mapper.Map<DC.ProductInSiteInfo>(pisi);
 
-                DC.Product p = _productClient.GetProductByProductCode(piso.ProductCode, null).Result.ReadAsSync();
+                string productCode = pisi.ProductCode;
+                DC.Product p = _productClient.GetProductByProductCode(productCode, null).Result.ReadAsAsync().Result;
 
                 if (p == null)
-                    throw new ArgumentException("Product not found: " + piso.ProductCode);
-                p.ProductInSites.Add(dcpiso);
+                    throw new ArgumentException("Product not found: " + pisi.ProductCode);
 
-                ProductInSiteInfo returnedPisi = Mapper.Map<ProductInSiteInfo>(dcpiso);
+                if (p.ProductInSites == null)
+                    p.ProductInSites = new List<DC.ProductInSiteInfo>(1);
+
+                p.ProductInSites.Add(dcpisi);
+
+                DC.Product returnedProduct = _productClient.UpdateProduct(p, productCode).Result.ReadAsAsync().Result;
+
+                DC.ProductInSiteInfo returnedDcPisi = returnedProduct.ProductInSites.First(x => x.SiteId == pisi.SiteId);
+                ProductInSiteInfo returnedPisi = Mapper.Map<ProductInSiteInfo>(returnedDcPisi);
                 
                 // inject ProductCode into the return object. ExtJS needs this.
-                returnedPisi.ProductCode = piso.ProductCode;
+                returnedPisi.ProductCode = pisi.ProductCode;
 
                 returned.Add(returnedPisi);
             }
@@ -101,26 +109,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [WebInvoke(UriTemplate = "edit")]
-        public Task<Response<List<Product>>> EditProduct(List<ProductInSiteInfo> pisos)
+        public Task<Response<List<Product>>> EditProduct(List<ProductInSiteInfo> pisis)
         {
             List<ProductInSiteInfo> returned = new List<ProductInSiteInfo>();
 
-            foreach (ProductInSiteInfo pisi in pisos)
+            foreach (ProductInSiteInfo pisi in pisis)
             {
-                DC.ProductInSiteInfo dcpiso = Mapper.Map<DC.ProductInSiteInfo>(pisi);
+                DC.ProductInSiteInfo dcpisi = Mapper.Map<DC.ProductInSiteInfo>(pisi);
 
-                DC.Product p = _productClient.GetProductByProductCode(pisi.ProductCode, null).Result.ReadAsSync();
+                DC.Product p = _productClient.GetProductByProductCode(pisi.ProductCode, null).Result.ReadAsAsync().Result;
                 if (p == null)
                     throw new ArgumentException("Product not found: " + pisi.ProductCode);
 
-                int existingPisoIndex = p.ProductInSites.FindIndex(x => x.SiteId == dcpiso.SiteId);
+                int existingPisoIndex = p.ProductInSites.FindIndex(x => x.SiteId == dcpisi.SiteId);
                 if (existingPisoIndex >= 0)
-                    p.ProductInSites[existingPisoIndex] = dcpiso;
+                    p.ProductInSites[existingPisoIndex] = dcpisi;
                 else
-                    p.ProductInSites.Add(dcpiso);
+                    throw new ArgumentException("ProductInSiteInfo not found. Product: " + p.ProductCode + ". Site ID: " + pisi.SiteId);
 
-                ProductInSiteInfo returnedPisi = Mapper.Map<ProductInSiteInfo>(dcpiso);
-                p.ProductInSites.Add(dcpiso);
+                ProductInSiteInfo returnedPisi = Mapper.Map<ProductInSiteInfo>(dcpisi);
+                p.ProductInSites.Add(dcpisi);
             }
 
             return null;
