@@ -511,7 +511,7 @@
     <Content Include="Scripts\app\view\product\SingleSiteForm.js" />
     <Content Include="Scripts\app\view\product\SiteForm.js" />
     <Content Include="Scripts\app\view\product\subform\Categories.js" />
-    <Content Include="Scripts\app\view\product\subform\OverrideContainer.js" />
+    <Content Include="Scripts\app\view\product\subform\OverrideForm.js" />
     <Content Include="Scripts\app\view\product\subform\SEO.js" />
     <Content Include="Scripts\app\view\product\subform\Merchandising.js" />
     <Content Include="Scripts\app\view\product\subform\Shipping.js" />

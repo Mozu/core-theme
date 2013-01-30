@@ -116,19 +116,6 @@ Ext.define('Taco.core.ux.form.Form', {
 
         this.validateModel();
 
-        // this.on({
-        //     afterrender: {
-        //         fn: function () {
-        //             var header = this.getHeader();
-
-        //             if (header) {
-        //                 header.hide();
-        //             }
-        //         },
-        //         scope: this
-        //     }
-        // });
-
         this.saveTasks.on({
             complete: function () {
                 this.fireEvent('savesuccess', this);
@@ -162,6 +149,12 @@ Ext.define('Taco.core.ux.form.Form', {
             this.isFormContainer = true;
             this.forms.push(cmp);
         }, this);
+    },
+
+    setReadOnly: function (readOnly) {
+        Ext.each(this.query('[isFormField]'), function (cmp) {
+            this.setReadOnly(readOnly);
+        });
     },
 
     addStore: function (store) {

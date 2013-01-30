@@ -10,7 +10,11 @@ Ext.define('Taco.view.product.subform.General', {
     title: 'General',
 
     initComponent: function () {
-        this.defaults.width = 200;
+        this.defaults = {
+            width: 200,
+            product: this.product,
+            productInSiteInfo: this.productInSiteInfo
+        };
 
         this.items = [{
             fieldLabel: 'Code',
@@ -19,7 +23,8 @@ Ext.define('Taco.view.product.subform.General', {
             required: true,
             width: 200
         }, {
-            xtype: 'override',
+            xtype: 'productoverride',
+            overrideFieldName: 'isContentOverridden',
             width: '100%',
             items: [{
                 fieldLabel: 'Name',
@@ -36,8 +41,9 @@ Ext.define('Taco.view.product.subform.General', {
                 required: true
             }]
         }, {
-            xtype: 'override',
+            xtype: 'productoverride',
             width: '100%',
+            overrideFieldName: 'isPriceOverridden',
             defaults: {
                 width: 200
             },

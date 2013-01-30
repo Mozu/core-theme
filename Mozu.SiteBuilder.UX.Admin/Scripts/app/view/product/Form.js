@@ -11,6 +11,8 @@ Ext.define('Taco.view.product.Form', {
         'Taco.view.product.SiteForm'
     ],
 
+    id: 'taco',
+
     layout: 'fit',
 
     isSingleSite: true,
@@ -31,9 +33,10 @@ Ext.define('Taco.view.product.Form', {
 
         this.inSitesStore.data.each(function (info) {
             this.siteForms.push(Ext.create('Taco.view.product.SiteForm', {
-                title: 'SiteID: ' + info.get('siteId'),
                 isSingleSite: this.isSingleSite,
-                record: info
+                record: info,
+                product: this.record,
+                productInSiteInfo: info
             }));
         }, this);
 
@@ -53,5 +56,19 @@ Ext.define('Taco.view.product.Form', {
 
     singleSiteCheck: function () {
         return this.inSitesStore.data.length === 1;
+    },
+
+    addSite: function (siteId) {
+        var siteInfo = Ext.create('Taco.model.ProductInSiteInfo', {
+            siteId: siteId
+        });
+        this.inSitesStore.add(siteInfo);
+        
+        var wasSingleSite = this.isSingleSite;
+
+        var siteForm = Ext.create('Taco.view.product.SiteForm', {
+            
+        })
+        this.tabpanel.add(Ext.create('Ta'))
     }
 });
