@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public Task<Response<List<Product>>> CreateProduct(List<Product> products)
         {
             // our in-memory product repository
-            List<DC.Product> productRepo = (List<DC.Product>)HttpRuntime.Cache.Get(PRODUCTS_CACHE_FORMAT_STRING);
+            List<DC.Product> productRepo = ProductRepository;
 
             List<Product> createdProducts = new List<Product>(products.Count);
             foreach (Product p in products)
@@ -137,6 +137,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "edit?id={id}")]
         public Task<Response<List<Product>>> EditProduct(List<Product> products, int? id = null)
         {
+            throw new NotImplementedException();
+
             List<Product> updatedProducts = new List<Product>(products.Count);
             foreach (Product p in products)
             {
@@ -197,6 +199,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
 
             repo.AddRange(new[] { p1, p2 });
+        }
+
+        /// <summary>
+        /// Allows ProductInSiteInfoController to get to our in-memory products.
+        /// </summary>
+        internal static DC.Product GetProduct(string productCode, IApiContext ctx)
+        {
+            string key = String.Format(PRODUCTS_CACHE_FORMAT_STRING, ctx.TenantId);
+
+            // our in-memory product repository
+            List<DC.Product> productRepo = (List<DC.Product>)HttpRuntime.Cache.Get(key);
+
+            if (productRepo.Count == 0)
+                InitializeRepoWithMockData(productRepo, ctx.SiteId.HasValue ? ctx.SiteId.Value : 0);
+
+            return productRepo.FirstOrDefault(p => p.ProductCode == productCode);
         }
     }
 }

@@ -317,6 +317,7 @@
     <Compile Include="Api\BehaviorsController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\CmsDocumentController.cs" />
+    <Compile Include="Api\ProductController.cs" />
     <Compile Include="Api\CustomersController.cs" />
     <Compile Include="Api\DiscountController.cs" />
     <Compile Include="Api\FileManagementController.cs" />
@@ -410,7 +411,7 @@
     <Compile Include="Api\PageTypeDefinitionController.cs" />
     <Compile Include="Api\CheckoutSettingsController.cs" />
     <Compile Include="Api\PhoneOrderController.cs" />
-    <Compile Include="Api\ProductController.cs">
+    <Compile Include="Api\ProductInSiteInfoController.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Api\RolesController.cs" />
