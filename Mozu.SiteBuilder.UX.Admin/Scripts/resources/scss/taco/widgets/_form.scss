@@ -2005,43 +2005,15 @@
     }
   }
 
-  // .#{$prefix}tab-bar-taco-plain-top {
-  //   border: 0px none;
-  //   @include background(none $color-neutral-white);
+  .#{$vprefix}form-card-nav {
+    .#{$vprefix}form-card-nav-link {
+      cursor: pointer;
+      margin-bottom: 20px;
+      padding: 2px 28px 0px;
 
-  //   .#{$prefix}tab-bar-body {
-  //     &.#{$prefix}tab-bar-body-taco {
-  //       border: 0px none;
-  //       height: 40px;
-  //       padding: 0px;
-  //       @include box-shadow(inset 0px -1px $color-grid-border-light);
-  //     }
-  //   }
-
-  //   .#{$prefix}tab-bar-strip {
-  //     border: 0px none;
-  //     display: none;
-  //     height: 0px;
-  //     padding: 0px;
-  //   }
-
-  //   .#{$prefix}tab-taco-top {
-  //     border: 1px solid $color-grid-border-light;
-  //     height: 40px;
-  //     @include background(none $color-neutral-white);
-  //     @include border-radius(3px 3px 0px 0px);
-
-  //     em {
-  //       padding: 0px 28px;
-  //     }
-  //     button {
-  //       color: $color;
-  //       font-weight: normal;
-  //     }
-  //   }
-  //   .#{$prefix}tab-taco-top-active {
-  //     background-color: $color-neutral-lightest;
-  //     border-bottom-color: $color-neutral-lightest;
-  //   }
-  // }
+      &:hover {
+        color: $color-neutral-black;
+      }
+    }
+  }
 }
