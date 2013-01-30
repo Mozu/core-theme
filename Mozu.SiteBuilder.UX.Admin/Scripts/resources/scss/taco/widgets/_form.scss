@@ -26,6 +26,10 @@
     }
   }
 
+  .#{$prefix}panel-body {
+    font-size: inherit;
+  }
+
   .#{$vprefix}formeditor {
 
     .#{$vprefix}formeditor {
