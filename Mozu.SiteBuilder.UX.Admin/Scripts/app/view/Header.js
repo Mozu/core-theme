@@ -3,7 +3,12 @@
  */
 Ext.define('Taco.view.Header', {
     extend: 'Ext.container.Container',
-    requires: ['Taco.view.navigation.PrimaryMenu', 'Taco.view.navigation.ContextSwitcher', 'Taco.view.navigation.SecondaryMenu', 'Taco.core.ux.action.Action'],
+    requires: [
+        'Taco.view.navigation.PrimaryMenu',
+        'Taco.view.navigation.SecondaryMenu',
+        'Taco.core.ux.action.Action',
+        'Taco.view.navigation.ContextSwitcher'
+    ],
 
     autoEl: {
         tag: 'header',
@@ -44,36 +49,7 @@ Ext.define('Taco.view.Header', {
             ]
         });
 
-        
-        contextSwitcherTrigger = Ext.create('Taco.core.ux.form.SelectField', {
-            name: 'context',
-            fieldLabel: 'Context',
-            hideLabel: true,
-            mode: 'local',
-            valueField: 'urlToken',
-            displayField: 'name',
-            width:300,
-            store: Taco.app.context.getStore(),
-            value: Taco.app.context.getCurrentContext().urlToken,
-            listeners:{
-                change: function(field, newValue, oldValue, eOpts) {
-                    var recordId = field.store.find('urlToken', newValue),
-                        record = field.store.getAt(recordId);
-             
-                    Taco.app.context.setCurrentContext(record.raw);
-                    console.log(newValue, oldValue);
-                },
-                scope:me
-        }
-        });
-        Taco.app.context.on('contextChange', function (taContext, curContext) {
-            if (contextSwitcherTrigger.getValue() != curContext.urlToken) {
-                contextSwitcherTrigger.suspendEvents(false);
-                contextSwitcherTrigger.setValue(curContext.urlToken);
-                contextSwitcherTrigger.resumeEvents();
-            }
-            
-        });
+        contextSwitcherTrigger = Ext.create('Taco.view.navigation.ContextSwitcher');
 
         this.primaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {
             trigger: primaryMenuTrigger,
@@ -117,7 +93,7 @@ Ext.define('Taco.view.Header', {
             items: [primaryMenuTrigger, breadcrumb, contextSwitcherTrigger]
         }];
 
-        this.callParent(arguments);
+        this.callParent( arguments );
 
         breadcrumb.on({
             click: {
