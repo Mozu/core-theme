@@ -49,6 +49,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
                 .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
                 .ForMember(x => x.ProductInSites, op => op.MapFrom(dc => dc.ProductInSites))
+                .AfterMap((x, y) =>
+                    {
+                        if (y.ProductInSites != null)
+                        {
+                            y.ProductInSites.Each(p => p.ProductCode = y.ProductCode);
+                        }
+                    })
                 ;
 
             Mapper.CreateMap<Product, DC.Product>()
@@ -83,7 +90,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))
                 .ForMember(x => x.ShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
                 .ForMember(x => x.FullDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
-                .ForMember(x => x.IsPriceOverriden, op => op.MapFrom(dc => dc.IsPriceOverridden))
+                .ForMember(x => x.IsPriceOverridden, op => op.MapFrom(dc => dc.IsPriceOverridden))
                 .ForMember(x => x.Price, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).Price))
                 .ForMember(x => x.SalePrice, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).SalePrice))
                 .ForMember(x => x.IsSEOContentOverridden, op => op.MapFrom(dc => dc.IsSEOContentOverridden))
