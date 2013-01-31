@@ -133,5 +133,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return null;
         }
+
+        [WebInvoke(UriTemplate = "delete")]
+        public Task<Response<List<ProductInSiteInfo>>> DeleteProductInSiteInfo(List<ProductInSiteInfo> pisis)
+        {
+            List<ProductInSiteInfo> deleted = new List<ProductInSiteInfo>(pisis.Count);
+            foreach (ProductInSiteInfo pisi in pisis)
+            {
+                string productCode = pisi.ProductCode;
+                DC.Product p = _productClient.GetProductByProductCode(productCode).Result.ReadAsAsync().Result;
+
+                int index = p.ProductInSites.FindIndex(x => x.SiteId == pisi.SiteId);
+                DC.ProductInSiteInfo dcpisi;
+                if (index >= 0)
+                {
+                    dcpisi = p.ProductInSites[index];
+                    deleted.Add(Mapper.Map<ProductInSiteInfo>(dcpisi));
+                    p.ProductInSites.RemoveAt(index);
+                    _productClient.UpdateProduct(p, productCode);
+                }
+                else
+                {
+                    throw new ArgumentException("ProductInSiteInfo not found for product. Site id: " + pisi.SiteId);
+                }
+            }
+
+            return List(deleted);
+        }
     }
 }
