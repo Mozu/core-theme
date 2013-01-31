@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.view.product.subform.OverrideContainer
+ * @class Taco.view.product.subform.OverrideForm
  * @author Michael Speed Elder
  *
  */
@@ -7,12 +7,18 @@
 Ext.define('Taco.view.product.subform.OverrideForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
+        'Taco.core.ux.modal.Confirmation',
+        'Ext.container.Container',
         'Ext.form.field.Checkbox'
     ],
     alias: 'widget.productoverride',
 
     componentCls: Taco.baseCSSPrefix + 'override-form',
-    header: false,
+    bodyStyle: {
+        overflow: 'visible'
+    },
+    header: false, // *** Prevents header of parent form from being automatically generated
+    allowModal: false, // *** Toggles whether a modal can be created; used for unchecking an "Override global" box programmatically without triggering the modal
 
     width: '100%',
     overrideFieldName: '',
@@ -38,31 +44,55 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
             defaults: this.defaults
         });
 
-        this.items = [{
-            xtype: 'checkbox',
-            width: 'auto',
-            boxLabel: 'Override global',
-            labelAlign: 'right',
-            cls: Taco.baseCSSPrefix + 'override-checkbox',
-            handler: function (checkbox, isChecked) {
-                this.setOverride(isChecked, true);
-            },
-            scope: this
-        }, this.formContainer];
+        this.items = [
+            {
+                xtype: 'checkbox',
+                width: 'auto',
+                boxLabel: 'Override global',
+                labelAlign: 'right',
+                allowModal: true,
+                cls: Taco.baseCSSPrefix + 'override-checkbox',
+                scope: this,
+                handler: function (checkbox, isChecked) {
+                    var overrideForm = this;
+                    if( checkbox.allowModal ) {
+                        Ext.create('Taco.core.ux.modal.Confirmation', {
+                            autoShow: true,
+                            text: isChecked ? '<h3 style="font-size: 20px">Override Global Values</h3><p style="margin: 1pc 0">You are about to override this section, are you sure you want to do that?</p>'
+                                            : '<h3 style="font-size: 20px">Remove Global Override</h3><p style="margin: 1pc 0">You are about to remove the global override for this section, are you sure you want to do that?</p>',
+                            listeners: {
+                                // *** If confirmed, enable/disable the underlying OverrideForm
+                                confirm: function () {
+                                    overrideForm.setOverride(isChecked, true);
+                                },
 
-        this.callParent(arguments);
+                                // *** If cancelled, restore checkbox to previous state
+                                cancel: function () {
+                                    checkbox.allowModal = false;
+                                    checkbox.setValue( !isChecked );
+                                    checkbox.allowModal = true;
+                                }
+                            }
+                        });
+                    }
+                }
+            },
+            this.formContainer
+        ];
+
+        this.callParent( arguments );
 
         if (this.productInSiteInfo) {
-            // site form
+            // *** SiteForm
             this.addCls('active');
-            this.setOverride(this.productInSiteInfo.get(this.overrideFieldName), false);
+            this.setOverride( this.productInSiteInfo.get( this.overrideFieldName ), false );
 
             this.product.on({
                 afteredit: this.onProductChange,
                 scope: this
             });
         } else {
-            //global form
+            // *** GlobalForm
             this.record = this.product;
             this.loadForm();
         }
@@ -80,31 +110,33 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
     /**
      * @override Ext.container.Container.disable
      *
-     * Call disable method of child container to prevent checkbox of Override Container from being disabled.
+     * Call disable method of child container to prevent checkbox of OverrideForm from being disabled.
      */
     disable: function ( silently ) {
         this.formContainer.disable( silently );
-        
     },
 
     /**
      * @override Ext.container.Container.enable
      *
-     * Call enable method of child container, since Override Container should not be disabled in any circumstance.
+     * Call enable method of child container, since OverrideForm should not be disabled in any circumstance.
      */
     enable: function ( silently ) {
         this.formContainer.enable( silently );
     },
 
     setOverride: function (val, shouldCopy) {
-        this.productInSiteInfo.set(this.overrideFieldName, val);
+        this.productInSiteInfo.set( this.overrideFieldName, val );
         
         if (val) {
             this.record = this.productInSiteInfo;
             if (shouldCopy) {
-                this.getForm().getFields().each(function (field) {
-                    this.productInSiteInfo.set(field.name, this.product.get(field.name));
-                }, this);
+                this.getForm().getFields().each(
+                    function (field) {
+                        this.productInSiteInfo.set( field.name, this.product.get(field.name) );
+                    },
+                    this
+                );
             }
 
             this.enable();
