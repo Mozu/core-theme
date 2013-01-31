@@ -86,7 +86,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 DC.Product p = _productClient.GetProductByProductCode(productCode, null).Result.ReadAsAsync().Result;
 
                 if (p == null)
-                    throw new ArgumentException("Product not found: " + pisi.ProductCode);
+                    throw new ArgumentException("Product not found: " + productCode);
 
                 if (p.ProductInSites == null)
                     p.ProductInSites = new List<DC.ProductInSiteInfo>(1);
@@ -109,7 +109,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [WebInvoke(UriTemplate = "edit")]
-        public Task<Response<List<Product>>> EditProduct(List<ProductInSiteInfo> pisis)
+        public Task<Response<List<ProductInSiteInfo>>> EditProduct(List<ProductInSiteInfo> pisis)
         {
             List<ProductInSiteInfo> returned = new List<ProductInSiteInfo>();
 
@@ -127,11 +127,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 else
                     throw new ArgumentException("ProductInSiteInfo not found. Product: " + p.ProductCode + ". Site ID: " + pisi.SiteId);
 
-                ProductInSiteInfo returnedPisi = Mapper.Map<ProductInSiteInfo>(dcpisi);
-                p.ProductInSites.Add(dcpisi);
+
+                DC.Product returnedDcProduct = _productClient.UpdateProduct(p, p.ProductCode).Result.ReadAsAsync().Result;
+                DC.ProductInSiteInfo returnedDcPisi = returnedDcProduct.ProductInSites.First(x => x.SiteId == pisi.SiteId);
+                returned.Add(Mapper.Map<ProductInSiteInfo>(returnedDcPisi));
             }
 
-            return null;
+            return List<ProductInSiteInfo>(returned);
         }
 
         [WebInvoke(UriTemplate = "delete")]
@@ -142,6 +144,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 string productCode = pisi.ProductCode;
                 DC.Product p = _productClient.GetProductByProductCode(productCode).Result.ReadAsAsync().Result;
+
+                if (p == null)
+                    throw new ArgumentException("Product not found: " + productCode);
 
                 int index = p.ProductInSites.FindIndex(x => x.SiteId == pisi.SiteId);
                 DC.ProductInSiteInfo dcpisi;
