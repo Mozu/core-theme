@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using Mozu.SiteBuilder.UX.Models.Users;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
@@ -24,6 +25,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<BehaviorCategory, Core.Api.Contracts.BehaviorCategory>();
             Mapper.CreateMap<Core.Api.Contracts.BehaviorCategory, BehaviorCategory>()
                   .ForMember(x => x.Behaviors, m => m.Ignore());
+
+
+            
+
+            Mapper.CreateMap<Mozu.AdminUser.Contracts.Invitation, Mozu.SiteBuilder.UX.Admin.Api.Models.Account.Invitation>();
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.Account.Invitation,Mozu.AdminUser.Contracts.Invitation>();
         }
     }
 }
