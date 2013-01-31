@@ -6,6 +6,7 @@
 
 Ext.define('Taco.model.ProductInSiteInfo', {
     extend: 'Taco.core.data.Model',
+    //requires:['Taco.model.Product'],
     fields:
     [
         {
@@ -110,20 +111,21 @@ Ext.define('Taco.model.ProductInSiteInfo', {
         }
     ],
     idProperty: "siteId",
-    associations: [
-        {
-            "type": "belongsTo",
-            "model": "Taco.model.Product",
-            "getterName": "getProduct",
-            "setterName": "setProduct",
-            "foreignKey": "productCode"
-        }
-    ],
+    //,
+    //associations: [
+    //    {
+    //        "type": "belongsTo",
+    //        "model": "Taco.model.Product",
+    //        "getterName": "getProduct",
+    //        "setterName": "setProduct",
+    //        "foreignKey": "productCode"
+    //    }
+    //],
 
     validations: [
 
-        { type: 'length', name: 'productName', min: 3, max: 100 },
-        { type: 'presence', name: 'productName' },
+     
+      
         { type: 'presence', name: 'productCode' },
         { type: 'length', name: 'productCode', min: 3, max: 30 },
         { type: 'format', name: 'productCode', matcher: /^[A-z0-9\-]*$/ }
