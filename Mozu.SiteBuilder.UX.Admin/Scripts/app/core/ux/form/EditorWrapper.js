@@ -72,7 +72,7 @@
         }
 
         if (this.additionalActions && this.additionalActions.length) {
-            this.actions = this.actions.concat(this.additionalActions);
+            this.actions = this.additionalActions.concat(this.actions);
         }
 
         this.on({

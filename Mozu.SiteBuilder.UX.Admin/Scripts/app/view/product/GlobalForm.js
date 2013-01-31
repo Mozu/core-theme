@@ -23,6 +23,10 @@ Ext.define('Taco.view.product.GlobalForm', {
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'global-admin-form'],
 
     initComponent: function () {
+        var subformCfg = {
+            isGlobal: true
+        };
+
         this.items = [
             {
                 xtype: 'combobox',
@@ -33,11 +37,11 @@ Ext.define('Taco.view.product.GlobalForm', {
                 store: ['Hide in website', 'Show on website'],
                 value: 'Hide in website'
             },
-            Ext.create('Taco.view.product.subform.General'),
-            Ext.create('Taco.view.product.subform.Inventory'),
-            Ext.create('Taco.view.product.subform.Properties'),
-            Ext.create('Taco.view.product.subform.Extras'),
-            Ext.create('Taco.view.product.subform.Shipping')
+            Ext.create('Taco.view.product.subform.General', subformCfg),
+            Ext.create('Taco.view.product.subform.Inventory', subformCfg),
+            Ext.create('Taco.view.product.subform.Properties', subformCfg),
+            Ext.create('Taco.view.product.subform.Extras', subformCfg),
+            Ext.create('Taco.view.product.subform.Shipping', subformCfg)
         ];
 
         this.callParent( arguments );
