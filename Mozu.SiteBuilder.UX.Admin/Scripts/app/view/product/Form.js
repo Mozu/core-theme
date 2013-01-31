@@ -58,17 +58,36 @@ Ext.define('Taco.view.product.Form', {
         return this.inSitesStore.data.length === 1;
     },
 
+    addSaveTasks: function (tasks) {
+
+        tasks.add({
+            key: 'sync-productInSiteInfo-store',
+            store: this.inSitesStore
+        });
+        
+
+        return tasks;
+    },
     addSite: function (siteId) {
         var siteInfo = Ext.create('Taco.model.ProductInSiteInfo', {
-            siteId: siteId
+            siteId: siteId,
+            productCode:this.record.getId()
         });
+        siteInfo.phantom = true;
         this.inSitesStore.add(siteInfo);
-        
+        siteInfo.set('productCode', this.record.getId());
+        siteInfo.phantom = true;
         var wasSingleSite = this.isSingleSite;
 
+        this.isSingleSite = this.singleSiteCheck();
+
         var siteForm = Ext.create('Taco.view.product.SiteForm', {
-            
-        })
-        this.tabpanel.add(Ext.create('Ta'))
+            isSingleSite: this.isSingleSite,
+            record:siteInfo,
+            product: this.record,
+            productInSiteInfo: siteInfo
+        });
+      
+        this.tabpanel.add(siteForm);
     }
 });

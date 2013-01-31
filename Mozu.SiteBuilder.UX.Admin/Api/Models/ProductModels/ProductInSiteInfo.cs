@@ -12,6 +12,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// The product these overrides belong to.
         /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "productCode")]
         public string ProductCode { get; set; }
 
         /// <summary>
