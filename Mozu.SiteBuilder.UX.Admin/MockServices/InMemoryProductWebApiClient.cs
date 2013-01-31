@@ -63,6 +63,18 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
             return (new TestResponse<DC.ProductCollection>(returnCol)).Task;
         }
 
+        /// <summary>
+        /// Update a Product.
+        /// </summary>
+        public Task<ServiceClientResponse<DC.Product>> UpdateProduct(DC.Product product, string productCode)
+        {
+            lock (ProductRepository)
+            {
+                var idx = ProductRepository.FindIndex(x => x.ProductCode == productCode);
+                ProductRepository[idx] = product;
+            }
+            return (new TestResponse<DC.Product>(product)).Task;
+        }
 
         /// <summary>
         /// Returns the product repository (which is backed by HttpRuntimeCache) for this tenant.
@@ -161,17 +173,6 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
 
             repo.AddRange(new[] { p1, p2 });
         }
-
-        public System.Threading.Tasks.Task<Core.Api.Contracts.Client.ServiceClientResponse<ProductAdmin.Contracts.Product>> UpdateProduct(ProductAdmin.Contracts.Product product, string productCode)
-        {
-           lock (ProductRepository)
-           {
-               var idx = ProductRepository.FindIndex(x => x.ProductCode == productCode);
-               ProductRepository[idx] = product;
-           }
-           return (new TestResponse<DC.Product>(product)).Task; 
-        }
-
 
         # region IProductWebApiClient shit that I'm not implementing
         public System.Threading.Tasks.Task<Core.Api.Contracts.Client.ServiceClientResponse<System.Net.Http.StreamContent>> DeleteConfigurableOption(string productCode, int? attributeId)
