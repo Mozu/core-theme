@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Caching;
@@ -68,10 +69,11 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// </summary>
         public Task<ServiceClientResponse<DC.Product>> UpdateProduct(DC.Product product, string productCode)
         {
-            lock (ProductRepository)
+            var repo = ProductRepository;
+            lock (repo)
             {
-                var idx = ProductRepository.FindIndex(x => x.ProductCode == productCode);
-                ProductRepository[idx] = product;
+                var idx = repo.FindIndex(x => x.ProductCode == productCode);
+                repo[idx] = product;
             }
             return (new TestResponse<DC.Product>(product)).Task;
         }
@@ -119,6 +121,24 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
             }
 
             return (new TestResponse<DC.Product>(product)).Task;
+        }
+
+        /// <summary>
+        /// pew pew pew
+        /// </summary>
+        public Task<ServiceClientResponse<StreamContent>> DeleteProduct(string productCode)
+        {
+            var repo = ProductRepository;
+            lock (repo)
+            {
+                int idx = repo.FindIndex(x => x.ProductCode == productCode);
+                if (idx < 0)
+                    throw new ArgumentException("Product not found: " + productCode);
+
+                repo.RemoveAt(idx);
+            }
+
+            return (new TestResponse<StreamContent>(null)).Task;
         }
 
 
@@ -176,11 +196,6 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
 
         # region IProductWebApiClient shit that I'm not implementing
         public System.Threading.Tasks.Task<Core.Api.Contracts.Client.ServiceClientResponse<System.Net.Http.StreamContent>> DeleteConfigurableOption(string productCode, int? attributeId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public System.Threading.Tasks.Task<Core.Api.Contracts.Client.ServiceClientResponse<System.Net.Http.StreamContent>> DeleteProduct(string productCode)
         {
             throw new NotImplementedException();
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
@@ -80,11 +81,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(createdProducts);
         }
 
-        [WebInvoke(UriTemplate = "edit?id={id}")]
-        public Task<Response<List<Product>>> EditProduct(List<Product> products, int? id = null)
+        [WebInvoke(UriTemplate = "edit")]
+        public Task<Response<List<Product>>> EditProduct(List<Product> products)
         {
-            throw new NotImplementedException();
-
             List<Product> updatedProducts = new List<Product>(products.Count);
             foreach (Product p in products)
             {
@@ -94,6 +93,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             return List(updatedProducts);
+        }
+
+        [WebInvoke(UriTemplate = "delete")]
+        public Task<Response<List<Product>>> DeleteProduct(List<Product> products)
+        {
+            List<Product> deletedProducts = new List<Product>(products.Count);
+            foreach (Product p in products)
+            {
+                // TODO: wtf is this for?
+                StreamContent ret = _productClient.DeleteProduct(p.ProductCode).Result.ReadAsAsync().Result;
+                deletedProducts.Add(p);
+            }
+
+            return List(deletedProducts);
         }
     }
 }
