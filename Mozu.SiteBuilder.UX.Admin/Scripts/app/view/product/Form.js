@@ -44,12 +44,12 @@ Ext.define('Taco.view.product.Form', {
 
         items.unshift(this.globalForm);
 
-        this.tabpanel = Ext.create('Taco.core.ux.tab.Panel', {
+        this.tabPanel = Ext.create('Taco.core.ux.tab.Panel', {
             navigation: true,
             items: items
         });
 
-        this.items = [this.tabpanel];
+        this.items = [this.tabPanel];
 
         this.callParent(arguments);
     },
@@ -72,22 +72,50 @@ Ext.define('Taco.view.product.Form', {
         var siteInfo = Ext.create('Taco.model.ProductInSiteInfo', {
             siteId: siteId,
             productCode:this.record.getId()
-        });
+        }), siteForm, wasSingleSite;
+        
         siteInfo.phantom = true;
         this.inSitesStore.add(siteInfo);
         siteInfo.set('productCode', this.record.getId());
         siteInfo.phantom = true;
-        var wasSingleSite = this.isSingleSite;
+        
+        wasSingleSite = this.isSingleSite;
 
         this.isSingleSite = this.singleSiteCheck();
 
-        var siteForm = Ext.create('Taco.view.product.SiteForm', {
+        siteForm = Ext.create('Taco.view.product.SiteForm', {
             isSingleSite: this.isSingleSite,
             record:siteInfo,
             product: this.record,
             productInSiteInfo: siteInfo
         });
+
+        this.siteForms.push(siteForm);
       
-        this.tabpanel.add(siteForm);
+        this.tabPanel.add(siteForm);
+    },
+
+    removeSite: function (siteId) {
+        var record = this.inSitesStore.findRecord('siteId', siteId),
+            form;
+
+        if (!record) {
+            return;
+        }
+
+        Ext.each(this.siteForms, function (f) {
+            if (record !== f.productInSiteInfo) {
+                return;
+            }
+            form = f;
+            return false;
+        });
+
+        if (!form) {
+            return;
+        }
+
+        this.tabPanel.remove(form);
+        this.inSitesStore.remove(record);
     }
 });

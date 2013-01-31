@@ -30,17 +30,9 @@ Ext.define('Taco.view.product.SiteForm', {
             record: this.record,
             product: this.product,
             productInSiteInfo: this.productInSiteInfo,
-            isSingleSite: true
+            isSingleSite: this.isSingleSite,
+            isGlobal: false
         };
-
-        this.generalForm = Ext.create('Taco.view.product.subform.General', subFormCfg);
-        this.inventoryForm = Ext.create('Taco.view.product.subform.Inventory', subFormCfg);
-        this.propertyForm = Ext.create('Taco.view.product.subform.Properties', subFormCfg);
-        this.extrasForm = Ext.create('Taco.view.product.subform.Extras', subFormCfg);
-        this.shippingForm = Ext.create('Taco.view.product.subform.Shipping', subFormCfg);
-        this.categoriesForm = Ext.create('Taco.view.product.subform.Categories', subFormCfg);
-        this.merchandisingForm = Ext.create('Taco.view.product.subform.Merchandising', subFormCfg);
-        this.seoForm = Ext.create('Taco.view.product.subform.SEO', subFormCfg);
 
         this.items = [
             {
@@ -52,14 +44,14 @@ Ext.define('Taco.view.product.SiteForm', {
                 store: ['Hide in website', 'Show on website'],
                 value: 'Hide in website'
             },
-            this.generalForm,
-            this.inventoryForm,
-            this.propertyForm,
-            this.extrasForm,
-            this.shippingForm,
-            this.categoriesForm,
-            this.merchandisingForm,
-            this.seoForm
+            Ext.create('Taco.view.product.subform.General', subFormCfg),
+            Ext.create('Taco.view.product.subform.Inventory', subFormCfg),
+            Ext.create('Taco.view.product.subform.Properties', subFormCfg),
+            Ext.create('Taco.view.product.subform.Extras', subFormCfg),
+            Ext.create('Taco.view.product.subform.Shipping', subFormCfg),
+            Ext.create('Taco.view.product.subform.Categories', subFormCfg),
+            Ext.create('Taco.view.product.subform.Merchandising', subFormCfg),
+            Ext.create('Taco.view.product.subform.SEO', subFormCfg)
         ];
 
         this.callParent(arguments);
