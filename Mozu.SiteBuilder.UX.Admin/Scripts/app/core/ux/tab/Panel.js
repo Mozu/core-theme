@@ -34,7 +34,12 @@ Ext.define('Taco.core.ux.tab.Panel', {
             componentCls: Taco.baseCSSPrefix + 'form-tab-bar',
             itemId: 'tabBar',
             margin: '20 0 20 160',
-            items: []
+            items: [{
+                xtype: 'component',
+                componentCls: Taco.baseCSSPrefix + 'form-tab',
+                cls: 'add',
+                html: 'Add Site'
+            }]
         });
 
         this.lbar = lbar;
@@ -49,7 +54,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
             this.updateNavigation();
         }
 
-        this.tbar.add(this.initTabs(this.items));
+        this.tbar.insert(0, this.initTabs(this.items));
     },
 
     getActiveItem: function () {
@@ -92,19 +97,23 @@ Ext.define('Taco.core.ux.tab.Panel', {
     },
 
     onAdd: function (card, position) {
-        var tab;
+        var newIndex, tab;
 
         this.initCard(card);
 
         if (this.rendered && this.tbar) {
-            tab = this.tbar.add({
-                xtype: 'formtab',
-                card: card,
-                text: card.title,
-                activeCls: this.activeTabCls,
-                invalidCls: this.invalidTabCls
-            });
-            Ext.apply(card, { tab: tab });
+            newIndex = this.items.getCount() - 1;
+
+            if (newIndex >= 0) {
+                tab = this.tbar.insert(newIndex, {
+                    xtype: 'formtab',
+                    card: card,
+                    text: card.title,
+                    activeCls: this.activeTabCls,
+                    invalidCls: this.invalidTabCls
+                });
+                Ext.apply(card, { tab: tab });
+            }
         }
     },
 

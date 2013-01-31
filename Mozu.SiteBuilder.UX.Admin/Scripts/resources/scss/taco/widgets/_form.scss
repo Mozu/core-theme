@@ -1998,6 +1998,33 @@
       &:nth-last-of-type(1) {
         @include border-radius(0px 3px 3px 0px);
       }
+
+      &.add {
+        background-color: rgb(181, 191, 201);
+        padding-left: 0px;
+        padding-right: 0px;
+        text-indent: -99999px;
+        width: 45px;
+
+        &::before {
+          background-color: $color-neutral-white;
+          content: "";
+          height: 13px;
+          left: 21px;
+          position: absolute;
+          top: 13px;
+          width: 3px;
+        }
+        &::after {
+          background-color: $color-neutral-white;
+          content: "";
+          height: 3px;
+          left: 16px;
+          position: absolute;
+          top: 18px;
+          width: 13px;
+        }
+      }
     }
 
     .#{$vprefix}form-tab-active {
