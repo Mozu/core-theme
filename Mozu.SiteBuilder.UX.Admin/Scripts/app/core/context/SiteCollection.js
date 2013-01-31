@@ -13,20 +13,15 @@
         Ext.apply(me, config);
         
         me.callParent([config]);
-        
-
 
         me.urlToken = me.contextType +':'+ me.id;
         
         Ext.each(me.sites, function (site, idx) {
             site.siteCollection = me;
             me.sites[idx]= Ext.create('Taco.core.context.Site', site);
-
         });
-        
-
-        
     },
+
     getSiteId: function () {
         if (this.sites.length == 1) {
             return this.sites[0].getSiteId();
@@ -34,8 +29,8 @@
         return null;
 
     },
+
     getSiteGroupId: function () {
         return this.id;
     }
-    
 });
