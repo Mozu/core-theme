@@ -59,7 +59,6 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
     },
 
     setValue: function ( newVal ) {
-        console.log("setValue", newVal);
         this.label.update( newVal + '<span>&#9662;</span>' );
     }
 });
