@@ -6,7 +6,11 @@
 Ext.define('Taco.view.role.BehaviorsForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.store.Behaviors'],
-
+    layout: {
+        type: 'fit',
+        align: 'stretch'
+    },
+    flex:1,
     initComponent: function () {
         this.store = Ext.create('Taco.store.Behaviors', {
             filters: [{

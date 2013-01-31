@@ -8,7 +8,10 @@ Ext.define('Taco.view.role.Form', {
     requires:['Taco.view.role.BehaviorsForm'],
     editTitle: 'Edit Role',
     createTitle: 'Create a Role',
-
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
     initComponent: function () {
 
         this.buildFormComponents();
