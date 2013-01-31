@@ -31,8 +31,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Represents whether the content information is overridden from the global data.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "isContentOverriden")]
-        public bool IsContentOverridden { get; set; }
+        [DataMember(EmitDefaultValue = false, Name = "isContentOverridden")]
+        public bool? IsContentOverridden { get; set; }
 
         /// <summary>
         /// The product name.
@@ -59,9 +59,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         #region Price
         /// <summary>
         /// Represents whether the price information is overridden from the global data.
-        /// </summary>
+        /// </summary>                                
         [DataMember(EmitDefaultValue = false, Name = "isPriceOverridden")]
-        public bool IsPriceOverriden { get; set; }
+        public bool IsPriceOverridden { get; set; }
 
         /// <summary>
         /// The list price.
@@ -84,7 +84,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         #endregion
 
         // TODO: categories
-
         #region SEO
 
         /// <summary>
