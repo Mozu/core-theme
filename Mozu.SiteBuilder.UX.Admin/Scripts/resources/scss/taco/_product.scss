@@ -1,8 +1,9 @@
 ﻿@mixin taco-product {
   .#{$vprefix}product-admin-form {
+    // *** For readability
     padding-bottom: 200px;
 
-    .#{$vprefix}formeditor .x-panel-header {
+    .#{$vprefix}formform .x-panel-header {
       margin-top: 24px;
     }
   }
@@ -21,6 +22,7 @@
 
   .#{$vprefix}override-form {
     $overrideOffset: 14px;
+    overflow: visible;
     // border: 1px dashed orange;
     // padding: 0 $overrideOffset $overrideOffset;
     // margin-left: -$overrideOffset;
@@ -63,13 +65,17 @@
 
     .#{$vprefix}override-checkbox {
       display: none; // *** Hide checkbox when not in an .active container
-      z-index: 10000; // *** Arbitrary value
+      z-index: 101; // *** Matches value of modal mask; this sits just under b/c mask comes later in the DOM
       background-color: #f1f0ec;
       outline: 5px solid #f1f0ec;
       //padding: 0 12px;
       position: absolute;
       top: -14px;
       right: 100px;
+
+      &.#{$vprefix}auto-z-index {
+        z-index: auto;
+      }
     }
   }
 }

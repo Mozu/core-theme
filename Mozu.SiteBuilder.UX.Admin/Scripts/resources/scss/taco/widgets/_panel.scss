@@ -2,8 +2,7 @@ $panel-header-color: $color-neutral-darkest;
 .#{$prefix}panel-header.#{$prefix}panel-header-default {
 	background-image: none !important;
 	background-color: transparent !important;
-	border-style: dashed;
-	border-color: $color-neutral-mid;
+	border: 0 dashed $color-neutral-mid;
 	border-bottom-width: 1px !important;
 	@include box-shadow(none);
 }

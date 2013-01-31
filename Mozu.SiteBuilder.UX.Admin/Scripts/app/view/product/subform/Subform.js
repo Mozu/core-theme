@@ -16,6 +16,7 @@ Ext.define('Taco.view.product.subform.Subform', {
     defaults: {
         xtype: 'textfield',
         labelAlign: 'top',
-        labelSeparator: ''
+        labelSeparator: '',
+        width: 250
     }
 });
