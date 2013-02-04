@@ -16,11 +16,11 @@ Ext.define('Taco.view.product.SingleSiteForm', {
         'Taco.view.product.subform.Merchandising',
         'Taco.view.product.subform.SEO'
     ],
-    // mixins: {
-    //     scrollspy: 'Taco.core.ux.ScrollSpy' // TODO: resolve JS error with this and getEl()
-    // },
+    mixins: {
+        scrollspy: 'Taco.core.ux.ScrollSpy' // TODO: resolve JS error with this and getEl()
+    },
     scrollSpyOffset: 150,
-    // id: "productSingleSiteForm",
+    id: "productSingleSiteForm",
     title: 'Single Site Admin', // *** For tab title
 
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'single-site-admin-form'],
@@ -51,6 +51,6 @@ Ext.define('Taco.view.product.SingleSiteForm', {
     constructor: function () {
         this.callParent(arguments);
         // ExtJs does not call mixin constructors, because it is bad and should feel bad
-        // this.mixins.scrollspy.constructor.call(this); // TODO: uncomment this when scrollspy works
+        this.mixins.scrollspy.constructor.call(this); // TODO: uncomment this when scrollspy works
     }
 });

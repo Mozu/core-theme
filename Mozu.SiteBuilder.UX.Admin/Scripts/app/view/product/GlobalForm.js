@@ -15,7 +15,14 @@ Ext.define('Taco.view.product.GlobalForm', {
         'Taco.view.product.subform.Shipping'
     ],
     persisteChangesToModel: true,
-
+    mixins: {
+        scrollspy: 'Taco.core.ux.ScrollSpy' // TODO: resolve JS error with this and getEl()
+    },
+    constructor: function () {
+        this.callParent(arguments);
+        this.mixins.scrollspy.constructor.call(this);
+    },
+    id: 'productGlobalForm',
     scrollSpyOffset: 150,
 
     createTitle: 'Global', // *** For tab title
