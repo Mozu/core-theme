@@ -60,11 +60,31 @@ Ext.define('Taco.core.ux.ScrollSpy', {
      * @private
      */
     initScrollSpy: function () {
-        var containerEl = this.getEl();
-        var scrollingContainer = this.scrollingContainer = containerEl.isScrollable() ? containerEl :
-            this.findParentBy(function (p) {
-                return p.getEl().isScrollable();
-            }).getEl();
+        var scrollingContainer = this.scrollingContainer;
+        if (!scrollingContainer) {
+
+            // first try config
+            if (this.scrollspyContainerSelector) scrollingContainer = Ext.select(this.scrollspyContainerSelector).first();
+
+            // then try self
+            var containerEl = this.getEl();
+            if (!scrollingContainer && containerEl.isScrollable()) scrollingContainer = containerEl;
+
+            // next try this.body, if this is a panel
+            if (!scrollingContainer && this.body && this.body.isScrollable && this.body.isScrollable()) scrollingContainer = this.body;
+
+            // if not, then search up for a scrollable;
+            if (!scrollingContainer) {
+                var scrollingParent = this.findParentBy(function (p) {
+                    return p.getEl().isScrollable();
+                });
+                if (containerEl) scrollingContainer = scrollingParent.getEl();
+            }
+
+            // last resort, just use doc body
+            if (!scrollingContainer) scrollingContainer = Ext.getBody();
+        }
+        this.scrollingContainer = scrollingContainer;
         this.refreshScrollSpyOffsets();
         this.mon(scrollingContainer, 'scroll', this.onSpiedScroll, this);
         this.onSpiedScroll();
