@@ -14,26 +14,27 @@ Ext.define('Taco.core.ux.tab.Panel', {
     activeItemCls: Taco.baseCSSPrefix + 'form-card-active',
     activeTabCls: Taco.baseCSSPrefix + 'form-tab-active',
     invalidTabCls: Taco.baseCSSPrefix + 'form-tab-invalid',
-    
-    config: {
-        /**
-         * @cfg {Boolean} navigation
-         * 'true' to insert naviation on the side
-         */
-        navigation: false
-    },
+
+    /**
+     * @cfg {Boolean} navigation
+     * 'true' to insert naviation on the side
+     */
+    navigation: false,
 
     initComponent: function () {
-        
-        if (this.getNavigation()) {
-            this.sideBar = Ext.create('Ext.Container', {
+        var me = this,
+            lbar,
+            tbar;
+
+        if (this.navigation) {
+            lbar = Ext.create('Ext.Container', {
                 componentCls: Taco.baseCSSPrefix + 'form-card-nav',
                 width: 160,
                 items: []
             });
         }
 
-        this.tabContainer = Ext.create('Ext.Container', {
+        tbar = Ext.create('Ext.Container', {
             xtype: 'container',
             componentCls: Taco.baseCSSPrefix + 'form-tab-bar',
             itemId: 'tabBar',
@@ -46,13 +47,23 @@ Ext.define('Taco.core.ux.tab.Panel', {
             }]
         });
 
+        // Don't comment this shit out or everything will break!
+        // Ask Jimmy for details...
+        this.lbar = lbar;
+        this.tbar = tbar;
+
         this.callParent(arguments);
 
-        if (this.getNavigation()) {
+        // Don't comment this shit out or everything will break!
+        // Ask Jimmy for details...
+        this.lbar = lbar;
+        this.tbar = tbar;
+
+        if (this.navigation) {
             this.updateNavigation();
         }
 
-        this.tabContainer.insert(0, this.initTabs(this.items));
+        this.tbar.insert(0, this.initTabs(this.items));
     },
 
     /**
@@ -70,12 +81,12 @@ Ext.define('Taco.core.ux.tab.Panel', {
      * @param {Ext.container.Container} newCard The Container that needs to be activated
      * @return {Ext.container.Container} Returns the 
      */
-    setActiveItem: function (card) {
+    setActiveItem: function (newCard) {
         var layout = this.getLayout();
 
-        layout.setActiveItem(card);
+        layout.setActiveItem(newCard);
 
-        return card;
+        return newCard;
     },
 
     /**
@@ -89,37 +100,11 @@ Ext.define('Taco.core.ux.tab.Panel', {
             itemEl = item.getEl();
 
         cardEl.scrollBy(0, itemEl.getY() - cardEl.getY(), true);
-
-        return this;
-    },
-    
-    /**
-     * Returns the tab by title
-     * @param  {String} title Title of the component in the tab
-     * @return {Ext.Component}       The component found by the title. Returns undefined if not found.
-     */
-    getTab: function (title) {
-        var result;
-
-        this.items.each(function (item) {
-            if (item.title === title) {
-                result = item;
-                return false;
-            }
-        });
-
-        return result;
     },
 
     /**
-     * Returns the tab by index
-     * @param  {Number} index The index of the Tab to find
-     * @return {Ext.Component}       The component found by the index. Returns undefined if not found.
+     * @private
      */
-    getTabAt: function (index) {
-        return this.items.getAt(index);
-    },
-
     initCard: function (card) {
         // defaults are unreliable, so this method is used instead
 
@@ -164,11 +149,11 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
         this.initCard(card);
 
-        if (this.rendered && this.tabContainer) {
+        if (this.rendered && this.tbar) {
             newIndex = this.items.getCount() - 1;
 
             if (newIndex >= 0) {
-                tab = this.tabContainer.insert(newIndex, {
+                tab = this.tbar.insert(newIndex, {
                     xtype: 'formtab',
                     card: card,
                     text: card.title,
@@ -226,8 +211,8 @@ Ext.define('Taco.core.ux.tab.Panel', {
     onRemove: function (card, autoDestroy) {
         var tab = card.tab;
 
-        if (this.rendered && this.tabContainer) {
-            this.tabContainer.remove(tab);
+        if (this.rendered && this.tbar) {
+            this.tbar.remove(tab);
         }
     },
 
@@ -254,7 +239,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
             });
         }, this);
 
-        this.sideBar.removeAll();
-        this.sideBar.add(links);
+        this.lbar.removeAll();
+        this.lbar.add(links);
     }
 });
