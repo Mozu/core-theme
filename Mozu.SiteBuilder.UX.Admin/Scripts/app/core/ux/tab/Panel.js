@@ -101,6 +101,33 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
         cardEl.scrollBy(0, itemEl.getY() - cardEl.getY(), true);
     },
+    
+    /**
+     * Returns the tab by title
+     * @param  {String} title Title of the component in the tab
+     * @return {Ext.Component}       The component found by the title. Returns undefined if not found.
+     */
+    getTab: function (title) {
+        var result;
+
+        this.items.each(function (item) {
+            if (item.title === title) {
+                result = item;
+                return false;
+            }
+        });
+
+        return result;
+    },
+
+    /**
+     * Returns the tab by index
+     * @param  {Number} index The index of the Tab to find
+     * @return {Ext.Component}       The component found by the index. Returns undefined if not found.
+     */
+    getTabAt: function (index) {
+        return this.items.getAt(index);
+    },
 
     /**
      * @private
