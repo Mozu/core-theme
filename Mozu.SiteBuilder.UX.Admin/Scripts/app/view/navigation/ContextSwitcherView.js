@@ -13,7 +13,7 @@ Ext.define('Taco.view.navigation.ContextSwitcherView', {
     shadow: false,
     hideMode: 'offsets',
     defaultAlign: 'tr-br',
-    y: -1000,
+    y: -1000, // *** Initially position off top of screen
     // TODO: Get this to render off screen AND consider itself hidden.  Click toggle on trigger takes one extra click initially to get the state right.
 
     autoEl: {
@@ -34,7 +34,6 @@ Ext.define('Taco.view.navigation.ContextSwitcherView', {
                 '{% values.collectionClass = values.contextType == "c" ? "taco-context-collection" : "" %}',
                 '{% values.containerClass = values.contextType != "s" ? "taco-context-container" : "" %}',
                 '<li class="taco-menu-item {containerClass} {collectionClass}">',
-                    '{% console.log(values) %}',
                     '{name}',
                 '</li>',
             '</tpl>'
@@ -46,6 +45,14 @@ Ext.define('Taco.view.navigation.ContextSwitcherView', {
         this.on('itemclick', this.contextClicked, this);
     },
 
+    /**
+     * @private
+     * @param {Ext.view.View} view
+     * @param {Ext.data.Model} record The record associated with the item clicked on.
+     * @param {HTMLElement} item The HTMLElement clicked on.
+     *
+     * Fires a 'contextClicked' event with salient parameters.
+     */
     contextClicked: function (view, record, item) {
         this.fireEvent('contextClicked', record, item.innerText);
     }
