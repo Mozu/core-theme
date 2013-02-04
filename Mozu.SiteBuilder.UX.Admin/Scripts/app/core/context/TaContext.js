@@ -48,8 +48,8 @@ Ext.define('Taco.core.context.TaContext', {
         }
 
         if (navigate !== false) {
-            if (Taco.core.AppState.contextRE.test (smState.uri)) {
-                newUrl = smState.uri.replace(Taco.core.AppState.contextRE, cfg.urlToken);
+            if (Taco.core.AppState.contextRE.test(smState.uri)) {
+                newUrl = smState.uri.replace(Taco.core.AppState.contextRE, cfg.urlTgetCurrentSiteCollectionoken);
             } else {
                 newUrl = cfg.urlToken + '/' + smState.uri;
             }
@@ -137,70 +137,52 @@ Ext.define('Taco.core.context.TaContext', {
     },
 
     setCurrentSite: function (id) {
-        var me = this, newSite = me.findSite(id), newCol = newSite!= null ? newSite.siteCollection: null;
+        var me = this, newSite = me.findSite(id);
 
-        if (me.currentCtx.id != id) {
-            if (!me.fireEvent('sitechange', me, newSite)) {
-                return false;
-            }
-        }
-        if (newCol != me.getCurrentSiteCollection()) {
-            if ( !me.fireEvent('sitecollectionchange', me, newCol) ) {
-                return false;
-            }
-        }
-        if ( !me.setCurrentContext(newSite) ) {
-            return false;
-        }
-        
-        me.currentSiteId = newSite != null ? newSite.id : null;
-        me.currentSiteCollectionId = newCol != null ? newCol.id : null;
-        return true;
+        return  me.setCurrentContext(newCol);
     },
 
     setCurrentSiteCollection: function (id) {
-        var me = this, newCol, curSite = me.getCurrentSite();
-        
-        Ext.each(me.siteCollections, function (sc) {
-            if (sc.id === id) {
-                newCol = sc;
-            }
-        });
-     
-        if (newCol != me.getCurrentSiteCollection()) {
-            if (!me.fireEvent('sitecollectionchange', me, newCol )) {
-                return false;
-            }
-        }
-        if (curSite != null ) {
-            if (!me.fireEvent('sitechange', me, null )) {
-                return false;
-            }
-        }
-        
-        if (!me.setCurrentContext(newCol)) {
-            return false;
-        }
-
-        me.currentSiteId = null;
-        me.currentSiteCollectionId = newCol != null ? newCol.id : null;
-        return true;
+        var me = this, newCol = this.findSiteCollection(id);
+        return me.setCurrentContext(newCol);
+       
     },
 
     getCurrentSiteCollection: function () {
-        return this.findSiteCollection(this.currentSiteCollectionId);
+        var cc = this.getCurrentContext();
+        if (cc.contextType == 'c') {
+            return cc;
+        }
+        if (cc.contextType == 's') {
+            return cc.getSiteGroup();
+        }
+        if (this.siteCollections.length == 1) {
+            return this.siteCollections;
+        }
+        return null;
     },
 
     getCurrentSite: function () {
-        return this.findSite(this.currentSiteId);
+        var cc = this.getCurrentContext(), sc = getCurrentSiteCollection;
+        if (cc.contextType == 's') {
+            return cc;
+        }
+        if (cc.contextType == 's') {
+            return cc.getSiteGroup();
+        }
+        if (sc!= null) {
+            if (sc.sites.length == 1) {
+                return sc;
+            }
+        }
+        return null;
     },
-
     findSiteCollection: function (id) {
         var me = this,
             foundCol;
         Ext.each(me.siteCollections, function (sc) {
             if (sc.id === id) {
-                foundCol=sc;
+                foundCol = sc;
             }
         });
         return foundCol;
@@ -218,4 +200,5 @@ Ext.define('Taco.core.context.TaContext', {
         });
         return foundSite;
     }
+
 });

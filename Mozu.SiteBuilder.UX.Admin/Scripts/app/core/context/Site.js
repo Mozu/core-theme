@@ -24,6 +24,9 @@
     },
     getSiteGroupId: function () {
         return this.siteCollection.getSiteGroupId();
+    },
+    getSiteGroup:function() {
+        return this.siteCollection;
     }
 
 });
