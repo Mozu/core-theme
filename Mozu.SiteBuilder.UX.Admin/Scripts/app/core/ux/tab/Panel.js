@@ -14,22 +14,26 @@ Ext.define('Taco.core.ux.tab.Panel', {
     activeItemCls: Taco.baseCSSPrefix + 'form-card-active',
     activeTabCls: Taco.baseCSSPrefix + 'form-tab-active',
     invalidTabCls: Taco.baseCSSPrefix + 'form-tab-invalid',
-    navigation: false,
+    
+    config: {
+        /**
+         * @cfg {Boolean} navigation
+         * 'true' to insert naviation on the side
+         */
+        navigation: false
+    },
 
     initComponent: function () {
-        var me = this,
-            lbar,
-            tbar;
-
-        if (this.navigation) {
-            lbar = Ext.create('Ext.Container', {
+        
+        if (this.getNavigation()) {
+            this.sideBar = Ext.create('Ext.Container', {
                 componentCls: Taco.baseCSSPrefix + 'form-card-nav',
                 width: 160,
                 items: []
             });
         }
 
-        tbar = Ext.create('Ext.Container', {
+        this.tabContainer = Ext.create('Ext.Container', {
             xtype: 'container',
             componentCls: Taco.baseCSSPrefix + 'form-tab-bar',
             itemId: 'tabBar',
@@ -42,25 +46,78 @@ Ext.define('Taco.core.ux.tab.Panel', {
             }]
         });
 
-        this.lbar = lbar;
-        this.tbar = tbar;
-
         this.callParent(arguments);
 
-        this.lbar = lbar;
-        this.tbar = tbar;
-
-        if (this.navigation) {
+        if (this.getNavigation()) {
             this.updateNavigation();
         }
 
-        this.tbar.insert(0, this.initTabs(this.items));
+        this.tabContainer.insert(0, this.initTabs(this.items));
     },
 
+    /**
+     * Gets the Active Tab inside the tab Panel
+     * @return {Ext.container.Container} The Active Container or Panel inside the tab
+     */
     getActiveItem: function () {
         var layout = this.getLayout();
 
         return layout.getActiveItem();
+    },
+
+    /**
+     * Sets the Active Tab inside the tab Panel
+     * @param {Ext.container.Container} newCard The Container that needs to be activated
+     * @return {Ext.container.Container} Returns the 
+     */
+    setActiveItem: function (card) {
+        var layout = this.getLayout();
+
+        layout.setActiveItem(card);
+
+        return card;
+    },
+
+    /**
+     * Scrolls to the card top of the given item
+     * @param  {Ext.container.Container} card The container or panel to scroll
+     * @param  {Ext.Component} item The given Component inside the container to scroll to.
+     * @return {Taco.core.ux.tab.panel}      Returns itself for chaining when complete.
+     */
+    scrollCard: function (card, item) {
+        var cardEl = card.body || card.getEl(),
+            itemEl = item.getEl();
+
+        cardEl.scrollBy(0, itemEl.getY() - cardEl.getY(), true);
+
+        return this;
+    },
+    
+    /**
+     * Returns the tab by title
+     * @param  {String} title Title of the component in the tab
+     * @return {Ext.Component}       The component found by the title. Returns undefined if not found.
+     */
+    getTab: function (title) {
+        var result;
+
+        this.items.each(function (item) {
+            if (item.title === title) {
+                result = item;
+                return false;
+            }
+        });
+
+        return result;
+    },
+
+    /**
+     * Returns the tab by index
+     * @param  {Number} index The index of the Tab to find
+     * @return {Ext.Component}       The component found by the index. Returns undefined if not found.
+     */
+    getTabAt: function (index) {
+        return this.items.getAt(index);
     },
 
     initCard: function (card) {
@@ -79,6 +136,9 @@ Ext.define('Taco.core.ux.tab.Panel', {
         });
     },
 
+    /**
+     * @private
+     */
     initTabs: function (items) {
         var tabs = [];
 
@@ -96,16 +156,19 @@ Ext.define('Taco.core.ux.tab.Panel', {
         return tabs;
     },
 
+    /**
+     * @private
+     */
     onAdd: function (card, position) {
         var newIndex, tab;
 
         this.initCard(card);
 
-        if (this.rendered && this.tbar) {
+        if (this.rendered && this.tabContainer) {
             newIndex = this.items.getCount() - 1;
 
             if (newIndex >= 0) {
-                tab = this.tbar.insert(newIndex, {
+                tab = this.tabContainer.insert(newIndex, {
                     xtype: 'formtab',
                     card: card,
                     text: card.title,
@@ -117,6 +180,9 @@ Ext.define('Taco.core.ux.tab.Panel', {
         }
     },
 
+    /**
+     * @private
+     */
     onCardActivate: function (card) {
         var tab = card.tab;
 
@@ -127,6 +193,9 @@ Ext.define('Taco.core.ux.tab.Panel', {
         return card;
     },
 
+    /**
+     * @private
+     */
     onCardDeactivate: function (card) {
         var tab = card.tab;
 
@@ -136,6 +205,9 @@ Ext.define('Taco.core.ux.tab.Panel', {
         return card;
     },
 
+    /**
+     * @private
+     */
     onCardValidityChange: function (form, valid) {
         var tab = form.owner.tab;
 
@@ -148,29 +220,20 @@ Ext.define('Taco.core.ux.tab.Panel', {
         return valid;
     },
 
+    /**
+     * @private
+     */
     onRemove: function (card, autoDestroy) {
         var tab = card.tab;
 
-        if (this.rendered && this.tbar) {
-            this.tbar.remove(tab);
+        if (this.rendered && this.tabContainer) {
+            this.tabContainer.remove(tab);
         }
     },
 
-    setActiveItem: function (newCard) {
-        var layout = this.getLayout();
-
-        layout.setActiveItem(newCard);
-
-        return newCard;
-    },
-
-    scrollCard: function (card, item) {
-        var cardEl = card.body || card.getEl(),
-            itemEl = item.getEl();
-
-        cardEl.scrollBy(0, itemEl.getY() - cardEl.getY(), true);
-    },
-
+    /**
+     * @private
+     */
     updateNavigation: function () {
         var card = this.getActiveItem(),
             links = [];
@@ -191,7 +254,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
             });
         }, this);
 
-        this.lbar.removeAll();
-        this.lbar.add(links);
+        this.sideBar.removeAll();
+        this.sideBar.add(links);
     }
 });
