@@ -49,7 +49,7 @@ Ext.define('Taco.core.context.TaContext', {
 
         if (navigate !== false) {
             if (Taco.core.AppState.contextRE.test(smState.uri)) {
-                newUrl = smState.uri.replace(Taco.core.AppState.contextRE, cfg.urlTgetCurrentSiteCollectionoken);
+                newUrl = smState.uri.replace(Taco.core.AppState.contextRE, cfg.urlToken);
             } else {
                 newUrl = cfg.urlToken + '/' + smState.uri;
             }
