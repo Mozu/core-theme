@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
                 //todo look up prop type.
 
                 var cmsProp = Properties[key];
-                var propDef = TypeHelper.GetPropertyType(key);
+                var propDef = TypeHelper.GetPropertyType(key).Result;
                 object retValue = null;
                 if (cmsProp != null)
                 {
@@ -135,7 +135,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
             
             mmd.AdditionalValues["entityType"] = "cms";
 
-            var propInfo = TypeHelper.GetPropertyType(propertyName);
+            var propInfo = TypeHelper.GetPropertyType(propertyName).Result;
             if (propInfo == null)
             {
                 return mmd;
@@ -282,7 +282,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
             get{
                 if (_pt == null)
                 {
-                    _pt = TypeHelper.GetPropertyType(this.Key);
+                    _pt = TypeHelper.GetPropertyType(this.Key).Result;
                     if (_pt == null)
                     {
                         _pt = new Mozu.Content.Contracts.PropertyType()

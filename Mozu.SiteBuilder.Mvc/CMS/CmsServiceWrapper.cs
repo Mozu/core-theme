@@ -303,7 +303,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         DC.PropertyValue ToPropertyValue(AVM.DocumentProperty inProperty, DC.PropertyValue outProperty = null)
         {
-            var propType = _cmsTypeHelper.GetPropertyType(inProperty.Key);//.GetDocumentType (doc.DocumentType).PropertyTypes.FirstOrDefault(x => string.Equals(x.Name, p.Key, StringComparison.OrdinalIgnoreCase));
+            var propType = _cmsTypeHelper.GetPropertyType(inProperty.Key).Result;//.GetDocumentType (doc.DocumentType).PropertyTypes.FirstOrDefault(x => string.Equals(x.Name, p.Key, StringComparison.OrdinalIgnoreCase));
             if (propType == null)
             {
                 throw new Exception("unknown property" + inProperty.Key);
