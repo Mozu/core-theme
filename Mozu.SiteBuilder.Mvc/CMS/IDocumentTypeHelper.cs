@@ -4,21 +4,18 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Web.Mvc;
-using Mozu.Content.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
+using System.Threading.Tasks;
+using Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-using Mozu.Content.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.Models.CMS;
-    using System.Collections.Concurrent;
-using System.Collections;
-    using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
+    using Content.Contracts.Clients;
+    using Models.CMS;
+    using System.Collections;
+    using UX.Models.StoreFront.CMS;
 
     /// <summary>
     /// TODO: Update summary.
@@ -46,7 +43,7 @@ using System.Collections;
             _cache = System.Runtime.Caching.MemoryCache.Default;
         }
 
-        public Mozu.Content.Contracts.DocumentType  GetDocumentType(string name)
+        public async Task<DocumentType> GetDocumentType(string name)
         {
             Mozu.Content.Contracts.DocumentType doc;
             Dictionary<string, Mozu.Content.Contracts.DocumentType> dic = null;
@@ -72,7 +69,7 @@ using System.Collections;
             }
             return null;
         }
-        public Mozu.Content.Contracts.PropertyType GetPropertyType(string name)
+        public async Task<PropertyType> GetPropertyType(string name)
         {
             Mozu.Content.Contracts.PropertyType prop;
             Dictionary<string, Mozu.Content.Contracts.PropertyType> dic = null;
@@ -104,17 +101,17 @@ using System.Collections;
 
         }
 
-        public WidgetDefinition GetWidgetDefintion(string id)
+        public async Task<WidgetDefinition> GetWidgetDefintion(string id)
         {
             return _widgetProvider.GetWidgets().FirstOrDefault(x => string.Equals(x.Id, id, StringComparison.OrdinalIgnoreCase));
         }
 
-        public PageTypeDefinition GetPageTypeDefinition(string id)
+        public async Task<PageTypeDefinition> GetPageTypeDefinition(string id)
         {
             return _pageTypeProvider.GetPageTypes().FirstOrDefault(x => string.Equals(x.Id, id, StringComparison.OrdinalIgnoreCase));
         }
 
-        public IEnumerable<PageTypeDefinition> GetPageTypeDefinitions()
+        public async Task<IEnumerable<PageTypeDefinition>> GetPageTypeDefinitions()
         {
             return _pageTypeProvider.GetPageTypes();
         }

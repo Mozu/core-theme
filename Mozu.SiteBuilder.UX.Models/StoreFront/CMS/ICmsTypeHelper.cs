@@ -4,7 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using C = Mozu.Content.Contracts;
+using System.Threading.Tasks;
+using Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Models.StoreFront.CMS
 {
@@ -16,10 +17,10 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.CMS
     /// </summary>
     public interface ICmsTypeHelper
     {
-        Mozu.Content.Contracts.DocumentType GetDocumentType(string name);
-        Mozu.Content.Contracts.PropertyType GetPropertyType(string name);
-        IEnumerable<PageTypeDefinition> GetPageTypeDefinitions();
-        WidgetDefinition GetWidgetDefintion(string id);
-        PageTypeDefinition GetPageTypeDefinition(string id);
+        Task<DocumentType> GetDocumentType(string name);
+        Task<PropertyType> GetPropertyType(string name);
+        Task<IEnumerable<PageTypeDefinition>> GetPageTypeDefinitions();
+        Task<WidgetDefinition> GetWidgetDefintion(string id);
+        Task<PageTypeDefinition> GetPageTypeDefinition(string id);
     }
 }
