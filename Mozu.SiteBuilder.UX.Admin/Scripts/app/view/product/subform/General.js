@@ -25,6 +25,7 @@ Ext.define('Taco.view.product.subform.General', {
         }, {
             xtype: 'productoverride',
             overrideFieldName: 'isContentOverridden',
+            hideOverride: this.isSingleSite,
             width: '100%',
             items: [{
                 fieldLabel: 'Name',
@@ -44,6 +45,7 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'productoverride',
             width: '100%',
             overrideFieldName: 'isPriceOverridden',
+            hideOverride: this.isSingleSite,
             defaults: {
                 width: 200
             },

@@ -26,6 +26,8 @@ Ext.define('Taco.view.product.SingleSiteForm', {
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'single-site-admin-form'],
 
     initComponent: function () {
+        
+
         this.items = [
             {
                 xtype: 'combobox',

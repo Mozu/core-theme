@@ -24,9 +24,7 @@ Ext.define('Taco.view.product.GlobalForm', {
     },
     id: 'productGlobalForm',
     scrollSpyOffset: 150,
-
-    createTitle: 'Global', // *** For tab title
-    editTitle: 'Global',
+    title: 'Global',
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'global-admin-form'],
 
     initComponent: function () {

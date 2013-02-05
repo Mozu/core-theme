@@ -54,16 +54,14 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
         this.callParent(arguments);
 
-        // Don't comment this shit out or everything will break!
-        // Ask Jimmy for details...
-        this.lbar = lbar;
-        this.tbar = tbar;
+        this.navigationBar = lbar;
+        this.tabBar = tbar;
 
         if (this.navigation) {
             this.updateNavigation();
         }
 
-        this.tbar.insert(0, this.initTabs(this.items));
+        this.tabBar.insert(0, this.initTabs(this.items));
     },
 
     /**
@@ -79,7 +77,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
     /**
      * Sets the Active Tab inside the tab Panel
      * @param {Ext.container.Container} newCard The Container that needs to be activated
-     * @return {Ext.container.Container} Returns the 
+     * @return {Ext.container.Container} Returns the active item
      */
     setActiveItem: function (newCard) {
         var layout = this.getLayout();
@@ -87,6 +85,59 @@ Ext.define('Taco.core.ux.tab.Panel', {
         layout.setActiveItem(newCard);
 
         return newCard;
+    },
+
+    /**
+     * Sets the Active Tab inside the tab Panel by Index
+     * @param {Number} index The Container that needs to be activated
+     * @return {Ext.container.Container} Returns the active item
+     */
+    setActiveItemAt: function (index) {
+        var layout = this.getLayout();
+
+        layout.setActiveItem(this.items.getAt(index));
+
+        return this.getActiveItem();
+    },
+
+    /**
+     * Hides the Tab in the tab bar at the selected index. If the index is not found, it will simply return.
+     * @param  {Number} index The index of the tab
+     * @return {Taco.core.ux.tab.Panel}       Returns itself once complete;
+     */
+    hideTabAt: function (index) {
+        var tab;
+        if (index < 0 || this.tabBar.items.length <= index) {
+            return this;
+        }
+
+        tab = this.tabBar.items.getAt(index);
+
+        if (tab.getEl()) {
+            tab.getEl().addCls('hidden');
+        }
+        tab.hide();
+
+        return this;
+    },
+
+    /**
+     * Shows the Tab in the tab bar at the selected index. If the index is not found, it will simply return.
+     * @param  {Number} index The index of the tab
+     * @return {Taco.core.ux.tab.Panel}       Returns itself once complete;
+     */
+    showTabAt: function (index) {
+        var tab;
+        if (index < 0 || this.tabBar.items.length <= index) {
+            return this;
+        }
+
+        tab = this.tabBar.items.getAt(index);
+
+        tab.getEl().removeCls('hidden');
+        tab.show();
+
+        return this;
     },
 
     /**
@@ -176,11 +227,11 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
         this.initCard(card);
 
-        if (this.rendered && this.tbar) {
+        if (this.rendered && this.tabBar) {
             newIndex = this.items.getCount() - 1;
 
             if (newIndex >= 0) {
-                tab = this.tbar.insert(newIndex, {
+                tab = this.tabBar.insert(newIndex, {
                     xtype: 'formtab',
                     card: card,
                     text: card.title,
@@ -238,8 +289,8 @@ Ext.define('Taco.core.ux.tab.Panel', {
     onRemove: function (card, autoDestroy) {
         var tab = card.tab;
 
-        if (this.rendered && this.tbar) {
-            this.tbar.remove(tab);
+        if (this.rendered && this.tabBar) {
+            this.tabBar.remove(tab);
         }
     },
 
@@ -266,7 +317,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
             });
         }, this);
 
-        this.lbar.removeAll();
-        this.lbar.add(links);
+        this.navigationBar.removeAll();
+        this.navigationBar.add(links);
     }
 });
