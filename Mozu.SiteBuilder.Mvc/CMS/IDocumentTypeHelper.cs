@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
             if (dic == null)
             {
-                var props = _docTypeClient.List(int.MaxValue, 0).Result.ReadAsSync();
+                var props = await _docTypeClient.List(int.MaxValue, 0).Result.ReadAsAsync();
                 dic = props.Items.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
                 lock (g_cache)
                 {
@@ -80,7 +80,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
             if (dic == null)
             {
-                var props = _propTypeClient.List(int.MaxValue, 0).Result.ReadAsSync().Items;
+                var response = await _propTypeClient.List(int.MaxValue, 0);
+                var props = response.ReadAsAsync().Result.Items;
                 //props.ForEach(x => x.PropertyValueType.Name = x.Name == "tags" ? "tags" : x.PropertyValueType.Name);
 
                 dic = props.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
@@ -101,17 +102,17 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         }
 
-        public async Task<WidgetDefinition> GetWidgetDefintion(string id)
+        public WidgetDefinition GetWidgetDefintion(string id)
         {
             return _widgetProvider.GetWidgets().FirstOrDefault(x => string.Equals(x.Id, id, StringComparison.OrdinalIgnoreCase));
         }
 
-        public async Task<PageTypeDefinition> GetPageTypeDefinition(string id)
+        public PageTypeDefinition GetPageTypeDefinition(string id)
         {
             return _pageTypeProvider.GetPageTypes().FirstOrDefault(x => string.Equals(x.Id, id, StringComparison.OrdinalIgnoreCase));
         }
 
-        public async Task<IEnumerable<PageTypeDefinition>> GetPageTypeDefinitions()
+        public IEnumerable<PageTypeDefinition> GetPageTypeDefinitions()
         {
             return _pageTypeProvider.GetPageTypes();
         }
