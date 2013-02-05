@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         {
             lock (g_provisionedSites)
             {
-                if (g_provisionedSites.Contains(_ctx.SiteId))
+                if (g_provisionedSites.Contains(_ctx.SiteId.GetValueOrDefault(-1)))
                 {
                     return;
                 }
@@ -82,7 +82,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
             lock (g_provisionedSites)
             {
-                g_provisionedSites.Add(_ctx.SiteId);
+                g_provisionedSites.Add(_ctx.SiteId.GetValueOrDefault(-1));
             }
         }
 
