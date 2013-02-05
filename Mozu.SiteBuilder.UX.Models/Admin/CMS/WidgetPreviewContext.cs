@@ -63,6 +63,8 @@ using System.Runtime.Serialization;
             //var mmd = new ModelMetadata(ModelMetadataProviders.Current, this.GetType(), () => this[property], typeof(string), property);
             //return mmd;
         }
+
+        public bool IsPreview { get; set; }
     }
 
     public class WidgetInstanceData 

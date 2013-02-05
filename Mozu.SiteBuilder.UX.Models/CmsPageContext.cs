@@ -7,11 +7,17 @@ using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 namespace Mozu.SiteBuilder.Mvc.Cms
 {
 
-   [DataContract(Name = "pageContext")] 
-   public class PageContext  
-   {
-       
-       [DataMember(Name = "title")]
+    [DataContract(Name = "pageContext")]
+    public class PageContext
+    {
+        public PageContext()
+
+        {
+            this.CmsContext = new CmsPageContext();
+        }
+    
+
+    [DataMember(Name = "title")]
        public string Title { get; set; }
 
        [DataMember(Name = "metaDescription")]
@@ -101,7 +107,7 @@ namespace Mozu.SiteBuilder.Mvc.Cms
 
 
        [DataMember(Name = "wpc")]
-       public WidgetPageContext WidgetContext  { get; set; }
+       public CmsPageContext CmsContext  { get; set; }
 
       
 

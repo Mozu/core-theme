@@ -41,85 +41,41 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             provHelper.ProvisionCms();
         }
 
-        public ActionResult Index()
-        {
-            return View();
-        }
-        public ActionResult Widget(string id)
-        {
-            return null;
-        }
-
+        
+      
 
         [HttpPost()]
         public ActionResult Preview(WidgetPreviewContext context)
         {
             _context.IsEditMode = true;
            
-            WidgetInstanceData wid = new WidgetInstanceData()
-                                         {
-                                             DefinitionId = context.DefinitionId,
-                                             Index = context.Index ,
-                                             ZoneId = context.ZoneId,
-                                             ZoneScope = context.ZoneScope ,
-                                             ConfigurationData = context.ConfigurationData 
-                                         };
-
-
-        
+          
 
             var def = _widgetProvider.GetWidgets().First(x => x.Id == context.DefinitionId);
-            //WidgetInstance wid = new WidgetInstance(this._cmsTypeHelper, this._context)
-            //{
-            //    DefinitionId = def.Id,
-            //    Collection = "widgets",
-            //    WigetDefinition = def,
-            //    Id = "new-" + Guid.NewGuid().ToString(),
 
-            //};
+            var wrd = new WidgetRuntimeData()
+                {
+                    Definition = def,
+                    DefinitionId = context.DefinitionId ,
+                    ConfigurationData = context.ConfigurationData,
+                    Index = context.Index ,
+                    ZoneId = context.ZoneId,
+                    ZoneScope = context.ZoneScope,
+                    IsPreview = true
+                };
 
            
-
-           
-            //wid.IsPreview = true;
-            //if (wid.Id == null)
-            //{
-            //    wid.Id = "new-" + Guid.NewGuid().ToString();
-            //}
-            //if (wid.Properties == null)
-            //{
-            //    wid.Properties = new CmsPropertyCollection();
-            //}
-
-            //foreach (var prop in def.Properties ?? Enumerable.Empty<WidgetDefintionProperty>())
-            //{
-            //    if (wid.Properties[prop.Key] == null)
-            //    {
-            //        wid.Properties.Add(new CmsProperty(prop.Key, prop.Value, _cmsTypeHelper.GetPropertyType(prop.Key)));
-            //    }
-            //}
-
-
-            //wid.Properties.Set(CmsConstants.Widgets.widget_tags, tags, _cmsTypeHelper.GetPropertyType(CmsConstants.Widgets.widget_tags));
-
-
-
-            //wid.Properties.Set(CmsConstants.Widgets.widget_type_id, def.Id, _cmsTypeHelper.GetPropertyType(CmsConstants.Widgets.widget_type_id));
-
-
-            //wid.Properties.Set(CmsConstants.Widgets.page_type_definition, "widget", _cmsTypeHelper.GetPropertyType(CmsConstants.Widgets.page_type_definition));
-
-            //wid.Properties.Set(CmsConstants.Widgets.widget_zone, context.ZoneId, _cmsTypeHelper.GetPropertyType(CmsConstants.Widgets.widget_zone));
 
 
             if (this.HttpContext.Request.ContentType == "application/json")
             {
                 var tw = new StringWriter();
                 var viewRes = System.Web.Mvc.ViewEngines.Engines[0].FindPartialView(this.ControllerContext, def.DisplayTemplate, true);
+
                 if (viewRes.View != null)
                 {
                     var vc = new ViewContext(this.ControllerContext, viewRes.View, new ViewDataDictionary(), this.TempData, tw);
-                    vc.ViewData.Model = wid;
+                    vc.ViewData.Model = wrd;
                     viewRes.View.Render(vc, tw);
                 }
                 else
@@ -128,24 +84,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 context.Output = tw.GetStringBuilder().ToString();
 
-                //var jsonData = new WidgetPreviewContext()
-                //{
-                //    Output = tw.GetStringBuilder().ToString(),
-                //    Document = new Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document()
-                //    {
-                //        DocumentId = wid.Id,
-                //        CollectionName = CmsConstants.Widgets.collection_name,
-                //        DocumentType = wid.DocumentTypeName ?? CmsConstants.Widgets.default_content_type,
-                //        Name = Guid.NewGuid().ToString(),
-                //        Items = wid.Properties.Select(x =>
-                //                new Mozu.SiteBuilder.Mvc.Models.CMS.Admin.DocumentProperty()
-                //                {
-                //                    Key = x.Key,
-                //                    Value = x.RawValue
-                //                }).ToList()
-                //    }
+                var jsonData = new WidgetPreviewContext()
+                {
+                    Output = tw.GetStringBuilder().ToString(),
+                    
 
-                //};
+                };
 
                 return new JsonDCResult()
                 {
@@ -156,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else
             {
-                var vr = View(wid);
+                var vr = View(wrd);
                 vr.ViewName = def.DisplayTemplate;
                 return vr;
             }
@@ -197,14 +141,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                Content = "<!--sof " + zoneId + "-->"
                            };
             }
-            if (_context.PageContext == null || _context.PageContext.WidgetContext == null || _context.PageContext.WidgetContext.RuntimeData == null)
+            if (_context.PageContext == null || _context.PageContext.CmsContext == null || _context.PageContext.CmsContext.RuntimeData == null)
             {
                 return new ContentResult()
                            {
                                Content = ""
                            };
             }
-            var zoneWidgets = _context.PageContext.WidgetContext.RuntimeData.Where(_ => string.Equals(_.ZoneId, zoneId, StringComparison.OrdinalIgnoreCase)).OrderBy( x=> x.Index ).ToList();
+            var zoneWidgets = _context.PageContext.CmsContext.RuntimeData.Where(_ => string.Equals(_.ZoneId, zoneId, StringComparison.OrdinalIgnoreCase)).OrderBy( x=> x.Index ).ToList();
 
             //StringBuilder sb = new StringBuilder();
             var tw = new StringWriter();

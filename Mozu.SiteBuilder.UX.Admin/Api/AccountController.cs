@@ -220,7 +220,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return null;
         }
 
-        public Task<Response<List<Tuple<Site, int>>>> Register(LoginUser user)
+        public Task<Response<List<Tuple<Site, int>>>> Register(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
         {
             //var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
             //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
@@ -272,7 +272,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return site;
         }
 
-        public Task<Response<List<Tuple<Site, int>>>> VolusionLogIn(LoginUser user)
+        public Task<Response<List<Tuple<Site, int>>>> VolusionLogIn(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
         {
             try
             {
@@ -416,7 +416,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "users/list")]
         public Task<Response<List<AccountUser>>> GetAccountUsers()
         {
-            var admins = _adminUserWebApiClient.Get(null, null, null).Result.ReadAsAsync().Result.Items;
+            var admins = _adminUserWebApiClient.Get(null, null, null, null, null).Result.ReadAsAsync().Result.Items;
             var invites = _invitationWebApiClient.GetInvitations(null).Result.ReadAsAsync().Result.Items;
             var invitations = Mapper.Map<List<Mozu.AdminUser.Contracts.Invitation>, List<Invitation>>(invites);
             foreach (var invitation in invitations)
@@ -522,7 +522,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return _usersRepo.UpdateUser(contractsUser, userId).Result.ReadAsSync();
         }
 
-        internal bool UserExists(LoginUser user)
+        internal bool UserExists(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
         {
             if (string.IsNullOrEmpty(user.EmailAddress))
             {
@@ -538,7 +538,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             return false;
         }
-        internal void UpdateForgottenPassword(LoginUser user)
+        internal void UpdateForgottenPassword(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
         {
             //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
             var res = _usersRepo.UpdateForgottenPassword(new ConfirmationInfo()

@@ -138,7 +138,7 @@
     </Reference>
     <Reference Include="Mozu.AdminUser.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13003.1\lib\Mozu.AdminUser.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13036.2\lib\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Cart.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -191,12 +191,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.SiteSettings.Shipping.Contracts.1.0.12342.1\lib\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Tenant.Contracts">
-      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.12361.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Tenant.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.13024.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.User.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.User.Contracts.1.0.13007.1\lib\Mozu.User.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.User.Contracts.1.0.13022.1\lib\Mozu.User.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40, Version=0.9.9.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -271,7 +272,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\CMS\WidgetPageContext.cs" />
+    <Compile Include="Admin\CMS\DocumentRequest.cs" />
+    <Compile Include="Admin\CMS\CmsPageContext.cs" />
     <Compile Include="Admin\TaContext.cs" />
     <Compile Include="Admin\ThemeSettings\ConfigurationField.cs" />
     <Compile Include="Admin\ThemeSettings\ConfigurationFieldValue.cs" />
