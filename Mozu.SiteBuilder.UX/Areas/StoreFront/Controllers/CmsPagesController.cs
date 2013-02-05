@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var res = await Page("pages", "404");
             if (res is HttpNotFoundResult)
             {
-                var ptd = _cmsTypeHelper.GetPageTypeDefinitions().Result.First(x => x.DefaultValues != null && (string)x.DefaultValues.GetValue(CmsConstants.Widgets.page_type) == "404");
+                var ptd = _cmsTypeHelper.GetPageTypeDefinitions().First(x => x.DefaultValues != null && (string)x.DefaultValues.GetValue(CmsConstants.Widgets.page_type) == "404");
                 var reqDocs = new List<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document>(){
                     new Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document(){
                       Items = new List<VM.Admin.DocumentProperty>()
@@ -102,12 +102,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<ActionResult> Home()
         {
-
-
             var res = await Page("pages", "home");
             if (res is HttpNotFoundResult)
             {
-                var ptd = _cmsTypeHelper.GetPageTypeDefinitions().Result.First(x => x.DefaultValues != null && (string)x.DefaultValues.GetValue(CmsConstants.Widgets.page_type) == "homepage");
+                var ptd = _cmsTypeHelper.GetPageTypeDefinitions().First(x => x.DefaultValues != null && (string)x.DefaultValues.GetValue(CmsConstants.Widgets.page_type) == "homepage");
                 var reqDocs = new List<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document>(){
                     new Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document(){
                       Items = new List<VM.Admin.DocumentProperty>()
