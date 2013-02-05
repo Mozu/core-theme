@@ -15,8 +15,6 @@ Ext.define('Taco.core.ux.tab.Tab', {
     text: '',
 
     initComponent: function () {
-        var me = this;
-
         Ext.applyIf(this, {
             html: this.text
         });

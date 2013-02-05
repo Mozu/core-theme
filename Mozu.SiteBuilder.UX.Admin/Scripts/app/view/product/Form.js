@@ -1,7 +1,6 @@
 ﻿/**
  * @class Taco.view.product.Form
- * @author Michael Speed Elder
- *
+ * The primary form on the product page that manages single site/multisite switching
  */
 Ext.define('Taco.view.product.Form', {
     extend: 'Taco.core.ux.form.Form',
@@ -15,9 +14,11 @@ Ext.define('Taco.view.product.Form', {
 
     layout: 'fit',
 
-    isSingleSite: true,
-
+    /**
+     * @protected
+     */
     initComponent: function() {
+        var tabItems;
 
         this.inSitesStore = this.record.productInSitesStore();
 
@@ -31,33 +32,105 @@ Ext.define('Taco.view.product.Form', {
 
         this.isSingleSite = this.singleSiteCheck();
 
-        this.inSitesStore.data.each(function (info) {
-            this.siteForms.push(Ext.create('Taco.view.product.SiteForm', {
-                isSingleSite: this.isSingleSite,
-                record: info,
-                product: this.record,
-                productInSiteInfo: info
-            }));
-        }, this);
+        this.buildSiteTabs();
 
-        var items = this.siteForms.slice(0);
+        tabItems = this.siteForms.slice(0);
 
-        items.unshift(this.globalForm);
+        tabItems.unshift(this.globalForm);
 
         this.tabPanel = Ext.create('Taco.core.ux.tab.Panel', {
             navigation: true,
-            items: items
+            items: tabItems
         });
 
         this.items = [this.tabPanel];
 
         this.callParent(arguments);
+
+        if (this.isSingleSite) {
+            this.goGoSingleSite(true)
+        }
     },
 
+    /**
+     * Will remove all the Site tabs (but not global) and rebuild all the forms
+     * @private
+     */
+    rebuildTabs: function () {
+        var siteForms = this.tabPanel.items.getRange(1);
+
+        Ext.suspendLayouts();
+
+        Ext.each(siteForms, function (siteForm) {
+            this.tabPanel.remove(siteForm);
+        }, this);
+
+        this.buildSiteTabs();
+
+        this.tabPanel.add(this.siteForms);
+        
+        Ext.resumeLayouts();
+    },
+
+    /**
+     * Builds all the site forms
+     * @private
+     */
+    buildSiteTabs: function () {
+        this.siteForms = [];
+
+        this.inSitesStore.data.each(function (info) {
+            this.siteForms.push(Ext.create('Taco.view.product.SiteForm', {
+                isSingleSite: this.isSingleSite,
+                record: info,
+                product: this.record,
+                productInSiteInfo: info,
+                formCfg: {
+                    isSingleSite: this.isSingleSite
+                }
+            }));
+        }, this);
+    },
+
+    /**
+     * Hides the global tab when in single site mode
+     * @private
+     */
+    goGoSingleSite: function (leaveTabs) {
+        if (!leaveTabs) {
+            this.rebuildTabs();
+        }
+        this.tabPanel.hideTabAt(0);
+        this.tabPanel.setActiveItemAt(1);
+    },
+
+    /**
+     * Shows the global tab when in multisite mode
+     * @private
+     */
+    goGoMultiSite: function (leaveTabs) {
+        if (!leaveTabs) {
+            this.rebuildTabs();
+        }
+        this.rebuildTabs();
+        this.tabPanel.showTabAt(0);
+        this.tabPanel.setActiveItemAt(this.tabPanel.items.length - 1);
+    },
+
+    /**
+     * Checks to see if the form is in multisite or singlesite mode
+     * @return {Boolean} True if the product is only on one site, false if it's shared
+     */
     singleSiteCheck: function () {
         return this.inSitesStore.data.length === 1;
     },
 
+    /**
+     * Adds the sync store task for the ProductsInSiteInfo store (no dependencies)
+     * @param {Ext.core.ux.form.Task} tasks The save tasks associated with the form.
+     * @return {Ext.core.ux.form.Task} The save tasks associated with the form
+     * @protected
+     */
     addSaveTasks: function (tasks) {
 
         tasks.add({
@@ -68,12 +141,18 @@ Ext.define('Taco.view.product.Form', {
 
         return tasks;
     },
+
+    /**
+     * Adds the product to a site
+     * @param {String} siteId The ID of the site that will have the product
+     */
     addSite: function (siteId) {
         var siteInfo = Ext.create('Taco.model.ProductInSiteInfo', {
             siteId: siteId,
             productCode:this.record.getId()
         }), siteForm, wasSingleSite;
         
+        //  Crazy Thom code, to get magical things to happen....but not really
         siteInfo.phantom = true;
         this.inSitesStore.add(siteInfo);
         siteInfo.set('productCode', this.record.getId());
@@ -83,18 +162,34 @@ Ext.define('Taco.view.product.Form', {
 
         this.isSingleSite = this.singleSiteCheck();
 
-        siteForm = Ext.create('Taco.view.product.SiteForm', {
-            isSingleSite: this.isSingleSite,
-            record:siteInfo,
-            product: this.record,
-            productInSiteInfo: siteInfo
-        });
+        //  State unchanged, gfto
+        if (wasSingleSite === this.isSingleSite) {
+            return;
+        }
 
-        this.siteForms.push(siteForm);
+        //  Must rebuild tabs now since state switched
+        if (this.isSingleSite) {
+            this.goGoSingleSite();
+        } else {
+            this.goGoMultiSite();
+        }
+
+        // siteForm = Ext.create('Taco.view.product.SiteForm', {
+        //     isSingleSite: this.isSingleSite,
+        //     record:siteInfo,
+        //     product: this.record,
+        //     productInSiteInfo: siteInfo
+        // });
+
+        // this.siteForms.push(siteForm);
       
-        this.tabPanel.add(siteForm);
+        // this.tabPanel.add(siteForm);
     },
 
+    /**
+     * Removes the product from a site
+     * @param  {String} siteId The ID of the site to remove the product from
+     */
     removeSite: function (siteId) {
         var record = this.inSitesStore.findRecord('siteId', siteId),
             form;

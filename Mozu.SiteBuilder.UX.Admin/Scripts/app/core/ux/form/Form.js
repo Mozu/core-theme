@@ -28,9 +28,20 @@ Ext.define('Taco.core.ux.form.Form', {
 
     initComponent: function () {
 
-        var formCfg = {
+        var formCfg;
+
+        if (!this.formCfg) {
+            this.formCfg = {};
+        }
+
+        formCfg = Ext.applyIf(this.formCfg, {
             record: this.record
-        };
+        });
+
+        if (this.title) {
+            this.originalTitle = this.title;
+        }
+
 
         this.addEvents([
             /**
@@ -235,11 +246,17 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     initTitle: function () {
-        var tplInput = this.title || (this.isEdit() ? this.editTitle : this.createTitle),
-            data = Ext.applyIf({
-                record: this.record
-            }, this.titleData),
-            tpl;
+        var tplInuput, data, tpl;
+
+        
+        if (this.originalTitle) {
+            return;
+        }
+
+        tplInput = this.isEdit() ? this.editTitle : this.createTitle;
+        data = Ext.applyIf({
+            record: this.record
+        }, this.titleData);
 
         if (typeof tplInput === 'string') {
             tplInput = [tplInput];

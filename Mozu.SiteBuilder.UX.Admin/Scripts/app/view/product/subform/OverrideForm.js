@@ -22,6 +22,11 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
 
     width: '100%',
     overrideFieldName: '',
+    
+    /**
+     * @cfg
+     */
+    hideOverride: false,
 
     initComponent: function () {
 
@@ -82,7 +87,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
 
         this.callParent( arguments );
 
-        if (this.productInSiteInfo) {
+        if (this.productInSiteInfo && !this.hideOverride) {
             // *** SiteForm
             this.addCls('active');
             this.setOverride( this.productInSiteInfo.get( this.overrideFieldName ), false );
