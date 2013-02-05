@@ -25,7 +25,7 @@
         },
         afterRequest: function ( request, success ){
             var me = this;
-            this.callParent(request, success);
+            this.callParent(arguments);
             if (success && request && request.action != 'read' && this.model && this.model.$className) {
                 this.signalCacheFlush();
             }
