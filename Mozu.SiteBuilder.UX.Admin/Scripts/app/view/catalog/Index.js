@@ -3,80 +3,100 @@
  */
 Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Taco.core.ux.tab.Panel'],
+    requires: ['Ext.selection.CheckboxModel', 'Ext.ux.RowExpander'],
 
     header: {
-        title: 'TabPanel Testing'
+        title: 'Grid Testing'
     },
 
     initComponent: function () {
         var me = this,
-            tp;
+            sm, gp;
 
-        tp = Ext.create('Taco.core.ux.tab.Panel', {
-            navigation: true,
-            items: [{
-                xtype: 'form',
-                title: 'One',
-                defaults: {
-                    xtype: 'textfield',
-                    labelAlign: 'top',
-                    labelSeparator: '',
-                    msgTarget: 'under'
-                },
-                items: [{
-                    name: 'firstName',
-                    fieldLabel: 'First Name',
-                    validator: function (value) {
-                        var msg = "That's not a real first name.";
+        this.store = Taco.core.data.StoreManager.getOrCreate({ type: 'Taco.store.Products', clearFilters:true , clearSort:true });
 
-                        return (value === 'the' ? msg : true);
-                    }
-                }, {
-                    name: 'lastName',
-                    fieldLabel: 'Last Name'
-                }, {
-                    name: 'address1',
-                    fieldLabel: 'Address Line 1'
-                }, {
-                    name: 'address2',
-                    fieldLabel: 'Address Line 2'
-                }]
+        sm = Ext.create('Ext.selection.CheckboxModel');
+
+        gp = Ext.create('Ext.grid.Panel', {
+            store: this.store,
+            selModel: sm,
+            columns: [{
+                dataIndex: 'productCode',
+                text: 'Code',
+                width: 150
             }, {
-                title: 'Two',
-                defaults: {
-                    margin: '0 0 10 0',
-                    style: { backgroundColor: '#ccf' },
-                },
+                dataIndex: 'productName',
+                text: 'Name',
+                flex: 1
+            }, {
+                dataIndex: 'price',
+                text: 'Price',
+                width: 150,
+                renderer: function (value) {
+                    return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+                }
+            }, {
+                dataIndex: 'salePrice',
+                text: 'Sale Price',
+                width: 150,
+                renderer: function (value) {
+                    return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+                }
+            }, {
+                dataIndex: 'productInSites',
+                text: 'Sites',
+                width: 150,
+                renderer: function (value) {
+                    return !Ext.isEmpty(value) ? value.length : '--';
+                }
+            }, {
+                dataIndex: 'productInSites',
+                text: 'Overridden',
+                width: 150,
+                renderer: function (value) {
+                    var ret;
+
+                    if (Ext.isEmpty(value)) {
+                        ret = '--';
+                    } else {
+                        ret = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'Yes' : 'No';
+                    }
+
+                    return ret;
+                }
+            }, {
+                dataIndex: 'stockOnHand',
+                text: 'Stock',
+                width: 150,
+                renderer: function (value) {
+                    return Ext.isNumeric(value) ? value : '--';
+                }
+            }],
+            dockedItems: [{
+                xtype: 'container',
+                dock: 'top',
+                weight: 90,
+                layout: 'auto',
                 items: [{
                     xtype: 'component',
-                    height: 400,
-                    html: 'consectetuer'
-                }, {
-                    xtype: 'component',
-                    height: 400,
-                    html: 'adipiscing'
-                }, {
-                    xtype: 'component',
-                    height: 400,
-                    html: 'elit'
-                }, {
-                    xtype: 'component',
-                    height: 400,
-                    html: 'nullam'
-                }, {
-                    xtype: 'component',
-                    height: 400,
-                    html: 'justo'
+                    html: 'hello world'
                 }]
+            }],
+            plugins: [{
+                ptype: 'rowexpander',
+                rowBodyTpl: new Ext.XTemplate(
+                    '<div>hello world</div>'
+                )
             }]
         });
 
         Ext.apply(me.body, {
             layout: 'fit',
-            items: [tp]
+            items: [gp]
         });
 
         this.callParent(arguments);
+
+        this.store.load();
     }
 });

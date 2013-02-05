@@ -124,36 +124,36 @@
         }
     });
 
-    Ext.define('Ext.grid.header.DropZoneOverride', {
-        override: 'Ext.grid.header.DropZone',
-        constructor: function () {
-            var me = this;
-            me.callParent(arguments);
+    // Ext.define('Ext.grid.header.DropZoneOverride', {
+    //     override: 'Ext.grid.header.DropZone',
+    //     constructor: function () {
+    //         var me = this;
+    //         me.callParent(arguments);
 
-            me.onNodeOver = function (node, dragZone, e, data) {
-                var me = this,
-                        header = me.headerCt,
-                        doPosition = true,
-                        from = data.header,
-                        to;
+    //         me.onNodeOver = function (node, dragZone, e, data) {
+    //             var me = this,
+    //                     header = me.headerCt,
+    //                     doPosition = true,
+    //                     from = data.header,
+    //                     to;
 
-                if (data.header.el.dom === node) {
-                    doPosition = false;
-                } else {
-                    to = me.getLocation(e, node).header;
-                    doPosition = (from.ownerCt === to.ownerCt) || (!from.ownerCt.sealed && !to.ownerCt.sealed);
-                }
+    //             if (data.header.el.dom === node) {
+    //                 doPosition = false;
+    //             } else {
+    //                 to = me.getLocation(e, node).header;
+    //                 doPosition = (from.ownerCt === to.ownerCt) || (!from.ownerCt.sealed && !to.ownerCt.sealed);
+    //             }
 
-                if (doPosition) {
-                    me.positionIndicator(data.header, node, e);
-                } else {
-                    me.valid = false;
-                }
+    //             if (doPosition) {
+    //                 me.positionIndicator(data.header, node, e);
+    //             } else {
+    //                 me.valid = false;
+    //             }
 
-                if (Ext.fly(node).hasCls('taco-frozen')) {
-                    me.valid = false;
-                }
-                return me.valid ? me.dropAllowed : me.dropNotAllowed;
-            }
-        }
-    });
+    //             if (Ext.fly(node).hasCls('taco-frozen')) {
+    //                 me.valid = false;
+    //             }
+    //             return me.valid ? me.dropAllowed : me.dropNotAllowed;
+    //         }
+    //     }
+    // });
