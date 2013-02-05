@@ -32,9 +32,9 @@ namespace Mozu.SiteBuilder.UX.Controllers
         //}
 
 
-        public async Task<bool> AsyncInitWidgetData()
+        public async Task<bool> AsyncInitData()
         {
-            var wctx = SiteContext.PageContext.WidgetContext;
+            var wctx = SiteContext.PageContext.CmsContext;
             if (wctx == null)
             {
                 return false;
@@ -42,37 +42,48 @@ namespace Mozu.SiteBuilder.UX.Controllers
             Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> pageTask = null;
             Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> templateTask = null;
             Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> siteTemplateTask = null;
-            List<Task<ServiceClientResponse<Mozu.Content.Contracts.Document>>> tasks = new List<Task<ServiceClientResponse<Document>>>();
-            if (wctx.PageId != null && wctx.Page == null)
+            var  tasks = new List<Task<ServiceClientResponse<Document>>>();
+            if (wctx.PageReq  != null && wctx.Page == null)
             {
-                pageTask = CmsService.Get("pages", wctx.PageId);
-                tasks.Add(pageTask);
+                if (wctx.PageReq.Id != null)
+                {
+                    pageTask = CmsService.Get( wctx.PageReq.Collection , wctx.PageReq.Id);
+                    tasks.Add(pageTask);
+                }
+               if (wctx.PageReq.Path != null)
+               {
+                   pageTask = CmsService.GetByPath(wctx.PageReq.Collection , wctx.PageReq.Path);
+                   tasks.Add(pageTask);
+               }
             }
-            if (wctx.TemplateId != null && wctx.Template == null)
+            if (wctx.TemplateReq != null && wctx.Template == null)
             {
-                templateTask = CmsService.Get("templates", wctx.PageId);
-                tasks.Add(templateTask);
+                if (wctx.TemplateReq.Id != null)
+                {
+                    templateTask = CmsService.Get(wctx.TemplateReq.Collection , wctx.TemplateReq.Id);
+                    tasks.Add(templateTask);
+                }
+                if (wctx.TemplateReq.Path != null)
+                {
+                    templateTask = CmsService.GetByPath(wctx.TemplateReq.Collection, wctx.TemplateReq.Path);
+                    tasks.Add(templateTask);
+                }
             }
-            if (wctx.SiteTemplateId != null && wctx.SiteTemplate == null)
+            if (wctx.SiteTemplateReq != null && wctx.SiteTemplate == null)
             {
-                siteTemplateTask = CmsService.Get("templates", wctx.PageId);
-                tasks.Add(siteTemplateTask);
+                if (wctx.SiteTemplateReq.Id != null)
+                {
+                    siteTemplateTask = CmsService.Get(wctx.SiteTemplateReq.Collection, wctx.SiteTemplateReq.Id);
+                    tasks.Add(siteTemplateTask);
+                }
+                if (wctx.SiteTemplateReq.Path != null)
+                {
+                    siteTemplateTask = CmsService.GetByPath(wctx.SiteTemplateReq.Collection, wctx.SiteTemplateReq.Path);
+                    tasks.Add(siteTemplateTask);
+                }
             }
-            if (wctx.PageName  != null && wctx.Page == null)
-            {
-                pageTask = CmsService.GetByPath("pages", wctx.PageName);
-                tasks.Add(pageTask);
-            }
-            if (wctx.TemplateName != null && wctx.Template == null)
-            {
-                templateTask = CmsService.GetByPath("templates", wctx.TemplateName);
-                tasks.Add(templateTask);
-            }
-            if (wctx.SiteTemplateName != null && wctx.SiteTemplate == null)
-            {
-                siteTemplateTask = CmsService.GetByPath("templates", wctx.SiteTemplateName);
-                tasks.Add(siteTemplateTask);
-            }
+
+           
 
            
             await Task.WhenAll(tasks.ToArray());
@@ -88,7 +99,25 @@ namespace Mozu.SiteBuilder.UX.Controllers
             {
                 wctx.SiteTemplate = siteTemplateTask.Result.ReadAsSync();
             }
+           
+            tasks.Clear();
             
+            if (templateTask == null && wctx.Page != null && wctx.Page.Properties != null && wctx.Page.Properties != null)
+            {
+                string templateName = wctx.Page.Properties.Where(x => x.PropertyType == "template").Select(x =>(string) x.Value).FirstOrDefault();
+                if (templateName != null)
+                {
+                    templateTask = CmsService.GetByPath("templates", templateName);
+                    tasks.Add(templateTask);
+                    var res = await templateTask;
+                    if ( templateTask.Result.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        wctx.Template = templateTask.Result.ReadAsSync();
+                    }
+                }
+
+            }
+
 
             wctx.Initialized = true;
             return true;

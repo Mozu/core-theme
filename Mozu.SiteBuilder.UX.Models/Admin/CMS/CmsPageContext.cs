@@ -9,28 +9,26 @@ using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
 {
     [DataContract(Name = "wpc")]
-    public class WidgetPageContext
+    public class CmsPageContext
     {
+        public CmsPageContext()
+        {
+            this.SiteTemplateReq= new DocumentRequest()
+                                      {
+                                          Collection="templates",
+                                          Path="site/default"
+                                      };
+        }
+        [DataMember(Name = "pdr")]
+        public DocumentRequest PageReq { get; set; }
 
-        [DataMember(Name = "pid")]
-        public string PageId { get; set; }
+        [DataMember(Name = "tdr")]
+        public DocumentRequest TemplateReq { get; set; }
 
-        [DataMember(Name = "tid")]
-        public string TemplateId { get; set; }
+        [DataMember(Name = "sdr")]
+        public DocumentRequest SiteTemplateReq { get; set; }
 
-        [DataMember(Name = "sid")]
-        public string SiteTemplateId { get; set; }
-
-        [DataMember(Name = "p")]
-        public string PageName { get; set; }
-
-        [DataMember(Name = "t")]
-        public string TemplateName { get; set; }
-
-        [DataMember(Name = "s")]
-        public string SiteTemplateName { get; set; }
-
-
+        
         [IgnoreDataMember()]
         public List<WidgetRuntimeData> RuntimeData { get; set; }
 

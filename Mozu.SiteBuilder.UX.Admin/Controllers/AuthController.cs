@@ -251,24 +251,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 _sbc.Save();
                 return this.Redirect(url);
             }
-            var zone = System.Configuration.ConfigurationManager.AppSettings["dnszone"];
-            var domain = (site.Domains ?? new List<Domain>()).FirstOrDefault(x => x.IsPrimary && x.FullName.EndsWith(zone, StringComparison.OrdinalIgnoreCase)) ?? site.AssignedDomain;
-            var host = domain.FullName;
+            throw new NotImplementedException("useSiteDomainNames  feature removed");
+            //var zone = System.Configuration.ConfigurationManager.AppSettings["dnszone"];
+            //var domain = (site.Domains ?? new List<Domain>()).FirstOrDefault(x => x.IsPrimary && x.FullName.EndsWith(zone, StringComparison.OrdinalIgnoreCase)) ?? site.AssignedDomain;
+            //var host = domain.FullName;
 
-            return Content(
-                string.Format("<html><body><form method=\"post\" id=\"ssoform\" action=\"http://{0}/admin/auth/SSORedirect\"><input type=\"hidden\"  name=\"url\" value=\"{1}\" /><input type=\"hidden\"  name=\"accessToken\" value=\"{2}\" /><input type=\"hidden\"  name=\"refreshToken\" value=\"{3}\" /><input type=\"hidden\"  name=\"profileToken\" value=\"{4}\" /><input type=\"hidden\"  name=\"accessTokenExpire\" value=\"{5}\" /><input type=\"hidden\"  name=\"refreshTokenExpire\" value=\"{6}\" /><input type=\"hidden\"  name=\"tenantId\" value=\"{7}\" /><input id=\"continue_btn\" type=\"submit\" value=\"continue\" /></form><script>document.getElementById('continue_btn').style.visibility = 'hidden';document.forms['ssoform'].submit()</script></body></form>",
-                host, 
-                url,
-                ticket.AccessToken ,
-                ticket.RefreshToken ,
-                ticket.ProfileToken ,
-                ticket.AccessTokenExpiration.Ticks.ToString("X2"),
-                ticket.RefreshTokenExpiration.Ticks.ToString("X2"),
-                 tenantId
+            //return Content(
+            //    string.Format("<html><body><form method=\"post\" id=\"ssoform\" action=\"http://{0}/admin/auth/SSORedirect\"><input type=\"hidden\"  name=\"url\" value=\"{1}\" /><input type=\"hidden\"  name=\"accessToken\" value=\"{2}\" /><input type=\"hidden\"  name=\"refreshToken\" value=\"{3}\" /><input type=\"hidden\"  name=\"profileToken\" value=\"{4}\" /><input type=\"hidden\"  name=\"accessTokenExpire\" value=\"{5}\" /><input type=\"hidden\"  name=\"refreshTokenExpire\" value=\"{6}\" /><input type=\"hidden\"  name=\"tenantId\" value=\"{7}\" /><input id=\"continue_btn\" type=\"submit\" value=\"continue\" /></form><script>document.getElementById('continue_btn').style.visibility = 'hidden';document.forms['ssoform'].submit()</script></body></form>",
+            //    host, 
+            //    url,
+            //    ticket.AccessToken ,
+            //    ticket.RefreshToken ,
+            //    ticket.ProfileToken ,
+            //    ticket.AccessTokenExpiration.Ticks.ToString("X2"),
+            //    ticket.RefreshTokenExpiration.Ticks.ToString("X2"),
+            //     tenantId
                 
-                )
+            //    )
                 
-                );
+            //    );
         }
         [HttpPost ]
         public ActionResult SSORedirect(string url, string accessToken, string refreshToken, string profileToken, string accessTokenExpire, string refreshTokenExpire, int tenantId)

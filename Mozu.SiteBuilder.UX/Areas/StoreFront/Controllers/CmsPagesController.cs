@@ -144,18 +144,32 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             
 
-            DC.Document doc = _cmsService.GetByPath(collection, pageName, null).Result.ReadAsSync();
+           // DC.Document doc = _cmsService.GetByPath(collection, pageName, null).Result.ReadAsSync();
 
             //pants
-            if (doc == null)
-                return new HttpNotFoundResult("not found dumb dumb");
 
-            var vm = Mapper.Map<DC.Document, VM.Document>(doc);
+
+           
             var pc = this.SiteContext.PageContext;
+
+            pc.CmsContext = new CmsPageContext()
+            {
+                PageReq = new DocumentRequest(){
+                    Path=pageName,
+                    Collection = collection
+                } 
+                
+            };
+            await this.AsyncInitData();
+
+            
+            if (pc.CmsContext.Page  == null)
+                return new HttpNotFoundResult("not found dumb dumb");
+            var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page);
 
             //pc.WidgetCreationTags.Add(doc.ToWidgetStem());
             pc.CollectionId = collection;
-            pc.DocumentId = doc.Id;
+            pc.DocumentId = pc.CmsContext.Page.Id;
             pc.Title = vm.Properties.GetValue("title") as string;
             pc.MetaDescription = vm.Properties.GetValue("meta_description") as string;
             pc.MetaTitle = vm.Properties.GetValue("meta_title") as string;
@@ -167,12 +181,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var template = ((string)(vm.Properties.GetValue("template")) ?? this.HttpContext.Request["template"] ?? "page");
             
             
-            pc.WidgetContext = new WidgetPageContext()
-                                   {
-                                       Page = doc,
-                                       TemplateName = template,
-                                       SiteTemplateName = "default"
-                                   };
+                
 
 
             var vr =ViewEngines.Engines.FindView(this.ControllerContext, template, null);
@@ -183,7 +192,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var result = View(vr.View , vm);
             var x = false;
-            x = await this.AsyncInitWidgetData();
+            x = await this.AsyncInitData();
 
 
             return result;

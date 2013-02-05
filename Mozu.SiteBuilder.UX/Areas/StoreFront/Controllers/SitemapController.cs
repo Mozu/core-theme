@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 Domain primary = site.Domains.FirstOrDefault(d => d.IsPrimary) ?? site.Domains.FirstOrDefault();
                 if (primary != null)
-                    return primary.FullName;
+                    return primary.DomainName;
                 else
                     return null;
             }

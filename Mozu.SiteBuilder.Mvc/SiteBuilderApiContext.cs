@@ -99,13 +99,26 @@ namespace Mozu.SiteBuilder.Mvc
                 var cookie = cookieProvider.GetRequestCookie(COOKIENAME);
                 if (cookie != null && cookie.HasKeys)
                 {
-                    this.SiteId = int.Parse(cookie["site"]);
-                    this.TenantId = int.Parse(cookie["tenant"]);
+                 
+                    int tmpInt;
+                    if (int.TryParse(cookie["site"], out tmpInt))
+                    {
+                        this.SiteId = tmpInt;
+                    }
+                    if (int.TryParse(cookie["tenant"], out tmpInt))
+                    {
+                        this.TenantId = tmpInt;
+                    }
+                    if (int.TryParse(cookie["sitegroup"], out tmpInt))
+                    {
+                        this.SiteGroupId  = tmpInt;
+                    }
+                    
                     return;
                 }
             }
-            this.SiteId = int.Parse(System.Configuration.ConfigurationManager.AppSettings["default-site"]);
-            this.TenantId = int.Parse(System.Configuration.ConfigurationManager.AppSettings["default-tenant"]);
+           // this.SiteId = int.Parse(System.Configuration.ConfigurationManager.AppSettings["default-site"]);
+           this.TenantId = int.Parse(System.Configuration.ConfigurationManager.AppSettings["default-tenant"]);
             
         }
 
