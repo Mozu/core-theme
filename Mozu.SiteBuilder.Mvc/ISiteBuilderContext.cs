@@ -16,7 +16,7 @@ namespace Mozu.SiteBuilder.Mvc
         //SiteConfiguration SiteConfiguration { get;  }
 
         int TenantId { get; set; }
-        int SiteId { get; set; }
+        int? SiteId { get; set; }
        
         PageContext PageContext { get; set; }
         ICatalogContext CatalogContext { get; set; }

@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.Mvc
             _themeSettingsRepo = themeRepo;
             _apiContext = apiContext;
 	        _generalSettings = generalSettings;
-	        this.SiteId = (int)_apiContext.SiteId;
+	        this.SiteId = _apiContext.SiteId;
             this.TenantId = _apiContext.TenantId;
 
             // attempt to look up theme by value of "SBTHEME".
@@ -195,7 +195,7 @@ namespace Mozu.SiteBuilder.Mvc
 
 		public int TenantId { get; set; }
 
-        public int SiteId { get; set; }
+        public int? SiteId { get; set; }
 
 		
 
