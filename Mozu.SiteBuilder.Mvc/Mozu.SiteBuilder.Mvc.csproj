@@ -380,6 +380,7 @@
     <Compile Include="Orders\IPciSettingsProvider.cs" />
     <Compile Include="Orders\OrderService.cs" />
     <Compile Include="Orders\OrderStatusProvider.cs" />
+    <Compile Include="Providers\TaContextProvider.cs" />
     <Compile Include="Security\AuthenticationExtensions.cs" />
     <Compile Include="Security\IAuthenticationHelper.cs" />
     <Compile Include="Security\SbAuthenticationModule.cs" />

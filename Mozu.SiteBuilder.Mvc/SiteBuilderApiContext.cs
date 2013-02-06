@@ -92,6 +92,7 @@ namespace Mozu.SiteBuilder.Mvc
                 if (site != null)
                 {
                     this.SiteId = site.Id;
+                    this.SiteGroupId = site.SiteGroupId;
                     this.TenantId = site.TenantId;
                     return;
                 }

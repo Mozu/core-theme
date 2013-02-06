@@ -1,4 +1,5 @@
-﻿@model List<Tuple<Mozu.Tenant.Contracts.Site, int>>
+﻿@using Mozu.SiteBuilder.UX.Models.Admin
+@model List<TaContext>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/generic.cshtml";
@@ -7,9 +8,8 @@
 <div class="rolesContainer">
     <h2>Vnext Launchpad</h2>
     <div class="rolesWrapper">
-        @foreach (var item in Model)
+        @foreach (TaContext collection in Model)
         {
-            Model.Count();
             <div class="role">
                 <div class="deleteRole">
                     <a href="javascript:;" onclick="DeleteRole(this,@item.Item1.Id,@item.Item2)">&times;</a>

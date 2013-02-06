@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Mozu.Core;
 using System.Linq;
 using Mozu.Core.Extensions;
+using Mozu.SiteBuilder.Mvc.Providers;
 using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -22,14 +23,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private ISiteBuilderContext _sbc;
         private readonly ITenantsWebApiClient _tenantsWebApi;
         private readonly IApiContext _apiContext;
+        private readonly ITaContextProvider _taContextProvider;
 
-        public HomeController( AccountApi accountApi, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient  tenantsWebApi, IApiContext apiContext)
+        public HomeController(AccountApi accountApi, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ISitesWebApiClient sitesWebApiClient, IApiContext apiContext, ITaContextProvider taContextProvider, ITenantsWebApiClient tenantsWebApi)
         {
             _authenticationHelper = authHelper;
             _accountApi = accountApi;
             _sbc = sbc;
-            _tenantsWebApi = tenantsWebApi;
             _apiContext = apiContext;
+            _taContextProvider = taContextProvider;
+            _tenantsWebApi = tenantsWebApi;
         }
         //
         // GET: /Home/

@@ -350,6 +350,7 @@
     <Compile Include="Mvc\Customers\CustomerGroupsRepositoryTests.cs" />
     <Compile Include="Mvc\Orders\OrderServiceTests.cs" />
     <Compile Include="Mvc\Orders\OrderStatusProviderTests.cs" />
+    <Compile Include="Mvc\Providers\TaContextProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CartControllerTests.cs" />
     <Compile Include="TestResponse.cs" />
