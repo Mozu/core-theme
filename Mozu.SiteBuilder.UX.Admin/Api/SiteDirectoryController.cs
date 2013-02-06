@@ -144,7 +144,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         var prodNodes = prodTask.Result.ReadAsSync().Items.Select(x =>
                             new SiteDirectoryNode
                             {
-                                id = "prod" + STRINGSPLITDELIM + x.Id,
+                                id = "prod" + STRINGSPLITDELIM + x.ProductCode ,
                                 name = x.Content.ProductName,
                                 url = "/product/" + x.ProductCode,
                                 leaf = true

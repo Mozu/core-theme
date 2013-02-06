@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return EmptyList<ProductInSiteInfo>();
             }
 
-            DC.Product product = _productClient.GetProductByProductCode(pagingParams.id, null).Result.ReadAsAsync().Result;
+            DC.Product product = _productClient.GetProduct(pagingParams.id, null).Result.ReadAsAsync().Result;
 
             if (pagingParams.id != null)
             {
@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 DC.ProductInSiteInfo dcpisi = Mapper.Map<DC.ProductInSiteInfo>(pisi);
 
                 string productCode = pisi.ProductCode;
-                DC.Product p = _productClient.GetProductByProductCode(productCode, null).Result.ReadAsAsync().Result;
+                DC.Product p = _productClient.GetProduct(productCode, null).Result.ReadAsAsync().Result;
 
                 if (p == null)
                     throw new ArgumentException("Product not found: " + productCode);
@@ -117,7 +117,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 DC.ProductInSiteInfo dcpisi = Mapper.Map<DC.ProductInSiteInfo>(pisi);
 
-                DC.Product p = _productClient.GetProductByProductCode(pisi.ProductCode, null).Result.ReadAsAsync().Result;
+                DC.Product p = _productClient.GetProduct(pisi.ProductCode, null).Result.ReadAsAsync().Result;
                 if (p == null)
                     throw new ArgumentException("Product not found: " + pisi.ProductCode);
 
@@ -143,7 +143,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (ProductInSiteInfo pisi in pisis)
             {
                 string productCode = pisi.ProductCode;
-                DC.Product p = _productClient.GetProductByProductCode(productCode).Result.ReadAsAsync().Result;
+                DC.Product p = _productClient.GetProduct(productCode).Result.ReadAsAsync().Result;
 
                 if (p == null)
                     throw new ArgumentException("Product not found: " + productCode);

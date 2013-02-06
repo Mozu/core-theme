@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (pagingParams.id != null)
             {
-                DC.Product prod = _productClient.GetProductByProductCode(pagingParams.id, null).Result.ReadAsAsync().Result;
+                DC.Product prod = _productClient.GetProduct(pagingParams.id, null).Result.ReadAsAsync().Result;
                 return List(Mapper.Map<Product>(prod));
             }
 

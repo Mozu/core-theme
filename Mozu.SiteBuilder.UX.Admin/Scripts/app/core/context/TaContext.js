@@ -23,8 +23,23 @@ Ext.define('Taco.core.context.TaContext', {
 
         Taco.core.StateManager.on('navigate', me.onNavigate, this);
         me.init(config);
+        Ext.Ajax.on('beforerequest', me.onBeforeAjaxRequest, me);
+
     },
 
+    onBeforeAjaxRequest:function(conn, options, eOpts) {
+
+        var headers = options.headers = options.headers || {}, sc = this.getCurrentSiteCollection(), site = this.getCurrentSite();
+
+        headers['x-vol-tenant'] = this.tenantId || this.id;
+        if (sc) {
+            headers['x-vol-site-group'] = sc.id;
+        }
+        if (site) {
+            headers['x-vol-site'] = site.id;
+            headers['x-vol-site-group'] = sc.getSiteGroupId();
+        }
+    },
     onNavigate: function (state) {
         var ulrToken = state.metaData.ctx, recordId = this.getStore().find('urlToken', ulrToken),
             record = this.getStore().getAt(recordId);
@@ -157,22 +172,20 @@ Ext.define('Taco.core.context.TaContext', {
             return cc.getSiteGroup();
         }
         if (this.siteCollections.length == 1) {
-            return this.siteCollections;
+            return this.siteCollections[0];
         }
         return null;
     },
 
     getCurrentSite: function () {
-        var cc = this.getCurrentContext(), sc = getCurrentSiteCollection;
+        var cc = this.getCurrentContext();
         if (cc.contextType == 's') {
             return cc;
         }
-        if (cc.contextType == 's') {
-            return cc.getSiteGroup();
-        }
-        if (sc!= null) {
-            if (sc.sites.length == 1) {
-                return sc;
+        
+        if (this.siteCollections.length == 1){
+            if (this.siteCollections[0].sites.length == 1) {
+                return this.siteCollections[0].sites[0];
             }
         }
         return null;

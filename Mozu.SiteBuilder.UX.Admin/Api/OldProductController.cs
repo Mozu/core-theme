@@ -112,9 +112,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public Task<Response<OldProduct>> DuplicateProduct(string id)
         {
             // NOTE: id == ProductCode
-            var origProd = _productClient.GetProductByProductCode(id,null).Result.ReadAsSync();
+            var origProd = _productClient.GetProduct(id, null).Result.ReadAsSync();
 
-            origProd.Id = null;
+         //   origProd.Id = null;
             origProd.ProductCode += "-COPY";
 
             if (origProd.Content != null)
@@ -132,7 +132,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (pagingParams.id != null)
             {
-                var prod = _productClient.GetProductByProductCode(pagingParams.id,null).Result.ReadAsSync();
+                var prod = _productClient.GetProduct(pagingParams.id, null).Result.ReadAsSync();
                 return List(Mapper.Map<OldProduct>(prod));
             }
 

@@ -256,7 +256,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             {
                 for (int i = 0; i < cnt.ProductImages.Count; i++)
                 {
-                    cnt.ProductImages[i].ImageId = cnt.ProductImages[i].ImageId.GetValueOrDefault(i);
+                    cnt.ProductImages[i].Id  = cnt.ProductImages[i].Id.GetValueOrDefault(i);
 
                 }
             }

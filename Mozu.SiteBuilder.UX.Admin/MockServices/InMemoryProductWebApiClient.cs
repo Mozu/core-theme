@@ -287,5 +287,41 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
             throw new NotImplementedException();
         }
         #endregion
+
+
+        public Task<ServiceClientResponse<DC.ProductInSiteInfo>> AddProductInSite(DC.ProductInSiteInfo productInSiteInfoIn, string productCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<StreamContent>> DeleteProductInSite(string productCode, int? siteId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<DC.Product>> GetProduct(string productCode, string responseGroups = null)
+        {
+            return this.GetProductByProductCode(productCode, responseGroups);
+        }
+
+        public Task<ServiceClientResponse<DC.ProductInSiteInfo>> GetProductInSite(string productCode, int? siteId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<List<DC.ProductInSiteInfo>>> GetProductInSites(string productCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<DC.ProductInSiteInfo>> UpdateProductInSite(DC.ProductInSiteInfo productInSiteInfoIn, string productCode, int? siteId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<List<DC.ProductInSiteInfo>>> UpdateProductInSites(List<DC.ProductInSiteInfo> productInSitesIn, string productCode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

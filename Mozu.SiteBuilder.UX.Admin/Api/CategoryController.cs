@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 int[] catIds = categoryIdsString.Split(new char[] { ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToArray();
 
-                categories = allCategories.Where(x => catIds.Contains(x.Id)).ToList();
+                categories = allCategories.Where(x => catIds.Contains(x.Id.GetValueOrDefault(-1))).ToList();
             }
             else
             {
@@ -106,7 +106,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var item = new AutoCompleteField<int>()
                 {
                     Display = category.Content.Name,
-                    Value = category.Id,
+                    Value = category.Id.GetValueOrDefault( -1),
                     Path = string.Join ( ">",  tmpHash.Reverse ().Select ( x=> x.Content.Name ).ToArray ())
                 };
                 retList.Add(item);
