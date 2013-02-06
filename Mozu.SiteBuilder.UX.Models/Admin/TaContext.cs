@@ -12,31 +12,37 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
     {
         [DataMember(Name = "tenantId")]
         public int TenantId { get; set; }
+
         [DataMember(Name = "siteCollections")]
         public List<TaContextSiteCollection> SiteCollections { get; set; }
-        
     }
-     [DataContract]
+
+    [DataContract]
     public class TaContextSiteCollection
     {
         [DataMember(Name = "id")]
         public int Id { get; set; }
+
         [DataMember(Name = "name")]
         public string Name { get; set; }
+
         [DataMember(Name = "sites")]
         public List<TaContextSite> Sites { get; set; }
     }
-     [DataContract]
+    
+    [DataContract]
     public class TaContextSite
     {
         [DataMember(Name = "id")]
         public int Id { get; set; }
+
         [DataMember(Name = "name")]
         public string Name { get; set; }
+
         [DataMember(Name = "stagingHost")]
         public string StagingHost { get; set; }
+
         [DataMember(Name = "defaultHost")]
         public string DefaultHost { get; set; }
-       
     }
 }

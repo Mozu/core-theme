@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.Tenant.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
@@ -12,16 +13,15 @@ using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 
 using UserAuthTicket = Mozu.Core.Api.Contracts.UserAuthTicket;
-using AccountApi = Mozu.SiteBuilder.UX.Admin.Api.AccountController;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly AccountApi _accountApi;
+        private readonly AccountController _accountApi;
         private IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
-        public AuthController(AccountApi accountApi, IAuthenticationHelper authHelper ,ISiteBuilderContext sbc  )
+        public AuthController(AccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc)
         {
             _authenticationHelper = authHelper;
             _accountApi = accountApi;
@@ -68,7 +68,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             if(res.Success)
             {
-                if ( res.Items.Count ==0 )
+                var collections = res.Items.First().SiteCollections;
+
+                if (collections.Count == 0)
+                {
+                    ModelState.AddModelError("General", "You don't have access to any sites.");
+                    return View("Index");
+                }
+
+                if (collections.Count == 1)
+                {
+                    // Auto login to tenant
+                    var taContext = res.Items.First();
+
+                    var tenant = await _accountApi.ChangeTenant(taContext.TenantId, collections.First().Id);
+                    if (tenant != null)
+                    {
+                        //todo look in config;
+                        //return RedirctDomain(tenant, tenant.Id, "/admin", _authenticationHelper.GetCurrentTicket());
+                        return Redirect("/admin");
+                    }
+                    return null;
+                }
+
+                if (collections.Count > 0)
+                {
+                    // Launch Pad with Tenant Names
+                    return View("Roles", res.Items);
+                }
+
+                return Redirect("/admin");
+
+                /*if (res.Items.Count == 0)
                 {
                     ModelState.AddModelError("General", "you dont have access to any sites");
                     return View("Index");
@@ -79,14 +110,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 }
                 else
                 {
-                    var site = await _accountApi.ChangeSite(res.Items.First().Item1.Id );
+                    //_sbc.TenantId = res.Items.First().TenantId;
+
+                    /*var ticket = _authenticationHelper.GetCurrentTicket();
+                    _authenticationHelper.SetCurrentUser(ticket);
+                    _sbc.TenantId = res.Items.First().TenantId;
+                    _sbc.SiteId = _authenticationHelper.GetCurrentUser().SiteId.GetValueOrDefault(-1);
+                    _sbc.Save();#1#
+
+                    return Redirect("/admin");
+
+                    /*var site = await _accountApi.ChangeSite(res.Items.First().TenantId);
                     if (site != null)
                     {
                         //todo look in config;
                         return RedirctDomain(site, site.TenantId, "/admin", _authenticationHelper.GetCurrentTicket());
-                    }
-                }
-                
+                    }#1#
+                }*/
+
                 //return RedirectToAction("Index", "Home");
             }
 
@@ -170,11 +211,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 }
                 else
                 {
-                    var site = await _accountApi.ChangeSite(res.Items.First().Item1.Id);
+                    var site = await _accountApi.ChangeSite(res.Items.First().TenantId);
                     if (site != null)
                     {
-                        return RedirctDomain(site, site.TenantId, "/admin", _authenticationHelper.GetCurrentTicket());
-
+                        //return RedirctDomain(site, site.TenantId, "/admin", _authenticationHelper.GetCurrentTicket());
+                        return Redirect("/admin");
                     }
                 }
 
@@ -233,7 +274,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             if (site != null)
             {
                 //todo: look in config
-                return RedirctDomain(site,site.TenantId, "/admin" , _authenticationHelper.GetCurrentTicket());
+                //return RedirctDomain(site,site.TenantId, "/admin" , _authenticationHelper.GetCurrentTicket());
+
+                var ticket = _authenticationHelper.GetCurrentTicket();
+                _authenticationHelper.SetCurrentUser(ticket);
+                _sbc.TenantId = id;
+                _sbc.SiteId = _authenticationHelper.GetCurrentUser().SiteId.GetValueOrDefault(-1);
+                _sbc.Save();
+
+                return Redirect("/admin");
             }
             ModelState.AddModelError("General", "Authentication failed!");
             return View("Login");

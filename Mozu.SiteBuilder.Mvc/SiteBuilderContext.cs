@@ -197,20 +197,19 @@ namespace Mozu.SiteBuilder.Mvc
 
         public int? SiteId { get; set; }
 
-		
+        public int? SiteGroupId { get; set; }
 
 		#endregion
 
 
         public void Save()
         {
-            HttpCookie cookie = new HttpCookie("");
-            cookie.Expires = DateTime.MaxValue;
-            cookie["site"] = this.SiteId.ToString ();
-            cookie["tenant"] = this.TenantId.ToString();
-            cookie["editmode"] = this.IsEditMode.ToString();
-          
-           
+            var cookie = new HttpCookie("") { Expires = DateTime.MaxValue };
+
+            cookie["site"] = SiteId.HasValue ? SiteId.ToString() : null;
+            cookie["sitegroup"] = SiteGroupId.HasValue ? SiteGroupId.ToString() : null;
+            cookie["tenant"] = TenantId.ToString();
+            cookie["editmode"] = IsEditMode.ToString();
 
             _cookieProvider.SaveResponseCookie(COOKIENAME,cookie);
         }
