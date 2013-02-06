@@ -60,7 +60,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         bool RemoveRoleFromSite(int siteId, int roleId);
         Task<Response<Tenant.Contracts.Tenant>> ChangeTenant(int id);
         Task<Response<List<TaContext>>> Register(LoginUser user);
-        Task<Response<List<AdminUser2>>> Logoff();
     }
 
     [ServiceContract]
