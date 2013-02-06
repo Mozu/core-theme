@@ -6,26 +6,26 @@ using Mozu.Core;
 using System.Linq;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Providers;
+using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Admin.Filters;
-using AccountApi = Mozu.SiteBuilder.UX.Admin.Api.AccountController;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
     [SiteBuilderAuthorize]
     public class HomeController : Controller
     {
-        private readonly AccountApi _accountApi;
+        private readonly AccountController _accountApi;
         private IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
         private readonly ITenantsWebApiClient _tenantsWebApi;
         private readonly IApiContext _apiContext;
         private readonly ITaContextProvider _taContextProvider;
 
-        public HomeController( AccountApi accountApi, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient  tenantsWebApi, IApiContext apiContext, ITaContextProvider taContextProvider)
+        public HomeController(AccountController accountApi, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ITaContextProvider taContextProvider)
         {
             _authenticationHelper = authHelper;
             _accountApi = accountApi;
@@ -48,14 +48,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             if (tenantRes.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
-                _accountApi.Logoff();
+                _authenticationHelper.LogOut();
             }
 
             var tenant = tenantRes.ReadAsSync();
 
             if (roles.IsNullOrEmpty())
             {
-                _accountApi.Logoff();
+                _authenticationHelper.LogOut();
             }
            // var sites = siteRes.ReadAsSync();
 

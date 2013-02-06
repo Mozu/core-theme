@@ -317,7 +317,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public ActionResult Logout()
         {
-            var logout = _accountApi.Logoff();
+            _authenticationHelper.LogOut();
             return Redirect("/admin/auth");
         }
     }
