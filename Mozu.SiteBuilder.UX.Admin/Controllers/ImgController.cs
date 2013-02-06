@@ -230,7 +230,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex);
-                return new RedirectResult("http://www.petsonline.com.my/includes/tng/styles/img_not_found.gif", true);
+                return RedirectPermanent("http://www.petsonline.com.my/includes/tng/styles/img_not_found.gif");
             }
 
         }

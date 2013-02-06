@@ -341,6 +341,7 @@
     <Compile Include="MappingTestFixture.cs" />
     <Compile Include="Mvc\CMS\CmsServiceWrapperTests.cs" />
     <Compile Include="Mvc\CMS\ProvisionHelperTests.cs" />
+    <Compile Include="Admin\Controllers\AuthControllerTests.cs" />
     <Compile Include="Mvc\Customers\AccountContactRepositoryTests.cs" />
     <Compile Include="Mvc\Customers\CustomerRepositoryTests.cs" />
     <Compile Include="Mvc\Customers\CustomerGroupsRepositoryTests.cs" />

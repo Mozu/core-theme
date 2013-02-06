@@ -146,7 +146,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (cat == null)
             {
-                return new RedirectResult("/store");
+                return Redirect("/store");
             }
             cat.ChildrenCategories = catList.Where (x => x.ParentCategoryId.GetValueOrDefault (-1) == categoryId).ToList();
 
