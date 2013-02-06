@@ -41,13 +41,31 @@ using InvitationWebApiClient = Mozu.AdminUser.Contracts.Clients.InvitationWebApi
 using ApiRole = Mozu.Core.Api.Contracts.Role;
 using AuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.AuthTicketWebApiClient;
 using IAuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.IAuthTicketWebApiClient;
+using LoginUser = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser;
 using Role = Mozu.SiteBuilder.UX.Models.Users.Role;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
+    // TODO: Temporarily extracted an interface here. These methods are all shared between AccountController and AuthController and should be moved into another Helper class
+    public interface IAccountController : IHttpController
+    {
+        AdminUser2 GetCurrentUser();
+        Task<Response<List<TaContext>>> VolusionLogIn(LoginUser login);
+        void CreatePasswordResetRequest(string emailAddress);
+        bool UserExists(LoginUser user);
+        Task<Site> ChangeSite(int tenantId);
+        AdminUser2 GetUser(string userId);
+        List<Tuple<Site, int>> SiteRolesList(string userId);
+        void UpdateForgottenPassword(LoginUser user);
+        bool RemoveRoleFromSite(int siteId, int roleId);
+        Task<Response<Tenant.Contracts.Tenant>> ChangeTenant(int id);
+        Task<Response<List<TaContext>>> Register(LoginUser user);
+        Task<Response<List<AdminUser2>>> Logoff();
+    }
+
     [ServiceContract]
     [AllowAnonymous]
-    public class AccountController : BaseController, IHttpController
+    public class AccountController : BaseController, IAccountController, IHttpController
     {
         private readonly IAdminUserWebApiClient _usersRepo;
         
@@ -260,7 +278,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return true;
         }
 
-        public async Task<Tenant.Contracts.Tenant> ChangeTenant(int tenantId)
+        public async Task<Response<Tenant.Contracts.Tenant>> ChangeTenant(int tenantId)
         {
             var tenant = await _tenantClient.GetTenant(tenantId).Result.ReadAsAsync();
             var repo = new AuthTicketWebApiClient(new ServiceClientMessageHandler(new ApiContext() { TenantId = tenantId }, _settings));
@@ -277,7 +295,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _siteBuilderContext.TenantId = tenantId;
             _siteBuilderContext.Save();
 
-            return tenant;
+            return Single2(tenant);
         }
 
         public async Task<Site> ChangeSite(int siteId)
@@ -587,7 +605,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return _usersRepo.UpdateUser(contractsUser, userId).Result.ReadAsSync();
         }
 
-        internal bool UserExists(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
+        public bool UserExists(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
         {
             if (string.IsNullOrEmpty(user.EmailAddress))
             {
@@ -604,7 +622,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return false;
         }
 
-        internal void UpdateForgottenPassword(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
+        public void UpdateForgottenPassword(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
         {
             //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
             var res = _usersRepo.UpdateForgottenPassword(new ConfirmationInfo()
@@ -620,7 +638,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        internal void CreatePasswordResetRequest(string email)
+        public void CreatePasswordResetRequest(string email)
         {
 
           //  var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));

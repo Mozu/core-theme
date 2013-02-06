@@ -16,6 +16,12 @@ namespace Mozu.SiteBuilder.IntegrationTests
             return entity;
         }
 
+        public static TEntity WithAny<TTasker, TEntity>(this TTasker self, Func<TTasker, Task<TEntity>> func, TEntity entity)
+        {
+            func(self).ReturnsForAnyArgs(Task<TEntity>.Factory.StartNew(() => entity));
+            return entity;
+        }
+
         public static TEntity With<TClient, TEntity>(this TClient self, Func<TClient, Task<ServiceClientResponse<TEntity>>> func, TEntity entity)
         {
             var testResponse = new TestResponse<TEntity>(entity);

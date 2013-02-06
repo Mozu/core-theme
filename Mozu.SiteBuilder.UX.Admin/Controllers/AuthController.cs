@@ -1,32 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Mozu.SiteBuilder.UX.Models.Admin;
-using Mozu.Tenant.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 
-using UserAuthTicket = Mozu.Core.Api.Contracts.UserAuthTicket;
-
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly AccountController _accountApi;
+        private readonly IAccountController _accountApi;
         private IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
-        public AuthController(AccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc)
+        public AuthController(IAccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc)
         {
             _authenticationHelper = authHelper;
             _accountApi = accountApi;
             _sbc = sbc;
-
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
@@ -38,7 +30,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             base.OnActionExecuted(filterContext);
         }
 
-        //
         // GET: /Auth/
         public ActionResult Index(LoginUser login)
         {
@@ -62,14 +53,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 return View("Index");
             }
 
-            
             // If the user authenticates, redirect them to the admin app
             var res = await _accountApi.VolusionLogIn(login);
 
             if(res.Success)
             {
                 var tenants = res.Items;
-                var collections = tenants.First().SiteCollections;
 
                 if (tenants.Count == 0)
                 {
@@ -85,8 +74,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                     var tenant = await _accountApi.ChangeTenant(taContext.TenantId);
                     if (tenant != null)
                     {
-                        //todo look in config;
-                        //return RedirctDomain(tenant, tenant.Id, "/admin", _authenticationHelper.GetCurrentTicket());
                         return Redirect("/admin");
                     }
                     return null;
@@ -99,37 +86,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 }
 
                 return Redirect("/admin");
-
-                /*if (res.Items.Count == 0)
-                {
-                    ModelState.AddModelError("General", "you dont have access to any sites");
-                    return View("Index");
-                }
-                else if (res.Items.Count > 1)
-                {
-                    return View("Roles", res.Items);
-                }
-                else
-                {
-                    //_sbc.TenantId = res.Items.First().TenantId;
-
-                    /*var ticket = _authenticationHelper.GetCurrentTicket();
-                    _authenticationHelper.SetCurrentUser(ticket);
-                    _sbc.TenantId = res.Items.First().TenantId;
-                    _sbc.SiteId = _authenticationHelper.GetCurrentUser().SiteId.GetValueOrDefault(-1);
-                    _sbc.Save();#1#
-
-                    return Redirect("/admin");
-
-                    /*var site = await _accountApi.ChangeSite(res.Items.First().TenantId);
-                    if (site != null)
-                    {
-                        //todo look in config;
-                        return RedirctDomain(site, site.TenantId, "/admin", _authenticationHelper.GetCurrentTicket());
-                    }#1#
-                }*/
-
-                //return RedirectToAction("Index", "Home");
             }
 
             // Otherwise, send the login error message
@@ -149,32 +105,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             try
             {
                 _accountApi.CreatePasswordResetRequest(user.EmailAddress );
-                return new JsonResult()
-                           {
-                               Data = true,
 
-                           };
+                return new JsonResult { Data = true };
             }
-
             catch (Exception)
             {
-
-                return new JsonResult()
-                           {
-                               Data = false,
-
-                           };
+                return new JsonResult { Data = false };
             }
         }
 
-
-
-
-
-
         public ActionResult NewAccountInvitation(LoginUser user)
         {
-            if (user.SiteId.GetValueOrDefault( ) != _sbc.SiteId )
+            if (user.SiteId.GetValueOrDefault() != _sbc.SiteId)
             {
                 _sbc.SiteId = user.SiteId.GetValueOrDefault();
                 _sbc.TenantId = user.TenantId.GetValueOrDefault();
@@ -189,15 +131,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
              
             return View(user);
         }
+
         [HttpPost ]
         public async Task<ActionResult> NewAccountInvitation(LoginUser user, FormCollection form)
         {
-
-            if (string.IsNullOrEmpty(user.Password ))
+            if (string.IsNullOrEmpty(user.Password))
             {
-                
                 if (string.IsNullOrEmpty(user.Password))
                     ModelState.AddModelError("Password", "Please enter your password!");
+
                 return View();
             }
 
@@ -210,17 +152,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 {
                     return View("Roles", res.Items);
                 }
-                else
-                {
-                    var site = await _accountApi.ChangeSite(res.Items.First().TenantId);
-                    if (site != null)
-                    {
-                        //return RedirctDomain(site, site.TenantId, "/admin", _authenticationHelper.GetCurrentTicket());
-                        return Redirect("/admin");
-                    }
-                }
 
-                //return RedirectToAction("Index", "Home");
+                var site = await _accountApi.ChangeSite(res.Items.First().TenantId);
+                if (site != null)
+                {
+                    return Redirect("/admin");
+                }
             }
 
             // Otherwise, send the login error message
@@ -231,7 +168,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public ActionResult ResetPassword(string validationToken, string userId )
         {
-            LoginUser user = new LoginUser();
+            var user = new LoginUser();
             user.ConfirmationCode = validationToken;
             var userObj = _accountApi.GetUser(userId);
 
@@ -243,7 +180,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             return View(user);
         }
-
 
         public ActionResult Launchpad()
         {
@@ -261,8 +197,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public ActionResult DeleteRole ( int siteId, int roleId)
         {
-            var res = _accountApi.RemoveRoleFromSite(siteId, roleId);
-            return new JsonResult()
+            _accountApi.RemoveRoleFromSite(siteId, roleId);
+            return new JsonResult
                        {
                            Data = true,
                            JsonRequestBehavior = JsonRequestBehavior.AllowGet
@@ -274,12 +210,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var tenant = await _accountApi.ChangeTenant(id);
             if (tenant != null)
             {
-
                 return Redirect("/admin");
             }
             return View("Login");
         }
 
+/*
+ * NOTE: No longer used since login attempts are made against Tenant.  (Missal 02/06/13)
+ * 
         public async Task<ActionResult> ChangeRole(int id)
         {
             var site = await _accountApi.ChangeSite(id);
@@ -299,7 +237,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             ModelState.AddModelError("General", "Authentication failed!");
             return View("Login");
         }
+*/
 
+/*
+ * Note: No longer used. Keep around for a little longer to save time from looking back in history if any issues arise.  (Missal 02/06/13)
+ * 
         ActionResult RedirctDomain (Site site, int tenantId , string url , UserAuthTicket ticket  )
         {
             
@@ -332,6 +274,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 
             //    );
         }
+*/
+
+/*
+ * Note: No longer used. Keep around for just a bit in case we want to look back in history quicker.  (Missal 02/06/13)
+ * 
         [HttpPost ]
         public ActionResult SSORedirect(string url, string accessToken, string refreshToken, string profileToken, string accessTokenExpire, string refreshTokenExpire, int tenantId)
         {
@@ -350,12 +297,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             return this.Redirect(url);
         }
+*/
 
         public ActionResult Register()
         {
             return View();
         }
-
 
         [HttpPost]
         public ActionResult Register(LoginUser user, FormCollection collection)
@@ -363,7 +310,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             if (ModelState.IsValidField("SiteName") && ModelState.IsValidField("EmailAddress") && ModelState.IsValidField("Password"))
             {
                 var reg = _accountApi.Register(user);
-                return new RedirectResult("/admin");
+                return Redirect("/admin");
             }
             return View(user);
         }
@@ -371,9 +318,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         public ActionResult Logout()
         {
             var logout = _accountApi.Logoff();
-            return new RedirectResult("/admin/auth");
-            
-           
+            return Redirect("/admin/auth");
         }
     }
 }
