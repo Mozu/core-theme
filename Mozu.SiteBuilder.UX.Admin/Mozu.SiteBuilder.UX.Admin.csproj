@@ -462,6 +462,8 @@
     <Content Include="Scripts\app\core\layout\Flex.js" />
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
     <Content Include="Scripts\app\core\context\TaContext.js" />
+    <Content Include="Scripts\app\core\ux\grid\Panel.js" />
+    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />
     <Content Include="Scripts\app\core\ux\ScrollSpy.js" />
     <Content Include="Scripts\app\core\ux\grid\RowExpander.js" />
     <Content Include="Scripts\app\core\ux\DragSource.js" />
@@ -2688,6 +2690,7 @@
     <Content Include="Scripts\app\mocks\themefonts.json" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Configuration\StartupTasks\" />
     <Folder Include="Models\" />
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
