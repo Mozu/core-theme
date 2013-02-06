@@ -17,16 +17,20 @@ Ext.define('Taco.view.product.SiteForm', {
         'Taco.view.product.subform.Merchandising',
         'Taco.view.product.subform.SEO'
     ],
-    // id: "productSingleSiteForm",
+    
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'single-site-admin-form'],
 
+    header: false,
+
     initComponent: function () {
+        var subFormCfg;
+
         this.defaults = this.defaults || {};
         this.defaults.isSingleSite = this.isSingleSite;
 
         this.editTitle = this.createTitle = 'Site ID: ' + this.record.get('siteId');
 
-        var subFormCfg = {
+        subFormCfg = {
             record: this.record,
             product: this.product,
             productInSiteInfo: this.productInSiteInfo,

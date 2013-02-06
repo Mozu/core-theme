@@ -173,17 +173,6 @@ Ext.define('Taco.view.product.Form', {
         } else {
             this.goGoMultiSite();
         }
-
-        // siteForm = Ext.create('Taco.view.product.SiteForm', {
-        //     isSingleSite: this.isSingleSite,
-        //     record:siteInfo,
-        //     product: this.record,
-        //     productInSiteInfo: siteInfo
-        // });
-
-        // this.siteForms.push(siteForm);
-      
-        // this.tabPanel.add(siteForm);
     },
 
     /**
@@ -192,7 +181,7 @@ Ext.define('Taco.view.product.Form', {
      */
     removeSite: function (siteId) {
         var record = this.inSitesStore.findRecord('siteId', siteId),
-            form;
+            wasSingleSite, form;
 
         if (!record) {
             return;
@@ -210,7 +199,22 @@ Ext.define('Taco.view.product.Form', {
             return;
         }
 
-        this.tabPanel.remove(form);
         this.inSitesStore.remove(record);
+
+        wasSingleSite = this.isSingleSite;
+
+        this.isSingleSite = this.singleSiteCheck();
+
+        //  State unchanged, gfto
+        if (wasSingleSite === this.isSingleSite) {
+            return;
+        }
+
+        //  Must rebuild tabs now since state switched
+        if (this.isSingleSite) {
+            this.goGoSingleSite();
+        } else {
+            this.goGoMultiSite();
+        }
     }
 });

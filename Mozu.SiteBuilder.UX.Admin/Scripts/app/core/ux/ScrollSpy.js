@@ -78,7 +78,9 @@ Ext.define('Taco.core.ux.ScrollSpy', {
                 var scrollingParent = this.findParentBy(function (p) {
                     return p.getEl().isScrollable();
                 });
-                if (containerEl) scrollingContainer = scrollingParent.getEl();
+                if (containerEl && scrollingParent) {
+                    scrollingContainer = scrollingParent.getEl();
+                }
             }
 
             // last resort, just use doc body

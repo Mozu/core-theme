@@ -25,6 +25,7 @@ Ext.define('Taco.view.product.GlobalForm', {
     id: 'productGlobalForm',
     scrollSpyOffset: 150,
     title: 'Global',
+    header: false,
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'global-admin-form'],
 
     initComponent: function () {
