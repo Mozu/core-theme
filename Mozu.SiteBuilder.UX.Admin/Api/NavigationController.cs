@@ -472,7 +472,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     case "product":
                         {
-                            var prod = _prodService.GetProductByProductCode(parts[1],null).Result.ReadAsSync();
+                            var prod = _prodService.GetProduct(parts[1], null).Result.ReadAsSync();
                             if (prod != null)
                             {
                                 navNode.Items.Add(prod.Map<NavigationTreeNode>());

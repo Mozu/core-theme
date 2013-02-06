@@ -64,6 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public AccountController(IAdminUserWebApiClient user, IRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings )
         {
             _usersRepo = user;
+            ;
             _rolesRepo = role;
             _authTicketRepo = auth;
             _tenantClient = tenantsClient;

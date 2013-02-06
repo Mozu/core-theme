@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "list")]
         public Task<Response<List<TaxRate>>> GetTaxRates(PagingParamaters pagingParams, FilterCollection extFilter)
         {
-            var res = _taxClient.FindRates(pagingParams.startIndex, pagingParams.pageSize).Result.ReadAsSync();
+            var res = _taxClient.GetRates(pagingParams.startIndex, pagingParams.pageSize).Result.ReadAsSync();
             var taxRates = Mapper.Map<List<TaxRate>>(res.Items);
 
             return List(taxRates, (int) res.TotalCount);

@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.Mvc
             }
             if (req != null)
             {
-                if ( req.Headers.AllKeys.Any(x => x == Mozu.Core.Api.Contracts.Constants.Headers.SITE))
+                if ( req.Headers.AllKeys.Any(x => x == Mozu.Core.Api.Contracts.Constants.Headers.TENANT ))
                 {
 
                     var headers = new HttpRequestMessage().Headers;
