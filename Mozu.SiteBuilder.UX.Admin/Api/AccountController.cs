@@ -260,10 +260,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return true;
         }
 
-        public async Task<Tenant.Contracts.Tenant> ChangeTenant(int tenantId, int siteGroupId)
+        public async Task<Tenant.Contracts.Tenant> ChangeTenant(int tenantId)
         {
             var tenant = await _tenantClient.GetTenant(tenantId).Result.ReadAsAsync();
-            var repo = new AuthTicketWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteGroupId = siteGroupId, TenantId = tenantId }, _settings));
+            var repo = new AuthTicketWebApiClient(new ServiceClientMessageHandler(new ApiContext() { TenantId = tenantId }, _settings));
             var ticket = _authHelper.GetCurrentTicket();
 
             ticket = await repo.RefreshUserAuthTicket(ticket.RefreshToken).Result.ReadAsAsync();
@@ -372,7 +372,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 List<Tenant.Contracts.Tenant> tenants = ulr.Tenants;
                 foreach (var tenant in tenants)
                 {
-                    var taContext = new TaContext { TenantId = tenant.Id, SiteCollections = new List<TaContextSiteCollection>() };
+                    var taContext = new TaContext
+                        {
+                            TenantId = tenant.Id,
+                            SiteCollections = new List<TaContextSiteCollection>(),
+                            Name = tenant.Name,
+                        };
 
                     foreach (var siteGroup in tenant.SiteGroups)
                     {

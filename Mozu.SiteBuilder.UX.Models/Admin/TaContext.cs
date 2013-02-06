@@ -13,6 +13,9 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "tenantId")]
         public int TenantId { get; set; }
 
+        [DataMember(Name = "name")]
+        public string Name { get; set; }
+
         [DataMember(Name = "siteCollections")]
         public List<TaContextSiteCollection> SiteCollections { get; set; }
     }

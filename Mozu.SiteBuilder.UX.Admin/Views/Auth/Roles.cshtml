@@ -8,9 +8,15 @@
 <div class="rolesContainer">
     <h2>Vnext Launchpad</h2>
     <div class="rolesWrapper">
-        @foreach (TaContext collection in Model)
+        @foreach (var tenant in Model)
         {
-            <div class="role">
+            
+            <fieldset>
+                <legend>@tenant.Name</legend>
+                <code>TenantId: @tenant.TenantId</code>
+                <a class="nextgen" href="ChangeTenant?id=@tenant.TenantId">@tenant.Name</a>
+            </fieldset>
+            @*<div class="role">
                 <div class="deleteRole">
                     <a href="javascript:;" onclick="DeleteRole(this,@item.Item1.Id,@item.Item2)">&times;</a>
                 </div>
@@ -21,16 +27,16 @@
                 <div class="roleType">
                     (@(item.Item2 == 1 ? "Super Admin" : "Admin"))
                 </div>
-                @*<code>Url: http://@(item.Item1.AssignedDomain !=null ? item.Item1.AssignedDomain.FullName :"[n/a]")</code>*@
-                <code>TenantId: @item.Item1.TenantId</code>
+                $1$<code>Url: http://@(item.Item1.AssignedDomain !=null ? item.Item1.AssignedDomain.FullName :"[n/a]")</code>#1#
                 <code>Site: @item.Item1.Id</code>
              
-            </div>
+            </div>*@
         }
     </div>
 </div><!-- #rolesContainer -->
 
 <script>
+    
     function DeleteRole(elm, site, role) {
         if (confirm('do you really want to remove this site from your available sites')) {
             $.ajax({

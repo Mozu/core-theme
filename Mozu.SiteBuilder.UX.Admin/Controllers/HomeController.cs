@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IApiContext _apiContext;
         private readonly ITaContextProvider _taContextProvider;
 
-        public HomeController(AccountApi accountApi, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ISitesWebApiClient sitesWebApiClient, IApiContext apiContext, ITaContextProvider taContextProvider, ITenantsWebApiClient tenantsWebApi)
+        public HomeController( AccountApi accountApi, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient  tenantsWebApi, IApiContext apiContext, ITaContextProvider taContextProvider)
         {
             _authenticationHelper = authHelper;
             _accountApi = accountApi;
