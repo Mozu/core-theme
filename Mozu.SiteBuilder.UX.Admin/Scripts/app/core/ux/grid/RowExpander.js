@@ -1,21 +1,20 @@
 /**
  * @class Taco.core.ux.grid.RowExpander
  * @author Jimmy Sanford
- * Extends the RowExpander plugin.
+ * Overrides the RowExpander plugin.
  */
 
 Ext.define('Taco.core.ux.grid.RowExpander', {
-    extend: 'Ext.ux.RowExpander',
+    override: 'Ext.ux.RowExpander',
     requires: ['Taco.core.ux.grid.RowBody'],
-    alias: 'plugin.taco.rowexpander',
 
-    constructor: function() {
+    constructor: function () {
         var me = this,
             grid,
             rowBodyTpl,
             features;
 
-        me.callParent(arguments);
+        me.callSuper(arguments);
         grid = me.getCmp();
 
         me.recordsExpanded = {};
@@ -59,9 +58,9 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
         } else {
             grid.features = features;
         }
-        // NOTE: features have to be added before init (before Table.initComponent)
     },
 
+    // overrides: removed valign, rowspan attributes; removed colspan decrement
     getRowBodyFeatureData: function(data, idx, record, orig) {
         var me = this,
             o = me.self.prototype.getAdditionalData.apply(this, arguments),
@@ -70,10 +69,41 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
         o.rowBody = me.getRowBodyContents(data);
         o.rowCls = me.recordsExpanded[record.internalId] ? '' : me.rowCollapsedCls;
         o.rowBodyCls = me.recordsExpanded[record.internalId] ? '' : me.rowBodyHiddenCls;
-        o[id + '-tdAttr'] = ' valign="top" ';
+        o[id + '-tdAttr'] = ' ';
         if (orig[id+'-tdAttr']) {
             o[id+'-tdAttr'] += orig[id+'-tdAttr'];
         }
         return o;
+    },
+
+    // overrides: removed toggling of hidden class on rowbody; parent's collapsed class is sufficient
+    toggleRow: function(rowIdx, record) {
+        var me = this,
+            view = me.view,
+            rowNode = view.getNode(rowIdx),
+            row = Ext.fly(rowNode, '_rowExpander'),
+            nextBd = row.down(me.rowBodyTrSelector, true),
+            isCollapsed = row.hasCls(me.rowCollapsedCls),
+            addOrRemoveCls = isCollapsed ? 'removeCls' : 'addCls',
+            rowHeight;
+
+        // Suspend layouts because of possible TWO views having their height change
+        Ext.suspendLayouts();
+        row[addOrRemoveCls](me.rowCollapsedCls);
+        me.recordsExpanded[record.internalId] = isCollapsed;
+        view.refreshSize();
+        view.fireEvent(isCollapsed ? 'expandbody' : 'collapsebody', row.dom, record, nextBd);
+
+        // Sync the height and class of the row on the locked side
+        if (me.grid.ownerLockable) {
+            view = me.grid.ownerLockable.lockedGrid.view;
+            rowHeight = row.getHeight();
+            row = Ext.fly(view.getNode(rowIdx), '_rowExpander');
+            row.setHeight(rowHeight);
+            row[addOrRemoveCls](me.rowCollapsedCls);
+            view.refreshSize();
+        }
+        // Coalesce laying out due to view size changes
+        Ext.resumeLayouts(true);
     }
 });

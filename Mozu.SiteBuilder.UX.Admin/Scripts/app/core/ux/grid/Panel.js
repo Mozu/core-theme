@@ -5,6 +5,7 @@
  */
 Ext.define('Taco.core.ux.grid.Panel', {
     extend: 'Ext.grid.Panel',
+    requires: ['Taco.core.ux.grid.RowExpander'],
     alias: 'widget.taco.gridpanel',
 
     initComponent: function () {

@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Taco.core.ux.grid.Panel', 'Ext.selection.CheckboxModel', 'Ext.ux.RowExpander'],
+    requires: ['Ext.selection.CheckboxModel', 'Taco.core.ux.grid.Panel', 'Ext.ux.RowExpander'],
 
     header: {
         title: 'Grid Testing'
@@ -85,17 +85,15 @@ Ext.define('Taco.view.catalog.Index', {
             plugins: [{
                 ptype: 'rowexpander',
                 rowBodyTpl: new Ext.XTemplate(
-                    // '<table class="x-grid-table x-grid-table-resizer" width="100%"><tbody>',
-                        '<tpl for="productInSites"><tr class="x-grid-row-body">',
-                            '<td colspan="3" class="x-grid-cell"><div class="x-grid-cell-inner"></div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{productName}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{siteId}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{isContentOverridden}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner"></div></td>',
-                        '</tr></tpl>',
-                    // '</tbody></table>',
+                    '<tpl for="productInSites"><tr class="x-grid-row-body">',
+                        '<td colspan="3" class="x-grid-cell"><div class="x-grid-cell-inner"></div></td>',
+                        '<td class="x-grid-cell"><div class="x-grid-cell-inner">{productName}</div></td>',
+                        '<td class="x-grid-cell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
+                        '<td class="x-grid-cell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
+                        '<td class="x-grid-cell"><div class="x-grid-cell-inner">{siteId}</div></td>',
+                        '<td class="x-grid-cell"><div class="x-grid-cell-inner">{isContentOverridden}</div></td>',
+                        '<td class="x-grid-cell"><div class="x-grid-cell-inner"></div></td>',
+                    '</tr></tpl>',
                 {
                     formatPrice: function (value) {
                         return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
