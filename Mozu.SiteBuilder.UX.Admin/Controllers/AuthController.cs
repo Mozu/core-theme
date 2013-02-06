@@ -68,20 +68,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             if(res.Success)
             {
-                var collections = res.Items.First().SiteCollections;
+                var tenants = res.Items;
+                var collections = tenants.First().SiteCollections;
 
-                if (collections.Count == 0)
+                if (tenants.Count == 0)
                 {
                     ModelState.AddModelError("General", "You don't have access to any sites.");
                     return View("Index");
                 }
 
-                if (collections.Count == 1)
+                if (tenants.Count == 1)
                 {
                     // Auto login to tenant
-                    var taContext = res.Items.First();
+                    var taContext = tenants.First();
 
-                    var tenant = await _accountApi.ChangeTenant(taContext.TenantId, collections.First().Id);
+                    var tenant = await _accountApi.ChangeTenant(taContext.TenantId);
                     if (tenant != null)
                     {
                         //todo look in config;
@@ -91,10 +92,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                     return null;
                 }
 
-                if (collections.Count > 0)
+                if (tenants.Count > 0)
                 {
                     // Launch Pad with Tenant Names
-                    return View("Roles", res.Items);
+                    return View("Roles", tenants);
                 }
 
                 return Redirect("/admin");
@@ -266,6 +267,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                            Data = true,
                            JsonRequestBehavior = JsonRequestBehavior.AllowGet
                        };
+        }
+
+        public async Task<ActionResult> ChangeTenant(int id)
+        {
+            var tenant = await _accountApi.ChangeTenant(id);
+            if (tenant != null)
+            {
+
+                return Redirect("/admin");
+            }
+            return View("Login");
         }
 
         public async Task<ActionResult> ChangeRole(int id)
