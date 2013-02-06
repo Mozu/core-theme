@@ -1,3 +1,31 @@
+@mixin taco-grid {
+  // overrides for RowExpander plugin
+  .#{$prefix}grid-row-expander {
+    background-image: none;
+    border-bottom: 5px solid transparent;
+    border-left: 10px solid $color-neutral-dark;
+    border-right: 0px none;
+    border-top: 5px solid transparent;
+    height: 0px;
+    width: 0px;
+    @include transform(rotate(90deg));
+    @include single-transition(-webkit-transform, 0.1s);
+  }
+
+  .#{$prefix}grid-row-collapsed {
+
+    .#{$prefix}grid-row-expander {
+      background-image: none;
+      @include transform(rotate(0deg));
+    }
+
+    .#{$prefix}grid-row-body {
+      display: none;
+    }
+    
+  }
+}
+
 // @mixin taco-grid {
 
 
@@ -636,9 +664,3 @@
 //     }
 //   }
 // }
-
-@mixin taco-grid {
-  .#{$prefix}grid-cell {
-    
-  }
-}

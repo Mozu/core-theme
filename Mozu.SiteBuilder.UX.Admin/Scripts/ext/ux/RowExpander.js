@@ -12,7 +12,8 @@ Ext.define('Ext.ux.RowExpander', {
     lockableScope: 'normal',
 
     requires: [
-        'Ext.grid.feature.RowBody',
+        // 'Ext.grid.feature.RowBody',
+        'Taco.core.ux.grid.RowBody',
         'Ext.grid.feature.RowWrap'
     ],
 
@@ -79,7 +80,7 @@ Ext.define('Ext.ux.RowExpander', {
         me.rowBodyTpl = Ext.XTemplate.getTpl(me, 'rowBodyTpl');
         rowBodyTpl = this.rowBodyTpl;
         features = [{
-            ftype: 'rowbody',
+            ftype: 'taco.rowbody',
             lockableScope: 'normal',
             columnId: me.getHeaderId(),
             recordsExpanded: me.recordsExpanded,
@@ -175,7 +176,7 @@ Ext.define('Ext.ux.RowExpander', {
         o.rowBody = me.getRowBodyContents(data);
         o.rowCls = me.recordsExpanded[record.internalId] ? '' : me.rowCollapsedCls;
         o.rowBodyCls = me.recordsExpanded[record.internalId] ? '' : me.rowBodyHiddenCls;
-        o[id + '-tdAttr'] = ' valign="top" rowspan="2" ';
+        o[id + '-tdAttr'] = ' valign="top" ';
         if (orig[id+'-tdAttr']) {
             o[id+'-tdAttr'] += orig[id+'-tdAttr'];
         }
