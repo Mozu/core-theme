@@ -20,6 +20,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
     /// <summary>
     /// Mocks IProductWebApiClient to store Products in the HttpRuntime.Cache
     /// </summary>
+    [Obsolete]
     public class InMemoryProductWebApiClient : IMoreAwesomeProductWebApiClient
     {
         private const string PRODUCTS_CACHE_FORMAT_STRING = "_products";

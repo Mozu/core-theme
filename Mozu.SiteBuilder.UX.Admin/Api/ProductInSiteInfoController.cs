@@ -18,9 +18,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     /// <summary>
     /// Controller for the product delta, ProductInSiteInfo.
-    /// TODO: The Mozu service for this is not currently available.
-    /// TODO: This controller is tightly coupled to the ProductController,
-    /// TODO: which maintains an in-memory cache of Products.
     /// 
     /// Important: When dealing with the Mozu services, we deal with the top-level Product object.
     /// ProductInSiteInfo is a sub-resource of that, so this controller looks up the parent Product,
@@ -34,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ProductInSiteInfoController(IMoreAwesomeProductWebApiClient productClient)
+        public ProductInSiteInfoController(IProductWebApiClient productClient)
         {
             _productClient = productClient;
         }

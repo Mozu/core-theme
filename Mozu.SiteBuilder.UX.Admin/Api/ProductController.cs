@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Caching;
 using System.Web.Http;
 using AutoMapper;
-using Mozu.Core;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -21,9 +17,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     /// <summary>
     /// Controller for products.
-    /// TODO: The Mozu service for this is not currently available.
-    /// TODO: I am storing all items in HttpRuntimeCache in the meantime.
-    /// TODO: Eventually we need to use the services.
     /// </summary>
     [ServiceContract]
     public class ProductController : BaseController
@@ -33,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ProductController(IMoreAwesomeProductWebApiClient productClient)
+        public ProductController(IProductWebApiClient productClient)
         {
             _productClient = productClient;
         }
