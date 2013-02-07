@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Mozu.ProductAdmin.Contracts.Clients;
-using System.ServiceModel.Web;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
-using DC = Mozu.ProductAdmin.Contracts;
-using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using AutoMapper;
-using System.Net.Http;
-using System.Text;
 using System.Linq.Expressions;
+using System.ServiceModel;
+using System.Text;
 using System.Web.Mvc;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {

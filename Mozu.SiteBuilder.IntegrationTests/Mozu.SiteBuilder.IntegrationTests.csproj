@@ -334,6 +334,8 @@
     <Compile Include="Admin\Api\AccountControllerTests.cs" />
     <Compile Include="Admin\Api\NavigationControllerTests.cs" />
     <Compile Include="Admin\Api\PagingParamatersRequestHandlersTests.cs" />
+    <Compile Include="Admin\Api\ProductControllerTests.cs" />
+    <Compile Include="Admin\Api\ProductInSiteInfoControllerTests.cs" />
     <Compile Include="Admin\GeneralSettingsWrapperTests.cs" />
     <Compile Include="ClientRepositories\RestServiceClientTests.cs" />
     <Compile Include="ClientRepositories\UserRepositoryTests.cs" />
