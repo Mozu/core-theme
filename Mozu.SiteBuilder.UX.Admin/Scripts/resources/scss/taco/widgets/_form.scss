@@ -1976,11 +1976,19 @@
   }
 
   .#{$vprefix}form-tab-panel {
+    $formTabColor: rgb(116, 133, 151);
+    $formTabColorBG: rgb(148, 164, 180);
+    $formTabCloseColor: ($formTabColor+$formTabColorBG)/2;
+
     background-color: $color-neutral-lightest;
 
+    .x-panel-body-default {
+      border: none;
+    }
+
     .#{$vprefix}form-tab {
-      background-color: rgb(148, 164, 180);
-      border-color: rgb(116, 133, 151);
+      background-color: $formTabColorBG;
+      border-color: $formTabColor;
       border-style: solid solid solid none;
       border-width: 1px 1px 1px 0px;
       color: $color-neutral-white;
@@ -2006,6 +2014,10 @@
         text-indent: -99999px;
         width: 45px;
 
+        &.list-open {
+          border-radius: 0 3px 0 0;
+        }
+
         &::before {
           background-color: $color-neutral-white;
           content: "";
@@ -2025,10 +2037,45 @@
           width: 13px;
         }
       }
+
+      .#{$vprefix}override-indicator {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        border: 8px solid orange;
+        border-left-color: transparent;
+        border-bottom-color: transparent;
+      }
+
+      &.#{$vprefix}has-overrides .#{$vprefix}override-indicator {
+        display: block;
+      }
     }
 
     .#{$vprefix}form-tab-active {
       background-color: rgb(94, 110, 125);
+    }
+
+    .#{$vprefix}form-tab-close-button {
+      display: inline-block;
+      width: 22px;
+      padding: 0 2px 2px 2px;
+      margin: -1px -8px 0 12px;
+      position: relative;
+      top: -2px;
+      line-height: 1;
+      border-radius: 50%;
+      border: 2px solid $formTabCloseColor;
+      background-color: $color-neutral-white;
+      color: $formTabCloseColor;
+      text-align: center;
+
+      &:hover {
+        border-color: $color-neutral-white;
+        background-color: $formTabCloseColor;
+        color: $color-neutral-white;
+      }
     }
   }
 
@@ -2043,4 +2090,15 @@
       }
     }
   }
+
+  .#{$vprefix}available-site-list {
+    color: $color-neutral-white;
+    background-color: rgb(181, 191, 201); // $addTabColor
+    border: 1px solid rgb(116, 133, 151); // $formTabColor
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    padding: 6px 8px 0;
+    text-shadow: 0 0 4px #666;
+  }
+
 }

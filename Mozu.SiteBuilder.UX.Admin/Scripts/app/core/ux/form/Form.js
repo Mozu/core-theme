@@ -159,7 +159,6 @@ Ext.define('Taco.core.ux.form.Form', {
         this.forms = [];
         this.trackedFields = [];
 
-        console.log('track fields')
         Ext.each(this.query('[isFormForm],[isFormField]'), function (cmp) {
             if(cmp.isTrackedField || cmp.up('[isFormForm]') !== this) {
                 return;

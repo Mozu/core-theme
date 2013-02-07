@@ -19,6 +19,7 @@ Ext.define('Taco.view.product.SiteForm', {
     ],
     
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'single-site-admin-form'],
+    overrideCount: 0,
 
     header: false,
     persistChangesToModel: true,
@@ -26,10 +27,12 @@ Ext.define('Taco.view.product.SiteForm', {
     initComponent: function () {
         var subFormCfg;
 
-        this.defaults = this.defaults || {};
+        this.defaults = this.defaults || {};  // TODO: Are these two lines necessary?
         this.defaults.isSingleSite = this.isSingleSite;
 
-        this.editTitle = this.createTitle = 'Site ID: ' + this.record.get('siteId');
+        this.siteId = this.record.get('siteId');
+
+        this.editTitle = this.createTitle = 'Site ID: ' + this.siteId;
 
         subFormCfg = {
             record: this.record,
@@ -60,6 +63,44 @@ Ext.define('Taco.view.product.SiteForm', {
         ];
 
         this.callParent(arguments);
+
+        this.on({
+            overrideCountChange: this.handleOverrideChange,
+            scope: this
+        });
+    },
+
+    /**
+     * @private
+     * @param {int} delta
+     *
+     * Event handler called when this container receives an 'overrideCountChange' event.
+     * This can be used to notify the tab when to change it's appearance to reflect the
+     * fact that it contains an overridden fieldset.
+     */
+    handleOverrideChange: function ( delta ) {
+        var tab = this.getTabComponent();
+        if( tab ) {
+            this.overrideCount += delta;
+            if( this.overrideCount ) {
+                tab.addCls(Taco.baseCSSPrefix + 'has-overrides');
+            } else {
+                tab.removeCls(Taco.baseCSSPrefix + 'has-overrides');
+            }
+        }
+    },
+
+    /**
+     * @public
+     * @return {Taco.core.ux.tab.Tab|Boolean}
+     *
+     * Gets the Tab component associated with this Form.
+     */
+    getTabComponent: function () {
+        if( this.tab ) {
+            return this.tab;
+        }
+        return false;
     },
 
     addSaveTasks: function (tasks) {

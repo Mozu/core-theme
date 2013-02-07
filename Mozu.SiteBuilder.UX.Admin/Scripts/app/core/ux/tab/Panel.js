@@ -1,11 +1,14 @@
 /**
  * @class Taco.core.ux.tab.Panel
  * @author Jimmy Sanford
- * 
+ *
  */
 Ext.define('Taco.core.ux.tab.Panel', {
     extend: 'Ext.panel.Panel',
-    requires: ['Taco.core.ux.tab.Tab'],
+    requires: [
+        'Taco.core.ux.tab.Tab',
+        'Taco.view.product.AddSiteContainer'
+    ],
     alias: 'widget.formtabpanel',
 
     componentCls: Taco.baseCSSPrefix + 'form-tab-panel',
@@ -22,9 +25,11 @@ Ext.define('Taco.core.ux.tab.Panel', {
     navigation: false,
 
     initComponent: function () {
-        var me = this,
+        var availableSiteList = Ext.create('Taco.view.product.AddSiteContainer', { currentSites: Ext.Array.pluck( this.items, 'siteId' ) }),
             lbar,
             tbar;
+
+        this.availableSiteList = availableSiteList;
 
         if (this.navigation) {
             lbar = Ext.create('Ext.Container', {
@@ -39,18 +44,40 @@ Ext.define('Taco.core.ux.tab.Panel', {
             componentCls: Taco.baseCSSPrefix + 'form-tab-bar',
             itemId: 'tabBar',
             margin: '20 0 20 160',
-            items: [{
-                xtype: 'component',
-                componentCls: Taco.baseCSSPrefix + 'form-tab',
-                cls: 'add',
-                html: 'Add Site'
-            }]
+            items: [
+                {
+                    xtype: 'component',
+                    componentCls: Taco.baseCSSPrefix + 'form-tab',
+                    cls: 'add',
+                    html: 'Add Site',
+                    availableSiteList: availableSiteList,
+                    listeners: {
+                        boxready: function () {
+                            this.getEl().on({
+                                click: function () {
+                                    var el = Ext.get(this);
+                                    if( el.hasCls('list-open') ) {
+                                        availableSiteList.hide();
+                                        el.removeCls('list-open');
+                                    } else {
+                                        availableSiteList.showBy(this, 'tr-br');
+                                        el.addCls('list-open');
+                                    }
+                                }
+                            })
+                        }
+                    }
+                },
+                availableSiteList
+            ]
         });
 
         // Don't comment this shit out or everything will break!
         // Ask Jimmy for details...
         this.lbar = lbar;
         this.tbar = tbar;
+
+        this.enableBubble('selectionChange'); // *** This event is fired as the result of a formTabCountChange being handled.
 
         this.callParent(arguments);
 
@@ -62,6 +89,12 @@ Ext.define('Taco.core.ux.tab.Panel', {
         }
 
         this.tabBar.insert(0, this.initTabs(this.items));
+
+        this.on('formTabCountChange', this.tabCountChange);
+        this.on({
+            formTabCountChange: this.tabCountChange,
+            target: availableSiteList
+        });
     },
 
     /**
@@ -152,11 +185,11 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
         cardEl.scrollBy(0, itemEl.getY() - cardEl.getY(), true);
     },
-    
+
     /**
      * Returns the tab by title
      * @param  {String} title Title of the component in the tab
-     * @return {Ext.Component}       The component found by the title. Returns undefined if not found.
+     * @return {Ext.Component|Boolean} The component found by the title. Returns false if not found.
      */
     getTab: function (title) {
         var result;
@@ -209,6 +242,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
             var tab = Ext.create('Taco.core.ux.tab.Tab', {
                 card: item,
                 text: item.title,
+                siteId: item.siteId,
                 activeCls: this.activeTabCls,
                 invalidCls: this.invalidTabCls
             });
@@ -217,6 +251,20 @@ Ext.define('Taco.core.ux.tab.Panel', {
         }, this);
 
         return tabs;
+    },
+
+    /**
+     * @private
+     * @param {Number?} removeSiteAtId [Optional] An id number to remove from the list of associated sites
+     */
+    tabCountChange: function ( removeSiteAtId ) {
+        // *** Get all sites in SiteCollection, reduce set to object of id:site pairs.
+        var selectedSites = this.availableSiteList.getSelectedSites();
+
+        if( removeSiteAtId ) {
+            delete selectedSites[ removeSiteAtId ];
+        }
+        this.fireEvent('selectionChange', selectedSites);
     },
 
     /**
