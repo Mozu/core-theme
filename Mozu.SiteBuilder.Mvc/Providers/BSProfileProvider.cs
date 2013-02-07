@@ -93,7 +93,7 @@
 //            {
 
 //                SettingsPropertyValue settingsPropertyValue = new SettingsPropertyValue(settingsProperty);
-//                if (settingsProperty.Name == "TenantId")
+//                if (settingsProperty.Name == "Id")
 //                {
 
 //                    var userName = (string)context["UserName"] ?? "1";

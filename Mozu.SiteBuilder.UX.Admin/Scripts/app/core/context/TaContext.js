@@ -9,7 +9,6 @@ Ext.define('Taco.core.context.TaContext', {
     urlToken: null,
     contextType: 't',
     name: 'All',
-    
     siteCollections: null,
     
     currentCtx: null,
@@ -31,7 +30,7 @@ Ext.define('Taco.core.context.TaContext', {
 
         var headers = options.headers = options.headers || {}, sc = this.getCurrentSiteCollection(), site = this.getCurrentSite();
 
-        headers['x-vol-tenant'] = this.tenantId || this.id;
+        headers['x-vol-tenant'] = this.id || this.id;
         if (sc) {
             headers['x-vol-site-group'] = sc.id;
         }
@@ -85,7 +84,7 @@ Ext.define('Taco.core.context.TaContext', {
     },
 
     getTenantId: function () {
-        return this.tenantId;
+        return this.id;
     },
 
     getSiteId: function () {
@@ -125,15 +124,19 @@ Ext.define('Taco.core.context.TaContext', {
             });
         });
 
-        me.store = Ext.create('Ext.data.Store', {
+        Ext.define('TaContext-StoreItem', {
+            extend: 'Ext.data.Model',
             fields: [
                 'name',
                 'contextType',
-                'urlToken',
-                { name: 'itemid', type: 'int' }
-                // *** Below field is not needed if this store can guarantee the order of its records
-                // { name: 'parentCollectionID', type: 'int', defaultValue: NaN } // *** ID of parent SiteCollection (for Sites only)
+                'urlToken'
             ],
+            idProperty: 'urlToken'
+        });
+        
+
+        me.store = Ext.create('Ext.data.Store', {
+            model: 'TaContext-StoreItem',
             data:data
         });
 
@@ -142,7 +145,7 @@ Ext.define('Taco.core.context.TaContext', {
 
     init: function (data) {
         var me = this;
-        me.urlToken = me.contextType +':'+ data.tenantId;
+        me.urlToken = me.contextType +':'+ data.id;
         me.currentCtx = me;
         
         Ext.each(data.siteCollections, function(sc,idx) {

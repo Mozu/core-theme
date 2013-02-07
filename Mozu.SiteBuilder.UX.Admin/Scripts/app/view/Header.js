@@ -72,7 +72,7 @@ Ext.define('Taco.view.Header', {
                 autoEl: {
                     tag: 'a',
                     href: '/admin',
-                    title: Taco.siteInfo.Name + ' siteId:[' + Taco.siteInfo.Id + '] tenantId:[' + Taco.siteInfo.TenantId + '] version:[' + Taco.apiVersion + '] date:[' + Ext.Date.format(Taco.buildDate, 'Y-m-d H:i:s') + ']',
+                    title: 'version:[' + Taco.apiVersion + '] date:[' + Ext.Date.format(Taco.buildDate, 'Y-m-d H:i:s') + ']',
                     cls: Taco.baseCSSPrefix + 'mozulogo'
                 }
             }, {

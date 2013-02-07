@@ -27,7 +27,7 @@
 //            if (site != null)
 //            {
 //                request.Headers.Add("x-vol-site", site.Id.ToString());
-//                request.Headers.Add("x-vol-tenant", site.TenantId.ToString());
+//                request.Headers.Add("x-vol-tenant", site.Id.ToString());
 
 //                if (!request.Headers.AllKeys.Contains("x-vol-locale"))
 //                {
