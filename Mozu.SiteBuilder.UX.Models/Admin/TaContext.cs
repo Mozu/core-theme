@@ -11,7 +11,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
     public class TaContext
     {
         [DataMember(Name = "id")]
-        public int Id { get; set; }
+        public int TenantId { get; set; }
 
         [DataMember(Name = "name")]
         public string Name { get; set; }

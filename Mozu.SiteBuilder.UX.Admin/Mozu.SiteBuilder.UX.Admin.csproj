@@ -444,6 +444,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="CurrentUserHelper.cs" />
+    <Compile Include="ICurrentUserHelper.cs" />
     <Compile Include="MockServices\InMemoryProductWebApiClient.cs" />
     <Compile Include="MockServices\TestResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

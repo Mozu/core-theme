@@ -5,7 +5,6 @@ using System.Web.Mvc;
 using Mozu.Core;
 using System.Linq;
 using Mozu.Core.Extensions;
-using Mozu.SiteBuilder.Mvc.Providers;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.Tenant.Contracts.Clients;
@@ -22,23 +21,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
         private readonly ITenantsWebApiClient _tenantsWebApi;
+        private readonly ICurrentUserHelper _currentUserHelper;
         private readonly IApiContext _apiContext;
-        private readonly ITaContextProvider _taContextProvider;
 
-        public HomeController(AccountController accountApi, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ITaContextProvider taContextProvider)
+        public HomeController(AccountController accountApi, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext)
         {
             _authenticationHelper = authHelper;
             _accountApi = accountApi;
             _sbc = sbc;
             _apiContext = apiContext;
-            _taContextProvider = taContextProvider;
             _tenantsWebApi = tenantsWebApi;
+            _currentUserHelper = currentUserHelper;
         }
-        //
+
         // GET: /Home/
         public ActionResult Index()
         {
-            var user = _accountApi.GetCurrentUser();
+            var user = _currentUserHelper.GetCurrentUser();
             var roles = _accountApi.GetUserSitesRoles(user.Id);
             var tenantRes = _tenantsWebApi.GetTenant( _apiContext.TenantId).Result;
            // var siteCol = _tenantsWebApi.AsBreadthFirstEnumerable();
@@ -63,7 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             var taContext = new TaContext()
                                 {
-                                    Id = tenant.Id,
+                                    TenantId = tenant.Id,
                                     Name=tenant.Name ,
                                     SiteCollections = tenant.SiteGroups.Select(sg =>
                                                                                new TaContextSiteCollection()

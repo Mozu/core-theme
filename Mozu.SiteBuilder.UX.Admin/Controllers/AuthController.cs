@@ -14,11 +14,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IAccountController _accountApi;
         private IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
-        public AuthController(IAccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc)
+        private readonly ICurrentUserHelper _currentUserHelper;
+
+        public AuthController(IAccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper)
         {
             _authenticationHelper = authHelper;
             _accountApi = accountApi;
             _sbc = sbc;
+            _currentUserHelper = currentUserHelper;
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
@@ -33,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         // GET: /Auth/
         public ActionResult Index(LoginUser login)
         {
-            var cUser = _accountApi.GetCurrentUser();
+            var cUser = _currentUserHelper.GetCurrentUser();
             login = login ?? new LoginUser();
             login.EmailAddress = (string.IsNullOrEmpty(login.EmailAddress) && cUser != null) ? cUser.EmailAddress : login.EmailAddress;
          
@@ -71,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                     // Auto login to tenant
                     var taContext = tenants.First();
 
-                    var tenant = await _accountApi.ChangeTenant(taContext.Id);
+                    var tenant = await _accountApi.ChangeTenant(taContext.TenantId);
                     if (tenant != null)
                     {
                         return Redirect("/admin");
@@ -153,7 +156,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                     return View("Roles", res.Items);
                 }
 
-                var site = await _accountApi.ChangeSite(res.Items.First().Id);
+                var site = await _accountApi.ChangeSite(res.Items.First().TenantId);
                 if (site != null)
                 {
                     return Redirect("/admin");
@@ -224,11 +227,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             if (site != null)
             {
                 //todo: look in config
-                //return RedirctDomain(site,site.Id, "/admin" , _authenticationHelper.GetCurrentTicket());
+                //return RedirctDomain(site,site.TenantId, "/admin" , _authenticationHelper.GetCurrentTicket());
 
                 var ticket = _authenticationHelper.GetCurrentTicket();
                 _authenticationHelper.SetCurrentUser(ticket);
-                _sbc.Id = id;
+                _sbc.TenantId = id;
                 _sbc.SiteId = _authenticationHelper.GetCurrentUser().SiteId.GetValueOrDefault(-1);
                 _sbc.Save();
 
@@ -249,7 +252,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             if ( System.Configuration.ConfigurationManager.AppSettings ["useSiteDomainNames"] != "true")
             {
                 _authenticationHelper.SetCurrentUser(ticket);
-                _sbc.Id = tenantId;
+                _sbc.TenantId = tenantId;
                 _sbc.SiteId = (int)_authenticationHelper.GetCurrentUser().SiteId;
                 _sbc.Save();
                 return this.Redirect(url);
@@ -291,7 +294,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                                 RefreshTokenExpiration = new DateTime(Int64.Parse(refreshTokenExpire, NumberStyles.HexNumber))
                             };
             _authenticationHelper.SetCurrentUser(ticket);
-            _sbc.Id = tenantId;
+            _sbc.TenantId = tenantId;
             _sbc.SiteId = (int)_authenticationHelper.GetCurrentUser().SiteId;
             _sbc.Save();
 
