@@ -7,7 +7,6 @@ Ext.define('Taco.core.ux.form.Form', {
     requires: ['Taco.core.ux.form.Tasks', 'Taco.core.ux.form.StepContainer'],
 
     componentCls: Taco.baseCSSPrefix + 'formform',
-    ui: 'taco',
 
     model: '',
     storeType: '',
