@@ -11,7 +11,6 @@ Ext.define('Taco.view.product.AddSiteContainer', {
         'Ext.form.CheckboxGroup'
     ],
 
-    id: 'asc',
     componentCls: Taco.baseCSSPrefix + 'available-site-list',
     floating: true,
     shadow: false,

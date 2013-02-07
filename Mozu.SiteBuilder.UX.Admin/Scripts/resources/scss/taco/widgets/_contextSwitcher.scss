@@ -29,7 +29,7 @@
 
   .#{$vprefix}context-switcher-list {
     background-color: $backgroundColor;
-    border-radius: $borderRadius 0 $borderRadius $borderRadius;
+    border-radius: 0 0 $borderRadius $borderRadius;
 
     li {
       color: $fontColor;

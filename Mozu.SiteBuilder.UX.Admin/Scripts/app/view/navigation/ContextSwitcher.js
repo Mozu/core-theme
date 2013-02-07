@@ -70,13 +70,18 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
      * Handles toggling visiblity of the "submenu" (ContextSwitcherView) of available contexts.
      */
     toggleSubmenu: function () {
-        var list = this.list;
+        var list = this.list,
+            label = this.label;
 
-        if( !list.isVisible() ) {
-            this.label.addCls('showing-list');
-            list.showBy( this, 'tr-br', [-50, 0] );
+        // console.log(this);
+        // window.xxx = this;
+
+        if( !label.hasCls('showing-list') ) {
+            label.addCls('showing-list');
+            // list.showBy( label, 'tr-br', [-159, 0] );
+            list.showBy( label, 'tr-br' );
         } else {
-            this.label.removeCls('showing-list');
+            label.removeCls('showing-list');
             list.hide();
         }
     },
