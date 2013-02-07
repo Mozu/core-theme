@@ -39,15 +39,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "list")]
         public Task<Response<List<ProductInSiteInfo>>> GetProductInSiteInfoList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            // TODO: Need to switch this to ProductCode
-            string productCode = extFilter.GetValue<string>("productCode");
+            // TODO: does productCode belong in paging params or filter?
+            // string productCode = extFilter.GetValue<string>("productCode");
+            string productCode = pagingParams.productCode;
 
             if (string.IsNullOrEmpty(productCode))
             {
                 return EmptyList<ProductInSiteInfo>();
             }
 
-            DC.Product product = _productClient.GetProduct(pagingParams.id, null).Result.ReadAsAsync().Result;
+            DC.Product product = _productClient.GetProduct(productCode, null).Result.ReadAsAsync().Result;
 
             if (pagingParams.id != null)
             {

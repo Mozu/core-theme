@@ -12,6 +12,7 @@ using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.MockServices
 {
+    [Obsolete]
     public interface IMoreAwesomeProductWebApiClient : IProductWebApiClient
     {
         bool IsAwesome { get; }
