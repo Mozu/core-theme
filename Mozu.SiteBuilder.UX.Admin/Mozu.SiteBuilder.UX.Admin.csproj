@@ -463,10 +463,12 @@
     <Content Include="Scripts\app\core\context\SiteCollection.js" />
     <Content Include="Scripts\app\core\layout\Flex.js" />
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
-    <Content Include="Scripts\app\core\context\TaContext.js" />
+    <Content Include="Scripts\app\core\context\TaContext.js" />	<Content Include="Scripts\app\core\ux\browser\Body.js" />
+    <Content Include="Scripts\app\core\ux\browser\Container.js" />
+    <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />
-    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />
-    <Content Include="Scripts\app\core\ux\ScrollSpy.js" />
+    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />   
+	<Content Include="Scripts\app\core\ux\ScrollSpy.js" />
     <Content Include="Scripts\app\core\ux\grid\RowExpander.js" />
     <Content Include="Scripts\app\core\ux\DragSource.js" />
     <Content Include="Scripts\app\core\ux\form\EditorLayout.js" />
@@ -1444,7 +1446,6 @@
     <Content Include="Scripts\app\core\ux\form\DateTime.js" />
     <Content Include="Scripts\app\core\ux\form\FileInputButton.js" />
     <Content Include="Scripts\app\core\ux\BaseCardPanel.js" />
-    <Content Include="Scripts\app\core\ux\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\IndentedTreeColumn.js" />
     <Content Include="Scripts\app\core\ux\CountrySelector.js" />
     <Content Include="Scripts\app\core\AppState.js" />

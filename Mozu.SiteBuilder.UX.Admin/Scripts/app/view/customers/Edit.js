@@ -3,7 +3,7 @@
  */
     Ext.define('Taco.view.customers.Edit', {
         extend: 'Taco.core.ux.form.Editor',
-        requires: ['Taco.model.CouponCode', 'Taco.store.Orders', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.BoxSelect', 'Taco.core.ux.modal.Content', 'Taco.core.ux.ItemBrowser', 'Taco.core.ux.CustomerGroupComboBox', 'Taco.core.ux.modal.Helper', 'Taco.view.address.AddressForm', 'Taco.view.customers.AddressPanel', 'Taco.view.customers.GroupsForm'],
+        requires: ['Taco.model.CouponCode', 'Taco.store.Orders', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.BoxSelect', 'Taco.core.ux.modal.Content', 'Taco.core.ux.browser.ItemBrowser', 'Taco.core.ux.CustomerGroupComboBox', 'Taco.core.ux.modal.Helper', 'Taco.view.address.AddressForm', 'Taco.view.customers.AddressPanel', 'Taco.view.customers.GroupsForm'],
         title: 'New Customer',
         model: 'Taco.model.CustomerAccount',
         type: 'customer',

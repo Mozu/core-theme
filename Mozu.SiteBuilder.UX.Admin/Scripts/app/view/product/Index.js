@@ -4,7 +4,7 @@
     Ext.define('Taco.view.product.Index', {
         extend: 'Taco.core.ux.content.Container',
         alias: 'widget.prodindex',
-        requires: ['Ext.form.Panel', 'Taco.core.ux.BaseGrid', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.modal.Confirmation', 'Taco.core.ux.ItemBrowser'],
+        requires: ['Ext.form.Panel', 'Taco.core.ux.BaseGrid', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.modal.Confirmation', 'Taco.core.ux.browser.ItemBrowser'],
         mixins: {
             protectable: 'Taco.core.util.Protectable'
         },
@@ -167,7 +167,7 @@
             
 
 
-            me.itembrowser = Ext.create('Taco.core.ux.ItemBrowser', {
+            me.itembrowser = Ext.create('Taco.core.ux.browser.ItemBrowser', {
                 uniquePanels: [me.gridpanel, me.tilepanel],
                 itemStore: me.store,
                 itemType: 'products',

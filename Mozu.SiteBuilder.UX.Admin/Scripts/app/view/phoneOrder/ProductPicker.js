@@ -2,7 +2,7 @@
  * @class Taco.view.phoneOrder.ProductPicker
  */
 Ext.define('Taco.view.phoneOrder.ProductPicker', {
-    extend: 'Taco.core.ux.ItemBrowser',
+    extend: 'Taco.core.ux.browser.ItemBrowser',
     requires: ['Taco.core.ux.GridPager', 'Taco.core.ux.BaseGrid'],
     itemType: 'products',
     filterProperty: 'productName',
