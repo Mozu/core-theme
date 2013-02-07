@@ -105,7 +105,7 @@ Ext.define('Taco.view.fileManagement.Index', {
             }
         });
 
-        me.itembrowser = Ext.create('Taco.core.ux.ItemBrowser', {
+        me.itembrowser = Ext.create('Taco.core.ux.browser.ItemBrowser', {
             uniquePanels: [me.gridpanel, me.tilepanel],
             commonPanels: [me.foldertree],
             itemStore: me.filesStore,

@@ -2,7 +2,7 @@
  * @class Taco.view.inventory.ItemBrowser
  */
 Ext.define('Taco.view.inventory.ItemBrowser', {
-    extend: 'Taco.core.ux.ItemBrowser',
+    extend: 'Taco.core.ux.browser.ItemBrowser',
     alias: 'widget.inventorybrowser',
 
     initComponent: function () {

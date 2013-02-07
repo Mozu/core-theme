@@ -2,7 +2,7 @@
  * @class Taco.view.customers.ItemBrowser
  */
 Ext.define('Taco.view.customers.ItemBrowser', {
-    extend: 'Taco.core.ux.ItemBrowser',
+    extend: 'Taco.core.ux.browser.ItemBrowser',
     alias: 'widget.customersbrowser',
     requires: ['Ext.data.Store', 'Taco.view.customers.SearchForm', 'Taco.core.util.RangeFilter'],
 
