@@ -6,6 +6,7 @@ using Mozu.Core;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
 using Mozu.Provisioning.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin;
 using Mozu.Tenant.Contracts.Clients;
 using NSubstitute;
 using NUnit.Framework;
@@ -33,6 +34,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private IAdminUserWebApiClient _adminUserWebApiClient;
         private ISiteBuilderContext _siteBuilderContext;
         private ISettings _settings;
+        private IContextSwitcher _contextSwitcher;
 
         [SetUp]
         public void SetUp()
@@ -49,6 +51,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             _adminUserWebApiClient = Substitute.For<IAdminUserWebApiClient>();
             _siteBuilderContext = Substitute.For<ISiteBuilderContext>();
             _settings = Substitute.For<ISettings>();
+            _contextSwitcher = Substitute.For<IContextSwitcher>();
         }
 
         [Test, Ignore("Has dependency on 'SiteBuilderContext.Current'. Can this be replaced with injected instance?")]
@@ -152,7 +155,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private AccountApi GetApi()
         {
             return new AccountApi(_userWebApiClient, _roleWebApiClient, _authTicketWebApiClient, _tenantsWebApiClient, _authenticationHelper,
-                _sitesWebApiClient, _invitationWebApiClient, /*_merchantSignUpWebApiClient*/null, _adminUserWebApiClient, _siteBuilderContext, _settings);
+                _sitesWebApiClient, _invitationWebApiClient, /*_merchantSignUpWebApiClient*/null, _adminUserWebApiClient, _siteBuilderContext,
+                _settings, _contextSwitcher);
         }
     }
 }

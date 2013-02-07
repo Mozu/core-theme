@@ -320,6 +320,7 @@
     <Compile Include="Api\BehaviorsController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\CmsDocumentController.cs" />
+    <Compile Include="Api\IAccountController.cs" />
     <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
     <Compile Include="Api\ProductController.cs" />
     <Compile Include="Api\CustomersController.cs" />
@@ -436,6 +437,7 @@
     <Compile Include="Configuration\ConfigurationModule.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContextSwitcher.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImgController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
@@ -445,6 +447,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="CurrentUserHelper.cs" />
+    <Compile Include="IContextSwitcher.cs" />
     <Compile Include="ICurrentUserHelper.cs" />
     <Compile Include="MockServices\InMemoryProductWebApiClient.cs" />
     <Compile Include="MockServices\TestResponse.cs" />
@@ -463,7 +466,8 @@
     <Content Include="Scripts\app\core\context\SiteCollection.js" />
     <Content Include="Scripts\app\core\layout\Flex.js" />
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
-    <Content Include="Scripts\app\core\context\TaContext.js" />	<Content Include="Scripts\app\core\ux\browser\Body.js" />
+    <Content Include="Scripts\app\core\context\TaContext.js" />
+	<Content Include="Scripts\app\core\ux\browser\Body.js" />
     <Content Include="Scripts\app\core\ux\browser\Container.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />

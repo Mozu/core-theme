@@ -2,8 +2,10 @@
 using System.Net;
 using System.Threading;
 using System.Web.Mvc;
+using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using System.Linq;
+using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Models.Admin;
@@ -17,17 +19,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
     [SiteBuilderAuthorize]
     public class HomeController : Controller
     {
-        private readonly AccountController _accountApi;
-        private IAuthenticationHelper _authenticationHelper;
+        private readonly IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
         private readonly ITenantsWebApiClient _tenantsWebApi;
         private readonly ICurrentUserHelper _currentUserHelper;
         private readonly IApiContext _apiContext;
+        private readonly IAdminUserWebApiClient _usersRepo;
 
-        public HomeController(AccountController accountApi, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext)
+        public HomeController(IAdminUserWebApiClient usersRepo, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext)
         {
+            _usersRepo = usersRepo;
             _authenticationHelper = authHelper;
-            _accountApi = accountApi;
             _sbc = sbc;
             _apiContext = apiContext;
             _tenantsWebApi = tenantsWebApi;
@@ -38,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         public ActionResult Index()
         {
             var user = _currentUserHelper.GetCurrentUser();
-            var roles = _accountApi.GetUserSitesRoles(user.Id);
+            var roles = GetUserSitesRoles(user.Id);
             var tenantRes = _tenantsWebApi.GetTenant( _apiContext.TenantId).Result;
            // var siteCol = _tenantsWebApi.AsBreadthFirstEnumerable();
 
@@ -109,6 +111,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             return View();
         }
+
+        public List<Role> GetUserSitesRoles(string userId)
+        {
+            var res = _usersRepo.GetUserRoles(userId, null).Result;
+
+            // var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
+            // var res = rootUserRepo.GetUser(userId, null).Result;
+            if (res.ResponseMessage.IsSuccessStatusCode)
+            {
+                return res.ReadAsSync().Items;
+            }
+
+            return new List<Core.Api.Contracts.Role>();
+
+        }
+
 
         private static string GetExtLocaleFile(string language)
         {

@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Web.Http.Controllers;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
+using Mozu.SiteBuilder.UX.Models.Admin;
+using Mozu.Tenant.Contracts;
+
+namespace Mozu.SiteBuilder.UX.Admin.Api
+{
+    // TODO: Temporarily extracted an interface here. These methods are all shared between AccountController and AuthController and should be moved into another Helper class
+    public interface IAccountController : IHttpController
+    {
+        Task<Response<List<TaContext>>> VolusionLogIn(LoginUser login);
+        void CreatePasswordResetRequest(string emailAddress);
+        bool UserExists(LoginUser user);
+        Models.Account.User GetUser(string userId);
+        List<Tuple<Site, int>> SiteRolesList(string userId);
+        void UpdateForgottenPassword(LoginUser user);
+        bool RemoveRoleFromSite(int siteId, int roleId);
+        Task<Response<List<TaContext>>> Register(LoginUser user);
+    }
+}
