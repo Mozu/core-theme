@@ -1,14 +1,38 @@
-$panel-header-color: $color-neutral-darkest;
-.#{$prefix}panel-header.#{$prefix}panel-header-default {
-	background-image: none !important;
-	background-color: transparent !important;
-	border: 0 dashed $color-neutral-mid;
-	border-bottom-width: 1px !important;
-	@include box-shadow(none);
-}
+// $panel-header-color: $color-neutral-darkest;
+
+// .#{$prefix}panel-header.#{$prefix}panel-header-default {
+// 	background-image: none !important;
+// 	background-color: transparent !important;
+// 	border: 0 dashed $color-neutral-mid;
+// 	border-bottom-width: 1px !important;
+// 	@include box-shadow(none);
+// }
+
 .#{$prefix}panel-header img.#{$prefix}tool-expand-top, .#{$prefix}panel-header img.#{$prefix}tool-collapse-top {
 	@include icons-sprite('icon-panelcollapse');
 }
+
 .#{$prefix}panel-header img.#{$prefix}tool-expand-bottom, .#{$prefix}panel-header img.#{$prefix}tool-collapse-bottom {
 	@include icons-sprite('icon-panelexpand');
 }
+
+@include extjs-panel-ui(
+  'taco',
+
+  $ui-base-color: $color,
+  $ui-border-width: 1px,
+  $ui-border-color: rgb(0, 0, 255),
+  $ui-border-radius: 2px,
+
+  $ui-header-color: $color,
+  $ui-header-font-size: null,
+  $ui-header-font-weight: normal,
+  $ui-header-border-color: rgb(255, 0, 255),
+  $ui-header-background-color: rgb(230, 230, 255),
+  $ui-header-background-gradient: null,
+
+  $ui-body-color: $color,
+  $ui-body-border-color: rgb(255, 0, 0),
+  $ui-body-border-width: 1px,
+  $ui-body-background-color: transparent
+);
