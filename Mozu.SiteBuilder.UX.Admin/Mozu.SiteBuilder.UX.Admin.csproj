@@ -320,6 +320,7 @@
     <Compile Include="Api\BehaviorsController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\CmsDocumentController.cs" />
+    <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
     <Compile Include="Api\ProductController.cs" />
     <Compile Include="Api\CustomersController.cs" />
     <Compile Include="Api\DiscountController.cs" />
@@ -380,7 +381,6 @@
     <Compile Include="Api\Models\Checkout\OrderProcessingSettings.cs" />
     <Compile Include="Api\Models\Checkout\PaymentSetting.cs" />
     <Compile Include="Api\Models\PhoneOrder\RuntimeProduct.cs" />
-    <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
     <Compile Include="Api\Models\ProductModels\Product.cs" />
     <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
     <Compile Include="Api\Models\ProductModels\ProductInSiteInfo.cs" />
