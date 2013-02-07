@@ -5,7 +5,8 @@
 Ext.define('Taco.core.ux.content.Container', {
     extend: 'Ext.container.Container',
     alias: 'widget.contentcontainer',
-    requires: ['Taco.core.ux.content.Header','Taco.core.ux.content.Body'],
+    requires: ['Taco.core.ux.content.Header','Taco.core.ux.content.Body'],    headerCls: 'Taco.core.ux.content.Header', 
+    bodyCls: 'Taco.core.ux.content.Body', 
 
     bubbleEvents: ['add', 'remove', 'save', 'cancel'],
 
@@ -29,9 +30,9 @@ Ext.define('Taco.core.ux.content.Container', {
             body: {}
         });
 
-        me.header = Ext.create('Taco.core.ux.content.Header', me.header);
+        me.header = Ext.create(me.headerCls, me.header);
 
-        me.body = Ext.create('Taco.core.ux.content.Body', me.body);
+        me.body = Ext.create(me.bodyCls, me.body);
 
         me.items = [me.header, me.body];
 
