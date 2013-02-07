@@ -2059,17 +2059,18 @@
 
     .#{$vprefix}form-tab-close-button {
       display: inline-block;
-      width: 22px;
-      padding: 0 2px 2px 2px;
-      margin: -1px -8px 0 12px;
+      width: 17px;
+      padding: 1px;
+      margin: 0 -8px 0 12px;
       position: relative;
       top: -2px;
       line-height: 1;
       border-radius: 50%;
-      border: 2px solid $formTabCloseColor;
+      border: 1px solid $formTabCloseColor;
       background-color: $color-neutral-white;
       color: $formTabCloseColor;
       text-align: center;
+      font-size: 13px;
 
       &:hover {
         border-color: $color-neutral-white;
