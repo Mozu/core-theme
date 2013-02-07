@@ -64,6 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var taContext = new TaContext()
                                 {
                                     Id = tenant.Id,
+                                    Name=tenant.Name ,
                                     SiteCollections = tenant.SiteGroups.Select(sg =>
                                                                                new TaContextSiteCollection()
                                                                                    {
