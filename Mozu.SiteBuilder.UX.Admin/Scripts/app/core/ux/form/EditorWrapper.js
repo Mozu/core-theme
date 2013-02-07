@@ -96,8 +96,8 @@
             },
             savesuccess: function () {
                 console.log('savesuccess');
-                this.dirtybutton.setLoading(false);
-                this.dirtybutton.setDirty(false);
+                //this.dirtybutton.setLoading(false);
+                //this.dirtybutton.setDirty(false);
                 this.onComplete();
                 this.fireEvent('aftersave', this, this.record, this.isEdit());
             },

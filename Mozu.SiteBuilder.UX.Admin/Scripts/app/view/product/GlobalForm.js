@@ -30,7 +30,8 @@ Ext.define('Taco.view.product.GlobalForm', {
 
     initComponent: function () {
         var subformCfg = {
-            isGlobal: true
+            isGlobal: true,
+            product: this.record
         };
 
         this.items = [
