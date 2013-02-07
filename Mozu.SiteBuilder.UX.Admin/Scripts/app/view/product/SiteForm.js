@@ -21,6 +21,7 @@ Ext.define('Taco.view.product.SiteForm', {
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'single-site-admin-form'],
 
     header: false,
+    persistChangesToModel: true,
 
     initComponent: function () {
         var subFormCfg;
@@ -59,5 +60,16 @@ Ext.define('Taco.view.product.SiteForm', {
         ];
 
         this.callParent(arguments);
+    },
+
+    addSaveTasks: function (tasks) {
+        if (this.isSingleSite) {
+            tasks.add([{
+                key: 'save-product-record',
+                saveRecord: this.record
+            }]);
+        }
+
+        return tasks;
     }
 });

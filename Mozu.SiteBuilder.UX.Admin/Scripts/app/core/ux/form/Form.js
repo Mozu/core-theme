@@ -24,7 +24,10 @@ Ext.define('Taco.core.ux.form.Form', {
     trackResetOnLoad: true,
     createTitle: 'Create',
     editTitle: 'Edit',
-    persisteChangesToModel: false,
+    persistChangesToModel: false,
+    tasksKeyPrefix: '',
+    cascadeChildTasks: true,
+
 
     initComponent: function () {
 
@@ -120,7 +123,7 @@ Ext.define('Taco.core.ux.form.Form', {
             change: function (field, newValue) {
                 this.savableStateCheck();
                 
-                if (!this.persisteChangesToModel) {
+                if (!this.record || !this.persistChangesToModel || !Ext.Array.contains(this.trackedFields, field)) {
                     return;
                 }
 
@@ -153,6 +156,10 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     trackFields: function () {
+        this.forms = [];
+        this.trackedFields = [];
+
+        console.log('track fields')
         Ext.each(this.query('[isFormForm],[isFormField]'), function (cmp) {
             if(cmp.isTrackedField || cmp.up('[isFormForm]') !== this) {
                 return;
@@ -162,6 +169,7 @@ Ext.define('Taco.core.ux.form.Form', {
             cmp.isTrackedField = true;
 
             if (!cmp.isFormForm) {
+                this.trackedFields.push(cmp);
                 return;
             }
 
@@ -192,15 +200,28 @@ Ext.define('Taco.core.ux.form.Form', {
         });
     },
 
+    addChildSaveTasks: function (tasks) {
+        Ext.each(this.forms, function (form) {
+            form.addSaveTasks(tasks);
+        }, this);
+
+        return tasks;
+    },
+
     addSaveTasks: function (tasks) {
+        
+        if (this.cascadeChildTasks) {
+            this.addChildSaveTasks(tasks);
+        }
+
         tasks.add([{
-            key: 'update-record',
+            key: this.tasksKeyPrefix + 'update-record',
             updateRecord: this.record,
             updateForm: this
         }, {
-            key: 'save-record',
+            key: this.tasksKeyPrefix + 'save-record',
             saveRecord: this.record,
-            dependencies: 'update-record'
+            dependencies: this.tasksKeyPrefix + 'update-record'
         }]);
 
         return tasks;
@@ -211,9 +232,6 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     save: function () {
-        Ext.each(this.forms, function (form) {
-            form.addSaveTasks(this.saveTasks);
-        }, this);
 
         this.addSaveTasks(this.saveTasks);
         this.saveTasks.execute();
