@@ -49,6 +49,23 @@ Ext.define('Taco.controller.Testing', {
                         p.save( { 
                             success: function (record, operation) {
                                 alert("successfully created " + record.getId());
+                                var siteId = prompt('Site id?');
+
+                                var pisi = Ext.create('Taco.model.ProductInSiteInfo', {
+                                    productCode: p.get('productCode'),
+                                    siteId: siteId
+                                });
+
+                                pisi.phantom = true;
+
+                                pisi.save({
+                                    success: function (record, operation) {
+                                        alert("successfully created PISI: " + record.getId());
+                                    },
+                                    failure: function () {
+                                        alert('fail');
+                                    }
+                                });
                             },
                             failure: function(record, operation)
                             {
