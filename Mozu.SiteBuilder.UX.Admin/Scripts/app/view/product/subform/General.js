@@ -13,8 +13,11 @@ Ext.define('Taco.view.product.subform.General', {
         this.defaults = {
             width: 200,
             product: this.product,
-            productInSiteInfo: this.productInSiteInfo
+            productInSiteInfo: this.productInSiteInfo,
+            persistChangesToModel: true
         };
+
+        this.record = this.product;
 
         this.items = [{
             fieldLabel: 'Code',

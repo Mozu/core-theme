@@ -16,6 +16,7 @@
     },
 
     add: function (task) {
+
         if (task.length) {
             Ext.each(task, function (t) {
                 this.add(t);
@@ -32,6 +33,11 @@
             dependencies: [],
             status: 0
         });
+
+        // TODO: REMOVE
+        if (this.tasks.get(task.key)) {
+            console.log('DUPLICATE TASK KEY: ', task.key);
+        }
 
         if (task.updateRecord) {
             task.fn = function (tasks) {
@@ -188,6 +194,7 @@
         console.log('final callback');
         this.complete = true;
         this.fireEvent('complete');
+        this.tasks.clear();
         if (!this.finalCallback) {
             return;
         }

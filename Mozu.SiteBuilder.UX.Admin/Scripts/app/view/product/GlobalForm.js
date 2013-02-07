@@ -14,7 +14,7 @@ Ext.define('Taco.view.product.GlobalForm', {
         'Taco.view.product.subform.Extras',
         'Taco.view.product.subform.Shipping'
     ],
-    persisteChangesToModel: true,
+    persistChangesToModel: true,
     mixins: {
         scrollspy: 'Taco.core.ux.ScrollSpy' // TODO: resolve JS error with this and getEl()
     },
@@ -51,5 +51,18 @@ Ext.define('Taco.view.product.GlobalForm', {
         ];
 
         this.callParent( arguments );
+    },
+
+    addSaveTasks: function (tasks) {
+        if (this.isSingleSite) {
+            return;
+        }
+
+        tasks.add([{
+            key: 'save-product-record',
+            saveRecord: this.record
+        }]);
+
+        return tasks;
     }
 });

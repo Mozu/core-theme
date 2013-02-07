@@ -22,6 +22,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
 
     width: '100%',
     overrideFieldName: '',
+    persistChangesToModel: true,
     
     /**
      * @cfg
@@ -88,7 +89,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
         this.callParent( arguments );
 
         if (this.productInSiteInfo && !this.hideOverride) {
-            // *** SiteForm
+            // *** SiteForm Multisite Mode
             this.addCls('active');
             this.setOverride( this.productInSiteInfo.get( this.overrideFieldName ), false );
 
@@ -97,7 +98,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                 scope: this
             });
         } else {
-            // *** GlobalForm
+            // *** GlobalForm and SiteForm Single Site Mode
             this.record = this.product;
             this.loadForm();
         }
@@ -151,5 +152,10 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
         }
 
         this.loadForm();
+    },
+
+    addSaveTasks: function (tasks) {
+        debugger;
+        return this.callParent(arguments);
     }
 });

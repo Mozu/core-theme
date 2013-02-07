@@ -24,13 +24,13 @@ Ext.define('Taco.view.product.Form', {
 
         this.stores = [this.inSitesStore];
 
-        this.globalForm = Ext.create('Taco.view.product.GlobalForm', {
-            record: this.record
-        });
-
         this.siteForms = [];
 
         this.isSingleSite = this.singleSiteCheck();
+
+        this.globalForm = Ext.create('Taco.view.product.GlobalForm', {
+            record: this.record
+        });
 
         this.buildSiteTabs();
 
@@ -79,12 +79,13 @@ Ext.define('Taco.view.product.Form', {
     buildSiteTabs: function () {
         this.siteForms = [];
 
-        this.inSitesStore.data.each(function (info) {
+        this.inSitesStore.data.each(function (info, index) {
             this.siteForms.push(Ext.create('Taco.view.product.SiteForm', {
                 isSingleSite: this.isSingleSite,
                 record: info,
                 product: this.record,
                 productInSiteInfo: info,
+                tasksKeyPrefix: 'site-' + index,
                 formCfg: {
                     isSingleSite: this.isSingleSite
                 }
@@ -100,6 +101,7 @@ Ext.define('Taco.view.product.Form', {
         if (!leaveTabs) {
             this.rebuildTabs();
         }
+        this.globalForm.isSingleSite = true;
         this.tabPanel.hideTabAt(0);
         this.tabPanel.setActiveItemAt(1);
     },
@@ -112,6 +114,7 @@ Ext.define('Taco.view.product.Form', {
         if (!leaveTabs) {
             this.rebuildTabs();
         }
+        this.globalForm.isSingleSite = false;
         this.rebuildTabs();
         this.tabPanel.showTabAt(0);
         this.tabPanel.setActiveItemAt(this.tabPanel.items.length - 1);
@@ -137,7 +140,8 @@ Ext.define('Taco.view.product.Form', {
             key: 'sync-productInSiteInfo-store',
             store: this.inSitesStore
         });
-        
+
+        this.addChildSaveTasks(tasks);
 
         return tasks;
     },
