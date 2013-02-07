@@ -107,7 +107,7 @@ Ext.define('Taco.view.product.SiteForm', {
         if (this.isSingleSite) {
             tasks.add([{
                 key: 'save-product-record',
-                saveRecord: this.record
+                saveRecord: this.product
             }]);
         }
 

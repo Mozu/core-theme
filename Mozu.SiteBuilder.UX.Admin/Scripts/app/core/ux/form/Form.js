@@ -110,8 +110,8 @@ Ext.define('Taco.core.ux.form.Form', {
         this.saveTasks = Ext.create('Taco.core.ux.form.Tasks');
 
         this.callParent(arguments);
-
         this.forms = [];
+        this.trackedFields = [];
 
         this.trackFields();
 
@@ -142,9 +142,23 @@ Ext.define('Taco.core.ux.form.Form', {
 
         this.saveTasks.on({
             complete: function () {
+                this.resetOriginalValues();
                 this.fireEvent('savesuccess', this);
             },
             scope: this
+        });
+    },
+
+    resetOriginalValues: function () {
+        Ext.each(this.forms, function (form) {
+            form.resetOriginalValues();
+        });
+
+        Ext.each(this.trackedFields, function(field) {
+            if (!field.resetOriginalValue) {
+                return;
+            }
+            field.resetOriginalValue();
         });
     },
 
@@ -156,8 +170,6 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     trackFields: function () {
-        this.forms = [];
-        this.trackedFields = [];
 
         Ext.each(this.query('[isFormForm],[isFormField]'), function (cmp) {
             if(cmp.isTrackedField || cmp.up('[isFormForm]') !== this) {
@@ -345,10 +357,6 @@ Ext.define('Taco.core.ux.form.Form', {
         this.savableState = newState;
 
         this.fireEvent('savablestatechange', this, newState);
-    },
-
-    setSavableState: function (savableState) {
-        this.savableState = savableState;
     },
 
     getSavableState: function () {
