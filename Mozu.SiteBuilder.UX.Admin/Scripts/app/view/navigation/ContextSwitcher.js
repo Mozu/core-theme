@@ -1,6 +1,7 @@
 /**
  * @class Taco.view.navigation.ContextSwitcher
- * @author Jimmy Sanford, Michael Speed Elder
+ * @author Jimmy Sanford
+ * @author Michael Speed Elder
  * 
  */
 Ext.define('Taco.view.navigation.ContextSwitcher', {

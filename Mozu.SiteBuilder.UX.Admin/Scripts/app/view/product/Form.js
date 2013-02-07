@@ -47,9 +47,14 @@ Ext.define('Taco.view.product.Form', {
 
         this.callParent(arguments);
 
-        if (this.isSingleSite) {
+        if(this.isSingleSite) {
             this.goGoSingleSite(true)
         }
+
+        this.on({
+            selectionChange: this.handleSelectionChange,
+            scope: this
+        });
     },
 
     /**
@@ -220,5 +225,17 @@ Ext.define('Taco.view.product.Form', {
         } else {
             this.goGoMultiSite();
         }
+    },
+
+    /**
+     * @private
+     * @param {Object} sites A list of all sites that are associated with this product.  Property names are siteIds, values are the siteNames.
+     */
+    handleSelectionChange: function ( sites ) {
+        console.log( 'handleSelectionChange', sites );
+        Ext.Object.each(sites, function (siteId, siteName) {
+            // TODO
+
+        });
     }
 });

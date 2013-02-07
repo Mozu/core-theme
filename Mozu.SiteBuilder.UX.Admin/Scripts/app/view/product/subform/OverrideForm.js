@@ -69,7 +69,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                             listeners: {
                                 // *** If confirmed, enable/disable the underlying OverrideForm
                                 confirm: function () {
-                                    overrideForm.setOverride(isChecked, true);
+                                    overrideForm.setOverride(isChecked, true, checkbox);
                                 },
 
                                 // *** If cancelled, restore checkbox to previous state
@@ -85,6 +85,8 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
             },
             this.formContainer
         ];
+
+        this.enableBubble('overrideCountChange');
 
         this.callParent( arguments );
 
@@ -131,7 +133,8 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
         this.formContainer.enable( silently );
     },
 
-    setOverride: function (val, shouldCopy) {
+    setOverride: function (val, shouldCopy, overrideCheckbox) {
+        var overrideCountDelta;
         this.productInSiteInfo.set( this.overrideFieldName, val );
         
         if (val) {
@@ -145,17 +148,32 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                 );
             }
 
+            overrideCountDelta = 1;
             this.enable();
         } else {
             this.record = this.product;
+            overrideCountDelta = -1;
             this.disable();
         }
 
-        this.loadForm();
+        this.fireEvent('overrideCountChange', overrideCountDelta);
+
+        if( overrideCheckbox ) {
+            // *** The loadForm() call triggers the checkbox handler function (which spawns a modal) unless disabled here
+            overrideCheckbox.allowModal = false;
+
+            this.loadForm();
+
+            // *** When the form loads, it can unset the value of the override checkbox
+            overrideCheckbox.setValue(val ? true : false);
+
+            overrideCheckbox.allowModal = true;
+        } else {
+            this.loadForm();
+        }
     },
 
     addSaveTasks: function (tasks) {
-        debugger;
         return this.callParent(arguments);
     }
 });
