@@ -201,7 +201,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var res = _usersRepo.GetUserRoles(userId, null).Result;
 
-           // var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
+           // var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, Id = VOLUSIONTENANTID }));
            // var res = rootUserRepo.GetUser(userId, null).Result;
             if ( res.ResponseMessage.IsSuccessStatusCode )
             {
@@ -244,8 +244,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public Task<Response<List<TaContext>>> Register(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
         {
-            //var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
-            //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
+            //var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, Id = VOLUSIONTENANTID }));
+            //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, Id = VOLUSIONTENANTID }));
 
 
             var res = _merchantSignUpWebApiClient.MerchantSignUp(new MerchantSignUpRequest()
@@ -265,7 +265,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             LightweightUserClaims user = _authHelper.GetCurrentUser();
             var site = _siteClient.GetSite(siteId).Result.ReadAsSync();
 
-            //var userThing = new UserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = site.Id, TenantId = site.TenantId }));
+            //var userThing = new UserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = site.Id, Id = site.Id }));
             //userThing.DeleteUserRoleForTenant(user.UserId, roleId);
 
             // NOTE: This replaces the above code, I think, I need to double check and test though... - CM
@@ -328,7 +328,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     if (UserExists(user))
                     {
-                       // var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
+                       // var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, Id = VOLUSIONTENANTID }));
                         ulr = _usersRepo.Login(new Core.Api.Contracts.UserAuthInfo { EmailAddress = user.EmailAddress, Password = user.Password }).Result.ReadAsSync();
                       //  ticket = lur.AuthTicket;
                         //ticket = _usersRepo.CreateUserAuthTicket().Result.ReadAsSync();
@@ -382,7 +382,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     sites.AddRange(blurg.Result.ReadAsSync().Items);
                 }*/
 
-                //var sites = _siteClient.GetSites(0, int.MaxValue, null, string.Join(" or ", ulr.Tenants.Select(x => "TenantId eq " + x))).Result.ReadAsSync();
+                //var sites = _siteClient.GetSites(0, int.MaxValue, null, string.Join(" or ", ulr.Tenants.Select(x => "Id eq " + x))).Result.ReadAsSync();
                 //return this.List<Tuple<Site, int>>(sites.Select(x => new Tuple<Site, int>(x, 1)).ToList());
 
                 var contexts = new List<TaContext>();
@@ -391,7 +391,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     var taContext = new TaContext
                         {
-                            TenantId = tenant.Id,
+                            Id = tenant.Id,
                             SiteCollections = new List<TaContextSiteCollection>(),
                             Name = tenant.Name,
                         };
@@ -408,9 +408,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 return List(contexts);
 
-                /*var ts = _tenantClient.GetTenants(0, int.MaxValue, null, string.Join(" or ", ulr.Tenants.Select(x => "TenantId eq " + x.Id))).Result.ReadAsSync();
+                /*var ts = _tenantClient.GetTenants(0, int.MaxValue, null, string.Join(" or ", ulr.Tenants.Select(x => "Id eq " + x.Id))).Result.ReadAsSync();
 
-                //var tenants = ts.Items.Select(x => new TaContext { TenantId = x.Id });
+                //var tenants = ts.Items.Select(x => new TaContext { Id = x.Id });
                 var tenants = ts.Items.Select(x => _taContextProvider.GetContext(x.Id));
 
                 return List(tenants.ToList());*/
@@ -426,7 +426,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         //{
 
-        //    var userRepo = new UserWebApiClient(new VolusionApiWebClientFactory(new VolusionWebApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
+        //    var userRepo = new UserWebApiClient(new VolusionApiWebClientFactory(new VolusionWebApiContext() { SiteId = VOLUSIONSITEID, Id = VOLUSIONTENANTID }));
 
         //    var rolesTask = userRepo.GetUserRoles(userId, null).Result;
 
@@ -440,7 +440,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         //                new Tuple<Site, int>(sites.Items.FirstOrDefault(site => site.Id == role.SiteId), role.RoleId))
 
-        //        .Where(x => x.Item1 != null).OrderByDescending(x => x.Item1.TenantId).ToList();
+        //        .Where(x => x.Item1 != null).OrderByDescending(x => x.Item1.Id).ToList();
 
         //    return res;
 
@@ -611,7 +611,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return false;
             }
              
-           // var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
+           // var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, Id = VOLUSIONTENANTID }));
             var res = _usersRepo.GetUserByEmail(user.EmailAddress, null).Result;
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
@@ -623,7 +623,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public void UpdateForgottenPassword(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
         {
-            //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
+            //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, Id = VOLUSIONTENANTID }));
             var res = _usersRepo.UpdateForgottenPassword(new ConfirmationInfo()
                                                                {
                                                                    EmailAddress = user.EmailAddress,
@@ -640,7 +640,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public void CreatePasswordResetRequest(string email)
         {
 
-          //  var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
+          //  var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, Id = VOLUSIONTENANTID }));
             var res = _usersRepo.ResetPassword(new ResetPasswordInfo() { EmailAddress = email }).Result;
             if (res.HasException)
             {

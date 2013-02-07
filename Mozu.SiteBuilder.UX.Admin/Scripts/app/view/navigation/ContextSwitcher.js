@@ -98,7 +98,7 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
         // *** urlContext takes the form of *:######, where * is 't', 'c', or 's' for Tenant, SiteCollection, or Site respectively.
         var contextType     = urlContext.split(':')[0],
             siteCollections = Taco.app.context.siteCollections,
-            displayName     = 'All', // *** Default to 'All' (context is likely t:tenantId)
+            displayName     = 'All', // *** Default to 'All' (context is likely t:Id)
 
             // *** Callback function for Ext.each loops below that tests the current item's urlToken against the argued parameter urlContext
             testItemNameAgainstContext = function ( item ) {

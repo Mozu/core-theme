@@ -35,7 +35,7 @@
 
 //            /*ISiteBuilderContext siteContext = new SiteBuilderContext
 //                                                {
-//                                                    TenantId = 1,
+//                                                    Id = 1,
 //                                                    WebSiteId = 1
 //                                                };#1#
 
@@ -66,7 +66,7 @@
 
 //            ISiteBuilderContext siteContext = new SiteBuilderContext
 //            {
-//                TenantId = 1,
+//                Id = 1,
 //                WebSiteId = 1
 //            };
 
@@ -93,7 +93,7 @@
 //                        .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc"))
 //                        .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.ClientRepositories"))
 //                        .UsingAssembly(Assembly.GetExecutingAssembly())
-//                        .UsingBuildAction(b => b.Register(c=> new SiteBuilderContext{TenantId = "1"}).As<ISiteBuilderContext>())
+//                        .UsingBuildAction(b => b.Register(c=> new SiteBuilderContext{Id = "1"}).As<ISiteBuilderContext>())
 //                        .Build();
 			
 //            var restclientFactory = container.Resolve<Func<Func<Category, object>, IServiceClient<Category>>>();
@@ -110,7 +110,7 @@
 //                      .UsingAssembly(Assembly.Load("Mozu.Core"))
 //                      .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc"))
 //                      .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.ClientRepositories"))
-//                      .UsingBuildAction(b => b.Register(c => new SiteBuilderContext { TenantId = "1" }).As<ISiteBuilderContext>())
+//                      .UsingBuildAction(b => b.Register(c => new SiteBuilderContext { Id = "1" }).As<ISiteBuilderContext>())
 //                      .UsingAssembly(Assembly.GetExecutingAssembly())
 //                      .Build();
 
@@ -132,7 +132,7 @@
 //                      .UsingAssembly(Assembly.Load("Mozu.Core"))
 //                      .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc"))
 //                      .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.ClientRepositories"))
-//                      .UsingBuildAction(b => b.Register(c => new SiteBuilderContext { TenantId = "1" }).As<ISiteBuilderContext>())
+//                      .UsingBuildAction(b => b.Register(c => new SiteBuilderContext { Id = "1" }).As<ISiteBuilderContext>())
 //                      .UsingAssembly(Assembly.GetExecutingAssembly())
 //                      .Build();
 

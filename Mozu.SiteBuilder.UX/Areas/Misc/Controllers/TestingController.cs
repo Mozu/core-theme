@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         //public ActionResult Tenant ()
         //{
         //    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        //    sb.AppendFormat("<form method='post'>TenantID: <input type='textbox' name='id' value='{0}'/><br /><input type='submit' /></form>", this.SiteContext.TenantId);
+        //    sb.AppendFormat("<form method='post'>TenantID: <input type='textbox' name='id' value='{0}'/><br /><input type='submit' /></form>", this.SiteContext.Id);
         //    return new ContentResult (){ Content = sb.ToString ()};
             
         //}

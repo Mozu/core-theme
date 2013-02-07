@@ -70,7 +70,7 @@
 //        static HashSet<string> g_provisioned = new HashSet<string>();
 //        private void Provision(IApiContext ctx)
 //        {
-//            string key = ctx.TenantId + "|" + ctx.SiteId;
+//            string key = ctx.Id + "|" + ctx.SiteId;
 //            if (g_provisioned.Contains(key))
 //            {
 //                return;
