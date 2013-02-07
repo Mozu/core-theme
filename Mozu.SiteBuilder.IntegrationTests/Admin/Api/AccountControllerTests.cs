@@ -6,7 +6,6 @@ using Mozu.Core;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
 using Mozu.Provisioning.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.Providers;
 using Mozu.Tenant.Contracts.Clients;
 using NSubstitute;
 using NUnit.Framework;
@@ -34,7 +33,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private IAdminUserWebApiClient _adminUserWebApiClient;
         private ISiteBuilderContext _siteBuilderContext;
         private ISettings _settings;
-        private ITaContextProvider _taContextProvider;
 
         [SetUp]
         public void SetUp()
@@ -51,7 +49,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             _adminUserWebApiClient = Substitute.For<IAdminUserWebApiClient>();
             _siteBuilderContext = Substitute.For<ISiteBuilderContext>();
             _settings = Substitute.For<ISettings>();
-            _taContextProvider = Substitute.For<ITaContextProvider>();
         }
 
         [Test, Ignore("Has dependency on 'SiteBuilderContext.Current'. Can this be replaced with injected instance?")]
@@ -152,39 +149,10 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             _invitationWebApiClient.Received(1).ResubmitInvitation(invitation.Id);
         }
 
-        [Test]
-        public void GetCurrentUser_should_return_user_if_found_by_token_UserId()
-        {
-            var expectedId = "youzer eye dee";
-            _authenticationHelper.GetCurrentProfileToken().Returns(new ProfileToken { UserId = expectedId });
-            _userWebApiClient.With(x => x.GetUser(expectedId, null), new Mozu.Core.Api.Contracts.User { Id = expectedId });
-
-            var api = GetApi();
-
-            var user = api.GetCurrentUser();
-
-            user.ShouldNotBeNull();
-            user.Id.ShouldEqual(expectedId);
-        }
-
-        [Test]
-        public void GetCurrentUser_should_return_new_Unauthenticated_User_if_NotFound()
-        {
-            _authenticationHelper.GetCurrentProfileToken().Returns(new ProfileToken());
-            _userWebApiClient.WithAny(x => x.GetUser(null, null), null, msg => msg.StatusCode = HttpStatusCode.NotFound);
-
-            var api = GetApi();
-
-            var user = api.GetCurrentUser();
-
-            user.ShouldNotBeNull();
-            user.IsAuthenticated.ShouldBeFalse();
-        }
-
         private AccountApi GetApi()
         {
             return new AccountApi(_userWebApiClient, _roleWebApiClient, _authTicketWebApiClient, _tenantsWebApiClient, _authenticationHelper,
-                _sitesWebApiClient, _invitationWebApiClient, /*_merchantSignUpWebApiClient*/null, _adminUserWebApiClient, _siteBuilderContext, _settings, _taContextProvider);
+                _sitesWebApiClient, _invitationWebApiClient, /*_merchantSignUpWebApiClient*/null, _adminUserWebApiClient, _siteBuilderContext, _settings);
         }
     }
 }

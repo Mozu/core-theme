@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
+using Mozu.SiteBuilder.UX.Admin;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
@@ -23,6 +24,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
         private IAccountController _accountApi;
         private IAuthenticationHelper _authHelper;
         private ISiteBuilderContext _sbc;
+        private ICurrentUserHelper _currentUserHelper;
 
         [SetUp]
         public void SetUp()
@@ -30,6 +32,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
             _accountApi = Substitute.For<IAccountController>();
             _authHelper = Substitute.For<IAuthenticationHelper>();
             _sbc = Substitute.For<ISiteBuilderContext>();
+            _currentUserHelper = Substitute.For<ICurrentUserHelper>();
         }
 
         [TestFixture]
@@ -165,7 +168,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
 
         public AuthController GetController()
         {
-            return new AuthController(_accountApi, _authHelper, _sbc);
+            return new AuthController(_accountApi, _authHelper, _sbc, _currentUserHelper);
         }
     }
 }
