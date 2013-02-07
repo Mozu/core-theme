@@ -40,26 +40,10 @@ using InvitationWebApiClient = Mozu.AdminUser.Contracts.Clients.InvitationWebApi
 using ApiRole = Mozu.Core.Api.Contracts.Role;
 using AuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.AuthTicketWebApiClient;
 using IAuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.IAuthTicketWebApiClient;
-using LoginUser = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser;
 using Role = Mozu.SiteBuilder.UX.Models.Users.Role;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    // TODO: Temporarily extracted an interface here. These methods are all shared between AccountController and AuthController and should be moved into another Helper class
-    public interface IAccountController : IHttpController
-    {
-        Task<Response<List<TaContext>>> VolusionLogIn(LoginUser login);
-        void CreatePasswordResetRequest(string emailAddress);
-        bool UserExists(LoginUser user);
-        Task<Site> ChangeSite(int tenantId);
-        AdminUser2 GetUser(string userId);
-        List<Tuple<Site, int>> SiteRolesList(string userId);
-        void UpdateForgottenPassword(LoginUser user);
-        bool RemoveRoleFromSite(int siteId, int roleId);
-        Task<Response<Tenant.Contracts.Tenant>> ChangeTenant(int id);
-        Task<Response<List<TaContext>>> Register(LoginUser user);
-    }
-
     [ServiceContract]
     [AllowAnonymous]
     public class AccountController : BaseController, IAccountController, IHttpController
@@ -77,8 +61,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly  IAdminUserWebApiClient _adminUserWebApiClient;
         private ISiteBuilderContext _siteBuilderContext;
         private readonly ISettings _settings;
+        private readonly IContextSwitcher _contextSwitcher;
 
-        public AccountController(IAdminUserWebApiClient user, IRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings)
+        public AccountController(IAdminUserWebApiClient user, IRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings, IContextSwitcher contextSwitcher)
         {
             _usersRepo = user;
             ;
@@ -94,6 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _invitationWebApiClient = invitationWebApiClient;
             _siteBuilderContext = siteBuilderContext;
             _settings = settings;
+            _contextSwitcher = contextSwitcher;
         }
 
         
@@ -193,24 +179,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        public List<ApiRole> GetUserSitesRoles(string userId)
-        {
-            var res = _usersRepo.GetUserRoles(userId, null).Result;
-
-           // var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
-           // var res = rootUserRepo.GetUser(userId, null).Result;
-            if ( res.ResponseMessage.IsSuccessStatusCode )
-            {
-                return res.ReadAsSync().Items;
-            }
-
-            return new List<Core.Api.Contracts.Role>();
-
-        }
-
-
-
-
         public AdminUser2 GetUser(string id)
         {
             var res = _usersRepo.GetUser(id, null).Result;
@@ -259,38 +227,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public async Task<Response<Tenant.Contracts.Tenant>> ChangeTenant(int tenantId)
         {
-            var tenant = await _tenantClient.GetTenant(tenantId).Result.ReadAsAsync();
-            var repo = new AuthTicketWebApiClient(new ServiceClientMessageHandler(new ApiContext() { TenantId = tenantId }, _settings));
-            var ticket = _authHelper.GetCurrentTicket();
-
-            ticket = await repo.RefreshUserAuthTicket(ticket.RefreshToken).Result.ReadAsAsync();
-            var userAuthTicketForTenant = repo.CreateAuthTicketForTenant(new UserTokenInfo { AccessToken = ticket.AccessToken }).Result.ReadAsAsync().Result;
-
-            _authHelper.SetCurrentUser(userAuthTicketForTenant);
-
-            //var lwU = LightweightUserClaims.Parse(ticketForTenant.AccessToken);
-            _siteBuilderContext.SiteId = null;
-            _siteBuilderContext.SiteGroupId = null;
-            _siteBuilderContext.TenantId = tenantId;
-            _siteBuilderContext.Save();
+            var tenant = await _contextSwitcher.ChangeTenant(tenantId);
 
             return Single2(tenant);
         }
 
         public async Task<Site> ChangeSite(int siteId)
         {
-            var site = _siteClient.GetSite(siteId).Result.ReadAsSync();
-            var repo = new AuthTicketWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = siteId, TenantId = site.TenantId }, _settings ));
-            var ticket = _authHelper.GetCurrentTicket();
+            var site = await _contextSwitcher.ChangeSite(siteId);
 
-            ticket = await repo.RefreshUserAuthTicket(ticket.RefreshToken).Result.ReadAsAsync();
-            ticket = await repo.CreateAuthTicketForSite(new UserTokenInfo {AccessToken = ticket.AccessToken}).Result.ReadAsAsync();
-            _authHelper.SetCurrentUser(ticket);
-
-            var lwU = Mozu.Core.LightweightUserClaims.Parse(ticket.AccessToken);
-            _siteBuilderContext.SiteId = (int)lwU.SiteId;
-            _siteBuilderContext.TenantId = site.TenantId;
-            _siteBuilderContext.Save();
             return site;
         }
 

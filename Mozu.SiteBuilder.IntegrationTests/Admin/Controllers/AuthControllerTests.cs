@@ -25,6 +25,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
         private IAuthenticationHelper _authHelper;
         private ISiteBuilderContext _sbc;
         private ICurrentUserHelper _currentUserHelper;
+        private IContextSwitcher _contextSwitcher;
 
         [SetUp]
         public void SetUp()
@@ -33,6 +34,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
             _authHelper = Substitute.For<IAuthenticationHelper>();
             _sbc = Substitute.For<ISiteBuilderContext>();
             _currentUserHelper = Substitute.For<ICurrentUserHelper>();
+            _contextSwitcher = Substitute.For<IContextSwitcher>();
         }
 
         [TestFixture]
@@ -98,7 +100,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
             private Response<List<TaContext>> responseWithNoTenants;
             private Response<List<TaContext>> responseWithOneTenant;
             private Response<List<TaContext>> responseWithManyTenants;
-            private Response<Tenant.Contracts.Tenant> changeTenantResponse;
 
             [SetUp]
             public new void SetUp()
@@ -118,12 +119,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
                     Success = true,
                     Items = Enumerable.Repeat(new TaContext(), 30).ToList(),
                 };
-                changeTenantResponse = new Response<Tenant.Contracts.Tenant>
-                {
-                    Success = true,
-                    Items = new Tenant.Contracts.Tenant(),
-                };
-                _accountApi.WithAny(x => x.ChangeTenant(0), changeTenantResponse);
+                _contextSwitcher.WithAny(x => x.ChangeTenant(0), new Tenant.Contracts.Tenant());
             }
 
             [Test]
@@ -168,7 +164,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
 
         public AuthController GetController()
         {
-            return new AuthController(_accountApi, _authHelper, _sbc, _currentUserHelper);
+            return new AuthController(_accountApi, _authHelper, _sbc, _currentUserHelper, _contextSwitcher);
         }
     }
 }

@@ -15,13 +15,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
         private readonly ICurrentUserHelper _currentUserHelper;
+        private readonly IContextSwitcher _contextSwitcher;
 
-        public AuthController(IAccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper)
+        public AuthController(IAccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher)
         {
             _authenticationHelper = authHelper;
             _accountApi = accountApi;
             _sbc = sbc;
             _currentUserHelper = currentUserHelper;
+            _contextSwitcher = contextSwitcher;
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
@@ -74,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                     // Auto login to tenant
                     var taContext = tenants.First();
 
-                    var tenant = await _accountApi.ChangeTenant(taContext.TenantId);
+                    var tenant = await _contextSwitcher.ChangeTenant(taContext.TenantId);
                     if (tenant != null)
                     {
                         return Redirect("/admin");
@@ -156,7 +158,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                     return View("Roles", res.Items);
                 }
 
-                var site = await _accountApi.ChangeSite(res.Items.First().TenantId);
+                var site = await _contextSwitcher.ChangeSite(res.Items.First().TenantId);
                 if (site != null)
                 {
                     return Redirect("/admin");
@@ -210,7 +212,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public async Task<ActionResult> ChangeTenant(int id)
         {
-            var tenant = await _accountApi.ChangeTenant(id);
+            var tenant = await _contextSwitcher.ChangeTenant(id);
             if (tenant != null)
             {
                 return Redirect("/admin");
