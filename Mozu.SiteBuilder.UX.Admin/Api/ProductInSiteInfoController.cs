@@ -36,41 +36,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _productClient = productClient;
         }
 
-        [WebGet(UriTemplate = "list")]
-        public Task<Response<List<ProductInSiteInfo>>> GetProductInSiteInfoList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
-        {
-            // TODO: does productCode belong in paging params or filter?
-            // string productCode = extFilter.GetValue<string>("productCode");
-            string productCode = pagingParams.productCode;
-
-            if (string.IsNullOrEmpty(productCode))
-            {
-                return EmptyList<ProductInSiteInfo>();
-            }
-
-            DC.Product product = _productClient.GetProduct(productCode, null).Result.ReadAsAsync().Result;
-
-            if (pagingParams.id != null)
-            {
-                int siteId = Convert.ToInt32(pagingParams.id);
-                DC.ProductInSiteInfo pisi = product.ProductInSites.FirstOrDefault(p => p.SiteId == siteId);
-                return List(Mapper.Map<ProductInSiteInfo>(pisi));
-            }
-
-            // TODO: we don't do anything with these
-            string filter = OldProductController.CreateFilter(extFilter);
-            string sort = OldProductController.CreateSort(pagingParams);
-
-            // res = _productClient.GetProducts(pagingParams.startIndex, pagingParams.pageSize, sort, null, filter).Result.ReadAsAsync().Result;
-
-            List<ProductInSiteInfo> returned = Mapper.Map<List<ProductInSiteInfo>>(product.ProductInSites);
-
-            // inject ProductCode into the return object. ExtJS needs this.
-            returned.Each(pisi => pisi.ProductCode = productCode);
-
-            return List(returned, returned.Count);
-        }
-
         [WebInvoke(UriTemplate = "create")]
         public Task<Response<List<ProductInSiteInfo>>> CreateProductInSiteInfo(List<ProductInSiteInfo> pisis)
         {
@@ -107,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [WebInvoke(UriTemplate = "edit")]
-        public Task<Response<List<ProductInSiteInfo>>> EditProduct(List<ProductInSiteInfo> pisis)
+        public Task<Response<List<ProductInSiteInfo>>> EditProductInSiteInfo(List<ProductInSiteInfo> pisis)
         {
             List<ProductInSiteInfo> returned = new List<ProductInSiteInfo>();
 

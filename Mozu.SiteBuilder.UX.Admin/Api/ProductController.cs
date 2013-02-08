@@ -9,6 +9,7 @@ using AutoMapper;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers;
 using Mozu.SiteBuilder.UX.Admin.MockServices;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
@@ -40,8 +41,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List(Mapper.Map<Product>(prod));
             }
 
-            string filter = OldProductController.CreateFilter(extFilter);
-            string sort = OldProductController.CreateSort(pagingParams);
+            string filter = extFilter.ToFilterString();
+            string sort = pagingParams.sort.ToSortString();
 
             ProductCollection res;
             res = _productClient.GetProducts(pagingParams.startIndex, pagingParams.pageSize, sort, null, filter).Result.ReadAsAsync().Result;
