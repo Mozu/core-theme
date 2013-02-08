@@ -5,7 +5,8 @@
 Ext.define('Taco.core.ux.content.Container', {
     extend: 'Ext.container.Container',
     alias: 'widget.contentcontainer',
-    requires: ['Taco.core.ux.content.Header','Taco.core.ux.content.Body'],    headerCls: 'Taco.core.ux.content.Header', 
+    requires: ['Taco.core.ux.content.Header','Taco.core.ux.content.Body'],
+    headerCls: 'Taco.core.ux.content.Header', 
     bodyCls: 'Taco.core.ux.content.Body', 
 
     bubbleEvents: ['add', 'remove', 'save', 'cancel'],
@@ -22,9 +23,19 @@ Ext.define('Taco.core.ux.content.Container', {
     header: {},
 
     initComponent: function () {
-        var me = this,
-            isScrolled = false;
+        var me = this;
 
+        me.arrangePanels();
+
+        me.callParent(arguments);
+
+        me.subscribeEvents();
+
+        Taco.app.eventbus.fireEvent("createpageview");
+    },
+
+    arrangePanels: function() {
+        var me = this;
         Ext.applyIf(this, {
             header: {},
             body: {}
@@ -35,40 +46,43 @@ Ext.define('Taco.core.ux.content.Container', {
         me.body = Ext.create(me.bodyCls, me.body);
 
         me.items = [me.header, me.body];
+    },
 
-        me.callParent(arguments);
-
+    subscribeEvents: function() {
+        var me = this;
         me.mon(Taco.core.StateManager, {
             beforenavigate: me.onBeforeNavigate,
             navigate: me.onNavigate,
             statechange: me.onStateChange,
             scope: me
         });
-
         me.on({
             hide: me.onDisappear,
             destroy: me.onDisappear,
             show: me.onAppear,
             added: me.onAddToContentView,
-            afterRender: function () {
-                me.body.getEl().addListener({
-                scroll: function (e, t, eOpts) {
-                    if (!isScrolled && t.scrollTop > 0) {
-                        isScrolled = true;
-                        me.getEl().addCls('taco-content-scrolled');
-                    } else if (isScrolled && t.scrollTop === 0) {
-                        isScrolled = false;
-                        me.getEl().removeCls('taco-content-scrolled');
-                    }
-                    //console.log('scroll', t.scrollTop, e, t, eOpts);
-                }
-            });
-            }
+            afterRender: me.onAfterRender
         });
+    },
         
-        
+    onBodyScroll: function (e, t, eOpts) {
+        var me = this,
+            isScrolled = this.isScrolled;
+        if (!isScrolled && t.scrollTop > 0) {
+            isScrolled = true;
+            me.getEl().addCls('taco-content-scrolled');
+        } else if (isScrolled && t.scrollTop === 0) {
+            isScrolled = false;
+            me.getEl().removeCls('taco-content-scrolled');
+        }
+        me.isScrolled = isScrolled;
+    },
 
-        Taco.app.eventbus.fireEvent("createpageview");
+    onAfterRender: function () {
+        this.body.getEl().on({
+            scroll: this.onBodyScroll,
+            scope: this
+        });
     },
 
     getHeader: function () {

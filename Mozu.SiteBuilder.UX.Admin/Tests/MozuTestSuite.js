@@ -105,7 +105,12 @@ Harness.start({
     alsoPreload: [{
         text: "Taco.showViewPort=false;"
     }],
-    items: [{
+    items: [
+        {
+            url: 'unit/scrolling-content-body-adds-scroll-class.js',
+            title: 'Scrolling Content Body Adds Scroll Class'
+        },
+        {
         group: 'Forms',
         expanded: true,
         items: [{

@@ -1,8 +1,8 @@
 /**
  * @class Taco.view.product.Index
  */
-    Ext.define('Taco.view.product.Index', {
-        extend: 'Taco.core.ux.content.Container',
+Ext.define('Taco.view.product.Index', {
+    extend: 'Taco.core.ux.browser.BrowserPage',
         alias: 'widget.prodindex',
         requires: ['Ext.form.Panel', 'Taco.core.ux.BaseGrid', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.modal.Confirmation', 'Taco.core.ux.browser.ItemBrowser'],
         mixins: {

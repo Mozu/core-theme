@@ -275,12 +275,11 @@ Ext.application({
 
 
         if (Taco.showViewPort === false) {
-            return;
+            //return;
         }
         var me = this;
         this.initViewPort();
         this.initStateManager();
-
 
         // add some utility stuff
         Ext.apply(Ext.form.field.VTypes, {
@@ -294,27 +293,6 @@ Ext.application({
 
         // initiate quicktips
         Ext.tip.QuickTipManager.init();
-
-        // initiate HTML9ResponsiveBoilerStrapJS; backbone the databindings into squarespace ventricle
-        Ext.select('.h9rbs').on('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            Ext.Ajax.request({
-                async: false,
-                url: '/admin/Scripts/resources/lib/html9responsiveboilerstrap.js',
-                timeout: 5000,
-                scope: this,
-                success: function (response) {
-                    var s = document.createElement('script');
-                    var t = document.createTextNode(response.responseText);
-                    s.appendChild(t);
-                    document.head.appendChild(s);
-                    tinymce.dom.Event.domLoaded = true;
-                    //(new Function(response.responseText)).call(window);
-                }
-            });
-            return false;
-        });
 
         Taco.app.refreshStyle = function () {
             var tick = new Date().getTime();
