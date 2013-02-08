@@ -472,13 +472,13 @@
     <Content Include="Scripts\app\core\context\SiteCollection.js" />
     <Content Include="Scripts\app\core\layout\Flex.js" />
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
-    <Content Include="Scripts\app\core\context\TaContext.js" />
-    <Content Include="Scripts\app\core\ux\browser\Body.js" />
+    <Content Include="Scripts\app\core\context\TaContext.js" />	<Content Include="Scripts\app\core\ux\browser\Body.js" />
     <Content Include="Scripts\app\core\ux\browser\Container.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
+    <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />
-    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />
-    <Content Include="Scripts\app\core\ux\ScrollSpy.js" />
+    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />   
+	<Content Include="Scripts\app\core\ux\ScrollSpy.js" />
     <Content Include="Scripts\app\core\ux\grid\RowExpander.js" />
     <Content Include="Scripts\app\core\ux\DragSource.js" />
     <Content Include="Scripts\app\core\ux\form\EditorLayout.js" />
@@ -1856,6 +1856,7 @@
     <Content Include="Tests\siesta-1.1.8-standard\tests\senchatouch\701_sencha_touch_form.t.js" />
     <Content Include="Tests\speed-test.t.js" />
     <Content Include="Tests\unit\app-state-matches-uri.t.js" />
+    <Content Include="Tests\unit\scrolling-content-body-adds-scroll-class.js" />
     <Content Include="Tests\unit\enabling-robots-txt-override-enabled-robots-field.js" />
     <Content Include="Tests\unit\disabling-google-analytics-disables-ua-field.js" />
     <Content Include="Tests\unit\form\model-binds.t.js" />
