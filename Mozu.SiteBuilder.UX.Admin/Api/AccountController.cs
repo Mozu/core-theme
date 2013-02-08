@@ -53,7 +53,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IAdminUserWebApiClient _usersRepo;
         private readonly IRoleWebApiClient _rolesRepo;
         private readonly IAuthenticationHelper _authHelper;
-        private readonly IUniversalSiteApiClient _siteClient;
         private IInvitationWebApiClient _invitationWebApiClient;
         private readonly  IAdminUserWebApiClient _adminUserWebApiClient;
         private readonly ISettings _settings;
@@ -65,7 +64,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _usersRepo = user;
             _rolesRepo = role;
             _authHelper = authHelper;
-            _siteClient = siteClient;
             _adminUserWebApiClient = adminUserWebApiClient;
             _invitationWebApiClient = invitationWebApiClient;
             _settings = settings;
@@ -164,23 +162,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var response = task.Result;
                 return roles = response.ReadAsAsync().Result.Items;
             }
-        }
-
-        public bool RemoveRoleFromSite(int siteId, int roleId)
-        {
-            LightweightUserClaims user = _authHelper.GetCurrentUser();
-            var site = _siteClient.GetSite(siteId).Result.ReadAsSync();
-
-            //var userThing = new UserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = site.Id, TenantId = site.TenantId }));
-            //userThing.DeleteUserRoleForTenant(user.UserId, roleId);
-
-            // NOTE: This replaces the above code, I think, I need to double check and test though... - CM
-            var userClaims = new LightweightUserClaims { UserId = user.UserId };
-            
-            var roleThing = new RoleWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = site.Id, TenantId = site.TenantId, UserClaims = userClaims }, _settings ));
-            roleThing.DeleteRole(roleId);
-
-            return true;
         }
 
         public async Task<Response<Tenant.Contracts.Tenant>> ChangeTenant(int tenantId)
@@ -328,23 +309,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return res;
 
         //}
-
-        public List<Tuple<Site, int>> SiteRolesList(string userId)
-        {
-
-            var rolesTask = _usersRepo.GetUserRoles(userId, null).Result;
-
-            var roles = rolesTask.ResponseMessage.IsSuccessStatusCode ? rolesTask.ReadAsSync() : new Core.Api.Contracts.RoleCollection() { Items = new List<Core.Api.Contracts.Role>() };
-
-            var siteIds = roles.Items.Select(x => (int?)x.TenantId);
-
-            var sites = _siteClient.GetSites(0, int.MaxValue, null, string.Join(" or ", siteIds.Select(x => "id eq " + x))).Result.ReadAsSync();
-
-            var res = roles.Items.Select(role =>
-                        new Tuple<Site, int>(sites.Items.FirstOrDefault(site => site.Id == role.TenantId), role.Id))
-                .Where(x => x.Item1 != null).OrderByDescending(x => x.Item1.TenantId).ToList();
-            return res;
-        }
 
         [WebInvoke(Method = "POST", UriTemplate = "users/delete")]
         public Task<Response<AccountUser>> DeleteUser(AccountUser accountUser)

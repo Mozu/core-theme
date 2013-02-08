@@ -30,6 +30,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
         private IUserHelper _userHelper;
         private IPasswordHelper _passwordHelper;
         private IMerchantSignUpWebApiClient _merchantSignUpWebApiClient;
+        private IRolesHelper _rolesHelper;
 
         [SetUp]
         public void SetUp()
@@ -42,6 +43,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
             _userHelper = Substitute.For<IUserHelper>();
             _passwordHelper = Substitute.For<IPasswordHelper>();
             _merchantSignUpWebApiClient = Substitute.For<IMerchantSignUpWebApiClient>();
+            _rolesHelper = Substitute.For<IRolesHelper>();
         }
 
         [TestFixture]
@@ -171,7 +173,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
 
         public AuthController GetController()
         {
-            return new AuthController(_accountApi, _authHelper, _sbc, _currentUserHelper, _contextSwitcher, _userHelper, _passwordHelper, _merchantSignUpWebApiClient);
+            return new AuthController(_accountApi, _authHelper, _sbc, _currentUserHelper, _contextSwitcher, _userHelper, _passwordHelper, _merchantSignUpWebApiClient, _rolesHelper);
         }
     }
 }

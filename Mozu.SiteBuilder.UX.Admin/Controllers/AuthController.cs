@@ -23,8 +23,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IUserHelper _userHelper;
         private readonly IPasswordHelper _passwordHelper;
         private readonly Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient _merchantSignUpWebApiClient;
+        private readonly IRolesHelper _rolesHelper;
 
-        public AuthController(IAccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper, IPasswordHelper passwordHelper, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient)
+        public AuthController(IAccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper, IPasswordHelper passwordHelper, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IRolesHelper rolesHelper)
         {
             _authenticationHelper = authHelper;
             _accountApi = accountApi;
@@ -34,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _userHelper = userHelper;
             _passwordHelper = passwordHelper;
             _merchantSignUpWebApiClient = merchantSignUpWebApiClient;
+            _rolesHelper = rolesHelper;
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
@@ -199,7 +201,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         public ActionResult Launchpad()
         {
             var userId = _authenticationHelper.GetCurrentUser().UserId;
-            var res = _accountApi.SiteRolesList(userId);
+            var res = _rolesHelper.SiteRolesList(userId);
             return View("Roles", res);
         }
 
@@ -210,9 +212,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             return await Login(user);
         }
 
-        public ActionResult DeleteRole ( int siteId, int roleId)
+        public ActionResult DeleteRole(int siteId, int roleId)
         {
-            _accountApi.RemoveRoleFromSite(siteId, roleId);
+            _rolesHelper.RemoveRoleFromSite(siteId, roleId);
             return new JsonResult
                        {
                            Data = true,
