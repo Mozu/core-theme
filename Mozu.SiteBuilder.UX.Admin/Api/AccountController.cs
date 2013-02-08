@@ -62,8 +62,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private ISiteBuilderContext _siteBuilderContext;
         private readonly ISettings _settings;
         private readonly IContextSwitcher _contextSwitcher;
+        private readonly IUserHelper _userHelper;
 
-        public AccountController(IAdminUserWebApiClient user, IRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings, IContextSwitcher contextSwitcher)
+        public AccountController(IAdminUserWebApiClient user, IRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings, IContextSwitcher contextSwitcher, IUserHelper userHelper)
         {
             _usersRepo = user;
             ;
@@ -80,9 +81,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _siteBuilderContext = siteBuilderContext;
             _settings = settings;
             _contextSwitcher = contextSwitcher;
+            _userHelper = userHelper;
         }
 
-        
         [WebInvoke(UriTemplate = "logoff")]
         public Task<Response<List<AdminUser2>>> Logoff()
         {
@@ -179,17 +180,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        public AdminUser2 GetUser(string id)
-        {
-            var res = _usersRepo.GetUser(id, null).Result;
-            if ( res.ResponseMessage.IsSuccessStatusCode )
-            {
-                return Mapper.Map<AdminUser2>(res.ReadAsAsync().Result);
-             
-            }
-            return null;
-        }
-
         public Task<Response<List<TaContext>>> Register(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
         {
             //var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
@@ -251,7 +241,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     var invite = _invitationWebApiClient.GetInvitation(user.Invitation).Result.ReadAsSync();
 
-                    if (UserExists(user))
+                    if (_userHelper.UserExists(user))
                     {
                        // var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
                         ulr = _usersRepo.Login(new Core.Api.Contracts.UserAuthInfo { EmailAddress = user.EmailAddress, Password = user.Password }).Result.ReadAsSync();
@@ -527,23 +517,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             contractsUser.EmailAddress = accountInformation.Email;
 
             return _usersRepo.UpdateUser(contractsUser, userId).Result.ReadAsSync();
-        }
-
-        public bool UserExists(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
-        {
-            if (string.IsNullOrEmpty(user.EmailAddress))
-            {
-                return false;
-            }
-             
-           // var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
-            var res = _usersRepo.GetUserByEmail(user.EmailAddress, null).Result;
-            if (res.ResponseMessage.IsSuccessStatusCode)
-            {
-                var du = res.ReadAsSync();
-                return du != null && du.EmailAddress != null;
-            }
-            return false;
         }
 
         public void UpdateForgottenPassword(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)

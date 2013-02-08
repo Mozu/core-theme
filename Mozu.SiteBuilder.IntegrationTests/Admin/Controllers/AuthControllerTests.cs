@@ -26,6 +26,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
         private ISiteBuilderContext _sbc;
         private ICurrentUserHelper _currentUserHelper;
         private IContextSwitcher _contextSwitcher;
+        private IUserHelper _userHelper;
 
         [SetUp]
         public void SetUp()
@@ -35,6 +36,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
             _sbc = Substitute.For<ISiteBuilderContext>();
             _currentUserHelper = Substitute.For<ICurrentUserHelper>();
             _contextSwitcher = Substitute.For<IContextSwitcher>();
+            _userHelper = Substitute.For<IUserHelper>();
         }
 
         [TestFixture]
@@ -164,7 +166,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
 
         public AuthController GetController()
         {
-            return new AuthController(_accountApi, _authHelper, _sbc, _currentUserHelper, _contextSwitcher);
+            return new AuthController(_accountApi, _authHelper, _sbc, _currentUserHelper, _contextSwitcher, _userHelper);
         }
     }
 }

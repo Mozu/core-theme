@@ -7,13 +7,14 @@ using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
 using Mozu.Provisioning.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin;
+using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.Tenant.Contracts.Clients;
 using NSubstitute;
 using NUnit.Framework;
-using Should;using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
+using Should;
 using Role = Mozu.Core.Api.Contracts.Role;
-using AccountApi = Mozu.SiteBuilder.UX.Admin.Api.AccountController;
 using IAuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.IAuthTicketWebApiClient;
 using IInvitationWebApiClient = Mozu.AdminUser.Contracts.Clients.IInvitationWebApiClient;
 using IRoleWebApiClient = Mozu.AdminUser.Contracts.Clients.IRoleWebApiClient;
@@ -35,6 +36,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private ISiteBuilderContext _siteBuilderContext;
         private ISettings _settings;
         private IContextSwitcher _contextSwitcher;
+        private IUserHelper _userHelper;
 
         [SetUp]
         public void SetUp()
@@ -52,6 +54,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             _siteBuilderContext = Substitute.For<ISiteBuilderContext>();
             _settings = Substitute.For<ISettings>();
             _contextSwitcher = Substitute.For<IContextSwitcher>();
+            _userHelper = Substitute.For<IUserHelper>();
         }
 
         [Test, Ignore("Has dependency on 'SiteBuilderContext.Current'. Can this be replaced with injected instance?")]
@@ -103,30 +106,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         }
 
         [Test]
-        public void GetUser_by_id_should_return_mapped_user()
-        {
-            var id = Guid.NewGuid().ToString("n");
-            _userWebApiClient.With(x => x.GetUser(id, null), new Mozu.Core.Api.Contracts.User { Id = id });
-
-            var api = GetApi();
-
-            var user = api.GetUser(id);
-            user.Id.ShouldEqual(id);
-        }
-
-        [Test]
-        public void GetUser_should_return_null_if_response_is_not_successful()
-        {
-            _userWebApiClient.WithAny(x => x.GetUser(null, null), null, msg => msg.StatusCode = HttpStatusCode.NotFound);
-
-            var api = GetApi();
-
-            var user = api.GetUser("whatever");
-
-            user.ShouldBeNull();
-        }
-
-        [Test]
         public void DeleteInvitation_should_delegate_to_InvitationWebApiClient()
         {
             var invitation = new UX.Admin.Api.Models.Account.Invitation { Id = "dsaklfjadsfkjf" };
@@ -152,11 +131,11 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             _invitationWebApiClient.Received(1).ResubmitInvitation(invitation.Id);
         }
 
-        private AccountApi GetApi()
+        private AccountController GetApi()
         {
-            return new AccountApi(_userWebApiClient, _roleWebApiClient, _authTicketWebApiClient, _tenantsWebApiClient, _authenticationHelper,
+            return new AccountController(_userWebApiClient, _roleWebApiClient, _authTicketWebApiClient, _tenantsWebApiClient, _authenticationHelper,
                 _sitesWebApiClient, _invitationWebApiClient, /*_merchantSignUpWebApiClient*/null, _adminUserWebApiClient, _siteBuilderContext,
-                _settings, _contextSwitcher);
+                _settings, _contextSwitcher, _userHelper);
         }
     }
 }
