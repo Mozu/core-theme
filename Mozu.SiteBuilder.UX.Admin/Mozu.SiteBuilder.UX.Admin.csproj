@@ -472,13 +472,13 @@
     <Content Include="Scripts\app\core\context\SiteCollection.js" />
     <Content Include="Scripts\app\core\layout\Flex.js" />
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
-    <Content Include="Scripts\app\core\context\TaContext.js" />	<Content Include="Scripts\app\core\ux\browser\Body.js" />
-    <Content Include="Scripts\app\core\ux\browser\Container.js" />
+    <Content Include="Scripts\app\core\context\TaContext.js" />
+    <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />
-    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />   
-	<Content Include="Scripts\app\core\ux\ScrollSpy.js" />
+    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />
+    <Content Include="Scripts\app\core\ux\ScrollSpy.js" />
     <Content Include="Scripts\app\core\ux\grid\RowExpander.js" />
     <Content Include="Scripts\app\core\ux\DragSource.js" />
     <Content Include="Scripts\app\core\ux\form\EditorLayout.js" />
@@ -1474,7 +1474,7 @@
     </Content>
     <Content Include="Tests\Chalupa\Core.js" />
     <Content Include="Tests\integration\product-basic-edit-save.js" />
-    <Content Include="Tests\MozuTestSuite.html" />
+    <Content Include="Tests\index.html" />
     <Content Include="Tests\MozuTestSuite.js" />
     <Content Include="Tests\sanity-test.t.js" />
     <Content Include="Tests\siesta-1.1.8-standard\bin\admin-tests.js" />
