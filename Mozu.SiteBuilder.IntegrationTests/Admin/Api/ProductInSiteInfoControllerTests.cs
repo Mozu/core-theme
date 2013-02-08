@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api;
-using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
@@ -56,44 +57,48 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         }
 
         [Test]
-        public void Test_get_pisi_list_with_no_product_code_gives_you_nothing_and_youll_like_it()
+        public void Test_create_works()
         {
-            // conspicuous lack of productCode in PagingParameters
-            var pagingParams = new PagingParamaters {};
-            var extFilter = new FilterCollection();
+            ProductInSiteInfo newPisi = new ProductInSiteInfo {
+                ProductCode = _mock.ProductCode,
+                SiteId = 3,
+                IsContentOverridden = true,
+                ProductName = "foo bar",
+                FullDescription = "blah blah blah"
+            };
 
-            var response = _testedController.GetProductInSiteInfoList(pagingParams, extFilter).Result;
+            var response = _testedController.CreateProductInSiteInfo(new List<ProductInSiteInfo> { newPisi }).Result;
 
             response.Success.ShouldBeTrue();
-            response.Total.ShouldEqual(0);
+            response.Items.Count.ShouldEqual(1);
+            response.Items[0].ProductCode.ShouldEqual(newPisi.ProductCode);
+            response.Items[0].ProductName.ShouldEqual(newPisi.ProductName);
+            response.Items[0].FullDescription.ShouldEqual(newPisi.FullDescription);
+            response.Items[0].SiteId.ShouldEqual(newPisi.SiteId);
         }
-
 
         [Test]
-        public void Test_get_pisi_list_for_all_sites()
+        public void Test_edit_works()
         {
-            string productCode = _mock.ProductCode;
-            var pagingParams = new PagingParamaters { productCode = productCode };
-            var extFilter = new FilterCollection();
+            ProductInSiteInfo editedPisi = Mapper.Map<ProductInSiteInfo>(_mock.ProductInSites.Last());
+            editedPisi.IsContentOverridden = true;
+            editedPisi.ProductName = "new product name just for this test.";
 
-            var response = _testedController.GetProductInSiteInfoList(pagingParams, extFilter).Result;
+            var response = _testedController.EditProductInSiteInfo(new List<ProductInSiteInfo> { editedPisi }).Result;
 
             response.Success.ShouldBeTrue();
-            response.Total.ShouldEqual(_mock.ProductInSites.Count);
+            response.Items.Count.ShouldEqual(1);
+            response.Items[0].ProductName.ShouldEqual(editedPisi.ProductName);
         }
 
-        public void Test_get_pisi_list_for_one_site()
+        [Test]
+        public void Test_delete_works()
         {
-            string productCode = _mock.ProductCode;
-            int siteId = _mock.ProductInSites.First().SiteId;
-            var pagingParams = new PagingParamaters { productCode = productCode, id = Convert.ToString(siteId) };
-            var extFilter = new FilterCollection();
+            ProductInSiteInfo deletedPisi = Mapper.Map<ProductInSiteInfo>(_mock.ProductInSites.Last());
 
-            var response = _testedController.GetProductInSiteInfoList(pagingParams, extFilter).Result;
+            var response = _testedController.DeleteProductInSiteInfo(new List<ProductInSiteInfo> { deletedPisi }).Result;
 
             response.Success.ShouldBeTrue();
-            response.Total.ShouldEqual(1);
-            response.Items.First().SiteId.ShouldEqual(siteId);
         }
 
         // TODO: some more testing

@@ -6,7 +6,7 @@
 
 Ext.define('Taco.controller.Testing', {
     extend: 'Taco.core.Controller',
-    requires: ['Taco.model.Order', 'Taco.model.OrderItem', 'Taco.model.Product'],
+    requires: ['Taco.model.Order', 'Taco.model.OrderItem', 'Taco.model.Product', 'Taco.store.Products'],
 
     statics: {
         returnString: function (str) {
@@ -25,6 +25,10 @@ Ext.define('Taco.controller.Testing', {
 
 
     foster: function() {
+
+        var productStore = Ext.data.StoreManager.lookup('Taco.store.Products');
+        productStore.load();
+
         this.createContentView('Taco.core.ux.content.Container', {
 
             header: {
@@ -61,6 +65,10 @@ Ext.define('Taco.controller.Testing', {
                                 pisi.save({
                                     success: function (record, operation) {
                                         alert("successfully created PISI: " + record.getId());
+
+                                        // true means to not not not load data automatically
+                                        productStore.clearFilter(true);
+                                        productStore.load();
                                     },
                                     failure: function () {
                                         alert('fail');
@@ -95,6 +103,70 @@ Ext.define('Taco.controller.Testing', {
                         });
 
                     }
+                },
+                {
+                    xtype: 'box',
+                    autoEl: 'hr'
+                },
+                {
+                    xtype: 'button',
+                    text: "Click to filter your Fosters",
+                    handler: function() {
+                        var filterString = window.prompt("Enter a foster name to search for.", "123");
+
+                        // true means to not not not load data automatically
+                        productStore.clearFilter(true);
+                        productStore.filter("foo", "bar");
+                        //productStore.filter([
+                        //    {property: "productName", value: filterString}
+                        //]);
+
+                        // onLoad handled by grid.
+                    }
+                },
+                {
+                    xtype: 'box',
+                    autoEl: 'hr'
+                },
+                {
+                    xtype: 'button',
+                    text: "Click to clear your Foster filters",
+                    handler: function() {
+                        // false means to reload data automatically
+                        productStore.clearFilter(false);
+                        // onLoad handled by grid.
+                    }
+                },
+                {
+                    xtype: 'box',
+                    autoEl: 'hr'
+                },
+                {
+                    xtype: "gridpanel",
+                    store: productStore,
+                    columns: [
+                        {
+                            xtype: 'gridcolumn',
+                            dataIndex: 'productCode',
+                            text: 'Product Code',
+                        },
+                        {
+                            xtype: 'gridcolumn',
+                            dataIndex: 'productName',
+                            text: 'Product Name',
+                        },
+                        {
+                            xtype: 'gridcolumn',
+                            dataIndex: 'productInSites',
+                            text: 'Sites',
+                            renderer: function (pisis) {
+                                var mapped = Ext.Array.map(pisis, function (pisi) {
+                                    return pisi.siteId;
+                                });
+                                return mapped.join(",");
+                            }
+                        }
+                    ]
                 }]
             }
         });
@@ -109,9 +181,6 @@ Ext.define('Taco.controller.Testing', {
         order = Ext.create('Taco.model.Order', {
             
         });
-
-       
-       
         
         orderItemStore.add(
            {
