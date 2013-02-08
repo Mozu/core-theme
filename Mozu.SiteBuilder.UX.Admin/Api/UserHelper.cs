@@ -39,5 +39,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             return false;
         }
+
+        public Core.Api.Contracts.User UpdateUser(AccountInformation accountInformation, string userId)
+        {
+            var contractsUser = _adminUserWebApiClient.GetUser(userId, null).Result.ReadAsAsync().Result;
+            contractsUser.FirstName = accountInformation.FirstName;
+            contractsUser.LastName = accountInformation.LastName;
+            contractsUser.EmailAddress = accountInformation.Email;
+
+            return _adminUserWebApiClient.UpdateUser(contractsUser, userId).Result.ReadAsSync();
+        }
+
     }
 }

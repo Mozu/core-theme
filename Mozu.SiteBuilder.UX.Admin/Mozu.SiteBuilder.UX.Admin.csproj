@@ -451,8 +451,10 @@
     <Compile Include="CurrentUserHelper.cs" />
     <Compile Include="IContextSwitcher.cs" />
     <Compile Include="ICurrentUserHelper.cs" />
+    <Compile Include="IPasswordHelper.cs" />
     <Compile Include="MockServices\InMemoryProductWebApiClient.cs" />
     <Compile Include="MockServices\TestResponse.cs" />
+    <Compile Include="PasswordHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

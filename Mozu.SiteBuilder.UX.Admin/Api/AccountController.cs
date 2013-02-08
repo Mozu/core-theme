@@ -48,37 +48,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [AllowAnonymous]
     public class AccountController : BaseController, IAccountController, IHttpController
     {
+        private List<ApiRole> roles;
+
         private readonly IAdminUserWebApiClient _usersRepo;
-        
-        private IRoleWebApiClient _rolesRepo;
-        private Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient   _merchantSignUpWebApiClient;
-        private readonly IAuthTicketWebApiClient _authTicketRepo;
-        private ITenantsWebApiClient _tenantClient;
+        private readonly IRoleWebApiClient _rolesRepo;
         private readonly IAuthenticationHelper _authHelper;
         private readonly IUniversalSiteApiClient _siteClient;
-        private  IInvitationWebApiClient _invitationWebApiClient;
-        private List<ApiRole> roles;
+        private IInvitationWebApiClient _invitationWebApiClient;
         private readonly  IAdminUserWebApiClient _adminUserWebApiClient;
-        private ISiteBuilderContext _siteBuilderContext;
         private readonly ISettings _settings;
         private readonly IContextSwitcher _contextSwitcher;
         private readonly IUserHelper _userHelper;
 
-        public AccountController(IAdminUserWebApiClient user, IRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings, IContextSwitcher contextSwitcher, IUserHelper userHelper)
+        public AccountController(IAdminUserWebApiClient user, IRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, IAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings, IContextSwitcher contextSwitcher, IUserHelper userHelper)
         {
             _usersRepo = user;
-            ;
             _rolesRepo = role;
-            _authTicketRepo = auth;
-            _tenantClient = tenantsClient;
             _authHelper = authHelper;
             _siteClient = siteClient;
-
-
-            _merchantSignUpWebApiClient = merchantSignUpWebApiClient;
             _adminUserWebApiClient = adminUserWebApiClient;
             _invitationWebApiClient = invitationWebApiClient;
-            _siteBuilderContext = siteBuilderContext;
             _settings = settings;
             _contextSwitcher = contextSwitcher;
             _userHelper = userHelper;
@@ -96,7 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "list")]
         public Task<Response<List<AdminUser2>>> GetUsers(PagingParamaters pagingParams, FilterCollection extFilter)
         {
-            List<Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Core.Api.Contracts.User>>> tasks= new System.Collections.Generic.List<Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Core.Api.Contracts.User>>>();
+            var tasks= new List<Task<ServiceClientResponse<Core.Api.Contracts.User>>>();
             if (pagingParams.id != null)
             {
                 tasks.Add(_usersRepo.GetUser((string)pagingParams.id, null));
@@ -146,10 +135,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
             return this.List<AdminUser2>(users);
-            
-        
         }
-
 
         public Task<Response<List<AdminUser2>>> GetAccount()
         {
@@ -178,24 +164,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var response = task.Result;
                 return roles = response.ReadAsAsync().Result.Items;
             }
-        }
-
-        public Task<Response<List<TaContext>>> Register(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
-        {
-            //var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
-            //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
-
-
-            var res = _merchantSignUpWebApiClient.MerchantSignUp(new MerchantSignUpRequest()
-                                                                     {
-                                                                         EmailAddress = user.EmailAddress,
-                                                                         Password = user.Password,
-                                                                         Domain = user.SiteName + "." + System.Configuration.ConfigurationManager.AppSettings["dnszone"]
-
-                                                                     }).Result.ReadAsSync();
-
-
-            return VolusionLogIn(user);
         }
 
         public bool RemoveRoleFromSite(int siteId, int roleId)
@@ -499,49 +467,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         return Message<AccountInformation>(false, response.ReadException().Message);
                 }
 
-                var result = UpdateUser(accountInformation, userId);
+                var result = _userHelper.UpdateUser(accountInformation, userId);
 
                 return Single(Mapper.Map<AccountInformation>(result));
             }
             catch (Exception ex)
             {
                 return Message<AccountInformation>(false, ex.Message);
-            }
-        }
-
-        private Core.Api.Contracts.User UpdateUser(AccountInformation accountInformation, string userId)
-        {
-            var contractsUser = _usersRepo.GetUser(userId, null).Result.ReadAsAsync().Result;
-            contractsUser.FirstName = accountInformation.FirstName;
-            contractsUser.LastName = accountInformation.LastName;
-            contractsUser.EmailAddress = accountInformation.Email;
-
-            return _usersRepo.UpdateUser(contractsUser, userId).Result.ReadAsSync();
-        }
-
-        public void UpdateForgottenPassword(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
-        {
-            //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
-            var res = _usersRepo.UpdateForgottenPassword(new ConfirmationInfo()
-                                                               {
-                                                                   EmailAddress = user.EmailAddress,
-                                                                   ConfirmationCode = user.ConfirmationCode,
-                                                                   NewPassword = user.Password
-                                                               }).Result;
-
-            if (res.HasException)
-            {
-                throw res.ReadException();
-            }
-        }
-
-        public void CreatePasswordResetRequest(string email)
-        {
-            //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
-            var res = _usersRepo.ResetPassword(new ResetPasswordInfo() { EmailAddress = email }).Result;
-            if (res.HasException)
-            {
-                throw res.ReadException();
             }
         }
     }
