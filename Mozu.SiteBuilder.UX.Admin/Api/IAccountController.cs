@@ -14,8 +14,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         Task<Response<List<TaContext>>> VolusionLogIn(LoginUser login);
         void CreatePasswordResetRequest(string emailAddress);
-        bool UserExists(LoginUser user);
-        Models.Account.User GetUser(string userId);
         List<Tuple<Site, int>> SiteRolesList(string userId);
         void UpdateForgottenPassword(LoginUser user);
         bool RemoveRoleFromSite(int siteId, int roleId);

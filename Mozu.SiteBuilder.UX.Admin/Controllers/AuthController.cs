@@ -16,14 +16,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private ISiteBuilderContext _sbc;
         private readonly ICurrentUserHelper _currentUserHelper;
         private readonly IContextSwitcher _contextSwitcher;
+        private readonly IUserHelper _userHelper;
 
-        public AuthController(IAccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher)
+        public AuthController(IAccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper)
         {
             _authenticationHelper = authHelper;
             _accountApi = accountApi;
             _sbc = sbc;
             _currentUserHelper = currentUserHelper;
             _contextSwitcher = contextSwitcher;
+            _userHelper = userHelper;
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
@@ -129,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 return this.Redirect(ControllerContext.HttpContext.Request.Url.PathAndQuery);
             }
             
-            if ( _accountApi.UserExists ( user ))
+            if (_userHelper.UserExists(user))
             {
                 return RedirectToRoute("login",  user);
             }
@@ -175,7 +177,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             var user = new LoginUser();
             user.ConfirmationCode = validationToken;
-            var userObj = _accountApi.GetUser(userId);
+            var userObj = _userHelper.GetUser(userId);
 
             if ( userObj == null )
             {

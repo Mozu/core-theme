@@ -321,6 +321,7 @@
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\CmsDocumentController.cs" />
     <Compile Include="Api\IAccountController.cs" />
+    <Compile Include="Api\IUserHelper.cs" />
     <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
     <Compile Include="Api\ProductController.cs" />
     <Compile Include="Api\CustomersController.cs" />
@@ -429,6 +430,7 @@
     <Compile Include="Api\TaxController.cs" />
     <Compile Include="Api\TestingController.cs" />
     <Compile Include="Api\ThemeSettingController.cs" />
+    <Compile Include="Api\UserHelper.cs" />
     <Compile Include="Api\WebToolsController.cs" />
     <Compile Include="Api\WidgetDefinitionController.cs" />
     <Compile Include="App_Start\Diagnostics.cs" />
@@ -467,12 +469,12 @@
     <Content Include="Scripts\app\core\layout\Flex.js" />
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
     <Content Include="Scripts\app\core\context\TaContext.js" />
-	<Content Include="Scripts\app\core\ux\browser\Body.js" />
+    <Content Include="Scripts\app\core\ux\browser\Body.js" />
     <Content Include="Scripts\app\core\ux\browser\Container.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />
-    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />   
-	<Content Include="Scripts\app\core\ux\ScrollSpy.js" />
+    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />
+    <Content Include="Scripts\app\core\ux\ScrollSpy.js" />
     <Content Include="Scripts\app\core\ux\grid\RowExpander.js" />
     <Content Include="Scripts\app\core\ux\DragSource.js" />
     <Content Include="Scripts\app\core\ux\form\EditorLayout.js" />
