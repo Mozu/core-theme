@@ -80,7 +80,7 @@ if (args.argv.length == 2 || options.help) {
 
 
 var localdomain = args.argv[2];
-var harnessURL = "http://" + localdomain + "/admin/Tests/MozuTestSuite.html";
+var harnessURL = "http://" + localdomain + "/admin/Tests";
 
 var reportFormat    = options[ 'report-format' ]
 var reportFile      = options[ 'report-file' ]
