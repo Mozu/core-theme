@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Mozu.Provisioning.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Admin.Api;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
+using Mozu.SiteBuilder.UX.Models.Admin;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -17,8 +21,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ICurrentUserHelper _currentUserHelper;
         private readonly IContextSwitcher _contextSwitcher;
         private readonly IUserHelper _userHelper;
+        private readonly IPasswordHelper _passwordHelper;
+        private readonly Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient _merchantSignUpWebApiClient;
 
-        public AuthController(IAccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper)
+        public AuthController(IAccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper, IPasswordHelper passwordHelper, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient)
         {
             _authenticationHelper = authHelper;
             _accountApi = accountApi;
@@ -26,6 +32,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _currentUserHelper = currentUserHelper;
             _contextSwitcher = contextSwitcher;
             _userHelper = userHelper;
+            _passwordHelper = passwordHelper;
+            _merchantSignUpWebApiClient = merchantSignUpWebApiClient;
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
@@ -111,7 +119,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             try
             {
-                _accountApi.CreatePasswordResetRequest(user.EmailAddress );
+                _passwordHelper.CreatePasswordResetRequest(user.EmailAddress );
 
                 return new JsonResult { Data = true };
             }
@@ -198,7 +206,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         [HttpPost]
         public async Task<ActionResult> ResetPassword(LoginUser user , FormCollection col)
         {
-            _accountApi.UpdateForgottenPassword(user);
+            _passwordHelper.UpdateForgottenPassword(user);
             return await Login(user);
         }
 
@@ -305,6 +313,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             return this.Redirect(url);
         }
 */
+        public Task<Response<List<TaContext>>> Register(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
+        {
+            //var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
+            //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
+
+            var res = _merchantSignUpWebApiClient.MerchantSignUp(new MerchantSignUpRequest()
+            {
+                EmailAddress = user.EmailAddress,
+                Password = user.Password,
+                Domain = user.SiteName + "." + System.Configuration.ConfigurationManager.AppSettings["dnszone"]
+
+            }).Result.ReadAsSync();
+
+
+            return _accountApi.VolusionLogIn(user);
+        }
 
         public ActionResult Register()
         {
@@ -316,7 +340,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             if (ModelState.IsValidField("SiteName") && ModelState.IsValidField("EmailAddress") && ModelState.IsValidField("Password"))
             {
-                var reg = _accountApi.Register(user);
+                var reg = Register(user);
                 return Redirect("/admin");
             }
             return View(user);

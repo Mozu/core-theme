@@ -134,7 +134,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private AccountController GetApi()
         {
             return new AccountController(_userWebApiClient, _roleWebApiClient, _authTicketWebApiClient, _tenantsWebApiClient, _authenticationHelper,
-                _sitesWebApiClient, _invitationWebApiClient, /*_merchantSignUpWebApiClient*/null, _adminUserWebApiClient, _siteBuilderContext,
+                _sitesWebApiClient, _invitationWebApiClient, _adminUserWebApiClient, _siteBuilderContext,
                 _settings, _contextSwitcher, _userHelper);
         }
     }

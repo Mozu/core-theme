@@ -13,10 +13,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public interface IAccountController : IHttpController
     {
         Task<Response<List<TaContext>>> VolusionLogIn(LoginUser login);
-        void CreatePasswordResetRequest(string emailAddress);
         List<Tuple<Site, int>> SiteRolesList(string userId);
-        void UpdateForgottenPassword(LoginUser user);
         bool RemoveRoleFromSite(int siteId, int roleId);
-        Task<Response<List<TaContext>>> Register(LoginUser user);
     }
 }
