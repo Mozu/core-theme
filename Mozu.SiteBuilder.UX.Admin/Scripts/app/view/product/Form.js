@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @class Taco.view.product.Form
  * The primary form on the product page that manages single site/multisite switching
  */
@@ -40,7 +40,10 @@ Ext.define('Taco.view.product.Form', {
 
         this.tabPanel = Ext.create('Taco.core.ux.tab.Panel', {
             navigation: true,
-            items: tabItems
+            items: tabItems,
+            pickerCfg: {
+                data: Taco.app.context.getCurrentSiteCollection().sites
+            }
         });
 
         this.items = [this.tabPanel];
@@ -48,11 +51,11 @@ Ext.define('Taco.view.product.Form', {
         this.callParent(arguments);
 
         if(this.isSingleSite) {
-            this.goGoSingleSite(true)
+            this.goGoSingleSite(true);
         }
 
-        this.on({
-            selectionChange: this.handleSelectionChange,
+        this.tabPanel.on({
+            selectionchange: this.onTabSelectionChange,
             scope: this
         });
     },
@@ -227,12 +230,16 @@ Ext.define('Taco.view.product.Form', {
         }
     },
 
+    onTabSelectionChange: function (tabPanel, values, oldValues) {
+        console.log('tab selection changed')
+    },
+
     /**
      * @private
      * @param {Object} sites A list of all sites that are associated with this product.  Property names are siteIds, values are the siteNames.
      */
     handleSelectionChange: function ( sites ) {
-        console.log( 'handleSelectionChange', sites );
+        //console.log( 'handleSelectionChange', sites );
         Ext.Object.each(sites, function (siteId, siteName) {
             // TODO
 

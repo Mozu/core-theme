@@ -12,6 +12,7 @@ Ext.define('Taco.view.product.subform.Subform', {
     bodyStyle: {
         '-webkit-justify-content': 'flex-start'
     },
+    cascadeRecordLoad: false,
 
     defaults: {
         xtype: 'textfield',

@@ -474,13 +474,12 @@
     <Content Include="Scripts\app\core\context\SiteCollection.js" />
     <Content Include="Scripts\app\core\layout\Flex.js" />
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
-    <Content Include="Scripts\app\core\context\TaContext.js" />
-    <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
+    <Content Include="Scripts\app\core\context\TaContext.js" />    <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />
-    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />
-    <Content Include="Scripts\app\core\ux\ScrollSpy.js" />
+    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />   
+	<Content Include="Scripts\app\core\ux\ScrollSpy.js" />
     <Content Include="Scripts\app\core\ux\grid\RowExpander.js" />
     <Content Include="Scripts\app\core\ux\DragSource.js" />
     <Content Include="Scripts\app\core\ux\form\EditorLayout.js" />
@@ -501,6 +500,7 @@
     <Content Include="Scripts\app\core\ux\simplegrid\Body.js" />
     <Content Include="Scripts\app\core\ux\simplegrid\Grid.js" />
     <Content Include="Scripts\app\core\ux\simplegrid\Header.js" />
+    <Content Include="Scripts\app\core\ux\tab\Picker.js" />
     <Content Include="Scripts\app\core\ux\tab\Tab.js" />
     <Content Include="Scripts\app\core\ux\tab\Panel.js" />
     <Content Include="Scripts\app\core\ux\tinymce\WindowManager.js" />
@@ -1864,6 +1864,7 @@
     <Content Include="Tests\unit\form\model-binds.t.js" />
     <Content Include="Tests\unit\grid-action-buttons.js" />
     <Content Include="Tests\unit\roles\edit-form.t.js" />
+    <Content Include="Tests\unit\tab\picker.t.js" />
     <Content Include="Tests\unit\treelist-row-is-draggable.t.js" />
     <Content Include="Views\Home\Index_Compiled.cshtml">
       <SubType>Code</SubType>

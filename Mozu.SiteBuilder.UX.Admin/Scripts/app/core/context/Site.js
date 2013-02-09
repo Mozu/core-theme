@@ -7,8 +7,8 @@
     urlToken: null,
     contextType: 's',
     
-    siteCollection: null
-    ,
+    siteCollection: null,
+    
     constructor: function (config) {
         var me = this;
         config = Ext.apply({}, config);

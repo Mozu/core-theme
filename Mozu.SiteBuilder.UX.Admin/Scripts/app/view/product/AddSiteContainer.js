@@ -39,7 +39,7 @@ Ext.define('Taco.view.product.AddSiteContainer', {
                 handler: function () {
                     var siteInfoPair = {};
                     siteInfoPair[this.siteId] = this.siteName;
-                    me.fireEvent('formTabCountChange');
+                    me.fireEvent('selectionchange');
                 }
             },
             items: checkboxes
@@ -47,7 +47,12 @@ Ext.define('Taco.view.product.AddSiteContainer', {
 
         this.items = [this.checkboxgroup];
 
-        this.enableBubble('formTabCountChange');
+        //this.enableBubble('formTabCountChange');
+        //
+        
+        this.addEvents([
+            'selectionchange'
+        ]);
 
         this.callParent( arguments );
     },

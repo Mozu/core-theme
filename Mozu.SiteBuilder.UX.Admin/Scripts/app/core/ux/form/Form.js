@@ -27,6 +27,7 @@ Ext.define('Taco.core.ux.form.Form', {
     persistChangesToModel: false,
     tasksKeyPrefix: '',
     cascadeChildTasks: true,
+    cascadeRecordLoad: true,
 
 
     initComponent: function () {
@@ -162,6 +163,32 @@ Ext.define('Taco.core.ux.form.Form', {
         });
     },
 
+    loadRecord: function(record, cascade) {
+        if (cascade) {
+            return this.callParent([record]);
+        }
+
+        Ext.iterate(record.data, function (fieldName, value) {
+            var field;
+            
+            Ext.each(this.trackedFields, function (trackedField) {
+                if (trackedField && trackedField.name === fieldName) {
+                    field = trackedField;
+                    return false;
+                }
+            });
+
+            if (!field) {
+                return;
+            }
+
+            field.setValue(value);
+            if (this.getForm().trackResetOnLoad) {
+                field.resetOriginalValue();
+            }
+        }, this);
+    },
+
     checkFields: function (container, cmp) {
         if (container !== this && container.up('[isFormForm]') !== this) {
             return;
@@ -262,6 +289,10 @@ Ext.define('Taco.core.ux.form.Form', {
         }
 
         this.loadRecord(record);
+
+        if (noCascade === undefined) {
+            noCascade = !this.cascadeRecordLoad;
+        }
 
         if (!noCascade) {
             Ext.each(this.forms, function (form) {
