@@ -43,6 +43,8 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
         // *** 'subitems' are items of child Container
         this.subitems = this.items;
 
+        this.isOverridden = this.productInSiteInfo && this.productInSiteInfo.get(this.overrideFieldName);
+
         this.formContainer = Ext.widget({
             xtype: 'container',
             width: "100%",
@@ -59,6 +61,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                 allowModal: true,
                 cls: Taco.baseCSSPrefix + 'override-checkbox',
                 scope: this,
+                checked: this.isOverridden,
                 handler: function (checkbox, isChecked) {
                     var overrideForm = this;
                     if( checkbox.allowModal ) {
@@ -88,12 +91,12 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
 
         this.enableBubble('overrideCountChange');
 
-        this.callParent( arguments );
+        this.callParent(arguments);
 
         if (this.productInSiteInfo && !this.hideOverride) {
             // *** SiteForm Multisite Mode
             this.addCls('active');
-            this.setOverride( this.productInSiteInfo.get( this.overrideFieldName ), false );
+            this.setOverride(this.isOverridden, false );
 
             this.product.on({
                 afteredit: this.onProductChange,

@@ -7,7 +7,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
     extend: 'Ext.panel.Panel',
     requires: [
         'Taco.core.ux.tab.Tab',
-        'Taco.view.product.AddSiteContainer'
+        'Taco.core.ux.tab.Picker'
     ],
     alias: 'widget.formtabpanel',
 
@@ -25,60 +25,72 @@ Ext.define('Taco.core.ux.tab.Panel', {
     navigation: false,
 
     initComponent: function () {
-        var availableSiteList = Ext.create('Taco.view.product.AddSiteContainer', { currentSites: Ext.Array.pluck( this.items, 'siteId' ) }),
-            lbar,
+        var lbar,
             tbar;
 
-        this.availableSiteList = availableSiteList;
+        if (!this.pickerCfg) {
+            this.pickerCfg = {};
+        }
+
+        Ext.applyIf(this.pickerCfg, {
+            checkedItems: Ext.Array.pluck(this.items, 'tabPickerId')
+        });
+
+        this.picker = Ext.create('Taco.core.ux.tab.Picker', this.pickerCfg);
 
         if (this.navigation) {
-            lbar = Ext.create('Ext.Container', {
+            lbar = Ext.widget({
+                xtype: 'container',
                 componentCls: Taco.baseCSSPrefix + 'form-card-nav',
                 width: 160,
                 items: []
             });
         }
 
-        tbar = Ext.create('Ext.Container', {
+        this.addButton = Ext.widget( {
+            xtype: 'component',
+            componentCls: Taco.baseCSSPrefix + 'form-tab',
+            cls: 'add',
+            html: 'Add',
+            listeners: {
+                boxready: function () {
+                    this.getEl().on({
+                        click: function () {
+                            this.picker.toggle();
+                        },
+                        scope: this
+                    });
+                },
+                scope: this
+            }
+        });
+
+        tbar = Ext.widget({
             xtype: 'container',
             componentCls: Taco.baseCSSPrefix + 'form-tab-bar',
             itemId: 'tabBar',
             margin: '20 0 20 160',
             items: [
-                {
-                    xtype: 'component',
-                    componentCls: Taco.baseCSSPrefix + 'form-tab',
-                    cls: 'add',
-                    html: 'Add Site',
-                    availableSiteList: availableSiteList,
-                    listeners: {
-                        boxready: function () {
-                            this.getEl().on({
-                                click: function () {
-                                    var el = Ext.get(this);
-                                    if( el.hasCls('list-open') ) {
-                                        availableSiteList.hide();
-                                        el.removeCls('list-open');
-                                    } else {
-                                        availableSiteList.showBy(this, 'tr-br');
-                                        el.addCls('list-open');
-                                    }
-                                }
-                            })
-                        }
-                    }
-                },
-                availableSiteList
+               this.addButton,
+               this.picker
             ]
         });
+
+        this.addEvents([
+            /**
+             * @event selectionchange
+             * Fired when the Number of Tabs selected is changed
+             * @param {Taco.core.ux.tab.Panel} tabPanel The Tab Panel where the tab selection was changed
+             */
+            'selectionchange'
+        ]);
 
         // Don't comment this shit out or everything will break!
         // Ask Jimmy for details...
         this.lbar = lbar;
         this.tbar = tbar;
 
-        this.enableBubble('selectionChange'); // *** This event is fired as the result of a formTabCountChange being handled.
-
+        //this.enableBubble('selectionchange'); // *** This event is fired as the result of a formTabCountChange being handled.
         this.callParent(arguments);
 
         this.navigationBar = lbar;
@@ -90,11 +102,17 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
         this.tabBar.insert(0, this.initTabs(this.items));
 
-        this.on('formTabCountChange', this.tabCountChange);
-        this.on({
-            formTabCountChange: this.tabCountChange,
-            target: availableSiteList
+        //this.on('formTabCountChange', this.tabCountChange);
+        this.picker.on({
+            selectionchange: this.onTabSelectionChange,
+            scope: this
+
+            //target: this.availableSiteList
         });
+    },
+
+    onTabSelectionChange: function () {
+
     },
 
     /**
@@ -264,7 +282,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
         if( removeSiteAtId ) {
             delete selectedSites[ removeSiteAtId ];
         }
-        this.fireEvent('selectionChange', selectedSites);
+        this.fireEvent('selectionchange', selectedSites);
     },
 
     /**

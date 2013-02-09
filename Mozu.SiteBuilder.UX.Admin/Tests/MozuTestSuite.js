@@ -128,6 +128,13 @@ Harness.start({
             title: 'TreeList rows are draggable'
         }]
     }, {
+        group: 'Tabs',
+        expanded: true,
+        items: [{
+            url: 'unit/tab/picker.t.js',
+            title: 'Tab Picker Tests'
+        }]
+    }, {
         group: 'Modals',
         expanded: false
     }, {
