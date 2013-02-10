@@ -1,7 +1,18 @@
-﻿Ext.define('Chalupa.Core', {
+﻿Ext.ns('Chalupa');
+Ext.define('Chalupa.Core', {
     singleton: true,
     constructor:function () {
+
         this.callParent(arguments);
+
+        
+    },
+    applyHelpers: function (test) {
+        Ext.override(test, {
+            waitForRender: function (cmp, afterRender) {
+                test.waitFor(function () {return cmp.rendered;}, afterRender);
+            }
+        });
     },
     showViewPort:function ()
     {
