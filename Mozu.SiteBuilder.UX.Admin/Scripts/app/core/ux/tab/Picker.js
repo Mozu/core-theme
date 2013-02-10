@@ -14,9 +14,10 @@ Ext.define('Taco.core.ux.tab.Picker', {
     shadow: false,
     idTpl: '{id}',
     displayTpl: '{name}',
+    hidden: true,
 
     initComponent: function () {
-        var checkboxes = [];
+        this.checkboxes = [];
 
         this.addEvents([
             /**
@@ -30,7 +31,7 @@ Ext.define('Taco.core.ux.tab.Picker', {
 
         Ext.each(this.data, function (record) {
             var id = this.idTpl.apply(record);
-            checkboxes.push({
+            this.checkboxes.push({
                 id: id,
                 boxLabel: this.displayTpl.apply(record),
                 checked: Ext.Array.contains(this.checkedItems, id),
@@ -41,7 +42,8 @@ Ext.define('Taco.core.ux.tab.Picker', {
         this.checkboxGroup = Ext.widget({
             xtype: 'checkboxgroup',
             columns: 1,
-            vertical: true
+            vertical: true,
+            items: this.checkboxes
         });
 
         this.items = [this.checkboxGroup];
@@ -49,7 +51,12 @@ Ext.define('Taco.core.ux.tab.Picker', {
         this.callParent(arguments);
     },
 
+    getCheckedRecords: function () {
+        return Ext.Array.pluck(this.checkboxGroup.getChecked(), 'data');
+    },
+
     show: function () {
+        this.currentItems = this.getCheckedRecords()
         this.getEl().addCls('list-open');
         this.callParent(arguments);
     },
@@ -57,6 +64,7 @@ Ext.define('Taco.core.ux.tab.Picker', {
     hide: function () {
         this.getEl().removeCls('list-open');
         this.callParent(arguments);
+        this.fireEvent('selectionchange', this, this.getCheckedRecords(), this.currentItems);
     },
 
     toggle: function () {
