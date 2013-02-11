@@ -38,7 +38,7 @@
                                 beforerender: function(view) {
                                     var item;
 
-                                    if (Taco.User.sites.length < 2) {
+                                    if (Taco.app.context.isSingleSite()) {
                                         item = view.store.getById(1);
                                         if (item) {
                                             view.store.remove(item);

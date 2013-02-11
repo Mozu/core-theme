@@ -90,14 +90,17 @@ namespace Mozu.SiteBuilder.UX.Controllers
             if (pageTask != null && pageTask.Result.ResponseMessage.IsSuccessStatusCode)
             {
                 wctx.Page = pageTask.Result.ReadAsSync();
+                wctx.PageReq.Id = wctx.Page.Id;
             }
             if (templateTask != null && templateTask.Result.ResponseMessage.IsSuccessStatusCode)
             {
                 wctx.Template  = templateTask.Result.ReadAsSync();
+                wctx.Template.Id = wctx.Template.Id;
             }
             if (siteTemplateTask != null && siteTemplateTask.Result.ResponseMessage.IsSuccessStatusCode)
             {
                 wctx.SiteTemplate = siteTemplateTask.Result.ReadAsSync();
+                wctx.SiteTemplate.Id = wctx.SiteTemplate.Id;
             }
            
             tasks.Clear();
@@ -126,7 +129,17 @@ namespace Mozu.SiteBuilder.UX.Controllers
         }
 
 
-       
+        protected override IAsyncResult BeginExecute(RequestContext requestContext, AsyncCallback callback, object state)
+        {
+            bool isEditModeFlg;
+
+            if (requestContext.HttpContext != null &&
+                bool.TryParse(requestContext.HttpContext.Request["isEditMode"] as string, out isEditModeFlg) && isEditModeFlg)
+            {
+                this.SiteContext.IsEditMode = isEditModeFlg;
+            }
+            return base.BeginExecute(requestContext, callback, state);
+        }
         protected override void Execute(RequestContext requestContext)
         {
            // var isEditMode = ;

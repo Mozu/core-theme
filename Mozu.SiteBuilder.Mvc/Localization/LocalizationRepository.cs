@@ -14,10 +14,12 @@ namespace Mozu.SiteBuilder.Mvc.Localization
 {
     public class LocalizationRepository : ILocalizationRepository
     {
+        private readonly MozuVirtualPathProvider _mozuVirtualPathProvider;
         private static readonly ConcurrentDictionary<string, Dictionary<string, Dictionary<string, string>>> _tableCache = new ConcurrentDictionary<string, Dictionary<string, Dictionary<string, string>>>();
         
-        public LocalizationRepository()
+        public LocalizationRepository(MozuVirtualPathProvider mozuVirtualPathProvider)
         {
+            _mozuVirtualPathProvider = mozuVirtualPathProvider;
         }
 
         public void ClearCache()
@@ -135,7 +137,7 @@ namespace Mozu.SiteBuilder.Mvc.Localization
             // Walk the theme hierarchy and merge the localization strings down to the currently applied theme
             foreach (var theme in siteContext.Theme.Stack.Reverse())
             {
-                var pp = new MozuVirtualPathProvider(new DjangoMozuViewEngine());
+                var pp = _mozuVirtualPathProvider;
                 var stem = "~/themes/" + theme + "/resources/strings/lang-" + language + ".csv";
                 var file = pp.GetFile(stem) as MozuVirtualFile;
                 var dictKey = siteContext.SiteId + "|" + siteContext.Theme.Id.ToLower() + "|" + language;

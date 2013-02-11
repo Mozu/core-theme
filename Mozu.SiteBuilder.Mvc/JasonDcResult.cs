@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Newtonsoft.Json.Bson;
+
 namespace Mozu.SiteBuilder.Mvc
 {
     using System;
@@ -55,8 +57,13 @@ namespace Mozu.SiteBuilder.Mvc
             }
             if (this.Data != null)
             {
-                JsonSerializer ser = new JsonSerializer();
-                ser.Serialize ( response.Output , this.Data );
+                Newtonsoft.Json.JsonSerializer ser = new JsonSerializer()
+                                                         {
+
+                                                         };
+                
+                JsonWriter jwriter = new JsonTextWriter(response.Output );
+                ser.Serialize(jwriter, this.Data );
                
                 //var jwriter = new JsonTextWriter(response.Output);
                 //jwriter.writeo

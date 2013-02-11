@@ -4,6 +4,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Autofac;
+using Autofac.Integration.Mvc;
+
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
     using System;
@@ -17,23 +20,79 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
     using System.Web;
     using System.Web.Routing;
 
+
+    class TemplateLoader: NDjango.Interfaces.ITemplateLoader
+    {
+        public MozuVirtualPathProvider PathProvider
+        {
+            get
+            {
+                return AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<MozuVirtualPathProvider>();
+             
+            }
+        }
+
+
+        public System.IO.TextReader GetTemplate(string path)
+        {
+            var vpath = path;
+            if (path.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1)
+            {
+                vpath = "layouts/" + path;
+            }
+            if (Path.GetExtension(vpath) == "")
+            {
+                vpath += ".vol";
+            }
+
+            var file = this.PathProvider.GetFile(vpath);
+            if (file == null)
+            {
+                throw new InvalidOperationException(string.Format("invalid virtual path [{0}]", vpath));
+            }
+            return new StreamReader(file.Open());
+        }
+
+        public bool IsUpdated(string path, DateTime timestamp)
+        {
+            // var vpath = path.StartsWith("~/themes/") ? path : GetLayoutPath(path);
+            if (path.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1)
+            {
+                path = "layouts/" + path;
+            }
+            if (Path.GetExtension(path) == "")
+            {
+                path += ".vol";
+            }
+            MozuVirtualFile file = (MozuVirtualFile)this.PathProvider.GetFile(path);
+            return file.GetLastWriteTime() > timestamp;
+        }
+    }
+
+
     public class DjangoMozuViewEngine : VirtualPathProviderViewEngine, NDjango.Interfaces.ITemplateLoader
     {
-        public DjangoMozuViewEngine()
-        {
-            this.TemplateManagerProvider = new NDjango.TemplateManagerProvider().WithLoader(this);
-        }
+        //public DjangoMozuViewEngine()
+        //{
+        //    this.TemplateManagerProvider = new NDjango.TemplateManagerProvider().WithLoader(this);
+        //}
 
+        private ITemplateManager _templateManager;
+        private ISiteBuilderContext _siteBuilderContext;
+        public DjangoMozuViewEngine( ITemplateManager templateManager , MozuVirtualPathProvider  mozuVirtualPathProvider, ISiteBuilderContext siteBuilderContext )
+           
+    {
+            _templateManager = templateManager;
+            _siteBuilderContext = siteBuilderContext;
+         
 
-        public DjangoMozuViewEngine(Func<TemplateManagerProvider, NDjango.TemplateManagerProvider> setup)
-            : this()
-        {
-            TemplateManagerProvider = setup(TemplateManagerProvider).WithLoader(this);
-
-            this.VirtualPathProvider = new MozuVirtualPathProvider(this);
-            this.TemplateManger = this.TemplateManagerProvider.GetNewManager();
+            this.VirtualPathProvider = mozuVirtualPathProvider;
+          //  this.TemplateManger = this.TemplateManagerProvider.GetNewManager();
             //server = HttpContext.Current.Server;
         }
+
+
+
 
         public MozuVirtualPathProvider PathProvider
         {
@@ -112,7 +171,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         private ICollection<string>  _themeStack;
         public ICollection<string> ThemeStack
         {
-            get { return _themeStack ?? SiteBuilderContext.Current.Theme.Stack; }
+            get { return _themeStack ?? _siteBuilderContext.Theme.Stack; }
             set { _themeStack = value; }
         }
 
@@ -198,32 +257,32 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
 
 
-        public NDjango.TemplateManagerProvider TemplateManagerProvider
-        {
-            get;
-            private set;
-        }
-        //HttpServerUtility server;
-        public IEnumerable<KeyValuePair<string, ITag>> InstalledTags
-        {
-            get
-            {
-                object tags = this.TemplateManagerProvider.GetType().GetField("tags", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField).GetValue(this.TemplateManagerProvider);
+        //public NDjango.TemplateManagerProvider TemplateManagerProvider
+        //{
+        //    get;
+        //    private set;
+        //}
+        ////HttpServerUtility server;
+        //public IEnumerable<KeyValuePair<string, ITag>> InstalledTags
+        //{
+        //    get
+        //    {
+        //        object tags = this.TemplateManagerProvider.GetType().GetField("tags", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField).GetValue(this.TemplateManagerProvider);
 
-                return (IEnumerable<KeyValuePair<string, ITag>>)tags;
-            }
-        }
-        public IEnumerable<KeyValuePair<string, ISimpleFilter>> InstalledFilters
-        {
-            get
-            {
-                object tags = this.TemplateManagerProvider.GetType().GetField("filters", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField).GetValue(this.TemplateManagerProvider);
+        //        return (IEnumerable<KeyValuePair<string, ITag>>)tags;
+        //    }
+        //}
+        //public IEnumerable<KeyValuePair<string, ISimpleFilter>> InstalledFilters
+        //{
+        //    get
+        //    {
+        //        object tags = this.TemplateManagerProvider.GetType().GetField("filters", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField).GetValue(this.TemplateManagerProvider);
 
-                return (IEnumerable<KeyValuePair<string, ISimpleFilter>>)tags;
-            }
-        }
+        //        return (IEnumerable<KeyValuePair<string, ISimpleFilter>>)tags;
+        //    }
+        //}
 
-        private ITemplateManager _templateManager;
+        
         public ITemplateManager TemplateManger
         {
             get { return _templateManager; }

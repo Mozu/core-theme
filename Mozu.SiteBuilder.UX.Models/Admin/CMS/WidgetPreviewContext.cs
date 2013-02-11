@@ -5,7 +5,9 @@
 // -----------------------------------------------------------------------
 
 using System.Web.Mvc;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
 {
@@ -18,33 +20,45 @@ using System.Runtime.Serialization;
     using Mozu.SiteBuilder.Mvc.Cms;
 
     
-    [DataContract(Name = "widgetLocationContext")]
-    public class WidgetPreviewContext
+    //[DataContract(Name = "widgetLocationContext")]
+    //public class WidgetPreviewContext
+    //{
+    //    [DataMember(Name = "configuration")]
+    //    public string ConfigurationData { get; set; }
+
+    //    [DataMember(Name = "pageContext", EmitDefaultValue = false)]
+    //    public PageContext PageContext { get; set; }
+
+    //    [DataMember(Name = "definitionId")]
+    //    public string DefinitionId { get; set; }
+        
+    //    [DataMember(Name = "zoneId")]
+    //    public string  ZoneId { get; set; }
+
+    //    [DataMember(Name = "zoneScope")]
+    //    public string ZoneScope { get; set; }
+        
+
+    //    [DataMember(Name = "output")]
+    //    public string Output { get; set; }
+
+
+    //     [DataMember(Name = "index")]
+    //    public int? Index { get; set; }
+
+
+
+    //     public string DocumentId { get; set; }
+    //}
+    [DataContract()]
+    public class WidgetPreviewData:WidgetRuntimeData
     {
-        [DataMember(Name = "configuration")]
-        public string ConfigurationData { get; set; }
-
-        [DataMember(Name = "pageContext", EmitDefaultValue = false)]
-        public PageContext PageContext { get; set; }
-
-        [DataMember(Name = "definitionId")]
-        public string DefinitionId { get; set; }
-        
-        [DataMember(Name = "zoneId")]
-        public string  ZoneId { get; set; }
-
-        [DataMember(Name = "zoneScope")]
-        public string ZoneScope { get; set; }
-        
-
+        [DataMember(Name = "context")]
+        public CmsPageContext Context { get; set; }
         [DataMember(Name = "output")]
         public string Output { get; set; }
-
-
-         [DataMember(Name = "index")]
-        public int? Index { get; set; }
     }
-
+    [DataContract()]
     public class WidgetRuntimeData : WidgetInstanceData ,IModelMetadataParentContainer, IModelMetadataContainer 
     {
 
@@ -66,13 +80,18 @@ using System.Runtime.Serialization;
 
         public bool IsPreview { get; set; }
     }
-
+    [DataContract()]
     public class WidgetInstanceData 
     {
+        public WidgetInstanceData()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
         [DataMember(Name = "definitionId")]
         public string DefinitionId { get; set; }
 
-        [DataMember(Name = "zoneId")]
+        //[DataMember(Name = "zoneId")]
+        [JsonProperty(PropertyName = "zoneId")]
         public string ZoneId { get; set; }
 
         [DataMember(Name = "index")]
@@ -83,8 +102,12 @@ using System.Runtime.Serialization;
 
         [DataMember(Name = "zoneScope")]
         public string ZoneScope { get; set; }
+       
+        [DataMember(Name = "source")]
+        public DocumentRequest Source { get; set; }
 
-        
+        [DataMember(Name = "id")]
+        public string Id { get; set; }
     }
     
 }

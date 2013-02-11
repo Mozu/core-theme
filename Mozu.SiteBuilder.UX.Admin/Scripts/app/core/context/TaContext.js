@@ -25,7 +25,32 @@ Ext.define('Taco.core.context.TaContext', {
         Ext.Ajax.on('beforerequest', me.onBeforeAjaxRequest, me);
 
     },
-
+    isMultiSite:function() {
+        var ret = false;
+        Ext.each(this.siteCollections, function (sc) {
+            if (sc.sites.length > 1) {
+                ret = true;
+            }
+        });
+        return ret;
+    },
+    isMultiSiteCollection:function() {
+        return this.siteCollections.length > 1;
+    },
+    isSingleSite:function() {
+        return this.siteCollections.length == 1 && this.siteCollections[0].sites.length == 1;
+    },
+    toCookieString:function() {
+        var ret = '',  sc = this.getCurrentSiteCollection(), site = this.getCurrentSite();
+        ret = 'tenant=' + this.id;
+        if (sc) {
+            ret += '&sitegroup=' + sc.id;
+        }
+        if (site) {
+            ret += '&site=' + site.id;
+        }
+        return ret;
+    },
     onBeforeAjaxRequest:function(conn, options, eOpts) {
 
         var headers = options.headers = options.headers || {}, sc = this.getCurrentSiteCollection(), site = this.getCurrentSite();
@@ -71,10 +96,18 @@ Ext.define('Taco.core.context.TaContext', {
         }
         
         me.currentCtx = cfg;
-        
+        me.setCookie();
         return true;
     },
+    setCookie: function () {
+        var name = 'SBCONTEXT', value = this.toCookieString(), expires = new Date(2050, 1, 1), path = null, domain = null, secure = false;
+        //ext excapes multi value cookies
+        //Ext.util.Cookies.set('SBCONTEXT', cookieVal, new Date(2050, 1, 1));
+        document.cookie = name + "=" + value + ((expires === null) ? "" : ("; expires=" + expires.toGMTString())) + ((path === null) ? "" : ("; path=" + path)) + ((domain === null) ? "" : ("; domain=" + domain)) + ((secure === true) ? "; secure" : "");
 
+        
+
+    },
     getCurrent: function () {
         return this.getCurrentContext();
     },
@@ -114,15 +147,17 @@ Ext.define('Taco.core.context.TaContext', {
         if (me.store) {
             return me.store;
         }
-
         data.push(me);
-        Ext.each(me.siteCollections, function (sc) {
+
+        Ext.each(me.siteCollections, function(sc) {
             data.push(sc);
-            Ext.each(sc.sites, function (site) {
+
+            Ext.each(sc.sites, function(site) {
                 site.parentCollectionID = sc.id;
                 data.push(site);
             });
         });
+        
 
         Ext.define('TaContext-StoreItem', {
             extend: 'Ext.data.Model',
@@ -152,6 +187,12 @@ Ext.define('Taco.core.context.TaContext', {
             me.siteCollections[idx] = Ext.create('Taco.core.context.SiteCollection', sc);
 
         });
+        if (this.isSingleSite()) {
+            me.currentCtx = this.siteCollections[0].sites[0];
+        }else if (!this.isMultiSiteCollection()) {
+            me.currentCtx = this.siteCollections[0];
+        }
+        this.setCookie();
     },
 
     setCurrentSite: function (id) {

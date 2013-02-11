@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Autofac;
+using Autofac.Integration.Mvc;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using DC = Mozu.Content.Contracts;
@@ -30,13 +32,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected ICmsServiceWrapper _cmsService;
         protected ISiteBuilderContext _context;
         protected ICmsTypeHelper _cmsTypeHelper;
+        private ILifetimeScope _lifetimeScope;
+        private readonly IViewEngine _viewEngine;
+
         public CmsPagesController(
             IDocumentWebApiClient docRepo,
             IDocumentTypeWebApiClient docTypeRepo,
             ISiteBuilderContext context,
             IProvisioningHelper provHelper,
             ICmsServiceWrapper cmsService,
-            ICmsTypeHelper cmsTypeHelper
+            ICmsTypeHelper cmsTypeHelper,
+            IViewEngine viewEngine,
+            ILifetimeScope lifetimeScope 
 
             )
         {
@@ -46,9 +53,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _cmsService = cmsService;
             _context = context;
             _cmsTypeHelper= cmsTypeHelper;
-
-           
-
+            _viewEngine = viewEngine;
+            _lifetimeScope = lifetimeScope;
         }
 
 
@@ -137,17 +143,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return vr;
         }
 
+        //class myOpts :IMappingOperationOptions
+        //{
+        //    public Func<Type, object> Resolver;
+        //    public void ConstructServicesUsing(Func<Type, object> constructor)
+        //    {
+                
+        //    }
+
+        //    public bool CreateMissingTypeMaps { get; set; }
+        //}
         //
         // GET: /StoreFront/Details/5
         [HttpGet]
         public async Task<ActionResult> Page(string collection, string pageName)
         {
             
-
-           // DC.Document doc = _cmsService.GetByPath(collection, pageName, null).Result.ReadAsSync();
-
-            //pants
-
 
            
             var pc = this.SiteContext.PageContext;
@@ -165,7 +176,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
             if (pc.CmsContext.Page  == null)
                 return new HttpNotFoundResult("not found dumb dumb");
-            var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page);
+            var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page,
+                                                          opt => opt.ConstructServicesUsing(_lifetimeScope .Resolve ));
 
             //pc.WidgetCreationTags.Add(doc.ToWidgetStem());
             pc.CollectionId = collection;
@@ -179,22 +191,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
             var template = ((string)(vm.Properties.GetValue("template")) ?? this.HttpContext.Request["template"] ?? "page");
-            
-            
-                
 
 
-            var vr =ViewEngines.Engines.FindView(this.ControllerContext, template, null);
-            if ( vr.View == null)
+            
+            
+            
+            
+            //return View(template, vm);
+            var vr = _viewEngine .FindView(this.ControllerContext, template, null, true);
+            if (vr.View == null)
             {
-                vr = ViewEngines.Engines.FindView(this.ControllerContext, "blankpage", null);
+                vr = _viewEngine.FindView(this.ControllerContext, "blankpage", null, true);
             }
-
-            var result = View(vr.View , vm);
-            var x = false;
-            x = await this.AsyncInitData();
-
-
+            var result = View(vr.View, vm);
+            
+            
             return result;
         }
 

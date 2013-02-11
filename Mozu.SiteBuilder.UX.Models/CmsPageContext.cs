@@ -106,7 +106,7 @@ namespace Mozu.SiteBuilder.Mvc.Cms
        }
 
 
-       [DataMember(Name = "wpc")]
+       [DataMember(Name = "cms")]
        public CmsPageContext CmsContext  { get; set; }
 
       

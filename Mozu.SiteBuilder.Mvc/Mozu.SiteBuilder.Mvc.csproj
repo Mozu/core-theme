@@ -442,6 +442,7 @@
     <Compile Include="Tags\DynamicTagBase.cs" />
     <Compile Include="Tags\Url\ActionTag.cs" />
     <Compile Include="Tags\Url\RouteUrl.cs" />
+    <Compile Include="TempMocks\MockProductCategoryRuntimeWebApiClient.cs" />
     <Compile Include="Theme\Exceptions\DuplicateThemeNameException.cs" />
     <Compile Include="Theme\Exceptions\ThemeInfoMetadataDidntSerializeException.cs" />
     <Compile Include="Theme\Exceptions\ThemeInheritanceRecursionException.cs" />

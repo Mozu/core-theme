@@ -249,27 +249,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 //var sites = _siteClient.GetSites(0, int.MaxValue, null, string.Join(" or ", ulr.Tenants.Select(x => "TenantId eq " + x))).Result.ReadAsSync();
                 //return this.List<Tuple<Site, int>>(sites.Select(x => new Tuple<Site, int>(x, 1)).ToList());
 
-                var contexts = new List<TaContext>();
-                List<Tenant.Contracts.Tenant> tenants = ulr.Tenants;
-                foreach (var tenant in tenants)
-                {
-                    var taContext = new TaContext
-                        {
-                            TenantId = tenant.Id,
-                            SiteCollections = new List<TaContextSiteCollection>(),
-                            Name = tenant.Name,
-                        };
-
-                    foreach (var siteGroup in tenant.SiteGroups)
-                    {
-                        var collection = new TaContextSiteCollection();
-                        collection.Id = siteGroup.Id;
-                        collection.Name = siteGroup.Name;
-
-                        taContext.SiteCollections.Add(collection);
-                    }
-                    contexts.Add(taContext);
-                }
+                var contexts = AutoMapper.Mapper.Map<List<TaContext>>(ulr.Tenants);
+                
                 return List(contexts);
 
                 /*var ts = _tenantClient.GetTenants(0, int.MaxValue, null, string.Join(" or ", ulr.Tenants.Select(x => "TenantId eq " + x.Id))).Result.ReadAsSync();

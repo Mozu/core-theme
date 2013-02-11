@@ -11,7 +11,9 @@
             'Taco.view.site.page.entityAdapters.ExternalLinkEntityAdapter',
             'Taco.view.product.edit.Inline',
             'Taco.view.site.navigation.ExternalLinkEditor',
-            'Taco.core.ux.form.Form'
+            'Taco.core.ux.form.Form',
+            'Taco.model.WidgetInstance',
+            'Taco.store.WidgetInstances'
         ],
         alias: 'widget.inlineeditor',
         title: 'Page Editor',
@@ -145,6 +147,14 @@
                 ]
             });
 
+            this.widgets = new Ext.create('Taco.store.WidgetInstances', {
+                listeners: {
+                    add: this.onFormStateChange,
+                    datachanged: this.onFormStateChange,
+                    update: this.onFormStateChange,
+                    scope: this
+                }
+            });
 
             this.cmsDocs = new Ext.create('Taco.store.CmsDocuments', {
                 listeners: {
@@ -282,7 +292,10 @@
         },
 
         isDirty: function () {
-            return this.cmsDocs.getNewRecords().length > 0 ||
+            return  this.widgets.getNewRecords().length > 0 ||
+                    this.widgets.getUpdatedRecords().length > 0 ||
+                    this.widgets.getRemovedRecords().length > 0 ||
+                    this.cmsDocs.getNewRecords().length > 0 ||
                     this.cmsDocs.getUpdatedRecords().length > 0 ||
                     this.cmsDocs.getRemovedRecords().length > 0 ||
                     this.categories.getUpdatedRecords().length > 0 ||
@@ -507,13 +520,14 @@
                     definitionId: dropEvent.widgetDefinition.id,
                     zoneId: dropEvent.zoneData.zoneId,
                     zoneScope: dropEvent.zoneData.zoneScope,
-                    pageContext: dropEvent.pageData.pageContext,
-                    document: dropEvent.document
+                    context: dropEvent.pageData.pageContext.cms,
+                    configuration: dropEvent.configuration,
+                    index: dropEvent.index
                 },
                 success: function (response) {
                     jsonData = Ext.JSON.decode(response.responseText);
 
-                    records = me.cmsDocs.add(jsonData.document);
+                    records = me.widgets.add(jsonData);
                     records[0].phantom = true;
                     me.onFormStateChange();
                     html = jsonData.output;
