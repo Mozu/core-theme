@@ -199,7 +199,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Name = fldr.name,
                     ParentId = fldr.parentId,
                     Id = fldr.id,
-                    CollectionName = "files"
+                    DocumentListName = "files"
                 };
                 var ret = _folderClient.Create("files", dm).Result.ReadAsSync();
                 var vm = new FileManagementFolder()
@@ -245,7 +245,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Name = fldr.name,
                     ParentId = fldr.parentId,
                     Id = fldr.id,
-                    CollectionName = "files"
+                    DocumentListName = "files"
                 };
                 var ret = _folderClient.Update("files", dm.Id, dm).Result.ReadAsSync();
                 

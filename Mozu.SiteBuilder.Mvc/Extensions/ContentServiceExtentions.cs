@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     {
         public static string ToWidgetStem(this Document doc)
         {
-            return doc.ContentCollection + doc.Id;
+            return doc.DocumentListName + doc.Id;
         }
 
         public static Document Set(this Document doc, string key, object value)

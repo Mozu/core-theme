@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var productFolder = _folderRepo.GetByPath("files", "/products").Result.ReadAsSync();
             if (productFolder == null)
             {
-                productFolder = _folderRepo.Create("files", new DC.Folder() { CollectionName = "files", Name = "products", Path = "/" }).Result.ReadAsSync();
+                productFolder = _folderRepo.Create("files", new DC.Folder() { DocumentListName = "files", Name = "products", Path = "/" }).Result.ReadAsSync();
 
             }
             string fileName = doc.FileName;
@@ -95,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 DocumentType = "image",
                 FolderId = productFolder.Id,
                 //Properties = properties,
-                ContentCollection = "files",
+                DocumentListName = "files",
                 //ContentSummary = new ContentStreamSummary()
                 //{
                 //   // MimeType = "image/jpeg"

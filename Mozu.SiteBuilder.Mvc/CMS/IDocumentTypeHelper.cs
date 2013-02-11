@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
             if (dic == null)
             {
-                var response = await _propTypeClient.List(int.MaxValue, 0);
+                var response = await _propTypeClient.GetList(int.MaxValue, 0);
                 var props = response.ReadAsAsync().Result.Items;
                 //props.ForEach(x => x.PropertyValueType.Name = x.Name == "tags" ? "tags" : x.PropertyValueType.Name);
 

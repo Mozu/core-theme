@@ -126,10 +126,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                                       {
                                           Name = NavigationFileName,
                                           DocumentType = "document",
-                                          ContentCollection = NavigationContentCollection,
+                                          DocumentListName  = NavigationContentCollection,
                                       };
 
-                    var response = _docWebApiClient.Create(document.ContentCollection, document).Result;
+                    var response = _docWebApiClient.Create(document.DocumentListName, document).Result;
 
                     if (response.HasException)
                     {

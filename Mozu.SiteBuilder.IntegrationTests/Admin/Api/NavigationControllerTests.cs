@@ -157,8 +157,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             _navigationRepository.GetSet().Returns(new NavigationSet());
             var pages = new List<Document>
                 {
-                    new Document { ContentCollection = "scauses", Id = Guid.NewGuid().ToString("n"), Name = "Dropbox", Properties = new List<PropertyValue>() },
-                    new Document { ContentCollection = "scauses", Id = Guid.NewGuid().ToString("n"), Name = "Drive", Properties = new List<PropertyValue>() },
+                    new Document { DocumentListName  = "scauses", Id = Guid.NewGuid().ToString("n"), Name = "Dropbox", Properties = new List<PropertyValue>() },
+                    new Document { DocumentListName = "scauses", Id = Guid.NewGuid().ToString("n"), Name = "Drive", Properties = new List<PropertyValue>() },
                 };
             _cmsServiceWrapper.WithAny(x => x.GetList(null), new PagedCollection<Document> { Items = pages });
 
@@ -175,7 +175,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             for (var i = 0; i < response.Items.Count; i++)
             {
                 var item = response.Items[i];
-                item.Url.ShouldContain(pages[i].ContentCollection);
+                item.Url.ShouldContain(pages[i].DocumentListName);
                 item.Url.ShouldContain(pages[i].Name);
             }
         }

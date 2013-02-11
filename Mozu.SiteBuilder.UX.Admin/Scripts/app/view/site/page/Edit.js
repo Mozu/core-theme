@@ -189,6 +189,7 @@
             this.basic = Ext.create('Taco.view.site.page.EditSurface', {
                 pageSrc: this.pageSrc,
                 cmsDocs: this.cmsDocs,
+                widgets: this.widgets,
                 listeners: {
                     documentload: this.onDocumentLoad,
                     beforeedit: this.onBeforeEdit,
@@ -285,6 +286,7 @@
             this.cmsDocs.rejectChanges();
             this.categories.rejectChanges();
             this.products.rejectChanges();
+            this.widgets.rejectChanges();
             this.navigateIframe( {
                 suppressAddState:true,
                 url:this.pageSrc
@@ -372,6 +374,11 @@
                 store: me.cmsDocs
             });
             chain.addSyncStoreTask({
+                key: 'widgets',
+                depends: [],
+                store: me.widgets
+            });
+            chain.addSyncStoreTask({
                 key: 'inlineProducts',
                 depends: [],
                 store: me.products
@@ -383,7 +390,7 @@
             });
             chain.add({
                 key: 'dirtybtn',
-                depends: ['inlineProducts', 'cmsDocs'],
+                depends: ['inlineProducts', 'cmsDocs', 'widgets'],
                 fn: function (chn) {
                     me.onFormStateChange();
                     chn.callback();
@@ -546,9 +553,10 @@
                 doc, key;
 
             dropEvent.callback();
-
+            debugger;
+            Ext.
             key = props.collection + '_' + props.documentId;
-            if (props.isShadow) {
+            if (props.isShadow) {s
                 doc = me.cmsDocs.findRecord('documentId', props.documentId);
             }
             else {

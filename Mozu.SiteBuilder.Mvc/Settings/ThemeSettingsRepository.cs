@@ -102,7 +102,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                 {
                     Name = docName,
                     DocumentType = "theme_settings",
-                    ContentCollection = "settings",
+                    DocumentListName = "settings",
                     Properties = new List<PropertyValue>
                     {
                         new PropertyValue
@@ -123,7 +123,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                     }
                 };
 
-                document = _docWebApiClient.Create(metaDoc.ContentCollection, metaDoc).Result.ReadAsSync();
+                document = _docWebApiClient.Create(metaDoc.DocumentListName, metaDoc).Result.ReadAsSync();
             }
             
             return document.Id;

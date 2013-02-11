@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
             Mapper.CreateMap<DC.Document, VM.Document>()
                 .ForMember (x=> x.DocumentType ,  op=> op.MapFrom ( x=> x.DocumentType ))
-                .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ContentCollection ))
+                .ForMember(x => x.Collection, op => op.MapFrom(_ => _.DocumentListName  ))
                 
                 .ConstructUsingServiceLocator();
             //Mapper.CreateMap<DC.Document, VM.WidgetInstance >()
@@ -35,11 +35,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
            //     .ConstructUsingServiceLocator();
             Mapper.CreateMap<DC.Document, VM.Blog >()
                 .ForMember(x => x.DocumentType, op => op.MapFrom(x => x.DocumentType))
-                .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ContentCollection))
+                .ForMember(x => x.Collection, op => op.MapFrom(_ => _.DocumentListName))
                 .ConstructUsingServiceLocator();
             Mapper.CreateMap<DC.Document, VM.Post >()
                 .ForMember(x => x.DocumentType, op => op.MapFrom(x => x.DocumentType))
-                .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ContentCollection))
+                .ForMember(x => x.Collection, op => op.MapFrom(_ => _.DocumentListName))
                 .ConstructUsingServiceLocator(); 
             Mapper.CreateMap<VM.Document, DC.Document>();
             Mapper.CreateMap<DC.PropertyValue, VM.CmsProperty>()

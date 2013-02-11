@@ -109,7 +109,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                     }
                     else
                     {
-                        var folder=_folderRepo.Create("blogs", new DC.Folder() { Name = folderPath, CollectionName = "blogs" }).Result.ReadAsSync();
+                        var folder = _folderRepo.Create("blogs", new DC.Folder() { Name = folderPath, DocumentListName = "blogs" }).Result.ReadAsSync();
                         d.FolderId = folder.Id;
                     }
 
