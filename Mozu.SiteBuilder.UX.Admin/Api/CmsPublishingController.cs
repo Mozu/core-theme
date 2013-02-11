@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? startIndex = pagingParams.startIndex;
 
             DC.PagedCollection<DC.Document> res;
-            res = _documentClient.GetDrafts(/*documentListName: */ null, /*responseGroups: */ null, /*shouldRecurseFolders: */ null, pageSize, startIndex).Result.ReadAsAsync().Result;
+            res = _documentClient.GetDrafts(/*documentListName: */ null, /*responseGroups: */ null, pageSize, startIndex).Result.ReadAsAsync().Result;
 
             return List(Mapper.Map<List<Document>>(res.Items), (int)res.TotalCount);
         }
