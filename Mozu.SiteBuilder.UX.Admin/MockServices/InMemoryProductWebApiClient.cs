@@ -325,5 +325,29 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         {
             throw new NotImplementedException();
         }
+
+        public IServiceClientMessageHandler Handler
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public ConfigOptions Options
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

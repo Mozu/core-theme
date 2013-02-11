@@ -110,7 +110,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             new SiteDirectoryNode (){
                                 name = x.Name, 
                                 leaf = true,
-                                url =  "/" + x.ContentCollection + "/" +  x.Name  
+                                url = "/" + x.DocumentListName + "/" + x.Name  
 
                             });
                         resItems.AddRange( pages )   ;

@@ -65,20 +65,20 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 }
             }
 
-            try
-            {
-                var features = _client.GetProvisionedFeatures().Result.ReadAsAsync().Result;
+            //try
+            //{
+            //    var features = _client. .GetProvisionedFeatures().Result.ReadAsAsync().Result;
 
-                var featuresToAdd = GetFeaturesToAdd(features);
+            //    var featuresToAdd = GetFeaturesToAdd(features);
 
-                if (!TryFeatureProvision(featuresToAdd))
-                    return;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.EventLog.WriteEntry("Volusion.NextGen", ex.ToString(), System.Diagnostics.EventLogEntryType.Error);
-                throw;
-            }
+            //    if (!TryFeatureProvision(featuresToAdd))
+            //        return;
+            //}
+            //catch (Exception ex)
+            //{
+            //    System.Diagnostics.EventLog.WriteEntry("Volusion.NextGen", ex.ToString(), System.Diagnostics.EventLogEntryType.Error);
+            //    throw;
+            //}
 
             lock (g_provisionedSites)
             {
@@ -99,13 +99,14 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         private bool TryFeatureProvision(IEnumerable<Feature> features)
         {
-            if (!features.Any())
-                return false;
+            return true;
+            //if (!features.Any())
+            //    return false;
 
-            var featureProvision = new FeatureProvisionMessage { FeaturesToAdd = features.ToList() };
-            var successfulProvision = _client.ProvisionFeatures(featureProvision, true).Result.ResponseMessage.IsSuccessStatusCode;
+            //var featureProvision = new FeatureProvisionMessage { FeaturesToAdd = features.ToList() };
+            //var successfulProvision = _client.ProvisionFeatures(featureProvision, true).Result.ResponseMessage.IsSuccessStatusCode;
 
-            return successfulProvision;
+            //return successfulProvision;
         }
     }
 }

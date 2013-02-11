@@ -147,7 +147,7 @@ Disallow: /admin/";
                 Name = name,
                 ContentMimeType = mimeType,
                 DocumentType = "document",
-                ContentCollection = ContentCollection,
+                DocumentListName = ContentCollection,
             };
 
             var response = await _documentWebApiClient.Create(ContentCollection, document);

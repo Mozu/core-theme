@@ -12,6 +12,7 @@ using System.Web.Routing;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Autofac;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Checkout;
 
 namespace Mozu.SiteBuilder.UX.Controllers
@@ -32,99 +33,14 @@ namespace Mozu.SiteBuilder.UX.Controllers
         //}
 
 
+     
+
         public async Task<bool> AsyncInitData()
         {
-            var wctx = SiteContext.PageContext.CmsContext;
-            if (wctx == null)
-            {
-                return false;
-            }
-            Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> pageTask = null;
-            Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> templateTask = null;
-            Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> siteTemplateTask = null;
-            var  tasks = new List<Task<ServiceClientResponse<Document>>>();
-            if (wctx.PageReq  != null && wctx.Page == null)
-            {
-                if (wctx.PageReq.Id != null)
-                {
-                    pageTask = CmsService.Get( wctx.PageReq.Collection , wctx.PageReq.Id);
-                    tasks.Add(pageTask);
-                }
-               if (wctx.PageReq.Path != null)
-               {
-                   pageTask = CmsService.GetByPath(wctx.PageReq.Collection , wctx.PageReq.Path);
-                   tasks.Add(pageTask);
-               }
-            }
-            if (wctx.TemplateReq != null && wctx.Template == null)
-            {
-                if (wctx.TemplateReq.Id != null)
-                {
-                    templateTask = CmsService.Get(wctx.TemplateReq.Collection , wctx.TemplateReq.Id);
-                    tasks.Add(templateTask);
-                }
-                if (wctx.TemplateReq.Path != null)
-                {
-                    templateTask = CmsService.GetByPath(wctx.TemplateReq.Collection, wctx.TemplateReq.Path);
-                    tasks.Add(templateTask);
-                }
-            }
-            if (wctx.SiteTemplateReq != null && wctx.SiteTemplate == null)
-            {
-                if (wctx.SiteTemplateReq.Id != null)
-                {
-                    siteTemplateTask = CmsService.Get(wctx.SiteTemplateReq.Collection, wctx.SiteTemplateReq.Id);
-                    tasks.Add(siteTemplateTask);
-                }
-                if (wctx.SiteTemplateReq.Path != null)
-                {
-                    siteTemplateTask = CmsService.GetByPath(wctx.SiteTemplateReq.Collection, wctx.SiteTemplateReq.Path);
-                    tasks.Add(siteTemplateTask);
-                }
-            }
-
-           
-
-           
-            await Task.WhenAll(tasks.ToArray());
-            if (pageTask != null && pageTask.Result.ResponseMessage.IsSuccessStatusCode)
-            {
-                wctx.Page = pageTask.Result.ReadAsSync();
-                wctx.PageReq.Id = wctx.Page.Id;
-            }
-            if (templateTask != null && templateTask.Result.ResponseMessage.IsSuccessStatusCode)
-            {
-                wctx.Template  = templateTask.Result.ReadAsSync();
-                wctx.Template.Id = wctx.Template.Id;
-            }
-            if (siteTemplateTask != null && siteTemplateTask.Result.ResponseMessage.IsSuccessStatusCode)
-            {
-                wctx.SiteTemplate = siteTemplateTask.Result.ReadAsSync();
-                wctx.SiteTemplate.Id = wctx.SiteTemplate.Id;
-            }
-           
-            tasks.Clear();
             
-            if (templateTask == null && wctx.Page != null && wctx.Page.Properties != null && wctx.Page.Properties != null)
-            {
-                string templateName = wctx.Page.Properties.Where(x => x.PropertyType == "template").Select(x =>(string) x.Value).FirstOrDefault();
-                if (templateName != null)
-                {
-                    templateTask = CmsService.GetByPath("templates", templateName);
-                    tasks.Add(templateTask);
-                    var res = await templateTask;
-                    if ( templateTask.Result.ResponseMessage.IsSuccessStatusCode)
-                    {
-                        wctx.Template = templateTask.Result.ReadAsSync();
-                    }
-                }
-
-            }
-
-
-            wctx.Initialized = true;
-            return true;
-
+            CmsHelper helper = new CmsHelper(this.CmsService);
+            var ret =await helper.InitCmsPageContext(SiteContext.PageContext.CmsContext);
+            return ret;
 
         }
 
