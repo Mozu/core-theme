@@ -553,7 +553,7 @@
                 doc, key;
 
             dropEvent.callback();
-            debugger;
+            //debugger;
             Ext.
             key = props.collection + '_' + props.documentId;
             if (props.isShadow) {s
