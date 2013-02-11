@@ -103,7 +103,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICmsServiceWrapper cmsService,
             IOrderService orderService,
             ICmsTypeHelper cmsTypeHelper)
-            : base(docRepo, docTypeRepo, context, provHelper, cmsService, cmsTypeHelper)
+            : base(docRepo, docTypeRepo, context, provHelper, cmsService, cmsTypeHelper, null, null)
         {
             _orderService = orderService;
         }

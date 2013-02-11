@@ -18,11 +18,14 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Settings;
+using Mozu.SiteBuilder.Mvc.TempMocks;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.User.Contracts.Clients;
+using NDjango;
+using NDjango.Interfaces;
 using Module = Autofac.Module;
 
 
@@ -34,11 +37,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 		protected override void Load(ContainerBuilder builder)
 		{
-            builder.Register(c => new DjangoMozuViewEngine(setup => setup
-                .WithLibrary(typeof(NDjango.FiltersCS.AddFilter).Assembly)
-                .WithLibrary(typeof(DjangoMozuViewEngine).Assembly)
-                .WithLibrary(typeof(AutofacModule).Assembly)
-                .WithSetting("settings.DEFAULT_AUTOESCAPE", false))).As<IViewEngine>().As<DjangoMozuViewEngine>().SingleInstance();
+            
 
 			//Registers controllers and allows property injection into action filters
 			builder.RegisterControllers(ThisAssembly);
@@ -49,14 +48,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
 
+          
 
-		    builder.Register(c => new DjangoMozuViewEngine(setup => setup
 
-		                                                                    .WithLibrary(typeof (NDjango.FiltersCS.AddFilter).Assembly)
-		                                                                    .WithLibrary(typeof (DjangoMozuViewEngine).Assembly)
-		                                                                    .WithLibrary(typeof (AutofacModule).Assembly)
+		   
 
-		                                                                    .WithSetting("settings.DEFAULT_AUTOESCAPE", false))).As<IViewEngine>().As<DjangoMozuViewEngine>().SingleInstance();
 
 
             builder.RegisterType<SiteBuilderApiContext>().As<Mozu.Core.IApiContext>().InstancePerHttpRequest();
@@ -103,6 +99,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.Register(c => new DocumentWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IDocumentWebApiClient>().InstancePerLifetimeScope();
             builder.Register(c => new ProductCategoryRuntimeWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IProductCategoryRuntimeWebApiClient>().InstancePerLifetimeScope();
             builder.Register(c => new ProductRuntimeWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IProductRuntimeWebApiClient>().InstancePerLifetimeScope();
+
+		    builder.RegisterType<MockProductCategoryRuntimeWebApiClient>().As<IProductCategoryRuntimeWebApiClient>();
+            builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 
            // builder.RegisterType<MozuServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
 		}

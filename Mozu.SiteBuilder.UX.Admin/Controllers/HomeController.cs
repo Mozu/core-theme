@@ -62,28 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
            // var site = new Mozu.Tenant.Contracts.Site();
 
-            var taContext = new TaContext()
-                                {
-                                    TenantId = tenant.Id,
-                                    Name=tenant.Name ,
-                                    SiteCollections = tenant.SiteGroups.Select(sg =>
-                                                                               new TaContextSiteCollection()
-                                                                                   {
-                                                                                       Id= sg.Id,
-                                                                                       Name=sg.Name ,
-                                                                                       Sites = sg.Sites.Select(site=>
-                                                                                        new TaContextSite(){
-                                                                                                Id = site.Id,
-                                                                                                Name = site.Name,
-                                                                                                StagingHost = site.Domains.Where( x=> x.IsSystemAssigned ).Select(x=>x.DomainName).FirstOrDefault()
-                                                                                                
-                                                                                        }
-
-                                                                                       ).ToList() 
-                                                                                   }
-                                        ).ToList() 
-                                };
-                                   
+            var taContext = AutoMapper.Mapper.Map<TaContext>(tenant);
 
 
             this.ViewData["taContext"] = taContext;
@@ -93,13 +72,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             this.ViewData["extlocalefile"] = GetExtLocaleFile(Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName);
             this.ViewData["useGoogleAnalytics"] = System.Configuration.ConfigurationManager.AppSettings["useGoogleAnalytics"];
             this.ViewData["googleAnalyticsAccount"] = System.Configuration.ConfigurationManager.AppSettings["googleAnalyticsAccount"];
-            this.ViewData["site"] = new Mozu.Tenant.Contracts.Site()
-                                        {
-                                            Name = "xxx",
-                                            Id = 123,
-                                            TenantId = 123
-
-                                        };
+         
             if (this.HttpContext.Request["testHarnessMode"] == "true")
             {
                 return View("TestHarnes");

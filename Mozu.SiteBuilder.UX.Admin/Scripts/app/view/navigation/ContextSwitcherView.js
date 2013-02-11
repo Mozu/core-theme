@@ -9,11 +9,14 @@ Ext.define('Taco.view.navigation.ContextSwitcherView', {
 
     floating: true,
     shadow: false,
+    hideMode: 'offsets',
+    defaultAlign: 'tr-br',
+    y: -1000, // *** Initially position off top of screen
     // TODO: Get this to render off screen AND consider itself hidden.  Click toggle on trigger takes one extra click initially to get the state right.
 
     autoEl: {
-         tag: 'ul',
-         cls: Taco.baseCSSPrefix + 'context-switcher-list'
+        tag: 'ul',
+        cls: Taco.baseCSSPrefix + 'context-switcher-list'
     },
     itemSelector:    'li.' + Taco.baseCSSPrefix + 'menu-item',
     // overItemCls:     Taco.baseCSSPrefix + 'menu-item-hover',
@@ -22,17 +25,29 @@ Ext.define('Taco.view.navigation.ContextSwitcherView', {
     initComponent: function () {
         this.store = Taco.app.context.getStore();
 
-        // // TODO: Call addEvents() for 'contextClicked'?
+        // TODO: Call addEvents() for 'contextClicked'?
 
+        if (Taco.app.context.isMultiSiteCollection()) {
         this.tpl = [
-             '<tpl for=".">',
-                 '{% values.collectionClass = values.contextType == "c" ? "taco-context-collection" : "" %}',
-                 '{% values.containerClass = values.contextType != "s" ? "taco-context-container" : "" %}',
-                 '<li class="taco-menu-item {containerClass} {collectionClass}">',
-                     '{name}',
-                 '</li>',
-             '</tpl>'
+            '<tpl for=".">',
+                '{% values.collectionClass = values.contextType == "c" ? "taco-context-collection" : "" %}',
+                '{% values.containerClass = values.contextType != "s" ? "taco-context-container" : "" %}',
+                '<li class="taco-menu-item {containerClass} {collectionClass}">',
+                    '{name}',
+                '</li>',
+                '</tpl>'
+            ];
+        } else {
+            this.tpl = [
+                '<tpl for=".">',
+                    '<tpl if="values.contextType == \'s\'" >',
+                        '<li class="taco-menu-item taco-context-container">',
+                            '{name}',
+                        '</li>',
+                    '</tpl>',
+            '</tpl>'
         ];
+        }
 
         this.enableBubble('contextClicked');
 
@@ -42,7 +57,7 @@ Ext.define('Taco.view.navigation.ContextSwitcherView', {
         this.hide();
 
         this.on('itemclick', this.contextClicked, this);
-    }
+    },
 
     /**
      * @private
@@ -52,7 +67,7 @@ Ext.define('Taco.view.navigation.ContextSwitcherView', {
      *
      * Fires a 'contextClicked' event with salient parameters.
      */
-    , contextClicked: function (view, record, item) {
-         this.fireEvent('contextClicked', record, item.innerText);
+    contextClicked: function (view, record, item) {
+        this.fireEvent('contextClicked', record, item.innerText);
     }
 });

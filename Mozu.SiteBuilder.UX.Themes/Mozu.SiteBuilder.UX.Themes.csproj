@@ -777,7 +777,7 @@
     <Content Include="Themes\Core3\Resources\Stylesheets\storefront.less" />
     <Content Include="Themes\Core3\Resources\Stylesheets\Modules\typography.less" />
     <Content Include="Themes\Core3\Templates\_blankPage.vol" />
-    <Content Include="Themes\Core3\Templates\_404_page.vol" />
+    <Content Include="Themes\Core3\Templates\_404.vol" />
     <Content Include="Themes\Core3\Templates\_Blog.vol" />
     <Content Include="Themes\Core3\Templates\_Cart.vol" />
     <Content Include="Themes\Core3\Templates\_Category.vol" />

@@ -1,4 +1,6 @@
-﻿using Mozu.SiteBuilder.Mvc.Tags;
+﻿using Autofac;
+using Autofac.Integration.Mvc;
+using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.Localization;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
@@ -6,11 +8,12 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     [NDjango.Interfaces.Name("localize")]
     public class LocalizeTag: DynamicTagBase
     {
-        private readonly LocalizationRepository _localizationRepository = null;
+        private readonly ILocalizationRepository _localizationRepository = null;
         
         public LocalizeTag()
         {
-            _localizationRepository = new LocalizationRepository();
+           _localizationRepository =  AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<ILocalizationRepository>();
+            //_localizationRepository = new LocalizationRepository();
         }
 
         public string Process(string colKey, string key)

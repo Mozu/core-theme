@@ -17,12 +17,14 @@ using Mozu.Content.Contracts;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     public class WidgetsController : BaseController
     {
-
+        private readonly IViewEngine _viewEngine;
         private readonly IProductWebApiClient _productClient;
 
         ISiteBuilderContext _context;
@@ -30,8 +32,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         ICmsServiceWrapper _cmsService;
         private readonly IWidgetProvider _widgetProvider;
 
-        public WidgetsController(IProductWebApiClient productClient, ISiteBuilderContext context, ICmsTypeHelper cmsTypeHelper, IProvisioningHelper provHelper, ICmsServiceWrapper cmsService, IWidgetProvider widgetProvider)
+        public WidgetsController(  IViewEngine viewEngine, IProductWebApiClient productClient, ISiteBuilderContext context, ICmsTypeHelper cmsTypeHelper, IProvisioningHelper provHelper, ICmsServiceWrapper cmsService, IWidgetProvider widgetProvider)
         {
+            _viewEngine = viewEngine;
             _productClient = productClient;
             _context = context;
             _cmsService = cmsService;
@@ -41,36 +44,78 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             provHelper.ProvisionCms();
         }
 
-        
-      
+
+        class JsonBinder : IModelBinder 
+      {
+
+
+
+            public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+            {
+                if (controllerContext.RequestContext.HttpContext.Request.ContentType != "application/json")
+                {
+                    return null;
+                }
+                var stream = controllerContext.RequestContext.HttpContext.Request.InputStream;
+
+                //if (stream.Length == 0)
+                //{
+                //    return null;
+                //}
+                //if (stream.Position != 0)
+                //{
+                //    if (!stream.CanSeek)
+                //    {
+                //        return null;
+                //    }
+                //    stream.Position = 0;
+                //}
+
+                var jsonReader = new JsonTextReader(new StreamReader(stream));
+                var ser = new JsonSerializer();
+                return ser.Deserialize(jsonReader, bindingContext.ModelType);
+            }
+      }
 
         [HttpPost()]
-        public ActionResult Preview(WidgetPreviewContext context)
+        public ActionResult Preview([ModelBinder(typeof(JsonModelBinder))] WidgetPreviewData wrd )
         {
+
+           
+
             _context.IsEditMode = true;
+
+
+
+            var def = _widgetProvider.GetWidgets().First(x => x.Id == wrd.DefinitionId);
+
+            wrd.Definition = def;
+            wrd.IsPreview = true;
            
-          
-
-            var def = _widgetProvider.GetWidgets().First(x => x.Id == context.DefinitionId);
-
-            var wrd = new WidgetRuntimeData()
-                {
-                    Definition = def,
-                    DefinitionId = context.DefinitionId ,
-                    ConfigurationData = context.ConfigurationData,
-                    Index = context.Index ,
-                    ZoneId = context.ZoneId,
-                    ZoneScope = context.ZoneScope,
-                    IsPreview = true
-                };
-
-           
+            switch (wrd.ZoneScope ?? "page")
+            {
+                case "site":
+                    {
+                        wrd.Source = wrd.Context.SiteTemplateReq;
+                        break; 
+                    }
+                case "template":
+                    {
+                        wrd.Source = wrd.Context.TemplateReq;
+                        break;
+                    }
+                default:
+                    {
+                        wrd.Source = wrd.Context.PageReq;
+                        break;
+                    }
+            }
 
 
             if (this.HttpContext.Request.ContentType == "application/json")
             {
                 var tw = new StringWriter();
-                var viewRes = System.Web.Mvc.ViewEngines.Engines[0].FindPartialView(this.ControllerContext, def.DisplayTemplate, true);
+                var viewRes = _viewEngine.FindPartialView(this.ControllerContext, def.DisplayTemplate, true);
 
                 if (viewRes.View != null)
                 {
@@ -82,18 +127,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     throw new Exception("can't find template " + def.DisplayTemplate);
                 }
-                context.Output = tw.GetStringBuilder().ToString();
+                wrd.Output = tw.GetStringBuilder().ToString();
 
-                var jsonData = new WidgetPreviewContext()
-                {
-                    Output = tw.GetStringBuilder().ToString(),
-                    
-
-                };
-
+               
                 return new JsonDCResult()
                 {
-                    Data = context,
+                    Data = wrd,
                     JsonRequestBehavior = JsonRequestBehavior.AllowGet
                 };
 

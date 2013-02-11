@@ -8,7 +8,7 @@ using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 
 namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
 {
-    [DataContract(Name = "wpc")]
+    [DataContract(Name = "cms")]
     public class CmsPageContext
     {
         public CmsPageContext()
@@ -19,13 +19,13 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
                                           Path="site/default"
                                       };
         }
-        [DataMember(Name = "pdr")]
+        [DataMember(Name = "pageDoc")]
         public DocumentRequest PageReq { get; set; }
 
-        [DataMember(Name = "tdr")]
+        [DataMember(Name = "templateDoc")]
         public DocumentRequest TemplateReq { get; set; }
 
-        [DataMember(Name = "sdr")]
+        [DataMember(Name = "siteDoc")]
         public DocumentRequest SiteTemplateReq { get; set; }
 
         

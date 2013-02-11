@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.Mvc;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.ProductAdmin.Contracts.Clients;
@@ -8,6 +9,8 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteSettings.Shipping.Contracts.Clients;
 using Mozu.UspsShippingAdmin.Contracts.Clients;
+using NDjango;
+using NDjango.Interfaces;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
@@ -57,6 +60,22 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>();
 
             builder.RegisterType<NullLoggingService>().As<ILoggingService>();
+
+            builder.Register(c => new TemplateManagerProvider()
+                          .WithLibrary(typeof(NDjango.FiltersCS.AddFilter).Assembly)
+                          .WithLibrary(typeof(DjangoMozuViewEngine).Assembly)
+                          .WithLibrary(typeof(AutofacModule).Assembly)
+                          .WithSetting("settings.DEFAULT_AUTOESCAPE", false)
+                          .WithLoader(c.Resolve<ITemplateLoader>())).As<TemplateManagerProvider>().SingleInstance();
+
+
+            builder.Register(c => c.Resolve<TemplateManagerProvider>().GetNewManager()).As<ITemplateManager>();
+
+
+
+
+           // builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
+         
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.ServiceModel;
+using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Mozu.AdminUser.Contracts.Clients;
@@ -13,6 +14,8 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Configuration;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using NDjango;
+using NDjango.Interfaces;
 using Api = Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.User.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.MockServices;
@@ -38,7 +41,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
         {
             //var platformService = typeof(PlatformService.Contracts.Clients.ReferenceDataWebApiClient).Assembly;
             //builder.ScanAssemblyAndRegisterTypes(platformService, x => x.IsAssignableFrom(typeof(PlatformService.Contracts.Clients.IReferenceDataWebApiClient)));
-
+            
+            
             builder.RegisterType<SiteBuilderContext>().As<ISiteBuilderContext>().InstancePerLifetimeScope();
 
             builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().InstancePerLifetimeScope();
@@ -72,11 +76,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.Register<System.Web.HttpContextBase>((c, p) => new System.Web.HttpContextWrapper(System.Web.HttpContext.Current)).InstancePerDependency();
 
             builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
-            builder.Register(c => new DjangoMozuViewEngine(setup => setup
-                                                                            .WithLibrary(typeof (DjangoMozuViewEngine).Assembly)
-                                                                            .WithLibrary(typeof (NDjango.FiltersCS.AddFilter).Assembly)
-                                                                            .WithLibrary(typeof (AutofacModule).Assembly)
-                                                                            .WithSetting("settings.DEFAULT_AUTOESCAPE", false))).As<DjangoMozuViewEngine>().SingleInstance();
+
+
+           
+
 
             builder.RegisterType<NoOpMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerLifetimeScope();
 
@@ -85,6 +88,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             // builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductRuntime.Contracts.Clients.ProductRuntimeWebApiClient).Assembly);
             builder.Register(c => new ProductRuntimeWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductRuntimeWebApiClient>().InstancePerLifetimeScope();
             builder.Register(c => new ProductSearchWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductSearchWebApiClient>().InstancePerLifetimeScope();
+
+            builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>();
+            builder.RegisterType<System.Web.Mvc.RazorViewEngine>().As<IViewEngine>();
         }
 
 

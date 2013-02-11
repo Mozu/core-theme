@@ -11,8 +11,11 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
     componentCls: Taco.baseCSSPrefix + 'context-switcher',
 
     width: 250, // TODO: Width needs to be set to be pushed right in an Hbox.  This is shitty, and it makes me angry, and I don't know how to fix it.
-
+    hidden: true,
     initComponent: function () {
+        
+        this.hidden = Taco.app.context.isSingleSite();
+        
         this.label = Ext.create('Ext.container.Container', {
             autoEl: {
                 tag: 'div',
@@ -32,6 +35,7 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
 
         this.on({
             afterrender: function () {
+                
                 // *** Set ContextSwitcher display label to current context
                 if( Taco.core.StateManager ) {
                     this.mon(

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Dynamic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
@@ -10,6 +13,8 @@ using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.UX.StartupTasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Volusion.SiteBuilder.UX.Models;
 
 namespace Mozu.SiteBuilder.UX.Configuration
@@ -30,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 		/// </summary>
 		public static void Bootstrap()
 		{
+               ViewEngines.Engines.Clear();
 			//Auto registers any interface/implementations that follow the standard naming convention
 			_container = new AutofacContainerFactory()
 						//.UsingAssembly(Assembly.Load("Mozu.Core"))
@@ -60,14 +66,15 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             InitLogging();
 
-            //ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
-           // ValueProviderFactories.Factories.Add(new JsonNetValueProviderFactory());
+           //ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
+           //ValueProviderFactories.Factories.Add(new JsonDotNetValueProviderFactory());
 
 			DependencyResolver.SetResolver(_resolver);
            // StartUpTaskRunner.Start(DependencyResolver.Current.GetServices<IStartUpTask>());
 		    new RoutingConfigurationStartupTask().Execute();
 		}
 
+        
 	    private static void InitLogging()
 	    {
             LoggingService.InitializeLoggingServiceFactory(new MozuLoggingServiceFactory());

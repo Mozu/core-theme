@@ -9,29 +9,28 @@ using System.IO;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
-    public class MozuVirtualPathProvider : VirtualPathProvider
+    public interface IMozuVirtualPathDataProvider
     {
-        private DjangoMozuViewEngine _djangoMozuViewEngine;
+        Dictionary<string, string> Themes { get; }
+    }
+
+    class MozuVirtualPathDataProvider : IMozuVirtualPathDataProvider
+    {
+        public MozuVirtualPathDataProvider(System.Collections.Specialized.NameValueCollection config = null)
+        {
+            _config = config ?? System.Configuration.ConfigurationManager.AppSettings;
+                
+            InitThemeLookup();
+        }
         private readonly NameValueCollection _config;
         private Dictionary<string, string> _themeLookup;
         private System.Collections.Concurrent.ConcurrentDictionary<string, FileSystemWatcher> _fileSystemWatchers = new ConcurrentDictionary<string, FileSystemWatcher>(StringComparer.OrdinalIgnoreCase);
-        // List<Tuple<string,string>> _virtMap = new List<Tuple<string,string>>();
-        // string _themeRoot;
 
-
-        public MozuVirtualPathProvider(DjangoMozuViewEngine djangoMozuViewEngine, System.Collections.Specialized.NameValueCollection config = null)
-        {
-            _config = config ?? System.Configuration.ConfigurationManager.AppSettings;
-
-            this._djangoMozuViewEngine = djangoMozuViewEngine;
-
-            InitThemeLookup();
-        }
-        public IEnumerable<KeyValuePair<string, string>> Themes
+        public Dictionary<string, string> Themes
         {
             get { return _themeLookup; }
         }
-        void InitThemeLookup()
+         void InitThemeLookup()
         {
 
             var tl = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -51,6 +50,11 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             this._themeLookup = tl;
         }
 
+        void watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            this.InitThemeLookup();
+        }
+
         private FileSystemWatcher CreateWatcher(string path)
         {
             var watcher = new FileSystemWatcher(path)
@@ -64,15 +68,53 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return watcher;
         }
 
-        void watcher_Changed(object sender, FileSystemEventArgs e)
+    }
+    public class MozuVirtualPathProvider : VirtualPathProvider
+    {
+        private readonly IMozuVirtualPathDataProvider _mozuVirtualPathDataProvider;
+        private readonly ISiteBuilderContext _siteBuilderContext;
+
+
+        //private DjangoMozuViewEngine _djangoMozuViewEngine;
+       
+        // List<Tuple<string,string>> _virtMap = new List<Tuple<string,string>>();
+        // string _themeRoot;
+
+
+        public MozuVirtualPathProvider( IMozuVirtualPathDataProvider mozuVirtualPathDataProvider , ISiteBuilderContext  siteBuilderContext  )
         {
-            this.InitThemeLookup();
+            _mozuVirtualPathDataProvider = mozuVirtualPathDataProvider;
+            _siteBuilderContext = siteBuilderContext;
         }
+
+        public IEnumerable<KeyValuePair<string, string>> Themes
+        {
+            get { return _mozuVirtualPathDataProvider.Themes ; }
+        }
+
+
+        public string MapLocalPath(string virtualPath, string theme)
+        {
+            //var pathParts = virtualPath.Replace("\\","/").Split('/');
+            //if (pathParts.Length < 3)
+            //{
+            //    throw new InvalidOperationException(string.Format("invalid path [{0}]", virtualPath));
+            //}
+
+            //string theme = pathParts[2];
+            //{dev:name}
+            return _mozuVirtualPathDataProvider.Themes[theme] + virtualPath;
+
+
+        }
+
+
+        
 
         private ICollection<string> _themeStack;
         public ICollection<string> ThemeStack
         {
-            get { return _themeStack ?? SiteBuilderContext.Current.Theme.Stack; }
+            get { return _themeStack ?? (_siteBuilderContext ??SiteBuilderContext.Current ).Theme.Stack; }
             set { _themeStack = value; }
         }
 
@@ -115,20 +157,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return base.GetCacheKey(virtualPath);
         }
 
-        public string MapLocalPath(string virtualPath, string theme)
-        {
-            //var pathParts = virtualPath.Replace("\\","/").Split('/');
-            //if (pathParts.Length < 3)
-            //{
-            //    throw new InvalidOperationException(string.Format("invalid path [{0}]", virtualPath));
-            //}
-
-            //string theme = pathParts[2];
-            //{dev:name}
-            return _themeLookup[theme] + virtualPath;
-
-
-        }
+       
         public override VirtualDirectory GetDirectory(string virtualDir)
         {
             foreach (var theme in this.ThemeStack)
