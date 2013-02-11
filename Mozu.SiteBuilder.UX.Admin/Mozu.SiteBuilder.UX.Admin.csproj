@@ -320,6 +320,7 @@
     <Compile Include="Api\BehaviorsController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\CmsDocumentController.cs" />
+    <Compile Include="Api\CmsPublishingController.cs" />
     <Compile Include="Api\ModelMapping\WidgetInstanceDataMapping.cs" />
     <Compile Include="Api\WidgetInstanceDataController.cs" />
     <Compile Include="Api\IVolusionLoginHelper.cs" />
