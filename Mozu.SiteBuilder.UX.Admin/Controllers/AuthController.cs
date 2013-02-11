@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Mozu.Provisioning.Contracts;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -15,7 +16,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly IAccountController _accountApi;
+        private readonly IVolusionLoginHelper _loginHelper;
         private IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
         private readonly ICurrentUserHelper _currentUserHelper;
@@ -25,10 +26,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient _merchantSignUpWebApiClient;
         private readonly IRolesHelper _rolesHelper;
 
-        public AuthController(IAccountController accountApi, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper, IPasswordHelper passwordHelper, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IRolesHelper rolesHelper)
+        public AuthController(IVolusionLoginHelper loginHelper, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper, IPasswordHelper passwordHelper, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IRolesHelper rolesHelper)
         {
             _authenticationHelper = authHelper;
-            _accountApi = accountApi;
+            _loginHelper = loginHelper;
             _sbc = sbc;
             _currentUserHelper = currentUserHelper;
             _contextSwitcher = contextSwitcher;
@@ -70,20 +71,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 return View("Index");
             }
 
-            // If the user authenticates, redirect them to the admin app
-            var res = await _accountApi.VolusionLogIn(login);
-
-            if(res.Success)
+            try
             {
-                var tenants = res.Items;
+                // If the user authenticates, redirect them to the admin app
+                var tenants = await _loginHelper.VolusionLogIn(login);
 
-                if (tenants.Count == 0)
+                if (tenants.Skip(1).Any()) // more than 1
                 {
-                    ModelState.AddModelError("General", "You don't have access to any sites.");
-                    return View("Index");
+                    // Launch Pad with Tenant Names
+                    return View("Roles", tenants);
                 }
-
-                if (tenants.Count == 1)
+                if (tenants.Any())
                 {
                     // Auto login to tenant
                     var taContext = tenants.First();
@@ -96,19 +94,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                     return null;
                 }
 
-                if (tenants.Count > 0)
-                {
-                    // Launch Pad with Tenant Names
-                    return View("Roles", tenants);
-                }
-
-                return Redirect("/admin");
+                ModelState.AddModelError("General", "You don't have access to any sites.");
+                return View("Index");
             }
+            catch (AggregateException exception)
+            {
+                // Otherwise, send the login error message
+                ModelState.AddModelError("General", exception.UnwrapAgg().Message);
 
-            // Otherwise, send the login error message
-            ModelState.AddModelError("General", "Authentication failed!");
-
-            return View("Index");
+                return View("Index");
+            }
         }
 
         public ActionResult ForgotPassword()
@@ -161,20 +156,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             }
 
             // If the user authenticates, redirect them to the admin app
-            var res = await _accountApi.VolusionLogIn(user);
-
-            if (res.Success)
+            try
             {
-                if (res.Items.Count > 1)
+                var contexts = await _loginHelper.VolusionLogIn(user);
+
+                if (contexts.Skip(1).Any()) // checking for "greater than 1" without enumerating the collection
                 {
-                    return View("Roles", res.Items);
+                    return View("Roles", contexts);
                 }
 
-                var site = await _contextSwitcher.ChangeSite(res.Items.First().Id);
+                var site = await _contextSwitcher.ChangeSite(contexts.First().Id);
                 if (site != null)
                 {
                     return Redirect("/admin");
                 }
+            }
+            catch (AggregateException exception)
+            {
+                var message = exception.UnwrapAgg().Message;
+                ModelState.AddModelError("General", message);
             }
 
             // Otherwise, send the login error message
@@ -237,7 +237,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
  * 
         public async Task<ActionResult> ChangeRole(int id)
         {
-            var site = await _accountApi.ChangeSite(id);
+            var site = await _loginHelper.ChangeSite(id);
             if (site != null)
             {
                 //todo: look in config
@@ -315,7 +315,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             return this.Redirect(url);
         }
 */
-        public Task<Response<List<TaContext>>> Register(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
+        public Task<List<TaContext>> Register(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
         {
             //var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
             //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
@@ -329,7 +329,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             }).Result.ReadAsSync();
 
 
-            return _accountApi.VolusionLogIn(user);
+            return _loginHelper.VolusionLogIn(user);
         }
 
         public ActionResult Register()
@@ -342,7 +342,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             if (ModelState.IsValidField("SiteName") && ModelState.IsValidField("EmailAddress") && ModelState.IsValidField("Password"))
             {
-                var reg = Register(user);
+                var reg = Register(user).Result;
                 return Redirect("/admin");
             }
             return View(user);
