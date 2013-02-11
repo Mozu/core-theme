@@ -1,5 +1,4 @@
 // $panel-header-color: $color-neutral-darkest;
-
 // .#{$prefix}panel-header.#{$prefix}panel-header-default {
 // 	background-image: none !important;
 // 	background-color: transparent !important;
@@ -7,32 +6,36 @@
 // 	border-bottom-width: 1px !important;
 // 	@include box-shadow(none);
 // }
+@mixin taco-panel {
 
-.#{$prefix}panel-header img.#{$prefix}tool-expand-top, .#{$prefix}panel-header img.#{$prefix}tool-collapse-top {
-	@include icons-sprite('icon-panelcollapse');
+  .#{$prefix}panel-header img.#{$prefix}tool-expand-top, .#{$prefix}panel-header img.#{$prefix}tool-collapse-top {
+  	@include icons-sprite('icon-panelcollapse');
+  }
+  .#{$prefix}panel-header img.#{$prefix}tool-expand-bottom, .#{$prefix}panel-header img.#{$prefix}tool-collapse-bottom {
+  	@include icons-sprite('icon-panelexpand');
+  }
+
+  @include extjs-panel-ui(
+    'taco',
+
+    $ui-base-color: $color,
+    $ui-border-color: $color-grid-border,
+    $ui-border-radius: null,
+    $ui-border-width: 1px,
+
+    $ui-header-background-color: rgba(255, 255, 255, 0),
+    $ui-header-background-gradient: null,
+    $ui-header-border-color: $color-grid-border,
+    $ui-header-color: $color,
+    $ui-header-font-size: null,
+    $ui-header-font-weight: normal,
+    $ui-header-inner-border-color: null,
+
+    $ui-body-background-color: null,
+    $ui-body-border-color: $color-grid-border,
+    $ui-body-border-width: null,
+    $ui-body-color: $color,
+    $ui-body-font-size: null
+  );
+  
 }
-
-.#{$prefix}panel-header img.#{$prefix}tool-expand-bottom, .#{$prefix}panel-header img.#{$prefix}tool-collapse-bottom {
-	@include icons-sprite('icon-panelexpand');
-}
-
-@include extjs-panel-ui(
-  'taco',
-
-  $ui-base-color: $color,
-  $ui-border-width: 1px,
-  $ui-border-color: rgb(0, 0, 255),
-  $ui-border-radius: 2px,
-
-  $ui-header-color: $color,
-  $ui-header-font-size: null,
-  $ui-header-font-weight: normal,
-  $ui-header-border-color: rgb(255, 0, 255),
-  $ui-header-background-color: rgb(230, 230, 255),
-  $ui-header-background-gradient: null,
-
-  $ui-body-color: $color,
-  $ui-body-border-color: rgb(255, 0, 0),
-  $ui-body-border-width: 1px,
-  $ui-body-background-color: transparent
-);

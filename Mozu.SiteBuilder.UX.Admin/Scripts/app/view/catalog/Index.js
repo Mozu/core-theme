@@ -15,7 +15,9 @@ Ext.define('Taco.view.catalog.Index', {
 
         this.store = Taco.core.data.StoreManager.getOrCreate({ type: 'Taco.store.Products', clearFilters:true , clearSort:true });
 
-        sm = Ext.create('Ext.selection.CheckboxModel');
+        sm = Ext.create('Ext.selection.CheckboxModel', {
+            checkOnly: true
+        });
 
         gp = Ext.create('Taco.core.ux.grid.Panel', {
             store: this.store,
@@ -110,5 +112,15 @@ Ext.define('Taco.view.catalog.Index', {
         this.callParent(arguments);
 
         this.store.load();
+
+        gp.on({
+            itemclick: this.onItemClick,
+            scope: this
+        });
+    },
+
+    onItemClick: function (view, record, item, index, e) {
+        e.preventDefault();
+        console.log(record, e.getTarget('tr.x-grid-row-body'));
     }
 });

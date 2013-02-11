@@ -10,8 +10,6 @@ Ext.define('Taco.view.product.Form', {
         'Taco.view.product.SiteForm'
     ],
 
-    id: 'taco',
-
     layout: 'fit',
 
     /**

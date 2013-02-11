@@ -4,7 +4,7 @@
 
 	Ext.define('Taco.view.account.Overview', {
 	    extend: 'Taco.core.ux.content.Container',
-	    requires: ['Taco.view.account.Navigation','Taco.core.ux.Panel','Taco.model.AccountInformation','Taco.view.address.AddressForm','Taco.view.account.AccountInformation','Taco.core.ux.modal.Helper','Taco.store.CountryComboBox'],
+	    requires: ['Taco.view.account.Navigation','Ext.panel.Panel','Taco.model.AccountInformation','Taco.view.address.AddressForm','Taco.view.account.AccountInformation','Taco.core.ux.modal.Helper','Taco.store.CountryComboBox'],
 
 		initComponent: function () {
 			var me = this;
@@ -15,7 +15,7 @@
 
 			me.navigation = Ext.create('Taco.view.account.Navigation');
 
-			me.space = Ext.create('Taco.core.ux.Panel', {
+			me.space = Ext.create('Ext.panel.Panel', {
 				items: [
 					Ext.create('Ext.Img', {
 						height: 191, width: 510,
@@ -31,7 +31,7 @@
                 });
 			};
 
-	        me.overview = Ext.create('Taco.core.ux.Panel', {
+	        me.overview = Ext.create('Ext.panel.Panel', {
 	        	defaults: {
 	        		margin: '0 0 10 0'
 	        	},
@@ -84,7 +84,7 @@
 				}]
 			});
 
-			me.items = Ext.create('Taco.core.ux.Panel', {
+			me.items = Ext.create('Ext.panel.Panel', {
 	        	defaults: { margin: '20 220 0 0 '},
 	            layout: { type: 'hbox', align: 'left' },
 				items: [ 

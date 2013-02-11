@@ -4,7 +4,7 @@
 
 	Ext.define('Taco.view.account.Billing', {
 		extend: 'Taco.core.ux.content.Container',
-	    requires: ['Taco.view.account.Navigation','Taco.core.ux.Panel','Taco.view.account.Overview'],
+	    requires: ['Taco.view.account.Navigation','Taco.view.account.Overview'],
 
 	    initComponent: function () {
 	        var me = this;
@@ -15,7 +15,7 @@
 
 			me.navigation = Ext.create('Taco.view.account.Navigation');
 
-			me.items = Ext.create('Taco.core.ux.Panel', {
+			me.items = Ext.create('Ext.panel.Panel', {
 	        	defaults: { margin: '20 220 0 0 '},
 	            layout: { type: 'vbox', align: 'left' },
 				items: [{

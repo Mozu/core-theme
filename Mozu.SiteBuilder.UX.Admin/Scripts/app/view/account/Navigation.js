@@ -3,7 +3,7 @@
  */
 
 	Ext.define('Taco.view.account.Navigation', {
-	    extend: 'Taco.core.ux.Panel',
+	    extend: 'Ext.panel.Panel',
 	    requires:['Taco.core.ux.action.Action'],
     	defaults: { margin: '0 25, 0 0' },
 		layout: { type: 'hbox', align: 'left' },

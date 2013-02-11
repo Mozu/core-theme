@@ -79,6 +79,7 @@ Ext.application({
             'Taco.core.ux.IconList',
             'Taco.core.ux.CardPanel',
             'Taco.core.ux.CellEditing',
+            'Taco.core.ux.Panel',
             'Taco.view.Header',
             'Ext.state.CookieProvider',
             'Ext.draw.Component',
