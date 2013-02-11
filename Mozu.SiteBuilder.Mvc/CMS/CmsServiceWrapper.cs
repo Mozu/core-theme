@@ -6,6 +6,7 @@
 
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
+using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
@@ -24,6 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     using Mozu.SiteBuilder.Mvc.Models.CMS;
     using Mozu.SiteBuilder.Mvc.Extensions;
     using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
+    using Mozu.Core.Api.Client;
 
     /// <summary>
     /// TODO: Update summary.
@@ -51,12 +53,16 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         }
         public IEnumerable<Task<Tuple<bool,ServiceClientResponse<StreamContent>>>> Delete(IEnumerable<AVM.Document> docs)
         {
+            //ServiceClientExtensions;
+
             return docs.Select(doc => _docRepo.Delete(doc.CollectionName, doc.DocumentId, null)
                 .ContinueWith((x) =>
                 {
                     var resp = x.Result;
                     return new Tuple<bool, ServiceClientResponse<StreamContent>>(resp.ResponseMessage.IsSuccessStatusCode, resp);
                 }));
+            
+
         }
        
 
