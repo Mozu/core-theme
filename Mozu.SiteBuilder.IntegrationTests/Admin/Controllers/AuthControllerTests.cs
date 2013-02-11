@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
         private const string launchPadViewName = "Roles";
         private const string adminRedirectUrl = "/admin";
 
-        private IAccountController _accountApi;
+        private IVolusionLoginHelper _accountApi;
         private IAuthenticationHelper _authHelper;
         private ISiteBuilderContext _sbc;
         private ICurrentUserHelper _currentUserHelper;
@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
         [SetUp]
         public void SetUp()
         {
-            _accountApi = Substitute.For<IAccountController>();
+            _accountApi = Substitute.For<IVolusionLoginHelper>();
             _authHelper = Substitute.For<IAuthenticationHelper>();
             _sbc = Substitute.For<ISiteBuilderContext>();
             _currentUserHelper = Substitute.For<ICurrentUserHelper>();
@@ -53,7 +53,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
             private readonly LoginUser emptyLogin = new LoginUser();
             private readonly LoginUser loginWithoutEmail = new LoginUser { Password = "Blah!1" };
             private readonly LoginUser loginWithoutPassword = new LoginUser { EmailAddress = "user@volusion.com" };
-            private readonly Response<List<TaContext>> failedResponse = new Response<List<TaContext>> { Success = false };
 
             [Test]
             public void When_everything_is_missing_errors_should_be_present()
@@ -88,46 +87,22 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
                 result.ViewName.ShouldEqual("Index");
                 result.ViewData.ModelState["Password"].Errors.ShouldNotBeEmpty();
             }
-
-            [Test]
-            public void When_email_and_password_are_present_but_login_fails()
-            {
-                var controller = GetController();
-                _accountApi.With(x => x.VolusionLogIn(validLogin), failedResponse);
-
-                var result = controller.Login(validLogin).Result as ViewResult;
-
-                result.ViewName.ShouldEqual("Index");
-                result.ViewData.ModelState["General"].Errors.ShouldNotBeEmpty();
-            }
         }
 
         [TestFixture]
         public class On_successful_Login : AuthControllerTests
         {
             private readonly LoginUser login = new LoginUser { EmailAddress = "blah@volusion.com", Password = "Password1" };
-            private Response<List<TaContext>> responseWithNoTenants;
-            private Response<List<TaContext>> responseWithOneTenant;
-            private Response<List<TaContext>> responseWithManyTenants;
+            private List<TaContext> responseWithNoTenants;
+            private List<TaContext> responseWithOneTenant;
+            private List<TaContext> responseWithManyTenants;
 
             [SetUp]
             public new void SetUp()
             {
-                responseWithNoTenants = new Response<List<TaContext>>
-                {
-                    Success = true,
-                    Items = new List<TaContext>()
-                };
-                responseWithOneTenant = new Response<List<TaContext>>
-                {
-                    Success = true,
-                    Items = new List<TaContext> { new TaContext() },
-                };
-                responseWithManyTenants = new Response<List<TaContext>>
-                {
-                    Success = true,
-                    Items = Enumerable.Repeat(new TaContext(), 30).ToList(),
-                };
+                responseWithNoTenants = new List<TaContext>();
+                responseWithOneTenant = new List<TaContext> { new TaContext() };
+                responseWithManyTenants = Enumerable.Repeat(new TaContext(), 30).ToList();
                 _contextSwitcher.WithAny(x => x.ChangeTenant(0), new Tenant.Contracts.Tenant());
             }
 
@@ -167,7 +142,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Controllers
 
                 var model = result.Model as List<TaContext>;
                 model.ShouldNotBeNull();
-                model.Count.ShouldEqual(responseWithManyTenants.Items.Count);
+                model.Count.ShouldEqual(responseWithManyTenants.Count);
             }
         }
 

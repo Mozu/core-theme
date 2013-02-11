@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [ServiceContract]
     [AllowAnonymous]
-    public class AccountController : BaseController, IAccountController, IHttpController
+    public class AccountController : BaseController, IHttpController
     {
         private List<ApiRole> roles;
 
@@ -178,94 +178,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return site;
         }
 
-        public Task<Response<List<TaContext>>> VolusionLogIn(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
-        {
-            try
-            {
-                UserLoginResult ulr = null;
-                //Core.Api.Contracts.UserAuthTicket ticket = null;
-                LightweightUserClaims volLwp = null;
-                var dcUser = Mapper.Map<Core.Api.Contracts.User>(user);
-                if (!string.IsNullOrEmpty(user.Invitation))
-                {
-                    var invite = _invitationWebApiClient.GetInvitation(user.Invitation).Result.ReadAsSync();
-
-                    if (_userHelper.UserExists(user))
-                    {
-                       // var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
-                        ulr = _usersRepo.Login(new Core.Api.Contracts.UserAuthInfo { EmailAddress = user.EmailAddress, Password = user.Password }).Result.ReadAsSync();
-                      //  ticket = lur.AuthTicket;
-                        //ticket = _usersRepo.CreateUserAuthTicket().Result.ReadAsSync();
-                        _authHelper.SetCurrentUser(ulr.AuthTicket );
-                        var user1=_authHelper.GetCurrentUser();
-                        _invitationWebApiClient = new InvitationWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = user.SiteId.GetValueOrDefault(0), TenantId = user.TenantId.GetValueOrDefault(0), UserClaims = user1 }, _settings ));
-                                                     
-                        
-                        var ci = _invitationWebApiClient.ConfirmInvitation(user.Invitation).Result;
-                        if (ci.HasException)
-                        {
-                            throw ci.ReadException();
-                        }
-                    }
-                    else
-                    {
-
-                        dcUser.EmailAddress = invite.EmailAddress;
-                        dcUser.LocaleCode = string.IsNullOrEmpty(dcUser.LocaleCode) ? "en-US" : dcUser.LocaleCode;
-
-                       var  ticket = _invitationWebApiClient.CompleteInvitation(user.Invitation, dcUser).Result.ReadAsSync();
-                       _authHelper.SetCurrentUser(ticket);
-                    }
-
-
-
-                }
-                if (ulr == null)
-                {
-                    ulr = _usersRepo.Login(new Core.Api.Contracts.UserAuthInfo { EmailAddress = user.EmailAddress, Password = user.Password }).Result.ReadAsSync();
-                  
-                }
-                _authHelper.SetCurrentUser(ulr.AuthTicket );
-                //volLwp = LightweightUserClaims.Parse(ulr.AuthTicket.AccessToken );
-
-
-
-             //   var res = SiteRolesList(volLwp.UserId );
-               // return this.List<Tuple<Site, int>>(res);
-                  //      sites.Items.FirstOrDefault(site=> site.Id == role.SiteId )
-                /*List<Site> sites = new List<Site>();
-                List<Task<ServiceClientResponse<SiteCollection>>> blurgs = new List<Task<ServiceClientResponse<SiteCollection>>>();
-                foreach (var tenant in ulr.Tenants)
-                {
-                    blurgs.Add(_tenantClient.GetSites(tenant.Id));
-                }
-                Task.WaitAll(blurgs.ToArray() );
-
-                foreach (var blurg in blurgs)
-                {
-                    sites.AddRange(blurg.Result.ReadAsSync().Items);
-                }*/
-
-                //var sites = _siteClient.GetSites(0, int.MaxValue, null, string.Join(" or ", ulr.Tenants.Select(x => "TenantId eq " + x))).Result.ReadAsSync();
-                //return this.List<Tuple<Site, int>>(sites.Select(x => new Tuple<Site, int>(x, 1)).ToList());
-
-                var contexts = AutoMapper.Mapper.Map<List<TaContext>>(ulr.Tenants);
-                
-                return List(contexts);
-
-                /*var ts = _tenantClient.GetTenants(0, int.MaxValue, null, string.Join(" or ", ulr.Tenants.Select(x => "TenantId eq " + x.Id))).Result.ReadAsSync();
-
-                //var tenants = ts.Items.Select(x => new TaContext { TenantId = x.Id });
-                var tenants = ts.Items.Select(x => _taContextProvider.GetContext(x.Id));
-
-                return List(tenants.ToList());*/
-            }
-            catch (Exception e)
-            {
-                return FailureList<TaContext>(e.UnwrapAgg().Message);
-            }
-
-        }
 
         //public List<Tuple<Site, int>> SiteRolesList(string userId)
 
