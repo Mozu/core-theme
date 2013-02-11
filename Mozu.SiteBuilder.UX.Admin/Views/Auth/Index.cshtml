@@ -58,16 +58,16 @@
 
     <ul>
         <li><a href="/admin/auth/register">Register</a> for a new Account</li>
-        <li>Click <a href="#" onclick="testUser()">here</a> for test login </li>
+        <li>Click <a href="#" onclick="testUser()">here</a> or <a href="#" onclick="testUser('test_user2@volusion.com')">here</a> for test login </li>
 
     </ul>
 
 </div>
 <script>
 
-    function testUser() {
+    function testUser(email) {
         var f = window.document.forms[0];
-        f["EmailAddress"].value = "test_user@volusion.com";
+        f["EmailAddress"].value = email || "test_user@volusion.com";
         f["Password"].value = "Password1";
         f.submit();
 
