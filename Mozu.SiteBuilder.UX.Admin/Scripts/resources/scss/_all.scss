@@ -4,11 +4,15 @@
 $include-default: true !default;
 $include-default-uis: true !default;
 
+// define variables before ext does
 @import 'taco-overrides';
 
 @import 'functions';
 @import 'variables';
 @import 'mixins';
+
+// define variables after ext does
+@import 'taco-variables';
 
 // webfonts
 @import "webfonts";

@@ -4,7 +4,7 @@
 
 	Ext.define('Taco.view.account.Users', {
 		extend: 'Taco.core.ux.content.Container',
-	    requires: ['Taco.store.Roles','Taco.store.AccountUsers','Taco.view.account.Navigation','Taco.core.ux.Panel','Taco.view.account.Overview'],
+	    requires: ['Taco.store.Roles', 'Taco.store.AccountUsers', 'Taco.view.account.Navigation', 'Taco.view.account.Overview'],
 
 	    initComponent: function () {
 	        var me = this;
@@ -166,7 +166,7 @@
 	            }]
 			});
 
-			me.items = Ext.create('Taco.core.ux.Panel', {
+			me.items = Ext.create('Ext.panel.Panel', {
 			    layout: { type: 'fit' },
                 flex:1,
 	            items: [me.basegrid]

@@ -8,6 +8,7 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
     override: 'Ext.ux.RowExpander',
     requires: ['Taco.core.ux.grid.RowBody'],
 
+    // overrides: changed feature ftype from rowbody to taco.rowbody
     constructor: function () {
         var me = this,
             grid,
@@ -76,6 +77,13 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
         return o;
     },
 
+    // overrides: does not toggle row if dblclick occurred on a checkbox
+    onDblClick: function(view, record, row, rowIdx, e) {
+        if (!e.getTarget('.x-grid-row-checker')) {
+            this.toggleRow(rowIdx, record);
+        }
+    },
+
     // overrides: removed toggling of hidden class on rowbody; parent's collapsed class is sufficient
     toggleRow: function(rowIdx, record) {
         var me = this,
@@ -105,5 +113,32 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
         }
         // Coalesce laying out due to view size changes
         Ext.resumeLayouts(true);
+    },
+
+    // overrides: added row-expander class to td element
+    getHeaderConfig: function() {
+        var me = this;
+
+        return {
+            id: me.getHeaderId(),
+            width: 24,
+            lockable: false,
+            sortable: false,
+            resizable: false,
+            draggable: false,
+            hideable: false,
+            menuDisabled: true,
+            cls: Ext.baseCSSPrefix + 'grid-header-special',
+            renderer: function(value, metadata) {
+                metadata.tdCls = Ext.baseCSSPrefix + 'grid-cell-special ' + Ext.baseCSSPrefix + 'grid-cell-row-expander';
+                return '<div class="' + Ext.baseCSSPrefix + 'grid-row-expander">&#160;</div>';
+            },
+            processEvent: function(type, view, cell, rowIndex, cellIndex, e, record) {
+                if (type == "mousedown" && e.getTarget('.x-grid-row-expander')) {
+                    me.toggleRow(rowIndex, record);
+                    return me.selectRowOnExpand;
+                }
+            }
+        };
     }
 });

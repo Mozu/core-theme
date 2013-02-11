@@ -12,5 +12,9 @@ Ext.define('Taco.core.ux.grid.Panel', {
         var me = this;
 
         this.callParent(arguments);
+    },
+
+    getActions: function () {
+        return this.actions ? Ext.Array.pluck(this.actions, 'eventName') : [];
     }
 });

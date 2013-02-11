@@ -477,13 +477,12 @@
     <Content Include="Scripts\app\core\context\SiteCollection.js" />
     <Content Include="Scripts\app\core\layout\Flex.js" />
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
-    <Content Include="Scripts\app\core\context\TaContext.js" />
-    <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
+    <Content Include="Scripts\app\core\context\TaContext.js" />    <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />
-    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />
-    <Content Include="Scripts\app\core\ux\ScrollSpy.js" />
+    <Content Include="Scripts\app\core\ux\grid\RowBody.js" />   
+	<Content Include="Scripts\app\core\ux\ScrollSpy.js" />
     <Content Include="Scripts\app\core\ux\grid\RowExpander.js" />
     <Content Include="Scripts\app\core\ux\DragSource.js" />
     <Content Include="Scripts\app\core\ux\form\EditorLayout.js" />
@@ -2753,6 +2752,8 @@
     <None Include="Scripts\app\locale\lang-en.csv" />
     <Content Include="Scripts\resources\scss\_taco-overrides.scss" />
     <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\classes\firebug\FIREBUG.LICENSE" />
+    <Content Include="Scripts\resources\scss\_taco-variables.scss" />
+    <Content Include="Scripts\resources\scss\taco\variables\_panel.scss" />
     <None Include="Scripts\resources\scss\taco\widgets\_checkout.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_panel.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_phoneOrders.scss" />
