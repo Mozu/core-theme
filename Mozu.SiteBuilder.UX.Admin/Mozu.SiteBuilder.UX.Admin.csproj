@@ -483,6 +483,7 @@
     <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
+    <Content Include="Scripts\app\core\ux\grid\Header.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />
     <Content Include="Scripts\app\core\ux\grid\RowBody.js" />
     <Content Include="Scripts\app\core\ux\ScrollSpy.js" />

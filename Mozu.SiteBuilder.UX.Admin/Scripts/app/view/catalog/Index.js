@@ -84,6 +84,11 @@ Ext.define('Taco.view.catalog.Index', {
                     html: 'hello world'
                 }]
             }],
+            actions: [{
+                tooltip: 'View in Store',
+                iconCls: 'taco-action-hide',
+                eventName: 'viewproduct'
+            }],
             plugins: [{
                 ptype: 'rowexpander',
                 rowBodyTpl: new Ext.XTemplate(
@@ -121,6 +126,6 @@ Ext.define('Taco.view.catalog.Index', {
 
     onItemClick: function (view, record, item, index, e) {
         e.preventDefault();
-        console.log(record, e.getTarget('tr.x-grid-row-body'));
+        // console.log(record, e.getTarget('tr.x-grid-row-body'));
     }
 });
