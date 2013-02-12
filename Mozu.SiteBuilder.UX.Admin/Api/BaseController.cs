@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -52,6 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 };
         }
 
+        [Obsolete]
         public Task<Response<List<T>>> List<T>(List<T> list, int? total = null)
         {
             return Task<Response<List<T>>>.Factory.StartNew(() => new Response<List<T>>

@@ -322,11 +322,13 @@
     <Compile Include="Api\CmsDocumentController.cs" />
     <Compile Include="Api\CmsPublishingController.cs" />
     <Compile Include="Api\ModelMapping\WidgetInstanceDataMapping.cs" />
+    <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
+    <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
+    <Compile Include="Api\Models\ProductModels\ProductLocalizedImage.cs" />
     <Compile Include="Api\WidgetInstanceDataController.cs" />
     <Compile Include="Api\IVolusionLoginHelper.cs" />
     <Compile Include="Api\IUserHelper.cs" />
     <Compile Include="Api\ModelMapping\TenantMapping.cs" />
-    <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
     <Compile Include="Api\ProductController.cs" />
     <Compile Include="Api\CustomersController.cs" />
     <Compile Include="Api\DiscountController.cs" />
@@ -388,7 +390,6 @@
     <Compile Include="Api\Models\Checkout\PaymentSetting.cs" />
     <Compile Include="Api\Models\PhoneOrder\RuntimeProduct.cs" />
     <Compile Include="Api\Models\ProductModels\Product.cs" />
-    <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
     <Compile Include="Api\Models\ProductModels\ProductInSiteInfo.cs" />
     <Compile Include="Api\Models\Response.cs" />
     <Compile Include="Api\Models\Account\User.cs" />

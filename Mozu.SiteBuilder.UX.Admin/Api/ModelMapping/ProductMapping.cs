@@ -48,6 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
                 .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
                 .ForMember(x => x.ProductInSites, op => op.MapFrom(dc => dc.ProductInSites))
+                .ForMember(x => x.Images, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductImages))
                 .AfterMap((x, y) =>
                     {
                         if (y.ProductInSites != null)
@@ -60,14 +61,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Product, DC.Product>()
                 .ForMember(dc => dc.ProductCode, op => op.MapFrom(p => p.ProductCode))
                 .ForMember(dc => dc.BaseProductCode, op => op.MapFrom(p => p.BaseProductCode))
-                .ForMember(dc => dc.Content, op => op.MapFrom(p =>
-                    new DC.ProductLocalizedContent()
+                .ForMember(dc => dc.Content, op => op.ResolveUsing(p =>
+                {
+                    List<DC.ProductLocalizedImage> images = Mapper.Map<List<DC.ProductLocalizedImage>>(p.Images);
+                    return new DC.ProductLocalizedContent
                     {
                         ProductName = p.ProductName,
                         ProductShortDescription = p.ShortDescription,
-                        ProductFullDescription = p.FullDescription
-                    }
-                ))
+                        ProductFullDescription = p.FullDescription,
+                        ProductImages = images
+                    };
+                }))
                 .ForMember(dc => dc.Price, op => op.MapFrom(p =>
                     new DC.ProductPrice()
                     {
@@ -97,18 +101,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MetaTagDescription, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagDescription))
                 .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
                 .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
+                .ForMember(x => x.Images, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductImages))
                 ;
 
             Mapper.CreateMap<ProductInSiteInfo, DC.ProductInSiteInfo>()
-                .ForMember(dc => dc.IsContentOverridden, op => op.MapFrom(piso => piso.IsContentOverridden))
-                .ForMember(dc => dc.Content, op => op.MapFrom(piso =>
-                    new DC.ProductLocalizedContent
+                .ForMember(dc => dc.IsContentOverridden, op => op.MapFrom(pisi => pisi.IsContentOverridden))
+                .ForMember(dc => dc.Content, op => op.ResolveUsing(pisi => {
+                    List<DC.ProductLocalizedImage> images = Mapper.Map<List<DC.ProductLocalizedImage>>(pisi.Images);
+                    return new DC.ProductLocalizedContent
                     {
-                        ProductName = piso.ProductName,
-                        ProductShortDescription = piso.ShortDescription,
-                        ProductFullDescription = piso.FullDescription
-                    }
-                ))
+                        ProductName = pisi.ProductName,
+                        ProductShortDescription = pisi.ShortDescription,
+                        ProductFullDescription = pisi.FullDescription,
+                        ProductImages = images
+                    };
+                }))
                 .ForMember(dc => dc.Price, op => op.MapFrom(p =>
                     new DC.ProductPrice
                     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
@@ -52,7 +53,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "fullDescription")]
         public string FullDescription { get; set; }
 
-        // TODO: images
+        /// <summary>
+        /// A collection of images for this product.
+        /// </summary>
+        public List<ProductLocalizedImage> Images { get; set; }
 
         #endregion
 

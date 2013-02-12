@@ -16,6 +16,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers
         private const string CATEGORY_ID_PROPERTY = "productinsites.productcategories.categoryId";
         private const string IS_ACTIVE_PROPERTY = "productinsites.isActive";
         private const string STOCK_ON_HAND_PROPERTY = "stockOnHand";
+        private const string SITE_ID_PROPERTY = "productinsites.siteId";
 
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
@@ -55,6 +56,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers
                         break;
                     case "stockonhand":
                         sb.AppendFormat("{2} {1} {0}", filter.value, filter.comparison, STOCK_ON_HAND_PROPERTY);
+                        break;
+                    case "siteid":
+                        sb.AppendFormat("{1} eq {0}", filter.value, SITE_ID_PROPERTY);
                         break;
                 }
             }
