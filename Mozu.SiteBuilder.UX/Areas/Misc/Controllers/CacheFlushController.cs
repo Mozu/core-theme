@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.UX.Models;
@@ -20,8 +22,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         //
         // GET: /Misc/CacheFlush/
 
-        public JsonDCResult Index(Newtonsoft.Json.Linq.JObject jObject)
+        public JsonDCResult Index()
         {
+            //todo make testable with model binder maybe?
+            var jObject = Newtonsoft.Json.Linq.JObject.Load(new JsonTextReader(new StreamReader(this.HttpContext.Request.InputStream)));
             JToken  modelTkn;
             if (jObject.TryGetValue("model", out modelTkn))
             {
