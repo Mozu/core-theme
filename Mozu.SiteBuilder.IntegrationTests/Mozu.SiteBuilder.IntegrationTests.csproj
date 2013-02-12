@@ -332,6 +332,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Api\AccountControllerTests.cs" />
+    <Compile Include="Admin\Api\CmsPublishingControllerTests.cs" />
     <Compile Include="Admin\Api\NavigationControllerTests.cs" />
     <Compile Include="Admin\Api\PagingParamatersRequestHandlersTests.cs" />
     <Compile Include="Admin\Api\ProductControllerTests.cs" />
