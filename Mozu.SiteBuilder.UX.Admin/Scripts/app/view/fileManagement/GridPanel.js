@@ -4,7 +4,7 @@
 Ext.define('Taco.view.fileManagement.GridPanel', {
     extend: 'Taco.core.ux.BaseGrid',
     mixins: ['Taco.core.ux.FileDragDroppable'],
-    requires: ["Ext.data.UuidGenerator", "Taco.view.fileManagement.UpdateBar", "Ext.grid.column.Action", "Taco.core.ux.DragHandleColumn", "Taco.core.ux.QuickAdder", "Taco.core.ux.ClassHandledDragDrop", "Taco.core.ux.action.TreeListAction", "Taco.core.ux.GridPager"],
+    requires: ["Ext.data.UuidGenerator", "Taco.view.fileManagement.UpdateBar", "Ext.grid.column.Action", "Taco.core.ux.DragHandleColumn", "Taco.core.ux.QuickAdder", "Taco.core.ux.ClassHandledDragDrop", "Taco.core.ux.action.TreeListAction", "Taco.core.ux.grid.Pager"],
     alias: 'widget.filelist',
 
     cls: 'taco-treelist',
@@ -135,7 +135,7 @@ Ext.define('Taco.view.fileManagement.GridPanel', {
             dock: 'top'
         });
 
-        me.pager = Ext.create('Taco.core.ux.GridPager', {
+        me.pager = Ext.create('Taco.core.ux.grid.Pager', {
             store: me.store
         });
 

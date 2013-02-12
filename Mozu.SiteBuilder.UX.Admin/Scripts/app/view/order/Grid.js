@@ -58,7 +58,7 @@ Ext.define('Taco.view.order.Grid', {
             flex: 1
         }];
 
-        this.pager = Ext.create('Taco.core.ux.GridPager', {
+        this.pager = Ext.create('Taco.core.ux.grid.Pager', {
             store: this.store
         });
 

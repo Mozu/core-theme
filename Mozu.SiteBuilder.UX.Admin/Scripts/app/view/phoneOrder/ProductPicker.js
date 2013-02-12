@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.phoneOrder.ProductPicker', {
     extend: 'Taco.core.ux.browser.ItemBrowser',
-    requires: ['Taco.core.ux.GridPager', 'Taco.core.ux.BaseGrid'],
+    requires: ['Taco.core.ux.grid.Pager', 'Taco.core.ux.BaseGrid'],
     itemType: 'products',
     filterProperty: 'productName',
     height: 500,
@@ -16,7 +16,7 @@ Ext.define('Taco.view.phoneOrder.ProductPicker', {
 
         me.itemStore = Taco.core.data.StoreManager.getOrCreate({ type: 'Taco.store.Products', clearFilters: true, clearSort: true });
 
-        me.pager = Ext.create('Taco.core.ux.GridPager', {
+        me.pager = Ext.create('Taco.core.ux.grid.Pager', {
             store: me.itemStore
         });
 
