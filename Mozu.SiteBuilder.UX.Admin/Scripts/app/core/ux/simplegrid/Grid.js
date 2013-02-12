@@ -1,5 +1,6 @@
 /**
  * Taco.core.ux.simplegrid.Grid
+ * @deprecated
  */
 Ext.define('Taco.core.ux.simplegrid.Grid', {
     extend: 'Ext.container.Container',

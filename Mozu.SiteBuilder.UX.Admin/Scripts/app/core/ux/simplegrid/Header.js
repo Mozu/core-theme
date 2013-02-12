@@ -1,5 +1,6 @@
 /**
  * Taco.core.ux.simplegrid.Header
+ * @deprecated
  */
 Ext.define('Taco.core.ux.simplegrid.Header', {
     extend: 'Ext.view.View',
