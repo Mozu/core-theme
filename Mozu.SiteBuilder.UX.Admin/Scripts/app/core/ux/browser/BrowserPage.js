@@ -28,7 +28,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             itemId: 'newbutton',
             onClick: function () {
                 this.launchEditor(Ext.create(this.modelName));
-                Taco.app.StateManager.addState(me.token + '/create');
+                Taco.app.StateManager.addState(this.token + '/create');
             }
         }]
     },
