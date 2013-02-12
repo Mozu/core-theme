@@ -5,7 +5,7 @@
 Ext.define('Taco.core.ux.browser.BrowserPage', {
     extend: 'Taco.core.ux.content.ContainerWithSidebar',
     alias: 'widget.browserpage',
-    requires: ['Taco.core.ux.grid.Panel', 'Taco.core.ux.TilePanel', 'Taco.core.ux.grid.Pager', 'Ext.util.Inflector', 'Ext.form.Panel', 'Taco.core.ux.BaseGrid', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.modal.Confirmation', 'Taco.core.ux.browser.ItemBrowser', 'Ext.selection.CheckboxModel'],
+    requires: ['Taco.core.ux.grid.Panel', 'Taco.core.ux.TilePanel', 'Taco.core.ux.grid.Pager', 'Ext.util.Inflector', 'Ext.form.Panel', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.modal.Confirmation', 'Taco.core.ux.browser.ItemBrowser', 'Ext.selection.CheckboxModel'],
 
     typeName: 'Item',
     createButtonPrefix: "Create New ",
@@ -62,12 +62,12 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
 
     gridPanelDefaults: {
         enableColumnHide: true,
-        disableSelection: true,
         paged: true,
-        selModel: {
+        selModel: Ext.create('Ext.selection.CheckboxModel', { // must pass instantiated selModel, config-only is bugged
             selType: 'checkboxmodel',
-            checkOnly: true
-        }
+            checkOnly: true,
+            showHeaderCheckbox: true
+        })
     },
 
     tilePanelDefaults: {

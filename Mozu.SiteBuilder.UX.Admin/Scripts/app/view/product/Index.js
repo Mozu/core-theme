@@ -16,54 +16,55 @@ Ext.define('Taco.view.product.Index', {
         columns: [{
             dataIndex: 'productCode',
             text: 'Code',
-            width: 150
+            width: 100
         }, {
             dataIndex: 'productName',
             text: 'Name',
+            minWidth: 120,
+            flex: 1,
             renderer: function(value) {
                 return '<a href="#" class="taco-launch-editor">' + value + '</a>';
-            },
-            flex: 1
+            }
         }, {
             dataIndex: 'price',
             text: 'Price',
-            width: 150,
+            width: 70,
             renderer: function (value) {
                 return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
             }
         }, {
             dataIndex: 'salePrice',
             text: 'Sale Price',
-            width: 150,
+            width: 100,
             renderer: function (value) {
                 return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
             }
         }, {
             dataIndex: 'productInSites',
             text: 'Sites',
-            width: 150,
+            width: 120,
             renderer: function (value) {
                 return !Ext.isEmpty(value) ? value.length : '--';
             }
         }, {
             dataIndex: 'productInSites',
             text: 'Overridden',
-            width: 150,
+            width: 100,
             renderer: function (value) {
-                var ret;
+                var output;
 
                 if (Ext.isEmpty(value)) {
-                    ret = '--';
+                    output = '--';
                 } else {
-                    ret = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'Yes' : 'No';
+                    output = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'Yes' : 'No';
                 }
 
-                return ret;
+                return output;
             }
         }, {
             dataIndex: 'stockOnHand',
             text: 'Stock',
-            width: 150,
+            width: 70,
             renderer: function (value) {
                 return Ext.isNumeric(value) ? value : '--';
             }
@@ -77,6 +78,11 @@ Ext.define('Taco.view.product.Index', {
                 xtype: 'component',
                 html: 'hello world'
             }]
+        }],
+        actions: [{
+            iconCls: 'taco-action-hide',
+            tooltip: 'Preview',
+            eventName: 'viewproduct'
         }]
     },
 
