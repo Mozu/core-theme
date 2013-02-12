@@ -42,8 +42,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "fullDescription")]
         public string FullDescription { get; set; }
 
-
-        // TODO: photos
+        /// <summary>
+        /// A collection of images for this product.
+        /// </summary>
+        public List<ProductLocalizedImage> Images { get; set; }
 
         /// <summary>
         /// The list price.

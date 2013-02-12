@@ -33,12 +33,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "list")]
-        public Task<Response<List<Product>>> ListProducts([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<Product>>> ListProducts([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {
-                DC.Product prod = _productClient.GetProduct(pagingParams.id, null).Result.ReadAsAsync().Result;
-                return List(Mapper.Map<Product>(prod));
+                var result = await _productClient.GetProduct(pagingParams.id, null);
+                DC.Product prod = result.ReadAsAsync().Result;
+                return List2(Mapper.Map<Product>(prod));
             }
 
             string filter = extFilter.ToFilterString();
@@ -47,11 +48,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ProductCollection res;
             res = _productClient.GetProducts(pagingParams.startIndex, pagingParams.pageSize, sort, null, filter).Result.ReadAsAsync().Result;
 
-            return List(Mapper.Map<List<Product>>(res.Items), (int)res.TotalCount);
+            return List2(Mapper.Map<List<Product>>(res.Items), (int)res.TotalCount);
         }
 
         [WebInvoke(UriTemplate = "create")]
-        public Task<Response<List<Product>>> CreateProduct(List<Product> products)
+        public async Task<Response<List<Product>>> CreateProduct(List<Product> products)
         {
             List<Product> createdProducts = new List<Product>(products.Count);
             foreach (Product p in products)
@@ -61,7 +62,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 try
                 {
-                    returned = _productClient.AddProduct(dataModel).Result.ReadAsAsync().Result;
+                    var result = await _productClient.AddProduct(dataModel);
+                    returned = result.ReadAsAsync().Result;
                 }
                 catch
                 {
@@ -72,35 +74,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 createdProducts.Add(Mapper.Map<Product>(returned));
             }
 
-            return List(createdProducts);
+            return List2(createdProducts);
         }
 
         [WebInvoke(UriTemplate = "edit")]
-        public Task<Response<List<Product>>> EditProduct(List<Product> products)
+        public async Task<Response<List<Product>>> EditProduct(List<Product> products)
         {
             List<Product> updatedProducts = new List<Product>(products.Count);
             foreach (Product p in products)
             {
                 DC.Product dataModel = Mapper.Map<DC.Product>(p);
-                DC.Product ret = _productClient.UpdateProduct(dataModel, dataModel.ProductCode).Result.ReadAsAsync().Result;
-                updatedProducts.Add(Mapper.Map<Product>(ret));
+                var result = await _productClient.UpdateProduct(dataModel, dataModel.ProductCode);
+                DC.Product returned = result.ReadAsAsync().Result;
+                updatedProducts.Add(Mapper.Map<Product>(returned));
             }
 
-            return List(updatedProducts);
+            return List2(updatedProducts);
         }
 
         [WebInvoke(UriTemplate = "delete")]
-        public Task<Response<List<Product>>> DeleteProduct(List<Product> products)
+        public async Task<Response<List<Product>>> DeleteProduct(List<Product> products)
         {
             List<Product> deletedProducts = new List<Product>(products.Count);
             foreach (Product p in products)
             {
+                var result = await _productClient.DeleteProduct(p.ProductCode);
                 // TODO: wtf is this for?
-                StreamContent ret = _productClient.DeleteProduct(p.ProductCode).Result.ReadAsAsync().Result;
+                StreamContent ret = result.ReadAsAsync().Result;
                 deletedProducts.Add(p);
             }
 
-            return List(deletedProducts);
+            return List2(deletedProducts);
         }
     }
 }

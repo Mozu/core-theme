@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "create")]
-        public Task<Response<List<ProductInSiteInfo>>> CreateProductInSiteInfo(List<ProductInSiteInfo> pisis)
+        public async Task<Response<List<ProductInSiteInfo>>> CreateProductInSiteInfo(List<ProductInSiteInfo> pisis)
         {
             List<ProductInSiteInfo> returned = new List<ProductInSiteInfo>();
 
@@ -46,7 +46,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 DC.ProductInSiteInfo dcpisi = Mapper.Map<DC.ProductInSiteInfo>(pisi);
 
                 string productCode = pisi.ProductCode;
-                DC.Product p = _productClient.GetProduct(productCode, null).Result.ReadAsAsync().Result;
+                var result = await _productClient.GetProduct(productCode, null);
+                DC.Product p = result.ReadAsAsync().Result;
 
                 if (p == null)
                     throw new ArgumentException("Product not found: " + productCode);
@@ -67,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 returned.Add(returnedPisi);
             }
 
-            return List<ProductInSiteInfo>(returned);
+            return List2<ProductInSiteInfo>(returned);
         }
 
 
@@ -100,13 +101,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "delete")]
-        public Task<Response<List<ProductInSiteInfo>>> DeleteProductInSiteInfo(List<ProductInSiteInfo> pisis)
+        public async Task<Response<List<ProductInSiteInfo>>> DeleteProductInSiteInfo(List<ProductInSiteInfo> pisis)
         {
             List<ProductInSiteInfo> deleted = new List<ProductInSiteInfo>(pisis.Count);
             foreach (ProductInSiteInfo pisi in pisis)
             {
                 string productCode = pisi.ProductCode;
-                DC.Product p = _productClient.GetProduct(productCode).Result.ReadAsAsync().Result;
+                var result = await _productClient.GetProduct(productCode);
+                DC.Product p = result.ReadAsAsync().Result;
 
                 if (p == null)
                     throw new ArgumentException("Product not found: " + productCode);
@@ -118,7 +120,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     dcpisi = p.ProductInSites[index];
                     deleted.Add(Mapper.Map<ProductInSiteInfo>(dcpisi));
                     p.ProductInSites.RemoveAt(index);
-                    _productClient.UpdateProduct(p, productCode);
+                    await _productClient.UpdateProduct(p, productCode);
                 }
                 else
                 {
@@ -126,7 +128,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
 
-            return List(deleted);
+            return List2(deleted);
         }
     }
 }
