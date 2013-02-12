@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Ext.selection.CheckboxModel', 'Taco.core.ux.grid.Panel', 'Ext.ux.RowExpander'],
+    requires: ['Ext.selection.CheckboxModel', 'Taco.core.ux.grid.Panel', 'Ext.ux.RowExpander', 'Taco.core.ux.grid.Pager'],
 
     header: {
         title: 'Grid Testing'
@@ -83,6 +83,10 @@ Ext.define('Taco.view.catalog.Index', {
                     xtype: 'component',
                     html: 'hello world'
                 }]
+            }, {
+                xtype: 'taco.pager',
+                dock: 'bottom',
+                store: this.store
             }],
             actions: [{
                 tooltip: 'View in Store',

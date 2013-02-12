@@ -5,6 +5,10 @@
   .#{$prefix}panel {
     .#{$prefix}grid-body {
       border-top-color: $color-grid-border; // defaults to header background-color
+
+      &~ .#{$prefix}docked-bottom {
+        border-top-color: $color-neutral-white;
+      }
     }
   }
 
@@ -122,7 +126,7 @@
     padding: 0px;
   }
 
-  /* GRID CONTAINERS */
+  /* CONTAINERS, TOOLBARS, ETC. */
 
   // togglegroup styles
   .#{$vprefix}togglegroup {
@@ -177,6 +181,31 @@
           border-right: 1px solid $color-neutral-darkest;
           @include border-radius(0px 3px 3px 0px);
         }
+      }
+    }
+  }
+
+  // pager styles
+  .#{$vprefix}pager {
+    background: none $color-neutral-light;
+    border: 1px solid $color-grid-border;
+    padding: 7px;
+    @include border-radius(0px 0px 3px 3px);
+    @include box-shadow(0 1px 0 #fff inset);
+
+    .#{$vprefix}action {
+      background-color: $color-grid-row;
+      height: 28px;
+      min-width: 28px;
+      padding-top: 6px;
+      margin:2px;
+      text-align: center;
+      display:inline-block;
+      @include border-radius(6px);
+      
+      &.active{
+        background-color: $color-highlighted-background;
+        color:$color-highlighted-foreground;
       }
     }
   }
@@ -416,30 +445,6 @@
 
 //       .#{$vprefix}toolbar-form-cell {
 //         padding: 6px 0 1px 8px;
-//       }
-//     }
-//   }
-
-//   .#{$vprefix}gridpager {
-//     background: none $color-neutral-light;
-//     border-color: $color-grid-border;
-//     padding: 7px;
-//     @include border-radius(0px 0px 3px 3px);
-//     @include box-shadow(0 1px 0 #fff inset);
-
-//     .#{$vprefix}action {
-//       background-color: $color-grid-row;
-//       height: 28px;
-//       min-width: 28px;
-//       padding-top: 6px;
-//       margin:2px;
-//       text-align: center;
-//       display:inline-block;
-//       @include border-radius(6px);
-      
-//       &.active{
-//         background-color: $color-highlighted-background;
-//         color:$color-highlighted-foreground;
 //       }
 //     }
 //   }

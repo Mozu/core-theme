@@ -31,7 +31,7 @@ Ext.define('Taco.view.option.Index', {
             }]
         };
 
-        me.pager = Ext.create('Taco.core.ux.GridPager', {
+        me.pager = Ext.create('Taco.core.ux.grid.Pager', {
             store: me.store
         });
         me.search = Ext.widget('toolbar', {

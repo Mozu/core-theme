@@ -437,7 +437,7 @@ Ext.define('Taco.controller.Testing', {
                     }
                 }
             },
-            Ext.create('Taco.core.ux.GridPager', {
+            Ext.create('Taco.core.ux.grid.Pager', {
                 store: store
             })],
 
