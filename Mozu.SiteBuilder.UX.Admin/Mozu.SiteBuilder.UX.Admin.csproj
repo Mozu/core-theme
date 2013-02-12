@@ -482,7 +482,10 @@
     <Content Include="Scripts\app\core\context\TaContext.js" />
     <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
+    <Content Include="Scripts\app\core\ux\browser\FilterList.js" />
+    <Content Include="Scripts\app\core\ux\content\ContainerWithSidebar.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
+    <Content Include="Scripts\app\core\ux\SidebarList.js" />
     <Content Include="Scripts\app\core\ux\grid\Header.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />
     <Content Include="Scripts\app\core\ux\grid\RowBody.js" />
@@ -515,6 +518,7 @@
     <None Include="Scripts\app\mocks\behaviors.json" />
     <Content Include="Scripts\app\model\Behavior.js" />
     <Content Include="Scripts\app\model\CartItem.js" />
+    <Content Include="Scripts\app\model\CmsDocumentDirty.js" />
     <Content Include="Scripts\app\model\ProductInSiteInfo.js" />
     <Content Include="Scripts\app\model\LocalizedString.js" />
     <Content Include="Scripts\app\model\RuntimeProduct.js" />
@@ -523,6 +527,7 @@
     <Content Include="Scripts\app\model\WidgetInstance.js" />
     <Content Include="Scripts\app\store\Behaviors.js" />
     <Content Include="Scripts\app\store\CartItems.js" />
+    <Content Include="Scripts\app\store\CmsDocumentsDirty.js" />
     <Content Include="Scripts\app\store\LocalizedStrings.js" />
     <Content Include="Scripts\app\store\Orders.js" />
     <Content Include="Scripts\app\store\RuntimeProductSearch.js" />
@@ -568,8 +573,6 @@
     <Content Include="Scripts\app\view\themes\ThemeView.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\build.xml" />
-    <Content Include="Scripts\build\all-classes.js" />
-    <Content Include="Scripts\build\index.html" />
     <Content Include="Scripts\ext\ext-all-debug.js" />
     <Content Include="Scripts\ext\ext-all-dev.js" />
     <Content Include="Scripts\ext\locale\ext-lang-af.js" />
