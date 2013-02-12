@@ -5,82 +5,87 @@
 */
 
 
-    Ext.define('Taco.core.ux.BaseGrid', {
-        extend: 'Ext.grid.Panel',
-        requires: ['Ext.grid.column.Action', 'Taco.core.ux.action.GridAction', 'Taco.core.ux.CheckColumn'],
-        alias: 'widget.basegrid',
-        cls: 'taco-basegrid',
-        enableColumnHide: false,
-        rowLines: false,
-        paging: null,
+Ext.define('Taco.core.ux.BaseGrid', {
+    extend: 'Ext.grid.Panel',
+    requires: ['Ext.grid.column.Action', 'Taco.core.ux.action.GridAction', 'Taco.core.ux.CheckColumn'],
+    alias: 'widget.basegrid',
+    cls: 'taco-basegrid',
+    enableColumnHide: false,
+    rowLines: false,
+    paging: null,
 
-        initComponent: function () {
-            var me = this;
+    initComponent: function () {
+        var me = this;
 
-            if (this.actions) {
+        if (this.actions) {
 
-                this.actions = this.actions.map(function (actionConf) {
-                    return Ext.create('Taco.core.ux.action.GridAction', actionConf);
-                });
-                this.columns = Ext.Array.clone(this.columns);
-                this.columns.push({
-                    xtype: 'actioncolumn',
-                    cls: 'taco-actions-column taco-frozen',
-                    items: this.actions,
-                    width: this.actions.length * 48,
-                    draggable: false,
-                    sortable: false,
-                    resizable: false,
-                    hideable: false
-                });
-            }
-
-            if (this.enableColumnHide) {
-                this.columns.push({
-                    xtype: 'gridcolumn',
-                    cls: 'taco-controls-column taco-frozen',
-                    draggable: false,
-                    sortable: false,
-                    resizable: false,
-                    hideable: false,
-                    width: 32
-                });
-            }
-            if (this.hiddenColumns) {
-                Ext.Array.each(this.columns, function (col) {
-                    col.hidden = this.hiddenColumns.indexOf(col.dataIndex) > -1;
-                }, this);
-            }
-
-            // paging configuration
-            // 'infinite' for infinite scrolling; 'discrete' for toolbar with numeric paging
-            if (me.paging === 'infinite') {
-                me.verticalScrollerType = 'paginggridscroller';
-                me.disableSelection = true;
-                me.invalidateScrollerOnRefresh = false;
-            }
-            else if (me.paging === 'discrete') {
-                me.dockedItems = me.dockedItems || [];
-                //                me.dockedItems.unshift({
-                //                    xtype: 'pagingtoolbar',
-                //                    dock: 'bottom',
-                //                    store: me.store,
-                //                    displayInfo: true
-                //                });
-                me.dockedItems.unshift({
-                    xtype: 'toolbar',
-                    dock: 'bottom',
-                    store: me.store,
-                    items: {
-                        xtype: 'component',
-                        html: '<div>Page 1</div>'
-                    }
-                });
-            }
-
-            this.callParent(arguments);
+            this.actions = this.actions.map(function (actionConf) {
+                return Ext.create('Taco.core.ux.action.GridAction', actionConf);
+            });
+            this.columns = Ext.Array.clone(this.columns);
+            this.columns.push({
+                xtype: 'actioncolumn',
+                cls: 'taco-actions-column taco-frozen',
+                items: this.actions,
+                width: this.actions.length * 48,
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                hideable: false
+            });
         }
-    });
+
+        if (this.enableColumnHide) {
+            this.columns.push({
+                xtype: 'gridcolumn',
+                cls: 'taco-controls-column taco-frozen',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                hideable: false,
+                width: 32
+            });
+        }
+        if (this.hiddenColumns) {
+            Ext.Array.each(this.columns, function (col) {
+                col.hidden = this.hiddenColumns.indexOf(col.dataIndex) > -1;
+            }, this);
+        }
+
+        // paging configuration
+        // 'infinite' for infinite scrolling; 'discrete' for toolbar with numeric paging
+        if (me.paging === 'infinite') {
+            me.verticalScrollerType = 'paginggridscroller';
+            me.disableSelection = true;
+            me.invalidateScrollerOnRefresh = false;
+        }
+        else if (me.paging === 'discrete') {
+            me.dockedItems = me.dockedItems || [];
+            //                me.dockedItems.unshift({
+            //                    xtype: 'pagingtoolbar',
+            //                    dock: 'bottom',
+            //                    store: me.store,
+            //                    displayInfo: true
+            //                });
+            me.dockedItems.unshift({
+                xtype: 'toolbar',
+                dock: 'bottom',
+                store: me.store,
+                items: {
+                    xtype: 'component',
+                    html: '<div>Page 1</div>'
+                }
+            });
+        }
+
+        this.callParent(arguments);
+    },
+
+    getActionEvents: function () {
+        return Ext.Array.pluck(this.actions, 'eventName');
+    }
+
+});
 
     // Override Ext.grid.header.Container (xtype: headercontainer)
     // HeaderContainer drives resizing, moving, and hiding of table columns

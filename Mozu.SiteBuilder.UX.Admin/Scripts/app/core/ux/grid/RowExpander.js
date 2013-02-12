@@ -84,6 +84,16 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
         }
     },
 
+    expandAllRows: function(expand) {
+        var me = this;
+        this.cmp.store.each(function (record, idx) {
+            var row = Ext.fly(me.view.getNode(idx), '_rowExpander'),
+                shouldToggle = row.hasCls(me.rowCollapsedCls);
+            if (expand === false) shouldToggle = !shouldToggle;
+            if (shouldToggle) me.toggleRow(idx, record);
+        });
+    },
+
     // overrides: removed toggling of hidden class on rowbody; parent's collapsed class is sufficient
     toggleRow: function(rowIdx, record) {
         var me = this,
