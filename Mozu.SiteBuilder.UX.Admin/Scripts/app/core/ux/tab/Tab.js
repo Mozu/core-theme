@@ -16,11 +16,14 @@ Ext.define('Taco.core.ux.tab.Tab', {
     text: '',
 
     initComponent: function () {
+        //TODO: Fix the horse shit below
+        var closeButton = '<span class="' + Taco.baseCSSPrefix + 'form-tab-close-button">&times;</span>' + '<span class="' + Taco.baseCSSPrefix + 'override-indicator"></span>';
+
         Ext.applyIf(this, {
-            html: this.text + '<span class="' + Taco.baseCSSPrefix + 'form-tab-close-button">&times;</span>' + '<span class="' + Taco.baseCSSPrefix + 'override-indicator"></span>'
+            html: this.text + (this.tabPickerId ? closeButton : '')
         });
 
-        this.enableBubble('formTabCountChange');
+        this.enableBubble('tabclose');
 
         this.callParent(arguments);
 
@@ -68,6 +71,6 @@ Ext.define('Taco.core.ux.tab.Tab', {
      * Fires a formTabCountChange event to be handled by a parent container.  This event should ultimately trigger the removal of this tab.  The siteId associated with this tab is sent as well.
      */
     closeTab: function () {
-        this.fireEvent('formTabCountChange', this.siteId);
+        this.fireEvent('tabclose', this, this.tabPickerId);
     }
 });

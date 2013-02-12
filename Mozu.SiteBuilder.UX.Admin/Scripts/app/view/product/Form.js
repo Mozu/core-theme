@@ -56,6 +56,11 @@ Ext.define('Taco.view.product.Form', {
             selectionchange: this.onTabSelectionChange,
             scope: this
         });
+
+        this.on({
+            tabclose: this.onTabClose,
+            scope: this
+        });
     },
 
     /**
@@ -85,18 +90,25 @@ Ext.define('Taco.view.product.Form', {
     buildSiteTabs: function () {
         this.siteForms = [];
 
-        this.inSitesStore.data.each(function (info, index) {
-            this.siteForms.push(Ext.create('Taco.view.product.SiteForm', {
-                isSingleSite: this.isSingleSite,
-                record: info,
-                product: this.record,
-                productInSiteInfo: info,
-                tasksKeyPrefix: 'site-' + index,
-                formCfg: {
-                    isSingleSite: this.isSingleSite
-                }
-            }));
+        this.inSitesStore.data.each(function (info) {
+            this.siteForms.push(this.buildSiteForm(info));
         }, this);
+    },
+
+    buildSiteForm: function (productInSiteInfo) {
+        var siteId = productInSiteInfo.get('siteId');
+
+        return Ext.create('Taco.view.product.SiteForm', {
+            isSingleSite: this.isSingleSite,
+            record: productInSiteInfo,
+            product: this.record,
+            productInSiteInfo: productInSiteInfo,
+            tasksKeyPrefix: 'site-' + siteId,
+            formCfg: {
+                isSingleSite: this.isSingleSite
+            },
+            tabPickerId: '' + siteId
+        });
     },
 
     /**
@@ -124,6 +136,24 @@ Ext.define('Taco.view.product.Form', {
         this.rebuildTabs();
         this.tabPanel.showTabAt(0);
         this.tabPanel.setActiveItemAt(this.tabPanel.items.length - 1);
+    },
+
+    goGoSiteSwitch: function () {
+        var wasSingleSite = this.isSingleSite;
+
+        this.isSingleSite = this.singleSiteCheck();
+
+        //  State unchanged, gfto
+        if (wasSingleSite === this.isSingleSite) {
+            return;
+        }
+
+        //  Must rebuild tabs now since state switched
+        if (this.isSingleSite) {
+            this.goGoSingleSite();
+        } else {
+            this.goGoMultiSite();
+        }
     },
 
     /**
@@ -156,7 +186,7 @@ Ext.define('Taco.view.product.Form', {
      * Adds the product to a site
      * @param {String} siteId The ID of the site that will have the product
      */
-    addSite: function (siteId) {
+    addSite: function (siteId, suspendSwitch) {
         var siteInfo = Ext.create('Taco.model.ProductInSiteInfo', {
             siteId: siteId,
             productCode:this.record.getId()
@@ -167,29 +197,23 @@ Ext.define('Taco.view.product.Form', {
         this.inSitesStore.add(siteInfo);
         siteInfo.set('productCode', this.record.getId());
         siteInfo.phantom = true;
+
+        siteForm = this.buildSiteForm(siteInfo);
+
+        this.siteForms.push(siteForm);
+        this.tabPanel.add(siteForm);
         
-        wasSingleSite = this.isSingleSite;
-
-        this.isSingleSite = this.singleSiteCheck();
-
-        //  State unchanged, gfto
-        if (wasSingleSite === this.isSingleSite) {
+        if (suspendSwitch) {
             return;
         }
-
-        //  Must rebuild tabs now since state switched
-        if (this.isSingleSite) {
-            this.goGoSingleSite();
-        } else {
-            this.goGoMultiSite();
-        }
+        this.goGoSiteSwitch();
     },
 
     /**
      * Removes the product from a site
      * @param  {String} siteId The ID of the site to remove the product from
      */
-    removeSite: function (siteId) {
+    removeSite: function (siteId, suspendSwitch) {
         var record = this.inSitesStore.findRecord('siteId', siteId),
             wasSingleSite, form;
 
@@ -209,34 +233,42 @@ Ext.define('Taco.view.product.Form', {
             return;
         }
 
+        this.tabPanel.remove(form);
+
         this.inSitesStore.remove(record);
-
-        wasSingleSite = this.isSingleSite;
-
-        this.isSingleSite = this.singleSiteCheck();
-
-        //  State unchanged, gfto
-        if (wasSingleSite === this.isSingleSite) {
+        
+        if (suspendSwitch) {
             return;
         }
 
-        //  Must rebuild tabs now since state switched
-        if (this.isSingleSite) {
-            this.goGoSingleSite();
-        } else {
-            this.goGoMultiSite();
-        }
+        this.goGoSiteSwitch();
+    },
+
+    onTabClose: function (tab, siteId) {
+        this.removeSite(siteId);
     },
 
     onTabSelectionChange: function (tabPanel, values, oldValues) {
-        console.log('tab selection changed')
+        //console.log('tab selection changed')
+        var addSites = Ext.Array.difference(values, oldValues),
+            removeSites = Ext.Array.difference(oldValues, values);
+
+        Ext.each(addSites, function (siteId) {
+            this.addSite(siteId, true);
+        }, this);
+
+        Ext.each(removeSites, function (siteId) {
+            this.removeSite(siteId, true);
+        }, this);
+
+        this.goGoSiteSwitch();
     },
 
     /**
      * @private
      * @param {Object} sites A list of all sites that are associated with this product.  Property names are siteIds, values are the siteNames.
      */
-    handleSelectionChange: function ( sites ) {
+    handleSelectionChange: function (sites) {
         //console.log( 'handleSelectionChange', sites );
         Ext.Object.each(sites, function (siteId, siteName) {
             // TODO

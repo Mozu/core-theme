@@ -32,12 +32,6 @@ Ext.define('Taco.core.ux.tab.Panel', {
             this.pickerCfg = {};
         }
 
-        Ext.applyIf(this.pickerCfg, {
-            checkedItems: Ext.Array.pluck(this.items, 'tabPickerId')
-        });
-
-        this.picker = Ext.create('Taco.core.ux.tab.Picker', this.pickerCfg);
-
         if (this.navigation) {
             lbar = Ext.widget({
                 xtype: 'container',
@@ -54,7 +48,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
             html: 'Add',
             listeners: {
                 boxready: function () {
-                    this.getEl().on({
+                    this.addButton.getEl().on({
                         click: function () {
                             this.picker.toggle();
                         },
@@ -64,6 +58,13 @@ Ext.define('Taco.core.ux.tab.Panel', {
                 scope: this
             }
         });
+
+        Ext.applyIf(this.pickerCfg, {
+            checkedItems: this.getCheckedItems(),
+            positionNextTo: this.addButton
+        });
+
+        this.picker = Ext.create('Taco.core.ux.tab.Picker', this.pickerCfg);
 
         tbar = Ext.widget({
             xtype: 'container',
@@ -111,8 +112,18 @@ Ext.define('Taco.core.ux.tab.Panel', {
         });
     },
 
-    onTabSelectionChange: function () {
+    onTabSelectionChange: function (picker, newValues, oldValues) {
+        newValues = Ext.Array.pluck(newValues, 'id');
+        oldValues = Ext.Array.pluck(oldValues, 'id');
+        this.fireEvent('selectionchange', this, newValues, oldValues);
+    },
 
+    getCheckedItems: function () {
+        return Ext.Array.pluck(this.items.items || this.items, 'tabPickerId');
+    },
+
+    getItemByPickerId: function (id) {
+        return this.items.findBy(function (item) {return item.tabPickerId === id;});
     },
 
     /**
@@ -260,7 +271,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
             var tab = Ext.create('Taco.core.ux.tab.Tab', {
                 card: item,
                 text: item.title,
-                siteId: item.siteId,
+                tabPickerId: item.tabPickerId,
                 activeCls: this.activeTabCls,
                 invalidCls: this.invalidTabCls
             });
@@ -302,11 +313,14 @@ Ext.define('Taco.core.ux.tab.Panel', {
                     card: card,
                     text: card.title,
                     activeCls: this.activeTabCls,
+                    tabPickerId: card.tabPickerId,
                     invalidCls: this.invalidTabCls
                 });
                 Ext.apply(card, { tab: tab });
             }
         }
+
+        this.picker.buildCheckBoxes(this.getCheckedItems());
     },
 
     /**
@@ -358,6 +372,8 @@ Ext.define('Taco.core.ux.tab.Panel', {
         if (this.rendered && this.tabBar) {
             this.tabBar.remove(tab);
         }
+
+        this.picker.buildCheckBoxes(this.getCheckedItems());
     },
 
     /**
