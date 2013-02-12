@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers
                         break;
                     case "productname":
                     case "name":
-                        sb.AppendFormat("({2} cont \"{0}\" or {3} cont \"{0}\")", filter.value, PRODUCT_NAME_PROPERTY, PRODUCT_CODE_PROPERTY);
+                        sb.AppendFormat("({1} cont \"{0}\" or {2} cont \"{0}\")", filter.value, PRODUCT_NAME_PROPERTY, PRODUCT_CODE_PROPERTY);
                         break;
                     case "price":
                         sb.AppendFormat("{2} {1} {0}", filter.value, filter.comparison, PRICE_PROPERTY);
