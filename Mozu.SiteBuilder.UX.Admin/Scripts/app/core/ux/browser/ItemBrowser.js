@@ -117,6 +117,14 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         });
 
         this.callParent(arguments);
+
+        this.relayActionEvents();
+    },
+
+    relayActionEvents: function() {
+        Ext.Array.each(this.uniquePanels, function(panel) {
+            if (panel.getActionEvents) this.relayEvents(panel, panel.getActionEvents());
+        });
     },
 
     onItemStoreUpdate: function () {
@@ -138,7 +146,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         var me = this,
         store = me.itemStore;
         store.currentPage = 1;
-
+        if (!field || !(value in field)) return;
         if (field.value.length == 0) {
             store.filters.removeAtKey(this.id);
 

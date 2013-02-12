@@ -22,8 +22,12 @@ Ext.define('Taco.core.ux.content.Container', {
     body: {},
     header: {},
 
+    scopeActionHandlers: true,
+
     initComponent: function () {
         var me = this;
+
+        if (me.scopeActionHandlers) me.setActionHandlerScope(me.scopeActionHandlers);
 
         me.arrangePanels();
 
@@ -33,6 +37,17 @@ Ext.define('Taco.core.ux.content.Container', {
 
         Taco.app.eventbus.fireEvent("createpageview");
     },
+
+    setActionHandlerScope: function (scope) {
+        var me = this;
+        if (scope === true) scope = me;
+        if (me.header && me.header.actions) {
+            for (var i = 0; i < me.header.actions.length; i++) {
+                me.header.actions[i].scope = scope;
+            }
+        }
+    },
+            
 
     arrangePanels: function() {
         var me = this;
