@@ -18,6 +18,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers
         private const string CATEGORY_ID_PROPERTY = "productinsites.productcategories.categoryId";
         private const string IS_ACTIVE_PROPERTY = "productinsites.isActive";
         private const string STOCK_ON_HAND_PROPERTY = "stockOnHand";
+        private const string STOCK_AVAILABLE_PROPERTY = "stockAvailable";
+        private const string CREATE_DATE_PROPERTY = "createDate";
+        private const string UPDATE_DATE_PROPERTY = "updateDate";
 
         /// <summary>
         /// Converts a SortingCollection for Product to a mozu services-compatible sort string.
@@ -63,6 +66,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers
                         break;
                     case "stockonhand":
                         sb.Append(STOCK_ON_HAND_PROPERTY);
+                        break;
+                    case "stockavailable":
+                        sb.Append(STOCK_AVAILABLE_PROPERTY);
+                        break;
+                    case "updatedate":
+                        sb.Append(UPDATE_DATE_PROPERTY);
+                        break;
+                    case "createdate":
+                        sb.Append(CREATE_DATE_PROPERTY);
                         break;
                     default:
                         {
