@@ -116,10 +116,9 @@ Ext.define('Taco.controller.Testing', {
 
                         // true means to not not not load data automatically
                         productStore.clearFilter(true);
-                        productStore.filter("foo", "bar");
-                        //productStore.filter([
-                        //    {property: "productName", value: filterString}
-                        //]);
+                        productStore.filter([
+                            {property: "productName", value: filterString}
+                        ]);
 
                         // onLoad handled by grid.
                     }
