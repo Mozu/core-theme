@@ -86,8 +86,8 @@ Ext.define('Taco.core.ux.tab.Panel', {
             'selectionchange'
         ]);
 
-        // Don't comment this shit out or everything will break!
-        // Ask Jimmy for details...
+        // pass configs for navigation and tab bar to Ext.panel.Panel's lbar and tbar configs, respectively
+        // after Ext generates dockedItems, it deletes these configs automatically
         this.lbar = lbar;
         this.tbar = tbar;
 

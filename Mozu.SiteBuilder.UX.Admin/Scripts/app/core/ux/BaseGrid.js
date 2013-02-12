@@ -87,42 +87,42 @@
     //
     // Normally column checkboxes are at the trigger menu's second level
     // Here we move them to the first level (and ignore/remove all other first-level children)
-    Ext.define('Ext.grid.header.ContainerOverride', {
-        override: 'Ext.grid.header.Container',
-        constructor: function () {
-            var me = this;
-            me.callParent(arguments);
+    // Ext.define('Ext.grid.header.ContainerOverride', {
+    //     override: 'Ext.grid.header.Container',
+    //     constructor: function () {
+    //         var me = this;
+    //         me.callParent(arguments);
 
-            me.getMenuItems = function () {
-                var me = this,
-                menuItems = me.enableColumnHide ? me.getColumnMenu(me) : [];
+    //         me.getMenuItems = function () {
+    //             var me = this,
+    //             menuItems = me.enableColumnHide ? me.getColumnMenu(me) : [];
 
-                return menuItems;
-            }
+    //             return menuItems;
+    //         }
 
-            me.getMenu = function () {
-                var me = this;
+    //         me.getMenu = function () {
+    //             var me = this;
 
-                if (!me.menu) {
-                    me.menu = new Ext.menu.Menu({
-                        hideOnParentHide: false,
-                        title: "Customize Columns",
-                        minWidth: 150,
-                        shadow: false,
-                        showSeparator: false,
-                        items: me.getMenuItems(),
-                        listeners: {
-                            deactivate: me.onMenuDeactivate,
-                            scope: me
-                        }
-                    });
-                    me.updateMenuDisabledState();
-                    me.fireEvent('menucreate', me, me.menu);
-                }
-                return me.menu;
-            }
-        }
-    });
+    //             if (!me.menu) {
+    //                 me.menu = new Ext.menu.Menu({
+    //                     hideOnParentHide: false,
+    //                     title: "Customize Columns",
+    //                     minWidth: 150,
+    //                     shadow: false,
+    //                     showSeparator: false,
+    //                     items: me.getMenuItems(),
+    //                     listeners: {
+    //                         deactivate: me.onMenuDeactivate,
+    //                         scope: me
+    //                     }
+    //                 });
+    //                 me.updateMenuDisabledState();
+    //                 me.fireEvent('menucreate', me, me.menu);
+    //             }
+    //             return me.menu;
+    //         }
+    //     }
+    // });
 
     // Ext.define('Ext.grid.header.DropZoneOverride', {
     //     override: 'Ext.grid.header.DropZone',
