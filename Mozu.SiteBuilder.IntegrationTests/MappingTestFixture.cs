@@ -28,6 +28,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
             AutoMapper.Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.CustomerMapping>();
             AutoMapper.Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.OrderMapping>();
             AutoMapper.Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.ProductMapping>();
+            AutoMapper.Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.CmsPagesMapping>();
         }
     }
 
