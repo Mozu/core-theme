@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.Content.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using DC = Mozu.Content.Contracts;
@@ -30,13 +30,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "listdrafts")]
-        public Task<Response<List<Document>>> ListDirtyDocuments([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<Document>>> ListDirtyDocuments([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {
-                DC.Document ret = _documentClient.Get(/*documentListName: */ null, pagingParams.id).Result.ReadAsAsync().Result;
+                var resultGetById = await _documentClient.Get(/*documentListName: */ null, pagingParams.id);
+                DC.Document ret = resultGetById.ReadAsAsync().Result;
 
-                return List(Mapper.Map<Document>(ret));
+                return List2(Mapper.Map<Document>(ret));
             }
 
             // TODO: filter and sort
@@ -46,10 +47,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? pageSize = pagingParams.pageSize;
             int? startIndex = pagingParams.startIndex;
 
-            DC.PagedCollection<DC.Document> res;
-            res = _documentClient.GetDrafts(/*documentListName: */ null, /*responseGroups: */ null, pageSize, startIndex).Result.ReadAsAsync().Result;
+            
+            var result = await _documentClient.GetDrafts(/*documentListName: */ null, /*responseGroups: */ null, pageSize, startIndex);
+            DC.PagedCollection<DC.Document> res = result.ReadAsAsync().Result;
 
-            return List(Mapper.Map<List<Document>>(res.Items), (int)res.TotalCount);
+            return List2(Mapper.Map<List<Document>>(res.Items), (int)res.TotalCount);
+        }
+
+        [WebInvoke(UriTemplate = "publish")]
+        public async Task<Response<List<string>>> Publish(List<string> ids)
+        {
+            var result = await _documentClient.PublishDocuments(/*documentList: */ null, ids);
+            List<string> returnedIds = result.ReadAsAsync().Result;
+            return List2(returnedIds);
+        }
+
+
+        [WebInvoke(UriTemplate = "publishall")]
+        public async Task<Response<List<string>>> PublishAll()
+        {
+            List<string> publishedDocIds = new List<string>();
+            int startIndex = 0;
+            int pageSize = 100;
+            int totalCount = Int32.MaxValue;
+
+            do
+            {
+                var getListResult = await _documentClient.GetDrafts(/*documentListName: */ null, /*responseGroups: */ null, pageSize, startIndex);
+                DC.PagedCollection<DC.Document> docs = getListResult.ReadAsAsync().Result;
+                totalCount = (int)docs.TotalCount;
+
+                List<string> docIds = docs.Items.Select(d => d.Id).ToList();
+                var publishResult = await _documentClient.PublishDocuments(/*documentList: */ null, docIds);
+                List<string> returnedIds = publishResult.ReadAsAsync().Result;
+                publishedDocIds.AddRange(returnedIds);
+
+                startIndex += docs.Items.Count;
+            } while (startIndex <= totalCount);
+
+            return List2(publishedDocIds);
         }
     }
 }
