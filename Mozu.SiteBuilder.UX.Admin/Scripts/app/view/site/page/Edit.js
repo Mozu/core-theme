@@ -155,7 +155,7 @@
                     scope: this
                 }
             });
-
+            window.pageEditor = this;
             this.cmsDocs = new Ext.create('Taco.store.CmsDocuments', {
                 listeners: {
                     add: this.onFormStateChange,

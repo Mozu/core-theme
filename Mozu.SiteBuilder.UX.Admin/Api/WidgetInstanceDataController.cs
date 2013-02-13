@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using Mozu.Core.Api.Contracts;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using DC=Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
@@ -22,25 +25,28 @@ using Mozu.Core.Api;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [ServiceContract]
-    public class WidgetInstanceDataController : BaseController
+    public class WidgetInstanceController : BaseController
     {
+        //private const string WIDGETPROPNAME = "slug";
         //static HashSet<int> g_provisioned = new HashSet<int>();
         //private readonly IDocumentWebApiClient _docRepo;
         ICmsTypeHelper _cmsTypeHelper;
 
         ICmsServiceWrapper _cmsService;
+        private IDocumentWebApiClient _documentWebApi;
         //ISessionDocumentStore _sessionDocStore;
-        public WidgetInstanceDataController(IDocumentWebApiClient docRepo,
+        public WidgetInstanceController(IDocumentWebApiClient docRepo,
       
             IApiContext apiContext,
             IProvisioningHelper provHelper,
           //  ISessionDocumentStore sessionDocStore,
             ICmsTypeHelper cmsTypeHelper,
-             ICmsServiceWrapper cmsService
+             ICmsServiceWrapper cmsService,
+            IDocumentWebApiClient documentWebApi 
             )
         {
 
-            
+            _documentWebApi = documentWebApi;
             _cmsService = cmsService;
           //  _docRepo = docRepo;
          //   _sessionDocStore = sessionDocStore;
@@ -53,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
         class DocumentRequestComparer :IEqualityComparer<DocumentRequest>
         {
-            public static DocumentRequestComparer Default = new DocumentRequestComparer();
+            public static readonly DocumentRequestComparer Default = new DocumentRequestComparer();
             public bool Equals(DocumentRequest x, DocumentRequest y)
             {
                 if (x == null && y == null)
@@ -64,56 +70,98 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     return false;
                 }
-                if ( string.Equals( x.Path  ,y.Path, StringComparison.InvariantCultureIgnoreCase ))
+                if ( !string.Equals( x.Path  ,y.Path, StringComparison.InvariantCultureIgnoreCase ))
                 {
                     return false;
                 }
-                if (string.Equals(x.Id, y.Id, StringComparison.InvariantCultureIgnoreCase))
+                if (!string.Equals(x.Id, y.Id, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    return true;
+                    return false;
                 }
-                if (x.Id == y.Id)
-                {
-                    return true;
-                }
-                if (x.Path == y.Path)
-                {
-                    return true;
-                }
-                return false;
+                
+                return true;
             }
 
             public int GetHashCode(DocumentRequest obj)
             {
-                throw new NotImplementedException();
+                return obj.Id == null ? (obj.Path == null ? 0 : obj.Path.ToLowerInvariant().GetHashCode()) : obj.Id.ToLowerInvariant().GetHashCode();
+                
             }
         }
-            
-            
-            [WebInvoke(Method = "POST", UriTemplate = "delete")]
-        public Task<Response<List<AVM.WidgetInstanceData>>> Process(List<AVM.WidgetInstanceData> docs)
+
+
+        [WebInvoke(Method = "POST", UriTemplate = "delete")]
+        public async Task<Response<List<AVM.WidgetInstanceData>>> Process(List<AVM.WidgetInstanceData> widgets, bool remove )
+        {
+            Task<ServiceClientResponse<DC.Document>> task;
+            var docs = new List<DC.Document>();
+            var cmsHelper = new CmsHelper(this._cmsService);
+            var docRequests = widgets.Select(x => x.Source).Distinct(DocumentRequestComparer.Default).ToList();
+            foreach (var req in docRequests)
             {
-                var docRequests = docs.Select(x => x.Source).Distinct(DocumentRequestComparer.Default).ToList();
-                foreach (var req in docRequests)
+                if (!cmsHelper.ProcessDocumentRequest(req, out task))
                 {
-                    
+                    continue;
                 }
-                CmsHelper  cmsHelper = new CmsHelper( this._cmsService );
-                throw new NotImplementedException();
+                var res = await task;
+
+                var doc = res.ReadAsSync();
+                docs.Add(doc);
+                var widgetRaw = doc.Get(CmsServiceWrapper.WIDGETPROPNAME) as string;
+
+                var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<AVM.WidgetInstanceData>():  Newtonsoft.Json.JsonConvert.DeserializeObject<List<AVM.WidgetInstanceData>>(widgetRaw);
+
+                foreach (var widget in widgets.Where(x => DocumentRequestComparer.Default.Equals(x.Source, req)))
+                {
+                    var index = existingWidgets.FindIndex(x => x.Id == widget.Id);
+                    if (index > -1)
+                    {
+                        existingWidgets.RemoveAt(index);
+                    }
+                    if (!remove)
+                    {
+                        existingWidgets.Add(widget);
+                    }
+                }
+
+                widgetRaw = Newtonsoft.Json.JsonConvert.SerializeObject(existingWidgets);
+
+                doc.Set(CmsServiceWrapper.WIDGETPROPNAME, widgetRaw);
+                
+
+
+                await _documentWebApi.Update(doc.DocumentListName, doc.Id, doc, TargetContextLevelType.NotSpecified);
+
+
+
+            }
+
+
+
+            return this.List2(widgets);
+
+
         }
 
 
         [WebInvoke(Method = "POST", UriTemplate = "create")]
         public Task<Response<List<AVM.WidgetInstanceData>>> Create(List<AVM.WidgetInstanceData> docs)
         {
-
-            throw new NotImplementedException();
+            return Process(docs, false);
+          
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "update")]
         public Task<Response<List<AVM.WidgetInstanceData>>> Update(List<AVM.WidgetInstanceData> docs)
         {
-            throw new NotImplementedException();
+            return Process(docs, false);
+        }
+
+        [WebInvoke(Method = "POST", UriTemplate = "destroy")]
+        public Task<Response<List<AVM.WidgetInstanceData>>> Delete(List<AVM.WidgetInstanceData> docs)
+        {
+            return Process(docs, true);
+
         }
 
         //[WebGet(UriTemplate = "read")]

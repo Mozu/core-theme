@@ -32,6 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     /// </summary>
     public class CmsServiceWrapper : Mozu.SiteBuilder.Mvc.CMS.ICmsServiceWrapper
     {
+        public  const string WIDGETPROPNAME = "slug";
         IDocumentWebApiClient _docRepo;
         ICmsTypeHelper _cmsTypeHelper;
         IFolderWebApiClient _folderRepo;

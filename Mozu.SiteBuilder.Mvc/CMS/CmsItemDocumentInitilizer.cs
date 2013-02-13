@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mozu.Content.Contracts;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Document = Mozu.Content.Contracts.Document;
+using Mozu.SiteBuilder.Mvc.Cms;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
@@ -96,7 +99,28 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
             }
 
+            cmsPageContext.RuntimeData = new List<WidgetRuntimeData>();
+            if (cmsPageContext.Page != null)
+            {
+                var widgetRaw = (string)cmsPageContext.Page.Get(CmsServiceWrapper.WIDGETPROPNAME);
+                var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                cmsPageContext.RuntimeData.AddRange(existingWidgets);
 
+            }
+            if (cmsPageContext.Template  != null)
+            {
+                var widgetRaw = (string)cmsPageContext.Template.Get(CmsServiceWrapper.WIDGETPROPNAME);
+                var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                cmsPageContext.RuntimeData.AddRange(existingWidgets);
+
+            }
+            if (cmsPageContext.SiteTemplate  != null)
+            {
+                var widgetRaw = (string)cmsPageContext.SiteTemplate.Get(CmsServiceWrapper.WIDGETPROPNAME);
+                var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                cmsPageContext.RuntimeData.AddRange(existingWidgets);
+
+            }
             cmsPageContext.Initialized = true;
             return true;
 

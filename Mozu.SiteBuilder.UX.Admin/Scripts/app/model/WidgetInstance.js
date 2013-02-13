@@ -40,17 +40,21 @@ Ext.define('Taco.model.WidgetInstance', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/app/WidgetInsance/read',
+            //read: '/admin/app/WidgetInsance/read',
             //read: '/admin/Scripts/app/mocks/widgetdefinitions.json',
-            create: '/admin/app/WidgetInsance/create',
-            update: '/admin/app/WidgetInsance/update',
-            destroy: '/admin/app/WidgetInsance/destroy'
+            create: '/admin/app/WidgetInstance/create',
+            update: '/admin/app/WidgetInstance/update',
+            destroy: '/admin/app/WidgetInstance/destroy'
         },
         reader: {
             type: 'json',
             root: 'items',
             successProperty: 'success',
             messageProperty: "message"
+        },
+        writer: {
+            allowSingle: false,
+            type: 'json'
         }
     }
 });

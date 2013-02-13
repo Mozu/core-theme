@@ -8968,47 +8968,51 @@ svg, vml {
 .x-panel .x-grid-body {
   border-top-color: #999691;
 }
+/* line 9, ../scss/taco/widgets/_grid.scss */
+.x-panel .x-grid-body ~ .x-docked-bottom {
+  border-top-color: white;
+}
 
-/* line 13, ../scss/taco/widgets/_grid.scss */
+/* line 17, ../scss/taco/widgets/_grid.scss */
 .x-grid-with-row-lines .x-grid-cell-inner {
   line-height: 20px;
   padding-bottom: 5px;
 }
 
-/* line 20, ../scss/taco/widgets/_grid.scss */
+/* line 24, ../scss/taco/widgets/_grid.scss */
 .x-grid-row {
   vertical-align: middle;
 }
-/* line 23, ../scss/taco/widgets/_grid.scss */
+/* line 27, ../scss/taco/widgets/_grid.scss */
 .x-grid-row .x-grid-cell-special {
   background-color: white;
   background-image: none;
   border-right: 0px none;
 }
 
-/* line 32, ../scss/taco/widgets/_grid.scss */
+/* line 36, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-alt .x-grid-cell-special {
   background-color: #fafafa;
 }
 
-/* line 39, ../scss/taco/widgets/_grid.scss */
+/* line 43, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-over .x-grid-cell-special {
   background-color: #efefef;
   border-color: #dddddd;
 }
 
-/* line 47, ../scss/taco/widgets/_grid.scss */
+/* line 51, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-focused .x-grid-cell-special {
   background-color: #efefef;
   border-color: #dddddd;
 }
 
-/* line 54, ../scss/taco/widgets/_grid.scss */
+/* line 58, ../scss/taco/widgets/_grid.scss */
 .x-grid-rowwrap-div .x-grid-cell-special {
   background-color: transparent;
 }
 
-/* line 60, ../scss/taco/widgets/_grid.scss */
+/* line 64, ../scss/taco/widgets/_grid.scss */
 .x-column-header {
   border: 0px none;
   font-size: 14px;
@@ -9016,23 +9020,23 @@ svg, vml {
   line-height: 14px;
 }
 
-/* line 67, ../scss/taco/widgets/_grid.scss */
+/* line 71, ../scss/taco/widgets/_grid.scss */
 .x-column-header-inner {
   padding-top: 11px !important;
 }
 
-/* line 72, ../scss/taco/widgets/_grid.scss */
+/* line 76, ../scss/taco/widgets/_grid.scss */
 .x-column-header-over .x-column-header-trigger {
   display: none;
 }
 
 /* PLUGINS, MIXINS, COLUMNS, ETC. */
-/* line 81, ../scss/taco/widgets/_grid.scss */
+/* line 85, ../scss/taco/widgets/_grid.scss */
 .x-column-header-checkbox .x-column-header-inner {
   padding-top: 7px !important;
 }
 
-/* line 87, ../scss/taco/widgets/_grid.scss */
+/* line 91, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-expander {
   background-image: none;
   border-bottom: 5px solid transparent;
@@ -9053,7 +9057,7 @@ svg, vml {
   transition: transform 0.1s;
 }
 
-/* line 101, ../scss/taco/widgets/_grid.scss */
+/* line 105, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-collapsed .x-grid-row-expander {
   background-image: none;
   -webkit-transform: rotate(0deg);
@@ -9062,12 +9066,12 @@ svg, vml {
   -o-transform: rotate(0deg);
   transform: rotate(0deg);
 }
-/* line 105, ../scss/taco/widgets/_grid.scss */
+/* line 109, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-collapsed .x-grid-row-body {
   display: none;
 }
 
-/* line 111, ../scss/taco/widgets/_grid.scss */
+/* line 115, ../scss/taco/widgets/_grid.scss */
 .taco-draghandle {
   cursor: move;
   display: block;
@@ -9078,13 +9082,13 @@ svg, vml {
   background-position: 0 -717px;
 }
 
-/* line 121, ../scss/taco/widgets/_grid.scss */
+/* line 125, ../scss/taco/widgets/_grid.scss */
 .x-grid-cell-draghandlecolumn .x-grid-cell-inner {
   padding: 0px;
 }
 
-/* GRID CONTAINERS */
-/* line 134, ../scss/taco/widgets/_grid.scss */
+/* CONTAINERS, TOOLBARS, ETC. */
+/* line 138, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group .x-form-radio {
   background-color: #edeae6;
   background-image: none;
@@ -9098,13 +9102,13 @@ svg, vml {
   -moz-box-shadow: 0 1px 0 white inset;
   box-shadow: 0 1px 0 white inset;
 }
-/* line 147, ../scss/taco/widgets/_grid.scss */
+/* line 151, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group .x-form-cb-checked .x-form-radio {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 153, ../scss/taco/widgets/_grid.scss */
+/* line 157, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(1) .x-form-radio {
   background: url('../images/card-s44a9b55566.png') 0 -48px;
   -webkit-border-radius: 3px 0px 0px 3px;
@@ -9113,7 +9117,7 @@ svg, vml {
   -o-border-radius: 3px 0px 0px 3px;
   border-radius: 3px 0px 0px 3px;
 }
-/* line 158, ../scss/taco/widgets/_grid.scss */
+/* line 162, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(1) .x-form-cb-checked .x-form-radio {
   background: url('../images/card-s44a9b55566.png') 0 -72px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
   background: url('../images/card-s44a9b55566.png') 0 -72px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
@@ -9122,11 +9126,11 @@ svg, vml {
   background: url('../images/card-s44a9b55566.png') 0 -72px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
   background-color: #70d2db;
 }
-/* line 165, ../scss/taco/widgets/_grid.scss */
+/* line 169, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(2) .x-form-radio {
   background: url('../images/card-s44a9b55566.png') 0 0;
 }
-/* line 169, ../scss/taco/widgets/_grid.scss */
+/* line 173, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(2) .x-form-cb-checked .x-form-radio {
   background: url('../images/card-s44a9b55566.png') 0 -24px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
   background: url('../images/card-s44a9b55566.png') 0 -24px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
@@ -9135,7 +9139,7 @@ svg, vml {
   background: url('../images/card-s44a9b55566.png') 0 -24px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
   background-color: #70d2db;
 }
-/* line 176, ../scss/taco/widgets/_grid.scss */
+/* line 180, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-last-of-type(1) .x-form-radio {
   border-right: 1px solid #5e5c5a;
   -webkit-border-radius: 0px 3px 3px 0px;
@@ -9143,6 +9147,33 @@ svg, vml {
   -ms-border-radius: 0px 3px 3px 0px;
   -o-border-radius: 0px 3px 3px 0px;
   border-radius: 0px 3px 3px 0px;
+}
+
+/* line 189, ../scss/taco/widgets/_grid.scss */
+.taco-pager {
+  background: none #edeae6;
+  border: 1px solid #999691;
+  padding: 7px;
+}
+/* line 194, ../scss/taco/widgets/_grid.scss */
+.taco-pager .taco-action {
+  background-color: #faf8f5;
+  height: 28px;
+  min-width: 28px;
+  padding-top: 6px;
+  margin: 2px;
+  text-align: center;
+  display: inline-block;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+}
+/* line 204, ../scss/taco/widgets/_grid.scss */
+.taco-pager .taco-action.active {
+  background-color: #70d2db;
+  color: white;
 }
 
 /* line 4, ../scss/taco/widgets/_tree.scss */
@@ -9176,7 +9207,7 @@ svg, vml {
   width: 34px;
   background-position: 0 -2766px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow.icon-folder-hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end.icon-folder-hover {
   background-position: 0 -2790px;
 }
@@ -9195,7 +9226,7 @@ svg, vml {
   width: 34px;
   background-position: 0 -2766px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus.icon-folder-hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus.icon-folder-hover {
   background-position: 0 -2790px;
 }
@@ -10826,11 +10857,11 @@ a:hover {
 .x-panel .taco-thumbnail-item .actions .action.download {
   background-position: 0 -2244px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.download:hover, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout_hover, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout-hover {
   background-position: 0 -2268px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.download:active, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout_active, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout-active {
   background-position: 0 -2358px;
 }
@@ -10838,11 +10869,11 @@ a:hover {
 .x-panel .taco-thumbnail-item .actions .action.delete {
   background-position: 0 -2334px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.delete:hover, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash_hover, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash-hover {
   background-position: 0 -2310px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.delete:active, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash_active, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash-active {
   background-position: 0 -2445px;
 }
@@ -10850,11 +10881,11 @@ a:hover {
 .x-panel .taco-thumbnail-item .actions .action.duplicate {
   background-position: 0 -2397px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.duplicate:hover, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile_hover, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile-hover {
   background-position: 0 -2421px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.duplicate:active, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile_active, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile-active {
   background-position: 0 -2501px;
 }
@@ -10862,11 +10893,11 @@ a:hover {
 .x-panel .taco-thumbnail-item .actions .action.remove {
   background-position: 0 -2220px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.remove:hover, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove_hover, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove-hover {
   background-position: 0 -2196px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.remove:active, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove_active, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove-active {
   background-position: 0 -2525px;
 }
