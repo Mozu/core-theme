@@ -20,15 +20,17 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         {
             xtype: 'secondarybutton',
             text: 'Switch to Edit Mode',
-            onClick: function () {
-                console.log(this);
+            listeners: {
+                click: function () { console.log(this, arguments); }
             }
         },{
             xtype: 'primarybutton',
             itemId: 'newbutton',
-            onClick: function () {
-                this.launchEditor(Ext.create(this.modelName));
-                Taco.app.StateManager.addState(this.token + '/create');
+            listeners: {
+                click: function () {
+                    this.launchEditor(Ext.create(this.modelName));
+                    Taco.app.StateManager.addState(this.token + '/create');
+                }
             }
         }]
     },
