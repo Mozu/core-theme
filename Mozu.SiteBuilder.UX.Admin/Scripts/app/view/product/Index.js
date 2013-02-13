@@ -122,12 +122,11 @@ Ext.define('Taco.view.product.Index', {
    
 
     launchLoadedEditor: function (record, options) {
-        var site,
+        var site = Taco.app.context.getCurrentSite(),
             infoStore,
             infoRecord;
 
-        if (record.phantom) {
-            site = Taco.app.context.getCurrentSite();
+        if (record.phantom && site) {
             infoStore = record.productInSitesStore();
             siteInfo = Ext.create('Taco.model.ProductInSiteInfo', {
                 siteId: site.id,
