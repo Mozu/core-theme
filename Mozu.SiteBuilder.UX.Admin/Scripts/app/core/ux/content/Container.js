@@ -43,7 +43,7 @@ Ext.define('Taco.core.ux.content.Container', {
         if (scope === true) scope = me;
         if (me.header && me.header.actions) {
             for (var i = 0; i < me.header.actions.length; i++) {
-                me.header.actions[i].scope = scope;
+                if (me.header.actions[i].listeners) me.header.actions[i].listeners.scope = scope;
             }
         }
     },
