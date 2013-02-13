@@ -136,7 +136,7 @@ Ext.define('Taco.view.product.Form', {
         if (!leaveTabs) {
             this.rebuildTabs();
         }
-        debugger;
+        
         this.globalForm.isSingleSite = false;
         this.globalForm.loadForm(undefined, true);
         this.rebuildTabs();
