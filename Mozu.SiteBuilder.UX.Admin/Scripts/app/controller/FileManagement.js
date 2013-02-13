@@ -18,7 +18,22 @@ Ext.define('Taco.controller.FileManagement', {
 
 
     index: function () {
-        this.createContentView('Taco.view.fileManagement.Index');
+        if (Taco.app.context.getCurrent().contextType == 't') {
+            this.createContentView('Taco.core.ux.content.Container', {
+                header: {
+                    title: "choose a site collection"
+                },
+
+                body: {
+                    layout: 'auto',
+                    items: [{
+                        html: 'placeholder for choose site collection interstitial '
+                    }]
+                }
+            });
+        } else {
+            this.createContentView('Taco.view.fileManagement.Index');
+        }
     }
     ,
     getFilesStore:function(conf){

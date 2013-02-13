@@ -22,18 +22,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [ServiceContract]
     public class FileManagementController : BaseController
     {
-        private readonly IDocumentWebApiClient _docClient;
-        private readonly IFolderWebApiClient _folderClient;
-        ICmsServiceWrapper _cmsService;
+        private ITenantCmsServiceWrapper _cmsService;
 
-        public FileManagementController(IDocumentWebApiClient docClient, IFolderWebApiClient folderClient, IProvisioningHelper provHeler, ICmsServiceWrapper cmsService)
+        public FileManagementController(IProvisioningHelper provHeler, ICmsServiceWrapper cmsService, ITenantCmsServiceWrapper tenantCmsServiceWrapper)
         {
-            _docClient = docClient;
-            _cmsService = cmsService;
-            ((DocumentWebApiClient)_docClient).Options.MaxSize = int.MaxValue;
-                
-
-            _folderClient =folderClient;
+            _cmsService = tenantCmsServiceWrapper;
             provHeler.ProvisionCms();
         }
 
@@ -45,7 +38,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string tmp;
             if (!string.IsNullOrEmpty(pagingParams.id))
             {
-                var ret = _docClient.Get("files", pagingParams.id, null, null).Result.ReadAsSync();
+                //var ret = _docClient.Get("files", pagingParams.id, null, null).Result.ReadAsSync();
+                var ret = _cmsService.Get("files", pagingParams.id, null, null).Result.ReadAsSync();
                 vm = new List<FileManagementFile>() { AutoMapper.Mapper.Map<FileManagementFile>(ret) };
                 totalCount = 1;
             }
@@ -53,7 +47,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 
                 var tasks =extFilter.Where(x => x.field == "id").Select(
-                    extF => _docClient.Get("files", (string)extF.value, null, CmsConstants.Documents.doc_state_active)).ToArray();
+                    extF => _cmsService.Get("files", (string)extF.value, null, CmsConstants.Documents.doc_state_active)).ToArray();
+                    //extF => _docClient.Get("files", (string)extF.value, null, CmsConstants.Documents.doc_state_active)).ToArray();
 
                 
                 Task.WaitAll(tasks);
@@ -67,7 +62,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 name = string.IsNullOrEmpty ( name ) ? null : name;
 
 
-                var folderId = extFilter.GetValue<string>("folderid") ?? _folderClient.GetByPath("files", null).Result.ReadAsSync().Id;
+                //var folderId = extFilter.GetValue<string>("folderid") ?? _folderClient.GetByPath("files", null).Result.ReadAsSync().Id;
+                var folderId = extFilter.GetValue<string>("folderid");
+                if (folderId == null)
+                {
+                    try
+                    {
+                        folderId = _cmsService.GetByPath("files", null).Result.ReadAsSync().Id;
+                    }
+                    catch (Exception e)
+                    {
+                        folderId = "";
+                    }
+                }
                 var req = new CmsListRequest()
                     {
                         Collection = "files",
@@ -125,7 +132,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 //{
                 //    dm = _docClient.Create("files", dm).Result.ReadAsSync();
                 //}
-               dm = _docClient.Create("files", dm).Result.ReadAsSync();
+
+               //dm = _docClient.Create("files", dm).Result.ReadAsSync();
+               dm = _cmsService.Create("files", dm).Result.ReadAsSync();
                 var vm = AutoMapper.Mapper.Map<FileManagementFile>(dm);
                 vmList.Add(vm);
             }
@@ -139,7 +148,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             bool b = true;
             foreach ( var file in files)
             {
-                b = _docClient.Delete("files", file.id, null).Result.ResponseMessage.IsSuccessStatusCode;
+                //b = _docClient.Delete("files", file.id, null).Result.ResponseMessage.IsSuccessStatusCode;
+                b = _cmsService.Delete("files", file.id, null).Result.ResponseMessage.IsSuccessStatusCode;
 
             
             }
@@ -147,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return EmptySingle<FileManagementFile>(b);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "f/ile/upload/{docid}")]
+        [WebInvoke(Method = "POST", UriTemplate = "file/upload/{docid}")]
         public Task<Response<string>> UploadContent(HttpRequestMessage request,string docid)
         {
             //todo add session id 
@@ -164,7 +174,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             using(var fs = fileinfo.OpenRead())
             {
-                result = _docClient.UpdateDocumentContent("files", docid , fs).Result.ResponseMessage;                
+                //result = _docClient.UpdateDocumentContent("files", docid , fs).Result.ResponseMessage;                
+                result = _cmsService.UpdateDocumentContent("files", docid , fs).Result.ResponseMessage;                
             }
 
             return Message<string>(result.IsSuccessStatusCode, "File uploaded");
@@ -175,9 +186,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          [WebGet(UriTemplate = "folder/list")]
         public Task<Response<List<FileManagementFolder>>> FolderList(PagingParamaters pagingParams, FilterCollection extFilter)
         {
-            var folderId = extFilter.GetValue <string>("folderid");
+            var folderId = extFilter.GetValue<string>("folderid");
 
-            var ret = _folderClient.GetFolderTree("files", extFilter.GetValue<string>("folderId", null), 99).Result.ReadAsSync();
+            //var ret = _folderClient.GetFolderTree("files", folderId, 99).Result.ReadAsSync();
+            var ret = _cmsService.GetFolderTree("files", folderId, 99).Result.ReadAsSync();
            
              
             var vm = Mapper.Map<FileManagementFolder>(ret);
@@ -201,7 +213,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Id = fldr.id,
                     DocumentListName = "files"
                 };
-                var ret = _folderClient.Create("files", dm).Result.ReadAsSync();
+                //var ret = _folderClient.Create("files", dm).Result.ReadAsSync();
+                var ret = _cmsService.Create("files", dm).Result.ReadAsSync();
                 var vm = new FileManagementFolder()
                 {
                       id = ret.Id,
@@ -220,10 +233,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var vms = new List<FileManagementFile>();
             foreach (var file in files)
             {
-                var dm = _docClient.Get("files", file.id, null, CmsConstants.Documents.doc_state_active ).Result.ReadAsSync();
+                //var dm = _docClient.Get("files", file.id, null, CmsConstants.Documents.doc_state_active ).Result.ReadAsSync();
+                var dm = _cmsService.Get("files", file.id, null, CmsConstants.Documents.doc_state_active ).Result.ReadAsSync();
                 dm.Name = file.name;
                 dm.FolderId = file.folderId;
-                var ret = _docClient.Update ( "files", dm.Id,  dm).Result.ReadAsSync();
+                //var ret = _docClient.Update ( "files", dm.Id,  dm).Result.ReadAsSync();
+                var ret = _cmsService.Update("files", dm.Id, dm).Result.ReadAsSync();
 
                 var vm = Mapper.Map<FileManagementFile>(ret);
                 vms.Add(vm);
@@ -247,7 +262,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Id = fldr.id,
                     DocumentListName = "files"
                 };
-                var ret = _folderClient.Update("files", dm.Id, dm).Result.ReadAsSync();
+                //var ret = _folderClient.Update("files", dm.Id, dm).Result.ReadAsSync();
+                var ret = _cmsService.Update("files", dm.Id, dm).Result.ReadAsSync();
                 
                 var vm = Mapper.Map<FileManagementFolder>(ret);
                 vms.Add(vm);
@@ -262,7 +278,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             bool success = true;
             foreach (var fldr in fldrs)
             {
-                var ret = _folderClient.Delete("files", fldr.id).Result.ResponseMessage;
+                //var ret = _folderClient.Delete("files", fldr.id).Result.ResponseMessage;
+                var ret = _cmsService.Delete("files", fldr.id).Result.ResponseMessage;
                 if (!ret.IsSuccessStatusCode)
                 {
                     success = false;
