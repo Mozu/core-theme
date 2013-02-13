@@ -5,7 +5,7 @@
 Ext.define('Taco.core.ux.browser.BrowserPage', {
     extend: 'Taco.core.ux.content.ContainerWithSidebar',
     alias: 'widget.browserpage',
-    requires: ['Taco.core.ux.grid.Panel', 'Taco.core.ux.TilePanel', 'Taco.core.ux.grid.Pager', 'Ext.util.Inflector', 'Ext.form.Panel', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.modal.Confirmation', 'Taco.core.ux.browser.ItemBrowser', 'Ext.selection.CheckboxModel'],
+    requires: ['Taco.core.ux.grid.Panel', 'Taco.core.ux.TilePanel', 'Taco.core.ux.grid.Pager', 'Ext.util.Inflector', 'Ext.form.Panel', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.modal.Confirmation', 'Taco.core.ux.browser.ItemBrowser', 'Ext.selection.CheckboxModel', 'Taco.core.ux.browser.FilterList' ],
 
     typeName: 'Item',
     createButtonPrefix: "Create New ",
@@ -85,7 +85,8 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     },
 
     createTilePanel: function(conf) {
-        Ext.applyIf(conf, this.tilePanelDefaults);        conf = Taco.app.context.forCurrentContext(conf);
+        Ext.applyIf(conf, this.tilePanelDefaults);
+        conf = Taco.app.context.forCurrentContext(conf);
         conf.store = this.store;
         this.tilePanel = Ext.create(this.tilePanelClass, conf);
         this.tilePanel.on({
@@ -100,16 +101,14 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
 
     createItemBrowser: function(conf) {
         var me = this;
-        var panels = []
-        if (this.gridPanel) panels.push(this.gridPanel);
-        if (this.tilePanel) panels.push(this.tilePanel);
         me.itemBrowser = Ext.create('Taco.core.ux.browser.ItemBrowser', {
-            uniquePanels: panels,
             itemStore: me.store,
             itemType: me.token,
             filterProperty: me.filterProperty,
             flex: 1,
-            isCollectionContext: Taco.app.context.getCurrent().contextType === "c"
+            isCollectionContext: Taco.app.context.getCurrent().contextType === "c",
+            gridPanel: me.gridPanel,
+            tilePanel: me.tilePanel
         });
 
         me.itemBrowser.on({
@@ -185,6 +184,24 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         Ext.apply(this.body, {
             layout: 'fit',
             items: [this.itemBrowser]
+        });
+    },
+
+    createSidebar: function() {
+        var me = this;
+        me.filterList = Ext.create('Taco.core.ux.browser.FilterList', {
+            itemType: me.token
+        });
+        me.sidebar = {
+            items: [me.filterList]
+        };
+        me.filterList.on('itemclick', function (cmp, record) {
+            var newFilter = record && record.get('configuration');
+            me.store.clearFilter();
+            if (newFilter) {
+                me.store.filter([newFilter]);
+            }
+
         });
     },
 
@@ -291,6 +308,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         if (this.useTilePanel) this.createTilePanel(this.tilePanelConf || {});
         this.createItemBrowser();
         this.layoutItemBrowser();
+        this.createSidebar();
         this.callParent(arguments);
         this.store.load();
     }

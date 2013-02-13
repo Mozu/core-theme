@@ -10,9 +10,12 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
 
     itemStoreId: false,
     filterProperty: 'title',
+    bodyPadding: '12 0 0 0',    useGridPanel: true,
+    useTilePanel: true,
 
-    setItemStore: function() {
+    createItemStore: function() {
         this.itemStore = this.itemStore || Ext.data.StoreManager.lookup(this.itemStoreId);
+        return this.itemStore;
     },
 
     createTopToolbar: function() {
@@ -83,26 +86,36 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 }
             }]
         };
-
-        if (me.uniquePanels.length > 1) {
-            conf.items.push(me.createToggleGroup());
-        }
-        me.topToolbar = Ext.widget('toolbar', conf );
+        if (me.useGridPanel && me.useTilePanel) conf.items.push(me.createToggleGroup());
+        me.topToolbar = Ext.widget('toolbar', conf);
         return me.topToolbar;
     },
 
-    createExpanderCollapser: function() {
+    createExpanderCollapser: function () {
+        var me = this,
+            expandCls = Taco.baseCSSPrefix + 'itembrowser-expandall',
+            collapseCls = Taco.baseCSSPrefix + 'itembrowser-collapseall';
         var me = this;
         me.expanderCollapser = Ext.widget('component', {
-            html: '<a href="#" class="' + Taco.baseCSSPrefix + 'itembrowser-expandall">expand all</a>&nbsp;|&nbsp;<a href="#" class="' + Taco.baseCSSPrefix + 'itembrowser-collapseall">collapse all</a>'
+            html: '<a href="#" class="' + expandCls + '">expand all</a>&nbsp;|&nbsp;<a href="#" class="' + collapseCls + '">collapse all</a>',
+            renderSelectors: {
+                expandEl: 'a.' + expandCls,
+                collapseEl: 'a.' + collapseCls
+            },
+            afterRender: function () {
+                me.expanderCollapser.expandEl.on('click', me.gridPanel.expandAllRows, me.gridPanel);
+                me.expanderCollapser.collapseEl.on('click', function () {
+                    me.gridPanel.expandAllRows(false);
+                });
+            }
         });
+
         return me.expanderCollapser;
     },
 
     createToggleGroup: function() {
         var me = this;
         me.toggleGroup = Ext.widget('togglegroup', {
-            hidden: me.uniquePanels.length === 1,
             columns: 2,
             vertical: false,
             margin: '0 5 0 10',
@@ -112,14 +125,16 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             ],
             listeners: {
                 change: function (group, selected) {
-                    var slider = me.down('slider') || null;
+                    var slider = me.toggleGroup.slider = me.toggleGroup.slider || me.down('slider') || null;
 
                     me.getLayout().setActiveItem(parseInt(selected.cardselect));
 
                     if (slider && !!(parseInt(selected.cardselect))) {
-                        me.down('slider').show();
-                    } else if (slider) {
-                        me.down('slider').hide();
+                        slider.show();
+                        me.expanderCollapser && me.expanderCollapser.hide();
+                    } else {
+                        slider&&slider.hide();
+                        me.expanderCollapser && me.expanderCollapser.show();
                     }
                 }
             }
@@ -136,9 +151,17 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 // placeholder for Bulk Actions button
             ]
         };
-        if (this.isCollectionContext) conf.items.push('->', me.createExpanderCollapser());
+        if (this.isCollectionContext && this.gridPanel && this.useGridPanel) conf.items.push('->', me.createExpanderCollapser());
         me.secondToolbar = Ext.widget('toolbar', conf);
         return me.secondToolbar;
+    },
+
+    constructor: function (conf) {
+        var panels = [];
+        if (conf.gridPanel && (conf.useGridPanel || this.useGridPanel)) panels.push(conf.gridPanel);
+        if (conf.tilePanel && (conf.useTilePanel || this.useTilePanel)) panels.push(conf.tilePanel);
+        conf.uniquePanels = panels;
+        this.callParent([conf]);
     },
 
     initComponent: function () {
@@ -146,7 +169,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
 
         if (!me.dockedItems || me.dockedItems.length === 0) me.dockedItems = [me.createTopToolbar(), me.createSecondToolbar()];
 
-        me.itemStore.on({
+        me.createItemStore().on({
             load: me.onItemStoreUpdate,
             datachanged: me.onItemStoreUpdate,
             scope: me

@@ -11,17 +11,23 @@ Ext.define('Taco.core.ux.SidebarList', {
 
     itemSelector: '.' + Taco.baseCSSPrefix + 'sidebarlist-list-item',
 
+    renderTpl: '<h1 class="' + Taco.baseCSSPrefix + 'sidebarlist-title">{title}</h1>{%this.renderContent(out,values)%}',
+
     renderSelectors: {
         titleEl: 'h1.' + Taco.baseCSSPrefix + 'sidebarlist-title',
         listEl: 'ul.' + Taco.baseCSSPrefix + 'sidebarlist-list'
     },
 
-    tpl: ['<h1 class="' + Taco.baseCSSPrefix + 'sidebarlist-title">{title}</h1>',
-          '<ul class="' + Taco.baseCSSPrefix + 'sidebarlist-list">',
+    tpl: ['<ul class="' + Taco.baseCSSPrefix + 'sidebarlist-list">',
           '<tpl for=".">',
-            '<li class="' + Taco.baseCSSPrefix + 'sidebarlist-list-item"><a href="#" class="' + Taco.baseCSSPrefix + 'sidebar-list-itemlink">{name}</a></li>',
+            '<li class="' + Taco.baseCSSPrefix + 'sidebarlist-list-item"><a href="javascript:;" class="' + Taco.baseCSSPrefix + 'sidebar-list-itemlink">{name}</a></li>',
           '</tpl>',
           '</ul>'
     ],
+    
+    initComponent: function () {
+        this.callParent(arguments);
+        this.store.load();
+    }
 
 });
