@@ -7,6 +7,6 @@ namespace Mozu.SiteBuilder.UX.Admin
     {
         Task<Tenant.Contracts.Tenant> ChangeTenant(int tenantId);
 
-        Task<Site> ChangeSite(int siteId);
+       // Task<Site> ChangeSite(int siteId);
     }
 }

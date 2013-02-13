@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return false;
             }
 
-            // var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
+           
             var res = _adminUserWebApiClient.GetUserByEmail(user.EmailAddress, null).Result;
             if (res.ResponseMessage.IsSuccessStatusCode)
             {

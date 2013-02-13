@@ -171,12 +171,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(tenant);
         }
 
-        public async Task<Site> ChangeSite(int siteId)
-        {
-            var site = await _contextSwitcher.ChangeSite(siteId);
+        //public async Task<Site> ChangeSite(int siteId)
+        //{
+        //    var site = await _contextSwitcher.ChangeSite(siteId);
 
-            return site;
-        }
+        //    return site;
+        //}
 
 
         //public List<Tuple<Site, int>> SiteRolesList(string userId)

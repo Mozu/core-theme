@@ -57,10 +57,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
                                                              }).Result.ReadAsSync();
 
                 var  settings =DependencyResolver.Current.GetService<ISettings>();
-                var tenantTicketRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler(new ApiContext() { TenantId = (int)testAccount.tenantId }, settings));
+                //var tenantTicketRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler(new ApiContext() { TenantId = (int)testAccount.tenantId }, settings));
                 var authHelper = DependencyResolver.Current.GetService<IAuthenticationHelper>();
 
-                var ticket=tenantTicketRepo.CreateAuthTicketForTenant(new UserTokenInfo()
+                var ticket = _authTicketWebApiClient.With( TargetContextLevelType.Tenant ).With(x => x.TenantId=(int)testAccount.tenantId).CreateAuthTicketForTenant(new UserTokenInfo()
                                                                {
                                                                    AccessToken = adminTicket.AuthTicket.AccessToken
                                                                }).Result.ReadAsSync();

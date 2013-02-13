@@ -17,13 +17,16 @@ namespace Mozu.SiteBuilder.UX.Admin
         private readonly IUniversalSiteApiClient _universalSiteApiClient;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly ISettings _settings;
+        private readonly IRoleWebApiClient _roleWebApi;
 
-        public RolesHelper(IAdminUserWebApiClient adminUserWebApiClient, IUniversalSiteApiClient universalSiteApiClient, IAuthenticationHelper authenticationHelper, ISettings settings)
+
+        public RolesHelper(IAdminUserWebApiClient adminUserWebApiClient, IUniversalSiteApiClient universalSiteApiClient, IAuthenticationHelper authenticationHelper, ISettings settings , IRoleWebApiClient roleWebApi )
         {
             _adminUserWebApiClient = adminUserWebApiClient;
             _universalSiteApiClient = universalSiteApiClient;
             _authenticationHelper = authenticationHelper;
             _settings = settings;
+            _roleWebApi = roleWebApi;
         }
 
         public List<Tuple<Site, int>> SiteRolesList(string userId)
@@ -49,8 +52,10 @@ namespace Mozu.SiteBuilder.UX.Admin
             // NOTE: This replaces the above code, I think, I need to double check and test though... - CM
             var userClaims = new LightweightUserClaims { UserId = user.UserId };
 
-            var roleThing = new RoleWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = site.Id, TenantId = site.TenantId, UserClaims = userClaims }, _settings));
-            roleThing.DeleteRole(roleId);
+          //  var roleThing = new RoleWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = site.Id, TenantId = site.TenantId, UserClaims = userClaims }, _settings));
+
+            _roleWebApi.With(x => x.SiteId = site.Id).DeleteRole(roleId);
+           // roleThing.DeleteRole(roleId);
 
             return true;
         }
