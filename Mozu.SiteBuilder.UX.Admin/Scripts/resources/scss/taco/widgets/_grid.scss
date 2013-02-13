@@ -66,6 +66,12 @@
     font-size: $grid-header-font-size;
     font-weight: bold;
     line-height: $grid-header-line-height;
+
+    &.#{$prefix}column-header-last {
+      .#{$prefix}column-header-trigger {
+        display: block !important;
+      }
+    }
   }
 
   .#{$prefix}column-header-inner {
