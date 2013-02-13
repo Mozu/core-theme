@@ -486,6 +486,7 @@
     <Content Include="Scripts\app\core\ux\browser\FilterList.js" />
     <Content Include="Scripts\app\core\ux\content\ContainerWithSidebar.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
+    <Content Include="Scripts\app\core\ux\grid\HeaderDropZone.js" />
     <Content Include="Scripts\app\core\ux\SidebarList.js" />
     <Content Include="Scripts\app\core\ux\grid\Header.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />

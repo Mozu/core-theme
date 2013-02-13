@@ -1,7 +1,8 @@
 /**
  * @class Taco.core.ux.grid.RowExpander
  * @author Jimmy Sanford
- * Overrides the RowExpander plugin.
+ * Overrides the RowExpander plugin. The primary override is changing the rowbody feature to our own taco.rowbody,
+ * but we are also slightly changing the generated DOM and interactions with grids using selection.CheckboxModel.
  */
 
 Ext.define('Taco.core.ux.grid.RowExpander', {
