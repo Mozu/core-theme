@@ -59,6 +59,7 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
         } else {
             grid.features = features;
         }
+        grid.expandAllRows = Ext.bind(me.expandAllRows, me);
     },
 
     // overrides: removed valign, rowspan attributes; removed colspan decrement

@@ -6,11 +6,21 @@
 
 Ext.define('Taco.core.ux.browser.FilterList', {
     extend: 'Taco.core.ux.SidebarList',
-
-    itemSelector: 'taco-sidebarlist-item',
+    requires: ['Taco.store.ItemFilters'],
 
     renderData: {
         title: 'Filters'
     },
+
+    initComponent: function () {
+        var me = this;
+        me.store = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.ItemFilters', clearSort: true, filters: {
+                property: 'filterType',
+                value: me.itemType
+            }
+        })
+        this.callParent(arguments);
+    }
 
 });

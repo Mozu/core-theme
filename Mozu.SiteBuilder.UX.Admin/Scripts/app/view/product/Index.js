@@ -4,7 +4,7 @@
 Ext.define('Taco.view.product.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.prodindex',
-    requires: ['Taco.model.Product'],
+    requires: ['Taco.model.Product', 'Taco.store.Products'],
 
     typeName: 'Product',
     modelName: 'Taco.model.Product',
@@ -78,6 +78,7 @@ Ext.define('Taco.view.product.Index', {
             c: {
                 plugins: [{
                     ptype: 'rowexpander',
+                    pluginId: 'expander',
                     rowBodyTpl: new Ext.XTemplate(
                         '<tpl for="productInSites"><tr class="x-grid-row-body">',
                             '<td colspan="2" class="x-grid-cell"><div class="x-grid-cell-inner"></div></td>',
