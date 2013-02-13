@@ -88,8 +88,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
                 {
                     return false;
                 }
+                int tenantId;
+                string tenantStr;
+                lwUser.Bag.TryGetValue("TenantId", out tenantStr);
+                int.TryParse(tenantStr, out tenantId);
 
-                if (lwUser.TenantId != SiteBuilderContext.Current.TenantId)
+                if (tenantId != SiteBuilderContext.Current.TenantId)
                 {
                     return false;
                 }

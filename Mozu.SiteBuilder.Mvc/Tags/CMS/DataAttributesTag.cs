@@ -6,6 +6,7 @@
 
 using System.Json;
 using Mozu.SiteBuilder.UX.Models;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.Mvc.Tags.Data
 {
@@ -183,10 +184,14 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
                 attributeName = obj.ToString();
             }
             if ( mmd.AdditionalValues.TryGetValue ( "data-editing", out obj ))
-            {
+            {  
                 if (obj is JsonValue)
                 {
                     ((JsonValue)obj).Save(sw, JsonSaveOptions.None);
+                }
+                if (obj is Newtonsoft.Json.Linq.JObject)
+                {
+                    ((Newtonsoft.Json.Linq.JObject) obj).WriteTo(new JsonTextWriter(sw) {Formatting = Newtonsoft.Json.Formatting.None});
                 }
                 else if (obj is string)
                 {

@@ -5,8 +5,11 @@
 // -----------------------------------------------------------------------
 
 using System.Web.Mvc;
+using Autofac;
+using Autofac.Integration.Mvc;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
+using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
@@ -66,16 +69,30 @@ using System.Runtime.Serialization;
 
         public System.Web.Mvc.ModelMetadata GetModelMetadata()
         {
-            return null;
-            //var mmd  = GetModelMetadata("___");
+            
+            var mmd  = GetModelMetadata("___");
             //return mmd;
+            var wid = this.TypeHelper.GetWidgetDefintion(this.DefinitionId.ToString());
+            var jobj = Newtonsoft.Json.Linq.JObject.FromObject(this);
+            jobj["editView"] = wid.EditView;
+            mmd.AdditionalValues["data-attribute-name"] = "data-editing-widget";
+            mmd.AdditionalValues["data-editing"] = jobj;
+            
+
+            return mmd;
         }
 
+        ICmsTypeHelper TypeHelper
+        {
+            get
+            {
+                return AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<ICmsTypeHelper>();
+            }
+        }
         public System.Web.Mvc.ModelMetadata GetModelMetadata(string property)
         {
-            return null;
-            //var mmd = new ModelMetadata(ModelMetadataProviders.Current, this.GetType(), () => this[property], typeof(string), property);
-            //return mmd;
+            var mmd = new ModelMetadata(ModelMetadataProviders.Current, this.GetType(), () => "na", typeof(string), property);
+            return mmd;
         }
 
         public bool IsPreview { get; set; }

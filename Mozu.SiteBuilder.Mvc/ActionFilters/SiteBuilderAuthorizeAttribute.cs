@@ -43,11 +43,20 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                 {
                     return false;
                 }
-
-                if (lwUser.SiteId != SiteBuilderContext.Current.SiteId)
+                int tenantId;
+                string tenantStr;
+                lwUser.Bag.TryGetValue("TenantId", out tenantStr);
+                int.TryParse(tenantStr, out tenantId);
+               
+                
+                if ( tenantId != SiteBuilderContext.Current.TenantId )
                 {
                     return false;
                 }
+                //if (lwUser != SiteBuilderContext.Current.SiteId)
+                //{
+                //    return false;
+                //}
 
                 if (RequiredBehaviors != null && RequiredBehaviors.Length > 0 &&
                     (lwUser.BehaviorIds == null || !(RequiredBehaviors.All(x => lwUser.BehaviorIds.Contains(x)))))
