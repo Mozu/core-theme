@@ -13,6 +13,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers;
 using Mozu.SiteBuilder.UX.Admin.MockServices;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -65,10 +66,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     var result = await _productClient.AddProduct(dataModel);
                     returned = result.ReadAsAsync().Result;
                 }
-                catch
+                catch (AggregateException e)
                 {
-                    // TODO: should probably do something about these errors
-                    continue;
+                    return Message3<List<Product>>(false, e.UnwrapAgg().Message);
                 }
 
                 createdProducts.Add(Mapper.Map<Product>(returned));
