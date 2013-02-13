@@ -100,10 +100,10 @@ Ext.define('Taco.model.FileManagementFile', {
         type: 'readahead',
         unfilteredParam:'unfiltered',
         api: {
-            read: '/admin/app/fileMangment/file/list',
-            create: '/admin/app/fileMangment/file/create',
-            update: '/admin/app/fileMangment/file/edit',
-            destroy: '/admin/app/fileMangment/file/delete'
+            read: '/admin/app/fileManagement/file/list',
+            create: '/admin/app/fileManagement/file/create',
+            update: '/admin/app/fileManagement/file/edit',
+            destroy: '/admin/app/fileManagement/file/delete'
         },
         reader: {
             type: 'json',
