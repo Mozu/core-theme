@@ -574,6 +574,8 @@
     <Content Include="Scripts\app\view\themes\ThemeView.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\build.xml" />
+    <Content Include="Scripts\build\all-classes.js" />
+    <Content Include="Scripts\build\index.html" />
     <Content Include="Scripts\ext\ext-all-debug.js" />
     <Content Include="Scripts\ext\ext-all-dev.js" />
     <Content Include="Scripts\ext\locale\ext-lang-af.js" />
