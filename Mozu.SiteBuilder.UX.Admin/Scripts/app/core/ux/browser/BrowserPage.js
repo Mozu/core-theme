@@ -76,6 +76,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
 
     createGridPanel: function(conf) {
         Ext.applyIf(conf, this.gridPanelDefaults);
+        conf = Taco.app.context.forCurrentContext(conf);
         if (conf.paged) conf.dockedItems = [this.createGridPager()];
         conf.store = this.store;
         this.gridPanel = Ext.create(this.gridPanelClass, conf);
@@ -84,11 +85,12 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     },
 
     createTilePanel: function(conf) {
-        Ext.applyIf(conf, this.tilePanelDefaults);
+        Ext.applyIf(conf, this.tilePanelDefaults);        conf = Taco.app.context.forCurrentContext(conf);
         conf.store = this.store;
         this.tilePanel = Ext.create(this.tilePanelClass, conf);
         this.tilePanel.on({
             tileclick: function (view, record) {
+                var me = this;
                 me.launchEditor(record);
                 Taco.app.StateManager.addState(me.token + '/edit/' + record.getId(), { id: record.getId() });
             }
@@ -106,7 +108,8 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             itemStore: me.store,
             itemType: me.token,
             filterProperty: me.filterProperty,
-            flex: 1
+            flex: 1,
+            isCollectionContext: Taco.app.context.getCurrent().contextType === "c"
         });
 
         me.itemBrowser.on({
