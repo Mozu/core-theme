@@ -10,14 +10,16 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
 
     itemStoreId: false,
     filterProperty: 'title',
-    bodyPadding: '12 0 0 0',
 
     setItemStore: function() {
         this.itemStore = this.itemStore || Ext.data.StoreManager.lookup(this.itemStoreId);
     },
 
     createTopToolbar: function() {
-        var me = this, conf = {
+        var me = this,
+            conf;
+
+        conf = {
             dock: 'top',
             items: [{
                 xtype: 'textfield',
@@ -81,12 +83,16 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 }
             }]
         };
-        if (me.uniquePanels.length > 1) conf.push(me.createToggleGroup());
+
+        if (me.uniquePanels.length > 1) {
+            conf.items.push(me.createToggleGroup());
+        }
         me.topToolbar = Ext.widget('toolbar', conf );
         return me.topToolbar;
     },
 
     createExpanderCollapser: function() {
+        var me = this;
         me.expanderCollapser = Ext.widget('component', {
             html: '<a href="#" class="' + Taco.baseCSSPrefix + 'itembrowser-expandall">expand all</a>&nbsp;|&nbsp;<a href="#" class="' + Taco.baseCSSPrefix + 'itembrowser-collapseall">collapse all</a>'
         });
@@ -94,6 +100,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
     },
 
     createToggleGroup: function() {
+        var me = this;
         me.toggleGroup = Ext.widget('togglegroup', {
             hidden: me.uniquePanels.length === 1,
             columns: 2,
