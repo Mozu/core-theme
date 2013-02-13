@@ -79,33 +79,10 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                     totalCount: 0,
                     unit: 'records'
                 }
-            }, {
-                xtype: 'togglegroup',
-                hidden: me.uniquePanels.length === 1,
-                columns: 2,
-                vertical: false,
-                margin: '0 5 0 10',
-                items: [
-                    { name: 'cardselect', inputValue: '0', fieldCls: 'toggle-gridview', checked: true },
-                    { name: 'cardselect', inputValue: '1', fieldCls: 'toggle-iconview' }
-                ],
-                listeners: {
-                    change: function (group, selected) {
-                        var slider = me.down('slider') || null;
-
-                        me.getLayout().setActiveItem(parseInt(selected.cardselect));
-
-                        if (slider && !!(parseInt(selected.cardselect))) {
-                            me.down('slider').show();
-                        } else if (slider) {
-                            me.down('slider').hide();
-                        }
-                    }
-                }
             }]
-        }
-        me.topToolbar = Ext.widget('toolbar',);
-        if (me.uniquePanels.length === 1) 
+        };
+        if (me.uniquePanels.length > 1) conf.push(me.createToggleGroup());
+        me.topToolbar = Ext.widget('toolbar', conf );
         return me.topToolbar;
     },
 
@@ -114,6 +91,33 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             html: '<a href="#" class="' + Taco.baseCSSPrefix + 'itembrowser-expandall">expand all</a>&nbsp;|&nbsp;<a href="#" class="' + Taco.baseCSSPrefix + 'itembrowser-collapseall">collapse all</a>'
         });
         return me.expanderCollapser;
+    },
+
+    createToggleGroup: function() {
+        me.toggleGroup = Ext.widget('togglegroup', {
+            hidden: me.uniquePanels.length === 1,
+            columns: 2,
+            vertical: false,
+            margin: '0 5 0 10',
+            items: [
+                { name: 'cardselect', inputValue: '0', fieldCls: 'toggle-gridview', checked: true },
+                { name: 'cardselect', inputValue: '1', fieldCls: 'toggle-iconview' }
+            ],
+            listeners: {
+                change: function (group, selected) {
+                    var slider = me.down('slider') || null;
+
+                    me.getLayout().setActiveItem(parseInt(selected.cardselect));
+
+                    if (slider && !!(parseInt(selected.cardselect))) {
+                        me.down('slider').show();
+                    } else if (slider) {
+                        me.down('slider').hide();
+                    }
+                }
+            }
+        });
+        return me.toggleGroup;
     },
 
     createSecondToolbar: function () {
@@ -133,13 +137,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
     initComponent: function () {
         var me = this;
 
-        // add a toolbar with filter, summary info, and card switcher
-        if (!me.dockedItems || me.dockedItems.length === 0) {
-            me.dockedItems = [me.topToolbar,
-            {
-                
-            }];
-        }
+        if (!me.dockedItems || me.dockedItems.length === 0) me.dockedItems = [me.createTopToolbar(), me.createSecondToolbar()];
 
         me.itemStore.on({
             load: me.onItemStoreUpdate,
