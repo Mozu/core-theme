@@ -38,7 +38,8 @@ Ext.define('Taco.view.product.SiteForm', {
             product: this.product,
             productInSiteInfo: this.productInSiteInfo,
             isSingleSite: this.isSingleSite,
-            isGlobal: false
+            isGlobal: false,
+            persistChangesToModel: true
         };
 
         this.items = [
