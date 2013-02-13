@@ -26,6 +26,8 @@ Ext.define('Taco.view.product.Form', {
 
         this.isSingleSite = this.singleSiteCheck();
 
+        this.siteCollection = Taco.app.context.getCurrentSiteCollection();
+
         this.globalForm = Ext.create('Taco.view.product.GlobalForm', {
             record: this.record
         });
@@ -40,7 +42,7 @@ Ext.define('Taco.view.product.Form', {
             navigation: true,
             items: tabItems,
             pickerCfg: {
-                data: Taco.app.context.getCurrentSiteCollection().sites
+                data: this.siteCollection.sites
             }
         });
 
@@ -96,7 +98,8 @@ Ext.define('Taco.view.product.Form', {
     },
 
     buildSiteForm: function (productInSiteInfo) {
-        var siteId = productInSiteInfo.get('siteId');
+        var siteId = productInSiteInfo.get('siteId'),
+            site = this.siteCollection.findSite(siteId);
 
         return Ext.create('Taco.view.product.SiteForm', {
             isSingleSite: this.isSingleSite,
@@ -107,7 +110,8 @@ Ext.define('Taco.view.product.Form', {
             formCfg: {
                 isSingleSite: this.isSingleSite
             },
-            tabPickerId: '' + siteId
+            tabPickerId: '' + siteId,
+            title: site ? site.name : siteId
         });
     },
 
@@ -132,7 +136,9 @@ Ext.define('Taco.view.product.Form', {
         if (!leaveTabs) {
             this.rebuildTabs();
         }
+        debugger;
         this.globalForm.isSingleSite = false;
+        this.globalForm.loadForm(undefined, true);
         this.rebuildTabs();
         this.tabPanel.showTabAt(0);
         this.tabPanel.setActiveItemAt(this.tabPanel.items.length - 1);
@@ -266,7 +272,8 @@ Ext.define('Taco.view.product.Form', {
 
     /**
      * @private
-     * @param {Object} sites A list of all sites that are associated with this product.  Property names are siteIds, values are the siteNames.
+     * @param {Object} sites A list of all sites that are associated with this product. 
+     *                       Property names are siteIds, values are the siteNames.
      */
     handleSelectionChange: function (sites) {
         //console.log( 'handleSelectionChange', sites );

@@ -93,7 +93,7 @@ Ext.define('Taco.view.product.Index', {
                             return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
                         }
                     })
-                }]
+        }]
     
             }
         }
@@ -117,6 +117,28 @@ Ext.define('Taco.view.product.Index', {
         imageField: 'imagePath',
         isDragable: false,
         nameField: 'productName',
-    }
+    },
 
+   
+
+    launchLoadedEditor: function (record, options) {
+        var site,
+            infoStore,
+            infoRecord;
+
+        if (record.phantom) {
+            site = Taco.app.context.getCurrentSite();
+            infoStore = record.productInSitesStore();
+            siteInfo = Ext.create('Taco.model.ProductInSiteInfo', {
+                siteId: site.id,
+                productCode: record.getId()
+            });
+            siteInfo.phantom = true;
+            infoStore.add(siteInfo);
+            siteInfo.set('productCote', record.getId());
+            siteInfo.phantom = true;
+        }
+        this.callParent(arguments);
+    }
+    
 });

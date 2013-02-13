@@ -276,6 +276,9 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     loadForm: function (record, noCascade) {
+        var noCascadeArg = noCascade,
+            recordArg = record;
+
         if (!record) {
             record = this.record;
         }
@@ -296,7 +299,7 @@ Ext.define('Taco.core.ux.form.Form', {
 
         if (!noCascade) {
             Ext.each(this.forms, function (form) {
-                form.loadForm(record);
+                form.loadForm(recordArg, noCascadeArg);
             });
         }
 
