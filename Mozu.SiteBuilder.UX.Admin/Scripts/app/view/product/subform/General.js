@@ -24,7 +24,10 @@ Ext.define('Taco.view.product.subform.General', {
             name: 'productCode',
             emptyText: '#######',
             required: true,
-            width: 200
+            labelAlign: 'top',
+            labelSeparator: '',
+            width: 200,
+            xtype: 'textfield'
         }, {
             xtype: 'productoverride',
             overrideFieldName: 'isContentOverridden',
