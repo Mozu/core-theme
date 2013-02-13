@@ -41,10 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 if (_userHelper.UserExists(user))
                 {
-                    // var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
                     ulr = await _usersRepo.Login(new Core.Api.Contracts.UserAuthInfo { EmailAddress = user.EmailAddress, Password = user.Password }).Result.ReadAsAsync();
-                    //  ticket = lur.AuthTicket;
-                    //ticket = _usersRepo.CreateUserAuthTicket().Result.ReadAsSync();
                     _authHelper.SetCurrentUser(ulr.AuthTicket);
                     var user1 = _authHelper.GetCurrentUser();
                     _invitationWebApiClient = new InvitationWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = user.SiteId.GetValueOrDefault(0), TenantId = user.TenantId.GetValueOrDefault(0), UserClaims = user1 }, _settings));

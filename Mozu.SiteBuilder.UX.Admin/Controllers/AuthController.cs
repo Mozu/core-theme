@@ -165,11 +165,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                     return View("Roles", contexts);
                 }
 
-                var site = await _contextSwitcher.ChangeSite(contexts.First().Id);
-                if (site != null)
-                {
-                    return Redirect("/admin");
-                }
+                throw new NotImplementedException();
+               // var site = await _contextSwitcher.ChangeSite(contexts.First().Id);
+                //if (site != null)
+                //{
+                //    return Redirect("/admin");
+                //}
             }
             catch (AggregateException exception)
             {

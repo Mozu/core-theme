@@ -22,7 +22,7 @@ Ext.define('Taco.core.ux.action.Action', {
             click: {
                 fn: this.onClick,
                 element: 'el',
-                scope: this.scope || this
+                scope: this 
             }
         })
         
@@ -40,11 +40,11 @@ Ext.define('Taco.core.ux.action.Action', {
             this.fireEvent('click', this);
             return;
         }
-    	
         e.stopEvent();
 
         if (this.fireEvent('beforeclick', this, e) !== false) {
             this.fireEvent('click', this);
         }
     }
+    	
 });
