@@ -21,6 +21,7 @@ Ext.define('Taco.view.product.SiteForm', {
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'single-site-admin-form'],
     overrideCount: 0,
 
+
     header: false,
     persistChangesToModel: true,
 
@@ -31,8 +32,6 @@ Ext.define('Taco.view.product.SiteForm', {
         this.defaults.isSingleSite = this.isSingleSite;
 
         this.siteId = this.record.get('siteId');
-
-        this.editTitle = this.createTitle = 'Site ID: ' + this.siteId;
 
         subFormCfg = {
             record: this.record,

@@ -28,9 +28,23 @@
         }
         return null;
 
+    }, 
+
+    findSite: function (id) {
+        var site;
+
+        Ext.each(this.sites, function (s) {
+            if (s.id === id) {
+                site = s;
+                return false;
+            }
+        });
+
+        return site;
     },
 
-    getSiteGroupId: function () {
+    getSiteGroupId: function () { 
+
         return this.id;
     }
 });
