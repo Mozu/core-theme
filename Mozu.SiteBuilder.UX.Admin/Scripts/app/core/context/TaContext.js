@@ -256,6 +256,29 @@ Ext.define('Taco.core.context.TaContext', {
             });
         });
         return foundSite;
+    },
+
+    /**
+     * Configuration objects often change based on context; this method exists to transform those objects based on a contextConf property.
+     *
+     *    {
+     *        split: true,
+     *        contextConf:  {
+     *                         c: {
+     *                                split: false
+     *                            }
+     *                      }
+     *    }
+     *
+     *
+     * @param Object obj The object to transform based on context. If it contains a contextConf property, this function will transform the object. If not, nothing will happen.
+     */
+    forCurrentContext: function (obj) {
+        var contextType = this.getCurrent().contextType;
+        if (obj.contextConf && obj.contextConf[contextType]) {
+            obj = Ext.apply({}, obj, obj.contextConf[contextType]);
+        }
+        return obj;
     }
 
 });
