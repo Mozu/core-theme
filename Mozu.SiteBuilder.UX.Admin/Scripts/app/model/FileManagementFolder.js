@@ -43,10 +43,10 @@ Ext.define('Taco.model.FileManagementFolder', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/app/fileMangment/folder/list',
-            create: '/admin/app/fileMangment/folder/create',
-            update: '/admin/app/fileMangment/folder/edit',
-            destroy: '/admin/app/fileMangment/folder/delete'
+            read: '/admin/app/fileManagement/folder/list',
+            create: '/admin/app/fileManagement/folder/create',
+            update: '/admin/app/fileManagement/folder/edit',
+            destroy: '/admin/app/fileManagement/folder/delete'
         },
         reader: {
             type: 'json',
