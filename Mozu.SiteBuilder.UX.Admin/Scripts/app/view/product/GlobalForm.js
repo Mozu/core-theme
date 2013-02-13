@@ -22,7 +22,6 @@ Ext.define('Taco.view.product.GlobalForm', {
         this.callParent(arguments);
         this.mixins.scrollspy.constructor.call(this);
     },
-    id: 'productGlobalForm',
     scrollSpyOffset: 150,
     title: 'Global',
     header: false,

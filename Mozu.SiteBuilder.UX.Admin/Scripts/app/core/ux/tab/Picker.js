@@ -57,7 +57,7 @@ Ext.define('Taco.core.ux.tab.Picker', {
         Ext.each(this.data, function (record) {
             var id = this.idTpl.apply(record);
             checkboxes.push({
-                id: id,
+                value: id,
                 boxLabel: this.displayTpl.apply(record),
                 checked: Ext.Array.contains(checkedItems, id),
                 data: record

@@ -94,8 +94,7 @@ Ext.define('Taco.view.product.Index', {
                             return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
                         }
                     })
-        }]
-    
+                }]
             }
         }
     },
