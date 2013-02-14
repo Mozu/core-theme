@@ -5,7 +5,7 @@
 Ext.define('Taco.core.ux.browser.BrowserPage', {
     extend: 'Taco.core.ux.content.ContainerWithSidebar',
     alias: 'widget.browserpage',
-    requires: ['Taco.core.ux.grid.Panel', 'Taco.core.ux.TilePanel', 'Taco.core.ux.grid.Pager', 'Ext.util.Inflector', 'Ext.form.Panel', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.modal.Confirmation', 'Taco.core.ux.browser.ItemBrowser', 'Ext.selection.CheckboxModel', 'Taco.core.ux.browser.FilterList' ],
+    requires: ['Taco.core.ux.grid.Panel', 'Taco.core.ux.TilePanel', 'Taco.core.ux.grid.Pager', 'Ext.util.Inflector', 'Ext.form.Panel', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.modal.Confirmation', 'Taco.core.ux.browser.ItemBrowser', 'Ext.selection.CheckboxModel', 'Taco.core.ux.browser.FilterList', 'Taco.core.ux.browser.Modal'],
 
     typeName: 'Item',
     createButtonPrefix: "Create New ",
