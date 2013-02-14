@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.name, op => op.MapFrom(x => x.Name))
                 .ForMember(x => x.thumbnail, op => op.ResolveUsing(DoThumb))
                 .ForMember(x => x.isUploaded, op => op.ResolveUsing(x => x.ContentLength.GetValueOrDefault(0) > 0))
-                .ForMember(x=>x.width  , op=> op.ResolveUsing (_=> _.Properties.Where (_p=> _p.PropertyType == "width").Select(_p=>(int?)_p.Value ).FirstOrDefault ()))
+                .ForMember(x => x.width  , op=> op.ResolveUsing (_=> _.Properties.Where (_p=> _p.PropertyType == "width").Select(_p=>(int?)_p.Value ).FirstOrDefault ()))
                 .ForMember(x => x.height, op => op.ResolveUsing(_ => _.Properties.Where(_p => _p.PropertyType == "height").Select(_p => (int?)_p.Value).FirstOrDefault()))
                 .ForMember(x => x.fileSize, op => op.MapFrom(x => x.ContentLength.GetValueOrDefault(0)));
 

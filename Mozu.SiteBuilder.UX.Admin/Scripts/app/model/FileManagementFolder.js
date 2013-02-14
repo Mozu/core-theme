@@ -1,7 +1,7 @@
 ﻿/**
 * @class Taco.model.FileManagementFolder
 * @author no one
-* The CategoryFileManagementFile model
+* The FileManagementFolder model
 */
 
 Ext.define('Taco.model.FileManagementFolder', {
