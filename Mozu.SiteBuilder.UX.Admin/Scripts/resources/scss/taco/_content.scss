@@ -44,6 +44,24 @@
 	.#{$vprefix}content-sidebar {
 		
 		background-color: white;
+
+		.#{$vprefix}sidebarlist {
+			margin: 0 30px;
+			h1 {
+				padding: 0 0 15px;
+				margin: 0 0 15px;
+				font-size: 16pt;
+				font-weight: normal;
+				border-bottom: 1px dashed #999;
+				}
+			.#{$vprefix}sidebarlist-list-item {
+				margin: 6px 0;
+				font-size: 9pt;
+				&.#{$prefix}item-selected {
+					font-weight: bold;
+				}
+			}
+		}
 	
 	}
 

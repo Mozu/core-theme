@@ -15,28 +15,11 @@ Ext.define('Taco.controller.PendingChanges', {
     modelName: 'Pending Change',
 
 
-    //index: function () {
-    //    if (Taco.app.context.getCurrent().contextType == 't') {
-    //        this.createContentView('Taco.core.ux.content.Container', {
-    //            header: {
-    //                title: "choose a site collection"
-    //            },
-
-    //            body: {
-    //                layout: 'auto',
-    //                items: [{
-    //                    html: 'placeholder for choose site collection interstitial '
-    //                }]
-    //            }
-    //        });
-    //    } else {
-    //        this.createContentView('Taco.view.product.Index');
-    //    }
-    //}
+    index: function () {
+        Taco.core.StateManager.attemptNavigate('pendingchanges/cms');
+    },
 
     cms: function () {
-        this.createContentView('Taco.view.pendingchange.Cms', {
-
-        });
+        this.createContentView('Taco.view.pendingchange.Cms');
     }
 });

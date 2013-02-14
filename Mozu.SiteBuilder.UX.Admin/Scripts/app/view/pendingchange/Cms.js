@@ -28,7 +28,11 @@ Ext.define('Taco.view.pendingchange.Cms', {
             tpl: ['<span>{text} <em>({count} items)</em></span>'],
             listeners: {
                 click: function () {
-                    this.store.publishAll();
+                    var me = this;
+                    this.store.publishAll(function () {
+                        me.fireEvent('setmessage', 'All changes published!', 'success');
+                        me.store.reload();
+                    });
                 }
             }
         }]
