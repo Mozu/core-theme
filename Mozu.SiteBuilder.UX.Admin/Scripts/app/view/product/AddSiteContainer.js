@@ -2,6 +2,7 @@
  * @class Taco.view.product.AddSiteContainer
  * @author Michael Speed Elder
  *
+ * This class represents the [+] tab that allows products to be associated (or unassociated) with multiple sites.
  */
 
 Ext.define('Taco.view.product.AddSiteContainer', {
