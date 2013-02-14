@@ -43,7 +43,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         this.token = this.token || pluralName.toLowerCase();
         this.header.title = pluralName;
         Ext.Array.some(this.header.actions, function (item) {
-            if (item.itemId === "newbutton") {
+            if (item.itemId === "newbutton" && !item.text) {
                 item.text = me.createButtonPrefix + me.typeName;
                 return true;
             }
@@ -199,9 +199,11 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         };
         me.filterList.on('itemclick', function (cmp, record) {
             var newFilter = record && record.get('configuration');
-            me.store.clearFilter();
             if (newFilter) {
+                me.store.clearFilter(true); // clear silently so as not to throw two dataChanged events
                 me.store.filter([newFilter]);
+            } else {
+                me.store.clearFilter();
             }
 
         });

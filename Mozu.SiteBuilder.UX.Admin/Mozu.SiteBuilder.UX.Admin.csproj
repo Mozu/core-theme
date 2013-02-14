@@ -473,6 +473,7 @@
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
     <Content Include="Scripts\.sencha\workspace\plugin.xml" />
+    <Content Include="Scripts\app\controller\PendingChanges.js" />
     <Content Include="Scripts\app\controller\Errors.js" />
     <Content Include="Scripts\app\controller\PhoneOrders.js" />
     <Content Include="Scripts\app\controller\Roles.js" />
@@ -539,6 +540,7 @@
     <Content Include="Scripts\app\store\WidgetInstances.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
+    <Content Include="Scripts\app\view\pendingchange\Cms.js" />
     <Content Include="Scripts\app\view\phoneOrder\BillingSection.js" />
     <Content Include="Scripts\app\view\phoneOrder\ProductPicker.js" />
     <Content Include="Scripts\app\view\phoneOrder\CustomerSection.js" />

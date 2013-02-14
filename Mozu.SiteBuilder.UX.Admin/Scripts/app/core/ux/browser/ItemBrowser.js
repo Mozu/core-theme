@@ -10,7 +10,8 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
 
     itemStoreId: false,
     filterProperty: 'title',
-    bodyPadding: '12 0 0 0',    useGridPanel: true,
+    bodyPadding: '12 0 0 0',
+    useGridPanel: true,
     useTilePanel: true,
 
     createItemStore: function() {
@@ -97,7 +98,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             collapseCls = Taco.baseCSSPrefix + 'itembrowser-collapseall';
         var me = this;
         me.expanderCollapser = Ext.widget('component', {
-            html: '<a href="#" class="' + expandCls + '">expand all</a>&nbsp;|&nbsp;<a href="#" class="' + collapseCls + '">collapse all</a>',
+            html: '<a href="javascript;" class="' + expandCls + '">expand all</a>&nbsp;|&nbsp;<a href="javascript;" class="' + collapseCls + '">collapse all</a>',
             renderSelectors: {
                 expandEl: 'a.' + expandCls,
                 collapseEl: 'a.' + collapseCls
@@ -151,7 +152,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 // placeholder for Bulk Actions button
             ]
         };
-        if (this.isCollectionContext && this.gridPanel && this.useGridPanel) conf.items.push('->', me.createExpanderCollapser());
+        if (this.isCollectionContext && this.gridPanel && this.useGridPanel && this.useMultiGrid) conf.items.push('->', me.createExpanderCollapser());
         me.secondToolbar = Ext.widget('toolbar', conf);
         return me.secondToolbar;
     },
