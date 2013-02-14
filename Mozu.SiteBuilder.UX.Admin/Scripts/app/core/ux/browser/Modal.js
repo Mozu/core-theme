@@ -102,7 +102,10 @@ Ext.define('Taco.core.ux.browser.Modal', {
                 xtype: 'action',
                 text: 'Cancel',
                 listeners: {
-                    click: function () { this.hide(); },
+                    click: function () {
+                        this.store.rejectChanges();
+                        this.hide();
+                    },
                     scope: this
                 }
             }]
