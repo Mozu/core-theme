@@ -102,7 +102,8 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             collapseCls = Taco.baseCSSPrefix + 'itembrowser-collapseall';
         var me = this;
         me.expanderCollapser = Ext.widget('component', {
-            html: '<a href="javascript;" class="' + expandCls + '">expand all</a>&nbsp;|&nbsp;<a href="javascript;" class="' + collapseCls + '">collapse all</a>',
+            cls: Taco.baseCSSPrefix + 'expandercollapser',
+            html: '<a href="javascript:;" class="' + expandCls + '">expand all</a>&nbsp;|&nbsp;<a href="javascript:;" class="' + collapseCls + '">collapse all</a>',
             renderSelectors: {
                 expandEl: 'a.' + expandCls,
                 collapseEl: 'a.' + collapseCls
@@ -156,7 +157,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 // placeholder for Bulk Actions button
             ]
         };
-        if (this.isCollectionContext && this.gridPanel && this.useGridPanel && this.useMultiGrid) conf.items.push('->', me.createExpanderCollapser());
+        if (this.isCollectionContext && this.gridPanel && this.useGridPanel && this.gridPanel.useMultiGrid) conf.items.push('->', me.createExpanderCollapser());
         me.secondToolbar = Ext.widget('toolbar', conf);
         return me.secondToolbar;
     },

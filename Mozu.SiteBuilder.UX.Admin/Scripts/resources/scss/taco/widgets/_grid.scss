@@ -97,6 +97,13 @@
     }
   }
 
+  // expandercollapser
+  .#{$vprefix}expandercollapser {
+	color: $color-action-link;
+	font-size: 10pt;
+	padding: 6px 0;
+  }
+
   // rowexpander overrides
   .#{$prefix}grid-row-expander {
     background-image: none;

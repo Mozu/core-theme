@@ -11,7 +11,6 @@ Ext.define('Taco.view.product.Index', {
     storeName: 'Taco.store.Products',
     editorName: 'Taco.view.product.Edit',
     filterProperty: 'productName',
-    useMultiGrid: true,
 
     gridPanelConf: {
         columns: [{
@@ -77,6 +76,7 @@ Ext.define('Taco.view.product.Index', {
         }],
         contextConf: {
             c: {
+                useMultiGrid: true,
                 plugins: [{
                     ptype: 'rowexpander',
                     pluginId: 'expander',
