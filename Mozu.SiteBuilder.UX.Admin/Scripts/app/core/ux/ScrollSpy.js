@@ -31,12 +31,17 @@ Ext.define('Taco.core.ux.ScrollSpy', {
      * @private
      */
     onSpiedScroll: function() {
-        var newTarget,
+        var i,
+            newTarget,
             currentTarget = this.currentScrollSpyTarget;
-        var scrollOffset = this.scrollingContainer.getScroll().top + this.scrollSpyOffset;
-        var maxScrollHeight = this.scrollingContainer.getAttribute('scrollHeight') - this.scrollingContainer.getComputedHeight();
-        var i;
+        var scrollingContainer = this.scrollingContainer;
+        var scrollOffset = scrollingContainer.getScroll().top + this.scrollSpyOffset;
+        var maxScrollHeight = scrollingContainer.getAttribute('scrollHeight') - scrollingContainer.getComputedHeight();
         var offsets = this.offsets;
+
+        // *** .getComputedHeight does not seem to account for top or bottom padding (even when set through javascript)
+        maxScrollHeight += parseInt(scrollingContainer.getStyle('padding-top')) + parseInt(scrollingContainer.getStyle('padding-bottom'));
+
         if (scrollOffset >= maxScrollHeight) { // always last one in the list
             newTarget = this.items.last();
         } else {
@@ -60,36 +65,48 @@ Ext.define('Taco.core.ux.ScrollSpy', {
      * @private
      */
     initScrollSpy: function () {
-        var scrollingContainer = this.scrollingContainer;
-        if (!scrollingContainer) {
+        this.scrollingContainer = getScrollingContainer.call( this, this.scrollingContainer );
+        this.refreshScrollSpyOffsets();
+        this.mon(this.scrollingContainer, 'scroll', this.onSpiedScroll, this);
+        this.onSpiedScroll();
 
-            // first try config
-            if (this.scrollspyContainerSelector) scrollingContainer = Ext.select(this.scrollspyContainerSelector).first();
+        /**
+         * @private
+         * @param scrollingContainer
+         */
+        function getScrollingContainer ( scrollingContainer ) {
+            if( scrollingContainer ) {
+                return scrollingContainer;
+            }
+            else {
+                // first try config
+                if (this.scrollspyContainerSelector) {
+                    return Ext.select(this.scrollspyContainerSelector).first();
+                }
 
-            // then try self
-            var containerEl = this.getEl();
-            if (!scrollingContainer && containerEl.isScrollable()) scrollingContainer = containerEl;
+                // then try self
+                var containerEl = this.getEl();
+                if (containerEl.isScrollable()) {
+                    return containerEl;
+                }
 
-            // next try this.body, if this is a panel
-            if (!scrollingContainer && this.body && this.body.isScrollable && this.body.isScrollable()) scrollingContainer = this.body;
+                // next try this.body, if this is a panel
+                if (this.body && this.body.isScrollable && this.body.isScrollable()) {
+                    return this.body;
+                }
 
-            // if not, then search up for a scrollable;
-            if (!scrollingContainer) {
+                // if not, then search up for a scrollable;
                 var scrollingParent = this.findParentBy(function (p) {
                     return p.getEl().isScrollable();
                 });
                 if (containerEl && scrollingParent) {
-                    scrollingContainer = scrollingParent.getEl();
+                    return scrollingParent.getEl();
                 }
-            }
 
-            // last resort, just use doc body
-            if (!scrollingContainer) scrollingContainer = Ext.getBody();
+                // last resort, just use doc body
+                return Ext.getBody();
+            }
         }
-        this.scrollingContainer = scrollingContainer;
-        this.refreshScrollSpyOffsets();
-        this.mon(scrollingContainer, 'scroll', this.onSpiedScroll, this);
-        this.onSpiedScroll();
     },
         
 

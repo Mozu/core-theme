@@ -384,19 +384,23 @@ Ext.define('Taco.core.ux.tab.Panel', {
             links = [];
 
         card.items.each(function (item) {
-            links.push({
-                xtype: 'component',
-                componentCls: Taco.baseCSSPrefix + 'form-card-nav-link',
-                target: item,
-                html: item.title,
-                listeners: {
-                    click: {
-                        scope: this,
-                        element: 'el',
-                        fn: function () { this.scrollCard(card, item); }
+            if( item.title ) {
+                var link = Ext.widget({
+                    xtype: 'component',
+                    componentCls: Taco.baseCSSPrefix + 'form-card-nav-link',
+                    target: item,
+                    html: item.title,
+                    listeners: {
+                        click: {
+                            scope: this,
+                            element: 'el',
+                            fn: function () { this.scrollCard(card, item); }
+                        }
                     }
-                }
-            });
+                });
+                item.sideNavLink = link;
+                links.push(link);
+            }
         }, this);
 
         this.navigationBar.removeAll();
