@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 publishedDocIds.AddRange(returnedIds);
 
                 startIndex += docs.Items.Count;
-            } while (startIndex <= totalCount);
+            } while (startIndex < totalCount);
 
             return List2(publishedDocIds);
         }

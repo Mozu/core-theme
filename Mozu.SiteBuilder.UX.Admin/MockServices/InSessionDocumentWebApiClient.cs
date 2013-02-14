@@ -36,6 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         {
             new Document {
                 Name = MOCK_0_NAME,
+                Id = "b69564d8-9211-46f3-99b3-b020a20afa4c",
                 Items = new List<DocumentProperty> {
                     new DocumentProperty {
                         Key = "title",
@@ -97,7 +98,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
                 where !PublishedIds.Contains(d.Id)
                 select d;
 
-            List<DC.Document> mappedMocks = Mapper.Map<List<DC.Document>>(_mocks);
+            List<DC.Document> mappedMocks = Mapper.Map<List<DC.Document>>(filteredMocks);
             var ret = new DC.PagedCollection<DC.Document> { TotalCount = mappedMocks.Count, Items = mappedMocks };
 
             return (new TestResponse<DC.PagedCollection<DC.Document>>(ret)).Task;
@@ -110,6 +111,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         {
             List<string> newPublishedIds = new List<string>();
             newPublishedIds.AddRange(PublishedIds);
+            newPublishedIds.AddRange(documentIds);
 
             HttpCookie newCookie = new HttpCookie(COOKIE_NAME, String.Join(";", newPublishedIds));
             _cookieMonster.SaveResponseCookie(COOKIE_NAME, newCookie);
