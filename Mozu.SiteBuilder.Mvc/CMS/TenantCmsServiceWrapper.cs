@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts;
@@ -80,10 +81,18 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 .UpdateDocumentContent(contentCollection, documentId, stream);
         }
 
-        public Task<ServiceClientResponse<FolderTree>> GetFolderTree(string contentCollection, string rootFolderId, int? levels)
+        public Task<ServiceClientResponse<FolderTree>> GetFolderTree(string documentListName, string rootFolderId, int? levels)
         {
-            return _folderWebApiClient.With(_targetContextLevelType)
-                .GetFolderTree(contentCollection, rootFolderId, levels);
+            var folderWebApiClient = _folderWebApiClient.With(_targetContextLevelType);
+
+            var task = folderWebApiClient.GetFolderTree(documentListName, rootFolderId, levels);
+
+            if (task.Result.ResponseMessage.StatusCode != HttpStatusCode.NotFound)
+                return task;
+
+            var folder = new Folder { DocumentListName = documentListName, ParentId = rootFolderId, Name = documentListName };
+            folderWebApiClient.Create(documentListName, folder, _targetContextLevelType).Result.ReadAsAsync();
+            return folderWebApiClient.GetFolderTree(documentListName, rootFolderId, levels);
         }
 
         public Task<ServiceClientResponse<Document>> Update(string contentCollection, string documentId, Document document)
