@@ -7,10 +7,12 @@
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
+using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
 {
@@ -62,7 +64,7 @@ using System.Runtime.Serialization;
         public string Output { get; set; }
     }
     [DataContract()]
-    public class WidgetRuntimeData : WidgetInstanceData ,IModelMetadataParentContainer, IModelMetadataContainer 
+    public class WidgetRuntimeData : WidgetInstanceData, IModelMetadataParentContainer, IModelMetadataContainer, Mozu.SiteBuilder.UX.Models.IAlternateNamingValueContainer
     {
 
         public WidgetDefinition Definition { get; set; }
@@ -96,6 +98,15 @@ using System.Runtime.Serialization;
         }
 
         public bool IsPreview { get; set; }
+
+
+        public virtual Object this[string key]
+        {
+            get
+            {
+                return this.GetAlternateNamedValue(key);
+            }
+        }
     }
     [DataContract()]
     public class WidgetInstanceData 
@@ -116,6 +127,25 @@ using System.Runtime.Serialization;
 
         [DataMember(Name = "configuration")]
         public string ConfigurationData { get; set; }
+
+        private Newtonsoft.Json.Linq.JObject _config;
+        [DataMember(Name = "config")]
+        public Newtonsoft.Json.Linq.JObject Config
+        {
+            get
+            {
+                if (_config == null && !string.IsNullOrEmpty(this.ConfigurationData))
+                {
+                    _config = Newtonsoft.Json.Linq.JObject.Parse(this.ConfigurationData);
+                }
+                if (_config == null)
+                {
+                    _config = new JObject();
+                }
+                return _config;
+            }
+        }
+
 
         [DataMember(Name = "zoneScope")]
         public string ZoneScope { get; set; }
