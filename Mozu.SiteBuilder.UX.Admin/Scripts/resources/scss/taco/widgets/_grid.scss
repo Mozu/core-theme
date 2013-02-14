@@ -20,6 +20,10 @@
     }
   }
 
+  .#{$prefix}grid-cell-selected {
+    background-color: $color-highlighted-background-light !important;
+  }
+
   // grid rows
   .#{$prefix}grid-row {
     vertical-align: middle;
@@ -128,8 +132,23 @@
     @include icons-sprite(icon-draghandle);
   }
 
-  .#{$prefix}grid-cell-draghandlecolumn .#{$prefix}grid-cell-inner {
-    padding: 0px;
+  .#{$prefix}grid-cell-draghandlecolumn {
+    .#{$prefix}grid-cell-inner {
+      padding: 0px;
+    }
+  }
+
+  // cellediting overrides
+  .#{$prefix}border-box {
+    .#{$prefix}grid-editor {
+      .#{$prefix}form-item-body {
+        padding: 2px;
+      }
+      .#{$prefix}form-text {
+        height: 30px;
+        padding-bottom: 5px;
+      }
+    }
   }
 
   /* CONTAINERS, TOOLBARS, ETC. */
