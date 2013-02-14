@@ -19,9 +19,13 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         actions: [
         {
             xtype: 'secondarybutton',
-            text: 'Switch to Edit Mode',
+            text: 'Edit Records',
             listeners: {
-                click: function () { console.log(this, arguments); }
+                click: function () {
+                    Ext.create('Taco.core.ux.browser.Modal', {
+                        store: this.store
+                    });
+                }
             }
         },{
             xtype: 'primarybutton',

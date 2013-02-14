@@ -4,7 +4,7 @@
 Ext.define('Taco.core.ux.modal.Modal', {
     extend: 'Ext.container.Container',
     requires: ['Taco.core.ux.modal.Cover'],
-    alias: 'taco-modal',
+    alias: 'widget.taco.modal',
     baseCls: 'taco-modal',
     content: {
         items: []

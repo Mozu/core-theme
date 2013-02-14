@@ -483,6 +483,7 @@
     <Content Include="Scripts\app\core\layout\Flex.js" />
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
     <Content Include="Scripts\app\core\context\TaContext.js" />
+    <Content Include="Scripts\app\core\ux\browser\Modal.js" />
     <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\browser\FilterList.js" />
