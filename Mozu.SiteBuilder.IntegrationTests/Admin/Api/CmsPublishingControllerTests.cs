@@ -5,6 +5,7 @@ using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.MockServices;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
@@ -34,8 +35,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         [SetUp]
         public void SetUp()
         {
-            _documentClient = Substitute.For<IDocumentWebApiClient>();
-            _testedController = new CmsPublishingController(_documentClient);
+            _documentClient = Substitute.For<IMoreAwesomeDocumentWebApiClient>();
+            _testedController = new CmsPublishingController((IMoreAwesomeDocumentWebApiClient)_documentClient);
 
             // set up Get mock.
             _documentClient.Get(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(

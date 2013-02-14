@@ -91,6 +91,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>();
             builder.RegisterType<System.Web.Mvc.RazorViewEngine>().As<IViewEngine>();
+
+            // TODO: This binding will be unnecessary once the DocumentWebApiClient works better.
+            builder.RegisterType<InSessionDocumentWebApiClient>().As<IMoreAwesomeDocumentWebApiClient>();
         }
 
 

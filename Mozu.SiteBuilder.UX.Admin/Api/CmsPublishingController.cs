@@ -9,6 +9,7 @@ using AutoMapper;
 using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.MockServices;
 using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -24,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public CmsPublishingController(IDocumentWebApiClient documentClient)
+        public CmsPublishingController(IMoreAwesomeDocumentWebApiClient documentClient)
         {
             _documentClient = documentClient;
         }
