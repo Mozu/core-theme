@@ -193,8 +193,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var tw = new StringWriter();
             foreach (var zw in zoneWidgets)
             {
-
-                var viewRes = System.Web.Mvc.ViewEngines.Engines[0].FindPartialView(this.ControllerContext, zw.Definition.DisplayTemplate, true);
+                if (zw.Definition == null)
+                {
+                   zw.Definition =  _cmsTypeHelper.GetWidgetDefintion(zw.DefinitionId);
+                }
+                if (zw.Definition == null)
+                {
+                    continue;
+                }
+                var viewRes = _viewEngine.FindPartialView(this.ControllerContext, zw.Definition.DisplayTemplate, true);
                 if (viewRes.View != null)
                 {
                     var vc = new ViewContext(this.ControllerContext, viewRes.View, new ViewDataDictionary(), this.TempData, tw);
