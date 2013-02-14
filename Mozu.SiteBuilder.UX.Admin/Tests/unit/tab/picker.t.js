@@ -7,16 +7,33 @@
 
             o.sites = o.createSites();
 
+            o.cmp = Ext.create('Ext.Component', {
+                html: '+'
+            });
+
             o.pickerUi = Ext.create('Taco.core.ux.tab.Picker', {
                 data: o.sites,
                 checkedItems: ['100', '101'],
-                renderTo: Ext.getBody()
+                positionNextTo: o.cmp
             });
 
-            t.waitForRender(o.pickerUi, o.afterRender);
+            //t.waitForRender(o.pickerUi, o.afterRender);
+            
+            Taco.app.contentView.removeAll();
+
+            o.asyncRender = t.beginAsync();
+
+            Taco.app.contentView.add({
+                xtype: 'container',
+                items: [
+                    o.cmp,
+                    o.pickerUi
+                ]
+            });
         },
 
-        afterRender: function() {
+        afterRender: function () {
+            t.endAsync(o.asyncRender);
             t.diag('Picker rendered');
 
             t.ok(o.pickerUi.isHidden(), 'Picker is hidden by default.');
