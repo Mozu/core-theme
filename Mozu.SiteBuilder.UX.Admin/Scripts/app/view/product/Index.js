@@ -11,6 +11,7 @@ Ext.define('Taco.view.product.Index', {
     storeName: 'Taco.store.Products',
     editorName: 'Taco.view.product.Edit',
     filterProperty: 'productName',
+    useMultiGrid: true,
 
     gridPanelConf: {
         columns: [{

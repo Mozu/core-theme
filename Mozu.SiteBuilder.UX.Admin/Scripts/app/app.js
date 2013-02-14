@@ -26,6 +26,7 @@
  * @requires Taco.controller.Customers
  * @requires Taco.controller.Categories
  * @requires Taco.controller.Products
+ * @requires Taco.controller.PendingChanges
  * @requires Taco.controller.Options
  * @requires Taco.controller.Inventory
  * @requires Taco.controller.Message
@@ -97,6 +98,7 @@ Ext.application({
             'Customers',
             'Categories',
             'Products',
+            'PendingChanges',
             'Options',
             'Inventory',
             'Message',
