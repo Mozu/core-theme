@@ -110,6 +110,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         me.itemBrowser = Ext.create('Taco.core.ux.browser.ItemBrowser', {
             itemStore: me.store,
             itemType: me.token,
+            typeName: me.typeName,
             filterProperty: me.filterProperty,
             flex: 1,
             isCollectionContext: Taco.app.context.getCurrent().contextType === "c",

@@ -13,14 +13,14 @@
         remoteSort: true,
         remoteFilter: true,
         
-        publishAll: function () {
+        publishAll: function (cb) {
             var me = this;
             Ext.Ajax.request({
                 url: '/admin/app/cmspublishing/publishall',
                 method: "POST",
                 success: function (response) {
                     me.load();
-                    me.fireEvent('setmessage', 'All changes published!', 'success');
+                    if (cb) cb(response);
                 },
                 failure: function (response) {
                     console.log("Error publishing general settings!", response);

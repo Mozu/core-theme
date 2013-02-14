@@ -28,7 +28,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             items: [{
                 xtype: 'textfield',
                 flex: 2,
-                emptyText: 'Search products',
+                emptyText: 'Search ' + me.typeName.toLowerCase(),
                 enableKeyEvents: true,
                 listeners: {
                     'keyup': {
@@ -77,13 +77,17 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 tpl: new Ext.XTemplate([
                         '<div>',
                             '<span class="record-total-count">{totalCount}</span> ',
-                            '<span class="record-unit">{unit}</span>',
+                            '<span class="record-unit">',
+                            //'{unit}',
+                            '<tpl if="totalCount == 1">{[Ext.util.Inflector.singularize(values.unit)]}<tpl else>{unit}</tpl>',
+                            '</span>',
                         '</div>'
                 ]),
                 data: {
                     count: 0,
                     totalCount: 0,
                     unit: 'records'
+                    
                 }
             }]
         };
