@@ -645,7 +645,7 @@
 		  }
 		}
     
-		.#{$prefix}progress-default {
+		.#{$prefix} progress-default {
 		  border: 0;
 		  padding: 2px;
 		  height: 12px;
@@ -2032,12 +2032,13 @@
   }
 
   .#{$vprefix}form-card-nav {
+    color: $color-neutral-darker;
     .#{$vprefix}form-card-nav-link {
       cursor: pointer;
       margin-bottom: 20px;
       padding: 2px 28px 0px;
 
-      &:hover {
+      &:hover, &.scrollspy {
         color: $color-neutral-black;
       }
     }

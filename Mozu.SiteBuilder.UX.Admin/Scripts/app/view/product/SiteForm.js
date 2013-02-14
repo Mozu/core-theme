@@ -17,10 +17,13 @@ Ext.define('Taco.view.product.SiteForm', {
         'Taco.view.product.subform.Merchandising',
         'Taco.view.product.subform.SEO'
     ],
-    
+    mixins: {
+        scrollspy: 'Taco.core.ux.ScrollSpy' // TODO: resolve JS error with this and getEl()
+    },
+    scrollSpyOffset: 240,
+
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'single-site-admin-form'],
     overrideCount: 0,
-
 
     header: false,
     persistChangesToModel: true,
@@ -66,8 +69,15 @@ Ext.define('Taco.view.product.SiteForm', {
 
         this.on({
             overrideCountChange: this.handleOverrideChange,
+            scrollspy: this.updateScrollPosition,
             scope: this
         });
+    },
+
+    constructor: function () {
+        this.callParent(arguments);
+        // ExtJs does not call mixin constructors, because it is bad and should feel bad
+        this.mixins.scrollspy.constructor.call(this); // TODO: uncomment this when scrollspy works
     },
 
     /**
@@ -112,5 +122,15 @@ Ext.define('Taco.view.product.SiteForm', {
         }
 
         return tasks;
+    },
+
+    updateScrollPosition: function (newTarget, oldTarget) {
+        // console.log('\nupdateScrollPosition', newTarget.sideNavLink, oldTarget.sideNavLink);
+        if( newTarget && newTarget.sideNavLink ) {
+            newTarget.sideNavLink.addCls('scrollspy');
+        }
+        if( oldTarget && oldTarget.sideNavLink ) {
+            oldTarget.sideNavLink.removeCls('scrollspy');
+        }
     }
 });
