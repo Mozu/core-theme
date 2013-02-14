@@ -550,7 +550,6 @@
     <Content Include="Scripts\app\view\product\Form.js" />
     <Content Include="Scripts\app\view\product\GlobalForm.js" />
     <Content Include="Scripts\app\view\product\ImageField.js" />
-    <Content Include="Scripts\app\view\product\SingleSiteForm.js" />
     <Content Include="Scripts\app\view\product\SiteForm.js" />
     <Content Include="Scripts\app\view\product\subform\Categories.js" />
     <Content Include="Scripts\app\view\product\subform\OverrideForm.js" />
