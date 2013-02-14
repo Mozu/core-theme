@@ -92,6 +92,20 @@
         "address": "/admin/themesettings"
     }]
 }, {
+    "id": "publishing",
+    "label": "Publishing",
+    "address": "/admin/pendingchanges",
+    "icon": "settings",
+    "items": [{
+        "id": "cmspublishing",
+        "label": "CMS",
+        "address": "/pendingchanges/cms"
+    }, {
+        "id": "catalogpublishing",
+        "label": "Catalog",
+        "address": "/pendingchanges/catalog"
+    }]
+}, {
     "id": "reports",
     "label": "Reports",
     "address": "/admin/dashboard",
