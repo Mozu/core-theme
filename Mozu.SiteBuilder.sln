@@ -25,7 +25,7 @@ Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 7
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://tfs.ads.volusion.com:8080/tfs/vnext
+		SccTeamFoundationServer = http://tfs-app01.ads.volusion.com:8080/tfs/vnext
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = Mozu.SiteBuilder.Mvc\\Mozu.SiteBuilder.Mvc.csproj
 		SccProjectName1 = Mozu.SiteBuilder.Mvc
@@ -62,6 +62,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|x86 = Release|x86
+		SI|Any CPU = SI|Any CPU
+		SI|Mixed Platforms = SI|Mixed Platforms
+		SI|x86 = SI|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}.CI|Any CPU.ActiveCfg = CI|Any CPU
@@ -89,6 +92,11 @@ Global
 		{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}.Release|x86.ActiveCfg = Release|Any CPU
+		{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}.SI|Any CPU.ActiveCfg = Release|Any CPU
+		{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}.SI|Any CPU.Build.0 = Release|Any CPU
+		{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}.SI|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}.SI|Mixed Platforms.Build.0 = Release|Any CPU
+		{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}.SI|x86.ActiveCfg = Release|Any CPU
 		{64E108C3-DDB5-4FA8-8C17-778F64B028BA}.CI|Any CPU.ActiveCfg = CI|Any CPU
 		{64E108C3-DDB5-4FA8-8C17-778F64B028BA}.CI|Any CPU.Build.0 = CI|Any CPU
 		{64E108C3-DDB5-4FA8-8C17-778F64B028BA}.CI|Mixed Platforms.ActiveCfg = CI|Any CPU
@@ -114,6 +122,11 @@ Global
 		{64E108C3-DDB5-4FA8-8C17-778F64B028BA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{64E108C3-DDB5-4FA8-8C17-778F64B028BA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{64E108C3-DDB5-4FA8-8C17-778F64B028BA}.Release|x86.ActiveCfg = Release|Any CPU
+		{64E108C3-DDB5-4FA8-8C17-778F64B028BA}.SI|Any CPU.ActiveCfg = SI|Any CPU
+		{64E108C3-DDB5-4FA8-8C17-778F64B028BA}.SI|Any CPU.Build.0 = SI|Any CPU
+		{64E108C3-DDB5-4FA8-8C17-778F64B028BA}.SI|Mixed Platforms.ActiveCfg = SI|Any CPU
+		{64E108C3-DDB5-4FA8-8C17-778F64B028BA}.SI|Mixed Platforms.Build.0 = SI|Any CPU
+		{64E108C3-DDB5-4FA8-8C17-778F64B028BA}.SI|x86.ActiveCfg = SI|Any CPU
 		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.CI|Any CPU.ActiveCfg = CI|Any CPU
 		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.CI|Any CPU.Build.0 = CI|Any CPU
 		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.CI|Mixed Platforms.ActiveCfg = CI|Any CPU
@@ -139,6 +152,11 @@ Global
 		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.Release|x86.ActiveCfg = Release|Any CPU
+		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.SI|Any CPU.ActiveCfg = SI|Any CPU
+		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.SI|Any CPU.Build.0 = SI|Any CPU
+		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.SI|Mixed Platforms.ActiveCfg = SI|Any CPU
+		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.SI|Mixed Platforms.Build.0 = SI|Any CPU
+		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.SI|x86.ActiveCfg = SI|Any CPU
 		{73E0DB46-7958-4A58-B834-57A5B04669B1}.CI|Any CPU.ActiveCfg = CI|Any CPU
 		{73E0DB46-7958-4A58-B834-57A5B04669B1}.CI|Any CPU.Build.0 = CI|Any CPU
 		{73E0DB46-7958-4A58-B834-57A5B04669B1}.CI|Mixed Platforms.ActiveCfg = CI|Any CPU
@@ -164,6 +182,11 @@ Global
 		{73E0DB46-7958-4A58-B834-57A5B04669B1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{73E0DB46-7958-4A58-B834-57A5B04669B1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{73E0DB46-7958-4A58-B834-57A5B04669B1}.Release|x86.ActiveCfg = Release|Any CPU
+		{73E0DB46-7958-4A58-B834-57A5B04669B1}.SI|Any CPU.ActiveCfg = SI|Any CPU
+		{73E0DB46-7958-4A58-B834-57A5B04669B1}.SI|Any CPU.Build.0 = SI|Any CPU
+		{73E0DB46-7958-4A58-B834-57A5B04669B1}.SI|Mixed Platforms.ActiveCfg = SI|Any CPU
+		{73E0DB46-7958-4A58-B834-57A5B04669B1}.SI|Mixed Platforms.Build.0 = SI|Any CPU
+		{73E0DB46-7958-4A58-B834-57A5B04669B1}.SI|x86.ActiveCfg = SI|Any CPU
 		{3AC84F6C-74E6-4767-A80E-9FC022037F70}.CI|Any CPU.ActiveCfg = CI|Any CPU
 		{3AC84F6C-74E6-4767-A80E-9FC022037F70}.CI|Any CPU.Build.0 = CI|Any CPU
 		{3AC84F6C-74E6-4767-A80E-9FC022037F70}.CI|Mixed Platforms.ActiveCfg = CI|Any CPU
@@ -189,6 +212,11 @@ Global
 		{3AC84F6C-74E6-4767-A80E-9FC022037F70}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{3AC84F6C-74E6-4767-A80E-9FC022037F70}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3AC84F6C-74E6-4767-A80E-9FC022037F70}.Release|x86.ActiveCfg = Release|Any CPU
+		{3AC84F6C-74E6-4767-A80E-9FC022037F70}.SI|Any CPU.ActiveCfg = SI|Any CPU
+		{3AC84F6C-74E6-4767-A80E-9FC022037F70}.SI|Any CPU.Build.0 = SI|Any CPU
+		{3AC84F6C-74E6-4767-A80E-9FC022037F70}.SI|Mixed Platforms.ActiveCfg = SI|Any CPU
+		{3AC84F6C-74E6-4767-A80E-9FC022037F70}.SI|Mixed Platforms.Build.0 = SI|Any CPU
+		{3AC84F6C-74E6-4767-A80E-9FC022037F70}.SI|x86.ActiveCfg = SI|Any CPU
 		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.CI|Any CPU.ActiveCfg = CI|Any CPU
 		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.CI|Any CPU.Build.0 = CI|Any CPU
 		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.CI|Mixed Platforms.ActiveCfg = CI|Any CPU
@@ -214,6 +242,11 @@ Global
 		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.Release|x86.ActiveCfg = Release|Any CPU
+		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.SI|Any CPU.ActiveCfg = SI|Any CPU
+		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.SI|Any CPU.Build.0 = SI|Any CPU
+		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.SI|Mixed Platforms.ActiveCfg = SI|Any CPU
+		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.SI|Mixed Platforms.Build.0 = SI|Any CPU
+		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.SI|x86.ActiveCfg = SI|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
