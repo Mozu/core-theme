@@ -107,6 +107,15 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'SI|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -520,6 +529,7 @@
     <Content Include="Scripts\app\core\ux\tab\Panel.js" />
     <Content Include="Scripts\app\core\ux\tinymce\WindowManager.js" />
     <Content Include="Scripts\app\locale\Strings.js" />
+    <Content Include="Configs\AppSettings.SI.config" />
     <None Include="Scripts\app\mocks\behaviors.json" />
     <Content Include="Scripts\app\model\Behavior.js" />
     <Content Include="Scripts\app\model\CartItem.js" />
@@ -1962,6 +1972,10 @@
     <Content Include="Tests\siesta-1.1.8-standard\resources\syntaxhighlighter_3.0.83\MIT-LICENSE" />
     <Content Include="Tests\siesta-1.1.8-standard\resources\syntaxhighlighter_3.0.83\tests\webrick.rb" />
     <Content Include="Tests\siesta-1.1.8-standard\resources\syntaxhighlighter_3.0.83\tests\webrick.sh" />
+    <Content Include="Web.SI.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
