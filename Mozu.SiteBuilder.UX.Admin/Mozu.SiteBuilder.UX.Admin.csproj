@@ -523,7 +523,7 @@
     <None Include="Scripts\app\mocks\behaviors.json" />
     <Content Include="Scripts\app\model\Behavior.js" />
     <Content Include="Scripts\app\model\CartItem.js" />
-    <Content Include="Scripts\app\model\CmsDocumentDirty.js" />
+    <Content Include="Scripts\app\model\CmsDocumentDraft.js" />
     <Content Include="Scripts\app\model\ItemFilter.js" />
     <Content Include="Scripts\app\model\ProductInSiteInfo.js" />
     <Content Include="Scripts\app\model\LocalizedString.js" />
@@ -533,7 +533,7 @@
     <Content Include="Scripts\app\model\WidgetInstance.js" />
     <Content Include="Scripts\app\store\Behaviors.js" />
     <Content Include="Scripts\app\store\CartItems.js" />
-    <Content Include="Scripts\app\store\CmsDocumentsDirty.js" />
+    <Content Include="Scripts\app\store\CmsDocumentDrafts.js" />
     <Content Include="Scripts\app\store\ItemFilters.js" />
     <Content Include="Scripts\app\store\LocalizedStrings.js" />
     <Content Include="Scripts\app\store\Orders.js" />
