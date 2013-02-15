@@ -59,6 +59,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(x => x.Key, m => m.MapFrom(x => x.PropertyType));
             Mapper.CreateMap<Mvc.Models.CMS.Admin.DocumentProperty, Mozu.Content.Contracts.PropertyValue>()
                 .ForMember(x => x.PropertyType, m => m.MapFrom(x => x.Key));
+
+
+            Mapper.CreateMap<Mozu.Content.Contracts.Document, Mozu.SiteBuilder.UX.Models.Admin.CMS.DocumentDraft>()
+                .ForMember(d => d.Id, m => m.MapFrom(dc => dc.Id))
+                .ForMember(d => d.DraftType, m => m.ResolveUsing(dc => dc.DocumentListName == "Pages" ? "Page" : "Template"))
+                .ForMember(d => d.Name, m => m.MapFrom(dc => dc.Name))
+                .ForMember(d => d.ModificationType, m => m.ResolveUsing(dc => dc.InsertDate == null ? "Created" : "Modified"))
+                .ForMember(d => d.ModifiedBy, m => m.MapFrom(dc => "James Zetlen"))
+                .ForMember(d => d.LastModified, m => m.MapFrom(dc => dc.UpdateDate))
+                .ForMember(d => d.LastPublished, m => m.MapFrom(dc => dc.InsertDate))
+                ;
+
         }
         
         string blurg (DC.Document doc )

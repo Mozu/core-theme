@@ -35,10 +35,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (pagingParams.id != null)
             {
-                var resultGetById = await _documentClient.Get(/*documentListName: */ null, pagingParams.id);
-                DC.Document ret = resultGetById.ReadAsAsync().Result;
-
-                return List2(Mapper.Map<Document>(ret));
+                // this operation is not supported.
+                var response = FailureList<List<Document>>("Getting a single document by this method is not supported.");
             }
 
             // TODO: filter and sort
@@ -69,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             List<string> publishedDocIds = new List<string>();
             int startIndex = 0;
-            int pageSize = 100;
+            int pageSize = 200;
             int totalCount = Int32.MaxValue;
 
             do
@@ -83,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 List<string> returnedIds = publishResult.ReadAsAsync().Result;
                 publishedDocIds.AddRange(returnedIds);
 
-                startIndex += docs.Items.Count;
+                startIndex = docs.StartIndex + docs.PageSize;
             } while (startIndex < totalCount);
 
             return List2(publishedDocIds);

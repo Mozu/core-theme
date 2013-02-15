@@ -1,14 +1,14 @@
 ﻿/**
-* @class Taco.store.CmsDocumentsStore
+* @class Taco.store.CmsDocumentDrafts
 * @author Foster Hersey
 * The CmsDocuments store
 * Hint: It's a CmsDocument with unpublished changes.
 */
 
 
-    Ext.define('Taco.store.CmsDocumentsDirty', {
+    Ext.define('Taco.store.CmsDocumentDrafts', {
         extend: 'Ext.data.Store',
-        model: 'Taco.model.CmsDocumentDirty',
+        model: 'Taco.model.CmsDocumentDraft',
         pageSize: 25,
         remoteSort: true,
         remoteFilter: true,

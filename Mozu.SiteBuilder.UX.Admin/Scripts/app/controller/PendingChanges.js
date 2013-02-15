@@ -9,8 +9,8 @@ Ext.define('Taco.controller.PendingChanges', {
     requires: ['Taco.view.pendingchange.Cms'],
     editorView: 'Taco.view.category.SimpleEditor',
     listView: null,
-    models: ['Taco.model.CmsDocumentDirty'],
-    stores: ['Taco.store.CmsDocumentsDirty'],
+    models: ['Taco.model.CmsDocumentDraft'],
+    stores: ['Taco.store.CmsDocumentDrafts'],
     views: ['pendingchange.Cms'],
     modelName: 'Pending Change',
 

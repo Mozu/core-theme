@@ -4,12 +4,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Caching;
 using AutoMapper;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
-using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using DC = Mozu.Content.Contracts;
@@ -32,25 +30,14 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         private const string COOKIE_NAME = "published_ids";
         private const string MOCK_0_NAME = "Hey Zetlen";
 
-        private List<Document> _mocks = new List<Document>
+        private List<DC.Document> _mocks = new List<DC.Document>
         {
-            new Document {
-                Name = MOCK_0_NAME,
+            new DC.Document {
                 Id = "b69564d8-9211-46f3-99b3-b020a20afa4c",
-                Items = new List<DocumentProperty> {
-                    new DocumentProperty {
-                        Key = "title",
-                        Value = MOCK_0_NAME
-                    },
-                    new DocumentProperty {
-                        Key = "meta_title",
-                        Value = MOCK_0_NAME
-                    },
-                    new DocumentProperty {
-                        Key = "page_type_definition",
-                        Value = "blank_page1"
-                    }
-                }
+                Name = MOCK_0_NAME,
+                DocumentListName = "Pages",
+                InsertDate = null,
+                UpdateDate = new DateTime(915148800l)
             }
         };
         
@@ -93,13 +80,12 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// </summary>
         public Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetDrafts(string documentListName, string responseGroups = "", int? pageSize = null, int? startIndex = null, Core.Api.Contracts.TargetContextLevelType targetContextLevel = Core.Api.Contracts.TargetContextLevelType.NotSpecified)
         {
-            IEnumerable<Document> filteredMocks =
-                from d in _mocks
-                where !PublishedIds.Contains(d.Id)
-                select d;
+            List<DC.Document> filteredMocks =
+                (from d in _mocks
+                 where !PublishedIds.Contains(d.Id)
+                 select d).ToList();
 
-            List<DC.Document> mappedMocks = Mapper.Map<List<DC.Document>>(filteredMocks);
-            var ret = new DC.PagedCollection<DC.Document> { TotalCount = mappedMocks.Count, Items = mappedMocks };
+            var ret = new DC.PagedCollection<DC.Document> { TotalCount = filteredMocks.Count, Items = filteredMocks };
 
             return (new TestResponse<DC.PagedCollection<DC.Document>>(ret)).Task;
         }
