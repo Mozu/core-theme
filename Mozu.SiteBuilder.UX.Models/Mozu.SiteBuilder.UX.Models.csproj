@@ -278,6 +278,7 @@
   <ItemGroup>
     <Compile Include="Admin\CMS\DocumentRequest.cs" />
     <Compile Include="Admin\CMS\CmsPageContext.cs" />
+    <Compile Include="Admin\CMS\DocumentDraft.cs" />
     <Compile Include="Admin\TaContext.cs" />
     <Compile Include="Admin\ThemeSettings\ConfigurationField.cs" />
     <Compile Include="Admin\ThemeSettings\ConfigurationFieldValue.cs" />

@@ -6,7 +6,7 @@
 
 Ext.define('Taco.controller.Testing', {
     extend: 'Taco.core.Controller',
-    requires: ['Taco.model.Order', 'Taco.model.OrderItem', 'Taco.model.Product', 'Taco.store.Products', 'Taco.store.CmsDocumentsDirty'],
+    requires: ['Taco.model.Order', 'Taco.model.OrderItem', 'Taco.model.Product', 'Taco.store.Products', 'Taco.store.CmsDocumentDrafts'],
 
     statics: {
         returnString: function (str) {
@@ -174,8 +174,8 @@ Ext.define('Taco.controller.Testing', {
     fostercms: function() {
 
 
-        // var docuStore = Ext.data.StoreManager.lookup('Taco.store.CmsDocumentsDirty');
-        var docuStore = Taco.core.data.StoreManager.getOrCreate( { type:'Taco.store.CmsDocumentsDirty',  clearFilters: true, clearSort: true, autoLoad: true });
+        // var docuStore = Ext.data.StoreManager.lookup('Taco.store.CmsDocumentDrafts');
+        var docuStore = Taco.core.data.StoreManager.getOrCreate( { type:'Taco.store.CmsDocumentDrafts',  clearFilters: true, clearSort: true, autoLoad: true });
         docuStore.load();
 
         this.createContentView('Taco.core.ux.content.Container', {

@@ -3,11 +3,11 @@
  */
 Ext.define('Taco.view.pendingchange.Cms', {
     extend: 'Taco.core.ux.browser.BrowserPage',
-    requires: ['Taco.model.CmsDocumentDirty', 'Taco.store.CmsDocumentsDirty'],
+    requires: ['Taco.model.CmsDocumentDraft', 'Taco.store.CmsDocumentDrafts'],
 
     typeName: 'Pending Changes',
-    modelName: 'Taco.model.CmsDocumentDirty',
-    storeName: 'Taco.store.CmsDocumentsDirty',
+    modelName: 'Taco.model.CmsDocumentDraft',
+    storeName: 'Taco.store.CmsDocumentDrafts',
     filterProperty: 'productName',
     useTilePanel: false,
 
