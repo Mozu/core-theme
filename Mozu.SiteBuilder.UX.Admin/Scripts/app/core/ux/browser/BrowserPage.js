@@ -22,9 +22,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             text: 'Edit Records',
             listeners: {
                 click: function () {
-                    Ext.create('Taco.core.ux.browser.Modal', {
-                        store: this.store
-                    });
+                    this.launchBulkEditor();
                 }
             }
         },{
@@ -234,6 +232,12 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         }
     },
 
+    launchBulkEditor: function () {
+        Ext.create('Taco.core.ux.browser.Modal', {
+            store: this.store,
+            columns: this.bulkEditorColumns || this.gridPanelConf.columns
+        });
+    },
     launchEditor: function (record, options) {
         var me = this,
             modelClass = Ext.ClassManager.get(me.modelName);

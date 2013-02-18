@@ -141,9 +141,15 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
             hideable: false,
             menuDisabled: true,
             cls: Ext.baseCSSPrefix + 'grid-header-special',
-            renderer: function(value, metadata) {
+            renderer: function(value, metadata, record) {
+                var cls = Ext.baseCSSPrefix + 'grid-row-expander';
+
                 metadata.tdCls = Ext.baseCSSPrefix + 'grid-cell-special ' + Ext.baseCSSPrefix + 'grid-cell-row-expander';
-                return '<div class="' + Ext.baseCSSPrefix + 'grid-row-expander">&#160;</div>';
+                
+                if (Ext.isEmpty(me.rowBodyTpl.applyOut(record.getData(), []))) {
+                    cls += (' empty');
+                }
+                return '<div class="' + cls + '">&#160;</div>';
             },
             processEvent: function(type, view, cell, rowIndex, cellIndex, e, record) {
                 if (type == "mousedown" && e.getTarget('.x-grid-row-expander')) {
@@ -152,5 +158,15 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
                 }
             }
         };
+    },
+
+    /**
+     * An empty function by default, but provided so you can hide the expander if there is nothing to expand.
+     * @param {Ext.data.Model} record The record
+     * @return {Boolean} hidden True if the expander should be hidden for this record, else false
+     * @template
+     */
+    hideExpanderFn: function (record) {
+        return false;
     }
 });
