@@ -35,12 +35,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Get paged list of all pending drafts.
         /// </summary>
         [WebGet(UriTemplate = "listdrafts")]
-        public async Task<Response<List<Document>>> ListDirtyDocuments([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<DocumentDraft>>> ListDirtyDocuments([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {
                 // this operation is not supported.
-                var response = FailureList<List<Document>>("Getting a single document by this method is not supported.");
+                return FailureList2<DocumentDraft>("Getting a single document by this method is not supported.");
             }
 
             // TODO: filter and sort
@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var result = await _documentClient.GetDrafts(/*documentListName: */ null, /*responseGroups: */ null, pageSize, startIndex);
             DC.PagedCollection<DC.Document> res = result.ReadAsAsync().Result;
 
-            return List2(Mapper.Map<List<Document>>(res.Items), (int)res.TotalCount);
+            return List2(Mapper.Map<List<DocumentDraft>>(res.Items), (int)res.TotalCount);
         }
 
         /// <summary>

@@ -90,6 +90,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             });
         }
 
+        [Obsolete]
         public Task<Response<List<T>>> FailureList<T>(string errorMessage)
         {
             return Task<Response<List<T>>>.Factory.StartNew(() => new Response<List<T>>
@@ -99,6 +100,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Total = 0,
                 Message = errorMessage,
             });
+        }
+
+        public Response<List<T>> FailureList2<T>(string errorMessage)
+        {
+            return new Response<List<T>>
+                {
+                    Items = new List<T>(),
+                    Success = false,
+                    Total = 0,
+                    Message = errorMessage
+                };
         }
 
         public Task<Response<T>> SuccessWithTotal<T>(int total)
