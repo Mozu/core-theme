@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         Task<ServiceClientResponse<StreamContent>> UpdateDocumentContent(string contentCollection, string documentId, FileStream stream);
 
-        Task<ServiceClientResponse<FolderTree>> GetFolderTree(string contentCollection, string getValue, int? levels);
+        Task<ServiceClientResponse<FolderTree>> GetFolderTree(string contentCollection);
 
         Task<ServiceClientResponse<Document>> Update(string contentCollection, string documentId, Document document);
 
