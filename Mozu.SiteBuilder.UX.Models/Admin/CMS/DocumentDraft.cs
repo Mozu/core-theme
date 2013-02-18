@@ -22,6 +22,12 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         public string DraftType { get; set; }
 
         /// <summary>
+        /// The document list name.
+        /// </summary>
+        [DataMember(Name = "documentListName")]
+        public string DocumentListName { get; set; }
+
+        /// <summary>
         /// Document name.
         /// </summary>
         [DataMember(Name = "name")]
