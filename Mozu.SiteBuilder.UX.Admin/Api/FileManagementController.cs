@@ -189,7 +189,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var folderId = extFilter.GetValue<string>("folderid");
 
             //var ret = _folderClient.GetFolderTree("files", folderId, 99).Result.ReadAsSync();
-            var ret = _cmsService.GetFolderTree("files", folderId, 99).Result.ReadAsSync();
+            var ret = _cmsService.GetFolderTree("files").Result.ReadAsSync();
            
              
             var vm = Mapper.Map<FileManagementFolder>(ret);

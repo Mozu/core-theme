@@ -81,18 +81,20 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 .UpdateDocumentContent(contentCollection, documentId, stream);
         }
 
-        public Task<ServiceClientResponse<FolderTree>> GetFolderTree(string documentListName, string rootFolderId, int? levels)
+        public async Task<ServiceClientResponse<FolderTree>> GetFolderTree(string documentListName)
         {
+            const int levels = 99;
             var folderWebApiClient = _folderWebApiClient.With(_targetContextLevelType);
 
-            var task = folderWebApiClient.GetFolderTree(documentListName, rootFolderId, levels);
+            Folder rootFolder = folderWebApiClient.GetByPath(documentListName, "/").Result.ReadAsAsync().Result;
+            var task = await folderWebApiClient.GetFolderTree(documentListName, rootFolder.Id, levels);
 
-            if (task.Result.ResponseMessage.StatusCode != HttpStatusCode.NotFound)
+            if (task.ResponseMessage.StatusCode != HttpStatusCode.NotFound)
                 return task;
 
-            var folder = new Folder { DocumentListName = documentListName, ParentId = rootFolderId, Name = documentListName };
+            var folder = new Folder { DocumentListName = documentListName, ParentId = rootFolder.Id, Name = documentListName };
             folderWebApiClient.Create(documentListName, folder, _targetContextLevelType).Result.ReadAsAsync();
-            return folderWebApiClient.GetFolderTree(documentListName, rootFolderId, levels);
+            return await folderWebApiClient.GetFolderTree(documentListName, rootFolder.Id, levels);
         }
 
         public Task<ServiceClientResponse<Document>> Update(string contentCollection, string documentId, Document document)
