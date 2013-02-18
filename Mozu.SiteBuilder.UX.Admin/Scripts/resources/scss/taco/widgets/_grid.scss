@@ -116,6 +116,10 @@
     width: 0px;
     @include transform(rotate(90deg));
     @include single-transition(transform, 0.1s);
+
+    &.empty {
+      visibility: hidden;
+    }
   }
 
   .#{$prefix}grid-row-collapsed {

@@ -100,6 +100,50 @@ Ext.define('Taco.view.product.Index', {
         }
     },
 
+    bulkEditorColumns: [{
+        dataIndex: 'productCode',
+        text: 'Code',
+        width: 100
+    }, {
+        dataIndex: 'productName',
+        text: 'Name',
+        minWidth: 120,
+        flex: 1,
+        editor: {
+            xtype: 'textfield'
+        }
+    }, {
+        dataIndex: 'price',
+        text: 'Price',
+        width: 100,
+        renderer: function (value) {
+            return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+        },
+        editor: {
+            xtype: 'currencyfield',
+            minValue: 0,
+            decimalPrecision: 2,
+            hideTrigger: true,
+            keyNavEnabled: false,
+            mouseWheelEnabled: false
+        }
+    }, {
+        dataIndex: 'salePrice',
+        text: 'Sale Price',
+        width: 100,
+        renderer: function (value) {
+            return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+        },
+        editor: {
+            xtype: 'currencyfield',
+            minValue: 0,
+            decimalPrecision: 2,
+            hideTrigger: true,
+            keyNavEnabled: false,
+            mouseWheelEnabled: false
+        }
+    }],
+
     tilePanelConf: {
         actions: [{
             iconCls: 'download',
@@ -119,8 +163,6 @@ Ext.define('Taco.view.product.Index', {
         isDragable: false,
         nameField: 'productName',
     },
-
-   
 
     launchLoadedEditor: function (record, options) {
         var site = Taco.app.context.getCurrentSite(),

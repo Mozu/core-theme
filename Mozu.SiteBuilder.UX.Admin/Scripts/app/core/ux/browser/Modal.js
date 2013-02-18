@@ -7,58 +7,19 @@ Ext.define('Taco.core.ux.browser.Modal', {
     autoShow: true,
     width: 700,
 
+    columns: [],
     store: undefined,
 
     initComponent: function (eOpts) {
         var me = this;
 
+        console.log(this.columns);
+
         this.grid = Ext.create('Taco.core.ux.grid.Panel', {
             store: this.store,
             selType: 'cellmodel',
             margin: '20 0 0',
-            columns: [{
-                dataIndex: 'productCode',
-                text: 'Code',
-                width: 100
-            }, {
-                dataIndex: 'productName',
-                text: 'Name',
-                minWidth: 120,
-                flex: 1,
-                editor: {
-                    xtype: 'textfield'
-                }
-            }, {
-                dataIndex: 'price',
-                text: 'Price',
-                width: 100,
-                renderer: function (value) {
-                    return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-                },
-                editor: {
-                    xtype: 'currencyfield',
-                    minValue: 0,
-                    decimalPrecision: 2,
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false
-                }
-            }, {
-                dataIndex: 'salePrice',
-                text: 'Sale Price',
-                width: 100,
-                renderer: function (value) {
-                    return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-                },
-                editor: {
-                    xtype: 'currencyfield',
-                    minValue: 0,
-                    decimalPrecision: 2,
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false
-                }
-            }],
+            columns: this.columns,
             plugins: [{
                 ptype: 'cellediting',
                 clicksToEdit: 1
