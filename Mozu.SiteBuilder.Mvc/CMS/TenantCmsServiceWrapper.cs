@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 return task;
 
             var folder = new Folder { DocumentListName = documentListName, ParentId = rootFolder.Id, Name = documentListName };
-            folderWebApiClient.Create(documentListName, folder, _targetContextLevelType).Result.ReadAsAsync();
+            await folderWebApiClient.Create(documentListName, folder, _targetContextLevelType).Result.ReadAsAsync();
             return await folderWebApiClient.GetFolderTree(documentListName, rootFolder.Id, levels);
         }
 
