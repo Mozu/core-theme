@@ -31,6 +31,6 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
         public string FolderId { get; set; }
 
         [DataMember(Name = "items")]
-        public List<DocumentProperty> Items { get; set; } 
+        public List<DocumentProperty> Items { get; set; }
     }
 }

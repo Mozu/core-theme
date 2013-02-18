@@ -20,6 +20,11 @@ Ext.define('Taco.model.CmsDocumentDraft', {
             "useNull": true
         },
         {
+            "name": "documentListName",
+            "type": "string",
+            "useNull": true
+        },
+        {
             "name": "name",
             "type": "string",
             "useNull": true
@@ -50,7 +55,8 @@ Ext.define('Taco.model.CmsDocumentDraft', {
     proxy: {
         type: 'readahead',
         api: {
-            read: '/admin/app/cmspublishing/listdrafts'
+            "read": "/admin/app/cmspublishing/listdrafts",
+            "delete": "/admin/app/cmspublishing/discard"
         },
         reader: {
             type: 'json',
