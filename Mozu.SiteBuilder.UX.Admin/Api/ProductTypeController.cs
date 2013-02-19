@@ -9,6 +9,7 @@ using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
+using Mozu.SiteBuilder.UX.Admin.MockServices;
 using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -24,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ProductTypeController(IProductTypeWebApiClient productTypeClient)
+        public ProductTypeController(IMoreAwesomeProductTypeWebApiClient productTypeClient)
         {
             _productTypeClient = productTypeClient;
         }

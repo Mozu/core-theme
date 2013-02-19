@@ -12,12 +12,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
 {
     using ProductAdmin.Contracts;
 
-    [Obsolete]
     public interface IMoreAwesomeAttributeWebApiClient : IAttributeWebApiClient
     {
     }
 
-    [Obsolete]
     public class InMemoryAttributeWebApiClient : IMoreAwesomeAttributeWebApiClient
     {
         private readonly IDictionary<string, AttributeTypeRule> _attributeTypeRules;

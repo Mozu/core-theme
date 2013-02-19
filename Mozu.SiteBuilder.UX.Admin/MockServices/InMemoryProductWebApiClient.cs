@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
     [Obsolete]
     public class InMemoryProductWebApiClient : IMoreAwesomeProductWebApiClient
     {
-        private const string PRODUCTS_CACHE_FORMAT_STRING = "_products";
+        private const string PRODUCTS_CACHE_FORMAT_STRING = "_products_{0}";
         private IApiContext _ctx;
 
         /// <summary>
@@ -288,8 +288,6 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         {
             throw new NotImplementedException();
         }
-        #endregion
-
 
         public Task<ServiceClientResponse<DC.ProductInSiteInfo>> AddProductInSite(DC.ProductInSiteInfo productInSiteInfoIn, string productCode)
         {
@@ -349,5 +347,6 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
                 throw new NotImplementedException();
             }
         }
+        #endregion
     }
 }

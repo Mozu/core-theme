@@ -479,6 +479,7 @@
     <Compile Include="ICurrentUserHelper.cs" />
     <Compile Include="IPasswordHelper.cs" />
     <Compile Include="IRolesHelper.cs" />
+    <Compile Include="MockServices\InMemoryProductTypeApiClient.cs" />
     <Compile Include="MockServices\InMemoryAttributeWebApiClient.cs" />
     <Compile Include="MockServices\InSessionDocumentWebApiClient.cs" />
     <Compile Include="MockServices\InMemoryProductWebApiClient.cs" />
