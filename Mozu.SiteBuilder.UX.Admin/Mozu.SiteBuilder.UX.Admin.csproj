@@ -538,12 +538,16 @@
     <Content Include="Scripts\app\locale\Strings.js" />
     <Content Include="Configs\AppSettings.SI.config" />
     <None Include="Scripts\app\mocks\behaviors.json" />
+    <Content Include="Scripts\app\model\Attribute.js" />
+    <Content Include="Scripts\app\model\AttributeValue.js" />
     <Content Include="Scripts\app\model\Behavior.js" />
     <Content Include="Scripts\app\model\CartItem.js" />
     <Content Include="Scripts\app\model\CmsDocumentDraft.js" />
+    <Content Include="Scripts\app\model\ProductTypeAttribute.js" />
     <Content Include="Scripts\app\model\ItemFilter.js" />
     <Content Include="Scripts\app\model\ProductInSiteInfo.js" />
     <Content Include="Scripts\app\model\LocalizedString.js" />
+    <Content Include="Scripts\app\model\ProductType.js" />
     <Content Include="Scripts\app\model\RuntimeProduct.js" />
     <Content Include="Scripts\app\model\RuntimeProductSearchResult.js" />
     <Content Include="Scripts\app\model\SimplegridColumn.js" />

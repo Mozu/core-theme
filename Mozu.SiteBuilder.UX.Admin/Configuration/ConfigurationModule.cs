@@ -61,6 +61,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient ).Assembly);
 
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.Clients.CheckoutSettingsWebApiClient).Assembly);
+            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.User.Contracts.Clients.IUserWebApiClient).Assembly);
 
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.General.Contracts.Clients.GeneralSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Customer.Contracts.Clients.CustomerAccountWebApiClient).Assembly);
@@ -76,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.Register<System.Web.HttpContextBase>((c, p) => new System.Web.HttpContextWrapper(System.Web.HttpContext.Current)).InstancePerDependency();
 
             builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
-
+            
 
            
 

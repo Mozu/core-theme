@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin
             base.AddMessageHandlers();
 
             GlobalFilters.Filters.Add(new HandleErrorAttribute());
-
+          //  GlobalFilters.Filters.Add(new SiteBuilderAuthorizeAttribute());
             var configuration = GlobalConfiguration.Configuration;
 
             configuration.Filters.Add(new ApiExceptionFilter(new ExceptionResponseBuilderCollection { IncludeExceptionDetails = true }, new ApiExceptionFilterLogger { IsErrorLoggingEnabled = false }));
@@ -86,7 +86,7 @@ namespace Mozu.SiteBuilder.UX.Admin
             DependencyResolver.SetResolver(resolver);
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(Container);
         }
-
+        
         protected override void ApplicationStart()
         {
             var configuration = GlobalConfiguration.Configuration;
