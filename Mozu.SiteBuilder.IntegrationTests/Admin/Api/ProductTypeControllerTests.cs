@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using AutoMapper;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
@@ -60,7 +60,11 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             // set up AddProductType mock.
             _productTypeClient.AddProductType(Arg.Any<DC.ProductType>()).Returns(
-                args => new TestResponse<DC.ProductType>((DC.ProductType)args[0]).Task
+                args => {
+                    DC.ProductType addedPT = (DC.ProductType)args[0];
+                    addedPT.Id = new Random().Next();
+                    return new TestResponse<DC.ProductType>(addedPT).Task;
+                }
             );
 
             // set up UpdateProductType mock.
@@ -96,6 +100,63 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             Response<List<ProductType>> r = _testedController.ListProductTypes(pagingParams, filterParams).Result;
 
+            r.Success.ShouldBeTrue();
+            r.Total.ShouldEqual(_mocks.Items.Count);
+            IEnumerable<int?> mockIds = _mocks.Items.Select(m => m.Id);
+            IEnumerable<int?> returnedIds = r.Items.Select(pt => pt.Id);
+            
+            // there shouldn't be any ids that exist in one list but not the other.
+            mockIds.Except(returnedIds).ShouldBeEmpty();
+        }
+
+        [Test]
+        public void CreateProductType_should_call_AddProductType_for_each_product_requested()
+        {
+            var newPTs = new List<ProductType>
+                {
+                    new ProductType { Name = "Kitten Mittens the ProductType" },
+                    new ProductType { Name = "Cat Pants the ProductType" }
+                };
+
+            Response<List<ProductType>> response = _testedController.CreateProductType(newPTs).Result;
+
+            response.Items.Count.ShouldEqual(2);
+            response.Items[0].Name.ShouldEqual(newPTs[0].Name);
+            response.Items[0].Id.ShouldBeInRange(1, Int32.MaxValue);
+            response.Items[1].Name.ShouldEqual(newPTs[1].Name);
+            response.Items[1].Id.ShouldBeInRange(1, Int32.MaxValue);
+        }
+
+        [Test]
+        public void DeleteProductType_should_send_each_Id_to_productTypeClient_DeleteProductType()
+        {
+            var productTypes = Mapper.Map<List<ProductType>>(_mocks.Items);
+
+            var response = _testedController.DeleteProductType(productTypes).Result;
+
+            _productTypeClient.Received(1).DeleteProductType(productTypes[0].Id);
+            _productTypeClient.Received(1).DeleteProductType(productTypes[1].Id);
+
+            response.Success.ShouldBeTrue();
+            response.Total.ShouldEqual(productTypes.Count);
+        }
+
+        [Test]
+        public void EditProductType_should_send_each_ProductType_to_productTypeClient()
+        {
+            var productTypes = new List<ProductType>
+                {
+                    new ProductType { Id = 123, Name = "Zetlen's Product Type" },
+                    new ProductType { Id = 456, Name = "PT Cray Cray" }
+                };
+
+            var response = _testedController.EditProductType(productTypes).Result;
+
+            response.Success.ShouldBeTrue();
+            response.Total.ShouldEqual(productTypes.Count);
+            response.Items.First().Id.ShouldEqual(productTypes.First().Id);
+            response.Items.First().Name.ShouldEqual(productTypes.First().Name);
+            response.Items.Last().Name.ShouldEqual(productTypes.Last().Name);
         }
         // TODO: some more testing
     }
