@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
     [TestFixture]
     public class ModelTests
     {
-        [Test]
+        [Test, Explicit("Run to create some sample JSON")]
         public void Can_create_a_test_ProductType()
         {
             var id = 198;
