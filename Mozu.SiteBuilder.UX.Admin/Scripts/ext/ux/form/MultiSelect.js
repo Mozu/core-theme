@@ -1,8 +1,7 @@
 /**
- * @class Taco.core.ux.form.MultiSelect
- * A control that allows selection of multiple items in a list
+ * A control that allows selection of multiple items in a list.
  */
-Ext.define('Taco.core.ux.form.MultiSelect', {
+Ext.define('Ext.ux.form.MultiSelect', {
     
     extend: 'Ext.form.FieldContainer',
     
@@ -11,12 +10,14 @@ Ext.define('Taco.core.ux.form.MultiSelect', {
         field: 'Ext.form.field.Field'    
     },
     
-    alternateClassName: 'Taco.core.ux.Multiselect',
+    alternateClassName: 'Ext.ux.Multiselect',
     alias: ['widget.multiselectfield', 'widget.multiselect'],
     
-    requires: ['Ext.panel.Panel', 'Ext.view.BoundList'],
+    requires: ['Ext.panel.Panel', 'Ext.view.BoundList', 'Ext.layout.container.Fit'],
     
     uses: ['Ext.view.DragZone', 'Ext.view.DropZone'],
+    
+    layout: 'anchor',
     
     /**
      * @cfg {String} [dragGroup=""] The ddgroup name for the MultiSelect DragZone.
@@ -42,7 +43,7 @@ Ext.define('Taco.core.ux.form.MultiSelect', {
      */
 
     /**
-     * @cfg {String} [appendOnly=false] True if the list should only allow append drops when drag/drop is enabled.
+     * @cfg {String} [appendOnly=false] `true` if the list should only allow append drops when drag/drop is enabled.
      * This is useful for lists which are sorted.
      */
     appendOnly: false,
@@ -57,7 +58,7 @@ Ext.define('Taco.core.ux.form.MultiSelect', {
      */
 
     /**
-     * @cfg {Boolean} [allowBlank=true] False to require at least one item in the list to be selected, true to allow no
+     * @cfg {Boolean} [allowBlank=true] `false` to require at least one item in the list to be selected, `true` to allow no
      * selection.
      */
     allowBlank: true,
@@ -89,17 +90,17 @@ Ext.define('Taco.core.ux.form.MultiSelect', {
      * Validation message displayed when {@link #maxSelections} is not met
      * The {0} token will be replaced by the value of {@link #maxSelections}.
      */
-    maxSelectionsText: 'Minimum {0} item(s) required',
+    maxSelectionsText: 'Maximum {0} item(s) required',
 
     /**
      * @cfg {String} [delimiter=","] The string used to delimit the selected values when {@link #getSubmitValue submitting}
      * the field as part of a form. If you wish to have the selected values submitted as separate
-     * parameters rather than a single delimited parameter, set this to <tt>null</tt>.
+     * parameters rather than a single delimited parameter, set this to `null`.
      */
     delimiter: ',',
 
     /**
-     * @cfg {Ext.data.Store/Array} store The data source to which this MultiSelect is bound (defaults to <tt>undefined</tt>).
+     * @cfg {Ext.data.Store/Array} store The data source to which this MultiSelect is bound (defaults to `undefined`).
      * Acceptable values for this property are:
      * <div class="mdetail-params"><ul>
      * <li><b>any {@link Ext.data.Store Store} subclass</b></li>
@@ -115,7 +116,13 @@ Ext.define('Taco.core.ux.form.MultiSelect', {
      */
     
     ignoreSelectChange: 0,
-    
+
+    /**
+     * @cfg {Object} listConfig
+     * An optional set of configuration properties that will be passed to the {@link Ext.view.BoundList}'s constructor.
+     * Any configuration that is valid for BoundList can be included.
+     */
+
     initComponent: function(){
         var me = this;
 
@@ -130,7 +137,7 @@ Ext.define('Taco.core.ux.form.MultiSelect', {
         if (!Ext.isDefined(me.valueField)) {
             me.valueField = me.displayField;
         }
-        Ext.apply(me, me.setupItems());
+        me.items = me.setupItems();
         
         
         me.callParent();
@@ -140,24 +147,35 @@ Ext.define('Taco.core.ux.form.MultiSelect', {
     
     setupItems: function() {
         var me = this;
-        
-        me.boundList = Ext.create('Ext.view.BoundList', {
+
+        me.boundList = Ext.create('Ext.view.BoundList', Ext.apply({
+            anchor: 'none 100%',
             deferInitialRefresh: false,
+            border: 1,
             multiSelect: true,
             store: me.store,
             displayField: me.displayField,
             disabled: me.disabled
-        });
-        
+        }, me.listConfig));
         me.boundList.getSelectionModel().on('selectionchange', me.onSelectChange, me);
+        
+        // Only need to wrap the BoundList in a Panel if we have a title.
+        if (!me.title) {
+            return me.boundList;
+        }
+
+        // Wrap to add a title
+        me.boundList.border = false;
         return {
-            layout: 'fit',
+            border: true,
+            anchor: 'none 100%',
+            layout: 'anchor',
             title: me.title,
             tbar: me.tbar,
             items: me.boundList
         };
     },
-    
+
     onSelectChange: function(selModel, selections){
         if (!this.ignoreSelectChange) {
             this.setValue(selections);
@@ -192,13 +210,17 @@ Ext.define('Taco.core.ux.form.MultiSelect', {
     },
     
     afterRender: function(){
-        var me = this;
+        var me = this,
+            records;
         
         me.callParent();
         if (me.selectOnRender) {
-            ++me.ignoreSelectChange;
-            me.boundList.getSelectionModel().select(me.getRecordsForValue(me.value));
-            --me.ignoreSelectChange;
+            records = me.getRecordsForValue(me.value);
+            if (records.length) {
+                ++me.ignoreSelectChange;
+                me.boundList.getSelectionModel().select(records);
+                --me.ignoreSelectChange;
+            }
             delete me.toSelect;
         }    
         
@@ -276,7 +298,7 @@ Ext.define('Taco.core.ux.form.MultiSelect', {
     /**
      * Clear any invalid styles/messages for this field.
      *
-     * **Note**: this method does not cause the Field's {@link #validate} or {@link #isValid} methods to return `true`
+     * __Note:__ this method does not cause the Field's {@link #validate} or {@link #isValid} methods to return `true`
      * if the value does not _pass_ validation. So simply clearing a field's errors will not necessarily allow
      * submission of forms submitted with the {@link Ext.form.action.Submit#clientValidation} option set.
      */
@@ -307,18 +329,18 @@ Ext.define('Taco.core.ux.form.MultiSelect', {
     /**
      * Returns the value that would be included in a standard form submit for this field.
      *
-     * @return {String} The value to be submitted, or null.
+     * @return {String} The value to be submitted, or `null`.
      */
     getSubmitValue: function() {
         var me = this,
             delimiter = me.delimiter,
             val = me.getValue();
-            
+        
         return Ext.isString(delimiter) ? val.join(delimiter) : val;
     },
     
     getValue: function(){
-        return this.value;
+        return this.value || [];
     },
     
     getRecordsForValue: function(value){
@@ -348,28 +370,44 @@ Ext.define('Taco.core.ux.form.MultiSelect', {
         var delimiter = this.delimiter,
             valueField = this.valueField,
             i = 0,
+            out,
             len,
             item;
             
-        if (delimiter && Ext.isString(value)) {
-            value = value.split(delimiter);
-        } else if (!Ext.isArray(value)) {
-            value = [value];
-        }
-        
-        for (len = value.length; i < len; ++i) {
-            item = value[i];
-            if (item && item.isModel) {
-                value[i] = item.get(valueField);
+        if (Ext.isDefined(value)) {
+            if (delimiter && Ext.isString(value)) {
+                value = value.split(delimiter);
+            } else if (!Ext.isArray(value)) {
+                value = [value];
             }
+        
+            for (len = value.length; i < len; ++i) {
+                item = value[i];
+                if (item && item.isModel) {
+                    value[i] = item.get(valueField);
+                }
+            }
+            out = Ext.Array.unique(value);
+        } else {
+            out = [];
         }
-        return Ext.Array.unique(value);
+        return out;
     },
     
     setValue: function(value){
         var me = this,
-            selModel = me.boundList.getSelectionModel();
-        
+            selModel = me.boundList.getSelectionModel(),
+            store = me.store;
+
+        // Store not loaded yet - we cannot set the value
+        if (!store.data || !store.getCount()) {
+            store.on({
+                load: Ext.Function.bind(me.setValue, me, [value]),
+                single: true
+            });
+            return;
+        }
+
         value = me.setupValue(value);
         me.mixins.field.setValue.call(me, value);
         
