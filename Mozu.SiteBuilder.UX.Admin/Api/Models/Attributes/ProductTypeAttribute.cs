@@ -37,15 +37,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 
     
 
-        [DataMember(Name = "usageTypes")]
+        [DataMember(Name = "usageType")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public List<ProductTypeAttributeUsageType> UsageTypes { get; set; }
+        public ProductTypeAttributeUsageType UsageType { get; set; }
 
         [DataMember(Name = "attributeName")]
         public string AttributeName  { get; set; }
 
 
         [DataMember(Name = "attributeInputTypes")]
-        public AttributeInputType[] AttributeInputTypes { get; set; }
+        public List<ProductTypeAttributeUsageType>  AttributeInputTypes { get; set; }
     }
 }       
