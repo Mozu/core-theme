@@ -17,4 +17,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         [DataMember(Name = "datetime")]
         DateTime,
     }
+
+    public enum ProductTypeAttributeUsage
+    {
+        option,extra,property
+    }
 }

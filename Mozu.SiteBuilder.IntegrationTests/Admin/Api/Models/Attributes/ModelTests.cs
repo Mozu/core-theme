@@ -17,7 +17,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
             var options = GetOptions(id);
             var properties = GetProperties(id);
             var extras = GetExtras(id);
-
+             
             var productType = new ProductType
             {
                 Extras = extras.ToList(),
@@ -27,7 +27,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 Id = id,
                 IsBase = true,
                 NumberOfProducts = 12,
+                ModifiedDate = DateTime.Now 
             };
+
 
             var text = new DumpTag().Process(productType);
 
@@ -44,16 +46,16 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 AllowMulti = false,
                 AllValues = new List<AttributeValue>
                 {
-                    new AttributeValue { AttributeId = attributeId, Id = 659, Value = "With Handle" },
+                    new AttributeValue { AttributeId = attributeId.ToString( ), Id = 659.ToString( ), Value = "With Handle" },
                 },
-                Id = attributeId++,
+                Id = (attributeId++).ToString( ),
                 Index = index++,
                 IsHidden = false,
                 IsLocked = true,
                 IsRequired = true,
                 ProductTypeId = productTypeId,
                 SelectedValues = new List<int>(),
-                UsageType = ProductTypeAttributeUsageType.Admin,
+                UsageType = ProductTypeAttributeUsage.extra 
             };
         }
 
@@ -67,19 +69,21 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 AllowMulti = false,
                 AllValues = new List<AttributeValue>
                 {
-                    new AttributeValue { AttributeId = attributeId, Id = 3209, Value = "Blue" },
-                    new AttributeValue { AttributeId = attributeId, Id = 3210, Value = "Red" },
-                    new AttributeValue { AttributeId = attributeId, Id = 3211, Value = "Green" },
-                    new AttributeValue { AttributeId = attributeId, Id = 3212, Value = "White" },
+                    new AttributeValue { AttributeId = attributeId.ToString(), Id = 3209.ToString(), Value = "Blue" },
+                    new AttributeValue { AttributeId = attributeId.ToString(), Id = 3210.ToString(), Value = "Red" },
+                    new AttributeValue { AttributeId = attributeId.ToString(), Id = 3211.ToString(), Value = "Green" },
+                    new AttributeValue { AttributeId = attributeId.ToString(), Id = 3212.ToString(), Value = "White" },
                 },
-                Id = attributeId++,
+                Id = (attributeId++).ToString(),
+                
                 Index = index++,
                 IsHidden = false,
                 IsLocked = true,
                 IsRequired = true,
+                
                 ProductTypeId = productTypeId,
                 SelectedValues = new List<int> { 3209, 3210, 3211 },
-                UsageType = ProductTypeAttributeUsageType.Shopper,
+                UsageType = ProductTypeAttributeUsage.extra 
             };
 
             yield return new ProductTypeAttribute
@@ -87,17 +91,17 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 AllowMulti = true,
                 AllValues = new List<AttributeValue>
                 {
-                    new AttributeValue { AttributeId = attributeId, Id = 2332, Value = "Matte" },
-                    new AttributeValue { AttributeId = attributeId, Id = 2333, Value = "Glossy" },
+                    new AttributeValue { AttributeId = attributeId.ToString(), Id = 2332.ToString(), Value = "Matte" },
+                    new AttributeValue { AttributeId = attributeId.ToString(), Id = 2333.ToString(), Value = "Glossy" },
                 },
-                Id = attributeId++,
+                Id = (attributeId++).ToString(),
                 Index = index++,
                 IsHidden = false,
                 IsLocked = true,
                 IsRequired = false,
                 ProductTypeId = productTypeId,
                 SelectedValues = new List<int> { 2332 },
-                UsageType = ProductTypeAttributeUsageType.Shopper,
+                UsageType = ProductTypeAttributeUsage.extra,
             };
         }
 
@@ -107,14 +111,14 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
             {
                 AllValues = null,
                 AllowMulti = false,
-                Id = 342,
+                Id = 342.ToString(),
                 Index = 0,
                 IsHidden = false,
                 IsLocked = true,
                 IsRequired = false,
                 ProductTypeId = productTypeId,
                 SelectedValues = new List<int>(),
-                UsageType = ProductTypeAttributeUsageType.Unknown,
+                UsageType = ProductTypeAttributeUsage.option
             };
         }
     }

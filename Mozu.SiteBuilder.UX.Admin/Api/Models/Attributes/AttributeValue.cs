@@ -6,10 +6,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
     public class AttributeValue
     {
         [DataMember(Name = "id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [DataMember(Name = "attributeId")]
-        public int AttributeId { get; set; }
+        public string AttributeId { get; set; }
 
         [DataMember(Name = "value")]
         public object Value { get; set; }
