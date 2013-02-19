@@ -45,11 +45,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public Response<List<T>> List2<T>(T single, int? total = null)
         {
+            var items = new List<T> {single};
             return new Response<List<T>>
                 {
-                    Items = new List<T> { single },
+                    Items = items,
                     Success = true,
-                    Total = total ?? 0,
+                    Total = total ?? items.Count,
                 };
         }
 
