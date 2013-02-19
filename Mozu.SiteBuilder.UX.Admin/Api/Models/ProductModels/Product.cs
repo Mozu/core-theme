@@ -76,6 +76,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "stockOnHand")]
         public int? StockOnHand { get; set; }
 
+
+
+        [DataMember(EmitDefaultValue = false, Name = "stockOnHandAdjustment")]
+        public StockOnHandAdjustment StockOnHandAdjustment { get; set; }
+
+
+
+        
+
         /// <summary>
         /// Hide when out of stock.
         /// </summary>
