@@ -331,6 +331,13 @@
     <Compile Include="Api\CmsDocumentController.cs" />
     <Compile Include="Api\CmsPublishingController.cs" />
     <Compile Include="Api\ModelMapping\WidgetInstanceDataMapping.cs" />
+    <Compile Include="Api\Models\Attributes\Attribute.cs" />
+    <Compile Include="Api\Models\Attributes\AttributeDataType.cs" />
+    <Compile Include="Api\Models\Attributes\AttributeInputType.cs" />
+    <Compile Include="Api\Models\Attributes\AttributeValue.cs" />
+    <Compile Include="Api\Models\Attributes\ProductType.cs" />
+    <Compile Include="Api\Models\Attributes\ProductTypeAttribute.cs" />
+    <Compile Include="Api\Models\Attributes\ProductTypeAttributeUsageType.cs" />
     <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
     <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
     <Compile Include="Api\Models\ProductModels\ProductLocalizedImage.cs" />
