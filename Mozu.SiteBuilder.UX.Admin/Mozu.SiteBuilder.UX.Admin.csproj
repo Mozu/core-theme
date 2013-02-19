@@ -1027,6 +1027,8 @@
     <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-top-sides.gif" />
     <Content Include="Scripts\ext\resources\themes\images\default\window\window-default-corners.gif" />
     <Content Include="Scripts\ext\resources\themes\images\default\window\window-default-sides.gif" />
+    <Content Include="Scripts\ext\ux\form\ItemSelector.js" />
+    <Content Include="Scripts\ext\ux\form\MultiSelect.js" />
     <Content Include="Scripts\ext\ux\IFrame.js" />
     <Content Include="Scripts\index.html" />
     <Content Include="Scripts\jsduck-4.3.2.exe" />
@@ -2806,6 +2808,7 @@
     <Content Include="Scripts\app\mocks\itemfilters.json" />
     <Content Include="Scripts\app\mocks\productTypes.json" />
     <Content Include="Scripts\app\mocks\attributes.json" />
+    <Content Include="Scripts\resources\scss\taco\variables\_boundlist.scss" />
     <None Include="Scripts\resources\scss\taco\widgets\_checkout.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_panel.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_phoneOrders.scss" />

@@ -1,0 +1,12 @@
+$boundlist-border-color: $color-grid-border;
+$boundlist-border-style: solid none none;
+
+$boundlist-item-border-color: $color-grid-border;
+$boundlist-item-border-style: none solid solid;
+$boundlist-item-padding: 8px 24px;
+
+$boundlist-item-over-border-color: $color-grid-border;
+$boundlist-item-selected-border-color: $color-grid-border;
+
+$boundlist-item-over-background-color: $color-neutral-lightest;
+$boundlist-item-selected-background-color: $color-highlighted-background-light !important;
