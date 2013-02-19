@@ -87,6 +87,19 @@ Ext.define('Taco.model.ProductInSiteInfo', {
             "type": "int"
         },
         {
+            "name": "site",
+            "type": "auto",
+            persist: false,
+            convert: function (value, record) {
+                if (this.site == null) {
+                    var siteId = record.get('siteId');
+                    this.site= Taco.app.context.findSite(siteId);
+                }
+                return this.site;
+
+            }
+        },
+        {
             "name": "categoryIds",
             "type": "auto",
             "useNull": true

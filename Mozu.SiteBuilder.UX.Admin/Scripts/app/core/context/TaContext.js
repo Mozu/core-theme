@@ -130,7 +130,7 @@ Ext.define('Taco.core.context.TaContext', {
         }
         return this.getContext().getSiteId();
     },
-
+   
     getSiteGroupId: function () {
         if (this == this.getContext()) {
             if (this.siteCollections.length == 1) {

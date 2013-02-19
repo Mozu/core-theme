@@ -86,14 +86,19 @@ Ext.define('Taco.view.product.Index', {
                             '<td class="x-grid-cell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-site-id="{siteId}">{parent.productName}</a></div></td>',
                             '<td class="x-grid-cell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
                             '<td class="x-grid-cell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{siteId}</div></td>',
+                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{siteId:this.toSiteName}</div></td>',
                             '<td class="x-grid-cell"><div class="x-grid-cell-inner">{isContentOverridden}</div></td>',
                             '<td class="x-grid-cell"><div class="x-grid-cell-inner"></div></td>',
                         '</tr></tpl>',
                     {
                         formatPrice: function (value) {
                             return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+                        },
+                        toSiteName: function (value) {
+                            var site = Taco.app.context.findSite(value);
+                            return site ? site.name : 'n/a';
                         }
+                        
                     })
                 }]
             }
