@@ -341,7 +341,6 @@
     <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
     <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
     <Compile Include="Api\Models\ProductModels\ProductLocalizedImage.cs" />
-    <Compile Include="Api\ProductTypeController.cs" />
     <Compile Include="Api\WidgetInstanceDataController.cs" />
     <Compile Include="Api\IVolusionLoginHelper.cs" />
     <Compile Include="Api\IUserHelper.cs" />
@@ -478,7 +477,6 @@
     <Compile Include="ICurrentUserHelper.cs" />
     <Compile Include="IPasswordHelper.cs" />
     <Compile Include="IRolesHelper.cs" />
-    <Compile Include="MockServices\InMemoryAttributeWebApiClient.cs" />
     <Compile Include="MockServices\InSessionDocumentWebApiClient.cs" />
     <Compile Include="MockServices\InMemoryProductWebApiClient.cs" />
     <Compile Include="MockServices\TestResponse.cs" />
@@ -491,6 +489,7 @@
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
     <Content Include="Scripts\.sencha\workspace\plugin.xml" />
+    <Content Include="Scripts\app\controller\Attributes.js" />
     <Content Include="Scripts\app\controller\PendingChanges.js" />
     <Content Include="Scripts\app\controller\Errors.js" />
     <Content Include="Scripts\app\controller\PhoneOrders.js" />
@@ -561,7 +560,9 @@
     <Content Include="Scripts\app\store\LocalizedStrings.js" />
     <Content Include="Scripts\app\store\Orders.js" />
     <Content Include="Scripts\app\store\RuntimeProductSearch.js" />
+    <Content Include="Scripts\app\store\Attributes.js" />
     <Content Include="Scripts\app\store\WidgetInstances.js" />
+    <Content Include="Scripts\app\view\attribute\Index.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\pendingchange\Cms.js" />

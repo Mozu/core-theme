@@ -15,6 +15,7 @@ Ext.define('Taco.core.ux.tab.Picker', {
     idTpl: '{id}',
     displayTpl: '{name}',
     hidden: true,
+    alignment: 'tr-br?',
 
     initComponent: function () {
 
@@ -79,7 +80,7 @@ Ext.define('Taco.core.ux.tab.Picker', {
         this.currentItems = this.getCheckedRecords();
         this.callParent(arguments);
 
-        this.alignTo(this.positionNextTo.getEl(), 'tr-br?');
+        this.alignTo(this.positionNextTo.getEl(), this.alignment);
     },
 
     hide: function () {
