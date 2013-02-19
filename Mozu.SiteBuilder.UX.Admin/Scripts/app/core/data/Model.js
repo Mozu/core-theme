@@ -24,6 +24,80 @@ Ext.define('Taco.core.data.Model', {
         this.fireEvent('afteredit', this, modifiedFieldNames);
     },
     
+    afterCommit: function () {
+        this.callParent(arguments);
+        this.fireEvent('aftercommit', this);
+    },
+    afterReject: function () {
+        this.callParent(arguments);
+        this.callStore("afterreject", this);
+    },
+     
+    
+    getOrCreateHasManyStore: function (config) {
+        var me = this,
+            storeConfig = config.storeConfig || {},
+            modelDefaults = config.modelDefaults || {},
+            model = config.model,
+            storeName = config.storeName || config.associationKey + 'Store',
+            associationKey = config.associationKey,
+            foreignKey = config.foreignKey || null,
+            foreignProperty = config.foreignProperty || this.model;
+
+        this.hasManyStores = this.hasManyStores || {};
+        if (this.hasManyStores[storeName] != null) {
+            return this.hasManyStores[storeName];
+        }
+        if (foreignKey) {
+            modelDefaults[foreignKey] = this.getId();
+        }
+        config = Ext.apply({}, storeConfig, {
+            model: model,
+            remoteFilter: false,
+            data: this.get(associationKey),
+            modelDefaults: modelDefaults,
+            listeners: {
+                add: function(store, records, index, eOpts) {
+                    Ext.each(store.records, function(record) {
+                        record[foreignProperty] = this;
+                        
+                    });
+                },
+                update: function (store, record, operation, eOpts) {
+                    if (operation == Ext.data.Model.COMMIT) {
+                        return;
+                    }
+                    var data = [];
+                    if (store.isDirty()) {
+                        Ext.each(store.data.items, function (record) {
+                            data.push(record.getData());
+                        });
+                        this.set(associationKey, data);
+                    }
+                },
+                datachanged: function(store) {
+                    var data = [];
+                    if (store.isDirty()) {
+                        Ext.each(store.data.items, function(record) {
+                            data.push(record.getData());
+                        });
+                        this.set(associationKey, data);
+                    }
+                },
+                scope: this
+            }
+        });
+        this.hasManyStores[storeName] = new Ext.data.Store(config);
+        this.on('aftercommit', function (model) {
+            this.hasManyStores[storeName].commitChanges();
+        }, this);
+        this.on('afterreject', function (model) {
+            this.hasManyStores[storeName].rejectChanges();
+        }, this);
+        
+        return this.hasManyStores[storeName];
+
+    },
 
 
     getMessage: function () {

@@ -3,9 +3,9 @@
  */
 Ext.define('Taco.model.Attribute', {
     requires:['Taco.model.AttributeValue'],
-    extend: 'Ext.data.Model',
+    extend: 'Taco.core.data.Model',
     fields: [
-        { name: 'id', type: 'string' },
+        { name: 'id', type: 'auto' },
         { name: 'name', type: 'string' },
         { name: 'inputType', type: 'string' },
         { name: 'dataType', type: 'string' },
@@ -16,20 +16,26 @@ Ext.define('Taco.model.Attribute', {
         { name: 'regex', type: 'string' },
         {
             name: 'values',
-            type: 'auto',
-            serialize: function (value, record) {
-                return record.getAssociatedData()['getAttributeValues'];
+            type: 'auto'
+            //,
+            //serialize: function (value, record) {
+            //    return record.getAssociatedData()['getAttributeValues'];
            
 
-        }}
+            //}
+        }
         
     ],
-    hasMany: [
-        {
+    getAttributeValues: function () {
+        return this.getOrCreateHasManyStore({
             model: 'Taco.model.AttributeValue',
-            name: "getAttributeValues",
-            associationKey: 'values'
-        }],
+            associationKey: 'values',
+            foreignKey: 'attributeId',
+            foreignProperty:'attribute'
+        });
+        
+        
+    },
     proxy: {
         type: 'ajaxproxy',
         api: {

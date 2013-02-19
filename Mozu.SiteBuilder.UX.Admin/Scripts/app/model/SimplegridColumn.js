@@ -2,7 +2,7 @@
  * Taco.model.SimplegridColumn
  */
 Ext.define('Taco.model.SimplegridColumn', {
-    extend: 'Ext.data.Model',
+    extend: 'Taco.core.data.Model',
 
     idProperty: 'id',
 

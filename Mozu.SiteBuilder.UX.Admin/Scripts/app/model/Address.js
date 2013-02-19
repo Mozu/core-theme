@@ -2,7 +2,7 @@
  * @class Taco.model.Address
  */
 Ext.define('Taco.model.Address', {
-    extend: 'Ext.data.Model',
+    extend: 'Taco.core.data.Model',
     fields: [
         { name: 'firstName',             type: 'string' },
         { name: 'lastName',              type: 'string' },

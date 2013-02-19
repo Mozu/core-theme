@@ -2,7 +2,7 @@
  * @class Taco.model.ActiveRateProvider
  */
 Ext.define('Taco.model.ActiveRateProvider', {
-    extend: 'Ext.data.Model',
+    extend: 'Taco.core.data.Model',
     fields: [
         { name: 'id', type: 'int' },
         { name: 'name', type: 'string' },

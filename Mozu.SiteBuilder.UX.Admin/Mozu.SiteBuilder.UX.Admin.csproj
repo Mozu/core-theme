@@ -2797,6 +2797,7 @@
     <Content Include="Scripts\resources\scss\_taco-variables.scss" />
     <Content Include="Scripts\resources\scss\taco\variables\_panel.scss" />
     <Content Include="Scripts\app\mocks\itemfilters.json" />
+    <Content Include="Scripts\app\mocks\productTypes.json" />
     <None Include="Scripts\resources\scss\taco\widgets\_checkout.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_panel.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_phoneOrders.scss" />

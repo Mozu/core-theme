@@ -3,7 +3,7 @@
  */
 
 	Ext.define('Taco.model.AccountInformation', {
-	    extend: 'Ext.data.Model',
+	    extend: 'Taco.core.data.Model',
 	    fields: [
 	        { name: 'email',           type: 'string' },
 	        { name: 'firstName',       type: 'string' },

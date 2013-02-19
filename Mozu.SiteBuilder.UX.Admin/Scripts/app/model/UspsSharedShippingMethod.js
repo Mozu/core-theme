@@ -2,7 +2,7 @@
  * @class Taco.model.UspsSharedShippingMethod
  */
 Ext.define('Taco.model.UspsSharedShippingMethod', {
-    extend: 'Ext.data.Model',
+    extend: 'Taco.core.data.Model',
     fields: [
         { name: 'code', type: 'string' },
         { name: 'content', type: 'auto' },

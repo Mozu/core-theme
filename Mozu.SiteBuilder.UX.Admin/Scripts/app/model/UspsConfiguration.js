@@ -2,7 +2,7 @@
  * @class Taco.model.UspsConfiguration
  */
 Ext.define('Taco.model.UspsConfiguration', {
-    extend: 'Ext.data.Model',
+    extend: 'Taco.core.data.Model',
     fields: [
         { name: 'uspsConfigurationId', type: 'int' },
         { name: 'uspsUserId', type: 'string' },

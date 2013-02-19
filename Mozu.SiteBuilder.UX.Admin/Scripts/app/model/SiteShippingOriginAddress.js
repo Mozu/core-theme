@@ -2,7 +2,7 @@
  * @class Taco.model.SiteShippingOriginAddress
  */
 Ext.define('Taco.model.SiteShippingOriginAddress', {
-    extend: 'Ext.data.Model',
+    extend: 'Taco.core.data.Model',
     fields: [
         { name: 'senderName', type: 'string' },
         { name: 'address1', type: 'string' },
