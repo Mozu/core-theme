@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 {
@@ -33,7 +35,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         [DataMember(Name = "allValues")]
         public List<AttributeValue> AllValues { get; set; }
 
-        [DataMember(Name = "usageType")]
-        public ProductTypeAttributeUsageType UsageType { get; set; }
+    
+
+        [DataMember(Name = "usageTypes")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public List<ProductTypeAttributeUsageType> UsageTypes { get; set; }
+
+        [DataMember(Name = "attributeName")]
+        public string AttributeName  { get; set; }
+
+
+        [DataMember(Name = "attributeInputTypes")]
+        public AttributeInputType[] AttributeInputTypes { get; set; }
     }
-}
+}       
