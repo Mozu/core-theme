@@ -2541,9 +2541,7 @@
     <Content Include="Scripts\app\core\ux\DragDropZone.js" />
     <Content Include="Scripts\app\core\ux\FilterableDataView.js" />
     <Content Include="Scripts\app\core\ux\form\Editor.js" />
-    <Content Include="Scripts\app\core\ux\form\ItemSelector.js" />
     <Content Include="Scripts\app\core\ux\form\Linker.js" />
-    <Content Include="Scripts\app\core\ux\form\MultiSelect.js" />
     <Content Include="Scripts\app\core\ux\form\SelectField.js" />
     <Content Include="Scripts\app\core\ux\form\SlugField.js" />
     <Content Include="Scripts\app\core\ux\GenEditor.js" />
