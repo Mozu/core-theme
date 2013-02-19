@@ -44,5 +44,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 
         [DataMember(Name = "regex")]
         public string Regex { get; set; }
+
+
+
+        [DataMember(Name = "values")]
+        public List<AttributeValue> Values { get; set; }
+
+
     }
 }

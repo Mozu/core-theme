@@ -1,0 +1,60 @@
+﻿[
+    {
+        "id": "color",
+        "name": "Color",
+        "inputType": 3,
+        "dataType": 4,
+        "isOption": true,
+        "isExtra": true,
+        "isProperty": true,
+        "valueType": 3,
+        "min": null,
+        "max": null,
+        "regex": null,
+        "values": [
+            {
+                "id": "red",
+                "attributeId": "color",
+                "value": "red"
+            },
+            {
+                "id": "gold",
+                "attributeId": "color",
+                "value": "gold"
+            },
+            {
+                "id": "green",
+                "attributeId": "color",
+                "value": "green"
+            }
+        ]
+    },
+    {
+        "id": "birthday",
+        "name": "birthday",
+        "inputType": 1,
+        "dataType": 2,
+        "isOption": false,
+        "isExtra": null,
+        "isProperty": true,
+        "valueType": 1,
+        "min": null,
+        "max": null,
+        "regex": null,
+        "values": null
+    },
+    {
+        "id": "engraving",
+        "name": "engraving",
+        "inputType": 5,
+        "dataType": 2,
+        "isOption": true,
+        "isExtra": null,
+        "isProperty": null,
+        "valueType": 2,
+        "min": 0,
+        "max": 10,
+        "regex": "[a-zA-Z0-9]*",
+        "values": null
+    }
+]
