@@ -9,25 +9,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
     public class ProductTypeAttribute
     {
         [DataMember(Name = "id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [DataMember(Name = "productTypeId")]
-        public int ProductTypeId { get; set; }
+        public int? ProductTypeId { get; set; }
 
         [DataMember(Name = "index")]
-        public int Index { get; set; }
+        public int? Index { get; set; }
 
         [DataMember(Name = "isRequired")]
-        public bool IsRequired { get; set; }
+        public bool? IsRequired { get; set; }
 
         [DataMember(Name = "allowMulti")]
-        public bool AllowMulti { get; set; }
+        public bool? AllowMulti { get; set; }
 
         [DataMember(Name = "isHidden")]
-        public bool IsHidden { get; set; }
+        public bool? IsHidden { get; set; }
 
         [DataMember(Name = "isLocked")]
-        public bool IsLocked { get; set; }
+        public bool? IsLocked { get; set; }
 
         [DataMember(Name = "selectedValues")]
         public List<int> SelectedValues { get; set; }
@@ -39,13 +39,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 
         [DataMember(Name = "usageType")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public ProductTypeAttributeUsageType UsageType { get; set; }
+        public ProductTypeAttributeUsage UsageType { get; set; }
 
         [DataMember(Name = "attributeName")]
         public string AttributeName  { get; set; }
 
 
-        [DataMember(Name = "attributeInputTypes")]
-        public List<ProductTypeAttributeUsageType>  AttributeInputTypes { get; set; }
+        [DataMember(Name = "attributeInputType")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public AttributeInputType AttributeInputType { get; set; }
     }
 }       

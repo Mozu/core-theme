@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
@@ -16,7 +17,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         public bool IsBase { get; set; }
 
         [DataMember(Name = "numberOfProducts")]
-        public int NumberOfProducts { get; set; }
+        public int? NumberOfProducts { get; set; }
 
         [DataMember(Name = "options")]
         public List<ProductTypeAttribute> Options { get; set; }
@@ -26,5 +27,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 
         [DataMember(Name = "properties")]
         public List<ProductTypeAttribute> Properties { get; set; }
+
+        [DataMember(Name = "modifiedDate")]
+        public DateTime? ModifiedDate { get; set; }
+
     }
 }

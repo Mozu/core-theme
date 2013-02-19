@@ -5,16 +5,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
     [DataContract]
     public enum AttributeInputType
     {
-        [DataMember(Name = "undefined")]
-        Unknown,
-
-        [DataMember(Name = "single")]
-        Single,
-
-        [DataMember(Name = "multiple")]
-        Multiple,
-
-        [DataMember(Name = "text")]
-        Text,
+       
+        None = 0, 
+        Date = 1, 
+        DateTime = 2, 
+        List = 3, 
+        TextArea = 4, 
+        TextBox = 5, 
+        YesNo = 6
+    
     }
 }

@@ -3,7 +3,7 @@
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 {
     [DataContract]
-    public enum ProductTypeAttributeUsageType
+    public enum AttributeValueType
     {
         [DataMember(Name = "undefined")]
         Unknown,

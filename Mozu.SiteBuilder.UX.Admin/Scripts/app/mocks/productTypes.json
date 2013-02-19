@@ -1,85 +1,567 @@
-﻿[{
-    "id": 198,
-    "name": "Buckets",
-    "isBase": true,
-    "numberOfProducts": 12,
-    "options": [{
-        "id": 412,
-        "productTypeId": 198,
-        "index": 0,
-        "isRequired": true,
-        "allowMulti": false,
-        "isHidden": false,
-        "isLocked": true,
-        "selectedValues": [
-        3209,
-        3210,
-        3211],
-        "allValues": [{
-            "id": 3209,
-            "attributeId": 412,
-            "value": "Blue"
-        }, {
-            "id": 3210,
-            "attributeId": 412,
-            "value": "Red"
-        }, {
-            "id": 3211,
-            "attributeId": 412,
-            "value": "Green"
-        }, {
-            "id": 3212,
-            "attributeId": 412,
-            "value": "White"
-        }],
-        "usageType": 2
-    }, {
-        "id": 413,
-        "productTypeId": 198,
-        "index": 1,
-        "isRequired": false,
-        "allowMulti": true,
-        "isHidden": false,
-        "isLocked": true,
-        "selectedValues": [
-        2332],
-        "allValues": [{
-            "id": 2332,
-            "attributeId": 413,
-            "value": "Matte"
-        }, {
-            "id": 2333,
-            "attributeId": 413,
-            "value": "Glossy"
-        }],
-        "usageType": 2
-    }],
-    "extras": [{
-        "id": 93,
-        "productTypeId": 198,
-        "index": 0,
-        "isRequired": true,
-        "allowMulti": false,
-        "isHidden": false,
-        "isLocked": true,
-        "selectedValues": [],
-        "allValues": [{
-            "id": 659,
-            "attributeId": 93,
-            "value": "With Handle"
-        }],
-        "usageType": 1
-    }],
-    "properties": [{
-        "id": 342,
-        "productTypeId": 198,
-        "index": 0,
-        "isRequired": false,
-        "allowMulti": false,
-        "isHidden": false,
-        "isLocked": true,
-        "selectedValues": [],
-        "allValues": null,
-        "usageType": 0
-    }]
-}]
+﻿[
+    {
+        "id": 198,
+        "name": "Buckets",
+        "isBase": true,
+        "numberOfProducts": 12,
+        "options": [
+            {
+                "id": "412",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": true,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [
+                    3209,
+                    3210,
+                    3211
+                ],
+                "allValues": [
+                    {
+                        "id": "3209",
+                        "attributeId": "412",
+                        "value": "Blue"
+                    },
+                    {
+                        "id": "3210",
+                        "attributeId": "412",
+                        "value": "Red"
+                    },
+                    {
+                        "id": "3211",
+                        "attributeId": "412",
+                        "value": "Green"
+                    },
+                    {
+                        "id": "3212",
+                        "attributeId": "412",
+                        "value": "White"
+                    }
+                ],
+                "usageType": "option",
+                "attributeName": null,
+                "attributeInputType": "List"
+            },
+            {
+                "id": "413",
+                "productTypeId": 198,
+                "index": 1,
+                "isRequired": false,
+                "allowMulti": true,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [
+                    2332
+                ],
+                "allValues": [
+                    {
+                        "id": "2332",
+                        "attributeId": "413",
+                        "value": "Matte"
+                    },
+                    {
+                        "id": "2333",
+                        "attributeId": "413",
+                        "value": "Glossy"
+                    }
+                ],
+                "usageType": "option",
+                "attributeName": null,
+                "attributeInputType": "List"
+            }
+        ],
+        "extras": [
+            {
+                "id": "93",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": true,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [],
+                "allValues": [
+                    {
+                        "id": "659",
+                        "attributeId": "93",
+                        "value": "With Handle"
+                    }
+                ],
+                "usageType": "extra",
+                "attributeName": null,
+                "attributeInputType": "List"
+            }
+        ],
+        "properties": [
+            {
+                "id": "342",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": false,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [],
+                "allValues": null,
+                "usageType": "property",
+                "attributeName": "isbn",
+                "attributeInputType": "TextBox"
+            }
+        ],
+        "modifiedDate": "2013-02-19T14:16:04.7008041-06:00"
+    },
+    {
+        "id": 200,
+        "name": "Pants",
+        "isBase": true,
+        "numberOfProducts": 12,
+        "options": [
+            {
+                "id": "412",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": true,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [
+                    3209,
+                    3210,
+                    3211
+                ],
+                "allValues": [
+                    {
+                        "id": "3209",
+                        "attributeId": "412",
+                        "value": "Blue"
+                    },
+                    {
+                        "id": "3210",
+                        "attributeId": "412",
+                        "value": "Red"
+                    },
+                    {
+                        "id": "3211",
+                        "attributeId": "412",
+                        "value": "Green"
+                    },
+                    {
+                        "id": "3212",
+                        "attributeId": "412",
+                        "value": "White"
+                    }
+                ],
+                "usageType": "option",
+                "attributeName": null,
+                "attributeInputType": "List"
+            },
+            {
+                "id": "413",
+                "productTypeId": 198,
+                "index": 1,
+                "isRequired": false,
+                "allowMulti": true,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [
+                    2332
+                ],
+                "allValues": [
+                    {
+                        "id": "2332",
+                        "attributeId": "413",
+                        "value": "Matte"
+                    },
+                    {
+                        "id": "2333",
+                        "attributeId": "413",
+                        "value": "Glossy"
+                    }
+                ],
+                "usageType": "option",
+                "attributeName": null,
+                "attributeInputType": "List"
+            }
+        ],
+        "extras": [
+            {
+                "id": "93",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": true,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [],
+                "allValues": [
+                    {
+                        "id": "659",
+                        "attributeId": "93",
+                        "value": "With Handle"
+                    }
+                ],
+                "usageType": "extra",
+                "attributeName": null,
+                "attributeInputType": "List"
+            }
+        ],
+        "properties": [
+            {
+                "id": "342",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": false,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [],
+                "allValues": null,
+                "usageType": "property",
+                "attributeName": "isbn",
+                "attributeInputType": "TextBox"
+            }
+        ],
+        "modifiedDate": "2013-02-19T14:16:04.7008041-06:00"
+    },
+    {
+        "id": 201,
+        "name": "Pants",
+        "isBase": true,
+        "numberOfProducts": 12,
+        "options": [
+            {
+                "id": "412",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": true,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [
+                    3209,
+                    3210,
+                    3211
+                ],
+                "allValues": [
+                    {
+                        "id": "3209",
+                        "attributeId": "412",
+                        "value": "Blue"
+                    },
+                    {
+                        "id": "3210",
+                        "attributeId": "412",
+                        "value": "Red"
+                    },
+                    {
+                        "id": "3211",
+                        "attributeId": "412",
+                        "value": "Green"
+                    },
+                    {
+                        "id": "3212",
+                        "attributeId": "412",
+                        "value": "White"
+                    }
+                ],
+                "usageType": "option",
+                "attributeName": null,
+                "attributeInputType": "List"
+            },
+            {
+                "id": "413",
+                "productTypeId": 198,
+                "index": 1,
+                "isRequired": false,
+                "allowMulti": true,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [
+                    2332
+                ],
+                "allValues": [
+                    {
+                        "id": "2332",
+                        "attributeId": "413",
+                        "value": "Matte"
+                    },
+                    {
+                        "id": "2333",
+                        "attributeId": "413",
+                        "value": "Glossy"
+                    }
+                ],
+                "usageType": "option",
+                "attributeName": null,
+                "attributeInputType": "List"
+            }
+        ],
+        "extras": [
+            {
+                "id": "93",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": true,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [],
+                "allValues": [
+                    {
+                        "id": "659",
+                        "attributeId": "93",
+                        "value": "With Handle"
+                    }
+                ],
+                "usageType": "extra",
+                "attributeName": null,
+                "attributeInputType": "List"
+            }
+        ],
+        "properties": [
+            {
+                "id": "342",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": false,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [],
+                "allValues": null,
+                "usageType": "property",
+                "attributeName": "isbn",
+                "attributeInputType": "TextBox"
+            }
+        ],
+        "modifiedDate": "2013-02-19T14:16:04.7008041-06:00"
+    },
+    {
+        "id": 202,
+        "name": "Pants",
+        "isBase": true,
+        "numberOfProducts": 12,
+        "options": [
+            {
+                "id": "412",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": true,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [
+                    3209,
+                    3210,
+                    3211
+                ],
+                "allValues": [
+                    {
+                        "id": "3209",
+                        "attributeId": "412",
+                        "value": "Blue"
+                    },
+                    {
+                        "id": "3210",
+                        "attributeId": "412",
+                        "value": "Red"
+                    },
+                    {
+                        "id": "3211",
+                        "attributeId": "412",
+                        "value": "Green"
+                    },
+                    {
+                        "id": "3212",
+                        "attributeId": "412",
+                        "value": "White"
+                    }
+                ],
+                "usageType": "option",
+                "attributeName": null,
+                "attributeInputType": "List"
+            },
+            {
+                "id": "413",
+                "productTypeId": 198,
+                "index": 1,
+                "isRequired": false,
+                "allowMulti": true,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [
+                    2332
+                ],
+                "allValues": [
+                    {
+                        "id": "2332",
+                        "attributeId": "413",
+                        "value": "Matte"
+                    },
+                    {
+                        "id": "2333",
+                        "attributeId": "413",
+                        "value": "Glossy"
+                    }
+                ],
+                "usageType": "option",
+                "attributeName": null,
+                "attributeInputType": "List"
+            }
+        ],
+        "extras": [
+            {
+                "id": "93",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": true,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [],
+                "allValues": [
+                    {
+                        "id": "659",
+                        "attributeId": "93",
+                        "value": "With Handle"
+                    }
+                ],
+                "usageType": "extra",
+                "attributeName": null,
+                "attributeInputType": "List"
+            }
+        ],
+        "properties": [
+            {
+                "id": "342",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": false,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [],
+                "allValues": null,
+                "usageType": "property",
+                "attributeName": "isbn",
+                "attributeInputType": "TextBox"
+            }
+        ],
+        "modifiedDate": "2013-02-19T14:16:04.7008041-06:00"
+    },
+    {
+        "id": 203,
+        "name": "Pants",
+        "isBase": true,
+        "numberOfProducts": 12,
+        "options": [
+            {
+                "id": "412",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": true,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [
+                    3209,
+                    3210,
+                    3211
+                ],
+                "allValues": [
+                    {
+                        "id": "3209",
+                        "attributeId": "412",
+                        "value": "Blue"
+                    },
+                    {
+                        "id": "3210",
+                        "attributeId": "412",
+                        "value": "Red"
+                    },
+                    {
+                        "id": "3211",
+                        "attributeId": "412",
+                        "value": "Green"
+                    },
+                    {
+                        "id": "3212",
+                        "attributeId": "412",
+                        "value": "White"
+                    }
+                ],
+                "usageType": "option",
+                "attributeName": null,
+                "attributeInputType": "List"
+            },
+            {
+                "id": "413",
+                "productTypeId": 198,
+                "index": 1,
+                "isRequired": false,
+                "allowMulti": true,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [
+                    2332
+                ],
+                "allValues": [
+                    {
+                        "id": "2332",
+                        "attributeId": "413",
+                        "value": "Matte"
+                    },
+                    {
+                        "id": "2333",
+                        "attributeId": "413",
+                        "value": "Glossy"
+                    }
+                ],
+                "usageType": "option",
+                "attributeName": null,
+                "attributeInputType": "List"
+            }
+        ],
+        "extras": [
+            {
+                "id": "93",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": true,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [],
+                "allValues": [
+                    {
+                        "id": "659",
+                        "attributeId": "93",
+                        "value": "With Handle"
+                    }
+                ],
+                "usageType": "extra",
+                "attributeName": null,
+                "attributeInputType": "List"
+            }
+        ],
+        "properties": [
+            {
+                "id": "342",
+                "productTypeId": 198,
+                "index": 0,
+                "isRequired": false,
+                "allowMulti": false,
+                "isHidden": false,
+                "isLocked": true,
+                "selectedValues": [],
+                "allValues": null,
+                "usageType": "property",
+                "attributeName": "isbn",
+                "attributeInputType": "TextBox"
+            }
+        ],
+        "modifiedDate": "2013-02-19T14:16:04.7008041-06:00"
+    }
+]

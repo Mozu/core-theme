@@ -9,7 +9,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
     public class Attribute
     {
         [DataMember(Name = "id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [DataMember(Name = "name")]
         public string Name { get; set; }
@@ -20,12 +20,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         [DataMember(Name = "dataType")]
         public AttributeDataType DataType { get; set; }
 
-        [DataMember(Name = "valueType")]
-        public string ValueType { get; set; }
 
-        [DataMember(Name = "usageTypes")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public List<ProductTypeAttributeUsageType> UsageTypes { get; set; }
+        [DataMember(Name = "isOption")]
+        public bool IsOption { get; set; }
+
+        [DataMember(Name = "isExtra")]
+        public bool? IsExtra { get; set; }
+
+        [DataMember(Name = "isProperty")]
+        public bool? IsProperty { get; set; }
+
+
+        [DataMember(Name = "valueType")]
+        public AttributeValueType ValueType { get; set; }
+
+ 
 
         [DataMember(Name = "min")]
         public object Min { get; set; }
