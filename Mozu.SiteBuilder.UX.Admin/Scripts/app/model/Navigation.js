@@ -2,7 +2,7 @@
  * @class Taco.model.Navigation
  */
     Ext.define('Taco.model.Navigation', {
-        extend: 'Ext.data.Model',
+        extend: 'Taco.core.data.Model',
         idProperty: 'name',
         fields: ['name',
         {

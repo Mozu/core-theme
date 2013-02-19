@@ -2,7 +2,7 @@
  * @class Taco.model.SiteShippingRegion
  */
 Ext.define('Taco.model.SiteShippingRegion', {
-    extend: 'Ext.data.Model',
+    extend: 'Taco.core.data.Model',
     fields: [
         { name: 'isoCountryCode', type: 'string' }
     ],

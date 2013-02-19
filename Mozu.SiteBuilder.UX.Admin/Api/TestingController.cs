@@ -12,6 +12,7 @@ using Mozu.SiteBuilder.Mvc.Theme.Repositories;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
+using Newtonsoft.Json.Linq;
 using Site = Mozu.SiteBuilder.UX.Admin.Api.Models.Testing.Site;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -63,7 +64,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(items, g_testData.Count);
         }
 
-
+        [WebInvoke(UriTemplate = "testCreate")]
+        public JContainer TestCreate(JContainer ret)
+        {
+            return ret;
+        }
+        [WebInvoke(UriTemplate = "testDestroy")]
+        public JContainer TestDestroy(JContainer ret)
+        {
+            return ret;
+        }
+        [WebInvoke(UriTemplate = "testUpdate")]
+        public JContainer TestUpdate(JContainer ret)
+        {
+            return ret;
+        }
         [WebGet(UriTemplate = "Files?id={id}")]
         public Task<Response<List<Node>>> GetAllNode(string id)
         {

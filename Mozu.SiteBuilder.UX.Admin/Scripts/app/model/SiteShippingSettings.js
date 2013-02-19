@@ -3,7 +3,7 @@
  */
 
 Ext.define('Taco.model.SiteShippingSettings', {
-    extend: 'Ext.data.Model',
+    extend: 'Taco.core.data.Model',
     fields: [
         { name: 'activeRateProvider', type: 'auto' },
         { name: 'siteShippingOriginAddress', type: 'auto' },

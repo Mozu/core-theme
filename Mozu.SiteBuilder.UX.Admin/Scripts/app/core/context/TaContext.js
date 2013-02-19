@@ -161,7 +161,7 @@ Ext.define('Taco.core.context.TaContext', {
         
 
         Ext.define('TaContext-StoreItem', {
-            extend: 'Ext.data.Model',
+            extend: 'Taco.core.data.Model',
             fields: [
                 'name',
                 'contextType',

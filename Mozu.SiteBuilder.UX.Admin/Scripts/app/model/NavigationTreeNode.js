@@ -2,7 +2,7 @@
  * @class Taco.model.NavigationTreeNode
  */
 Ext.define('Taco.model.NavigationTreeNode', {
-        extend: 'Ext.data.Model',
+        extend: 'Taco.core.data.Model',
 
         fields: [{
             name: 'id',

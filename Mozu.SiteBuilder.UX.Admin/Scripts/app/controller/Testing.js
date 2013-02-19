@@ -6,7 +6,7 @@
 
 Ext.define('Taco.controller.Testing', {
     extend: 'Taco.core.Controller',
-    requires: ['Taco.model.Order', 'Taco.model.OrderItem', 'Taco.model.Product', 'Taco.store.Products', 'Taco.store.CmsDocumentDrafts'],
+    requires: ['Taco.model.ProductType','Taco.model.Order', 'Taco.model.OrderItem', 'Taco.model.Product', 'Taco.store.Products', 'Taco.store.CmsDocumentDrafts'],
 
     statics: {
         returnString: function (str) {
@@ -23,6 +23,31 @@ Ext.define('Taco.controller.Testing', {
         }())
     },
 
+    producttypes:function() {
+        
+        window.pts =Ext.create('Ext.data.Store', {
+            model: 'Taco.model.ProductType'
+            
+        });
+        pts.load({
+            scope: this,
+            callback: function (records, operation, success) {
+                // the operation object
+                // contains all of the details of the load operation
+                console.log(records);
+                var pt = pts.getAt(0);
+                pt.getOptions().add({ attributeId: 666 });
+                pts.sync({
+                    callback:function() {
+                        pts.sync();
+                        pt.getOptions().getAt(0).set('hidden', true);
+                        pts.sync();
+                    }
+                });
+            }
+        });
+        
+    },
 
     foster: function() {
 
