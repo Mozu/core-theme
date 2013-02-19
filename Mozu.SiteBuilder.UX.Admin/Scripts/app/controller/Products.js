@@ -14,10 +14,9 @@ Ext.define('Taco.controller.Products', {
     views: ['product.Index'],
     modelName: 'Product',
 
-
-    index: function () {
-        if (Taco.app.context.getCurrent().contextType == 't') {
-            this.createContentView('Taco.core.ux.content.Container', {
+    contextPlaceholders: {
+        t: function () {
+            return Ext.create('Taco.core.ux.content.Container', {
                 header: {
                     title: "choose a site collection"
                 },
@@ -29,9 +28,6 @@ Ext.define('Taco.controller.Products', {
                     }]
                 }
             });
-        } else {
-            this.createContentView('Taco.view.product.Index');
         }
     }
-
 });

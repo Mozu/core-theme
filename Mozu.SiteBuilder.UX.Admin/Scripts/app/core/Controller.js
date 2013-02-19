@@ -10,6 +10,12 @@ Ext.define('Taco.core.Controller', {
     modelName: null,
 
     /**
+     * @cfg contextPlaceHolders
+     * @type {Object}
+     */
+    contextPlaceholders: {},
+
+    /**
      * Gets or creates the editor associated with this controller.
      * @param  {Object} config Should contain an object ID and config for an editor.
      * @return {undefined}       
@@ -44,11 +50,23 @@ Ext.define('Taco.core.Controller', {
     },
 
     /**
-     * Autogenerate a view based on a naming convention `Taco.view.[controllername].Index` where controllername, singularized with Ext.util.Inflector, is the name of this controller.
+     * Autogenerate a view based on a naming convention `Taco.view.[controllername].Index` where controllername,
+     * singularized with Ext.util.Inflector, is the name of this controller.
+     * If there are any Context Placeholders based on the current Context Type, it will execute those views instead
+     * of the default index view.
      * @return {undefined}
      */
     index: function () {
-        this.buildIndex();
+        var contextType = Taco.app.context.getCurrent().contextType;
+
+        debugger;
+        if (this.contextPlaceholders && this.contextPlaceholders[contextType]) {
+            this.createContentView(this.contextPlaceholders[contextType]());
+        } else {
+            this.buildIndex();    
+        }
+
+        
     },
 
     getIndexView: function () {
