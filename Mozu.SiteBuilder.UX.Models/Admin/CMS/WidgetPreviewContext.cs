@@ -129,6 +129,7 @@ using System.Runtime.Serialization;
         public string ConfigurationData { get; set; }
 
         private Newtonsoft.Json.Linq.JObject _config;
+
         [DataMember(Name = "config")]
         public Newtonsoft.Json.Linq.JObject Config
         {
@@ -144,8 +145,18 @@ using System.Runtime.Serialization;
                 }
                 return _config;
             }
-        }
+            set
+            {
+                _config = value;
+                if (value == null)
+                {
+                    this.ConfigurationData = null;
+                    return;
+                }
+                this.ConfigurationData = _config.ToString(Formatting.None);
 
+            }
+        }
 
         [DataMember(Name = "zoneScope")]
         public string ZoneScope { get; set; }

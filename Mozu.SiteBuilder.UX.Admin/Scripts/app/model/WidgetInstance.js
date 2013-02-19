@@ -25,7 +25,7 @@ Ext.define('Taco.model.WidgetInstance', {
         type: "int",
         useNull: true
     }, {
-        name: "configuration",
+        name: "config",
         type: "any",
         useNull: true
     }, {

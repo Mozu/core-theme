@@ -556,7 +556,7 @@
             //debugger;
             Ext.
             key = props.collection + '_' + props.documentId;
-            if (props.isShadow) {s
+            if (props.isShadow) {
                 doc = me.cmsDocs.findRecord('documentId', props.documentId);
             }
             else {
@@ -615,30 +615,24 @@
         onEditwidget: function (eventData) {
             var me = this,
                 doc = eventData.document;
+            
             Ext.Ajax.request({
                 url: '/Widgets/preview',
-                jsonData: {
-                    definitionId: eventData.metaData.definitionId,
-                    zoneId: eventData.metaData.zoneId,
-                    pageContext: eventData.pageData.pageContext,
-                    document: eventData.document.data
-                },
+                jsonData: eventData.model.data,
                 success: function (response) {
-                    var jsonData = Ext.JSON.decode(response.responseText),
-                        html;
-
-                    // records = me.cmsDocs.add(jsonData.document);
-                    // records[0].phantom = true;
+                    jsonData = Ext.JSON.decode(response.responseText);
+                    html = jsonData.output;
                     me.onFormStateChange();
                     html = jsonData.output;
                     eventData.callback({
                         html: html
                     });
-                    //                    var el = Ext.get(eventData.widget);
-                    //                    Ext.DomHelper.insertHtml('afterEnd', el.dom, html);
-                    //                    el.remove();
+                    
+
                 }
             });
+            
+
 
         },
         beforeDeleteWidget: function (eventData) {

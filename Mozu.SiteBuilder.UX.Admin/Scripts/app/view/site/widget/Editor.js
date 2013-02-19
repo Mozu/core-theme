@@ -14,13 +14,14 @@ Ext.define('Taco.view.site.widget.Editor', {
     widgetEditData: null,
 
     constructor: function (cfg) {
-        if (cfg.widgetEditData && cfg.widgetEditData.document) {
-            this.widgetConfig = JSON.parse(cfg.widgetEditData.document.getItem(cfg.configName || this.configName));
-            // Init the config if necessary
-            if (!this.widgetConfig) {
-                this.widgetConfig = cfg.initWidgetConfig ? cfg.initWidgetConfig() : this.initWidgetConfig();
-            }
+        this.record = cfg.widgetEditData.model;
+        this.widgetConfig = this.record.get('config');
+
+        if (!this.widgetConfig) {
+            this.widgetConfig = cfg.initWidgetConfig ? cfg.initWidgetConfig() : this.initWidgetConfig();
+            this.record.set('config', this.widgetConfig);
         }
+        
         this.callParent(arguments);
     },
 
@@ -67,8 +68,9 @@ Ext.define('Taco.view.site.widget.Editor', {
      * the 'aftersave' event
      */
     onSave: function () {
+        
         var config = this.buildWidgetConfig();
-        this.widgetEditData.document.setItem(this.configName, config, true);
+        this.record.set('config', config);
         this.fireEvent('aftersave', this.widgetEditData);
         this.hide();
     }

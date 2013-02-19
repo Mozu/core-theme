@@ -91,26 +91,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             wrd.Definition = def;
             wrd.IsPreview = true;
-           
-            switch (wrd.ZoneScope ?? "page")
-            {
-                case "site":
-                    {
-                        wrd.Source = wrd.Context.SiteTemplateReq;
-                        break; 
-                    }
-                case "template":
-                    {
-                        wrd.Source = wrd.Context.TemplateReq;
-                        break;
-                    }
-                default:
-                    {
-                        wrd.Source = wrd.Context.PageReq;
-                        break;
-                    }
-            }
 
+            if (wrd.Source == null)
+            {
+                switch (wrd.ZoneScope ?? "page")
+                {
+                    case "site":
+                        {
+                            wrd.Source = wrd.Context.SiteTemplateReq;
+                            break;
+                        }
+                    case "template":
+                        {
+                            wrd.Source = wrd.Context.TemplateReq;
+                            break;
+                        }
+                    default:
+                        {
+                            wrd.Source = wrd.Context.PageReq;
+                            break;
+                        }
+                }
+            }
 
             if (this.HttpContext.Request.ContentType == "application/json")
             {

@@ -13,6 +13,7 @@ using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 
@@ -39,13 +40,15 @@ namespace Mozu.SiteBuilder.Mvc
     public class SiteBuilderApiContext : MozuServiceApiContext
     {
         private readonly ISettings _settings;
+        private readonly AuthenticationHelper _authenticationHelper;
         internal const string CONTEXT_KEY = "V:STORECTX";
         internal const string COOKIENAME = "SBCONTEXT";
 
-        public SiteBuilderApiContext(System.Web.HttpContextBase context, Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper authHelper, ICookieProvider cookieProvider , ISettings settings )
+        public SiteBuilderApiContext(System.Web.HttpContextBase context, Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper authHelper, ICookieProvider cookieProvider , ISettings settings , AuthenticationHelper authenticationHelper )
             : base()
         {
             _settings = settings;
+            _authenticationHelper = authenticationHelper;
 
 
             Load(context, cookieProvider);
@@ -57,7 +60,7 @@ namespace Mozu.SiteBuilder.Mvc
         {
             this.LocaleCode = "en-US";
             this.CurrencyCode = "usd";
-
+            this.UserClaims = _authenticationHelper.GetCurrentUser();
             HttpRequestBase req = null;
             try
             {
@@ -118,6 +121,7 @@ namespace Mozu.SiteBuilder.Mvc
                     return;
                 }
             }
+            
            // this.SiteId = int.Parse(System.Configuration.ConfigurationManager.AppSettings["default-site"]);
            this.TenantId = int.Parse(System.Configuration.ConfigurationManager.AppSettings["default-tenant"]);
             

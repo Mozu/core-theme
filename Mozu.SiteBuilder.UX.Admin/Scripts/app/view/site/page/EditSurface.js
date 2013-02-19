@@ -314,29 +314,18 @@
         createWidgetEditor: function (eventData ) {
             var me = this,
             editor,
-            key,
-            doc;
-            if ( !me.cmsDocs ){
+            widgetModel;
+            if (!me.widgets) {
                 return;
             }
-            key = eventData.metaData.collection + '_' + eventData.metaData.documentId;
-            doc = me.cmsDocs.getById(key);
-            if (doc === null) {
-                Taco.model.CmsDocument.load(key, {
-                    scope: me,
-                    failure: function(record, operation) {
-                        //do something if the load failed
-                        console.log('failed to load the CmsDocument', key, arguments);
-                    },
-                    success: function(record, operation) {
-                        me.cmsDocs.add([record]);
-                        me.createWidgetEditor( eventData );
-                    }
-
-                });
-                return ;
-           }
-           eventData.document = doc;
+            widgetModel = me.widgets.getById(eventData.metaData.id);
+            if (!widgetModel) {
+                me.widgets.loadData([eventData.metaData], true);
+                widgetModel = me.widgets.getById(eventData.metaData.id);
+            }
+           
+           
+            eventData.model = widgetModel;
 
            editor = Ext.create(eventData.metaData.editView, {
                 widgetEditData: eventData,
