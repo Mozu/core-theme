@@ -349,6 +349,7 @@
     <Compile Include="Admin\Api\ProductInSiteInfoControllerTests.cs" />
     <Compile Include="Admin\CurrentUserProviderTests.cs" />
     <Compile Include="Admin\GeneralSettingsWrapperTests.cs" />
+    <Compile Include="Admin\MockServices\InMemoryAttributeWebApiClientTests.cs" />
     <Compile Include="ClientRepositories\RestServiceClientTests.cs" />
     <Compile Include="ClientRepositories\UserRepositoryTests.cs" />
     <Compile Include="MappingTestFixture.cs" />
