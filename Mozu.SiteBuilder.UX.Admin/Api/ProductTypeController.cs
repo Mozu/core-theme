@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Get a list of Product Types.
         /// </summary>
         [WebGet(UriTemplate = "list")]
-        public async Task<Response<List<ProductType>>> ListProducts([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<ProductType>>> ListProductTypes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {
@@ -101,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "edit")]
         public async Task<Response<List<ProductType>>> EditProductType(List<ProductType> productTypes)
         {
-            List<ProductType> editedProductTypes = new List<ProductType>();
+            List<ProductType> editedProductTypes = new List<ProductType>(productTypes.Count);
 
             foreach (ProductType pt in productTypes)
             {
@@ -112,6 +112,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             return List2(editedProductTypes);
+        }
+
+        /// <summary>
+        /// Delete existing product types.
+        /// </summary>
+        [WebInvoke(UriTemplate = "delete")]
+        public async Task<Response<List<ProductType>>> DeleteProductType(List<ProductType> productTypes)
+        {
+            List<ProductType> deletedProducts = new List<ProductType>(productTypes.Count);
+            foreach (ProductType pt in productTypes)
+            {
+                var result = await _productTypeClient.DeleteProductType(pt.Id);
+                // TODO: check success
+                deletedProducts.Add(pt);
+            }
+
+            return List2(deletedProducts);
         }
     }
 }
