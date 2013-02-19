@@ -95,6 +95,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             // TODO: This binding will be unnecessary once the DocumentWebApiClient works better.
             builder.RegisterType<InSessionDocumentWebApiClient>().As<IMoreAwesomeDocumentWebApiClient>();
+
+            // TODO: This binding will be unnecessary once the ProductTypeApiClient is implemented.
+            builder.RegisterType<InMemoryProductTypeWebApiClient>().As<IMoreAwesomeProductTypeWebApiClient>();
+
+            // TODO: This binding will be unnecessary once the AttributeWebApiClient is implemented.
+            builder.RegisterType<InMemoryAttributeWebApiClient>().As<IMoreAwesomeAttributeWebApiClient>();
         }
 
 

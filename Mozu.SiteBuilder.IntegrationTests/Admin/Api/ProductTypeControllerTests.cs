@@ -7,6 +7,7 @@ using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
+using Mozu.SiteBuilder.UX.Admin.MockServices;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
@@ -17,7 +18,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
     [TestFixture]
     public class ProductTypeControllerTests
     {
-        private IProductTypeWebApiClient _productTypeClient;
+        private IMoreAwesomeProductTypeWebApiClient _productTypeClient;
         ProductTypeController _testedController;
         private readonly DC.ProductTypeCollection _mocks = new DC.ProductTypeCollection
         {
@@ -42,7 +43,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         [SetUp]
         public void SetUp()
         {
-            _productTypeClient = Substitute.For<IProductTypeWebApiClient>();
+            _productTypeClient = Substitute.For<IMoreAwesomeProductTypeWebApiClient>();
             _testedController = new ProductTypeController(_productTypeClient);
 
             // set up GetProductType mock.
