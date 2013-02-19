@@ -57,16 +57,21 @@ Ext.define('Taco.core.Controller', {
      * @return {undefined}
      */
     index: function () {
-        var contextType = Taco.app.context.getCurrent().contextType;
+        var contextType = Taco.app.context.getCurrent().contextType,
+            placeholder;
 
-        debugger;
-        if (this.contextPlaceholders && this.contextPlaceholders[contextType]) {
-            this.createContentView(this.contextPlaceholders[contextType]());
-        } else {
-            this.buildIndex();    
+        Ext.iterate(this.contextPlaceholders, function (key, fn) {
+            if (key.indexOf(contextType) > -1 && typeof fn === 'function') {
+                placeholder = fn.apply(this);
+            }
+        }, this);
+
+        if (placeholder) {
+            this.createContentView(placeholder);
+            return;
         }
 
-        
+        this.buildIndex();        
     },
 
     getIndexView: function () {
