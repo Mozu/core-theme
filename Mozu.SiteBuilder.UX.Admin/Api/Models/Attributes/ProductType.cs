@@ -7,7 +7,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
     public class ProductType
     {
         [DataMember(Name = "id")]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [DataMember(Name = "name")]
         public string Name { get; set; }
