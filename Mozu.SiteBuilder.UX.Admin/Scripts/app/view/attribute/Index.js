@@ -10,6 +10,7 @@ Ext.define('Taco.view.attribute.Index', {
     typeName: 'Attribute',
     modelName: 'Taco.model.Attribute',
     storeName: 'Taco.store.Attributes',
+    editorName: 'Taco.view.attribute.Edit',
     filterProperty: 'name',
 
     gridPanelConf: {
@@ -19,12 +20,12 @@ Ext.define('Taco.view.attribute.Index', {
             flex: 1,
             minWidth: 120,
             renderer: function (value) {
-                return '<a href="#" calss="taco-launch-editor">' + value + '</a>';
+                return '<a href="#" class="taco-launch-editor">' + value + '</a>';
              }
         }, {
             dataIndex: 'inputType',
             text: 'Input Type',
-            width: 70
+            width: 130
         }]
     }
 })
