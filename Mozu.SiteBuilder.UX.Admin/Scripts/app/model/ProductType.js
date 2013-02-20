@@ -48,18 +48,18 @@ Ext.define('Taco.model.ProductType', {
     },
     proxy: {
         type: 'ajaxproxy',
+        // api: {
+        //     create: '/admin/app/Testing/testCreate',
+        //     read: '/admin/Scripts/app/mocks/producttypes.json',
+        //     update: '/admin/app/Testing/testUpdate',
+        //     destroy: '/admin/app/Testing/testDestroy'
+        // },
         api: {
-            create: '/admin/app/Testing/testCreate',
-            read: '/admin/Scripts/app/mocks/producttypes.json',
-            update: '/admin/app/Testing/testUpdate',
-            destroy: '/admin/app/Testing/testDestroy'
+            create: '/admin/app/ProductType/create',
+            read: '/admin/app/ProductType/list',
+            update: '/admin/app/ProductType/edit',
+            destroy: '/admin/app/ProductType/delete'
         },
-        //api: {
-        //    create: '/admin/app/Attribute/create',
-        //    read: '/admin/app/Attribute/read',
-        //    update: '/admin/app/Attribute/update',
-        //    destroy: '/admin/app/Attribute/destroy'
-        //},
         reader: {
             type: 'json',
             root: 'items',
