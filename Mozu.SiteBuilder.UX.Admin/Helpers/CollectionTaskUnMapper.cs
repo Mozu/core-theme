@@ -25,10 +25,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
         /// <returns>A Task of Enumerable objects from the SiteBuilder API.</returns>
         public async Task<IEnumerable<TClient>> PerformAction<T>(IEnumerable<TClient> collection, Func<TServer, Task<ServiceClientResponse<T>>> action)
         {
-            return from attr in await Task.WhenAll(
-                from attribute in collection.Select(x => Mapper.Map<TServer>(x))
-                let res = action(attribute)
-                select res.Result.ReadAsAsync())
+            var tasks = from item in collection.Select(x => Mapper.Map<TServer>(x))
+                             let res = action(item)
+                             select res.Result.ReadAsAsync();
+
+            return from attr in await Task.WhenAll(tasks)
+                   select Mapper.Map<TClient>(attr);
+        }
+
+        public async Task<IEnumerable<TClient>> PerformAction<T>(IEnumerable<TClient> collection, Func<TServer, TClient, Task<ServiceClientResponse<T>>> action)
+        {
+            var things = collection.Select(x => new {Server = Mapper.Map<TServer>(x), Client = x});
+
+            var tasks = from item in things
+                        let res = action(item.Server, item.Client)
+                        select res.Result.ReadAsAsync();
+
+            return from attr in await Task.WhenAll(tasks)
                    select Mapper.Map<TClient>(attr);
         }
     }
