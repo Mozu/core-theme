@@ -14,17 +14,36 @@
         remoteFilter: true,
         
         publishAll: function (cb) {
-            var me = this;
+            var me  = this,
+                url = me.getProxy().api.publishAll;
+
             Ext.Ajax.request({
-                url: '/admin/app/cmspublishing/publishall',
+                url: url,
                 method: "POST",
                 success: function (response) {
-                    me.load();
+                    me.reload();
                     if (cb) cb(response);
                 },
                 failure: function (response) {
                     console.log("Error publishing general settings!", response);
                 }
             });
-        }
+        },
+
+        discardAll: function(cb) {
+            var me  = this,
+                url = me.getProxy().api.discardAll;
+
+            Ext.Ajax.request({
+                url: url,
+                method: "POST",
+                success: function (response) {
+                    me.reload();
+                    if (cb) cb(response);
+                },
+                failure: function (response) {
+                    console.log("Error publishing general settings!", response);
+                }
+            });
+        },
     });

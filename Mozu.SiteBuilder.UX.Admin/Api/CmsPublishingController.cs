@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.Content.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.MockServices;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -64,7 +63,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             List<string> returnedIds = new List<string>();
 
-            IEnumerable<IGrouping<string, DocumentDraft>> documentListGroups = docs.GroupBy(doc => doc.DocumentListName);
+            List<DocumentDraft> draftsReadyForPublishing = docs.Where(dr => dr.IsPublished).ToList();
+
+            if (draftsReadyForPublishing.Count == 0)
+            {
+                return FailureList2<string>("No DocumentDrafts provided were marked for publish. Be sure to set IsPublished=true.");
+            }
+
+            IEnumerable<IGrouping<string, DocumentDraft>> documentListGroups = draftsReadyForPublishing.GroupBy(doc => doc.DocumentListName);
 
             foreach (IGrouping<string, DocumentDraft> docGroup in documentListGroups)
             {

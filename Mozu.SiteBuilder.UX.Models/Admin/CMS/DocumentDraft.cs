@@ -34,6 +34,13 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         public string Name { get; set; }
 
         /// <summary>
+        /// Used to initate a publish action.
+        /// The client can "update" the model with IsPublished=true to publish the draft.
+        /// </summary>
+        [DataMember(Name = "isPublished")]
+        public bool IsPublished { get; set; }
+
+        /// <summary>
         /// Modification type, e.g. "Updated", "Created" or "Deleted".
         /// </summary>
         [DataMember(Name = "modificationType")]
