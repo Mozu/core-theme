@@ -324,6 +324,7 @@
   <ItemGroup>
     <Compile Include="Api\AddressController.cs" />
     <Compile Include="Api\ApiAuthorizeAttribute.cs" />
+    <Compile Include="Api\AttributeController.cs" />
     <Compile Include="Api\BaseController.cs" />
     <Compile Include="Api\BehaviorCategoriesController.cs" />
     <Compile Include="Api\BehaviorsController.cs" />
@@ -475,6 +476,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="CurrentUserHelper.cs" />
+    <Compile Include="Helpers\AttributeHelper.cs" />
+    <Compile Include="Helpers\IAttributeHelper.cs" />
     <Compile Include="IContextSwitcher.cs" />
     <Compile Include="ICurrentUserHelper.cs" />
     <Compile Include="IPasswordHelper.cs" />

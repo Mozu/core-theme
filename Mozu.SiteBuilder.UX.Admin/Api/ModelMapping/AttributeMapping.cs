@@ -17,15 +17,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
-            Mapper.CreateMap<ProductType, Contracts.ProductType>()
-                .ForMember(x => x.Options, opt => opt.MapFrom(x => x.Options))
-                ;
-            Mapper.CreateMap<Contracts.ProductType, ProductType>()
-                ;
+            Mapper.CreateMap<ProductType, Contracts.ProductType>();
+            Mapper.CreateMap<Contracts.ProductType, ProductType>();
 
-            Mapper.CreateMap<Contracts.AttributeInProductType, ProductTypeAttribute>()
+            Mapper.CreateMap<Contracts.AttributeInProductType, ProductTypeAttribute>();
+            Mapper.CreateMap<ProductTypeAttribute, Contracts.AttributeInProductType>();
+
+            Mapper.CreateMap<Attribute, Contracts.Attribute>()
+                .ForMember(x => x.AttributeFQN, opt => opt.MapFrom(x => x.Id))
                 ;
-            Mapper.CreateMap<ProductTypeAttribute, Contracts.AttributeInProductType>()
+            Mapper.CreateMap<Contracts.Attribute, Attribute>()
+                .ForMember(x => x.Id, opt => opt.MapFrom(x => x.AttributeFQN))
                 ;
         }
     }

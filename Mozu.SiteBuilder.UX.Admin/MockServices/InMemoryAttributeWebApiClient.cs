@@ -115,6 +115,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         public Task<ServiceClientResponse<StreamContent>> DeleteAttribute(string AttributeFQN, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
             _attributes.Remove(AttributeFQN);
+            _attributeVocabularyValues.Remove(AttributeFQN);
             return Task(default(StreamContent));
         }
 
