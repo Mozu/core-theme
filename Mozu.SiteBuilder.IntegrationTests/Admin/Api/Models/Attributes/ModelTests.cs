@@ -4,6 +4,7 @@ using System.Linq;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
 using NUnit.Framework;
+using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
 {
@@ -32,6 +33,26 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
 
 
             var text = new DumpTag().Process(productType);
+
+            Console.WriteLine(text);
+        }
+
+        [Test, Explicit("Run to create some sample JSON")]
+        public void Can_create_an_Attribute_with_AttributeValues()
+        {
+            var id = "92348u502u";
+            var attribute = new Attribute
+            {
+                Id = id,
+                Values = new List<AttributeValue>
+                {
+                    new AttributeValue { Id = "3233", AttributeId = id, Value = 123 },
+                    new AttributeValue { Id = "3233", AttributeId = id, Value = 456 },
+                    new AttributeValue { Id = "3233", AttributeId = id, Value = 789 },
+                }
+            };
+
+            var text = new DumpTag().Process(attribute);
 
             Console.WriteLine(text);
         }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
 using Mozu.SiteBuilder.UX.Admin.MockServices;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 
@@ -14,6 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
     {
         private readonly IMoreAwesomeAttributeWebApiClient _attributeWebApiClient;
         private readonly CollectionTaskUnMapper<Attribute, Contracts.Attribute> _attributeMapper = new CollectionTaskUnMapper<Attribute, Contracts.Attribute>();
+        private readonly CollectionTaskUnMapper<AttributeValue, Contracts.AttributeVocabularyValue> _attributeValueMapper = new CollectionTaskUnMapper<AttributeValue, Contracts.AttributeVocabularyValue>();
 
         public AttributeHelper(IMoreAwesomeAttributeWebApiClient attributeWebApiClient)
         {
@@ -23,14 +25,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
         public async Task<IEnumerable<Attribute>> GetAttributes(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             string filter = null; // extFilter.ToFilterString();
-            string sort = null; // pagingParams.sort.ToSortString();
+            string sort = null;   // pagingParams.sort.ToSortString();
 
             var result = await _attributeWebApiClient.GetAttributes(
-                /*startIndex: */     pagingParams.startIndex,
-                /*pageSize: */       pagingParams.pageSize,
-                /*sortBy: */         sort,
-                /*responseGroups: */ null,
-                /*filter: */         filter
+                /* startIndex:     */ pagingParams.startIndex,
+                /* pageSize:       */ pagingParams.pageSize,
+                /* sortBy:         */ sort,
+                /* responseGroups: */ null,
+                /* filter:         */ filter
                 );
             var res = result.ReadAsAsync().Result;
 
@@ -39,7 +41,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 
         public async Task<IEnumerable<Attribute>> CreateAttributes(List<Attribute> attributes)
         {
-            return await _attributeMapper.PerformAction(attributes, a => _attributeWebApiClient.AddAttribute(a));
+            var results = await _attributeMapper.PerformAction(attributes, a => _attributeWebApiClient.AddAttribute(a));
+            await _attributeValueMapper.PerformAction(results.SelectMany(SelectValuesAssigned), (a, b) => _attributeWebApiClient.AddAttributeVocabularyValue(a, b.AttributeId));
+            return results;
+        }
+
+        private static IEnumerable<AttributeValue> SelectValuesAssigned(Attribute x)
+        {
+            return x.Values.Select(v =>
+                {
+                    v.AttributeId = x.Id;
+                    return v;
+                });
         }
 
         public async Task<IEnumerable<Attribute>> EditAttributes(List<Attribute> attributes)
