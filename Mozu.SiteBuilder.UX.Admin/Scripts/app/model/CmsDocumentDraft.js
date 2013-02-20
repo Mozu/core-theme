@@ -30,6 +30,11 @@ Ext.define('Taco.model.CmsDocumentDraft', {
             "useNull": true
         },
         {
+            "name": "isPublished",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
             "name": "modificationType",
             "type": "string",
             "useNull": true
@@ -55,8 +60,12 @@ Ext.define('Taco.model.CmsDocumentDraft', {
     proxy: {
         type: 'readahead',
         api: {
-            "read": "/admin/app/cmspublishing/listdrafts",
-            "delete": "/admin/app/cmspublishing/discard"
+            read: "/admin/app/cmspublishing/listdrafts",
+            destroy: "/admin/app/cmspublishing/discard",
+            // note: to publish, you must also set isPublished=true on the model.
+            update: "/admin/app/cmspublishing/publish",
+            publishAll: "/admin/app/cmspublishing/publishall",
+            discardAll: "/admin/app/cmspublishing/discardall"
         },
         reader: {
             type: 'json',
