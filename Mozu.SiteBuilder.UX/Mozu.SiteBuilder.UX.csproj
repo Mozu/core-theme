@@ -392,6 +392,21 @@
     <Content Include="Global.asax">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="JS_SDK\banner.tpl" />
+    <None Include="JS_SDK\jshintrc.json" />
+    <None Include="JS_SDK\README.md" />
+    <None Include="JS_SDK\definewrapper.tpl" />
+    <None Include="JS_SDK\package.json" />
+    <Content Include="JS_SDK\Gruntfile.js" />
+    <Content Include="JS_SDK\src\ajax.js" />
+    <Content Include="JS_SDK\src\api.js" />
+    <Content Include="JS_SDK\src\apiresponse.js" />
+    <Content Include="JS_SDK\src\objecttypes.js" />
+    <Content Include="JS_SDK\src\site.js" />
+    <Content Include="JS_SDK\src\tenant.js" />
+    <Content Include="JS_SDK\src\seed.js" />
+    <Content Include="JS_SDK\tests\SDKSpec.js" />
+    <Content Include="JS_SDK\vendor\jquery.js" />
     <Content Include="Mobile\Default.aspx" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -430,6 +445,8 @@
     <Folder Include="Areas\Misc\Views\Shared\" />
     <Folder Include="Areas\StoreFront\Models\" />
     <Folder Include="Areas\StoreFront\Views\Shared\" />
+    <Folder Include="JS_SDK\dist\" />
+    <Folder Include="JS_SDK\docs\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
