@@ -477,6 +477,7 @@
     </Compile>
     <Compile Include="CurrentUserHelper.cs" />
     <Compile Include="Helpers\AttributeHelper.cs" />
+    <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
     <Compile Include="Helpers\IAttributeHelper.cs" />
     <Compile Include="IContextSwitcher.cs" />
     <Compile Include="ICurrentUserHelper.cs" />
