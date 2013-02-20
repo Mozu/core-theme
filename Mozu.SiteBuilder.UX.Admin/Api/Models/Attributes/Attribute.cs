@@ -14,9 +14,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
+         [JsonConverter(typeof(StringEnumConverter))]
         [DataMember(Name = "inputType")]
         public AttributeInputType InputType { get; set; }
 
+         [JsonConverter(typeof(StringEnumConverter))]
         [DataMember(Name = "dataType")]
         public AttributeDataType DataType { get; set; }
 
@@ -32,6 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 
 
         [DataMember(Name = "valueType")]
+        [JsonConverter(typeof(StringEnumConverter))]
         public AttributeValueType ValueType { get; set; }
 
  
