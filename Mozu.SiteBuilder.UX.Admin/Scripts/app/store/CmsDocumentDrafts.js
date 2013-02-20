@@ -13,13 +13,19 @@
         remoteSort: true,
         remoteFilter: true,
         
-        publishAll: function (cb) {
+        publishAll: function (type, cb) {
             var me  = this,
                 url = me.getProxy().api.publishAll;
+
+            if (typeof type === "function") {
+                cb = type;
+                type = null;
+            }
 
             Ext.Ajax.request({
                 url: url,
                 method: "POST",
+                data: type ? { type: type } : '',
                 success: function (response) {
                     me.reload();
                     if (cb) cb(response);
