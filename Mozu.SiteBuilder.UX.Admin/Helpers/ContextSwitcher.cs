@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -6,11 +6,9 @@ using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
-using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
-using Mozu.Core.Api.Client;
 
-namespace Mozu.SiteBuilder.UX.Admin
+namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
     public class ContextSwitcher : IContextSwitcher
     {

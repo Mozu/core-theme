@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mozu.AdminUser.Contracts.Clients;
@@ -9,7 +9,7 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.Tenant.Contracts;
 
-namespace Mozu.SiteBuilder.UX.Admin
+namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
     public class RolesHelper : IRolesHelper
     {

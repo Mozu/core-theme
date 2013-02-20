@@ -3,6 +3,7 @@ using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Admin;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 using NSubstitute;
 using NUnit.Framework;
 using Should;

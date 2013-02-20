@@ -1,4 +1,4 @@
-﻿namespace Mozu.SiteBuilder.UX.Admin
+namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
     public interface IPasswordHelper
     {
