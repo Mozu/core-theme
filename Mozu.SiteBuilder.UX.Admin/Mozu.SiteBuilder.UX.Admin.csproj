@@ -466,7 +466,6 @@
     <Compile Include="Configuration\ConfigurationModule.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContextSwitcher.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImgController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
@@ -475,22 +474,23 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="CurrentUserHelper.cs" />
     <Compile Include="Helpers\AttributeHelper.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
+    <Compile Include="Helpers\ContextSwitcher.cs" />
+    <Compile Include="Helpers\CurrentUserHelper.cs" />
     <Compile Include="Helpers\IAttributeHelper.cs" />
-    <Compile Include="IContextSwitcher.cs" />
-    <Compile Include="ICurrentUserHelper.cs" />
-    <Compile Include="IPasswordHelper.cs" />
-    <Compile Include="IRolesHelper.cs" />
+    <Compile Include="Helpers\IContextSwitcher.cs" />
+    <Compile Include="Helpers\ICurrentUserHelper.cs" />
+    <Compile Include="Helpers\IPasswordHelper.cs" />
+    <Compile Include="Helpers\IRolesHelper.cs" />
+    <Compile Include="Helpers\PasswordHelper.cs" />
+    <Compile Include="Helpers\RolesHelper.cs" />
     <Compile Include="MockServices\InMemoryProductTypeApiClient.cs" />
     <Compile Include="MockServices\InMemoryAttributeWebApiClient.cs" />
     <Compile Include="MockServices\InSessionDocumentWebApiClient.cs" />
     <Compile Include="MockServices\InMemoryProductWebApiClient.cs" />
     <Compile Include="MockServices\TestResponse.cs" />
-    <Compile Include="PasswordHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RolesHelper.cs" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

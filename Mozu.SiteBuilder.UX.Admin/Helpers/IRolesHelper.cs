@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Mozu.Tenant.Contracts;
 
-namespace Mozu.SiteBuilder.UX.Admin
+namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
     public interface IRolesHelper
     {

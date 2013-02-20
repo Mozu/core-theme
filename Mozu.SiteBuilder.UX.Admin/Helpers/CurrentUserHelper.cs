@@ -1,9 +1,9 @@
-﻿using System.Net;
+using System.Net;
 using AutoMapper;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Security;
 
-namespace Mozu.SiteBuilder.UX.Admin
+namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
     public class CurrentUserHelper : ICurrentUserHelper
     {

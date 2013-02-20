@@ -1,7 +1,7 @@
-﻿using Mozu.AdminUser.Contracts;
+using Mozu.AdminUser.Contracts;
 using Mozu.AdminUser.Contracts.Clients;
 
-namespace Mozu.SiteBuilder.UX.Admin
+namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
     public class PasswordHelper : IPasswordHelper
     {

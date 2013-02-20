@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using Mozu.Tenant.Contracts;
+using System.Threading.Tasks;
 
-namespace Mozu.SiteBuilder.UX.Admin
+namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
     public interface IContextSwitcher
     {

@@ -8,6 +8,7 @@ using Mozu.Core.Settings;
 using Mozu.Provisioning.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin;
 using Mozu.SiteBuilder.UX.Admin.Api;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.Tenant.Contracts.Clients;
 using NSubstitute;
 using NUnit.Framework;
