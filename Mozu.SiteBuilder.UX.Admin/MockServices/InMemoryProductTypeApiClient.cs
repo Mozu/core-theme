@@ -58,8 +58,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// </summary>
         public Task<ServiceClientResponse<DC.ProductTypeCollection>> GetProductTypes(int? startIndex = null, int? pageSize = null, string sortBy = null, string responseGroups = null, string filter = null, Core.Api.Contracts.TargetContextLevelType targetContextLevel = Core.Api.Contracts.TargetContextLevelType.NotSpecified)
         {
+            var items = ProductTypeRepository.ToList();
+
             // ignore all paging and sorting parameters, because fuck it.
-            DC.ProductTypeCollection returnCol = new DC.ProductTypeCollection { Items = ProductTypeRepository.ToList() };
+            DC.ProductTypeCollection returnCol = new DC.ProductTypeCollection { Items = items, TotalCount = items.Count };
 
             return (new TestResponse<DC.ProductTypeCollection>(returnCol)).Task;
         }
