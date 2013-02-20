@@ -43,7 +43,7 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
             ftype: 'rowwrap',
             lockableScope: 'normal'
         },
-        // In case the client grid is lockable (At this stage we cannot know; plugins are constructed early)
+        // In case the client grid is lockable (At tkhis stage we cannot know; plugins are constructed early)
         // push a Feature into the locked side which sets up the initially collapsed row state correctly
         {
             ftype: 'feature',
