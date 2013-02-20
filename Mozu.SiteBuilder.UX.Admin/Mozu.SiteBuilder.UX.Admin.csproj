@@ -570,6 +570,8 @@
     <Content Include="Scripts\app\store\RuntimeProductSearch.js" />
     <Content Include="Scripts\app\store\Attributes.js" />
     <Content Include="Scripts\app\store\WidgetInstances.js" />
+    <Content Include="Scripts\app\view\attribute\Edit.js" />
+    <Content Include="Scripts\app\view\attribute\Form.js" />
     <Content Include="Scripts\app\view\attribute\Index.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />

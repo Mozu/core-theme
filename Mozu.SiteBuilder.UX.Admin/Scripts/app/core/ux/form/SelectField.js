@@ -9,6 +9,7 @@ Ext.define('Taco.core.ux.form.SelectField', {
     editable: false,
     triggerAction: 'all',
     typeAhead: false,
+    isSelectField: true,
     listConfig: {
         shadow: false
     },
