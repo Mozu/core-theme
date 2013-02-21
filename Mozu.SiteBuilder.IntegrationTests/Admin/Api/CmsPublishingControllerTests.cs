@@ -96,7 +96,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         [Test]
         public void Publish_all_should_work()
         {
-            var response = _testedController.PublishAll().Result;
+            var emptyArgs = new PublishArgs();
+            var response = _testedController.PublishAll(emptyArgs).Result;
 
             response.Success.ShouldBeTrue();
             response.Total.ShouldEqual(_mocks.Items.Count);
@@ -120,7 +121,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         [Test]
         public void Discard_all_should_work()
         {
-            var response = _testedController.DiscardAll().Result;
+            var emptyArgs = new PublishArgs();
+            var response = _testedController.DiscardAll(emptyArgs).Result;
 
             response.Success.ShouldBeTrue();
             response.Total.ShouldEqual(_mocks.Items.Count);

@@ -25,7 +25,8 @@
             Ext.Ajax.request({
                 url: url,
                 method: "POST",
-                params: type ? { type: type } : '',
+                jsonData: type ? { docType: type } : '',
+                // jsonData: {foo: 'foo'},
                 success: function (response) {
                     me.reload();
                     if (cb) cb(response);

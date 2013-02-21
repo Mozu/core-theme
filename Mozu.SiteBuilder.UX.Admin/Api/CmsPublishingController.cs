@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
@@ -14,6 +15,18 @@ using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
+    /// <summary>
+    /// DTO class to allow PublishAll and DiscardAll to receive arguments.
+    /// </summary>
+    [DataContract]
+    public class PublishArgs
+    {
+        [DataMember(Name = "docType")]
+        public string DocType;
+    }
+
+
+
     /// <summary>
     /// Controller for CMS smiegels.
     /// </summary>
@@ -106,10 +119,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         /// <summary>
         /// Publishes all the pending changes.
+        /// <param name="type">Document type ("Page" or "Template"). Passing null or empty means to publish all documents.</param>
         /// </summary>
         [WebInvoke(UriTemplate = "publishall")]
-        public async Task<Response<List<string>>> PublishAll()
+        public async Task<Response<List<string>>> PublishAll(PublishArgs args)
         {
+            string documentListName = GetDocumentListNameFromDocType(args.DocType);
+
             // TODO: The all-knowing Thom has said this method is not sufficient.
             // Since we'd have to get each page, then group by document list name and make N calls to publish
             // We should wait for the Mozu service to support a PublishAll().
@@ -121,7 +137,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             do
             {
-                var getListResult = await _documentClient.GetDrafts(/*documentListName: */ null, /*responseGroups: */ null, pageSize, startIndex);
+                var getListResult = await _documentClient.GetDrafts(/*documentListName: */ documentListName, /*responseGroups: */ null, pageSize, startIndex);
                 DC.PagedCollection<DC.Document> docs = getListResult.ReadAsAsync().Result;
                 totalCount = (int)docs.TotalCount;
 
@@ -145,10 +161,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Publishes all the pending changes.
         /// </summary>
+        /// <param name="type">Document type ("Page" or "Template"). Passing null or empty means to discard all documents.</param>
         [WebInvoke(UriTemplate = "discardall")]
-        public async Task<Response<List<string>>> DiscardAll()
+        public async Task<Response<List<string>>> DiscardAll(PublishArgs args)
         {
-            // TODO: This method implementation should be thrwon away when the Mozu service supports a DiscardAll().
+            string documentListName = GetDocumentListNameFromDocType(args.DocType);
+
+            // TODO: This method implementation should be thrown away when the Mozu service supports a DiscardAll().
             // See related note in PublishAll().
 
             List<string> discardedDocIds = new List<string>();
@@ -158,7 +177,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             do
             {
-                var getListResult = await _documentClient.GetDrafts(/*documentListName: */ null, /*responseGroups: */ null, pageSize, startIndex);
+                var getListResult = await _documentClient.GetDrafts(/*documentListName: */ documentListName, /*responseGroups: */ null, pageSize, startIndex);
                 DC.PagedCollection<DC.Document> docs = getListResult.ReadAsAsync().Result;
                 totalCount = (int)docs.TotalCount;
 
@@ -177,6 +196,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             } while (startIndex < totalCount);
 
             return List2(discardedDocIds);
+        }
+
+        /// <summary>
+        /// Translates the UI's idea of a document type (Page and Template) into the appropriate DocumentListName for a cms collection.
+        /// If null or an unsupported document type is provided, this will return null.
+        /// </summary>
+        private string GetDocumentListNameFromDocType(string type)
+        {
+            switch ((type ?? "").ToLower())
+            {
+                case "page":
+                    return "Pages";
+                case "template":
+                    return "Templates";
+                default:
+                    return null;
+            }
         }
     }
 }
