@@ -485,6 +485,7 @@
     <Compile Include="Helpers\IRolesHelper.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
+    <Compile Include="MockServices\AbstractInMemoryResourceApiClient.cs" />
     <Compile Include="MockServices\InMemoryProductTypeApiClient.cs" />
     <Compile Include="MockServices\InMemoryAttributeWebApiClient.cs" />
     <Compile Include="MockServices\InSessionDocumentWebApiClient.cs" />

@@ -1,5 +1,8 @@
-﻿using Mozu.ProductAdmin.Contracts;
+﻿using System.Runtime.Caching;
+using Mozu.Core;
+using Mozu.ProductAdmin.Contracts;
 using Mozu.SiteBuilder.UX.Admin.MockServices;
+using NSubstitute;
 using NUnit.Framework;
 using Should;
 
@@ -71,7 +74,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.MockServices
 
         public InMemoryAttributeWebApiClient GetClient()
         {
-            return new InMemoryAttributeWebApiClient();
+            var ctx = Substitute.For<IApiContext>();
+            var cache = new MemoryCache("foo");
+            return new InMemoryAttributeWebApiClient(ctx, cache);
         }
     }
 }

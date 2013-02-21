@@ -100,9 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterType<InMemoryProductTypeWebApiClient>().As<IMoreAwesomeProductTypeWebApiClient>();
 
             // TODO: This binding will be unnecessary once the AttributeWebApiClient is implemented.
-            builder.Register(c => new InMemoryAttributeWebApiClient())
-                   .As<IMoreAwesomeAttributeWebApiClient>()
-                   .SingleInstance();
+            builder.RegisterType<InMemoryAttributeWebApiClient>().As<IMoreAwesomeAttributeWebApiClient>();
         }
 
 
