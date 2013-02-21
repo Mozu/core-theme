@@ -4,6 +4,7 @@ using System.Linq;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
 using NUnit.Framework;
+using Should;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
@@ -55,6 +56,38 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
             var text = new DumpTag().Process(attribute);
 
             Console.WriteLine(text);
+        }
+
+        [Test]
+        public void Can_map_Attribute_Enums_to_Strings()
+        {
+            var attribute = new Attribute
+            {
+                ValueType = AttributeValueType.Shopper,
+                InputType = AttributeInputType.TextBox,
+                DataType = AttributeDataType.DateTime,
+            };
+            var mapped = AutoMapper.Mapper.Map<ProductAdmin.Contracts.Attribute>(attribute);
+
+            mapped.ValueType.ShouldEqual("Shopper");
+            mapped.InputType.ShouldEqual("TextBox");
+            mapped.DataType.ShouldEqual("DateTime");
+        }
+
+        [Test]
+        public void Can_map_Attribute_Strings_to_Enums()
+        {
+            var attribute = new ProductAdmin.Contracts.Attribute
+            {
+                ValueType = "Shopper",
+                InputType = "TextBox",
+                DataType = "DateTime",
+            };
+            var mapped = AutoMapper.Mapper.Map<Attribute>(attribute);
+
+            mapped.ValueType.ShouldEqual(AttributeValueType.Shopper);
+            mapped.InputType.ShouldEqual(AttributeInputType.TextBox);
+            mapped.DataType.ShouldEqual(AttributeDataType.DateTime);
         }
 
         private IEnumerable<ProductTypeAttribute> GetExtras(int productTypeId)
