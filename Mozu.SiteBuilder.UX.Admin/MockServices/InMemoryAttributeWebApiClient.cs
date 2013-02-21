@@ -47,6 +47,22 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
 
         public IServiceClientMessageHandler Handler { get; set; }
 
+        protected override void InitializeRepoWithMockData(AttributeRepo repo)
+        {
+            foreach (var item in SeedAttributes)
+            {
+                repo.Attributes.Add(item);
+                foreach (var attribute in repo.Attributes)
+                {
+                    repo.AttributeVocabularyValues.AddOrUpdate(
+                        attribute.AttributeFQN,
+                        attribute.VocabularyValues,
+                        (s, list) => repo.AttributeVocabularyValues[s]
+                        );
+                }
+            }
+        }
+
         public Task<ServiceClientResponse<DC.AttributeTypeRuleCollection>> GetAttributeTypeRules(int? startIndex = null, int? pageSize = null, string sortBy = null, string responseGroups = null, string filter = null, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
             return TaskCollection<DC.AttributeTypeRule, DC.AttributeTypeRuleCollection>(Repository.AttributeTypeRules);
@@ -152,5 +168,16 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         {
             return Task(new TCollection { Items = entityList.ToList() });
         }
+
+        private IEnumerable<DC.Attribute> SeedAttributes
+        {
+            get
+            {
+                return from type in GetType().Assembly.GetTypes()
+                       where typeof (DC.Attribute).IsAssignableFrom(type)
+                       select (DC.Attribute) Activator.CreateInstance(type);
+            }
+        }
+
     }
 }
