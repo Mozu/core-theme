@@ -1,0 +1,71 @@
+@mixin taco-boundlist {
+
+  .#{$prefix}boundlist-with-hidden-selections {
+    .#{$prefix}boundlist-selected {
+      display: none;
+    }
+  }
+
+  .#{$prefix}boundlist-item-drag {
+    cursor: move;
+    display: block;
+    font-size: 0px;
+    height: 34px;
+    left: 0px;
+    line-height: 0px;
+    overflow: hidden;
+    position: absolute;
+    text-indent: -9999px;
+    top: 0px;
+    width: 16px;
+
+    &::after {
+      border-left: 4px double $color-grid-border;
+      content: "";
+      display: block;
+      height: 28px;
+      left: 5px;
+      position: absolute;
+      top: 3px;
+      width: 4px;
+    }
+  }
+
+  .#{$prefix}boundlist-item-close {
+    cursor: pointer;
+    display: block;
+    font-size: 0px;
+    height: 20px;
+    line-height: 0px;
+    overflow: hidden;
+    position: absolute;
+    right: 0px;
+    text-indent: -9999px;
+    top: 7px;
+    width: 20px;
+
+    &::after {
+      background-color: $color-grid-border;
+      color: $color-neutral-white;
+      content: "×";
+      font-size: 14px;
+      height: 16px;
+      left: 0px;
+      line-height: 1em;
+      position: absolute;
+      text-align: center;
+      text-indent: 0px;
+      top: 2px;
+      width: 16px;
+      @include border-radius(14px);
+      @include flexbox(row, nowrap, center, center, center);
+    }
+
+    &:hover {
+      &::after {
+        background-color: $color-neutral-mid;
+      }
+    }
+  }
+
+}

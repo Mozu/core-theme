@@ -90,6 +90,22 @@
 
   /* PLUGINS, MIXINS, COLUMNS, ETC. */
 
+  .#{$prefix}grid-cell-inner {
+    span.overridden {
+      background-color: $color-action-primary-background;
+      display: inline-block;
+      font-size: 0px;
+      height: 10px;
+      line-height: 0px;
+      overflow: hidden;
+      text-indent: -9999px;
+      vertical-align: middle;
+      width: 10px;
+      @include border-radius(10px);
+      @include box-shadow(inset 0px -1px rgba(255, 255, 255, 0.4), inset 0px 1px rgba(0, 0, 0, 0.4));
+    }
+  }
+
   // checkbox overrides
   .#{$prefix}column-header-checkbox {
     .#{$prefix}column-header-inner {
@@ -99,9 +115,9 @@
 
   // expandercollapser
   .#{$vprefix}expandercollapser {
-	color: $color-action-link;
-	font-size: 10pt;
-	padding: 6px 0;
+    color: $color-action-link;
+    font-size: 10pt;
+    padding: 6px 0;
   }
 
   // rowexpander overrides

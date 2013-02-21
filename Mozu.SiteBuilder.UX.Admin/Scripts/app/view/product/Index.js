@@ -4,7 +4,7 @@
 Ext.define('Taco.view.product.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.prodindex',
-    requires: ['Taco.model.Product', 'Taco.store.Products'],
+    requires: ['Taco.model.Product', 'Taco.store.Products', 'Ext.ux.RowExpander'],
 
     typeName: 'Product',
     modelName: 'Taco.model.Product',
@@ -87,10 +87,13 @@ Ext.define('Taco.view.product.Index', {
                             '<td class="x-grid-cell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
                             '<td class="x-grid-cell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
                             '<td class="x-grid-cell"><div class="x-grid-cell-inner">{siteId:this.toSiteName}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{isContentOverridden}</div></td>',
+                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
                             '<td class="x-grid-cell"><div class="x-grid-cell-inner"></div></td>',
                         '</tr></tpl>',
                     {
+                        formatOverridden: function (value) {
+                            return value ? '<span class="overridden">Overridden</span>' : '';
+                        },
                         formatPrice: function (value) {
                             return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
                         },
@@ -98,7 +101,6 @@ Ext.define('Taco.view.product.Index', {
                             var site = Taco.app.context.findSite(value);
                             return site ? site.name : 'n/a';
                         }
-                        
                     })
                 }]
             }
