@@ -35,7 +35,6 @@ Ext.define('Taco.view.catalog.Index', {
                 },
                 items: [{
                     xtype: 'multiselect',
-                    itemId: 'step-0',
                     name: 'attribute',
                     fieldLabel: 'Attribute',
                     store: store,
@@ -70,17 +69,26 @@ Ext.define('Taco.view.catalog.Index', {
                         }
                     },
                     onSelectChange: function (selModel, selections) {
-                        var nextStep = panel.down('#step-1'),
+                        var form = panel.getForm(),
+                            nextStep = form.findField('values'),
+                            additionalSteps = [form.findField('selections')],
                             values = selections.map(function (record) { return record.get('values'); });
 
                         if (!this.ignoreSelectChange) {
                             this.setValue(selections);
-                            nextStep.show().bindStore(values[0], true);
+                            if (Ext.isEmpty(selections)) {
+                                nextStep.hide();
+                            } else {
+                                nextStep.show().bindStore(values[0], true);
+                            }
+
+                            Ext.Array.each(additionalSteps, function (step) {
+                                if (step) step.hide();
+                            });
                         }
                     }
                 }, {
                     xtype: 'multiselect',
-                    itemId: 'step-1',
                     name: 'values',
                     fieldLabel: 'Values',
                     store: [],
@@ -92,17 +100,20 @@ Ext.define('Taco.view.catalog.Index', {
                         selModel: { mode: 'SIMPLE' }
                     },
                     onSelectChange: function (selModel, selections) {
-                        var nextStep = panel.down('#step-2'),
+                        var nextStep = panel.getForm().findField('selections'),
                             records = selModel.getSelection();
 
                         if (!this.ignoreSelectChange) {
                             this.setValue(selections);
-                            nextStep.show().getStore().loadData(records, false);
+                            if (Ext.isEmpty(selections)) {
+                                nextStep.hide();
+                            } else {
+                                nextStep.show().getStore().loadData(records, false);
+                            }
                         }
                     }
                 }, {
                     xtype: 'multiselect',
-                    itemId: 'step-2',
                     name: 'selections',
                     fieldLabel: 'Selections',
                     store: [],
@@ -113,10 +124,27 @@ Ext.define('Taco.view.catalog.Index', {
                     listConfig: {
                         selModel: { mode: 'MULTI' },
                         itemTpl: [
-                            '<span class="x-boundlist-item-drag">Drag</span>',
+                            '<span class="x-boundlist-item-drag">Drag </span>',
                             '<span class="x-boundlist-item-content">{field1}</span>',
-                            '<span class="x-boundlist-item-close">Close</span>'
-                        ]
+                            '<span class="x-boundlist-item-close"> Close</span>'
+                        ],
+                        listeners: {
+                            itemclick: function (view, record, item, index, e) {
+                                var closeBtn = e.getTarget('.x-boundlist-item-close', 10),
+                                    prevStep, store;
+
+                                if (closeBtn) {
+                                    store = view.getStore();
+                                    store.remove(record);
+
+                                    prevStep = panel.getForm().findField('values'),
+                                    prevStep.boundList.deselect(record);
+
+                                    return false;
+                                }
+                            },
+                            scope: this
+                        }
                     }
                 }]
             }]

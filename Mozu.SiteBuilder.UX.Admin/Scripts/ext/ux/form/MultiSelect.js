@@ -233,6 +233,7 @@ Ext.define('Ext.ux.form.MultiSelect', {
                 view: me.boundList,
                 ddGroup: me.dragGroup,
                 dragText: '{0} Item{1}',
+                validHandleClass: 'x-boundlist-item-drag',
                 onInitDrag: function (x, y) {
                     var me = this,
                         data = me.dragData,
@@ -240,7 +241,7 @@ Ext.define('Ext.ux.form.MultiSelect', {
                         selectionModel = view.getSelectionModel(),
                         record = view.getRecord(data.item),
                         e = data.event;
-                        
+
                     if (!selectionModel.isSelected(record)) {
                         selectionModel.select(record, (selectionModel.getSelectionMode === 'SIMPLE'));
                     }
@@ -250,6 +251,28 @@ Ext.define('Ext.ux.form.MultiSelect', {
                     me.proxy.update(me.ddel.dom);
                     me.onStartDrag(x, y);
                     return true;
+                },
+                isValidHandleChild: function (node) {
+                    var valid = true,
+                        nodeName,
+                        i, len;
+
+                    try {
+                        nodeName = node.nodeName.toUpperCase();
+                    } catch(e) {
+                        nodeName = node.nodeName;
+                    }
+                    valid = valid && !this.invalidHandleTypes[nodeName];
+                    valid = valid && !this.invalidHandleIds[node.id];
+
+                    for (i=0, len=this.invalidHandleClasses.length; valid && i<len; ++i) {
+                        valid = !Ext.fly(node).hasCls(this.invalidHandleClasses[i]);
+                    }
+                    if (!Ext.isEmpty(this.validHandleClass)) {
+                        valid = Ext.fly(node).hasCls(this.validHandleClass);
+                    }
+
+                    return valid;
                 }
             });
         }
