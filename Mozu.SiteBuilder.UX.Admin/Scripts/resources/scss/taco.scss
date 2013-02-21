@@ -46,6 +46,7 @@ $include-default: false;
 @include taco-content;
 @include taco-modal;
 @include taco-actions;
+@include taco-boundlist;
 @include taco-messages;
 @include taco-dashboard;
 @include taco-fieldgroup;

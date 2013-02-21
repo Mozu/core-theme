@@ -232,7 +232,25 @@ Ext.define('Ext.ux.form.MultiSelect', {
             me.dragZone = Ext.create('Ext.view.DragZone', {
                 view: me.boundList,
                 ddGroup: me.dragGroup,
-                dragText: '{0} Item{1}'
+                dragText: '{0} Item{1}',
+                onInitDrag: function (x, y) {
+                    var me = this,
+                        data = me.dragData,
+                        view = data.view,
+                        selectionModel = view.getSelectionModel(),
+                        record = view.getRecord(data.item),
+                        e = data.event;
+                        
+                    if (!selectionModel.isSelected(record)) {
+                        selectionModel.select(record, (selectionModel.getSelectionMode === 'SIMPLE'));
+                    }
+                    data.records = selectionModel.getSelection();
+
+                    me.ddel.update(me.getDragText());
+                    me.proxy.update(me.ddel.dom);
+                    me.onStartDrag(x, y);
+                    return true;
+                }
             });
         }
         if (me.droppable || me.dropGroup){

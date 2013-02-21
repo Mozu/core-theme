@@ -44,7 +44,31 @@ Ext.define('Taco.view.catalog.Index', {
                     displayField: 'attribute',
                     valueField: 'attribute',
                     maxSelections: 1,
-                    listConfig: { multiSelect: false },
+                    listConfig: {
+                        selModel: {
+                            mode: 'SINGLE',
+                            allowDeselect: true,
+                            // patch doSelect method to use doMultiSelect if records is an empty array
+                            // doSingleSelect cannot handle anything but a single unencapsulated record
+                            doSelect: function (records, keepExisting, suppressEvent) {
+                                var me = this,
+                                    record;
+
+                                if (me.locked || !me.store) {
+                                    return;
+                                }
+                                if (typeof records === "number") {
+                                    records = [me.store.getAt(records)];
+                                }
+                                if (me.selectionMode == "SINGLE" && !Ext.isEmpty(records)) {
+                                    record = records.length ? records[0] : records;
+                                    me.doSingleSelect(record, suppressEvent);
+                                } else {
+                                    me.doMultiSelect(records, keepExisting, suppressEvent);
+                                }
+                            }
+                        }
+                    },
                     onSelectChange: function (selModel, selections) {
                         var nextStep = panel.down('#step-1'),
                             values = selections.map(function (record) { return record.get('values'); });
@@ -63,8 +87,37 @@ Ext.define('Taco.view.catalog.Index', {
                     hidden: true,
                     width: 240,
                     margin: '0 40',
-                    maxSelections: 1,
-                    listConfig: { multiSelect: false }
+                    listConfig: {
+                        cls: Ext.baseCSSPrefix + 'boundlist-with-hidden-selections',
+                        selModel: { mode: 'SIMPLE' }
+                    },
+                    onSelectChange: function (selModel, selections) {
+                        var nextStep = panel.down('#step-2'),
+                            records = selModel.getSelection();
+
+                        if (!this.ignoreSelectChange) {
+                            this.setValue(selections);
+                            nextStep.show().getStore().loadData(records, false);
+                        }
+                    }
+                }, {
+                    xtype: 'multiselect',
+                    itemId: 'step-2',
+                    name: 'selections',
+                    fieldLabel: 'Selections',
+                    store: [],
+                    ddReorder: true,
+                    hidden: true,
+                    width: 240,
+                    margin: '0 40',
+                    listConfig: {
+                        selModel: { mode: 'MULTI' },
+                        itemTpl: [
+                            '<span class="x-boundlist-item-drag">Drag</span>',
+                            '<span class="x-boundlist-item-content">{field1}</span>',
+                            '<span class="x-boundlist-item-close">Close</span>'
+                        ]
+                    }
                 }]
             }]
         });
