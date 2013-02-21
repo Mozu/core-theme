@@ -7,6 +7,7 @@ Ext.define('Taco.core.ux.action.Action', {
     extend: 'Ext.Component',
     alias: 'widget.action',
     baseCls: 'taco-action',
+    mixins: ['Taco.core.util.GetsParentPage'],
     autoEl: {
     	tag: 'a',
     	href: '#'

@@ -5,5 +5,6 @@
 Ext.define('Taco.core.ux.action.PrimaryButton', {
     extend: 'Taco.core.ux.action.Primary',
     alias: 'widget.primarybutton',
-    autoEl: 'button'
+    autoEl: 'button',
+    mixins: ['Taco.core.util.GetsParentPage']
 });
