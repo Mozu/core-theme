@@ -43,10 +43,11 @@ Ext.define('Taco.view.pendingchange.Cms', {
             initComponent: function () {
                 var me;
                 this.menu = new Ext.menu.Menu({
+                    plain: true,
                     items: [
-                    { text: 'Publish all pages and templates', handler: function () { me.publishAll(); } },
-                    { text: 'Publish all pages', handler: function () { me.publishAll('page'); }},
-                    { text: 'Publish all templates', handler: function () { me.publishAll('template'); } }
+                    { plain: true, text: 'Publish all pages and templates', handler: function () { me.publishAll(); } },
+                    { plain: true, text: 'Publish all pages', handler: function () { me.publishAll('page'); } },
+                    { plain: true, text: 'Publish all templates', handler: function () { me.publishAll('template'); } }
                     ]
                 });
                 this.callParent(arguments);

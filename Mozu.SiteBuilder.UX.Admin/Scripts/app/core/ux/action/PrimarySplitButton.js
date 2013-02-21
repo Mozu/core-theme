@@ -5,5 +5,6 @@ Ext.define('Taco.core.ux.action.PrimarySplitButton', {
     extend: 'Ext.button.Split',
     alias: 'widget.primarysplitbutton',
     mixins: ['Taco.core.util.GetsParentPage'],
-    cls: Taco.baseCSSPrefix + 'action ' + Taco.baseCSSPrefix + 'splitbutton'
+    scale: 'medium',
+    cls: Taco.baseCSSPrefix + 'action ' + Taco.baseCSSPrefix + 'splitbutton ' + Taco.baseCSSPrefix + 'action-primary'
 });
