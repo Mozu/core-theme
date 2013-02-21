@@ -89,7 +89,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
             this.formContainer
         ];
 
-        this.enableBubble('overrideCountChange');
+        this.enableBubble('overrideChange');
 
         this.callParent(arguments);
 
@@ -159,7 +159,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
             this.disable();
         }
 
-        this.fireEvent('overrideCountChange', overrideCountDelta);
+        this.fireEvent('overrideChange', overrideCountDelta);
 
         if( overrideCheckbox ) {
             // *** The loadForm() call triggers the checkbox handler function (which spawns a modal) unless disabled here

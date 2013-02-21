@@ -10,6 +10,13 @@ namespace Mozu.SiteBuilder.UX.Models
     {
         object this[string key] { get; }
     }
+
+
+    public interface ICmsMetaDataExtrator
+    {
+        System.Web.Mvc.ModelMetadata GetCmsModelMetadata(string expression );
+
+    }
     public static class CaseInsensitiveNamingContainerExtension
     {
         static System.Collections.Concurrent.ConcurrentDictionary<Type, Dictionary<string, Func<object, object>>> g_funckyDics = new System.Collections.Concurrent.ConcurrentDictionary<Type, Dictionary<string, Func<object, object>>>();

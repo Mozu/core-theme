@@ -68,13 +68,13 @@ namespace Mozu.SiteBuilder.Mvc.CMS
        
 
 
-        public IEnumerable<Task<Tuple< DC.Document, ServiceClientResponse<DC.Document> >>> Create(IEnumerable<AVM.Document> docs)
+        public IEnumerable<Task< ServiceClientResponse<DC.Document> >> Create(IEnumerable<AVM.Document> docs)
         {
             var response = new List<AVM.Document>();
 
             
 
-            List<Task<Tuple< DC.Document, ServiceClientResponse<DC.Document>>>>  tasks  = new List<Task<Tuple<DC.Document,ServiceClientResponse<DC.Document>>>>();
+            var  tasks  = new List<Task<ServiceClientResponse<DC.Document>>>();
 
             foreach (var doc in docs)
             {
@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 var d = (pageTypeDef.DefaultValues ?? new AVM.Document());
                 d.Items = d.Items ?? new List<AVM.DocumentProperty>();
                 d.Name = doc.Name ?? d.Name ?? Guid.NewGuid().ToString();
-                d.PublishState = d.PublishState ?? CmsConstants.Documents.doc_state_active;
+                //d.PublishState = d.PublishState ?? CmsConstants.Documents.doc_state_active;
                 d.DocumentType = d.DocumentType ?? pageTypeDef.DocumentType;
 
                 d.Items = d.Items.Union(doc.Items/*.Select(x => ToPropertyValue(x))*/, PropCompare.Default).ToList();
@@ -126,7 +126,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
 
                 var newD = AutoMapper.Mapper.Map<DC.Document>(d);
-                var task = _docRepo.Create(d.ContentCollection, newD).ContinueWith(x => AttachDefaultWidgets(x.Result, pageTypeDef));
+                var task = _docRepo.Create(d.ContentCollection, newD);
                 tasks.Add(task);
 
 
@@ -162,8 +162,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                     //todo: clean up create sync.
                     continue;
                 }
-                var d = _docRepo.Get(doc.CollectionName, doc.DocumentId, null, CmsConstants.Documents.doc_state_active).Result.ReadAsSync();
-                d.PublishState = CmsConstants.Documents.doc_state_active;
+                var d = _docRepo.Get(doc.CollectionName, doc.DocumentId, null, null).Result.ReadAsSync();
+               // d.PublishState = CmsConstants.Documents.doc_state_active;
                 foreach (var item in doc.Items)
                 {
                     var prop = d.Properties.FirstOrDefault(x => string.Equals(x.PropertyType, item.Key, StringComparison.OrdinalIgnoreCase));
@@ -192,11 +192,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetList(CmsListRequest request)
         {
-            return _docRepo.List( request.Collection, request.ToFilterString (), null, request.Recurse,  CmsConstants.Documents.doc_state_active , request.ToSortString (), request.PageSize, request.StartIndex );
+            return _docRepo.List(request.Collection, request.ToFilterString(), null, request.Recurse, request.DocumentStatus ?? "draft", request.ToSortString(), request.PageSize, request.StartIndex);
         }
-        public Task <ServiceClientResponse<DC.Document>> GetByPath ( string contentCollection , string name, string folderPath )
+        public Task <ServiceClientResponse<DC.Document>> GetByPath ( string contentCollection , string name, string folderPath ,string documentState = "draft" )
         {
-            return _docRepo.FindByName (contentCollection, name, folderPath, null, CmsConstants.Documents.doc_state_active).ContinueWith(x =>
+            return _docRepo.FindByName(contentCollection, name, folderPath, null, documentState).ContinueWith(x =>
                 {
 
                     if (x.Result.ResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -249,48 +249,48 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return _docRepo.Get(contentCollection, id, null, activeVersion ? CmsConstants.Documents.doc_state_active : "draft");
         }
 
-        Tuple<DC.Document, ServiceClientResponse<DC.Document>> AttachDefaultWidgets(ServiceClientResponse<Mozu.Content.Contracts.Document> resp, PageTypeDefinition pageDef)
-        {
-            if (!resp.ResponseMessage.IsSuccessStatusCode)
-            {
-                return new Tuple<DC.Document, ServiceClientResponse<DC.Document>>(null, resp);
-            }
-            var doc = resp.ReadAsSync();
-            if (pageDef.Widgets == null)
-            {
-                return new Tuple<DC.Document, ServiceClientResponse<DC.Document>>(doc, resp);
-            }
-            List<Task<ServiceClientResponse<Mozu.Content.Contracts.Document>>> tasks = new List<Task<ServiceClientResponse<Mozu.Content.Contracts.Document>>>();
-            foreach (var widget in pageDef.Widgets)
-            {
+        //Tuple<DC.Document, ServiceClientResponse<DC.Document>> AttachDefaultWidgets(ServiceClientResponse<Mozu.Content.Contracts.Document> resp, PageTypeDefinition pageDef)
+        //{
+        //    if (!resp.ResponseMessage.IsSuccessStatusCode)
+        //    {
+        //        return new Tuple<DC.Document, ServiceClientResponse<DC.Document>>(null, resp);
+        //    }
+        //    var doc = resp.ReadAsSync();
+        //    if (pageDef.Widgets == null)
+        //    {
+        //        return new Tuple<DC.Document, ServiceClientResponse<DC.Document>>(doc, resp);
+        //    }
+        //    List<Task<ServiceClientResponse<Mozu.Content.Contracts.Document>>> tasks = new List<Task<ServiceClientResponse<Mozu.Content.Contracts.Document>>>();
+        //    foreach (var widget in pageDef.Widgets)
+        //    {
 
-                switch (pageDef.EntityType)
-                {
-                    //case "blog":
-                    //    {
-                    //        widget.Set(CmsConstants.Widgets.widget_location_page_types, new List<string> { "blog" });
-                    //        break;
-                    //    }
-                    default:
-                        {
-                            widget.Set(CmsConstants.Widgets.widget_tags , new List<string>() { doc.ToWidgetStem() });
-                            break;
-                        }
-                }
-                widget.Name = Guid.NewGuid().ToString();
-                widget.ContentCollection = CmsConstants.Widgets.collection_name;
-                widget.PublishState = CmsConstants.Documents.doc_state_active;
-                widget.DocumentType = widget.DocumentType ?? CmsConstants.Widgets.default_content_type;
+        //        switch (pageDef.EntityType)
+        //        {
+        //            //case "blog":
+        //            //    {
+        //            //        widget.Set(CmsConstants.Widgets.widget_location_page_types, new List<string> { "blog" });
+        //            //        break;
+        //            //    }
+        //            default:
+        //                {
+        //                    widget.Set(CmsConstants.Widgets.widget_tags , new List<string>() { doc.ToWidgetStem() });
+        //                    break;
+        //                }
+        //        }
+        //        widget.Name = Guid.NewGuid().ToString();
+        //        widget.ContentCollection = CmsConstants.Widgets.collection_name;
+        //       // widget.PublishState = CmsConstants.Documents.doc_state_active;
+        //        widget.DocumentType = widget.DocumentType ?? CmsConstants.Widgets.default_content_type;
 
-                var newWidget = AutoMapper.Mapper.Map<DC.Document>(widget);
-                tasks.Add(_docRepo.Create(CmsConstants.Widgets.collection_name, newWidget));
-            }
-            Task.WaitAll(tasks.ToArray());
-            var stuff = tasks.Select(x => x.Result.ReadAsSync()).ToList();
+        //        var newWidget = AutoMapper.Mapper.Map<DC.Document>(widget);
+        //        tasks.Add(_docRepo.Create(CmsConstants.Widgets.collection_name, newWidget));
+        //    }
+        //    Task.WaitAll(tasks.ToArray());
+        //    var stuff = tasks.Select(x => x.Result.ReadAsSync()).ToList();
 
-            return new Tuple<DC.Document, ServiceClientResponse<DC.Document>>(doc, resp);
+        //    return new Tuple<DC.Document, ServiceClientResponse<DC.Document>>(doc, resp);
             
-        }
+        //}
 
         class PropCompare : IEqualityComparer<Models.CMS.Admin.DocumentProperty>
         {

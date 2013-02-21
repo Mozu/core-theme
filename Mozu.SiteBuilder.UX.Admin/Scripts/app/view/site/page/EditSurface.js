@@ -519,7 +519,13 @@
         },
 
         bindMetadata: function () {
-            this.documentData = Ext.decode(Ext.get(this.iframe.getDoc().body).getAttribute('data-editing-document'));
+            var doc = this.iframe.getDoc(),
+                widgetNodelList = doc.querySelectorAll('[data-editing-widget]'),
+                widgetRawArray = [];
+            
+            this.documentData = Ext.decode(Ext.get(doc.body).getAttribute('data-editing-document'));
+            Ext.each(widgetNodelList, function (item) { widgetRawArray.push(JSON.parse(item.getAttribute('data-editing-widget'))); });
+            this.widgets.loadData(widgetRawArray);
         },
 
 

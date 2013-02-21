@@ -249,7 +249,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             });
             return;
         }
-        me.launchLoadedEditor(record);
+        me.launchLoadedEditor(record, options);
     },
     launchLoadedEditor: function(record, options){
         var me = this,
@@ -302,11 +302,15 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     },
 
     onItemClick: function (view, record, elm, index, e) {
+        var metaData = { id: record.getId() };
         // console.log(e.target);
         if (e.target.className === 'taco-launch-editor') {
             e.preventDefault();
-            this.launchEditor(record);
-            Taco.app.StateManager.addState(this.token + '/edit/' + record.getId(), { id: record.getId() });
+            if (e.target) {
+                metaData = Ext.apply(metaData, e.target.dataset);
+            }
+            this.launchEditor(record, metaData);
+            Taco.app.StateManager.addState(this.token + '/edit/' + record.getId(), metaData);
         }
     },
 

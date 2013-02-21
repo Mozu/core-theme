@@ -42,6 +42,7 @@ Ext.define('Taco.view.product.Index', {
         }, {
             dataIndex: 'productInSites',
             text: 'Sites',
+            sortable:false,
             width: 120,
             renderer: function (value) {
                 return !Ext.isEmpty(value) ? value.length : '--';
@@ -49,6 +50,7 @@ Ext.define('Taco.view.product.Index', {
         }, {
             dataIndex: 'productInSites',
             text: 'Overridden',
+            sortable: false,
             width: 100,
             renderer: function (value) {
                 var output;

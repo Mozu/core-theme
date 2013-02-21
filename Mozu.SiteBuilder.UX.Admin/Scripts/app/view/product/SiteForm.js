@@ -66,12 +66,18 @@ Ext.define('Taco.view.product.SiteForm', {
         ];
 
         this.callParent(arguments);
+        
+
+
 
         this.on({
-            overrideCountChange: this.handleOverrideChange,
+            overrideChange: this.handleOverrideChange,
             scrollspy: this.updateScrollPosition,
+            render:this.handleOverrideChange,
+                
             scope: this
         });
+       // this.handleOverrideChange();
     },
 
     constructor: function () {
@@ -81,18 +87,16 @@ Ext.define('Taco.view.product.SiteForm', {
     },
 
     /**
-     * @private
-     * @param {int} delta
      *
-     * Event handler called when this container receives an 'overrideCountChange' event.
+     * Event handler called when this container receives an 'overrideChange' event.
      * This can be used to notify the tab when to change it's appearance to reflect the
      * fact that it contains an overridden fieldset.
      */
-    handleOverrideChange: function ( delta ) {
-        var tab = this.getTabComponent();
-        if( tab ) {
-            this.overrideCount += delta;
-            if( this.overrideCount ) {
+    handleOverrideChange: function (  ) {
+        var tab = this.getTabComponent(),
+            isOverridden = this.productInSiteInfo.get('isContentOverridden') || this.productInSiteInfo.get('isPriceOverridden') || this.productInSiteInfo.get('isSeoOverridden');
+        if (tab) {
+            if (isOverridden) {
                 tab.addCls(Taco.baseCSSPrefix + 'has-overrides');
             } else {
                 tab.removeCls(Taco.baseCSSPrefix + 'has-overrides');

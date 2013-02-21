@@ -64,7 +64,7 @@ using System.Runtime.Serialization;
         public string Output { get; set; }
     }
     [DataContract()]
-    public class WidgetRuntimeData : WidgetInstanceData, IModelMetadataParentContainer, IModelMetadataContainer, Mozu.SiteBuilder.UX.Models.IAlternateNamingValueContainer
+    public class WidgetRuntimeData : WidgetInstanceData, IModelMetadataParentContainer, IModelMetadataContainer, Mozu.SiteBuilder.UX.Models.IAlternateNamingValueContainer, ICmsMetaDataExtrator
     {
 
         public WidgetDefinition Definition { get; set; }
@@ -106,6 +106,30 @@ using System.Runtime.Serialization;
             {
                 return this.GetAlternateNamedValue(key);
             }
+        }
+
+        public ModelMetadata GetCmsModelMetadata(string expression)
+        {
+            var parts = expression.Split('.');
+            if (parts.Length < 2 && !string.Equals( parts[2] , "config", StringComparison.OrdinalIgnoreCase ))
+            {
+                return null;
+            }
+            var mmd = new ModelMetadata(ModelMetadataProviders.Current, this.GetType(), () => "na", typeof(string), expression);
+            
+            mmd.AdditionalValues["data-attribute-name"] = "data-editing-element";
+
+            mmd.AdditionalValues["id"] = this.Id ;
+            mmd.AdditionalValues["entityType"] = "widget";
+            mmd.AdditionalValues["fieldName"] = expression.Split('.').Last();
+            
+            // mmd.AdditionalValues["data-editing"] = jobj;
+            
+            
+
+
+            return mmd;
+
         }
     }
     [DataContract()]
