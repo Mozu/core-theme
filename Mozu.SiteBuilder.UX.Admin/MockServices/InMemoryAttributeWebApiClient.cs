@@ -1,105 +1,114 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.Caching;
 using System.Threading.Tasks;
+using Mozu.Core;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.ProductAdmin.Contracts.Clients;
-using System.Collections.Concurrent;
+using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.MockServices
 {
-    using ProductAdmin.Contracts;
-
     public interface IMoreAwesomeAttributeWebApiClient : IAttributeWebApiClient
     {
     }
 
-    public class InMemoryAttributeWebApiClient : IMoreAwesomeAttributeWebApiClient
+    public class AttributeRepo
     {
-        private readonly IDictionary<string, AttributeTypeRule> _attributeTypeRules;
-        private readonly IDictionary<string, Attribute> _attributes;
-        private readonly IDictionary<string, List<AttributeVocabularyValue>> _attributeVocabularyValues;
+        public readonly List<DC.Attribute> Attributes = new List<DC.Attribute>();
+        public readonly List<DC.AttributeTypeRule> AttributeTypeRules = new List<DC.AttributeTypeRule>();
+        public readonly ConcurrentDictionary<string, List<DC.AttributeVocabularyValue>> AttributeVocabularyValues = new ConcurrentDictionary<string, List<DC.AttributeVocabularyValue>>();
+    }
 
-        public InMemoryAttributeWebApiClient()
+    public class InMemoryAttributeWebApiClient : AbstractInMemoryResourceApiClient<AttributeRepo>, IMoreAwesomeAttributeWebApiClient
+    {
+        private const string CACHE_KEY_FORMAT_STRING = "_product_attributes_{0}_{1}";
+        private IApiContext _ctx;
+
+        /// <summary>
+        /// Cache key for the repository. Tied to current tenant/site group.
+        /// </summary>
+        protected override string CacheKey { get { return String.Format(CACHE_KEY_FORMAT_STRING, _ctx.TenantId, _ctx.SiteGroupId); } }
+
+        /// <summary>
+        /// Public constructor
+        /// </summary>
+        /// <param name="ctx"></param>
+        public InMemoryAttributeWebApiClient(IApiContext ctx, ObjectCache cache = null) : base(cache)
         {
-            _attributeTypeRules = new ConcurrentDictionary<string, AttributeTypeRule>();
-            _attributes = new ConcurrentDictionary<string, Attribute>();
-            _attributeVocabularyValues = new ConcurrentDictionary<string, List<AttributeVocabularyValue>>();
+            _ctx = ctx;
         }
 
         public ConfigOptions Options { get; set; }
 
         public IServiceClientMessageHandler Handler { get; set; }
 
-        public Task<ServiceClientResponse<AttributeTypeRuleCollection>> GetAttributeTypeRules(int? startIndex = null, int? pageSize = null, string sortBy = null, string responseGroups = null, string filter = null, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        public Task<ServiceClientResponse<DC.AttributeTypeRuleCollection>> GetAttributeTypeRules(int? startIndex = null, int? pageSize = null, string sortBy = null, string responseGroups = null, string filter = null, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
-            return TaskCollection<AttributeTypeRule, AttributeTypeRuleCollection>(_attributeTypeRules.Values);
+            return TaskCollection<DC.AttributeTypeRule, DC.AttributeTypeRuleCollection>(Repository.AttributeTypeRules);
         }
 
-        public Task<ServiceClientResponse<AttributeCollection>> GetAttributes(int? startIndex = null, int? pageSize = null, string sortBy = null, string responseGroups = null, string filter = null, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        public Task<ServiceClientResponse<DC.AttributeCollection>> GetAttributes(int? startIndex = null, int? pageSize = null, string sortBy = null, string responseGroups = null, string filter = null, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
-            return TaskCollection<Attribute, AttributeCollection>(_attributes.Values);
+            return TaskCollection<DC.Attribute, DC.AttributeCollection>(Repository.Attributes);
         }
 
-        public Task<ServiceClientResponse<Attribute>> GetAttribute(string attributeFQN, string responseGroups = null, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        public Task<ServiceClientResponse<DC.Attribute>> GetAttribute(string attributeFQN, string responseGroups = null, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
-            Attribute attribute;
-            return Task(_attributes.TryGetValue(attributeFQN, out attribute) ? attribute : default(Attribute));
+            return Task(Repository.Attributes.FirstOrDefault(a => a.AttributeFQN == attributeFQN));
         }
 
-        public Task<ServiceClientResponse<AttributeVocabularyValueCollection>> GetAttributeVocabularyValues(string attributeFQN, string responseGroups = null, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        public Task<ServiceClientResponse<DC.AttributeVocabularyValueCollection>> GetAttributeVocabularyValues(string attributeFQN, string responseGroups = null, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
-            return TaskCollection<AttributeVocabularyValue, AttributeVocabularyValueCollection>(_attributeVocabularyValues.SelectMany(x => x.Value));
+            return TaskCollection<DC.AttributeVocabularyValue, DC.AttributeVocabularyValueCollection>(Repository.AttributeVocabularyValues.SelectMany(x => x.Value));
         }
 
-        public Task<ServiceClientResponse<Attribute>> AddAttribute(Attribute attribute, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        public Task<ServiceClientResponse<DC.Attribute>> AddAttribute(DC.Attribute attribute, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
-            _attributes.Add(attribute.AttributeFQN, attribute);
+            Repository.Attributes.Add(attribute);
             return Task(attribute);
         }
 
-        public Task<ServiceClientResponse<AttributeVocabularyValue>> AddAttributeVocabularyValue(AttributeVocabularyValue attributeValue, string attributeFQN, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        public Task<ServiceClientResponse<DC.AttributeVocabularyValue>> AddAttributeVocabularyValue(DC.AttributeVocabularyValue attributeValue, string attributeFQN, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
-            List<AttributeVocabularyValue> list;
-            if (_attributeVocabularyValues.TryGetValue(attributeFQN, out list))
+            List<DC.AttributeVocabularyValue> list = Repository.AttributeVocabularyValues.GetOrAdd(attributeFQN, new List<DC.AttributeVocabularyValue>());
+            list.Add(attributeValue);
+
+            return Task(attributeValue);
+        }
+
+        public Task<ServiceClientResponse<DC.Attribute>> UpdateAttribute(DC.Attribute attribute, string atributeFQN, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        {
+            int index = Repository.Attributes.FindIndex(a => a.AttributeFQN == atributeFQN);
+            Repository.Attributes[index] = attribute;
+
+            return Task(attribute);
+        }
+
+        public Task<ServiceClientResponse<List<DC.AttributeVocabularyValue>>> UpdateAttributeVocabularyValues(List<DC.AttributeVocabularyValue> attributeValue, string attributeFQN, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        {
+            if (Repository.AttributeVocabularyValues.ContainsKey(attributeFQN))
             {
-                list.Add(attributeValue);
+                Repository.AttributeVocabularyValues[attributeFQN] = attributeValue;
             }
             else
             {
-                _attributeVocabularyValues.Add(attributeFQN, new List<AttributeVocabularyValue> { attributeValue });
+                Repository.AttributeVocabularyValues.TryAdd(attributeFQN, attributeValue);
             }
             return Task(attributeValue);
         }
 
-        public Task<ServiceClientResponse<Attribute>> UpdateAttribute(Attribute attribute, string atributeFQN, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
-        {
-            _attributes[atributeFQN] = attribute;
-            return Task(attribute);
-        }
-
-        public Task<ServiceClientResponse<List<AttributeVocabularyValue>>> UpdateAttributeVocabularyValues(List<AttributeVocabularyValue> attributeValue, string attributeFQN, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
-        {
-            if (_attributeVocabularyValues.ContainsKey(attributeFQN))
-            {
-                _attributeVocabularyValues[attributeFQN] = attributeValue;
-            }
-            else
-            {
-                _attributeVocabularyValues.Add(attributeFQN, attributeValue);
-            }
-            return Task(attributeValue);
-        }
-
-        public Task<ServiceClientResponse<AttributeVocabularyValue>> UpdateAttributeVocabularyValue(AttributeVocabularyValue attributeValue, string attributeFQN, string value, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        public Task<ServiceClientResponse<DC.AttributeVocabularyValue>> UpdateAttributeVocabularyValue(DC.AttributeVocabularyValue attributeValue, string attributeFQN, string value, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
             var updatedAttribute = attributeValue;
             updatedAttribute.Value = value;
 
-            List<AttributeVocabularyValue> list;
-            if (_attributeVocabularyValues.TryGetValue(attributeFQN, out list))
+            List<DC.AttributeVocabularyValue> list;
+            if (Repository.AttributeVocabularyValues.TryGetValue(attributeFQN, out list))
             {
                 var index = list.FindIndex(x => x.Value == attributeValue.Value);
                 list.RemoveAt(index);
@@ -112,19 +121,22 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
             return Task(attributeValue);
         }
 
-        public Task<ServiceClientResponse<StreamContent>> DeleteAttribute(string AttributeFQN, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        public Task<ServiceClientResponse<StreamContent>> DeleteAttribute(string attributeFQN, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
-            _attributes.Remove(AttributeFQN);
-            _attributeVocabularyValues.Remove(AttributeFQN);
+            Repository.Attributes.RemoveAll(a => a.AttributeFQN == attributeFQN);
+            
+            List<DC.AttributeVocabularyValue> nil;
+            Repository.AttributeVocabularyValues.TryRemove(attributeFQN, out nil);
+
             return Task(default(StreamContent));
         }
 
         public Task<ServiceClientResponse<StreamContent>> DeleteAttributeValue(string attributeFQN, string value, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
-            List<AttributeVocabularyValue> list;
-            if (_attributeVocabularyValues.TryGetValue(attributeFQN, out list))
+            List<DC.AttributeVocabularyValue> list;
+            if (Repository.AttributeVocabularyValues.TryGetValue(attributeFQN, out list))
             {
-                list.RemoveAll(x => x.Value == value);
+                list.RemoveAll(x => (string)x.Value == value);
                 list.RemoveAll(x => x.Content.StringValue == value);
             }
             return Task(default(StreamContent));

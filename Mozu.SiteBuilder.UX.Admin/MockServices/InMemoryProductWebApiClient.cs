@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Caching;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.ProductAdmin.Contracts.Clients;
@@ -22,10 +20,15 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
     /// Mocks IProductWebApiClient to store Products in the HttpRuntime.Cache
     /// </summary>
     [Obsolete]
-    public class InMemoryProductWebApiClient : IMoreAwesomeProductWebApiClient
+    public class InMemoryProductWebApiClient : AbstractInMemoryResourceApiClient<List<DC.Product>>, IMoreAwesomeProductWebApiClient
     {
-        private const string PRODUCTS_CACHE_FORMAT_STRING = "_products_{0}";
+        private const string PRODUCTS_CACHE_FORMAT_STRING = "_products_{0}_{1}";
         private IApiContext _ctx;
+
+        /// <summary>
+        /// Cache key for the repository. Tied to current tenant/site group.
+        /// </summary>
+        protected override string CacheKey { get { return String.Format(PRODUCTS_CACHE_FORMAT_STRING, _ctx.TenantId, _ctx.SiteGroupId); } }
 
         /// <summary>
         /// Implements IMoreAwesomeProductWebApiClient
@@ -45,11 +48,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// </summary>
         public Task<ServiceClientResponse<DC.Product>> GetProductByProductCode(string productCode, string responseGroups = null)
         {
-            var repo = ProductRepository;
             DC.Product prod;
-            lock (repo)
+            lock (Repository)
             {
-                prod = repo.FirstOrDefault(p => p.ProductCode == productCode);
+                prod = Repository.FirstOrDefault(p => p.ProductCode == productCode);
             }
 
             return (new TestResponse<DC.Product>(prod)).Task;
@@ -61,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         public Task<ServiceClientResponse<DC.ProductCollection>> GetProducts(int? startIndex = null, int? pageSize = null, string sortBy = null, string responseGroups = null, string filter = null)
         {
             // ignore all paging and sorting parameters, because fuck it.
-            DC.ProductCollection returnCol = new DC.ProductCollection { Items = ProductRepository.ToList() };
+            DC.ProductCollection returnCol = new DC.ProductCollection { Items = Repository.ToList() };
 
             return (new TestResponse<DC.ProductCollection>(returnCol)).Task;
         }
@@ -71,44 +73,12 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// </summary>
         public Task<ServiceClientResponse<DC.Product>> UpdateProduct(DC.Product product, string productCode)
         {
-            var repo = ProductRepository;
-            lock (repo)
+            lock (Repository)
             {
-                var idx = repo.FindIndex(x => x.ProductCode == productCode);
-                repo[idx] = product;
+                var idx = Repository.FindIndex(x => x.ProductCode == productCode);
+                Repository[idx] = product;
             }
             return (new TestResponse<DC.Product>(product)).Task;
-        }
-
-        /// <summary>
-        /// Returns the product repository (which is backed by HttpRuntimeCache) for this tenant.
-        /// TODO: This is a lot of logic for a property. Then again, this is throwaway code.
-        /// </summary>
-        private List<DC.Product> ProductRepository
-        {
-            get
-            {
-                string key = String.Format(PRODUCTS_CACHE_FORMAT_STRING, _ctx.TenantId);
-
-                List<DC.Product> existingRepo = (List<DC.Product>)HttpRuntime.Cache[key];
-                if (existingRepo == null)
-                {
-                    existingRepo = new List<DC.Product>();
-                    HttpRuntime.Cache.Add(key, existingRepo, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.NotRemovable, null);
-                }
-
-                // if the repository is empty, fill it with mock data.
-                lock (existingRepo)
-                {
-                    if (existingRepo.Count == 0)
-                    {
-                        int currentSiteId = _ctx.SiteId.HasValue ? _ctx.SiteId.Value : 0;
-                        InitializeRepoWithMockData(existingRepo, currentSiteId);
-                    }
-                }
-
-                return existingRepo;
-            }
         }
 
         /// <summary>
@@ -116,10 +86,9 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// </summary>
         public Task<ServiceClientResponse<DC.Product>> AddProduct(DC.Product product)
         {
-            var repo = ProductRepository;
-            lock (repo)
+            lock (Repository)
             {
-                repo.Add(product);
+                Repository.Add(product);
             }
 
             return (new TestResponse<DC.Product>(product)).Task;
@@ -130,14 +99,9 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// </summary>
         public Task<ServiceClientResponse<StreamContent>> DeleteProduct(string productCode)
         {
-            var repo = ProductRepository;
-            lock (repo)
+            lock (Repository)
             {
-                int idx = repo.FindIndex(x => x.ProductCode == productCode);
-                if (idx < 0)
-                    throw new ArgumentException("Product not found: " + productCode);
-
-                repo.RemoveAt(idx);
+                Repository.RemoveAll(x => x.ProductCode == productCode);
             }
 
             return (new TestResponse<StreamContent>(null)).Task;
@@ -147,8 +111,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// <summary>
         /// Initializes some mock product data for the ui team's delight.
         /// </summary>
-        private static void InitializeRepoWithMockData(List<DC.Product> repo, int siteIdToOverride)
+        protected override void InitializeRepoWithMockData(List<DC.Product> repo)
         {
+            int siteIdToOverride = _ctx.SiteId.HasValue ? _ctx.SiteId.Value : 0;
+
             DC.Product p1 = new DC.Product
             {
                 ProductCode = "KT-001",

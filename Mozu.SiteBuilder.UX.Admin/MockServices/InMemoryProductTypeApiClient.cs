@@ -20,10 +20,15 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
     /// <summary>
     /// Mocks IProductTypeWebApiClient to store ProductTypes in the HttpRuntime.Cache
     /// </summary>
-    public class InMemoryProductTypeWebApiClient : IMoreAwesomeProductTypeWebApiClient
+    public class InMemoryProductTypeWebApiClient : AbstractInMemoryResourceApiClient<List<DC.ProductType>>, IMoreAwesomeProductTypeWebApiClient
     {
-        private const string PRODUCT_TYPE_CACHE_FORMAT_STRING = "_productTypes_{0}";
+        private const string PRODUCT_TYPE_CACHE_FORMAT_STRING = "_product_types_{0}_{1}";
         private IApiContext _ctx;
+
+        /// <summary>
+        /// Cache key for the repository. Tied to current tenant/site group.
+        /// </summary>
+        protected override string CacheKey { get { return String.Format(PRODUCT_TYPE_CACHE_FORMAT_STRING, _ctx.TenantId, _ctx.SiteGroupId); } }
 
         /// <summary>
         /// Implements IMoreAwesomeProductTypeWebApiClient
@@ -43,11 +48,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// </summary>
         public Task<ServiceClientResponse<DC.ProductType>> GetProductType(int? productTypeId, Core.Api.Contracts.TargetContextLevelType targetContextLevel = Core.Api.Contracts.TargetContextLevelType.NotSpecified)
         {
-            var repo = ProductTypeRepository;
             DC.ProductType prod;
-            lock (repo)
+            lock (Repository)
             {
-                prod = repo.FirstOrDefault(p => p.Id == productTypeId);
+                prod = Repository.FirstOrDefault(p => p.Id == productTypeId);
             }
 
             return (new TestResponse<DC.ProductType>(prod)).Task;
@@ -58,7 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// </summary>
         public Task<ServiceClientResponse<DC.ProductTypeCollection>> GetProductTypes(int? startIndex = null, int? pageSize = null, string sortBy = null, string responseGroups = null, string filter = null, Core.Api.Contracts.TargetContextLevelType targetContextLevel = Core.Api.Contracts.TargetContextLevelType.NotSpecified)
         {
-            var items = ProductTypeRepository.ToList();
+            var items = Repository.ToList();
 
             // ignore all paging and sorting parameters, because fuck it.
             DC.ProductTypeCollection returnCol = new DC.ProductTypeCollection { Items = items, TotalCount = items.Count };
@@ -71,12 +75,11 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// </summary>
         public Task<ServiceClientResponse<DC.ProductType>> AddProductType(DC.ProductType productType, Core.Api.Contracts.TargetContextLevelType targetContextLevel = Core.Api.Contracts.TargetContextLevelType.NotSpecified)
         {
-            var repo = ProductTypeRepository;
-            lock (repo)
+            lock (Repository)
             {
-                int maxId = repo.Select(pt => (int)pt.Id).Max();
+                int maxId = Repository.Select(pt => (int)pt.Id).Max();
                 productType.Id = maxId + 1;
-                repo.Add(productType);
+                Repository.Add(productType);
             }
 
             return (new TestResponse<DC.ProductType>(productType)).Task;
@@ -87,12 +90,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// </summary>
         public Task<ServiceClientResponse<DC.ProductType>> UpdateProductType(DC.ProductType productType, int? productTypeId, Core.Api.Contracts.TargetContextLevelType targetContextLevel = Core.Api.Contracts.TargetContextLevelType.NotSpecified)
         {
-            var repo = ProductTypeRepository;
-
-            lock (repo)
+            lock (Repository)
             {
-                int indexOfExisting = repo.FindIndex(pt => pt.Id == productTypeId);
-                repo[indexOfExisting] = productType;
+                int indexOfExisting = Repository.FindIndex(pt => pt.Id == productTypeId);
+                Repository[indexOfExisting] = productType;
             }
 
             return (new TestResponse<DC.ProductType>(productType)).Task;
@@ -103,50 +104,18 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         /// </summary>
         public Task<ServiceClientResponse<StreamContent>> DeleteProductType(int? productTypeId, Core.Api.Contracts.TargetContextLevelType targetContextLevel = Core.Api.Contracts.TargetContextLevelType.NotSpecified)
         {
-            var repo = ProductTypeRepository;
-
-            lock (repo)
+            lock (Repository)
             {
-                repo.RemoveAll(pt => pt.Id == productTypeId);
+                Repository.RemoveAll(pt => pt.Id == productTypeId);
             }
 
             return (new TestResponse<StreamContent>(null)).Task;
         }
 
         /// <summary>
-        /// Returns the ProductType repository (which is backed by HttpRuntimeCache) for this tenant.
-        /// </summary>
-        private List<DC.ProductType> ProductTypeRepository
-        {
-            get
-            {
-                string key = String.Format(PRODUCT_TYPE_CACHE_FORMAT_STRING, _ctx.TenantId);
-
-                List<DC.ProductType> existingRepo = (List<DC.ProductType>)HttpRuntime.Cache[key];
-                if (existingRepo == null)
-                {
-                    existingRepo = new List<DC.ProductType>();
-                    HttpRuntime.Cache.Add(key, existingRepo, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.NotRemovable, null);
-                }
-
-                // if the repository is empty, fill it with mock data.
-                lock (existingRepo)
-                {
-                    if (existingRepo.Count == 0)
-                    {
-                        int currentSiteId = _ctx.SiteId.HasValue ? _ctx.SiteId.Value : 0;
-                        InitializeRepoWithMockData(existingRepo, currentSiteId);
-                    }
-                }
-
-                return existingRepo;
-            }
-        }
-
-        /// <summary>
         /// Initializes some mock product data for the ui team's delight.
         /// </summary>
-        private static void InitializeRepoWithMockData(List<DC.ProductType> repo, int siteIdToOverride)
+        protected override void InitializeRepoWithMockData(List<DC.ProductType> repo)
         {
             DC.ProductType p1 = new DC.ProductType
             {
