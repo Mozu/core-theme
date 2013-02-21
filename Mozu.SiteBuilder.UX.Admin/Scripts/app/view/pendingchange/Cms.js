@@ -14,7 +14,8 @@ Ext.define('Taco.view.pendingchange.Cms', {
     publishAllText: "Publish All",
     
     publishAll: function (type) {
-        var me = this;        me.store.publishAll(type, function () {
+        var me = this;
+        me.store.publishAll(type, function () {
             var notice = type ? 'All ' + type + ' changes published!' : 'All changes published!'
             Taco.app.fireEvent('setmessage', notice, 'success');
             me.store.reload();
@@ -42,14 +43,14 @@ Ext.define('Taco.view.pendingchange.Cms', {
             },
             initComponent: function () {
                 var me;
-                this.menu = new Ext.menu.Menu({
-                    plain: true,
+                this.createMenu({
                     items: [
-                    { plain: true, text: 'Publish all pages and templates', handler: function () { me.publishAll(); } },
-                    { plain: true, text: 'Publish all pages', handler: function () { me.publishAll('page'); } },
-                    { plain: true, text: 'Publish all templates', handler: function () { me.publishAll('template'); } }
+                    { text: 'Publish all pages and templates', handler: function () { me.publishAll(); } },
+                    { text: 'Publish all pages', handler: function () { me.publishAll('page'); } },
+                    { text: 'Publish all templates', handler: function () { me.publishAll('template'); } }
                     ]
                 });
+
                 this.callParent(arguments);
                 this.on('boxready', function () {
                     me = this.getParentPage();
