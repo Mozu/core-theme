@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.pendingchange.Cms', {
     extend: 'Taco.core.ux.browser.BrowserPage',
-    requires: ['Taco.model.CmsDocumentDraft', 'Taco.store.CmsDocumentDrafts'],
+    requires: ['Taco.model.CmsDocumentDraft', 'Taco.store.CmsDocumentDrafts', 'Taco.core.ux.action.PrimarySplitButton'],
 
     typeName: 'Pending Changes',
     modelName: 'Taco.model.CmsDocumentDraft',
@@ -12,6 +12,14 @@ Ext.define('Taco.view.pendingchange.Cms', {
     useTilePanel: false,
 
     publishAllText: "Publish All",
+    
+    publishAll: function (type) {
+        var me = this;        me.store.publishAll(type, function () {
+            var notice = type ? 'All ' + type + ' changes published!' : 'All changes published!'
+            Taco.app.fireEvent('setmessage', notice, 'success');
+            me.store.reload();
+        });
+    },
 
     header: {
         actions: [
@@ -21,26 +29,38 @@ Ext.define('Taco.view.pendingchange.Cms', {
             listeners: {
                 click: function () { console.log(this, arguments); }
             }
-        },{
-            xtype: 'primarybutton',
+        }, {
+            xtype: 'primarysplitbutton',
             itemId: 'publishAll',
             text: '',
-            tpl: ['<span>{text} <em>({count} items)</em></span>'],
-            listeners: {
-                click: function () {
-                    var me = this;
-                    this.store.publishAll(function () {
-                        me.fireEvent('setmessage', 'All changes published!', 'success');
-                        me.store.reload();
-                    });
-                }
+            textTpl: new Ext.XTemplate('<span>{text} <em>({count} items)</em></span>'),
+            handler: function() {
+                this.getParentPage().publishAll();
+            },
+            updateCount: function (obj) {
+                this.setText([this.textTpl.apply(obj)]);
+            },
+            initComponent: function () {
+                var me;
+                this.menu = new Ext.menu.Menu({
+                    items: [
+                    { text: 'Publish all pages and templates', handler: function () { me.publishAll(); } },
+                    { text: 'Publish all pages', handler: function () { me.publishAll('page'); }},
+                    { text: 'Publish all templates', handler: function () { me.publishAll('template'); } }
+                    ]
+                });
+                this.callParent(arguments);
+                this.on('boxready', function () {
+                    me = this.getParentPage();
+                });
             }
+
         }]
     },
 
     updateChangeCount: function () {
         this.publishButton = this.publishButton || this.header.getActions().getComponent('publishAll');
-        this.publishButton.update({ text: this.publishAllText, count: this.store.count() });
+        this.publishButton.updateCount({ text: this.publishAllText, count: this.store.count() });
     },
 
     initComponent: function() {

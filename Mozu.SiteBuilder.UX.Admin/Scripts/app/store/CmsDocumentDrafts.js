@@ -25,13 +25,13 @@
             Ext.Ajax.request({
                 url: url,
                 method: "POST",
-                data: type ? { type: type } : '',
+                params: type ? { type: type } : '',
                 success: function (response) {
                     me.reload();
                     if (cb) cb(response);
                 },
                 failure: function (response) {
-                    console.log("Error publishing general settings!", response);
+                    console.log("Error publishing drafts!", response);
                 }
             });
         },
@@ -48,7 +48,7 @@
                     if (cb) cb(response);
                 },
                 failure: function (response) {
-                    console.log("Error publishing general settings!", response);
+                    console.log("Error discarding drafts!", response);
                 }
             });
         },
