@@ -18,6 +18,21 @@ Ext.define('Taco.core.data.Model', {
         return me.callParent(arguments);
     },
 
+
+    isEqual: function (a, b) {
+        
+        if (Ext.isDate(a) && Ext.isDate(b)) {
+            return Ext.Date.isEqual(a, b);
+        }
+        
+        var ret = this.callParent(arguments);
+        if (!ret && Ext.isObject(a) && Ext.isObject(b) && a.$className == undefined && b.$className == undefined) {
+            return Ext.encode(a) == Ext.encode(b);
+        }
+        return ret;
+    },
+    
+
     
     afterEdit: function (modifiedFieldNames) {
         this.callParent(arguments);

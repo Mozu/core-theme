@@ -401,10 +401,21 @@
         },
         onEdit: function (value, props) {
             var me = this,
-                key, doc, product;
+                key, doc, product, widget, parts, widgetConfig;
 
             switch (props.entityType) {
-                case "cms":
+                case "widget":
+                    widget = this.widgets.getById(props.id);
+                    parts = props.fieldName.split('.');
+                    if (parts.length > 1) {
+                        Ext.raise('tbd');
+                    }
+                    //widgetConfig = Ext.apply({}, widget.get('config') || {});
+                    widgetConfig = widget.get('config') || {};
+                    widgetConfig[props.fieldName] = value;
+                    widget.set('config', widgetConfig);
+                    break;
+            case "cms":
                     if (Ext.isObject(value)) {
                         value = Ext.JSON.encode(value);
                     }

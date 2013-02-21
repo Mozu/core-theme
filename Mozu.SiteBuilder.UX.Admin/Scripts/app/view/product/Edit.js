@@ -15,25 +15,7 @@ Ext.define('Taco.view.product.Edit', {
     formCls: 'Taco.view.product.Form',
 
     initComponent: function () {
-
-        this.additionalActions = [{
-            xtype: 'action',
-            text: 'Add to Site',
-            click: function () {
-                var siteId = prompt("Enter a siteID");
-                this.form.addSite(siteId);
-            },
-            scope: this
-        }, {
-            xtype: 'action',
-            text: 'Remove from Site',
-            click: function () {
-                var siteId = prompt("Enter a siteID");
-                this.form.removeSite(siteId);
-            },
-            scope: this
-        }];
-
+        this.formCfg = Ext.apply(this.formCfg || {}, { options: this.options });
         this.callParent(arguments);
     }
 });

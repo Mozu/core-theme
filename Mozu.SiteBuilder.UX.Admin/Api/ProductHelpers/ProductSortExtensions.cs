@@ -13,8 +13,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers
         private const string PRODUCT_CODE_PROPERTY = "productCode";
         private const string GLOBAL_PRODUCT_NAME_PROPERTY = "content.productName";
         private const string GLOBAL_PRICE_PROPERTY = "price.price";
+        private const string GLOBAL_SALE_PRICE_PROPERTY = "price.saleprice";
         private const string SITE_PRODUCT_NAME_PROPERTY = "productinsites.content.productName";
         private const string SITE_PRICE_PROPERTY = "productinsites.price.price";
+        private const string SITE_SALE_PRICE_PROPERTY = "productinsites.price.saleprice";
         private const string CATEGORY_ID_PROPERTY = "productinsites.productcategories.categoryId";
         private const string IS_ACTIVE_PROPERTY = "productinsites.isActive";
         private const string STOCK_ON_HAND_PROPERTY = "stockOnHand";
@@ -57,9 +59,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers
 
                         break;
                     case "saleprice":
-                    case "price":
+                        sb.Append(useSiteContext ? SITE_SALE_PRICE_PROPERTY : GLOBAL_SALE_PRICE_PROPERTY);
+                        break;
+                        case "price":
                         sb.Append(useSiteContext ? SITE_PRICE_PROPERTY : GLOBAL_PRICE_PROPERTY);
-
                         break;
                     case "productcode":
                         sb.Append(PRODUCT_CODE_PROPERTY);

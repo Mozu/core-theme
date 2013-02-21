@@ -41,6 +41,7 @@ Ext.define('Taco.view.product.Form', {
         this.tabPanel = Ext.create('Taco.core.ux.tab.Panel', {
             navigation: true,
             items: tabItems,
+            activeItem: this.getInitialTab(tabItems),
             pickerCfg: {
                 data: this.siteCollection.sites
             }
@@ -63,7 +64,26 @@ Ext.define('Taco.view.product.Form', {
             tabclose: this.onTabClose,
             scope: this
         });
+        
     },
+    
+    getInitialTab: function (tabItems) {
+        var selectedTabIndex = 0, initSiteId = (this.options && this.options.siteId) ? this.options.siteId : Taco.app.context.getSiteId();
+        if (initSiteId) {
+            Ext.each(tabItems, function(x, index) {
+                if (x.siteId == initSiteId) {
+                    selectedTabIndex = index;
+                }
+            });
+            
+           
+        }
+        return selectedTabIndex;
+
+
+    },
+    
+
 
     /**
      * Will remove all the Site tabs (but not global) and rebuild all the forms

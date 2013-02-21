@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var tasks = _cmsService.Create(docs);
             Task.WaitAll(tasks.ToArray ());
-            var response = tasks.Select(x => x.Result.Item1).Select(ConvertDocument).ToList();
+            var response = tasks.Select(x => x.Result.ReadAsSync()).Select(ConvertDocument).ToList();
 
             return List(response);
         }

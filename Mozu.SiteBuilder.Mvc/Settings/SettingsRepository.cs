@@ -49,8 +49,14 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                     if (settings == null)
                     {
                         var res = _generalSettingsWebApiClient.GetGeneralSettings(null).Result;
-                        settings = Mapper.Map<UX.Models.Settings.GeneralSettings>(res.ReadAsSync());
-
+                        try
+                        {
+                            settings = Mapper.Map<UX.Models.Settings.GeneralSettings>(res.ReadAsSync());
+                        }
+                        catch 
+                        {
+                            settings = new UX.Models.Settings.GeneralSettings();
+                        }
                         System.Web.HttpRuntime.Cache.Insert(key, settings, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 0, 3));
                     }
                     return settings;

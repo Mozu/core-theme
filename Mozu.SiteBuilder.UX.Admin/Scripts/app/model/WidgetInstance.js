@@ -37,6 +37,14 @@ Ext.define('Taco.model.WidgetInstance', {
         type: 'string',
         persist: false
     }],
+    get: function (field) {
+        
+        var value = this.callParent(arguments);
+        if (value && field == 'config') {
+            return Ext.apply({}, value);
+        }
+        return value;
+    },
     proxy: {
         type: 'ajaxproxy',
         api: {

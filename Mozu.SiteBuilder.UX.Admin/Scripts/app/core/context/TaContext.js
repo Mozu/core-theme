@@ -122,23 +122,23 @@ Ext.define('Taco.core.context.TaContext', {
     },
 
     getSiteId: function () {
-        if (this == this.getContext()) {
+        if (this == this.getCurrentContext()) {
             if (this.siteCollections.length == 1) {
                 return this.siteCollections[0].getSiteId();
             }
             return null;
         }
-        return this.getContext().getSiteId();
+        return this.getCurrentContext().getSiteId();
     },
    
     getSiteGroupId: function () {
-        if (this == this.getContext()) {
+        if (this == this.getCurrentContext()) {
             if (this.siteCollections.length == 1) {
                 return this.siteCollections[0].getSiteId();
             }
             return null;
         }
-        return this.getContext().getSiteId();
+        return this.getCurrentContext().getSiteId();
     },
 
     getStore: function() {
