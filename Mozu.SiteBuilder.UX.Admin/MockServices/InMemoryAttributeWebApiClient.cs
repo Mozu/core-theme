@@ -85,7 +85,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
 
         public Task<ServiceClientResponse<DC.Attribute>> AddAttribute(DC.Attribute attribute, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
-            Repository.Attributes.Add(attribute);
+            lock (Repository)
+            {
+                Repository.Attributes.Add(attribute);
+            }
             return Task(attribute);
         }
 
