@@ -2,8 +2,8 @@
  * @class Taco.model.Attribute
  */
 Ext.define('Taco.model.ProductType', {
-    requires: ['Taco.model.ProductTypeAttribute'],
     extend: 'Taco.core.data.Model',
+    requires: ['Taco.model.ProductTypeAttribute'],
     fields: [
         { name: 'id', type: 'auto' },
         { name: 'name', type: 'string' },

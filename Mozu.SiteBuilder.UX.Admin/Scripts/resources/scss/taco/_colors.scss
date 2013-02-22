@@ -34,8 +34,8 @@ $color-neutral-black: rgb(0, 0, 0);
 
 $color-highlighted-background: rgb(112, 210, 219);
 $color-highlighted-background-light: rgb(189, 249, 255);
-$color-highlighted-foreground: #FFF;
-$color-highlited-outline: $color-neutral-dark;
+$color-highlighted-foreground: $color-neutral-white;
+$color-highlighted-outline: $color-neutral-dark;
 
 $color-action-primary-background: rgb(255, 156, 51);
 $color-action-primary-background-hover: adjust-lightness($color-action-primary-background, 4);
