@@ -4,7 +4,7 @@
 Ext.define('Taco.model.ProductTypeAttribute', {
     extend: 'Taco.core.data.Model',
     fields: [
-        { name: 'id', type: 'auto' },
+        { name: 'attributeFQN', type: 'string' },
         { name: 'productTypeId', type: 'auto' },
         {name:'index', type:'int'},
         { name: 'isLocked', type: 'boolean', defaultValue: false },
@@ -19,6 +19,7 @@ Ext.define('Taco.model.ProductTypeAttribute', {
         { name: 'usageType', type: 'string' }
 
     ],
+    idProperty: 'attributeFQN',
     proxy: {
         type: 'ajaxproxy',
         api: {

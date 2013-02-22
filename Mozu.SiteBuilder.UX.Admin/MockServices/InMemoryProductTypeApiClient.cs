@@ -8,6 +8,7 @@ using System.Web.Caching;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin.MockServices.Mocks;
 using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.MockServices
@@ -120,13 +121,37 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
             DC.ProductType p1 = new DC.ProductType
             {
                 Id = 1,
-                Name = "Product Type 1"
+                Name = "Product Type 1",
+                Properties = new List<DC.AttributeInProductType>
+                {
+                    new DC.AttributeInProductType {
+                        Attribute = new ColorAttribute(),
+                        AttributeFQN = ColorAttribute.ATTRIBUTE_FQN
+                    }
+                },
+                Options = new List<DC.AttributeInProductType>
+                {
+                    new DC.AttributeInProductType {
+                        Attribute = new GiftWrapAttribute(),
+                        AttributeFQN = GiftWrapAttribute.ATTRIBUTE_FQN
+                    }
+                },
+                Extras = new List<DC.AttributeInProductType>
+                {
+                    new DC.AttributeInProductType {
+                        Attribute = new EngravingAttribute(),
+                        AttributeFQN = EngravingAttribute.ATTRIBUTE_FQN
+                    }
+                }
             };
 
             DC.ProductType p2 = new DC.ProductType
             {
                 Id = 2,
-                Name = "Product Type 2"
+                Name = "Product Type 2",
+                Properties = new List<DC.AttributeInProductType>(),
+                Options = new List<DC.AttributeInProductType>(),
+                Extras = new List<DC.AttributeInProductType>()
             };
 
             repo.AddRange(new[] { p1, p2 });

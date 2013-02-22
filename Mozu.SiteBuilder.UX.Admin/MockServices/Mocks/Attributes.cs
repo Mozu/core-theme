@@ -5,9 +5,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
 {
     public class UPCAttribute : DC.Attribute
     {
+        public const string ATTRIBUTE_FQN = "UPC";
         public UPCAttribute()
         {
-            AttributeFQN = "UPC";
+            AttributeFQN = ATTRIBUTE_FQN;
             DataType = "String";
             ValueType = "Admin";
             InputType = "TextBox";
@@ -19,9 +20,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
 
     public class EngravingAttribute : DC.Attribute
     {
+        public const string ATTRIBUTE_FQN = "CustomEngraving";
         public EngravingAttribute()
         {
-            AttributeFQN = "CustomEngraving";
+            AttributeFQN = ATTRIBUTE_FQN;
             DataType = "String";
             ValueType = "Shopper";
             InputType = "TextArea";
@@ -33,9 +35,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
 
     public class GiftWrapAttribute : DC.Attribute
     {
+        public const string ATTRIBUTE_FQN = "GiftWrapYesNo";
         public GiftWrapAttribute()
         {
-            AttributeFQN = "GiftWrapYesNo";
+            AttributeFQN = ATTRIBUTE_FQN;
             DataType = "Bool";
             InputType = "YesNo";
             ValueType = "Shopper";
@@ -44,9 +47,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
 
     public class UnitCostAttribute : DC.Attribute
     {
+        public const string ATTRIBUTE_FQN = "UnitCost";
         public UnitCostAttribute()
         {
-            AttributeFQN = "UnitCost";
+            AttributeFQN = ATTRIBUTE_FQN;
             DataType = "Number";
             InputType = "TextBox";
             ValueType = "Admin";
@@ -58,9 +62,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
 
     public class ColorAttribute : DC.Attribute
     {
+        public const string ATTRIBUTE_FQN = "Thing-Color";
         public ColorAttribute()
         {
-            AttributeFQN = "Thing-Color";
+            AttributeFQN = ATTRIBUTE_FQN;
             AttributeSequence = 1;
             DataType = "String";
             InputType = "List";
@@ -80,9 +85,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
 
     public class FinishAttribute : DC.Attribute
     {
+        public const string ATTRIBUTE_FQN = "BucketFinish";
         public FinishAttribute()
         {
-            AttributeFQN = "BucketFinish";
+            AttributeFQN = ATTRIBUTE_FQN;
             AttributeSequence = 1;
             DataType = "String";
             InputType = "List";

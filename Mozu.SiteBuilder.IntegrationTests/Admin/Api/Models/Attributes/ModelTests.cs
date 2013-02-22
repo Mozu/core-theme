@@ -47,9 +47,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 Id = id,
                 Values = new List<AttributeValue>
                 {
-                    new AttributeValue { Id = "3233", AttributeId = id, Value = 123 },
-                    new AttributeValue { Id = "3233", AttributeId = id, Value = 456 },
-                    new AttributeValue { Id = "3233", AttributeId = id, Value = 789 },
+                    new AttributeValue { Id = "3233", AttributeFQN = id, Value = 123 },
+                    new AttributeValue { Id = "3233", AttributeFQN = id, Value = 456 },
+                    new AttributeValue { Id = "3233", AttributeFQN = id, Value = 789 },
                 }
             };
 
@@ -100,9 +100,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 AllowMulti = false,
                 AllValues = new List<AttributeValue>
                 {
-                    new AttributeValue { AttributeId = attributeId.ToString( ), Id = 659.ToString( ), Value = "With Handle" },
+                    new AttributeValue { AttributeFQN = attributeId.ToString( ), Id = 659.ToString( ), Value = "With Handle" },
                 },
-                Id = (attributeId++).ToString( ),
+                AttributeFQN = (attributeId++).ToString( ),
                 Index = index++,
                 IsHidden = false,
                 IsLocked = true,
@@ -123,12 +123,12 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 AllowMulti = false,
                 AllValues = new List<AttributeValue>
                 {
-                    new AttributeValue { AttributeId = attributeId.ToString(), Id = 3209.ToString(), Value = "Blue" },
-                    new AttributeValue { AttributeId = attributeId.ToString(), Id = 3210.ToString(), Value = "Red" },
-                    new AttributeValue { AttributeId = attributeId.ToString(), Id = 3211.ToString(), Value = "Green" },
-                    new AttributeValue { AttributeId = attributeId.ToString(), Id = 3212.ToString(), Value = "White" },
+                    new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 3209.ToString(), Value = "Blue" },
+                    new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 3210.ToString(), Value = "Red" },
+                    new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 3211.ToString(), Value = "Green" },
+                    new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 3212.ToString(), Value = "White" },
                 },
-                Id = (attributeId++).ToString(),
+                AttributeFQN = (attributeId++).ToString(),
                 
                 Index = index++,
                 IsHidden = false,
@@ -145,10 +145,10 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 AllowMulti = true,
                 AllValues = new List<AttributeValue>
                 {
-                    new AttributeValue { AttributeId = attributeId.ToString(), Id = 2332.ToString(), Value = "Matte" },
-                    new AttributeValue { AttributeId = attributeId.ToString(), Id = 2333.ToString(), Value = "Glossy" },
+                    new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 2332.ToString(), Value = "Matte" },
+                    new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 2333.ToString(), Value = "Glossy" },
                 },
-                Id = (attributeId++).ToString(),
+                AttributeFQN = (attributeId++).ToString(),
                 Index = index++,
                 IsHidden = false,
                 IsLocked = true,
@@ -165,7 +165,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
             {
                 AllValues = null,
                 AllowMulti = false,
-                Id = 342.ToString(),
+                AttributeFQN = 342.ToString(),
                 Index = 0,
                 IsHidden = false,
                 IsLocked = true,
