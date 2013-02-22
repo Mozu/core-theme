@@ -118,7 +118,8 @@ Ext.application({
             'PhoneOrders',
             'Shipping',
             'Errors',
-            'Roles'
+            'Roles',
+            'ProductTypes'
            ],
     stores: ['Taco.store.LocalizedStrings'],
     context:null,
