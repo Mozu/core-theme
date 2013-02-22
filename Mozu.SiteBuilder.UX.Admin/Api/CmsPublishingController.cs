@@ -33,12 +33,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [ServiceContract]
     public class CmsPublishingController : BaseController
     {
+        private string HACK= "stuff";
         private IDocumentWebApiClient _documentClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public CmsPublishingController(IMoreAwesomeDocumentWebApiClient documentClient)
+        //public CmsPublishingController(IMoreAwesomeDocumentWebApiClient documentClient)
+       public CmsPublishingController(IDocumentWebApiClient documentClient)
         {
             _documentClient = documentClient;
         }
@@ -62,7 +64,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? pageSize = pagingParams.pageSize;
             int? startIndex = pagingParams.startIndex;
             
-            var result = await _documentClient.GetDrafts(/*documentListName: */ null, /*responseGroups: */ null, pageSize, startIndex);
+            var result = await _documentClient.GetDrafts(HACK, /*responseGroups: */ null, pageSize, startIndex);
+            
             DC.PagedCollection<DC.Document> res = result.ReadAsAsync().Result;
 
             return List2(Mapper.Map<List<DocumentDraft>>(res.Items), (int)res.TotalCount);
@@ -137,7 +140,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             do
             {
-                var getListResult = await _documentClient.GetDrafts(/*documentListName: */ documentListName, /*responseGroups: */ null, pageSize, startIndex);
+                var getListResult = await _documentClient.GetDrafts(HACK, /*responseGroups: */ null, pageSize, startIndex);
                 DC.PagedCollection<DC.Document> docs = getListResult.ReadAsAsync().Result;
                 totalCount = (int)docs.TotalCount;
 
@@ -177,7 +180,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             do
             {
-                var getListResult = await _documentClient.GetDrafts(/*documentListName: */ documentListName, /*responseGroups: */ null, pageSize, startIndex);
+                var getListResult = await _documentClient.GetDrafts(HACK, /*responseGroups: */ null, pageSize, startIndex);
                 DC.PagedCollection<DC.Document> docs = getListResult.ReadAsAsync().Result;
                 totalCount = (int)docs.TotalCount;
 

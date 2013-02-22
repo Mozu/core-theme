@@ -2651,7 +2651,7 @@
     <Content Include="Scripts\app\store\Navigation.js" />
     <Content Include="Scripts\app\store\OptionComboBox.js" />
     <Content Include="Scripts\app\store\Options.js" />
-    <Content Include="Scripts\app\store\ProductOptions.js" />
+    <Content Include="Scripts\app\store\ProductTypes.js" />
     <Content Include="Scripts\app\store\ProductOptionValues.js" />
     <Content Include="Scripts\app\store\Products.js" />
     <Content Include="Scripts\app\store\shared\BaseStore.js" />

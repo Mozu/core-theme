@@ -81,7 +81,10 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     createGridPanel: function(conf) {
         Ext.applyIf(conf, this.gridPanelDefaults);
         conf = Taco.app.context.forCurrentContext(conf);
-        if (conf.paged) conf.dockedItems = [this.createGridPager()];
+        if (conf.paged) {
+            conf.dockedItems = Ext.clone(conf.dockedItems || []);
+            conf.dockedItems.push(this.createGridPager());
+        }
         conf.store = this.store;
         this.gridPanel = Ext.create(this.gridPanelClass, conf);
         this.gridPanel.view.on('itemclick', this.onItemClick, this);

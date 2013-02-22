@@ -73,6 +73,13 @@ Ext.define('Taco.view.pendingchange.Cms', {
     },
 
     gridPanelConf: {
+        dockedItems: [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
+                text: 'Docked to the top'
+            }]
+        }],
         columns: [{
             dataIndex: 'id',
             text: 'Code',
@@ -82,6 +89,12 @@ Ext.define('Taco.view.pendingchange.Cms', {
             text: 'Name',
             minWidth: 120,
             flex: 1
+        }, {
+            dataIndex: 'type',
+            text: 'type',
+            value:'Page',
+            minWidth: 120,
+            width: 100
         }, {
             dataIndex: 'publishState',
             text: 'Modification',
