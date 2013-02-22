@@ -21,6 +21,7 @@ Ext.define('Taco.view.product.Index', {
             dataIndex: 'productName',
             text: 'Name',
             minWidth: 120,
+            resizable: false,
             flex: 1,
             renderer: function(value) {
                 return '<a href="#" class="taco-launch-editor">' + value + '</a>';

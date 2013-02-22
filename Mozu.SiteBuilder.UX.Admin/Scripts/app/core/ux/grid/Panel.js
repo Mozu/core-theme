@@ -32,7 +32,7 @@ Ext.define('Taco.core.ux.grid.Panel', {
     columnDefaults: {
         draggable: true,
         hideable: true,
-        resizable: false,
+       // resizable: true,
         sortable: true
     },
 
