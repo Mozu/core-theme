@@ -14,17 +14,17 @@
         "values": [
             {
                 "id": "red",
-                "attributeId": "color",
+                "attributeFQN": "color",
                 "value": "red"
             },
             {
                 "id": "gold",
-                "attributeId": "color",
+                "attributeFQN": "color",
                 "value": "gold"
             },
             {
                 "id": "green",
-                "attributeId": "color",
+                "attributeFQN": "color",
                 "value": "green"
             }
         ]

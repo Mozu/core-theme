@@ -8,8 +8,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
     [DataContract]
     public class ProductTypeAttribute
     {
-        [DataMember(Name = "id")]
-        public string Id { get; set; }
+        [DataMember(Name = "attributeFQN")]
+        public string AttributeFQN { get; set; }
 
         [DataMember(Name = "productTypeId")]
         public int? ProductTypeId { get; set; }
