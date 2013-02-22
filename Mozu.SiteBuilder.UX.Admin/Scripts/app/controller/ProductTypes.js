@@ -1,16 +1,17 @@
 ﻿/**
- * @class Taco.controller.Attributes
- * @author Travis Johnson
- * The Attributes controller
+ * @class Taco.controller.ProductTypes
+ * @author Jimmy Sanford
+ * The Product Types controller
  */
 
-Ext.define('Taco.controller.Attributes', {
+Ext.define('Taco.controller.ProductTypes', {
     extend: 'Taco.core.Controller',
+    requires:['Taco.view.productType.Edit'],
     listView: null,
-    models: ['Taco.model.Attribute'],
-    stores: ['Taco.store.Attributes'],
-    views: ['attribute.Index'],
-    modelName: 'Attribute',
+    models: ['Taco.model.ProductType'],
+    stores: [],
+    views: ['productType.Index'],
+    modelName: 'ProductType',
 
     contextPlaceholders: {
         t: function () {
