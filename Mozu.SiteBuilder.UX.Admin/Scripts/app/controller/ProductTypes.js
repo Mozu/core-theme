@@ -9,7 +9,7 @@ Ext.define('Taco.controller.ProductTypes', {
     requires:['Taco.view.productType.Edit'],
     listView: null,
     models: ['Taco.model.ProductType'],
-    stores: [],
+    stores: ['Taco.store.ProductTypes'],
     views: ['productType.Index'],
     modelName: 'ProductType',
 
