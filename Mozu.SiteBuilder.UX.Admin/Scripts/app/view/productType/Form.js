@@ -4,7 +4,7 @@
  */
 
 Ext.define('Taco.view.productType.Form', {
-    extend: 'Taco.core.ux.form.Form'
+    extend: 'Taco.core.ux.form.Form',
 
     initComponent: function () {
         this.callParent(arguments);
