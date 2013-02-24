@@ -127,6 +127,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "publishall")]
         public async Task<Response<List<string>>> PublishAll(PublishArgs args)
         {
+            args = args ?? new PublishArgs();
             string documentListName = GetDocumentListNameFromDocType(args.DocType);
 
             // TODO: The all-knowing Thom has said this method is not sufficient.
@@ -168,6 +169,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "discardall")]
         public async Task<Response<List<string>>> DiscardAll(PublishArgs args)
         {
+            args = args ?? new PublishArgs();
             string documentListName = GetDocumentListNameFromDocType(args.DocType);
 
             // TODO: This method implementation should be thrown away when the Mozu service supports a DiscardAll().

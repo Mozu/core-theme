@@ -16,7 +16,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     {
         private readonly ICmsServiceWrapper _cmsServiceWrapper;
 
-        public CmsHelper(ICmsServiceWrapper cmsServiceWrapper)
+        public CmsHelper(ICmsServiceWrapper cmsServiceWrapper )
         {
             _cmsServiceWrapper = cmsServiceWrapper;
         }
@@ -88,12 +88,22 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 string templateName = cmsPageContext.Page.Properties.Where(x => x.PropertyType == "template").Select(x => (string)x.Value).FirstOrDefault();
                 if (templateName != null)
                 {
+                    if (cmsPageContext.TemplateReq == null)
+                    {
+                        cmsPageContext.TemplateReq = new DocumentRequest()
+                                                         {
+                                                             Path = templateName ,
+                                                             Collection="templates"
+                                                         };
+                    }
                     templateTask = _cmsServiceWrapper.GetByPath("templates", templateName);
                     tasks.Add(templateTask);
                     var res = await templateTask;
                     if (templateTask.Result.ResponseMessage.IsSuccessStatusCode)
                     {
+                        
                         cmsPageContext.Template = templateTask.Result.ReadAsSync();
+                        cmsPageContext.TemplateReq.Id = cmsPageContext.Template.Id;
                     }
                 }
 
@@ -125,6 +135,25 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return true;
 
 
+        }
+
+        public void CreateTemplate(DocumentRequest req, out Task<ServiceClientResponse<Document>> task)
+        {
+            if (req.Path == null)
+            {
+                task = null;
+                return;
+            }
+
+            task = _cmsServiceWrapper.RawCreate(
+                new Document()
+                    {
+                        DocumentListName = "templates",
+                        DocumentType = "page_template",
+                        Name = System.IO.Path.GetFileName(req.Path),
+                        Path = System.IO.Path.GetDirectoryName(req.Path)
+                    });
+            return;
         }
     }
 }

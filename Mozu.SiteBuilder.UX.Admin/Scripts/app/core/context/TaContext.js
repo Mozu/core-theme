@@ -279,7 +279,8 @@ Ext.define('Taco.core.context.TaContext', {
         if (obj.contextConf && obj.contextConf[contextType]) {
             obj = Ext.apply({}, obj, obj.contextConf[contextType]);
         }
-        return obj;
+        //return a shallow clone of the top object
+        return Ext.apply({}, obj);
     }
 
 });

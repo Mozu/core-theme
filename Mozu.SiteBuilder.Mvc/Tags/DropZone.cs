@@ -64,6 +64,19 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             {
                 return new MvcHtmlString("!<-- warning:  redundant drop zone tag " + zoneId + " -->");
             }
+            if (string.IsNullOrEmpty(scope))
+            {
+                scope = "page";
+            }
+            else
+            {
+                scope = scope.ToLowerInvariant();
+                if (scope != "template" && scope != "global")
+                {
+                    throw new Exception("invalid scope type "  + scope  );
+                }
+            }
+            scope = (scope ?? "").ToLowerInvariant();
             bool useDefaultId = true;
             StringBuilder sb = new StringBuilder();
             sb.Append("<div ");
@@ -95,6 +108,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 var dJ = jobj.AsDynamic();
                 dJ["zoneId"] = zoneId;
                 dJ["zoneScope"] = scope;
+                sb.AppendFormat("data-editing-zone-scope=\"{0}\" ", scope ?? "page");
                 sb.Append("data-editing-zone=\"");
                 sw = new StringWriter();
                 jobj.Save(sw, JsonSaveOptions.None);

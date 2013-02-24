@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Net;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using System.Linq;
 using System.ServiceModel;
@@ -104,7 +105,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     continue;
                 }
                 var res = await task;
-
+                if (res.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    cmsHelper.CreateTemplate(req, out task);
+                    res = await task;
+                }
                 var doc = res.ReadAsSync();
                 docs.Add(doc);
                 var widgetRaw = doc.Get(CmsServiceWrapper.WIDGETPROPNAME) as string;

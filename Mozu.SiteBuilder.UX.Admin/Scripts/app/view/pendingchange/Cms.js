@@ -16,7 +16,7 @@ Ext.define('Taco.view.pendingchange.Cms', {
     publishAll: function (type) {
         var me = this;
         me.store.publishAll(type, function () {
-            var notice = type ? 'All ' + type + ' changes published!' : 'All changes published!'
+            var notice = type ? 'All ' + type + ' changes published!' : 'All changes published!';
             Taco.app.fireEvent('setmessage', notice, 'success');
             me.store.reload();
         });
@@ -77,29 +77,63 @@ Ext.define('Taco.view.pendingchange.Cms', {
             xtype: 'toolbar',
             dock: 'top',
             items: [{
-                text: 'Docked to the top'
+                text: 'BULK ITEM update',
+                handler: function () {
+                    var grid = this.up('grid'),
+                        checkedModels = grid.getSelectionModel().getSelection(),
+                        store = grid.store;
+                    if (checkedModels) {
+                        Ext.each(checkedModels, function(item) {
+                            item.set('isPublished', true);
+                        });
+                        store.sync({
+                            callback:function() {
+                                store.reload();
+                            } 
+                        });
+                    }
+                }
             }]
         }],
         columns: [{
-            dataIndex: 'id',
-            text: 'Code',
-            width: 100
-        }, {
-            dataIndex: 'name',
-            text: 'Name',
-            minWidth: 120,
-            flex: 1
-        }, {
-            dataIndex: 'type',
-            text: 'type',
-            value:'Page',
-            minWidth: 120,
-            width: 100
-        }, {
-            dataIndex: 'publishState',
-            text: 'Modification',
-            width: 120
-        }
+                dataIndex: 'name',
+                text: 'Name',
+                minWidth: 120,
+                flex: 1
+            }, {
+                dataIndex: 'draftType',
+                text: 'type',
+                value: 'Page',
+                minWidth: 120,
+                width: 100
+            }, {
+                dataIndex: 'modification',
+                text: 'Modification',
+                renderer: function(value) {
+                    return 'n/a';
+                },
+                width: 100
+            }, {
+                dataIndex: 'lastModified',
+                text: 'Last Modified',
+                xtype: 'datecolumn',
+                width: 200
+            }, {
+                dataIndex: 'modifiedBy',
+                text: 'Modified By',
+                renderer: function(value) {
+                    return 'n/a';
+                },
+                width: 100
+            },
+            {
+                dataIndex: 'lastPublished',
+                text: 'Last Published',
+                renderer: function(value) {
+                    return 'n/a';
+                },
+                width: 100
+            }
         ]
     }
 });
