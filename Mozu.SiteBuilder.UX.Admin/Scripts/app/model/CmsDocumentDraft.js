@@ -58,7 +58,7 @@ Ext.define('Taco.model.CmsDocumentDraft', {
     ],
 
     proxy: {
-        type: 'readahead',
+        type: 'ajax',
         api: {
             read: "/admin/app/cmspublishing/listdrafts",
             destroy: "/admin/app/cmspublishing/discard",

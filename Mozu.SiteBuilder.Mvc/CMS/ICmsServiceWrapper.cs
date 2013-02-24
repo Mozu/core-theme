@@ -9,6 +9,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     public interface ICmsServiceWrapper
     {
         IEnumerable<Task<ServiceClientResponse<Mozu.Content.Contracts.Document>>> Create(System.Collections.Generic.IEnumerable<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document> docs);
+        Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> RawCreate(Mozu.Content.Contracts.Document doc);
         System.Collections.Generic.IEnumerable<System.Threading.Tasks.Task<Tuple<bool, Mozu.Core.Api.Contracts.Client.ServiceClientResponse<StreamContent>>>> Delete(System.Collections.Generic.IEnumerable<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document> docs);
         System.Threading.Tasks.Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Mozu.Content.Contracts.Document>> GetByPath(string contentCollection, string name, string folderPath = null, string docStatus = "draft");
 

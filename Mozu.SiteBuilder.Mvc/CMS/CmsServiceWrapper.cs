@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     /// </summary>
     public class CmsServiceWrapper : Mozu.SiteBuilder.Mvc.CMS.ICmsServiceWrapper
     {
-        public  const string WIDGETPROPNAME = "slug";
+        public const string WIDGETPROPNAME = "widgets";
         IDocumentWebApiClient _docRepo;
         ICmsTypeHelper _cmsTypeHelper;
         IFolderWebApiClient _folderRepo;
@@ -367,6 +367,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         public Task<ServiceClientResponse<List<DC.Facet>>> GetFacets(string contentCollection,  string propertyName)
         {
             return _facetsRepo.Get(contentCollection,propertyName);
+        }
+
+
+        public Task<ServiceClientResponse<DC.Document>> RawCreate(DC.Document doc)
+        {
+            return _docRepo.Create(doc.DocumentListName, doc );
         }
     }
 }
