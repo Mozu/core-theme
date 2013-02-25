@@ -80,7 +80,8 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
 
         public Task<ServiceClientResponse<DC.AttributeVocabularyValueCollection>> GetAttributeVocabularyValues(string attributeFQN, string responseGroups = null, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
-            return TaskCollection<DC.AttributeVocabularyValue, DC.AttributeVocabularyValueCollection>(Repository.AttributeVocabularyValues.SelectMany(x => x.Value));
+            var values = Repository.AttributeVocabularyValues.Where(x => x.Value != null).SelectMany(x => x.Value);
+            return TaskCollection<DC.AttributeVocabularyValue, DC.AttributeVocabularyValueCollection>(values);
         }
 
         public Task<ServiceClientResponse<DC.Attribute>> AddAttribute(DC.Attribute attribute, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)

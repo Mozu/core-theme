@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.Core.Api.Contracts.Client;
@@ -31,6 +32,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 
             return from attr in await Task.WhenAll(tasks)
                    select Mapper.Map<TClient>(attr);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collection">A collection of SiteBuilder objects.</param>
+        /// <param name="action">The action to be performed.</param>
+        /// <returns>The StreamContent results from void actions performed on the server.</returns>
+        public async Task<IEnumerable<TClient>> PerformVoidAction(IEnumerable<TClient> collection, Func<TServer, Task<ServiceClientResponse<StreamContent>>> action)
+        {
+            var tasks = from item in collection.Select(x => Mapper.Map<TServer>(x))
+                        let res = action(item)
+                        select res.Result.ReadAsAsync();
+
+            await Task.WhenAll(tasks);
+
+            return collection;
         }
 
         public async Task<IEnumerable<TClient>> PerformAction<T>(IEnumerable<TClient> collection, Func<TServer, TClient, Task<ServiceClientResponse<T>>> action)

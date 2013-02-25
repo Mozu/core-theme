@@ -106,7 +106,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (productTypes == null || !productTypes.Any())
                 return Message3<List<ProductType>>(false, "No product types were deleted because they were not sent correctly. Please try again.");
 
-            var deletedProducts = await _productTypeMapper.PerformAction(productTypes, x => _productTypeClient.DeleteProductType(x.Id));
+            var deletedProducts = await _productTypeMapper.PerformVoidAction(productTypes, x => _productTypeClient.DeleteProductType(x.Id));
 
             return List2(deletedProducts.ToList());
         }
