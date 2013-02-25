@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             else
             {
                 scope = scope.ToLowerInvariant();
-                if (scope != "template" && scope != "global")
+                if (scope != "template" && scope != "site")
                 {
                     throw new Exception("invalid scope type "  + scope  );
                 }
