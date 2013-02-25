@@ -108,7 +108,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 IsLocked = true,
                 IsRequired = true,
                 ProductTypeId = productTypeId,
-                SelectedValues = new List<int>(),
+                SelectedValues = new List<AttributeValue>(),
                 UsageType = ProductTypeAttributeUsage.extra 
             };
         }
@@ -118,16 +118,17 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
             var index = 0;
             var attributeId = 412;
 
-            yield return new ProductTypeAttribute
-            {
-                AllowMulti = false,
-                AllValues = new List<AttributeValue>
+            var attributeValues = new List<AttributeValue>
                 {
-                    new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 3209.ToString(), Value = "Blue" },
+                    new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 3209.ToString(), Value = "Blue"},
                     new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 3210.ToString(), Value = "Red" },
                     new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 3211.ToString(), Value = "Green" },
                     new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 3212.ToString(), Value = "White" },
-                },
+                };
+            yield return new ProductTypeAttribute
+            {
+                AllowMulti = false,
+                AllValues = attributeValues,
                 AttributeFQN = (attributeId++).ToString(),
                 
                 Index = index++,
@@ -136,25 +137,26 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 IsRequired = true,
                 
                 ProductTypeId = productTypeId,
-                SelectedValues = new List<int> { 3209, 3210, 3211 },
+                SelectedValues = new List<AttributeValue> { attributeValues[0], attributeValues[1], attributeValues[2] },
                 UsageType = ProductTypeAttributeUsage.extra 
             };
 
-            yield return new ProductTypeAttribute
-            {
-                AllowMulti = true,
-                AllValues = new List<AttributeValue>
+            var allValues = new List<AttributeValue>
                 {
                     new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 2332.ToString(), Value = "Matte" },
                     new AttributeValue { AttributeFQN = attributeId.ToString(), Id = 2333.ToString(), Value = "Glossy" },
-                },
+                };
+            yield return new ProductTypeAttribute
+            {
+                AllowMulti = true,
+                AllValues = allValues,
                 AttributeFQN = (attributeId++).ToString(),
                 Index = index++,
                 IsHidden = false,
                 IsLocked = true,
                 IsRequired = false,
                 ProductTypeId = productTypeId,
-                SelectedValues = new List<int> { 2332 },
+                SelectedValues = new List<AttributeValue> { allValues[0] },
                 UsageType = ProductTypeAttributeUsage.extra,
             };
         }
@@ -171,7 +173,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 IsLocked = true,
                 IsRequired = false,
                 ProductTypeId = productTypeId,
-                SelectedValues = new List<int>(),
+                SelectedValues = new List<AttributeValue>(),
                 UsageType = ProductTypeAttributeUsage.option
             };
         }

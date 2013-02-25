@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.ProductAdmin.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Admin.MockServices;
 using DC = Mozu.ProductAdmin.Contracts;
 
@@ -21,6 +22,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class ProductTypeController : BaseController
     {
         private readonly IProductTypeWebApiClient _productTypeClient;
+
+        private readonly CollectionTaskUnMapper<ProductType, DC.ProductType> _productTypeMapper = new CollectionTaskUnMapper<ProductType, DC.ProductType>();
 
         /// <summary>
         /// Public constructor.
@@ -57,11 +60,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             DC.ProductTypeCollection res;
             var result = await _productTypeClient.GetProductTypes(
-                /*startIndex: */     pagingParams.startIndex, 
-                /*pageSize: */       pagingParams.pageSize, 
-                /*sortBy: */         sort, 
-                /*responseGroups: */ null, 
-                /*filter: */         filter
+                /* startIndex:     */ pagingParams.startIndex,
+                /* pageSize:       */ pagingParams.pageSize,
+                /* sortBy:         */ sort,
+                /* responseGroups: */ null,
+                /* filter:         */ filter
             );
             res = result.ReadAsAsync().Result;
 
@@ -74,26 +77,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "create")]
         public async Task<Response<List<ProductType>>> CreateProductType(List<ProductType> productTypes)
         {
-            List<ProductType> createdProductTypes = new List<ProductType>(productTypes.Count);
-            foreach (ProductType p in productTypes)
-            {
-                DC.ProductType dataModel = Mapper.Map<DC.ProductType>(p);
-                DC.ProductType returned;
+            if (productTypes == null || !productTypes.Any())
+                return Message3<List<ProductType>>(false, "No product types were created because they were not sent correctly. Please try again.");
 
-                try
-                {
-                    var result = await _productTypeClient.AddProductType(dataModel);
-                    returned = result.ReadAsAsync().Result;
-                }
-                catch (AggregateException e)
-                {
-                    return FailureList2<ProductType>(e.UnwrapAgg().Message);
-                }
-
-                createdProductTypes.Add(Mapper.Map<ProductType>(returned));
-            }
-
-            return List2(createdProductTypes);
+            var createdProductTypes = await _productTypeMapper.PerformAction(productTypes, x => _productTypeClient.AddProductType(x));
+            return List2(createdProductTypes.ToList());
         }
 
         /// <summary>
@@ -102,17 +90,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "edit")]
         public async Task<Response<List<ProductType>>> EditProductType(List<ProductType> productTypes)
         {
-            List<ProductType> editedProductTypes = new List<ProductType>(productTypes.Count);
+            if (productTypes == null || !productTypes.Any())
+                return Message3<List<ProductType>>(false, "No product types were edited because they were not sent correctly. Please try again.");
 
-            foreach (ProductType pt in productTypes)
-            {
-                DC.ProductType mappedPt = Mapper.Map<DC.ProductType>(pt);
-                var res = await _productTypeClient.UpdateProductType(mappedPt, pt.Id);
-                DC.ProductType returned = res.ReadAsAsync().Result;
-                editedProductTypes.Add(Mapper.Map<ProductType>(returned));
-            }
-
-            return List2(editedProductTypes);
+            var editedProductTypes = await _productTypeMapper.PerformAction(productTypes, (a, b) => _productTypeClient.UpdateProductType(a, b.Id));
+            return List2(editedProductTypes.ToList());
         }
 
         /// <summary>
@@ -121,15 +103,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "delete")]
         public async Task<Response<List<ProductType>>> DeleteProductType(List<ProductType> productTypes)
         {
-            List<ProductType> deletedProducts = new List<ProductType>(productTypes.Count);
-            foreach (ProductType pt in productTypes)
-            {
-                var result = await _productTypeClient.DeleteProductType(pt.Id);
-                // TODO: check success
-                deletedProducts.Add(pt);
-            }
+            if (productTypes == null || !productTypes.Any())
+                return Message3<List<ProductType>>(false, "No product types were deleted because they were not sent correctly. Please try again.");
 
-            return List2(deletedProducts);
+            var deletedProducts = await _productTypeMapper.PerformAction(productTypes, x => _productTypeClient.DeleteProductType(x.Id));
+
+            return List2(deletedProducts.ToList());
         }
     }
 }

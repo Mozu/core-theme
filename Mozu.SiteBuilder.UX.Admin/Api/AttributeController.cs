@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Attribute>>> CreateAttribute([FromBody] List<Attribute> attributes)
         {
             if (attributes == null || !attributes.Any())
-                return Message3<List<Attribute>>(false, "No attributes were created because they were not sent correctly. Please tray again.");
+                return Message3<List<Attribute>>(false, "No attributes were created because they were not sent correctly. Please try again.");
 
             var createdAttributes = await _attributeHelper.CreateAttributes(attributes);
             return List2(createdAttributes.ToList());
@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Attribute>>> EditAttribute(List<Attribute> attributes)
         {
             if (attributes == null || !attributes.Any())
-                return Message3<List<Attribute>>(false, "No attributes were edited because they were not sent correctly. Please tray again.");
+                return Message3<List<Attribute>>(false, "No attributes were edited because they were not sent correctly. Please try again.");
 
             var editedAttributes = await _attributeHelper.EditAttributes(attributes);
             return List2(editedAttributes.ToList());
@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Attribute>>> DeleteAttribute(List<Attribute> attributes)
         {
             if (attributes == null || !attributes.Any())
-                return Message3<List<Attribute>>(false, "No attributes were deleted because they were not sent correctly. Please tray again.");
+                return Message3<List<Attribute>>(false, "No attributes were deleted because they were not sent correctly. Please try again.");
 
             var deletedAttributes = await _attributeHelper.DeleteAttributes(attributes);
             return List2(deletedAttributes.ToList());
