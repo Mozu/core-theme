@@ -72,10 +72,10 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
             ValueType = "Admin";
             VocabularyValues = new List<ProductAdmin.Contracts.AttributeVocabularyValue>
                 {
-                    new ProductAdmin.Contracts.AttributeVocabularyValue { Content = new ProductAdmin.Contracts.AttributeVocabularyValueLocalizedContent { StringValue = "Red" }, Value = "Red", ValueSequence = 1 },
-                    new ProductAdmin.Contracts.AttributeVocabularyValue { Content = new ProductAdmin.Contracts.AttributeVocabularyValueLocalizedContent { StringValue = "Green" }, Value = "Green", ValueSequence = 2 },
-                    new ProductAdmin.Contracts.AttributeVocabularyValue { Content = new ProductAdmin.Contracts.AttributeVocabularyValueLocalizedContent { StringValue = "Blue" }, Value = "Blue", ValueSequence = 3 },
-                    new ProductAdmin.Contracts.AttributeVocabularyValue { Content = new ProductAdmin.Contracts.AttributeVocabularyValueLocalizedContent { StringValue = "Yellow" }, Value = "Yellow", ValueSequence = 4 },
+                    new DC.AttributeVocabularyValue { Content = new DC.AttributeVocabularyValueLocalizedContent { StringValue = "Red" }, Value = "Red", ValueSequence = 1 },
+                    new DC.AttributeVocabularyValue { Content = new DC.AttributeVocabularyValueLocalizedContent { StringValue = "Green" }, Value = "Green", ValueSequence = 2 },
+                    new DC.AttributeVocabularyValue { Content = new DC.AttributeVocabularyValueLocalizedContent { StringValue = "Blue" }, Value = "Blue", ValueSequence = 3 },
+                    new DC.AttributeVocabularyValue { Content = new DC.AttributeVocabularyValueLocalizedContent { StringValue = "Yellow" }, Value = "Yellow", ValueSequence = 4 },
                 };
             IsProperty = true;
             IsExtra = false;

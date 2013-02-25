@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         public bool? IsLocked { get; set; }
 
         [DataMember(Name = "selectedValues")]
-        public List<int> SelectedValues { get; set; }
+        public List<AttributeValue> SelectedValues { get; set; }
 
         [DataMember(Name = "allValues")]
         public List<AttributeValue> AllValues { get; set; }
