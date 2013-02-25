@@ -69,8 +69,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(d => d.ModifiedBy, m => m.MapFrom(dc => "James Zetlen"))
                 .ForMember(d => d.LastModified, m => m.MapFrom(dc => dc.UpdateDate))
                 .ForMember(d => d.LastPublished, m => m.MapFrom(dc => dc.InsertDate))
+                .ForMember(d => d.IsPublished, m => m.MapFrom(dc => string.Equals(dc.PublishState, VM.CmsConstants.Documents.doc_state_active, StringComparison.OrdinalIgnoreCase)))
                 ;
-
         }
         
         string blurg (DC.Document doc )

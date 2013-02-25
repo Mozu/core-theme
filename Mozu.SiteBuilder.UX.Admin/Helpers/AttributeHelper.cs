@@ -62,7 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 
         public async Task<IEnumerable<Attribute>> DeleteAttributes(List<Attribute> attributes)
         {
-            return await _attributeMapper.PerformAction(attributes, a => _attributeWebApiClient.DeleteAttribute(a.AttributeFQN));
+            return await _attributeMapper.PerformVoidAction(attributes, a => _attributeWebApiClient.DeleteAttribute(a.AttributeFQN));
         }
     }
 }

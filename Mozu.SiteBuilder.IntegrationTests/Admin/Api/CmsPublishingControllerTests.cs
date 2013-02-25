@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Mozu.Content.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.MockServices;
@@ -25,7 +26,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
                 new DC.Document {
                     Id = "12345",
                     Name = "Test Document 1",
-                    DocumentListName = "Pages1"
+                    DocumentListName = "Pages1",
+                    PublishState = CmsConstants.Documents.doc_state_active
                 },
                 new DC.Document {
                     Id = "56789",
