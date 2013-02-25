@@ -101,10 +101,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Attribute, DC.Attribute>()
                 .ForMember(x => x.VocabularyValues, opt => opt.MapFrom(x => x.Values))
                 .ForMember(x => x.AttributeFQN, opt => opt.MapFrom(x => x.Id))
+                .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new DC.AttributeLocalizedContent
+                    {
+                        Description = "",
+                        Name = x.Name,
+                        LocaleCode = "en-US",
+                    }))
                 ;
             Mapper.CreateMap<DC.Attribute, Attribute>()
                 .ForMember(x => x.Values, opt => opt.MapFrom(x => x.VocabularyValues))
                 .ForMember(x => x.Id, opt => opt.MapFrom(x => x.AttributeFQN))
+                .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Content.Name))
                 ;
             #endregion
         }

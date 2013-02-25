@@ -15,6 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
             IsExtra = false;
             IsOption = false;
             IsProperty = true;
+            Content = new DC.AttributeLocalizedContent { LocaleCode = "en-US", Name = "UPC" };
         }
     }
 
@@ -30,6 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
             IsExtra = true;
             IsOption = false;
             IsProperty = false;
+            Content = new DC.AttributeLocalizedContent { LocaleCode = "en-US", Name = "Custom Engraving" };
         }
     }
 
@@ -42,6 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
             DataType = "Bool";
             InputType = "YesNo";
             ValueType = "Shopper";
+            Content = new DC.AttributeLocalizedContent { LocaleCode = "en-US", Name = "Gift Wrap?" };
         }
     }
 
@@ -57,6 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
             IsProperty = true;
             IsExtra = false;
             IsOption = false;
+            Content = new DC.AttributeLocalizedContent { LocaleCode = "en-US", Name = "Unit Cost" };
         }
     }
 
@@ -80,6 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
             IsProperty = true;
             IsExtra = false;
             IsOption = false;
+            Content = new DC.AttributeLocalizedContent { LocaleCode = "en-US", Name = "Color" };
         }
     }
 
@@ -101,6 +106,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
             IsProperty = false;
             IsExtra = true;
             IsOption = false;
+            Content = new DC.AttributeLocalizedContent { LocaleCode = "en-US", Name = "Finish" };
         }
     }
 }
