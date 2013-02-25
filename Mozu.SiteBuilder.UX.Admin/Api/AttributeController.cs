@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _attributeHelper = attributeHelper;
         }
 
-        [WebGet(UriTemplate = "list")]
+        [WebGet(UriTemplate = "read")]
         public async Task<Response<List<Attribute>>> ListAttributes([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
         {
             var items = await _attributeHelper.GetAttributes(pagingParams, extFilter);
@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(createdAttributes.ToList());
         }
 
-        [WebInvoke(UriTemplate = "edit", Method = "POST")]
+        [WebInvoke(UriTemplate = "update", Method = "POST")]
         public async Task<Response<List<Attribute>>> EditAttribute(List<Attribute> attributes)
         {
             if (attributes == null || !attributes.Any())
@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(editedAttributes.ToList());
         }
 
-        [WebInvoke(UriTemplate = "delete", Method = "POST")]
+        [WebInvoke(UriTemplate = "destory", Method = "POST")]
         public async Task<Response<List<Attribute>>> DeleteAttribute(List<Attribute> attributes)
         {
             if (attributes == null || !attributes.Any())
