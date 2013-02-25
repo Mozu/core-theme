@@ -81,6 +81,8 @@ Ext.application({
             'Taco.core.ux.CardPanel',
             'Taco.core.ux.CellEditing',
             'Taco.core.ux.Panel',
+            'Taco.core.ux.form.field.Base',
+            'Taco.core.ux.form.field.Container',
             'Taco.view.Header',
             'Ext.state.CookieProvider',
             'Ext.draw.Component',
@@ -89,7 +91,6 @@ Ext.application({
             'Ext.layout.container.Accordion',
             'Ext.layout.container.Absolute',
             'Ext.form.field.Radio'
-
     ],
     controllers: [
             'Analytics',

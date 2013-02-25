@@ -20,10 +20,6 @@
         "id": "customers",
         "label": "Customers",
         "address": "/admin/customers"
-    }, {
-        "id": "generalsettings",
-        "label": "Settings",
-        "address": "/admin/generalsettings"
     }]
 }, {
     "id": "catalog",
@@ -105,11 +101,6 @@
         "label": "Catalog",
         "address": "/pendingchanges/catalog"
     }]
-}, {
-    "id": "reports",
-    "label": "Reports",
-    "address": "/admin/dashboard",
-    "icon": "settings"
 }, {
     "id": "sites",
     "label": "Edit Website",
