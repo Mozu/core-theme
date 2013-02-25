@@ -38,6 +38,10 @@ Ext.define('Taco.view.attribute.Form', {
         },
         subformCfg: {
             'List': function (statics) {
+                var dataType = statics.fieldCfg.dataType;
+
+                dataType.readOnly = this.isEdit();
+
                 return [{
                     xtype: 'checkboxgroup',
                     fieldLabel: 'Attribute Type',
@@ -49,7 +53,7 @@ Ext.define('Taco.view.attribute.Form', {
                         {boxLabel: 'Extra', name: 'isExtra', inputValue: true}
                     ]
                 },
-                statics.fieldCfg.dataType, 
+                dataType, 
                 {
                     xtype: 'component',
                     fieldLabel: 'Values',
@@ -58,54 +62,115 @@ Ext.define('Taco.view.attribute.Form', {
             },
 
             'TextBox': function (statics) {
+                var attributeType = statics.fieldCfg.attributeType,
+                    dataType = statics.fieldCfg.dataType;
+
+                attributeType.readOnly = dataType.readOnly = this.isEdit();
+
                 return [
-                    statics.fieldCfg.attributeType,
-                    statics.fieldCfg.dataType,
+                    attributeType,
+                    dataType,
                 {
-                    fieldLabel: 'Min char/val',
-                    name: 'min'
-                }, {
-                    fieldLabel: 'Max char/val',
-                    name: 'max'
+                    xtype: 'fieldcontainer',
+                    defaults: this.defaults,
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
+                    items: [{
+                        fieldLabel: 'Min char/val',
+                        //xtype: 'textfield',
+                        name: 'min'
+                    }, {
+                        fieldLabel: 'Max char/val',
+                        //xtype: 'textfield',
+                        name: 'max'
+                    }],
+                    listeners: {
+                        boxready: function () {
+                            this.doLayout();
+                        },
+                        scope: this
+                    }
                 }, {
                     fieldLabel: 'Input validation',
                     name: 'regex',
                     emptyText: 'RegEx'
                 }];
-
             },
 
             'TextArea': function (statics) {
+                var attributeType = statics.fieldCfg.attributeType;
+
+                attributeType.readOnly = this.isEdit();
+
                 return [
-                    statics.fieldCfg.attributeType,
+                    attributeType,
                 {
-                    fieldLabel: 'Rows',
-                }, {
-                    fieldLabel: 'Max char.'
+                    xtype: 'fieldcontainer',
+                    defaults: this.defaults,
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
+                    items: [{
+                        fieldLabel: 'Rows'
+                    }, {
+                        fieldLabel: 'Max char.'
+                    }],
+                    listeners: {
+                        boxready: function () {
+                            this.doLayout();
+                        },
+                        scope: this
+                    }
                 }];
             },
 
             'YesNo': function (statics) {
-                return [statics.fieldCfg.attributeType];
+                var attributeType = statics.fieldCfg.attributeType;
+
+                attributeType.readOnly = this.isEdit();
+
+                return [attributeType];
             },
 
             'Date': function (statics) {
+                var attributeType = statics.fieldCfg.attributeType;
+
+                attributeType.readOnly = this.isEdit();
+
                 return [{
                     xtype: 'checkboxgroup',
                     name: 'includeTime',
                     inputValue: true,
-                    boxLabel: 'Include time selector'
+                    boxLabel: 'Include time selector',
+                    readOnly: this.isEdit()
                 },
-                statics.fieldCfg.attributeType,
+                attributeType,
                 {
-                    xtype: 'selectfield',
-                    name: 'dateForm'
-                }, {
-                    xtype: 'datefield',
-                    name: 'min'
-                }, {
-                    xtype: 'datefield',
-                    name: 'max'
+                    xtype: 'fieldcontainer',
+                    fieldLabel: 'Range',
+                    layout: {
+                        align: 'stretch',
+                        type: 'hbox'
+                    },
+                    items: [{
+                        xtype: 'datefield',
+                        name: 'min'
+                    }, {
+                        xtype: 'component',
+                        html: 'to'
+                    }, {
+                        xtype: 'datefield',
+                        name: 'max'
+                    }],
+                    listeners: {
+                        boxready: function () {
+                            this.doLayout();
+                        },
+                        scope: this
+                    }
                 }];
             }
         }
@@ -126,7 +191,7 @@ Ext.define('Taco.view.attribute.Form', {
             listeners: {
                 afterload: function () {
                     var attributeField = this.getForm().findField('attributeType');
-                    
+
                     if (!attributeField || !attributeField.isSelectField) {
                         return;
                     }
@@ -149,6 +214,7 @@ Ext.define('Taco.view.attribute.Form', {
             xtype: 'selectfield',
             fieldLabel: 'Input Type',
             name: 'inputType',
+            readOnly: this.isEdit(),
             store: [
                 ['List', 'List'],
                 ['TextBox', 'Text box'],
@@ -164,7 +230,8 @@ Ext.define('Taco.view.attribute.Form', {
     },
 
     onInputTypeChange: function (input, value) {
-        var buildForms = this.statics().subformCfg[value];
+        var buildForms = this.statics().subformCfg[value],
+            form;
 
         if (!buildForms) {
             return;
@@ -172,7 +239,11 @@ Ext.define('Taco.view.attribute.Form', {
 
         this.subform.removeAll();
 
-        this.subform.add(buildForms.apply(this, [this.statics()]));
+        form = buildForms.apply(this, [this.statics()]);
+
+
+
+        this.subform.add(form);
 
 
         this.subform.loadForm(this.record);
