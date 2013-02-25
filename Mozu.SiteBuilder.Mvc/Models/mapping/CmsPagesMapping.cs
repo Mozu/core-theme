@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
             Mapper.CreateMap<Mozu.Content.Contracts.Document, Mozu.SiteBuilder.UX.Models.Admin.CMS.DocumentDraft>()
                 .ForMember(d => d.Id, m => m.MapFrom(dc => dc.Id))
-                .ForMember(d => d.DraftType, m => m.ResolveUsing(dc => dc.DocumentListName == "Pages" ? "Page" : "Template"))
+                .ForMember(d => d.DraftType, m => m.ResolveUsing(dc => dc.DocumentListName.ToLowerInvariant() == "pages" ? "Page" : "Template"))
                 .ForMember(d => d.Name, m => m.MapFrom(dc => dc.Name))
                 .ForMember(d => d.ModificationType, m => m.ResolveUsing(dc => dc.InsertDate == null ? "Created" : "Modified"))
                 .ForMember(d => d.ModifiedBy, m => m.MapFrom(dc => "James Zetlen"))
