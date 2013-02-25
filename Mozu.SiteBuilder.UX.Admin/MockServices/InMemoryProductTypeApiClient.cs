@@ -154,7 +154,31 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
                 Extras = new List<DC.AttributeInProductType>()
             };
 
-            repo.AddRange(new[] { p1, p2 });
+            DC.Attribute p3attribute = new EngravingAttribute();
+            p3attribute.VocabularyValues.Add(new DC.AttributeVocabularyValue { Value = "YOLO" });
+
+            DC.ProductType p3 = new DC.ProductType
+            {
+                Id = 3,
+                Name = "Product Type 3",
+                Properties = new List<DC.AttributeInProductType>(),
+                Options = new List<DC.AttributeInProductType>(),
+                Extras = new List<DC.AttributeInProductType>
+                {
+                    new DC.AttributeInProductType {
+                        Attribute = p3attribute,
+                        AttributeFQN = p3attribute.AttributeFQN,
+                        VocabularyValues = new List<DC.AttributeVocabularyValueInProductType> {
+                            new DC.AttributeVocabularyValueInProductType {
+                                Order = 1,
+                                Value = p3attribute.VocabularyValues.First().Value,
+                                VocabularyValue = p3attribute.VocabularyValues.First()
+                            }
+                        }
+                    }
+                }
+            };
+            repo.AddRange(new[] { p1, p2, p3 });
         }
 
         #region IProductTypeWebApiClient shit that i'm not implementing

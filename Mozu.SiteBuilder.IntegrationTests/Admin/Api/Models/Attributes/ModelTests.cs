@@ -109,7 +109,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 IsRequired = true,
                 ProductTypeId = productTypeId,
                 SelectedValues = new List<AttributeValue>(),
-                UsageType = ProductTypeAttributeUsage.extra 
             };
         }
 
@@ -138,7 +137,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 
                 ProductTypeId = productTypeId,
                 SelectedValues = new List<AttributeValue> { attributeValues[0], attributeValues[1], attributeValues[2] },
-                UsageType = ProductTypeAttributeUsage.extra 
             };
 
             var allValues = new List<AttributeValue>
@@ -157,7 +155,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 IsRequired = false,
                 ProductTypeId = productTypeId,
                 SelectedValues = new List<AttributeValue> { allValues[0] },
-                UsageType = ProductTypeAttributeUsage.extra,
             };
         }
 
@@ -174,7 +171,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 IsRequired = false,
                 ProductTypeId = productTypeId,
                 SelectedValues = new List<AttributeValue>(),
-                UsageType = ProductTypeAttributeUsage.option
             };
         }
     }

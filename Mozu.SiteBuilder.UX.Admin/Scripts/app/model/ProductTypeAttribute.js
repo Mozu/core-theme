@@ -13,10 +13,10 @@ Ext.define('Taco.model.ProductTypeAttribute', {
         { name: 'isHidden', type: 'boolean', defaultValue: false },
 
         { name: 'attributeName', type: 'string', persist: false },
-        { name: 'attributeInputType', type: 'auto', persist: false },
         { name: 'allValues', type: 'auto', persist: false },
         { name: 'selectedValues', type: 'auto' },
-        { name: 'usageType', type: 'string' }
+        { name: 'dataType', type: 'string' },
+        { name: 'inputType', type: 'string' }
 
     ],
     idProperty: 'attributeFQN',

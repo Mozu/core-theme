@@ -37,6 +37,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             return ret;
         }
 
+        private List<DC.AttributeVocabularyValueInProductType> MapSelectedValuesToVocabularyValueInProductTypeList(List<AttributeValue> selectedValues)
+        {
+            return selectedValues.Select((val, idx) => new DC.AttributeVocabularyValueInProductType { Value = val.Value, Order = idx }).ToList();
+        }
+
         protected override void Configure()
         {
             #region Product Type
@@ -67,7 +72,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IsHidden, opt => opt.MapFrom(dc => dc.IsHiddenProperty))
                 .ForMember(x => x.IsLocked, opt => opt.MapFrom(dc => dc.IsInheretedFromBaseType))
                 .ForMember(x => x.AllValues, opt => opt.MapFrom(dc => dc.Attribute.VocabularyValues))
-                .ForMember(x => x.SelectedValues, opt => opt.MapFrom(dc => dc.VocabularyValues))
+                .ForMember(x => x.SelectedValues, opt => opt.ResolveUsing(dc => MapVocabularyValueInProductTypeListToSelectedValues(dc.VocabularyValues, dc.AttributeFQN)))
+                .ForMember(x => x.DataType, opt => opt.MapFrom(dc => dc.Attribute.DataType))
+                .ForMember(x => x.InputType, opt => opt.MapFrom(dc => dc.Attribute.InputType))
+                .ForMember(x => x.AttributeName, opt => opt.MapFrom(dc => dc.Attribute.AttributeCode))
                 ;
 
             Mapper.CreateMap<ProductTypeAttribute, DC.AttributeInProductType>()
@@ -77,13 +85,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     AttributeFQN = x.AttributeFQN,
                     AttributeCode = x.AttributeName,
-                    VocabularyValues = Mapper.Map<List<DC.AttributeVocabularyValue>>(x.AllValues)
+                    VocabularyValues = Mapper.Map<List<DC.AttributeVocabularyValue>>(x.AllValues),
+                    DataType = x.DataType,
+                    InputType = x.InputType
                 }))
                 .ForMember(dc => dc.IsHiddenProperty, opt => opt.MapFrom(x => x.IsHidden))
                 .ForMember(dc => dc.IsInheretedFromBaseType, opt => opt.MapFrom(x => x.IsLocked))
                 .ForMember(dc => dc.IsRequiredByAdmin, opt => opt.MapFrom(x => x.IsRequired))
                 .ForMember(dc => dc.IsMultiSelectProperty, opt => opt.MapFrom(x => x.AllowMulti))
-                .ForMember(dc => dc.VocabularyValues, opt => opt.MapFrom(x => x.SelectedValues))
+                .ForMember(dc => dc.VocabularyValues, opt => opt.ResolveUsing(x => MapSelectedValuesToVocabularyValueInProductTypeList(x.SelectedValues)))
                 ;
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>();
@@ -114,6 +124,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Content.Name))
                 ;
             #endregion
+        }
+
+        private List<AttributeValue> MapVocabularyValueInProductTypeListToSelectedValues(List<DC.AttributeVocabularyValueInProductType> list, string attributeFQN)
+        {
+            List<AttributeValue> r =
+                (from l in list
+                orderby l.Order
+                select new AttributeValue {
+                     AttributeFQN = attributeFQN,
+                     Value = l.Value
+                }).ToList();
+
+            return r;
         }
     }
 }
