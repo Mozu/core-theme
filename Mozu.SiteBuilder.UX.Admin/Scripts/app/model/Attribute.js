@@ -40,18 +40,18 @@ Ext.define('Taco.model.Attribute', {
     },
     proxy: {
         type: 'ajaxproxy',
+        // api: {
+        //     create: '/admin/app/Test/testCreate',
+        //     read: '/admin/Scripts/app/mocks/attributes.json',
+        //     update: '/admin/app/Test/testUpdate',
+        //     destroy: '/admin/app/Test/testDestroy'
+        // },
         api: {
-            create: '/admin/app/Test/testCreate',
-            read: '/admin/Scripts/app/mocks/attributes.json',
-            update: '/admin/app/Test/testUpdate',
-            destroy: '/admin/app/Test/testDestroy'
+           create: '/admin/app/attribute/create',
+           read: '/admin/app/attribute/read',
+           update: '/admin/app/attribute/update',
+           destroy: '/admin/app/attribute/destroy'
         },
-        //api: {
-        //    create: '/admin/app/Attribute/create',
-        //    read: '/admin/app/Attribute/read',
-        //    update: '/admin/app/Attribute/update',
-        //    destroy: '/admin/app/Attribute/destroy'
-        //},
         reader: {
             type: 'json',
             root: 'items',
