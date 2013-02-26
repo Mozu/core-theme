@@ -178,7 +178,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
             get
             {
                 return from type in GetType().Assembly.GetTypes()
-                       where typeof (DC.Attribute).IsAssignableFrom(type)
+                       where typeof (DC.Attribute).IsAssignableFrom(type) && !type.IsAbstract
                        select (DC.Attribute) Activator.CreateInstance(type);
             }
         }
