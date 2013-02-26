@@ -1,1 +1,0 @@
-﻿var ObjectTypes = function () { };
