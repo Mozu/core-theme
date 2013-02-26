@@ -14,6 +14,72 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
     [TestFixture]
     public class ModelTests
     {
+        [Test]
+        public void Can_map_from_Contract_Attribute_to_SiteBuilder_Attribute_for_Date()
+        {
+            var attribute = new ProductAdmin.Contracts.Attribute
+            {
+                DataType = "DateTime",
+                Validation = new AttributeValidation
+                {
+                    MaxDateValue = new DateTime(2001, 1, 1),
+                    MinDateValue = new DateTime(1999, 12, 31),
+                },
+            };
+
+            var actual = AutoMapper.Mapper.Map<Attribute>(attribute);
+
+            actual.Min.ShouldBeType<DateTime>();
+            actual.Min.ShouldEqual(attribute.Validation.MinDateValue);
+
+            actual.Max.ShouldBeType<DateTime>();
+            actual.Max.ShouldEqual(attribute.Validation.MaxDateValue);
+        }
+
+        [Test]
+        public void Can_map_from_Contract_Attribute_to_SiteBuilder_Attribute_for_Numeric()
+        {
+            var attribute = new ProductAdmin.Contracts.Attribute
+            {
+                DataType = "Number",
+                Validation = new AttributeValidation
+                {
+                    MaxNumericValue = 9000m,
+                    MinNumericValue = 42.23589m,
+                },
+            };
+
+            var actual = AutoMapper.Mapper.Map<Attribute>(attribute);
+
+            actual.Min.ShouldBeType<decimal>();
+            actual.Min.ShouldEqual(attribute.Validation.MinNumericValue);
+
+            actual.Max.ShouldBeType<decimal>();
+            actual.Max.ShouldEqual(attribute.Validation.MaxNumericValue);
+        }
+
+        [Test]
+        public void Can_map_from_Contract_Attribute_to_SiteBuilder_Attribute_for_String()
+        {
+            var attribute = new ProductAdmin.Contracts.Attribute
+            {
+                DataType = "String",
+                Validation = new AttributeValidation
+                {
+                    MaxStringLength = 40,
+                    MinStringLength = 20,
+                },
+            };
+
+            var actual = AutoMapper.Mapper.Map<Attribute>(attribute);
+
+            actual.Min.ShouldBeType<int>();
+            actual.Min.ShouldEqual(attribute.Validation.MinStringLength);
+
+            actual.Max.ShouldBeType<int>();
+            actual.Max.ShouldEqual(attribute.Validation.MaxStringLength);
+        }
+
         [Test, Explicit("Run to create some sample JSON")]
         public void Can_create_a_test_ProductType()
         {
