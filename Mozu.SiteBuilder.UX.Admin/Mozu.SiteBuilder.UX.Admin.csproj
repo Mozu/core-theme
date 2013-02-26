@@ -332,6 +332,7 @@
     <Compile Include="Api\CmsDocumentController.cs" />
     <Compile Include="Api\CmsPublishingController.cs" />
     <Compile Include="Api\ModelMapping\AttributeMapping.cs" />
+    <Compile Include="Api\ModelMapping\AttributeValidationResolver.cs" />
     <Compile Include="Api\ModelMapping\WidgetInstanceDataMapping.cs" />
     <Compile Include="Api\Models\Attributes\Attribute.cs" />
     <Compile Include="Api\Models\Attributes\AttributeDataType.cs" />
