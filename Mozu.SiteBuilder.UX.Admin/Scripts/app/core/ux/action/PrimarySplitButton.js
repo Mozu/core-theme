@@ -15,7 +15,20 @@ Ext.define('Taco.core.ux.action.PrimarySplitButton', {
             cls: Taco.baseCSSPrefix + 'splitbutton-menu-item'
         }
     },
-    createMenu: function (conf) {
-        this.menu = Ext.create('Ext.menu.Menu', Ext.applyIf(conf || {}, this.menuDefaults));
+    initComponent : function() {
+        this.menu = this.createMenu();
+        this.callParent(arguments);
+    },
+    
+    createMenu: function () {
+        if (this.menu && this.menu.$className == undefined) {
+            this.menu = Ext.applyIf(this.menu, this.menuDefaults);
+        }
+        return this.menu || Ext.create('Ext.menu.Menu', Ext.applyIf({ items: this.createMenuItems() || [] },  this.menuDefaults));
+    },
+    createMenuItems: function () {
+        return this.menuItems;
     }
+    
+
 });

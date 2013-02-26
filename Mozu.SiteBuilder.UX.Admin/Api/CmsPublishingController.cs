@@ -151,10 +151,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 foreach (IGrouping<string, DC.Document> docGroup in documentListGroups)
                 {
-                    // TODO: currently the server ignores documentListName, so we double-check that we only got results from the list we expected.
-                    if (!String.IsNullOrEmpty(documentListName) && docGroup.Key.ToLower() != documentListName.ToLower())
-                        continue;
 
+                    //ugg
+                    if (documentListName != HACK)
+                    {
+                        // TODO: currently the server ignores documentListName, so we double-check that we only got results from the list we expected.
+                        if (!String.IsNullOrEmpty(documentListName) && docGroup.Key.ToLower() != documentListName.ToLower())
+                            continue;
+                    }
                     List<string> docIds = docGroup.Select(doc => doc.Id).ToList();
 
                     var publishResult = await _documentClient.PublishDocuments(/*documentListName: */ docGroup.Key, /*documentIds: */ docIds);
