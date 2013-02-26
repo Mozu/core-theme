@@ -108,27 +108,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             #endregion
 
             #region Attributes
-            Mapper.CreateMap<Attribute, DC.Attribute>()
-                .ForMember(x => x.VocabularyValues, opt => opt.MapFrom(x => x.Values))
-                .ForMember(x => x.AttributeFQN, opt => opt.MapFrom(x => x.Id))
-                .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new DC.AttributeLocalizedContent
-                    {
-                        Description = "",
-                        Name = x.Name,
-                        LocaleCode = "en-US",
-                    }))
-                //.ForMember(x => x.Validation, opt => opt.ResolveUsing(x => new DC.AttributeValidation{ RegularExpression = x.Regex }))
-                .AfterMap((a, b) => b.Validation = new DC.AttributeValidation { RegularExpression = a.Regex })
-                //.AfterMap<AttributeValidationMappingAction>()
-                ;
+            Mapper.CreateMap<Attribute, DC.Attribute>().ConvertUsing<AttributeToContractConverter>();
+
             Mapper.CreateMap<DC.Attribute, Attribute>()
                 .ForMember(x => x.Values, opt => opt.MapFrom(x => x.VocabularyValues))
                 .ForMember(x => x.Id, opt => opt.MapFrom(x => x.AttributeFQN))
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Content.Name))
                 .ForMember(x => x.Regex, opt => opt.MapFrom(x => x.Validation.RegularExpression))
-                //.ForMember(x => x.Max, opt => opt.ResolveUsing<AttributeValidationMaxResolver>())
-                //.ForMember(x => x.Min, opt => opt.ResolveUsing<AttributeValidationMinResolver>())
-                //.AfterMap<AttributeValidationMappingAction>()
                 ;
             #endregion
         }
