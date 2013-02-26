@@ -54,7 +54,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 RegularExpression = source.Regex,
             };
 
-            Strategies[source.DataType](attributeValidation, source);
+            if (source.DataType != AttributeDataType.None)
+                Strategies[source.DataType](attributeValidation, source);
 
             var destination = new DC.Attribute
             {
