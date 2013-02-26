@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mozu.ProductAdmin.Contracts;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
 using NUnit.Framework;
 using Should;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
+using ProductType = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.ProductType;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
 {
@@ -82,12 +84,37 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 ValueType = "Shopper",
                 InputType = "TextBox",
                 DataType = "DateTime",
+                Validation = new AttributeValidation { RegularExpression = "/bla(h|H)" },
             };
             var mapped = AutoMapper.Mapper.Map<Attribute>(attribute);
 
             mapped.ValueType.ShouldEqual(AttributeValueType.Shopper);
             mapped.InputType.ShouldEqual(AttributeInputType.TextBox);
             mapped.DataType.ShouldEqual(AttributeDataType.DateTime);
+            mapped.Regex.ShouldEqual("/bla(h|H)");
+        }
+
+        [Test]
+        public void Travis_test()
+        {
+            var attribute = new Attribute
+                {
+                    Regex = "travis",
+                    Id = "UPC",
+                    DataType = AttributeDataType.String,
+                    InputType = AttributeInputType.TextBox,
+                    Name = "UPC1",
+                    ValueType = AttributeValueType.Admin,
+                    IsOption = false,
+                    IsExtra = false,
+                    IsProperty = true,
+                    Min = "",
+                    Max = "",
+                    Values = new List<AttributeValue>(),
+                };
+            var dcAttribute = AutoMapper.Mapper.Map<ProductAdmin.Contracts.Attribute>(attribute);
+
+            dcAttribute.ShouldNotBeNull();
         }
 
         private IEnumerable<ProductTypeAttribute> GetExtras(int productTypeId)
