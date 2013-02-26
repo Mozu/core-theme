@@ -9,27 +9,19 @@ using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
-    public class AttributeValidationMappingAction : IMappingAction<Attribute, DC.Attribute>
+    public class AttributeToContractConverter : ITypeConverter<Attribute, DC.Attribute>
     {
-        private static readonly IDictionary<AttributeDataType, Action<AttributeValidation, Attribute>> strategies = new Dictionary<AttributeDataType, Action<AttributeValidation, Attribute>>
-            {
-                { AttributeDataType.DateTime, MapDateValues },
-                { AttributeDataType.Number, MapNumericValues },
-                { AttributeDataType.String, MapStringLengthValues },
-            };
-
-        public void Process(DC.Attribute source, Attribute destination)
+        private static readonly IDictionary<AttributeDataType, Action<AttributeValidation, Attribute>> Strategies = new Dictionary<AttributeDataType, Action<AttributeValidation, Attribute>>
         {
-            source.Validation = source.Validation ?? new AttributeValidation();
-            var validation = new AttributeValidation { RegularExpression = source.Validation.RegularExpression, };
-
-            strategies[destination.DataType](validation, destination);
-        }
+            { AttributeDataType.DateTime, MapDateValues },
+            { AttributeDataType.Number, MapNumericValues },
+            { AttributeDataType.String, MapStringLengthValues },
+        };
 
         private static void MapStringLengthValues(AttributeValidation validation, Attribute attribute)
         {
-            validation.MinStringLength = ToValue<int?>(attribute.Min);
-            validation.MaxStringLength = ToValue<int?>(attribute.Max);
+            validation.MinStringLength = ToValue<int?>(attribute.Min) ?? 0;
+            validation.MaxStringLength = ToValue<int?>(attribute.Max) ?? 0;
         }
 
         private static void MapDateValues(AttributeValidation validation, Attribute attribute)
@@ -40,8 +32,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private static void MapNumericValues(AttributeValidation validation, Attribute attribute)
         {
-            validation.MaxNumericValue = ToValue<decimal?>(attribute.Max);
-            validation.MinNumericValue = ToValue<decimal?>(attribute.Min);
+            validation.MaxNumericValue = ToValue<decimal?>(attribute.Max) ?? 0m;
+            validation.MinNumericValue = ToValue<decimal?>(attribute.Min) ?? 0m;
         }
 
         protected static T ToValue<T>(object value)
@@ -53,38 +45,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             return default(T);
         }
 
-        public void Process(Attribute source, DC.Attribute destination)
+        public DC.Attribute Convert(ResolutionContext context)
         {
-        }
+            var source = (Attribute) context.SourceValue;
 
-        /*protected override AttributeValidation ResolveCore(Attribute source)
-        {
-            var destination = new AttributeValidation { RegularExpression = source.Regex, };
+            var attributeValidation = new AttributeValidation
+            {
+                RegularExpression = source.Regex,
+            };
 
-            strategies[source.DataType](destination, source);
+            Strategies[source.DataType](attributeValidation, source);
+
+            var destination = new DC.Attribute
+            {
+                Validation = attributeValidation,
+                VocabularyValues = Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values),
+                AttributeFQN = source.Id,
+                Content = new DC.AttributeLocalizedContent
+                {
+                    Description = "",
+                    Name = source.Name,
+                    LocaleCode = "en-US",
+                },
+                InputType = Enum.GetName(typeof(AttributeInputType), source.InputType),
+                DataType = Enum.GetName(typeof(AttributeDataType), source.DataType),
+                ValueType = Enum.GetName(typeof(AttributeValueType), source.ValueType),
+                IsProperty = source.IsProperty,
+                IsExtra = source.IsExtra,
+                IsOption = source.IsOption,
+            };
 
             return destination;
-        }*/
+        }
     }
-
-    //public class AttributeToAttributeValidationResolver : ValueResolver<Attribute, AttributeValidation>
-    //{
-    //    /*private static readonly IEnumerable<IValidationMappingStrategy> Strategies = new List<IValidationMappingStrategy>
-    //    {
-    //        new DateValidationMappingStrategy(),
-    //    };*/
-
-
-    //    protected override AttributeValidation ResolveCore(Attribute source)
-    //    {
-    //        var validation = new AttributeValidation { RegularExpression = source.Regex, };
-
-    //        //var strategy = Strategies.FirstOrDefault(x => x.CanMap(source));
-    //        //if (strategy != null)
-    //        //    strategy.Map(validation, source);
-
-    //        return validation;
-    //    }
-
-    //}
 }
