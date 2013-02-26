@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Mozu.ProductAdmin.Contracts;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Attribute = Mozu.ProductAdmin.Contracts.Attribute;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
@@ -31,18 +32,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected static readonly IDictionary<string, Func<string, AttributeValidation, object>> Strategies = new Dictionary<string, Func<string, AttributeValidation, object>>(StringComparer.OrdinalIgnoreCase)
         {
-            { "DateTime", MapDate },
+            { "DateTime", MapDate    },
             { "Number",   MapNumeric },
-            { "String",   MapString },
+            { "String",   MapString  },
         };
 
         protected object Map(string key, Attribute attribute)
         {
-            Function func;
-            if (attribute.DataType != null && Strategies.TryGetValue(attribute.DataType, out func))
-                return func(key, attribute.Validation);
-
-            throw new InvalidOperationException(string.Format(messageFormat, attribute.DataType ?? "(null)", string.Join(", ", Strategies.Select(x => x.Key))));
+            return Strategies.GetOrDefault(attribute.DataType, NullOp)(key, attribute.Validation);
         }
 
         private static object MapString(string key, AttributeValidation validation)
@@ -58,6 +55,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private static object MapDate(string key, AttributeValidation validation)
         {
             return key == "min" ? validation.MinDateValue : validation.MaxDateValue;
+        }
+
+        private static object NullOp(string key, AttributeValidation validation)
+        {
+            return null;
         }
     }
 }

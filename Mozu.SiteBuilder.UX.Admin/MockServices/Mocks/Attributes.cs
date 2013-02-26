@@ -3,7 +3,15 @@ using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
 {
-    public class UPCAttribute : DC.Attribute
+    public abstract class BaseMockAttribute : DC.Attribute
+    {
+        protected BaseMockAttribute()
+        {
+            Validation = new DC.AttributeValidation();
+        }
+    }
+
+    public class UPCAttribute : BaseMockAttribute
     {
         public const string ATTRIBUTE_FQN = "UPC";
         public UPCAttribute()
@@ -20,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
         }
     }
 
-    public class EngravingAttribute : DC.Attribute
+    public class EngravingAttribute : BaseMockAttribute
     {
         public const string ATTRIBUTE_FQN = "CustomEngraving";
         public EngravingAttribute()
@@ -37,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
         }
     }
 
-    public class GiftWrapAttribute : DC.Attribute
+    public class GiftWrapAttribute : BaseMockAttribute
     {
         public const string ATTRIBUTE_FQN = "GiftWrapYesNo";
         public GiftWrapAttribute()
@@ -51,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
         }
     }
 
-    public class UnitCostAttribute : DC.Attribute
+    public class UnitCostAttribute : BaseMockAttribute
     {
         public const string ATTRIBUTE_FQN = "UnitCost";
         public UnitCostAttribute()
@@ -68,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
         }
     }
 
-    public class ColorAttribute : DC.Attribute
+    public class ColorAttribute : BaseMockAttribute
     {
         public const string ATTRIBUTE_FQN = "Thing-Color";
         public ColorAttribute()
@@ -92,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
         }
     }
 
-    public class FinishAttribute : DC.Attribute
+    public class FinishAttribute : BaseMockAttribute
     {
         public const string ATTRIBUTE_FQN = "BucketFinish";
         public FinishAttribute()

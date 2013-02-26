@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using AutoMapper;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 using AttributeValidation = Mozu.ProductAdmin.Contracts.AttributeValidation;
@@ -13,9 +14,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
     {
         private static readonly IDictionary<AttributeDataType, Action<AttributeValidation, Attribute>> Strategies = new Dictionary<AttributeDataType, Action<AttributeValidation, Attribute>>
         {
-            { AttributeDataType.DateTime, MapDateValues },
-            { AttributeDataType.Number, MapNumericValues },
-            { AttributeDataType.String, MapStringLengthValues },
+            { AttributeDataType.DateTime, MapDateValues         },
+            { AttributeDataType.Number,   MapNumericValues      },
+            { AttributeDataType.String,   MapStringLengthValues },
         };
 
         private static void MapStringLengthValues(AttributeValidation validation, Attribute attribute)
@@ -54,8 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 RegularExpression = source.Regex,
             };
 
-            if (source.DataType != AttributeDataType.None)
-                Strategies[source.DataType](attributeValidation, source);
+            Strategies.GetOrDefault(source.DataType, NoOp)(attributeValidation, source);
 
             var destination = new DC.Attribute
             {
@@ -77,6 +77,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             };
 
             return destination;
+        }
+
+        private static void NoOp(AttributeValidation v, Attribute a)
+        {
         }
     }
 }

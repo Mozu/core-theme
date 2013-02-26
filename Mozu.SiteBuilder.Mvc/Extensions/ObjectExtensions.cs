@@ -86,5 +86,11 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             }
             return e;
         }
+
+        public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> self, TKey key, TValue @default)
+        {
+            TValue value;
+            return self.TryGetValue(key, out value) ? value : @default;
+        }
     }
 }
