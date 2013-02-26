@@ -41,20 +41,11 @@ Ext.define('Taco.view.pendingchange.Cms', {
             updateCount: function (obj) {
                 this.setText([this.textTpl.apply(obj)]);
             },
-            initComponent: function () {
-                var me;
-                this.createMenu({
-                    items: [
-                    { text: 'Publish all pages and templates', handler: function () { me.publishAll(); } },
-                    { text: 'Publish all pages', handler: function () { me.publishAll('page'); } },
-                    { text: 'Publish all templates', handler: function () { me.publishAll('template'); } }
-                    ]
-                });
-
-                this.callParent(arguments);
-                this.on('boxready', function () {
-                    me = this.getParentPage();
-                });
+            createMenuItems: function () {
+                var me = this;
+                return [{ text: 'Publish all pages and templates', handler: function() { me.getParentPage().publishAll(); } },
+                { text: 'Publish all pages', handler: function () { me.getParentPage().publishAll('page'); } },
+                { text: 'Publish all templates', handler: function () { me.getParentPage().publishAll('template'); } }];
             }
 
         }]
@@ -65,10 +56,11 @@ Ext.define('Taco.view.pendingchange.Cms', {
         this.publishButton.updateCount({ text: this.publishAllText, count: this.store.count() });
     },
 
-    initComponent: function() {
+    initComponent: function () {
+        
         this.callParent(arguments);
         this.mon(this.store, 'datachanged', this.updateChangeCount, this);
-        this.store.load();
+        //this.store.load();
         this.updateChangeCount();
     },
 
@@ -76,22 +68,50 @@ Ext.define('Taco.view.pendingchange.Cms', {
         dockedItems: [{
             xtype: 'toolbar',
             dock: 'top',
+          
             items: [{
-                text: 'BULK ITEM update',
-                handler: function () {
-                    var grid = this.up('grid'),
-                        checkedModels = grid.getSelectionModel().getSelection(),
-                        store = grid.store;
-                    if (checkedModels) {
-                        Ext.each(checkedModels, function(item) {
-                            item.set('isPublished', true);
-                        });
-                        store.sync({
-                            callback:function() {
-                                store.reload();
-                            } 
-                        });
-                    }
+                xtype:'primarysplitbutton',
+                text: 'Bulk Actions',
+                handler: function(btn) {
+                    btn.showMenu();
+                },
+                
+                menu:
+                 {
+                    xtype:'menu',
+                    items: [ {
+                        text: 'Publish',
+                        handler: function() {
+                            var grid = this.grid || (this.grid = this.up('grid')),
+                                checkedModels = grid.getSelectionModel().getSelection(),
+                                store = grid.store;
+                            if (checkedModels) {
+                                Ext.each(checkedModels, function(item) {
+                                    item.set('isPublished', true);
+                                });
+                                store.sync({
+                                    callback: function() {
+                                        store.reload();
+                                    }
+                                });
+                            }
+                        },
+                    },{
+                        text: 'Discard',
+                        handler: function() {
+                            var grid = this.up('grid'),
+                                checkedModels = grid.getSelectionModel().getSelection(),
+                                store = grid.store;
+                            if (checkedModels) {
+                                store.remove(checkedModels);
+                                store.sync({
+                                    callback: function() {
+                                        store.reload();
+                                    }
+                                });
+                            }
+                        },
+                    }]
                 }
             }]
         }],

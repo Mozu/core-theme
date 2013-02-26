@@ -403,7 +403,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-            var catTasks = _catClient.GetChildCategories(-1);
+            var catTasks = _catClient.GetChildCategories(0);
             Task.WaitAll(pageTasks, catTasks, blogTasks);
 
 

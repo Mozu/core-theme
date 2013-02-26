@@ -782,7 +782,8 @@
             if (md.controller && md.controller === "sites") {
                 
                 config = {
-                    url:  newState.getUri().substring("sites".length ),
+                    url: newState.getUri().substring(newState.getUri().indexOf('sites/')+'sites'.length),
+                    //url:  newState.getUri().substring("sites".length ),
                     suppressAddState: true
                 };
                 md.navigateMetaData = md;
