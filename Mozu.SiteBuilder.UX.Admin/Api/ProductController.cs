@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
@@ -10,10 +9,9 @@ using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers;
-using Mozu.SiteBuilder.UX.Admin.MockServices;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
-using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -23,6 +21,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [ServiceContract]
     public class ProductController : BaseController
     {
+        private readonly CollectionTaskUnMapper<Product, DC.Product> _productMapper = new CollectionTaskUnMapper<Product, DC.Product>();
+
         private readonly IProductWebApiClient _productClient;
 
         /// <summary>
@@ -46,8 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string filter = extFilter.ToFilterString();
             string sort = pagingParams.sort.ToSortString();
 
-            ProductCollection res;
-            res = _productClient.GetProducts(pagingParams.startIndex, pagingParams.pageSize, sort, null, filter).Result.ReadAsAsync().Result;
+            ProductCollection res = _productClient.GetProducts(pagingParams.startIndex, pagingParams.pageSize, sort, null, filter).Result.ReadAsAsync().Result;
 
             return List2(Mapper.Map<List<Product>>(res.Items), (int)res.TotalCount);
         }
@@ -55,56 +54,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "create")]
         public async Task<Response<List<Product>>> CreateProduct(List<Product> products)
         {
-            List<Product> createdProducts = new List<Product>(products.Count);
-            foreach (Product p in products)
-            {
-                DC.Product dataModel = Mapper.Map<DC.Product>(p);
-                DC.Product returned;
+            if (products == null || !products.Any())
+                return Message3<List<Product>>(false, "No products were created because they were not sent correctly. Please try again.");
 
-                try
-                {
-                    var result = await _productClient.AddProduct(dataModel);
-                    returned = result.ReadAsAsync().Result;
-                }
-                catch (AggregateException e)
-                {
-                    return Message3<List<Product>>(false, e.UnwrapAgg().Message);
-                }
-
-                createdProducts.Add(Mapper.Map<Product>(returned));
-            }
-
-            return List2(createdProducts);
+            var createdProducts = await _productMapper.PerformAction(products, p => _productClient.AddProduct(p));
+            return List2(createdProducts.ToList());
         }
 
         [WebInvoke(UriTemplate = "edit")]
         public async Task<Response<List<Product>>> EditProduct(List<Product> products)
         {
-            List<Product> updatedProducts = new List<Product>(products.Count);
-            foreach (Product p in products)
-            {
-                DC.Product dataModel = Mapper.Map<DC.Product>(p);
-                var result = await _productClient.UpdateProduct(dataModel, dataModel.ProductCode);
-                DC.Product returned = result.ReadAsAsync().Result;
-                updatedProducts.Add(Mapper.Map<Product>(returned));
-            }
+            if (products == null || !products.Any())
+                return Message3<List<Product>>(false, "No products were edited because they were not sent correctly. Please try again.");
 
-            return List2(updatedProducts);
+            var editedProducts = await _productMapper.PerformAction(products, p => _productClient.UpdateProduct(p, p.ProductCode));
+            return List2(editedProducts.ToList());
         }
 
         [WebInvoke(UriTemplate = "delete")]
         public async Task<Response<List<Product>>> DeleteProduct(List<Product> products)
         {
-            List<Product> deletedProducts = new List<Product>(products.Count);
-            foreach (Product p in products)
-            {
-                var result = await _productClient.DeleteProduct(p.ProductCode);
-                // TODO: wtf is this for?
-                StreamContent ret = result.ReadAsAsync().Result;
-                deletedProducts.Add(p);
-            }
+            if (products == null || !products.Any())
+                return Message3<List<Product>>(false, "No products were edited because they were not sent correctly. Please try again.");
 
-            return List2(deletedProducts);
+            var deletedProducts = await _productMapper.PerformVoidAction(products, p => _productClient.DeleteProduct(p.ProductCode));
+            return List2(deletedProducts.ToList());
         }
     }
 }
