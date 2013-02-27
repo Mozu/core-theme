@@ -72,7 +72,7 @@
             expect(typeof api.get).toBe("function");
             expect(typeof api.update).toBe("function");
             expect(typeof api.create).toBe("function");
-            expect(typeof api.delete).toBe("function");
+            expect(typeof api.remove).toBe("function");
         });
 
         describe("the api.request method", function () {
@@ -144,7 +144,8 @@
                 runs(function () {
                     expect(res.ProductCode).toBe("foobar");
                 });
-            });
+            });
+
             it("should work with the shortcut string to the main path param", function () {
                 var res;
                 spyOn(Mozu.ApiReference, "getUrlFor").andCallThrough();

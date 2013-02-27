@@ -503,6 +503,7 @@
     <Content Include="App_Data\51Degrees.mobi-Lite-2012.12.04.dat" />
     <Content Include="Configs\AppSettings.SI.config" />
     <Content Include="51Degrees.mobi.config" />
+    <Content Include="JS_SDK\tests\SDKSpec.coffee" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <Content Include="Web.SI.config">
       <DependentUpon>Web.config</DependentUpon>
