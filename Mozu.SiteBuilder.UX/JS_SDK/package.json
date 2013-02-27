@@ -1,4 +1,4 @@
-{
+﻿{
     "name": "mozu-sdk",
     "title": "Mozu JavaScript SDK",
     "author": "Volusion, Inc.",
@@ -12,7 +12,10 @@
         "grunt-contrib-jasmine": "~0.3.2",
         "grunt-contrib-clean": "~0.4.0",
         "grunt-contrib-concat": "~0.1.2",
-        "grunt-contrib-uglify": "~0.1.1"
+        "grunt-contrib-uglify": "~0.1.1",
+        "node-static": "~0.6.7",
+        "open": "~0.0.3",
+        "keypress": "~0.1.0"
     },
     "main": "./dist/mozu-sdk"
 }

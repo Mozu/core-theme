@@ -10,7 +10,8 @@ module.exports = function (grunt) {
         toExport: 'Mozu',
         exportAs: 'Mozu',
 
-        tmp: '<%= pkg.name %>.tmp',
+        releasetemp: '<%= pkg.name %>.tmp',
+        debugtemp: '<%= pkg.name %>.debug.tmp',
 
         banner: grunt.file.read('banner.tpl'),
 
@@ -20,7 +21,7 @@ module.exports = function (grunt) {
                 src: ['dist']
             },
             tmp: {
-                src: ['<%= tmp %>']
+                src: ['<%= releasetemp %>', '<%= debugtemp %>']
             }
         },
         concat: {
@@ -29,21 +30,33 @@ module.exports = function (grunt) {
             },
             dist: {
                 src: allScripts,
-                dest: '<%= tmp %>'
+                dest: '<%= releasetemp %>'
             },
             debug: {
                 src: allScripts.concat('init_debug.js'),
-                dest: '<%= tmp %>'
+                dest: '<%= debugtemp %>'
             }
         },
         wrap: {
-            wrapper: 'definewrapper.tpl',
-            src: '<%= concat.dist.dest %>',
-            dest: '<%= tmp %>',
-            data: {
-                toExport: '<%= toExport %>',
-                exportAs: '<%= exportAs %>',
-                banner: '<%= banner %>'
+            release: {
+                wrapper: 'definewrapper.tpl',
+                src: '<%= concat.dist.dest %>',
+                dest: '<%= releasetemp %>',
+                data: {
+                    toExport: '<%= toExport %>',
+                    exportAs: '<%= exportAs %>',
+                    banner: '<%= banner %>'
+                }
+            },
+            debug: {
+                wrapper: '<%= wrap.release.wrapper %>',
+                src: '<%= debugtemp %>',
+                dest: '<%= pkg.main %>.debug.js',
+                data: {
+                    toExport: '<%= toExport %>',
+                    exportAs: '<%= exportAs %>',
+                    banner: '<%= banner %>'
+                }
             }
         },
         uglify: {
@@ -51,7 +64,7 @@ module.exports = function (grunt) {
                 options: {
                     banner: '<%= banner %>'
                 },
-                src: '<%= wrap.dest %>',
+                src: '<%= wrap.release.dest %>',
                 dest: '<%= pkg.main %>.min.js'
             },
             beautify: {
@@ -63,18 +76,23 @@ module.exports = function (grunt) {
                     compress: false,
                     mangle: false
                 },
-                src: '<%= wrap.dest %>',
+                src: '<%= wrap.release.dest %>',
                 dest: '<%= pkg.main %>.js'
             }
         },
         jasmine: {
             all: {
-                src: '<%= uglify.beautify.dest %>',
+                src: '<%= wrap.debug.dest %>',
                 options: {
                     errorReporting: true,
                     specs: 'tests/**/*.js',
                     vendor: 'vendor/jquery.js'
                 }
+            }
+        },
+        browser: {
+            test: {
+                url: "http://127.0.0.1:8080/_SpecRunner.html"
             }
         }
     });
@@ -84,8 +102,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
 
-    grunt.registerTask('wrap', 'Wraps the file using a lodash template.', function () {
-        var conf = grunt.config('wrap');
+    grunt.registerMultiTask('wrap', 'Wraps the file using a lodash template.', function () {
+        var conf = this.data;
         grunt.log.write('Looking for ' + conf.wrapper + ' and ' + conf.src + '....');
         try {
             var wrapper = grunt.file.read('./' + conf.wrapper, 'UTF-8'),
@@ -100,13 +118,35 @@ module.exports = function (grunt) {
         grunt.log.ok('Wrapped file saved to ' + conf.dest);
     });
 
-    var order = ['clean:dist', 'concat:dist', 'wrap', 'uglify:beautify', 'uglify:dist', 'clean:tmp', 'jasmine:all'];
-    var debugorder = ['clean:dist', 'concat:debug', 'wrap', 'uglify:beautify', 'uglify:dist', 'clean:tmp', 'jasmine:all'];
+    grunt.registerMultiTask('browser', 'Opens a browser to view a specrunner', function () {
+        var fserv = new (require('node-static')).Server();
+        var done = this.async();
+        var server = require('http').createServer(function (req, res) {
+            req.addListener('end', function () {
+                fserv.serve(req, res);
+            });
+        }).listen(8080);
 
-    grunt.registerTask('strict', debugorder); // TODO: figure out real debug channel
-    grunt.registerTask('debug', debugorder);
+        require('keypress')(process.stdin);
+        grunt.log.writeln('Opening ' + this.data.url);
+        require('open')(this.data.url);
+        grunt.log.ok();
+        grunt.log.writeln('Running static HTTP server. Press ESC in this window to continue...');
+        process.stdin.on('keypress', function (ch, key) {
+            if (key && key.name === "escape") {
+                server.close();
+                done();
+            }
+        });
+        process.stdin.setRawMode(true);
+        process.stdin.resume();
+    });
+
+    var order = ['clean:dist', 'concat', 'wrap', 'uglify', 'clean:tmp', 'jasmine:all'];
+
+    grunt.registerTask('default', order); // TODO: figure out real debug channel
     grunt.registerTask('test', ['jasmine:all']);
-    grunt.registerTask('testdebug', ['jasmine:all:build']);
-    grunt.registerTask('default', debugorder.slice(0, -1));
+    grunt.registerTask('testdebug', ['jasmine:all:build', 'browser']);
+    grunt.registerTask('notest', order.slice(0, -1));
 
 };
