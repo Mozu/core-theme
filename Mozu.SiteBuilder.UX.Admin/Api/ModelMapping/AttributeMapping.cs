@@ -115,8 +115,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Id, opt => opt.MapFrom(x => x.AttributeFQN))
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Content.Name))
                 .ForMember(x => x.Regex, opt => opt.MapFrom(x => x.Validation.RegularExpression))
-                .ForMember(x => x.Min, opt => opt.ResolveUsing<AttributeValidationMinResolver>())
-                .ForMember(x => x.Max, opt => opt.ResolveUsing<AttributeValidationMaxResolver>())
+                .ForMember(x => x.Min, opt => opt.ResolveUsing(new AttributeValidationMinResolver()))
+                .ForMember(x => x.Max, opt => opt.ResolveUsing(new AttributeValidationMaxResolver()))
                 ;
             #endregion
         }
