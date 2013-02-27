@@ -1,21 +1,56 @@
 ﻿// BEGIN REFERENCE
 var ApiReference = (function () {
 
-    var baseUrl = 'http:///';
-
-    var simpleShortcuts = {
+    var urlShortcuts = {
         'products': 'mozu.ProductRuntime.WebApi/products',
-    };
-
-    var templateShortcuts = {
         'productsearch': {
-            template: 'mozu.ProductRuntime.WebApi/productsearch?q={query}
+            template: 'mozu.ProductRuntime.WebApi/productsearch{?_*}',
+            shortcutParam: 'q',
+            defaults: {
 
-    var objectSvcsSingle = {
-        product: '/mozu.ProductRuntime.WebApi/products/{productCode}'
+            }
+        },
+        'product': {
+            'get': {
+                template: 'mozu.ProductRuntime.WebApi/products/{productCode}',
+                shortcutParam: 'productCode'
+            },
+            'create': 'mozu.ProductRuntime.WebApi/products'
+        }
     };
+
     return {
-        getUrlFor: function(verb, typeName, conf, context) {
+
+        getUrlFor: function(operation, shortcutName, conf, context) {
+            var shortcut = urlShortcuts[shortcutName];
+            if (shortcut[operation]) shortcut = shortcut[operation];
+            if (!shortcut) throw "No known URL for '" + shortcutName + "' type.";
+            if (typeof shortcut === "string") return shortcut;
+            if (shortcut.template) {
+                // cache templates lazily
+                if (typeof shortcut.template === "string") shortcut.template = utils.uritemplate.parse(shortcut.template);
+                var tptData = {
+                    _: conf
+                };
+                if (typeof conf === "string") {
+                    if (!shortcut.shortcutParam) throw "No shortcut parameter available for '" + shortcutName + "'. Please supply a configuration object instead of '" + conf + "'.";
+                    tptData[shortcut.shortcutParam] = conf;
+                } else if (conf) {
+                    utils.extend(tptData, conf.query || conf);
+                }
+                if (shortcut.defaults) tptData = utils.extend({}, shortcut.defaults, tptData);
+                return shortcut.template.expand(tptData);
+            }
+
+            throw "URLs beyond simple strings and templates are not implemented."
+
+        },
+
+        createRichObjectFor: function (typeName, typeInfo) {
+
+        }
+
+    };
 
 }());
 // END REFERENCE
