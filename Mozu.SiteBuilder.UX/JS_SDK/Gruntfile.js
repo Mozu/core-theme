@@ -107,6 +107,6 @@ module.exports = function (grunt) {
     grunt.registerTask('debug', debugorder);
     grunt.registerTask('test', ['jasmine:all']);
     grunt.registerTask('testdebug', ['jasmine:all:build']);
-    grunt.registerTask('default', order.slice(0, -1));
+    grunt.registerTask('default', debugorder.slice(0, -1));
 
 };

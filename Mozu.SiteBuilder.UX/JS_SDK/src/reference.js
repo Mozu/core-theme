@@ -2,7 +2,14 @@
 var ApiReference = (function () {
 
     var urlShortcuts = {
-        'products': 'mozu.ProductRuntime.WebApi/products',
+        'products': {
+            template: 'mozu.ProductRuntime.WebApi/products{?_*}',
+            defaults: {
+                startIndex: 0,
+                pageSize: 25
+            }
+        },
+
         'productsearch': {
             template: 'mozu.ProductRuntime.WebApi/productsearch{?_*}',
             shortcutParam: 'q',
@@ -11,8 +18,11 @@ var ApiReference = (function () {
             }
         },
         'product': {
-            template: 'mozu.ProductRuntime.WebApi/products/{productCode}',
-            shortcutParam: 'productCode'
+            template: 'mozu.ProductRuntime.WebApi/products/{productCode}?{&allowInactive*}',
+            shortcutParam: 'productCode',
+            defaults: {
+                allowInactive: false
+            }
         }
     };
 
@@ -27,9 +37,7 @@ var ApiReference = (function () {
             if (shortcut.template) {
                 // cache templates lazily
                 if (typeof shortcut.template === "string") shortcut.template = utils.uritemplate.parse(shortcut.template);
-                var tptData = {
-                    _: conf
-                };
+                var tptData = {};
                 if (typeof conf === "string") {
                     if (!shortcut.shortcutParam) throw "No shortcut parameter available for '" + shortcutName + "'. Please supply a configuration object instead of '" + conf + "'.";
                     tptData[shortcut.shortcutParam] = conf;
@@ -37,7 +45,7 @@ var ApiReference = (function () {
                     utils.extend(tptData, conf.query || conf);
                 }
                 if (shortcut.defaults) tptData = utils.extend({}, shortcut.defaults, tptData);
-                return shortcut.template.expand(tptData);
+                return shortcut.template.expand(utils.extend({ _: tptData }, tptData));
             }
 
             throw "URLs beyond simple strings and templates are not implemented."
