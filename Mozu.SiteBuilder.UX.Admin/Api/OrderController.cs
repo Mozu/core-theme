@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 using AutoMapper;
 using OrderClinet = Mozu.Order.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -117,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "read")]
-        public Task<Response<List<OrderAdmin.Order>>> GetOrders(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<OrderAdmin.Order>>> GetOrders([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {
@@ -319,7 +320,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         // Customers
 
         [WebGet(UriTemplate = "customer/list/?customerId={customerId}")]
-        public Task<Response<List<OrderAdmin.Order>>> GetCustomerOrders(PagingParamaters pagingParams, FilterCollection extFilter, int customerId)
+        public Task<Response<List<OrderAdmin.Order>>> GetCustomerOrders([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, int customerId)
         {
             var filter = string.Format("CustomerAccountId eq {0}", customerId);
             var response = _orderWebApiClient.GetOrders(pagingParams.startIndex, pagingParams.pageSize, null, filter).Result.ReadAsSync();

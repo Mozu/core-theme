@@ -26,72 +26,33 @@ using Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers;
 using Mozu.SiteBuilder.UX.Admin.App_Start;
 using Mozu.SiteBuilder.UX.Admin.Configuration;
 using Mozu.Tenant.Contracts.Clients;
-using Volusion.SiteBuilder.UX.Models;
+
 
 namespace Mozu.SiteBuilder.UX.Admin
 {
-    public class MvcApplication : WebApiApplicationBase
+    public class MvcApplication :  WebApiApplicationBase
     {
-        protected override void PreApplicationStart()
+        private BootStrapperAdmin _bsa;
+
+
+        protected void Application_Start()
         {
-            LogStartupMessage<MvcApplication>("Mozu.SiteBuilder.Admin");
-        }
+            if (_bsa != null)
+            {
+                return;
+                
+            }
+            _bsa = new BootStrapperAdmin();
+            _bsa.Bootstrap(GlobalConfiguration.Configuration);
 
-        protected override void InitializeLoggingServiceFactory()
-        {
-            // No additional hooks needed here, just use base implementation
-            base.InitializeLoggingServiceFactory();
-        }
 
-        protected override void InitializeAutoMapperProfiles()
-        {
-            // No additional hooks needed here, just use base implementation
-            base.InitializeAutoMapperProfiles();
-        }
-
-        protected override void InitializeContainerFactory(AutofacContainerFactory containerFactory)
-        {
-            containerFactory
-                .UsingAssembly(Assembly.Load("Mozu.Core.Api"))
-                .UsingAssembly(typeof(ISitesWebApiClient).Assembly)
-                .UsingAssembly(typeof(IMerchantSignUpWebApiClient).Assembly)
-                .UsingAssembly(typeof(IStartUpTask).Assembly)
-                .UsingAssembly(typeof(IPermissionsRepository).Assembly)
-                .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc"))
-                .UsingAssembly(Assembly.GetExecutingAssembly())
-                ;
-
-            containerFactory.ShowDebugOutput(true);
-        }
-
-        protected override void AddMessageHandlers()
-        {
-            base.AddMessageHandlers();
-
-            GlobalFilters.Filters.Add(new HandleErrorAttribute());
-          //  GlobalFilters.Filters.Add(new SiteBuilderAuthorizeAttribute());
-            var configuration = GlobalConfiguration.Configuration;
-
-            configuration.Filters.Add(new ApiExceptionFilter(new ExceptionResponseBuilderCollection { IncludeExceptionDetails = true }, new ApiExceptionFilterLogger { IsErrorLoggingEnabled = false }));
-
-            configuration.BindParameter(typeof(FilterCollection), new FilterCollectionRequestHandler());
-            configuration.BindParameter(typeof(PagingParamaters), new PagingParamatersRequestHandlers());
-        }
-
-        protected override void RegisterControllerRoutes()
-        {
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new HackApiHttpActionSelector());
-
-            var resolver = new AutofacDependencyResolver(Container);
+            var resolver = new AutofacDependencyResolver(_bsa.Container );
             DependencyResolver.SetResolver(resolver);
-            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(Container);
-        }
-        
-        protected override void ApplicationStart()
-        {
-            var configuration = GlobalConfiguration.Configuration;
+            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(_bsa.Container);
 
-            WebApiConfig.Register(configuration);
+
+            AreaRegistration.RegisterAllAreas();
+            WebApiConfig.Register(GlobalConfiguration.Configuration);
 
             RegisterMvcRoutes(RouteTable.Routes);
         }
@@ -130,49 +91,5 @@ namespace Mozu.SiteBuilder.UX.Admin
             //routes.Insert(0, new Route("apitest/index", new TestClientIndexRouteHandler()));
         }
 
-        class HackApiHttpActionSelector : ApiControllerActionSelector
-        {
-            private Hashtable _inits = new Hashtable();
-
-            public override HttpActionDescriptor SelectAction(HttpControllerContext controllerContext)
-            {
-                if (!_inits.Contains(controllerContext.ControllerDescriptor))
-                {
-                    lock (_inits)
-                    {
-                        if (!_inits.Contains(controllerContext.ControllerDescriptor))
-                        {
-                            var all = this.GetActionMapping(controllerContext.ControllerDescriptor).SelectMany(x => x).ToList();
-
-
-                            foreach (var item in all)
-                            {
-                                var wge = item.GetCustomAttributes<WebGetAttribute>().FirstOrDefault();
-                                if (wge != null)
-                                {
-                                    if (!item.SupportedHttpMethods.Any(x => x.Method == "GET"))
-                                    {
-                                        item.SupportedHttpMethods.Add(HttpMethod.Get);
-                                    }
-                                }
-                                var wie = item.GetCustomAttributes<WebInvokeAttribute>().FirstOrDefault();
-                                if (wie != null)
-                                {
-                                    var meth = wie.Method;
-                                    meth = string.IsNullOrEmpty(meth) ? "POST" : meth;
-                                    if (!item.SupportedHttpMethods.Any(x => x.Method == meth))
-                                    {
-                                        item.SupportedHttpMethods.Add(new HttpMethod(meth));
-                                    }
-                                }
-                            }
-                            _inits.Add(controllerContext.ControllerDescriptor, true);
-                        }
-                    }
-                }
-
-                return base.SelectAction(controllerContext);
-            }
-        }
     }
 }

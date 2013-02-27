@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Mozu.Customer.Contracts;
 using Mozu.SiteBuilder.Mvc.Customers;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -29,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "search")]
-        public async Task<Response<List<CustomerAccount>>> GetAdvancedSearch(PagingParamaters pagingParameters, FilterCollection extFilter)
+        public async Task<Response<List<CustomerAccount>>> GetAdvancedSearch([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
         {
             // todo : hook up search pieces and create filter
             var customerAccounts = await _customerRepository.GetAll(0, 1, null);
@@ -37,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "list")]
-        public async Task<Response<List<CustomerAccount>>> GetList(PagingParamaters pagingParameters, FilterCollection extFilter)
+        public async Task<Response<List<CustomerAccount>>> GetList([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
         {
             var filter = GetCustomerSearchFilter(extFilter);
 
@@ -68,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "notes/list")]
-        public async Task<Response<List<CustomerAccountNote>>> GetNotes(PagingParamaters pagingParameters, FilterCollection extFilter)
+        public async Task<Response<List<CustomerAccountNote>>> GetNotes([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
         {
             var customerAccountId = extFilter.Get<CustomerAccount, int>(x => x.Id);
             var notes = await _customerRepository.GetCustomerNotes(customerAccountId, pagingParameters.startIndex, pagingParameters.pageSize);
@@ -77,7 +78,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "notes/create")]
-        public async Task<Response<CustomerAccountNote>> CreateNote(CustomerAccountNote customerAccountNote, FilterCollection extFilter)
+        public async Task<Response<CustomerAccountNote>> CreateNote(CustomerAccountNote customerAccountNote, [FromUri]FilterCollection extFilter)
         {
             var customerAccountId = extFilter.Get<CustomerAccount, int>(x => x.Id);
             var customerNote = await _customerRepository.CreateCustomerNote(customerAccountNote, customerAccountId);
@@ -86,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "groups/list")]
-        public async Task<Response<List<CustomerGroup>>> GetGroups(PagingParamaters pagingParamaters, FilterCollection extFilter)
+        public async Task<Response<List<CustomerGroup>>> GetGroups([FromUri]PagingParamaters pagingParamaters, [FromUri]FilterCollection extFilter)
         {
             var filter = GetGroupsSearchFilter(extFilter);
 

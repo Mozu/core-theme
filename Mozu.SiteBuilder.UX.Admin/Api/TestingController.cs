@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Theme;
 using Mozu.SiteBuilder.Mvc.Theme.Repositories;
@@ -57,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "list")]
-        public Task<Response<List<DGD>>> GetTestList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<DGD>>> GetTestList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var items = g_testData.Skip(pagingParams.pageIndex.GetValueOrDefault(0)).Take(pagingParams.pageSize.GetValueOrDefault(1000)).ToList();
 
@@ -262,7 +263,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "tenant/list")]
-        public Task<Response<List<Tenant.Contracts.Tenant >>> GetTenantList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<Tenant.Contracts.Tenant>>> GetTenantList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             string filter = null;
             TenantCollection tenants = null;

@@ -48,13 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
             ProfileToken pt = null;
             if (ticket == null || String.IsNullOrEmpty(ticket.AccessToken))
             {
-                id = new LightweightUserClaims
-                {
-                    //set to min.. only way to say non authenticated
-                    Expiration = DateTime.Now.AddYears( 10 ) ,
-                    UserId = Guid.NewGuid().ToString("N"),
-                    IsAnonymous = true 
-                };
+                id = LightweightUserClaims.CreateAnonymous(scopeType : UserScopeType.Tenant);
                 ticket = ticket ?? new UserAuthTicket();
                 ticket.AccessToken  = id.ToAccessToken();
             }
@@ -106,8 +100,8 @@ namespace Mozu.SiteBuilder.Mvc.Security
                 principal = context.User;
 
             return principal as LightweightUserClaims
-                ?? Thread.CurrentPrincipal as LightweightUserClaims
-                ?? new LightweightUserClaims();
+                   ?? Thread.CurrentPrincipal as LightweightUserClaims
+                   ?? LightweightUserClaims.CreateAnonymous(scopeType: UserScopeType.Tenant);
         }
 
         public void SetCookie(UserAuthTicket ticket)
@@ -122,13 +116,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
             if (cookie == null || cookie["AccessToken"] == null)
             {
-                var user = new LightweightUserClaims()
-                               {
-                                   //set to min.. only way to say non authenticated
-                                   Expiration = DateTime.Now.AddYears(10),
-                                   UserId = Guid.NewGuid().ToString("N"),
-                                   IsAnonymous = true
-                               };
+                var user = LightweightUserClaims.CreateAnonymous(scopeType: UserScopeType.Tenant);
                 var profile = new ProfileToken()
                                   {
                                       UserId = user.UserId

@@ -19,6 +19,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
                 "Misc/{controller}/{action}/{id}",
                 new { action = "Index", id = UrlParameter.Optional }
             );
+
+            context.MapRoute("resources",
+               "resources/{action}/{*pathInfo}",
+               new { controller = "Resource", Action = "script", pathInfo = UrlParameter.Optional });
+
         }
     }
 }

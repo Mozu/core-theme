@@ -82,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
         
         [WebGet(UriTemplate = "list")]
-        public Task<Response<List<AdminUser2>>> GetUsers(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<AdminUser2>>> GetUsers([FromUri]PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var tasks= new List<Task<ServiceClientResponse<Core.Api.Contracts.User>>>();
             if (pagingParams.id != null)

@@ -1,6 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection;
+using System.ServiceModel.Web;
 using System.Web.Http;
+using System.Web.Http.Routing;
+using System.Web.Routing;
+using Mozu.Core.Api;
 using Mozu.SiteBuilder.UX.Admin.Api;
 
 namespace Mozu.SiteBuilder.UX.Admin.App_Start
@@ -17,10 +24,14 @@ namespace Mozu.SiteBuilder.UX.Admin.App_Start
                 {
                     var name = t.Name.ToLower();
                     var routePrefix = "app/" + name.Substring(0, name.LastIndexOf("controller", StringComparison.OrdinalIgnoreCase));
-                    Mozu.Core.Api.HttpRouteCollectionExtensions.MapHttpRoute(config.Routes, t, routePrefix);
+
+                    
+                    Mozu.Core.Api.HttpRouteCollectionExtensions.MapHttpRoute(config.Routes, t, routePrefix, false );
                 });
 
-            //diagnostics.BuildHtmlFile(config);
+            //diagnostics.BuildHtmlFile(confiHttpRouteCollectionExtensionsg);
         }
     }
+
+
 }

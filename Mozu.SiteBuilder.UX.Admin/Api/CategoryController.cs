@@ -2,6 +2,7 @@
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using System.Web.Http;
 using AutoMapper;
 //using Volusion.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts;
@@ -31,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "read")]
-        public Task<Response<List<Category>>> GetCategories(PagingParamaters pagingParams)
+        public Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams)
         {
             if (pagingParams.id == null)
             {

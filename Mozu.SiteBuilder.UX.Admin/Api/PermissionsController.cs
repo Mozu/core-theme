@@ -3,6 +3,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Users;
@@ -26,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "roles")]
-        public Task<Response<List<Role>>> Roles(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<Role>>> Roles([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             return List(_permissionsRepository.GetRoles().Result.ToList());
         }
@@ -58,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "behaviors")]
-        public Task<Response<List<Behavior>>> GetBehaviors(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<Behavior>>> GetBehaviors([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             return List(_permissionsRepository.GetBehaviors().Result.ToList());
         }

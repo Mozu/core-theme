@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Mozu.SiteBuilder.Mvc.Customers;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Customers;
@@ -29,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "read/{customerId}")]
-        public Task<Response<List<CustomerAccountContact>>> Read(PagingParamaters pagingParams, FilterCollection extFilter, int? customerId)
+        public Task<Response<List<CustomerAccountContact>>> Read([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, int? customerId)
         {
             var addresses = _accountContactRepository.GetAll(customerId).Result;
 

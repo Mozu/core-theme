@@ -12,16 +12,31 @@ Ext.define('Taco.view.product.subform.Shipping', {
     
     initComponent: function () {
         this.items = [{
-            fieldLabel: 'Package Weight',
-            value: '126 kg'
-        }, {
+                xtype: 'unitfield',
+                name: 'packageWeight',
+                fieldLabel: 'Weight',
+                emptyText: 'lbs',
+                unitString: ' lbs',
+                unitAtEnd: true,
+                decimalPrecision: 3,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            
+            }, {
             xtype: 'formflexbox',
             width: 320,
             cls: Taco.baseCSSPrefix + 'flex-field-spacing',
             defaults: {
                 width: 100,
-                xtype: 'textfield'
+                xtype: 'unitfield',
+                unitString: 'in',
+                decimalPrecision: 3,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
             },
+            
             items: [{
                 xtype: 'component',
                 width: '100%',
@@ -31,14 +46,18 @@ Ext.define('Taco.view.product.subform.Shipping', {
                     'html': 'Package Dimensions'
                 }
             }, {
+                name:'packageLength',
                 emptyText: 'l'
             }, {
+                name:'packageWidth',
                 emptyText: 'w'
             }, {
+                name:'packageHeight',
                 emptyText: 'h'
             }]
         }];
 
         this.callParent( arguments );
     }
+
 });

@@ -5,6 +5,7 @@ using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
+using Mozu.Core.User;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.Tenant.Contracts;
@@ -48,10 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 
             //var userThing = new UserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = site.Id, TenantId = site.TenantId }));
             //userThing.DeleteUserRoleForTenant(user.UserId, roleId);
-
-            // NOTE: This replaces the above code, I think, I need to double check and test though... - CM
-            var userClaims = new LightweightUserClaims { UserId = user.UserId };
-
+           
           //  var roleThing = new RoleWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = site.Id, TenantId = site.TenantId, UserClaims = userClaims }, _settings));
 
             _roleWebApi.With(x => x.SiteId = site.Id).DeleteRole(roleId);
