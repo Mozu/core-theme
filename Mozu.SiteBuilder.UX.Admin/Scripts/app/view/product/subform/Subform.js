@@ -22,8 +22,8 @@ Ext.define('Taco.view.product.subform.Subform', {
     },
     initComponent:function() {
         this.callParent(arguments);
-        if (this.readonly != undefined) {
-            this.setReadOnly(this.readonly);
+        if (this.readOnly != undefined) {
+            this.setReadOnly(this.readOnly);
         }
     }
 });

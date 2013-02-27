@@ -23,6 +23,7 @@ Ext.define('Taco.view.product.subform.General', {
             fieldLabel: 'Code',
             name: 'productCode',
             emptyText: '#######',
+            readOnly:  (this.product && !this.product.phantom),
             required: true,
             labelAlign: 'top',
             labelSeparator: '',

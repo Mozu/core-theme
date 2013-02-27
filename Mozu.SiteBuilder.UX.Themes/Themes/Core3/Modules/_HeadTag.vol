@@ -11,6 +11,9 @@
         {% endblock StyleSheets %}
 
         {% block HeaderScripts %}
-        <script src="/resources/scripts/vendor/modernizr-respond.min.js"></script>
+    <script src="/resources/scripts/vendor/modernizr-respond.min.js"></script>
+    <script>
+      window.zapiConfig={{SiteContext.apiClientContext }};
+    </script>
     {% endblock HeaderScripts %}
 </head>
