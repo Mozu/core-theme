@@ -92,6 +92,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
             "sitemap.xml",
             new { controller = "Sitemap", action = "Index" });
 
+            context.MapRoute(
+            "Widgets",
+            "widgets/{action}",
+            new { controller = "Widgets", action = "Index" });
+
+
         }
     }
 }

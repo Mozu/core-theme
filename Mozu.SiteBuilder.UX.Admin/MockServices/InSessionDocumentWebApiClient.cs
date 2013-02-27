@@ -194,6 +194,12 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
                 throw new NotImplementedException();
             }
         }
+
+
+        public Task<ServiceClientResponse<DC.DocumentDraftSummaryPagedCollection>> GetDrafts(string documentListNames = null, int? pageSize = null, int? startIndex = null, Core.Api.Contracts.TargetContextLevelType targetContextLevel = Core.Api.Contracts.TargetContextLevelType.NotSpecified)
+        {
+            throw new NotImplementedException();
+        }
     }
 #endregion
 }

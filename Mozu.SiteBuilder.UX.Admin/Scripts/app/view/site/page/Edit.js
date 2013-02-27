@@ -647,23 +647,7 @@
 
         },
         beforeDeleteWidget: function (eventData) {
-            var me = this,
-                props = eventData.metaData,
-                key = props.collection + '_' + props.documentId,
-                doc = me.cmsDocs.getById(key);
-
-
-            if (doc === null) {
-                doc = Ext.create('Taco.model.CmsDocument', {
-                    id: key,
-                    documentId: props.documentId,
-                    collectionName: props.collection,
-                    items: []
-                });
-                doc.editingInfo = props;
-                me.cmsDocs.add(doc);
-            }
-            me.cmsDocs.remove(doc);
+            this.widgets.remove(this.widgets.getById(eventData.metaData.id));
             eventData.callback();
         },
 
