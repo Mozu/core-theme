@@ -1,7 +1,6 @@
 ﻿'use strict';
 
-var allScripts = ['node_modules/when/when.js', 'src/seed.js'];
-//var allScripts = ['node_modules/when/when.js', 'src/seed.js', 'src/ajax.js', 'src/tenant.js', 'src/site.js', 'src/api.js', 'src/apiresponse.js', 'src/objecttypes.js'];
+var allScripts = ['node_modules/when/when.js', 'node_modules/uritemplate/bin/uritemplate.js', 'src/utils.js', 'src/reference.js', 'src/interface.js', 'src/context.js', 'src/init.js'];
 
 module.exports = function (grunt) {
 
@@ -31,6 +30,10 @@ module.exports = function (grunt) {
             dist: {
                 src: allScripts,
                 dest: '<%= tmp %>'
+            },
+            debug: {
+                src: allScripts.concat('init_debug.js'),
+                dest: '<%= tmp %>'
             }
         },
         wrap: {
@@ -56,6 +59,7 @@ module.exports = function (grunt) {
             all: {
                 src: '<%= wrap.dest %>',
                 options: {
+                    errorReporting: true,
                     specs: 'tests/**/*.js',
                     vendor: 'vendor/jquery.js'
                 }
@@ -84,9 +88,11 @@ module.exports = function (grunt) {
         grunt.log.ok('Wrapped file saved to ' + conf.dest);
     });
 
-    var order = ['clean:dist', 'concat', 'wrap', 'uglify', 'clean:tmp', 'jasmine:all'];
+    var order = ['clean:dist', 'concat:dist', 'wrap', 'uglify', 'clean:tmp', 'jasmine:all'];
+    var debugorder = ['clean:dist', 'concat:debug', 'wrap', 'uglify', 'clean:tmp', 'jasmine:all'];
 
-    grunt.registerTask('strict', order);
+    grunt.registerTask('strict', debugorder); // TODO: figure out real debug channel
+    grunt.registerTask('debug', debugorder);
     grunt.registerTask('test', ['jasmine:all']);
     grunt.registerTask('testdebug', ['jasmine:all:build']);
     grunt.registerTask('default', order.slice(0, -1));

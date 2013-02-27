@@ -398,7 +398,12 @@
     <None Include="JS_SDK\definewrapper.tpl" />
     <None Include="JS_SDK\package.json" />
     <Content Include="JS_SDK\Gruntfile.js" />
-    <Content Include="JS_SDK\src\seed.js" />
+    <Content Include="JS_SDK\init_debug.js" />
+    <Content Include="JS_SDK\src\utils.js" />
+    <Content Include="JS_SDK\src\interface.js" />
+    <Content Include="JS_SDK\src\reference.js" />
+    <Content Include="JS_SDK\src\context.js" />
+    <Content Include="JS_SDK\src\init.js" />
     <Content Include="JS_SDK\tests\SDKSpec.js" />
     <Content Include="JS_SDK\vendor\jquery.js" />
     <Content Include="Mobile\Default.aspx" />
