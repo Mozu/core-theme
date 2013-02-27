@@ -29,7 +29,7 @@ Ext.define('Taco.view.product.SiteForm', {
     persistChangesToModel: true,
 
     initComponent: function () {
-        var subFormCfg;
+        var subFormCfg, subFormReadOnlyCfg;
 
         this.defaults = this.defaults || {};  // TODO: Are these two lines necessary?
         this.defaults.isSingleSite = this.isSingleSite;
@@ -45,6 +45,8 @@ Ext.define('Taco.view.product.SiteForm', {
             persistChangesToModel: true
         };
 
+        subFormReadOnlyCfg = Ext.apply({ readOnly: true, record: this.product }, subFormCfg);
+        
         this.items = [
             {
                 xtype: 'combobox',
@@ -56,10 +58,10 @@ Ext.define('Taco.view.product.SiteForm', {
                 value: 'Hide in website'
             },
             Ext.create('Taco.view.product.subform.General', subFormCfg),
-            Ext.create('Taco.view.product.subform.Inventory', subFormCfg),
-            Ext.create('Taco.view.product.subform.Properties', subFormCfg),
-            Ext.create('Taco.view.product.subform.Extras', subFormCfg),
-            Ext.create('Taco.view.product.subform.Shipping', subFormCfg),
+            Ext.create('Taco.view.product.subform.Inventory', subFormReadOnlyCfg),
+            Ext.create('Taco.view.product.subform.Properties', subFormReadOnlyCfg),
+            Ext.create('Taco.view.product.subform.Extras', subFormReadOnlyCfg),
+            Ext.create('Taco.view.product.subform.Shipping', subFormReadOnlyCfg),
             Ext.create('Taco.view.product.subform.Categories', subFormCfg),
             Ext.create('Taco.view.product.subform.Merchandising', subFormCfg),
             Ext.create('Taco.view.product.subform.SEO', subFormCfg)
