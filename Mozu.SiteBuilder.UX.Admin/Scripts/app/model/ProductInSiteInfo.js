@@ -117,7 +117,7 @@ Ext.define('Taco.model.ProductInSiteInfo', {
             defaultValue: false
         },
         {
-            "name": "isSeoOverridden",
+            "name": "isSEOContentOverridden",
             "type": "boolean",
             "useNull": false,
             defaultValue: false

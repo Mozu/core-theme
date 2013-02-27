@@ -12,7 +12,8 @@ Ext.define('Taco.view.product.GlobalForm', {
         'Taco.view.product.subform.Inventory',
         'Taco.view.product.subform.Properties',
         'Taco.view.product.subform.Extras',
-        'Taco.view.product.subform.Shipping'
+        'Taco.view.product.subform.Shipping',
+        'Taco.view.product.subform.SEO'
     ],
     persistChangesToModel: true,
     mixins: {
@@ -48,7 +49,8 @@ Ext.define('Taco.view.product.GlobalForm', {
             Ext.create('Taco.view.product.subform.Inventory', subformCfg),
             Ext.create('Taco.view.product.subform.Properties', subformCfg),
             Ext.create('Taco.view.product.subform.Extras', subformCfg),
-            Ext.create('Taco.view.product.subform.Shipping', subformCfg)
+            Ext.create('Taco.view.product.subform.Shipping', subformCfg),
+            Ext.create('Taco.view.product.subform.SEO', subformCfg)
         ];
 
         this.callParent( arguments );
