@@ -108,7 +108,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             #endregion
 
             #region Attributes
-            Mapper.CreateMap<Attribute, DC.Attribute>().ConvertUsing<AttributeToContractConverter>();
+            Mapper.CreateMap<Attribute, DC.Attribute>().ConvertUsing(new AttributeToContractConverter());
 
             Mapper.CreateMap<DC.Attribute, Attribute>()
                 .ForMember(x => x.Values, opt => opt.MapFrom(x => x.VocabularyValues))
