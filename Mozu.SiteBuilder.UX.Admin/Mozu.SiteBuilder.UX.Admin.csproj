@@ -1530,6 +1530,14 @@
     <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\themes\advanced\skins\default\img\progress.gif" />
     <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\themes\advanced\skins\default\img\tabs.gif" />
     <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\themes\advanced\skins\default\ui.css" />
+    <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\themes\advanced\skins\o2k7\content.css" />
+    <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\themes\advanced\skins\o2k7\dialog.css" />
+    <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\themes\advanced\skins\o2k7\img\button_bg.png" />
+    <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\themes\advanced\skins\o2k7\img\button_bg_black.png" />
+    <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\themes\advanced\skins\o2k7\img\button_bg_silver.png" />
+    <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\themes\advanced\skins\o2k7\ui.css" />
+    <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\themes\advanced\skins\o2k7\ui_black.css" />
+    <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\themes\advanced\skins\o2k7\ui_silver.css" />
     <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\themes\advanced\source_editor.htm" />
     <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\tiny_mce.js" />
     <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\tiny_mce_dev.js" />
