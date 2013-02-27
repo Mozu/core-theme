@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.BaseProductCode, op => op.MapFrom(p => p.BaseProductCode))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(p =>
                 {
-                    List<DC.ProductLocalizedImage> images = Mapper.Map<List<DC.ProductLocalizedImage>>(p.Images);
+                    var images = Mapper.Map<List<DC.ProductLocalizedImage>>(p.Images);
                     return new DC.ProductLocalizedContent
                     {
                         ProductName = p.ProductName,
@@ -72,6 +72,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         ProductImages = images
                     };
                 }))
+                 .ForMember(dc => dc.SEOContent , op => op.ResolveUsing(p =>
+                 {
+                     return new DC.ProductLocalizedSEOContent() 
+                     {
+                         MetaTagDescription = p.MetaTagDescription ,
+                         MetaTagKeywords = p.MetaTagKeywords,
+                         MetaTagTitle = p.MetaTagTitle ,
+                         SEOFriendlyUrl = p.SEOFriendlyUrl 
+                     };
+                 }))
                 .ForMember(dc => dc.Price, op => op.MapFrom(p =>
                     new DC.ProductPrice()
                     {
@@ -89,7 +99,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<DC.ProductInSiteInfo, ProductInSiteInfo>()
                 .ForMember(x => x.SiteId, op => op.MapFrom(dc => dc.SiteId))
-                .ForMember(x => x.IsContentOverridden, op => op.MapFrom(dc => dc.IsContentOverridden))
+                .ForMember(x => x.IsPriceOverridden , op => op.MapFrom(dc => dc.IsContentOverridden))
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))
                 .ForMember(x => x.ShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
                 .ForMember(x => x.FullDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
@@ -105,7 +115,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<ProductInSiteInfo, DC.ProductInSiteInfo>()
+                .ForMember(dc => dc.SiteId, op => op.MapFrom(pisi => pisi.SiteId))
                 .ForMember(dc => dc.IsContentOverridden, op => op.MapFrom(pisi => pisi.IsContentOverridden))
+                .ForMember(dc => dc.IsPriceOverridden, op => op.MapFrom(pisi => pisi.IsPriceOverridden))
+                .ForMember(dc => dc.IsSEOContentOverridden, op => op.MapFrom(pisi => pisi.IsSEOContentOverridden))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(pisi => {
                     List<DC.ProductLocalizedImage> images = Mapper.Map<List<DC.ProductLocalizedImage>>(pisi.Images);
                     return new DC.ProductLocalizedContent

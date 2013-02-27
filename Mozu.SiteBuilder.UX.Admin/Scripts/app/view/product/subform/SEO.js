@@ -11,19 +11,31 @@ Ext.define('Taco.view.product.subform.SEO', {
     
     initComponent: function () {
         this.defaults.width = '100%';
+        this.defaults.product = this.product;
+        this.defaults.productInSiteInfo = this.productInSiteInfo;
+        this.defaults.persistChangesToModel = true;
+
+   
 
         this.items = [{
             xtype: 'productoverride',
+            overrideFieldName: 'isSEOContentOverridden',
+            hideOverride: this.isSingleSite,
             items: [{
-                fieldLabel: 'Meta Title'
+                fieldLabel: 'Meta Title',
+                name: 'metaTagTitle'
+                
             }, {
-                fieldLabel: 'Friendly URL'
+                fieldLabel: 'Friendly URL',
+                name: 'seoFriendlyUrl'
             }, {
                 fieldLabel: 'Meta Description',
+                name: 'metaTagDescription',
                 xtype: 'textarea'
             }]
         }];
 
         this.callParent( arguments );
-    }
+    },
+   
 });

@@ -96,7 +96,7 @@ Ext.define('Taco.view.product.SiteForm', {
      */
     handleOverrideChange: function (  ) {
         var tab = this.getTabComponent(),
-            isOverridden = this.productInSiteInfo.get('isContentOverridden') || this.productInSiteInfo.get('isPriceOverridden') || this.productInSiteInfo.get('isSeoOverridden');
+            isOverridden = this.productInSiteInfo.get('isContentOverridden') || this.productInSiteInfo.get('isPriceOverridden') || this.productInSiteInfo.get('isSEOContentOverridden');
         if (tab) {
             if (isOverridden) {
                 tab.addCls(Taco.baseCSSPrefix + 'has-overrides');
