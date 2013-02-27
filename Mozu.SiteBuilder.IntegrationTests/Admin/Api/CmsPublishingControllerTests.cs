@@ -20,17 +20,18 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
     {
         private IDocumentWebApiClient _documentClient;
         CmsPublishingController _testedController;
-        private readonly DC.PagedCollection<DC.Document> _mocks = new DC.PagedCollection<DC.Document>
+        private readonly DC.DocumentDraftSummaryPagedCollection  _mocks = new DC.DocumentDraftSummaryPagedCollection()
         {
-            Items = new List<DC.Document> {
-                new DC.Document {
-                    Id = "12345",
+        
+            Items = new List<DC.DocumentDraftSummary > {
+                new DC.DocumentDraftSummary {
+                    Id = Guid.NewGuid(),
                     Name = "Test Document 1",
-                    DocumentListName = "Pages1",
-                    PublishState = CmsConstants.Documents.doc_state_active
+                    DocumentListName = "Pages1"
+                    
                 },
-                new DC.Document {
-                    Id = "56789",
+                new DC.DocumentDraftSummary {
+                    Id = Guid.NewGuid(),
                     Name = "Test Document 2",
                     DocumentListName = "Pages2"
                 }
@@ -44,8 +45,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             _testedController = new CmsPublishingController((IMoreAwesomeDocumentWebApiClient)_documentClient);
             
             // set up GetDrafts mock.
-            _documentClient.GetDrafts(Arg.Any<string>(), Arg.Any<String>(), Arg.Any<int?>(), Arg.Any<int?>()).Returns(
-                args => new TestResponse<DC.PagedCollection<DC.Document>>(_mocks).Task
+            _documentClient.GetDrafts().Returns(
+                args => new TestResponse<DC.DocumentDraftSummaryPagedCollection >(_mocks).Task
             );
 
             // set up PublishDocuments mock.
@@ -62,7 +63,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         [Test]
         public void Get_list_with_an_id_should_fail()
         {
-            var pagingParams = new PagingParamaters { id = _mocks.Items.Last().Id };
+            var pagingParams = new PagingParamaters { id = _mocks.Items.Last().Id.ToString( ) };
             var extFilter = new FilterCollection();
             Response<List<DocumentDraft>> response = _testedController.ListDirtyDocuments(pagingParams, extFilter).Result;
 
@@ -77,7 +78,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             Response<List<DocumentDraft>> response = _testedController.ListDirtyDocuments(pagingParams, extFilter).Result;
 
             response.Items.Count.ShouldEqual(_mocks.Items.Count);
-            response.Items[0].Id.ShouldEqual(_mocks.Items[0].Id);
+            response.Items[0].Id.ShouldEqual(_mocks.Items[0].Id.ToString( ));
             response.Items[0].Name.ShouldEqual(_mocks.Items[0].Name);
         }
 

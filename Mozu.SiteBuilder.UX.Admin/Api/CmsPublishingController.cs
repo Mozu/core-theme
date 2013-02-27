@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [ServiceContract]
     public class CmsPublishingController : BaseController
     {
-        private string HACK= "stuff";
+       
         private IDocumentWebApiClient _documentClient;
 
         /// <summary>
@@ -63,10 +63,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             int? pageSize = pagingParams.pageSize;
             int? startIndex = pagingParams.startIndex;
+
+            var result = await _documentClient.GetDrafts(pageSize: 200);
             
-            var result = await _documentClient.GetDrafts(HACK, /*responseGroups: */ null, pageSize, startIndex);
-            
-            DC.PagedCollection<DC.Document> res = result.ReadAsAsync().Result;
+            var res = result.ReadAsAsync().Result;
 
             return List2(Mapper.Map<List<DocumentDraft>>(res.Items), (int)res.TotalCount);
         }
@@ -130,7 +130,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             args = args ?? new PublishArgs();
 
             // TODO: The service does not currently support "null", so we pass HACK instead.
-            string documentListName = GetDocumentListNameFromDocType(args.DocType) ?? HACK;
+            string documentListName = GetDocumentListNameFromDocType(args.DocType) ;
 
             // TODO: The all-knowing Thom has said this method is not sufficient.
             // Since we'd have to get each page, then group by document list name and make N calls to publish
@@ -143,23 +143,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             do
             {
-                var getListResult = await _documentClient.GetDrafts(/*documentListName: */ documentListName, /*responseGroups: */ null, pageSize, startIndex);
-                DC.PagedCollection<DC.Document> docs = getListResult.ReadAsAsync().Result;
+
+                var getListResult = await _documentClient.GetDrafts(documentListNames: documentListName, pageSize: pageSize, startIndex: startIndex);// /*responseGroups: */ null, pageSize, startIndex);
+
+                var docs = getListResult.ReadAsAsync().Result;
+               
                 totalCount = (int)docs.TotalCount;
 
-                IEnumerable<IGrouping<string, DC.Document>> documentListGroups = docs.Items.GroupBy(doc => doc.DocumentListName);
+                var documentListGroups = docs.Items.GroupBy(doc => doc.DocumentListName);
 
-                foreach (IGrouping<string, DC.Document> docGroup in documentListGroups)
+                foreach (var docGroup in documentListGroups)
                 {
 
                     //ugg
-                    if (documentListName != HACK)
-                    {
-                        // TODO: currently the server ignores documentListName, so we double-check that we only got results from the list we expected.
-                        if (!String.IsNullOrEmpty(documentListName) && docGroup.Key.ToLower() != documentListName.ToLower())
-                            continue;
-                    }
-                    List<string> docIds = docGroup.Select(doc => doc.Id).ToList();
+                    //if (documentListName != HACK)
+                    //{
+                    //    // TODO: currently the server ignores documentListName, so we double-check that we only got results from the list we expected.
+                    //    if (!String.IsNullOrEmpty(documentListName) && docGroup.Key.ToLower() != documentListName.ToLower())
+                    //        continue;
+                    //}
+
+
+                    List<string> docIds = docGroup.Select(doc => doc.Id.ToString()).ToList();
 
                     var publishResult = await _documentClient.PublishDocuments(/*documentListName: */ docGroup.Key, /*documentIds: */ docIds);
                     List<string> returnedIds = publishResult.ReadAsAsync().Result;
@@ -181,7 +186,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             args = args ?? new PublishArgs();
             // TODO: The service does not currently support "null", so we pass HACK instead.
-            string documentListName = GetDocumentListNameFromDocType(args.DocType) ?? HACK;
+            string documentListName = GetDocumentListNameFromDocType(args.DocType);
 
             // TODO: This method implementation should be thrown away when the Mozu service supports a DiscardAll().
             // See related note in PublishAll().
@@ -193,19 +198,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             do
             {
-                var getListResult = await _documentClient.GetDrafts(/*documentListName: */ documentListName, /*responseGroups: */ null, pageSize, startIndex);
-                DC.PagedCollection<DC.Document> docs = getListResult.ReadAsAsync().Result;
+                var getListResult = await _documentClient.GetDrafts(documentListNames :documentListName,pageSize:pageSize , startIndex:startIndex );
+                var  docs = getListResult.ReadAsAsync().Result;
                 totalCount = (int)docs.TotalCount;
 
-                IEnumerable<IGrouping<string, DC.Document>> documentListGroups = docs.Items.GroupBy(doc => doc.DocumentListName);
+                var documentListGroups = docs.Items.GroupBy(doc => doc.DocumentListName);
 
-                foreach (IGrouping<string, DC.Document> docGroup in documentListGroups)
+                foreach (var docGroup in documentListGroups)
                 {
                     // TODO: currently the server ignores documentListName, so we double-check that we only got results from the list we expected.
                     if (!String.IsNullOrEmpty(documentListName) && docGroup.Key.ToLower() != documentListName.ToLower())
                         continue;
 
-                    List<string> docIds = docGroup.Select(doc => doc.Id).ToList();
+                    List<string> docIds = docGroup.Select(doc => doc.Id.ToString( )).ToList();
 
                     var discardResult = await _documentClient.Discard(/*documentListName: */ docGroup.Key, /*documentIds: */ docIds);
                     List<string> returnedIds = discardResult.ReadAsAsync().Result;
