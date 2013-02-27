@@ -73,7 +73,7 @@
         proxy: {
             type: 'ajaxproxy',
             api: {
-                read: '/admin/app/WidgetDefinition/list',
+                read: '/admin/app/WidgetDefinition/read',
                 //read: '/admin/Scripts/app/mocks/widgetdefinitions.json',
                 create: '/admin/app/WidgetDefinition/create',
                 update: '/admin/app/WidgetDefinition/edit',
