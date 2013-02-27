@@ -19,5 +19,11 @@ Ext.define('Taco.view.product.subform.Subform', {
         labelAlign: 'top',
         labelSeparator: '',
         width: 250
+    },
+    initComponent:function() {
+        this.callParent(arguments);
+        if (this.readonly != undefined) {
+            this.setReadOnly(this.readonly);
+        }
     }
 });
