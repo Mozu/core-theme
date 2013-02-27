@@ -11,11 +11,8 @@ var ApiReference = (function () {
             }
         },
         'product': {
-            'get': {
-                template: 'mozu.ProductRuntime.WebApi/products/{productCode}',
-                shortcutParam: 'productCode'
-            },
-            'create': 'mozu.ProductRuntime.WebApi/products'
+            template: 'mozu.ProductRuntime.WebApi/products/{productCode}',
+            shortcutParam: 'productCode'
         }
     };
 
