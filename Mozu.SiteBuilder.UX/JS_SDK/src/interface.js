@@ -12,7 +12,7 @@ var basicOps = {
     get: 'GET',
     update: 'PUT',
     create: 'POST',
-    'delete': 'DELETE'
+    remove: 'DELETE'
 };
 ApiInterface.prototype = {
     request: function (method, url, conf) {

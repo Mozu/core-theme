@@ -23,7 +23,8 @@ var ApiReference = (function () {
             defaults: {
                 allowInactive: false
             }
-        }
+        },
+        'cart': 'mozu.Cart.WebApi/carts/current'
     };
 
     return {
