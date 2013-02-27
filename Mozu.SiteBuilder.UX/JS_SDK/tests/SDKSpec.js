@@ -40,6 +40,10 @@
         it("should persist tenantId after siteId is set", function () {
             expect(site.tenant).toBe(1);
         });
+
+        it("should be able to initialize from a conf object as well", function () {
+            expect(Mozu.Store({ 'tenant': 30001, 'site-group': 1, 'site': 30002, 'host': 'http://aus01pdweb001.ads.volusion.com:9090/' }).api()).toBeTruthy();
+        });
     });
     
     describe("the ApiInterface object", function () {

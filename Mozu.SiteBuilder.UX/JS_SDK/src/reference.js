@@ -20,6 +20,7 @@ var ApiReference = (function () {
 
         getUrlFor: function(operation, shortcutName, conf, context) {
             var shortcut = urlShortcuts[shortcutName];
+            if (!shortcut) return shortcutName;
             if (shortcut[operation]) shortcut = shortcut[operation];
             if (!shortcut) throw "No known URL for '" + shortcutName + "' type.";
             if (typeof shortcut === "string") return shortcut;
