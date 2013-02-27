@@ -398,12 +398,6 @@
     <None Include="JS_SDK\definewrapper.tpl" />
     <None Include="JS_SDK\package.json" />
     <Content Include="JS_SDK\Gruntfile.js" />
-    <Content Include="JS_SDK\src\ajax.js" />
-    <Content Include="JS_SDK\src\api.js" />
-    <Content Include="JS_SDK\src\apiresponse.js" />
-    <Content Include="JS_SDK\src\objecttypes.js" />
-    <Content Include="JS_SDK\src\site.js" />
-    <Content Include="JS_SDK\src\tenant.js" />
     <Content Include="JS_SDK\src\seed.js" />
     <Content Include="JS_SDK\tests\SDKSpec.js" />
     <Content Include="JS_SDK\vendor\jquery.js" />
