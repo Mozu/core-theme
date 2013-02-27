@@ -124,6 +124,41 @@
                 });
 
             });
+            
+            it("should work with simple url templates, like 'product'", function () {
+                var res;
+                runs(function () {
+                    api.get("product", { productCode: "foobar" }).then(function (product) {
+                        res = product;
+                    });
+                });
+
+                waitsFor(function () {
+                    return res;
+                });
+
+                runs(function () {
+                    expect(res.ProductCode).toBe("foobar");
+                });
+            });
+            it("should work with the shortcut string to the main path param", function () {
+                var res;
+                spyOn(Mozu.ApiReference, "getUrlFor").andCallThrough();
+                runs(function () {
+                    api.get("product", "foobar").then(function (product) {
+                        res = product;
+                    });
+                    expect(Mozu.ApiReference.getUrlFor).toHaveBeenCalledWith("get", "product", "foobar", api.context);
+                });
+
+                waitsFor(function () {
+                    return res;
+                });
+
+                runs(function () {
+                    expect(res.ProductCode).toBe("foobar");
+                });
+            });
         });
 
     });
