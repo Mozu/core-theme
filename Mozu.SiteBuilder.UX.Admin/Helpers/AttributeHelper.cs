@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Http;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
@@ -22,7 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
             _attributeWebApiClient = attributeWebApiClient;
         }
 
-        public async Task<IEnumerable<Attribute>> GetAttributes(PagingParamaters pagingParams, FilterCollection extFilter)
+        public async Task<IEnumerable<Attribute>> GetAttributes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             string filter = null; // extFilter.ToFilterString();
             string sort = null;   // pagingParams.sort.ToSortString();

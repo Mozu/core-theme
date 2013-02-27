@@ -2,6 +2,7 @@
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Web.Http;
 using DC=Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
 using System.Threading.Tasks;
@@ -75,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "read")]
-        public Task<Response<List<AVM.Document>>> ReadDocument( PagingParamaters pagingParams)
+        public Task<Response<List<AVM.Document>>> ReadDocument([FromUri]PagingParamaters pagingParams)
         {
             DC.PagedCollection<DC.Document> results = null;
             if (pagingParams.id == null)

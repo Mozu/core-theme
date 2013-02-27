@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 //using Volusion.ProductAdmin.Contracts.Clients;
+using System.Web.Http;
 using Mozu.ProductAdmin.Contracts.Clients;
 using System.ServiceModel.Web;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
@@ -31,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "file/list")]
-        public Task<Response<List<FileManagementFile>>> FileList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<FileManagementFile>>> FileList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             List<FileManagementFile> vm = null;
             int totalCount = 0;
@@ -184,7 +185,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
          [WebGet(UriTemplate = "folder/list")]
-        public Task<Response<List<FileManagementFolder>>> FolderList(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<FileManagementFolder>>> FolderList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var folderId = extFilter.GetValue<string>("folderid");
 

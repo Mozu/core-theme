@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Http;
 using Mozu.ProductAdmin.Contracts.Clients;
 using System.ServiceModel.Web;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -58,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "list")]
-        public Task<Response<List<TaxRate>>> GetTaxRates(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<TaxRate>>> GetTaxRates([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var res = _taxClient.GetRates(pagingParams.startIndex, pagingParams.pageSize).Result.ReadAsSync();
             var taxRates = Mapper.Map<List<TaxRate>>(res.Items);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using System.ServiceModel.Web;
@@ -44,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [WebGet(UriTemplate = "list")]
-        public Task<Response<List<PageCreateType>>> List(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<PageCreateType>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var singlePageTypes = new string[] { "homepage" };
 

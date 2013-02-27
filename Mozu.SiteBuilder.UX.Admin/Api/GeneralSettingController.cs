@@ -3,6 +3,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using System.Web.Http;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Settings;
@@ -42,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "timezones/read")]
-        public Task<Response<List<TimeZone>>> GetTimeZones(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<TimeZone>>> GetTimeZones([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var results = _wrapper.GetTimeZones().ToList();
 
@@ -50,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "ipranges/read")]
-        public Task<Response<List<IPBlock>>> GetIpRanges(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<IPBlock>>> GetIpRanges([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var results = _wrapper.GetIPBlocks().ToList();
 

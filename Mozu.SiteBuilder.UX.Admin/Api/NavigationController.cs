@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
+using System.Web.Http;
 using AutoMapper;
 //using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc;
@@ -137,7 +138,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "search/?query={query}")]
-        public Task<Response<List<NavigationTreeNode>>> Search(PagingParamaters pagingParams, FilterCollection extFilter)
+        public Task<Response<List<NavigationTreeNode>>> Search([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (!string.IsNullOrEmpty(extFilter.query))
                 extFilter.Add(new FilterCollectionItem {value = extFilter.query});

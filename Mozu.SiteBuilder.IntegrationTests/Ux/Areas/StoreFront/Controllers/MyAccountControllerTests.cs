@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
             _orderWebApiClient = Substitute.For<IOrderWebApiClient>();
             _authenticationHelper = Substitute.For<IAuthenticationHelper>();
 
-            _lightweightUser = new LightweightUserClaims();
+            _lightweightUser = LightweightUserClaims.CreateAnonymous(scopeType:UserScopeType.Tenant );
             _authenticationHelper.GetCurrentUser().Returns(_lightweightUser);
 
             _user = new Mozu.Core.Api.Contracts.User();

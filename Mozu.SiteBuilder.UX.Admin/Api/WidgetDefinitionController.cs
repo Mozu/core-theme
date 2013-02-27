@@ -2,6 +2,7 @@
 using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -20,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "list")]
-        public Task<Response<List<WidgetDefinition>>> GetWidgets(PagingParamaters pagingParams, FilterCollection extFilter )
+        public Task<Response<List<WidgetDefinition>>> GetWidgets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var defs = _widgetProvider.GetWidgets();
 
