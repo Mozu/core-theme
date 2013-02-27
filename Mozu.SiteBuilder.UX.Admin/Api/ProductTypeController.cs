@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Get a list of Product Types.
         /// </summary>
-        [WebGet(UriTemplate = "list")]
+        [WebGet(UriTemplate = "read")]
         public async Task<Response<List<ProductType>>> ListProductTypes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
@@ -87,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Edit existing product types.
         /// </summary>
-        [WebInvoke(UriTemplate = "edit")]
+        [WebInvoke(UriTemplate = "update")]
         public async Task<Response<List<ProductType>>> EditProductType(List<ProductType> productTypes)
         {
             if (productTypes == null || !productTypes.Any())
@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Delete existing product types.
         /// </summary>
-        [WebInvoke(UriTemplate = "delete")]
+        [WebInvoke(UriTemplate = "destory")]
         public async Task<Response<List<ProductType>>> DeleteProductType(List<ProductType> productTypes)
         {
             if (productTypes == null || !productTypes.Any())
