@@ -39,7 +39,7 @@ module.exports = function (grunt) {
         wrap: {
             wrapper: 'definewrapper.tpl',
             src: '<%= concat.dist.dest %>',
-            dest: '<%= pkg.main %>.js',
+            dest: '<%= tmp %>',
             data: {
                 toExport: '<%= toExport %>',
                 exportAs: '<%= exportAs %>',
@@ -47,17 +47,29 @@ module.exports = function (grunt) {
             }
         },
         uglify: {
-            options: {
-                banner: '<%= banner %>'
-            },
             dist: {
+                options: {
+                    banner: '<%= banner %>'
+                },
                 src: '<%= wrap.dest %>',
                 dest: '<%= pkg.main %>.min.js'
+            },
+            beautify: {
+                options: {
+                    banner: '<%= banner %>',
+                    beautify: true,
+                    comments: true,
+                    indent_level: 2,
+                    compress: false,
+                    mangle: false
+                },
+                src: '<%= wrap.dest %>',
+                dest: '<%= pkg.main %>.js'
             }
         },
         jasmine: {
             all: {
-                src: '<%= wrap.dest %>',
+                src: '<%= uglify.beautify.dest %>',
                 options: {
                     errorReporting: true,
                     specs: 'tests/**/*.js',
@@ -88,8 +100,8 @@ module.exports = function (grunt) {
         grunt.log.ok('Wrapped file saved to ' + conf.dest);
     });
 
-    var order = ['clean:dist', 'concat:dist', 'wrap', 'uglify', 'clean:tmp', 'jasmine:all'];
-    var debugorder = ['clean:dist', 'concat:debug', 'wrap', 'uglify', 'clean:tmp', 'jasmine:all'];
+    var order = ['clean:dist', 'concat:dist', 'wrap', 'uglify:beautify', 'uglify:dist', 'clean:tmp', 'jasmine:all'];
+    var debugorder = ['clean:dist', 'concat:debug', 'wrap', 'uglify:beautify', 'uglify:dist', 'clean:tmp', 'jasmine:all'];
 
     grunt.registerTask('strict', debugorder); // TODO: figure out real debug channel
     grunt.registerTask('debug', debugorder);

@@ -20,7 +20,7 @@ ApiInterface.prototype = {
         var ajaxConf = {
             dataType: 'json',
             contentType: 'application/json',
-            headers: this.context.All(),
+            headers: this.context.headers(),
             url: this.context.Host() + url
         };
 

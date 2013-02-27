@@ -7,7 +7,10 @@ ApiContext.prototype = {
     api: function() {
         return this._apiInstance || (this._apiInstance = new ApiInterface(this));
     },
-    All: function() {
+    Store: function(conf) {
+        return new ApiContext(conf);
+    },
+    headers: function() {
         var allvars = ['app-claims','user-claims','callchain','currency','locale','tenant','site-group','site'],
             headerObj = {};
         for (var i = 0; i < allvars.length; i++) {
