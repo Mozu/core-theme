@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Autofac.Integration.Mvc;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Logging;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Cms;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -26,7 +28,9 @@ using Mozu.SiteSettings.General.Contracts;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
+using Newtonsoft.Json.Linq;
 using IApiContext = Mozu.Core.IApiContext;
+using APIConstants=Mozu.Core.Api.Contracts.Constants ;
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -44,6 +48,7 @@ namespace Mozu.SiteBuilder.Mvc
 	    private Lazy<IThemeSettingsRepository> _themeSettingsRepo;
 	    private readonly IApiContext _apiContext;
 	    private readonly IGeneralSettingsWebApiClient _generalSettings;
+	    private readonly ISettings _configSettings;
 	    Lazy<ISettingsRepository> _settings;
 	    private readonly Lazy<ICatalogContext> _catContext;
         private readonly ICookieProvider _cookieProvider;
@@ -63,7 +68,7 @@ namespace Mozu.SiteBuilder.Mvc
 	    private Lazy<bool> _googleAnalyticsEnabled;
 	    private Lazy<bool> _googleAnalyticsEcommerceEnabled;
 
-	    public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<INavigationRuntimeFactory> navFac, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings)
+	    public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<INavigationRuntimeFactory> navFac, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, ISettings configSettings= null)
 		{
 			PageContext = new PageContext();
            
@@ -76,6 +81,7 @@ namespace Mozu.SiteBuilder.Mvc
             _themeSettingsRepo = themeRepo;
             _apiContext = apiContext;
 	        _generalSettings = generalSettings;
+	        _configSettings = configSettings;
 	        this.SiteId = _apiContext.SiteId;
             this.TenantId = _apiContext.TenantId;
 
@@ -167,8 +173,62 @@ namespace Mozu.SiteBuilder.Mvc
         [DataMember (Name="pageContext")]
         public PageContext PageContext { get;  set; }
 
+	    private Newtonsoft.Json.Linq.JObject _apiClientContext;
 
-        object ISiteBuilderContext.this[string key]
+
+	    public Newtonsoft.Json.Linq.JObject ApiClientContext
+	    {
+	        get
+	        {
+
+                if (_apiClientContext == null)
+	            {
+                    _apiClientContext = new JObject();
+	                var header = new JObject();
+                    header[APIConstants.Headers.APP_CLAIMS] = AppIdToken;
+                    header[APIConstants.Headers.CURRENCY] = _apiContext.CurrencyCode;
+                    header[APIConstants.Headers.LOCALE] = _apiContext.LocaleCode;
+                    header[APIConstants.Headers.SITE] = this._apiContext.SiteId;
+                    header[APIConstants.Headers.SITE_GROUP] = this._apiContext.SiteGroupId;
+                    header[APIConstants.Headers.TENANT] = this._apiContext.TenantId;
+                    header[APIConstants.Headers.USER_CLAIMS] = this._apiContext.UserClaims.ToAccessToken();
+                    header[APIConstants.Headers.BYPASS_CACHE] = this._apiContext.ShouldBypassCache.ToString();
+
+	                
+                    var urls = new JObject();
+	                urls["product"] = _configSettings.AppSettings("service-url-ProductRuntimeWebApi");
+                    urls["cart"] = _configSettings.AppSettings("service-url-CartWebApi");
+                    urls["user"] = _configSettings.AppSettings("service-url-UserWebApi");
+                    urls["order"] = _configSettings.AppSettings("service-url-OrderWebApi");
+                    urls["search"] = _configSettings.AppSettings("service-url-ProductSearchWebApi");
+                    urls["cms"] = _configSettings.AppSettings("service-url-DocumentWebApi");
+	                _apiClientContext["header"] = header;
+                    _apiClientContext["urls"] = urls;
+
+	            }
+                return _apiClientContext;
+	        }
+	    }
+
+	    private static string g_appId;
+
+	    private static string AppIdToken
+	    {
+	        get
+	        {
+	            if (g_appId == null)
+	            {
+	                ;
+	                var claims = new LightweightAppClaims {AppId = ConfigurationManager.AppSettings["AppId"]};
+	                g_appId = claims.ToAccessToken();
+	            }
+	            return g_appId;
+	        }
+	    }
+
+
+
+	    object ISiteBuilderContext.this[string key]
         {
             get
             {
