@@ -37,7 +37,7 @@
     }, {
         "id": "attributes",
         "label": "Attributes",
-        "address": "/admin/options"
+        "address": "/admin/attributes"
     }]
 }, {
     "id": "marketing",
