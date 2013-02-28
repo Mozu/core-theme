@@ -25,8 +25,8 @@ ApiContext.prototype = {
 var immutableAccessors = {
     tenant: 'Tenant',
     site: 'Site',
-    'site-group': 'SiteGroup',
-    host: 'Host'
+    'site-group': 'SiteGroup'
+    //host: 'Host'
 };
 var setImmutableAccessor = function(propName, fnName) {
     ApiContext.prototype[fnName] = function(val) {
@@ -47,7 +47,8 @@ var mutableAccessors = {
     'user-claims': 'UserClaims',
     callchain: 'CallChain',
     currency: 'Currency',
-    locale: 'Locale'
+    locale: 'Locale',
+    'bypass-cache': 'BypassCache'
 };
 var setMutableAccessor = function (propName, fnName) {
     ApiContext.prototype[fnName] = function (val) {
