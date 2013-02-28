@@ -6,16 +6,18 @@
 
     describe("the root object", function () {
 
-        it("should have a Tenant function, a Host function and a Site function", function () {
-            expect(typeof Mozu.Host).toBe("function");
+        it("should have a Tenant function, a SiteGroup function and a Site function", function () {
+            //expect(typeof Mozu.Host).toBe("function");
             expect(typeof Mozu.Tenant).toBe("function");
             expect(typeof Mozu.Site).toBe("function");
+            expect(typeof Mozu.SiteGroup).toBe("function");
         });
 
-        it("should return an ApiContext from the Host, Tenant and Site functions", function () {
+        it("should return an ApiContext from the Tenant, SiteGroup, and Site functions", function () {
             expect(Mozu.Tenant(1)).toBeDefined();
-            expect(Mozu.Host('flarp')).toBeDefined();
+            //expect(Mozu.Host('flarp')).toBeDefined();
             expect(Mozu.Site(22)).toBeDefined();
+            expect(Mozu.SiteGroup(22)).toBeDefined();
         });
     });
 
@@ -26,9 +28,9 @@
             expect(tenant.tenant).toBe(1);
         });
 
-        it("should have a Site and Host function", function () {
+        it("should have a Site and SiteGroup function", function () {
             expect(typeof tenant.Site).toBe("function");
-            expect(typeof tenant.Host).toBe("function");
+            expect(typeof tenant.SiteGroup).toBe("function");
         });
 
         var site;
@@ -42,26 +44,26 @@
         });
 
         it("should be able to initialize from a conf object as well", function () {
-            expect(Mozu.Store({ 'tenant': 30001, 'site-group': 1, 'site': 30002, 'host': 'http://aus01pdweb001.ads.volusion.com:9090/' }).api()).toBeTruthy();
+            expect(Mozu.Store({ 'tenant': 30001, 'site-group': 1, 'site': 30002 }).api()).toBeTruthy();
         });
     });
     
     describe("the ApiInterface object", function () {
-        var completeContext = Mozu.Host('http://aus01pdweb001.ads.volusion.com:9090/').Tenant(30001).SiteGroup(1).Site(30002);
-        var noTenantContext = Mozu.Host('derp').SiteGroup(1).Site(40000);
-        var noSiteContext = Mozu.Host('derp').Tenant(30000).SiteGroup(1);
-        var noSiteGroupContext = Mozu.Host('derp').Tenant(30000).Site(1);
-        var noHostContext = Mozu.Tenant(4000).SiteGroup(1).Site(2);
+        var completeContext = Mozu.Tenant(30001).SiteGroup(1).Site(30002);
+        var noTenantContext = Mozu.SiteGroup(1).Site(40000);
+        var noSiteContext = Mozu.Tenant(30000).SiteGroup(1);
+        var noSiteGroupContext = Mozu.Tenant(30000).Site(1);
+        //var noHostContext = Mozu.Tenant(4000).SiteGroup(1).Site(2);
 
         it("should be returned by the 'api' method of a complete ApiContext", function () {
             expect(completeContext.api()).toBeDefined();
         });
 
-        it("should error when any of tenant, site, or host are not supplied", function () {
+        it("should error when any of tenant, site, or sitegroup are not supplied", function () {
             expect(noTenantContext.api).toThrow();
             expect(noSiteContext.api).toThrow();
             expect(noSiteGroupContext.api).toThrow();
-            expect(noHostContext.api).toThrow();
+            //expect(noHostContext.api).toThrow();
         });
 
         var api = completeContext.api();
@@ -80,7 +82,7 @@
             it("should run an ajax request from the request method", function () {
                 spyOn(Mozu.Utils, 'ajax').andCallThrough();
 
-                req = api.request('GET', 'mozu.ProductRuntime.WebApi/products');
+                req = api.request('GET', 'http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/products');
 
                 expect(Mozu.Utils.ajax).toHaveBeenCalled();
             });
@@ -92,7 +94,7 @@
             it("should send the JSON response to the .then handler of the promise", function () {
                 var req, res;
                 runs(function () {
-                    req = api.request('GET', 'mozu.ProductRuntime.WebApi/products/foobar');
+                    req = api.request('GET', 'http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/products/foobar');
                     req.then(function () {
                         console.log(arguments);
                         res = arguments[0];
@@ -124,7 +126,7 @@
                 });
 
                 runs(function () {
-                    expect(res.Items).toBeTruthy();
+                    expect(res instanceof Mozu.ApiReference.ApiObject).toBeTruthy();
                 });
 
             });
@@ -142,7 +144,7 @@
                 });
 
                 runs(function () {
-                    expect(res.ProductCode).toBe("foobar");
+                    expect(res.data.ProductCode).toBe("foobar");
                 });
             });
 
@@ -161,8 +163,38 @@
                 });
 
                 runs(function () {
-                    expect(res.ProductCode).toBe("foobar");
+                    expect(res.data.ProductCode).toBe("foobar");
                 });
+            });
+
+        });
+
+        describe("the ApiObject returned by the api interface", function() {
+            it("should have an actions method that peforms common actions for the object type", function () {
+                var res;
+                runs(function () {
+                    api.get('product', 'foobar').then(function (foobar) {
+                        api.get('cart').then(function (cart) {
+                            expect(cart.data.Items.length).toBe(0);
+                            return cart.action('empty');
+                        }).then(function (cart) {
+                            foobar.Quantity = 1;
+                            return cart.action('addproduct', foobar);
+                        }).then(function (newcart) {
+                            res = newcart;
+                        });
+                    })
+                });
+
+                waitsFor(function () {
+                    return res;
+                });
+
+                runs(function () {
+                    expect(res.data.Items.length).toBe(1);
+                    expect(res.data.Items[0].Product.ProductCode).toBe("foobar");
+                });
+                    
             });
         });
 
