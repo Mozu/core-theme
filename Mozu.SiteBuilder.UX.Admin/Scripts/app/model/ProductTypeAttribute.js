@@ -1,23 +1,21 @@
 ﻿/**
- * @class Taco.model.Attribute
+ * @class Taco.model.ProductTypeAttribute
  */
 Ext.define('Taco.model.ProductTypeAttribute', {
     extend: 'Taco.core.data.Model',
     fields: [
         { name: 'attributeFQN', type: 'string' },
         { name: 'productTypeId', type: 'auto' },
-        {name:'index', type:'int'},
+        { name:'index', type: 'int' },
         { name: 'isLocked', type: 'boolean', defaultValue: false },
         { name: 'isRequired', type: 'boolean', defaultValue: false },
         { name: 'allowMulti', type: 'boolean', defaultValue: false },
         { name: 'isHidden', type: 'boolean', defaultValue: false },
-
         { name: 'attributeName', type: 'string', persist: false },
         { name: 'allValues', type: 'auto', persist: false },
         { name: 'selectedValues', type: 'auto' },
         { name: 'dataType', type: 'string' },
         { name: 'inputType', type: 'string' }
-
     ],
     idProperty: 'attributeFQN',
     proxy: {

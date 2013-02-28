@@ -9,7 +9,6 @@
             'Taco.view.site.page.entityAdapters.ProductEntityAdapter',
             'Taco.view.site.page.entityAdapters.CategoryEntityAdapter',
             'Taco.view.site.page.entityAdapters.ExternalLinkEntityAdapter',
-            'Taco.view.product.edit.Inline',
             'Taco.view.site.navigation.ExternalLinkEditor',
             'Taco.core.ux.form.Form',
             'Taco.model.WidgetInstance',

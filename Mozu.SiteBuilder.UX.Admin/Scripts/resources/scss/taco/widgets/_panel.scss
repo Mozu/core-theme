@@ -37,5 +37,44 @@
     $ui-body-color: $color,
     $ui-body-font-size: null
   );
+
+  /* panel specific styles, move to separate file */
+  .#{$vprefix}producttype-attribute-panel {
+    &> .#{$prefix}panel-header {
+      .#{$prefix}panel-header-body {
+        border-bottom: 1px dashed $color-grid-border;
+        margin-bottom: 10px;
+      }
+
+      .#{$prefix}panel-header-text {
+        font-size: 1.25em;
+        line-height: 1.25em;
+      }
+    }
+
+    &> .#{$prefix}panel-body {
+      background-color: $color-neutral-lightest;
+    }
+
+    .#{$vprefix}draghandle {
+      display: inline-block;
+      margin: 0px;
+      vertical-align: middle;
+    }
+    .#{$vprefix}attribute-item-header-text {
+      display: inline-block;
+      font-size: 15px;
+      font-weight: bold;
+      line-height: 1em;
+      padding-top: 0.5em;
+      vertical-align: middle;
+    }
+    .#{$vprefix}attribute-item-body {
+      border-top: 1px solid $color-neutral-white;
+      font-size: 14px;
+      padding: 0.5em 0.5em 0.5em 36px;
+      @include inner-shadow(0.1, 0px, 0px, 1px);
+    }
+  }
   
 }
