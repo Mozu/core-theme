@@ -9,9 +9,10 @@ var ApiReference = (function () {
 
     ApiObject.prototype = {
         action: function (actionName, data) {
+            var me = this;
             var url = ApiReference.getUrlFor(actionName, this.type, this.data, this.api.context);
             return this.api.request(null, url, data || this.data).then(function (rawJSON) {
-                return ApiReference.tryCreateApiObject(type, rawJSON, me);
+                return ApiReference.tryCreateApiObject(me.type, rawJSON, me.api);
             });
         },
         getAvailableActions: function () {

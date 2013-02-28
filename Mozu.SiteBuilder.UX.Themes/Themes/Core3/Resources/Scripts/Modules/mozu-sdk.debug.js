@@ -1512,7 +1512,7 @@
                         headers: headers,
                         data: data,
                         success: success,
-                        failure: failure
+                        error: failure
                     });
                 },
                 // the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
@@ -1536,8 +1536,14 @@
 
                 ApiObject.prototype = {
                     action: function (actionName, data) {
+                        var me = this;
                         var url = ApiReference.getUrlFor(actionName, this.type, this.data, this.api.context);
-                        return this.api.request(null, url, data || this.data);
+                        return this.api.request(null, url, data || this.data).then(function (rawJSON) {
+                            return ApiReference.tryCreateApiObject(me.type, rawJSON, me.api);
+                        });
+                    },
+                    getAvailableActions: function () {
+                        return ApiReference.getActionsFor(this.type);
                     }
                 };
 
@@ -1551,6 +1557,15 @@
                         "order": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Order.WebApi/orders/",
                         "search": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/productsearch/",
                         "cms": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Content.WebApi/documents/"
+                    },
+
+                    getActionsFor: function (shortcutName) {
+                        if (!urlShortcuts[shortcutName]) return false;
+                        var actions = [];
+                        for (var a in urlShortcuts[shortcutName]) {
+                            actions.push(a);
+                        }
+                        return actions;
                     },
 
                     getUrlFor: function (operation, shortcutName, conf, context) {
@@ -1580,6 +1595,10 @@
 
                         return shortcut.verb ? { verbOverride: shortcut.verb, url: returnUrl } : returnUrl;
 
+                    },
+
+                    tryCreateApiObject: function (type, rawJSON, api) {
+                        return type in urlShortcuts ? new ApiObject(type, rawJSON, api) : rawJSON;
                     },
 
                     ApiObject: ApiObject
@@ -1612,6 +1631,10 @@
                         get: pub.urls.cart + 'current',
                         addproduct: {
                             verb: 'POST',
+                            template: pub.urls.cart + 'current/items/'
+                        },
+                        empty: {
+                            verb: 'DELETE',
                             template: pub.urls.cart + 'current/items/'
                         }
                     },
@@ -1656,12 +1679,17 @@
             ApiInterface.prototype = {
                 request: function (method, url, conf) {
                     conf = conf || {};
-                    if (url.verbOverride) url = url.url;
+                    if (url.verbOverride) {
+                        method = url.verbOverride;
+                        url = url.url;
+                    }
 
                     var deferred = utils.when.defer();
 
-                    var xhr = utils.ajax(url.verbOverride || method, url, this.context.headers(), conf.data, function (rawJSON) {
-                        deferred.resolve(xhr);
+                    var data = conf.data || conf;
+
+                    var xhr = utils.ajax(method, url, this.context.headers(), data, function (rawJSON) {
+                        deferred.resolve(rawJSON, xhr);
                     }, function (error) {
                         deferred.reject(error, xhr);
                     });
@@ -1673,7 +1701,7 @@
                 ApiInterface.prototype[fnName] = function (type, conf) {
                     var me = this;
                     return this.request(verb, ApiReference.getUrlFor(fnName, type, conf, this.context), conf).then(function (rawJSON) {
-                        return new ApiReference.ApiObject(type, rawJSON, me);
+                        return ApiReference.tryCreateApiObject(type, rawJSON, me);
                     });
                 }
             };

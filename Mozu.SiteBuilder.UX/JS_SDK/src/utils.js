@@ -12,7 +12,7 @@ var utils = {
             headers: headers, 
             data: data,
             success: success,
-            failure: failure
+            error: failure
         });
     },
     // the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
