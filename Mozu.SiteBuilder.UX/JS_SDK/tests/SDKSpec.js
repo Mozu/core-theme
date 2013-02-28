@@ -173,16 +173,26 @@
             it("should have an actions method that peforms common actions for the object type", function () {
                 var res;
                 runs(function () {
+
+                    var product, cart;
                     api.get('product', 'foobar').then(function (foobar) {
-                        api.get('cart').then(function (cart) {
-                            return cart.action('empty');
-                        }).then(function (cart) {
-                            expect(cart.data.Items.length).toBe(0);
-                            return cart.action('addproduct', { Product: foobar.data, Quantity: 1 });
-                        }).then(function (newcart) {
-                            res = newcart;
-                        });
-                    })
+                        product = foobar;
+                        return api.get('cart')
+                    }).then(function (c) {
+                        cart = c;
+                        return cart.action('empty');
+                    }).then(function (emptyCart) {
+                        cart = emptyCart;
+                        expect(cart.data.Items.length).toBe(0);
+                        return cart.action('addproduct', {
+                            Product: product.data,
+                            Quantity: 1
+                        })
+                    }).then(function (cartItem) {
+                        return cart.action('get');
+                    }).then(function (newCart) {
+                        res = newCart;
+                    });
                 });
 
                 waitsFor(function () {
@@ -190,7 +200,8 @@
                 });
 
                 runs(function () {
-                    expect(res.data.Product.ProductCode).toBe("foobar");
+                    expect(res.data.Items.length).toBe(1);
+                    expect(res.data.Items[0].Product.ProductCode).toBe("foobar");
                 });
                     
             });

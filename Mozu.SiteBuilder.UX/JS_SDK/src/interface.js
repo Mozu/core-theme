@@ -16,7 +16,6 @@ var basicOps = {
 };
 ApiInterface.prototype = {
     request: function (method, url, conf) {
-        conf = conf || {};
         if (url.verbOverride) {
             method = url.verbOverride;
             url = url.url;
@@ -24,7 +23,10 @@ ApiInterface.prototype = {
 
         var deferred = utils.when.defer();
 
-        var data = conf.data || conf;
+        var data;
+        if (conf) {
+            data = conf.data || conf;
+        }
 
         var xhr = utils.ajax(method, url, this.context.headers(), data, function (rawJSON) {
             deferred.resolve(rawJSON, xhr);
