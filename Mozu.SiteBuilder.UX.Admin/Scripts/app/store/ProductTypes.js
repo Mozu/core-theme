@@ -11,7 +11,7 @@ Ext.define('Taco.store.ProductTypes', {
         //  numFromEdge: 10,
         // leadingBufferZone:40,
         // trailingBufferZone:10,
-        storeId: 'ProductTypeStoer',
+        storeId: 'ProductTypeStore',
         buffered: false,
         remoteFilter: true
         // remoteSort: true
