@@ -5,6 +5,7 @@
 
 Ext.define('Taco.view.attribute.Form', {
     extend: 'Taco.core.ux.form.Form',
+    requires: ['Taco.view.option.valueEditor.MultiValue'],
 
     
     title: 'Attribute',
@@ -48,16 +49,15 @@ Ext.define('Taco.view.attribute.Form', {
                     vertical: true,
                     columns: 1,
                     items: [
-                        {boxLabel: 'Option', name: 'isOption', inputValue: true},
-                        {boxLabel: 'Property', name: 'isProperty', inputValue: true},
-                        {boxLabel: 'Extra', name: 'isExtra', inputValue: true}
+                        {boxLabel: 'Option', name: 'isOption', inputValue: true, readOnly: this.isEdit()},
+                        {boxLabel: 'Property', name: 'isProperty', inputValue: true, readOnly: this.isEdit()},
+                        {boxLabel: 'Extra', name: 'isExtra', inputValue: true, readOnly: this.isEdit()}
                     ]
                 },
                 dataType, 
                 {
-                    xtype: 'component',
-                    fieldLabel: 'Values',
-                    html: 'Values...TBD'
+                    xtype: 'optionvalueeditor',
+                    store: this.valuesStore
                 }];
             },
 
@@ -179,6 +179,12 @@ Ext.define('Taco.view.attribute.Form', {
     initComponent: function () {
 
         this.buildFormComponents();
+
+
+
+        this.valuesStore = this.record.getAttributeValues();
+
+        this.stores = [this.valuesStore];
 
         this.callParent(arguments);
     },
