@@ -120,7 +120,8 @@ Ext.application({
             'Shipping',
             'Errors',
             'Roles',
-            'ProductTypes'
+            'ProductTypes',
+            'Attributes'
            ],
     stores: ['Taco.store.LocalizedStrings'],
     context:null,
