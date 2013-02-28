@@ -56,7 +56,7 @@ Ext.define('Taco.model.ProductType', {
         // },
         api: {
             create: '/admin/app/ProductType/create',
-            read: '/admin/app/ProductType/list',
+            read: '/admin/app/ProductType/read',
             update: '/admin/app/ProductType/edit',
             destroy: '/admin/app/ProductType/delete'
         },
