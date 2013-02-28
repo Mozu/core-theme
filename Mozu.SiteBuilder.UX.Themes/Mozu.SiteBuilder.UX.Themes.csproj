@@ -351,6 +351,7 @@
     <Content Include="Themes\Cantaloupe2\theme.xml" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\context-parser.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\api.js" />
+    <Content Include="Themes\Core3\Resources\Scripts\Modules\knockout-viewmodel.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\mozu-sdk.debug.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Vendor\jquery-cookie.js" />
     <Content Include="Themes\RESTCore\MetaData\build.js" />
