@@ -8,6 +8,7 @@ using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.Handlers.Message;
 using Mozu.Core.Configuration;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -44,6 +45,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             
             
             builder.RegisterType<SiteBuilderContext>().As<ISiteBuilderContext>().InstancePerLifetimeScope();
+
+            builder.RegisterType<SbApiContextBuilder>().As<IApiContextBuilder>();
 
             builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().InstancePerLifetimeScope();
             builder.RegisterType<Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper>().InstancePerLifetimeScope();
@@ -107,7 +110,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
 
         
+        class SbApiContextBuilder:IApiContextBuilder
+        {
 
+            public IApiContext BuildApiContext(IApiContext apiContext, System.Net.Http.HttpRequestMessage request)
+            {
+                return DependencyResolver.Current.GetService<IApiContext>();
+            }
+        }
 
 
         private void RegisterOtherStuff(ContainerBuilder builder)

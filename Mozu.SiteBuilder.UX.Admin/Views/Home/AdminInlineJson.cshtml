@@ -12,6 +12,7 @@
             var siteRolesJson = Newtonsoft.Json.JsonConvert.SerializeObject(siteRoles);
      
             var taContext = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["taContext"]);
+            var siteUsers = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["siteUsers"]);
             var extPath = WebConfigurationManager.AppSettings["extPath"];
             var dashboardInstructionsLoc = WebConfigurationManager.AppSettings["admin.dashboardInstructions.loc"];
             var dashboardInstructions = "";
@@ -39,6 +40,7 @@
         User : { id: '@user.Id'  , taContext: @Html.Raw(taContext) , email: '@user.EmailAddress', sites: @Html.Raw(siteRolesJson), name: '@user.FirstName @user.LastName'.trim() },
         apiVersion: '@ver.FileVersion',
         dashBoardInstructions :  @Html.Raw(string.IsNullOrEmpty(dashboardInstructions) ? "'tbd'": dashboardInstructions) ,
+        siteUsers:@Html.Raw(siteUsers),
         buildDate : new Date ('@verDate')
 
         @if (Convert.ToBoolean(ViewData["useGoogleAnalytics"])) {
