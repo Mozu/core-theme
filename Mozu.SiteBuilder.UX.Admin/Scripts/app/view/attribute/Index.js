@@ -5,7 +5,7 @@
 Ext.define('Taco.view.attribute.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.attributeindex',
-    requires: ['Taco.model.Attribute', 'Taco.store.Attributes'],
+    requires: ['Taco.model.Attribute', 'Taco.store.Attributes', 'Taco.view.attribute.Edit'],
 
     typeName: 'Attribute',
     modelName: 'Taco.model.Attribute',

@@ -524,5 +524,4 @@ Ext.define('Taco.core.ux.form.Form', {
             customText: 'Did not pass the filter'
         });
     }
-
 });
