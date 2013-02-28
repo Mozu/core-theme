@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
@@ -38,14 +39,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         }
 
         // GET: /Home/
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var user = _currentUserHelper.GetCurrentUser();
             var roles = GetUserSitesRoles(user.Id);
-            var tenantRes = _tenantsWebApi.GetTenant( _apiContext.TenantId).Result;
+            var tenantRes = await _tenantsWebApi.GetTenant( _apiContext.TenantId);
            // var siteCol = _tenantsWebApi.AsBreadthFirstEnumerable();
 
-
+            var siteUsers = await _usersRepo.Get(pageSize: 200, responseGroups:" ", filter: string.Format("roletenantid eq {0}", _apiContext.TenantId));
 
 
             if (tenantRes.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -73,6 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             this.ViewData["extlocalefile"] = GetExtLocaleFile(Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName);
             this.ViewData["useGoogleAnalytics"] = System.Configuration.ConfigurationManager.AppSettings["useGoogleAnalytics"];
             this.ViewData["googleAnalyticsAccount"] = System.Configuration.ConfigurationManager.AppSettings["googleAnalyticsAccount"];
+            this.ViewData["siteUsers"] = siteUsers.ReadAsSync().Items;
          
             if (this.HttpContext.Request["testHarnessMode"] == "true")
             {

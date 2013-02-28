@@ -47,7 +47,16 @@ Ext.define('Taco.model.CmsDocumentDraft', {
         {
             "name": "modifiedBy",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            convert: function (v, r) {
+                var uName = null;
+                Ext.each(Taco.siteUsers, function (item) {
+                    if (item.Id == v) {
+                        uName = item.EmailAddress;
+                    }
+                });
+                return uName;
+            }
         },
         {
             "name": "lastPublished",

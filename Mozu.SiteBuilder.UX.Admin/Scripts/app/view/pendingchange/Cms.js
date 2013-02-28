@@ -127,11 +127,9 @@ Ext.define('Taco.view.pendingchange.Cms', {
                 minWidth: 120,
                 width: 100
             }, {
-                dataIndex: 'modification',
+                dataIndex: 'modificationType',
                 text: 'Modification',
-                renderer: function(value) {
-                    return 'n/a';
-                },
+              
                 width: 100
             }, {
                 dataIndex: 'lastModified',
@@ -141,17 +139,13 @@ Ext.define('Taco.view.pendingchange.Cms', {
             }, {
                 dataIndex: 'modifiedBy',
                 text: 'Modified By',
-                renderer: function(value) {
-                    return 'n/a';
-                },
+                
                 width: 100
             },
             {
                 dataIndex: 'lastPublished',
                 text: 'Last Published',
-                renderer: function(value) {
-                    return 'n/a';
-                },
+                xtype: 'datecolumn',
                 width: 100
             }
         ]
