@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.ServiceModel;
 using System.Text;
@@ -30,40 +31,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers
             // if (!string.IsNullOrEmpty(extFilter.query))
             //     extFilter.Add(new FilterCollectionItem { comparison = "cont", field = PropertyGuy.Convert(x => x.Content.ProductName), value = extFilter.query });
 
-            var sb = new StringBuilder();
+            return string.Join(" and ", extFilter.Select(GetFilter));
+        }
 
-            foreach (var filter in extFilter)
+        private static string GetFilter(FilterCollectionItem filter)
+        {
+            switch (filter.property.ToLowerInvariant())
             {
-                if (sb.Length > 0)
-                {
-                    sb.Append(" and ");
-                }
-
-                switch (filter.property.ToLowerInvariant())
-                {
-                    case "categoryids":
-                        sb.AppendFormat("{2} {1} {0}", filter.value, filter.comparison);
-                        break;
-                    case "isactive":
-                        sb.AppendFormat("{2} {1} {0}", filter.value, filter.comparison, IS_ACTIVE_PROPERTY);
-                        break;
-                    case "productname":
-                    case "name":
-                        sb.AppendFormat("({1} cont \"{0}\" or {2} cont \"{0}\")", filter.value, PRODUCT_NAME_PROPERTY, PRODUCT_CODE_PROPERTY);
-                        break;
-                    case "price":
-                        sb.AppendFormat("{2} {1} {0}", filter.value, filter.comparison, PRICE_PROPERTY);
-                        break;
-                    case "stockonhand":
-                        sb.AppendFormat("{2} {1} {0}", filter.value, filter.comparison, STOCK_ON_HAND_PROPERTY);
-                        break;
-                    case "siteid":
-                        sb.AppendFormat("{1} eq {0}", filter.value, SITE_ID_PROPERTY);
-                        break;
-                }
+                case "categoryids":
+                    return string.Format("{2} {1} {0}", filter.value, filter.comparison);
+                case "isactive":
+                    return string.Format("{2} {1} {0}", filter.value, filter.comparison, IS_ACTIVE_PROPERTY);
+                case "productname":
+                case "name":
+                    return string.Format("({1} cont \"{0}\" or {2} cont \"{0}\")", filter.value, PRODUCT_NAME_PROPERTY, PRODUCT_CODE_PROPERTY);
+                case "price":
+                    return string.Format("{2} {1} {0}", filter.value, filter.comparison, PRICE_PROPERTY);
+                case "stockonhand":
+                    return string.Format("{2} {1} {0}", filter.value, filter.comparison, STOCK_ON_HAND_PROPERTY);
+                case "siteid":
+                    return string.Format("{1} eq {0}", filter.value, SITE_ID_PROPERTY);
             }
-            
-            return sb.ToString();
+            return "";
         }
     }
 }
