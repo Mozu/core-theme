@@ -175,11 +175,10 @@
                 runs(function () {
                     api.get('product', 'foobar').then(function (foobar) {
                         api.get('cart').then(function (cart) {
-                            expect(cart.data.Items.length).toBe(0);
                             return cart.action('empty');
                         }).then(function (cart) {
-                            foobar.Quantity = 1;
-                            return cart.action('addproduct', foobar);
+                            expect(cart.data.Items.length).toBe(0);
+                            return cart.action('addproduct', { Product: foobar.data, Quantity: 1 });
                         }).then(function (newcart) {
                             res = newcart;
                         });
@@ -191,8 +190,7 @@
                 });
 
                 runs(function () {
-                    expect(res.data.Items.length).toBe(1);
-                    expect(res.data.Items[0].Product.ProductCode).toBe("foobar");
+                    expect(res.data.Product.ProductCode).toBe("foobar");
                 });
                     
             });

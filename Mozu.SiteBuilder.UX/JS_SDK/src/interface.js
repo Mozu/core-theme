@@ -24,7 +24,9 @@ ApiInterface.prototype = {
 
         var deferred = utils.when.defer();
 
-        var xhr = utils.ajax(method, url, this.context.headers(), conf.data, function (rawJSON) {
+        var data = conf.data || conf;
+
+        var xhr = utils.ajax(method, url, this.context.headers(), data, function (rawJSON) {
             deferred.resolve(rawJSON, xhr);
         }, function (error) {
             deferred.reject(error, xhr);
