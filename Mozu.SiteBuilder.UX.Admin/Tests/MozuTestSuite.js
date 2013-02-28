@@ -26,7 +26,7 @@ Harness.start({
         expanded: false
     }, {
         group: 'Products',
-        expanded: false,
+        expanded: true,
         items: [{
             group: 'Products',
             expanded: false,
@@ -41,8 +41,12 @@ Harness.start({
             group: 'Categories',
             expanded: false
         }, {
-            group: 'Options',
-            expanded: false
+            group: 'Attributes',
+            expanded: true,
+            items: [{
+                url: 'integration/attributes/attribute-create.t.js',
+                title: 'Attribute Creation'
+            }]
         }]
     }, {
         group: 'Orders',
