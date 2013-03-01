@@ -265,11 +265,13 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             listeners: {
                 cancel: function () {
                     editorView.destroy();
-                    Taco.core.StateManager.addState(me.token);
-                    if (me.isDirty) {
-                        me.store.load();
-                        me.isDirty = false;
-                    }
+                    Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller);
+                    
+                    //Taco.core.StateManager.addState(me.token);
+                    //if (me.isDirty) {
+                    //    me.store.load();
+                    //    me.isDirty = false;
+                    //}
                 },
                 save: function () {
                     me.isDirty = true;

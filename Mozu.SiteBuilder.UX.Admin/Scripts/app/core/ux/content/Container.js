@@ -109,7 +109,7 @@ Ext.define('Taco.core.ux.content.Container', {
     },
 
     onAppear: function () {
-        if (this.ownerCt.hideEverythingBut) this.ownerCt.hideEverythingBut(this)
+        if (this.ownerCt.destroyEverythingBut) this.ownerCt.destroyEverythingBut(this)
     },
 
     onAddToContentView: function () {

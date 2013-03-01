@@ -31,10 +31,22 @@ Ext.define('Taco.core.ContentView' , {
      * @return {undefined} 
      */
     hideEverythingBut: function (that) {
-        var me = this
-        me.items.each(function (item, ix, l) {
-            if (me.isContentView(item) && item !== that) item.hide()
-        })
+        var me = this;
+        me.items.each(function(item, ix, l) {
+            if (me.isContentView(item) && item !== that) {
+                item.hide()
+            }
+        });
+    },
+    destroyEverythingBut: function (that) {
+        var me = this;
+        me.items.each(function(item, ix, l) {
+            if (me.isContentView(item) && item !== that) {
+                
+                Ext.defer(function() { item.destroy(); }, 1);
+                
+            }
+        });
     }
 
 });
