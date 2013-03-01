@@ -15,39 +15,6 @@ Ext.define('Taco.core.Controller', {
      */
     contextPlaceholders: {},
 
-    /**
-     * Gets or creates the editor associated with this controller.
-     * @param  {Object} config Should contain an object ID and config for an editor.
-     * @return {undefined}       
-     */
-    getEditor: function (config) {
-        Ext.error('DEPRICATED');
-        if (config.obj_id) {
-            if (config.obj_id == -1) {
-
-                var cat = Ext.create(this.modelName, {
-                    id: -1,
-                    sequence: 1
-                });
-
-                return Ext.create(this.editorView, Ext.apply(config, {
-                    data: cat
-                }));
-            }
-
-            return this.getModel(this.modelName).load(config.obj_id, {
-                scope: this,
-                success: function (model) {
-                    Ext.create(this.editorView, Ext.apply(config, {
-                        data: model
-                    }));
-                }
-            });
-        }
-
-        // TODO: Check for the actual object here: config.data??
-        return Ext.create(this.editorView, config);
-    },
 
     /**
      * Autogenerate a view based on a naming convention `Taco.view.[controllername].Index` where controllername,
@@ -81,6 +48,14 @@ Ext.define('Taco.core.Controller', {
         }
         return this.indexView;
     },
+    
+    getEditorView: function () {
+        if (!this.editorView) {
+            console.log(this.id);
+            this.editorView = 'Taco.view.' + Ext.String.uncapitalize(Ext.util.Inflector.singularize(this.id)) + '.Edit';
+        }
+        return this.editorView;
+    },
 
     buildIndex: function (record) {
         this.createContentView(this.getIndexView(), {
@@ -90,28 +65,24 @@ Ext.define('Taco.core.Controller', {
 
     edit: function (id) {
         Taco.model[this.modelName].load(id, {
-            success: function (record) {
-                this.buildIndex(record);
+            success: function(record) {
+
+                this.createContentView(this.getEditorView(), {
+                    record: record
+                });
             },
             scope: this
         });
     },
 
-    create: function() {
-        this.buildIndex(Ext.create('Taco.model.' + this.modelName));
-    },
-
-    /**
-     * Create an editor editing a new record of this Controller's associated Taco.core.data.Model.
-     * @return {undefined} 
-     */
-    createDEPRECRICATED: function () {
-        this.getEditor({
-            obj_id: -1,
-            editMode: true
+    create: function () {
+        var record = Ext.create(this.modelName);
+        this.createContentView(this.getEditorView(), {
+            record: record
         });
     },
 
+  
     /**
      * Create a new **read-only** editor displaying an existing record of this Controller's associated Taco.core.data.Model.
      * @param  {Number/Taco.core.data.Model} id The ID of the model, or the model itself.
