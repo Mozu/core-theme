@@ -524,6 +524,7 @@
     <Content Include="Scripts\app\core\ux\form\field\Base.js" />
     <Content Include="Scripts\app\core\ux\form\field\Container.js" />
     <Content Include="Scripts\app\core\ux\form\field\MultiSelect.js" />
+    <Content Include="Scripts\app\core\ux\grid\MenuColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\HeaderDropZone.js" />
     <Content Include="Scripts\app\core\ux\SidebarList.js" />
     <Content Include="Scripts\app\core\ux\grid\Header.js" />
