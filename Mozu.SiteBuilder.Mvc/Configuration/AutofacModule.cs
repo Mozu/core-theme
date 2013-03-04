@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.RegisterType<ThemeMetadataProvider>().As<IThemeMetaDataProvider>().SingleInstance();
             builder.RegisterType<ThemeRepository>().As<IThemeRepository>().SingleInstance()
-                .OnActivated(tr => tr.Instance.Initialize());
+                .OnActivating(tr => tr.Instance.Initialize());
 
             builder.RegisterType<RoleWebApiClient>().As<IRoleWebApiClient>();
             builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
