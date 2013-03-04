@@ -424,7 +424,7 @@ Ext.define('Taco.view.generalsettings.Index', {
                                     console.log("form/action", form, action);
                                 },
                                 failure: function () {
-                                    console.error("You done fucked up.");
+                                    console.error(arguments);
                                 }
                             })
                         }

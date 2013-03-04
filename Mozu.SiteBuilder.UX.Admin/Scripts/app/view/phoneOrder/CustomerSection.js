@@ -23,7 +23,7 @@ Ext.define("Taco.view.phoneOrder.CustomerSection", {
     initComponent: function () {
         var me = this;
 
-        Ext.define("Fuckyou", {
+        Ext.define("Fynames", {
             extend: "Ext.data.Model",
             fields: [
                 { name: "firstName", type: "string" }
@@ -31,7 +31,8 @@ Ext.define("Taco.view.phoneOrder.CustomerSection", {
         });
 
         me.fixture = Ext.create("Ext.data.Store", {
-            model: "Fuckyou",
+            model: "Fynames",
+            
             data: [
                 { firstName: "Michael" },
                 { firstName: "Chris" },
