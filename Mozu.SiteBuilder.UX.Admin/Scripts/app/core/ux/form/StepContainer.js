@@ -70,7 +70,7 @@
                     return;
                 }
                 
-                // If step is already rendered, fade in that mother fucker!
+                // If step is already rendered, fade in
                 step.getEl().setStyle({opacity: 0});
                 step.show();
                 step.getEl().fadeIn({duration: 1000});
