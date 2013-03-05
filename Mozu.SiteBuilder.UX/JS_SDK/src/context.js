@@ -10,17 +10,17 @@ ApiContext.prototype = {
     Store: function(conf) {
         return new ApiContext(conf);
     },
-    headers: function() {
-        var allvars = ['app-claims','user-claims','callchain','currency','locale','tenant','site-group','site'],
+    asObject: function (prefix) {
+        var allvars = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale', 'tenant', 'site-group', 'site'],
             headerObj = {};
+        prefix = prefix || '';
         for (var i = 0; i < allvars.length; i++) {
-            headerObj[this.headerPrefix + allvars[i]] = this[allvars[i]];
+            headerObj[prefix + allvars[i]] = this[allvars[i]];
         }
         return headerObj;
     },
     currency: 'usd',
-    locale: 'en-US',
-    headerPrefix: 'x-vol-'
+    locale: 'en-US'
 };
 var immutableAccessors = {
     tenant: 'Tenant',

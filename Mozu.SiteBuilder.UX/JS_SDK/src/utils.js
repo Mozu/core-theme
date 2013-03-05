@@ -1,20 +1,92 @@
 ﻿// BEGIN UTILS
 var utils = {
-    // TODO: factor out jQuery
-    extend: $.proxy($.extend, $),
+    extend: function () {
+        var src, copy, name, options,
+            target = arguments[0],
+            i = 1,
+            length = arguments.length;
+
+        for (; i < length; i++) {
+            // Only deal with non-null/undefined values
+            if ((options = arguments[i]) != null) {
+                // Extend the base object
+                for (name in options) {
+                    copy = options[name];
+
+                    // Prevent never-ending loop
+                    if (target === copy) {
+                        continue;
+                    }
+
+                    if (copy !== undefined) {
+                        target[name] = copy;
+                    }
+                }
+            }
+        }
+        return target;
+    },
     ajax: function (method, url, headers, data, success, failure) {
         if (typeof data !== "string") data = JSON.stringify(data);
-        return $.ajax({
-            type: method || 'GET',
-            url: url,
-            dataType: 'json',
-            contentType: 'application/json',
-            headers: headers, 
-            data: data,
-            success: success,
-            error: failure
-        });
+        var xhr = new (window.XMLHttpRequest ? window.XMLHttpRequest : window.ActiveXObject("Microsoft.XMLHTTP"))();
+        var timeout = setTimeout(function () {
+            clearTimeout(timeout);
+            failure(xhr, "Request timed out.");
+        }, 20000);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                clearTimeout(timeout);
+                if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+                    var json;
+                    try {
+                        json = JSON.parse(xhr.responseText);
+                    } catch (e) {
+                        failure(xhr, e);
+                    }
+                    if (json) success(json, xhr);
+                } else {
+                    failure(xhr);
+                }
+            }
+        };
+        xhr.open(method || 'GET', url);
+        if (headers) {
+            for (var h in headers) {
+                if (headers[h]) xhr.setRequestHeader(h, headers[h]);
+            }
+        }
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(method !== 'GET' && data);
+        return xhr;
     },
+
+    pipeline: function (tasks /* initialArgs... */) {
+        var initialArgs, runTask;
+
+        initialArgs = Array.prototype.slice.call(arguments, 1);
+
+        // Self-optimizing function to run first task with multiple
+        // args using apply, but subsequence tasks via direct invocation
+        runTask = function (task, args) {
+            runTask = function(task, arg) {
+                return task(arg);
+            };
+
+            return task.apply(null, args);
+        };
+
+        return utils.when.reduce(tasks,
+            function(args, task) {
+                return runTask(task, args);
+            },
+            initialArgs
+        );
+    },
+    // TODO: the below is horrible. request that all types include their type parameter.
+    areSameType: function(ljson, rjson) {
+        return Object.keys(ljson).join() === Object.keys(rjson).join();
+    },
+
     // the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
     // this allows us to cleanly vendor AMD-compatible scripts without polluting scope.
     // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.

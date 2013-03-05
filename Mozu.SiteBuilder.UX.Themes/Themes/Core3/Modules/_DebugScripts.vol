@@ -4,6 +4,7 @@
         //urlArgs: "bust=" +  (new Date()).getTime(),
         baseUrl: "/resources/scripts",
         paths: {
+            sdk: "../../sdk/debug",
             jquery: "http://code.jquery.com/jquery",
             knockout: "vendor/knockout-latest.debug",
             pciaas: "vendor/pci-temp",

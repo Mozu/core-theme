@@ -1,6 +1,13 @@
 ﻿// BEGIN REFERENCE
 var ApiReference = (function () {
 
+    var basicOps = {
+        get: 'GET',
+        update: 'PUT',
+        create: 'POST',
+        del: 'DELETE'
+    };
+
     var ApiObject = function (type, data, iapi) {
         this.data = data;
         this.api = iapi;
@@ -20,8 +27,28 @@ var ApiReference = (function () {
         }
     };
 
+    var setOp = function(fnName) {
+        ApiObject.prototype[fnName] = function (conf) {
+            var me = this,
+                type = this.type;
+            return this.api.request(basicOps[fnName], ApiReference.getUrlFor(fnName, type, conf, this.context), conf).then(function (rawJSON) {
+                if (utils.areSameType(rawJSON, me.data)) {
+                    me.data = rawJSON;
+                    return me;
+                } else {
+                    return ApiReference.tryCreateApiObject(type, rawJSON, me);
+                }
+            });
+        }
+    };
+    for (var i in basicOps) {
+        if (basicOps.hasOwnProperty(i)) setOp(i);
+    }
+
     var genericQueryTpt = '{?_*}';
     var pub = {
+
+        basicOps: basicOps,
 
         urls: {
         "product": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/products/",
@@ -61,7 +88,7 @@ var ApiReference = (function () {
                     utils.extend(tptData, conf.query || conf);
                 }
                 if (shortcut.defaults) tptData = utils.extend({}, shortcut.defaults, tptData);
-                returnUrl = shortcut.template.expand(utils.extend({ _: tptData }, tptData));
+                returnUrl = shortcut.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData));
             } else {
                 throw "URLs beyond simple strings and templates are not implemented."
             }
@@ -113,7 +140,8 @@ var ApiReference = (function () {
         },
         'me': {
             get: {
-                template: pub.urls.user + '{id}'
+                template: pub.urls.user + '{id}',
+                shortcutParam: 'id'
             },
             login: {
                 template: pub.urls.user + "Login"
@@ -121,10 +149,28 @@ var ApiReference = (function () {
         },
         'order': {
             create: {
-                template: pub.urls.order + '{?cartId*}'
+                template: pub.urls.order + '{?cartId*}',
+                shortcutParam: 'cartId'
+            }
+        },
+        'document': {
+            get: {
+                template: pub.urls.cms + "{documentListName}/{documentId}/?version={version}&status={status}",
+                shortcutParam: 'documentId',
+                defaults: {
+                    documentListName: 'default'
+                }
+            }
+        },
+        'documentbyname': {
+            get: {
+                template: pub.urls.cms + "{documentListName}/named/{documentName}/?folderPath={folderPath}&version={version}&status={status}",
+                shortcutParam: 'documentName',
+                defaults: {
+                    documentListName: 'default'
+                }
             }
         }
-
     };
 
     return pub;

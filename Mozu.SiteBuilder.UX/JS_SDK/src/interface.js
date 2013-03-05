@@ -7,15 +7,9 @@ var ApiInterface = function (context) {
     this.context = context;
 };
 
-
-var basicOps = {
-    get: 'GET',
-    update: 'PUT',
-    create: 'POST',
-    remove: 'DELETE'
-};
 ApiInterface.prototype = {
     request: function (method, url, conf) {
+        var me = this;
         if (url.verbOverride) {
             method = url.verbOverride;
             url = url.url;
@@ -28,25 +22,38 @@ ApiInterface.prototype = {
             data = conf.data || conf;
         }
 
-        var xhr = utils.ajax(method, url, this.context.headers(), data, function (rawJSON) {
+        var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function (rawJSON) {
             deferred.resolve(rawJSON, xhr);
         }, function (error) {
-            deferred.reject(error, xhr);
+            deferred.reject(error, xhr, url);
+        });
+
+        deferred.promise.otherwise(function (failedXhr) {
+            me.onError(deferred.promise, failedXhr, url)
         });
 
         return deferred.promise;
+    },
+    all: function () {
+        return utils.when.join.apply(utils.when, arguments);
+    },
+    steps: function () {
+        return utils.pipeline(Array.prototype.slice.call(arguments));
+    },
+    onError: function (badPromise, xhr, url) {
+        window.console && console.error("Error communicating with Mozu API at " + url, badPromise, xhr);
     }
 };
-var setOp = function(fnName, verb) {
+var setOp = function(fnName) {
     ApiInterface.prototype[fnName] = function (type, conf) {
         var me = this;
-        return this.request(verb, ApiReference.getUrlFor(fnName, type, conf, this.context), conf).then(function (rawJSON) {
+        return this.request(ApiInterface.basicOps[fnName], ApiReference.getUrlFor(fnName, type, conf, this.context), conf).then(function (rawJSON) {
             return ApiReference.tryCreateApiObject(type, rawJSON, me);
         });
     }
 };
-for (var i in basicOps) {
-    if (basicOps.hasOwnProperty(i)) setOp(i, basicOps[i]);
+for (var i in ApiReference.basicOps) {
+    if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
 }
 // END INTERFACE
 
