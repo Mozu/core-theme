@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-03-04
+ * Mozu JavaScript SDK - v0.1.0 - 2013-03-05
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -939,7 +939,12 @@
                         var me = this;
                         var url = ApiReference.getUrlFor(actionName, this.type, this.data, this.api.context);
                         return this.api.request(null, url, data).then(function(rawJSON) {
-                            return ApiReference.tryCreateApiObject(me.type, rawJSON, me.api);
+                            if (utils.areSameType(rawJSON, me.data)) {
+                                me.data = rawJSON;
+                                return me;
+                            } else {
+                                return ApiReference.tryCreateApiObject(null, rawJSON, me.api);
+                            }
                         });
                     },
                     getAvailableActions: function() {
@@ -948,15 +953,7 @@
                 };
                 var setOp = function(fnName) {
                     ApiObject.prototype[fnName] = function(conf) {
-                        var me = this, type = this.type;
-                        return this.api.request(basicOps[fnName], ApiReference.getUrlFor(fnName, type, conf, this.context), conf).then(function(rawJSON) {
-                            if (utils.areSameType(rawJSON, me.data)) {
-                                me.data = rawJSON;
-                                return me;
-                            } else {
-                                return ApiReference.tryCreateApiObject(type, rawJSON, me);
-                            }
-                        });
+                        return this.action(fnName, conf);
                     };
                 };
                 for (var i in basicOps) {
@@ -1012,10 +1009,14 @@
                         } : returnUrl;
                     },
                     tryCreateApiObject: function(type, rawJSON, api) {
-                        return type in urlShortcuts ? new ApiObject(type, rawJSON, api) : rawJSON;
+                        return type in urlShortcuts ? new ApiObject(type, rawJSON, api) : ApiReference.getTypeFromObject(rawJSON) ? new ApiObject(ApiReference.getTypeFromObject(rawJSON), rawJSON, api) : rawJSON;
+                    },
+                    getTypeFromObject: function(rawJSON) {
+                        return null;
                     },
                     ApiObject: ApiObject
                 };
+                var typeSignatures = {};
                 var urlShortcuts = {
                     products: {
                         template: pub.urls.product + genericQueryTpt,
@@ -1124,7 +1125,7 @@
             var setOp = function(fnName) {
                 ApiInterface.prototype[fnName] = function(type, conf) {
                     var me = this;
-                    return this.request(ApiInterface.basicOps[fnName], ApiReference.getUrlFor(fnName, type, conf, this.context), conf).then(function(rawJSON) {
+                    return this.request(ApiReference.basicOps[fnName], ApiReference.getUrlFor(fnName, type, conf, this.context), conf).then(function(rawJSON) {
                         return ApiReference.tryCreateApiObject(type, rawJSON, me);
                     });
                 };
