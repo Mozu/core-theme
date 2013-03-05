@@ -6,7 +6,7 @@ Harness.configure({
     autoCheckGlobals: false,
     expectedGlobals: ['Ext', 'Taco'],
 
-    preload: ['/admin/tests/chalupa/core.js', '/admin/Scripts/app/app.js'],
+    preload: ['/admin/tests/chalupa/core.js', '/admin/Scripts/app/app.js', '/admin/tests/sinon.js'],
 
     hostPageUrl: '/admin?testHarnessMode=true'
 });

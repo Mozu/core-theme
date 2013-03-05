@@ -340,6 +340,11 @@ Ext.define('Taco.core.ux.form.Form', {
         this.setTitle(tpl.apply(data));
     },
 
+
+    findField: function (id) {
+        return this.getForm().findField(id);
+    },
+    
     //  TODO: Refactor to Update Record
     /**
      * Updates the model bound to the form and calls update() on each form in forms.

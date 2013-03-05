@@ -11,6 +11,89 @@ Ext.define('Chalupa.Core', {
         Ext.override(test, {
             waitForRender: function (cmp, afterRender) {
                 test.waitFor(function () {return cmp.rendered;}, afterRender);
+            },
+            loadIndex: function (controllerName, callback, scope, componentQuery) {
+                var fn, controller;
+
+                test.diag('Loading Index from Controller: ' + controllerName);
+
+                scope = scope || test;
+
+                controller = Taco.app.controllers.get(controllerName);
+
+                test.ok(controller, controllerName + ' Controller is loaded');
+
+                controller.index();
+
+                if (typeof componentQuery === 'function') {
+                    fn = componentQuery;
+                } else if (typeof componentQuery === 'string') {
+                    fn = function () {
+                        var results = Ext.ComponentQuery.query(componentQuery);
+
+                        if (results.length !== 1) {
+                            return false;
+                        }
+                        
+                        test.indexCmp = results[0];
+
+                        if (!test.indexCmp.rendered) {
+                            return false;
+                        }
+
+                        return true;
+                    }
+                } else {
+                    fn = function () {
+                        var cmp = Taco.app.contentView.items.first();
+
+                        test.indexCmp = cmp;
+
+                        return (cmp && cmp.rendered);
+                    }
+                }
+
+                test.waitFor(fn, callback, scope);
+            },
+
+            setContext: function (cfg, navigate) {
+                var temp;
+                test.diag('Loading Conext: ' + (cfg.$className || cfg));
+
+                if (typeof cfg === 'string') {
+                    switch (cfg) {
+                        case 'collection':
+                            temp = Taco.app.context.siteCollections;
+
+                            test.ok(temp.length, 'One or more site collections exist');
+
+                            cfg = temp[0];
+
+                            test.ok(cfg, 'A valid site collection exists');
+                            
+                            break;
+                    }
+                }
+
+                Taco.app.context.setCurrentContext(cfg, navigate);
+            },
+
+            clickSelect: function (cmp, text, callback) {
+                if (!cmp) {
+                    return;
+                }
+                test.click(cmp.getEl(), function () {
+                    var nodes = cmp.getPicker().getNodes();
+
+                    Ext.each(nodes, function (node) {
+                        var el = Ext.fly(node);
+                        if (el.getHTML() === text) {
+                            test.click(el, callback);
+                            return false;
+                        }
+                    })
+                    
+                });
             }
         });
     },

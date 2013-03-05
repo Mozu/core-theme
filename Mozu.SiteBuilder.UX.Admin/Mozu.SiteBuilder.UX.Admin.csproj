@@ -1966,6 +1966,7 @@
     <Content Include="Tests\siesta-1.1.8-standard\tests\senchatouch\010_performsetup.js" />
     <Content Include="Tests\siesta-1.1.8-standard\tests\senchatouch\010_performsetup.t.js" />
     <Content Include="Tests\siesta-1.1.8-standard\tests\senchatouch\701_sencha_touch_form.t.js" />
+    <Content Include="Tests\sinon.js" />
     <Content Include="Tests\speed-test.t.js" />
     <Content Include="Tests\unit\app-state-matches-uri.t.js" />
     <Content Include="Tests\unit\scrolling-content-body-adds-scroll-class.js" />
