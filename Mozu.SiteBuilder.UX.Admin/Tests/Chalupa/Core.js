@@ -94,6 +94,67 @@ Ext.define('Chalupa.Core', {
                     })
                     
                 });
+            },
+
+            setFormValues: function (form, map, callback, timeout, interval) {
+                var fieldsToSet = [],
+                    intervals = {};
+
+                timeout = timeout || 10000;
+                interval = interval || 10;
+                callback = callback || Ext.emptyFn;
+
+                Ext.iterate(map, function (key, value) {
+                    var fnComplete = function () {
+                        var field = form.findField(key);
+                        clearInterval(intervals[key]);
+                        Ext.Array.remove(fieldsToSet, key);
+
+                        test.ok(field, 'Found field: "' + key + '", setting value: "' + value + '"');
+                        field.setValue(value);
+
+                        
+                        // Get out if there are still fields to set
+                        if (fieldsToSet.length) {
+                            return;
+                        }
+
+                        callback();
+
+                        // if (field.getValue() === value) {
+                        //     callback();
+                        //     return;
+                        // }
+
+                        // test.waitFor(function () {
+                        //     return field.getValue() === value;
+                        // }, callback);
+                    };
+                    
+                    fieldsToSet.push(key);
+
+                    intervals[key] = setInterval(function () {
+                        if (form.findField(key)) {
+                            fnComplete();
+                        }
+                    }, interval);
+                });
+
+                setTimeout(function () {
+                    if (fieldsToSet.length === 0) {
+                        return;
+                    }
+
+                    Ext.iterate(intervals, function (key, interval) {
+                        clearInterval(interval);
+                    });
+
+                    Ext.each(fieldsToSet, function (field) {
+                        test.fail('Timed out finding field: "' + field + '"', 'setFormValues');
+                    });
+
+                    callback();
+                }, timeout);
             }
         });
     },
