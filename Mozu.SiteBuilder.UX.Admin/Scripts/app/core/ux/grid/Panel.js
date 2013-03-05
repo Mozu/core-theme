@@ -6,35 +6,15 @@
  */
 Ext.define('Taco.core.ux.grid.Panel', {
     extend: 'Ext.grid.Panel',
-    requires: ['Taco.core.ux.grid.Header', 'Taco.core.ux.grid.RowExpander', 'Taco.core.ux.form.SelectField', 'Ext.ux.RowExpander'],
+    requires: ['Taco.core.ux.grid.Header', 'Taco.core.ux.grid.RowExpander', 'Taco.core.ux.form.SelectField', 'Ext.ux.RowExpander', 'Taco.core.ux.grid.MenuColumn'],
     alias: 'widget.taco.gridpanel',
-
-    /**
-     * @cfg {Ext.grid.column.Column} actionColumn
-     * A column definition object that defines the model-independent, rightmost column in the grid.
-     */
-    actionColumn: {
-        xtype: 'templatecolumn',
-        text: 'Actions',
-        width: 150,
-        draggable: false,
-        hideable: false,
-        resizable: false,
-        sortable: false,
-        tpl: '<div class="taco-actions-control"></div>'
-    },
 
     /**
      * @cfg {Object} columnDefaults
      * This option is a means of applying default settings to all added columns. Defaults are applied so as not
      * to override existing properties (see {@link Ext#applyIf}).
      */
-    columnDefaults: {
-        draggable: true,
-        hideable: true,
-       // resizable: true,
-        sortable: true
-    },
+    columnDefaults: {},
 
     initComponent: function () {
         var me = this;
@@ -51,9 +31,9 @@ Ext.define('Taco.core.ux.grid.Panel', {
     initColumns: function (columns) {
         if (Ext.isEmpty(columns)) columns = [];
 
-        if (this.actions && this.actionColumn && !Ext.Array.contains(columns, this.actionColumn)) {
-            columns.push(this.actionColumn);
-        }
+        // if (this.actions && this.actionColumn && !Ext.Array.contains(columns, this.actionColumn)) {
+        //     columns.push(this.actionColumn);
+        // }
 
         Ext.Array.each(columns, function (col) {
             Ext.applyIf(col, this.columnDefaults);
