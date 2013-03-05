@@ -19,7 +19,12 @@ var ApiReference = (function () {
             var me = this;
             var url = ApiReference.getUrlFor(actionName, this.type, this.data, this.api.context);
             return this.api.request(null, url, data).then(function (rawJSON) {
-                return ApiReference.tryCreateApiObject(me.type, rawJSON, me.api);
+                if (utils.areSameType(rawJSON, me.data)) {
+                    me.data = rawJSON;
+                    return me;
+                } else {
+                    return ApiReference.tryCreateApiObject(null, rawJSON, me.api);
+                }
             });
         },
         getAvailableActions: function () {
@@ -29,16 +34,7 @@ var ApiReference = (function () {
 
     var setOp = function(fnName) {
         ApiObject.prototype[fnName] = function (conf) {
-            var me = this,
-                type = this.type;
-            return this.api.request(basicOps[fnName], ApiReference.getUrlFor(fnName, type, conf, this.context), conf).then(function (rawJSON) {
-                if (utils.areSameType(rawJSON, me.data)) {
-                    me.data = rawJSON;
-                    return me;
-                } else {
-                    return ApiReference.tryCreateApiObject(type, rawJSON, me);
-                }
-            });
+            return this.action(fnName, conf);
         }
     };
     for (var i in basicOps) {
@@ -98,10 +94,19 @@ var ApiReference = (function () {
         },
 
         tryCreateApiObject: function (type, rawJSON, api) {
-            return type in urlShortcuts ? new ApiObject(type, rawJSON, api) : rawJSON;
+            return type in urlShortcuts ? new ApiObject(type, rawJSON, api) :
+                (ApiReference.getTypeFromObject(rawJSON) ? new ApiObject(ApiReference.getTypeFromObject(rawJSON), rawJSON, api) : rawJSON);
+        },
+
+        getTypeFromObject: function (rawJSON) {
+            //TODO: figure out how to do typing, omg
+            return null;
         },
 
         ApiObject: ApiObject
+
+        };
+    var typeSignatures = {
 
     };
     var urlShortcuts = {

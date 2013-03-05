@@ -47,7 +47,7 @@ ApiInterface.prototype = {
 var setOp = function(fnName) {
     ApiInterface.prototype[fnName] = function (type, conf) {
         var me = this;
-        return this.request(ApiInterface.basicOps[fnName], ApiReference.getUrlFor(fnName, type, conf, this.context), conf).then(function (rawJSON) {
+        return this.request(ApiReference.basicOps[fnName], ApiReference.getUrlFor(fnName, type, conf, this.context), conf).then(function (rawJSON) {
             return ApiReference.tryCreateApiObject(type, rawJSON, me);
         });
     }
