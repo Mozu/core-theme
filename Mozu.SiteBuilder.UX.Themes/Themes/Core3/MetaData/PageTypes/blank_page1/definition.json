@@ -1,17 +1,15 @@
 {
-  "DefaultValues": {
-    "contentCollection": "pages",
-    "items": [
-      {
-        "key": "page_type",
-        "value": "webpage"
-      }
-    ]
-  },
-  "DisplayName": "Blank Page",
-  "DocumentType": "web_page",
-  "EntityType": "webpage",
-  "Icon": "",
-  "Id": "blank_page1",
-  "Template": "blankpage"
+    id: "blank_page1",
+    displayName: "Blank Page",
+    documentType: "web_page",
+    entityType: "webpage",
+    pageType:"webpage",
+    renderTemplate: "blankpage",
+    userCreatable: true,
+    widgets:[{
+            definitionId: "content",
+            zoneId: "body",
+            index: 0
+        }
+    ] 
 }

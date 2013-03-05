@@ -223,7 +223,7 @@
     </Reference>
     <Reference Include="Mozu.Tenant.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.13024.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.13059.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.User.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -309,6 +309,14 @@
     <Content Include="Themes\Core3\Modules\_GoogleAnalyticsTrackingCode.vol">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Themes\Core3\MetaData\PageTypes\404\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\about_us1\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\blank_page1\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\blog\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\email\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\home1\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\landing1\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\post\definition.json" />
     <None Include="Themes\RESTCore\Resources\Scripts\Fixtures\RESTProduct.json" />
     <Content Include="Morrissey\morrissey.js" />
     <Content Include="Morrissey\src\lyrically.js" />
@@ -704,7 +712,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Morrissey\test\theme3\" />
-    <Folder Include="Themes\Core3\MetaData\PageTypes\" />
     <Folder Include="Themes\Core3\Resources\Fonts\" />
     <Folder Include="Themes\Core3\Resources\Images\c2Images\" />
     <Folder Include="Themes\Core3\Resources\Scripts-Built\" />
