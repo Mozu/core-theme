@@ -21,6 +21,12 @@ Ext.define('Taco.view.pendingchange.Cms', {
             me.store.reload();
         });
     },
+    discardAll:function() {
+        me.store.discardAll( function () {
+            Taco.app.fireEvent('setmessage', 'changes discarded', 'success');
+            me.store.reload();
+        });
+    },
 
     header: {
         actions: [
@@ -28,7 +34,10 @@ Ext.define('Taco.view.pendingchange.Cms', {
             xtype: 'secondarybutton',
             text: 'Discard All',
             listeners: {
-                click: function () { console.log(this, arguments); }
+                click: function() {
+
+                    this.getParentPage().discardAll();
+                }
             }
         }, {
             xtype: 'primarysplitbutton',

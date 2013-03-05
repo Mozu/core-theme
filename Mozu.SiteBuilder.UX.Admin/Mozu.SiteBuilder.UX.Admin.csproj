@@ -250,7 +250,7 @@
     </Reference>
     <Reference Include="Mozu.Tenant.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.13024.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.13059.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.User.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -1058,7 +1058,7 @@
     <Content Include="Scripts\resources\images\background-alpha.png" />
     <Content Include="favicon.ico" />
     <Content Include="Scripts\resources\images\card-s44a9b55566.png" />
-    <Content Include="Scripts\resources\images\icons-s0fbf826b1b.png" />
+    <Content Include="Scripts\resources\images\icons-sccb5eca2ce.png" />
     <Content Include="Scripts\resources\images\icons\icon-catalog-large.png" />
     <Content Include="Scripts\resources\images\icons\icon-customers-large.png" />
     <Content Include="Scripts\resources\images\icons\icon-dashboard-large.png" />

@@ -5,6 +5,6 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 {
     public interface IPageTypeProvider
     {
-        IEnumerable<PageTypeDefinition> GetPageTypes();
+        IEnumerable<PageTemplateDefinition> GetPageTypes();
     }
 }

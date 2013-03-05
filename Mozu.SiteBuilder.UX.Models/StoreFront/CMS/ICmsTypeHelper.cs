@@ -20,8 +20,8 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.CMS
         Task<DocumentType> GetDocumentType(string name);
         Task<PropertyType> GetPropertyType(string name);
 
-        IEnumerable<PageTypeDefinition> GetPageTypeDefinitions();
+        IEnumerable<PageTemplateDefinition> GetPageTypeDefinitions();
         WidgetDefinition GetWidgetDefintion(string id);
-        PageTypeDefinition GetPageTypeDefinition(string id);
+        PageTemplateDefinition GetPageTypeDefinition(string id);
     }
 }

@@ -107,12 +107,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return _widgetProvider.GetWidgets().FirstOrDefault(x => string.Equals(x.Id, id, StringComparison.OrdinalIgnoreCase));
         }
 
-        public PageTypeDefinition GetPageTypeDefinition(string id)
+        public PageTemplateDefinition GetPageTypeDefinition(string id)
         {
             return _pageTypeProvider.GetPageTypes().FirstOrDefault(x => string.Equals(x.Id, id, StringComparison.OrdinalIgnoreCase));
         }
 
-        public IEnumerable<PageTypeDefinition> GetPageTypeDefinitions()
+        public IEnumerable<PageTemplateDefinition> GetPageTypeDefinitions()
         {
             return _pageTypeProvider.GetPageTypes();
         }

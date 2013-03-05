@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Web.Hosting;
 using Mozu.SiteBuilder.Mvc.Theme;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
@@ -12,31 +14,32 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     {
         private readonly VirtualPathProvider _virtualPathProvider;
         private readonly ISiteBuilderContext _sbCtx;
-        private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(T));
+        private readonly JsonSerializer _serializer = new Newtonsoft.Json.JsonSerializer();
 
         protected DefinitionProvider(VirtualPathProvider virtualPathProvider, ISiteBuilderContext ctx)
         {
             _virtualPathProvider = virtualPathProvider;
             _sbCtx = ctx;
+            
         }
 
-        protected IEnumerable<T> GetFromFolder(string folderName)
+        protected IEnumerable<T> GetFromFolder( string  folderName)
         {
             // var baseDirectory = _virtualPathProvider.GetDirectory("/");
             
             // get a VirtualDirectory for the current theme.
             // TODO: massive break of abstraction
             // TODO: this model does not allow themes to inherit their ancestors widgets and page types.
-            var widgetDirectory = _virtualPathProvider.GetDirectory(folderName);
-
-          //  var widgetDirectory = baseDirectory.Directories.Cast<VirtualDirectory>().FirstOrDefault(d => string.Equals(d.Name, folderName, StringComparison.OrdinalIgnoreCase));
-            if (widgetDirectory == null)
+            var virtDir = _virtualPathProvider.GetDirectory(folderName);
+          
+          
+          
+            if (virtDir == null)
                 return Enumerable.Empty<T>();
 
-            return 
-                from w in widgetDirectory.Directories.Cast<VirtualDirectory>()
-                from x in w.Directories.Cast<VirtualDirectory>()
-                select DeserializeFromVirtualFileBase(x);
+            return
+                from w in virtDir.Directories.Cast<VirtualDirectory>()
+                select DeserializeFromVirtualFileBase(w);
         }
 
         protected T DeserializeFromVirtualFileBase(VirtualFileBase basePath)
@@ -70,8 +73,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 if (stream.Length == 0)
                     return new T();
+                var sr = new StreamReader(stream);
+                var reader = new JsonTextReader(sr);
+                return _serializer.Deserialize<T>(reader);
+                // return  JsonConvert.DeserializeObject<T>(stream);
 
-                return (T) _serializer.ReadObject(stream);
             }
         }
     }

@@ -5,16 +5,16 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
-    public class PageTypeProvider : DefinitionProvider<PageTypeDefinition>, IPageTypeProvider
+    public class PageTypeProvider : DefinitionProvider<PageTemplateDefinition>, IPageTypeProvider
     {
         public PageTypeProvider(DjangoMozuViewEngine viewEngine, ISiteBuilderContext ctx) : base(viewEngine.PathProvider, ctx)
         {
         }
 
-        public IEnumerable<PageTypeDefinition> GetPageTypes()
+        public IEnumerable<PageTemplateDefinition> GetPageTypes()
         {
             // TODO: Cache this or make it static
-            return GetFromFolder("metadata").Where(x => !string.IsNullOrWhiteSpace(x.Id));
+            return GetFromFolder("metadata/pageTypes").Where(x => !string.IsNullOrWhiteSpace(x.Id));
         }
     }
 }

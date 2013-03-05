@@ -45,59 +45,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [WebGet(UriTemplate = "list")]
-        public Task<Response<List<PageCreateType>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async  Task<Response<List<PageCreateType>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            var singlePageTypes = new string[] { "homepage" };
 
-            var filter = string.Join(" or ", singlePageTypes.Select(x => string.Format("page_type eq {0}", x)));
-            var pageReq = new CmsListRequest ()
-            { 
-                Collection = CmsConstants.Documents.default_collection_name
-            };
-            pageReq.Filters.Add ("Properties.page_type eq homepage");
 
-            var pageTask = _cmsService.GetList(pageReq);
+            var pageTypes = _pageTypeProvider.GetPageTypes().Where(x => x.UserCreatable.GetValueOrDefault(true))
+                                             .Select(x => new PageCreateType()
+                                                              {
+                                                                  DisplayName = x.DisplayName,
+                                                                  Id = x.Id
+                                                              }).ToList();
 
-            var blogReq  = new CmsListRequest()
-            {
-                Collection = "blogs",
-                DocumentType = "blog"
-            };
-            var blogTask = _cmsService.GetList(blogReq);
+           
 
-            Task.WaitAll(pageTask, blogTask);
-            var blogs = blogTask.Result.ReadAsSync();
-            var pages = pageTask.Result.ReadAsSync();
-
-            var copy = new List<PageTypeDefinition>(_pageTypeProvider.GetPageTypes());
-
-            foreach (var singlePageType in singlePageTypes)
-            {
-                if (pages.Items.Any(x => (string)x.Get(CmsConstants.Widgets.page_type) == singlePageType))
-                {
-                    copy.RemoveAll(x => x.DefaultValues != null && (string)x.DefaultValues.GetValue(CmsConstants.Widgets.page_type) == singlePageType);
-                }
-            }
-
-            if (blogs.Items.Any(x => x.DocumentType == "blog"))
-            {
-                copy.RemoveAll(x => x.EntityType == "blog");
-            }
-            else
-            {
-                copy.RemoveAll(x => x.EntityType == "post");
-            }
-
-            copy.RemoveAll(x => !x.UserCreatable.GetValueOrDefault(true));
-
-            var pageTypes = copy.Select(x => new PageCreateType
-            {
-                DisplayName = x.DisplayName,
-                Icon = x.Icon,
-                Id = x.Id
-            }).ToList();
-
-            return List(pageTypes);
+            return List2(pageTypes);
         }
     }
 }

@@ -1,19 +1,9 @@
 {
-  "DefaultValues": {
-    "contentCollection": "pages",
-    "name": "404",
-    "items": [
-      {
-        "key": "page_type",
-        "value": "404"
-      }
-    ]
-  },
-  "DisplayName": "404 Not Found",
-  "DocumentType": "web_page",
-  "EntityType": "webpage ",
-  "Icon": "",
-  "Id": "404",
-  "Template": "404",
-  "UserCreatable": false
+    id: "404",
+    displayName: "404 Not Found",
+    documentType: "web_page",
+    entityType: "webpage",
+    pageType:"404",
+    renderTemplate: "404",
+    userCreatable: false
 }

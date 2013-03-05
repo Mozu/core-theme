@@ -8,6 +8,7 @@ using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
@@ -86,24 +87,40 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 {
                     throw new InvalidOperationException("missing documentTypeId");
                 }
-                var pageTypeDef = _cmsTypeHelper.GetPageTypeDefinition(documentTypeId).Clone<PageTypeDefinition>();
+
+                var pageTypeDef = _cmsTypeHelper.GetPageTypeDefinition(documentTypeId);
+
+
+
+                var d = AutoMapper.Mapper.Map<Mozu.Content.Contracts.Document>(doc);
                
-                
+                d.Name = string.IsNullOrEmpty(d.Name) ? Guid.NewGuid().ToString() : d.Name;
+               d.DocumentType = string.IsNullOrEmpty( d.DocumentType)? pageTypeDef.DocumentType:d.DocumentType;
 
-                var d = (pageTypeDef.DefaultValues ?? new AVM.Document());
-                d.Items = d.Items ?? new List<AVM.DocumentProperty>();
-                d.Name = doc.Name ?? d.Name ?? Guid.NewGuid().ToString();
-                //d.PublishState = d.PublishState ?? CmsConstants.Documents.doc_state_active;
-                d.DocumentType = d.DocumentType ?? pageTypeDef.DocumentType;
-
-                d.Items = d.Items.Union(doc.Items/*.Select(x => ToPropertyValue(x))*/, PropCompare.Default).ToList();
-
-                if ( !string.IsNullOrEmpty (  pageTypeDef.Template) && d.Get(CmsConstants.Documents.template) == null)
+                if (string.IsNullOrEmpty((string) d.Get(CmsConstants.Documents.template)))
                 {
                     d.Set(CmsConstants.Documents.template, pageTypeDef.Template);
                 }
-                d.ContentCollection = d.ContentCollection ?? CmsConstants.Documents.default_collection_name;
 
+
+
+                d.DocumentListName = string.IsNullOrEmpty(d.DocumentListName) ? CmsConstants.Documents.default_collection_name : d.DocumentListName;
+
+                if (pageTypeDef.Properties != null)
+                {
+                    foreach (var kvp in pageTypeDef.Properties)
+                    {
+                        if (string.IsNullOrEmpty((string) d.Get(kvp.Key)))
+                        {
+                            var jval = kvp.Value as JValue ;
+                            if (jval != null)
+                            {
+                                d.Set(kvp.Key, jval.Value );
+                            }
+                            
+                        }
+                    }
+                }
 
                 if (documentTypeId == "post")
                 {
@@ -125,8 +142,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 }
 
 
-                var newD = AutoMapper.Mapper.Map<DC.Document>(d);
-                var task = _docRepo.Create(d.ContentCollection, newD);
+
+                var task = _docRepo.Create(d.DocumentListName , d);
                 tasks.Add(task);
 
 
@@ -249,48 +266,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return _docRepo.Get(contentCollection, id, null, activeVersion ? CmsConstants.Documents.doc_state_active : "draft");
         }
 
-        //Tuple<DC.Document, ServiceClientResponse<DC.Document>> AttachDefaultWidgets(ServiceClientResponse<Mozu.Content.Contracts.Document> resp, PageTypeDefinition pageDef)
-        //{
-        //    if (!resp.ResponseMessage.IsSuccessStatusCode)
-        //    {
-        //        return new Tuple<DC.Document, ServiceClientResponse<DC.Document>>(null, resp);
-        //    }
-        //    var doc = resp.ReadAsSync();
-        //    if (pageDef.Widgets == null)
-        //    {
-        //        return new Tuple<DC.Document, ServiceClientResponse<DC.Document>>(doc, resp);
-        //    }
-        //    List<Task<ServiceClientResponse<Mozu.Content.Contracts.Document>>> tasks = new List<Task<ServiceClientResponse<Mozu.Content.Contracts.Document>>>();
-        //    foreach (var widget in pageDef.Widgets)
-        //    {
-
-        //        switch (pageDef.EntityType)
-        //        {
-        //            //case "blog":
-        //            //    {
-        //            //        widget.Set(CmsConstants.Widgets.widget_location_page_types, new List<string> { "blog" });
-        //            //        break;
-        //            //    }
-        //            default:
-        //                {
-        //                    widget.Set(CmsConstants.Widgets.widget_tags , new List<string>() { doc.ToWidgetStem() });
-        //                    break;
-        //                }
-        //        }
-        //        widget.Name = Guid.NewGuid().ToString();
-        //        widget.ContentCollection = CmsConstants.Widgets.collection_name;
-        //       // widget.PublishState = CmsConstants.Documents.doc_state_active;
-        //        widget.DocumentType = widget.DocumentType ?? CmsConstants.Widgets.default_content_type;
-
-        //        var newWidget = AutoMapper.Mapper.Map<DC.Document>(widget);
-        //        tasks.Add(_docRepo.Create(CmsConstants.Widgets.collection_name, newWidget));
-        //    }
-        //    Task.WaitAll(tasks.ToArray());
-        //    var stuff = tasks.Select(x => x.Result.ReadAsSync()).ToList();
-
-        //    return new Tuple<DC.Document, ServiceClientResponse<DC.Document>>(doc, resp);
-            
-        //}
+       
 
         class PropCompare : IEqualityComparer<Models.CMS.Admin.DocumentProperty>
         {
