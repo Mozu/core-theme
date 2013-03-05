@@ -40,5 +40,17 @@ Ext.define('Taco.core.ux.grid.Header', {
             me.fireEvent('menucreate', me, me.menu);
         }
         return me.menu;
+    },
+
+    onHeaderTriggerClick: function(header, e, t) {
+        var me = this;
+
+        if (header.fireEvent('headertriggerclick', me, header, e, t) !== false && me.fireEvent("headertriggerclick", me, header, e, t) !== false) {
+            if (me.menu && me.menu.isVisible()) {
+                me.menu.hide();
+            } else {
+                me.showMenuBy(t, header);
+            }
+        }
     }
 });

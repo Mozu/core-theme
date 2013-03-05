@@ -71,12 +71,21 @@ Ext.define('Taco.view.product.Index', {
             renderer: function (value) {
                 return Ext.isNumeric(value) ? value : '--';
             }
+        }, {
+            xtype: 'taco.menucolumn',
+            text: 'Actions',
+            menuItems: [
+                { text: 'Preview', eventName: 'viewproduct' },
+                { text: 'Duplicate', eventName: 'viewproduct' },
+                { text: 'Delete', eventName: 'viewproduct' },
+                { text: 'Edit', eventName: 'viewproduct' }
+            ]
         }],
-        actions: [{
-            iconCls: 'taco-action-hide',
-            tooltip: 'Preview',
-            eventName: 'viewproduct'
-        }],
+        // actions: [{
+        //     iconCls: 'taco-action-hide',
+        //     tooltip: 'Preview',
+        //     eventName: 'viewproduct'
+        // }],
         contextConf: {
             c: {
                 useMultiGrid: true,

@@ -178,6 +178,13 @@
     }
   }
 
+  .#{$vprefix}grid-row-menu-trigger {
+    background-color: crimson;
+    border-radius: 2px;
+    height: 16px;
+    width: 16px;
+  }
+
   /* CONTAINERS, TOOLBARS, ETC. */
 
   // togglegroup styles
