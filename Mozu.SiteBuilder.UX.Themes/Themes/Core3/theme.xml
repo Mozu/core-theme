@@ -4,5 +4,5 @@
   <author>Volusion</author>
   <extends></extends>
   <isDesktop>true</isDesktop>
-  <isMobile>true</isMobile>
+  <isMobile>false</isMobile>
 </theme>

@@ -85,8 +85,7 @@ module.exports = function (grunt) {
                 src: '<%= wrap.debug.dest %>',
                 options: {
                     errorReporting: true,
-                    specs: 'tests/**/*.js',
-                    vendor: 'vendor/jquery.js'
+                    specs: 'tests/**/*.js'
                 }
             }
         },
@@ -148,5 +147,6 @@ module.exports = function (grunt) {
     grunt.registerTask('test', ['jasmine:all']);
     grunt.registerTask('testdebug', ['jasmine:all:build', 'browser']);
     grunt.registerTask('notest', order.slice(0, -1));
+    grunt.registerTask('debug', ['notest', 'testdebug']);
 
 };

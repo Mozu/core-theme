@@ -63,7 +63,6 @@
             expect(noTenantContext.api).toThrow();
             expect(noSiteContext.api).toThrow();
             expect(noSiteGroupContext.api).toThrow();
-            //expect(noHostContext.api).toThrow();
         });
 
         var api = completeContext.api();
@@ -74,7 +73,7 @@
             expect(typeof api.get).toBe("function");
             expect(typeof api.update).toBe("function");
             expect(typeof api.create).toBe("function");
-            expect(typeof api.remove).toBe("function");
+            expect(typeof api.del).toBe("function");
         });
 
         describe("the api.request method", function () {
@@ -169,9 +168,75 @@
 
         });
 
+        describe("the .all method of the api interface", function () {
+
+            var foobar, cart;
+
+            it("should make a bunch of API calls at once and return them all to a handler", function () {
+                runs(
+                    function () {
+                        api.all(api.get('product', 'foobar'), api.get('cart')).spread(function (f, c) {
+                            foobar = f;
+                            cart = c;
+                        });
+                    });
+
+                waitsFor(function () {
+                    return foobar && cart;
+                });
+
+                runs(function () {
+                    expect(foobar.type).toBe("product");
+                    expect(cart.type).toBe("cart");
+                });
+            });
+        });
+
+        describe("the .steps method of the api interface", function () {
+
+            var product, cart, res;
+
+            it("should make calls in sequence, passing the arguments from the previous call to the next one", function () {
+
+                runs(function () {
+
+                    api.steps(function () {
+                        return api.get('product', 'foobar');
+                    }, function (foobar) {
+                        product = foobar;
+                        return api.get('cart');
+                    }, function (c) {
+                        cart = c;
+                        return cart.action('empty');
+                    }, function (emptyCart) {
+                        expect(cart.data.Items.length).toBe(0);
+                        return cart.action('addproduct', {
+                            Product: product.data,
+                            Quantity: 1
+                        });
+                    }, function (cartItem) {
+                        return cart.get()
+                    }, function (newCart) {
+                        res = newCart;
+                    });
+
+                });
+
+                waitsFor(function () { return res; });
+
+                runs(function () {
+                    expect(res.data.Items.length).toBe(1);
+                    expect(res.data.Items[0].Product.ProductCode).toBe("foobar");
+                });
+
+            });
+        });
+
         describe("the ApiObject returned by the api interface", function() {
+            
+            var res;
+
             it("should have an actions method that peforms common actions for the object type", function () {
-                var res;
                 runs(function () {
 
                     var product, cart;
@@ -204,6 +269,9 @@
                     expect(res.data.Items[0].Product.ProductCode).toBe("foobar");
                 });
                     
+            });
+            it("should have a getAvailableActions method that returns all actions that can be performed on this resource", function () {
+                expect(res.getAvailableActions()).toContain("empty");
             });
         });
 

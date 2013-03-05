@@ -3,6 +3,7 @@
     require.config({
         baseUrl: "/resources/scriptsbuilt",
         paths: {
+            sdk: "../../sdk/min",
             jquery: "http://code.jquery.com/jquery.min"
         },
         priority: ['jquery']

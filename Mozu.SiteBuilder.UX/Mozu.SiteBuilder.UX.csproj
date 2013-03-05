@@ -339,6 +339,7 @@
     <Compile Include="ActionFilters\WigitContexInitFilter.cs" />
     <Compile Include="Areas\Misc\Controllers\AccountController.cs" />
     <Compile Include="Areas\Misc\Controllers\CacheFlushController.cs" />
+    <Compile Include="Areas\Misc\Controllers\SDKResourceController.cs" />
     <Compile Include="Areas\Misc\Controllers\DeveloperDocumentationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocalizationController.cs" />
     <Compile Include="Areas\Misc\Controllers\ResourceController.cs" />
@@ -390,6 +391,9 @@
     <None Include="JS_SDK\README.md" />
     <None Include="JS_SDK\definewrapper.tpl" />
     <None Include="JS_SDK\package.json" />
+    <Content Include="JS_SDK\dist\mozu-sdk.debug.js" />
+    <Content Include="JS_SDK\dist\mozu-sdk.js" />
+    <Content Include="JS_SDK\dist\mozu-sdk.min.js" />
     <Content Include="JS_SDK\Gruntfile.js" />
     <Content Include="JS_SDK\init_debug.js" />
     <Content Include="JS_SDK\src\utils.js" />
@@ -398,7 +402,6 @@
     <Content Include="JS_SDK\src\context.js" />
     <Content Include="JS_SDK\src\init.js" />
     <Content Include="JS_SDK\tests\SDKSpec.js" />
-    <Content Include="JS_SDK\vendor\jquery.js" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -436,7 +439,6 @@
     <Folder Include="Areas\Misc\Views\Shared\" />
     <Folder Include="Areas\StoreFront\Models\" />
     <Folder Include="Areas\StoreFront\Views\Shared\" />
-    <Folder Include="JS_SDK\dist\" />
     <Folder Include="JS_SDK\docs\" />
   </ItemGroup>
   <ItemGroup>

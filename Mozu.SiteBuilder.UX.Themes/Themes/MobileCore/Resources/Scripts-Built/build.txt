@@ -35,6 +35,8 @@ pages/checkout.js
 vendor/pci-temp.js
 nls/messages-checkout.js
 i18n!nls/messages-checkout
+shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
+modules/context-parser.js
 modules/models-checkout.js
 ajax![method=post]/checkout/data
 pages/checkout.js

@@ -3,7 +3,7 @@
  *
  */
 
-define(['modules/mozu-sdk.debug'], function (Mozu) {
+define(['sdk'], function (Mozu) {
     Mozu.ApiReference.urls = window.zapiConfig.urls;
     var headers = window.zapiConfig.header;
     return Mozu.Tenant(headers['x-vol-tenant'])
