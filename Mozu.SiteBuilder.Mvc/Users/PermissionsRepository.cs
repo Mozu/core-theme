@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.AdminUser.Contracts.Clients;
+using Mozu.Reference.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models.Users;
 
 namespace Mozu.SiteBuilder.Mvc.Users
@@ -13,12 +14,12 @@ namespace Mozu.SiteBuilder.Mvc.Users
     public class PermissionsRepository : IPermissionsRepository
     {
         private readonly IRoleWebApiClient _rolesWebApiClient;
-        private readonly IBehaviorWebApiClient _behaviorWebApiClient;
+        private readonly IReferenceDataWebApiClient _referenceWebApiClient;
 
-        public PermissionsRepository(IRoleWebApiClient rolesWebApiClient, IBehaviorWebApiClient behaviorWebApiClient)
+        public PermissionsRepository(IRoleWebApiClient rolesWebApiClient, IReferenceDataWebApiClient referenceWebApiClient)
         {
             _rolesWebApiClient = rolesWebApiClient;
-            _behaviorWebApiClient = behaviorWebApiClient;
+            _referenceWebApiClient = referenceWebApiClient;
         }
 
         public Task<List<Role>> GetRoles()
@@ -106,7 +107,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
         public Task<List<Behavior>> GetBehaviors()
         {
-            var response = _behaviorWebApiClient.GetBehaviors().Result;
+            var response = _referenceWebApiClient.GetBehaviors().Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
                 return InTask(new List<Behavior>(0));
@@ -118,7 +119,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
         public Task<Behavior> GetBehavior(int? id)
         {
-            var response = _behaviorWebApiClient.GetBehavior(id).Result;
+            var response = _referenceWebApiClient.GetBehavior(id).Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
                 return null;
@@ -130,7 +131,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
         public Task<List<BehaviorCategory>> GetCategories()
         {
-            var response = _behaviorWebApiClient.GetCategories().Result;
+            var response = _referenceWebApiClient.GetBehaviorCategories().Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
                 return InTask(new List<BehaviorCategory>(0));
@@ -142,7 +143,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
         public Task<BehaviorCategory> GetCategory(int? id)
         {
-            var response = _behaviorWebApiClient.GetCategory(id).Result;
+            var response = _referenceWebApiClient.GetBehaviorCategory(id).Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
                 return null;
@@ -157,7 +158,9 @@ namespace Mozu.SiteBuilder.Mvc.Users
             var categories = GetCategories();
             var behaviors = GetBehaviors();
 
-            return InTask(new BehaviorTree(categories.Result, behaviors.Result));
+            // return InTask(new BehaviorTree(categories.Result, behaviors.Result));
+            // Bug 7177 - fix BehaviorTree to avoid the stackoverflow exception that's happening
+            return InTask(new BehaviorTree(Enumerable.Empty<BehaviorCategory>(), Enumerable.Empty<Behavior>()));
         }
 
         private static Task<T> InTask<T>(T thing)
