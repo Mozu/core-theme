@@ -148,13 +148,73 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 },
                 Extras = new List<DC.AttributeInProductType>
                 {
+                    // Extra - Date - DateTime
+                    new DC.AttributeInProductType {
+                        Attribute = new ShopperDateAttribute(),
+                        AttributeFQN = ShopperDateAttribute.ATTRIBUTE_FQN
+                    },
 
+                    // Extra - DateTime - DateTime
+                    new DC.AttributeInProductType {
+                        Attribute = new ShopperDateTimeAttribute(),
+                        AttributeFQN = ShopperDateTimeAttribute.ATTRIBUTE_FQN
+                    },
+
+                    // Extra - TextArea - String
+                    new DC.AttributeInProductType {
+                        Attribute = new EngravingParagraphAttribute(),
+                        AttributeFQN = EngravingParagraphAttribute.ATTRIBUTE_FQN
+                    },
+                    
+                    // Extra - TextBox - Number
+                    new DC.AttributeInProductType {
+                        Attribute = new NumberOfMissingScrewsAttribute(),
+                        AttributeFQN = NumberOfMissingScrewsAttribute.ATTRIBUTE_FQN
+                    },
+
+                    // Extra - TextBox - String
+                    new DC.AttributeInProductType {
+                        Attribute = new EngravingAttribute(),
+                        AttributeFQN = EngravingAttribute.ATTRIBUTE_FQN
+                    },
+
+                    // Extra - YesNo - Boolean
+                    new DC.AttributeInProductType {
+                        Attribute = new GiftWrapAttribute(),
+                        AttributeFQN = GiftWrapAttribute.ATTRIBUTE_FQN
+                    }
                 },
                 Properties = new List<DC.AttributeInProductType> {
+                    // Property - Date - DateTime
+                    new DC.AttributeInProductType {
+                        Attribute = new NewYearsEditionAttribute(),
+                        AttributeFQN = NewYearsEditionAttribute.ATTRIBUTE_FQN
+                    },
+                    // Property - DateTime - DateTime
+                    new DC.AttributeInProductType {
+                        Attribute = new AppointmentKeeperAttribute(),
+                        AttributeFQN = AppointmentKeeperAttribute.ATTRIBUTE_FQN
+                    },
+                    // Property - TextArea - String
+                    new DC.AttributeInProductType {
+                        Attribute = new EngravedPoem(),
+                        AttributeFQN = EngravedPoem.ATTRIBUTE_FQN
+                    },
+                    // Property - TextBox - Number
+                    new DC.AttributeInProductType {
+                        Attribute = new UnitCostAttribute(),
+                        AttributeFQN = UnitCostAttribute.ATTRIBUTE_FQN
+                    },
+                    // Property - TextBox - String
                     new DC.AttributeInProductType {
                         Attribute = new UPCAttribute(),
                         AttributeFQN = UPCAttribute.ATTRIBUTE_FQN
-                    }
+                    },
+                    // Property - YesNo - Bool
+                    new DC.AttributeInProductType {
+                        Attribute = new SmashedToPiecesAttribute(),
+                        AttributeFQN = SmashedToPiecesAttribute.ATTRIBUTE_FQN
+                    },
                 }
             };
         }
