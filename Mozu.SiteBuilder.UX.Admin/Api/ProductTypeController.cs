@@ -138,7 +138,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     // Option - List - Number
                     new DC.AttributeInProductType {
                         Attribute = new NumberOfWheelsAttribute(),
-                        AttributeFQN = ColorAttribute.ATTRIBUTE_FQN
+                        AttributeFQN = NumberOfWheelsAttribute.ATTRIBUTE_FQN
                     },
                     // Option - List - DateTime
                     new DC.AttributeInProductType {
