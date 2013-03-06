@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
@@ -76,30 +77,6 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
         }
     }
 
-    public class ColorAttribute : BaseMockAttribute
-    {
-        public const string ATTRIBUTE_FQN = "Thing-Color";
-        public ColorAttribute()
-        {
-            AttributeFQN = ATTRIBUTE_FQN;
-            AttributeSequence = 1;
-            DataType = "String";
-            InputType = "List";
-            ValueType = "Admin";
-            VocabularyValues = new List<ProductAdmin.Contracts.AttributeVocabularyValue>
-                {
-                    new DC.AttributeVocabularyValue { Content = new DC.AttributeVocabularyValueLocalizedContent { StringValue = "Red" }, Value = "Red", ValueSequence = 1 },
-                    new DC.AttributeVocabularyValue { Content = new DC.AttributeVocabularyValueLocalizedContent { StringValue = "Green" }, Value = "Green", ValueSequence = 2 },
-                    new DC.AttributeVocabularyValue { Content = new DC.AttributeVocabularyValueLocalizedContent { StringValue = "Blue" }, Value = "Blue", ValueSequence = 3 },
-                    new DC.AttributeVocabularyValue { Content = new DC.AttributeVocabularyValueLocalizedContent { StringValue = "Yellow" }, Value = "Yellow", ValueSequence = 4 },
-                };
-            IsProperty = true;
-            IsExtra = false;
-            IsOption = false;
-            Content = new DC.AttributeLocalizedContent { LocaleCode = "en-US", Name = "Color" };
-        }
-    }
-
     public class FinishAttribute : BaseMockAttribute
     {
         public const string ATTRIBUTE_FQN = "BucketFinish";
@@ -121,4 +98,75 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
             Content = new DC.AttributeLocalizedContent { LocaleCode = "en-US", Name = "Finish" };
         }
     }
+
+    #region Predefined attributes
+    public class ColorAttribute : BaseMockAttribute
+    {
+        public const string ATTRIBUTE_FQN = "Thing-Color";
+        public ColorAttribute()
+        {
+            AttributeFQN = ATTRIBUTE_FQN;
+            AttributeSequence = 1;
+            DataType = "String";
+            InputType = "List";
+            ValueType = "Predefined";
+            VocabularyValues = new List<ProductAdmin.Contracts.AttributeVocabularyValue>
+                {
+                    new DC.AttributeVocabularyValue { Content = new DC.AttributeVocabularyValueLocalizedContent { StringValue = "Red" }, Value = "Red", ValueSequence = 1 },
+                    new DC.AttributeVocabularyValue { Content = new DC.AttributeVocabularyValueLocalizedContent { StringValue = "Green" }, Value = "Green", ValueSequence = 2 },
+                    new DC.AttributeVocabularyValue { Content = new DC.AttributeVocabularyValueLocalizedContent { StringValue = "Blue" }, Value = "Blue", ValueSequence = 3 },
+                    new DC.AttributeVocabularyValue { Content = new DC.AttributeVocabularyValueLocalizedContent { StringValue = "Yellow" }, Value = "Yellow", ValueSequence = 4 },
+                };
+            IsProperty = true;
+            IsExtra = false;
+            IsOption = true;
+            Content = new DC.AttributeLocalizedContent { LocaleCode = "en-US", Name = "Color" };
+        }
+    }
+
+    public class NumberOfWheelsAttribute : BaseMockAttribute
+    {
+        public const string ATTRIBUTE_FQN = "NumberOfWheels";
+        public NumberOfWheelsAttribute()
+        {
+            AttributeFQN = ATTRIBUTE_FQN;
+            AttributeSequence = 1;
+            DataType = "Number";
+            InputType = "List";
+            ValueType = "Predefined";
+            VocabularyValues = new List<DC.AttributeVocabularyValue> {
+                new DC.AttributeVocabularyValue { Value = 2, ValueSequence = 1 },
+                new DC.AttributeVocabularyValue { Value = 3, ValueSequence = 2 },
+                new DC.AttributeVocabularyValue { Value = 17, ValueSequence = 3 },
+            };
+            IsProperty = false;
+            IsExtra = false;
+            IsOption = true;
+            Content = new DC.AttributeLocalizedContent { LocaleCode = "en-US", Name = "Number of Wheels" };
+        }
+    }
+
+    public class LastTimeYouPaidTaxesAttribute : BaseMockAttribute
+    {
+        public const string ATTRIBUTE_FQN = "LastTimeYouPaidTaxes";
+        public LastTimeYouPaidTaxesAttribute()
+        {
+            AttributeFQN = AttributeFQN;
+            AttributeSequence = 1;
+            DataType = "DateTime";
+            InputType = "List";
+            ValueType = "Predefined";
+            VocabularyValues = new List<DC.AttributeVocabularyValue> {
+                new DC.AttributeVocabularyValue { Value = new DateTime(2011, 12, 31), ValueSequence = 1 },
+                new DC.AttributeVocabularyValue { Value = new DateTime(2010, 12, 31), ValueSequence = 1 },
+                new DC.AttributeVocabularyValue { Value = new DateTime(2009, 12, 31), ValueSequence = 1 },
+                new DC.AttributeVocabularyValue { Value = new DateTime(1972, 12, 31), ValueSequence = 1 }
+            };
+            IsProperty = false;
+            IsExtra = false;
+            IsOption = true;
+            Content = new DC.AttributeLocalizedContent { LocaleCode = "en-US", Name = "Last Time You Paid Taxes" };
+        }
+    }
+    #endregion
 }

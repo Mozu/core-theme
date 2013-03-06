@@ -11,6 +11,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Admin.MockServices;
+using Mozu.SiteBuilder.UX.Admin.MockServices.Mocks;
 using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -50,8 +51,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     return FailureList2<ProductType>("Invalid id parameter passed." + e.ToString());
                 }
-                var resultSingle = await _productTypeClient.GetProductType(id);
-                DC.ProductType prod = resultSingle.ReadAsAsync().Result;
+
+                // TODO: hack for ProductType = 1 to give Travis a mock object with all attributes available.
+                DC.ProductType prod;
+                if (id == 1)
+                {
+                    prod = GiveTravisAMockProductType();
+                }
+                else
+                {
+                    var resultSingle = await _productTypeClient.GetProductType(id);
+                    prod = resultSingle.ReadAsAsync().Result;
+                }
                 return List2(Mapper.Map<ProductType>(prod));
             }
 
@@ -109,6 +120,43 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var deletedProducts = await _productTypeMapper.PerformVoidAction(productTypes, x => _productTypeClient.DeleteProductType(x.Id));
 
             return List2(deletedProducts.ToList());
+        }
+
+        /// <summary>
+        /// Generates a mock ProductType with all types of attributes on it.
+        /// </summary>
+        private DC.ProductType GiveTravisAMockProductType()
+        {
+            return new DC.ProductType
+            {
+                Options = new List<DC.AttributeInProductType> {
+                    // Option - List - String
+                    new DC.AttributeInProductType {
+                        Attribute = new ColorAttribute(),
+                        AttributeFQN = ColorAttribute.ATTRIBUTE_FQN
+                    },
+                    // Option - List - Number
+                    new DC.AttributeInProductType {
+                        Attribute = new NumberOfWheelsAttribute(),
+                        AttributeFQN = ColorAttribute.ATTRIBUTE_FQN
+                    },
+                    // Option - List - DateTime
+                    new DC.AttributeInProductType {
+                        Attribute = new LastTimeYouPaidTaxesAttribute(),
+                        AttributeFQN = LastTimeYouPaidTaxesAttribute.ATTRIBUTE_FQN
+                    }
+                },
+                Extras = new List<DC.AttributeInProductType>
+                {
+
+                },
+                Properties = new List<DC.AttributeInProductType> {
+                    new DC.AttributeInProductType {
+                        Attribute = new UPCAttribute(),
+                        AttributeFQN = UPCAttribute.ATTRIBUTE_FQN
+                    }
+                }
+            };
         }
     }
 }
