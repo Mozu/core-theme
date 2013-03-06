@@ -33,12 +33,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private List<DC.AttributeInProductType> MapAttributeToDCAttribute(List<ProductTypeAttribute> attributes)
         {
-            List<DC.AttributeInProductType> ret = Mapper.Map<List<DC.AttributeInProductType>>(attributes.OrderBy(x => x.Index));
+            List<DC.AttributeInProductType> ret;
+
+            if (attributes == null)
+                ret = new List<DC.AttributeInProductType>();
+            else
+                ret = Mapper.Map<List<DC.AttributeInProductType>>(attributes.OrderBy(x => x.Index));
+
             return ret;
         }
 
         private List<DC.AttributeVocabularyValueInProductType> MapSelectedValuesToVocabularyValueInProductTypeList(List<AttributeValue> selectedValues)
         {
+            if (selectedValues == null)
+                return new List<DC.AttributeVocabularyValueInProductType>();
+
             return selectedValues.Select((val, idx) => new DC.AttributeVocabularyValueInProductType { Value = val.Value, Order = idx }).ToList();
         }
 
@@ -60,8 +69,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Name, opt => opt.MapFrom(x => x.Name))
                 .ForMember(dc => dc.IsBaseProductType, opt => opt.MapFrom(x => x.IsBase))
                 .ForMember(dc => dc.Options, opt => opt.ResolveUsing(x => MapAttributeToDCAttribute(x.Options)))
-                .ForMember(dc => dc.Properties, opt => opt.ResolveUsing(x => Mapper.Map<List<DC.AttributeInProductType>>(x.Properties.OrderBy(x1 => x1.Index))))
-                .ForMember(dc => dc.Extras, opt => opt.ResolveUsing(x => Mapper.Map<List<DC.AttributeInProductType>>(x.Extras.OrderBy(x1 => x1.Index))))
+                .ForMember(dc => dc.Properties, opt => opt.ResolveUsing(x => MapAttributeToDCAttribute(x.Properties)))
+                .ForMember(dc => dc.Extras, opt => opt.ResolveUsing(x => MapAttributeToDCAttribute(x.Extras)))
                 ;
 
             Mapper.CreateMap<DC.AttributeInProductType, ProductTypeAttribute>()
@@ -123,6 +132,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private List<AttributeValue> MapVocabularyValueInProductTypeListToSelectedValues(List<DC.AttributeVocabularyValueInProductType> list, string attributeFQN)
         {
+            if (list == null)
+                return new List<AttributeValue>();
+
             List<AttributeValue> r =
                 (from l in list
                 orderby l.Order

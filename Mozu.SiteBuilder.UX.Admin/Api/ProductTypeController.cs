@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Delete existing product types.
         /// </summary>
-        [WebInvoke(UriTemplate = "destory")]
+        [WebInvoke(UriTemplate = "destroy")]
         public async Task<Response<List<ProductType>>> DeleteProductType(List<ProductType> productTypes)
         {
             if (productTypes == null || !productTypes.Any())
