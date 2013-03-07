@@ -14,7 +14,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         public IEnumerable<WidgetDefinition> GetWidgets()
         {
             // TODO: Cache this or make it static
-            return GetFromFolder("widgets").Where(x => !string.IsNullOrWhiteSpace(x.Id));
+            return GetFromFolder("metadata/widgets").Where(x => !string.IsNullOrWhiteSpace(x.Id));
         }
     }
 }

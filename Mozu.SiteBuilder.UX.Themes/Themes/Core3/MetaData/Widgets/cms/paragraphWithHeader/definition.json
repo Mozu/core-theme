@@ -1,0 +1,7 @@
+{
+	"id": "content_with_header",
+	"displayName": "Paragraph with Header",
+	"displayTemplate": "cms/paragraphWithHeader",
+	"icon": "/admin/scripts/resources/images/AddPhotos.png",
+	"properties": []
+}
