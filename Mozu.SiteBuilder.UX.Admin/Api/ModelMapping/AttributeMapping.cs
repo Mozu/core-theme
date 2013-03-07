@@ -105,7 +105,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.VocabularyValues, opt => opt.ResolveUsing(x => MapSelectedValuesToVocabularyValueInProductTypeList(x.SelectedValues)))
                 ;
 
-            Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>();
+            Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
+                .ForMember(dc => dc.Content, opt => opt.MapFrom(x => new DC.AttributeVocabularyValueLocalizedContent { LocaleCode = "en-US", StringValue = (string)x.Value }))
+                .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Value))
+                // TODO: do not hard code this.
+                .ForMember(dc => dc.ValueSequence, opt => opt.MapFrom(x => 0))
+            ;
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>();
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValueInProductType>()

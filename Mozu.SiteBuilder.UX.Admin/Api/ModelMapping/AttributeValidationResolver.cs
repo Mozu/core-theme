@@ -70,13 +70,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 },
                 InputType = Enum.GetName(typeof(AttributeInputType), source.InputType),
                 DataType = Enum.GetName(typeof(AttributeDataType), source.DataType),
-                ValueType = Enum.GetName(typeof(AttributeValueType), source.ValueType),
+                ValueType = GetOrInferValueType(source),
                 IsProperty = source.IsProperty,
                 IsExtra = source.IsExtra,
                 IsOption = source.IsOption,
             };
 
             return destination;
+        }
+
+        /// <summary>
+        /// Infers the ValueType from the InputType and UsageType if none is provided.
+        /// </summary>
+        private static string GetOrInferValueType(Attribute source)
+        {
+            if (source.ValueType != AttributeValueType.Unknown)
+            {
+                return Enum.GetName(typeof(AttributeValueType), source.ValueType);
+            }
+            else
+            {
+                // a "list" input type is always predefined.
+                if (source.InputType == AttributeInputType.List)
+                    return Enum.GetName(typeof(AttributeValueType), AttributeValueType.Predefined);
+                // a non-list input type has to be either a Property OR an Extra
+                else if (source.IsProperty == true && source.IsExtra == true)
+                    throw new ArgumentException(String.Format("A {0} input type cannot be both a Property and an Extra.", Enum.GetName(typeof(AttributeInputType), source.InputType)));
+                // a Property is always an AdminEntered ValueType
+                else if (source.IsProperty == true)
+                    return Enum.GetName(typeof(AttributeValueType), AttributeValueType.Admin);
+                // an Extra is always a ShopperEntered ValueType
+                else if (source.IsExtra == true)
+                    return Enum.GetName(typeof(AttributeValueType), AttributeValueType.Shopper);
+                else
+                    throw new ArgumentException(String.Format("A {0} input type must be a property or an extra.", Enum.GetName(typeof(AttributeInputType), source.InputType)));
+            }
         }
 
         private static void NoOp(AttributeValidation v, Attribute a)
