@@ -30,6 +30,11 @@ namespace Mozu.SiteBuilder.Mvc.Security
         {
             var helper =  new AuthenticationHelper( new HttpContextWrapper( HttpContext.Current) , new CookieProvider ());
             var ticket = helper.GetTicketFromRequest();
+            if (ticket == null)
+            {
+                ticket = helper.CreateAnonymousTicket();
+                helper.SetCookie(ticket);
+            }
             helper.SetCurrentUser(ticket);
         }
     }
