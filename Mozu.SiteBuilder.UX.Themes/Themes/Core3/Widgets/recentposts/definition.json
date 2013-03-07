@@ -1,0 +1,8 @@
+{
+	"id": "recent_posts",
+	"displayName": "Recent Posts",
+	"displayTemplate": "recentposts/template",
+	"icon": "/admin/scripts/resources/images/AddPhotos.png",
+	"editView": "Taco.view.site.widget.RecentBlogPosts",
+	"properties": []
+}

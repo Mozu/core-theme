@@ -209,20 +209,21 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
 
     onKeyUp: function (field) {
         var me = this,
-        store = me.itemStore;
+         value = field.getValue(),
+            store = me.itemStore;
         store.currentPage = 1;
-        if (!field || !(value in field)) return;
-        if (field.value.length == 0) {
+     
+        if (value.length == 0) {
             store.filters.removeAtKey(this.id);
 
             store.load();
             return;
         }
-        if (field.value.length >= 3) {
+        if (value.length >= 3) {
             store.filters.add(this.id, Ext.create('Ext.util.Filter', {
                 anyMatch: true,
                 property: me.filterProperty,
-                value: field.getValue(),
+                value: value,
                 root: 'data'
             }));
             store.load();

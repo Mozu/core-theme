@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     /// </summary>
     public class CmsServiceWrapper : Mozu.SiteBuilder.Mvc.CMS.ICmsServiceWrapper
     {
-        public const string WIDGETPROPNAME = "widgets";
+        
         IDocumentWebApiClient _docRepo;
         ICmsTypeHelper _cmsTypeHelper;
         IFolderWebApiClient _folderRepo;
@@ -106,21 +106,59 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
                 d.DocumentListName = string.IsNullOrEmpty(d.DocumentListName) ? CmsConstants.Documents.default_collection_name : d.DocumentListName;
 
+                if (pageTypeDef.Widgets != null)
+                {
+                    var widgetPropVal= Newtonsoft.Json.JsonConvert.SerializeObject(pageTypeDef.Widgets);
+                    d.Set(CmsConstants.Documents.widget_prop, widgetPropVal);
+                }
+
+
                 if (pageTypeDef.Properties != null)
                 {
                     foreach (var kvp in pageTypeDef.Properties)
                     {
                         if (string.IsNullOrEmpty((string) d.Get(kvp.Key)))
                         {
-                            var jval = kvp.Value as JValue ;
-                            if (jval != null)
+                            object valueToSet = null;
+                            switch (kvp.Value.Type)
                             {
-                                d.Set(kvp.Key, jval.Value );
+                                case JTokenType.Array:
+                                    {
+                                        valueToSet = kvp.Value.ToObject<object[]>();
+                                        break;
+                                    }
+                                    case JTokenType.Object:
+                                    {
+                                        valueToSet = kvp.Value.ToString();
+                                        break;
+                                    }
+                                    default:
+                                    {
+                                        var jval = kvp.Value as JValue;
+                                        if (jval != null)
+                                        {
+                                            valueToSet = jval.Value;
+                                        }
+                                        break;
+                                    }
+
                             }
-                            
+
+                            if (valueToSet != null)
+                            {
+                                d.Set(kvp.Key, valueToSet);
+                            }
+                           
+
+
                         }
                     }
                 }
+
+                
+
+
+                //tbd get this shit out of here
 
                 if (documentTypeId == "post")
                 {
@@ -140,6 +178,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                     
 
                 }
+
 
 
 

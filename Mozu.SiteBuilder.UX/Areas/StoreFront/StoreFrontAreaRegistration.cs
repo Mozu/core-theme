@@ -97,6 +97,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
             "widgets/{action}",
             new { controller = "Widgets", action = "Index" });
 
+            context.MapRoute( 
+                "templates",
+                "templates/{templateId}",
+                new { controller = "Templates", action = "Index" });
+                
 
         }
     }

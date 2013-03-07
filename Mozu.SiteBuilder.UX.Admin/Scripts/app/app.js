@@ -109,6 +109,7 @@ Ext.application({
             'FileManagement',
             'Discounts',
             'PaymentAndCheckout',
+            'PageTemplates',
             'Tax',
             'Themes',
             'Themesettings',

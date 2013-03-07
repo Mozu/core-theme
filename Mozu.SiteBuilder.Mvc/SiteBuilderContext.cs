@@ -156,6 +156,7 @@ namespace Mozu.SiteBuilder.Mvc
        
 
 		public bool IsEditMode { get; set; }
+        public EditModes? EditMode { get; set; }
         public bool IsDebugMode { get; set; }
 
 	   

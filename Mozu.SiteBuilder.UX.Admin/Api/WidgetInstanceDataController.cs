@@ -112,7 +112,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 var doc = res.ReadAsSync();
                 docs.Add(doc);
-                var widgetRaw = doc.Get(CmsServiceWrapper.WIDGETPROPNAME) as string;
+                var widgetRaw = doc.Get( CmsConstants.Documents.widget_prop ) as string;
 
                 var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<AVM.WidgetInstanceData>():  Newtonsoft.Json.JsonConvert.DeserializeObject<List<AVM.WidgetInstanceData>>(widgetRaw);
 
@@ -131,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 widgetRaw = Newtonsoft.Json.JsonConvert.SerializeObject(existingWidgets);
 
-                doc.Set(CmsServiceWrapper.WIDGETPROPNAME, widgetRaw);
+                doc.Set(CmsConstants.Documents.widget_prop, widgetRaw);
                 
 
 

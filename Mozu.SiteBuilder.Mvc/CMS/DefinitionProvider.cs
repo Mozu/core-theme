@@ -29,27 +29,54 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             
             // get a VirtualDirectory for the current theme.
             // TODO: massive break of abstraction
-            // TODO: this model does not allow themes to inherit their ancestors widgets and page types.
+           
             var virtDir = _virtualPathProvider.GetDirectory(folderName);
           
           
-          
+         
             if (virtDir == null)
-                return Enumerable.Empty<T>();
+                yield break;
+            var dirs = new Queue<VirtualDirectory>();
+            foreach (VirtualDirectory dir in virtDir.Directories)
+            {
+                dirs.Enqueue(dir);
+            }
 
-            return
-                from w in virtDir.Directories.Cast<VirtualDirectory>()
-                select DeserializeFromVirtualFileBase(w);
+            while (dirs.Count > 0)
+            {
+                var dir = dirs.Dequeue();
+
+                var definitionFile = dir.Files.Cast<VirtualFile>().FirstOrDefault(f => "definition.json".Equals(f.Name, StringComparison.InvariantCultureIgnoreCase));
+                if (definitionFile != null)
+                {
+                    yield return DeserializeFromVirtualFileBase(definitionFile);
+                }
+                else 
+                {
+                    foreach (VirtualDirectory subDir in dir.Directories)
+                    {
+                        dirs.Enqueue(subDir);
+                    }
+                }
+            }
+            
+            
+
+
         }
 
         protected T DeserializeFromVirtualFileBase(VirtualFileBase basePath)
         {
             VirtualFile definitionFile;
-
+            
             // if we are provided a directory, attempt to find "definition.json" inside.
             if (basePath is VirtualDirectory)
             {
                 definitionFile = ((VirtualDirectory)basePath).Files.Cast<VirtualFile>().FirstOrDefault(f => "definition.json".Equals(f.Name, StringComparison.InvariantCultureIgnoreCase));
+                if (definitionFile == null && ((VirtualDirectory) basePath).Directories != null )
+                {
+                    
+                }
             }
             else if (basePath is VirtualFile)
             {

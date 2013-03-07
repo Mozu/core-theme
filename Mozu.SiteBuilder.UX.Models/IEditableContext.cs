@@ -17,5 +17,12 @@ namespace Mozu.SiteBuilder.UX.Models
     public interface IEditableContext
     {
         bool IsEditMode { get; set; }
+        EditModes? EditMode { get; set; }
+
+        
+    }
+    public enum EditModes
+    {
+        Page,Template,Site
     }
 }

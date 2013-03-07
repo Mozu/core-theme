@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Json;
+using Mozu.SiteBuilder.UX.Models;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -76,7 +77,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     throw new Exception("invalid scope type "  + scope  );
                 }
             }
-            scope = (scope ?? "").ToLowerInvariant();
+            scope = (scope ?? "page").ToLowerInvariant();
             bool useDefaultId = true;
             StringBuilder sb = new StringBuilder();
             sb.Append("<div ");
@@ -102,7 +103,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             }
             var isEditmode = SiteBuilderContext.Current.IsEditMode;
             StringWriter sw;
-            if (isEditmode)
+            if (isEditmode && string.Equals(scope, SiteBuilderContext.Current.EditMode.GetValueOrDefault(EditModes.Page).ToString(), StringComparison.InvariantCultureIgnoreCase  ))
             {
                 var jobj = new JsonObject();
                 var dJ = jobj.AsDynamic();

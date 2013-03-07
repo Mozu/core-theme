@@ -42,12 +42,18 @@
                     do_dumb_shit: false,
                     fieldLabel: 'Choose type',
                     mode: 'local',
-                    valueField: 'Id',
-                    displayField: 'DisplayName',
+                    valueField: 'id',
+                    displayField: 'displayName',
                     width: 200,
                     emptyText: 'Select',
                     store: Ext.create('Ext.data.Store', {
-                        model: 'Taco.model.PageTypeDefinition'
+                        model: 'Taco.model.PageTypeDefinition',
+                        filters: [
+                            function (item) {
+                                return item.get('userCreatable')===true;
+                            }
+                        ]
+                        
                     })
                 }
                 //, {
