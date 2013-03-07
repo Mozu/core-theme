@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
@@ -14,7 +15,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         public IEnumerable<PageTemplateDefinition> GetPageTypes()
         {
             // TODO: Cache this or make it static
-            return GetFromFolder("metadata/pageTypes").Where(x => !string.IsNullOrWhiteSpace(x.Id));
+            return GetFromFolder("metadata/pageTypes").Where(x => !string.IsNullOrWhiteSpace(x.Id)).Select(x =>
+                {
+                    x.Properties = new JObject();
+                    return x;
+                });
         }
     }
 }

@@ -39,8 +39,8 @@ namespace Mozu.SiteBuilder.IntegrationTests
         [Test, Explicit("This test is used for troubleshooting mapping profiles.")]
         public void Mappings_should_be_valid()
         {
-            AutoMapper.Mapper.AddProfile<UX.Admin.Api.ModelMapping.AttributeMapping>();
-            AutoMapper.Mapper.AssertConfigurationIsValid(new UX.Admin.Api.ModelMapping.AttributeMapping().ProfileName);
+            AutoMapper.Mapper.AddProfile<OrderMapping>();
+            AutoMapper.Mapper.AssertConfigurationIsValid(new OrderMapping().ProfileName);
         }
     }
 }

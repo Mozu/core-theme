@@ -30,7 +30,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _ctx = ctx;
             _catClient = catClient;
             _productClient = productClient;
-            ((ServiceClientBase)productClient).Options.MaxSize = int.MaxValue;
+
+            var options = ((ServiceClientBase) productClient).Options ??
+                          (((ServiceClientBase) productClient).Options = new ConfigOptions());
+            options.MaxSize = int.MaxValue;
         }
 
         public ActionResult ProductDetail(string productCode)
