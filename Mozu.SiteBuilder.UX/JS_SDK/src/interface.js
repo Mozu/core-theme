@@ -8,12 +8,11 @@ var ApiInterface = function (context) {
 };
 
 ApiInterface.prototype = {
-    request: function (method, url, conf) {
-        var me = this;
-        if (url.verbOverride) {
-            method = url.verbOverride;
-            url = url.url;
-        }
+    request: function (method, requestConf, conf) {
+        var me = this,
+            url = typeof requestConf === "string" ? requestConf : requestConf.url;
+        if (requestConf.verbOverride)
+            method = requestConf.verbOverride;
 
         var deferred = utils.when.defer();
 
@@ -45,11 +44,14 @@ ApiInterface.prototype = {
     }
 };
 var setOp = function(fnName) {
-    ApiInterface.prototype[fnName] = function (type, conf) {
-        var me = this;
-        return this.request(ApiReference.basicOps[fnName], ApiReference.getUrlFor(fnName, type, conf, this.context), conf).then(function (rawJSON) {
+    ApiInterface.prototype[fnName] = function (type, conf, isRemote) {
+        var me = this,
+            fulfill = function (rawJSON) {
             return ApiReference.tryCreateApiObject(type, rawJSON, me);
-        });
+        };
+        isRemote = isRemote === false ? false : true;
+        return isRemote ? this.request(ApiReference.basicOps[fnName], ApiReference.getRequestConfig(fnName, type, conf, this.context), conf).then(fulfill) :
+                          utils.when(utils.extend(conf, { unsynced: true }), fulfill);
     }
 };
 for (var i in ApiReference.basicOps) {

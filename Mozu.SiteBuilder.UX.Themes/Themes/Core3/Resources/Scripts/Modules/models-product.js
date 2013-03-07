@@ -121,9 +121,10 @@
     });
 
     var Product = KnockoutVM.extend({
+        mozuType: 'product',
         endpoint: '/cart/addproduct',
         statics: {
-            productCode: ''
+            ProductCode: ''
         },
         observables: {
             quantity: { numeric: 0 },
@@ -139,6 +140,14 @@
             var j = Product.prototype.toJS.apply(this);
             j.options = this.config.emitAllOptions();
             return j;
+        },
+        submit: function() {
+            var me = this;
+            this.addtocart({ Product: this.toJS(), Quantity: this.quantity() }).then(function (cartitem) {
+                $.each(me.updateCallbacks, function (ix, fn) {
+                    fn.call(me, cartitem);
+                });
+            });
         },
         unknownError: function () {
             this.messages.push({ message: genericMsg.UnexpectedError });

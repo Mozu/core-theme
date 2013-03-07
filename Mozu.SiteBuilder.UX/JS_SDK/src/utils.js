@@ -56,6 +56,7 @@ var utils = {
             }
         }
         xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.setRequestHeader('Accept', 'application/json');
         xhr.send(method !== 'GET' && data);
         return xhr;
     },
