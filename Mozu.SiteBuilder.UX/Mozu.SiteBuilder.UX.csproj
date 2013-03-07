@@ -341,6 +341,7 @@
     <Compile Include="Areas\Misc\Controllers\CacheFlushController.cs" />
     <Compile Include="Areas\Misc\Controllers\SDKResourceController.cs" />
     <Compile Include="Areas\Misc\Controllers\DeveloperDocumentationController.cs" />
+    <Compile Include="Areas\StoreFront\Controllers\TemplateController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocalizationController.cs" />
     <Compile Include="Areas\Misc\Controllers\ResourceController.cs" />
     <Compile Include="Areas\Misc\Controllers\ScriptController.cs" />

@@ -6,24 +6,7 @@
     Ext.define('Taco.model.PageTypeDefinition', {
 
         extend: 'Taco.core.data.Model',
-        fields: [
-             {
-                 name: "Id",
-                 type: "string",
-                 useNull: true
-             },
-             {
-                 name: "DisplayName",
-                 type: "string",
-                 useNull: true
-             },
-             {
-                 name: "Icon",
-                 type: "string",
-                 useNull: true
-             }
-        ],
-
+        fields: ['id','displayName','renderTemplate','entityType','pageType','documentType','userCreatable','properties','widgets'],
         proxy: {
             type: 'ajaxproxy',
             api: {

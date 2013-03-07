@@ -502,6 +502,7 @@
     <Content Include="Scripts\.sencha\app\plugin.xml" />
     <Content Include="Scripts\.sencha\workspace\plugin.xml" />
     <Content Include="Scripts\app\controller\Attributes.js" />
+    <Content Include="Scripts\app\controller\PageTemplates.js" />
     <Content Include="Scripts\app\controller\ProductTypes.js" />
     <Content Include="Scripts\app\controller\PendingChanges.js" />
     <Content Include="Scripts\app\controller\Errors.js" />
@@ -586,6 +587,8 @@
     <Content Include="Scripts\app\view\attribute\Index.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
+    <Content Include="Scripts\app\view\pageTemplate\Edit.js" />
+    <Content Include="Scripts\app\view\pageTemplate\Index.js" />
     <Content Include="Scripts\app\view\pendingchange\Cms.js" />
     <Content Include="Scripts\app\view\phoneOrder\BillingSection.js" />
     <Content Include="Scripts\app\view\phoneOrder\ProductPicker.js" />

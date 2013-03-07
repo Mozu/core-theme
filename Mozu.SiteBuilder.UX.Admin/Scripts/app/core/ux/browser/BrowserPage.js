@@ -325,7 +325,9 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     },
 
     initComponent: function () {
+        
         this.updateRecordTypeName();
+        this.store = Taco.core.data.StoreManager.getOrCreate(this.store);
         if (this.useGridPanel) this.createGridPanel(this.gridPanelConf || {});
         if (this.useTilePanel) this.createTilePanel(this.tilePanelConf || {});
         this.createItemBrowser();

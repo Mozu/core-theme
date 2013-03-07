@@ -45,20 +45,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [WebGet(UriTemplate = "list")]
-        public async  Task<Response<List<PageCreateType>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<PageTemplateDefinition>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
 
 
-            var pageTypes = _pageTypeProvider.GetPageTypes().Where(x => x.UserCreatable.GetValueOrDefault(true))
-                                             .Select(x => new PageCreateType()
-                                                              {
-                                                                  DisplayName = x.DisplayName,
-                                                                  Id = x.Id
-                                                              }).ToList();
+            IEnumerable<PageTemplateDefinition> pageTypes = _pageTypeProvider.GetPageTypes();
+            bool userCreatable = false;
+            if (extFilter.TryGetValue("userCreatable",out userCreatable ))
+            {
+                pageTypes = pageTypes.Where(x =>
+                x.UserCreatable.GetValueOrDefault(true) == userCreatable );
+            }
+
+            //var pageCreateTypes = pageTypes.ToList();
 
            
 
-            return List2(pageTypes);
+
+            return List2(pageTypes.ToList() );
         }
     }
 }

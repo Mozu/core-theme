@@ -27,6 +27,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
             public const string page_type_definition = "page_type_definition";
             public const string page_type = "page_type";
             public const string widget_tags = "widget_tags";
+           
             //public const string widget_location_page_types = "widget_location_page_types";
             //public  const string widget_location_categories = "widget_location_categories";
             //public const string widget_location_products = "widget_location_products";
@@ -37,6 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
             public const string doc_state_active = "active";
             public const string default_collection_name = "pages";
             public static string template = "template";
+            public const string widget_prop = "widgets";
         }
     }
 }

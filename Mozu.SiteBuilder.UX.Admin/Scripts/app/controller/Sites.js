@@ -42,6 +42,20 @@ Ext.define('Taco.controller.Sites', {
         }
         this.createContentView('Taco.view.site.page.Edit', { pageSrc: url });
     },
+    templates: function (params) {
+        
+        if (!this.validateContext()) {
+            return;
+        }
+
+        var url = '/';
+        if (params.id) {
+            url = '/templates/' + params.id;
+        } else if (typeof params === "string") {
+            url = '/templates/' + params;
+        }
+        this.createContentView('Taco.view.site.page.Edit', { pageSrc: url });
+    },
     
    
     
@@ -76,6 +90,7 @@ Ext.define('Taco.controller.Sites', {
         }
         this.createContentView('Taco.view.site.page.Edit', { pageSrc: url });
     },
+    
     product: function (params) {
         
         if (!this.validateContext()) {

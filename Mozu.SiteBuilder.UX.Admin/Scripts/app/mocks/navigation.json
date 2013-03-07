@@ -105,7 +105,13 @@
     "id": "sites",
     "label": "Edit Website",
     "address": "/admin/sites/pages",
-    "icon": "website"
+    "icon": "website",
+    "items":[
+        {"id": "templates",
+    "label": "Templates",
+    "address": "/pageTemplates"
+        }]
+    
 }, {
     "id": "fileManagement",
     "label": "File Manager",
