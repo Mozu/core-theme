@@ -74,18 +74,69 @@ Ext.define('Taco.view.product.Index', {
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',
-            menuItems: [
-                { text: 'Preview', eventName: 'viewproduct' },
-                { text: 'Duplicate', eventName: 'viewproduct' },
-                { text: 'Delete', eventName: 'viewproduct' },
-                { text: 'Edit', eventName: 'viewproduct' }
-            ]
+            menuItems: [{
+                tpl: [
+                    '<tpl if="this.isMultiSite(productInSites)">',
+                        '<div>Preview in</div>',
+                    '<tpl else>',
+                        'Preview',
+                    '</tpl>',
+                    '<ul class="' + Taco.baseCSSPrefix + 'grid-row-menu-list"><tpl for="productInSites">',
+                        '<li>{siteId:this.toSiteName}</li>',
+                    '</tpl></ul>', {
+                        isMultiSite: function (value) {
+                            return !Ext.isEmpty(value);
+                        },
+                        toSiteName: function (value) {
+                            var site = Taco.app.context.findSite(value);
+                            return site ? site.name : 'n/a';
+                        }
+                    }
+                ]
+            }, {
+                text: 'Delete',
+                eventName: 'deleteproduct'
+            }, {
+                text: 'Edit',
+                eventName: 'editproduct'
+            }]
         }],
-        // actions: [{
-        //     iconCls: 'taco-action-hide',
-        //     tooltip: 'Preview',
-        //     eventName: 'viewproduct'
-        // }],
+        listeners: {
+            deleteproduct: function (grid, record) {
+                var modal = Ext.create('Taco.core.ux.modal.Confirmation', {
+                    autoShow: true,
+                    content: {
+                        html: 'Are you sure you want to delete this product?'
+                    },
+                    listeners: {
+                        cancel: Ext.emptyFn,
+                        confirm: function () {
+                            var store = grid.getStore();
+                            grid.setLoading(true);
+                            store.remove(record);
+                            store.sync({
+                                success: function (m) {
+                                    grid.setLoading(false);
+                                },
+                                failure: function (m) {
+                                    grid.setLoading(false);
+                                }
+                            });
+                        },
+                        scope: this
+                    }
+                });
+            },
+            editproduct: function (grid, record) {
+                var page = grid.up('browserpage'),
+                    metaData = { id: record.getId() };
+
+                page.launchEditor(record, metaData);
+                Taco.app.StateManager.addState(page.token + '/edit/' + record.getId(), metaData);
+            },
+            viewproduct: Ext.emptyFn,
+            scope: this
+        },
         contextConf: {
             c: {
                 useMultiGrid: true,
