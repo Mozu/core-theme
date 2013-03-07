@@ -178,11 +178,30 @@
     }
   }
 
+  // menucolumn styles
   .#{$vprefix}grid-row-menu-trigger {
     background-color: $color-neutral-light;
     border-radius: 2px;
     height: 16px;
     width: 16px;
+  }
+
+  .#{$vprefix}grid-row-menu {
+    @include border-radius(3px);
+    @include box-shadow(0px 3px 4px rgba(0, 0, 0, 0.5));
+
+    .#{$prefix}menu-body {
+      background-color: $color-neutral-white !important;
+      font-size: 0.8125em;
+      @include border-radius(4px);
+    }
+
+    .#{$vprefix}grid-row-menu-list {
+      li {
+        margin-top: 4px;
+        padding-left: 12px;
+      }
+    }
   }
 
   /* CONTAINERS, TOOLBARS, ETC. */
