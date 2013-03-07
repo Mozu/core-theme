@@ -17,13 +17,13 @@ var ApiReference = (function () {
     ApiObject.prototype = {
         action: function (actionName, data) {
             var me = this;
-            var url = ApiReference.getUrlFor(actionName, this.type, this.data, this.api.context);
-            return this.api.request(null, url, data).then(function (rawJSON) {
-                if (utils.areSameType(rawJSON, me.data)) {
+            var requestConf = ApiReference.getRequestConfig(actionName, this.type, this.data, this.api.context);
+            return this.api.request(null, requestConf, data).then(function (rawJSON) {
+                if (requestConf.returnType) {
+                    return ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
+                } else {
                     me.data = rawJSON;
                     return me;
-                } else {
-                    return ApiReference.tryCreateApiObject(null, rawJSON, me.api);
                 }
             });
         },
@@ -55,46 +55,46 @@ var ApiReference = (function () {
         "cms": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Content.WebApi/documents/"
         },
 
-        getActionsFor: function(shortcutName) {
-            if (!urlShortcuts[shortcutName]) return false;
+        getActionsFor: function(typeName) {
+            if (!objectTypes[typeName]) return false;
             var actions = [];
-            for (var a in urlShortcuts[shortcutName]) {
+            for (var a in objectTypes[typeName]) {
                 actions.push(a);
             }
             return actions;
         },
 
-        getUrlFor: function(operation, shortcutName, conf, context) {
-            var shortcut = urlShortcuts[shortcutName];
-            if (!shortcut) return shortcutName;
-            if (shortcut[operation]) shortcut = shortcut[operation];
-            if (!shortcut) throw "No known URL for '" + shortcutName + "' type.";
-            if (typeof shortcut === "string") return shortcut;
-            var returnUrl;
-            if (shortcut.url) {
-                returnUrl = shortcut.url;
-            } else if (shortcut.template) {
+        getRequestConfig: function (operation, typeName, conf, context) {
+            var oType = objectTypes[typeName];
+            if (!oType) return typeName;
+            if (oType[operation]) oType = oType[operation];
+            if (!oType) throw "No known URL for '" + typeName + "' type.";
+            if (typeof oType === "string") return oType;
+            var returnObj = {};
+            if (oType.url) {
+                returnObj.url = oType.url;
+            } else if (oType.template) {
                 // cache templates lazily
-                if (typeof shortcut.template === "string") shortcut.template = utils.uritemplate.parse(shortcut.template);
+                if (typeof oType.template === "string") oType.template = utils.uritemplate.parse(oType.template);
                 var tptData = {};
                 if (typeof conf === "string") {
-                    if (!shortcut.shortcutParam) throw "No shortcut parameter available for '" + shortcutName + "'. Please supply a configuration object instead of '" + conf + "'.";
-                    tptData[shortcut.shortcutParam] = conf;
+                    if (!oType.shortcutParam) throw "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
+                    tptData[oType.shortcutParam] = conf;
                 } else if (conf) {
                     utils.extend(tptData, conf.query || conf);
                 }
-                if (shortcut.defaults) tptData = utils.extend({}, shortcut.defaults, tptData);
-                returnUrl = shortcut.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData));
+                if (oType.defaults) tptData = utils.extend({}, oType.defaults, tptData);
+                returnObj.url = oType.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData));
             } else {
                 throw "URLs beyond simple strings and templates are not implemented."
             }
-
-            return shortcut.verb? { verbOverride: shortcut.verb, url: returnUrl } : returnUrl;
-
+            if (oType.verb) returnObj.verbOverride = oType.verb;
+            if (oType.returnType) returnObj.returnType = oType.returnType;
+            return returnObj;
         },
 
         tryCreateApiObject: function (type, rawJSON, api) {
-            return type in urlShortcuts ? new ApiObject(type, rawJSON, api) :
+            return type in objectTypes ? new ApiObject(type, rawJSON, api) :
                 (ApiReference.getTypeFromObject(rawJSON) ? new ApiObject(ApiReference.getTypeFromObject(rawJSON), rawJSON, api) : rawJSON);
         },
 
@@ -109,7 +109,7 @@ var ApiReference = (function () {
     var typeSignatures = {
 
     };
-    var urlShortcuts = {
+    var objectTypes = {
         'products': {
             template: pub.urls.product + genericQueryTpt,
             defaults: {
@@ -126,22 +126,34 @@ var ApiReference = (function () {
             }
         },
         'product': {
-            template: pub.urls.product + '{productCode}?{&allowInactive*}',
-            shortcutParam: 'productCode',
-            defaults: {
-                allowInactive: false
+            get: {
+                template: pub.urls.product + '{productCode}?{&allowInactive*}',
+                shortcutParam: 'productCode',
+                defaults: {
+                    allowInactive: false
+                }
+            },
+            addtocart: {
+                verb: 'POST',
+                returnType: 'cartitem',
+                template: pub.urls.cart + 'current/items/'
             }
         },
         'cart': {
             get: pub.urls.cart + 'current',
             addproduct: {
                 verb: 'POST',
+                returnType: 'cartitem',
                 template: pub.urls.cart + 'current/items/'
             },
             empty: {
                 verb: 'DELETE',
                 template: pub.urls.cart + 'current/items/'
             }
+        },
+        'cartitem': {
+            template: pub.urls.cart + 'current/items/{id}',
+            shortcutParam: 'id'
         },
         'me': {
             get: {

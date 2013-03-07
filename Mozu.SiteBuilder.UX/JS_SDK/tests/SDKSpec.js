@@ -149,12 +149,12 @@
 
             it("should work with the shortcut string to the main path param", function () {
                 var res;
-                spyOn(Mozu.ApiReference, "getUrlFor").andCallThrough();
+                spyOn(Mozu.ApiReference, "getRequestConfig").andCallThrough();
                 runs(function () {
                     api.get("product", "foobar").then(function (product) {
                         res = product;
                     });
-                    expect(Mozu.ApiReference.getUrlFor).toHaveBeenCalledWith("get", "product", "foobar", api.context);
+                    expect(Mozu.ApiReference.getRequestConfig).toHaveBeenCalledWith("get", "product", "foobar", api.context);
                 });
 
                 waitsFor(function () {
@@ -235,11 +235,11 @@
         describe("the ApiObject returned by the api interface", function() {
             
             var res;
+            var product, cart;
 
             it("should have an actions method that peforms common actions for the object type", function () {
                 runs(function () {
 
-                    var product, cart;
                     api.get('product', 'foobar').then(function (foobar) {
                         product = foobar;
                         return api.get('cart')
@@ -272,6 +272,24 @@
             });
             it("should have a getAvailableActions method that returns all actions that can be performed on this resource", function () {
                 expect(res.getAvailableActions()).toContain("empty");
+            });
+
+            it("should return an API object of a different type for some actions", function () {
+                var res;
+                runs(function () {
+                    cart.action('addproduct', {
+                        Product: product.data,
+                        Quantity: 3
+                    }).then(function (cartItem) {
+                        res = cartItem;
+                    });
+                });
+
+                waitsFor(function () { return res; });
+
+                runs(function () {
+                    expect(res.type).toBe('cartitem');
+                });
             });
         });
 

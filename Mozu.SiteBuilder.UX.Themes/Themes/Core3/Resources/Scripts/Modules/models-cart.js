@@ -1,6 +1,7 @@
 ﻿define(["jquery", "knockout", "modules/knockout-viewmodel", "i18n!nls/messages"], function ($, ko, KnockoutVM, genericMsg) {
 
     var CartItem = KnockoutVM.extend({
+        mozuType: 'cartitem',
         endpoint: '/cart/updatecartitem',
         statics: {
             parentCart: '',
@@ -35,6 +36,7 @@
     });
 
     var Cart = KnockoutVM.extend({
+        mozuType: 'cart',
         observableArrays: {
             items: {}
         },

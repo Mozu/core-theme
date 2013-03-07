@@ -20,7 +20,7 @@
 
         // map model data from json attributes
         var productData = {
-            productCode: $productView.mozuData('product-code'),
+            ProductCode: $productView.mozuData('product-code'),
             price: $priceView.mozuData('price'),
             config: {
                 options: $optionContainer.mozuData('options'),
@@ -50,11 +50,11 @@
         });
 
         // go to the cart when complete
-        product.whenServerUpdates(function (cart) {
-            if (cart && cart.id) {
+        product.whenServerUpdates(function (cartitem) {
+            if (cartitem && cartitem.data.CartItemId) {
                 product.submitting(true);
                 window.location.href = "/cart";
-            } else if (cart && cart.messages) {
+            } else if (cartitem && cartitem.messages) {
                 product.messages(cart.messages);
             } else {
                 product.unknownError();

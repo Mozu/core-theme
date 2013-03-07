@@ -1,4 +1,4 @@
-﻿define(["jquery", "modules/knockout-plus"], function ($, ko) {
+﻿define(["jquery", "modules/knockout-plus", "modules/api"], function ($, ko, api) {
 
     var traverseObjectForFunctionsAndBind = function (obj, newContext, depth) {
         depth = depth || 0;
@@ -179,12 +179,24 @@
                 }
             );
             return ko.toJS(ret);
+        },
+        createSDKObject: function(obj) {
+            var me = this;
+            this.apiPromise = api.create(this.mozuType, this.toJS(), false).then(function (apiModel) {
+                me.apiModel = apiModel;
+                $.each(apiModel.getAvailableActions(), function (ix, actionName) {
+                    (actionName in me ? apiModel : me)[actionName] = function (data) {
+                        return apiModel.action(actionName, data);
+                    };
+                });
+            });
         }
     };
 
     return {
         extend: function (conf, initFunc) {
             var ctor = function (obj) {
+                var me = this;
                 this.constructor = ctor;
                 if (conf) $.extend(this, conf);
                 this.exclusionList = makeExclusionList(this);
@@ -193,6 +205,8 @@
                 this.submitting = ko.observable(false);
                 if (initFunc)
                     initFunc.apply(this, arguments);
+                if (this.mozuType) 
+                    this.createSDKObject(obj);
             };
             ctor.prototype = ptype;
 
