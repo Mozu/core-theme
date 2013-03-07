@@ -183,5 +183,26 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
             }
         }
 
+
+
+        public Task<ServiceClientResponse<StreamContent>> DeleteAttributeVocabularyValue(string attributeFQN, string value, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<DC.AttributeTypeRuleCollection>> GetAttributeTypeRules(int? startIndex = null, int? pageSize = null, string sortBy = null, string filter = null, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceClientResponse<DC.AttributeVocabularyValue>> GetAttributeVocabularyValue(string attributeFQN, string value, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceClientResponse<List<DC.AttributeVocabularyValue>>> IAttributeWebApiClient.GetAttributeVocabularyValues(string attributeFQN, string responseGroups = null, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
