@@ -114,24 +114,27 @@ namespace Mozu.SiteBuilder.Mvc.Security
         {
             var cookie = CookieProvider.GetRequestCookie(CookieName);
 
-            if (cookie == null || cookie["AccessToken"] == null)
+            if (cookie != null && cookie["AccessToken"] !=null)
             {
-                var user = LightweightUserClaims.CreateAnonymous(scopeType: UserScopeType.Tenant);
-                var profile = new ProfileToken()
-                                  {
-                                      UserId = user.UserId
-                                  };
-                return new UserAuthTicket()
-                           {
-                               AccessToken = user.ToAccessToken(),
-                               ProfileToken = profile.ToToken(),
-                               AccessTokenExpiration = user.Expiration
-                           };
+                return cookie.ToTicket();
             }
 
-            return cookie.ToTicket();
+            return null;
         }
-
+        public UserAuthTicket CreateAnonymousTicket()
+        {
+            var user = LightweightUserClaims.CreateAnonymous(scopeType: UserScopeType.Tenant);
+            var profile = new ProfileToken()
+            {
+                UserId = user.UserId
+            };
+            return new UserAuthTicket()
+            {
+                AccessToken = user.ToAccessToken(),
+                ProfileToken = profile.ToToken(),
+                AccessTokenExpiration = user.Expiration
+            };
+        }
         public void LogOut()
         {
             SetCurrentUser(null);
