@@ -131,7 +131,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
         {
             var attribute = new Attribute
             {
-                ValueType = AttributeValueType.Shopper,
+                ValueType = AttributeValueType.ShopperEntered,
                 InputType = AttributeInputType.TextBox,
                 DataType = AttributeDataType.DateTime,
             };
@@ -154,7 +154,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
             };
             var mapped = AutoMapper.Mapper.Map<Attribute>(attribute);
 
-            mapped.ValueType.ShouldEqual(AttributeValueType.Shopper);
+            mapped.ValueType.ShouldEqual(AttributeValueType.ShopperEntered);
             mapped.InputType.ShouldEqual(AttributeInputType.TextBox);
             mapped.DataType.ShouldEqual(AttributeDataType.DateTime);
             mapped.Regex.ShouldEqual("/bla(h|H)");
@@ -170,7 +170,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                     DataType = AttributeDataType.String,
                     InputType = AttributeInputType.TextBox,
                     Name = "UPC1",
-                    ValueType = AttributeValueType.Admin,
+                    ValueType = AttributeValueType.AdminEntered,
                     IsOption = false,
                     IsExtra = false,
                     IsProperty = true,

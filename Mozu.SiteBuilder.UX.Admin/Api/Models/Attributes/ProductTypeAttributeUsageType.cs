@@ -9,10 +9,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         Unknown,
 
         [DataMember(Name = "admin")]
-        Admin,
+        AdminEntered,
 
         [DataMember(Name = "shopper")]
-        Shopper,
+        ShopperEntered,
 
         [DataMember(Name = "predefined")]
         Predefined,

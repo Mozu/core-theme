@@ -98,10 +98,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     throw new ArgumentException(String.Format("A {0} input type cannot be both a Property and an Extra.", Enum.GetName(typeof(AttributeInputType), source.InputType)));
                 // a Property is always an AdminEntered ValueType
                 else if (source.IsProperty == true)
-                    return Enum.GetName(typeof(AttributeValueType), AttributeValueType.Admin);
+                    return Enum.GetName(typeof(AttributeValueType), AttributeValueType.AdminEntered);
                 // an Extra is always a ShopperEntered ValueType
                 else if (source.IsExtra == true)
-                    return Enum.GetName(typeof(AttributeValueType), AttributeValueType.Shopper);
+                    return Enum.GetName(typeof(AttributeValueType), AttributeValueType.ShopperEntered);
                 else
                     throw new ArgumentException(String.Format("A {0} input type must be a property or an extra.", Enum.GetName(typeof(AttributeInputType), source.InputType)));
             }
