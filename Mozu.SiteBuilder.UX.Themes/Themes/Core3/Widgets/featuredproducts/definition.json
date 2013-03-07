@@ -1,8 +1,0 @@
-{
-	"id": "featured_product",
-	"displayName": "Featured Products",
-	"displayTemplate": "featuredproducts/template",
-	"icon": "/admin/scripts/resources/images/AddPhotos.png",
-	"editView": "Taco.view.site.widget.FeaturedProducts",
-	"properties": []
-}

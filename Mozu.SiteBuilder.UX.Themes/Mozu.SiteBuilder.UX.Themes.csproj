@@ -309,17 +309,17 @@
     <Content Include="Themes\Core3\Modules\_GoogleAnalyticsTrackingCode.vol">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Core3\MetaData\PageTypes\404\definition.json" />
-    <Content Include="Themes\Core3\MetaData\PageTypes\about_us1\definition.json" />
-    <Content Include="Themes\Core3\MetaData\PageTypes\blank_page1\definition.json" />
-    <Content Include="Themes\Core3\MetaData\PageTypes\blog\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\cms\404\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\cms\about_us1\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\cms\blank_page1\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\cms\blog\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\email\definition.json" />
-    <Content Include="Themes\Core3\MetaData\PageTypes\home1\definition.json" />
-    <Content Include="Themes\Core3\MetaData\PageTypes\landing1\definition.json" />
-    <Content Include="Themes\Core3\MetaData\PageTypes\post\definition.json" />
-    <Content Include="Themes\Core3\MetaData\PageTypes\cart\definition.json" />
-    <Content Include="Themes\Core3\MetaData\PageTypes\search\definition.json" />
-    <Content Include="Themes\Core3\MetaData\PageTypes\product\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\cms\home1\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\cms\landing1\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\cms\post\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\commerce\cart\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\catalog\search\definition.json" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\catalog\product\definition.json" />
     <None Include="Themes\RESTCore\Resources\Scripts\Fixtures\RESTProduct.json" />
     <Content Include="Morrissey\morrissey.js" />
     <Content Include="Morrissey\src\lyrically.js" />
@@ -718,7 +718,6 @@
     <Folder Include="Themes\Core3\Resources\Fonts\" />
     <Folder Include="Themes\Core3\Resources\Images\c2Images\" />
     <Folder Include="Themes\Core3\Resources\Scripts-Built\" />
-    <Folder Include="Themes\Core3\Widgets\core\" />
     <Folder Include="Themes\MobileCore\Layouts\" />
     <Folder Include="Themes\MobileCore\Resources\Scripts\nls\fr\" />
     <Folder Include="Themes\MobileCore\Templates\Email\" />
@@ -809,27 +808,27 @@
     <Content Include="Themes\Core3\Templates\_Post.vol" />
     <Content Include="Themes\Core3\Templates\_Product.vol" />
     <Content Include="Themes\Core3\Templates\_SearchResults.vol" />
-    <Content Include="Themes\Core3\Widgets\addthis\template.vol" />
-    <Content Include="Themes\Core3\Widgets\blogarchive\template.vol" />
-    <Content Include="Themes\Core3\Widgets\blogRss\template.vol" />
-    <Content Include="Themes\Core3\Widgets\columndivider\template.vol" />
-    <Content Include="Themes\Core3\Widgets\content\template.vol">
+    <Content Include="Themes\Core3\Widgets\social\addthis.vol" />
+    <Content Include="Themes\Core3\Widgets\blog\blogarchive.vol" />
+    <Content Include="Themes\Core3\Widgets\blog\blogRss.vol" />
+    <Content Include="Themes\Core3\Widgets\cms\columndivider.vol" />
+    <Content Include="Themes\Core3\Widgets\cms\content.vol">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Core3\Widgets\content2Col\template.vol" />
-    <Content Include="Themes\Core3\Widgets\facebookComments\template.vol" />
-    <Content Include="Themes\Core3\Widgets\featuredproducts\template.vol">
+    <Content Include="Themes\Core3\Widgets\cms\content2col.vol" />
+    <Content Include="Themes\Core3\Widgets\social\facebookcomments.vol" />
+    <Content Include="Themes\Core3\Widgets\catalog\featuredproducts.vol">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Core3\Widgets\horizontalrule\template.vol" />
-    <Content Include="Themes\Core3\Widgets\image\template.vol">
+    <Content Include="Themes\Core3\Widgets\cms\horizontalrule.vol" />
+    <Content Include="Themes\Core3\Widgets\cms\image.vol">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Core3\Widgets\paragraphWithHeader\template.vol" />
-    <Content Include="Themes\Core3\Widgets\pickles\template.vol" />
-    <Content Include="Themes\Core3\Widgets\recentposts\template.vol" />
-    <Content Include="Themes\Core3\Widgets\tagcollection\template.vol" />
-    <Content Include="Themes\Core3\Widgets\tags\template.vol" />
+    <Content Include="Themes\Core3\Widgets\cms\paragraphwithheader.vol" />
+    <Content Include="Themes\Core3\Widgets\misc\pickels.vol" />
+    <Content Include="Themes\Core3\Widgets\blog\recentposts.vol" />
+    <Content Include="Themes\Core3\Widgets\blog\tagcollection.vol" />
+    <Content Include="Themes\Core3\Widgets\blog\tags.vol" />
     <Content Include="Themes\Core3\Resources\Stylesheets\Pages\search-results.less">
       <Compile>True</Compile>
       <Minify>True</Minify>
@@ -913,22 +912,20 @@
     <None Include="Themes\Adaptive\Resources\Stylesheets\Pages\category.less" />
     <None Include="Themes\Adaptive\Resources\Stylesheets\Pages\checkout.less" />
     <None Include="Themes\Adaptive\Resources\Stylesheets\Pages\product-details.less" />
-    <Content Include="Themes\Core3\Widgets\addthis\definition.json" />
-    <Content Include="Themes\Core3\Widgets\blogarchive\definition.json" />
-    <Content Include="Themes\Core3\Widgets\blogRss\definition.json" />
-    <Content Include="Themes\Core3\Widgets\columndivider\definition.json" />
-    <Content Include="Themes\Core3\Widgets\content2Col\definition.json" />
-    <Content Include="Themes\Core3\Widgets\content\definition.json" />
-    <Content Include="Themes\Core3\Widgets\facebookComments\definition.json" />
-    <Content Include="Themes\Core3\Widgets\featuredproducts\definition.json" />
-    <Content Include="Themes\Core3\Widgets\horizontalrule\definition.json" />
-    <Content Include="Themes\Core3\Widgets\imagesGallery\definition.json" />
-    <Content Include="Themes\Core3\Widgets\image\definition.json" />
-    <Content Include="Themes\Core3\Widgets\paragraphWithHeader\definition.json" />
-    <Content Include="Themes\Core3\Widgets\pickles\definition.json" />
-    <Content Include="Themes\Core3\Widgets\recentposts\definition.json" />
-    <Content Include="Themes\Core3\Widgets\tagcollection\definition.json" />
-    <Content Include="Themes\Core3\Widgets\tags\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\social\addthis\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\blog\blogarchive\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\blog\blogRss\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\cms\columndivider\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\cms\content\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\social\facebookComments\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\catalog\featuredproducts\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\cms\horizontalrule\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\cms\imagesGallery\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\cms\image\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\cms\paragraphWithHeader\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\misc\pickles\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\blog\recentposts\definition.json" />
+    <Content Include="Themes\Core3\MetaData\Widgets\blog\tagcollection\definition.json" />
     <Content Include="Themes\MobileCore\Modules\ProductImages.vol" />
     <Content Include="Themes\Core3\Modules\_LoadingBar.vol" />
     <Content Include="Themes\Core3\Modules\_LoginModal.vol" />
@@ -1075,7 +1072,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core3\Widgets\imagesGallery\template.vol" />
+    <Content Include="Themes\Core3\Widgets\cms\imagesGallery.vol" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Morrissey\package.json" />
