@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
         public void Cart_returned_from_services_should_have_same_Id_as_StoreFront_Cart()
         {
             var controller = GetController();
-            var entity = new Mozu.Cart.Contracts.Cart { Id = "1f6b06fb016648b28d9731181e99e78c" };
+            var entity = new Mozu.CommerceRuntime.Contracts.Cart.Cart { Id = "1f6b06fb016648b28d9731181e99e78c" };
 
             _cartWebApiClient.With(x => x.GetOrCreateCart(), entity);
 

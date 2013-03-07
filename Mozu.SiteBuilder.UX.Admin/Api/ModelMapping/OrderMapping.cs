@@ -25,8 +25,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<VM.Category, Contracts.Category>();
             Mapper.CreateMap<Contracts.Category, VM.Category>();
 
-            Mapper.CreateMap<VM.Discount, Contracts.Discount>();
-            Mapper.CreateMap<Contracts.Discount, VM.Discount>();
+            //Mapper.CreateMap<VM.Discount, Contracts.Discount>();
+            //Mapper.CreateMap<Contracts.Discount, VM.Discount>();
 
             Mapper.CreateMap<VM.Measurement, Mozu.Core.Api.Contracts.Measurement>();
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, VM.Measurement>();

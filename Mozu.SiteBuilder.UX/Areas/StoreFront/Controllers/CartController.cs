@@ -13,7 +13,7 @@ using VMCart = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.Cart;
 using CartItem = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.CartItem;
 using VM=Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Linq;
-using Product = Mozu.Cart.Contracts.Product;
+using Product = Mozu.ProductRuntime.Contracts.Product;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -72,17 +72,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public JsonDCResult GetCart()
         {
-            var item = new Mozu.Cart.Contracts.CartItem
-            {
-                Product = new Product
-                {
-                    ProductCode = "123456789876"
-                },
-                Quantity = 1,
-            };
-
-            var ret = _cartClient.AddItemToCart(item).Result.ReadAsAsync().Result;
-
             // TODO: Use GetOrCreate here???
             var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
 
@@ -95,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public JsonDCResult UpdateCart(VMCart cart)
         {
-            var c = Mapper.Map<Mozu.Cart.Contracts.Cart>(cart);
+            var c = Mapper.Map<Mozu.CommerceRuntime.Contracts.Cart.Cart>(cart);
             var ret = _cartClient.UpdateCart(c).Result.ReadAsAsync().Result;
 
             return new JsonDCResult()
@@ -126,7 +115,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public JsonDCResult AddCartItem(CartItem item)
         {
-            var cartItem = Mapper.Map<Mozu.Cart.Contracts.CartItem>(item);
+            var cartItem = Mapper.Map<Mozu.CommerceRuntime.Contracts.Cart.CartItem>(item);
             var ret = _cartClient.AddItemToCart(cartItem).Result.ReadAsAsync().Result;
             var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
 
@@ -139,16 +128,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public JsonDCResult AddProduct(VM.ProductConfigurationRequest item)
         {
+            var cartItem = Mapper.Map<Mozu.CommerceRuntime.Contracts.Cart.CartItem>(item);
+            var addItemResponse = _cartClient.AddItemToCart(cartItem).Result;
 
-            var cartItem = Mapper.Map<Mozu.Cart.Contracts.CartItem>(item);
-            var ret = _cartClient.AddItemToCart(cartItem).Result.ReadAsAsync().Result;
-            var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
+            if (addItemResponse.HasException)
+                throw addItemResponse.ReadException();
+
+            var addedCartItem = addItemResponse.ReadAsAsync().Result;
+            CommerceRuntime.Contracts.Cart.Cart cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
 
             return new JsonDCResult()
-                       {
-                           Data = Mapper.Map<VMCart>(cart)
-                       };
-
+            {
+                Data = Mapper.Map<VMCart>(cart)
+            };
         }
 
 

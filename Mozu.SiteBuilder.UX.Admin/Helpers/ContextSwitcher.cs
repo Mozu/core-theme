@@ -41,7 +41,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
             var ticket = _authenticationHelper.GetCurrentTicket();
 
            // ticket = await repo.RefreshUserAuthTicket(ticket.RefreshToken).Result.ReadAsAsync();
-            var userAuthTicketForTenant = _authTicketWeb.With(TargetContextLevelType.Tenant).With(x => x.TenantId = tenantId).CreateAuthTicketForTenant(new UserTokenInfo { AccessToken = ticket.AccessToken }).Result.ReadAsAsync().Result;
+            var authTicketForTenant = _authTicketWeb
+                .With(TargetContextLevelType.Tenant)
+                .With(x => x.TenantId = tenantId)
+                .CreateAuthTicketForTenant(new UserTokenInfo {AccessToken = ticket.AccessToken});
+
+            var userAuthTicketForTenant = authTicketForTenant.Result.ReadAsAsync().Result;
 
             _authenticationHelper.SetCurrentUser(userAuthTicketForTenant);
 

@@ -1,8 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Mozu.SiteBuilder.UX.Models.Orders;
 
 namespace Mozu.SiteBuilder.UX.Models.StoreFront.Cart
 {
+    [DataContract]
+    public class ProductPrice
+    {
+        [DataMember(Name = "price")]
+        public decimal? Price { get; set; }
+
+        [DataMember(Name = "salePrice")]
+        public decimal? SalePrice { get; set; }
+
+        [DataMember(Name = "discount")]
+        public AppliedDiscount Discount { get; set; }
+    }
+
     [DataContract]
     public class Product
     {
@@ -28,6 +42,6 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Cart
         public List<ProductOption> Options { get; set; }
 
         [DataMember(Name = "price")]
-        public decimal? Price { get; set; }
+        public ProductPrice Price { get; set; }
     }
 }

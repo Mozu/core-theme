@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             //    .ForMember(x => x.Description, op => op.MapFrom(x => x.Content.Description));
 
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ConfiguredProduct, ConfiguredProduct>()
-                .ForMember(x => x.Price, op => op.MapFrom(_ =>
+                .ForMember(x => x.Price, op => op.ResolveUsing(_ =>
                     new ProductPrice()
                     {
                         Price = _.Price != null ? _.Price.Price : null,

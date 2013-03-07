@@ -42,26 +42,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             Mapper.CreateMap<Models.Customers.Address, Address>();
             Mapper.CreateMap<Address, Models.Customers.Address>();
 
-            Mapper.CreateMap<Models.Orders.Order, Mozu.Order.Contracts.Order>();
-            Mapper.CreateMap<Mozu.Order.Contracts.Order, Models.Orders.Order>();
+            //          Mapper.CreateMap<Models.Orders.Order, Mozu.Order.Contracts.Order>();
+            //          Mapper.CreateMap<Mozu.Order.Contracts.Order, Models.Orders.Order>();
 
-            Mapper.CreateMap<Models.Orders.AppliedDiscount, Mozu.Order.Contracts.AppliedDiscount>();
-            Mapper.CreateMap<Mozu.Order.Contracts.AppliedDiscount, AppliedDiscount>();
-
-            Mapper.CreateMap<Models.Orders.Category, Mozu.Order.Contracts.Category>();
-            Mapper.CreateMap<Mozu.Order.Contracts.Category, Category>();
+            //          Mapper.CreateMap<Models.Orders.AppliedDiscount, Mozu.Order.Contracts.AppliedDiscount>();
+            //          Mapper.CreateMap<Mozu.Order.Contracts.AppliedDiscount, AppliedDiscount>();
 
             Mapper.CreateMap<Models.Orders.Discount, Mozu.Order.Contracts.Discount>();
             Mapper.CreateMap<Mozu.Order.Contracts.Discount, Models.Orders.Discount>();
 
-            Mapper.CreateMap<Measurement, Mozu.Core.Api.Contracts.Measurement>();
-            Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, Measurement>();
-
-            Mapper.CreateMap<Models.Orders.OrderItem, Mozu.Order.Contracts.OrderItem>();
-            Mapper.CreateMap<Mozu.Order.Contracts.OrderItem, Models.Orders.OrderItem>();
+            //          Mapper.CreateMap<Models.Orders.OrderItem, Mozu.Order.Contracts.OrderItem>();
+            //          Mapper.CreateMap<Mozu.Order.Contracts.OrderItem, Models.Orders.OrderItem>();
 
             Mapper.CreateMap<Models.Orders.OrderNote, Mozu.Order.Contracts.OrderNote>();
             Mapper.CreateMap<Mozu.Order.Contracts.OrderNote, Models.Orders.OrderNote>();
+
+            Mapper.CreateMap<Measurement, Mozu.Core.Api.Contracts.Measurement>();
+            Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, Measurement>();
 
             Mapper.CreateMap<Models.Orders.PackageMeasurements, Mozu.Order.Contracts.PackageMeasurements>();
             Mapper.CreateMap<Mozu.Order.Contracts.PackageMeasurements, Models.Orders.PackageMeasurements>();
@@ -78,14 +75,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             Mapper.CreateMap<Models.Orders.PaymentTransactionInteraction, Mozu.Order.Contracts.PaymentTransactionInteraction>();
             Mapper.CreateMap<Mozu.Order.Contracts.PaymentTransactionInteraction, Models.Orders.PaymentTransactionInteraction>();
 
-            Mapper.CreateMap<Models.Orders.Product, Mozu.Order.Contracts.Product>();
-            Mapper.CreateMap<Mozu.Order.Contracts.Product, Models.Orders.Product>();
+            //          Mapper.CreateMap<Models.Orders.Product, Mozu.Order.Contracts.Product>();
+            //          Mapper.CreateMap<Mozu.Order.Contracts.Product, Models.Orders.Product>();
+
+            Mapper.CreateMap<Models.StoreFront.Cart.ProductPrice, Mozu.CommerceRuntime.Contracts.CartOrder.ProductPrice>();
+            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.CartOrder.ProductPrice, Models.StoreFront.Cart.ProductPrice>();
+
+            Mapper.CreateMap<Models.Orders.Category, Mozu.Order.Contracts.Category>();
+            Mapper.CreateMap<Mozu.Order.Contracts.Category, Category>();
 
             Mapper.CreateMap<Models.Orders.ProductOption, Mozu.Order.Contracts.ProductOption>();
             Mapper.CreateMap<Mozu.Order.Contracts.ProductOption, Models.Orders.ProductOption>();
 
-            Mapper.CreateMap<Models.Orders.ProductPrice, Mozu.Order.Contracts.ProductPrice>();
-            Mapper.CreateMap<Mozu.Order.Contracts.ProductPrice, Models.Orders.ProductPrice>();
+            //          Mapper.CreateMap<Models.Orders.ProductPrice, Mozu.Order.Contracts.ProductPrice>();
+            //          Mapper.CreateMap<Mozu.Order.Contracts.ProductPrice, Models.Orders.ProductPrice>();
 
             Mapper.CreateMap<Models.Orders.ProductStock, Mozu.Order.Contracts.ProductStock>();
             Mapper.CreateMap<Mozu.Order.Contracts.ProductStock, Models.Orders.ProductStock>();
@@ -187,6 +190,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 ;
 
             Mapper.CreateMap<OrderNote, Models.Orders.OrderNote>();
+
+            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.CartOrder.AppliedDiscount, Models.Orders.AppliedDiscount>()
+                .ForMember(x => x.Discount, op => op.Ignore())
+                ;
+            Mapper.CreateMap<Models.Orders.AppliedDiscount, Mozu.CommerceRuntime.Contracts.CartOrder.AppliedDiscount>()
+                .ForMember(x => x.Discount, op => op.Ignore())
+                ;
 
             Mapper.AssertConfigurationIsValid(ProfileName);
         }
