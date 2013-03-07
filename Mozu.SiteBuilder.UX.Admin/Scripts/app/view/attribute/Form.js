@@ -22,6 +22,22 @@ Ext.define('Taco.view.attribute.Form', {
                 xtype: 'selectfield',
                 fieldLabel: 'Attribute Type',
                 name: 'attributeType',
+                listeners: {
+                    select: function (field, records) {
+                        var record = this.up('form').record, isProperty = false, isExtra = false;
+                        
+                        if (field.getValue() == 'Property') {
+                            isProperty = true;
+                        }
+                        if (field.getValue() == 'Extra') {
+                            isExtra = true;
+                        }
+
+                        record.set('isExtra',isExtra);
+                        record.set('isProperty',isProperty);
+                       
+                    }
+                },
                 store: [
                     'Property',
                     'Extra'
@@ -79,11 +95,13 @@ Ext.define('Taco.view.attribute.Form', {
                     },
                     items: [{
                         fieldLabel: 'Min char/val',
-                        //xtype: 'textfield',
+                        xtype: 'numberfield',
+                        hideTrigger: true,
                         name: 'min'
                     }, {
                         fieldLabel: 'Max char/val',
-                        //xtype: 'textfield',
+                        xtype: 'numberfield',
+                        hideTrigger: true,
                         name: 'max'
                     }],
                     listeners: {
