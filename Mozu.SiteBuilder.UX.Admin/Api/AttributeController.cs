@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
@@ -43,10 +44,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 IEnumerable<Attribute> createdAttributes = await _attributeHelper.CreateAttributes(attributes);
                 return List2(createdAttributes.ToList());
             }
-            catch (AggregateException e)
+            catch (AggregateException aggEx)
             {
-                Exception simpleEx = e.UnwrapAgg();
+                Exception simpleEx = aggEx.UnwrapAgg();
                 return FailureList2<Attribute>(simpleEx.Message);
+            }
+            catch (AutoMapperMappingException mapEx)
+            {
+                Exception innerEx = mapEx.InnerException;
+                return FailureList2<Attribute>(innerEx.Message);
+            }
+            catch (ArgumentException argEx)
+            {
+                return FailureList2<Attribute>(argEx.Message);
             }
         }
 
