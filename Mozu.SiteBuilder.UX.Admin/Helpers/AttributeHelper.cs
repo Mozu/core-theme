@@ -1,24 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
-using Mozu.SiteBuilder.UX.Admin.MockServices;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
+    using Mozu.ProductAdmin.Contracts.Clients;
     using Contracts = ProductAdmin.Contracts;
 
     public class AttributeHelper : IAttributeHelper
     {
-        private readonly IMoreAwesomeAttributeWebApiClient _attributeWebApiClient;
+        private readonly IAttributeWebApiClient _attributeWebApiClient;
         private readonly CollectionTaskUnMapper<Attribute, Contracts.Attribute> _attributeMapper = new CollectionTaskUnMapper<Attribute, Contracts.Attribute>();
         private readonly CollectionTaskUnMapper<AttributeValue, Contracts.AttributeVocabularyValue> _attributeValueMapper = new CollectionTaskUnMapper<AttributeValue, Contracts.AttributeVocabularyValue>();
 
-        public AttributeHelper(IMoreAwesomeAttributeWebApiClient attributeWebApiClient)
+        public AttributeHelper(IAttributeWebApiClient attributeWebApiClient)
         {
             _attributeWebApiClient = attributeWebApiClient;
         }

@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
@@ -35,8 +37,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (attributes == null || !attributes.Any())
                 return Message3<List<Attribute>>(false, "No attributes were created because they were not sent correctly. Please try again.");
 
-            var createdAttributes = await _attributeHelper.CreateAttributes(attributes);
-            return List2(createdAttributes.ToList());
+
+            try
+            {
+                IEnumerable<Attribute> createdAttributes = await _attributeHelper.CreateAttributes(attributes);
+                return List2(createdAttributes.ToList());
+            }
+            catch (AggregateException e)
+            {
+                Exception simpleEx = e.UnwrapAgg();
+                return FailureList2<Attribute>(simpleEx.Message);
+            }
         }
 
         [WebInvoke(UriTemplate = "update", Method = "POST")]
