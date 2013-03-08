@@ -42,17 +42,17 @@ var ApiReference = (function () {
     }
 
     var genericQueryTpt = '{?_*}';
+    var defaultHost = window.location.protocol + '//' + window.location.host + '/';
     var pub = {
 
         basicOps: basicOps,
-
         urls: {
-        "product": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/products/",
-        "cart": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Cart.WebApi/carts/",
-        "user": "http://aus01pdweb001.ads.volusion.com:9090/mozu.User.WebApi/users/",
-        "order": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Order.WebApi/orders/",
-        "search": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/productsearch/",
-        "cms": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Content.WebApi/documents/"
+            "ProductService": defaultHost + 'mozu.ProductRuntime.WebApi/products/',
+            "CartService": defaultHost + 'mozu.Cart.WebApi/commerce/carts/',
+            "UserService": defaultHost + 'mozu.User.WebApi/users/',
+            "OrderService": defaultHost + 'mozu.Order.WebApi/orders/',
+            "SearchService": defaultHost + 'mozu.ProductRuntime.WebApi/productsearch/',
+            "CmsService": defaultHost + 'mozu.Content.WebApi/documents/',
         },
 
         getActionsFor: function(typeName) {
@@ -64,18 +64,27 @@ var ApiReference = (function () {
             return actions;
         },
 
+        parseServiceUrls: function(tpt) {
+            // TODO: add unescape flag to uritemplates lib (fork uritemplates lib, obvs
+            for (var svcName in this.urls) {
+                tpt = tpt.replace(new RegExp('\\{\\$' + svcName + '\\}'), ApiReference.urls[svcName]);
+            }
+            return tpt;
+        },
+
         getRequestConfig: function (operation, typeName, conf, context) {
             var oType = objectTypes[typeName];
             if (!oType) return typeName;
             if (oType[operation]) oType = oType[operation];
             if (!oType) throw "No known URL for '" + typeName + "' type.";
-            if (typeof oType === "string") return oType;
+            if (typeof oType === "string") return this.parseServiceUrls(oType);
             var returnObj = {};
             if (oType.url) {
-                returnObj.url = oType.url;
+                returnObj.url = this.parseServiceUrls(oType.url);
             } else if (oType.template) {
                 // cache templates lazily
-                if (typeof oType.template === "string") oType.template = utils.uritemplate.parse(oType.template);
+                if (typeof oType.template === "string")
+                    oType.template = utils.uritemplate.parse(this.parseServiceUrls(oType.template));
                 var tptData = {};
                 if (typeof conf === "string") {
                     if (!oType.shortcutParam) throw "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
@@ -84,7 +93,7 @@ var ApiReference = (function () {
                     utils.extend(tptData, conf.query || conf);
                 }
                 if (oType.defaults) tptData = utils.extend({}, oType.defaults, tptData);
-                returnObj.url = oType.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData));
+                returnObj.url = oType.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData, ApiReference.urls));
             } else {
                 throw "URLs beyond simple strings and templates are not implemented."
             }
@@ -112,7 +121,7 @@ var ApiReference = (function () {
     };
     var objectTypes = {
         'products': {
-            template: pub.urls.product + genericQueryTpt,
+            template: '{$ProductService}' + genericQueryTpt,
             defaults: {
                 startIndex: 0,
                 pageSize: 25
@@ -120,7 +129,7 @@ var ApiReference = (function () {
         },
 
         'search': {
-            template: pub.urls.search + genericQueryTpt,
+            template: '{$SearchService}' + genericQueryTpt,
             shortcutParam: 'q',
             defaults: {
 
@@ -128,7 +137,7 @@ var ApiReference = (function () {
         },
         'product': {
             get: {
-                template: pub.urls.product + '{productCode}?{&allowInactive*}',
+                template: '{$ProductService}{productCode}?{&allowInactive*}',
                 shortcutParam: 'productCode',
                 defaults: {
                     allowInactive: false
@@ -137,44 +146,44 @@ var ApiReference = (function () {
             addtocart: {
                 verb: 'POST',
                 returnType: 'cartitem',
-                template: pub.urls.cart + 'current/items/'
+                template: '{$CartService}current/items/'
             }
         },
         'cart': {
-            get: pub.urls.cart + 'current',
+            get: '{$CartService}current',
             addproduct: {
                 verb: 'POST',
                 returnType: 'cartitem',
-                template: pub.urls.cart + 'current/items/'
+                template: '{$CartService}current/items/'
             },
             empty: {
                 verb: 'DELETE',
-                template: pub.urls.cart + 'current/items/'
+                template: '{$CartService}current/items/'
             }
         },
         'cartitem': {
-            template: pub.urls.cart + 'current/items/{id}',
+            template: '{$CartService}current/items/{id}',
             shortcutParam: 'id'
         },
         'me': {
             get: {
-                template: pub.urls.user + '{id}',
+                template: '{$UserService}{id}',
                 shortcutParam: 'id'
             },
             login: {
-                template: pub.urls.user + "Login"
+                template: '{$UserService}Login'
             }
         },
         'order': {
             create: {
-                template: pub.urls.order + '{?cartId*}',
+                template: '{$OrderService}{?cartId*}',
                 shortcutParam: 'cartId',
                 noBody: true
             }
         },
         'document': {
             get: {
-                template: pub.urls.cms + "{documentListName}/{documentId}/?version={version}&status={status}",
+                template: '{$CmsService}{documentListName}/{documentId}/?version={version}&status={status}',
                 shortcutParam: 'documentId',
                 defaults: {
                     documentListName: 'default'
@@ -183,7 +192,7 @@ var ApiReference = (function () {
         },
         'documentbyname': {
             get: {
-                template: pub.urls.cms + "{documentListName}/named/{documentName}/?folderPath={folderPath}&version={version}&status={status}",
+                template: '{$CmsService}{documentListName}/named/{documentName}/?folderPath={folderPath}&version={version}&status={status}',
                 shortcutParam: 'documentName',
                 defaults: {
                     documentListName: 'default'

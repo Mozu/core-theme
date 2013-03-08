@@ -191,12 +191,12 @@ namespace Mozu.SiteBuilder.Mvc
 
 	                
                     var urls = new JObject();
-	                urls["product"] = _configSettings.AppSettings("service-url-ProductRuntimeWebApi");
-                    urls["cart"] = _configSettings.AppSettings("service-url-CartWebApi");
-                    urls["user"] = _configSettings.AppSettings("service-url-UserWebApi");
-                    urls["order"] = _configSettings.AppSettings("service-url-OrderWebApi");
-                    urls["search"] = _configSettings.AppSettings("service-url-ProductSearchWebApi");
-                    urls["cms"] = _configSettings.AppSettings("service-url-DocumentWebApi");
+	                urls["ProductService"] = _configSettings.AppSettings("service-url-ProductRuntimeWebApi");
+                    urls["CartService"] = _configSettings.AppSettings("service-url-CartWebApi");
+                    urls["UserService"] = _configSettings.AppSettings("service-url-UserWebApi");
+                    urls["OrderService"] = _configSettings.AppSettings("service-url-OrderWebApi");
+                    urls["SearchService"] = _configSettings.AppSettings("service-url-ProductSearchWebApi");
+                    urls["CmsService"] = _configSettings.AppSettings("service-url-DocumentWebApi");
 	                _apiClientContext["header"] = header;
                     _apiClientContext["urls"] = urls;
 
