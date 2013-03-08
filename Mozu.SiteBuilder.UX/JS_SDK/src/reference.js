@@ -90,6 +90,7 @@ var ApiReference = (function () {
             }
             if (oType.verb) returnObj.verbOverride = oType.verb;
             if (oType.returnType) returnObj.returnType = oType.returnType;
+            if (oType.noBody) returnObj.noBody = oType.noBody;
             return returnObj;
         },
 
@@ -167,7 +168,8 @@ var ApiReference = (function () {
         'order': {
             create: {
                 template: pub.urls.order + '{?cartId*}',
-                shortcutParam: 'cartId'
+                shortcutParam: 'cartId',
+                noBody: true
             }
         },
         'document': {
