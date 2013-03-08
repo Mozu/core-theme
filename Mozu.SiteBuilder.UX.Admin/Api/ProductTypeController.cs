@@ -10,6 +10,7 @@ using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
+using Mozu.SiteBuilder.UX.Admin.Helpers.ProductTypeHelpers;
 using Mozu.SiteBuilder.UX.Admin.MockServices;
 using Mozu.SiteBuilder.UX.Admin.MockServices.Mocks;
 using DC = Mozu.ProductAdmin.Contracts;
@@ -29,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ProductTypeController(IMoreAwesomeProductTypeWebApiClient productTypeClient)
+        public ProductTypeController(IProductTypeWebApiClient productTypeClient)
         {
             _productTypeClient = productTypeClient;
         }
@@ -66,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(Mapper.Map<ProductType>(prod));
             }
 
-            string filter = null; // extFilter.ToFilterString();
+            string filter = extFilter.ToFilterString();
             string sort = null; // pagingParams.sort.ToSortString();
 
             DC.ProductTypeCollection res;
@@ -74,8 +75,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 /* startIndex:     */ pagingParams.startIndex,
                 /* pageSize:       */ pagingParams.pageSize,
                 /* sortBy:         */ sort,
-                /* responseGroups: */ null,
-                /* filter:         */ filter
+                /* filter:         */ filter,
+                /* responseGroups: */ null
             );
             res = result.ReadAsAsync().Result;
 

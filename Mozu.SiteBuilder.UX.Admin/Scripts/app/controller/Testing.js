@@ -47,6 +47,55 @@ Ext.define('Taco.controller.Testing', {
             }
         });
         
+        this.createContentView('Taco.core.ux.content.Container', {
+
+            header: {
+                title: "Product Types"
+            },
+
+            body: {
+                layout: 'auto',
+                items: [
+                {
+                    xtype: 'button',
+                    text: "Click to create a PT",
+                    handler: function() {
+                        var randomInteger = Math.round(1 + Math.random() * 1000),
+                            p = Ext.create('Taco.model.ProductType', {
+                              name: "foster " + randomInteger
+                            });
+
+                        p.save({ 
+                            success: function (record, operation) {
+                                alert("successfully created " + record.getId());
+
+                                var o = record.getOptions();
+                                o.add({ attributeId: 666 });
+                                record.save();
+                                // pts.sync();
+                            },
+                            failure: function(record, operation)
+                            {
+                                alert("fail");
+                            }
+                        });
+
+                        /*
+                        p.getOptions().add({ attributeId: 666 });
+                        p.save();
+                        p.getExtras().add({ attributeId: 667 });
+                        p.getProperties().add({ attributeId: 668 });
+                        */
+
+                    }
+                },
+                {
+                    xtype: 'box',
+                    autoEl: 'hr'
+                }]
+            }
+        });
+
     },
 
     foster: function() {

@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Web.Mvc;
 using DC = Mozu.ProductAdmin.Contracts;
 
-namespace Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers
+namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
 {
     /// <summary>
     /// Converts object properties on a Product to a string representation of the property name.

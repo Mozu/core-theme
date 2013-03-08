@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
-using System.ServiceModel;
-using System.Text;
-using System.Web.Mvc;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using DC = Mozu.ProductAdmin.Contracts;
 
-namespace Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers
+namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
 {
     internal static class ProductFilterExtensions
     {

@@ -478,6 +478,10 @@
       <Link>Configs\AppSettings.Dev.config</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Mozu.SiteBuilder.UX.Admin\Configs\AppSettings.SI.config">
+      <Link>Configs\AppSettings.SI.config</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Log4Net.CI.config" />
@@ -499,7 +503,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\51Degrees.mobi-Lite-2012.12.04.dat" />
-    <Content Include="Configs\AppSettings.SI.config" />
     <Content Include="JS_SDK\tests\SDKSpec.coffee" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <Content Include="Web.SI.config">
