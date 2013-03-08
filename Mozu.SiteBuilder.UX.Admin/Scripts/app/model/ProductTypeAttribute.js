@@ -12,8 +12,8 @@ Ext.define('Taco.model.ProductTypeAttribute', {
         { name: 'allowMulti', type: 'boolean', defaultValue: false },
         { name: 'isHidden', type: 'boolean', defaultValue: false },
         { name: 'attributeName', type: 'string', persist: false },
-        { name: 'allValues', type: 'auto', persist: false },
-        { name: 'selectedValues', type: 'auto' },
+        { name: 'allValues', type: 'auto', persist: false, defaultValue: [] },
+        { name: 'selectedValues', type: 'auto', defaultValue: [] },
         { name: 'dataType', type: 'string' },
         { name: 'inputType', type: 'string' }
     ],

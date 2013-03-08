@@ -155,7 +155,7 @@ Ext.define('Taco.view.attribute.Form', {
 
             'Date': function (statics) {
                 var attributeType = statics.fieldCfg.attributeType;
-
+                this.record.set('dataType', 'dateTime');
                 attributeType.readOnly = this.isEdit();
 
                 return [{
