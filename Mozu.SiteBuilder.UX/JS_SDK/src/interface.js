@@ -17,7 +17,7 @@ ApiInterface.prototype = {
         var deferred = utils.when.defer();
 
         var data;
-        if (conf) {
+        if (conf && !requestConf.noBody) {
             data = conf.data || conf;
         }
 

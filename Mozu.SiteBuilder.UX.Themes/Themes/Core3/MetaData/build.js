@@ -1,6 +1,7 @@
 ({
     paths: {
         jquery: "empty:",
+        sdk: "empty:",
         knockout: "vendor/knockout-latest",
         pciaas: "vendor/pci-temp"
     },
@@ -19,6 +20,7 @@
                 'text',
                 'ajax',
                 'shim',
+                'modules/api',
                 'modules/actions-processor',
                 'modules/animatemodals',
                 'modules/jquery-sitemenu',
@@ -28,7 +30,7 @@
                 'modules/knockout-plus',
                 'modules/tagcloud'
             ],
-            exclude: ['jquery'],
+            exclude: ['jquery', 'sdk'],
         },
         {
             name: "pages/product",

@@ -2,23 +2,19 @@
 pages/common.js
 ----------------
 pages/common.js
-text.js
-shim.js
-shim!vendor/hammer>Hammer
-shim!vendor/jquery.specialevent.hammer[jquery=jQuery,shim!vendor/hammer>Hammer=Hammer]
-modules/jquery-mobileevents.js
 vendor/knockout-latest.js
+text.js
 ajax.js
+shim.js
 modules/api.js
 modules/actions-processor.js
 modules/animatemodals.js
 modules/jquery-sitemenu.js
 modules/loading-bars.js
-modules/login-links.js
-modules/message-dismisser.js
 i18n.js
 nls/messages.js
 i18n!nls/messages
+modules/login-links.js
 modules/knockout-plus.js
 modules/knockout-viewmodel.js
 shim!vendor/jquery.tagcloud.0-0-1[jquery=jQuery]
@@ -27,9 +23,14 @@ modules/tagcloud.js
 pages/product.js
 ----------------
 modules/models-product.js
-shim!vendor/swipe.min>Swipe
+shim!vendor/jquery-colorbox[jquery=jQuery]
 modules/product-images.js
 pages/product.js
+
+pages/cart.js
+----------------
+modules/models-cart.js
+pages/cart.js
 
 pages/checkout.js
 ----------------
@@ -40,6 +41,7 @@ shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
 modules/context-parser.js
 modules/models-checkout.js
 ajax![method=post]/checkout/data
+shim!vendor/bootstrap/bootstrap-affix[jquery=jQuery]
 pages/checkout.js
 
 pages/myaccount.js
