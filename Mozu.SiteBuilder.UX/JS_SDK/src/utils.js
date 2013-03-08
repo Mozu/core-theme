@@ -26,6 +26,16 @@ var utils = {
         }
         return target;
     },
+    camelCase: (function () {
+        var rdashAlpha = /-([\da-z])/gi,
+            cccb = function(match, l) {
+                return l.toUpperCase();
+            };
+        return function(str, firstCap) {
+            return (firstCap ? str.charAt(0).toUpperCase() + str.substring(1) : str).replace(rdashAlpha, cccb);
+        };
+    }()),
+
     ajax: function (method, url, headers, data, success, failure) {
         if (typeof data !== "string") data = JSON.stringify(data);
         var xhr = new (window.XMLHttpRequest ? window.XMLHttpRequest : window.ActiveXObject("Microsoft.XMLHTTP"))();
