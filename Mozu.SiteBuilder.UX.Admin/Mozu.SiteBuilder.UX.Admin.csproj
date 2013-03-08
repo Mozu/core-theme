@@ -443,9 +443,6 @@
     <Compile Include="Api\PageTypeDefinitionController.cs" />
     <Compile Include="Api\CheckoutSettingsController.cs" />
     <Compile Include="Api\PhoneOrderController.cs" />
-    <Compile Include="Api\ProductHelpers\ProductFilterExtensions.cs" />
-    <Compile Include="Api\ProductHelpers\ProductSortExtensions.cs" />
-    <Compile Include="Api\ProductHelpers\PropertyGuy.cs" />
     <Compile Include="Api\ProductInSiteInfoController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -478,16 +475,21 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\AttributeHelper.cs" />
+    <Compile Include="Helpers\AttributeHelpers\AttributeHelper.cs" />
+    <Compile Include="Helpers\AttributeHelpers\IAttributeHelper.cs" />
+    <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
     <Compile Include="Helpers\ContextSwitcher.cs" />
     <Compile Include="Helpers\CurrentUserHelper.cs" />
-    <Compile Include="Helpers\IAttributeHelper.cs" />
     <Compile Include="Helpers\IContextSwitcher.cs" />
     <Compile Include="Helpers\ICurrentUserHelper.cs" />
     <Compile Include="Helpers\IPasswordHelper.cs" />
     <Compile Include="Helpers\IRolesHelper.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
+    <Compile Include="Helpers\ProductHelpers\ProductFilterExtensions.cs" />
+    <Compile Include="Helpers\ProductHelpers\ProductSortExtensions.cs" />
+    <Compile Include="Helpers\ProductHelpers\PropertyGuy.cs" />
+    <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
     <Compile Include="MockServices\AbstractInMemoryResourceApiClient.cs" />
     <Compile Include="MockServices\InMemoryProductTypeApiClient.cs" />

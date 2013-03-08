@@ -9,7 +9,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 using DC = Mozu.ProductAdmin.Contracts;
 
-namespace Mozu.SiteBuilder.UX.Admin.Helpers
+namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
 {
     using Mozu.ProductAdmin.Contracts.Clients;
     using Contracts = ProductAdmin.Contracts;
@@ -35,15 +35,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 
         public async Task<IEnumerable<Attribute>> GetAttributes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            string filter = null; // extFilter.ToFilterString();
+            string filter = extFilter.ToFilterString();
             string sort = null;   // pagingParams.sort.ToSortString();
 
             var result = await _attributeWebApiClient.GetAttributes(
                 /* startIndex:     */ pagingParams.startIndex,
                 /* pageSize:       */ pagingParams.pageSize,
                 /* sortBy:         */ sort,
-                /* responseGroups: */ null,
-                /* filter:         */ filter
+                /* filter:         */ filter,
+                /* responseGroups: */ null
                 );
             var res = result.ReadAsAsync().Result;
 
@@ -52,7 +52,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 
         public async Task<IEnumerable<Attribute>> CreateAttributes(List<Attribute> attributes)
         {
-            List<DC.Attribute> dcAttrs = Mapper.Map<List<DC.Attribute>>(attributes);
             var results = await _attributeMapper.PerformAction(attributes, a => _attributeWebApiClient.AddAttribute(a));
             await _attributeValueMapper.PerformAction(results.SelectMany(SelectValuesAssigned), (a, b) => _attributeWebApiClient.AddAttributeVocabularyValue(a, b.AttributeFQN));
             return results;
@@ -69,7 +68,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 
         public async Task<IEnumerable<Attribute>> EditAttributes(List<Attribute> attributes)
         {
-            List<DC.Attribute> dcAttrs = Mapper.Map<List<DC.Attribute>>(attributes);
             return await _attributeMapper.PerformAction(attributes, a => _attributeWebApiClient.UpdateAttribute(a, a.AttributeFQN));
         }
 

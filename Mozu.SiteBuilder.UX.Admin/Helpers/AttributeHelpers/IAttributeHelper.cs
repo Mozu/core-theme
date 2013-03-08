@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
+using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 
-namespace Mozu.SiteBuilder.UX.Admin.Helpers
+namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
 {
     public interface IAttributeHelper
     {

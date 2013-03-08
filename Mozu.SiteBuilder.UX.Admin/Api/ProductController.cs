@@ -8,8 +8,8 @@ using AutoMapper;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Api.ProductHelpers;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
+using Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
 

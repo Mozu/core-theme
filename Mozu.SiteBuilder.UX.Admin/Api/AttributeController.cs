@@ -8,7 +8,7 @@ using System.Web.Http;
 using AutoMapper;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Helpers;
+using Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
