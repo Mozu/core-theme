@@ -18,13 +18,9 @@ Ext.define('Taco.model.Attribute', {
         { name: 'regex', type: 'string' },
         {
             name: 'values',
-            type: 'auto'
-            //,
-            //serialize: function (value, record) {
-            //    return record.getAssociatedData()['getAttributeValues'];
-           
-
-            //}
+            type: 'auto',
+            defaultValue: []
+            
         }
         
     ],

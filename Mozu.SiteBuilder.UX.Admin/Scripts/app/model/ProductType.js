@@ -8,10 +8,10 @@ Ext.define('Taco.model.ProductType', {
         { name: 'id', type: 'auto' },
         { name: 'name', type: 'string' },
         { name: 'isBase', type: 'boolean' },
-        { name: 'options', type: 'auto' },
+        { name: 'options', type: 'auto', defaultValue: [] },
         {name:'numberOfProducts', type:'int'},
-        { name: 'extras', type: 'auto' },
-        { name: 'properties', type: 'auto' },
+        { name: 'extras', type: 'auto', defaultValue: [] },
+        { name: 'properties', type: 'auto', defaultValue: [] },
     { name: 'modifiedDate', type: 'date' }
     
         
