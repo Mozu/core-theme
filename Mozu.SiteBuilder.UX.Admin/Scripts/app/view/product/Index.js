@@ -101,42 +101,6 @@ Ext.define('Taco.view.product.Index', {
                 eventName: 'editproduct'
             }]
         }],
-        listeners: {
-            deleteproduct: function (grid, record) {
-                var modal = Ext.create('Taco.core.ux.modal.Confirmation', {
-                    autoShow: true,
-                    content: {
-                        html: 'Are you sure you want to delete this product?'
-                    },
-                    listeners: {
-                        cancel: Ext.emptyFn,
-                        confirm: function () {
-                            var store = grid.getStore();
-                            grid.setLoading(true);
-                            store.remove(record);
-                            store.sync({
-                                success: function (m) {
-                                    grid.setLoading(false);
-                                },
-                                failure: function (m) {
-                                    grid.setLoading(false);
-                                }
-                            });
-                        },
-                        scope: this
-                    }
-                });
-            },
-            editproduct: function (grid, record) {
-                var page = grid.up('browserpage'),
-                    metaData = { id: record.getId() };
-
-                page.launchEditor(record, metaData);
-                Taco.app.StateManager.addState(page.token + '/edit/' + record.getId(), metaData);
-            },
-            viewproduct: Ext.emptyFn,
-            scope: this
-        },
         contextConf: {
             c: {
                 useMultiGrid: true,
@@ -232,6 +196,47 @@ Ext.define('Taco.view.product.Index', {
         imageField: 'imagePath',
         isDragable: false,
         nameField: 'productName',
+    },
+
+    initComponent: function () {
+        this.callParent(arguments);
+
+        this.gridPanel.on({
+            deleteproduct: function (grid, record) {
+                var modal = Ext.create('Taco.core.ux.modal.Confirmation', {
+                    autoShow: true,
+                    content: {
+                        html: 'Are you sure you want to delete this product?'
+                    },
+                    listeners: {
+                        cancel: Ext.emptyFn,
+                        confirm: function () {
+                            var store = grid.getStore();
+                            grid.setLoading(true);
+                            store.remove(record);
+                            store.sync({
+                                success: function (m) {
+                                    grid.setLoading(false);
+                                },
+                                failure: function (m) {
+                                    grid.setLoading(false);
+                                }
+                            });
+                        },
+                        scope: this
+                    }
+                });
+            },
+            editproduct: function (clickEvent) {
+                var record = clickEvent.record,
+                    metaData = { id: record.getId() };
+
+                this.launchEditor(record, metaData);
+                Taco.app.StateManager.addState(this.token + '/edit/' + record.getId(), metaData);
+            },
+            viewproduct: Ext.emptyFn,
+            scope: this
+        });
     },
 
     launchLoadedEditor: function (record, options) {

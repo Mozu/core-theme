@@ -26,26 +26,24 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
         this.callParent(arguments);
     },
 
-    getMenu: function (record) {
+    getMenu: function (clickEvent) {
         if (this.menu) {
-            this.menu.record = record;
-            this.updateMenuItems(record);
+            this.updateMenuItems(clickEvent);
         } else {
             this.menu = new Ext.menu.Menu({
-                record: record,
                 plain: true,
                 shadow: false,
                 cls: Taco.baseCSSPrefix + 'grid-row-menu',
-                items: this.getMenuItems(record)
+                items: this.getMenuItems(clickEvent)
             });
         }
 
         return this.menu;
     },
 
-    getMenuItems: function (record) {
+    getMenuItems: function (clickEvent) {
         var items = this.menuItems,
-            data = record.getData();
+            data = clickEvent.record.getData();
 
         Ext.Array.each(items, function (item) {
             Ext.applyIf(item, this.menuItemDefaults);
@@ -54,7 +52,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
                 tpl: item.text || '',
                 renderTpl: '{%this.renderContent(out,values)%}',
                 handler: this.menuItemHandler,
-                scope: this
+                clickEvent: clickEvent
             });
         }, this);
 
@@ -62,22 +60,29 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
     },
 
     handler: function(grid, rowIndex, colIndex, header, e, record, item) {
-        var trigger = e.getTarget('img.' + this.iconCls, 10);
+        var trigger = e.getTarget('img.' + this.iconCls, 10),
+            clickEvent = {};
+
+        Ext.apply(clickEvent, {
+            grid: grid.ownerCt,
+            record: record,
+            item: item,
+            index: rowIndex,
+            e: e
+        });
 
         if (this.menu && this.menu.isVisible()) {
             this.menu.hide();
         } else {
-            this.showMenuBy(trigger, record);
+            this.showMenuBy(trigger, clickEvent);
         }
     },
 
     menuItemHandler: function (item, e) {
-        var menu = item.ownerCt,
-            eventName = item.eventName,
-            record = menu.record,
-            grid = this.up('gridpanel');
+        var grid = item.clickEvent.grid;
 
-        grid.fireEvent(eventName, grid, record);
+        console.log(grid);
+        grid.fireEvent(item.eventName, item.clickEvent);
     },
 
     setMenuActive: function (isMenuOpen) {
@@ -85,16 +90,16 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
         this.triggerEl.addCls(Ext.baseCSSPrefix + 'menu');
     },
 
-    showMenuBy: function (el, record) {
-        var menu = this.getMenu(record);
+    showMenuBy: function (el, clickEvent) {
+        var menu = this.getMenu(clickEvent);
 
         Ext.fly(el).addCls(Ext.baseCSSPrefix + 'menu');
         menu.showBy(el);
     },
 
-    updateMenuItems: function (record) {
+    updateMenuItems: function (clickEvent) {
         var items = this.menu.items,
-            data = record.getData();
+            data = clickEvent.record.getData();
 
         items.each(function (item) {
             item.update(data);
