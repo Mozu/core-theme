@@ -49,7 +49,7 @@ Ext.define('Taco.view.attribute.Form', {
                 name: 'dataType',
                 store: [
                     ['String', 'Text'],
-                    ['Numeric', 'Number']
+                    ['Number', 'Number']
                 ]
             }
         },

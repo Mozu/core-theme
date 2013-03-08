@@ -21,8 +21,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private static void MapStringLengthValues(AttributeValidation validation, Attribute attribute)
         {
-            validation.MinStringLength = ToValue<int?>(attribute.Min) ?? 0;
-            validation.MaxStringLength = ToValue<int?>(attribute.Max) ?? 0;
+            validation.MinStringLength = ToIntValue(attribute.Min);
+            validation.MaxStringLength = ToIntValue(attribute.Max);
         }
 
         private static void MapDateValues(AttributeValidation validation, Attribute attribute)
@@ -33,8 +33,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private static void MapNumericValues(AttributeValidation validation, Attribute attribute)
         {
-            validation.MaxNumericValue = ToValue<decimal?>(attribute.Max) ?? 0m;
-            validation.MinNumericValue = ToValue<decimal?>(attribute.Min) ?? 0m;
+            validation.MaxNumericValue = ToDecimalValue(attribute.Max);
+            validation.MinNumericValue = ToDecimalValue(attribute.Min);
         }
 
         protected static T ToValue<T>(object value)
@@ -46,6 +46,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             return default(T);
         }
 
+        protected static int? ToIntValue(object value)
+        {
+            if (value != null)
+                return System.Convert.ToInt32(value);
+            else
+                return null;
+        }
+
+        protected static decimal? ToDecimalValue(object value)
+        {
+            if (value != null)
+                return System.Convert.ToDecimal(value);
+            else
+                return null;
+        }
+
         public DC.Attribute Convert(ResolutionContext context)
         {
             var source = (Attribute) context.SourceValue;
@@ -55,17 +71,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 RegularExpression = source.Regex,
             };
 
+            // apply the correct attribute validation
             Strategies.GetOrDefault(source.DataType, NoOp)(attributeValidation, source);
 
             var destination = new DC.Attribute
             {
+                AttributeCode =  (source.Name ?? "").Trim(),
                 Validation = attributeValidation,
                 VocabularyValues = Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values),
                 AttributeFQN = source.Id,
                 Content = new DC.AttributeLocalizedContent
                 {
                     Description = "",
-                    Name = source.Name,
+                    Name = (source.Name ?? "").Trim(),
                     LocaleCode = "en-US",
                 },
                 InputType = Enum.GetName(typeof(AttributeInputType), source.InputType),

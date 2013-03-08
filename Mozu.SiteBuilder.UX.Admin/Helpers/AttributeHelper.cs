@@ -25,6 +25,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
             _attributeWebApiClient = attributeWebApiClient;
         }
 
+        public async Task<Attribute> GetAttribute(string attributeFQN)
+        {
+            var result = await _attributeWebApiClient.GetAttribute(attributeFQN);
+            var res = result.ReadAsAsync().Result;
+
+            return Mapper.Map<Attribute>(res);
+        }
+
         public async Task<IEnumerable<Attribute>> GetAttributes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             string filter = null; // extFilter.ToFilterString();

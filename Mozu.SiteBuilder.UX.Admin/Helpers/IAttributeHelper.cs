@@ -7,6 +7,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
     public interface IAttributeHelper
     {
+        Task<Attribute> GetAttribute(string id);
+
         Task<IEnumerable<Attribute>> GetAttributes(PagingParamaters pagingParams, FilterCollection extFilter);
 
         Task<IEnumerable<Attribute>> CreateAttributes(List<Attribute> attributes);
@@ -14,5 +16,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
         Task<IEnumerable<Attribute>> EditAttributes(List<Attribute> attributes);
 
         Task<IEnumerable<Attribute>> DeleteAttributes(List<Attribute> attributes);
+
+        
     }
 }

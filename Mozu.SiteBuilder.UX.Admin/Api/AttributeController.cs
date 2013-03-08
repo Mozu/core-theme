@@ -27,9 +27,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "read")]
         public async Task<Response<List<Attribute>>> ListAttributes([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
         {
-            var items = await _attributeHelper.GetAttributes(pagingParams, extFilter);
-
-            return List2(items.ToList());
+            if (!String.IsNullOrEmpty(pagingParams.id))
+            {
+                // get single Attribute
+                var item = await _attributeHelper.GetAttribute(pagingParams.id);
+                return List2(item);
+            }
+            else
+            {
+                var items = await _attributeHelper.GetAttributes(pagingParams, extFilter);
+                return List2(items.ToList());
+            }
         }
 
         [WebInvoke(UriTemplate = "create", Method = "POST")]
