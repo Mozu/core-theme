@@ -131,7 +131,7 @@ Ext.define('Taco.view.pendingchange.Cms', {
                 flex: 1
             }, {
                 dataIndex: 'draftType',
-                text: 'type',
+                text: 'Type',
                 value: 'Page',
                 minWidth: 120,
                 width: 100
