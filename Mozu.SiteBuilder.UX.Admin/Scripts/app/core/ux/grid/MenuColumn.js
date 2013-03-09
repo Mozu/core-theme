@@ -9,100 +9,63 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
     alias: 'widget.taco.menucolumn',
 
     draggable: false,
+
     hideable: false,
+
     iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger',
+
     resizable: false,
+
     sortable: false,
+
     text: 'Actions',
+
     width: 100,
 
-    menuItems: [],
-    menuItemDefaults: {
-        plain: true,
-        padding: 6
-    },
+    actions: [],
 
-    initComponent: function () {
-        this.callParent(arguments);
-    },
+    constructor: function (config) {
+        var cfg = Ext.apply({}, config),
+            iconCls = cfg.iconCls || this.iconCls,
+            actions = cfg.actions || [],
+            subActions = [];
 
-    getMenu: function (clickEvent) {
-        if (this.menu) {
-            this.updateMenuItems(clickEvent);
-        } else {
-            this.menu = new Ext.menu.Menu({
-                plain: true,
-                shadow: false,
-                cls: Taco.baseCSSPrefix + 'grid-row-menu',
-                items: this.getMenuItems(clickEvent)
-            });
-        }
+        Ext.applyIf(config, {
+            items: [{
+                iconCls: iconCls,
+                handler: function (view, rowIndex, colIndex, item, e, record) {
+                    var trigger = e.getTarget('img.' + item.iconCls, 10);
 
-        return this.menu;
-    },
+                    Ext.Array.each(actions, function (action, index, allActions) {
+                        Ext.apply(action, {
+                            handler: function (item, e) { view.fireEvent(item.eventName, view, record, item); }
+                        });
 
-    getMenuItems: function (clickEvent) {
-        var items = this.menuItems,
-            data = clickEvent.record.getData();
+                        if (action.multiSite) {
+                            var subitems = record.get('productInSites');
+                            Ext.Array.each(subitems, function (subitem) {
+                                Ext.Array.include(allActions, {
+                                    itemId: action.itemId + subitem.siteId.toString(),
+                                    text: subitem.siteId.toString(),
+                                    eventName: action.eventName,
+                                    handler: function (item, e) { view.fireEvent(item.eventName, view, record, item); }
+                                });
+                            });
+                        }
+                    }, this);
 
-        Ext.Array.each(items, function (item) {
-            Ext.applyIf(item, this.menuItemDefaults);
-            Ext.applyIf(item, {
-                data: data,
-                tpl: item.text || '',
-                renderTpl: '{%this.renderContent(out,values)%}',
-                handler: this.menuItemHandler,
-                clickEvent: clickEvent
-            });
-        }, this);
+                    if (this.actionMenu) {
+                        this.actionMenu.destroy();
+                        delete this.actionMenu;
+                    }
 
-        return items;
-    },
-
-    handler: function(grid, rowIndex, colIndex, header, e, record, item) {
-        var trigger = e.getTarget('img.' + this.iconCls, 10),
-            clickEvent = {};
-
-        Ext.apply(clickEvent, {
-            grid: grid.ownerCt,
-            record: record,
-            item: item,
-            index: rowIndex,
-            e: e
+                    this.actionMenu = Ext.create('Ext.menu.Menu', {
+                        items: actions
+                    }).showBy(trigger);
+                }
+            }]
         });
 
-        if (this.menu && this.menu.isVisible()) {
-            this.menu.hide();
-        } else {
-            this.showMenuBy(trigger, clickEvent);
-        }
+        this.callParent(arguments);
     },
-
-    menuItemHandler: function (item, e) {
-        var grid = item.clickEvent.grid;
-
-        console.log(grid);
-        grid.fireEvent(item.eventName, item.clickEvent);
-    },
-
-    setMenuActive: function (isMenuOpen) {
-        this.titleEl[isMenuOpen ? 'addCls' : 'removeCls'](this.headerOpenCls);
-        this.triggerEl.addCls(Ext.baseCSSPrefix + 'menu');
-    },
-
-    showMenuBy: function (el, clickEvent) {
-        var menu = this.getMenu(clickEvent);
-
-        Ext.fly(el).addCls(Ext.baseCSSPrefix + 'menu');
-        menu.showBy(el);
-    },
-
-    updateMenuItems: function (clickEvent) {
-        var items = this.menu.items,
-            data = clickEvent.record.getData();
-
-        items.each(function (item) {
-            item.update(data);
-        }, this);
-    }
 });
