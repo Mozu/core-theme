@@ -74,32 +74,36 @@ Ext.define('Taco.view.product.Index', {
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',
-            menuItems: [{
-                tpl: [
-                    '<tpl if="this.isMultiSite(productInSites)">',
-                        '<div>Preview in</div>',
-                    '<tpl else>',
-                        'Preview',
-                    '</tpl>',
-                    '<ul class="' + Taco.baseCSSPrefix + 'grid-row-menu-list"><tpl for="productInSites">',
-                        '<li>{siteId:this.toSiteName}</li>',
-                    '</tpl></ul>', {
-                        isMultiSite: function (value) {
-                            return !Ext.isEmpty(value);
-                        },
-                        toSiteName: function (value) {
-                            var site = Taco.app.context.findSite(value);
-                            return site ? site.name : 'n/a';
-                        }
-                    }
-                ]
+            actions: [{
+                itemId: 'preview',
+                text: 'Preview',
+                eventName: 'viewproduct',
+                multiSite: true
             }, {
-                text: 'Delete',
-                eventName: 'deleteproduct'
-            }, {
+                itemId: 'edit',
                 text: 'Edit',
                 eventName: 'editproduct'
+            }, {
+                itemId: 'delete',
+                text: 'Delete',
+                eventName: 'deleteproduct'
             }]
+            // items: [{
+            //     iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger'
+                // handler: function (view, rowIndex, colIndex, item, e, record) {
+                //     var trigger = e.getTarget('img.' + item.iconCls, 10);
+
+                //     if (this.actionMenu) this.actionMenu.destroy();
+
+                //     this.actionMenu = Ext.create('Ext.menu.Menu', {
+                //         items: [{
+                //             text: 'Edit',
+                //             eventName: 'editproduct',
+                //             handler: function (item, e) { view.fireEvent(item.eventName, view, record); }
+                //         }]
+                //     }).showBy(trigger);
+                // }
+            // }]
         }],
         contextConf: {
             c: {
@@ -199,42 +203,23 @@ Ext.define('Taco.view.product.Index', {
     },
 
     initComponent: function () {
+        var view;
+
         this.callParent(arguments);
 
-        this.gridPanel.on({
-            deleteproduct: function (grid, record) {
-                var modal = Ext.create('Taco.core.ux.modal.Confirmation', {
-                    autoShow: true,
-                    content: {
-                        html: 'Are you sure you want to delete this product?'
-                    },
-                    listeners: {
-                        cancel: Ext.emptyFn,
-                        confirm: function () {
-                            var store = grid.getStore();
-                            grid.setLoading(true);
-                            store.remove(record);
-                            store.sync({
-                                success: function (m) {
-                                    grid.setLoading(false);
-                                },
-                                failure: function (m) {
-                                    grid.setLoading(false);
-                                }
-                            });
-                        },
-                        scope: this
-                    }
-                });
+        view = this.gridPanel.getView();
+        view.on({
+            viewproduct: function (view, record, item) {
+                console.log('viewproduct', record);
             },
-            editproduct: function (clickEvent) {
-                var record = clickEvent.record,
-                    metaData = { id: record.getId() };
+            editproduct: function (view, record, item) {
+                var metaData = { id: record.getId() };
+
+                console.log('editproduct', item);
 
                 this.launchEditor(record, metaData);
                 Taco.app.StateManager.addState(this.token + '/edit/' + record.getId(), metaData);
             },
-            viewproduct: Ext.emptyFn,
             scope: this
         });
     },
@@ -252,7 +237,7 @@ Ext.define('Taco.view.product.Index', {
             });
             siteInfo.phantom = true;
             infoStore.add(siteInfo);
-            siteInfo.set('productCote', record.getId());
+            siteInfo.set('productCode', record.getId());
             siteInfo.phantom = true;
         }
         this.callParent(arguments);
