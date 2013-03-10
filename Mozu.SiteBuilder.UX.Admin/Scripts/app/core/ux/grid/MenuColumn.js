@@ -24,42 +24,55 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
 
     actions: [],
 
+    menuCls: Taco.baseCSSPrefix + 'grid-row-menu',
+
     constructor: function (config) {
         var cfg = Ext.apply({}, config),
             iconCls = cfg.iconCls || this.iconCls,
-            actions = cfg.actions || [],
-            subActions = [];
+            actions = cfg.actions || this.actions,
+            menuCls = cfg.menuCls || this.menuCls;
 
         Ext.applyIf(config, {
             items: [{
                 iconCls: iconCls,
                 handler: function (view, rowIndex, colIndex, item, e, record) {
-                    var trigger = e.getTarget('img.' + item.iconCls, 10);
+                    var trigger = e.getTarget('img.' + item.iconCls, 10),
+                        children = record.get('productInSites');
 
                     Ext.Array.each(actions, function (action, index, allActions) {
-                        Ext.apply(action, {
-                            handler: function (item, e) { view.fireEvent(item.eventName, view, record, item); }
-                        });
+                        var subMenu = undefined,
+                            subItems = [];
 
-                        if (action.multiSite) {
-                            var subitems = record.get('productInSites');
-                            Ext.Array.each(subitems, function (subitem) {
-                                Ext.Array.include(allActions, {
-                                    itemId: action.itemId + subitem.siteId.toString(),
-                                    text: subitem.siteId.toString(),
+                        if (!Ext.isEmpty(children) && action.multiSite === true) {
+                            Ext.Array.each(children, function (child) {
+                                subItems.push({
+                                    plain: false,
+                                    text: child.siteId.toString(),
                                     eventName: action.eventName,
                                     handler: function (item, e) { view.fireEvent(item.eventName, view, record, item); }
                                 });
                             });
                         }
+
+                        if (!Ext.isEmpty(subItems)) {
+                            subMenu = {
+                                plain: true,
+                                cls: menuCls,
+                                items: subItems
+                            };
+                        }
+
+                        Ext.apply(action, {
+                            plain: false,
+                            menu: subMenu,
+                            handler: function (item, e) { view.fireEvent(item.eventName, view, record, item); }
+                        });
                     }, this);
 
-                    if (this.actionMenu) {
-                        this.actionMenu.destroy();
-                        delete this.actionMenu;
-                    }
-
+                    Ext.destroy(this.actionMenu);
                     this.actionMenu = Ext.create('Ext.menu.Menu', {
+                        plain: true,
+                        cls: menuCls,
                         items: actions
                     }).showBy(trigger);
                 }
