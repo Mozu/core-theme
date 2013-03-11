@@ -22,14 +22,15 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
     /// </summary>
     internal class ThemeMetadataProvider : IThemeMetaDataProvider
     {
-        private const string METADATA_SCHEMA_PATH = "~/tools/Theme.xsd";
-        private const string SETTINGS_SCHEMA_PATH = "~/tools/ThemeSettings.xsd";
+      //  private const string METADATA_SCHEMA_PATH = "~/tools/Theme.xsd";
+       // private const string SETTINGS_SCHEMA_PATH = "~/tools/ThemeSettings.xsd";
         private const string METADATA_FILE_NAME = "theme.xml";
         private readonly NameValueCollection _config;
 
-     
-        private XmlSchemaSet _metadataValidationSchema;
-        private XmlSchemaSet _settingsValidationSchema;
+        private XmlSerializer _themeInformationMetadataSerialzer;
+        private XmlSerializer _configurationItemCollectionSerializer;
+        //private XmlSchemaSet _metadataValidationSchema;
+        //private XmlSchemaSet _settingsValidationSchema;
 
         /// <summary>
         /// Constructor.
@@ -38,19 +39,20 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
         public ThemeMetadataProvider(System.Collections.Specialized.NameValueCollection config = null )
         {
             _config = config ?? System.Configuration.ConfigurationManager.AppSettings;
-        
-         
 
+
+            _themeInformationMetadataSerialzer=  new System.Xml.Serialization.XmlSerializer(typeof (ThemeInformationMetadata));
+            _configurationItemCollectionSerializer = new XmlSerializer(typeof(ConfigurationItemCollection));
             // set up XSD validation for theme.xml. We will call .Validate() as we load documents.
-            _metadataValidationSchema = new XmlSchemaSet();
-            _metadataValidationSchema.Add("", XmlReader.Create(GetResource("Theme.xsd")));
+            //_metadataValidationSchema = new XmlSchemaSet();
+            //_metadataValidationSchema.Add("", XmlReader.Create(GetResource("Theme.xsd")));
 
             // set up XSD validation for ThemeSettings.xml. We will call .Validate() as we load documents.
-            
-            _settingsValidationSchema = new XmlSchemaSet();
-            _settingsValidationSchema.Add("", XmlReader.Create(GetResource("ThemeSettings.xsd")));
 
-       
+            //_settingsValidationSchema = new XmlSchemaSet();
+            // _settingsValidationSchema.Add("", XmlReader.Create(GetResource("ThemeSettings.xsd")));
+
+
         }
 
         private Stream GetResource( string resourceName)
@@ -128,69 +130,6 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
         }
 
 
-
-        /// <summary>
-        /// Searches the filesystem at ~/Themes/ and creates an <code>IThemeMetaData</code> for every entry it finds.
-        /// </summary>
-        //public IEnumerable<IThemeMetaData> GetThemes2()
-        //{
-        //    VirtualDirectory themesRootDir = _pathProvider.GetDirectory("~/Themes/");
-
-        //    // a "theme directory" is any subdirectory that contains a theme.xml file.
-        //    var themeDirectories = themesRootDir.Directories.Cast<VirtualDirectory>().Where(d => d.Files.Cast<VirtualFile>().Any(f => f.Name == METADATA_FILE_NAME));
-
-        //    foreach (VirtualDirectory themeDir in themeDirectories)
-        //    {
-        //        VirtualFile themeFile = ((IEnumerable<VirtualFile>)themeDir.Files).First(f => f.Name == METADATA_FILE_NAME);
-        //        VirtualDirectory metadataDir = ((IEnumerable<VirtualDirectory>)themeDir.Directories).FirstOrDefault(d => "MetaData".Equals(d.Name, StringComparison.InvariantCultureIgnoreCase));
-        //        VirtualFile settingsFile = metadataDir == null ? null : metadataDir.Files.Cast<VirtualFile>().FirstOrDefault(f => "ThemeSettings.xml".Equals(f.Name, StringComparison.InvariantCultureIgnoreCase));
-        //        VirtualFile thumbnailFile = metadataDir == null ? null : metadataDir.Files.Cast<VirtualFile>().FirstOrDefault(f => Regex.IsMatch(f.Name, ".*thumb.*\\..*"));
-
-        //        if (themeFile == null || settingsFile == null)
-        //        {
-        //            // a theme is invalid if it does not contain a theme.xml and a ThemeSettings.xml file.
-        //            // TODO: log that we threw the theme out.
-        //            continue;
-        //        }
-
-        //        ThemeInformationMetadata themeInfo;
-        //        ConfigurationItemCollection themeSettings;
-
-        //        try
-        //        {
-        //            themeInfo = GetThemeInfoMetadataFromFile(themeFile);
-        //            themeSettings = GetThemeSettingsConfigurationFromFile(settingsFile);
-        //        }
-        //        catch (ThemeInfoMetadataDidntSerializeException)
-        //        {
-        //            // this is invalid because its theme.xml file didn't parse.
-        //            // TODO: log that we threw the theme out.
-        //            continue;
-        //        }
-        //        catch (ThemeSettingsConfigurationDidntSerializeException)
-        //        {
-        //            // this is invalid because its ThemeSettings.xml file didn't parse.
-        //            // TODO: log that we threw the theme out.
-        //            continue;
-        //        }
-
-        //        Thumbnail themeThumbnail = null;
-        //        if (thumbnailFile != null)
-        //        {
-        //            try
-        //            {
-        //                themeThumbnail = GetThemeThumbnailFromFile(thumbnailFile);
-        //            }
-        //            catch (IOException)
-        //            {
-        //                // thumbnail didn't load. it doesn't matter. the theme is still good.
-        //            }
-        //        }
-
-        //        yield return new ThemeMetaData(themeInfo, themeSettings, themeThumbnail);
-        //    }
-        //}
-
         /// <summary>
         /// Deserializes <code>ThemeInformationMetadata</code> from a <code>VirtualFile</code>.
         /// </summary>
@@ -203,14 +142,14 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
             {
                 XDocument doc = XDocument.Load(stream);
 
-                try
-                {
-                    doc.Validate(_metadataValidationSchema, null);
-                }
-                catch (XmlSchemaValidationException e)
-                {
-                    throw new ThemeInfoMetadataDidntSerializeException(String.Format("The settings file at {0} did not validate.", themeFileLoc), e);
-                }
+                //try
+                //{
+                //    doc.Validate(_metadataValidationSchema, null);
+                //}
+                //catch (XmlSchemaValidationException e)
+                //{
+                //    throw new ThemeInfoMetadataDidntSerializeException(String.Format("The settings file at {0} did not validate.", themeFileLoc), e);
+                //}
 
                 try
                 {
@@ -237,14 +176,14 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
             {
                 XDocument doc = XDocument.Load(stream);
 
-                try
-                {
-                    doc.Validate(_settingsValidationSchema, null);
-                }
-                catch (XmlSchemaValidationException e)
-                {
-                    throw new ThemeSettingsConfigurationDidntSerializeException(String.Format("The settings file at {0} did not validate.", settingsFile), e);
-                }
+                //try
+                //{
+                //    doc.Validate(_settingsValidationSchema, null);
+                //}
+                //catch (XmlSchemaValidationException e)
+                //{
+                //    throw new ThemeSettingsConfigurationDidntSerializeException(String.Format("The settings file at {0} did not validate.", settingsFile), e);
+                //}
 
                 try
                 {
@@ -280,9 +219,9 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
         /// </summary>
         private class ThemeMetaData : IThemeMetaData
         {
-            public ThemeInformationMetadata ThemeInfo { get; private set; }
-            public ConfigurationItemCollection ThemeSettings { get; private set;}
-            public Thumbnail Thumbnail { get; private set; }
+            public ThemeInformationMetadata ThemeInfo { get;  set; }
+            public ConfigurationItemCollection ThemeSettings { get;  set;}
+            public Thumbnail Thumbnail { get;  set; }
 
             public ThemeMetaData(ThemeInformationMetadata themeInfo, ConfigurationItemCollection themeSettings, Thumbnail thumbnail)
             {
@@ -290,6 +229,51 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
                 this.ThemeSettings = themeSettings;
                 this.Thumbnail = thumbnail;
             }
+
+            public ThemeMetaData()
+            {
+                // TODO: Complete member initialization
+            }
+
+            public string Id { get; set; }
+        }
+
+
+        public IThemeMetaData GetTheme(string id, bool forDev)
+        {
+            var tmd = new ThemeMetaData();
+            tmd.Id = id;
+
+            var devPrefix = _config["devThemeBasePath"];
+            
+            var themePath = Path.Combine(devPrefix, id);
+            if (!Directory.Exists(themePath))
+            {
+                var localPath = new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/";
+                themePath = Path.Combine(localPath, id);
+            }
+            var themeInfoMetaDataFilePath = themePath + "\\metadata\\theme.xml";
+            if (!File.Exists(themeInfoMetaDataFilePath))
+            {
+                themeInfoMetaDataFilePath = themePath + "\\theme.xml";
+            }
+            using (var fs = File.OpenRead(themeInfoMetaDataFilePath))
+            {
+                tmd.ThemeInfo = (ThemeInformationMetadata ) _themeInformationMetadataSerialzer.Deserialize(fs);
+            }
+            var themeSettingsFilePath = themePath + "\\metadata\\ThemeSettings.xml";
+            using (var fs = File.OpenRead(themeSettingsFilePath))
+            {
+                tmd.ThemeSettings = (ConfigurationItemCollection) _configurationItemCollectionSerializer.Deserialize(fs);
+            }
+            var imageFilePath = Directory.GetFiles(themePath + "\\metadata", "*thumb.*").FirstOrDefault();
+            if (imageFilePath != null)
+            {
+                tmd.Thumbnail = new Thumbnail(Path.GetFileName(imageFilePath ), File.ReadAllBytes(imageFilePath ));
+            }
+
+            return tmd;
+
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Theme;
 using Mozu.SiteBuilder.Mvc.Theme.Exceptions;
+using Mozu.SiteBuilder.Mvc.Theme.Providers;
 
 namespace Mozu.SiteBuilder.Mvc.Theme.Factories
 {
@@ -16,24 +17,48 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Factories
     /// </summary>
     internal class ThemeFactory : IDisposable
     {
-        private List<Theme> _themes;
+        private readonly IThemeMetaDataProvider _themeMetaDataProvider;
+        //  private List<Theme> _themes;
         private ThemeConfigurationFactory _configFactory;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ThemeFactory()
+        public ThemeFactory(IThemeMetaDataProvider themeMetaDataProvider  )
         {
-            _themes = new List<Theme>();
+            _themeMetaDataProvider = themeMetaDataProvider;
+
+            //_themes = new List<Theme>();
             _configFactory = new ThemeConfigurationFactory();
+        }
+
+
+        public Theme GetTheme(string themeId)
+        {
+            Theme theme;
+            if (TryGetThemeFromCache(themeId, out theme))
+            {
+                return theme;
+            }
+
+            var tmd = _themeMetaDataProvider.GetTheme(themeId, true );
+
+            theme = Convert(tmd);
+            InitializeThemeInheritanceStackAndConfiguration(theme);
+            return theme;
+        }
+        bool  TryGetThemeFromCache(string themeId, out Theme theme)
+        {
+            theme = null;
+            return false ;
         }
         
         /// <summary>
         /// Adds an uninitialized theme to this factory's internal list of themes.
         /// </summary>
-        public void AddTheme(IThemeMetaData metadata)
+        Theme Convert(IThemeMetaData metadata)
         {
-            Theme newTheme = new Theme
+            return  new Theme
             {
                 Name                = metadata.ThemeInfo.Name,
                 Author              = metadata.ThemeInfo.Author,
@@ -44,7 +69,6 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Factories
                 NodeConfiguration   = metadata.ThemeSettings.Items
             };
 
-            _themes.Add(newTheme);
         }
 
         /// <summary>
@@ -53,30 +77,31 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Factories
         /// </summary>
         public IList<ITheme> GetThemes()
         {
-            // establish inheritance of all themes
-            foreach (Theme theme in _themes)
-            {
-                if (!theme.IsInitialized)
-                {
-                    try
-                    {
-                        // initialize theme's inheritance
-                        this.InitializeThemeInheritanceStackAndConfiguration(theme);
-                    }
-                    catch (Exception e)
-                    {
-                        string errorMessage = String.Format("Unknown error occured attempting to build theme's inheritance stack. Theme will not be available. Theme: {0}. Message: {1}", theme.Name, e.Message);
-                        System.Diagnostics.Debug.WriteLine(errorMessage);
-                        LoggingService.LoggerFor<ThemeFactory>().Error(errorMessage, e);
-                        continue;
-                    }
-                }
-            }
+            throw new NotImplementedException();
+            //// establish inheritance of all themes
+            //foreach (Theme theme in _themes)
+            //{
+            //    if (!theme.IsInitialized)
+            //    {
+            //        try
+            //        {
+            //            // initialize theme's inheritance
+            //            this.InitializeThemeInheritanceStackAndConfiguration(theme);
+            //        }
+            //        catch (Exception e)
+            //        {
+            //            string errorMessage = String.Format("Unknown error occured attempting to build theme's inheritance stack. Theme will not be available. Theme: {0}. Message: {1}", theme.Name, e.Message);
+            //            System.Diagnostics.Debug.WriteLine(errorMessage);
+            //            LoggingService.LoggerFor<ThemeFactory>().Error(errorMessage, e);
+            //            continue;
+            //        }
+            //    }
+            //}
 
-            // remove any themes that were not properly initialized
-            _themes.RemoveAll(t => !t.IsInitialized);
+            //// remove any themes that were not properly initialized
+            //_themes.RemoveAll(t => !t.IsInitialized);
 
-            return _themes.ToList<ITheme>();
+            //return _themes.ToList<ITheme>();
         }
 
         /// <summary>
@@ -90,10 +115,9 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Factories
             if (theme.IsInitialized)
                 return theme;
 
-            string inherits = theme.InheritanceString;
-
+           
             // nothing inherited
-            if (String.IsNullOrWhiteSpace(inherits))
+            if (String.IsNullOrWhiteSpace(theme.InheritanceString))
             {
                 theme.Parent = null;
                 theme.InheritanceString = null;
@@ -102,22 +126,21 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Factories
                 return theme;
             }
 
-            inherits = inherits.Trim();
-
-            Theme parent = _themes.FirstOrDefault(t => t.Name == inherits);
+            //fix stack overflow...
+            Theme parent = this.GetTheme(theme.InheritanceString);
 
             if (parent == null)
-                throw new ThemeNotFoundException(String.Format("Theme {0} not found.", inherits));
+                throw new ThemeNotFoundException(String.Format("Theme {0} not found.", theme.InheritanceString));
 
-            if (!parent.IsInitialized)
-            {
-                chain = chain ?? new Stack<Theme>(new[] { theme });
+            //if (!parent.IsInitialized)
+            //{
+            //    chain = chain ?? new Stack<Theme>(new[] { theme });
 
-                if (chain.Any(t => t.Name == inherits))
-                    throw new ThemeInheritanceRecursionException();
+            //    if (chain.Any(t => t.Name == inherits))
+            //        throw new ThemeInheritanceRecursionException();
                 
-                parent = this.InitializeThemeInheritanceStackAndConfiguration(parent, chain);
-            }
+            //    parent = this.InitializeThemeInheritanceStackAndConfiguration(parent, chain);
+            //}
 
             // set theme's parent.
             theme.Parent = parent;

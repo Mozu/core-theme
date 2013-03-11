@@ -12,6 +12,9 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
         /// <summary>
         /// Searches the underlying data store for themes and creates an <code>IThemeMetaData</code> for every entry it finds.
         /// </summary>
-        IEnumerable<IThemeMetaData> GetThemes();
+    //    IEnumerable<IThemeMetaData> GetThemes();
+
+        IThemeMetaData GetTheme(string theme, bool forDev);
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Mozu.SiteBuilder.Mvc.Theme.Exceptions;
@@ -17,9 +18,10 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Repositories
     /// </summary>
     internal class ThemeRepository : IThemeRepository
     {
+        private readonly ThemeFactory _themeFactory;
         private const string DEFAULT_THEME = "Core3";
-        private IList<ITheme> _themes;
-        private readonly IThemeMetaDataProvider _themeProvider;
+        private System.Collections.Concurrent.ConcurrentDictionary<string, ITheme> _themes = new ConcurrentDictionary<string, ITheme>(StringComparer.OrdinalIgnoreCase);
+       
 
         public bool IsInitialized { get; private set; }
 
@@ -27,30 +29,30 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Repositories
         /// Public constructor.
         /// </summary>
         /// <param name="themeProvider"></param>
-        public ThemeRepository(IThemeMetaDataProvider themeProvider)
+        public ThemeRepository(ThemeFactory themeFactory )
         {
-            _themeProvider = themeProvider;
+            _themeFactory = themeFactory;
         }
 
-        /// <summary>
-        /// Called by the DI framework before this repository is used for the first time.
-        /// For each theme provided by <code>themeProvider</code>, delegates to a <code>ThemeInfoFactory</code>
-        /// </summary>
-        public void Initialize()
-        {
+        ///// <summary>
+        ///// Called by the DI framework before this repository is used for the first time.
+        ///// For each theme provided by <code>themeProvider</code>, delegates to a <code>ThemeInfoFactory</code>
+        ///// </summary>
+        //public void Initialize()
+        //{
            
-            using (ThemeFactory fac = new ThemeFactory())
-            {
-                foreach (IThemeMetaData meta in _themeProvider.GetThemes())
-                {
-                    fac.AddTheme(meta);
-                }
+        //    using (ThemeFactory fac = new ThemeFactory())
+        //    {
+        //        foreach (IThemeMetaData meta in _themeProvider.GetThemes())
+        //        {
+        //            fac.AddTheme(meta);
+        //        }
 
-                _themes = fac.GetThemes();
-            }
+        //        _themes = fac.GetThemes();
+        //    }
 
-            IsInitialized = true;
-        }
+        //    IsInitialized = true;
+        //}
 
         /// <summary>
         /// Finds a theme by name.
@@ -60,7 +62,9 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Repositories
         {
             try
             {
-                return _themes.First(t => t.Name == name);
+
+                return  _themes.GetOrAdd(name, _themeFactory.GetTheme);
+
             }
             catch (Exception e)
             {
@@ -84,13 +88,13 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Repositories
             }
         }
 
-        /// <summary>
-        /// Returns all themes.
-        /// </summary>
-        public IEnumerable<ITheme> GetAll()
-        {
-            return _themes;
-        }
+        ///// <summary>
+        ///// Returns all themes.
+        ///// </summary>
+        //public IEnumerable<ITheme> GetAll()
+        //{
+        //    return _themes;
+        //}
 
         /// <summary>
         /// Returns the system default theme.
