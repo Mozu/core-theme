@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected static int? ToIntValue(object value)
         {
-            if (value != null)
+            if (!string.IsNullOrWhiteSpace(value as string))
                 return System.Convert.ToInt32(value);
             else
                 return null;
@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected static decimal? ToDecimalValue(object value)
         {
-            if (value != null)
+            if (!string.IsNullOrWhiteSpace(value as string))
                 return System.Convert.ToDecimal(value);
             else
                 return null;
