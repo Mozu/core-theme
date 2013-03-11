@@ -158,9 +158,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
             var categories = GetCategories();
             var behaviors = GetBehaviors();
 
-            // return InTask(new BehaviorTree(categories.Result, behaviors.Result));
-            // Bug 7177 - fix BehaviorTree to avoid the stackoverflow exception that's happening
-            return InTask(new BehaviorTree(Enumerable.Empty<BehaviorCategory>(), Enumerable.Empty<Behavior>()));
+             return InTask(new BehaviorTree(categories.Result, behaviors.Result));
         }
 
         private static Task<T> InTask<T>(T thing)

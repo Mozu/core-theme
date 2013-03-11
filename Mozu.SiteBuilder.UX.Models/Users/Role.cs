@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Models.Users
                 Id= "cat"+category.Id ,
                 Name = category.Name,
                 Cls = BehaviorCategoryCls,
-                Children = category.Categories.Select(c => BuildNode(c, categories, behaviors)).Concat(category.Behaviors.Select(CreateBehavior)).ToList(),
+                Children = behaviors.Where(x => x.CategoryId == category.Id).Select(CreateBehavior).ToList(),
             };
         }
 

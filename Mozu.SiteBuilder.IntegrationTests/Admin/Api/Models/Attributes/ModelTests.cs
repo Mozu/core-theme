@@ -137,7 +137,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
             };
             var mapped = AutoMapper.Mapper.Map<ProductAdmin.Contracts.Attribute>(attribute);
 
-            mapped.ValueType.ShouldEqual("Shopper");
+            mapped.ValueType.ShouldEqual("ShopperEntered");
             mapped.InputType.ShouldEqual("TextBox");
             mapped.DataType.ShouldEqual("DateTime");
         }
@@ -147,7 +147,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
         {
             var attribute = new ProductAdmin.Contracts.Attribute
             {
-                ValueType = "Shopper",
+                ValueType = "ShopperEntered",
                 InputType = "TextBox",
                 DataType = "DateTime",
                 Validation = new AttributeValidation { RegularExpression = "/bla(h|H)" },

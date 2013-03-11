@@ -159,9 +159,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<ActionResult> Page(string collection, string pageName)
         {
-            
-
-           
             var pc = this.SiteContext.PageContext;
 
             pc.CmsContext = new CmsPageContext()
@@ -174,9 +171,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
             await this.AsyncInitData();
 
-            
             if (pc.CmsContext.Page  == null)
-                return new HttpNotFoundResult("not found dumb dumb");
+                return new HttpNotFoundResult("not found");
+
             var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page,
                                                           opt => opt.ConstructServicesUsing(_lifetimeScope .Resolve ));
 
@@ -188,16 +185,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             pc.MetaTitle = vm.Properties.GetValue("meta_title") as string;
             pc.PageType = (string)(vm.Properties.GetValue("page_type")) ?? "cmspage";
 
-            
-
-
             var template = ((string)(vm.Properties.GetValue("template")) ?? this.HttpContext.Request["template"] ?? "page");
 
-
-            
-            
-            
-            
             //return View(template, vm);
             var vr = _viewEngine .FindView(this.ControllerContext, template, null, true);
             if (vr.View == null)
@@ -205,14 +194,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 vr = _viewEngine.FindView(this.ControllerContext, "blankpage", null, true);
             }
             var result = View(vr.View, vm);
-            
-            
+
             return result;
         }
-
-
-
-
 
         //
         // GET: /StoreFront/Create
