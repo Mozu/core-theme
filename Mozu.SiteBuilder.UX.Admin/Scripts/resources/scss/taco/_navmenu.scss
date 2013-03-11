@@ -1,7 +1,7 @@
 @mixin taco-navmenu {
 
   .#{$vprefix}viewport-nav {
-    background-color: $color-neutral-mid-lighter;
+    background-color: $color-neutral-white;
 
     .#{$vprefix}primary-menu-trigger {
       border-right: 1px solid $color-grid-border;
@@ -107,17 +107,17 @@
   }
 
   .#{$vprefix}primary-menu-ct {
-    margin-top: 35px;
+    margin-top: 51px;
     opacity: 1;
     visibility: visible !important;
     @include background(linear-gradient(top, $color-primary-menu-background-dark, $color-primary-menu-background-mid));
     @include outer-shadow(0.4, 2px, 3px, 3px);
-    @include transition(margin 0.2s linear, opacity 0.2s linear, top 0s linear, left 0s linear);
+    @include transition(margin 0.15s linear, opacity 0.15s linear, top 0s linear, left 0s linear);
 
     &.#{$prefix}hide-offsets {
       margin-top: 0px;
       opacity: 0;
-      @include transition(margin 0.2s linear, opacity 0.2s linear, top 0s linear 0.2s, left 0s linear 0.2s);
+      @include transition(margin 0.15s linear, opacity 0.15s linear, top 0s linear 0.15s, left 0s linear 0.15s);
     }
   }
   .#{$vprefix}primary-menu {

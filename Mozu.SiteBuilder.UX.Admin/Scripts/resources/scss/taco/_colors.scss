@@ -1,45 +1,61 @@
+/* NEUTRAL COLORS */
 
-// Grayscale fonts
-$color-dark-ultra: rgb(50, 0, 0);    // #323232
-$color-dark: rgb(80, 0, 0);          // #505050
-$color-mid-dark: rgb(100, 0, 0);   // #646464
-$color-mid: rgb(126, 0, 0);         // #7E7E7E
-$color-mid-light: rgb(146, 0, 0);   // #929292
-$color-light: rgb(160, 0, 0);       // #A0A0A0
-$color-light-mid: rgb(192, 0, 0);   // #C0C0C0
-$color-light-ultra: rgb(215, 0, 0); // #D7D7D7
-$color-light-ultra-ultra: rgb(230, 0, 0); // #E6E6E6
-$color-240: rgb(240, 0, 0); // #F0F0F0
-$color-250: rgb(250, 0, 250); // #FAFAFA
+$color-neutral-white:           rgb(255, 255, 255);
+$color-neutral-lightest:        rgb(242, 240, 237);
+$color-neutral-light:           rgb(237, 234, 230);
+$color-neutral-mid-lighter:     rgb(230, 226, 217);
+$color-neutral-mid-light:       rgb(215, 213, 210);
+$color-neutral-mid:             rgb(192, 192, 192);
+$color-neutral-dark:            rgb(154, 154, 154);
+$color-neutral-darker:          rgb(124, 123, 122);
+$color-neutral-darkest:         rgb(94, 92, 90);
+$color-neutral-black:           rgb(0, 0, 0);
 
-// Messages
-$color-status: rgb(0, 255, 204); // #CCFFCC
-$color-warning: rgb(0, 255, 204); // #FFFFCC
-$color-error: rgb(0, 204, 204); // #FFCCCC
+$color-neutral-95:              rgb(242, 242, 242); // #F2F2F2 gray 95%
+$color-neutral-90:              rgb(230, 230, 230); // #E6E6E6 gray 90%
+$color-neutral-70:              rgb(179, 179, 179); // #B3B3B3 gray 70%
+$color-neutral-45:              rgb(114, 114, 114); // #727272 gray 45%
+$color-neutral-30:              rgb(75, 75, 75);    // #4B4B4B gray 30%
+$color-neutral-20:              rgb(50, 50, 50);    // #323232 gray 20%
 
+/* THEME COLORS */
 
+$base-color: $color-neutral-90;
 
+$color-theme-base:              rgb(210, 70, 60);   // #D2463C red
+$color-theme-base-dark:         rgb(158, 53, 46);   // #9E352E red
 
-// Styleguide Colors
-$color-neutral-white: rgb(255, 255, 255);
-$color-neutral-lightest: rgb(242, 240, 237);
-$color-neutral-light: rgb(237, 234, 230);
-$color-neutral-mid-lighter: rgb(230, 226, 217);
-$color-neutral-mid-light: rgb(215, 213, 210);
-$color-neutral-mid: rgb(192, 192, 192);
-$color-neutral-dark: rgb(154, 154, 154);
-$color-neutral-darker: rgb(124, 123, 122);
-$color-neutral-darkest: rgb(94, 92, 90);
-$color-neutral-black: rgb(0, 0, 0);
+$color-theme-accent:            rgb(37, 174, 144);  // #25AE90 green
+
+$color-theme-support:           rgb(228, 239, 255); // #E4EFFF blue
+$color-theme-support-dark:      rgb(163, 184, 214); // #A3B8D6 blue
+$color-theme-support-darker:    rgb(55, 120, 213);  // #3778D5 blue
+$color-theme-support-darkest:   rgb(22, 69, 136);   // #164588 blue
+
+/* MESSAGE COLORS */
+
+$color-status:                  rgb(204, 255, 204); // #CCFFCC green
+$color-warning:                 rgb(204, 255, 204); // #FFFFCC yellow
+$color-error:                   rgb(204, 204, 204); // #FFCCCC red
+
+/* ACTION COLORS */
+
+$color-action-link: $color-theme-support-darkest;
+
+$color-action-primary-background: $color-theme-base;
+$color-action-primary-background-hover: $color-theme-base;
+$color-action-primary-background-active: $color-theme-base-dark;
+
+/* OLD COLORS */
 
 $color-highlighted-background: rgb(112, 210, 219);
 $color-highlighted-background-light: rgb(189, 249, 255);
 $color-highlighted-foreground: $color-neutral-white;
 $color-highlighted-outline: $color-neutral-dark;
 
-$color-action-primary-background: rgb(255, 156, 51);
-$color-action-primary-background-hover: adjust-lightness($color-action-primary-background, 4);
-$color-action-primary-background-active: adjust-lightness($color-action-primary-background, -6);
+// $color-action-primary-background: rgb(255, 156, 51);
+// $color-action-primary-background-hover: adjust-lightness($color-action-primary-background, 4);
+// $color-action-primary-background-active: adjust-lightness($color-action-primary-background, -6);
 $color-action-background-disabled: $color-neutral-light;
 $color-action-primary-foreground: #FFF;
 $color-action-primary-outline: adjust-lightness($color-action-primary-background, -10);
@@ -51,7 +67,7 @@ $color-action-background-disabled: $color-neutral-light;
 $color-action-foreground: $color-neutral-darkest;
 $color-action-outline: $color-neutral-dark;
 
-$color-action-link: adjust-lightness($color-highlighted-background, -15);
+// $color-action-link: adjust-lightness($color-highlighted-background, -15);
 
 $color-grid-row: rgb(250, 248, 245);
 $color-grid-row-alt: rgb(242, 240, 237);
@@ -60,5 +76,3 @@ $color-grid-border-light: rgb(218, 218, 216);
 
 $color-primary-menu-background-mid: rgb(97, 96, 94);
 $color-primary-menu-background-dark: rgb(76, 73, 66);
-
-$base-color: $color-neutral-mid-lighter;

@@ -100,7 +100,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         var me = this,
             expandCls = Taco.baseCSSPrefix + 'itembrowser-expandall',
             collapseCls = Taco.baseCSSPrefix + 'itembrowser-collapseall';
-        var me = this;
+
         me.expanderCollapser = Ext.widget('component', {
             cls: Taco.baseCSSPrefix + 'expandercollapser',
             html: '<a href="javascript:;" class="' + expandCls + '">expand all</a>&nbsp;|&nbsp;<a href="javascript:;" class="' + collapseCls + '">collapse all</a>',
@@ -152,6 +152,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         var me = this;
         var conf = {
             dock: 'top',
+            border: false,
             weight: 100,
             items: [
                 // placeholder for Bulk Actions button

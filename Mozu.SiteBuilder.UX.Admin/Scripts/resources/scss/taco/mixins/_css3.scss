@@ -1,3 +1,6 @@
+@mixin dark-border ($color: $color-neutral-white) {
+  border-color: adjust-color($color, $red: -51, $green: -51, $blue: -51);
+}
 
 @mixin outer-shadow ($strength: 0.3, $radius: 5px, $x: 0, $y: 0) {
   box-shadow: $x $y $radius rgba(0,0,0,$strength);
@@ -15,7 +18,7 @@
   -ms-box-shadow: $x $y $radius rgba(0,0,0,$strength) inset;
 }
 
- @mixin facade-transitions($speed: 0.3s, $easing: ease-in-out) {
+ @mixin facade-transitions ($speed: 0.3s, $easing: ease-in-out) {
     transition: box-shadow $speed $easing, transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
     -webkit-transition: -webkit-box-shadow $speed $easing, -webkit-transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
     -moz-transition: -moz-box-shadow $speed $easing, -moz-transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;

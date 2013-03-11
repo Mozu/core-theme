@@ -8,7 +8,7 @@ Ext.define('Taco.core.ux.content.ContainerWithSidebar', {
     requires: ['Taco.core.ux.content.Sidebar'],
 
     layout: {
-        align: 'stretch',
+        // align: 'stretch',
         type: 'border'
     },
 
@@ -21,8 +21,8 @@ Ext.define('Taco.core.ux.content.ContainerWithSidebar', {
 
         me.main = Ext.create('Ext.Container', {
             region: 'center',
-            cls: 'taco-content-container',
-            flex: 1,
+            cls: Taco.baseCSSPrefix + 'content-container',
+            // flex: 1,
             layout: {
                 align: 'stretch',
                 type: 'vbox'
