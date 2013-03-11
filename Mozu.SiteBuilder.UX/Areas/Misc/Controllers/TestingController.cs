@@ -1,18 +1,29 @@
 ﻿using System.Web.Mvc;
+using System.Linq;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.Core.ErrorHandling;
+using System.Threading.Tasks;
+using System;
+using System.Net;
+using System.Web;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
     public class TestingController : Mozu.SiteBuilder.UX.Controllers.BaseController
     {
-        ISitesWebApiClient WSRepo;
-        public TestingController(ISitesWebApiClient  wsRepo )
+        ISitesWebApiClient _wsRepo;
+        ITenantsWebApiClient _tRepo;
+        ICookieProvider _cookies;
+
+        public TestingController(ISitesWebApiClient  wsRepo, ITenantsWebApiClient tRepo, ICookieProvider cookies )
         {
-            WSRepo = wsRepo;
+            _wsRepo = wsRepo;
+            _tRepo = tRepo;
+            _cookies = cookies;
         }
+
         //
         // GET: /Misc/Testing/
 
@@ -20,12 +31,47 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             return View();
         }
-        public ActionResult ChangeSite ()
+
+        /// <summary>
+        /// Returns a hyperlinked list of all available sites.
+        /// GET: /Misc/Testing/SiteList
+        /// </summary>
+        public async Task<ActionResult> SiteList()
         {
-            
-            var model = new ChangeSiteModel();
-            return View(model);
+            var tRes = await _tRepo.GetTenants(0, 200, null, null);
+
+            TenantCollection tenants = tRes.ReadAsAsync().Result;
+
+            return View(tenants);
         }
+
+        /// <summary>
+        /// Returns a hyperlinked list of all available sites.
+        /// GET: /_gosite/(siteid)?redir=...
+        /// </summary>
+        public async Task<ActionResult> GoSite(int siteId, string redir)
+        {
+            var res = await _wsRepo.GetSite(siteId);
+            var site = res.ReadAsAsync().Result;
+
+            // fuck it.
+            string contextString = String.Format("tenant={0}&sitegroup={1}&site={2}", site.TenantId, site.SiteGroupId, site.Id);
+            var c1 = new HttpCookie("SBCONTEXT", contextString);
+            var c2 = new HttpCookie("SBCONTEXT2", contextString);
+
+            _cookies.SaveResponseCookie(c1.Name, c1);
+            _cookies.SaveResponseCookie(c2.Name, c2);
+
+            if (!String.IsNullOrEmpty(redir))
+            {
+                return new RedirectResult(redir);
+            }
+            else
+            {
+                return new RedirectResult("~/");
+            }
+        }
+
         [HttpPost ]
         public ActionResult ChangeSite(ChangeSiteModel model, FormCollection form)
         {
@@ -34,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 try
                 {
-                    site = WSRepo.GetSite(model.SiteId).Result.ReadAsAsync().Result;
+                    site = _wsRepo.GetSite(model.SiteId).Result.ReadAsAsync().Result;
                 }
                 catch (MozuApplicationException )
                 {
@@ -51,7 +97,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                 try
                 {
-                    site = WSRepo.GetSite(model.SiteId).Result.ReadAsAsync().Result;
+                    site = _wsRepo.GetSite(model.SiteId).Result.ReadAsAsync().Result;
                 }
                 catch (MozuApplicationException )
                 {
