@@ -7,12 +7,10 @@ Ext.define('Taco.core.ux.content.Sidebar', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.sidebar',
 
-    width: 300,
     collapsible: true,
-    region: 'east',
-
-    cls: 'taco-content-sidebar',
-
+    componentCls: Taco.baseCSSPrefix + 'content-sidebar',
+    floatable: false,
     layout: 'fit',
-
+    region: 'east',
+    width: 300
 });

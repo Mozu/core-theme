@@ -8,14 +8,13 @@ Ext.define('Taco.view.Viewport', {
     id: 'primaryViewPort',
     layout: {
         type: 'border'
-        // align: 'stretch'
     },
 
     initComponent: function () {
         this.contentView = Ext.create('Taco.core.ContentView', { id: 'contentView', region: 'center' });
 
         this.items = [
-            Ext.create('Taco.view.Header', { height: 84, region: 'north' }),
+            Ext.create('Taco.view.Header', { region: 'north' }),
             this.contentView
         ];
         

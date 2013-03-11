@@ -22,7 +22,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     resizable: false,
     shadow: false,
     x: 0,
-    y: 49,
+    y: 55,
     
     initComponent: function () {
         this.callParent(arguments);

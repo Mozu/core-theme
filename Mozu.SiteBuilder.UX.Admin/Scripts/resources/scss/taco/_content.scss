@@ -42,8 +42,10 @@
   }
 	
 	.#{$vprefix}content-sidebar {
-		
-		background-color: white;
+    background-color: $color-neutral-white;
+    border-style: solid none none solid;
+    border-width: 1px 0px 0px 1px;
+    @include dark-border($color-neutral-white);
 
 		.#{$vprefix}sidebarlist {
 			margin: 0 30px;

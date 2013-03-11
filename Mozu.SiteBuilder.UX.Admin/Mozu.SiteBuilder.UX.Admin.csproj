@@ -1077,6 +1077,7 @@
     <Content Include="Scripts\resources\images\icons\icon-panelexpand.png" />
     <Content Include="Scripts\resources\images\icons\icon-primarymenu-selected.png" />
     <Content Include="Scripts\resources\images\icons\icon-primarymenu.png" />
+    <Content Include="Scripts\resources\images\icons\icon-rowactions.png" />
     <Content Include="Scripts\resources\images\icons\icon-settings-large.png" />
     <Content Include="Scripts\resources\images\icons\icon-store-large.png" />
     <Content Include="Scripts\resources\images\icons\icon-store-selected.png" />

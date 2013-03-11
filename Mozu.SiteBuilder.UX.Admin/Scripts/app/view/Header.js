@@ -10,10 +10,9 @@ Ext.define('Taco.view.Header', {
         'Taco.view.navigation.ContextSwitcher'
     ],
 
-    autoEl: {
-        tag: 'header',
-        cls: Taco.baseCSSPrefix + 'viewport-header'
-    },
+    autoEl: { tag: 'header' },
+    componentCls: Taco.baseCSSPrefix + 'viewport-header',
+    height: 106,
     layout: 'auto',
 
     initComponent: function () {
@@ -23,9 +22,9 @@ Ext.define('Taco.view.Header', {
         primaryMenuTrigger = Ext.create('Taco.core.ux.action.Action', {
             xtype: 'action',
             text: 'menu',
-            cls: Taco.baseCSSPrefix + 'primary-menu-trigger',
             width: 56,
-            height: 35,
+            height: 51,
+            cls: Taco.baseCSSPrefix + 'primary-menu-trigger',
             click: function () {
                 if (me.primaryMenu.isHidden() || !me.primaryMenu.rendered) {
                     me.primaryMenu.showMenu();
@@ -66,7 +65,7 @@ Ext.define('Taco.view.Header', {
                 type: 'hbox',
                 align: 'middle'
             },
-            height: 49,
+            height: 55,
             items: [{
                 xtype: 'component',
                 autoEl: {
@@ -89,7 +88,7 @@ Ext.define('Taco.view.Header', {
                 type: 'hbox',
                 align: 'middle'
             },
-            height: 35,
+            height: 51,
             items: [primaryMenuTrigger, breadcrumb, contextSwitcherTrigger]
         }];
 

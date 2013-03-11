@@ -70,6 +70,7 @@
     font-size: $grid-header-font-size;
     font-weight: bold;
     line-height: $grid-header-line-height;
+    text-shadow: none;
 
     &.#{$prefix}column-header-last {
       .#{$prefix}column-header-trigger {
@@ -79,7 +80,7 @@
   }
 
   .#{$prefix}column-header-inner {
-    padding-top: 11px !important;
+    padding-top: 15px !important;
   }
 
   .#{$prefix}column-header-over {
@@ -92,24 +93,24 @@
 
   .#{$prefix}grid-cell-inner {
     span.overridden {
-      background-color: $color-action-primary-background;
+      background-color: $color-theme-support-darker;
       display: inline-block;
       font-size: 0px;
-      height: 10px;
+      height: 8px;
       line-height: 0px;
       overflow: hidden;
       text-indent: -9999px;
       vertical-align: middle;
-      width: 10px;
-      @include border-radius(10px);
-      @include box-shadow(inset 0px -1px rgba(255, 255, 255, 0.4), inset 0px 1px rgba(0, 0, 0, 0.4));
+      width: 8px;
+      @include border-radius(8px);
+      // @include box-shadow(inset 0px -1px rgba(255, 255, 255, 0.4), inset 0px 1px rgba(0, 0, 0, 0.4));
     }
   }
 
   // checkbox overrides
   .#{$prefix}column-header-checkbox {
     .#{$prefix}column-header-inner {
-      padding-top: 7px !important;
+      padding-top: 11px !important;
     }
   }
 
@@ -180,10 +181,9 @@
 
   // menucolumn styles
   .#{$vprefix}grid-row-menu-trigger {
-    background-color: $color-neutral-light;
-    border-radius: 2px;
-    height: 16px;
-    width: 16px;
+    height: 30px;
+    width: 50px;
+    @include icons-sprite(icon-rowactions);
   }
 
   .#{$vprefix}grid-row-menu {

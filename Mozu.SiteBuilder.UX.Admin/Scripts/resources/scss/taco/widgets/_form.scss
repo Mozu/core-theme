@@ -404,9 +404,9 @@
 	}
  .#{$vprefix}datalist-item.x-item-selected{
     //border-color:white
-    background-image: -webkit-linear-gradient(left top, $color-light-ultra, $color-neutral-lightest);
+    background-image: -webkit-linear-gradient(left top, $color-neutral-mid-light, $color-neutral-lightest);
     .name{
-      color:$color-mid-dark;
+      color:$color-neutral-darkest;
     }
  }
 	@each $size in 80px, 120px, 155px {
