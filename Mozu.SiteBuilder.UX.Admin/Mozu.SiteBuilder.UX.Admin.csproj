@@ -601,6 +601,8 @@
     <Content Include="Scripts\app\view\phoneOrder\ShippingSection.js" />
     <Content Include="Scripts\app\view\phoneOrder\ItemsSection.js" />
     <Content Include="Scripts\app\view\phoneOrder\Index.js" />
+    <Content Include="Scripts\app\view\productType\AttributeForm.js" />
+    <Content Include="Scripts\app\view\productType\AttributeGroup.js" />
     <Content Include="Scripts\app\view\productType\Edit.js" />
     <Content Include="Scripts\app\view\productType\Form.js" />
     <Content Include="Scripts\app\view\productType\Index.js" />
