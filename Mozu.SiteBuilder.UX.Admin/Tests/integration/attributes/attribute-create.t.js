@@ -28,10 +28,11 @@
             t.setFormValues(m.form, {
                 name: 'Test name',
                 inputType: 'Text box',
-                attributeType: 'Extra'
+                attributeType: 'Extra',
+                dataType: 'Numeric'
             }, function () {
                 t.ok(m.form, 'Form is set');
-            }, 1000);
+            });
         }
     };
 

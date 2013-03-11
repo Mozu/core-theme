@@ -5,7 +5,14 @@
 
 Ext.define('Taco.view.productType.Form', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.core.ux.form.field.MultiSelect', 'Taco.core.ux.BoxReorderer', 'Taco.model.ProductTypeAttribute'],
+    requires: [
+        'Taco.core.ux.form.field.MultiSelect', 
+        'Taco.core.ux.BoxReorderer',
+        'Taco.model.ProductTypeAttribute',
+        'Taco.store.Attributes',
+        'Taco.model.ProductType',
+        'Taco.view.productType.AttributeForm'
+    ],
 
     title: 'Product Type',
 
@@ -33,43 +40,119 @@ Ext.define('Taco.view.productType.Form', {
             }
         };
         this.items = [{
+            xtype: 'textfield',
+            fieldLabel: 'Name',
+            labelPosition: 'top',
+            labelSeparator: '',
+            width: 700,
+            emptyText: 'Enter a Product Type Name',
+            name: 'name'
+        }, {
             itemId: 'options',
+            attributeType: 'options',
+            layout: 'card',
             header: {
                 title: 'Options',
                 margin: '0 0 7',
             },
-            plugins: Ext.create('Taco.core.ux.BoxReorderer', {
-                listeners: {
-                    drop: this.onDrop,
-                    scope: this
+            tools: [{
+                xtype: 'primarybutton',
+                text: 'Add',
+                click: this.addAttribute,
+                scope: this
+            }],
+            items: [{
+                header: false,
+                itemId: 'attributes',
+                // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
+                //     listeners: {
+                //         drop: this.onDrop,
+                //         scope: this
+                //     }
+                // })
+            }, {
+                header: false,
+                itemId: 'editor',
+                xtype: 'formform',
+                layout: {
+                    type: 'formflexbox',
+                    align: 'left'
                 }
-            })
+            }]
         }, {
             itemId: 'extras',
+            attributeType: 'extras',
+            layout: 'card',
             header: {
                 title: 'Extras',
                 margin: '0 0 7',
-            }
+            },
+            tools: [{
+                xtype: 'primarybutton',
+                text: 'Add',
+                click: this.addAttribute,
+                scope: this
+            }],
+            items: [{
+                header: false,
+                itemId: 'attributes',
+                // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
+                //     listeners: {
+                //         drop: this.onDrop,
+                //         scope: this
+                //     }
+                // })
+            }, {
+                header: false,
+                itemId: 'editor'
+            }]
         }, {
             itemId: 'properties',
+            attributeType: 'properties',
+            layout: 'card',
             header: {
                 title: 'Properties',
                 margin: '0 0 7',
-            }
+            },
+            tools: [{
+                xtype: 'primarybutton',
+                text: 'Add',
+                click: this.addAttribute,
+                scope: this
+            }],
+            items: [{
+                header: false,
+                itemId: 'attributes',
+                // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
+                //     listeners: {
+                //         drop: this.onDrop,
+                //         scope: this
+                //     }
+                // })
+            }, {
+                header: false,
+                itemId: 'editor'
+            }]
         }];
 
         this.callParent(arguments);
 
-        Ext.Array.each(['options', 'extras', 'properties'], this.addAttribute, this);
+        //Ext.Array.each(['options', 'extras', 'properties'], this.addAttribute, this);
+        //
+        
+
+        this.buildAttributeList('options', this.record.getOptions());
+        this.buildAttributeList('extras', this.record.getExtras());
+        this.buildAttributeList('properties', this.record.getProperties());
     },
 
-    addAttribute: function (attributeType) {
-        var data = this.record.get(attributeType),
-            panel = this.items.get(attributeType),
+
+    buildAttributeList: function (attributeType, store) {
+        var panel = this.items.get(attributeType).items.get('attributes'),
             tpl = this.attributeItemTpl,
             additions = [];
-
-        Ext.Array.each(data, function (attribute) {
+        
+        store.each(function (attribute) {
             additions.push({
                 xtype: 'container',
                 attribute: attribute,
@@ -86,26 +169,18 @@ Ext.define('Taco.view.productType.Form', {
                     items: [{
                         xtype: 'component',
                         flex: 1,
-                        data: attribute,
+                        data: attribute.raw,
                         tpl: tpl
                     }, {
-                        xtype: 'button',
+                        xtype: 'secondarybutton',
                         text: 'Delete',
-                        width: 64,
-                        height: 24,
-                        margin: '0 7 0 0',
-                        handler: function () { console.log('delete clicked', attribute); }
+                        click: function () { console.log('delete clicked', attribute); }
                     }, {
-                        xtype: 'button',
+                        xtype: 'secondarybutton',
                         text: 'Edit',
-                        width: 64,
-                        height: 24,
-                        margin: '0 7 0 0',
-                        listeners: {
-                            click: {
-                                fn: this.editAttribute,
-                                scope: this
-                            }
+                        click: {
+                            fn: this.editAttribute,
+                            scope: this
                         }
                     }]
                 }, {
@@ -116,7 +191,7 @@ Ext.define('Taco.view.productType.Form', {
                     items: [{
                         xtype: 'component',
                         itemId: 'placeholder',
-                        data: attribute,
+                        data: attribute.raw,
                         tpl: [
                             '<tpl if="this.isList(inputType)">',
                                 '{[Ext.Array.pluck(values.allValues, "value").join(", ")]}',
@@ -135,17 +210,103 @@ Ext.define('Taco.view.productType.Form', {
         panel.add(additions);
     },
 
+    getAttributeStoreFromType: function (type) {
+        switch (type) {
+            case 'options':
+                return this.record.getOptions();
+            case 'extras':
+                return this.record.getExtras();
+            case 'properties':
+                return this.record.getProperties();
+        }
+    },
+
+    getAttributeSelectorDEPRECATED: function (filter, attribute) {
+        this.attributeStore.clearFilter();
+        this.attributeStore.filter(filter);
+
+        return Ext.create('Ext.view.View', {
+            tpl: [
+                '<tpl for=".">',
+                    '<div class="attribute-wrap">{name}</div>',
+                '</tpl>'
+            ],
+            store: this.attributeStore,
+            itemSelector: 'div.attribute-wrap',
+            listeners: {
+                select: function (item, record) {
+                    console.log('selected', record);
+                },
+                scope: this
+            }
+        });
+    },
+
+    getAttributeSelector: function (filter, attribute) {
+        this.attributeStore.clearFilter();
+        this.attributeStore.filter(filter);
+
+        return Ext.create('Taco.core.ux.form.field.MultiSelect', {
+            name: 'attribute',
+            ignoreParentFormTracking: true,
+            fieldLabel: 'Attribute',
+            store: this.attributeStore,
+            width: 240,
+            margin: '0 40 0 0',
+            displayField: 'name',
+            valueField: 'id',
+            maxSelections: 1,
+            listConfig: {
+                selModel: {
+                    allowDeselect: false,
+                    listeners: {
+                        selectionchange: function () {
+                            console.log('changed')
+                        }
+                    }
+                }
+            }
+        });
+    },
+
+    onEditClick: function (button) {
+    },
+
+    addAttribute: function (button) {
+        var cardPanel = button.up('[attributeType]'),
+            type = cardPanel.attributeType,
+            editor = cardPanel.items.get(1),
+            productTypeAttributeStore = this.getAttributeStoreFromType(type),
+            attributeSelector;
+
+        editor.removeAll();
+        
+        attributeSelector = this.getAttributeSelector(function (record) {
+            return productTypeAttributeStore.indexOf(record) < 0;
+        });
+    
+        editor.add(attributeSelector);
+        cardPanel.getLayout().setActiveItem(1);
+    },
+
     editAttribute: function (button) {
+        
+
         var attributeItem = button.up('[attribute]'),
             attribute = attributeItem.attribute,
             body = attributeItem.items.get('body'),
-            editForm = this.getEditForm(attribute);
+            cardPanel = attributeItem.up('[attributeType]'),
+            editor = cardPanel.items.get(1),
+            editForm = this.getEditForm(cardPanel.attributeType, attribute);
 
-        body.items.get('placeholder').hide();
-        body.add(editForm);
+        editor.add(editForm);
+        cardPanel.getLayout().setActiveItem(1);
+
+        // body.items.get('placeholder').hide();
+        // body.add(editForm);
     },
 
-    getEditForm: function (attribute) {
+    getEditForm: function (attributeType, attribute) {
         var inputType = attribute.inputType,
             fields = [],
             panel, attributeStore, attributeField, valuesField, selectionsField, configField, actionsGroup;
@@ -155,9 +316,12 @@ Ext.define('Taco.view.productType.Form', {
             data: [attribute]
         });
 
+
+
         attributeField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'attribute',
             fieldLabel: 'Attribute',
+            ignoreSelectChange: true,
             store: attributeStore,
             width: 240,
             margin: '0 40 0 0',

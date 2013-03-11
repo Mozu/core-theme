@@ -26,7 +26,7 @@ Ext.define('Taco.model.ProductType', {
         });
 
     },
-    getExtas: function () {
+    getExtras: function () {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.ProductTypeAttribute',
             modelDefaults: { usageType: 'extra' },
