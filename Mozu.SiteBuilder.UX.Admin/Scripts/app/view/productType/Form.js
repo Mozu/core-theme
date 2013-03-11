@@ -8,6 +8,7 @@ Ext.define('Taco.view.productType.Form', {
     requires: [
         'Taco.core.ux.form.field.MultiSelect', 
         'Taco.core.ux.BoxReorderer',
+        'Taco.core.ux.form.FlexBox',
         'Taco.model.ProductTypeAttribute',
         'Taco.store.Attributes',
         'Taco.model.ProductType',
