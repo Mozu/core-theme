@@ -1,9 +1,0 @@
-﻿<div {% data_attributes Model %} class="mz-featured-products-widget-wrap">
-  {% html_action "featuredProducts" "catalog" with viewName="featuredproducts" and productCodes=Model.widget_configuration.productCodes as_parameter %}
-  {% if Model.widget_configuration.productCodes|length < 1 %}
-    <div class="mz-featured-products-widget">one</div>
-	<div class="mz-featured-products-widget">two</div>
-	<div class="mz-featured-products-widget">three</div>
-	<div class="mz-featured-products-widget">four</div>
-  {% endif %}
-</div>

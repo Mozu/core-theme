@@ -6,6 +6,7 @@ using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.Reference.Contracts.Clients;
 using Mozu.ShippingRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Theme.Factories;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteSettings.Shipping.Contracts.Clients;
 using Mozu.UspsShippingAdmin.Contracts.Clients;
@@ -42,8 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<CatalogContext>().As<ICatalogContext>().InstancePerLifetimeScope();
 
             builder.RegisterType<ThemeMetadataProvider>().As<IThemeMetaDataProvider>().SingleInstance();
-            builder.RegisterType<ThemeRepository>().As<IThemeRepository>().SingleInstance()
-                .OnActivating(tr => tr.Instance.Initialize());
+            builder.RegisterType<ThemeRepository>().As<IThemeRepository>().SingleInstance();
 
             builder.RegisterType<RoleWebApiClient>().As<IRoleWebApiClient>();
             builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
@@ -71,11 +71,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.Register(c => c.Resolve<TemplateManagerProvider>().GetNewManager()).As<ITemplateManager>();
 
+            builder.RegisterType<ThemeFactory>().SingleInstance();
 
 
+            // builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 
-           // builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
-         
         }
     }
 }

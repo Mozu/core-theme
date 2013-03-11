@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Theme;
@@ -205,11 +207,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "theme/list")]
-        public Task<Response<List<ThemeDTO>>> GetListThemes()
+        public Response<List<ThemeDTO>> GetListThemes()
         {
-            List<ThemeDTO> themes = _themeRepository.GetAll().Select<ITheme, ThemeDTO>(t => new ThemeDTO(t)).ToList();
+            var localThemeDir =   new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/";
+            var localThemes = Directory.GetDirectories(localThemeDir);
 
-            return List(themes);
+            var themes = localThemes.Select(x => _themeRepository.GetTheme(x)).Select<ITheme, ThemeDTO>(t => new ThemeDTO(t)).ToList();
+           // List<ThemeDTO> themes = _themeRepository.GetAll().Select<ITheme, ThemeDTO>(t => new ThemeDTO(t)).ToList();
+            return List2(themes);
+         //   throw new NotImplementedException();
+           
         }
 
         [WebInvoke(UriTemplate = "theme/update" , Method="POST")]

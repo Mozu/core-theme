@@ -1,9 +1,0 @@
-﻿{% block Breadcrumb %}
-<div class="mz-breadcrumb-wrap">
-	
-	<a href="/" class="mz-breadcrumb">Home</a> &gt; 
-	<a href="/" class="mz-breadcrumb">First Floor</a> &gt; 
-	<a href="/" class="mz-breadcrumb mz-breadcrumb-active">Second Floor</a> 
-	
-</div>
-{% endblock Breadcrumb %}

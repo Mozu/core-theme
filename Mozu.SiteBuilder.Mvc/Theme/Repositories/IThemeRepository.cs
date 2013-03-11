@@ -17,10 +17,10 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Repositories
         /// </summary>
         ITheme GetThemeOrDefault(string name);
 
-        /// <summary>
-        /// Returns all themes.
-        /// </summary>
-        IEnumerable<ITheme> GetAll();
+        ///// <summary>
+        ///// Returns all themes.
+        ///// </summary>
+        //IEnumerable<ITheme> GetAll();
 
         /// <summary>
         /// Returns the system default theme.
