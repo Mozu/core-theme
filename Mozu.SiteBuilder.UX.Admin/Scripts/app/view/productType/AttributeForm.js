@@ -1,7 +1,7 @@
 ﻿Ext.define('Taco.view.productType.AttributeForm', {
     extend: 'Taco.core.ux.form.Form',
     xtype: 'widget.taco.producttype.attributeform',
-
+    requires: ['Taco.core.ux.form.FlexBox'],
     ignoreParentFormTracking: true,
 
     layout: 'formflexbox',
