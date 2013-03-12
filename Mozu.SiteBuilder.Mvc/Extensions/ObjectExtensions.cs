@@ -92,5 +92,15 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             TValue value;
             return self.TryGetValue(key, out value) ? value : @default;
         }
+
+        public static string BetweenStrings(this string self, string start, string stop, StringComparison stringComparison = StringComparison.OrdinalIgnoreCase)
+        {
+            if (self == null || start == null || stop == null)
+                return null;
+
+            var leftIndex = self.IndexOf(start, stringComparison) + start.Length;
+            var rightIndex = self.IndexOf(stop, leftIndex, stringComparison);
+            return self.Substring(leftIndex, rightIndex - leftIndex);
+        }
     }
 }
