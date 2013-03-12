@@ -9,5 +9,9 @@ Ext.define('Taco.core.ux.form.field.MultiSelect', {
 
     initComponent: function () {
         this.callParent(arguments);
+    },
+
+    deselect: function (id) {
+        this.setValue(Ext.Array.remove(this.getValue(), id));
     }
 });
