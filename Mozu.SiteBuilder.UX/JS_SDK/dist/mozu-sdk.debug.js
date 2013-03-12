@@ -1632,7 +1632,7 @@ var ApiReference = (function () {
     ApiObject.prototype = {
         action: function (actionName, data) {
             var me = this;
-            var requestConf = ApiReference.getRequestConfig(actionName, this.type, this.data, this.api.context);
+            var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
             return this.api.request(basicOps[actionName], requestConf, data).then(function (rawJSON) {
                 if (requestConf.returnType) {
                     return ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
@@ -1693,7 +1693,7 @@ var ApiReference = (function () {
             return tpt;
         },
 
-        getRequestConfig: function (operation, typeName, conf, context) {
+        getRequestConfig: function (operation, typeName, conf, context, obj) {
             var oType = objectTypes[typeName];
             if (!oType) return typeName;
             if (operation) operation = utils.dashCase(operation);
@@ -1709,7 +1709,8 @@ var ApiReference = (function () {
                 if (typeof oType.template === "string")
                     oType.template = utils.uritemplate.parse(this.parseServiceUrls(oType.template));
                 var tptData = {};
-                if (typeof conf === "string") {
+                if (oType.includeSelf) tptData = utils.extend(tptData, obj.data);
+                if (conf !== undefined && typeof conf !== "object") {
                     if (!oType.shortcutParam) throw "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
                     tptData[oType.shortcutParam] = conf;
                 } else if (conf) {
@@ -1786,7 +1787,8 @@ var ApiReference = (function () {
             checkout: {
                 verb: 'POST',
                 template: '{$OrderService}?cartId={Id}',
-                noBody: true
+                noBody: true,
+                includeSelf: true
             }
         },
         'cartitem': {
@@ -1795,8 +1797,10 @@ var ApiReference = (function () {
                 shortcutParam: 'CartItemId'
             },
             'update-quantity': {
+                verb: 'PUT',
                 template: '{$CartService}current/items/{CartItemId}/{quantity}',
                 shortcutParam: "quantity",
+                includeSelf: true,
                 noBody: true
             }
         },
