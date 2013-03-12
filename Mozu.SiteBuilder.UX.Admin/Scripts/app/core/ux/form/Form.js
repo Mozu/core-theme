@@ -28,6 +28,7 @@ Ext.define('Taco.core.ux.form.Form', {
     tasksKeyPrefix: '',
     cascadeChildTasks: true,
     cascadeRecordLoad: true,
+    flexLayout: false,
 
 
     initComponent: function () {
@@ -45,7 +46,6 @@ Ext.define('Taco.core.ux.form.Form', {
         if (this.title) {
             this.originalTitle = this.title;
         }
-
 
         this.addEvents([
             /**
@@ -72,6 +72,11 @@ Ext.define('Taco.core.ux.form.Form', {
              */
             'afterload'
         ]);
+
+        if (this.flexLayout) {
+            this.layout = 'auto';
+            this.componentCls += ' ' + Taco.baseCSSPrefix + 'form-flexbox' + ' ' + Taco.baseCSSPrefix + 'form-flexbox-start';
+        }
 
         if (!this.items) {
             this.items = [];

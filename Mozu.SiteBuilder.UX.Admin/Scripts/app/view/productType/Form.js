@@ -10,9 +10,9 @@ Ext.define('Taco.view.productType.Form', {
         'Taco.core.ux.BoxReorderer',
         'Taco.core.ux.form.FlexBox',
         'Taco.model.ProductTypeAttribute',
-        'Taco.store.Attributes',
         'Taco.model.ProductType',
-        'Taco.view.productType.AttributeForm'
+        'Taco.view.productType.AttributeGroup',
+        'Taco.core.ux.form.FlexBox'
     ],
 
     title: 'Product Type',
@@ -32,14 +32,9 @@ Ext.define('Taco.view.productType.Form', {
         console.log(this.record.data);
 
         this.defaults = {
-            xtype: 'panel',
-            cls: Taco.baseCSSPrefix + 'producttype-attribute-panel',
-            margin: '0 0 21',
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            }
+            xtype: 'taco.producttype.attributegroup',
         };
+
         this.items = [{
             xtype: 'textfield',
             fieldLabel: 'Name',
@@ -49,44 +44,18 @@ Ext.define('Taco.view.productType.Form', {
             emptyText: 'Enter a Product Type Name',
             name: 'name'
         }, {
-            itemId: 'options',
-            attributeType: 'options',
-            layout: 'card',
-            header: {
-                title: 'Options',
-                margin: '0 0 7'
-            },
-            tools: [{
-                xtype: 'primarybutton',
-                text: 'Add',
-                click: this.addAttribute,
-                scope: this
-            }],
-            items: [{
-                header: false,
-                itemId: 'attributes'
-                // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
-                //     listeners: {
-                //         drop: this.onDrop,
-                //         scope: this
-                //     }
-                // })
+            type: 'options',
+            store: this.record.getOptions()
             }, {
-                header: false,
-                itemId: 'editor',
-                xtype: 'formform',
-                layout: {
-                    type: 'formflexbox',
-                    align: 'left'
-                }
-            }]
+            type: 'extras',
+            store: this.record.getExtras()
         }, {
             itemId: 'extras',
             attributeType: 'extras',
             layout: 'card',
             header: {
                 title: 'Extras',
-                margin: '0 0 7'
+                margin: '0 0 7',
             },
             tools: [{
                 xtype: 'primarybutton',
@@ -96,7 +65,7 @@ Ext.define('Taco.view.productType.Form', {
             }],
             items: [{
                 header: false,
-                itemId: 'attributes'
+                itemId: 'attributes',
                 // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
                 //     listeners: {
                 //         drop: this.onDrop,
@@ -113,7 +82,7 @@ Ext.define('Taco.view.productType.Form', {
             layout: 'card',
             header: {
                 title: 'Properties',
-                margin: '0 0 7'
+                margin: '0 0 7',
             },
             tools: [{
                 xtype: 'primarybutton',
@@ -123,18 +92,26 @@ Ext.define('Taco.view.productType.Form', {
             }],
             items: [{
                 header: false,
-                itemId: 'attributes'
+                itemId: 'attributes',
                 // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
                 //     listeners: {
                 //         drop: this.onDrop,
                 //         scope: this
-                //     }
-                // })
-            }, {
-                header: false,
-                itemId: 'editor'
-            }]
-        }];
+        //     }],
+        //     items: [{
+        //         header: false,
+        //         itemId: 'attributes',
+        //         // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
+        //         //     listeners: {
+        //         //         drop: this.onDrop,
+        //         //         scope: this
+        //         //     }
+        //         // })
+        //     }, {
+        //         header: false,
+        //         itemId: 'editor'
+        //     }]
+        // }];
 
         this.callParent(arguments);
 
@@ -142,9 +119,9 @@ Ext.define('Taco.view.productType.Form', {
         //
         
 
-        this.buildAttributeList('options', this.record.getOptions());
-        this.buildAttributeList('extras', this.record.getExtras());
-        this.buildAttributeList('properties', this.record.getProperties());
+        // this.buildAttributeList('options', this.record.getOptions());
+        // this.buildAttributeList('extras', this.record.getExtras());
+        // this.buildAttributeList('properties', this.record.getProperties());
     },
 
 
