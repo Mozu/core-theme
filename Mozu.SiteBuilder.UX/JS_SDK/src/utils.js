@@ -36,6 +36,14 @@ var utils = {
         };
     }()),
 
+    dashCase: (function() {
+        var rcase = /([a-z])([A-Z])/g,
+            rstr = "$1-$2";
+        return function(str) {
+            return str.replace(rcase,rstr).toLowerCase();
+        }
+    }()),
+
     ajax: function (method, url, headers, data, success, failure) {
         if (typeof data !== "string") data = JSON.stringify(data);
         var xhr = new (window.XMLHttpRequest ? window.XMLHttpRequest : window.ActiveXObject("Microsoft.XMLHTTP"))();

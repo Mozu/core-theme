@@ -150,7 +150,7 @@
             };
         },
         submit: function () {
-            this.addtocart(this.toJS());
+            this.addToCart(this.toJS());
         },
         unknownError: function () {
             this.messages.push({ message: genericMsg.UnexpectedError });

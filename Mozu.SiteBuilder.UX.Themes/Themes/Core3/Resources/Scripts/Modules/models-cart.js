@@ -13,11 +13,6 @@
             UnitPrice: {}
         },
         doNotSubmit: ['parentCart'],
-        submitIfChanged: function () {
-            if (this.oldQty != this.quantity()) {
-                this.submit();
-            }
-        },
         remove: function () {
             var me = this;
             this.del().then(function () {
@@ -27,12 +22,17 @@
             });
         }
     }, function constructItem() {
-        var self = this, parentCart = this.parentCart;
-        this.oldQty = this.Quantity();
+        var self = this;
         this.priceIsModified = ko.computed(function () {
             var price = self.UnitPrice();
             return price.BaseAmount != price.FinalAmount;
         });
+        this.Quantity.subscribe(function(newValue) {
+            self.parentCart.submitting(true);
+            self.UpdateQuantity(newValue).then(function() {
+                self.parentCart.submitting(false);
+            });
+        }
     });
 
     var Cart = KnockoutVM.extend({

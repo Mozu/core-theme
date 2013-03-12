@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-03-05
+ * Mozu JavaScript SDK - v0.1.0 - 2013-03-12
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1522,6 +1522,24 @@ var utils = {
         }
         return target;
     },
+    camelCase: (function () {
+        var rdashAlpha = /-([\da-z])/gi,
+            cccb = function(match, l) {
+                return l.toUpperCase();
+            };
+        return function(str, firstCap) {
+            return (firstCap ? str.charAt(0).toUpperCase() + str.substring(1) : str).replace(rdashAlpha, cccb);
+        };
+    }()),
+
+    dashCase: (function() {
+        var rcase = /([a-z])([A-Z])/g,
+            rstr = "$1-$2";
+        return function(str) {
+            return str.replace(rcase,rstr).toLowerCase();
+        }
+    }()),
+
     ajax: function (method, url, headers, data, success, failure) {
         if (typeof data !== "string") data = JSON.stringify(data);
         var xhr = new (window.XMLHttpRequest ? window.XMLHttpRequest : window.ActiveXObject("Microsoft.XMLHTTP"))();
@@ -1533,13 +1551,15 @@ var utils = {
             if (xhr.readyState === 4) {
                 clearTimeout(timeout);
                 if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
-                    var json;
-                    try {
-                        json = JSON.parse(xhr.responseText);
-                    } catch (e) {
-                        failure(xhr, e);
+                    var json = null;
+                    if (xhr.responseText.length > 0) {
+                        try {
+                            json = JSON.parse(xhr.responseText);
+                        } catch (e) {
+                            failure(xhr, e);
+                        }
                     }
-                    if (json) success(json, xhr);
+                    success(json, xhr);
                 } else {
                     failure(xhr);
                 }
@@ -1552,6 +1572,7 @@ var utils = {
             }
         }
         xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.setRequestHeader('Accept', 'application/json');
         xhr.send(method !== 'GET' && data);
         return xhr;
     },
@@ -1611,13 +1632,13 @@ var ApiReference = (function () {
     ApiObject.prototype = {
         action: function (actionName, data) {
             var me = this;
-            var url = ApiReference.getUrlFor(actionName, this.type, this.data, this.api.context);
-            return this.api.request(null, url, data).then(function (rawJSON) {
-                if (utils.areSameType(rawJSON, me.data)) {
+            var requestConf = ApiReference.getRequestConfig(actionName, this.type, this.data, this.api.context);
+            return this.api.request(basicOps[actionName], requestConf, data).then(function (rawJSON) {
+                if (requestConf.returnType) {
+                    return ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
+                } else {
                     me.data = rawJSON;
                     return me;
-                } else {
-                    return ApiReference.tryCreateApiObject(null, rawJSON, me.api);
                 }
             });
         },
@@ -1636,59 +1657,77 @@ var ApiReference = (function () {
     }
 
     var genericQueryTpt = '{?_*}';
+    var defaultHost = window.location.protocol + '//' + window.location.host + '/';
     var pub = {
 
         basicOps: basicOps,
-
         urls: {
-        "product": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/products/",
-        "cart": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Cart.WebApi/carts/",
-        "user": "http://aus01pdweb001.ads.volusion.com:9090/mozu.User.WebApi/users/",
-        "order": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Order.WebApi/orders/",
-        "search": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/productsearch/",
-        "cms": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Content.WebApi/documents/"
+            "ProductService": defaultHost + 'mozu.ProductRuntime.WebApi/products/',
+            "CartService": defaultHost + 'mozu.Cart.WebApi/commerce/carts/',
+            "UserService": defaultHost + 'mozu.User.WebApi/users/',
+            "OrderService": defaultHost + 'mozu.Order.WebApi/orders/',
+            "SearchService": defaultHost + 'mozu.ProductRuntime.WebApi/productsearch/',
+            "CmsService": defaultHost + 'mozu.Content.WebApi/documents/',
         },
 
-        getActionsFor: function(shortcutName) {
-            if (!urlShortcuts[shortcutName]) return false;
+        getActionsFor: function(typeName) {
+            if (!objectTypes[typeName]) return false;
             var actions = [];
-            for (var a in urlShortcuts[shortcutName]) {
-                actions.push(a);
+            for (var a in basicOps) {
+                if (!(a in objectTypes[typeName]))
+                    actions.push(a);
+
+            }
+            for (a in objectTypes[typeName]) {
+                if (a)
+                    actions.push(utils.camelCase(a));
             }
             return actions;
         },
 
-        getUrlFor: function(operation, shortcutName, conf, context) {
-            var shortcut = urlShortcuts[shortcutName];
-            if (!shortcut) return shortcutName;
-            if (shortcut[operation]) shortcut = shortcut[operation];
-            if (!shortcut) throw "No known URL for '" + shortcutName + "' type.";
-            if (typeof shortcut === "string") return shortcut;
-            var returnUrl;
-            if (shortcut.url) {
-                returnUrl = shortcut.url;
-            } else if (shortcut.template) {
+        parseServiceUrls: function(tpt) {
+            // TODO: add unescape flag to uritemplates lib (fork uritemplates lib, obvs
+            for (var svcName in this.urls) {
+                tpt = tpt.replace(new RegExp('\\{\\$' + svcName + '\\}'), ApiReference.urls[svcName]);
+            }
+            return tpt;
+        },
+
+        getRequestConfig: function (operation, typeName, conf, context) {
+            var oType = objectTypes[typeName];
+            if (!oType) return typeName;
+            if (operation) operation = utils.dashCase(operation);
+            if (oType[operation]) oType = oType[operation];
+            if (!oType) throw "No known URL for '" + typeName + "' type.";
+            if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
+            if (typeof oType === "string") return { url: this.parseServiceUrls(oType) };
+            var returnObj = {};
+            if (oType.url) {
+                returnObj.url = this.parseServiceUrls(oType.url);
+            } else if (oType.template) {
                 // cache templates lazily
-                if (typeof shortcut.template === "string") shortcut.template = utils.uritemplate.parse(shortcut.template);
+                if (typeof oType.template === "string")
+                    oType.template = utils.uritemplate.parse(this.parseServiceUrls(oType.template));
                 var tptData = {};
                 if (typeof conf === "string") {
-                    if (!shortcut.shortcutParam) throw "No shortcut parameter available for '" + shortcutName + "'. Please supply a configuration object instead of '" + conf + "'.";
-                    tptData[shortcut.shortcutParam] = conf;
+                    if (!oType.shortcutParam) throw "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
+                    tptData[oType.shortcutParam] = conf;
                 } else if (conf) {
                     utils.extend(tptData, conf.query || conf);
                 }
-                if (shortcut.defaults) tptData = utils.extend({}, shortcut.defaults, tptData);
-                returnUrl = shortcut.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData));
+                if (oType.defaultParams) tptData = utils.extend({}, oType.defaultParams, tptData);
+                returnObj.url = oType.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData, ApiReference.urls));
             } else {
                 throw "URLs beyond simple strings and templates are not implemented."
             }
-
-            return shortcut.verb? { verbOverride: shortcut.verb, url: returnUrl } : returnUrl;
-
+            if (oType.verb) returnObj.verbOverride = oType.verb;
+            if (oType.returnType) returnObj.returnType = oType.returnType;
+            if (oType.noBody) returnObj.noBody = oType.noBody;
+            return returnObj;
         },
 
         tryCreateApiObject: function (type, rawJSON, api) {
-            return type in urlShortcuts ? new ApiObject(type, rawJSON, api) :
+            return type in objectTypes ? new ApiObject(type, rawJSON, api) :
                 (ApiReference.getTypeFromObject(rawJSON) ? new ApiObject(ApiReference.getTypeFromObject(rawJSON), rawJSON, api) : rawJSON);
         },
 
@@ -1703,69 +1742,94 @@ var ApiReference = (function () {
     var typeSignatures = {
 
     };
-    var urlShortcuts = {
+    var objectTypes = {
         'products': {
-            template: pub.urls.product + genericQueryTpt,
-            defaults: {
+            template: '{$ProductService}' + genericQueryTpt,
+            defaultParams: {
                 startIndex: 0,
                 pageSize: 25
             }
         },
 
         'search': {
-            template: pub.urls.search + genericQueryTpt,
+            template: '{$SearchService}' + genericQueryTpt,
             shortcutParam: 'q',
-            defaults: {
+            defaultParams: {
 
             }
         },
         'product': {
-            template: pub.urls.product + '{productCode}?{&allowInactive*}',
-            shortcutParam: 'productCode',
-            defaults: {
-                allowInactive: false
+            get: {
+                template: '{$ProductService}{ProductCode}?{&allowInactive*}',
+                shortcutParam: 'ProductCode',
+                defaultParams: {
+                    allowInactive: false
+                }
+            },
+            'add-to-cart': {
+                verb: 'POST',
+                returnType: 'cartitem',
+                template: '{$CartService}current/items/'
             }
         },
         'cart': {
-            get: pub.urls.cart + 'current',
-            addproduct: {
+            get: '{$CartService}current',
+            'add-product': {
                 verb: 'POST',
-                template: pub.urls.cart + 'current/items/'
+                returnType: 'cartitem',
+                template: '{$CartService}current/items/'
             },
             empty: {
                 verb: 'DELETE',
-                template: pub.urls.cart + 'current/items/'
+                template: '{$CartService}current/items/'
+            },
+            checkout: {
+                verb: 'POST',
+                template: '{$OrderService}?cartId={Id}',
+                noBody: true
+            }
+        },
+        'cartitem': {
+            defaults: {
+                template: '{$CartService}current/items/{CartItemId}',
+                shortcutParam: 'CartItemId'
+            },
+            'update-quantity': {
+                template: '{$CartService}current/items/{CartItemId}/{quantity}',
+                shortcutParam: "quantity",
+                noBody: true
             }
         },
         'me': {
             get: {
-                template: pub.urls.user + '{id}',
+                template: '{$UserService}{Id}',
                 shortcutParam: 'id'
             },
             login: {
-                template: pub.urls.user + "Login"
+                template: '{$UserService}Login'
             }
         },
         'order': {
             create: {
-                template: pub.urls.order + '{?cartId*}',
-                shortcutParam: 'cartId'
+                template: '{$OrderService}{?cartId*}',
+                shortcutParam: 'cartId',
+                noBody: true
             }
         },
         'document': {
             get: {
-                template: pub.urls.cms + "{documentListName}/{documentId}/?version={version}&status={status}",
+                template: '{$CmsService}{documentListName}/{documentId}/?version={version}&status={status}',
                 shortcutParam: 'documentId',
-                defaults: {
+                defaultParams: {
                     documentListName: 'default'
                 }
             }
         },
         'documentbyname': {
             get: {
-                template: pub.urls.cms + "{documentListName}/named/{documentName}/?folderPath={folderPath}&version={version}&status={status}",
+                template: '{$CmsService}{documentListName}/named/{documentName}/?folderPath={folderPath}&version={version}&status={status}',
                 shortcutParam: 'documentName',
-                defaults: {
+                defaultParams: {
                     documentListName: 'default'
                 }
             }
@@ -1788,17 +1852,16 @@ var ApiInterface = function (context) {
 };
 
 ApiInterface.prototype = {
-    request: function (method, url, conf) {
-        var me = this;
-        if (url.verbOverride) {
-            method = url.verbOverride;
-            url = url.url;
-        }
+    request: function (method, requestConf, conf) {
+        var me = this,
+            url = typeof requestConf === "string" ? requestConf : requestConf.url;
+        if (requestConf.verbOverride)
+            method = requestConf.verbOverride;
 
         var deferred = utils.when.defer();
 
         var data;
-        if (conf) {
+        if (conf && !requestConf.noBody) {
             data = conf.data || conf;
         }
 
@@ -1825,11 +1888,14 @@ ApiInterface.prototype = {
     }
 };
 var setOp = function(fnName) {
-    ApiInterface.prototype[fnName] = function (type, conf) {
-        var me = this;
-        return this.request(ApiReference.basicOps[fnName], ApiReference.getUrlFor(fnName, type, conf, this.context), conf).then(function (rawJSON) {
+    ApiInterface.prototype[fnName] = function (type, conf, isRemote) {
+        var me = this,
+            fulfill = function (rawJSON) {
             return ApiReference.tryCreateApiObject(type, rawJSON, me);
-        });
+        };
+        isRemote = isRemote === false ? false : true;
+        return isRemote ? this.request(ApiReference.basicOps[fnName], ApiReference.getRequestConfig(fnName, type, conf, this.context), conf).then(fulfill) :
+                          utils.when(utils.extend(conf, { unsynced: true }), fulfill);
     }
 };
 for (var i in ApiReference.basicOps) {
@@ -1842,7 +1908,31 @@ for (var i in ApiReference.basicOps) {
 var ApiContext = function (conf) {
     // TODO: factor out jQuery
     utils.extend(this, conf);
+},
+    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale'], //, 'bypass-cache'],
+    immutableAccessors = ['tenant', 'site', 'site-group'],
+    immutableAccessorLength = immutableAccessors.length,
+    allAccessors = mutableAccessors.concat(immutableAccessors),
+    allAccessorsLength = allAccessors.length,
+    j;
+
+var setImmutableAccessor = function(propName) {
+    ApiContext.prototype[utils.camelCase(propName, true)] = function(val) {
+        if (val === undefined) return this[propName];
+        var newConf = this.asObject();
+        newConf[propName] = val;
+        return new ApiContext(newConf);
+    };
 };
+
+var setMutableAccessor = function (propName) {
+    ApiContext.prototype[utils.camelCase(propName, true)] = function (val) {
+        if (val === undefined) return this[propName];
+        this[propName] = val;
+        return this;
+    };
+};
+
 ApiContext.prototype = {
     api: function() {
         return this._apiInstance || (this._apiInstance = new ApiInterface(this));
@@ -1851,55 +1941,20 @@ ApiContext.prototype = {
         return new ApiContext(conf);
     },
     asObject: function (prefix) {
-        var allvars = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale', 'tenant', 'site-group', 'site'],
-            headerObj = {};
+        var obj = {};
         prefix = prefix || '';
-        for (var i = 0; i < allvars.length; i++) {
-            headerObj[prefix + allvars[i]] = this[allvars[i]];
+        for (var i = 0; i < allAccessorsLength; i++) {
+            obj[prefix + allAccessors[i]] = this[allAccessors[i]];
         }
-        return headerObj;
+        return obj;
     },
     currency: 'usd',
     locale: 'en-US'
 };
-var immutableAccessors = {
-    tenant: 'Tenant',
-    site: 'Site',
-    'site-group': 'SiteGroup'
-    //host: 'Host'
-};
-var setImmutableAccessor = function(propName, fnName) {
-    ApiContext.prototype[fnName] = function(val) {
-        if (val === undefined) return this[propName];
-        var newConf = {};
-        for (var k in immutableAccessors) {
-            newConf[k] = this[k];
-        }
-        newConf[propName] = val;
-        return new ApiContext(newConf);
-    };
-};
-for (var j in immutableAccessors) {
-    if (immutableAccessors.hasOwnProperty(j)) setImmutableAccessor(j, immutableAccessors[j]);
-}
-var mutableAccessors = {
-    'app-claims': 'AppClaims',
-    'user-claims': 'UserClaims',
-    callchain: 'CallChain',
-    currency: 'Currency',
-    locale: 'Locale',
-    'bypass-cache': 'BypassCache'
-};
-var setMutableAccessor = function (propName, fnName) {
-    ApiContext.prototype[fnName] = function (val) {
-        if (val === undefined) return this[propName];
-        this[propName] = val;
-        return this;
-    };
-};
-for (var k in mutableAccessors) {
-    if (mutableAccessors.hasOwnProperty(k)) setMutableAccessor(k, mutableAccessors[k]);
-}
+
+for (j = 0; j < immutableAccessors.length; j++) setImmutableAccessor(immutableAccessors[j]);
+for (j = 0; j < mutableAccessors.length; j++) setMutableAccessor(mutableAccessors[j]);
+
 // END CONTEXT
 
 /********/

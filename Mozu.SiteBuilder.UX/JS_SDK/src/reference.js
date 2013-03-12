@@ -65,7 +65,7 @@ var ApiReference = (function () {
             }
             for (a in objectTypes[typeName]) {
                 if (a)
-                    actions.push(a);
+                    actions.push(utils.camelCase(a));
             }
             return actions;
         },
@@ -81,9 +81,11 @@ var ApiReference = (function () {
         getRequestConfig: function (operation, typeName, conf, context) {
             var oType = objectTypes[typeName];
             if (!oType) return typeName;
+            if (operation) operation = utils.dashCase(operation);
             if (oType[operation]) oType = oType[operation];
             if (!oType) throw "No known URL for '" + typeName + "' type.";
-            if (typeof oType === "string") return this.parseServiceUrls(oType);
+            if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
+            if (typeof oType === "string") return { url: this.parseServiceUrls(oType) };
             var returnObj = {};
             if (oType.url) {
                 returnObj.url = this.parseServiceUrls(oType.url);
@@ -98,7 +100,7 @@ var ApiReference = (function () {
                 } else if (conf) {
                     utils.extend(tptData, conf.query || conf);
                 }
-                if (oType.defaults) tptData = utils.extend({}, oType.defaults, tptData);
+                if (oType.defaultParams) tptData = utils.extend({}, oType.defaultParams, tptData);
                 returnObj.url = oType.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData, ApiReference.urls));
             } else {
                 throw "URLs beyond simple strings and templates are not implemented."
@@ -128,7 +130,7 @@ var ApiReference = (function () {
     var objectTypes = {
         'products': {
             template: '{$ProductService}' + genericQueryTpt,
-            defaults: {
+            defaultParams: {
                 startIndex: 0,
                 pageSize: 25
             }
@@ -137,7 +139,7 @@ var ApiReference = (function () {
         'search': {
             template: '{$SearchService}' + genericQueryTpt,
             shortcutParam: 'q',
-            defaults: {
+            defaultParams: {
 
             }
         },
@@ -145,11 +147,11 @@ var ApiReference = (function () {
             get: {
                 template: '{$ProductService}{ProductCode}?{&allowInactive*}',
                 shortcutParam: 'ProductCode',
-                defaults: {
+                defaultParams: {
                     allowInactive: false
                 }
             },
-            addtocart: {
+            'add-to-cart': {
                 verb: 'POST',
                 returnType: 'cartitem',
                 template: '{$CartService}current/items/'
@@ -157,7 +159,7 @@ var ApiReference = (function () {
         },
         'cart': {
             get: '{$CartService}current',
-            addproduct: {
+            'add-product': {
                 verb: 'POST',
                 returnType: 'cartitem',
                 template: '{$CartService}current/items/'
@@ -173,8 +175,15 @@ var ApiReference = (function () {
             }
         },
         'cartitem': {
-            template: '{$CartService}current/items/{CartItemId}',
-            shortcutParam: 'CartItemId'
+            defaults: {
+                template: '{$CartService}current/items/{CartItemId}',
+                shortcutParam: 'CartItemId'
+            },
+            'update-quantity': {
+                template: '{$CartService}current/items/{CartItemId}/{quantity}',
+                shortcutParam: "quantity",
+                noBody: true
+            }
         },
         'me': {
             get: {
@@ -196,7 +205,7 @@ var ApiReference = (function () {
             get: {
                 template: '{$CmsService}{documentListName}/{documentId}/?version={version}&status={status}',
                 shortcutParam: 'documentId',
-                defaults: {
+                defaultParams: {
                     documentListName: 'default'
                 }
             }
@@ -205,7 +214,7 @@ var ApiReference = (function () {
             get: {
                 template: '{$CmsService}{documentListName}/named/{documentName}/?folderPath={folderPath}&version={version}&status={status}',
                 shortcutParam: 'documentName',
-                defaults: {
+                defaultParams: {
                     documentListName: 'default'
                 }
             }
