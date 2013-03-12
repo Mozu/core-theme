@@ -7,6 +7,8 @@
 
 {% block BodyContent %}
 
+{% dump Model %}
+
 <div id="mz-checkout-loading" class="mz-checkout-loading">
     <p>
         <em>Please wait...</em>
