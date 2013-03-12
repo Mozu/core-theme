@@ -1090,6 +1090,7 @@
                         checkout: {
                             verb: "POST",
                             template: "{$OrderService}?cartId={Id}",
+                            returnType: "order",
                             noBody: true,
                             includeSelf: true
                         }

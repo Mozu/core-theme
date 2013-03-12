@@ -1,4 +1,4 @@
-﻿define(["jquery", "modules/knockout-plus", "modules/api"], function ($, ko, api) {
+﻿define(["jquery", "modules/knockout-plus", "modules/api", "i18n!nls/messages"], function ($, ko, api, genericMsg) {
 
     var traverseObjectForFunctionsAndBind = function (obj, newContext, depth) {
         depth = depth || 0;
@@ -72,6 +72,16 @@
 
     makeEventBus = function () {
         return $({});
+    },
+
+    makeMessageBus = function (vm) {
+        vm.messages = ko.observableArray([]);
+        vm.removeMessage = function (msg) {
+            vm.messages.remove(msg);
+        }
+        vm.unknownError = function () {
+            vm.messages.push({ message: genericMsg.UnexpectedError });
+        };
     },
 
     ptype = {
@@ -200,6 +210,8 @@
                 this.initialized = true;
                 this.submitting = ko.observable(false);                if (this.mozuType) 
                     this.createSDKObject(obj);
+                if (this.hasMessages)
+                    makeMessageBus(this);
                 if (initFunc)
                     initFunc.apply(this, arguments);
             };

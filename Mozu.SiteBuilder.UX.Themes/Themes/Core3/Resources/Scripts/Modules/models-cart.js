@@ -1,4 +1,4 @@
-﻿define(["jquery", "knockout", "modules/knockout-viewmodel", "i18n!nls/messages"], function ($, ko, KnockoutVM, genericMsg) {
+﻿define(["shim!vendor/jquery-cookie[jquery=jQuery]>jQuery", "knockout", "modules/knockout-viewmodel", "i18n!nls/messages"], function ($, ko, KnockoutVM, genericMsg) {
 
     var CartItem = KnockoutVM.extend({
         mozuType: 'cartitem',
@@ -38,6 +38,7 @@
 
     var Cart = KnockoutVM.extend({
         mozuType: 'cart',
+        hasMessages: true,
         observableArrays: {
             Items: {}
         },
@@ -48,8 +49,10 @@
         checkout: function () {
             var self = this;
             self.submitting(true);
-            this.apiModel.checkout().then(function () {
-                window.location = "checkout";
+            this.apiModel.checkout().then(function (order) {
+                $.cookie.raw = true;
+                $.cookie('order', 'orderid=' + order.data.Id + ';', { path: '/' });
+                window.location = "cart/checkout";
             }, function (error) {
                 self.messages.push(error.message);
             });

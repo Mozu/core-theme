@@ -1,4 +1,4 @@
-﻿define(["jquery", "modules/knockout-plus", "modules/knockout-viewmodel", "i18n!nls/messages"], function ($, ko, KnockoutVM, genericMsg) {
+﻿define(["jquery", "modules/knockout-plus", "modules/knockout-viewmodel"], function ($, ko, KnockoutVM) {
 
     var ProductOption = KnockoutVM.extend({
         statics: {
@@ -127,6 +127,7 @@
 
     var Product = KnockoutVM.extend({
         mozuType: 'product',
+        hasMessages: true,
         statics: {
             ProductCode: ''
         },
@@ -151,9 +152,6 @@
         },
         submit: function () {
             this.addToCart(this.toJS());
-        },
-        unknownError: function () {
-            this.messages.push({ message: genericMsg.UnexpectedError });
         }
     }, function constructProduct() {
         var self = this;
@@ -162,12 +160,6 @@
             var pState = self.PurchasableState();
             return pState && pState.IsPurchasable;
         });
-
-        var messages = this.messages = ko.observableArray([]);
-        this.removeMessage = function (msg) {
-            messages.remove(msg);
-        };
-
     });
 
 
