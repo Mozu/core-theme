@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using Mozu.Order.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Orders;
@@ -20,17 +22,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IAuthenticationHelper _authHelper;
         private readonly ICookieProvider _cookieProvider;
         private readonly IPciSettingsProvider _pciSettingsProvider;
+        private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly OrderStatusProvider _orderStatusProvider = new OrderStatusProvider();
 
         //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IOrderService orderService, IAuthenticationHelper authHelper, ICookieProvider cookieProvider, IPciSettingsProvider pciSettingsProvider)
+        public CheckoutController(IOrderService orderService, IAuthenticationHelper authHelper, ICookieProvider cookieProvider, IPciSettingsProvider pciSettingsProvider, IOrderWebApiClient orderWebApiClient)
         {
             _orderService = orderService;
             _authHelper = authHelper;
             _cookieProvider = cookieProvider;
             _pciSettingsProvider = pciSettingsProvider;
+            _orderWebApiClient = orderWebApiClient;
         }
 
         /*public string MerchantId
@@ -44,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (string.IsNullOrWhiteSpace(id))
                 return LastOrderId != null ? RedirectToAction("Confirmation") : RedirectToAction("Index", "Cart");
 
-            var model = GetModel(id);
+            Order.Contracts.Order model = _orderWebApiClient.GetOrder(id).Result.ReadAsAsync().Result;
             if (model == null)
                 return RedirectToAction("Index", "Cart");
 
@@ -166,10 +170,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 _pciSettingsProvider = pciSettingsProvider;
             }
 
-            private ContactInformation GetContact()
+            private async Task<ContactInformation> GetContact()
             {
                 var profileToken = _authenticationHelper.GetCurrentProfileToken();
-                var contact = _orderService.GetOrderContact(profileToken);
+                var contact = await _orderService.GetOrderContact(profileToken);
 
                 return contact ?? new ContactInformation();
             }
@@ -216,7 +220,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 var page = new CheckoutPage(model)
                 {
-                    Contact = GetContact(),
+                    Contact = GetContact().Result,
                     Success = true,
                     PaymentApi = new PaymentApiModel
                     {

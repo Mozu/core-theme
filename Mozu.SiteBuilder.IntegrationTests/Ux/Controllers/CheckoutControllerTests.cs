@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web.Mvc;
+using Mozu.Order.Contracts.Clients;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
@@ -20,6 +21,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Controllers
     public class CheckoutControllerTests
     {
         private IOrderService orderService;
+        private IOrderWebApiClient orderWebApiClient;
         private OrderInformation order;
 
         [TestFixtureSetUp]
@@ -35,6 +37,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Controllers
             order = new OrderInformation();
             orderService = Substitute.For<IOrderService>();
             orderService.GetOrder(Arg.Any<string>()).Returns(order);
+            orderWebApiClient = Substitute.For<IOrderWebApiClient>();
         }
 
         [Test, Ignore("Lots of underlying features changed since this test was first written. It probably needs to be removed and other parts tested. I'm not even sure it's a useful test any longer.")]
@@ -89,7 +92,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Controllers
 
         private CheckoutController GetController()
         {
-            return new CheckoutController(orderService, new AuthenticationHelper(null), new CookieProvider(), new PciSettingsProvider());
+            return new CheckoutController(orderService, new AuthenticationHelper(null), new CookieProvider(), new PciSettingsProvider(), orderWebApiClient);
         }
     }
 }
