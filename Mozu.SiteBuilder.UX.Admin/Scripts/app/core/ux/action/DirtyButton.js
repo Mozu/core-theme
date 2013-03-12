@@ -52,24 +52,6 @@ Ext.define('Taco.core.ux.action.DirtyButton', {
         }
     },
 
-    disable: function () {
-        var el = this.rendered ? this.el : this.protoEl;
-        if (el) {
-            el.set({
-                disabled: 'disabled'
-            });
-        }
-    },
-
-    enable: function () {
-        var el = this.rendered ? this.el : this.protoEl;
-        if (el) {
-            this.el.set({
-                disabled: null
-            }, false);
-        }
-    },
-
     setLoading: function (load, e) {
         var el = this.rendered ? this.el : this.protoEl;
         

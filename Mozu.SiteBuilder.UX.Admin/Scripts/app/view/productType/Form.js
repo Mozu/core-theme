@@ -33,6 +33,7 @@ Ext.define('Taco.view.productType.Form', {
 
         this.defaults = {
             xtype: 'taco.producttype.attributegroup',
+            productType: this.record
         };
 
         this.items = [{
@@ -44,84 +45,15 @@ Ext.define('Taco.view.productType.Form', {
             emptyText: 'Enter a Product Type Name',
             name: 'name'
         }, {
-            type: 'options',
-            store: this.record.getOptions()
-            }, {
-            type: 'extras',
-            store: this.record.getExtras()
+            type: 'options'
         }, {
-            itemId: 'extras',
-            attributeType: 'extras',
-            layout: 'card',
-            header: {
-                title: 'Extras',
-                margin: '0 0 7',
-            },
-            tools: [{
-                xtype: 'primarybutton',
-                text: 'Add',
-                click: this.addAttribute,
-                scope: this
-            }],
-            items: [{
-                header: false,
-                itemId: 'attributes',
-                // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
-                //     listeners: {
-                //         drop: this.onDrop,
-                //         scope: this
-                //     }
-                // })
-            }, {
-                header: false,
-                itemId: 'editor'
-            }]
+            type: 'extras'
         }, {
-            itemId: 'properties',
-            attributeType: 'properties',
-            layout: 'card',
-            header: {
-                title: 'Properties',
-                margin: '0 0 7',
-            },
-            tools: [{
-                xtype: 'primarybutton',
-                text: 'Add',
-                click: this.addAttribute,
-                scope: this
-            }],
-            items: [{
-                header: false,
-                itemId: 'attributes',
-                // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
-                //     listeners: {
-                //         drop: this.onDrop,
-                //         scope: this
-        //     }],
-        //     items: [{
-        //         header: false,
-        //         itemId: 'attributes',
-        //         // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
-        //         //     listeners: {
-        //         //         drop: this.onDrop,
-        //         //         scope: this
-        //         //     }
-        //         // })
-        //     }, {
-        //         header: false,
-        //         itemId: 'editor'
-        //     }]
-        // }];
+            type: 'properties'
+        }];
+            
 
         this.callParent(arguments);
-
-        //Ext.Array.each(['options', 'extras', 'properties'], this.addAttribute, this);
-        //
-        
-
-        // this.buildAttributeList('options', this.record.getOptions());
-        // this.buildAttributeList('extras', this.record.getExtras());
-        // this.buildAttributeList('properties', this.record.getProperties());
     },
 
 

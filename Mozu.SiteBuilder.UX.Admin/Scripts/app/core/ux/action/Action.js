@@ -46,6 +46,25 @@ Ext.define('Taco.core.ux.action.Action', {
         if (this.fireEvent('beforeclick', this, e) !== false) {
             this.fireEvent('click', this);
         }
-    }
-    	
+    },
+
+    disable: function () {
+        var el = this.rendered ? this.el : this.protoEl;
+        if (!el) {
+            return;
+        }
+        el.set({
+            disabled: 'disabled'
+        });
+    },
+
+    enable: function () {
+        var el = this.rendered ? this.el : this.protoEl;
+        if (!el) {
+            return;
+        }
+        this.el.set({
+            disabled: null
+        }, false);
+    }	
 });
