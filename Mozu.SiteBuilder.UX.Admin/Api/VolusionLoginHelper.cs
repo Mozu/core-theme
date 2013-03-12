@@ -33,7 +33,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             UserLoginResult ulr = null;
             //Core.Api.Contracts.UserAuthTicket ticket = null;
-            LightweightUserClaims volLwp = null;
             var dcUser = Mapper.Map<Core.Api.Contracts.User>(user);
             if (!string.IsNullOrEmpty(user.Invitation))
             {

@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "document/create")]
-        public Task<Response<ProductImageDocument>> CreateDocument(ProductImageDocument doc)
+        public async Task<Response<ProductImageDocument>> CreateDocument(ProductImageDocument doc)
         {
             //var properties = new List<DC.PropertyValue>
             //{ 
@@ -63,10 +63,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //    //    Value = doc.ProductId
             //    //}            
             //};
-            var productFolder = _folderRepo.GetByPath("files", "/products").Result.ReadAsSync();
+            var productFolder = (await _folderRepo.GetByPath("files", "/products")).ReadAsSync();
             if (productFolder == null)
             {
-                productFolder = _folderRepo.Create("files", new DC.Folder() { DocumentListName = "files", Name = "products", Path = "/" }).Result.ReadAsSync();
+                productFolder = (await _folderRepo.Create("files", new DC.Folder() { DocumentListName = "files", Name = "products", Path = "/" })).ReadAsSync();
 
             }
             string fileName = doc.FileName;
@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 FolderId = productFolder.Id 
             };
             req.Filters.Add ( string.Format ( "name sw \"{0}\"", System.IO.Path.GetFileNameWithoutExtension(doc.FileName) ));
-            var matchingFiles = _cmsService.GetList(req).Result.ReadAsSync();
+            var matchingFiles = (await _cmsService.GetList(req)).ReadAsSync();
 
             if (matchingFiles.TotalCount > 0 )
             {
@@ -103,12 +103,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Name = fileName
             };
             
-            var result = _docRepo.Create("files", cmsDoc).Result.ReadAsSync();
+            var result = (await _docRepo.Create("files", cmsDoc)).ReadAsSync();
             
             // TODO: Get AutoMapper set up
             doc.Id = result.Id;
 
-            return Single(doc);
+            return Single2(doc);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "{docid}/create")]

@@ -46,9 +46,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _navRepo = navRepo;
         }
 
-          public Task<Response<List<NavigationTreeNode>>> Read(string node)
+          public async Task<Response<List<NavigationTreeNode>>> Read(string node)
           {
-              return GetRead(node);
+              return await GetRead(node);
           }
         //const  string _STRINGSPLITDELIM = "^^";
         //static string JoinParts ( params object[] parts )
@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return str.Split  ( new string[]{_STRINGSPLITDELIM}, StringSplitOptions.None );
         //}
         [WebGet(UriTemplate = "read/?node={node}" )]
-        public Task<Response<List<NavigationTreeNode>>> GetRead(string node)
+        public async Task<Response<List<NavigationTreeNode>>> GetRead(string node)
         {
             var resItems = new List<NavigationTreeNode>();
             var navSet = _navRepo.GetSet();
@@ -76,7 +76,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Collection = parts[1],
                     FolderId = parts[2],
                 };
-                var pages = _cmsService.GetList(request).Result.ReadAsAsync().Result.Items.Select(x => Mapper.Map<NavigationTreeNode>(x)).ToList ();
+                var result = (await _cmsService.GetList(request)).ReadAsSync();
+                var pages = Mapper.Map<List<NavigationTreeNode>>(result.Items);
                 pages.ForEach(x => { x.AllowDrag = x.AllowDrop = false; x.Leaf = true; });
 
                 resItems.AddRange(pages);
@@ -100,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var catTask = _catClient.GetChildCategories(int.Parse(parts[1]));
                 var prodTask = _prodService.GetProducts(0, 300, null, null, string.Format("CategoryId eq {0}", parts[1]));
-                Task.WaitAll(catTask, prodTask);
+                await Task.WhenAll(catTask, prodTask);
                 var cats = catTask.Result.ReadAsSync();
                 var prods = prodTask.Result.ReadAsSync();
                 resItems.AddRange(cats.Items.Select(x => x.Map<NavigationTreeNode>()));
@@ -134,11 +135,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
 
-            return this.List<NavigationTreeNode>( resItems );
+            return this.List2<NavigationTreeNode>( resItems );
         }
 
         [WebGet(UriTemplate = "search/?query={query}")]
-        public Task<Response<List<NavigationTreeNode>>> Search([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<NavigationTreeNode>>> Search([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (!string.IsNullOrEmpty(extFilter.query))
                 extFilter.Add(new FilterCollectionItem {value = extFilter.query});
@@ -158,18 +159,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var categorySearch = _catClient.GetCategories(0, 25, null, categoryFilter, null ).Result.ReadAsAsync();
             //var pagesSearch = _cmsService.GetList(request).Result.ReadAsAsync();
 
-            Task.WaitAll(productSearch, /*pagesSearch,*/ categorySearch);
+            await Task.WhenAll(productSearch, /*pagesSearch,*/ categorySearch);
 
             var results = categorySearch.Result.Items.Select(Mapper.Map<NavigationTreeNode>)
                 .Concat(productSearch.Result.Items.Select(Mapper.Map<NavigationTreeNode>))
                 //.Concat(pagesSearch.Result.Items.Select(Mapper.Map<NavigationTreeNode>))
                 .ToList();
 
-            return List(results);
+            return List2(results);
         }
 
         [WebInvoke(UriTemplate = "delete")]
-        public Task<Response<List<NavigationTreeNode>>> Delete(List<NavigationTreeNode> items)
+        public async Task<Response<List<NavigationTreeNode>>> Delete(List<NavigationTreeNode> items)
         {
             NavigationSet  navSet = null;
             List<Task> tasks = new List<Task>();
@@ -209,19 +210,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             if (tasks.Count > 0)
             {
-                Task.WaitAll(tasks.ToArray());
+                await Task.WhenAll(tasks.ToArray());
             }
-            return SuccessWithTotal<List<NavigationTreeNode>>(0);
+            return SuccessWithTotal2<List<NavigationTreeNode>>(0);
         }
         [WebInvoke(UriTemplate = "create")]
-        public Task<Response<List<NavigationTreeNode>>> Create(List<NavigationTreeNode> items)
+        public Response<List<NavigationTreeNode>> Create(List<NavigationTreeNode> items)
         {
             var navSet = _navRepo.GetSet();
             if (items.Any(x => x.Name == "reset"))
             {
                 navSet = NavigationSet.Default;
                 _navRepo.SaveSet(navSet);
-                return this.List<NavigationTreeNode>(items);
+                return List2<NavigationTreeNode>(items);
             }
             foreach (var item in items)
             {
@@ -230,11 +231,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 navSet.Nodes.Add(item.Map<NavigationNode >());
             }
             _navRepo.SaveSet(navSet);
-            return this.List<NavigationTreeNode>(items);
+            return this.List2<NavigationTreeNode>(items);
         }
 
         [WebInvoke(UriTemplate = "update")]
-        public Task<Response<List<NavigationTreeNode>>> Edit(List<NavigationTreeNode> items)
+        public async Task<Response<List<NavigationTreeNode>>> Edit(List<NavigationTreeNode> items)
         {
             
             var catNodes = items.Where(x => x.NodeType == "category").ToList();
@@ -274,7 +275,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (catCol == null)
                 {
                     var catFilter = string.Join(" or ", catNodes.Select(_ => "CategoryId eq " + NavigationNode.SplitParts(_.Id)[1]));
-                    catCol = _catClient.GetCategories(0, 100, null, catFilter, null).Result.ReadAsSync();
+                    catCol = (await _catClient.GetCategories(0, 100, null, catFilter, null)).ReadAsSync();
                 }
 
                 var catId = int.Parse(NavigationNode.SplitParts(node.Id)[1]);
@@ -303,7 +304,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (productCollection == null)
                 {
                     var prodFilter = string.Join(" or ", prodNodes.Select(_ => "ProductCode eq " + NavigationNode.SplitParts(_.Id)[1]));
-                    productCollection = _prodService.GetProducts(0, 100, null, null, prodFilter).Result.ReadAsAsync().Result;
+                    productCollection = (await _prodService.GetProducts(0, 100, null, null, prodFilter)).ReadAsSync();
 
                 }
                 var prodCode = NavigationNode.SplitParts(node.Id)[1];
@@ -340,7 +341,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (saveTasks.Count > 0)
             {
-                Task.WaitAll(saveTasks.ToArray());
+                await Task.WhenAll(saveTasks.ToArray());
             }
             if (pageNodes.Count > 0)
             {
@@ -355,7 +356,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     }
                     else
                     {
-                        AutoMapper.Mapper.Map<NavigationTreeNode, NavigationNode>(node, curNode);
+                        Mapper.Map<NavigationTreeNode, NavigationNode>(node, curNode);
                     }
                 }
                 navSet.Nodes.ForEach(x => x.Leaf = !navSet.Nodes.Any(y => y.ParentId == x.Id));
@@ -385,12 +386,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //}
             _navRepo.SaveSet(navSet);
 
-            return this.List<NavigationTreeNode>(items);
+            return List2<NavigationTreeNode>(items);
         }
 
 
-
-        private void ProcessRoot(System.Collections.Generic.List<NavigationTreeNode> resItems, UX.Models.Navigation.NavigationSet navSet)
+        private async void ProcessRoot(System.Collections.Generic.List<NavigationTreeNode> resItems, UX.Models.Navigation.NavigationSet navSet)
         {
             var navId = NavigationNode.JoinParts("group", "nav");
             var unlinkedId = NavigationNode.JoinParts("group", "nonLinked");
@@ -405,17 +405,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
             var catTasks = _catClient.GetChildCategories(0);
-            Task.WaitAll(pageTasks, catTasks, blogTasks);
+            await Task.WhenAll(pageTasks, catTasks, blogTasks);
 
 
-            var topCats = catTasks.Result.ReadAsAsync().Result;
-
-
-            var pages = pageTasks.Result.ReadAsAsync().Result;
+            var topCats = catTasks.Result.ReadAsSync();
+            var pages = pageTasks.Result.ReadAsSync();
+            var blogs = blogTasks.Result.ReadAsSync().Items;
+            
             pages.Items = pages.Items.Where(x => (string)x.Get("page_type") != "404").ToList();
             
-            var blogs = blogTasks.Result.ReadAsAsync().Result.Items;
-
 
             IEnumerable<NavigationTreeNode> newUnAssignedPages = pages.Items.Where(x => !navSet.Nodes.Any(_ => _.IdParts.Length > 0 && (_.IdParts.Last() == x.Id) || _.IdParts.Last() ==  x.Name )).Select(x => x.Map<NavigationTreeNode>());
 

@@ -12,15 +12,15 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Tax;
 using AutoMapper;
 using DC = Mozu.ProductAdmin.Contracts;
 using System.ServiceModel;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    //todo  make async
-
     [ServiceContract]
     public class TaxController : BaseController
     {
         ITaxRateWebApiClient _taxClient;
+        private readonly CollectionTaskUnMapper<TaxRate, DC.TaxRate> _taxMapper = new CollectionTaskUnMapper<TaxRate, DC.TaxRate>();
 
         public TaxController(ITaxRateWebApiClient taxClient)
         {
@@ -28,43 +28,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "create")]
-        public Task<Response<List<TaxRate>>> Create(List<TaxRate> vms)
+        public async Task<Response<List<TaxRate>>> Create(List<TaxRate> taxRates)
         {
-            var retList = (from vm in vms select Mapper.Map<DC.TaxRate >(vm) into dm let ret = _taxClient.AddRate (dm).Result.ReadAsSync() select ret ?? dm into ret select Mapper.Map<TaxRate >(ret)).ToList();
+            IEnumerable<TaxRate> results = await _taxMapper.PerformAction(taxRates, t => _taxClient.AddRate(t));
 
-            return List(retList);
+            return List2(results.ToList());
         }
 
         [WebInvoke(UriTemplate = "edit")]
-        public Task<Response<List<TaxRate>>> Edit(List<TaxRate> vms)
+        public async Task<Response<List<TaxRate>>> Edit(List<TaxRate> taxRates)
         {
-            var retList = (from vm in vms select Mapper.Map<DC.TaxRate>(vm) into dm select _taxClient.UpdateRate (dm, dm.CountryCode , dm.StateCode ).Result.ReadAsSync() into ret select Mapper.Map<TaxRate >(ret)).ToList();
+            IEnumerable<TaxRate> results = await _taxMapper.PerformAction(taxRates, t => _taxClient.UpdateRate(t, t.CountryCode, t.StateCode));
 
-            return List(retList);
+            return List2(results.ToList());
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "delete")]
-        public Task<Response<TaxRate>> Delete(List<TaxRate> vms)
+        public async Task<Response<TaxRate>> Delete(List<TaxRate> vms)
         {
-            foreach (var vm in vms)
-            {
-                var res = _taxClient.DeleteRate(vm.CountryCode, vm.StateCode).Result;
-                if (res.HasException)
-                {
-                    throw res.ReadException();
-                }
-            }
+            IEnumerable<TaxRate> results = await _taxMapper.PerformAction(vms, t => _taxClient.DeleteRate(t.CountryCode, t.StateCode));
 
-            return SuccessWithTotal<TaxRate>(vms.Count);
+            return SuccessWithTotal2<TaxRate>(results.Count());
         }
 
         [WebGet(UriTemplate = "list")]
-        public Task<Response<List<TaxRate>>> GetTaxRates([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<TaxRate>>> GetTaxRates([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            var res = _taxClient.GetRates(pagingParams.startIndex, pagingParams.pageSize).Result.ReadAsSync();
-            var taxRates = Mapper.Map<List<TaxRate>>(res.Items);
+            var res = await _taxClient.GetRates(pagingParams.startIndex, pagingParams.pageSize);
+            var ret = res.ReadAsSync();
+            var taxRates = Mapper.Map<List<TaxRate>>(ret.Items);
 
-            return List(taxRates, (int) res.TotalCount);
+            return List2(taxRates, (int) ret.TotalCount);
         }
     }
 }

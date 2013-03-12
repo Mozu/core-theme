@@ -20,19 +20,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "")]
-        public Task<Response<List<Behavior>>> GetAll()
+        public async Task<Response<List<Behavior>>> GetAll()
         {
-            var behaviors = _permissionsRepository.GetBehaviors().Result;
+            var behaviors = await _permissionsRepository.GetBehaviors();
 
-            return behaviors.IsNullOrEmpty() ? EmptyList<Behavior>() : List(behaviors);
+            return behaviors.IsNullOrEmpty() ? EmptyList2<Behavior>() : List2(behaviors);
         }
 
         [WebGet(UriTemplate = "behavior/{id}")]
-        public Task<Response<Behavior>> Get(int? id)
+        public async Task<Response<Behavior>> Get(int? id)
         {
-            var behavior = _permissionsRepository.GetBehavior(id).Result;
+            var behavior = await _permissionsRepository.GetBehavior(id);
 
-            return behavior == null ? EmptySingle<Behavior>(false) : Single(behavior);
+            return behavior == null ? EmptySingle2<Behavior>(false) : Single2(behavior);
         }
     }
 }

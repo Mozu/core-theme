@@ -31,24 +31,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "availableorderactions/?orderId={orderId}")]
-        public Task<Response<List<string>>> GetAvailableOrderActions(string orderId)
+        public async Task<Response<List<string>>> GetAvailableOrderActions(string orderId)
         {
-            var response = _orderWebApiClient.GetAvailableActions(orderId).Result.ReadAsSync();
-            return List(response);
+            var response = (await _orderWebApiClient.GetAvailableActions(orderId)).ReadAsSync();
+
+            return List2(response);
         }
 
         [WebGet(UriTemplate = "availableshipmentactions/?orderId={orderId}")]
-        public Task<Response<List<string>>> GetAvailableShipmentActions(string orderId)
+        public async Task<Response<List<string>>> GetAvailableShipmentActions(string orderId)
         {
-            var response = _orderWebApiClient.GetAvailableShipmentActions(orderId).Result.ReadAsSync();
-            return List(response);
+            var response = (await _orderWebApiClient.GetAvailableShipmentActions(orderId)).ReadAsSync();
+            return List2(response);
         }
 
         [WebGet(UriTemplate = "availablepaymentactions/?orderId={orderId}")]
-        public Task<Response<List<string>>> GetAvailablePaymentActions(string orderId)
+        public async Task<Response<List<string>>> GetAvailablePaymentActions(string orderId)
         {
-            var response = _orderWebApiClient.GetAvailablePaymentActions(orderId).Result.ReadAsSync();
-            return List(response);
+            var response = (await _orderWebApiClient.GetAvailablePaymentActions(orderId)).ReadAsSync();
+            return List2(response);
         }
 
         /// <summary>
@@ -58,10 +59,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="action">One of the following: Cancel, Close, Create, SetAsProcessing, Submit</param>
         /// <returns>Order</returns>
         [WebGet(UriTemplate = "orderaction/?orderId={orderId}&action={action}")]
-        public Task<Response<OrderAdmin.Order>> PerformOrderAction(string orderId, string action)
+        public async Task<Response<OrderAdmin.Order>> PerformOrderAction(string orderId, string action)
         {
-            var response = _orderWebApiClient.PerformOrderAction(orderId, action).Result.ReadAsSync();
-            return Single(Mapper.Map<OrderAdmin.Order>(response));
+            var response = (await _orderWebApiClient.PerformOrderAction(orderId, action)).ReadAsSync();
+            return Single2(Mapper.Map<OrderAdmin.Order>(response));
         }
 
         /// <summary>
@@ -71,10 +72,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="action">One of the following: Ship</param>
         /// <returns></returns>
         [WebGet(UriTemplate = "shipmentaction/?orderId={orderId}&action={action}")]
-        public Task<Response<OrderAdmin.Order>> PerformShipmentAction(string orderId, string action)
+        public async Task<Response<OrderAdmin.Order>> PerformShipmentAction(string orderId, string action)
         {
-            var response = _orderWebApiClient.PerformShipmentAction(orderId, action).Result.ReadAsSync();
-            return Single(Mapper.Map<OrderAdmin.Order>(response));
+            var response = (await _orderWebApiClient.PerformShipmentAction(orderId, action)).ReadAsSync();
+            return Single2(Mapper.Map<OrderAdmin.Order>(response));
         }
 
         // TODO: Need the strings here
@@ -85,16 +86,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="action">One of the following: ????</param>
         /// <returns></returns>
         [WebGet(UriTemplate = "paymentaction/?orderId={orderId}&action={action}")]
-        public Task<Response<OrderAdmin.Order>> PerformPaymentAction(string orderId, string action)
+        public async Task<Response<OrderAdmin.Order>> PerformPaymentAction(string orderId, string action)
         {
-            var response = _orderWebApiClient.PerformPaymentAction(orderId, action, null).Result.ReadAsSync();
-            return Single(Mapper.Map<OrderAdmin.Order>(response));
+            var response = (await _orderWebApiClient.PerformPaymentAction(orderId, action, null)).ReadAsSync();
+            return Single2(Mapper.Map<OrderAdmin.Order>(response));
         }
 
         // Orders
 
         [WebGet(UriTemplate = "autocomplete/?query={query}")]
-        public Task<Response<List<AutoCompleteField<string>>>> SearchByName(string query, FilterCollection extFilter)
+        public async Task<Response<List<AutoCompleteField<string>>>> SearchByName(string query, FilterCollection extFilter)
         {
             var filter = string.Empty;
 
@@ -105,7 +106,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 filter = string.Format(num > 0 ? "OrderNumber eq {0}" : "Payment.Card.BillingAddress.FirstName cont \"{0}\" or Payment.Card.BillingAddress.LastNameOrSurname cont \"{0}\"", query);
             }
 
-            var response = _orderWebApiClient.GetOrders(0, 500, null, filter).Result.ReadAsSync();
+            var response = (await _orderWebApiClient.GetOrders(0, 500, null, filter)).ReadAsSync();
 
             var retList = response.Items.Select(p => new AutoCompleteField<string>
             {
@@ -114,16 +115,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Value = p.Id
             }).ToList();
 
-            return List(retList);
+            return List2(retList);
         }
 
         [WebGet(UriTemplate = "read")]
-        public Task<Response<List<OrderAdmin.Order>>> GetOrders([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<OrderAdmin.Order>>> GetOrders([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {
-                var res = _orderWebApiClient.GetOrders(pagingParams.startIndex, pagingParams.pageSize, null, "OrderNumber eq " + pagingParams.id).Result.ReadAsSync();
-                return List(Mapper.Map<List<OrderAdmin.Order>>(res.Items));
+                var res = (await _orderWebApiClient.GetOrders(pagingParams.startIndex, pagingParams.pageSize, null, "OrderNumber eq " + pagingParams.id)).ReadAsSync();
+                return List2(Mapper.Map<List<OrderAdmin.Order>>(res.Items));
             }
             var query = extFilter.GetValue<string>("query", null);
             string filter = "OrderStatus ne \"New\"";
@@ -146,8 +147,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 filter = "CustomerAccountId eq " + customerId;
             }
 
-            var response = _orderWebApiClient.GetOrders(pagingParams.startIndex, pagingParams.pageSize, GetSort(pagingParams), filter).Result.ReadAsSync();
-            return List(Mapper.Map<List<OrderAdmin.Order>>(response.Items), (int)response.TotalCount);
+            var response = (await _orderWebApiClient.GetOrders(pagingParams.startIndex, pagingParams.pageSize, GetSort(pagingParams), filter)).ReadAsSync();
+            return List2(Mapper.Map<List<OrderAdmin.Order>>(response.Items), (int)response.TotalCount);
         }
 
         private static string GetSort(PagingParamaters p)
@@ -202,129 +203,136 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var order in orders)
             {
                 var so = Mapper.Map<Mozu.Order.Contracts.Order>(order);
-                var response = await _orderWebApiClient.CreateOrder(so);
-                var ret = await response.ReadAsAsync();
-                retOrders.Add(Mapper.Map<OrderAdmin.Order>(ret));
+                var response = (await _orderWebApiClient.CreateOrder(so)).ReadAsSync();
+                retOrders.Add(Mapper.Map<OrderAdmin.Order>(response));
             }
-            return await List(retOrders);
+            return List2(retOrders);
         }
 
         [WebInvoke(UriTemplate = "delete/?orderId={orderId}")]
-        public Task<Response<bool>> DeleteOrder(string orderId)
+        public async Task<Response<OrderAdmin.Order>> DeleteOrder(string orderId)
         {
-            var response = _orderWebApiClient.DeleteOrder(orderId).Result.ReadAsSync();
-            return Single(true);
+            var response = await _orderWebApiClient.DeleteOrder(orderId);
+            var ret = response.ReadAsSync();
+            return SuccessWithTotal2<OrderAdmin.Order>(1);
         }
 
         // Order notes
 
         [WebInvoke(UriTemplate = "ordernote/create/?orderId={orderId}")]
-        public Task<Response<OrderAdmin.OrderNote>> CreateOrderNote(OrderAdmin.OrderNote orderNote, string orderId)
+        public async Task<Response<OrderAdmin.OrderNote>> CreateOrderNote(OrderAdmin.OrderNote orderNote, string orderId)
         {
-            var response = _orderWebApiClient.CreateOrderNote(Mapper.Map<Mozu.Order.Contracts.OrderNote>(orderNote), orderId).Result.ReadAsSync();
-            return Single(Mapper.Map<OrderAdmin.OrderNote>(response));
+            var res = (await _orderWebApiClient.CreateOrderNote(Mapper.Map<Mozu.Order.Contracts.OrderNote>(orderNote), orderId)).ReadAsSync();
+            return Single2(Mapper.Map<OrderAdmin.OrderNote>(res));
         }
 
         [WebInvoke(UriTemplate = "ordernote/read/?orderId={orderId}&id={id}")]
-        public Task<Response<OrderAdmin.OrderNote>> GetOrderNote(string orderId, string id)
+        public async Task<Response<OrderAdmin.OrderNote>> GetOrderNote(string orderId, string id)
         {
-            var response = _orderWebApiClient.GetOrderNote(orderId, id).Result.ReadAsSync();
-            return Single(Mapper.Map<OrderAdmin.OrderNote>(response));
+            var response = (await _orderWebApiClient.GetOrderNote(orderId, id)).ReadAsSync();
+            return Single2(Mapper.Map<OrderAdmin.OrderNote>(response));
         }
 
         [WebGet(UriTemplate = "ordernote/list/?orderId={orderId}")]
-        public Task<Response<List<OrderAdmin.OrderNote>>> GetOrderNotes(string orderId)
+        public async Task<Response<List<OrderAdmin.OrderNote>>> GetOrderNotes(string orderId)
         {
-            var response = _orderWebApiClient.GetOrderNotes(orderId).Result.ReadAsSync();
-            return Single(Mapper.Map<List<OrderAdmin.OrderNote>>(response));
+            var response = (await _orderWebApiClient.GetOrderNotes(orderId)).ReadAsSync();
+            return Single2(Mapper.Map<List<OrderAdmin.OrderNote>>(response));
         }
 
         [WebInvoke(UriTemplate = "ordernote/delete/?orderId={orderId}&orderNoteId={orderNoteId}")]
-        public Task<Response<bool>> DeleteOrderNote(string orderId, string orderNoteId)
+        public async Task<Response<List<OrderAdmin.OrderNote>>> DeleteOrderNote(string orderId, string orderNoteId)
         {
-            var response = _orderWebApiClient.DeleteOrderNote(orderId, orderNoteId).Result.ReadAsSync();
-            return Single(true);
+            var response = (await _orderWebApiClient.DeleteOrderNote(orderId, orderNoteId)).ReadAsSync();
+            return SuccessWithTotal2<List<OrderAdmin.OrderNote>>(1);
         }
 
         // Payment transactions
 
         [WebGet(UriTemplate = "paymenttransaction/list/?orderId={orderId}")]
-        public Task<Response<List<OrderAdmin.PaymentTransaction>>> GetPaymentTransactions(string orderId)
+        public async Task<Response<List<OrderAdmin.PaymentTransaction>>> GetPaymentTransactions(string orderId)
         {
-            var response = _orderWebApiClient.GetPaymentTransactions(orderId).Result.ReadAsSync();
-            return List(Mapper.Map<List<OrderAdmin.PaymentTransaction>>(response));
+            var response = (await _orderWebApiClient.GetPaymentTransactions(orderId)).ReadAsSync();
+            return List2(Mapper.Map<List<OrderAdmin.PaymentTransaction>>(response));
         }
 
         [WebInvoke(UriTemplate = "paymenttransaction/create/?orderId={orderId}")]
-        public Task<Response<OrderAdmin.PaymentTransaction>> CreatePaymentTransaction(OrderAdmin.PaymentTransaction paymentTransaction, string orderId)
+        public async Task<Response<OrderAdmin.PaymentTransaction>> CreatePaymentTransaction(OrderAdmin.PaymentTransaction paymentTransaction, string orderId)
         {
-            var response = _orderWebApiClient.CreatePaymentTransaction(Mapper.Map<Mozu.Order.Contracts.PaymentTransaction>(paymentTransaction), orderId).Result.ReadAsSync();
-            return Single(Mapper.Map<OrderAdmin.PaymentTransaction>(response));
+            var response = (await _orderWebApiClient.CreatePaymentTransaction(Mapper.Map<Mozu.Order.Contracts.PaymentTransaction>(paymentTransaction), orderId)).ReadAsSync();
+            return Single2(Mapper.Map<OrderAdmin.PaymentTransaction>(response));
         }
 
         // Shipment
 
         [WebGet(UriTemplate = "shipment/read/?orderId={orderId}")]
-        public Task<Response<OrderAdmin.Shipment>> GetShipment(string orderId)
+        public async Task<Response<OrderAdmin.Shipment>> GetShipment(string orderId)
         {
-            var response = _orderWebApiClient.GetShipment(orderId).Result.ReadAsSync();
-            return Single(Mapper.Map<OrderAdmin.Shipment>(response));
+            var response = (await _orderWebApiClient.GetShipment(orderId)).ReadAsSync();
+            return Single2(Mapper.Map<OrderAdmin.Shipment>(response));
         }
 
         [WebInvoke(UriTemplate = "shipment/edit/?orderId={orderId}")]
-        public Task<Response<OrderAdmin.Shipment>> UpdateShipment(OrderAdmin.Shipment shipment, string orderId)
+        public async Task<Response<OrderAdmin.Shipment>> UpdateShipment(OrderAdmin.Shipment shipment, string orderId)
         {
-            var response = _orderWebApiClient.UpdateShipment(Mapper.Map<Mozu.Order.Contracts.Shipment>(shipment), orderId).Result.ReadAsSync();
-            return Single(Mapper.Map<OrderAdmin.Shipment>(response));
+            var response = (await _orderWebApiClient.UpdateShipment(Mapper.Map<Mozu.Order.Contracts.Shipment>(shipment), orderId)).ReadAsSync();
+            return Single2(Mapper.Map<OrderAdmin.Shipment>(response));
         }
 
         [WebInvoke(UriTemplate = "shipment/delete/?orderId={orderId}")]
-        public Task<Response<bool>> DeleteShipment(string orderId)
+        public async Task<Response<List<OrderAdmin.Shipment>>> DeleteShipment(string orderId)
         {
-            var response = _orderWebApiClient.DeleteShipment(orderId).Result.ReadAsSync();
-            return Single(true);
+            var response = (await _orderWebApiClient.DeleteShipment(orderId)).ReadAsSync();
+            return SuccessWithTotal2<List<OrderAdmin.Shipment>>(1);
         }
 
         // Payment
 
         [WebGet(UriTemplate = "payment/read/?orderId={orderId}")]
-        public Task<Response<OrderAdmin.PaymentReference>> GetPayment(string orderId)
+        public async Task<Response<OrderAdmin.PaymentReference>> GetPayment(string orderId)
         {
-            var response = _orderWebApiClient.GetPayment(orderId).Result.ReadAsSync();
-            return Single(Mapper.Map<OrderAdmin.PaymentReference>(response));
+            var response = (await _orderWebApiClient.GetPayment(orderId)).ReadAsSync();
+            return Single2(Mapper.Map<OrderAdmin.PaymentReference>(response));
         } 
 
         [WebInvoke(UriTemplate = "payment/edit/?orderId={orderId}")]
-        public Task<Response<OrderAdmin.PaymentReference>> UpdatePayment(OrderAdmin.PaymentReference payment, string orderId)
+        public async Task<Response<OrderAdmin.PaymentReference>> UpdatePayment(OrderAdmin.PaymentReference payment, string orderId)
         {
-            var response = _orderWebApiClient.UpdatePayment(Mapper.Map<Mozu.Order.Contracts.PaymentReference>(payment), orderId).Result.ReadAsSync();
-            return Single(Mapper.Map<OrderAdmin.PaymentReference>(response));
+            Mozu.Order.Contracts.PaymentReference dcPayment = Mapper.Map<Mozu.Order.Contracts.PaymentReference>(payment);
+            var response = (await _orderWebApiClient.UpdatePayment(dcPayment, orderId)).ReadAsSync();
+
+            OrderAdmin.PaymentReference ret = Mapper.Map<OrderAdmin.PaymentReference>(response);
+
+            return Single2(ret);
         }
 
         // Order items
 
         [WebGet(UriTemplate = "orderitem/read/?orderItemid={orderItemid}&orderId={orderId}")]
-        public Task<Response<OrderAdmin.OrderItem>> GetOrderItem(string orderItemId, string orderId)
+        public async Task<Response<OrderAdmin.OrderItem>> GetOrderItem(string orderItemId, string orderId)
         {
-            var response = _orderWebApiClient.GetOrderItem(orderItemId, orderId).Result.ReadAsSync();
-            return Single(Mapper.Map<OrderAdmin.OrderItem>(response));
+            var response = (await _orderWebApiClient.GetOrderItem(orderItemId, orderId)).ReadAsSync();
+            var ret = Mapper.Map<OrderAdmin.OrderItem>(response);
+            return Single2(ret);
         }
 
         [WebGet(UriTemplate = "orderitem/list/?orderId={orderId}")]
-        public Task<Response<List<OrderAdmin.OrderItem>>> GetOrderItems(string orderId)
+        public async Task<Response<List<OrderAdmin.OrderItem>>> GetOrderItems(string orderId)
         {
-            var response = _orderWebApiClient.GetOrderItems(orderId).Result.ReadAsSync();
-            return List(Mapper.Map<List<OrderAdmin.OrderItem>>(response.Items));
+            var response = (await _orderWebApiClient.GetOrderItems(orderId)).ReadAsSync();
+            var ret = Mapper.Map<List<OrderAdmin.OrderItem>>(response.Items);
+            return List2(ret);
         }
 
         // Customers
 
         [WebGet(UriTemplate = "customer/list/?customerId={customerId}")]
-        public Task<Response<List<OrderAdmin.Order>>> GetCustomerOrders([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, int customerId)
+        public async Task<Response<List<OrderAdmin.Order>>> GetCustomerOrders([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, int customerId)
         {
             var filter = string.Format("CustomerAccountId eq {0}", customerId);
-            var response = _orderWebApiClient.GetOrders(pagingParams.startIndex, pagingParams.pageSize, null, filter).Result.ReadAsSync();
-            return List(Mapper.Map<List<OrderAdmin.Order>>(response.Items));
+            var response = (await _orderWebApiClient.GetOrders(pagingParams.startIndex, pagingParams.pageSize, null, filter)).ReadAsSync();
+            var ret = Mapper.Map<List<OrderAdmin.Order>>(response.Items);
+            return List2(ret);
         }
     }
 }

@@ -21,11 +21,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "read")]
-        public Task<Response<List<WidgetDefinition>>> GetWidgets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public Response<List<WidgetDefinition>> GetWidgets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var defs = _widgetProvider.GetWidgets();
 
-            return List(defs.ToList());
+            return List2(defs.ToList());
         }
     }
 }

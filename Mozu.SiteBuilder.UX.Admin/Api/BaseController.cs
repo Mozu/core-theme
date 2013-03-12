@@ -13,6 +13,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [Resource(PrimaryResourceType =typeof( Product))]
     public abstract class BaseController : ApiController, IApiController
     {
+        [Obsolete]
         public Task<Response<T>> EmptySingle<T>(bool success = true)
         {
             return Task<Response<T>>.Factory.StartNew(() => new Response<T>
@@ -23,6 +24,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             });
         }
 
+        public Response<T> EmptySingle2<T>(bool success = true)
+        {
+            return new Response<T>
+            {
+                Items = default(T),
+                Success = success,
+                Total = 0,
+            };
+        }
+
+        [Obsolete]
         public Task<Response<T>> Single<T>(T single, int? total = null, string message = null)
         {
             return Task<Response<T>>.Factory.StartNew(() => new Response<T>
@@ -45,7 +57,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public Task<Response<List<T>>> List<T>(T single, int? total = null)
         {
+            #pragma warning disable 612
             return List(new List<T> {single}, total);
+            #pragma warning restore 612
+
         }
 
         public Response<List<T>> List2<T>(T single, int? total = null)
@@ -80,9 +95,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 };
         }
 
+        [Obsolete]
         public Task<Response<List<T>>> EmptyList<T>()
         {
             return List(default(List<T>));
+        }
+
+        public Response<List<T>> EmptyList2<T>()
+        {
+            return List2(default(List<T>));
         }
 
         public Task<Response<List<T>, VariantMetaData>> ListWithMetaData<T>(List<T> list, VariantMetaData metaData, int? total = null)
@@ -132,6 +153,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return FailureList2<T>(error);
         }
 
+        [Obsolete]
         public Task<Response<T>> SuccessWithTotal<T>(int total)
         {
             return Task<Response<T>>.Factory.StartNew(() => new Response<T>
@@ -140,6 +162,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Success = true,
                 Total = total,
             });
+        }
+
+        public Response<T> SuccessWithTotal2<T>(int total)
+        {
+            return new Response<T>
+            {
+                Items = default(T),
+                Success = true,
+                Total = total
+            };
         }
 
         public Task<Response<T>> Message<T>(bool success, string message)

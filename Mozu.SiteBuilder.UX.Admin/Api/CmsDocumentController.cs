@@ -46,46 +46,46 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "delete")]
-        public Task<Response<List<AVM.Document>>> Delete(List<AVM.Document> docs)
+        public async Task<Response<List<AVM.Document>>> Delete(List<AVM.Document> docs)
         {
-            var tasks = _cmsService.Delete(docs).ToArray ();
-            Task.WaitAll(tasks);
+            var tasks = _cmsService.Delete(docs);
+            await Task.WhenAll(tasks);
             var successes = tasks.Select(x => x.Result).Select(x => x.Item1 ? 1 : 0).Sum();
 
-            return EmptyList<AVM.Document>();
+            return EmptyList2<AVM.Document>();
         }
        
         
         [WebInvoke(Method = "POST", UriTemplate = "create")]
-        public Task<Response<List<AVM.Document>>> Create(List<AVM.Document> docs)
+        public async Task<Response<List<AVM.Document>>> Create(List<AVM.Document> docs)
         {
             var tasks = _cmsService.Create(docs);
-            Task.WaitAll(tasks.ToArray ());
+            await Task.WhenAll(tasks.ToArray ());
             var response = tasks.Select(x => x.Result.ReadAsSync()).Select(ConvertDocument).ToList();
 
-            return List(response);
+            return List2(response);
         }
        
         [WebInvoke(Method = "POST", UriTemplate = "update")]
-        public Task<Response<List<AVM.Document>>> Update(List<AVM.Document> docs )
+        public async Task<Response<List<AVM.Document>>> Update(List<AVM.Document> docs )
         {
-            var tasks = _cmsService.Update(docs).ToArray();
-            Task.WaitAll(tasks);
+            var tasks = _cmsService.Update(docs);
+            await Task.WhenAll(tasks);
 
-            return List(docs);
+            return List2(docs);
         }
 
         [WebGet(UriTemplate = "read")]
-        public Task<Response<List<AVM.Document>>> ReadDocument([FromUri]PagingParamaters pagingParams)
+        public async Task<Response<List<AVM.Document>>> ReadDocument([FromUri]PagingParamaters pagingParams)
         {
             DC.PagedCollection<DC.Document> results = null;
             if (pagingParams.id == null)
             {
-                results = _cmsService.GetList ( new CmsListRequest ()
+                results = (await _cmsService.GetList ( new CmsListRequest ()
                 {
                     Collection = CmsConstants.Documents.default_collection_name,
                     PageSize = int.MaxValue 
-                }).Result.ReadAsSync();
+                })).ReadAsSync();
                 
                 
             }
@@ -98,7 +98,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     Items = new List<DC.Document>()
                     {
-                        this._cmsService.Get( col, id ).Result.ReadAsSync ()
+                        (await _cmsService.Get( col, id )).ReadAsSync()
                         
                     },
                     TotalCount =1,
@@ -109,7 +109,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             var docs = results.Items.Select(document => ConvertDocument(document )).ToList();
 
-            return List(docs);
+            return List2(docs);
         }
 
         private static AVM.Document ConvertDocument(Mozu.Content.Contracts.Document result)

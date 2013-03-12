@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                 startIndex: pagingParameters.startIndex,
                                 pageSize: pagingParameters.pageSize);
 
-            return await List(customers.ToList());
+            return List2(customers.ToList());
         }
 
         [WebGet(UriTemplate = "edit/{id}")]
@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var customer = await _customerRepository.Get(id);
 
-            return await Single(customer);
+            return Single2(customer);
         }
 
         [WebGet(UriTemplate = "autocomplete/?query={query}")]
@@ -97,11 +97,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "groups/update")]
-        public Task<Response<CustomerGroup>> UpdateGroup(CustomerGroup group)
+        public Response<CustomerGroup> UpdateGroup(CustomerGroup group)
         {
             // TODO: This is required for models that are stored in a TreeList. Right now, to leverage
             //       checkboxes and drag and drop, a TreeList is being used for these in the UI.
-            var response = Single(@group, message: "Groups cannot be updated at this time.");
+            var response = Single2(group, message: "Groups cannot be updated at this time.");
 
             return response;
         }

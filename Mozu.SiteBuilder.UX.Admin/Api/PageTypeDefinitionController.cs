@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [WebGet(UriTemplate = "list")]
-        public async Task<Response<List<PageTemplateDefinition>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public Response<List<PageTemplateDefinition>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
 
 

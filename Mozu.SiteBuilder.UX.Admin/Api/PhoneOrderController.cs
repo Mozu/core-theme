@@ -40,60 +40,51 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "product/{productCode}")]
-        public Task<Response<RuntimeProductContract>> GetProductRaw(string productCode)
+        public async Task<Response<RuntimeProductContract>> GetProductRaw(string productCode)
         {
-            ServiceClientResponse<RuntimeProductContract> res = _productClient.GetProduct(productCode, null, null, null).Result;
-            RuntimeProductContract prod = res.ReadAsSync();
+            RuntimeProductContract prod = (await _productClient.GetProduct(productCode, null, null, null)).ReadAsSync();
             // var product = Mapper.Map<CatalogProduct>(prod);
 
-            return Single<RuntimeProductContract>(prod);
+            return Single2<RuntimeProductContract>(prod);
         }
 
         [WebGet(UriTemplate = "product/{productCode}")]
-        public Task<Response<RuntimeProductDTO>> GetProduct(string productCode)
+        public async Task<Response<RuntimeProductDTO>> GetProduct(string productCode)
         {
-            ServiceClientResponse<RuntimeProductContract> res = _productClient.GetProduct(productCode, null, null, null).Result;
-            RuntimeProductContract prod = res.ReadAsSync();
+            RuntimeProductContract prod = (await _productClient.GetProduct(productCode, null, null, null)).ReadAsSync();
 
             RuntimeProductDTO product = Mapper.Map<RuntimeProductDTO>(prod);
 
-            return Single<RuntimeProductDTO>(product);
+            return Single2<RuntimeProductDTO>(product);
         }
 
         [WebGet(UriTemplate = "productsuggest?q={query}")]
-        public Task<Response<List<string>>> GetSuggestProduct(string query)
+        public async Task<Response<List<string>>> GetSuggestProduct(string query)
         {
-            ServiceClientResponse<SearchSuggestionContract> res = _searchClient.Suggest(query, null).Result;
+            SearchSuggestionContract ss = (await _searchClient.Suggest(query, null)).ReadAsSync();
 
-            SearchSuggestionContract ss = res.ReadAsSync();
-
-            return List<string>(ss.Suggestions);
+            return List2<string>(ss.Suggestions);
         }
 
         [WebGet(UriTemplate = "productsearch?q={q}")]
-        public Task<Response<List<RuntimeProductContract>>> GetProductSearch(string q)
+        public async Task<Response<List<RuntimeProductContract>>> GetProductSearch(string q)
         {
-            ServiceClientResponse<RuntimeProductSearchResultContract> res = _searchClient.Search(q, null, null, null, null, null, null, null, null, null).Result;
-
-            RuntimeProductSearchResultContract r = res.ReadAsSync();
+            RuntimeProductSearchResultContract r = (await _searchClient.Search(q, null, null, null, null, null, null, null, null, null)).ReadAsSync();
             // var product = Mapper.Map<CatalogProduct>(prod);
 
-            return List<RuntimeProductContract>(r.Items);
+            return List2<RuntimeProductContract>(r.Items);
         }
 
         [WebInvoke(Method="POST",UriTemplate = "order/stuffit")]
-        public Task<Response<OrderDTO>> StuffAnOrderIntoABox(OrderDTO order)
+        public async Task<Response<OrderDTO>> StuffAnOrderIntoABox(OrderDTO order)
         {
             var o = new OrderContract();
 
             o.Items.AddRange(order.Items);
 
-            ServiceClientResponse<OrderContract> res = _orderClient.CreateOrder(o).Result;
+            OrderContract r = (await _orderClient.CreateOrder(o)).ReadAsSync();
 
-            OrderContract r = res.ReadAsSync();
-            // var product = Mapper.Map<CatalogProduct>(prod);
-
-            return Single<OrderDTO>(order);
+            return Single2<OrderDTO>(order);
         }
 
         [DataContract]

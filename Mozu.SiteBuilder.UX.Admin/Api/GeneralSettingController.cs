@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "save")]
-        public Task<Response<GeneralSettings>> Save(GeneralSettings settingsToSave)
+        public Response<GeneralSettings> Save(GeneralSettings settingsToSave)
         {
             var existingBlockIds = _wrapper.GetIPBlocks().Select(x => x.Id).ToList();
             var savedSettings = _wrapper.UpdateGeneralSettings(settingsToSave);
@@ -39,23 +39,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             else
                 _wrapper.UpdateIPBlockCollection(settingsToSave, existingBlockIds);
 
-            return Single(Mapper.Map<GeneralSettings>(savedSettings));
+            return Single2(Mapper.Map<GeneralSettings>(savedSettings));
         }
 
         [WebGet(UriTemplate = "timezones/read")]
-        public Task<Response<List<TimeZone>>> GetTimeZones([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public Response<List<TimeZone>> GetTimeZones([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var results = _wrapper.GetTimeZones().ToList();
 
-            return List(results);
+            return List2(results);
         }
 
         [WebGet(UriTemplate = "ipranges/read")]
-        public Task<Response<List<IPBlock>>> GetIpRanges([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public Response<List<IPBlock>> GetIpRanges([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var results = _wrapper.GetIPBlocks().ToList();
 
-            return List(results);
+            return List2(results);
         }
     }
 }

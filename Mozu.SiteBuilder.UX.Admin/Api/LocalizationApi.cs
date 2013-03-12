@@ -15,12 +15,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         [ApiAuthorize]
         [WebGet(UriTemplate = "read")]
-        public Task<Response<List<KeyValuePair<string, string>>>> GetStrings()
+        public Response<List<KeyValuePair<string, string>>> GetStrings()
         {
             var lang = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
             var list = new List<KeyValuePair<string, string>>();
             var path = HttpContext.Current.Server.MapPath(@"/admin/scripts/app/locale/lang-" + lang + ".csv");
 
+            // TODO: async-y reading magic
             using (var reader = new StreamReader(File.OpenRead(path)))
             {
                 while (!reader.EndOfStream)
@@ -41,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             } 
 
-            return List(list);
+            return List2(list);
         } 
     }
 }
