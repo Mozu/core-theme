@@ -168,7 +168,7 @@
                     me.publish('update', returnObj);
                     return returnObj;
                 };
-            this.apiPromise = api.create(this.mozuType, obj, false).then(function (apiModel) {
+            this.apiPromise = api.create(this.mozuType, this.toJS(), false).then(function (apiModel) {
                 me.apiModel = apiModel;
                 $.each(apiModel.getAvailableActions(), function (ix, actionName) {
                     (actionName in me ? apiModel : me)[actionName] = function (data) {

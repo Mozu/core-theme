@@ -43,7 +43,7 @@
 						<span class="mz-cart-price mz-updated-price" data-bind="css: { 'mz-updated-price': !priceIsModified }, currencyText: UnitPrice().FinalAmount"></span>
 					</td>
 					<td align="center">
-						<input class="mz-cart-quantity" type="text" data-bind="value: Quantity" />
+						<input class="mz-cart-quantity" type="text" data-bind="value: Quantity, valueUpdate: 'afterkeydown'" />
 					</td>
 					<td align="right">
 						<span class="mz-cart-rowtotal" data-bind="currencyText: Total"></span>
@@ -81,7 +81,10 @@
 				<tr >
 					<td colspan="5" align ="right">
 						<input type="hidden" name="Id" value="{{ Model.Id }}" />
+                        {% comment %}
+                        <!-- Below button should no longer be necessary, as edits to quantity instantly "take" -->
 						<input type="button" value="Update" id="update" data-bind="click: updateItems" />
+                        {% endcomment %}
 						<button id="checkout" class="mz-button mz-btn-checkout mz-btn-cta"  {% if Model.Items.Count == 0 %} disabled="disabled" {% endif %} type="submit">Proceed to Checkout</button>
 					</td>
 				</tr>
