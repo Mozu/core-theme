@@ -6,6 +6,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core.ErrorHandling;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers;
@@ -55,6 +56,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             catch (AggregateException aggEx)
             {
                 Exception simpleEx = aggEx.UnwrapAgg();
+                var mozuEx = simpleEx as MozuApplicationException;
+                if (mozuEx != null)
+                    return FriendlyMozuFailure<Attribute>(mozuEx);
+
                 return FailureList2<Attribute>(simpleEx.Message);
             }
             catch (AutoMapperMappingException mapEx)

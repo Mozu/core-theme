@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.Core.Api;
+using Mozu.Core.ErrorHandling;
 using Mozu.ProductAdmin.Contracts;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -115,6 +117,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Total = 0,
                     Message = errorMessage
                 };
+        }
+
+        /// <summary>
+        /// This method is a hacky workaround to extracting the "friendly" error message
+        /// out of the MozuApplicationException's Message.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public Response<List<T>> FriendlyMozuFailure<T>(MozuApplicationException exception)
+        {
+            var error = exception.Message.BetweenStrings("ErrorMessage: \"", "\"");
+            return FailureList2<T>(error);
         }
 
         public Task<Response<T>> SuccessWithTotal<T>(int total)
