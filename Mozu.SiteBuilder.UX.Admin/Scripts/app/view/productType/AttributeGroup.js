@@ -13,7 +13,7 @@
     attributeItemTpl: [
         '<tpl for=".">',
             '<span class="', Taco.baseCSSPrefix, 'draghandle"></span>',
-            '<span class="', Taco.baseCSSPrefix, 'attribute-item-header-text">{attributeFQN}</span>',
+            '<span class="', Taco.baseCSSPrefix, 'attribute-item-header-text">{attributeName}</span>',
         '</tpl>'
     ],
 
@@ -69,65 +69,73 @@
         var items = [];
 
         this.store.each(function (attribute) {
-            items.push(Ext.create('Ext.container.Container', {
-                attribute: attribute,
-                reorderable: true,
-                cls: Taco.baseCSSPrefix + 'attribute-item',
-                items: [{
-                    xtype: 'container',
-                    itemId: 'header',
-                    cls: Taco.baseCSSPrefix + 'attribute-item-header',
-                    layout: {
-                        type: 'hbox',
-                        align: 'middle'
-                    },
-                    items: [{
-                        xtype: 'component',
-                        flex: 1,
-                        data: attribute.raw,
-                        tpl: this.attributeItemTpl
-                    }, {
-                        xtype: 'secondarybutton',
-                        itemId: 'delete',
-                        text: 'Delete',
-                        click: function () { this.removeAttribute(attribute); },
-                        scope: this
-                    }, {
-                        xtype: 'secondarybutton',
-                        itemId: 'edit',
-                        text: 'Edit',
-                        click: function () { this.edit(attribute); },
-                        scope: this
-                    }]
-                }, {
-                    xtype: 'container',
-                    itemId: 'body',
-                    minHeight: 50,
-                    cls: Taco.baseCSSPrefix + 'attribute-item-body',
-                    items: [{
-                        xtype: 'component',
-                        itemId: 'placeholder',
-                        data: attribute.raw,
-                        tpl: [
-                            '<tpl if="this.isList(inputType)">',
-                                '{[Ext.Array.pluck(values.allValues, "value").join(", ")]}',
-                            '<tpl else>',
-                                '{inputType}',
-                            '</tpl>',
-                            {
-                                isList: function (inputType) { return inputType === 'List'; }
-                            }
-                        ]
-                    }]
-                }]
-            }));
+            items.push(this.buildAttribute(attribute));
         }, this);
         
         return items;
     },
 
+    buildAttribute: function (attribute) {
+        //debugger;a
+        return Ext.create('Ext.container.Container', {
+            attribute: attribute,
+            reorderable: true,
+            cls: Taco.baseCSSPrefix + 'attribute-item',
+            items: [{
+                xtype: 'container',
+                itemId: 'header',
+                cls: Taco.baseCSSPrefix + 'attribute-item-header',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                items: [{
+                    xtype: 'component',
+                    flex: 1,
+                    data: attribute.data,
+                    tpl: this.attributeItemTpl
+                }, {
+                    xtype: 'secondarybutton',
+                    itemId: 'delete',
+                    text: 'Delete',
+                    click: function () { this.removeAttribute(attribute); },
+                    scope: this
+                }, {
+                    xtype: 'secondarybutton',
+                    itemId: 'edit',
+                    text: 'Edit',
+                    click: function () { this.edit(attribute); },
+                    scope: this
+                }]
+            }, {
+                xtype: 'container',
+                itemId: 'body',
+                minHeight: 50,
+                cls: Taco.baseCSSPrefix + 'attribute-item-body',
+                items: [{
+                    xtype: 'component',
+                    itemId: 'placeholder',
+                    data: attribute.data,
+                    tpl: [
+                        '<tpl if="this.isList(inputType)">',
+                            '{[Ext.Array.pluck(values.selectedValues, "value").join(", ")]}',
+                        '<tpl else>',
+                            '{inputType}',
+                        '</tpl>',
+                        {
+                            isList: function (inputType) { return inputType === 'List'; }
+                        }
+                    ]
+                }]
+            }]
+        });
+    },
+
     create: function () {
         this.down('[itemId=add]').disable();
+        this.editor.record = Ext.create('Taco.model.ProductTypeAttribute', {
+            productTypeId: this.productType.getId()
+        });
         this.editor.create();
         this.getLayout().setActiveItem(1);
     },
@@ -140,8 +148,14 @@
     removeAttribute: function (attribute) {
     },
 
-    onSave: function () {
-
+    onSave: function (form, record) {
+        if (this.editor.isEdit()) {
+            //
+        } else {
+            this.store.add(record);
+        }
+        this.listContainer.add(this.buildAttribute(record));
+        this.onCancel();
     },
 
     onCancel: function () {

@@ -75,7 +75,7 @@ Ext.define('Taco.core.ux.form.Form', {
 
         if (this.flexLayout) {
             this.layout = 'auto';
-            this.componentCls += ' ' + Taco.baseCSSPrefix + 'form-flexbox' + ' ' + Taco.baseCSSPrefix + 'form-flexbox-start';
+            this.bodyCls += ' ' + Taco.baseCSSPrefix + 'flexform';
         }
 
         if (!this.items) {
