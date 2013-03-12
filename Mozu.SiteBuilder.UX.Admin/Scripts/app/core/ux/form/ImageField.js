@@ -10,7 +10,7 @@ Ext.define('Taco.core.ux.form.ImageField', {
     width: 200,
     height: 200,
     imgBaseUrl: '/admin/img/files/',
-    imgAddPhoto: '/admin/Scripts/resources/images/AddPhotos.png',
+    imgAddPhoto: '/admin/Scripts/resources/images/legacy/AddPhotos.png',
 
     fieldSubTpl: [
         // '<div id="{id}-display" class="taco-image-field" style="height: {height}px; width: {width}px;">',

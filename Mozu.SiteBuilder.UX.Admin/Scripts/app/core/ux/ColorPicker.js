@@ -175,7 +175,7 @@ Ext.define('Taco.core.ux.ColorPicker', {
             height: 64,
             items: [{
                 type: 'image',
-                src: '/admin/Scripts/resources/images/background-alpha.png',
+                src: '/admin/Scripts/resources/images/legacy/background-alpha.png',
                 width: '100%',
                 height: '100%'
             }, this.sampleColor]
