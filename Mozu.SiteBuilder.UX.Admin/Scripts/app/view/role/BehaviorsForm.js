@@ -30,7 +30,7 @@ Ext.define('Taco.view.role.BehaviorsForm', {
         tasks.add([{
             key: 'sync-behavior-store',
             store: this.store,
-            dependencies: 'update-fk-store',
+            dependencies: 'update-fk-store'
         }, {
             key: 'update-fk-store',
             updateForeignKey: 'roleId',

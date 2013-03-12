@@ -54,7 +54,7 @@ Ext.define('Taco.view.productType.Form', {
             layout: 'card',
             header: {
                 title: 'Options',
-                margin: '0 0 7',
+                margin: '0 0 7'
             },
             tools: [{
                 xtype: 'primarybutton',
@@ -64,7 +64,7 @@ Ext.define('Taco.view.productType.Form', {
             }],
             items: [{
                 header: false,
-                itemId: 'attributes',
+                itemId: 'attributes'
                 // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
                 //     listeners: {
                 //         drop: this.onDrop,
@@ -86,7 +86,7 @@ Ext.define('Taco.view.productType.Form', {
             layout: 'card',
             header: {
                 title: 'Extras',
-                margin: '0 0 7',
+                margin: '0 0 7'
             },
             tools: [{
                 xtype: 'primarybutton',
@@ -96,7 +96,7 @@ Ext.define('Taco.view.productType.Form', {
             }],
             items: [{
                 header: false,
-                itemId: 'attributes',
+                itemId: 'attributes'
                 // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
                 //     listeners: {
                 //         drop: this.onDrop,
@@ -113,7 +113,7 @@ Ext.define('Taco.view.productType.Form', {
             layout: 'card',
             header: {
                 title: 'Properties',
-                margin: '0 0 7',
+                margin: '0 0 7'
             },
             tools: [{
                 xtype: 'primarybutton',
@@ -123,7 +123,7 @@ Ext.define('Taco.view.productType.Form', {
             }],
             items: [{
                 header: false,
-                itemId: 'attributes',
+                itemId: 'attributes'
                 // plugins: Ext.create('Taco.core.ux.BoxReorderer', {
                 //     listeners: {
                 //         drop: this.onDrop,
@@ -262,7 +262,7 @@ Ext.define('Taco.view.productType.Form', {
                     allowDeselect: false,
                     listeners: {
                         selectionchange: function () {
-                            console.log('changed')
+                            //console.log('changed')
                         }
                     }
                 }

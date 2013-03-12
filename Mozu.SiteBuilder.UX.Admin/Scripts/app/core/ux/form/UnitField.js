@@ -244,5 +244,5 @@ Ext.define('Taco.core.ux.form.UnitField', {
         if (!Ext.isEmpty(v)) {
             me.setValue(v);
         }
-    },
+    }
 });

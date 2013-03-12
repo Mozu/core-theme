@@ -15,8 +15,6 @@ Ext.define('Taco.view.product.subform.SEO', {
         this.defaults.productInSiteInfo = this.productInSiteInfo;
         this.defaults.persistChangesToModel = true;
 
-   
-
         this.items = [{
             xtype: 'productoverride',
             overrideFieldName: 'isSEOContentOverridden',
@@ -24,7 +22,6 @@ Ext.define('Taco.view.product.subform.SEO', {
             items: [{
                 fieldLabel: 'Meta Title',
                 name: 'metaTagTitle'
-                
             }, {
                 fieldLabel: 'Friendly URL',
                 name: 'seoFriendlyUrl'
@@ -36,6 +33,5 @@ Ext.define('Taco.view.product.subform.SEO', {
         }];
 
         this.callParent( arguments );
-    },
-   
+    }
 });
