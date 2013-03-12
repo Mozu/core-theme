@@ -3,7 +3,8 @@
  */
 Ext.define('Taco.core.ux.form.FlexBox', {
     extend: 'Ext.container.Container',
-    alias: 'widget.formflexbox',
+   
+    alias: ['widget.formflexbox', 'layout.formflexbox'],
     componentCls: Taco.baseCSSPrefix + 'form-flexbox',
 
     layout: 'auto',
