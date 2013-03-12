@@ -44,6 +44,15 @@
         observables: {
             Total: {},
             hasDiscount: {},
+        },
+        checkout: function () {
+            var self = this;
+            self.submitting(true);
+            this.apiModel.checkout().then(function () {
+                window.location = "checkout";
+            }, function (error) {
+                self.messages.push(error.message);
+            });
         }
     }, function constructCart() {
         var self = this;
@@ -74,6 +83,9 @@
         this.isEmpty = ko.computed(function () {
             return self.Items().length === 0;
         });
+
+        // run an extra sync because we don't get a full cart in the mozuData object for some reason
+        this.get();
     });
 
 

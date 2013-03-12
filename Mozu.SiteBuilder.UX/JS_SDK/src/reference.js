@@ -17,7 +17,7 @@ var ApiReference = (function () {
     ApiObject.prototype = {
         action: function (actionName, data) {
             var me = this;
-            var requestConf = ApiReference.getRequestConfig(actionName, this.type, data, this.api.context, this);
+            var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
             return this.api.request(basicOps[actionName], requestConf, data).then(function (rawJSON) {
                 if (requestConf.returnType) {
                     return ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
@@ -172,7 +172,8 @@ var ApiReference = (function () {
             checkout: {
                 verb: 'POST',
                 template: '{$OrderService}?cartId={Id}',
-                noBody: true
+                noBody: true,
+                includeSelf: true
             }
         },
         'cartitem': {
