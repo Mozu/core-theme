@@ -2,10 +2,10 @@
  * @class Taco.view.themes.Index
  * @author Michael Speed Elder
  */
-Ext.define('Taco.view.themes.Index', {
+Ext.define('Taco.view.theme.Index', {
     extend: 'Taco.core.ux.content.Container',
     requires: [
-        'Taco.view.themes.ThemeView'
+        'Taco.view.theme.ThemeView'
         , 'Taco.store.ThemeListing'
     ],
 
@@ -98,10 +98,10 @@ Ext.define('Taco.view.themes.Index', {
 //            ]
 //        });
 
-        this.unpublishedThemes = Ext.create('Taco.view.themes.ThemeView', {
+        this.unpublishedThemes = Ext.create('Taco.view.theme.ThemeView', {
             store: this.store
         });
-        this.publishedThemes = Ext.create('Taco.view.themes.ThemeView', {
+        this.publishedThemes = Ext.create('Taco.view.theme.ThemeView', {
             store: this.store,
             renderSelected: true
         });

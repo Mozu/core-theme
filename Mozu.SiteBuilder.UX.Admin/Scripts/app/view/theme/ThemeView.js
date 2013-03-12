@@ -1,5 +1,5 @@
 /**
- * @class Taco.view.themes.ThemeView
+ * @class Taco.view.theme.ThemeView
  * @author Michael Speed Elder
  * Date: 12/4/12
  * Time: 6:21 PM
@@ -7,13 +7,13 @@
  *
  */
 
-Ext.define('Taco.view.themes.ThemeView', {
+Ext.define('Taco.view.theme.ThemeView', {
     extend: 'Ext.view.View',
     xtype: 'themeview',
     store: this.store,
     disableSelection: true,
     padding: '0 0 12 0', // *** Make room for box-shadow
-    // renderSelected: false, // *** Override through config when newing up to render either the "published" or the "unpublished" themes.
+    // renderSelected: false, // *** Override through config when newing up to render either the "published" or the "unpublished" theme.
     itemSelector: 'div.taco-theme-swatch'
 
     , initComponent: function () {
