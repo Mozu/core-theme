@@ -198,11 +198,10 @@
                 this.eventBus = makeEventBus(this);
                 this.populate(obj);
                 this.initialized = true;
-                this.submitting = ko.observable(false);
+                this.submitting = ko.observable(false);                if (this.mozuType) 
+                    this.createSDKObject(obj);
                 if (initFunc)
                     initFunc.apply(this, arguments);
-                if (this.mozuType) 
-                    this.createSDKObject(obj);
             };
             ctor.prototype = ptype;
 
