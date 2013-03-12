@@ -74,36 +74,72 @@ Ext.define('Taco.view.product.Index', {
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',
-            actions: [{
+            menuItems:[{
                 itemId: 'preview',
-                text: 'Preview',
-                eventName: 'viewproduct',
-                multiSite: true
+                text: 'Preview in',
+                menu: {
+                    plain: true,
+                    shadow: false,
+                    cls: Taco.baseCSSPrefix + 'grid-row-menu',
+                    items:[]
+                }
             }, {
-                itemId: 'edit',
-                text: 'Edit',
-                eventName: 'editproduct'
-            }, {
-                itemId: 'delete',
                 text: 'Delete',
-                eventName: 'deleteproduct'
-            }]
-            // items: [{
-            //     iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger'
-                // handler: function (view, rowIndex, colIndex, item, e, record) {
-                //     var trigger = e.getTarget('img.' + item.iconCls, 10);
+                menuColumnHandler: function (item, eventData) {
+                    var grid = eventData.grid,
+                        record = eventData.record,
+                        modal;
 
-                //     if (this.actionMenu) this.actionMenu.destroy();
+                    modal = Ext.create('Taco.core.ux.modal.Confirmation', {
+                        autoShow: true,
+                        content: {
+                            html: 'Are you sure you want to delete this product?'
+                        },
+                        listeners: {
+                            cancel: Ext.emptyFn,
+                            confirm: function () {
+                                var store = grid.getStore();
+                                grid.setLoading(true);
+                                store.remove(record);
+                                store.sync({
+                                    success: function (m) {
+                                        grid.setLoading(false);
+                                    },
+                                    failure: function (m) {
+                                        grid.setLoading(false);
+                                    }
+                                });
+                            },
+                            scope: this
+                        }
+                    });
+                }
+            }, {
+                text: 'Edit',
+                menuColumnHandler: function (item, eventData) {
+                    var page = eventData.grid.getParentPage(),
+                        record = eventData.record,
+                        metaData = { id: record.getId() };
 
-                //     this.actionMenu = Ext.create('Ext.menu.Menu', {
-                //         items: [{
-                //             text: 'Edit',
-                //             eventName: 'editproduct',
-                //             handler: function (item, e) { view.fireEvent(item.eventName, view, record); }
-                //         }]
-                //     }).showBy(trigger);
-                // }
-            // }]
+                    page.launchEditor(record, metaData);
+                    Taco.app.StateManager.addState(page.token + '/edit/' + record.getId(), metaData);
+                }
+            }],
+            onMenuShow: function(menu, eventData) {
+                var previewAction = menu.items.get('preview'),
+                    defaults = eventData.header.menuItemDefaults;
+
+                previewAction.menu.removeAll();
+                eventData.record.productInSitesStore().each(function(record) {
+                    previewAction.menu.add(Ext.applyIf({
+                        text: 'site ' + record.getId(),
+                        menuColumnHandler: function() {
+                            console.log(arguments);
+                        }
+                    }, defaults));
+                });
+                previewAction.setVisible(eventData.record.productInSitesStore().count());
+            }
         }],
         contextConf: {
             c: {
@@ -200,28 +236,6 @@ Ext.define('Taco.view.product.Index', {
         imageField: 'imagePath',
         isDragable: false,
         nameField: 'productName',
-    },
-
-    initComponent: function () {
-        var view;
-
-        this.callParent(arguments);
-
-        view = this.gridPanel.getView();
-        view.on({
-            viewproduct: function (view, record, item) {
-                console.log('viewproduct', record);
-            },
-            editproduct: function (view, record, item) {
-                var metaData = { id: record.getId() };
-
-                console.log('editproduct', item);
-
-                this.launchEditor(record, metaData);
-                Taco.app.StateManager.addState(this.token + '/edit/' + record.getId(), metaData);
-            },
-            scope: this
-        });
     },
 
     launchLoadedEditor: function (record, options) {
