@@ -26,7 +26,7 @@
             field: 'Ext.form.field.Field'
         },
         curIdx: 0,
-        data: { src: '/admin/Scripts/resources/images/AddPhotos.png', index: 0, total: 0}, 
+        data: { src: '/admin/Scripts/resources/images/legacy/AddPhotos.png', index: 0, total: 0}, 
         setValue: function (value) {
             var me = this;
 

@@ -15,7 +15,7 @@
         mixins: {
             field: 'Ext.form.field.Field'
         },
-        data:{src:'/admin/Scripts/resources/images/AddPhotos.png'},
+        data:{src:'/admin/Scripts/resources/images/legacy/AddPhotos.png'},
         setValue: function (value) {
             var me = this;
             if ( value && value.length >0 )

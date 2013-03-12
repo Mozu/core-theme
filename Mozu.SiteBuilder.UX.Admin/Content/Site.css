@@ -34,7 +34,7 @@ input[type=text], input[type=password], input[type=email] {
 
 
 #mozu-header {
-    background: #666 url("../../admin/Scripts/resources/images/fabric-2.png") repeat;
+    background: #666 url("../../admin/Scripts/resources/images/legacy/fabric-2.png") repeat;
     padding: 2pc 0;
     text-align: center;
 }
