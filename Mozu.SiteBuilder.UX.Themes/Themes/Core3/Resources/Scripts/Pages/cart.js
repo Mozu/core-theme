@@ -1,8 +1,8 @@
-﻿define(["jquery", "knockout", "modules/models-cart"], function ($, ko, CartModels) {
+﻿define(["modules/jquery-plus", "knockout", "modules/models-cart"], function ($, ko, CartModels) {
 
     var $cartForm = $('#mz-cart-form')
 
-    var cart = new CartModels.Cart($cartForm.data('cart'));
+    var cart = new CartModels.Cart($cartForm.mozuData('cart'));
 
     window.cartVM = cart;
 

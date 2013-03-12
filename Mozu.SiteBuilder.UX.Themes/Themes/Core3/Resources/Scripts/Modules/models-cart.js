@@ -27,12 +27,13 @@
             var price = self.UnitPrice();
             return price.BaseAmount != price.FinalAmount;
         });
-        this.Quantity.subscribe(function(newValue) {
+        this.Quantity.subscribe(function (newValue) {
             self.parentCart.submitting(true);
-            self.UpdateQuantity(newValue).then(function() {
-                self.parentCart.submitting(false);
+            self.apiModel.data.Quantity = newValue;
+            self.apiModel.action('update', self.apiModel.data).then(function () {
+                self.parentCart.get();
             });
-        }
+        });
     });
 
     var Cart = KnockoutVM.extend({
@@ -43,11 +44,6 @@
         observables: {
             Total: {},
             hasDiscount: {},
-        },
-        updateItems: function () {
-            ko.utils.arrayForEach(this.Items(), function (item) {
-                item.submitIfChanged();
-            });
         }
     }, function constructCart() {
         var self = this;
