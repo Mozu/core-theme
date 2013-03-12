@@ -47,13 +47,15 @@ var utils = {
             if (xhr.readyState === 4) {
                 clearTimeout(timeout);
                 if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
-                    var json;
-                    try {
-                        json = JSON.parse(xhr.responseText);
-                    } catch (e) {
-                        failure(xhr, e);
+                    var json = null;
+                    if (xhr.responseText.length > 0) {
+                        try {
+                            json = JSON.parse(xhr.responseText);
+                        } catch (e) {
+                            failure(xhr, e);
+                        }
                     }
-                    if (json) success(json, xhr);
+                    success(json, xhr);
                 } else {
                     failure(xhr);
                 }

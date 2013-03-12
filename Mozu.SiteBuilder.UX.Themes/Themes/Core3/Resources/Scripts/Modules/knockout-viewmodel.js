@@ -42,9 +42,9 @@
                 valIsArray = $.isArray(val);
 
                 // if the val is a KOViewModel it will have a toJS method
-                if (val&&val.toJS) {
+                if (val && val.toJS) {
                     val = val.toJS();
-                } else if (val&&val.toJSON) { // cover the standard, misleadingly-named toJSON method
+                } else if (val && val.toJSON) { // cover the standard, misleadingly-named toJSON method
                     val = val.toJSON();
                 }
 
@@ -68,6 +68,10 @@
             xObj[exclude[i]] = true;
         }
         return xObj;
+    },
+
+    makeEventBus = function () {
+        return $({});
     },
 
     ptype = {
@@ -96,7 +100,7 @@
 
             // add whatever's left, including statics
             $.extend(self, obj);
-
+            return self;
         },
         validate: function () {
             var self = this,
@@ -124,27 +128,6 @@
             return invalidCount === 0;
         },
 
-        /**
-         *
-         * @param {Function} cb  A callback function.
-         * @return {Object}
-         */
-        whenServerUpdates: function (cb) {
-            var self = this,
-                index;
-
-            this.updateCallbacks = this.updateCallbacks || [];
-            index = this.updateCallbacks.length;
-
-            if (cb) {
-                this.updateCallbacks[index] = $.proxy(cb, this);
-                return {
-                    dispose: function () {
-                        self.updateCallbacks[index] = null;
-                    }
-                }
-            }
-        },
         submit: function () {
             var self = this;
             if (this.validate()) {
@@ -157,12 +140,10 @@
                     data: JSON.stringify(this.toJS())
                 });
 
-                deferred.always(function () {
+                deferred.always(function (data) {
                     self.submitting(false);
+                    self.publish('update', data);
                 });
-
-                if (this.updateCallbacks)
-                    deferred.always(this.updateCallbacks);
 
                 return deferred;
             } else {
@@ -181,16 +162,30 @@
             return ko.toJS(ret);
         },
         createSDKObject: function(obj) {
-            var me = this;
-            this.apiPromise = api.create(this.mozuType, this.toJS(), false).then(function (apiModel) {
+            var me = this,
+                onSuccess = function (returnObj) {
+                    if (returnObj === me.apiModel) me.populate(me.apiModel.data);
+                    me.publish('update', returnObj);
+                    return returnObj;
+                };
+            this.apiPromise = api.create(this.mozuType, obj, false).then(function (apiModel) {
                 me.apiModel = apiModel;
                 $.each(apiModel.getAvailableActions(), function (ix, actionName) {
                     (actionName in me ? apiModel : me)[actionName] = function (data) {
-                        return apiModel.action(actionName, data);
+                        return apiModel.action(actionName, data).then(onSuccess);
                     };
                 });
             });
-        }
+        },
+        publish: function () {
+            this.eventBus.trigger.apply(this.eventBus, arguments);
+        },
+        on: function () {
+            this.eventBus.on.apply(this.eventBus, arguments);
+        },
+        off: function () {
+            this.eventBus.off.apply(this.eventBus, arguments);
+        },
     };
 
     return {
@@ -200,6 +195,7 @@
                 this.constructor = ctor;
                 if (conf) $.extend(this, conf);
                 this.exclusionList = makeExclusionList(this);
+                this.eventBus = makeEventBus(this);
                 this.populate(obj);
                 this.initialized = true;
                 this.submitting = ko.observable(false);

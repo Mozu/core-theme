@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //SiteContext.PageContext.WidgetQuery.Add ("product");
 
 
-            return View("product", product);
+            return View("product", prod);
         }
 
         public ActionResult ProductListing(int? categoryId, string sortBy = null, int? page = null, int? itemsPerPage = null)

@@ -2,66 +2,62 @@
 
     var CartItem = KnockoutVM.extend({
         mozuType: 'cartitem',
-        endpoint: '/cart/updatecartitem',
         statics: {
             parentCart: '',
-            id: '',
-            product: ''
+            CartItemId: '',
+            Product: ''
         },
         observables: {
-            quantity: { numeric: 0 },
-            total: { numeric: 2 },
-            unitPrice: {}
+            Quantity: { numeric: 0 },
+            Total: { numeric: 2 },
+            UnitPrice: {}
         },
-        doNotSubmit: ["parentCart", "product", "total", "unitPrice"],
+        doNotSubmit: ['parentCart'],
         submitIfChanged: function () {
             if (this.oldQty != this.quantity()) {
                 this.submit();
             }
         },
         remove: function () {
-            this.quantity(0);
-            this.submit();
+            var me = this;
+            this.del().then(function () {
+                me.parentCart.get();
+            }, function (err) {
+                me.parentCart.messages.push('Error removing item from cart.');
+            });
         }
     }, function constructItem() {
         var self = this, parentCart = this.parentCart;
-        this.oldQty = this.quantity();
+        this.oldQty = this.Quantity();
         this.priceIsModified = ko.computed(function () {
-            var price = self.unitPrice();
-            return price.baseAmount != price.finalAmount;
-        });
-        this.whenServerUpdates(function (newData) {
-            parentCart.populate(newData);
+            var price = self.UnitPrice();
+            return price.BaseAmount != price.FinalAmount;
         });
     });
 
     var Cart = KnockoutVM.extend({
         mozuType: 'cart',
         observableArrays: {
-            items: {}
+            Items: {}
         },
         observables: {
-            total: {},
+            Total: {},
             hasDiscount: {},
         },
         updateItems: function () {
-            ko.utils.arrayForEach(this.items(), function (item) {
+            ko.utils.arrayForEach(this.Items(), function (item) {
                 item.submitIfChanged();
             });
         }
     }, function constructCart() {
         var self = this;
 
-        this.isEmpty = ko.computed(function () {
-            return self.items().length === 0;
-        });
-
         // extract current value
-        var items = this.items();
+        var items = this.Items();
         // private, underlying observablearray
         var _items = ko.observableArray();
         // public proxy observable
-        this.items = ko.computed({
+        this.Items = ko.computed({
             write: function (newArray) {
                 if ($.isArray(newArray)) {
                     _items($.map(newArray, function (itemConf) {
@@ -77,7 +73,11 @@
         });
 
         // now populate it
-        this.items(items);
+        this.Items(items);
+
+        this.isEmpty = ko.computed(function () {
+            return self.Items().length === 0;
+        });
     });
 
 

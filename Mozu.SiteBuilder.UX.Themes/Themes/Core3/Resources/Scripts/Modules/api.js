@@ -11,7 +11,7 @@ define(['sdk'], function (Mozu) {
                .Site(headers['x-vol-site'])
                .AppClaims(headers['x-vol-app-claims'])
                .UserClaims(headers['x-vol-user-claims'])
-               .BypassCache(headers['x-vol-bypass-cache'])
+            //   .BypassCache(headers['x-vol-bypass-cache'])
                .api();
 
     // we would have also accepted Mozu.Store(headers) but that's less showoffy.

@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
 
-            return View("cart", Mapper.Map<VMCart>(cart));
+            return View("cart", cart); //Mapper.Map<VMCart>(cart));
         }
 
         public JsonDCResult ApplyCoupon(string couponCode)
