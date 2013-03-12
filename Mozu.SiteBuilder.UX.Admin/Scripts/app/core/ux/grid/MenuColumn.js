@@ -9,76 +9,95 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
     alias: 'widget.taco.menucolumn',
 
     draggable: false,
-
     hideable: false,
-
     iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger',
-
     resizable: false,
-
     sortable: false,
-
+    tdCls: Taco.baseCSSPrefix + 'menu-col-cell',
     text: 'Actions',
-
     width: 100,
 
-    actions: [],
+    menuItems: [],
+    menuItemDefaults: { plain: true },
 
-    menuCls: Taco.baseCSSPrefix + 'grid-row-menu',
+    getMenu: function (eventData) {
+        var menuColumnHandler, recurseItemFn;
 
-    constructor: function (config) {
-        var cfg = Ext.apply({}, config),
-            iconCls = cfg.iconCls || this.iconCls,
-            actions = cfg.actions || this.actions,
-            menuCls = cfg.menuCls || this.menuCls;
+        menuColumnHandler = function (item) {
+            item.menuColumnHandler(item, item.eventData);
+        };
 
-        Ext.applyIf(config, {
-            items: [{
-                iconCls: iconCls,
-                handler: function (view, rowIndex, colIndex, item, e, record) {
-                    var trigger = e.getTarget('img.' + item.iconCls, 10),
-                        children = record.get('productInSites');
+        recurseItemFn = function(item) {
+            item.eventData = eventData;
 
-                    Ext.Array.each(actions, function (action, index, allActions) {
-                        var subMenu = undefined,
-                            subItems = [];
+            if (item.menuColumnHandler && !item.menuColumnHandlerEvent) {
+                item.menuColumnHandlerEvent = true;
+                item.on('click', menuColumnHandler, item.scope || item );
+            }
+            if (item.menu) {
+                recurseItemFn(item.menu);
+            }
+            if (item.items) {
+                item.items.each(recurseItemFn);
+            }
+        };
 
-                        if (!Ext.isEmpty(children) && action.multiSite === true) {
-                            Ext.Array.each(children, function (child) {
-                                subItems.push({
-                                    plain: false,
-                                    text: child.siteId.toString(),
-                                    eventName: action.eventName,
-                                    handler: function (item, e) { view.fireEvent(item.eventName, view, record, item); }
-                                });
-                            });
-                        }
+        if (!this.menu) {
+            this.menu = new Ext.menu.Menu({
+                plain: true,
+                shadow: false,
+                cls: Taco.baseCSSPrefix + 'grid-row-menu',
+                items: this.getMenuItems(Ext.Array.clone(this.menuItems))
+            });
+        }
 
-                        if (!Ext.isEmpty(subItems)) {
-                            subMenu = {
-                                plain: true,
-                                cls: menuCls,
-                                items: subItems
-                            };
-                        }
+        if (this.onMenuShow) {
+            this.onMenuShow(this.menu, eventData);
+        }
+        
+        recurseItemFn(this.menu);
 
-                        Ext.apply(action, {
-                            plain: false,
-                            menu: subMenu,
-                            handler: function (item, e) { view.fireEvent(item.eventName, view, record, item); }
-                        });
-                    }, this);
+        return this.menu;
+    },
 
-                    Ext.destroy(this.actionMenu);
-                    this.actionMenu = Ext.create('Ext.menu.Menu', {
-                        plain: true,
-                        cls: menuCls,
-                        items: actions
-                    }).showBy(trigger);
-                }
-            }]
+    getMenuItems: function (items) {
+        Ext.Array.each(items, function (item) {
+            Ext.applyIf(item, this.menuItemDefaults);
+        }, this);
+
+        return items;
+    },
+
+    handler: function(grid, rowIndex, colIndex, header, e, record, item) {
+        var trigger = e.getTarget('img.' + this.iconCls, 10),
+            eventData = {};
+
+        Ext.apply(eventData, {
+            grid: grid.ownerCt,
+            rowIndex: rowIndex,
+            colIndex: colIndex,
+            header: header,
+            e: e,
+            record: record,
+            item: item
         });
 
-        this.callParent(arguments);
+        if (this.menu && this.menu.isVisible()) {
+            this.menu.hide();
+        } else {
+            this.showMenuBy(trigger, eventData);
+        }
     },
+
+    setMenuActive: function (isMenuOpen) {
+        this.titleEl[isMenuOpen ? 'addCls' : 'removeCls'](this.headerOpenCls);
+        this.triggerEl.addCls(Ext.baseCSSPrefix + 'menu');
+    },
+
+    showMenuBy: function (el, eventData) {
+        var menu = this.getMenu(eventData);
+
+        Ext.fly(el).addCls(Ext.baseCSSPrefix + 'menu');
+        menu.showBy(el, 'tl-tl?');
+    }
 });

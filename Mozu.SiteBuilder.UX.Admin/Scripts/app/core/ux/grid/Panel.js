@@ -9,6 +9,8 @@ Ext.define('Taco.core.ux.grid.Panel', {
     requires: ['Taco.core.ux.grid.Header', 'Taco.core.ux.grid.RowExpander', 'Taco.core.ux.form.SelectField', 'Ext.ux.RowExpander', 'Taco.core.ux.grid.MenuColumn'],
     alias: 'widget.taco.gridpanel',
 
+    mixins: ['Taco.core.util.GetsParentPage'],
+
     /**
      * @cfg {Object} columnDefaults
      * This option is a means of applying default settings to all added columns. Defaults are applied so as not
@@ -30,10 +32,6 @@ Ext.define('Taco.core.ux.grid.Panel', {
      */
     initColumns: function (columns) {
         if (Ext.isEmpty(columns)) columns = [];
-
-        // if (this.actions && this.actionColumn && !Ext.Array.contains(columns, this.actionColumn)) {
-        //     columns.push(this.actionColumn);
-        // }
 
         Ext.Array.each(columns, function (col) {
             Ext.applyIf(col, this.columnDefaults);

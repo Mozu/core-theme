@@ -180,27 +180,33 @@
   }
 
   // menucolumn styles
+  .#{$vprefix}menu-col-cell {
+    .#{$prefix}grid-cell-inner {
+      padding-bottom: 1px;
+      @include flexbox;
+    }
+  }
+
   .#{$vprefix}grid-row-menu-trigger {
+    cursor: pointer;
     height: 30px;
     width: 50px;
     @include icons-sprite(icon-rowactions);
   }
 
   .#{$vprefix}grid-row-menu {
-    @include border-radius(3px);
-    @include box-shadow(0px 3px 4px rgba(0, 0, 0, 0.5));
-
     .#{$prefix}menu-body {
-      background-color: $color-neutral-white !important;
+      border: 1px solid;
       font-size: 0.8125em;
-      @include border-radius(4px);
+      @include dark-border($color-neutral-white);
     }
 
-    .#{$vprefix}grid-row-menu-list {
-      li {
-        margin-top: 4px;
-        padding-left: 12px;
-      }
+    .#{$prefix}menu-item {
+      padding: 6px;
+    }
+
+    &+ .#{$vprefix}grid-row-menu {
+      margin-top: -1px;
     }
   }
 
