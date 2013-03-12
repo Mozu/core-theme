@@ -18,9 +18,10 @@ namespace Mozu.SiteBuilder.Mvc.Theme
         public string Name { get; set; }
 
         /// <summary>
-        /// Obsolete. Returns this theme's name.
+        /// Id. Returns this theme's Id.
         /// </summary>
-        public string Id { get { return this.Name; } }
+        public string Id { get; set; }
+        
 
         /// <summary>
         /// Contains this theme's author.
@@ -53,7 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme
         /// </summary>
         public ICollection<string> Stack { 
             get {
-                return StackT.Select(t => t.Name).ToArray();
+                return StackT.Select(t => t.Id ).ToArray();
             }
         }
 
@@ -106,5 +107,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme
         /// This class is intended to be initalized only by ThemeFactory.
         /// </summary>
         internal Theme() {}
+
+        public string ThemePath { get; set; }
     }
 }

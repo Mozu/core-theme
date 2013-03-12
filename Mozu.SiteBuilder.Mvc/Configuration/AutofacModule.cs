@@ -42,8 +42,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<AuthenticationHelper>().InstancePerLifetimeScope();
             builder.RegisterType<CatalogContext>().As<ICatalogContext>().InstancePerLifetimeScope();
 
-            builder.RegisterType<ThemeMetadataProvider>().As<IThemeMetaDataProvider>().SingleInstance();
-            builder.RegisterType<ThemeRepository>().As<IThemeRepository>().SingleInstance();
+            builder.RegisterType<ThemeMetadataProvider>().As<IThemeMetaDataProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<ThemeRepository>().As<IThemeRepository>().InstancePerLifetimeScope();
 
             builder.RegisterType<RoleWebApiClient>().As<IRoleWebApiClient>();
             builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.Register(c => c.Resolve<TemplateManagerProvider>().GetNewManager()).As<ITemplateManager>();
 
-            builder.RegisterType<ThemeFactory>().SingleInstance();
+            builder.RegisterType<ThemeFactory>().InstancePerLifetimeScope();
 
 
             // builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();

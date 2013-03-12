@@ -20,5 +20,8 @@ namespace Mozu.SiteBuilder.Mvc.Theme
 
         [XmlElement("isMobile")]
         public bool IsMobile { get; set; }
+
+         [XmlElement("id")]
+        public string Id { get; set; }
     }
 }

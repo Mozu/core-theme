@@ -8,11 +8,10 @@ namespace Mozu.SiteBuilder.Mvc.Theme
     /// </summary>
     public interface ITheme : IThemeBasicInfo
     {
-        /// <summary>
-        /// Id. Legacy field.
-        /// </summary>
-        // [Obsolete]
+        
         string Id { get; }
+
+        string ThemePath { get; }
 
         /// <summary>
         /// If this theme inherits from another theme, contains the inherited theme.

@@ -31,5 +31,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme
         /// Contains the thumbnail for this theme or null.
         /// </summary>
         Thumbnail Thumbnail { get; set; }
+
+        string Id { get; set; }
     }
 }

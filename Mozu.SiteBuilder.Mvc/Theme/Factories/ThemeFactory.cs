@@ -56,16 +56,18 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Factories
         /// <summary>
         /// Adds an uninitialized theme to this factory's internal list of themes.
         /// </summary>
-        Theme Convert(IThemeMetaData metadata)
+        Theme Convert(ThemeMetaData metadata)
         {
             return  new Theme
             {
                 Name                = metadata.ThemeInfo.Name,
+                Id                  = metadata.ThemeInfo.Id,
                 Author              = metadata.ThemeInfo.Author,
                 InheritanceString   = metadata.ThemeInfo.Extends,
                 IsDesktop           = metadata.ThemeInfo.IsDesktop,
                 IsMobile            = metadata.ThemeInfo.IsMobile,
                 Thumbnail           = metadata.Thumbnail,
+                ThemePath           = metadata.ThemePath ,
                 NodeConfiguration   = metadata.ThemeSettings.Items
             };
 

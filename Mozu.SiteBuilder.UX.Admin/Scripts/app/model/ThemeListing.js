@@ -5,12 +5,17 @@
 
 Ext.define('Taco.model.ThemeListing', {
     extend: 'Taco.core.data.Model',
-    idProperty:'name',
+    idProperty:'id',
     fields: [{
         name: 'name',
         type: 'string',
         isHidden: true
-    }, {
+    },
+        {
+            name: 'id',
+            type: 'string',
+            isHidden: true
+        }, {
         name: 'author',
         type: 'string',
         isHidden: true,
