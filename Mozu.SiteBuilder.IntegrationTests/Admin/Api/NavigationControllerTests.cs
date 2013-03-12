@@ -121,7 +121,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             _navigationRepository.GetSet().Returns(new NavigationSet());
             var api = GetApi();
 
-            var result = api.Create(nodes).Result;
+            var result = api.Create(nodes);
 
             _navigationRepository.Received(1).SaveSet(Arg.Is<NavigationSet>(set => set.Nodes.All(node => nodeNames.Contains(node.Name))));
             result.Items.Select(x => x.Name).ShouldEqual(nodeNames);

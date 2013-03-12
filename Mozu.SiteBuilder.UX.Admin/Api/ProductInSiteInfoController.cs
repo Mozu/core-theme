@@ -73,7 +73,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [WebInvoke(UriTemplate = "edit")]
-        public Task<Response<List<ProductInSiteInfo>>> EditProductInSiteInfo(List<ProductInSiteInfo> pisis)
+        public async Task<Response<List<ProductInSiteInfo>>> EditProductInSiteInfo(List<ProductInSiteInfo> pisis)
         {
             List<ProductInSiteInfo> returned = new List<ProductInSiteInfo>();
 
@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 DC.ProductInSiteInfo dcpisi = Mapper.Map<DC.ProductInSiteInfo>(pisi);
 
-                DC.Product p = _productClient.GetProduct(pisi.ProductCode, null).Result.ReadAsAsync().Result;
+                DC.Product p = (await _productClient.GetProduct(pisi.ProductCode, null)).ReadAsSync();
                 if (p == null)
                     throw new ArgumentException("Product not found: " + pisi.ProductCode);
 
@@ -92,12 +92,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     throw new ArgumentException("ProductInSiteInfo not found. Product: " + p.ProductCode + ". Site ID: " + pisi.SiteId);
 
 
-                DC.Product returnedDcProduct = _productClient.UpdateProduct(p, p.ProductCode).Result.ReadAsAsync().Result;
+                DC.Product returnedDcProduct = (await _productClient.UpdateProduct(p, p.ProductCode)).ReadAsSync();
                 DC.ProductInSiteInfo returnedDcPisi = returnedDcProduct.ProductInSites.First(x => x.SiteId == pisi.SiteId);
                 returned.Add(Mapper.Map<ProductInSiteInfo>(returnedDcPisi));
             }
 
-            return List<ProductInSiteInfo>(returned);
+            return List2<ProductInSiteInfo>(returned);
         }
 
         [WebInvoke(UriTemplate = "delete")]

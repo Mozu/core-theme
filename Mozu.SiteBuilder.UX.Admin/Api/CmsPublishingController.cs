@@ -58,8 +58,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             // TODO: filter and sort
-            string filter = null;
-            string sort = null;
+            // string filter = null;
+            // string sort = null;
 
             int? pageSize = pagingParams.pageSize;
             int? startIndex = pagingParams.startIndex;
@@ -68,7 +68,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
             var res = result.ReadAsAsync().Result;
 
-            return List2(Mapper.Map<List<DocumentDraft>>(res.Items), (int)res.TotalCount);
+            List<DocumentDraft> items = Mapper.Map<List<DocumentDraft>>(res.Items);
+
+            return List2(items, (int)res.TotalCount);
         }
 
         /// <summary>

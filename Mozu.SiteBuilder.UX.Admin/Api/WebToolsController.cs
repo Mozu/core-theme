@@ -49,11 +49,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "robotsTxt", Method = "POST")]
-        public Task<Response<RobotsTxtSettings>> UpdateRobotsTxt(RobotsTxtSettings settings)
+        public async Task<Response<RobotsTxtSettings>> UpdateRobotsTxt(RobotsTxtSettings settings)
         {
-            _webToolsRepository.SaveRobotsContent(settings);
+            await _webToolsRepository.SaveRobotsContent(settings);
 
-            return Single(settings);
+            return Single2(settings);
         }
     }
 }

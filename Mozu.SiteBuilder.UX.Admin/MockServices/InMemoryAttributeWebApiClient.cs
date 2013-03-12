@@ -195,6 +195,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
             throw new NotImplementedException();
         }
 
+#pragma warning disable 1066
         public Task<ServiceClientResponse<DC.AttributeVocabularyValue>> GetAttributeVocabularyValue(string attributeFQN, string value, TargetContextLevelType targetContextLevel = TargetContextLevelType.NotSpecified)
         {
             throw new NotImplementedException();
@@ -204,5 +205,6 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
         {
             throw new NotImplementedException();
         }
+#pragma warning restore 1066
     }
 }

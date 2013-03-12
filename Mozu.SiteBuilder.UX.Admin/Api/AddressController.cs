@@ -22,53 +22,54 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "read/accountcontact/?id={id}")]
-        public Task<Response<CustomerAccountContact>> GetAccountContact(int? customerAccountId, int? contactId)
+        public async Task<Response<CustomerAccountContact>> GetAccountContact(int? customerAccountId, int? contactId)
         {
-            var accountContact = _accountContactRepository.Get(customerAccountId, contactId).Result;
+            var accountContact = await _accountContactRepository.Get(customerAccountId, contactId);
 
-            return Single(accountContact);
+            return Single2(accountContact);
         }
 
         [WebGet(UriTemplate = "read/{customerId}")]
-        public Task<Response<List<CustomerAccountContact>>> Read([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, int? customerId)
+        public async Task<Response<List<CustomerAccountContact>>> Read([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, int? customerId)
         {
-            var addresses = _accountContactRepository.GetAll(customerId).Result;
+            var addresses = await _accountContactRepository.GetAll(customerId);
 
-            return List(addresses.ToList());
+            return List2(addresses.ToList());
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "update/{customerId}")]
-        public Task<Response<CustomerAccountContact>> Update(CustomerAccountContact contact, int? customerId)
+        public async Task<Response<CustomerAccountContact>> Update(CustomerAccountContact contact, int? customerId)
         {
-            var updatedAccountContact = _accountContactRepository.Update(contact, customerId).Result;
-            return Single(updatedAccountContact);
+            var updatedAccountContact = await _accountContactRepository.Update(contact, customerId);
+            return Single2(updatedAccountContact);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "create/{customerId}")]
-        public Task<Response<CustomerAccountContact>> Create(CustomerAccountContact accountContact, int? customerId)
+        public async Task<Response<CustomerAccountContact>> Create(CustomerAccountContact accountContact, int? customerId)
         {
-            var newAccountContact = _accountContactRepository.Create(accountContact, customerId).Result;
+            var newAccountContact = await _accountContactRepository.Create(accountContact, customerId);
 
-            return Single(newAccountContact);
+            return Single2(newAccountContact);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "delete/{customerId}/?force={force}")]
-        public Task<Response<CustomerAccountContact>> Delete(CustomerAccountContact contact, int? customerId, bool force)
+        public Response<CustomerAccountContact> Delete(CustomerAccountContact contact, int? customerId, bool force)
         {
+            // TODO: this only deletes if you force=true ??
             if (force)
             {
                 _accountContactRepository.Delete(contact, customerId);
-                return EmptySingle<CustomerAccountContact>();
+                return EmptySingle2<CustomerAccountContact>();
             }
-            return Single(contact);
+            return Single2(contact);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "duplicate/{customerId}")]
-        public Task<Response<CustomerAccountContact>> Duplicate(CustomerAccountContact accountContact, int? customerId)
+        public async Task<Response<CustomerAccountContact>> Duplicate(CustomerAccountContact accountContact, int? customerId)
         {
-            var duplicate = _accountContactRepository.Duplicate(accountContact).Result;
+            var duplicate = await _accountContactRepository.Duplicate(accountContact);
 
-            return Single(duplicate);
+            return Single2(duplicate);
         }
     }
 }

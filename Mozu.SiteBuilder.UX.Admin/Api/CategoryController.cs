@@ -32,31 +32,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "read")]
-        public Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams)
+        public async Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams)
         {
             if (pagingParams.id == null)
             {
-                var cats = _categoriesClient.GetCategories(startIndex:0,pageSize:600 ).Result.ReadAsAsync().Result;
+                var cats = (await _categoriesClient.GetCategories(startIndex:0,pageSize:600 )).ReadAsSync();
 
                 var categories = Mapper.Map<List<Category>>(cats.Items);
 
-                return List(categories);
+                return List2(categories);
             }
 
-            var category = _categoriesClient.GetCategory(pagingParams.NumericId ).Result.ReadAsAsync().Result;
+            var category = (await _categoriesClient.GetCategory(pagingParams.NumericId)).ReadAsSync();
 
-            return List(Mapper.Map<Category>(category));
+            return List2(Mapper.Map<Category>(category));
         }
 
         [WebGet(UriTemplate = "autocomplete/?query={query}&value={categoryIdsString}")]
-        public Task<Response<List<AutoCompleteField<int>>>> SearchByName(string query, FilterCollection extFilter, string categoryIdsString)
+        public async Task<Response<List<AutoCompleteField<int>>>> SearchByName(string query, FilterCollection extFilter, string categoryIdsString)
         {
-            var allCategories = _categoriesClient.GetCategories(0, 600, null, null, null).Result.ReadAsSync().Items
+            var allCategories = (await _categoriesClient.GetCategories(0, 600, null, null, null)).ReadAsSync().Items
                     //.Where(x => x.IsSystemDefault == false && x.Content != null && x.Content.Name != null)
                     .OrderBy(f => f.Content.Name);
             var catDic = allCategories.ToDictionary(x => x.Id);
 
-            List<Contracts.Category > categories = null;
+            List<Contracts.Category> categories = null;
             int catId;
             if (extFilter != null && extFilter.TryGetValue <int>( "id", out catId ))
             {
@@ -118,35 +118,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //    Value = category.CategoryId,
             //}).ToList();
 
-            return List(retList);
+            return List2(retList);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "update")]
-        public Task<Response<Category>> UpdateCategory(Category category)
+        public async Task<Response<Category>> UpdateCategory(Category category)
         {
-            var updatedCategory = _categoriesClient.UpdateCategory(Mapper.Map<Contracts.Category>(category), category.Id, false).Result.ReadAsAsync().Result;
+            var updatedCategory = (await _categoriesClient.UpdateCategory(Mapper.Map<Contracts.Category>(category), category.Id, false)).ReadAsSync();
 
-            return Single(Mapper.Map<Category>(updatedCategory));
+            return Single2(Mapper.Map<Category>(updatedCategory));
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "create")]
-        public Task<Response<Category>> CreateCategory(Category category)
+        public async Task<Response<Category>> CreateCategory(Category category)
         {
-            var createdCategory = _categoriesClient.AddCategory(Mapper.Map<Contracts.Category>(category)).Result.ReadAsAsync().Result;
+            var createdCategory = (await _categoriesClient.AddCategory(Mapper.Map<Contracts.Category>(category))).ReadAsSync();
 
-            return Single(Mapper.Map<Category>(createdCategory));
+            return Single2(Mapper.Map<Category>(createdCategory));
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "delete/?force={force}")]
-        public Task<Response<Category>> DeleteCategory(Category category, bool force)
+        public async Task<Response<Category>> DeleteCategory(Category category, bool force)
         {
             // Always force deletion of children for now
-            _categoriesClient.DeleteCategoryById(category.Id, true).Wait();
-            return EmptySingle<Category>();
+            await _categoriesClient.DeleteCategoryById(category.Id, true);
+            return EmptySingle2<Category>();
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "duplicate/?id={id}")]
-        public Task<Response<Category>> DuplicateCategory(int id)
+        public async Task<Response<Category>> DuplicateCategory(int id)
         {
             var originalCategory = _categoriesClient.GetCategory(id).Result.ReadAsAsync().Result;
             originalCategory.Id = -1;
@@ -154,20 +154,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //originalCategory.CategoryCode += "-COPY";
             originalCategory.Content.Name += "-COPY";
 
-            var newCategory = _categoriesClient.AddCategory(originalCategory).Result.ReadAsAsync().Result;
+            var newCategory = (await _categoriesClient.AddCategory(originalCategory)).ReadAsSync();
 
-            return Single(Mapper.Map<Category>(newCategory));
+            return Single2(Mapper.Map<Category>(newCategory));
         }
 
         [WebGet(UriTemplate = "tree/read/?id={id}")]
-        public Task<Response<List<CategoryTreeNode>>> ReadChildTreeNodes(int? id)
+        public async Task<Response<List<CategoryTreeNode>>> ReadChildTreeNodes(int? id)
         {
             id = id ?? 0;
 
             if (id == 0)
             {
                 //todo:could return more than 200 and will need to page  
-                var allCats = _categoriesClient.GetCategories(null, int.MaxValue, null, null, null).Result.ReadAsSync()
+                var allCats = (await _categoriesClient.GetCategories(null, int.MaxValue, null, null, null)).ReadAsSync()
                     .Items
                     .OrderBy(x => x.Sequence)
                     .Select(Mapper.Map<CategoryTreeNode>)
@@ -197,31 +197,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     item.leaf = item.Items == null;
                 }
-                return List(retList, allCats.Count);
+                return List2(retList, allCats.Count);
             }
-            var categories = _categoriesClient.GetChildCategories(id).Result.ReadAsSync();
+            var categories = (await _categoriesClient.GetChildCategories(id)).ReadAsSync();
             var categoryTreeNodes = Mapper.Map<List<CategoryTreeNode>>(categories.Items);
 
-            return List(categoryTreeNodes, (int) categories.TotalCount);
+            return List2(categoryTreeNodes, (int) categories.TotalCount);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "tree/duplicate/?id={id}")]
-        public Task<Response<CategoryTreeNode>> DuplicateTreeNode(int id)
+        public async Task<Response<CategoryTreeNode>> DuplicateTreeNode(int id)
         {
-            var originalCategory = _categoriesClient.GetCategory(id).Result.ReadAsAsync().Result;
+            var originalCategory = (await _categoriesClient.GetCategory(id)).ReadAsSync();
             originalCategory.Id = -1;
             //originalCategory.Content.CategoryId = -1;
             //originalCategory.CategoryCode += "-COPY";
             originalCategory.Content.Name += "-COPY";
 
-            var newCategory = _categoriesClient.AddCategory(originalCategory).Result.ReadAsAsync().Result;
+            var newCategory = (await _categoriesClient.AddCategory(originalCategory)).ReadAsSync();
 
             var categoryTreeNode = Mapper.Map<CategoryTreeNode>(newCategory);
-            return Single(categoryTreeNode);
+            return Single2(categoryTreeNode);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "tree/delete/?force={force}")]
-        public Task<Response<CategoryTreeNode>> DeleteTreeNode(List<CategoryTreeNode> nodes, bool force)
+        public async Task<Response<CategoryTreeNode>> DeleteTreeNode(List<CategoryTreeNode> nodes, bool force)
         {
             // NOTE: Ugh... so the proxy has a weird "feature" when we are dealing with treestore
             // where everything needs to come in as an array
@@ -229,13 +229,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var node = nodes[0];
 
             // Always force deletion of children for now
-            _categoriesClient.DeleteCategoryById(node.Id, true).Wait();
+            await _categoriesClient.DeleteCategoryById(node.Id, true);
 
-            return EmptySingle<CategoryTreeNode>();
+            return EmptySingle2<CategoryTreeNode>();
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "tree/create")]
-        public Task<Response<CategoryTreeNode>> CreateTreeNode(List<CategoryTreeNode> nodes)
+        public async Task<Response<CategoryTreeNode>> CreateTreeNode(List<CategoryTreeNode> nodes)
         {
             var node = nodes[0];
 
@@ -256,19 +256,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Sequence = node.Index
             };
 
-            var createdCategory = _categoriesClient.AddCategory (cat).Result.ReadAsAsync().Result;
+            var createdCategory = (await _categoriesClient.AddCategory(cat)).ReadAsSync();
 
             var categoryTreeNode = Mapper.Map<CategoryTreeNode>(createdCategory);
 
-            return Single(categoryTreeNode);
+            return Single2(categoryTreeNode);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "tree/update")]
-        public Task<Response<List<CategoryTreeNode>>> UpdateTreeNode(List<CategoryTreeNode> nodes)
+        public async Task<Response<List<CategoryTreeNode>>> UpdateTreeNode(List<CategoryTreeNode> nodes)
         {
            // var nodeResults = new List<CategoryTreeNode>();
 
-            var allCats = _categoriesClient.GetCategories(null, null, null, null, null).Result.ReadAsSync();
+            var allCats = (await _categoriesClient.GetCategories(null, null, null, null, null)).ReadAsSync();
             var tasks   = new List<System.Threading.Tasks.Task<CategoryTreeNode>>();
             foreach (var categoryTreeNode in nodes)
             {
@@ -287,13 +287,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                
             }
-            System.Threading.Tasks.Task.WaitAll(tasks.ToArray(), 60 * 1000);
+
+            // await with a timeout.
+            await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(60 * 1000));
+
             var nodeResults = tasks.Select ( x=> x.Result ).ToList ();
             //var updatedCategory = _categoriesClient.UpdateCategoryById(originalCategory, originalCategory.CategoryId).Result.ReadAsAsync().Result;
 
             //nodeResults.Add(Mapper.Map<CategoryTreeNode>(updatedCategory));
 
-            return List(nodeResults, nodes.Count);
+            return List2(nodeResults, nodes.Count);
         }
     }
 }

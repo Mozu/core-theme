@@ -1,46 +1,31 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Linq;
 using System.ServiceModel;
+using System.ServiceModel.Web;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using AutoMapper;
-using Mozu.AdminUser.Contracts;
 using Mozu.AdminUser.Contracts.Clients;
-using Mozu.Core.Api;
-using Mozu.Core.Api.Client;
 using Mozu.Core;
-using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Settings;
-using Mozu.PaymentService.Contracts.Clients.Public;
-using Mozu.Provisioning.Contracts;
-using Mozu.SiteBuilder.UX.Admin.Helpers;
-using Mozu.SiteBuilder.UX.Models.Admin;
-using Mozu.Tenant.Contracts;
-using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
-using System.ServiceModel.Web;
-
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
+using Mozu.Tenant.Contracts.Clients;
+using AdminUser2 = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
+using ApiRole = Mozu.Core.Api.Contracts.Role;
+using IAuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.IAuthTicketWebApiClient;
+using IInvitationWebApiClient = Mozu.AdminUser.Contracts.Clients.IInvitationWebApiClient;
+using Invitation = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.Invitation;
+using IRoleWebApiClient = Mozu.AdminUser.Contracts.Clients.IRoleWebApiClient;
 //using DC = Mozu.Core.Api.Contracts;
 using PasswordInfo = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.PasswordInfo;
-using AdminUser2 = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
-using Invitation = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.Invitation;
-using System.Text;
-using IInvitationWebApiClient = Mozu.AdminUser.Contracts.Clients.IInvitationWebApiClient;
-using IRoleWebApiClient = Mozu.AdminUser.Contracts.Clients.IRoleWebApiClient;
-using InvitationWebApiClient = Mozu.AdminUser.Contracts.Clients.InvitationWebApiClient;
-using ApiRole = Mozu.Core.Api.Contracts.Role;
-using AuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.AuthTicketWebApiClient;
-using IAuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.IAuthTicketWebApiClient;
 using Role = Mozu.SiteBuilder.UX.Models.Users.Role;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -49,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [AllowAnonymous]
     public class AccountController : BaseController, IHttpController
     {
-        private List<ApiRole> roles;
+        private List<ApiRole> _roles;
 
         private readonly IAdminUserWebApiClient _usersRepo;
         private readonly IRoleWebApiClient _rolesRepo;
@@ -73,16 +58,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "logoff")]
-        public Task<Response<List<AdminUser2>>> Logoff()
+        public Response<List<AdminUser2>> Logoff()
         {
             //var ticket = _authHelper.GetCurrentTicket();
             //_authTicketRepo.DeleteUserAuthTicket(ticket.RefreshToken).Result.ReadAsSync();
             _authHelper.LogOut();
-            return List(new List<AdminUser2>());
+            return EmptyList2<AdminUser2>();
         }
         
         [WebGet(UriTemplate = "list")]
-        public Task<Response<List<AdminUser2>>> GetUsers([FromUri]PagingParamaters pagingParams, FilterCollection extFilter)
+        public async Task<Response<List<AdminUser2>>> GetUsers([FromUri]PagingParamaters pagingParams, FilterCollection extFilter)
         {
             var tasks= new List<Task<ServiceClientResponse<Core.Api.Contracts.User>>>();
             if (pagingParams.id != null)
@@ -124,7 +109,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     
                 }
             }
-            Task.WaitAll(tasks.ToArray());
+            await Task.WhenAll(tasks.ToArray());
             List<AdminUser2> users = new List<AdminUser2>();
             foreach (var task in tasks)
             {
@@ -133,36 +118,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     users.Add(Mapper.Map<AdminUser2>(task.Result.ReadAsSync()));
                 }
             }
-            return this.List<AdminUser2>(users);
+            return List2<AdminUser2>(users);
         }
 
-        public Task<Response<List<AdminUser2>>> GetAccount()
+        public async Task<Response<List<AdminUser2>>> GetAccount()
         {
             LightweightUserClaims lwU = _authHelper.GetCurrentUser();
             var ctx = Mvc.SiteBuilderContext.Current;
-            var u = _usersRepo.GetUser(lwU.UserId, null).Result.ReadAsAsync().Result;
+            var u = (await _usersRepo.GetUser(lwU.UserId, null)).ReadAsSync();
 
-            return List(Mapper.Map<AdminUser2>(u));
+            return List2(Mapper.Map<AdminUser2>(u));
         }
 
         [WebGet(UriTemplate = "roles/list")]
-        public Task<Response<List<Role>>> GetRoles()
+        public async Task<Response<List<Role>>> GetRoles()
         {
-            var list = Roles.Select(Mapper.Map<Role>).ToList();
-            return List(list);
+            var list = (await GetRolesInternal()).Select(Mapper.Map<Role>).ToList();
+            return List2(list);
         }
 
-        private List<ApiRole> Roles
+        // TODO: this is a lot of logic for a property..
+        private async Task<List<ApiRole>> GetRolesInternal()
         {
-            get
-            {
-                if (roles != null)
-                    return roles;
+            if (_roles != null)
+                return _roles;
 
-                var task = _rolesRepo.GetRoles();
-                var response = task.Result;
-                return roles = response.ReadAsAsync().Result.Items;
-            }
+            var roles = (await _rolesRepo.GetRoles()).ReadAsSync();
+            return _roles = roles.Items;
         }
 
         public async Task<Response<Tenant.Contracts.Tenant>> ChangeTenant(int tenantId)
@@ -205,111 +187,111 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //}
 
         [WebInvoke(Method = "POST", UriTemplate = "users/delete")]
-        public Task<Response<AccountUser>> DeleteUser(AccountUser accountUser)
+        public async Task<Response<AccountUser>> DeleteUser(AccountUser accountUser)
         {
-            _adminUserWebApiClient.RemoveUserRole(accountUser.Id, accountUser.RoleId).Result.ReadAsAsync();
+            await _adminUserWebApiClient.RemoveUserRole(accountUser.Id, accountUser.RoleId);
 
-            return Single(new AccountUser());
+            return EmptySingle2<AccountUser>();
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "invitations/delete")]
-        public Task<Response<Invitation>> DeleteInvitation(Invitation invitation)
+        public async Task<Response<Invitation>> DeleteInvitation(Invitation invitation)
         {
-            _invitationWebApiClient.DeclineInvitation(invitation.Id).Result.ReadAsAsync();
+            await _invitationWebApiClient.DeclineInvitation(invitation.Id);
 
-            return Single(invitation);
+            return Single2(invitation);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "invitations/create")]
-        public Task<Response<Invitation>> CreateInvitation(Invitation invitation)
+        public async Task<Response<Invitation>> CreateInvitation(Invitation invitation)
         {
             try
             {
-                var result = _invitationWebApiClient.CreateInvitation(invitation.RoleId, invitation.EmailAddress).Result.ReadAsSync();
+                var result = (await _invitationWebApiClient.CreateInvitation(invitation.RoleId, invitation.EmailAddress)).ReadAsSync();
                 var newInvitation = Mapper.Map<AdminUser.Contracts.Invitation, Invitation>(result);
 
-                return Single(newInvitation);
+                return Single2(newInvitation);
             }
             catch (Exception e)
             {
-                return Message<Invitation>(false, e.Message);
+                return Message3<Invitation>(false, e.Message);
             }
         }
 
         [WebGet(UriTemplate = "users/list")]
-        public Task<Response<List<AccountUser>>> GetAccountUsers()
+        public async Task<Response<List<AccountUser>>> GetAccountUsers()
         {
-            var admins = _adminUserWebApiClient.Get(null, null, null, null, null).Result.ReadAsAsync().Result.Items;
-            var invites = _invitationWebApiClient.GetInvitations(null).Result.ReadAsAsync().Result.Items;
-            var invitations = Mapper.Map<List<Mozu.AdminUser.Contracts.Invitation>, List<Invitation>>(invites);
+            var admins = (await _adminUserWebApiClient.Get(null, null, null, null, null)).ReadAsSync().Items;
+            var invites = (await _invitationWebApiClient.GetInvitations(null)).ReadAsSync().Items;
+            var invitations = Mapper.Map<List<Invitation>>(invites);
             foreach (var invitation in invitations)
             {
-                var role = Roles.FirstOrDefault(r => r.Id == invitation.RoleId);
+                var role = (await GetRolesInternal()).FirstOrDefault(r => r.Id == invitation.RoleId);
                 invitation.Role = role == null ? "(unknown)" : role.Name;
             }
 
             var users = admins.Select(Mapper.Map<AccountUser>).Concat(
                 invitations.Select(Mapper.Map<AccountUser>)).ToList();
 
-            return List(users);
+            return List2(users);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "invitations/resend")]
-        public Task<Response<Invitation>> ResendInvitation(Invitation invitation)
+        public async Task<Response<Invitation>> ResendInvitation(Invitation invitation)
         {
-            _invitationWebApiClient.ResubmitInvitation(invitation.Id).Result.ReadAsAsync();
+            await _invitationWebApiClient.ResubmitInvitation(invitation.Id);
 
-            return Single(invitation);
+            return Single2(invitation);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "users/updaterole")]
-        public Task<Response<AccountUserRoleUpdate>> UpdateAccountUser(AccountUserRoleUpdate info)
+        public async Task<Response<AccountUserRoleUpdate>> UpdateAccountUser(AccountUserRoleUpdate info)
         {
             try
             {
                 var remove = _adminUserWebApiClient.RemoveUserRole(info.UserId, info.OldRole);
                 var add = _adminUserWebApiClient.AddUserRole(info.UserId, info.NewRole);
-                Task.WaitAll(remove, add);
+                await Task.WhenAll(remove, add);
             }
             catch (Exception e)
             {
-                return Message<AccountUserRoleUpdate>(false, e.Message);
+                return Message3<AccountUserRoleUpdate>(false, e.Message);
             }
 
-            return Single(info);
+            return Single2(info);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "password/update")]
-        public Task<Response<AdminUser2>> ChangePassword(PasswordInfo passwordInfo)
+        public async Task<Response<AdminUser2>> ChangePassword(PasswordInfo passwordInfo)
         {
             try
             {
                 var newPasswordInfo = Mapper.Map<AdminUser.Contracts.PasswordInfo>(passwordInfo);
                 var user = _authHelper.GetCurrentUser();
 
-                _usersRepo.ChangePassword(newPasswordInfo, user.UserId).Result.ReadAsSync();
+                await _usersRepo.ChangePassword(newPasswordInfo, user.UserId);
 
-                var result = _usersRepo.GetUser(user.UserId, null).Result.ReadAsSync();
+                var result = (await _usersRepo.GetUser(user.UserId, null)).ReadAsSync();
                 var updatedUser = Mapper.Map<AdminUser2>(result);
 
-                return Single(updatedUser);
+                return Single2(updatedUser);
             }
             catch (Exception e)
             {
-                return Message<AdminUser2>(false, e.Message);
+                return Message3<AdminUser2>(false, e.Message);
             }
         }
 
         [WebGet(UriTemplate = "information/read")]
-        public Task<Response<AccountInformation>> GetAccountInformation()
+        public Response<AccountInformation> GetAccountInformation()
         {
             var currentUser = _authHelper.GetCurrentUser();
 
-            return Single(Mapper.Map<AccountInformation>(currentUser));
+            return Single2(Mapper.Map<AccountInformation>(currentUser));
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "information/update")]
-        public Task<Response<AccountInformation>> UpdateAccountInformation(AccountInformation accountInformation)
+        public async Task<Response<AccountInformation>> UpdateAccountInformation(AccountInformation accountInformation)
         {
             try
             {
@@ -319,19 +301,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (!string.IsNullOrWhiteSpace(accountInformation.NewPassword) && accountInformation.NewPassword == accountInformation.ConfirmPassword)
                 {
                     var passwordInfo = Mapper.Map<AdminUser.Contracts.PasswordInfo>(accountInformation);
-                    var response = _usersRepo.ChangePassword(passwordInfo, userId).Result;
+                    var response = await _usersRepo.ChangePassword(passwordInfo, userId);
 
                     if (!response.ResponseMessage.IsSuccessStatusCode)
-                        return Message<AccountInformation>(false, response.ReadException().Message);
+                        return Message3<AccountInformation>(false, response.ReadException().Message);
                 }
 
                 var result = _userHelper.UpdateUser(accountInformation, userId);
 
-                return Single(Mapper.Map<AccountInformation>(result));
+                return Single2(Mapper.Map<AccountInformation>(result));
             }
             catch (Exception ex)
             {
-                return Message<AccountInformation>(false, ex.Message);
+                return Message3<AccountInformation>(false, ex.Message);
             }
         }
     }

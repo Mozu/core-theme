@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     {
                         folderId = _cmsService.GetByPath("files", "/").Result.ReadAsSync().Id;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         folderId = "";
                     }

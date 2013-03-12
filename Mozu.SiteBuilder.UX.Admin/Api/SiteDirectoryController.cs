@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         const  string STRINGSPLITDELIM = "^^";
 
         [WebGet(UriTemplate = "read/?id={id}")]
-        public Task<Response<List<SiteDirectoryNode>>> Read(string id)
+        public async Task<Response<List<SiteDirectoryNode>>> Read(string id)
         {
             var resItems = new List<SiteDirectoryNode>();
             if (id == null || id == "root")
@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     PageSize = 1
                 });
 
-                var blogDoc = blogTask.Result.ReadAsSync().Items.FirstOrDefault();
+                var blogDoc = (await blogTask).ReadAsSync().Items.FirstOrDefault();
                 if (blogDoc != null)
                 {
                     resItems.Add(new SiteDirectoryNode()
@@ -79,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     name = "Product Categories"
                 });
 
-                return List(resItems);
+                return List2(resItems);
             }
            
 
@@ -130,7 +130,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                         var prodTask = _prodService.GetProducts(0, 200, "Content.ProductName", null, string.Format("CategoryId eq {0}", catId));
                         Task.WaitAll(catTask, prodTask);
-                        var catNodes = catTask.Result.ReadAsSync().Items
+                        var catNodes = (await catTask).ReadAsSync().Items
                             
                             .Select(x =>
                                 new SiteDirectoryNode()
@@ -141,7 +141,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     url = "/category/" + x.Id
 
                                 });
-                        var prodNodes = prodTask.Result.ReadAsSync().Items.Select(x =>
+                        var prodNodes = (await prodTask).ReadAsSync().Items.Select(x =>
                             new SiteDirectoryNode
                             {
                                 id = "prod" + STRINGSPLITDELIM + x.ProductCode ,
@@ -158,10 +158,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     }
                 default:
                     {
-                        return List(resItems);
+                        return List2(resItems);
                     }
             }
-            return List(resItems);
+            return List2(resItems);
         }
     }
     

@@ -21,15 +21,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "role/{id}")]
-        public Task<Response<Role>> Role(int? id)
+        public async Task<Response<Role>> Role(int? id)
         {
-            return Single(_permissionsRepository.GetRole(id).Result);
+            var role = await _permissionsRepository.GetRole(id);
+            return Single2(role);
         }
 
         [WebGet(UriTemplate = "roles")]
-        public Task<Response<List<Role>>> Roles([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<Role>>> Roles([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            return List(_permissionsRepository.GetRoles().Result.ToList());
+            var roles = await _permissionsRepository.GetRoles();
+            return List2(roles);
         }
 
         /*[WebInvoke(UriTemplate = "role/create", Method = "POST")]
@@ -53,15 +55,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }*/
 
         [WebGet(UriTemplate = "behavior/{id}")]
-        public Task<Response<Behavior>> Behaviors(int? id)
+        public async Task<Response<Behavior>> Behaviors(int? id)
         {
-            return Single(_permissionsRepository.GetBehavior(id).Result);
+            var res = await _permissionsRepository.GetBehavior(id);
+            return Single2(res);
         }
 
         [WebGet(UriTemplate = "behaviors")]
-        public Task<Response<List<Behavior>>> GetBehaviors([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<Behavior>>> GetBehaviors([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            return List(_permissionsRepository.GetBehaviors().Result.ToList());
+            var res = await _permissionsRepository.GetBehaviors();
+            return List2(res.ToList());
         }
     }
 }

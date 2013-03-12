@@ -21,13 +21,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "read")]
-        public Task<Response<List<Mozu.SiteBuilder.UX.Models.Users.BehaviorTree.BehaviorTreeNode >>> GetRoleBehaviors( FilterCollection extFilter)
+        public async Task<Response<List<Mozu.SiteBuilder.UX.Models.Users.BehaviorTree.BehaviorTreeNode >>> GetRoleBehaviors( FilterCollection extFilter)
         {
             int roleId = extFilter.GetValue("roleId", -1);
             RoleBehavior roleBehavior = null;
             if (roleId > -1)
             {
-                roleBehavior = _permissionsRepository.GetRoleBehavior(roleId).Result;
+                roleBehavior = await _permissionsRepository.GetRoleBehavior(roleId);
             }
             else
             {
@@ -35,17 +35,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             
 
-            var tree = _permissionsRepository.GetBehaviorTree().Result;
+            var tree = await _permissionsRepository.GetBehaviorTree();
         
             tree.Nodes.ForEach( x =>  x.Children.ForEach(y => y.RoleId = roleId));
 
-            return  this.List(tree.Assign(roleBehavior).Nodes);
+            return  List2(tree.Assign(roleBehavior).Nodes);
         }
 
         [WebInvoke(UriTemplate = "edit", Method = "POST")]
-        public Task<Response<List<RoleBehavior>>> EditRoleBehaviors([FromBody] List<RoleBehavior> behaviors)
+        public async Task<Response<List<RoleBehavior>>> EditRoleBehaviors([FromBody] List<RoleBehavior> behaviors)
         {
-            var serverRole = _permissionsRepository.GetRole(behaviors.First().RoleId).Result;
+            var serverRole = await _permissionsRepository.GetRole(behaviors.First().RoleId);
 
             
 
@@ -69,10 +69,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 
             }
 
-            _permissionsRepository.UpdateRole(serverRole);
+            await _permissionsRepository.UpdateRole(serverRole);
 
 
-            return this.List<RoleBehavior>(behaviors);
+            return List2<RoleBehavior>(behaviors);
         }
     }
 
@@ -87,51 +87,51 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "")]
-        public Task<Response<List<Role>>> GetAll()
+        public async Task<Response<List<Role>>> GetAll()
         {
-            var roles = _permissionsRepository.GetRoles().Result;
+            var roles = await _permissionsRepository.GetRoles();
 
-            return roles.IsNullOrEmpty() ? EmptyList<Role>() : List(roles);
+            return roles.IsNullOrEmpty() ? EmptyList2<Role>() : List2(roles);
         }
 
         [WebGet(UriTemplate = "role/{id}")]
-        public Task<Response<Role>> GetRole(int? id)
+        public async Task<Response<Role>> GetRole(int? id)
         {
-            var role = _permissionsRepository.GetRole(id).Result;
+            var role = await _permissionsRepository.GetRole(id);
 
-            return role == null ? EmptySingle<Role>(false) : Single(role);
+            return role == null ? EmptySingle2<Role>(false) : Single2(role);
         }
 
         [WebInvoke(UriTemplate = "create", Method = "POST")]
-        public Task<Response<Role>> Create(Role role)
+        public async Task<Response<Role>> Create(Role role)
         {
-            var addedRole = _permissionsRepository.AddRole(role).Result;
+            var addedRole = await _permissionsRepository.AddRole(role);
 
-            return addedRole == null ? EmptySingle<Role>(false) : Single(addedRole);
+            return addedRole == null ? EmptySingle2<Role>(false) : Single2(addedRole);
         }
 
         [WebInvoke(UriTemplate = "update", Method = "POST")]
-        public Task<Response<Role>> Update(Role role)
+        public async Task<Response<Role>> Update(Role role)
         {
-            var updatedRole = _permissionsRepository.UpdateRole(role).Result;
+            var updatedRole = await _permissionsRepository.UpdateRole(role);
 
-            return updatedRole == null ? EmptySingle<Role>(false) : Single(updatedRole);
+            return updatedRole == null ? EmptySingle2<Role>(false) : Single2(updatedRole);
         }
 
         [WebInvoke(UriTemplate = "delete", Method = "POST")]
-        public Task<Response<Role>> Delete(Role role)
+        public async Task<Response<Role>> Delete(Role role)
         {
-            _permissionsRepository.DeleteRole(role);
+            await _permissionsRepository.DeleteRole(role);
 
-            return EmptySingle<Role>();
+            return EmptySingle2<Role>();
         }
 
         [WebGet(UriTemplate = "tree")]
-        public Task<Response<BehaviorTree>> GetTree()
+        public async Task<Response<BehaviorTree>> GetTree()
         {
-            var tree = _permissionsRepository.GetBehaviorTree().Result;
+            var tree = await _permissionsRepository.GetBehaviorTree();
 
-            return Single(tree);
+            return Single2(tree);
         }
     }
 }

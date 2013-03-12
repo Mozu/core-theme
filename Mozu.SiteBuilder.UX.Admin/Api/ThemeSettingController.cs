@@ -33,20 +33,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns>List of SettingConfiguration</returns>
         [WebGet(UriTemplate = "config/read")]
-        public Task<Response<List<ConfigurationItem>>> ReadConfiguration()
+        public Response<List<ConfigurationItem>> ReadConfiguration()
         {
             var config = _sbContext.Theme.Configuration.ToList();
-            return List(config);
+            return List2(config);
         }
             /// <summary>
         /// Returns the current settings for the core and theme
         /// </summary>
         /// <returns>List of field values</returns>
         [WebGet(UriTemplate = "instance/read")]
-        public Task<Response<List<FieldValue>>> ReadInstance()
+        public async Task<Response<List<FieldValue>>> ReadInstance()
         {
-            var values = _themeSettingsRepository.GetInstanceValues().Result;
-            return List(values);
+            var values = await _themeSettingsRepository.GetInstanceValues();
+            return List2(values);
         }
 
         /// <summary>
@@ -55,10 +55,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="values">Field values to persist</param>
         /// <returns>List of FieldValue></returns>
         [WebInvoke(Method = "POST", UriTemplate = "instance/save")]
-        public Task<Response<List<FieldValue>>> SaveInstance(List<FieldValue> values)
+        public async Task<Response<List<FieldValue>>> SaveInstance(List<FieldValue> values)
         {
-            var retval = _themeSettingsRepository.SaveInstanceValues(values).Result;
-            return List(retval);
+            var retval = await _themeSettingsRepository.SaveInstanceValues(values);
+            return List2(retval);
         }
     }
 }

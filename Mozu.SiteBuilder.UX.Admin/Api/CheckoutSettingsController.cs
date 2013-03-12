@@ -41,9 +41,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns></returns>
         [WebGet(UriTemplate = "read")]
-        public Task<Response<Setting>> GetSettings()
+        public async Task<Response<Setting>> GetSettings()
         {
-            var res = _checkoutSettingsWebApiClient.GetCheckoutSettings().Result;
+            var res = await _checkoutSettingsWebApiClient.GetCheckoutSettings();
             //if (! res.ResponseMessage .IsSuccessStatusCode )
             //{
             //    var pRes=_provisioningWebApiClient.CreateSite(new Mozu.Core.Api.Contracts.SiteProvisionMessage()).Result;
@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //}
             var setting = res.ReadAsSync();
             var ret = ConvertSetting(setting);
-            return Single(ret);
+            return Single2(ret);
         } 
 
         /// <summary>
@@ -64,11 +64,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="setting">The checkout settings</param>
         /// <returns>The active checkout settings</returns>
         [WebInvoke(UriTemplate = "update")]
-        public Task<Response<Setting>> UpdateSettings(Setting settingReq)
+        public async Task<Response<Setting>> UpdateSettings(Setting settingReq)
         {
             var cSetting = ConvertToContract(settingReq);
-            var ret = _checkoutSettingsWebApiClient.UpdateCheckoutSettings(cSetting).Result.ReadAsSync();
-            return Single(ConvertSetting(ret));
+            var ret = (await _checkoutSettingsWebApiClient.UpdateCheckoutSettings(cSetting)).ReadAsSync();
+            return Single2(ConvertSetting(ret));
         }
 
         /// <summary>
@@ -76,12 +76,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns>Array of gateway definitions</returns>
         [WebGet(UriTemplate = "definition/read")]
-        public Task<Response<List<GatewayDefinition>>> GetDefinitions()
+        public async Task<Response<List<GatewayDefinition>>> GetDefinitions()
         {
+            var def = (await _checkoutSettingsWebApiClient.GetGatewayDefinitions()).ReadAsSync();
 
-            var def = _checkoutSettingsWebApiClient.GetGatewayDefinitions().Result.ReadAsSync();
-
-            return List(Mapper.Map<List<GatewayDefinition>>(def.OrderBy(x => x.Name)));
+            var mapped = Mapper.Map<List<GatewayDefinition>>(def).OrderBy(x => x.Name).ToList();
+            return List2(mapped);
         }
 
         #region Private methods
