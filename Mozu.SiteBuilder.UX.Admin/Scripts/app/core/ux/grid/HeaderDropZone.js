@@ -35,5 +35,5 @@ Ext.define('Taco.core.ux.grid.HeaderDropZone', {
         }
 
         return me.valid ? me.dropAllowed : me.dropNotAllowed;
-    },
+    }
 });

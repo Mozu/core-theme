@@ -52,5 +52,5 @@
                     console.log("Error discarding drafts!", response);
                 }
             });
-        },
+        }
     });

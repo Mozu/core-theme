@@ -9,5 +9,5 @@ Ext.define('Taco.core.ux.form.CurrencyField', {
 
     unitAtEnd: false,
     unitString: '$',
-    displayDecimalPrecision: true,
+    displayDecimalPrecision: true
 });

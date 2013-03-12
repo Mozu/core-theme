@@ -13,7 +13,7 @@ Ext.define('Taco.view.attribute.Form', {
     defaults: {
         xtype: 'textfield',
         labelAlign: 'top',
-        labelSeparator: '',
+        labelSeparator: ''
     },
 
     statics: {
@@ -244,7 +244,7 @@ Ext.define('Taco.view.attribute.Form', {
                 ['TextBox', 'Text box'],
                 ['TextArea', 'Text area'],
                 ['YesNo', 'Yes/No'],
-                ['Date', 'Date'],
+                ['Date', 'Date']
             ],
             listeners: {
                 change: this.onInputTypeChange,

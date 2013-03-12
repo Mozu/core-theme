@@ -78,7 +78,7 @@ Ext.define('Taco.view.phoneOrder.ProductPicker', {
                     return value ? 'Available' : 'Hidden';
                 }
             }],
-           dockedItems: [me.pager],
+           dockedItems: [me.pager]
         });
 
         me.tilepanel = Ext.create('Taco.core.ux.TilePanel', {

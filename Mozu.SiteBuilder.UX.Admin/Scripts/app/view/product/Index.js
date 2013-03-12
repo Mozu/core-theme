@@ -235,7 +235,7 @@ Ext.define('Taco.view.product.Index', {
         imageCollection: 'productImages',
         imageField: 'imagePath',
         isDragable: false,
-        nameField: 'productName',
+        nameField: 'productName'
     },
 
     launchLoadedEditor: function (record, options) {

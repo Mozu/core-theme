@@ -8,6 +8,5 @@ Ext.define('Taco.view.attribute.Edit', {
     requires: [
         'Taco.view.attribute.Form'
     ],
-    formCls: 'Taco.view.attribute.Form',
-
+    formCls: 'Taco.view.attribute.Form'
 });

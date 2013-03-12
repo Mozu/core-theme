@@ -104,7 +104,7 @@ Ext.define('Taco.view.pendingchange.Cms', {
                                     }
                                 });
                             }
-                        },
+                        }
                     },{
                         text: 'Discard',
                         handler: function() {
@@ -119,7 +119,7 @@ Ext.define('Taco.view.pendingchange.Cms', {
                                     }
                                 });
                             }
-                        },
+                        }
                     }]
                 }
             }]
