@@ -109,29 +109,34 @@
 
     var ProductPrice = KnockoutVM.extend({
         observables: {
-            price: { numeric: 2 },
-            salePrice: { numeric: 2 },
-            discountId: {},
-            discountName: {},
-            hasSalePrice: {},
-            hasDiscount: {},
-            hasRange: {},
-            offerPrice: { numeric: 2 }
+            Price: { numeric: 2 },
+            SalePrice: { numeric: 2 },
+            DiscountId: {},
+            DiscountName: {},
+            OfferPrice: { numeric: 2 }
         }
+    }, function constructProductPrice() {
+        var me = this;
+        this.hasSalePrice = ko.computed(function () {
+            return !isNaN(me.SalePrice());
+        });
+        this.hasRange = ko.computed(function () {
+            return !isNaN(me.LowerBoundPrice + me.UpperBoundPrice);
+        });
     });
 
     var Product = KnockoutVM.extend({
         mozuType: 'product',
-        endpoint: '/cart/addproduct',
         statics: {
             ProductCode: ''
         },
         observables: {
-            quantity: { numeric: 0 },
-            variationProductCode: {}
+            Quantity: { numeric: 0 },
+            VariationProductCode: {},
+            PurchasableState: {}
         },
         submodels: {
-            price: ProductPrice,
+            Price: ProductPrice,
             config: ProductConfiguration
         },
         doNotSubmit: ["price", "config"],
@@ -139,25 +144,23 @@
             // server expects the options collection to belong to this model as well
             var j = Product.prototype.toJS.apply(this);
             j.options = this.config.emitAllOptions();
-            return j;
+            return {
+                Product: j,
+                Quantity: this.Quantity()
+            };
         },
-        submit: function() {
-            var me = this;
-            this.addtocart({ Product: this.toJS(), Quantity: this.quantity() }).then(function (cartitem) {
-                $.each(me.updateCallbacks, function (ix, fn) {
-                    fn.call(me, cartitem);
-                });
-            });
+        submit: function () {
+            this.addtocart(this.toJS());
         },
         unknownError: function () {
             this.messages.push({ message: genericMsg.UnexpectedError });
         }
     }, function constructProduct() {
         var self = this;
-        this.config.productCode = this.productCode;
+        this.config.productCode = this.ProductCode;
         this.isPurchasable = ko.computed(function () {
-            var pState = self.config.purchasableState();
-            return pState && pState.isPurchasable;
+            var pState = self.PurchasableState();
+            return pState && pState.IsPurchasable;
         });
 
         var messages = this.messages = ko.observableArray([]);

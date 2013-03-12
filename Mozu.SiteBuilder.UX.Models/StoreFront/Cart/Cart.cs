@@ -9,37 +9,37 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Cart
     [DataContract]
     public class Cart
     {
-        [DataMember(Name = "id")]
+        [DataMember]
         public string Id { get; set; }
 
-        [DataMember(Name = "isoCountryCode")]
+        [DataMember]
         public string ISOCurrencyCode { get; set; }
 
-        [DataMember(Name = "items")]
+        [DataMember]
         public List<CartItem> Items { get; set; }
 
-        [DataMember(Name = "subTotal")]
+        [DataMember]
         public decimal? SubTotal { get; set; }
 
-        [DataMember(Name = "discountTotal")]
+        [DataMember]
         public decimal? DiscountTotal { get; set; }
 
-        [DataMember(Name = "shippingTotal")]
+        [DataMember]
         public decimal? ShippingTotal { get; set; }
 
-        [DataMember(Name = "taxTotal")]
+        [DataMember]
         public decimal? TaxTotal { get; set; }
 
-        [DataMember(Name = "feeTotal")]
+        [DataMember]
         public decimal? FeeTotal { get; set; }
 
-        [DataMember(Name = "total")]
+        [DataMember]
         public decimal? Total { get; set; }
 
-        [DataMember(Name = "lastValidationDate")]
+        [DataMember]
         public DateTime? LastValidationDate { get; set; }
 
-        [DataMember(Name = "expirationDate")]
+        [DataMember]
         public DateTime? ExpirationDate { get; set; }
     }
 }

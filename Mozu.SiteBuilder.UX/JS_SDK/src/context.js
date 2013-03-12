@@ -3,7 +3,7 @@ var ApiContext = function (conf) {
     // TODO: factor out jQuery
     utils.extend(this, conf);
 },
-    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale', 'bypass-cache'],
+    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale'], //, 'bypass-cache'],
     immutableAccessors = ['tenant', 'site', 'site-group'],
     immutableAccessorLength = immutableAccessors.length,
     allAccessors = mutableAccessors.concat(immutableAccessors),
@@ -13,10 +13,7 @@ var ApiContext = function (conf) {
 var setImmutableAccessor = function(propName) {
     ApiContext.prototype[utils.camelCase(propName, true)] = function(val) {
         if (val === undefined) return this[propName];
-        var newConf = {};
-        for (var k = 0; k < immutableAccessorLength; k++) {
-            newConf[immutableAccessors[k]] = this[immutableAccessors[k]];
-        }
+        var newConf = this.asObject();
         newConf[propName] = val;
         return new ApiContext(newConf);
     };
@@ -38,12 +35,12 @@ ApiContext.prototype = {
         return new ApiContext(conf);
     },
     asObject: function (prefix) {
-        var headerObj = {};
+        var obj = {};
         prefix = prefix || '';
         for (var i = 0; i < allAccessorsLength; i++) {
-            headerObj[prefix + allAccessors[i]] = this[allAccessors[i]];
+            obj[prefix + allAccessors[i]] = this[allAccessors[i]];
         }
-        return headerObj;
+        return obj;
     },
     currency: 'usd',
     locale: 'en-US'

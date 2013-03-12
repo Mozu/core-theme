@@ -18,7 +18,7 @@ var ApiReference = (function () {
         action: function (actionName, data) {
             var me = this;
             var requestConf = ApiReference.getRequestConfig(actionName, this.type, this.data, this.api.context);
-            return this.api.request(null, requestConf, data).then(function (rawJSON) {
+            return this.api.request(basicOps[actionName], requestConf, data).then(function (rawJSON) {
                 if (requestConf.returnType) {
                     return ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
                 } else {
@@ -58,8 +58,14 @@ var ApiReference = (function () {
         getActionsFor: function(typeName) {
             if (!objectTypes[typeName]) return false;
             var actions = [];
-            for (var a in objectTypes[typeName]) {
-                actions.push(a);
+            for (var a in basicOps) {
+                if (!(a in objectTypes[typeName]))
+                    actions.push(a);
+
+            }
+            for (a in objectTypes[typeName]) {
+                if (a)
+                    actions.push(a);
             }
             return actions;
         },
@@ -137,8 +143,8 @@ var ApiReference = (function () {
         },
         'product': {
             get: {
-                template: '{$ProductService}{productCode}?{&allowInactive*}',
-                shortcutParam: 'productCode',
+                template: '{$ProductService}{ProductCode}?{&allowInactive*}',
+                shortcutParam: 'ProductCode',
                 defaults: {
                     allowInactive: false
                 }
@@ -159,15 +165,20 @@ var ApiReference = (function () {
             empty: {
                 verb: 'DELETE',
                 template: '{$CartService}current/items/'
+            },
+            checkout: {
+                verb: 'POST',
+                template: '{$OrderService}?cartId={Id}',
+                noBody: true
             }
         },
         'cartitem': {
-            template: '{$CartService}current/items/{id}',
-            shortcutParam: 'id'
+            template: '{$CartService}current/items/{CartItemId}',
+            shortcutParam: 'CartItemId'
         },
         'me': {
             get: {
-                template: '{$UserService}{id}',
+                template: '{$UserService}{Id}',
                 shortcutParam: 'id'
             },
             login: {

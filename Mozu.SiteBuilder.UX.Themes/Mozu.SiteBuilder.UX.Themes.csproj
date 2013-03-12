@@ -323,6 +323,7 @@
     <Content Include="Themes\Core3\MetaData\PageTypes\commerce\cart\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\search\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\product\definition.json" />
+    <Content Include="Themes\Core3\Resources\Scripts\Modules\jquery-plus.js" />
     <Content Include="Themes\Core3\Resources\Strings\lang-de.csv" />
     <Content Include="Themes\Core3\Resources\Strings\lang-en.csv" />
     <None Include="Themes\RESTCore\Resources\Scripts\Fixtures\RESTProduct.json" />

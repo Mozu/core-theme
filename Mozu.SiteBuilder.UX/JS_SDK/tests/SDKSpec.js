@@ -143,7 +143,7 @@
             it("should work with simple url templates, like 'product'", function () {
                 var res;
                 runs(function () {
-                    api.get("product", { productCode: "foobar" }).then(function (product) {
+                    api.get("product", { ProductCode: "foobar" }).then(function (product) {
                         res = product;
                     });
                 });
