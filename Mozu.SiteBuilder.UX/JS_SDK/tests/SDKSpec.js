@@ -220,7 +220,7 @@
                         return cart.action('empty');
                     }, function (emptyCart) {
                         expect(cart.data.Items.length).toBe(0);
-                        return cart.action('addproduct', {
+                        return cart.action('addProduct', {
                             Product: product.data,
                             Quantity: 1
                         });
@@ -259,7 +259,7 @@
                     }).then(function (emptyCart) {
                         cart = emptyCart;
                         expect(cart.data.Items.length).toBe(0);
-                        return cart.action('addproduct', {
+                        return cart.action('addProduct', {
                             Product: product.data,
                             Quantity: 1
                         })
@@ -287,7 +287,7 @@
             it("should return an API object of a different type for some actions", function () {
                 var res;
                 runs(function () {
-                    cart.action('addproduct', {
+                    cart.action('addProduct', {
                         Product: product.data,
                         Quantity: 3
                     }).then(function (cartItem) {
