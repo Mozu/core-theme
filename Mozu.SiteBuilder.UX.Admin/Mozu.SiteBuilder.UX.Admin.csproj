@@ -634,7 +634,7 @@
     <Content Include="Scripts\app\view\option\Form.js" />
     <Content Include="Scripts\app\view\themeSettings\Group.js" />
     <Content Include="Scripts\app\view\themeSettings\Section.js" />
-    <Content Include="Scripts\app\view\themes\ThemeView.js" />
+    <Content Include="Scripts\app\view\theme\ThemeView.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\build.xml" />
     <Content Include="Scripts\build\all-classes.js" />
@@ -1063,11 +1063,16 @@
     <Content Include="Scripts\jsduck-4.3.2.exe" />
     <Content Include="Scripts\makedocsasjson.bat" />
     <Content Include="Scripts\resources\css\taco.css" />
-    <Content Include="Scripts\resources\images\align-s0f469144e6.png" />
+    
+    <Content Include="Scripts\resources\images\*.png" Condition="'$(BuildingInsideVisualStudio)' != 'true'"/>
+    
+    <Content Include="Scripts\resources\images\AddPhotos.png" />
+    <Content Include="Scripts\resources\images\background-alpha.png" />
+    <Content Include="Scripts\resources\images\fabric-2.png" />
+    <Content Include="Scripts\resources\images\fabric.png" />
+    <Content Include="Scripts\resources\images\file-icon.png" />
     <Content Include="Scripts\resources\images\background-alpha.png" />
     <Content Include="favicon.ico" />
-    <Content Include="Scripts\resources\images\card-s44a9b55566.png" />
-    <Content Include="Scripts\resources\images\icons-seceae125a5.png" />
     <Content Include="Scripts\resources\images\icons\icon-catalog-large.png" />
     <Content Include="Scripts\resources\images\icons\icon-customers-large.png" />
     <Content Include="Scripts\resources\images\icons\icon-dashboard-large.png" />
@@ -1089,7 +1094,6 @@
     <Content Include="Scripts\resources\images\icons\icon-website.png" />
     <Content Include="Scripts\resources\images\indicator.mp3" />
     <Content Include="Scripts\resources\images\loading.gif" />
-    <Content Include="Scripts\resources\images\picker-sa04364cd82.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-carousel.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-grid.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-slider.png" />
@@ -2805,7 +2809,7 @@
     <Content Include="Scripts\app\view\testing\Shim.js" />
     <Content Include="Scripts\app\view\testing\StandaloneOption.js" />
     <Content Include="Scripts\app\view\themeSettings\Index.js" />
-    <Content Include="Scripts\app\view\themes\Index.js" />
+    <Content Include="Scripts\app\view\theme\Index.js" />
     <Content Include="Scripts\app\view\Viewport.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
