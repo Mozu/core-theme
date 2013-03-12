@@ -22,18 +22,45 @@
             xtype: 'primarybutton',
             text: 'Add',
             click: this.create,
+            itemId: 'add',
             scope: this
         }];
 
         this.title = Ext.util.Format.capitalize(this.type);
 
-        this.editor = Ext.create('Taco.view.productType.AttributeForm', {
+        switch (this.type) {
+            
+            case 'options':
+                this.store = this.productType.getOptions();
+                this.filterProperty = 'isOption';
+                break;
+            
+            case 'extras':
+                this.store = this.productType.getExtras();
+                this.filterProperty = 'isExtra';
+                break;
 
+            case 'properties':
+                this.store = this.productType.getProperties();
+                this.filterProperty = 'isProperty';
+                break;
+        }
+
+        this.editor = Ext.create('Taco.view.productType.AttributeForm', {
+            assignedAttributeStore: this.store,
+            filterProperty: this.filterProperty,
+            listeners: {
+                save: this.onSave,
+                cancel: this.onCancel,
+                scope: this
+            }
         });
 
         this.listContainer = Ext.create('Ext.container.Container', {
             items: this.buildAttributeList()
         });
+
+        this.items = [this.listContainer, this.editor];
 
         this.callParent(arguments);
     },
@@ -61,11 +88,13 @@
                         tpl: this.attributeItemTpl
                     }, {
                         xtype: 'secondarybutton',
+                        itemId: 'delete',
                         text: 'Delete',
                         click: function () { this.removeAttribute(attribute); },
                         scope: this
                     }, {
                         xtype: 'secondarybutton',
+                        itemId: 'edit',
                         text: 'Edit',
                         click: function () { this.edit(attribute); },
                         scope: this
@@ -98,14 +127,25 @@
     },
 
     create: function () {
-
+        this.down('[itemId=add]').disable();
+        this.editor.create();
+        this.getLayout().setActiveItem(1);
     },
 
     edit: function (attribute) {
         this.editor.edit(attribute);
+        this.getLayout().setActiveItem(1);
     },
 
     removeAttribute: function (attribute) {
+    },
 
+    onSave: function () {
+
+    },
+
+    onCancel: function () {
+        this.down('[itemId=add]').enable();
+        this.getLayout().setActiveItem(0);
     }
 });
