@@ -9,7 +9,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme
     public interface ITheme : IThemeBasicInfo
     {
         
-        string Id { get; }
+      
 
         string ThemePath { get; }
 
