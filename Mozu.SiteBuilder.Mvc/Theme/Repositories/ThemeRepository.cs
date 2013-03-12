@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Repositories
     {
         private readonly ThemeFactory _themeFactory;
         private const string DEFAULT_THEME = "Core3";
-        private System.Collections.Concurrent.ConcurrentDictionary<string, ITheme> _themes = new ConcurrentDictionary<string, ITheme>(StringComparer.OrdinalIgnoreCase);
+        private static System.Collections.Concurrent.ConcurrentDictionary<string, ITheme> _themes = new ConcurrentDictionary<string, ITheme>(StringComparer.OrdinalIgnoreCase);
        
 
         public bool IsInitialized { get; private set; }

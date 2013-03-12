@@ -9,6 +9,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Mozu.Core;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Theme;
 using Mozu.SiteBuilder.Mvc.Theme.Repositories;
@@ -24,8 +25,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class TestingController : BaseController
     {
         private readonly IThemeRepository _themeRepository;
+        private readonly IApiContext _apiContext;
+        private readonly ISiteBuilderContext _siteBuilderContext;
 
-        
+
         static List<DGD> g_testData;
 
         static TestingController()
@@ -52,11 +55,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly IGeneralSettingWrapper _generalSettingsWebApiClient;
 
-        public TestingController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository)
+        public TestingController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ISitesWebApiClient sitesWebApiClient, IApiContext apiContext, ISiteBuilderContext siteBuilderContext)
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient;
             _tenantClient = tenantClient;
             _themeRepository = themeRepository;
+            _apiContext = apiContext;
+            _siteBuilderContext = siteBuilderContext;
         }
 
         [WebGet(UriTemplate = "list")]
@@ -136,6 +141,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             [DataMember(Name = "name")]
             public string Name { get; set; }
 
+            [DataMember(Name = "id")]
+            public string Id { get; set; }
+
             [DataMember(Name = "author")]
             public string Author { get; set; }
 
@@ -174,24 +182,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             /// <summary>
             /// Copy constructor
             /// </summary>
-            public ThemeDTO(IThemeBasicInfo theme, bool? isSelectedDesktop = null, bool? isSelectedMobile = null)
+            public ThemeDTO(ISiteBuilderContext sbContext, IThemeBasicInfo theme, bool? isSelectedDesktop = null, bool? isSelectedMobile = null)
             {
                 Name = theme.Name;
                 Author = theme.Author;
                 Thumbnail = theme.Thumbnail;
                 IsDesktop = theme.IsDesktop;
                 IsMobile = theme.IsMobile;
+                Id = theme.Id;
 
                 if (isSelectedDesktop.HasValue)
                     IsSelectedDesktop = isSelectedDesktop.Value;
-                else if (String.Equals(Name, SiteBuilderContext.Current.DesktopTheme.Name, StringComparison.InvariantCultureIgnoreCase))
+                else if (String.Equals(Id , sbContext.DesktopTheme.Id , StringComparison.InvariantCultureIgnoreCase))
                     IsSelectedDesktop = true;
                 else
                     IsSelectedDesktop = false;
 
                 if (isSelectedMobile.HasValue)
                     IsSelectedMobile = isSelectedMobile.Value;
-                else if (SiteBuilderContext.Current.MobileTheme != null && String.Equals(Name, SiteBuilderContext.Current.MobileTheme.Name, StringComparison.InvariantCultureIgnoreCase))
+                else if (sbContext.MobileTheme != null && String.Equals(Name, sbContext.MobileTheme.Id , StringComparison.InvariantCultureIgnoreCase))
                     IsSelectedMobile = true;
                 else
                     IsSelectedMobile = false;
@@ -202,17 +211,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             /// </summary>
             public bool Equals(IThemeBasicInfo otherTheme)
             {
-                return otherTheme != null && this.Name == otherTheme.Name;
+                return otherTheme != null && this.Id  == otherTheme.Id ;
             }
         }
 
         [WebGet(UriTemplate = "theme/list")]
-        public Response<List<ThemeDTO>> GetListThemes()
+        public async Task<Response<List<ThemeDTO>>> GetListThemes()
         {
             var localThemeDir =   new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/";
-            var localThemes = Directory.GetDirectories(localThemeDir);
+            //var localThemes = Directory.GetDirectories(localThemeDir);
+            var entitlements = await _tenantClient.GetSiteEntitlements(_apiContext.TenantId, _apiContext.SiteId);
+            var localThemes = entitlements.ReadAsSync().Items.Where(x => x.ApplicationType == "Theme").Select(x => x.Id.ToString() ).Union(Directory.GetDirectories(localThemeDir).Select( x=>Path.GetFileName(x)));
 
-            var themes = localThemes.Select(x => _themeRepository.GetTheme(x)).Select<ITheme, ThemeDTO>(t => new ThemeDTO(t)).ToList();
+
+            var themes = localThemes
+                .Select(x =>
+                    {
+                        try
+                        {
+                            return _themeRepository.GetTheme(x);
+                        }
+                        catch
+                        {
+                            return null;
+                        }
+                        
+                    })
+                    .Where( x=> x!= null)
+                .Select<ITheme, ThemeDTO>(t => new ThemeDTO(_siteBuilderContext,t)).ToList();
            // List<ThemeDTO> themes = _themeRepository.GetAll().Select<ITheme, ThemeDTO>(t => new ThemeDTO(t)).ToList();
             return List2(themes);
          //   throw new NotImplementedException();
@@ -231,23 +257,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (newDesktop != null)
             {
                 // intent to set a desktop theme.
-                settings.DesktopTheme = newDesktop.Name;
+                settings.DesktopTheme = newDesktop.Id;
             }
-            else if (themes.Any(t => t.Equals(SiteBuilderContext.Current.DesktopTheme)))
+            else if (themes.Any(t => t.Equals(_siteBuilderContext.DesktopTheme)))
             {
                 // intent to un-set the desktop theme.
                 // having NO desktop theme is not a legal state, so we will set the theme to the default.
-                newDesktop = new ThemeDTO(_themeRepository.GetDefaultTheme(), true);
+                newDesktop = new ThemeDTO(_siteBuilderContext,_themeRepository.GetDefaultTheme(), true);
                 if (!themes.Any(t => t.Equals(newDesktop)))
                     themes.Add(newDesktop);
-                settings.DesktopTheme = newDesktop.Name;
+                settings.DesktopTheme = newDesktop.Id ;
             }
 
             if (newMobile != null)
             {
-                settings.MobileTheme = newMobile.Name;
+                settings.MobileTheme = newMobile.Id;
             }
-            else if (themes.Any(t => t.Equals(SiteBuilderContext.Current.MobileTheme)))
+            else if (themes.Any(t => t.Equals(_siteBuilderContext.MobileTheme)))
             {
                 // intent to un-set the mobile theme.
                 settings.MobileTheme = null;
@@ -261,10 +287,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             IEnumerable<ThemeDTO> returnedThemesList =
                 from t in themes
-                let isSelectedDesktop = (newDesktop != null && newDesktop.Equals(t)) || (newDesktop == null && t.Equals(SiteBuilderContext.Current.DesktopTheme))
-                let isSelectedMobile = (newMobile != null && newMobile.Equals(t)) || (newMobile == null && t.Equals(SiteBuilderContext.Current.MobileTheme))
-                let fullTheme = _themeRepository.GetTheme(t.Name)
-                select new ThemeDTO(fullTheme, isSelectedDesktop, isSelectedMobile);
+                let isSelectedDesktop = (newDesktop != null && newDesktop.Equals(t)) || (newDesktop == null && t.Equals(_siteBuilderContext.DesktopTheme))
+                let isSelectedMobile = (newMobile != null && newMobile.Equals(t)) || (newMobile == null && t.Equals(_siteBuilderContext.MobileTheme))
+                let fullTheme = _themeRepository.GetTheme(t.Id )
+                select new ThemeDTO(_siteBuilderContext,fullTheme, isSelectedDesktop, isSelectedMobile);
 
             return this.List(returnedThemesList.ToList());
         }
@@ -324,7 +350,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var sites = _tenantClient.GetSites(tenant.Id).Result.ReadAsSync();
             var site = sites.Items.First();
-            var ctx  = SiteBuilderContext.Current;
+            var ctx = _siteBuilderContext;
 
             ctx.TenantId = tenant.Id;
             ctx.SiteId = site.Id;
@@ -338,7 +364,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "setSiteContext")]
         public Task<Response<List<Site>>> SetSiteContext(Site site)
         {
-            var ctx  = SiteBuilderContext.Current;
+            var ctx = _siteBuilderContext;
 
             ctx.TenantId = site.tenantId.Value;
             ctx.SiteId = site.id.Value;
