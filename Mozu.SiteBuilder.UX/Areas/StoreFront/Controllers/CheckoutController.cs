@@ -170,10 +170,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 _pciSettingsProvider = pciSettingsProvider;
             }
 
-            private async Task<ContactInformation> GetContact()
+            private ContactInformation GetContact()
             {
                 var profileToken = _authenticationHelper.GetCurrentProfileToken();
-                var contact = await _orderService.GetOrderContact(profileToken);
+                var contact = _orderService.GetOrderContact(profileToken);
 
                 return contact ?? new ContactInformation();
             }
@@ -220,7 +220,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 var page = new CheckoutPage(model)
                 {
-                    Contact = GetContact().Result,
+                    Contact = GetContact(),
                     Success = true,
                     PaymentApi = new PaymentApiModel
                     {
