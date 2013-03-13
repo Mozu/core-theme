@@ -102,7 +102,8 @@ Ext.define('Taco.model.ProductInSiteInfo', {
         {
             "name": "categoryIds",
             "type": "auto",
-            "useNull": true
+            "useNull": true,
+            defaultValue: []
         },
         {
             "name": "isContentOverridden",
@@ -122,8 +123,29 @@ Ext.define('Taco.model.ProductInSiteInfo', {
             "useNull": false,
             defaultValue: false
         }
+
     ],
+    
     idProperty: "siteId",
+    getCategoryStore: function () {
+        var me = this;
+        if (me.categoryStore == null) {
+            me.categoryStore = Taco.core.data.StoreManager.getOrCreate(
+                {
+                    model: 'Taco.model.Category',
+                    createOnly: true,
+                    id: this.id,
+                    autoLoad :true,
+                    filters: function(record) {
+                        return (me.get('categoryIds') || []).indexOf(record.getId()) > -1;
+                    }
+                });
+
+        }
+        return me.categoryStore;
+    
+    },
+    
     //,
     //associations: [
     //    {
