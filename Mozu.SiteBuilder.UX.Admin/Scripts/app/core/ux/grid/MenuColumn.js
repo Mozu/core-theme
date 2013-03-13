@@ -20,6 +20,19 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
     menuItems: [],
     menuItemDefaults: { plain: true },
 
+    /**
+     * Gets the menu, or creates it if it doesn't exist.
+     * @param  {Object} eventData Modified data from the icon handler that requested the menu.
+     * @param {Ext.grid.Panel} eventData.grid The owning GridPanel.
+     * @param {Number} eventData.rowIndex The clicked row index.
+     * @param {Number} eventData.colIndex The clicked column index.
+     * @param {Object} eventData.header The clicked item (or this Column).
+     * @param {Event} eventData.e The click event.
+     * @param {Ext.data.Model} eventData.record The Record underlying the clicked row.
+     * @param {HtmlElement} eventData.item The clicked table row.
+     * @return {Ext.menu.Menu} The menu, populated with items.
+     * @private
+     */
     getMenu: function (eventData) {
         var menuColumnHandler, recurseItemFn;
 
@@ -60,6 +73,12 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
         return this.menu;
     },
 
+    /**
+     * Returns an array of items to populate the menu.
+     * @param  {Object[]} items An array of {@link Ext.menu.Item} items.
+     * @return {Array} The array of items.
+     * @private
+     */
     getMenuItems: function (items) {
         Ext.Array.each(items, function (item) {
             Ext.applyIf(item, this.menuItemDefaults);
@@ -89,15 +108,23 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
         }
     },
 
-    setMenuActive: function (isMenuOpen) {
-        this.titleEl[isMenuOpen ? 'addCls' : 'removeCls'](this.headerOpenCls);
-        this.triggerEl.addCls(Ext.baseCSSPrefix + 'menu');
-    },
-
+    /**
+     * Shows the menu by the clicked icon.
+     * @param  {HtmlElement} el The clicked icon.
+     * @param  {Object} eventData Modified data from the icon handler that requested the menu.
+     * @param {Ext.grid.Panel} eventData.grid The owning GridPanel.
+     * @param {Number} eventData.rowIndex The clicked row index.
+     * @param {Number} eventData.colIndex The clicked column index.
+     * @param {Object} eventData.header The clicked item (or this Column).
+     * @param {Event} eventData.e The click event.
+     * @param {Ext.data.Model} eventData.record The Record underlying the clicked row.
+     * @param {HtmlElement} eventData.item The clicked table row.
+     * @private
+     */
     showMenuBy: function (el, eventData) {
         var menu = this.getMenu(eventData);
 
-        Ext.fly(el).addCls(Ext.baseCSSPrefix + 'menu');
-        menu.showBy(el, 'tl-tl?');
+        // Ext.fly(el).addCls(Ext.baseCSSPrefix + 'menu');
+        menu.showBy(el);
     }
 });
