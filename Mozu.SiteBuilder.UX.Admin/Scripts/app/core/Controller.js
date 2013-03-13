@@ -76,7 +76,7 @@ Ext.define('Taco.core.Controller', {
     },
 
     create: function () {
-        var record = Ext.create(this.modelName);
+        var record = Ext.create('Taco.model.' + this.modelName);
         this.createContentView(this.getEditorView(), {
             record: record
         });

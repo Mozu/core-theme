@@ -11,7 +11,7 @@ Ext.define('Taco.controller.ProductTypes', {
     models: ['Taco.model.ProductType'],
     stores: ['Taco.store.ProductTypes'],
     views: ['productType.Index'],
-    modelName: 'Taco.model.ProductType',
+    modelName: 'ProductType',
 
     contextPlaceholders: {
         t: function () {

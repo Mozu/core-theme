@@ -78,11 +78,18 @@
 
     onSave: function () {
         this.record.set('isRequired', this.findField('isRequired').getValue());
-        this.record.set('attributeFQN', this.selectedAttribute.getId());
         this.record.set('dataType', this.selectedAttribute.get('dataType'));
         this.record.set('attributeName', this.selectedAttribute.get('name'));
-        this.record.set('selectedValues', Ext.Array.pluck(this.selectionStore.data.items, 'raw'));
         this.record.set('inputType', this.selectedAttribute.get('inputType'));
+
+        switch(this.selectedAttribute.get('inputType')) {
+            
+            case 'List':
+                this.record.set('selectedValues', Ext.Array.pluck(this.selectionStore.data.items, 'raw'));
+                break;
+        }
+        
+        this.record.set('attributeFQN', this.selectedAttribute.getId());
         this.record.phantom = true;
         this.fireEvent('save', this, this.record);
     },
@@ -123,10 +130,14 @@
     },
 
     addEditor: function (attribute) { 
+        Ext.each(this.query('[removeOnAttributeChange]'), function (cmp) {
+            this.remove(cmp);
+        }, this);
+
         if (attribute.get('inputType') === 'List') {
             this.addListEditor(attribute);
-            this.addCheckboxes(attribute);
         }
+        this.addCheckboxes(attribute);
     },
 
     addListEditor: function (attribute) {
@@ -150,6 +161,7 @@
         valuesField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'values',
             fieldLabel: 'Values',
+            removeOnAttributeChange: true,
             store: valuesStore,
             displayField: 'value',
             valueField: 'id',
@@ -177,6 +189,7 @@
 
         selectionsField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'selections',
+            removeOnAttributeChange: true,
             fieldLabel: 'Selections',
             store: this.selectionStore,
             ddReorder: true,
@@ -209,14 +222,35 @@
 
     addCheckboxes: function (attribute) {
         var fieldGroup = Ext.create('Ext.container.Container', {
-            items: [{
+            removeOnAttributeChange: true,
+            defaults: {
                 xtype: 'checkbox',
+                inputValue: true
+            },
+            items: [{
                 name: 'isRequired',
-                value: attribute.get('isRequired'),
-                inputValue: true,
+                value: this.record.get('isRequired'),
                 boxLabel: 'Required by admin'
             }]
         });
+
+        if (attribute.get('inputType') === 'list' && !attribute.get('isOption')) {
+            fieldGroup.add({
+                name: 'allowMulti',
+                value: this.record.get('allowMulti'),
+                boxLabel: 'Allow Multi select'
+            });
+        }
+
+        if (attribute.get('isProperty')) {
+            fieldGroup.add({
+                name: 'isHidden',
+                value: this.record.get('isHidden'),
+                boxLabel: 'Hidden from Shopper'
+            });
+        }
+
+
         this.insert(this.items.getCount() - 1, fieldGroup);
     }
 });

@@ -142,7 +142,7 @@
     },
 
     edit: function (ptAttribute) {
-        this.editor.record.set(ptAttribute);
+        this.editor.record = ptAttribute;
         this.editor.edit(ptAttribute);
         this.getLayout().setActiveItem(1);
     },
