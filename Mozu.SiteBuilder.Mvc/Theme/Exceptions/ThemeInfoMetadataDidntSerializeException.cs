@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mozu.SiteBuilder.Mvc.Theme.Exceptions
+namespace Mozu.SiteBuilder.Mvc.Themes.Exceptions
 {
     internal class ThemeInfoMetadataDidntSerializeException : Exception
     {

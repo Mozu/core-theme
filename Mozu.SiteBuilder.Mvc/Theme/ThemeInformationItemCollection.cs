@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace Mozu.SiteBuilder.Mvc.Theme
+namespace Mozu.SiteBuilder.Mvc.Themes
 {
     [XmlRoot("theme")]
     public class ThemeInformationMetadata

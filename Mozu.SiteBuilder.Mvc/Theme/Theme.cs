@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Mozu.SiteBuilder.Mvc.Theme;
+
 using Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings;
 
-namespace Mozu.SiteBuilder.Mvc.Theme
+namespace Mozu.SiteBuilder.Mvc.Themes
 {
     /// <summary>
     /// Internal class implementing an IThemeInfo.
     /// </summary>
-    internal class Theme : ITheme, IThemeBasicInfo
+    public  class Theme 
     {
         /// <summary>
         /// Contains this theme's name.
@@ -21,7 +21,15 @@ namespace Mozu.SiteBuilder.Mvc.Theme
         /// Id. Returns this theme's Id.
         /// </summary>
         public string Id { get; set; }
-        
+
+
+        public List<Models.CMS.WidgetDefinition> PageTypes { get; set; }
+
+        public List<Models.CMS.WidgetDefinition> Widgets { get; set; }
+
+        public ThemeFileSystemInfo[] FileListing { get; set; }
+
+
 
         /// <summary>
         /// Contains this theme's author.
@@ -41,7 +49,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme
         /// <summary>
         /// If this theme inherits from another theme, contains the inherited theme.
         /// </summary>
-        public ITheme Parent { get; set; }
+        public Theme Parent { get; set; }
 
         /// <summary>
         /// Contains the thumbnail for this theme or null.
@@ -61,13 +69,13 @@ namespace Mozu.SiteBuilder.Mvc.Theme
         /// <summary>
         /// Returns a complete theme inheritance stack with this theme as the first.
         /// </summary>
-        public ICollection<ITheme> StackT
+        public ICollection<Theme> StackT
         {
             get
             {
-                LinkedList<ITheme> stack = new LinkedList<ITheme>(new [] { this });
+                LinkedList<Theme> stack = new LinkedList<Theme>(new [] { this });
 
-                ITheme parent = this.Parent;
+                Theme parent = this.Parent;
                 while (parent != null)
                 {
                     stack.AddLast(parent);
@@ -83,7 +91,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme
         /// <summary>
         /// Contains the theme configuration object.
         /// </summary>
-        public IEnumerable<ConfigurationItem> Configuration { get; set; }
+        public IEnumerable<ThemeConfigurationItem> Configuration { get; set; }
 
 
         /// <summary>
@@ -100,7 +108,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme
         /// Gets the theme configuration information for this theme only (none of its ancestors).
         /// Used by ThemeInfoFactory and ThemeConfigurationFactory.
         /// </summary>
-        public IEnumerable<ConfigurationItem> NodeConfiguration { get; set; }
+        public IEnumerable<ThemeConfigurationItem> NodeConfiguration { get; set; }
 
         /// <summary>
         /// Internal constructor.
@@ -109,5 +117,14 @@ namespace Mozu.SiteBuilder.Mvc.Theme
         internal Theme() {}
 
         public string ThemePath { get; set; }
+    }
+
+    public class ThemeFileSystemInfo
+    {
+        public string Name { get; set; }
+        public bool IsFile { get; set; }
+        public string FullPath { get; set; }
+        public string RootPath { get; set; }
+        public string VirtualPath { get; set; }
     }
 }

@@ -294,7 +294,7 @@
     <Compile Include="Admin\TaContext.cs" />
     <Compile Include="Admin\ThemeSettings\ConfigurationField.cs" />
     <Compile Include="Admin\ThemeSettings\ConfigurationFieldValue.cs" />
-    <Compile Include="Admin\ThemeSettings\ConfigurationItem.cs">
+    <Compile Include="Admin\ThemeSettings\ThemeConfigurationItem.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Admin\ThemeSettings\FieldValue.cs" />

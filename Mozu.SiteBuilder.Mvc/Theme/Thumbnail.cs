@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Mozu.SiteBuilder.Mvc.Theme
+namespace Mozu.SiteBuilder.Mvc.Themes
 {
     public class Thumbnail
     {

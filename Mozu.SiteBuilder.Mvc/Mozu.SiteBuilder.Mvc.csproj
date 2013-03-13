@@ -455,13 +455,9 @@
     <Compile Include="Theme\Factories\ThemeConfigurationFactory.cs" />
     <Compile Include="Theme\Factories\ThemeFactory.cs" />
     <Compile Include="Theme\ITheme.cs" />
-    <Compile Include="Theme\IThemeBasicInfo.cs" />
-    <Compile Include="Theme\IThemeMetaData.cs" />
     <Compile Include="Theme\Repositories\IThemeRepository.cs" />
     <Compile Include="Theme\Providers\IThemeMetaDataProvider.cs" />
-    <Compile Include="Theme\Providers\ThemeInfoConfigurationDidntSerializeException.cs" />
     <Compile Include="Theme\Providers\ThemeMetadataProvider.cs" />
-    <Compile Include="Theme\Providers\ThemeSettingsConfigurationDidntSerializeException.cs" />
     <Compile Include="Theme\Theme.cs" />
     <Compile Include="Theme\Repositories\ThemeRepository.cs" />
     <Compile Include="Theme\ThemeInformationItemCollection.cs" />

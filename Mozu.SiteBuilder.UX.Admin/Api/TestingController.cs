@@ -11,8 +11,8 @@ using System.Web;
 using System.Web.Http;
 using Mozu.Core;
 using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.Theme;
-using Mozu.SiteBuilder.Mvc.Theme.Repositories;
+using Mozu.SiteBuilder.Mvc.Themes;
+using Mozu.SiteBuilder.Mvc.Themes.Repositories;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
@@ -136,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [DataContract]
-        public class ThemeDTO : IThemeBasicInfo
+        public class ThemeDTO 
         {
             [DataMember(Name = "name")]
             public string Name { get; set; }
@@ -182,7 +182,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             /// <summary>
             /// Copy constructor
             /// </summary>
-            public ThemeDTO(ISiteBuilderContext sbContext, IThemeBasicInfo theme, bool? isSelectedDesktop = null, bool? isSelectedMobile = null)
+            public ThemeDTO(ISiteBuilderContext sbContext, Theme theme, bool? isSelectedDesktop = null, bool? isSelectedMobile = null)
             {
                 Name = theme.Name;
                 Author = theme.Author;
@@ -209,7 +209,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             /// <summary>
             /// Checks for equality by comparing theme names.
             /// </summary>
-            public bool Equals(IThemeBasicInfo otherTheme)
+            public bool Equals(Theme otherTheme)
             {
                 return otherTheme != null && this.Id  == otherTheme.Id ;
             }
@@ -221,7 +221,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var localThemeDir =   new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/";
             //var localThemes = Directory.GetDirectories(localThemeDir);
             var entitlements = await _tenantClient.GetSiteEntitlements(_apiContext.TenantId, _apiContext.SiteId);
-            var localThemes = entitlements.ReadAsSync().Items.Where(x => x.ApplicationType == "Theme").Select(x => x.Id.ToString() ).Union(Directory.GetDirectories(localThemeDir).Select( x=>Path.GetFileName(x)));
+            var localThemes = entitlements.ReadAsSync().Items.Where(x => x.ApplicationType == "Theme").Select(x => x.ApplicationVersionId.ToString() ).Union(Directory.GetDirectories(localThemeDir).Select( x=>Path.GetFileName(x)));
 
 
             var themes = localThemes
@@ -238,7 +238,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         
                     })
                     .Where( x=> x!= null)
-                .Select<ITheme, ThemeDTO>(t => new ThemeDTO(_siteBuilderContext,t)).ToList();
+                .Select<Theme, ThemeDTO>(t => new ThemeDTO(_siteBuilderContext,t)).ToList();
            // List<ThemeDTO> themes = _themeRepository.GetAll().Select<ITheme, ThemeDTO>(t => new ThemeDTO(t)).ToList();
             return List2(themes);
          //   throw new NotImplementedException();

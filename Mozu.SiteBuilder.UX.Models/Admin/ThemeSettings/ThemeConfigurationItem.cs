@@ -20,28 +20,28 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings
     }
 
     [XmlRoot("settings" )]
-    public class ConfigurationItemCollection
+    public class ThemeConfigurationItemCollection
     {
         [XmlArray(ElementName = "items")]
-        [XmlArrayItem("item", typeof(ConfigurationItem))]
-        [XmlArrayItem("group", typeof(ConfigurationItemGroup))]
-        [XmlArrayItem("setting", typeof(ConfigurationItemField))]
-        [XmlArrayItem("preset", typeof(ConfigurationItemPreset))]
-        [XmlArrayItem("section", typeof(ConfigurationItemSection))]
+        [XmlArrayItem("item", typeof(ThemeConfigurationItem))]
+        [XmlArrayItem("group", typeof(ThemeConfigurationItemGroup))]
+        [XmlArrayItem("setting", typeof(ThemeConfigurationItemField))]
+        [XmlArrayItem("preset", typeof(ThemeConfigurationItemPreset))]
+        [XmlArrayItem("section", typeof(ThemeConfigurationItemSection))]
         [DataMember(EmitDefaultValue = false, Name = "items")]
-        public List<ConfigurationItem> Items { get; set; }
+        public List<ThemeConfigurationItem> Items { get; set; }
     }
 
     [KnownType(typeof(ConfigurationFieldValue))]
     [KnownType(typeof(PresetValue))]
     [KnownType(typeof(FieldValue))]
     [DataContract]
-    [KnownType( typeof(ConfigurationItem))]
-    [KnownType( typeof(ConfigurationItemGroup))]
-    [KnownType( typeof(ConfigurationItemField))]
-    [KnownType( typeof(ConfigurationItemPreset))]
-    [KnownType( typeof(ConfigurationItemSection))]
-    public class ConfigurationItem
+    [KnownType( typeof(ThemeConfigurationItem))]
+    [KnownType( typeof(ThemeConfigurationItemGroup))]
+    [KnownType( typeof(ThemeConfigurationItemField))]
+    [KnownType( typeof(ThemeConfigurationItemPreset))]
+    [KnownType( typeof(ThemeConfigurationItemSection))]
+    public class ThemeConfigurationItem
     {
         [DataMember(Name = "id")]
         [XmlAttribute("id")]
@@ -60,13 +60,13 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings
         public string Inherit { get; set; }
 
         [XmlArray(ElementName = "items")]
-        [XmlArrayItem("item", typeof(ConfigurationItem))]
-        [XmlArrayItem("group", typeof(ConfigurationItemGroup))]
-        [XmlArrayItem("setting", typeof(ConfigurationItemField))]
-        [XmlArrayItem("preset", typeof(ConfigurationItemPreset))]
-        [XmlArrayItem("section", typeof(ConfigurationItemSection))]
+        [XmlArrayItem("item", typeof(ThemeConfigurationItem))]
+        [XmlArrayItem("group", typeof(ThemeConfigurationItemGroup))]
+        [XmlArrayItem("setting", typeof(ThemeConfigurationItemField))]
+        [XmlArrayItem("preset", typeof(ThemeConfigurationItemPreset))]
+        [XmlArrayItem("section", typeof(ThemeConfigurationItemSection))]
         [DataMember(EmitDefaultValue = false, Name = "items")]
-        public List<ConfigurationItem> Items { get; set; }
+        public List<ThemeConfigurationItem> Items { get; set; }
 
         [XmlAttribute("type")]
         [DataMember(EmitDefaultValue = false, Name = "mode")]
@@ -103,7 +103,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings
         public string PresetTriggerText { get; set; }
     }
 
-    public class ConfigurationItemGroup : ConfigurationItem
+    public class ThemeConfigurationItemGroup : ThemeConfigurationItem
     {
         [XmlIgnore]
         public override string ItemType
@@ -116,7 +116,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings
         }
     }
 
-    public class ConfigurationItemField : ConfigurationItem
+    public class ThemeConfigurationItemField : ThemeConfigurationItem
     {
        [XmlIgnore]
         public override string ItemType
@@ -128,7 +128,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings
             }
         }
     }
-    public class ConfigurationItemPreset : ConfigurationItem
+    public class ThemeConfigurationItemPreset : ThemeConfigurationItem
     {
        [XmlIgnore]
         public override string ItemType
@@ -140,7 +140,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings
             }
         }
     }
-    public class ConfigurationItemSection : ConfigurationItem
+    public class ThemeConfigurationItemSection : ThemeConfigurationItem
     {
         [XmlIgnore]
         public override string ItemType

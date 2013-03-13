@@ -6,7 +6,7 @@ using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.Reference.Contracts.Clients;
 using Mozu.ShippingRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.CMS;
-using Mozu.SiteBuilder.Mvc.Theme.Factories;
+using Mozu.SiteBuilder.Mvc.Themes.Factories;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteSettings.Shipping.Contracts.Clients;
 using Mozu.UspsShippingAdmin.Contracts.Clients;
@@ -21,8 +21,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
     using Mozu.SiteBuilder.Mvc.Logging;
     using Mozu.SiteBuilder.Mvc.Models.CMS;
     using Mozu.SiteBuilder.Mvc.Security;
-    using Mozu.SiteBuilder.Mvc.Theme.Providers;
-    using Mozu.SiteBuilder.Mvc.Theme.Repositories;
+    using Mozu.SiteBuilder.Mvc.Themes.Providers;
+    using Mozu.SiteBuilder.Mvc.Themes.Repositories;
     using Mozu.SiteBuilder.Mvc.ViewEngine;
     using Module = Autofac.Module;
    
