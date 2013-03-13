@@ -26,11 +26,11 @@
         this.attributeStore.load();
 
         this.createFilter = function (record) {
-            return me.assignedAttributeStore.indexOf(record) < 0;
+            return me.assignedAttributeStore.contains(record);
         };
 
         this.editFilter = function (record) {
-            return me.assignedAttributeStore.indexof(record) >= 0;
+            return me.assignedAttributeStore.contains(record);
         };
 
         this.callParent(arguments);
@@ -141,15 +141,18 @@
         });
 
         this.selectionStore = Ext.create('Ext.data.Store', {
-            fields: fields
+            fields: fields,
+            data: this.record.get('selectedValues')
         });
 
+        //debugger;
         valuesField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'values',
             fieldLabel: 'Values',
             store: valuesStore,
             displayField: 'value',
             valueField: 'id',
+            value: Ext.Array.pluck(this.record.get('selectedValues'), 'id'),
             width: this.containerWidth,
             listConfig: {
                 cls: Ext.baseCSSPrefix + 'boundlist-with-hidden-selections',

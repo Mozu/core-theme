@@ -182,6 +182,19 @@ Ext.application({
                         }
                     });
                 });
+            },
+
+            contains: function (record) {
+                var found = false;
+
+                this.each(function (item) {
+                    if (record === item) {
+                        found = true;
+                        return false;
+                    }
+                });
+
+                return found;
             }
         });
 

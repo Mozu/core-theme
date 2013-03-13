@@ -141,6 +141,7 @@
     },
 
     edit: function (attribute) {
+        this.editor.record.set(attribute);
         this.editor.edit(attribute);
         this.getLayout().setActiveItem(1);
     },
@@ -149,11 +150,10 @@
     },
 
     onSave: function (form, record) {
-        if (this.editor.isEdit()) {
-            //
-        } else {
+        if (!this.store.contains(record)) {
             this.store.add(record);
         }
+
         this.listContainer.add(this.buildAttribute(record));
         this.onCancel();
     },
