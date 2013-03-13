@@ -53,17 +53,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     return FailureList2<ProductType>("Invalid id parameter passed." + e.ToString());
                 }
 
-                // TODO: hack for ProductType = 1 to give Travis a mock object with all attributes available.
-                DC.ProductType prod;
-                if (id == 1)
-                {
-                    prod = GiveTravisAMockProductType();
-                }
-                else
-                {
-                    var resultSingle = await _productTypeClient.GetProductType(id);
-                    prod = resultSingle.ReadAsAsync().Result;
-                }
+                var resultSingle = await _productTypeClient.GetProductType(id);
+                DC.ProductType prod = resultSingle.ReadAsAsync().Result;
                 return List2(Mapper.Map<ProductType>(prod));
             }
 
