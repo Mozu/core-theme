@@ -643,6 +643,7 @@
     <Content Include="Scripts\build\index.html" />
     <Content Include="Scripts\ext\ext-all-debug.js" />
     <Content Include="Scripts\ext\ext-all-dev.js" />
+    <Content Include="Scripts\ext\ext-all.js" />
     <Content Include="Scripts\ext\locale\ext-lang-af.js" />
     <Content Include="Scripts\ext\locale\ext-lang-bg.js" />
     <Content Include="Scripts\ext\locale\ext-lang-ca.js" />
