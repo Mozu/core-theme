@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string Id { get; set; }
 
 
-        public List<Models.CMS.WidgetDefinition> PageTypes { get; set; }
+        public List<Models.CMS.PageTemplateDefinition> PageTypes { get; set; }
 
         public List<Models.CMS.WidgetDefinition> Widgets { get; set; }
 
@@ -126,5 +126,14 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string FullPath { get; set; }
         public string RootPath { get; set; }
         public string VirtualPath { get; set; }
+        public System.IO.Stream  OpenRead()
+        {
+            return System.IO.File.OpenRead(FullPath);
+        }
+
+        public System.IO.TextReader  OpenText()
+        {
+             return System.IO.File.OpenText(FullPath);
+        }
     }
 }

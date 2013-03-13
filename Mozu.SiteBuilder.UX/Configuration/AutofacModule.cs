@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterType<SiteBuilderContext>().As<ISiteBuilderContext>().InstancePerHttpRequest().As<IEditableContext>().InstancePerHttpRequest();
 
             builder.RegisterType<ThemeSettingsRepository>().As<IThemeSettingsRepository>().InstancePerHttpRequest();
-            builder.RegisterType<WidgetProvider>().As<IWidgetProvider>();
+            
             builder.RegisterType<FiftyOneDegreesMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerHttpRequest();
 
             builder.RegisterType<RoleWebApiClient>().As<IRoleWebApiClient>();

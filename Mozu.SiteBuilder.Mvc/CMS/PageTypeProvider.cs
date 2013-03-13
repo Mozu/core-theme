@@ -1,25 +1,25 @@
-using System.Collections.Generic;
-using System.Linq;
-using Mozu.SiteBuilder.Mvc.Models.CMS;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Newtonsoft.Json.Linq;
+//using System.Collections.Generic;
+//using System.Linq;
+//using Mozu.SiteBuilder.Mvc.Models.CMS;
+//using Mozu.SiteBuilder.Mvc.ViewEngine;
+//using Newtonsoft.Json.Linq;
 
-namespace Mozu.SiteBuilder.Mvc.CMS
-{
-    public class PageTypeProvider : DefinitionProvider<PageTemplateDefinition>, IPageTypeProvider
-    {
-        public PageTypeProvider(DjangoMozuViewEngine viewEngine, ISiteBuilderContext ctx) : base(viewEngine.PathProvider, ctx)
-        {
-        }
+//namespace Mozu.SiteBuilder.Mvc.CMS
+//{
+//    public class PageTypeProvider : DefinitionProvider<PageTemplateDefinition>, IPageTypeProvider
+//    {
+//        public PageTypeProvider(DjangoMozuViewEngine viewEngine, ISiteBuilderContext ctx) : base(viewEngine.PathProvider, ctx)
+//        {
+//        }
 
-        public IEnumerable<PageTemplateDefinition> GetPageTypes()
-        {
-            // TODO: Cache this or make it static
-            return GetFromFolder("metadata/pageTypes").Where(x => !string.IsNullOrWhiteSpace(x.Id)).Select(x =>
-                {
-                    x.Properties = new JObject();
-                    return x;
-                });
-        }
-    }
-}
+//        public IEnumerable<PageTemplateDefinition> GetPageTypes()
+//        {
+//            // TODO: Cache this or make it static
+//            return GetFromFolder("metadata/pageTypes").Where(x => !string.IsNullOrWhiteSpace(x.Id)).Select(x =>
+//                {
+//                    x.Properties = new JObject();
+//                    return x;
+//                });
+//        }
+//    }
+//}

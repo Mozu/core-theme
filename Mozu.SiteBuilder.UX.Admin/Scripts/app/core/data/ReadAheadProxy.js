@@ -308,6 +308,7 @@ Ext.define('Taco.core.data.ReadAheadProxy', {
                         foundRecord.copyFrom(record);
                         foundRecord.commit();
                     }
+                    //todo:maybe reomve
                     Ext.each(data.nodeStores, function (store) {
                         foundRecord = store.getById(record.getId());
                         if (foundRecord && nodeRecords.indexOf(foundRecord) == -1) {

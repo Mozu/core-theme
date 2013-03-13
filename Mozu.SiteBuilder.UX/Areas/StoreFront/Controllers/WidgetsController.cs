@@ -30,15 +30,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         ISiteBuilderContext _context;
         ICmsTypeHelper _cmsTypeHelper;
         ICmsServiceWrapper _cmsService;
-        private readonly IWidgetProvider _widgetProvider;
+        
 
-        public WidgetsController(  IViewEngine viewEngine, IProductWebApiClient productClient, ISiteBuilderContext context, ICmsTypeHelper cmsTypeHelper, IProvisioningHelper provHelper, ICmsServiceWrapper cmsService, IWidgetProvider widgetProvider)
+        public WidgetsController(  IViewEngine viewEngine, IProductWebApiClient productClient, ISiteBuilderContext context, ICmsTypeHelper cmsTypeHelper, IProvisioningHelper provHelper, ICmsServiceWrapper cmsService)
         {
             _viewEngine = viewEngine;
             _productClient = productClient;
             _context = context;
             _cmsService = cmsService;
-            _widgetProvider = widgetProvider;
+            
 
             _cmsTypeHelper = cmsTypeHelper;
             provHelper.ProvisionCms();
@@ -87,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-            var def = _widgetProvider.GetWidgets().First(x => x.Id == wrd.DefinitionId);
+            var def = _context.Theme.Widgets .First(x => x.Id == wrd.DefinitionId);
 
             wrd.Definition = def;
             wrd.IsPreview = true;

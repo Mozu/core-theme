@@ -56,6 +56,12 @@ Ext.define('Taco.model.Category', {
             "useNull": true,
             persist: false
         },
+         {
+             "name": "parent",
+             "type": "auto",
+             "useNull": true,
+             persist: false
+         },
         {
             "name": "name",
             "type": "string",

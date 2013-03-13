@@ -14,7 +14,7 @@ Ext.define('Taco.view.product.subform.Categories', {
         var list, listStore;
 
         this.record = this.productInSiteInfo;
-
+        window.pisi = this.record;
         this.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.CategoriesTree',
             autoLoad: true
