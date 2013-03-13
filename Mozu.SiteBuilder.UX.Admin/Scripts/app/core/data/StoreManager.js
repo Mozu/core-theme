@@ -26,7 +26,9 @@ Ext.define('Taco.core.data.StoreManager', {
             var cc = Ext.apply({}, config);
             delete(cc.autoLoad);
             store = Ext.create(config.type, cc);
-            me.stores.add(config.id, store );
+            if (!config.createOnly) {
+                me.stores.add(config.id, store);
+            }
         }
         if (config.clearFilters ) {
             

@@ -54,7 +54,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
 
         [DataMember(Name = "path", EmitDefaultValue = false)]
         public string Path { get; set; }
-        
-        
+
+
+        [IgnoreDataMember]
+        public Category Parent { get; set; }
     }
 }

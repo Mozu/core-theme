@@ -12,7 +12,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Category;
 using Contracts = Mozu.ProductAdmin.Contracts;
 using System.Linq;
-
+using Mozu.Core.Api.Client;
 using Category = Mozu.SiteBuilder.UX.Admin.Api.Models.Category.Category;
 using System.Net.Http;
 using Mozu.Core.Api.Contracts.Client;
@@ -36,9 +36,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (pagingParams.id == null)
             {
-                var cats = (await _categoriesClient.GetCategories(startIndex:0,pageSize:600 )).ReadAsSync();
+                int start = 0;
+                List<Category> categories = new List<Category>();
+                while (true)
+                {
+                    var cats = (await _categoriesClient.GetCategories(startIndex: start, pageSize: 600, targetContextLevel: TargetContextLevelType.SiteGroup)).ReadAsSync();
+                    categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
+                    start = cats.PageSize + cats.StartIndex;
+                    if (cats.TotalCount <= start )
+                    {
+                        break;
+                    }
+                }
+                foreach (var category1 in categories)
+                {
+                    if (category1.ParentId.GetValueOrDefault(-1) > -1)
+                    {
+                        category1.Parent = categories.FirstOrDefault(x => x.Id == category1.ParentId.Value);
+                    }
+                }
+                var ancestory = new List<Category>();
+                foreach (var category1 in categories.Where(x => x.Parent != null))
+                {
+                    ancestory.Clear();
+                    var parent = category1.Parent;
 
-                var categories = Mapper.Map<List<Category>>(cats.Items);
+                    do
+                    {
+                        if (ancestory.Contains(parent))
+                        {
+                            break;
+                        }
+                        ancestory.Add(parent);
+                        parent = parent.Parent;
+
+                    } while (parent != null);
+                    ancestory.Reverse();
+                    category1.Path = string.Join("/", ancestory.Select(x => x.Name).ToArray());
+
+                }
 
                 return List2(categories);
             }
