@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SelectedValues, opt => opt.ResolveUsing(dc => MapVocabularyValueInProductTypeListToSelectedValues(dc.VocabularyValues, dc.AttributeFQN)))
                 .ForMember(x => x.DataType, opt => opt.MapFrom(dc => dc.Attribute.DataType))
                 .ForMember(x => x.InputType, opt => opt.MapFrom(dc => dc.Attribute.InputType))
-                .ForMember(x => x.AttributeName, opt => opt.MapFrom(dc => dc.Attribute.AttributeCode))
+                .ForMember(x => x.AttributeName, opt => opt.MapFrom(dc => dc.Attribute.Content != null ? dc.Attribute.Content.Name : dc.Attribute.AttributeCode ))
                 ;
 
             Mapper.CreateMap<ProductTypeAttribute, DC.AttributeInProductType>()
