@@ -172,6 +172,7 @@ Ext.define('Taco.model.Product', {
         "useNull": false
     }
   ],
+    
     idProperty: 'productCode',
     hasMany: [
         {

@@ -15,6 +15,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
         
         //  private List<Theme> _themes;
         private ThemeConfigurationFactory _configFactory;
+        private ThemeHierarchyProcessor _themeHierarchyProcessor;
         private Dictionary<string, Theme> _stackOverFlowCheckDictionary = new Dictionary<string, Theme>(StringComparer.OrdinalIgnoreCase ); 
         /// <summary>
         /// Public constructor.
@@ -24,6 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
             
             //_themes = new List<Theme>();
             _configFactory = new ThemeConfigurationFactory();
+            _themeHierarchyProcessor = new ThemeHierarchyProcessor();
         }
 
         public Theme Build(ThemeMetaData tmd, IThemeRepository repository )
@@ -63,7 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
 
             // set theme's merged configuration
             theme.Configuration = _configFactory.GetMergedConfigurations(theme);
-
+            _themeHierarchyProcessor.Process(theme);
             theme.IsInitialized = true;
 
             return theme;

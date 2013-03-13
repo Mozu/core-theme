@@ -3,6 +3,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -13,17 +14,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [ServiceContract]
     public class WidgetDefinitionController : BaseController
     {
-        private readonly IWidgetProvider _widgetProvider;
+        private readonly ISiteBuilderContext _siteBuilderContext;
+      
 
-        public WidgetDefinitionController(IWidgetProvider widgetProvider)
+        public WidgetDefinitionController(ISiteBuilderContext siteBuilderContext  )
         {
-            _widgetProvider = widgetProvider;
+            _siteBuilderContext = siteBuilderContext;
+         
         }
 
         [WebGet(UriTemplate = "read")]
         public Response<List<WidgetDefinition>> GetWidgets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            var defs = _widgetProvider.GetWidgets();
+            var defs = _siteBuilderContext.Theme.Widgets;
 
             return List2(defs.ToList());
         }

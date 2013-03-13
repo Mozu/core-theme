@@ -96,11 +96,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                                                                                VirtualPath = x.FullName.Substring( themePath.Length ).TrimEnd(new char[]{'\\'})
                                                                            }).ToArray() ;
 
-            var widgetMetaDataDir = Path.GetFullPath(themePath + "//metadata//widgets");
-            var pageTypesMetaDataDir = Path.GetFullPath(themePath + "//metadata//PageTypes");
+            var widgetMetaDataDir = "\\metadata\\widgets";
+            var pageTypesMetaDataDir = "\\metadata\\PageTypes";
             var jSerializer = new JsonSerializer();
 
-            tmd.Widgets= tmd.FileListing.Where(x => x.VirtualPath.StartsWith(widgetMetaDataDir, StringComparison.OrdinalIgnoreCase) && x.Name.Equals ("\\definition.json", StringComparison.OrdinalIgnoreCase))
+            tmd.Widgets= tmd.FileListing.Where(x => x.VirtualPath.StartsWith(widgetMetaDataDir, StringComparison.OrdinalIgnoreCase) && x.Name.Equals ("definition.json", StringComparison.OrdinalIgnoreCase))
                .Select(x =>
                    {
                        using (var stream = File.OpenText(x.FullPath ))
@@ -109,12 +109,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                        }
                    }).ToList();
 
-            tmd.PageTypes = tmd.FileListing.Where(x => x.VirtualPath.StartsWith( pageTypesMetaDataDir, StringComparison.OrdinalIgnoreCase) && x.Name.Equals("\\definition.json", StringComparison.OrdinalIgnoreCase))
+            tmd.PageTypes = tmd.FileListing.Where(x => x.VirtualPath.StartsWith( pageTypesMetaDataDir, StringComparison.OrdinalIgnoreCase) && x.Name.Equals("definition.json", StringComparison.OrdinalIgnoreCase))
                .Select(x =>
                {
                    using (var stream = File.OpenText(x.FullPath))
                    {
-                       return jSerializer.Deserialize<WidgetDefinition>(new JsonTextReader(stream));
+                       return jSerializer.Deserialize<PageTemplateDefinition>(new JsonTextReader(stream));
                    }
                }).ToList();
 

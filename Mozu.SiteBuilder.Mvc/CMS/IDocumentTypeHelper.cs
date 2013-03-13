@@ -26,18 +26,20 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         IDocumentTypeWebApiClient _docTypeClient;
         IPropertyTypeWebApiClient _propTypeClient;
         ISiteBuilderContext _ctx;
-        private readonly IWidgetProvider _widgetProvider;
-        private readonly IPageTypeProvider _pageTypeProvider;
+        //private readonly IWidgetProvider _widgetProvider;
+        //private readonly IPageTypeProvider _pageTypeProvider;
+        private readonly ISiteBuilderContext _siteBuilderContext;
         System.Runtime.Caching.ObjectCache _cache;
         //static ConcurrentDictionary<string, Mozu.Content.Contracts.DocumentType> _tenantDocDic = new ConcurrentDictionary<string, ContentService.Contracts.DocumentType>();
         static Hashtable g_cache = new Hashtable();
 
 
-        public CmsTypeHelper(IDocumentTypeWebApiClient docTypeClient, IPropertyTypeWebApiClient propClient, ISiteBuilderContext ctx, IWidgetProvider widgetProvider, IPageTypeProvider pageTypeProvider)
+        public CmsTypeHelper(IDocumentTypeWebApiClient docTypeClient, IPropertyTypeWebApiClient propClient, ISiteBuilderContext ctx, ISiteBuilderContext siteBuilderContext)
         {
             _ctx = ctx;
-            _widgetProvider = widgetProvider;
-            _pageTypeProvider = pageTypeProvider;
+            //_widgetProvider = widgetProvider;
+           // _pageTypeProvider = pageTypeProvider;
+            _siteBuilderContext = siteBuilderContext;
             _propTypeClient = propClient;
             _docTypeClient = docTypeClient;
             _cache = System.Runtime.Caching.MemoryCache.Default;
@@ -104,17 +106,19 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public WidgetDefinition GetWidgetDefintion(string id)
         {
-            return _widgetProvider.GetWidgets().FirstOrDefault(x => string.Equals(x.Id, id, StringComparison.OrdinalIgnoreCase));
+            return _siteBuilderContext.Theme.Widgets.FirstOrDefault(x => x.Id == id);
+           
         }
 
         public PageTemplateDefinition GetPageTypeDefinition(string id)
         {
-            return _pageTypeProvider.GetPageTypes().FirstOrDefault(x => string.Equals(x.Id, id, StringComparison.OrdinalIgnoreCase));
+            return _siteBuilderContext.Theme.PageTypes.FirstOrDefault(x => x.Id == id);
+          
         }
 
         public IEnumerable<PageTemplateDefinition> GetPageTypeDefinitions()
         {
-            return _pageTypeProvider.GetPageTypes();
+            return _siteBuilderContext.Theme.PageTypes;
         }
     }
 }

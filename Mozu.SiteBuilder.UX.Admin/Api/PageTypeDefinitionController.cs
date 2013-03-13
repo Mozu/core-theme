@@ -14,6 +14,7 @@ using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using System.Threading.Tasks;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
+using Mozu.SiteBuilder.Mvc;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -25,19 +26,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         ICmsTypeHelper _cmsTypeHelper;
         IDocumentWebApiClient _docRepo;
         ICmsServiceWrapper _cmsService;
+        private readonly ISiteBuilderContext _siteBuilderContext;
         //ISessionDocumentStore _sessionDocStore;
-        private IPageTypeProvider _pageTypeProvider;
+       // private IPageTypeProvider _pageTypeProvider;
 
         public PageTypeDefinitionController(
             IDocumentWebApiClient docRepo,
             IApiContext apiContext,
             IProvisioningHelper provHelper,
             ICmsTypeHelper cmsTypeHelper,
-            ICmsServiceWrapper cmsService, IPageTypeProvider pageTypeProvider)
+            ICmsServiceWrapper cmsService ,
+            ISiteBuilderContext siteBuilderContext)//, IPageTypeProvider pageTypeProvider)
         {
             _docRepo = docRepo;
             _cmsService = cmsService;
-            _pageTypeProvider = pageTypeProvider;
+            _siteBuilderContext = siteBuilderContext;
+            //   _pageTypeProvider = pageTypeProvider;
             _cmsTypeHelper = cmsTypeHelper;
         
         }
@@ -49,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
 
 
-            IEnumerable<PageTemplateDefinition> pageTypes = _pageTypeProvider.GetPageTypes();
+            IEnumerable<PageTemplateDefinition> pageTypes = this._siteBuilderContext.Theme.PageTypes;
             bool userCreatable = false;
             if (extFilter.TryGetValue("userCreatable",out userCreatable ))
             {

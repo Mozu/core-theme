@@ -132,7 +132,7 @@ Ext.define('Taco.model.ProductInSiteInfo', {
         if (me.categoryStore == null) {
             me.categoryStore = Taco.core.data.StoreManager.getOrCreate(
                 {
-                    model: 'Taco.model.Category',
+                    type: 'Taco.store.Categories',
                     createOnly: true,
                     id: this.id,
                     autoLoad :true,

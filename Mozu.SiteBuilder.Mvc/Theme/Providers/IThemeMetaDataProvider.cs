@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
 
         //public string[] FileListing { get; set; }
 
-        public List<Models.CMS.WidgetDefinition> PageTypes { get; set; }
+        public List<Models.CMS.PageTemplateDefinition> PageTypes { get; set; }
 
         public List<Models.CMS.WidgetDefinition> Widgets { get; set; }
 

@@ -454,6 +454,7 @@
     <Compile Include="Theme\Exceptions\ThemeSettingsConfigurationDidntSerializeException.cs" />
     <Compile Include="Theme\Factories\ThemeConfigurationFactory.cs" />
     <Compile Include="Theme\Factories\ThemeFactory.cs" />
+    <Compile Include="Theme\Factories\ThemeHierarchyProcessor.cs" />
     <Compile Include="Theme\ITheme.cs" />
     <Compile Include="Theme\Repositories\IThemeRepository.cs" />
     <Compile Include="Theme\Providers\IThemeMetaDataProvider.cs" />

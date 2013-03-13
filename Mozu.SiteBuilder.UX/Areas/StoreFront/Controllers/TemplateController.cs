@@ -31,33 +31,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [ValidateInput(false)]
     public class TemplatesController : BaseController
     {
+        private readonly ISiteBuilderContext _siteBuilderContext;
 
-        
+
         //private ILifetimeScope _lifetimeScope;
-        private readonly IPageTypeProvider _pageTypeProvider;
+       // private readonly IPageTypeProvider _pageTypeProvider;
        // private readonly IViewEngine _viewEngine;
 
         public TemplatesController(
-            IPageTypeProvider pageTypeProvider 
+            ISiteBuilderContext siteBuilderContext 
             
-            //IViewEngine viewEngine,
-            //ILifetimeScope lifetimeScope 
+           
 
             )
         {
-            _pageTypeProvider = pageTypeProvider;
-          //  _viewEngine = viewEngine;
+            _siteBuilderContext = siteBuilderContext;
+
+            //  _viewEngine = viewEngine;
            // _lifetimeScope = lifetimeScope;
         }
 
 
-
-
-
         public async Task<ActionResult> Index(string templateId)
         {
-            this.SiteContext.EditMode = EditModes.Template ; 
-            var pageType = _pageTypeProvider.GetPageTypes().FirstOrDefault( x => x.Id == templateId);
+            this.SiteContext.EditMode = EditModes.Template ;
+            var pageType = _siteBuilderContext.Theme.PageTypes.FirstOrDefault(x => x.Id == templateId);
             if (pageType == null)
             {
                 return new HttpNotFoundResult("template not found");
