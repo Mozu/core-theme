@@ -130,9 +130,16 @@
     },
 
     addEditor: function (attribute) { 
+        var ptAttribute = this.ptAttributeStore.containsById(attribute);
+
         Ext.each(this.query('[removeOnAttributeChange]'), function (cmp) {
             this.remove(cmp);
         }, this);
+
+        if (ptAttribute) {
+            this.record = ptAttribute;
+        }
+
 
         if (attribute.get('inputType') === 'List') {
             this.addListEditor(attribute);
@@ -229,7 +236,7 @@
             },
             items: [{
                 name: 'isRequired',
-                value: this.record.get('isRequired'),
+                checked: this.record.get('isRequired'),
                 boxLabel: 'Required by admin'
             }]
         });
@@ -237,15 +244,15 @@
         if (attribute.get('inputType') === 'list' && !attribute.get('isOption')) {
             fieldGroup.add({
                 name: 'allowMulti',
-                value: this.record.get('allowMulti'),
+                checked: this.record.get('allowMulti'),
                 boxLabel: 'Allow Multi select'
             });
         }
 
-        if (attribute.get('isProperty')) {
+        if (this.type === 'properties') {
             fieldGroup.add({
                 name: 'isHidden',
-                value: this.record.get('isHidden'),
+                checked: this.record.get('isHidden'),
                 boxLabel: 'Hidden from Shopper'
             });
         }
