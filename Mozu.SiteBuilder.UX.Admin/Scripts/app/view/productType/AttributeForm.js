@@ -30,7 +30,13 @@
         };
 
         this.editFilter = function (attributeRecord) {
-            return me.ptAttributeStore.containsById(attributeRecord);
+            var pta = me.ptAttributeStore.containsById(attributeRecord);
+
+            if (!pta) {
+                return false;
+            }
+
+            return !pta.get('isLocked');
         };
 
         this.callParent(arguments);
@@ -48,7 +54,9 @@
     edit: function (ptAttribute) {
         this.removeAll();
         this.addButtons();
-        this.addAttributes(this.editFilter, ptAttribute);
+        this.addAttributes([
+            {filterFn: this.editFilter}
+        ], ptAttribute);
     },
 
     addButtons: function () {
