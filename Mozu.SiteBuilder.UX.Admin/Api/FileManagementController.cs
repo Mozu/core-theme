@@ -18,6 +18,7 @@ using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.CMS;
 using System.Threading.Tasks;
 using Mozu.Core.Api.Contracts.Client;
+using System.IO;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [ServiceContract]
@@ -32,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "file/list")]
-        public Task<Response<List<FileManagementFile>>> FileList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<FileManagementFile>>> FileList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             List<FileManagementFile> vm = null;
             int totalCount = 0;
@@ -40,8 +41,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (!string.IsNullOrEmpty(pagingParams.id))
             {
                 //var ret = _docClient.Get("files", pagingParams.id, null, null).Result.ReadAsSync();
-                var ret = _cmsService.Get("files", pagingParams.id, null, null).Result.ReadAsSync();
-                vm = new List<FileManagementFile>() { AutoMapper.Mapper.Map<FileManagementFile>(ret) };
+                var ret = (await _cmsService.Get("files", pagingParams.id, null, null)).ReadAsSync();
+                vm = new List<FileManagementFile>() { Mapper.Map<FileManagementFile>(ret) };
                 totalCount = 1;
             }
             else if (extFilter.TryGetValue<string>("id", out tmp))
@@ -52,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     //extF => _docClient.Get("files", (string)extF.value, null, CmsConstants.Documents.doc_state_active)).ToArray();
 
                 
-                Task.WaitAll(tasks);
+                await Task.WhenAll(tasks);
                 vm = tasks.Where(x => !x.Result.HasException).Select(x => x.Result.ReadAsSync()).Select(x => Mapper.Map<FileManagementFile>(x)).ToList();
                 totalCount = vm.Count;
             }
@@ -69,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     try
                     {
-                        folderId = _cmsService.GetByPath("files", "/").Result.ReadAsSync().Id;
+                        folderId = (await _cmsService.GetByPath("files", "/")).ReadAsSync().Id;
                     }
                     catch (Exception)
                     {
@@ -88,18 +89,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     req.Filters.Add(string.Format("Name cont \"{0}\"", name));
                 }
 
-                var ret = _cmsService.GetList(req).Result.ReadAsSync();
+                var ret = (await _cmsService.GetList(req)).ReadAsSync();
 
                 
                 vm = ret.Items.Select(x => AutoMapper.Mapper.Map<FileManagementFile>(x)).ToList();
                 totalCount = (int) ret.TotalCount;
             }
 
-            return List(vm, totalCount);
+            return List2(vm, totalCount);
         }
 
         [WebInvoke(UriTemplate = "file/create")]
-        public Task<Response<List<FileManagementFile>>> CreateFile(List<FileManagementFile> files)
+        public async Task<Response<List<FileManagementFile>>> CreateFile(List<FileManagementFile> files)
         {
             List<FileManagementFile> vmList = new List<FileManagementFile>();
             foreach (var file in files)
@@ -135,31 +136,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 //}
 
                //dm = _docClient.Create("files", dm).Result.ReadAsSync();
-               dm = _cmsService.Create("files", dm).Result.ReadAsSync();
-                var vm = AutoMapper.Mapper.Map<FileManagementFile>(dm);
+               dm = (await _cmsService.Create("files", dm)).ReadAsSync();
+                var vm = Mapper.Map<FileManagementFile>(dm);
                 vmList.Add(vm);
             }
 
-            return List(vmList);
+            return List2(vmList);
         }
 
         [WebInvoke(UriTemplate = "file/delete")]
-        public Task<Response<FileManagementFile>> DeleteFile(List<FileManagementFile> files)
+        public async Task<Response<FileManagementFile>> DeleteFile(List<FileManagementFile> files)
         {
             bool b = true;
             foreach ( var file in files)
             {
                 //b = _docClient.Delete("files", file.id, null).Result.ResponseMessage.IsSuccessStatusCode;
-                b = _cmsService.Delete("files", file.id, null).Result.ResponseMessage.IsSuccessStatusCode;
+                b = (await _cmsService.Delete("files", file.id, null)).ResponseMessage.IsSuccessStatusCode;
 
             
             }
 
-            return EmptySingle<FileManagementFile>(b);
+            return EmptySingle2<FileManagementFile>(b);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "file/upload/{docid}")]
-        public Task<Response<string>> UploadContent(HttpRequestMessage request,string docid)
+        public async Task<Response<string>> UploadContent(HttpRequestMessage request,string docid)
         {
             //todo add session id 
             var streamProvider = new MultipartFormDataStreamProvider(System.IO.Path.GetTempPath());
@@ -168,7 +169,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var f = bodyPartFileNames.SingleOrDefault().Value;*/
 
 
-            var fileinfo = new System.IO.FileInfo(streamProvider.FileData.SingleOrDefault().LocalFileName);
+            var fileinfo = new FileInfo(streamProvider.FileData.SingleOrDefault().LocalFileName);
 
 
             HttpResponseMessage result = null;
@@ -176,21 +177,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             using(var fs = fileinfo.OpenRead())
             {
                 //result = _docClient.UpdateDocumentContent("files", docid , fs).Result.ResponseMessage;                
-                result = _cmsService.UpdateDocumentContent("files", docid , fs).Result.ResponseMessage;                
+                result = (await _cmsService.UpdateDocumentContent("files", docid , fs)).ResponseMessage;                
             }
 
-            return Message<string>(result.IsSuccessStatusCode, "File uploaded");
+            return Message3<string>(result.IsSuccessStatusCode, "File uploaded");
         }
 
 
 
          [WebGet(UriTemplate = "folder/list")]
-        public Task<Response<List<FileManagementFolder>>> FolderList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<FileManagementFolder>>> FolderList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var folderId = extFilter.GetValue<string>("folderid");
 
             //var ret = _folderClient.GetFolderTree("files", folderId, 99).Result.ReadAsSync();
-            var ret = _cmsService.GetFolderTree("files").Result.ReadAsSync();
+            var ret = (await _cmsService.GetFolderTree("files")).ReadAsSync();
            
              
             var vm = Mapper.Map<FileManagementFolder>(ret);
@@ -198,11 +199,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             vm.name  ="All Files";
              vm.expanded = true;
 
-             return List(vm);
+             return List2(vm);
         }
 
         [WebInvoke(UriTemplate = "folder/create")]
-         public Task<Response<List<FileManagementFolder>>> CreateFolder(List<FileManagementFolder> folders)
+        public async Task<Response<List<FileManagementFolder>>> CreateFolder(List<FileManagementFolder> folders)
         {
             List<FileManagementFolder> vms = new List<FileManagementFolder>();
             foreach (var fldr in folders)
@@ -215,7 +216,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     DocumentListName = "files"
                 };
                 //var ret = _folderClient.Create("files", dm).Result.ReadAsSync();
-                var ret = _cmsService.Create("files", dm).Result.ReadAsSync();
+                var ret = (await _cmsService.Create("files", dm)).ReadAsSync();
                 var vm = new FileManagementFolder()
                 {
                       id = ret.Id,
@@ -225,33 +226,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 vms.Add(vm);
             }
 
-            return List(vms);
+            return List2(vms);
         }
 
         [WebInvoke(UriTemplate = "file/edit")]
-        public Task<Response<List<FileManagementFile>>> EditFile(FileManagementFile[] files)
+        public async Task<Response<List<FileManagementFile>>> EditFile(FileManagementFile[] files)
         {
             var vms = new List<FileManagementFile>();
             foreach (var file in files)
             {
                 //var dm = _docClient.Get("files", file.id, null, CmsConstants.Documents.doc_state_active ).Result.ReadAsSync();
-                var dm = _cmsService.Get("files", file.id, null, CmsConstants.Documents.doc_state_active ).Result.ReadAsSync();
+                var dm = (await _cmsService.Get("files", file.id, null, CmsConstants.Documents.doc_state_active )).ReadAsSync();
                 dm.Name = file.name;
                 dm.FolderId = file.folderId;
                 //var ret = _docClient.Update ( "files", dm.Id,  dm).Result.ReadAsSync();
-                var ret = _cmsService.Update("files", dm.Id, dm).Result.ReadAsSync();
+                var ret = (await _cmsService.Update("files", dm.Id, dm)).ReadAsSync();
 
                 var vm = Mapper.Map<FileManagementFile>(ret);
                 vms.Add(vm);
             }
 
-            return List(vms);
+            return List2(vms);
         }
 
 
 
          [WebInvoke(UriTemplate = "folder/edit")]
-        public Task<Response<List<FileManagementFolder>>> EditFolder(List<FileManagementFolder> fldrs)
+        public async Task<Response<List<FileManagementFolder>>> EditFolder(List<FileManagementFolder> fldrs)
         {
             var vms = new List<FileManagementFolder>();
             foreach (var fldr in fldrs)
@@ -264,30 +265,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     DocumentListName = "files"
                 };
                 //var ret = _folderClient.Update("files", dm.Id, dm).Result.ReadAsSync();
-                var ret = _cmsService.Update("files", dm.Id, dm).Result.ReadAsSync();
+                var ret = (await _cmsService.Update("files", dm.Id, dm)).ReadAsSync();
                 
                 var vm = Mapper.Map<FileManagementFolder>(ret);
                 vms.Add(vm);
             }
 
-             return List(vms);
+             return List2(vms);
         }
 
         [WebInvoke(UriTemplate = "folder/delete")]
-        public Task<Response<FileManagementFolder>> DeleteFolder(List<FileManagementFolder> fldrs)
+        public async Task<Response<FileManagementFolder>> DeleteFolder(List<FileManagementFolder> fldrs)
         {
             bool success = true;
             foreach (var fldr in fldrs)
             {
                 //var ret = _folderClient.Delete("files", fldr.id).Result.ResponseMessage;
-                var ret = _cmsService.Delete("files", fldr.id).Result.ResponseMessage;
+                var ret = (await _cmsService.Delete("files", fldr.id)).ResponseMessage;
                 if (!ret.IsSuccessStatusCode)
                 {
                     success = false;
                 }
             }
 
-              return EmptySingle<FileManagementFolder>(success);
+              return EmptySingle2<FileManagementFolder>(success);
         }
     }
 }
