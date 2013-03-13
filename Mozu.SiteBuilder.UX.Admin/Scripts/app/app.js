@@ -189,7 +189,7 @@ Ext.application({
 
                 this.each(function (item) {
                     if (record === item) {
-                        found = true;
+                        found = item;
                         return false;
                     }
                 });
@@ -202,7 +202,7 @@ Ext.application({
 
                 this.each(function (item) {
                     if (record.getId() === item.getId()) {
-                        found = true;
+                        found = item;
                         return false;
                     }
                 });
@@ -215,7 +215,7 @@ Ext.application({
 
                 this.each(function (item) {
                     if (record.get(field) === item.get(field)) {
-                        found = true;
+                        found = item;
                         return false;
                     }
                 });
@@ -228,7 +228,7 @@ Ext.application({
 
                 this.each(function (item) {
                     if (fn(item, record)) {
-                        found = true;
+                        found = item;
                         return false;
                     }
                 });

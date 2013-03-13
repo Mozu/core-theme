@@ -38,7 +38,11 @@
         "id": "attributes",
         "label": "Attributes",
         "address": "/admin/attributes"
-    }]
+    }, {
+        "id": "productTypes",
+        "label": "Product Types",
+        "address": "/admin/producttypes"
+        }]
 }, {
     "id": "marketing",
     "label": "Marketing",

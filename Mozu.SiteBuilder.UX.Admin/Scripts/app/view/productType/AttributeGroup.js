@@ -49,6 +49,7 @@
         this.editor = Ext.create('Taco.view.productType.AttributeForm', {
             ptAttributeStore: this.store,
             filterProperty: this.filterProperty,
+            type: this.type,
             listeners: {
                 save: this.onSave,
                 cancel: this.onCancel,
@@ -153,11 +154,10 @@
     },
 
     onSave: function (form, record) {
-        if (!this.store.contains(record)) {
+        if (!this.store.containsById(record)) {
             this.store.add(record);
+            this.listContainer.add(this.buildAttribute(record));
         }
-
-        this.listContainer.add(this.buildAttribute(record));
         this.onCancel();
     },
 
