@@ -150,7 +150,7 @@ Ext.define('Taco.view.product.Index', {
                     rowBodyTpl: new Ext.XTemplate(
                         '<tpl for="productInSites"><tr class="x-grid-row-body">',
                             '<td colspan="3" class="x-grid-cell"><div class="x-grid-cell-inner"></div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-site-id="{siteId}">{parent.productName}</a></div></td>',
+                            '<td class="x-grid-cell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-site-id="{siteId}">{productName}</a></div></td>',
                             '<td class="x-grid-cell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
                             '<td class="x-grid-cell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
                             '<td class="x-grid-cell"><div class="x-grid-cell-inner">{siteId:this.toSiteName}</div></td>',
