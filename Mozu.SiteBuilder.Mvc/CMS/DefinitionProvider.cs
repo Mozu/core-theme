@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Web.Hosting;
-using Mozu.SiteBuilder.Mvc.Theme;
+using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json;
 

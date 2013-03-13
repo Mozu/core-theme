@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns>List of SettingConfiguration</returns>
         [WebGet(UriTemplate = "config/read")]
-        public Response<List<ConfigurationItem>> ReadConfiguration()
+        public Response<List<ThemeConfigurationItem>> ReadConfiguration()
         {
             var config = _sbContext.Theme.Configuration.ToList();
             return List2(config);

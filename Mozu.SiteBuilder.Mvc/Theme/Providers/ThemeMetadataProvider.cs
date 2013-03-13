@@ -12,13 +12,15 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Mozu.Core;
-using Mozu.SiteBuilder.Mvc.Theme;
-using Mozu.SiteBuilder.Mvc.Theme.Exceptions;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.SiteBuilder.Mvc.Themes;
+using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings;
 using Mozu.Tenant.Contracts.Clients;
+using Newtonsoft.Json;
 
-namespace Mozu.SiteBuilder.Mvc.Theme.Providers
+namespace Mozu.SiteBuilder.Mvc.Themes.Providers
 {
     /// <summary>
     /// Uses the Volusion VirtualPathProvider to search ~/Themes for theme descriptions.
@@ -29,11 +31,13 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
         private readonly IApiContext _apiContext;
         //  private const string METADATA_SCHEMA_PATH = "~/tools/Theme.xsd";
        // private const string SETTINGS_SCHEMA_PATH = "~/tools/ThemeSettings.xsd";
-        private const string METADATA_FILE_NAME = "theme.xml";
+        //private const string METADATA_FILE_NAME = "theme.xml";
         private readonly NameValueCollection _config;
 
-        private XmlSerializer _themeInformationMetadataSerialzer;
-        private XmlSerializer _configurationItemCollectionSerializer;
+        private static  XmlSerializer   _themeInformationMetadataSerialzer=  new System.Xml.Serialization.XmlSerializer(typeof (ThemeInformationMetadata));
+        private static XmlSerializer    _configurationItemCollectionSerializer = new XmlSerializer(typeof(ThemeConfigurationItemCollection));
+
+        
         
         /// <summary>
         /// Constructor.
@@ -44,34 +48,9 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
             _tenantsWebApiClient = tenantsWebApiClient;
             _apiContext = apiContext;
             _config = config ?? System.Configuration.ConfigurationManager.AppSettings;
-
-
-            _themeInformationMetadataSerialzer=  new System.Xml.Serialization.XmlSerializer(typeof (ThemeInformationMetadata));
-            _configurationItemCollectionSerializer = new XmlSerializer(typeof(ConfigurationItemCollection));
-            
         }
 
         
-
-        
-
-        /// <summary>
-        /// Reads the file contents of the thumbnail file into a <code>Thumbnail</code> object.
-        /// </summary>
-        /// <exception cref="IOException">Thrown by underlying calls to ReadBytes.</exception>
-        private Thumbnail GetThemeThumbnailFromFile(string thumbnailFileLoc)
-        {
-            byte[] bytes = null;
-
-            using ( var stream = File.OpenRead(thumbnailFileLoc))
-            using (var reader = new BinaryReader(stream))
-            {
-                bytes = reader.ReadBytes((int)reader.BaseStream.Length);
-            }
-
-            return new Thumbnail(Path.GetFileName(thumbnailFileLoc), bytes);
-        }
-
         /// <summary>
         /// Private implementation of <code>IThemeMetaData</code>
         /// </summary>
@@ -85,6 +64,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
             string themePath = null;
             if (int.TryParse(id, out intId))
             {
+                themePath = Path.GetFullPath(devPrefix + "//devshare//" + id);
                 /*work around for busted service
                 var res=_tenantsWebApiClient.GetSiteEntitlement(_apiContext.SiteId.GetValueOrDefault(), _apiContext.TenantId,intId ).Result;
                 if (res.ResponseMessage.StatusCode == HttpStatusCode.OK)
@@ -98,25 +78,49 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
                     return null;
                 }*/
 
-                var items = _tenantsWebApiClient.GetSiteEntitlements(_apiContext.SiteId.GetValueOrDefault(), _apiContext.TenantId).Result.ReadAsSync().Items;
-                var ent = items.FirstOrDefault(x => x.Id == intId);
-                if ( ent != null )
-                {
-                    themePath = devPrefix + "//devshare//" + ent.ApplicationVersionId;
 
-                }
-                else
-                {
-                    return null;
-                }
             }
             else
             {
                 var localPath = new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/";
-                themePath = Path.Combine(localPath, id);
+                themePath = Path.GetFullPath(localPath +"//"+ id);
             }
-            
-            
+            tmd.ThemePath = themePath;
+
+            tmd.FileListing = new DirectoryInfo(themePath).GetFileSystemInfos("*.*", SearchOption.AllDirectories)
+                                                          .Select(x => new ThemeFileSystemInfo()
+                                                                           {
+                                                                               Name = x.Name,
+                                                                               FullPath = x.FullName ,
+                                                                               RootPath = themePath ,
+                                                                               VirtualPath = x.FullName.Substring( themePath.Length ).TrimEnd(new char[]{'\\'})
+                                                                           }).ToArray() ;
+
+            var widgetMetaDataDir = Path.GetFullPath(themePath + "//metadata//widgets");
+            var pageTypesMetaDataDir = Path.GetFullPath(themePath + "//metadata//PageTypes");
+            var jSerializer = new JsonSerializer();
+
+            tmd.Widgets= tmd.FileListing.Where(x => x.VirtualPath.StartsWith(widgetMetaDataDir, StringComparison.OrdinalIgnoreCase) && x.Name.Equals ("\\definition.json", StringComparison.OrdinalIgnoreCase))
+               .Select(x =>
+                   {
+                       using (var stream = File.OpenText(x.FullPath ))
+                       {
+                           return jSerializer.Deserialize<WidgetDefinition>(new JsonTextReader(stream));
+                       }
+                   }).ToList();
+
+            tmd.PageTypes = tmd.FileListing.Where(x => x.VirtualPath.StartsWith( pageTypesMetaDataDir, StringComparison.OrdinalIgnoreCase) && x.Name.Equals("\\definition.json", StringComparison.OrdinalIgnoreCase))
+               .Select(x =>
+               {
+                   using (var stream = File.OpenText(x.FullPath))
+                   {
+                       return jSerializer.Deserialize<WidgetDefinition>(new JsonTextReader(stream));
+                   }
+               }).ToList();
+
+
+
+
             
             var themeInfoMetaDataFilePath = themePath + "\\metadata\\theme.xml";
             if (!File.Exists(themeInfoMetaDataFilePath))
@@ -131,7 +135,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
             var themeSettingsFilePath = themePath + "\\metadata\\ThemeSettings.xml";
             using (var fs = File.OpenRead(themeSettingsFilePath))
             {
-                tmd.ThemeSettings = (ConfigurationItemCollection) _configurationItemCollectionSerializer.Deserialize(fs);
+                tmd.ThemeSettings = (ThemeConfigurationItemCollection) _configurationItemCollectionSerializer.Deserialize(fs);
             }
             var imageFilePath = Directory.GetFiles(themePath + "\\metadata", "*thumb.*").FirstOrDefault();
             if (imageFilePath != null)
@@ -139,6 +143,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Providers
                 tmd.Thumbnail = new Thumbnail(Path.GetFileName(imageFilePath ), File.ReadAllBytes(imageFilePath ));
             }
             tmd.ThemePath = Path.GetFullPath(themePath);
+            
             return tmd;
 
         }

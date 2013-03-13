@@ -6,8 +6,8 @@ using System.Linq;
 using System.Web.Hosting;
 using System.Web;
 using System.IO;
-using Mozu.SiteBuilder.Mvc.Theme.Providers;
-using Mozu.SiteBuilder.Mvc.Theme.Repositories;
+using Mozu.SiteBuilder.Mvc.Themes.Providers;
+using Mozu.SiteBuilder.Mvc.Themes.Repositories;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {

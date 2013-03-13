@@ -85,7 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 case "png": {
                     if (doc.ContentLength .GetValueOrDefault (0) < 1)
                     {
-                        return "/admin/Scripts/resources/images/AddPhotos.png";
+                        return "/admin/Scripts/resources/images/legacy/AddPhotos.png";
                     }
                     return "/admin/img/files/" + doc.Id;
                 }

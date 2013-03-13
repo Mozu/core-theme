@@ -1,7 +1,7 @@
 ﻿using System;
 
 using Mozu.SiteBuilder.Mvc.Cms;
-using Mozu.SiteBuilder.Mvc.Theme;
+using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Models;
 using System.Dynamic;
 using Mozu.SiteBuilder.Mvc.Navigation;
@@ -41,18 +41,18 @@ namespace Mozu.SiteBuilder.Mvc
         /// chosen for the current site, returns the value of <code>MobileTheme</code>.
         /// Otherwise, returns the value of <code>DesktopTheme</code>.
         /// </summary>
-        ITheme Theme { get; }
+        Theme  Theme { get; }
 
         /// <summary>
         /// Returns the site's desktop theme.
         /// </summary>
-        ITheme DesktopTheme { get; }
+        Theme DesktopTheme { get; }
 
         /// <summary>
         /// Returns the site's mobile theme, if one is set. 
         /// Otherwise returns null.
         /// </summary>
-        ITheme MobileTheme { get; }
+        Theme MobileTheme { get; }
 
         /// <summary>
         /// Returns the currently set GoogleAnalyticsCode or null if not set.

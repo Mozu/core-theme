@@ -1,8 +1,13 @@
 ﻿using System;
 
-namespace Mozu.SiteBuilder.Mvc.Theme.Exceptions
+namespace Mozu.SiteBuilder.Mvc.Themes.Exceptions
 {
-    internal class ThemeInheritanceRecursionException : Exception
+    public class ThemeInheritanceRecursionException : Exception
     {
+        public ThemeInheritanceRecursionException(string message)
+            : base(message)
+
+        {
+        }
     }
 }

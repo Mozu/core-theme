@@ -14,9 +14,9 @@ using Mozu.SiteBuilder.Mvc.Cms;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.Settings;
-using Mozu.SiteBuilder.Mvc.Theme;
-using Mozu.SiteBuilder.Mvc.Theme.Exceptions;
-using Mozu.SiteBuilder.Mvc.Theme.Repositories;
+using Mozu.SiteBuilder.Mvc.Themes;
+using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
+using Mozu.SiteBuilder.Mvc.Themes.Repositories;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
 using Mozu.SiteSettings.General.Contracts;
@@ -50,13 +50,13 @@ namespace Mozu.SiteBuilder.Mvc
 
 	    private readonly Dictionary<string, Lazy<object>> _stateBag =
 			new Dictionary<string, Lazy<object>>(StringComparer.OrdinalIgnoreCase);
-        Lazy<ITheme> _desktopTheme;
-        Lazy<ITheme> _mobileTheme;
+        Lazy<Theme > _desktopTheme;
+        Lazy<Theme> _mobileTheme;
         
         /// <summary>
         /// Theme according to the cookie 
         /// </summary>
-        private readonly ITheme _cookieTheme = null;
+        private readonly Theme  _cookieTheme = null;
         Lazy<INavigationRuntimeFactory> _nav;
         private Lazy<string> _googleAnalyticsCode;
 	    private Lazy<bool> _googleAnalyticsEnabled;
@@ -92,7 +92,7 @@ namespace Mozu.SiteBuilder.Mvc
             }
 
             // needs to be lazy because _settings is lazy
-            _desktopTheme = new Lazy<ITheme>(() =>
+            _desktopTheme = new Lazy<Theme >(() =>
             {
                 string themeName = _settings.Value.General.DesktopTheme;
 
@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.Mvc
             });
 
             // needs to be lazy because _settings is lazy
-            _mobileTheme = new Lazy<ITheme>(() =>
+            _mobileTheme = new Lazy<Theme>(() =>
             {
                 string themeName = _settings.Value.General.MobileTheme;
                 if (String.IsNullOrEmpty(_settings.Value.General.MobileTheme))
@@ -334,7 +334,7 @@ namespace Mozu.SiteBuilder.Mvc
         /// chosen for the current site, returns the value of <code>MobileTheme</code>.
         /// Otherwise, returns the value of <code>DesktopTheme</code>.
         /// </summary>
-        public ITheme Theme
+        public Theme  Theme
         {
             get {
                 if (_cookieTheme != null)
@@ -349,7 +349,7 @@ namespace Mozu.SiteBuilder.Mvc
         /// <summary>
         /// Returns the site's desktop theme.
         /// </summary>
-        public ITheme DesktopTheme
+        public Theme  DesktopTheme
         {
             get { return _desktopTheme.Value; }
         }
@@ -358,7 +358,7 @@ namespace Mozu.SiteBuilder.Mvc
         /// Returns the site's mobile theme, if one is set. 
         /// Otherwise returns null.
         /// </summary>
-        public ITheme MobileTheme
+        public Theme MobileTheme
         {
             get { return _mobileTheme.Value; }
         }

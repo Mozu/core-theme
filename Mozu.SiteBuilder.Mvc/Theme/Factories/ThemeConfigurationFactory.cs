@@ -4,7 +4,7 @@ using System.Linq;
 using Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings;
 using Mozu.SiteBuilder.Mvc.Extensions;
 
-namespace Mozu.SiteBuilder.Mvc.Theme.Factories
+namespace Mozu.SiteBuilder.Mvc.Themes.Factories
 {
     /// <summary>
     /// Factory to build a merged configuration object from a themes inheritance chain.
@@ -14,9 +14,9 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Factories
         /// <summary>
         /// Figures out a <code>Theme</code>'s configuration by walking its inheritance tree and merging all the settings.
         /// </summary>
-        public List<ConfigurationItem> GetMergedConfigurations(Theme theme)
+        public List<ThemeConfigurationItem> GetMergedConfigurations(Theme theme)
         {
-            IEnumerable<IEnumerable<ConfigurationItem>> configurationStack =
+            IEnumerable<IEnumerable<ThemeConfigurationItem>> configurationStack =
                 from t in theme.StackT.Cast<Theme>().Reverse()
                 where t.NodeConfiguration != null
                 select t.NodeConfiguration;
@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Factories
             return MergeConfigurations(configurationStack);
         }
 
-        private static List<ConfigurationItem> MergeConfigurations(IEnumerable<IEnumerable<ConfigurationItem>> configs)
+        private static List<ThemeConfigurationItem> MergeConfigurations(IEnumerable<IEnumerable<ThemeConfigurationItem>> configs)
         {
             if (configs == null || configs.Count() == 0)
                 return null;
@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Factories
                 }
             }
 
-            List<ConfigurationItem> badItems = new List<ConfigurationItem>();
+            List<ThemeConfigurationItem> badItems = new List<ThemeConfigurationItem>();
             foreach (var overrideConfig in configs.Skip(1).Reverse())
             {
                 var configVals = overrideConfig.Flatten(x => x.Items);
@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Factories
             return dic.Values.ToList();
         }
 
-        private static ConfigurationItem MergeItem(ConfigurationItem destination, ConfigurationItem source)
+        private static ThemeConfigurationItem MergeItem(ThemeConfigurationItem destination, ThemeConfigurationItem source)
         {
             // Set top level properites
             destination.DefaultValue = source.DefaultValue;
@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.Mvc.Theme.Factories
             }
 
             // Add the destination children to the dictionary
-            var dic = new Dictionary<string, ConfigurationItem>();
+            var dic = new Dictionary<string, ThemeConfigurationItem>();
 
             if (destination.Items != null)
             {
