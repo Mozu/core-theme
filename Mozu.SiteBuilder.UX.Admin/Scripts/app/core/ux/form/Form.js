@@ -225,7 +225,7 @@ Ext.define('Taco.core.ux.form.Form', {
 
     setReadOnly: function (readOnly) {
         Ext.each(this.query('[isFormField]'), function (cmp) {
-            this.setReadOnly(readOnly);
+            if (typeof this.setReadOnly === 'function') this.setReadOnly(readOnly);
         });
     },
 
@@ -314,7 +314,7 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     initTitle: function () {
-        var tplInuput, data, tpl;
+        var tplInput, data, tpl;
 
         
         if (this.originalTitle) {
