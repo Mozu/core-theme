@@ -25,8 +25,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Represents whether the product is active in this site.
         /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "categoryIds")]
+        public List<int> ProductCategories { get; set; }
+
+
+        /// <summary>
+        /// Represents whether the product is active in this site.
+        /// </summary>
         [DataMember(EmitDefaultValue = false, Name = "isActive")]
         public bool IsActive { get; set; }
+
 
         #region Content
         /// <summary>

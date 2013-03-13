@@ -99,6 +99,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<DC.ProductInSiteInfo, ProductInSiteInfo>()
                 .ForMember(x => x.SiteId, op => op.MapFrom(dc => dc.SiteId))
+                .ForMember( x=> x.ProductCategories, op=> op.MapFrom( dc=> dc.ProductCategories != null ? dc.ProductCategories.Select( x=> x.CategoryId ).ToList() : null))
                 .ForMember(x => x.IsPriceOverridden , op => op.MapFrom(dc => dc.IsContentOverridden))
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))
                 .ForMember(x => x.ShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
@@ -116,6 +117,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<ProductInSiteInfo, DC.ProductInSiteInfo>()
                 .ForMember(dc => dc.SiteId, op => op.MapFrom(pisi => pisi.SiteId))
+                .ForMember(x => x.ProductCategories, op => op.MapFrom(pisi => pisi.ProductCategories != null ? pisi.ProductCategories.Select(catid => new ProductCategory() { CategoryId = catid }).ToArray()  : null))
                 .ForMember(dc => dc.IsContentOverridden, op => op.MapFrom(pisi => pisi.IsContentOverridden))
                 .ForMember(dc => dc.IsPriceOverridden, op => op.MapFrom(pisi => pisi.IsPriceOverridden))
                 .ForMember(dc => dc.IsSEOContentOverridden, op => op.MapFrom(pisi => pisi.IsSEOContentOverridden))
