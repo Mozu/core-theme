@@ -265,12 +265,12 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             listeners: {
                 cancel: function () {
                     editorView.destroy();
-                    debugger;
                     Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller);
 
                 },
                 aftersave: function (editor, record, isEdit) {
-
+                    editorView.destroy();
+                    Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller);
                 },
                 created:function (newRecord, editor) {
                     editorView.destroy();
