@@ -100,6 +100,11 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
 
             var leftIndex = self.IndexOf(start, stringComparison) + start.Length;
             var rightIndex = self.IndexOf(stop, leftIndex, stringComparison);
+
+            // guard against the search string not being found.
+            if (rightIndex < 0 || leftIndex < 0 || (rightIndex < leftIndex) || (rightIndex > self.Length))
+                return null;
+
             return self.Substring(leftIndex, rightIndex - leftIndex);
         }
     }

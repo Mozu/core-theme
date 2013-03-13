@@ -149,7 +149,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <returns></returns>
         public Response<List<T>> FriendlyMozuFailure<T>(MozuApplicationException exception)
         {
-            var error = exception.Message.BetweenStrings("ErrorMessage: \"", "\"");
+            // TODO: One day, maybe the mozu service will return some sort of "FriendlyError" property. Then we won't have to use this BetweenStrings hack. Also there will be unicorns and robots that fly cars.
+            string error = exception.Message.BetweenStrings("ErrorMessage: \"", "\"") ?? exception.Message;
             return FailureList2<T>(error);
         }
 
