@@ -265,16 +265,12 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             listeners: {
                 cancel: function () {
                     editorView.destroy();
+                    debugger;
                     Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller);
-                    
-                    //Taco.core.StateManager.addState(me.token);
-                    //if (me.isDirty) {
-                    //    me.store.load();
-                    //    me.isDirty = false;
-                    //}
+
                 },
-                save: function () {
-                    me.isDirty = true;
+                aftersave: function (editor, record, isEdit) {
+
                 },
                 created:function (newRecord, editor) {
                     editorView.destroy();
@@ -298,7 +294,8 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
                 deleterecord: function () {
                     editorView.destroy();
                     Taco.app.StateManager.addState(me.token);
-                }
+                },
+                scope: this
             },
             record: record
         });

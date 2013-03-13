@@ -77,8 +77,32 @@
     },
 
     buildAttribute: function (ptAttribute) {
-        //debugger;a
-        var attributeView = Ext.create('Ext.container.Container', {
+        var attributeView, items;
+
+        items = [{
+            xtype: 'component',
+            flex: 1,
+            data: ptAttribute.data,
+            tpl: this.attributeItemTpl
+        }];
+
+        if (!ptAttribute.get('isLocked')) {
+            items = items.concat([{
+                xtype: 'secondarybutton',
+                itemId: 'delete',
+                text: 'Delete',
+                click: function () { this.removeAttribute(ptAttribute, attributeView); },
+                scope: this
+            }, {
+                xtype: 'secondarybutton',
+                itemId: 'edit',
+                text: 'Edit',
+                click: function () { this.edit(ptAttribute); },
+                scope: this
+            }])
+        }
+
+        attributeView = Ext.create('Ext.container.Container', {
             reorderable: true,
             cls: Taco.baseCSSPrefix + 'attribute-item',
             items: [{
@@ -89,24 +113,7 @@
                     type: 'hbox',
                     align: 'middle'
                 },
-                items: [{
-                    xtype: 'component',
-                    flex: 1,
-                    data: ptAttribute.data,
-                    tpl: this.attributeItemTpl
-                }, {
-                    xtype: 'secondarybutton',
-                    itemId: 'delete',
-                    text: 'Delete',
-                    click: function () { this.removeAttribute(ptAttribute, attributeView); },
-                    scope: this
-                }, {
-                    xtype: 'secondarybutton',
-                    itemId: 'edit',
-                    text: 'Edit',
-                    click: function () { this.edit(ptAttribute); },
-                    scope: this
-                }]
+                items: items
             }, {
                 xtype: 'container',
                 itemId: 'body',
