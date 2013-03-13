@@ -47,7 +47,7 @@
         }
 
         this.editor = Ext.create('Taco.view.productType.AttributeForm', {
-            assignedAttributeStore: this.store,
+            ptAttributeStore: this.store,
             filterProperty: this.filterProperty,
             listeners: {
                 save: this.onSave,
@@ -68,17 +68,16 @@
     buildAttributeList: function () {
         var items = [];
 
-        this.store.each(function (attribute) {
-            items.push(this.buildAttribute(attribute));
+        this.store.each(function (ptAttribute) {
+            items.push(this.buildAttribute(ptAttribute));
         }, this);
         
         return items;
     },
 
-    buildAttribute: function (attribute) {
+    buildAttribute: function (ptAttribute) {
         //debugger;a
-        return Ext.create('Ext.container.Container', {
-            attribute: attribute,
+        var attributeView = Ext.create('Ext.container.Container', {
             reorderable: true,
             cls: Taco.baseCSSPrefix + 'attribute-item',
             items: [{
@@ -92,19 +91,19 @@
                 items: [{
                     xtype: 'component',
                     flex: 1,
-                    data: attribute.data,
+                    data: ptAttribute.data,
                     tpl: this.attributeItemTpl
                 }, {
                     xtype: 'secondarybutton',
                     itemId: 'delete',
                     text: 'Delete',
-                    click: function () { this.removeAttribute(attribute); },
+                    click: function () { this.removeAttribute(ptAttribute, attributeView); },
                     scope: this
                 }, {
                     xtype: 'secondarybutton',
                     itemId: 'edit',
                     text: 'Edit',
-                    click: function () { this.edit(attribute); },
+                    click: function () { this.edit(ptAttribute); },
                     scope: this
                 }]
             }, {
@@ -115,7 +114,7 @@
                 items: [{
                     xtype: 'component',
                     itemId: 'placeholder',
-                    data: attribute.data,
+                    data: ptAttribute.data,
                     tpl: [
                         '<tpl if="this.isList(inputType)">',
                             '{[Ext.Array.pluck(values.selectedValues, "value").join(", ")]}',
@@ -129,6 +128,8 @@
                 }]
             }]
         });
+        
+        return attributeView;
     },
 
     create: function () {
@@ -140,13 +141,15 @@
         this.getLayout().setActiveItem(1);
     },
 
-    edit: function (attribute) {
-        this.editor.record.set(attribute);
-        this.editor.edit(attribute);
+    edit: function (ptAttribute) {
+        this.editor.record.set(ptAttribute);
+        this.editor.edit(ptAttribute);
         this.getLayout().setActiveItem(1);
     },
 
-    removeAttribute: function (attribute) {
+    removeAttribute: function (ptAttribute, attributeView) {
+        this.store.remove(ptAttribute);
+        this.listContainer.remove(attributeView);
     },
 
     onSave: function (form, record) {

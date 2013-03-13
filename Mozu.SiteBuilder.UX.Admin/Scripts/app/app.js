@@ -195,6 +195,45 @@ Ext.application({
                 });
 
                 return found;
+            },
+
+            containsById: function (record) {
+                var found = false;
+
+                this.each(function (item) {
+                    if (record.getId() === item.getId()) {
+                        found = true;
+                        return false;
+                    }
+                });
+
+                return found;
+            },
+
+            containsByField: function (record, field) {
+                var found = false;
+
+                this.each(function (item) {
+                    if (record.get(field) === item.get(field)) {
+                        found = true;
+                        return false;
+                    }
+                });
+
+                return found;
+            },
+
+            containsByFn: function (fn, record) {
+                var found = false;
+
+                this.each(function (item) {
+                    if (fn(item, record)) {
+                        found = true;
+                        return false;
+                    }
+                });
+
+                return found;
             }
         });
 

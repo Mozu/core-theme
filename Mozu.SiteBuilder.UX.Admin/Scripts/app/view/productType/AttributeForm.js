@@ -25,12 +25,12 @@
 
         this.attributeStore.load();
 
-        this.createFilter = function (record) {
-            return me.assignedAttributeStore.contains(record);
+        this.createFilter = function (attributeRecord) {
+            return !me.ptAttributeStore.containsById(attributeRecord);
         };
 
-        this.editFilter = function (record) {
-            return me.assignedAttributeStore.contains(record);
+        this.editFilter = function (attributeRecord) {
+            return me.ptAttributeStore.containsById(attributeRecord);
         };
 
         this.callParent(arguments);
@@ -45,10 +45,10 @@
         ]);
     },
 
-    edit: function (attribute) {
+    edit: function (ptAttribute) {
         this.removeAll();
         this.addButtons();
-        this.addAttributes(this.editFilter, attribute);
+        this.addAttributes(this.editFilter, ptAttribute);
     },
 
     addButtons: function () {
@@ -83,6 +83,7 @@
         this.record.set('attributeName', this.selectedAttribute.get('name'));
         this.record.set('selectedValues', Ext.Array.pluck(this.selectionStore.data.items, 'raw'));
         this.record.set('inputType', this.selectedAttribute.get('inputType'));
+        this.record.phantom = true;
         this.fireEvent('save', this, this.record);
     },
 
