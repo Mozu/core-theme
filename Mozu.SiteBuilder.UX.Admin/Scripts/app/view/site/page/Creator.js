@@ -48,8 +48,10 @@
                     emptyText: 'Select',
                     store: Ext.create('Ext.data.Store', {
                         model: 'Taco.model.PageTypeDefinition',
+                        autoLoad:true,
                         filters: [
                             function (item) {
+                                
                                 return item.get('userCreatable')===true;
                             }
                         ]
@@ -65,6 +67,7 @@
             }];
 
             me.callParent(arguments);
+          
         },
 
         superSaver: function () {

@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var parts = NavigationNode.SplitParts(node ?? "root");
             if (parts[0] == "root")
             {
-                ProcessRoot(resItems, navSet);
+                await ProcessRoot(resItems, navSet);
             }
             else if (parts[0] == "folder")
             {
@@ -390,7 +390,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        private async void ProcessRoot(System.Collections.Generic.List<NavigationTreeNode> resItems, UX.Models.Navigation.NavigationSet navSet)
+        private  async  Task<bool> ProcessRoot(System.Collections.Generic.List<NavigationTreeNode> resItems, UX.Models.Navigation.NavigationSet navSet)
         {
             var navId = NavigationNode.JoinParts("group", "nav");
             var unlinkedId = NavigationNode.JoinParts("group", "nonLinked");
@@ -552,6 +552,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         }
                     }
             });
+            return true;
         }
 
         private static string GetSearchFilter(IEnumerable<FilterCollectionItem> extFilter, string format)
