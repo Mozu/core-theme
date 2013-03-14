@@ -1067,7 +1067,7 @@
     <Content Include="Scripts\jsduck-4.3.2.exe" />
     <Content Include="Scripts\makedocsasjson.bat" />
     <Content Include="Scripts\resources\css\taco.css" />
-    <Content Include="Scripts\resources\images\*.png" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.svg" />
     <Content Include="Scripts\resources\images\legacy\AddPhotos.png" />
     <Content Include="Scripts\resources\images\legacy\background-alpha.png" />
     <Content Include="favicon.ico" />
@@ -2875,6 +2875,9 @@
     <Content Include="Scripts\app\mocks\attributes.json" />
     <Content Include="Scripts\resources\scss\taco\variables\_boundlist.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_boundlist.scss" />
+    <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.eot" />
+    <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.ttf" />
+    <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.woff" />
     <None Include="Scripts\resources\scss\taco\widgets\_checkout.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_panel.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_phoneOrders.scss" />
