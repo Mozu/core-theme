@@ -48,17 +48,19 @@ Ext.define('Taco.core.ux.action.Action', {
         }
     },
 
-    disable: function () {
+   
+    
+    onDisable: function () {
         var el = this.rendered ? this.el : this.protoEl;
         if (!el) {
             return;
         }
+        
         el.set({
             disabled: 'disabled'
         });
     },
-
-    enable: function () {
+    onEnable: function() {
         var el = this.rendered ? this.el : this.protoEl;
         if (!el) {
             return;
@@ -66,5 +68,6 @@ Ext.define('Taco.core.ux.action.Action', {
         this.el.set({
             disabled: null
         }, false);
-    }	
+    }
+	
 });
