@@ -30,16 +30,17 @@ Ext.define('Taco.view.pageTemplate.Index', {
             text: 'entity Type',
             minWidth: 120,
             width: 120
-        }, {
-            xtype: 'taco.menucolumn',
-            text: 'Actions',
-            menuItems: [
-                { text: 'Preview', eventName: 'viewproduct' },
-                { text: 'Duplicate', eventName: 'viewproduct' },
-                { text: 'Delete', eventName: 'viewproduct' },
-                { text: 'Edit', eventName: 'viewproduct' }
-            ]
-        }]
+        },
+             {
+                 dataIndex: 'isDefault',
+                 text: 'Is Default',
+                 minWidth: 120,
+                 width: 120,
+                 xtype: 'booleancolumn',
+                 trueText: 'Yes',
+                 falseText: 'No'
+                 
+             }]
     },
     onItemClick: function (view, record, elm, index, e) {
         if (e.target.className === 'taco-launch-editor') {
