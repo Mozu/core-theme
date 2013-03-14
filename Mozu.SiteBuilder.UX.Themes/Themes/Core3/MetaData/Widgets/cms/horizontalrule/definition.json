@@ -2,7 +2,7 @@
 	"id": "horizontal_rule",
 	"displayName": "Horizontal Rule",
 	"displayTemplate": "cms/horizontalrule",
-	"icon": "/admin/scripts/resources/images/AddPhotos.png",
+	"icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
 	"editView": "Taco.view.site.widget.HorizontalRule",
 	"properties": []
 }

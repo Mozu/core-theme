@@ -6,7 +6,7 @@
 	"maxHeight": 100,
 	"minWidth": 50,
 	"minHeight": 50,
-	"icon": "/admin/scripts/resources/images/AddPhotos.png",
+	"icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
 	"editView": "Taco.view.site.widget.ColumnDivider",
 	"properties": []
 }
