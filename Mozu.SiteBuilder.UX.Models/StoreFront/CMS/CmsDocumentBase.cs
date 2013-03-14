@@ -149,7 +149,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
                 {
                     case ("image"):
                         {
-                            mmd.AdditionalValues["editDefault"] = "{ \"src\":\"/admin/scripts/resources/images/AddPhotos.png\", \"alt\":\"food is good\" }";
+                            mmd.AdditionalValues["editDefault"] = "{ \"src\":\"/admin/scripts/resources/images/legacy/AddPhotos.png\", \"alt\":\"food is good\" }";
                             break;
                         }
                     case ("html"):
@@ -239,7 +239,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
     [DataContract(Name = "cmsProperty")]
     public class CmsProperty
     {
-        static JObject g_image = JObject.Parse("{ \"src\":\"/admin/scripts/resources/images/AddPhotos.png\", \"alt\":\"food is good\" }");
+        static JObject g_image = JObject.Parse("{ \"src\":\"/admin/scripts/resources/images/legacy/AddPhotos.png\", \"alt\":\"food is good\" }");
         public CmsProperty(ICmsTypeHelper typeHelper)
         {
             TypeHelper = typeHelper;
