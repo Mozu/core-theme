@@ -1,10 +1,7 @@
 ﻿define(
-    ["jquery", "modules/knockout-plus", "pciaas", "modules/knockout-viewmodel", "i18n!nls/messages-checkout", "i18n!nls/messages", "modules/actions-processor", "modules/context-parser"],
-    function ($, ko, PCIaaS, ViewModelPrototype, msg, genericMsg, processActions, MozuContext) {
+    ["jquery", "modules/knockout-plus", "pciaas", "modules/knockout-viewmodel", "i18n!nls/messages-checkout", "i18n!nls/messages", "modules/api"],
+    function ($, ko, PCIaaS, ViewModelPrototype, msg, genericMsg, api) {
 
-        function mapFromServer(serverRes) {
-            return $.extend(serverRes, serverRes.model);
-        }
 
         function modelObservableValueIs(obsName, desiredValue) {
             return function () {
@@ -16,66 +13,134 @@
             if (this.submit()) this.stepStatus("submitting");
         }
 
-        var AddressSchemesRequest = $.getJSON("/addressschemes");
+        function editStep() {
+            this.stepStatus("incomplete");
+        }
 
-        var ShippingAddress = ViewModelPrototype.extend({
-            //endpoint: "/resources/scripts/fixtures/checkout-updateshippingaddress.json",
-            endpoint: "/checkout/updateshippingaddress",
-            statics: {
-                "orderId": ""
-            },
+        var PhoneNumbers = ViewModelPrototype.extend({
             observables: {
-                "firstName": { required: msg.FirstNameMissing },
-                "lastName": { required: msg.LastNameMissing },
-                "companyOrOrganization": {},
-                "address1": { required: msg.StreetMissing },
-                "address2": {},
-                "address3": {},
-                "email": {},
-                "phoneNumbers": {},
-                "cityOrTown": { required: msg.CityMissing },
-                "stateOrProvince": {
+                Home: {},
+                Work: {},
+                Mobile: {},
+                Fax: {}
+            }
+        });
+
+        // TODO: write a real KO binding for AddressSchemas, once the data is better
+        var AddressSchemesPromise = api.get('addressschemas').then(function (r) {
+            var items = r.data.Items,
+                statesByCountry = {};
+            $.each(items, function (ix, item) {
+                var states;
+                $.each(item.Fields, function (ix, field) {
+                    if (field.Label === "State") {
+                        states = field.Data;
+                        return false;
+                    }
+                });
+                statesByCountry[item.CountryCode] = {
+                    stateprovLabel: 'State',
+                    stateprovList: states
+                };
+            });
+            return {
+                statesByCountry: statesByCountry,
+                countries: items
+            };
+        });
+
+        var addressConf = {            observables: {
+                "Address1": { required: msg.StreetMissing },
+                "Address2": {},
+                "Address3": {},
+                "Address4": {},
+                "CityOrTown": { required: msg.CityMissing },
+                "StateOrProvince": { 
                     required: {
                         message: msg.StateProvMissing,
                         invalidateOnChange: false
                     }
                 },
-                "postalOrZipCode": { required: msg.PostalCodeMissing },
-                "countryCode": { required: msg.CountryMissing },
-                "stepStatus": {}
-            },
-            doNotSubmit: ["stepStatus"],
-            edit: function () {
-                this.stepStatus("incomplete");
-            },
-            nextStep: submitStep
-        },
-        function (conf) {
+                "PostalOrZipCode": { required: msg.PostalCodeMissing },
+                "CountryCode": {
+                    required: {
+                        message: msg.CountryMissing,
+                        invalidateOnChange: false
+                    }
+                }
+            }
+        };
+
+        var constructAddress = function (conf) {
             var self = this,
                 AddressSchemes = false;
 
             this.stateprovLabel = ko.computed(function () {
-                var countryCode = self.countryCode();
+                var countryCode = self.CountryCode();
                 if (AddressSchemes&&AddressSchemes[countryCode]) {
                     return AddressSchemes[countryCode].stateprovLabel;
                 }
                 return "";
             });
             this.stateprovList = ko.computed(function () {
-                var countryCode = self.countryCode();
+                var countryCode = self.CountryCode();
                 if (AddressSchemes&&AddressSchemes[countryCode]) {
                     return AddressSchemes[countryCode].stateprovList;
                 }
                 return [];
             });
 
-            AddressSchemesRequest.success(function (r) {
-                AddressSchemes = r;
-                self.countryCode.notifySubscribers();
-            });
-        }),
+            self.countryList = ko.observableArray();
 
+            AddressSchemesPromise.then(function (r) {
+                AddressSchemes = r.statesByCountry;
+                self.countryList(r.countries);
+                self.CountryCode.notifySubscribers();
+            });
+        };
+
+        var ShippingStreetAddress = ViewModelPrototype.extend(addressConf, constructAddress);
+
+        var ShippingAddress = ViewModelPrototype.extend({
+            statics: {
+                "Id": ""
+            },
+            observables: {
+                "FirstName": { required: msg.FirstNameMissing },
+                "LastNameOrSurname": { required: msg.LastNameMissing },
+                "CompanyOrOrganization": {},
+                "Email": {},
+                "stepStatus": {}
+            },
+            submodels: {
+                "Address": ShippingStreetAddress,
+                "PhoneNumbers": PhoneNumbers
+            },
+            edit: editStep,
+            nextStep: function() {
+                if (!this.validate()) return false;
+                this.stepStatus('submitting');
+                var self = this;
+                this.getParentModel().update().then(function () {
+                    if (self.checkStepStatus() === 'complete')
+                        self.getParentModel().getShippingMethods();
+                }, function(e) {
+                    self.getParentModel().getParentModel().messages.push(e.message);
+                    self.stepStatus('invalid')
+                });
+            },
+            checkStepStatus: function () {
+                if (!this.stepStatus) this.stepStatus = ko.observable();
+                var newStepStatus = this.validate(false) ? 'complete' : 'invalid';
+                this.stepStatus(newStepStatus);
+                return newStepStatus;
+            }
+        }, function constructShippingAddress() {
+            this.checkStepStatus();
+        }),
+       
         ShippingMethod = ViewModelPrototype.extend({
+            mozuType: 'shippingmethod',
             //endpoint: "/resources/scripts/fixtures/checkout-updateshippingmethod.json",
             endpoint: "/checkout/updateshippingmethod",
             statics: {
@@ -87,14 +152,13 @@
                 "name": {},
                 "price": {
                     numeric: 2
-                }
+                },
+                "stepStatus": {}
             },
             observableArrays: {
                 "availableShippingMethods": {}
             },
-            edit: function () {
-                this.stepStatus("incomplete");
-            },
+            edit: editStep,
             nextStep: submitStep,
             doNotSubmit: ["stepStatus", "availableShippingMethods", "price"]
         }, function (conf) {
@@ -120,6 +184,17 @@
                 self.name(chosen.name);
                 return chosen;
             });
+        }), 
+
+        Shipment = ViewModelPrototype.extend({
+            mozuType: 'shipment',
+            statics: {
+                "OrderId": ""
+            },
+            submodels: {
+                "ShippingAddress": ShippingAddress,
+                "ShippingMethod": ShippingMethod
+            }
         }),
 
         paymentTypeIsCreditCard = modelObservableValueIs("paymentType", "CreditCard"),
@@ -315,8 +390,8 @@
                 },
                 settings: {
                     framePath: "/../Assets/pci_receiver.html",
-                    siteId: MozuContext.site,
-                    tenantId: MozuContext.tenant
+                    siteId: api.context.Site(),
+                    tenantId: api.context.Tenant()
                 }
             });
 
@@ -349,16 +424,16 @@
             return !isCreatingAccount.apply(this);
         },
 
-        errorTimer,
 
         CheckoutPage = ViewModelPrototype.extend({
-            endpoint: "checkout/submit",
+            mozuType: 'order',
+            hasMessages: true,
             statics: {
-                orderId: ""
+                Id: "",
+                ISOCurrencyCode: "usd"
             },
             submodels: {
-                shippingAddress: ShippingAddress,
-                shippingMethod: ShippingMethod,
+                Shipment: Shipment,
                 paymentSection: PaymentSection,
                 orderSummary: OrderSummary
             },
@@ -392,9 +467,6 @@
                 },
                 comments: {}
             },
-            observableArrays: {
-                "messages": {}
-            },
             doNotSubmit: ["messages", "shippingAddress", "shippingMethod", "paymentSection", "orderSummary", "confirmPassword"],
             editCart: function() {
                 window.location = "/cart";
@@ -417,17 +489,16 @@
                     if (self[smName].stepStatus && self[smName].stepStatus() == "submitting") self[smName].stepStatus("invalid");
                 });
             },
-            unknownError: function() {
-                this.messages.push({ message: genericMsg.UnexpectedError });
-                this.endSubmit();
-            },
             errorTimeout: 30000
         }, function (conf) {
 
             var boundUpdate = $.proxy(this.update, this),
                 self = this;
 
-            this.whenServerUpdates(boundUpdate);
+            this.unknownError = function () {
+                this.messages.push({ message: genericMsg.UnexpectedError });
+                this.endSubmit();
+            };
 
             this.paymentSection.pciProcessor.events.error = function (messages) {
                 self.messages(messages);
@@ -435,18 +506,12 @@
             };
 
             this.paymentSection.pciProcessor.settings.set({
-                apiBase: this.paymentApi.base,
-                merchantID: this.merchantId
+                apiBase: this.paymentApiBase
             });
 
-            var messages = this.messages = ko.observableArray([]);
-            this.removeMessage = function (msg) {
-                messages.remove(msg);
-            };
-
             $.each(this.submodels, function (smName) {
-                self[smName].orderId = self.orderId;
-                self[smName].whenServerUpdates(boundUpdate);
+                self[smName].orderId = self.Id;
+                if (self[smName].apiModel && self[smName].apiModel.data) self[smName].apiModel.data.orderId = self.Id;
             });
 
             var ALLCOMPLETE = "completecompletecomplete",
@@ -455,7 +520,7 @@
                 backstop = $.proxy(this.unknownError,this);
 
             this.orderStatus = ko.computed(function () {
-                var statuses = [self.shippingAddress.stepStatus(), self.shippingMethod.stepStatus(), self.paymentSection.stepStatus()].join("");
+                var statuses = [self.Shipment.ShippingAddress.stepStatus(), self.Shipment.ShippingMethod.stepStatus(), self.paymentSection.stepStatus()].join("");
 
                 clearTimeout(errorTimer);
                 if (statuses.indexOf(SUBMITTING) !== -1) {
@@ -465,7 +530,7 @@
                 return statuses == ALLCOMPLETE;
             });
 
-            AddressSchemesRequest.error(backstop);
+            AddressSchemesPromise.otherwise(backstop);
 
         });
 
@@ -475,9 +540,6 @@
             PaymentSection: PaymentSection,
             OrderSummary: OrderSummary,
             CheckoutPage: CheckoutPage,
-
-
-            mapFromServer: mapFromServer
         }
     }
 );

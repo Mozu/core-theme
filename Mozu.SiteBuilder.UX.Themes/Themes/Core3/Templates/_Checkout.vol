@@ -7,8 +7,6 @@
 
 {% block BodyContent %}
 
-{% dump Model %}
-
 <div id="mz-checkout-loading" class="mz-checkout-loading">
     <p>
         <em>Please wait...</em>
@@ -16,7 +14,7 @@
     {% include "Modules/LoadingBar" %}
 </div>
 
-<form id="mz-checkout-form" class="mz-checkout-form" style="visibility: hidden" method="post" action="" onsubmit="return false;" data-bind="css: { 'mz-submitting': submitting }">
+<form id="mz-checkout-form" class="mz-checkout-form" style="visibility: hidden" method="post" action="" onsubmit="return false;" data-mz-checkout="{% json_attribute Model.order %}" data-mz-paymentapibase="{{ Model.paymentApiBase }}" data-bind="css: { 'mz-submitting': submitting }">
     <h1 class="mz-page-header">
         Checkout{% if not user.email %}
         <span class="mz-page-headernote mz-auxiliary-text mz-mini-modal-parent">Registered Customer? <a class="mz-utility-link mz-login" data-mz-action="login" href="javascript:;">Sign in</a>
@@ -113,30 +111,30 @@
 
     </div><!-- right .column -->
     <div class="mz-column">
-        <div class="mz-panel" id="mz-shipping-address-panel" data-bind="with: shippingAddress, cssClassFrom: shippingAddress.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
+        <div class="mz-panel" id="mz-shipping-address-panel" data-bind="with: Shipment.ShippingAddress, cssClassFrom: Shipment.ShippingAddress.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
             <h3 class="mz-panel-header">
                 Shipping Information
                 <button class="mz-edit-button" data-bind="click: edit">Edit</button>
             </h3>
             <div class="mz-panel-wrap">
-            <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus">
+            <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + Address.CountryCode()">
                 <p class="mz-desc">Where to?</p>
                 <div class="mz-completed-summary">
-                    <span data-bind="text: firstName() + ' ' + lastName()"></span>
-                    <span data-bind="text: address1"></span>
-                    <span data-bind="text: address2, visible: address2"></span>
-                    <span data-bind="text: address3, visible: address3"></span>
-                    <span data-bind="text: cityOrTown() + ', ' + stateOrProvince() + ' ' + postalOrZipCode()"></span>
-                    <span data-bind="text: countryCode"></span>
+                    <span data-bind="text: FirstName() + ' ' + LastNameOrSurname()"></span>
+                    <span data-bind="text: Address.Address1() "></span>
+                    <span data-bind="text: Address.Address2(), visible: Address.Address2()"></span>
+                    <span data-bind="text: Address.Address3(), visible: Address.Address3()"></span>
+                    <span data-bind="text: Address.CityOrTown() + ', ' + Address.StateOrProvince() + ' ' + Address.PostalOrZipCode()"></span>
+                    <span data-bind="text: Address.CountryCode()"></span>
                 </div>
                 <div class="mz-form-fieldgroup mz-form-fields">
                     <div class="mz-form-field-row">
                         <div class="mz-form-field-cell">
-                            <label for="firstname">First Name<span class="mz-required-field" data-bind="visible: firstName.required"> *</span>:</label>
+                            <label for="firstname">First Name<span class="mz-required-field" data-bind="visible: FirstName.required"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <input type="text" id="mz-shipping-address-firstname" name="firstname" data-bind="value: firstName, css: { 'mz-invalid': firstName.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: firstName.validationMessage() || '&nbsp;'"></span>
+                            <input type="text" id="mz-shipping-address-firstname" name="firstname" data-bind="value: FirstName, css: { 'mz-invalid': FirstName.invalid() }">
+                            <span class="mz-validation-message" data-bind="text: FirstName.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
                     <div class="mz-form-field-row">
@@ -144,23 +142,23 @@
                             <label for="lastname">Last Name<span class="mz-required-field"> *</span>:</label>
 						</div>
                         <div class="mz-form-field-cell">
-                            <input type="text" id="mz-shipping-address-lastname" name="lastname" data-bind="value: lastName, css: { 'mz-invalid': lastName.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: lastName.validationMessage() || '&nbsp;'"></span>
+                            <input type="text" id="mz-shipping-address-lastname" name="lastname" data-bind="value: LastNameOrSurname, css: { 'mz-invalid': LastNameOrSurname.invalid() }">
+                            <span class="mz-validation-message" data-bind="text: LastNameOrSurname.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
                     <div class="mz-form-field-row">
                         <div class="mz-form-field-cell">
-                            <label for="address-line-1">Address<span class="mz-required-field" data-bind="visible: firstName.required"> *</span>:</label>
+                            <label for="address-line-1">Address<span class="mz-required-field" data-bind="visible: Address.Address1.required"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <input type="text" id="mz-shipping-address-line-1" name="address-line-1" data-bind="value: address1, css: { 'mz-invalid': address1.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: address1.validationMessage() || '&nbsp;'"></span>
+                            <input type="text" id="mz-shipping-address-line-1" name="address-line-1" data-bind="value: Address.Address1, css: { 'mz-invalid': Address.Address1.invalid() }">
+                            <span class="mz-validation-message" data-bind="text: Address.Address1.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
                     <div class="mz-form-field-row">
                         <div class="mz-form-field-cell"></div>
                         <div class="mz-form-field-cell">
-                            <input type="text" id="mz-shipping-address-line-2" name="address-line-2" data-bind="value: address2">
+                            <input type="text" id="mz-shipping-address-line-2" name="address-line-2" data-bind="value: Address.Address2">
                             <span class="mz-validation-message">&nbsp;</span>
                         </div>
                     </div>
@@ -169,8 +167,8 @@
                             <label for="city">City<span class="mz-required-field"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <input type="text" id="mz-shipping-address-city" name="city" data-bind="value: cityOrTown, css: { 'mz-invalid': cityOrTown.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: cityOrTown.validationMessage() || '&nbsp;'"></span>
+                            <input type="text" id="mz-shipping-address-city" name="city" data-bind="value: Address.CityOrTown, css: { 'mz-invalid': Address.CityOrTown.invalid() }">
+                            <span class="mz-validation-message" data-bind="text: Address.CityOrTown.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
                     <div class="mz-form-field-row">
@@ -178,22 +176,19 @@
                             <label for="country">Country<span class="mz-required-field"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <select id="mz-shipping-address-country" data-bind="value: countryCode, css: { 'mz-invalid': countryCode.invalid() }">
-                                {% for country in Model.model.shippingAddress.availableCountries %}
-                                <option value="{{ country.code }}">{{ country.name }}</option>
-                                {% endfor %}
+                            <select id="mz-shipping-address-country" data-bind="value: Address.CountryCode, options: Address.countryList, optionsCaption: 'Choose...', optionsText: 'CountryLabel', optionsValue: 'CountryCode', css: { 'mz-invalid': Address.CountryCode.invalid() }">
                             </select>
-                            <span class="mz-validation-message" data-bind="text: countryCode.validationMessage() || '&nbsp;'"></span>
+                            <span class="mz-validation-message" data-bind="text: Address.CountryCode.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
-                    <div class="mz-form-field-row" data-bind="visible: countryCode">
+                    <div class="mz-form-field-row" data-bind="visible: Address.CountryCode">
                         <div class="mz-form-field-cell">
-                            <label for="secondary-country" data-bind="html: stateprovLabel() + '<span class=\'mz-required-field\' data-bind=\'visible: firstName.required\'> *</span>:'"></label>
+                            <label data-bind="html: Address.stateprovLabel() + '<span class=\'mz-required-field\' data-bind=\'visible: Address.StateOrProvince.required\'> *</span>:'"></label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <select data-bind="options: stateprovList, optionsText: 'label', optionsValue: 'code', optionsCaption: 'Choose...', value: stateOrProvince, css: { 'mz-invalid': stateOrProvince.invalid() }">
+                            <select data-bind="options: Address.stateprovList, optionsText: 'Value', optionsValue: 'Code', optionsCaption: 'Choose...', value: Address.StateOrProvince, css: { 'mz-invalid': Address.StateOrProvince.invalid() }">
                             </select>
-                            <span class="mz-validation-message" data-bind="text: stateOrProvince.validationMessage() || '&nbsp;'"></span>
+                            <span class="mz-validation-message" data-bind="text: Address.StateOrProvince.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
                     <div class="mz-form-field-row">
@@ -201,22 +196,22 @@
                             <label for="postal-code">Zip/Postal Code<span class="mz-required-field"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <input type="text" id="mz-shipping-address-postal-code" name="postal-code" data-bind="value: postalOrZipCode, css: { 'mz-invalid': postalOrZipCode.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: postalOrZipCode.validationMessage() || '&nbsp;'"></span>
+                            <input type="text" id="mz-shipping-address-postal-code" name="postal-code" data-bind="value: Address.PostalOrZipCode, css: { 'mz-invalid': Address.PostalOrZipCode.invalid() }">
+                            <span class="mz-validation-message" data-bind="text: Address.PostalOrZipCode.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
                 </div>
 
                 <div class="mz-next-step">
                     {% include "Modules/LoadingBar" %}
-                    <button class="mz-submit-button" data-bind="click: nextStep, text: $root.shippingMethod.stepStatus() == 'new' ? 'Next' : 'Update'"></button>
+                    <button class="mz-submit-button" data-bind="click: nextStep, text: $root.Shipment.ShippingMethod.stepStatus() == 'new' ? 'Next' : 'Update'"></button>
                 </div>
             </div><!-- .mz-inner-panel -->
             </div>
         </div><!-- Step 1 .panel -->
 
 
-        <div class="mz-panel" id="mz-shipping-method-panel" data-bind="with: shippingMethod, cssClassFrom: shippingMethod.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
+        <div class="mz-panel" id="mz-shipping-method-panel" data-bind="with: Shipment.ShippingMethod, cssClassFrom: Shipment.ShippingMethod.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
             <h3 class="mz-panel-header">
                 Shipping Method
                 <button class="mz-edit-button" data-bind="click: edit">Edit</button>

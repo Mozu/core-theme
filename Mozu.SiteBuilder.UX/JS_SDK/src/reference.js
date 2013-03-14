@@ -22,7 +22,8 @@ var ApiReference = (function () {
                 if (requestConf.returnType) {
                     return ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
                 } else {
-                    me.data = rawJSON;
+                    utils.extend(me.data, rawJSON);
+                    delete me.data.unsynced;
                     return me;
                 }
             });
@@ -184,7 +185,7 @@ var ApiReference = (function () {
             },
             'update-quantity': {
                 verb: 'PUT',
-                template: '{$CartService}current/items/{CartItemId}/{quantity}',
+                template: '{$CartService}current/items/{/CartItemId,quantity}',
                 shortcutParam: "quantity",
                 includeSelf: true,
                 noBody: true
@@ -200,15 +201,33 @@ var ApiReference = (function () {
             }
         },
         'order': {
+            get: {
+                template: '{$OrderService}{Id}',
+            },
             create: {
                 template: '{$OrderService}{?cartId*}',
                 shortcutParam: 'cartId',
                 noBody: true
+            },
+            "update-shipping-address": {
+                template: '{$OrderService}{Id}/shipment',
+                verb: 'PUT',
+                returnType: 'shipment',
+                includeSelf: true
+            },
+        },
+        'shipment': {
+            defaults: {
+                template: '{$OrderService}{orderId}/shipment',
+                includeSelf: true,
+            },
+            "get-shipping-methods": {
+                template: '{$OrderService}{orderId}/shipment/methods'
             }
         },
         'document': {
             get: {
-                template: '{$CmsService}{documentListName}/{documentId}/?version={version}&status={status}',
+                template: '{$CmsService}{/documentListName,documentId}/?version={version}&status={status}',
                 shortcutParam: 'documentId',
                 defaultParams: {
                     documentListName: 'default'
@@ -223,7 +242,8 @@ var ApiReference = (function () {
                     documentListName: 'default'
                 }
             }
-        }
+        },
+        'addressschemas': '{$ReferenceService}addressschemas'
     };
 
     return pub;

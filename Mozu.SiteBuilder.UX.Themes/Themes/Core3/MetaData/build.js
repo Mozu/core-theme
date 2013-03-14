@@ -21,7 +21,6 @@
                 'ajax',
                 'shim',
                 'modules/api',
-                'modules/actions-processor',
                 'modules/animatemodals',
                 'modules/jquery-sitemenu',
                 'modules/loading-bars',
@@ -30,7 +29,7 @@
                 'modules/knockout-plus',
                 'modules/tagcloud'
             ],
-            exclude: ['jquery', 'sdk'],
+            exclude: ['jquery', 'sdk', 'pciaas'],
         },
         {
             name: "pages/product",
