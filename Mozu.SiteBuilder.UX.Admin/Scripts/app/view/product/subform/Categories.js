@@ -13,25 +13,33 @@ Ext.define('Taco.view.product.subform.Categories', {
     initComponent: function () {
         var list, listStore;
 
+        // categories are not global, we're only operating on the productInSiteInfo
         this.record = this.productInSiteInfo;
         window.pisi = this.record;
         this.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.CategoriesTree',
             autoLoad: true
         });
+        
+        listStore = this.record.getCategoryStore();
 
-        listStore = Ext.create('Ext.data.Store', {
-            fields: ['id', 'name'],
-            data: []
-        });
-
+        // MultiSelect is the most optimal Field that uses BoundList without a trigger
         list = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'categoryIds',
+            width: 400,
             store: listStore,
             displayField: 'name',
             valueField: 'id',
             listConfig: {
-                disableSelection: true
+                disableSelection: true,
+                itemTpl: [
+                    '<span class="x-boundlist-item-content">{name}</span>',
+                    '<span class="x-boundlist-item-close"> Close</span>'
+                ],
+                listeners: {
+                    itemclick: this.onListItemClick,
+                    scope: this
+                }
             }
         });
 
@@ -46,21 +54,27 @@ Ext.define('Taco.view.product.subform.Categories', {
 
         this.callParent(arguments);
 
-        if (this.store.loading) {
-            this.store.on({
-                load: this.onLoad,
-                scope: this
-            });
-        } else {
-            this.onLoad();
-        }
+        // reset the list's dirty state when its store first loads
+        listStore.on({
+            load: function () { list.resetOriginalValue(); },
+            single: true,
+            scope: this
+        });
     },
 
+    /**
+     * Opens a modal with a TreePanel.
+     * @private
+     */
     launchModal: function () {
+        var list = this.getForm().findField('categoryIds'),
+            store = list.getStore();
+
         Ext.destroy(this.modal);
 
         this.modal = Ext.create('Taco.view.category.Modal', {
-            store: this.store
+            store: this.store,
+            preselection: store.getRange()
         });
 
         this.modal.on({
@@ -69,22 +83,39 @@ Ext.define('Taco.view.product.subform.Categories', {
         });
     },
 
-    onLoad: function () {
-        var pis = this.product.productInSitesStore().first(),
-            values;
+    /**
+     * Removes a value from the list if the close icon was clicked.
+     * @private
+     */
+    onListItemClick: function (view, record, item, index, e) {
+        var closeBtn = e.getTarget('.x-boundlist-item-close', 10),
+            list = view.ownerCt,
+            value, store;
 
-        values = Ext.Array.map(Ext.Array.clone(pis.get('categoryIds')), function (categoryId) {
-            var record = this.store.getById(categoryId);
+        if (closeBtn) {
+            store = view.getStore();
+            value = Ext.Array.remove(list.getValue(), record.getId());
 
-            return { id: categoryId, name: record.get('name') };
-        }, this);
+            store.remove(record);
+            list.setValue(value);
+            console.log(value, list.getValue());
+
+            return false;
+        }
     },
 
+    /**
+     * Populates the list with the selected values from the modal's TreePanel.
+     * @param  {Taco.core.ux.modal.Modal} modal The modal that fired the save event.
+     * @param  {Object} values An object with category data for the list.
+     * @private
+     */
     updateList: function (modal, values) {
-        var list = this.getForm().findField('categoryIds');
+        var list = this.getForm().findField('categoryIds'),
+            store = list.getStore();
 
-        list.getStore().loadData(values, false);
-        list.setValue(Ext.Array.pluck(values, 'id'));
-        console.log(list.getValue(), list.getSubmitValue());
+        store.remove(store.getRange());
+        store.add(values);
+        list.setValue(store.collect('id'));
     }
 });

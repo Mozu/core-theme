@@ -9,7 +9,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
         'Taco.core.ux.tab.Tab',
         'Taco.core.ux.tab.Picker'
     ],
-    alias: 'widget.formtabpanel',
+    alias: 'widget.taco.tabpanel',
 
     componentCls: Taco.baseCSSPrefix + 'form-tab-panel',
     layout: { type: 'card' },

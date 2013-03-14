@@ -15,22 +15,23 @@ Ext.define('Taco.view.category.Modal', {
             showHeaderCheckbox: true
         });
 
+        this.tree = Ext.create('Ext.tree.Panel', {
+            width: 644,
+            height: 120,
+            margin: '28 0 0 0',
+            rootVisible: false,
+            store: this.store,
+            displayField: 'name',
+            selModel: this.selModel
+        });
+
         this.content = {
             xtype: 'container',
             items: [{
                 xtype: 'component',
                 cls: Taco.baseCSSPrefix + 'modal-title',
                 html: 'Select Categories'
-            }, {
-                xtype: 'treepanel',
-                width: 644,
-                height: 120,
-                margin: '28 0 0 0',
-                rootVisible: false,
-                store: this.store,
-                displayField: 'name',
-                selModel: this.selModel
-            }]
+            }, this.tree]
         };
 
         this.actions = {
@@ -49,21 +50,36 @@ Ext.define('Taco.view.category.Modal', {
         };
 
         this.callParent(arguments);
+
+        this.preselect();
     },
 
     cancel: function () {
         this.hide();
     },
 
+    preselect: function () {
+        var preselection = this.preselection,
+            tree = this.tree;
+
+        Ext.Array.each(preselection, function (record) {
+            var path = record.get('path');
+            console.log(path);
+            // tree.selectPath(path);
+        }, this);
+    },
+
     save: function (button, e) {
         var selection = this.selModel.getSelection(),
             values;
 
-        values = Ext.Array.map(selection, function (record) {
-            return { id: record.getId(), name: record.get('name') };
-        }, this);
+        // values = Ext.Array.map(selection, function (record) {
+        //     return { id: record.getId(), name: record.get('name') };
+        // }, this);
+        
+        console.log(selection);
 
-        this.fireEvent('save', this, values);
+        this.fireEvent('save', this, selection);
 
         this.hide();
     }

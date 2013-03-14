@@ -1935,8 +1935,6 @@
     $formTabColorBG: rgb(148, 164, 180);
     $formTabCloseColor: ($formTabColor+$formTabColorBG)/2;
 
-    background-color: $color-neutral-lightest;
-
     .#{$vprefix}form-tab {
       background-color: $formTabColorBG;
       border-color: $formTabColor;
@@ -2029,10 +2027,22 @@
         color: $color-neutral-white;
       }
     }
+
+    &> .#{$prefix}panel-body {
+      background-color: $color-neutral-white;
+      border-style: solid;
+      border-width: 1px;
+      @include dark-border($color-neutral-white);
+    }
   }
 
   .#{$vprefix}form-card-nav {
+    background-color: $color-neutral-white;
+    border-style: solid none solid solid;
+    border-width: 1px 0px 1px 1px;
     color: $color-neutral-darker;
+    @include dark-border($color-neutral-white);
+
     .#{$vprefix}form-card-nav-link {
       cursor: pointer;
       margin-bottom: 20px;
@@ -2041,6 +2051,10 @@
       &:hover, &.scrollspy {
         color: $color-neutral-black;
       }
+    }
+
+    &+ .#{$prefix}panel-body {
+      border-left: 0px none;
     }
   }
 
