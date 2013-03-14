@@ -233,6 +233,7 @@ Ext.define('Taco.view.attribute.Form', {
         this.items = [{
             fieldLabel: 'Name',
             name: 'name',
+            allowBlank: false,
             emptyText: 'Enter an attribute name'
         }, {
             xtype: 'selectfield',
