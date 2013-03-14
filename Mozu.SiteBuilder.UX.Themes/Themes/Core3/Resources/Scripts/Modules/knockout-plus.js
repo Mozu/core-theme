@@ -33,14 +33,16 @@
     *           'fn' that defines a function to use to validate the field.
     * @return {Object} The modified 'target' observable.
     */
-    ko.extenders.required = function (target, opts) {
+    ko.extenders.required = function (target, opts, vm) {
 
         var msg = "This field is required",
+            gateFn = opts.onlyIf,
             testFn;
         opts = opts || {};
 
-        if (opts.onlyIf) {
-            target.validationActive = ko.computed(opts.onlyIf);
+        if (gateFn) {
+            if (typeof gateFn === "string") gateFn = vm[gateFn];
+            target.validationActive = ko.computed(gateFn);
             target.validationActive.subscribe(function(isActive){
                 if (!isActive) {
                     target.invalid(false);
@@ -71,10 +73,12 @@
         target.autoValidates = opts.invalidateOnChange !== false;
         target.invalid = ko.observable();
         target.validationMessage = ko.observable("");
-        target.validate = function (newValue) {
+        target.validate = function (newValue, silently) {
             var valid = testFn(newValue === undefined ? target() : newValue);
-            target.invalid(!valid);
-            target.validationMessage(valid ? "" : msg);
+            if (!silently) {
+                target.invalid(!valid);
+                target.validationMessage(valid ? "" : msg);
+            }
             return valid;
         };
 

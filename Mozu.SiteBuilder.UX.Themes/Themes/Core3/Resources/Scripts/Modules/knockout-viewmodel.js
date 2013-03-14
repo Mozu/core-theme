@@ -104,6 +104,7 @@
                     self[name].populate(obj[name]);
                 } else {
                     self[name] = new conf(obj[name]);
+                    self[name].__parentVM = self;
                 }
                 delete obj[name];
             });
@@ -112,8 +113,9 @@
             $.extend(self, obj);
             return self;
         },
-        validate: function () {
+        validate: function (loudly) {
             var self = this,
+                silently = loudly === false,
                 invalid,
                 invalidCount = 0;
             $.each([this.observables, this.observableArrays], function (ix, collection) {
@@ -122,7 +124,7 @@
                         // TODO: figure out how to determine if validation has run, because the below doesn't work
                         //invalid = self[k].invalid(); // if validation has already run, what was its result?
                         //if (invalid === undefined || !self[k].autoValidates)
-                            invalid = !self[k].validate(); // if validation did not run OR observable is not invalidating on change, run it now
+                            invalid = !self[k].validate(undefined, silently); // if validation did not run OR observable is not invalidating on change, run it now
                         if (invalid) {
                             invalidCount++;
                             console.log('invalid item:', k);
@@ -131,7 +133,7 @@
                 });
             });
             $.each(this.submodels, function (k) {
-                if (self[k].validate && !self[k].validate())
+                if (self[k].validate && !self[k].validate(loudly))
                     invalidCount++;
             });
             console.log('validation error count:', invalidCount);
@@ -174,7 +176,8 @@
         createSDKObject: function(obj) {
             var me = this,
                 onSuccess = function (returnObj) {
-                    if (returnObj === me.apiModel) me.populate(me.apiModel.data);
+                    // clone the apiModel before feeding it into me.populate, which destroys objects it gets
+                    if (returnObj === me.apiModel) me.populate($.extend({}, me.apiModel.data));
                     me.publish('update', returnObj);
                     return returnObj;
                 };
@@ -182,6 +185,8 @@
                 me.apiModel = apiModel;
                 $.each(apiModel.getAvailableActions(), function (ix, actionName) {
                     (actionName in me ? apiModel : me)[actionName] = function (data) {
+                        // include self by default in update action
+                        if (actionName === "update") data = data || me.toJS();
                         return apiModel.action(actionName, data).then(onSuccess);
                     };
                 });
@@ -196,6 +201,9 @@
         off: function () {
             this.eventBus.off.apply(this.eventBus, arguments);
         },
+        getParentModel: function () {
+            return this.__parentVM;
+        }
     };
 
     return {

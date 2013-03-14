@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-03-12
+ * Mozu JavaScript SDK - v0.1.0 - 2013-03-14
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -959,7 +959,8 @@
                             if (requestConf.returnType) {
                                 return ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
                             } else {
-                                me.data = rawJSON;
+                                utils.extend(me.data, rawJSON);
+                                delete me.data.unsynced;
                                 return me;
                             }
                         });
@@ -1102,7 +1103,7 @@
                         },
                         "update-quantity": {
                             verb: "PUT",
-                            template: "{$CartService}current/items/{CartItemId}/{quantity}",
+                            template: "{$CartService}current/items/{/CartItemId,quantity}",
                             shortcutParam: "quantity",
                             includeSelf: true,
                             noBody: true
@@ -1118,15 +1119,33 @@
                         }
                     },
                     order: {
+                        get: {
+                            template: "{$OrderService}{Id}"
+                        },
                         create: {
                             template: "{$OrderService}{?cartId*}",
                             shortcutParam: "cartId",
                             noBody: true
+                        },
+                        "update-shipping-address": {
+                            template: "{$OrderService}{Id}/shipment",
+                            verb: "PUT",
+                            returnType: "shipment",
+                            includeSelf: true
+                        }
+                    },
+                    shipment: {
+                        defaults: {
+                            template: "{$OrderService}{orderId}/shipment",
+                            includeSelf: true
+                        },
+                        "get-shipping-methods": {
+                            template: "{$OrderService}{orderId}/shipment/methods"
                         }
                     },
                     document: {
                         get: {
-                            template: "{$CmsService}{documentListName}/{documentId}/?version={version}&status={status}",
+                            template: "{$CmsService}{/documentListName,documentId}/?version={version}&status={status}",
                             shortcutParam: "documentId",
                             defaultParams: {
                                 documentListName: "default"
@@ -1141,7 +1160,8 @@
                                 documentListName: "default"
                             }
                         }
-                    }
+                    },
+                    addressschemas: "{$ReferenceService}addressschemas"
                 };
                 return pub;
             }();
@@ -1226,6 +1246,9 @@
                         obj[prefix + allAccessors[i]] = this[allAccessors[i]];
                     }
                     return obj;
+                },
+                setServiceUrls: function(urls) {
+                    ApiReference.urls = urls;
                 },
                 currency: "usd",
                 locale: "en-US"

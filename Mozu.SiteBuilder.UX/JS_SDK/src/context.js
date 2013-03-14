@@ -42,6 +42,9 @@ ApiContext.prototype = {
         }
         return obj;
     },
+    setServiceUrls: function(urls) {
+        ApiReference.urls = urls;
+    },
     currency: 'usd',
     locale: 'en-US'
 };

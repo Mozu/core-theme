@@ -4,7 +4,7 @@
  */
 
 define(['sdk'], function (Mozu) {
-    Mozu.ApiReference.urls = window.zapiConfig.urls;
+    Mozu.setServiceUrls(window.zapiConfig.urls);
     var headers = window.zapiConfig.header;
     return Mozu.Tenant(headers['x-vol-tenant'])
                .SiteGroup(headers['x-vol-site-group'])

@@ -382,7 +382,6 @@
     <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\jquery.tagcloud.0-0-1.js" />
     <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\knockout-latest.debug.js" />
     <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\modernizr-respond.min.js" />
-    <Content Include="Themes\Core3\Resources\Scripts\Modules\context-parser.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\api.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\knockout-viewmodel.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Vendor\jquery-cookie.js" />
@@ -454,7 +453,6 @@
     <Content Include="Themes\Core3\Resources\Images\header\wrapper_bg.jpg" />
     <Content Include="Themes\Core3\Resources\Images\layout\body_bg.gif" />
     <Content Include="Themes\Core3\Resources\Images\period.gif" />
-    <Content Include="Themes\Core3\Resources\Scripts\Modules\actions-processor.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\animatemodals.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\knockout-plus.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-product.js" />
