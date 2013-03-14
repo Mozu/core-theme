@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     } while (parent != null);
                     ancestory.Reverse();
-                    category1.Path = string.Join("/", ancestory.Select(x => x.Name).ToArray());
+                    category1.Path = string.Join("/", ancestory.Select(x => x.Id).ToArray());
 
                 }
 
