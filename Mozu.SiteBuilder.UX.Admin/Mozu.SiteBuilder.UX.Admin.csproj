@@ -1067,6 +1067,7 @@
     <Content Include="Scripts\makedocsasjson.bat" />
     <Content Include="Scripts\resources\css\taco.css" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.svg" />
+    <Content Include="Scripts\resources\images\*.png" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Content Include="Scripts\resources\images\legacy\AddPhotos.png" />
     <Content Include="Scripts\resources\images\legacy\background-alpha.png" />
     <Content Include="favicon.ico" />

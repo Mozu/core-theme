@@ -1,5 +1,6 @@
-/* line 786, icons/*.png */
-.icons-sprite, .x-panel-header img.x-tool-expand-top, .x-panel-header img.x-tool-collapse-top, .x-panel-header img.x-tool-expand-bottom, .x-panel-header img.x-tool-collapse-bottom, .taco-draghandle, .taco-foldertree.x-tree-arrows .x-tree-elbow, .taco-foldertree.x-tree-arrows .x-tree-elbow-end, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus, .taco-viewport-nav .taco-primary-menu-trigger, .taco-viewport-nav .taco-primary-menu-trigger.expanded, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-dashboard::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-store::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-catalog::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-marketing::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-website::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-settings::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-dashboard::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-store::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-catalog::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-marketing::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-website::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-settings::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-dashboard::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-store::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-catalog::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-marketing::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-website::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-settings::before, .taco-masthead .taco-mozulogo, .taco-modal .taco-close, .x-panel .taco-thumbnail-item .actions .action.download, .x-panel .taco-thumbnail-item .actions .action.delete, .x-panel .taco-thumbnail-item .actions .action.duplicate, .x-panel .taco-thumbnail-item .actions .action.remove, .x-item-selected .taco-datalist-selection, .x-item-selected .taco-datalist-deselection, .taco-option-value-view .taco-option-value-row:before, .x-field .x-form-checkbox,
+@charset "IBM437";
+/* line 794, icons/*.png */
+.icons-sprite, .x-panel-header img.x-tool-expand-top, .x-panel-header img.x-tool-collapse-top, .x-panel-header img.x-tool-expand-bottom, .x-panel-header img.x-tool-collapse-bottom, .taco-draghandle, .taco-grid-row-menu-trigger, .taco-foldertree.x-tree-arrows .x-tree-elbow, .taco-foldertree.x-tree-arrows .x-tree-elbow-end, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus, .taco-viewport-nav .taco-primary-menu-trigger, .taco-viewport-nav .taco-primary-menu-trigger.expanded, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-dashboard::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-store::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-catalog::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-marketing::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-website::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-settings::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-dashboard::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-store::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-catalog::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-marketing::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-website::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-settings::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-dashboard::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-store::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-catalog::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-marketing::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-website::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-settings::before, .taco-modal .taco-close, .x-panel .taco-thumbnail-item .actions .action.download, .x-panel .taco-thumbnail-item .actions .action.delete, .x-panel .taco-thumbnail-item .actions .action.duplicate, .x-panel .taco-thumbnail-item .actions .action.remove, .x-item-selected .taco-datalist-selection, .x-item-selected .taco-datalist-deselection, .taco-option-value-view .taco-option-value-row:before, .x-field .x-form-checkbox,
 .x-grid-cell-inner .x-tree-checkbox,
 .x-menu .x-menu-item-unchecked .x-menu-item-icon,
 .x-grid-table .x-grid-row-checker,
@@ -10,10 +11,15 @@
 .x-grid-header-ct .x-grid-hd-checker-on .x-column-header-text, .x-field .x-form-radio, .x-form-cb-checked .x-form-radio, .taco-boxselect .x-form-trigger, .taco-site-editor .taco-shim .taco-hint-widget > table .taco-hint-actions .taco-widgethandle, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-folder,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-category, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-blog,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-page,
-.taco-toolbox .taco-treelist tbody tr .taco-nav-node-systempage, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-link, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-product, .taco-toolbox .taco-treelist tbody tr:nth-child(3) .x-tree-icon, .taco-simplegrid .taco-simplegrid-checkbox, .taco-simplegrid .taco-simplegrid-checkbox.taco-simplegrid-checkbox-checked {
-  background: url('../images/icons-s0fbf826b1b.png') no-repeat;
+.taco-toolbox .taco-treelist tbody tr .taco-nav-node-systempage, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-link, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-product, .taco-toolbox .taco-treelist tbody tr:nth-child(3) .x-tree-icon, .taco-masthead .taco-mozulogo {
+  background: url('../images/icons-seceae125a5.png') no-repeat;
 }
 
+/* NEUTRAL COLORS */
+/* THEME COLORS */
+/* MESSAGE COLORS */
+/* ACTION COLORS */
+/* OLD COLORS */
 /**
  * @var {string} $prefix 
  * The prefix to be applied to all CSS selectors. If this is changed, it must also be changed in your 
@@ -214,6 +220,11 @@
  * but this can be changed by changing the default value of $include-missing-images to
  * be true.
  */
+/* PANELS */
+/* GRIDS */
+/* TOOLBARS */
+/* MENUS */
+/* LAYOUTS */
 /* Generated by Font Squirrel (http://www.fontsquirrel.com) on November 21, 2011 */
 @font-face {
   font-family: 'MyriadWebProRegular';
@@ -333,7 +344,7 @@ input, textarea, select {
 
 /* line 1, ../scss/core/_core.scss */
 .x-body {
-  color: #444444;
+  color: #323232;
   font-size: 16px;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
 }
@@ -411,8 +422,8 @@ input, textarea, select {
   display: block !important;
   visibility: hidden !important;
   position: absolute!important;
-  left: -10000px !important;
-  top: -10000px !important;
+  left: -10000px!important;
+  top: -10000px!important;
 }
 
 /* line 76, ../scss/core/_core.scss */
@@ -815,8 +826,8 @@ tr.x-container:before {
   left: 0;
   padding: 2px;
   border: 1px solid;
-  border-color: #d9cfba;
-  background: #f6f4f1;
+  border-color: #d4cccc;
+  background: #fafafa;
 }
 /* line 49, ../scss/widgets/_loadmask.scss */
 .x-mask-msg div {
@@ -825,7 +836,7 @@ tr.x-container:before {
   background-repeat: no-repeat;
   background-position: 5px center;
   cursor: wait;
-  border: 1px solid #cbc9c3;
+  border: 1px solid #cdcdcd;
   background-color: #eeeeee;
   color: #222222;
   font: normal 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
@@ -878,7 +889,7 @@ tr.x-container:before {
   color: #000;
   font: normal 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   border: 1px solid;
-  border-color: #ddd #bbb #bbb #ddd;
+  border-color: #dddddd #bbbbbb #bbbbbb #dddddd;
   background-color: #fff;
 }
 
@@ -1342,7 +1353,7 @@ tr.x-container:before {
 
 /* line 75, ../scss/layout/_layout.scss */
 .x-border-layout-ct {
-  background-color: #f6f5f1;
+  background-color: #e6e6e6;
   position: relative;
 }
 
@@ -1389,10 +1400,10 @@ tr.x-container:before {
 
 /* line 113, ../scss/layout/_layout.scss */
 .x-accordion-hd {
-  background: #f6f3ed !important;
-  -webkit-box-shadow: inset 0 0 0 0 #f6f3ed;
-  -moz-box-shadow: inset 0 0 0 0 #f6f3ed;
-  box-shadow: inset 0 0 0 0 #f6f3ed;
+  background: #f9f7f7 !important;
+  -webkit-box-shadow: inset 0 0 0 0 #f9f7f7;
+  -moz-box-shadow: inset 0 0 0 0 #f9f7f7;
+  box-shadow: inset 0 0 0 0 #f9f7f7;
 }
 /* line 117, ../scss/layout/_layout.scss */
 .x-accordion-hd .x-tool-collapse-top,
@@ -1437,7 +1448,7 @@ tr.x-container:before {
 
 /* line 160, ../scss/layout/_layout.scss */
 .x-accordion-hd-sibling-expanded {
-  border-top-color: #d9cfba !important;
+  border-top-color: #d4cccc !important;
   -webkit-box-shadow: inset 0 1px 0 0 white;
   -moz-box-shadow: inset 0 1px 0 0 white;
   box-shadow: inset 0 1px 0 0 white;
@@ -1445,7 +1456,7 @@ tr.x-container:before {
 
 /* line 165, ../scss/layout/_layout.scss */
 .x-accordion-hd-last-collapsed {
-  border-bottom-color: #f6f3ed !important;
+  border-bottom-color: #f9f7f7 !important;
 }
 
 /* line 174, ../scss/layout/_layout.scss */
@@ -1941,13 +1952,13 @@ tr.x-container:before {
 
 /* line 14, ../scss/util/_scroller.scss */
 .x-scroller-vertical {
-  border: 1px solid #d9cfba;
-  border-top-color: #edeae6;
+  border: 1px solid #d4cccc;
+  border-top-color: #323232;
 }
 
 /* line 19, ../scss/util/_scroller.scss */
 .x-scroller-horizontal {
-  border: 1px solid #d9cfba;
+  border: 1px solid #d4cccc;
 }
 
 /* line 23, ../scss/util/_scroller.scss */
@@ -2081,17 +2092,17 @@ tr.x-container:before {
 /* line 50, ../scss/widgets/_html.scss */
 .x-html h1 {
   font-size: 2em;
-  margin: .67em 0;
+  margin: 0.67em 0;
 }
 /* line 51, ../scss/widgets/_html.scss */
 .x-html h2 {
   font-size: 1.5em;
-  margin: .75em 0;
+  margin: 0.75em 0;
 }
 /* line 52, ../scss/widgets/_html.scss */
 .x-html h3 {
   font-size: 1.17em;
-  margin: .83em 0;
+  margin: 0.83em 0;
 }
 /* line 62, ../scss/widgets/_html.scss */
 .x-html h4,
@@ -2262,7 +2273,7 @@ tr.x-container:before {
   unicode-bidi: bidi-override;
 }
 
-/* line 70, ../scss/taco/mixins/_css3.scss */
+/* line 73, ../scss/taco/mixins/_css3.scss */
 .taco-no-select {
   user-select: none;
   -o-user-select: none;
@@ -2315,7 +2326,7 @@ tr.x-container:before {
   position: fixed !important;
   top: 129px !important;
   left: 126px;
-  border-bottom: 1px solid #bbb !important;
+  border-bottom: 1px solid #bbbbbb !important;
 }
 /* line 16, ../scss/taco/_tinymce_fixes.scss */
 .mceEditor .mceExternalClose {
@@ -2331,8 +2342,8 @@ tr.x-container:before {
 /* line 6, ../scss/widgets/_boundlist.scss */
 .x-boundlist {
   border-width: 1px;
-  border-style: solid;
-  border-color: #e5d8b9;
+  border-style: solid none none;
+  border-color: #999691;
   background: white;
 }
 /* line 12, ../scss/widgets/_boundlist.scss */
@@ -2348,7 +2359,7 @@ tr.x-container:before {
 
 /* line 29, ../scss/widgets/_boundlist.scss */
 .x-boundlist-item {
-  padding: 2px;
+  padding: 9px 24px 7px;
   user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
@@ -2360,20 +2371,20 @@ tr.x-container:before {
   position: relative;
   /*allow hover in IE on empty items*/
   border-width: 1px;
-  border-style: dotted;
-  border-color: white;
+  border-style: none solid solid;
+  border-color: #999691;
 }
 
 /* line 43, ../scss/widgets/_boundlist.scss */
 .x-boundlist-selected {
-  background: #ece9e2;
-  border-color: #d2ccb2;
+  background: #bdf9ff !important;
+  border-color: #999691;
 }
 
 /* line 48, ../scss/widgets/_boundlist.scss */
 .x-boundlist-item-over {
-  background: #f6f5f1;
-  border-color: #dcd7c2;
+  background: #f2f0ed;
+  border-color: #999691;
 }
 
 /* line 53, ../scss/widgets/_boundlist.scss */
@@ -2769,39 +2780,39 @@ tr.x-container:before {
 
 /* line 777, ../scss/widgets/_button.scss */
 .x-btn-default-small-over {
-  border-color: #e8e0cc;
+  border-color: #e4dad9;
   background-image: none;
-  background-color: #fdfbf8;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdfbf8), color-stop(48%, #fcf6ee), color-stop(52%, #ebe6db), color-stop(100%, #f0eade));
-  background-image: -webkit-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: -moz-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: -o-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
+  background-color: white;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(48%, #fcf7f7), color-stop(52%, #eae5e5), color-stop(100%, #efe8e8));
+  background-image: -webkit-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: -moz-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: -o-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
 }
 
 /* line 801, ../scss/widgets/_button.scss */
 .x-btn-default-small-focus {
-  border-color: #e8e0cc;
+  border-color: #e4dad9;
   background-image: none;
-  background-color: #fdfbf8;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdfbf8), color-stop(48%, #fcf6ee), color-stop(52%, #ebe6db), color-stop(100%, #f0eade));
-  background-image: -webkit-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: -moz-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: -o-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
+  background-color: white;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(48%, #fcf7f7), color-stop(52%, #eae5e5), color-stop(100%, #efe8e8));
+  background-image: -webkit-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: -moz-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: -o-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
 }
 
 /* line 826, ../scss/widgets/_button.scss */
 .x-btn-default-small-menu-active,
 .x-btn-default-small-pressed {
-  border-color: #d2cdbf;
+  border-color: #d2cccc;
   background-image: none;
-  background-color: #dbd8d1;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dbd8d1), color-stop(48%, #dfdcd8), color-stop(52%, #e4d2b0), color-stop(100%, #e6d6b9));
-  background-image: -webkit-linear-gradient(top, #dbd8d1, #dfdcd8 48%, #e4d2b0 52%, #e6d6b9);
-  background-image: -moz-linear-gradient(top, #dbd8d1, #dfdcd8 48%, #e4d2b0 52%, #e6d6b9);
-  background-image: -o-linear-gradient(top, #dbd8d1, #dfdcd8 48%, #e4d2b0 52%, #e6d6b9);
-  background-image: linear-gradient(top, #dbd8d1, #dfdcd8 48%, #e4d2b0 52%, #e6d6b9);
+  background-color: #dddddd;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dddddd), color-stop(48%, #e2e2e2), color-stop(52%, #e2bfc1), color-stop(100%, #e5c7c8));
+  background-image: -webkit-linear-gradient(top, #dddddd, #e2e2e2 48%, #e2bfc1 52%, #e5c7c8);
+  background-image: -moz-linear-gradient(top, #dddddd, #e2e2e2 48%, #e2bfc1 52%, #e5c7c8);
+  background-image: -o-linear-gradient(top, #dddddd, #e2e2e2 48%, #e2bfc1 52%, #e5c7c8);
+  background-image: linear-gradient(top, #dddddd, #e2e2e2 48%, #e2bfc1 52%, #e5c7c8);
 }
 
 /* line 850, ../scss/widgets/_button.scss */
@@ -2984,39 +2995,39 @@ tr.x-container:before {
 
 /* line 777, ../scss/widgets/_button.scss */
 .x-btn-default-medium-over {
-  border-color: #e8e0cc;
+  border-color: #e4dad9;
   background-image: none;
-  background-color: #fdfbf8;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdfbf8), color-stop(48%, #fcf6ee), color-stop(52%, #ebe6db), color-stop(100%, #f0eade));
-  background-image: -webkit-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: -moz-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: -o-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
+  background-color: white;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(48%, #fcf7f7), color-stop(52%, #eae5e5), color-stop(100%, #efe8e8));
+  background-image: -webkit-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: -moz-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: -o-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
 }
 
 /* line 801, ../scss/widgets/_button.scss */
 .x-btn-default-medium-focus {
-  border-color: #e8e0cc;
+  border-color: #e4dad9;
   background-image: none;
-  background-color: #fdfbf8;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdfbf8), color-stop(48%, #fcf6ee), color-stop(52%, #ebe6db), color-stop(100%, #f0eade));
-  background-image: -webkit-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: -moz-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: -o-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
+  background-color: white;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(48%, #fcf7f7), color-stop(52%, #eae5e5), color-stop(100%, #efe8e8));
+  background-image: -webkit-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: -moz-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: -o-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
 }
 
 /* line 826, ../scss/widgets/_button.scss */
 .x-btn-default-medium-menu-active,
 .x-btn-default-medium-pressed {
-  border-color: #d2cdbf;
+  border-color: #d2cccc;
   background-image: none;
-  background-color: #dbd8d1;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dbd8d1), color-stop(48%, #dfdcd8), color-stop(52%, #e4d2b0), color-stop(100%, #e6d6b9));
-  background-image: -webkit-linear-gradient(top, #dbd8d1, #dfdcd8 48%, #e4d2b0 52%, #e6d6b9);
-  background-image: -moz-linear-gradient(top, #dbd8d1, #dfdcd8 48%, #e4d2b0 52%, #e6d6b9);
-  background-image: -o-linear-gradient(top, #dbd8d1, #dfdcd8 48%, #e4d2b0 52%, #e6d6b9);
-  background-image: linear-gradient(top, #dbd8d1, #dfdcd8 48%, #e4d2b0 52%, #e6d6b9);
+  background-color: #dddddd;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dddddd), color-stop(48%, #e2e2e2), color-stop(52%, #e2bfc1), color-stop(100%, #e5c7c8));
+  background-image: -webkit-linear-gradient(top, #dddddd, #e2e2e2 48%, #e2bfc1 52%, #e5c7c8);
+  background-image: -moz-linear-gradient(top, #dddddd, #e2e2e2 48%, #e2bfc1 52%, #e5c7c8);
+  background-image: -o-linear-gradient(top, #dddddd, #e2e2e2 48%, #e2bfc1 52%, #e5c7c8);
+  background-image: linear-gradient(top, #dddddd, #e2e2e2 48%, #e2bfc1 52%, #e5c7c8);
 }
 
 /* line 850, ../scss/widgets/_button.scss */
@@ -3199,39 +3210,39 @@ tr.x-container:before {
 
 /* line 777, ../scss/widgets/_button.scss */
 .x-btn-default-large-over {
-  border-color: #e8e0cc;
+  border-color: #e4dad9;
   background-image: none;
-  background-color: #fdfbf8;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdfbf8), color-stop(48%, #fcf6ee), color-stop(52%, #ebe6db), color-stop(100%, #f0eade));
-  background-image: -webkit-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: -moz-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: -o-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
+  background-color: white;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(48%, #fcf7f7), color-stop(52%, #eae5e5), color-stop(100%, #efe8e8));
+  background-image: -webkit-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: -moz-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: -o-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
 }
 
 /* line 801, ../scss/widgets/_button.scss */
 .x-btn-default-large-focus {
-  border-color: #e8e0cc;
+  border-color: #e4dad9;
   background-image: none;
-  background-color: #fdfbf8;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdfbf8), color-stop(48%, #fcf6ee), color-stop(52%, #ebe6db), color-stop(100%, #f0eade));
-  background-image: -webkit-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: -moz-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: -o-linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
-  background-image: linear-gradient(top, #fdfbf8, #fcf6ee 48%, #ebe6db 52%, #f0eade);
+  background-color: white;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(48%, #fcf7f7), color-stop(52%, #eae5e5), color-stop(100%, #efe8e8));
+  background-image: -webkit-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: -moz-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: -o-linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
+  background-image: linear-gradient(top, #ffffff, #fcf7f7 48%, #eae5e5 52%, #efe8e8);
 }
 
 /* line 826, ../scss/widgets/_button.scss */
 .x-btn-default-large-menu-active,
 .x-btn-default-large-pressed {
-  border-color: #d2cdbf;
+  border-color: #d2cccc;
   background-image: none;
-  background-color: #dbd8d1;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dbd8d1), color-stop(48%, #dfdcd8), color-stop(52%, #e4d2b0), color-stop(100%, #e6d6b9));
-  background-image: -webkit-linear-gradient(top, #dbd8d1, #dfdcd8 48%, #e4d2b0 52%, #e6d6b9);
-  background-image: -moz-linear-gradient(top, #dbd8d1, #dfdcd8 48%, #e4d2b0 52%, #e6d6b9);
-  background-image: -o-linear-gradient(top, #dbd8d1, #dfdcd8 48%, #e4d2b0 52%, #e6d6b9);
-  background-image: linear-gradient(top, #dbd8d1, #dfdcd8 48%, #e4d2b0 52%, #e6d6b9);
+  background-color: #dddddd;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dddddd), color-stop(48%, #e2e2e2), color-stop(52%, #e2bfc1), color-stop(100%, #e5c7c8));
+  background-image: -webkit-linear-gradient(top, #dddddd, #e2e2e2 48%, #e2bfc1 52%, #e5c7c8);
+  background-image: -moz-linear-gradient(top, #dddddd, #e2e2e2 48%, #e2bfc1 52%, #e5c7c8);
+  background-image: -o-linear-gradient(top, #dddddd, #e2e2e2 48%, #e2bfc1 52%, #e5c7c8);
+  background-image: linear-gradient(top, #dddddd, #e2e2e2 48%, #e2bfc1 52%, #e5c7c8);
 }
 
 /* line 850, ../scss/widgets/_button.scss */
@@ -3408,39 +3419,39 @@ tr.x-container:before {
 
 /* line 777, ../scss/widgets/_button.scss */
 .x-btn-default-toolbar-small-over {
-  border-color: #bab5a9;
+  border-color: #b8b8b8;
   background-image: none;
-  background-color: #fcf7f0;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fcf7f0), color-stop(48%, #faf3e7), color-stop(52%, #e8e3d5), color-stop(100%, #ede7d8));
-  background-image: -webkit-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: -moz-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: -o-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
+  background-color: #fefbfc;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fefbfc), color-stop(48%, #fbf3f4), color-stop(52%, #e7e3e3), color-stop(100%, #ede5e5));
+  background-image: -webkit-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: -moz-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: -o-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
 }
 
 /* line 801, ../scss/widgets/_button.scss */
 .x-btn-default-toolbar-small-focus {
-  border-color: #bab5a9;
+  border-color: #b8b8b8;
   background-image: none;
-  background-color: #fcf7f0;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fcf7f0), color-stop(48%, #faf3e7), color-stop(52%, #e8e3d5), color-stop(100%, #ede7d8));
-  background-image: -webkit-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: -moz-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: -o-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
+  background-color: #fefbfc;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fefbfc), color-stop(48%, #fbf3f4), color-stop(52%, #e7e3e3), color-stop(100%, #ede5e5));
+  background-image: -webkit-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: -moz-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: -o-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
 }
 
 /* line 826, ../scss/widgets/_button.scss */
 .x-btn-default-toolbar-small-menu-active,
 .x-btn-default-toolbar-small-pressed {
-  border-color: #aba9a5;
+  border-color: #aeaeae;
   background-image: none;
-  background-color: #dddbd6;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dddbd6), color-stop(48%, #e1e0dd), color-stop(52%, #e5d4b6), color-stop(100%, #e7d9bf));
-  background-image: -webkit-linear-gradient(top, #dddbd6, #e1e0dd 48%, #e5d4b6 52%, #e7d9bf);
-  background-image: -moz-linear-gradient(top, #dddbd6, #e1e0dd 48%, #e5d4b6 52%, #e7d9bf);
-  background-image: -o-linear-gradient(top, #dddbd6, #e1e0dd 48%, #e5d4b6 52%, #e7d9bf);
-  background-image: linear-gradient(top, #dddbd6, #e1e0dd 48%, #e5d4b6 52%, #e7d9bf);
+  background-color: #e0e0e0;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e0e0e0), color-stop(48%, #e6e6e6), color-stop(52%, #e4c4c5), color-stop(100%, #e7cccd));
+  background-image: -webkit-linear-gradient(top, #e0e0e0, #e6e6e6 48%, #e4c4c5 52%, #e7cccd);
+  background-image: -moz-linear-gradient(top, #e0e0e0, #e6e6e6 48%, #e4c4c5 52%, #e7cccd);
+  background-image: -o-linear-gradient(top, #e0e0e0, #e6e6e6 48%, #e4c4c5 52%, #e7cccd);
+  background-image: linear-gradient(top, #e0e0e0, #e6e6e6 48%, #e4c4c5 52%, #e7cccd);
 }
 
 /* line 850, ../scss/widgets/_button.scss */
@@ -3611,39 +3622,39 @@ tr.x-container:before {
 
 /* line 777, ../scss/widgets/_button.scss */
 .x-btn-default-toolbar-medium-over {
-  border-color: #bab5a9;
+  border-color: #b8b8b8;
   background-image: none;
-  background-color: #fcf7f0;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fcf7f0), color-stop(48%, #faf3e7), color-stop(52%, #e8e3d5), color-stop(100%, #ede7d8));
-  background-image: -webkit-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: -moz-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: -o-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
+  background-color: #fefbfc;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fefbfc), color-stop(48%, #fbf3f4), color-stop(52%, #e7e3e3), color-stop(100%, #ede5e5));
+  background-image: -webkit-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: -moz-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: -o-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
 }
 
 /* line 801, ../scss/widgets/_button.scss */
 .x-btn-default-toolbar-medium-focus {
-  border-color: #bab5a9;
+  border-color: #b8b8b8;
   background-image: none;
-  background-color: #fcf7f0;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fcf7f0), color-stop(48%, #faf3e7), color-stop(52%, #e8e3d5), color-stop(100%, #ede7d8));
-  background-image: -webkit-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: -moz-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: -o-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
+  background-color: #fefbfc;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fefbfc), color-stop(48%, #fbf3f4), color-stop(52%, #e7e3e3), color-stop(100%, #ede5e5));
+  background-image: -webkit-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: -moz-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: -o-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
 }
 
 /* line 826, ../scss/widgets/_button.scss */
 .x-btn-default-toolbar-medium-menu-active,
 .x-btn-default-toolbar-medium-pressed {
-  border-color: #aba9a5;
+  border-color: #aeaeae;
   background-image: none;
-  background-color: #dddbd6;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dddbd6), color-stop(48%, #e1e0dd), color-stop(52%, #e5d4b6), color-stop(100%, #e7d9bf));
-  background-image: -webkit-linear-gradient(top, #dddbd6, #e1e0dd 48%, #e5d4b6 52%, #e7d9bf);
-  background-image: -moz-linear-gradient(top, #dddbd6, #e1e0dd 48%, #e5d4b6 52%, #e7d9bf);
-  background-image: -o-linear-gradient(top, #dddbd6, #e1e0dd 48%, #e5d4b6 52%, #e7d9bf);
-  background-image: linear-gradient(top, #dddbd6, #e1e0dd 48%, #e5d4b6 52%, #e7d9bf);
+  background-color: #e0e0e0;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e0e0e0), color-stop(48%, #e6e6e6), color-stop(52%, #e4c4c5), color-stop(100%, #e7cccd));
+  background-image: -webkit-linear-gradient(top, #e0e0e0, #e6e6e6 48%, #e4c4c5 52%, #e7cccd);
+  background-image: -moz-linear-gradient(top, #e0e0e0, #e6e6e6 48%, #e4c4c5 52%, #e7cccd);
+  background-image: -o-linear-gradient(top, #e0e0e0, #e6e6e6 48%, #e4c4c5 52%, #e7cccd);
+  background-image: linear-gradient(top, #e0e0e0, #e6e6e6 48%, #e4c4c5 52%, #e7cccd);
 }
 
 /* line 850, ../scss/widgets/_button.scss */
@@ -3814,39 +3825,39 @@ tr.x-container:before {
 
 /* line 777, ../scss/widgets/_button.scss */
 .x-btn-default-toolbar-large-over {
-  border-color: #bab5a9;
+  border-color: #b8b8b8;
   background-image: none;
-  background-color: #fcf7f0;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fcf7f0), color-stop(48%, #faf3e7), color-stop(52%, #e8e3d5), color-stop(100%, #ede7d8));
-  background-image: -webkit-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: -moz-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: -o-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
+  background-color: #fefbfc;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fefbfc), color-stop(48%, #fbf3f4), color-stop(52%, #e7e3e3), color-stop(100%, #ede5e5));
+  background-image: -webkit-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: -moz-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: -o-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
 }
 
 /* line 801, ../scss/widgets/_button.scss */
 .x-btn-default-toolbar-large-focus {
-  border-color: #bab5a9;
+  border-color: #b8b8b8;
   background-image: none;
-  background-color: #fcf7f0;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fcf7f0), color-stop(48%, #faf3e7), color-stop(52%, #e8e3d5), color-stop(100%, #ede7d8));
-  background-image: -webkit-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: -moz-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: -o-linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
-  background-image: linear-gradient(top, #fcf7f0, #faf3e7 48%, #e8e3d5 52%, #ede7d8);
+  background-color: #fefbfc;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fefbfc), color-stop(48%, #fbf3f4), color-stop(52%, #e7e3e3), color-stop(100%, #ede5e5));
+  background-image: -webkit-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: -moz-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: -o-linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
+  background-image: linear-gradient(top, #fefbfc, #fbf3f4 48%, #e7e3e3 52%, #ede5e5);
 }
 
 /* line 826, ../scss/widgets/_button.scss */
 .x-btn-default-toolbar-large-menu-active,
 .x-btn-default-toolbar-large-pressed {
-  border-color: #aba9a5;
+  border-color: #aeaeae;
   background-image: none;
-  background-color: #dddbd6;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dddbd6), color-stop(48%, #e1e0dd), color-stop(52%, #e5d4b6), color-stop(100%, #e7d9bf));
-  background-image: -webkit-linear-gradient(top, #dddbd6, #e1e0dd 48%, #e5d4b6 52%, #e7d9bf);
-  background-image: -moz-linear-gradient(top, #dddbd6, #e1e0dd 48%, #e5d4b6 52%, #e7d9bf);
-  background-image: -o-linear-gradient(top, #dddbd6, #e1e0dd 48%, #e5d4b6 52%, #e7d9bf);
-  background-image: linear-gradient(top, #dddbd6, #e1e0dd 48%, #e5d4b6 52%, #e7d9bf);
+  background-color: #e0e0e0;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e0e0e0), color-stop(48%, #e6e6e6), color-stop(52%, #e4c4c5), color-stop(100%, #e7cccd));
+  background-image: -webkit-linear-gradient(top, #e0e0e0, #e6e6e6 48%, #e4c4c5 52%, #e7cccd);
+  background-image: -moz-linear-gradient(top, #e0e0e0, #e6e6e6 48%, #e4c4c5 52%, #e7cccd);
+  background-image: -o-linear-gradient(top, #e0e0e0, #e6e6e6 48%, #e4c4c5 52%, #e7cccd);
+  background-image: linear-gradient(top, #e0e0e0, #e6e6e6 48%, #e4c4c5 52%, #e7cccd);
 }
 
 /* line 850, ../scss/widgets/_button.scss */
@@ -3910,15 +3921,15 @@ tr.x-container:before {
   padding: 1px 1px 1px 1px;
   border-width: 1px;
   border-style: solid;
-  background-color: #edebe6;
+  background-color: #f0f0f0;
 }
 
 /* line 60, ../scss/widgets/_btn-group.scss */
 .x-btn-group-default-framed {
-  border-color: #d0d0d0;
-  -webkit-box-shadow: #f6f6f4 0 1px 0px 0 inset, #f6f6f4 0 -1px 0px 0 inset, #f6f6f4 -1px 0 0px 0 inset, #f6f6f4 1px 0 0px 0 inset;
-  -moz-box-shadow: #f6f6f4 0 1px 0px 0 inset, #f6f6f4 0 -1px 0px 0 inset, #f6f6f4 -1px 0 0px 0 inset, #f6f6f4 1px 0 0px 0 inset;
-  box-shadow: #f6f6f4 0 1px 0px 0 inset, #f6f6f4 0 -1px 0px 0 inset, #f6f6f4 -1px 0 0px 0 inset, #f6f6f4 1px 0 0px 0 inset;
+  border-color: #d7d7d7;
+  -webkit-box-shadow: #fcfcfc 0 1px 0px 0 inset, #fcfcfc 0 -1px 0px 0 inset, #fcfcfc -1px 0 0px 0 inset, #fcfcfc 1px 0 0px 0 inset;
+  -moz-box-shadow: #fcfcfc 0 1px 0px 0 inset, #fcfcfc 0 -1px 0px 0 inset, #fcfcfc -1px 0 0px 0 inset, #fcfcfc 1px 0 0px 0 inset;
+  box-shadow: #fcfcfc 0 1px 0px 0 inset, #fcfcfc 0 -1px 0px 0 inset, #fcfcfc -1px 0 0px 0 inset, #fcfcfc 1px 0 0px 0 inset;
 }
 
 /* line 68, ../scss/widgets/_btn-group.scss */
@@ -3929,7 +3940,7 @@ tr.x-container:before {
 /* line 72, ../scss/widgets/_btn-group.scss */
 .x-btn-group-header-body-default-framed {
   padding: 1px 0;
-  background: #e9e4db;
+  background: #eae7e8;
   -moz-border-radius-topleft: 2px;
   -webkit-border-top-left-radius: 2px;
   border-top-left-radius: 2px;
@@ -3941,12 +3952,12 @@ tr.x-container:before {
 /* line 80, ../scss/widgets/_btn-group.scss */
 .x-btn-group-header-text-default-framed {
   font: normal 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: #8c846f;
+  color: #848484;
 }
 
 /* line 6, ../scss/widgets/_datepicker.scss */
 .x-datepicker {
-  border: 1px solid #605839;
+  border: 1px solid #57504f;
   background-color: white;
   position: relative;
 }
@@ -3954,7 +3965,7 @@ tr.x-container:before {
 .x-datepicker a {
   -moz-outline: 0 none;
   outline: 0 none;
-  color: #7c6b36;
+  color: #71504e;
   text-decoration: none;
   border-width: 0;
 }
@@ -3971,12 +3982,12 @@ tr.x-container:before {
   position: relative;
   height: 26px;
   background-image: none;
-  background-color: #6b6346;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #746c4c), color-stop(100%, #5f583e));
-  background-image: -webkit-linear-gradient(top, #746c4c, #5f583e);
-  background-image: -moz-linear-gradient(top, #746c4c, #5f583e);
-  background-image: -o-linear-gradient(top, #746c4c, #5f583e);
-  background-image: linear-gradient(top, #746c4c, #5f583e);
+  background-color: #5f5f5f;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #676666), color-stop(100%, #555554));
+  background-image: -webkit-linear-gradient(top, #676666, #555554);
+  background-image: -moz-linear-gradient(top, #676666, #555554);
+  background-image: -o-linear-gradient(top, #676666, #555554);
+  background-image: linear-gradient(top, #676666, #555554);
 }
 
 /* line 42, ../scss/widgets/_datepicker.scss */
@@ -4052,7 +4063,7 @@ tr.x-container:before {
 }
 /* line 108, ../scss/widgets/_datepicker.scss */
 .x-datepicker-month span {
-  color: #fff !important;
+  color: white !important;
 }
 /* line 112, ../scss/widgets/_datepicker.scss */
 .x-datepicker-month .x-btn-split-right {
@@ -4084,18 +4095,18 @@ table.x-datepicker-inner th {
   width: 25px;
   height: 19px;
   padding: 0;
-  color: #5e5944;
+  color: #585858;
   font: normal 10px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   text-align: right;
-  border-bottom: 1px solid #ebe2ce;
+  border-bottom: 1px solid #e9dddd;
   border-collapse: separate;
   background-image: none;
-  background-color: #faf7f2;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fefefd), color-stop(100%, #f4efe4));
-  background-image: -webkit-linear-gradient(top, #fefefd, #f4efe4);
-  background-image: -moz-linear-gradient(top, #fefefd, #f4efe4);
-  background-image: -o-linear-gradient(top, #fefefd, #f4efe4);
-  background-image: linear-gradient(top, #fefefd, #f4efe4);
+  background-color: #fdfcfc;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #f5eff0));
+  background-image: -webkit-linear-gradient(top, #ffffff, #f5eff0);
+  background-image: -moz-linear-gradient(top, #ffffff, #f5eff0);
+  background-image: -o-linear-gradient(top, #ffffff, #f5eff0);
+  background-image: linear-gradient(top, #ffffff, #f5eff0);
   cursor: default;
 }
 /* line 157, ../scss/widgets/_datepicker.scss */
@@ -4133,8 +4144,8 @@ table.x-datepicker-inner .x-datepicker-active {
 /* line 194, ../scss/widgets/_datepicker.scss */
 table.x-datepicker-inner .x-datepicker-selected a {
   background: repeat-x left top;
-  background-color: #f2f0ed;
-  border: 1px solid #d1c8b1;
+  background-color: #f6f6f6;
+  border: 1px solid #cac5c5;
 }
 /* line 200, ../scss/widgets/_datepicker.scss */
 table.x-datepicker-inner .x-datepicker-selected span {
@@ -4156,7 +4167,7 @@ table.x-datepicker-inner a:hover,
 table.x-datepicker-inner .x-datepicker-disabled a:hover {
   text-decoration: none !important;
   color: #000;
-  background-color: #fcf8f1;
+  background-color: #fefcfc;
 }
 /* line 229, ../scss/widgets/_datepicker.scss */
 table.x-datepicker-inner .x-datepicker-disabled a {
@@ -4169,14 +4180,14 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 .x-datepicker-footer,
 .x-monthpicker-buttons {
   position: relative;
-  border-top: 1px solid #ebe2ce;
+  border-top: 1px solid #e9dddd;
   background-image: none;
-  background-color: #faf7f2;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f3f0), color-stop(49%, #edebe6), color-stop(51%, #e8e5de), color-stop(100%, #eae7e1));
-  background-image: -webkit-linear-gradient(top, #f5f3f0, #edebe6 49%, #e8e5de 51%, #eae7e1);
-  background-image: -moz-linear-gradient(top, #f5f3f0, #edebe6 49%, #e8e5de 51%, #eae7e1);
-  background-image: -o-linear-gradient(top, #f5f3f0, #edebe6 49%, #e8e5de 51%, #eae7e1);
-  background-image: linear-gradient(top, #f5f3f0, #edebe6 49%, #e8e5de 51%, #eae7e1);
+  background-color: #fdfcfc;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f9f9f9), color-stop(49%, #f0f0f0), color-stop(51%, #eaeaea), color-stop(100%, #ececec));
+  background-image: -webkit-linear-gradient(top, #f9f9f9, #f0f0f0 49%, #eaeaea 51%, #ececec);
+  background-image: -moz-linear-gradient(top, #f9f9f9, #f0f0f0 49%, #eaeaea 51%, #ececec);
+  background-image: -o-linear-gradient(top, #f9f9f9, #f0f0f0 49%, #eaeaea 51%, #ececec);
+  background-image: linear-gradient(top, #f9f9f9, #f0f0f0 49%, #eaeaea 51%, #ececec);
   text-align: center;
 }
 /* line 250, ../scss/widgets/_datepicker.scss */
@@ -4200,7 +4211,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 
 /* line 268, ../scss/widgets/_datepicker.scss */
 .x-monthpicker {
-  border: 1px solid #605839;
+  border: 1px solid #57504f;
   background-color: white;
 }
 
@@ -4228,23 +4239,23 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   display: block;
   margin: 0 5px;
   text-decoration: none;
-  color: #7c6b36;
+  color: #71504e;
   border: 1px solid white;
   line-height: 17px;
 }
 /* line 308, ../scss/widgets/_datepicker.scss */
 .x-monthpicker-item a:hover {
-  background-color: #fcf8f1;
+  background-color: #fefcfc;
 }
 /* line 312, ../scss/widgets/_datepicker.scss */
 .x-monthpicker-item a.x-monthpicker-selected {
-  background-color: #faf7f2;
-  border: 1px solid #d1c8b1;
+  background-color: #fdfcfc;
+  border: 1px solid #cac5c5;
 }
 
 /* line 319, ../scss/widgets/_datepicker.scss */
 .x-monthpicker-months {
-  border-right: 1px solid #605839;
+  border-right: 1px solid #57504f;
   width: 87px;
 }
 
@@ -4336,7 +4347,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 
 /* line 12, ../scss/widgets/_colorpicker.scss */
 .x-color-picker a {
-  border: 1px solid #fff;
+  border: 1px solid white;
   float: left;
   padding: 2px;
   text-decoration: none;
@@ -4375,8 +4386,8 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
   cursor: default;
-  background: #f0f0f0 !important;
-  padding: 2px;
+  background: white !important;
+  padding: 0px;
 }
 
 /* line 12, ../scss/widgets/_menu.scss */
@@ -4497,7 +4508,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   height: 2px;
   border-top: solid 1px #e0e0e0;
   background-color: white;
-  margin: 2px 0px;
+  margin: 0px 0px;
   overflow: hidden;
 }
 
@@ -4514,7 +4525,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 
 /* line 141, ../scss/widgets/_menu.scss */
 .x-menu-item-indent {
-  margin-left: 31px;
+  margin-left: 29px;
   /* The 2px is the width of the seperator */
 }
 
@@ -4525,14 +4536,14 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 /* line 148, ../scss/widgets/_menu.scss */
 .x-menu-item-active .x-menu-item-link {
   background-image: none;
-  background-color: #f9f5ed;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdfbf9), color-stop(100%, #f3eddf));
-  background-image: -webkit-linear-gradient(top, #fdfbf9, #f3eddf);
-  background-image: -moz-linear-gradient(top, #fdfbf9, #f3eddf);
-  background-image: -o-linear-gradient(top, #fdfbf9, #f3eddf);
-  background-image: linear-gradient(top, #fdfbf9, #f3eddf);
+  background-color: #fbf8f8;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #f3ebeb));
+  background-image: -webkit-linear-gradient(top, #ffffff, #f3ebeb);
+  background-image: -moz-linear-gradient(top, #ffffff, #f3ebeb);
+  background-image: -o-linear-gradient(top, #ffffff, #f3ebeb);
+  background-image: linear-gradient(top, #ffffff, #f3ebeb);
   margin: 0px;
-  border: 1px solid #e9dec7;
+  border: 1px solid #e6d7d7;
   cursor: pointer;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -4569,7 +4580,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 .x-ie6 .x-menu-item-link,
 .x-ie7 .x-menu-item-link,
 .x-quirks .x-ie8 .x-menu-item-link {
-  padding-bottom: 2px;
+  padding-bottom: 0px;
 }
 
 /* line 203, ../scss/widgets/_menu.scss */
@@ -4595,7 +4606,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   border-color: #999691;
   border-style: solid;
   border-width: 1px;
-  border-top-color: #edeae6;
+  border-top-color: #323232;
 }
 
 /* line 17, ../scss/widgets/_grid.scss */
@@ -4645,9 +4656,9 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   zoom: 1;
   padding: 0;
   border: 1px solid #999691;
-  border-bottom-color: #edeae6;
+  border-bottom-color: #323232;
   background-image: none;
-  background-color: #edeae6;
+  background-color: #323232;
 }
 
 /* line 68, ../scss/widgets/_grid.scss */
@@ -4665,14 +4676,15 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   padding: 0;
   position: absolute;
   overflow: hidden;
-  border-right: 1px solid #edeae6;
+  border-right: 1px solid #323232;
   border-left: 0 none;
   border-top: 0 none;
   border-bottom: 0 none;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  color: white;
   font: normal 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   background-image: none;
-  background-color: #edeae6;
+  background-color: #323232;
 }
 
 /* line 99, ../scss/widgets/_grid.scss */
@@ -4684,7 +4696,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 /* line 103, ../scss/widgets/_grid.scss */
 .x-group-sub-header {
   background: transparent;
-  border-top: 1px solid #edeae6;
+  border-top: 1px solid #323232;
   border-left-width: 0;
 }
 
@@ -4694,7 +4706,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   position: relative;
   white-space: nowrap;
   line-height: 14px;
-  padding: 11px 5px 7px;
+  padding: 15px 5px 11px;
 }
 /* line 116, ../scss/widgets/_grid.scss */
 .x-column-header-inner .x-column-header-text {
@@ -4705,8 +4717,8 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 .x-column-header-over,
 .x-column-header-sort-ASC,
 .x-column-header-sort-DESC {
-  border-left-color: #eae0c8;
-  border-right-color: #eae0c8;
+  border-left-color: #e7d8d8;
+  border-right-color: #e7d8d8;
   background-image: none;
   background-color: #f2f0ed;
 }
@@ -4823,7 +4835,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 /* line 250, ../scss/widgets/_grid.scss */
 .x-grid-row-selected .x-grid-cell {
   border-style: dotted;
-  border-color: #dcd7c2;
+  border-color: #d8d4d3;
 }
 
 /* line 257, ../scss/widgets/_grid.scss */
@@ -4888,7 +4900,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 /* line 313, ../scss/widgets/_grid.scss */
 .x-grid-row .x-grid-cell-special {
   padding: 0;
-  border-right: 1px solid #d9d9d9;
+  border-right: 1px solid #e0e0e0;
   background-image: none;
   background-color: #f6f6f6;
   background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #f6f6f6), color-stop(100%, #e9e9e9));
@@ -4918,7 +4930,7 @@ browsers will do whacky things with it.
 
 /* line 338, ../scss/widgets/_grid.scss */
 .x-grid-row-selected .x-grid-cell-special {
-  border-right: 1px solid #eae0c8;
+  border-right: 1px solid #e7d8d8;
   background-image: none;
   background-color: #bdf9ff;
   background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #bdf9ff), color-stop(100%, #a4f7ff));
@@ -4937,13 +4949,13 @@ browsers will do whacky things with it.
 
 /* line 350, ../scss/widgets/_grid.scss */
 .x-grid-cell-selected {
-  background-color: #B8CFEE !important;
+  background-color: #b8cfee !important;
 }
 
 /* line 374, ../scss/widgets/_grid.scss */
 .x-grid-with-col-lines .x-grid-cell {
   padding-right: 0;
-  border-right: 1px solid #d9d9d9;
+  border-right: 1px solid #e0e0e0;
 }
 
 /* line 381, ../scss/widgets/_grid.scss */
@@ -5072,7 +5084,7 @@ browsers will do whacky things with it.
   background: white;
   border-width: 0 0 2px 0;
   border-style: solid;
-  border-color: #d9d0ba;
+  border-color: #d4cdcc;
   cursor: pointer;
 }
 
@@ -5085,7 +5097,7 @@ browsers will do whacky things with it.
 
 /* line 518, ../scss/widgets/_grid.scss */
 .x-grid-group-title {
-  color: #857b64;
+  color: #7b7b7b;
   font: bold 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
 }
 
@@ -5333,9 +5345,9 @@ browsers will do whacky things with it.
 }
 /* line 747, ../scss/widgets/_grid.scss */
 .x-grid-row-editor .x-panel-body {
-  background-color: #fdfcfa;
-  border-top: 1px solid #d9cfba !important;
-  border-bottom: 1px solid #d9cfba !important;
+  background-color: white;
+  border-top: 1px solid #d4cccc !important;
+  border-bottom: 1px solid #d4cccc !important;
 }
 
 /* line 757, ../scss/widgets/_grid.scss */
@@ -5409,7 +5421,7 @@ browsers will do whacky things with it.
 
 /* line 831, ../scss/widgets/_grid.scss */
 .x-grid-row-editor-buttons {
-  background-color: #fdfcfa;
+  background-color: white;
   position: absolute;
   bottom: -31px;
   padding: 4px;
@@ -5459,7 +5471,7 @@ browsers will do whacky things with it.
   bottom: 0px;
   width: 192px;
   height: 1px;
-  background-color: #d9cfba;
+  background-color: #d4cccc;
 }
 
 /* line 879, ../scss/widgets/_grid.scss */
@@ -5468,7 +5480,7 @@ browsers will do whacky things with it.
   height: 27px;
   width: 1px;
   top: 1px;
-  background-color: #d9cfba;
+  background-color: #d4cccc;
 }
 
 /* line 885, ../scss/widgets/_grid.scss */
@@ -5682,7 +5694,7 @@ textarea.x-form-field {
 /* line 76, ../scss/widgets/form/_field.scss */
 .x-form-focus,
 textarea.x-form-focus {
-  border-color: #c3b8a6;
+  border-color: #bbbbbb;
 }
 
 /* line 81, ../scss/widgets/form/_field.scss */
@@ -5781,7 +5793,7 @@ textarea.x-form-invalid-field {
 /* line 29, ../scss/widgets/form/_fieldset.scss */
 .x-fieldset-header {
   font: 15px/14px bold "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: #7c6b36;
+  color: #71504e;
   padding: 0 3px 1px;
   overflow: hidden;
 }
@@ -6003,7 +6015,7 @@ textarea.x-form-invalid-field {
 
 /* line 12, ../scss/widgets/form/_checkboxgroup.scss */
 .x-form-invalid .x-form-checkboxgroup-body {
-  border: 1px solid #c30!important;
+  border: 1px solid #cc3300 !important;
   background: transparent repeat-x bottom;
   background-image: url('../../ext/resources/themes/images/default/grid/invalid_line.gif');
   padding: 1px 3px 0 3px;
@@ -6011,15 +6023,15 @@ textarea.x-form-invalid-field {
 
 /* line 20, ../scss/widgets/form/_checkboxgroup.scss */
 .x-check-group-alt {
-  background: #eceae6;
-  border-top: 1px dotted #c7c7c7;
-  border-bottom: 1px dotted #c7c7c7;
+  background: #efefef;
+  border-top: 1px dotted #cecece;
+  border-bottom: 1px dotted #cecece;
 }
 
 /* line 27, ../scss/widgets/form/_checkboxgroup.scss */
 .x-form-check-group-label {
   color: #333;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #333333;
   margin: 0 30px 5px 0;
   padding: 2px;
 }
@@ -6059,13 +6071,13 @@ textarea.x-form-invalid-field {
 /* line 37, ../scss/widgets/form/_triggerfield.scss */
 .x-form-trigger-over {
   background-position: -17px 0;
-  border-bottom-color: #c3b8a6;
+  border-bottom-color: #bbbbbb;
 }
 
 /* line 43, ../scss/widgets/form/_triggerfield.scss */
 .x-form-trigger-wrap-focus .x-form-trigger {
   background-position: -51px 0;
-  border-bottom-color: #c3b8a6;
+  border-bottom-color: #bbbbbb;
 }
 
 /* line 49, ../scss/widgets/form/_triggerfield.scss */
@@ -6460,14 +6472,14 @@ textarea.x-form-invalid-field {
 
 /* line 112, ../scss/widgets/_panel.scss */
 .x-ie9m .x-panel-header-vertical .x-panel-header-text-container {
-  background: #eeeae2;
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1), progid:DXImageTransform.Microsoft.Chroma(color='#eeeae2');
+  background: #f0eded;
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1), progid:DXImageTransform.Microsoft.Chroma(color='#f0eded');
 }
 
 /* line 117, ../scss/widgets/_panel.scss */
 .x-ie9m .x-window-header-vertical .x-window-header-text-container {
-  background: #e4e4e4;
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1), progid:DXImageTransform.Microsoft.Chroma(color='#e4e4e4');
+  background: #eaeaea;
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1), progid:DXImageTransform.Microsoft.Chroma(color='#eaeaea');
 }
 
 /* line 124, ../scss/widgets/_panel.scss */
@@ -6514,27 +6526,27 @@ textarea.x-form-invalid-field {
 
 /* line 264, ../scss/widgets/_panel.scss */
 .x-panel-default {
-  border-color: #d9cfba;
+  border-color: #d4cccc;
 }
 
 /* line 269, ../scss/widgets/_panel.scss */
 .x-panel-header-default {
   font-size: 15px;
-  border-color: #d9cfba;
+  border-color: #d4cccc;
   border-width: 0px;
   border-style: solid;
   background-image: none;
-  background-color: #eeeae2;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f2ed), color-stop(45%, #efebe3), color-stop(46%, #e0dac9), color-stop(50%, #e0dac9), color-stop(51%, #e5e0d3), color-stop(100%, #eeeae2));
-  background-image: -webkit-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -moz-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -o-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
+  background-color: #f0eded;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f8f7f7), color-stop(45%, #f0efef), color-stop(46%, #ded8d8), color-stop(50%, #ded8d8), color-stop(51%, #e4e1e1), color-stop(100%, #f0eded));
+  background-image: -webkit-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -moz-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -o-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
 }
 
 /* line 354, ../scss/widgets/_panel.scss */
 .x-panel-header-text-default {
-  color: #816421;
+  color: #7a3535;
   font-size: 15px;
   font-weight: bold;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
@@ -6565,12 +6577,12 @@ textarea.x-form-invalid-field {
 .x-panel-header-default-left,
 .x-panel-header-default-right {
   background-image: none;
-  background-color: #eeeae2;
-  background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #f5f2ed), color-stop(45%, #efebe3), color-stop(46%, #e0dac9), color-stop(50%, #e0dac9), color-stop(51%, #e5e0d3), color-stop(100%, #eeeae2));
-  background-image: -webkit-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -moz-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -o-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
+  background-color: #f0eded;
+  background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #f8f7f7), color-stop(45%, #f0efef), color-stop(46%, #ded8d8), color-stop(50%, #ded8d8), color-stop(51%, #e4e1e1), color-stop(100%, #f0eded));
+  background-image: -webkit-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -moz-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -o-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
 }
 
 /* line 450, ../scss/widgets/_panel.scss */
@@ -6617,27 +6629,27 @@ textarea.x-form-invalid-field {
 
 /* line 264, ../scss/widgets/_panel.scss */
 .x-panel-default-framed {
-  border-color: #d9cfba;
+  border-color: #d4cccc;
 }
 
 /* line 269, ../scss/widgets/_panel.scss */
 .x-panel-header-default-framed {
   font-size: 15px;
-  border-color: #d9cfba;
+  border-color: #d4cccc;
   border-width: 0px;
   border-style: solid;
   background-image: none;
-  background-color: #eeeae2;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f2ed), color-stop(45%, #efebe3), color-stop(46%, #e0dac9), color-stop(50%, #e0dac9), color-stop(51%, #e5e0d3), color-stop(100%, #eeeae2));
-  background-image: -webkit-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -moz-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -o-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
+  background-color: #f0eded;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f8f7f7), color-stop(45%, #f0efef), color-stop(46%, #ded8d8), color-stop(50%, #ded8d8), color-stop(51%, #e4e1e1), color-stop(100%, #f0eded));
+  background-image: -webkit-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -moz-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -o-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
 }
 
 /* line 354, ../scss/widgets/_panel.scss */
 .x-panel-header-text-default-framed {
-  color: #816421;
+  color: #7a3535;
   font-size: 15px;
   font-weight: bold;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
@@ -6646,7 +6658,7 @@ textarea.x-form-invalid-field {
 
 /* line 364, ../scss/widgets/_panel.scss */
 .x-panel-body-default-framed {
-  background: #f6f4f1;
+  background: #fafafa;
   border-color: #999691;
   color: black;
   border-width: 0;
@@ -6668,12 +6680,12 @@ textarea.x-form-invalid-field {
 .x-panel-header-default-framed-left,
 .x-panel-header-default-framed-right {
   background-image: none;
-  background-color: #eeeae2;
-  background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #f5f2ed), color-stop(45%, #efebe3), color-stop(46%, #e0dac9), color-stop(50%, #e0dac9), color-stop(51%, #e5e0d3), color-stop(100%, #eeeae2));
-  background-image: -webkit-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -moz-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -o-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
+  background-color: #f0eded;
+  background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #f8f7f7), color-stop(45%, #f0efef), color-stop(46%, #ded8d8), color-stop(50%, #ded8d8), color-stop(51%, #e4e1e1), color-stop(100%, #f0eded));
+  background-image: -webkit-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -moz-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -o-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -6686,7 +6698,7 @@ textarea.x-form-invalid-field {
   padding: 3px 3px 3px 3px;
   border-width: 1px;
   border-style: solid;
-  background-color: #f6f4f1;
+  background-color: #fafafa;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -6707,12 +6719,12 @@ textarea.x-form-invalid-field {
   border-width: 1px 1px 0 1px;
   border-style: solid;
   background-image: none;
-  background-color: #eeeae2;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f2ed), color-stop(45%, #efebe3), color-stop(46%, #e0dac9), color-stop(50%, #e0dac9), color-stop(51%, #e5e0d3), color-stop(100%, #eeeae2));
-  background-image: -webkit-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -moz-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -o-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
+  background-color: #f0eded;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f8f7f7), color-stop(45%, #f0efef), color-stop(46%, #ded8d8), color-stop(50%, #ded8d8), color-stop(51%, #e4e1e1), color-stop(100%, #f0eded));
+  background-image: -webkit-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -moz-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -o-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -6733,12 +6745,12 @@ textarea.x-form-invalid-field {
   border-width: 1px 1px 1px 0;
   border-style: solid;
   background-image: none;
-  background-color: #eeeae2;
-  background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #f5f2ed), color-stop(45%, #efebe3), color-stop(46%, #e0dac9), color-stop(50%, #e0dac9), color-stop(51%, #e5e0d3), color-stop(100%, #eeeae2));
-  background-image: -webkit-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -moz-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -o-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
+  background-color: #f0eded;
+  background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #f8f7f7), color-stop(45%, #f0efef), color-stop(46%, #ded8d8), color-stop(50%, #ded8d8), color-stop(51%, #e4e1e1), color-stop(100%, #f0eded));
+  background-image: -webkit-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -moz-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -o-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -6759,12 +6771,12 @@ textarea.x-form-invalid-field {
   border-width: 0 1px 1px 1px;
   border-style: solid;
   background-image: none;
-  background-color: #eeeae2;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f2ed), color-stop(45%, #efebe3), color-stop(46%, #e0dac9), color-stop(50%, #e0dac9), color-stop(51%, #e5e0d3), color-stop(100%, #eeeae2));
-  background-image: -webkit-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -moz-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -o-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
+  background-color: #f0eded;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f8f7f7), color-stop(45%, #f0efef), color-stop(46%, #ded8d8), color-stop(50%, #ded8d8), color-stop(51%, #e4e1e1), color-stop(100%, #f0eded));
+  background-image: -webkit-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -moz-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -o-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -6785,12 +6797,12 @@ textarea.x-form-invalid-field {
   border-width: 1px 0 1px 1px;
   border-style: solid;
   background-image: none;
-  background-color: #eeeae2;
-  background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #f5f2ed), color-stop(45%, #efebe3), color-stop(46%, #e0dac9), color-stop(50%, #e0dac9), color-stop(51%, #e5e0d3), color-stop(100%, #eeeae2));
-  background-image: -webkit-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -moz-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -o-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
+  background-color: #f0eded;
+  background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #f8f7f7), color-stop(45%, #f0efef), color-stop(46%, #ded8d8), color-stop(50%, #ded8d8), color-stop(51%, #e4e1e1), color-stop(100%, #f0eded));
+  background-image: -webkit-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -moz-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -o-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
 }
 
 /* line 415, ../scss/widgets/_panel.scss */
@@ -6868,12 +6880,12 @@ textarea.x-form-invalid-field {
   border-width: 1px;
   border-style: solid;
   background-image: none;
-  background-color: #eeeae2;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f2ed), color-stop(45%, #efebe3), color-stop(46%, #e0dac9), color-stop(50%, #e0dac9), color-stop(51%, #e5e0d3), color-stop(100%, #eeeae2));
-  background-image: -webkit-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -moz-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -o-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
+  background-color: #f0eded;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f8f7f7), color-stop(45%, #f0efef), color-stop(46%, #ded8d8), color-stop(50%, #ded8d8), color-stop(51%, #e4e1e1), color-stop(100%, #f0eded));
+  background-image: -webkit-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -moz-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -o-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -6894,12 +6906,12 @@ textarea.x-form-invalid-field {
   border-width: 1px;
   border-style: solid;
   background-image: none;
-  background-color: #eeeae2;
-  background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #f5f2ed), color-stop(45%, #efebe3), color-stop(46%, #e0dac9), color-stop(50%, #e0dac9), color-stop(51%, #e5e0d3), color-stop(100%, #eeeae2));
-  background-image: -webkit-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -moz-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -o-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
+  background-color: #f0eded;
+  background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #f8f7f7), color-stop(45%, #f0efef), color-stop(46%, #ded8d8), color-stop(50%, #ded8d8), color-stop(51%, #e4e1e1), color-stop(100%, #f0eded));
+  background-image: -webkit-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -moz-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -o-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -6920,12 +6932,12 @@ textarea.x-form-invalid-field {
   border-width: 1px;
   border-style: solid;
   background-image: none;
-  background-color: #eeeae2;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f2ed), color-stop(45%, #efebe3), color-stop(46%, #e0dac9), color-stop(50%, #e0dac9), color-stop(51%, #e5e0d3), color-stop(100%, #eeeae2));
-  background-image: -webkit-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -moz-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -o-linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: linear-gradient(top, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
+  background-color: #f0eded;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f8f7f7), color-stop(45%, #f0efef), color-stop(46%, #ded8d8), color-stop(50%, #ded8d8), color-stop(51%, #e4e1e1), color-stop(100%, #f0eded));
+  background-image: -webkit-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -moz-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -o-linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: linear-gradient(top, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -6946,12 +6958,12 @@ textarea.x-form-invalid-field {
   border-width: 1px;
   border-style: solid;
   background-image: none;
-  background-color: #eeeae2;
-  background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #f5f2ed), color-stop(45%, #efebe3), color-stop(46%, #e0dac9), color-stop(50%, #e0dac9), color-stop(51%, #e5e0d3), color-stop(100%, #eeeae2));
-  background-image: -webkit-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -moz-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: -o-linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
-  background-image: linear-gradient(right, #f5f2ed, #efebe3 45%, #e0dac9 46%, #e0dac9 50%, #e5e0d3 51%, #eeeae2);
+  background-color: #f0eded;
+  background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #f8f7f7), color-stop(45%, #f0efef), color-stop(46%, #ded8d8), color-stop(50%, #ded8d8), color-stop(51%, #e4e1e1), color-stop(100%, #f0eded));
+  background-image: -webkit-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -moz-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: -o-linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
+  background-image: linear-gradient(right, #f8f7f7, #f0efef 45%, #ded8d8 46%, #ded8d8 50%, #e4e1e1 51%, #f0eded);
 }
 
 /* line 497, ../scss/widgets/_panel.scss */
@@ -6980,7 +6992,7 @@ textarea.x-form-invalid-field {
   position: absolute;
   overflow: visible;
   /*pointer needs to be able to stick out*/
-  border-color: #bab8b4;
+  border-color: #b9b9b9;
 }
 /* line 12, ../scss/widgets/_qtip.scss */
 .x-tip .x-tip-header .x-tool {
@@ -7002,7 +7014,7 @@ textarea.x-form-invalid-field {
   padding: 2px 2px 2px 2px;
   border-width: 1px;
   border-style: solid;
-  background-color: #fefefc;
+  background-color: white;
 }
 
 /* line 31, ../scss/widgets/_qtip.scss */
@@ -7054,7 +7066,7 @@ textarea.x-form-invalid-field {
   width: 0;
   border-style: solid;
   border-width: 5px;
-  border-color: #bab8b4;
+  border-color: #b9b9b9;
   zoom: 1;
 }
 
@@ -7361,19 +7373,19 @@ textarea.x-form-invalid-field {
 
 /* line 93, ../scss/widgets/_progress-bar.scss */
 .x-progress-default {
-  border-color: #b3a993;
+  border-color: #aaaaaa;
 }
 /* line 96, ../scss/widgets/_progress-bar.scss */
 .x-progress-default .x-progress-bar {
-  border-right-color: #b3a993;
-  border-top-color: #e8e5de;
+  border-right-color: #aaaaaa;
+  border-top-color: #e9e9e9;
   background-image: none;
-  background-color: #c9bb9c;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e4ddce), color-stop(50%, #d2c6ad), color-stop(51%, #c9bb9c), color-stop(100%, #bfb08c));
-  background-image: -webkit-linear-gradient(top, #e4ddce, #d2c6ad 50%, #c9bb9c 51%, #bfb08c);
-  background-image: -moz-linear-gradient(top, #e4ddce, #d2c6ad 50%, #c9bb9c 51%, #bfb08c);
-  background-image: -o-linear-gradient(top, #e4ddce, #d2c6ad 50%, #c9bb9c 51%, #bfb08c);
-  background-image: linear-gradient(top, #e4ddce, #d2c6ad 50%, #c9bb9c 51%, #bfb08c);
+  background-color: #bfb3b3;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e2dddd), color-stop(50%, #cac1c1), color-stop(51%, #bfb3b3), color-stop(100%, #b3a5a5));
+  background-image: -webkit-linear-gradient(top, #e2dddd, #cac1c1 50%, #bfb3b3 51%, #b3a5a5);
+  background-image: -moz-linear-gradient(top, #e2dddd, #cac1c1 50%, #bfb3b3 51%, #b3a5a5);
+  background-image: -o-linear-gradient(top, #e2dddd, #cac1c1 50%, #bfb3b3 51%, #b3a5a5);
+  background-image: linear-gradient(top, #e2dddd, #cac1c1 50%, #bfb3b3 51%, #b3a5a5);
 }
 /* line 103, ../scss/widgets/_progress-bar.scss */
 .x-progress-default .x-progress-text {
@@ -7381,7 +7393,7 @@ textarea.x-form-invalid-field {
 }
 /* line 107, ../scss/widgets/_progress-bar.scss */
 .x-progress-default .x-progress-text-back {
-  color: #7b7465;
+  color: #777777;
 }
 
 /* line 6, ../scss/widgets/_toolbar.scss */
@@ -7423,7 +7435,7 @@ textarea.x-form-invalid-field {
   margin: 0 3px 0 2px;
   height: 14px;
   width: 0px;
-  border-left: 1px solid #ffe3aa;
+  border-left: 1px solid #ffb7b8;
   border-right: 1px solid white;
 }
 
@@ -7467,7 +7479,7 @@ textarea.x-form-invalid-field {
   height: 0px;
   width: 10px;
   line-height: 0px;
-  border-top: 1px solid #ffe3aa;
+  border-top: 1px solid #ffb7b8;
   border-bottom: 1px solid white;
 }
 
@@ -7490,14 +7502,9 @@ textarea.x-form-invalid-field {
 
 /* line 144, ../scss/widgets/_toolbar.scss */
 .x-toolbar-default {
-  border-color: #d9cfba;
+  border-color: #d4cccc;
   background-image: none;
-  background-color: #eeece8;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f3f1), color-stop(100%, #eeece8));
-  background-image: -webkit-linear-gradient(top, #f5f3f1, #eeece8);
-  background-image: -moz-linear-gradient(top, #f5f3f1, #eeece8);
-  background-image: -o-linear-gradient(top, #f5f3f1, #eeece8);
-  background-image: linear-gradient(top, #f5f3f1, #eeece8);
+  background-color: #e6e6e6;
 }
 
 /* line 123, ../scss/widgets/_toolbar.scss */
@@ -7591,15 +7598,15 @@ textarea.x-form-invalid-field {
 
 /* line 122, ../scss/widgets/_window.scss */
 .x-window-default {
-  border-color: #bdbdbd;
+  border-color: #c3c3c3;
   -webkit-border-radius: 5px 5px;
   -moz-border-radius: 5px 5px;
   -ms-border-radius: 5px 5px;
   -o-border-radius: 5px 5px;
   border-radius: 5px 5px;
-  -webkit-box-shadow: #fdfdfc 0 1px 0px 0 inset, #fdfdfc 0 -1px 0px 0 inset, #fdfdfc -1px 0 0px 0 inset, #fdfdfc 1px 0 0px 0 inset;
-  -moz-box-shadow: #fdfdfc 0 1px 0px 0 inset, #fdfdfc 0 -1px 0px 0 inset, #fdfdfc -1px 0 0px 0 inset, #fdfdfc 1px 0 0px 0 inset;
-  box-shadow: #fdfdfc 0 1px 0px 0 inset, #fdfdfc 0 -1px 0px 0 inset, #fdfdfc -1px 0 0px 0 inset, #fdfdfc 1px 0 0px 0 inset;
+  -webkit-box-shadow: white 0 1px 0px 0 inset, white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  -moz-box-shadow: white 0 1px 0px 0 inset, white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  box-shadow: white 0 1px 0px 0 inset, white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -7619,27 +7626,27 @@ textarea.x-form-invalid-field {
   padding: 4px 4px 4px 4px;
   border-width: 1px;
   border-style: solid;
-  background-color: #e4e4e4;
+  background-color: #eaeaea;
 }
 
 /* line 141, ../scss/widgets/_window.scss */
 .x-window-body-default {
-  border-color: #d9d0ba;
+  border-color: #d4cdcc;
   border-width: 1px;
-  background: #f6f5f1;
+  background: #fafafa;
   color: black;
 }
 
 /* line 151, ../scss/widgets/_window.scss */
 .x-window-header-default {
   font-size: 15px;
-  border-color: #bdbdbd;
+  border-color: #c3c3c3;
   zoom: 1;
 }
 
 /* line 157, ../scss/widgets/_window.scss */
 .x-window-header-text-default {
-  color: #816021;
+  color: #7a3538;
   font-weight: bold;
   line-height: 15px;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
@@ -7663,7 +7670,7 @@ textarea.x-form-invalid-field {
   padding: 4px 5px 0 5px;
   border-width: 1px 1px 0 1px;
   border-style: solid;
-  background-color: #e4e4e4;
+  background-color: #eaeaea;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -7683,7 +7690,7 @@ textarea.x-form-invalid-field {
   padding: 5px 4px 5px 0;
   border-width: 1px 1px 1px 0;
   border-style: solid;
-  background-color: #e4e4e4;
+  background-color: #eaeaea;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -7703,7 +7710,7 @@ textarea.x-form-invalid-field {
   padding: 0 5px 4px 5px;
   border-width: 0 1px 1px 1px;
   border-style: solid;
-  background-color: #e4e4e4;
+  background-color: #eaeaea;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -7723,7 +7730,7 @@ textarea.x-form-invalid-field {
   padding: 5px 0px 5px 4px;
   border-width: 1px 0 1px 1px;
   border-style: solid;
-  background-color: #e4e4e4;
+  background-color: #eaeaea;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -7743,7 +7750,7 @@ textarea.x-form-invalid-field {
   padding: 4px 5px 4px 5px;
   border-width: 1px;
   border-style: solid;
-  background-color: #e4e4e4;
+  background-color: #eaeaea;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -7763,7 +7770,7 @@ textarea.x-form-invalid-field {
   padding: 5px 4px 5px 4px;
   border-width: 1px;
   border-style: solid;
-  background-color: #e4e4e4;
+  background-color: #eaeaea;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -7783,7 +7790,7 @@ textarea.x-form-invalid-field {
   padding: 4px 5px 4px 5px;
   border-width: 1px;
   border-style: solid;
-  background-color: #e4e4e4;
+  background-color: #eaeaea;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -7803,35 +7810,35 @@ textarea.x-form-invalid-field {
   padding: 5px 4px 5px 4px;
   border-width: 1px;
   border-style: solid;
-  background-color: #e4e4e4;
+  background-color: #eaeaea;
 }
 
 /* line 180, ../scss/widgets/_window.scss */
 .x-window-header-default-top {
-  -webkit-box-shadow: #fdfdfc 0 1px 0px 0 inset, #fdfdfc -1px 0 0px 0 inset, #fdfdfc 1px 0 0px 0 inset;
-  -moz-box-shadow: #fdfdfc 0 1px 0px 0 inset, #fdfdfc -1px 0 0px 0 inset, #fdfdfc 1px 0 0px 0 inset;
-  box-shadow: #fdfdfc 0 1px 0px 0 inset, #fdfdfc -1px 0 0px 0 inset, #fdfdfc 1px 0 0px 0 inset;
+  -webkit-box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  -moz-box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
 }
 
 /* line 184, ../scss/widgets/_window.scss */
 .x-window-header-default-right {
-  -webkit-box-shadow: #fdfdfc 0 1px 0px 0 inset, #fdfdfc 0 -1px 0px 0 inset, #fdfdfc -1px 0 0px 0 inset;
-  -moz-box-shadow: #fdfdfc 0 1px 0px 0 inset, #fdfdfc 0 -1px 0px 0 inset, #fdfdfc -1px 0 0px 0 inset;
-  box-shadow: #fdfdfc 0 1px 0px 0 inset, #fdfdfc 0 -1px 0px 0 inset, #fdfdfc -1px 0 0px 0 inset;
+  -webkit-box-shadow: white 0 1px 0px 0 inset, white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset;
+  -moz-box-shadow: white 0 1px 0px 0 inset, white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset;
+  box-shadow: white 0 1px 0px 0 inset, white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset;
 }
 
 /* line 188, ../scss/widgets/_window.scss */
 .x-window-header-default-bottom {
-  -webkit-box-shadow: #fdfdfc 0 -1px 0px 0 inset, #fdfdfc -1px 0 0px 0 inset, #fdfdfc 1px 0 0px 0 inset;
-  -moz-box-shadow: #fdfdfc 0 -1px 0px 0 inset, #fdfdfc -1px 0 0px 0 inset, #fdfdfc 1px 0 0px 0 inset;
-  box-shadow: #fdfdfc 0 -1px 0px 0 inset, #fdfdfc -1px 0 0px 0 inset, #fdfdfc 1px 0 0px 0 inset;
+  -webkit-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  -moz-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
 }
 
 /* line 192, ../scss/widgets/_window.scss */
 .x-window-header-default-left {
-  -webkit-box-shadow: #fdfdfc 0 1px 0px 0 inset, #fdfdfc 0 -1px 0px 0 inset, #fdfdfc 1px 0 0px 0 inset;
-  -moz-box-shadow: #fdfdfc 0 1px 0px 0 inset, #fdfdfc 0 -1px 0px 0 inset, #fdfdfc 1px 0 0px 0 inset;
-  box-shadow: #fdfdfc 0 1px 0px 0 inset, #fdfdfc 0 -1px 0px 0 inset, #fdfdfc 1px 0 0px 0 inset;
+  -webkit-box-shadow: white 0 1px 0px 0 inset, white 0 -1px 0px 0 inset, white 1px 0 0px 0 inset;
+  -moz-box-shadow: white 0 1px 0px 0 inset, white 0 -1px 0px 0 inset, white 1px 0 0px 0 inset;
+  box-shadow: white 0 1px 0px 0 inset, white 0 -1px 0px 0 inset, white 1px 0 0px 0 inset;
 }
 
 /* line 93, ../scss/widgets/_window.scss */
@@ -7841,7 +7848,7 @@ textarea.x-form-invalid-field {
 
 /* line 2, ../scss/util/_messagebox.scss */
 .x-message-box .x-window-body {
-  background-color: #e4e4e4;
+  background-color: #eaeaea;
   border: none;
 }
 
@@ -7894,12 +7901,12 @@ textarea.x-form-invalid-field {
   position: relative;
   background-color: transparent;
   background-image: none;
-  background-color: #ebe8e1;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f3ef), color-stop(100%, #ebe8e1));
-  background-image: -webkit-linear-gradient(top, #f5f3ef, #ebe8e1);
-  background-image: -moz-linear-gradient(top, #f5f3ef, #ebe8e1);
-  background-image: -o-linear-gradient(top, #f5f3ef, #ebe8e1);
-  background-image: linear-gradient(top, #f5f3ef, #ebe8e1);
+  background-color: #ececec;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f9f8f8), color-stop(100%, #ececec));
+  background-image: -webkit-linear-gradient(top, #f9f8f8, #ececec);
+  background-image: -moz-linear-gradient(top, #f9f8f8, #ececec);
+  background-image: -o-linear-gradient(top, #f9f8f8, #ececec);
+  background-image: linear-gradient(top, #f9f8f8, #ececec);
   font-size: 15px;
 }
 
@@ -7917,7 +7924,7 @@ textarea.x-form-invalid-field {
 /* line 90, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-body {
   border-style: solid;
-  border-color: #d9cfba;
+  border-color: #d4cccc;
   position: relative;
   z-index: 2;
   zoom: 1;
@@ -8046,8 +8053,8 @@ textarea.x-form-invalid-field {
   z-index: 1;
   border-style: solid;
   overflow: hidden;
-  border-color: #d9cfba;
-  background-color: #fbf8f2;
+  border-color: #d4cccc;
+  background-color: #fefcfc;
   zoom: 1;
 }
 
@@ -8069,12 +8076,12 @@ textarea.x-form-invalid-field {
   border-width: 1px 1px 0 1px;
   border-style: solid;
   background-image: none;
-  background-color: #fbf8f2;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f1ede3), color-stop(25%, #f7f3eb), color-stop(45%, #fbf8f2));
-  background-image: -webkit-linear-gradient(top, #f1ede3, #f7f3eb 25%, #fbf8f2 45%);
-  background-image: -moz-linear-gradient(top, #f1ede3, #f7f3eb 25%, #fbf8f2 45%);
-  background-image: -o-linear-gradient(top, #f1ede3, #f7f3eb 25%, #fbf8f2 45%);
-  background-image: linear-gradient(top, #f1ede3, #f7f3eb 25%, #fbf8f2 45%);
+  background-color: #fefcfc;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f3efee), color-stop(25%, #f9f6f6), color-stop(45%, #fefcfc));
+  background-image: -webkit-linear-gradient(top, #f3efee, #f9f6f6 25%, #fefcfc 45%);
+  background-image: -moz-linear-gradient(top, #f3efee, #f9f6f6 25%, #fefcfc 45%);
+  background-image: -o-linear-gradient(top, #f3efee, #f9f6f6 25%, #fefcfc 45%);
+  background-image: linear-gradient(top, #f3efee, #f9f6f6 25%, #fefcfc 45%);
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -8095,12 +8102,12 @@ textarea.x-form-invalid-field {
   border-width: 0 1px 1px 1px;
   border-style: solid;
   background-image: none;
-  background-color: #fbf8f2;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #f1ede3), color-stop(25%, #f7f3eb), color-stop(45%, #fbf8f2));
-  background-image: -webkit-linear-gradient(bottom, #f1ede3, #f7f3eb 25%, #fbf8f2 45%);
-  background-image: -moz-linear-gradient(bottom, #f1ede3, #f7f3eb 25%, #fbf8f2 45%);
-  background-image: -o-linear-gradient(bottom, #f1ede3, #f7f3eb 25%, #fbf8f2 45%);
-  background-image: linear-gradient(bottom, #f1ede3, #f7f3eb 25%, #fbf8f2 45%);
+  background-color: #fefcfc;
+  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #f3efee), color-stop(25%, #f9f6f6), color-stop(45%, #fefcfc));
+  background-image: -webkit-linear-gradient(bottom, #f3efee, #f9f6f6 25%, #fefcfc 45%);
+  background-image: -moz-linear-gradient(bottom, #f3efee, #f9f6f6 25%, #fefcfc 45%);
+  background-image: -o-linear-gradient(bottom, #f3efee, #f9f6f6 25%, #fefcfc 45%);
+  background-image: linear-gradient(bottom, #f3efee, #f9f6f6 25%, #fefcfc 45%);
 }
 
 /* line 28, ../scss/widgets/_tab.scss */
@@ -8112,7 +8119,7 @@ textarea.x-form-invalid-field {
   *display: inline;
   white-space: nowrap;
   height: 20px;
-  border-color: #d1c7b1;
+  border-color: #cac5c5;
   cursor: pointer;
   cursor: hand;
 }
@@ -8137,7 +8144,7 @@ textarea.x-form-invalid-field {
   font-size: 15px;
   font-weight: bold;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: #857f71;
+  color: #828282;
   outline: 0 none;
   overflow-x: visible;
 }
@@ -8195,7 +8202,7 @@ textarea.x-form-invalid-field {
   -webkit-box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   -moz-box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
-  border-bottom: 1px solid #d9cfba !important;
+  border-bottom: 1px solid #d4cccc !important;
 }
 /* line 134, ../scss/widgets/_tab.scss */
 .x-tab-default-top em {
@@ -8221,7 +8228,7 @@ textarea.x-form-invalid-field {
 
 /* line 157, ../scss/widgets/_tab.scss */
 .x-tab-default-top-active {
-  border-bottom-color: #fbf8f2 !important;
+  border-bottom-color: #fefcfc !important;
 }
 
 /* line 163, ../scss/widgets/_tab.scss */
@@ -8229,7 +8236,7 @@ textarea.x-form-invalid-field {
   -webkit-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   -moz-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
-  border-top: 1px solid #d9cfba !important;
+  border-top: 1px solid #d4cccc !important;
   -webkit-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   -moz-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
   box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
@@ -8252,20 +8259,20 @@ textarea.x-form-invalid-field {
 
 /* line 193, ../scss/widgets/_tab.scss */
 .x-tab-default-bottom-active {
-  border-top-color: #fbf8f2 !important;
+  border-top-color: #fefcfc !important;
 }
 
 /* line 197, ../scss/widgets/_tab.scss */
 .x-tab-default-disabled {
   cursor: default;
-  border-color: #e7e1d5;
+  border-color: #e6e3e3;
   background-image: none;
-  background-color: #faf8f3;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #faf8f3), color-stop(100%, #fffefd));
-  background-image: -webkit-linear-gradient(top, #faf8f3, #fffefd);
-  background-image: -moz-linear-gradient(top, #faf8f3, #fffefd);
-  background-image: -o-linear-gradient(top, #faf8f3, #fffefd);
-  background-image: linear-gradient(top, #faf8f3, #fffefd);
+  background-color: #fdfdfd;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdfdfd), color-stop(100%, #ffffff));
+  background-image: -webkit-linear-gradient(top, #fdfdfd, #ffffff);
+  background-image: -moz-linear-gradient(top, #fdfdfd, #ffffff);
+  background-image: -o-linear-gradient(top, #fdfdfd, #ffffff);
+  background-image: linear-gradient(top, #fdfdfd, #ffffff);
 }
 /* line 203, ../scss/widgets/_tab.scss */
 .x-tab-default-disabled button {
@@ -8316,23 +8323,23 @@ textarea.x-form-invalid-field {
 /* line 269, ../scss/widgets/_tab.scss */
 .x-tab-top-over {
   background-image: none;
-  background-color: #fefdfb;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #faf7ec), color-stop(25%, #fdfaf4), color-stop(45%, #fefdfb));
-  background-image: -webkit-linear-gradient(top, #faf7ec, #fdfaf4 25%, #fefdfb 45%);
-  background-image: -moz-linear-gradient(top, #faf7ec, #fdfaf4 25%, #fefdfb 45%);
-  background-image: -o-linear-gradient(top, #faf7ec, #fdfaf4 25%, #fefdfb 45%);
-  background-image: linear-gradient(top, #faf7ec, #fdfaf4 25%, #fefdfb 45%);
+  background-color: white;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f9f3f2), color-stop(25%, #fdf9f9), color-stop(45%, #ffffff));
+  background-image: -webkit-linear-gradient(top, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
+  background-image: -moz-linear-gradient(top, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
+  background-image: -o-linear-gradient(top, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
+  background-image: linear-gradient(top, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
 }
 
 /* line 272, ../scss/widgets/_tab.scss */
 .x-tab-bottom-over {
   background-image: none;
-  background-color: #fefdfb;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #faf7ec), color-stop(25%, #fdfaf4), color-stop(45%, #fefdfb));
-  background-image: -webkit-linear-gradient(bottom, #faf7ec, #fdfaf4 25%, #fefdfb 45%);
-  background-image: -moz-linear-gradient(bottom, #faf7ec, #fdfaf4 25%, #fefdfb 45%);
-  background-image: -o-linear-gradient(bottom, #faf7ec, #fdfaf4 25%, #fefdfb 45%);
-  background-image: linear-gradient(bottom, #faf7ec, #fdfaf4 25%, #fefdfb 45%);
+  background-color: white;
+  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #f9f3f2), color-stop(25%, #fdf9f9), color-stop(45%, #ffffff));
+  background-image: -webkit-linear-gradient(bottom, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
+  background-image: -moz-linear-gradient(bottom, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
+  background-image: -o-linear-gradient(bottom, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
+  background-image: linear-gradient(bottom, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
 }
 
 /* line 277, ../scss/widgets/_tab.scss */
@@ -8341,34 +8348,34 @@ textarea.x-form-invalid-field {
 }
 /* line 283, ../scss/widgets/_tab.scss */
 .x-tab-active button {
-  color: #7c6636;
+  color: #7d4242;
 }
 
 /* line 299, ../scss/widgets/_tab.scss */
 .x-tab-top-active {
   background-image: none;
-  background-color: #fbf8f2;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(25%, #ffffff), color-stop(45%, #fbf8f2));
-  background-image: -webkit-linear-gradient(top, #ffffff, #ffffff 25%, #fbf8f2 45%);
-  background-image: -moz-linear-gradient(top, #ffffff, #ffffff 25%, #fbf8f2 45%);
-  background-image: -o-linear-gradient(top, #ffffff, #ffffff 25%, #fbf8f2 45%);
-  background-image: linear-gradient(top, #ffffff, #ffffff 25%, #fbf8f2 45%);
+  background-color: #fefcfc;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(25%, #ffffff), color-stop(45%, #fefcfc));
+  background-image: -webkit-linear-gradient(top, #ffffff, #ffffff 25%, #fefcfc 45%);
+  background-image: -moz-linear-gradient(top, #ffffff, #ffffff 25%, #fefcfc 45%);
+  background-image: -o-linear-gradient(top, #ffffff, #ffffff 25%, #fefcfc 45%);
+  background-image: linear-gradient(top, #ffffff, #ffffff 25%, #fefcfc 45%);
 }
 
 /* line 302, ../scss/widgets/_tab.scss */
 .x-tab-bottom-active {
   background-image: none;
-  background-color: #fbf8f2;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #ffffff), color-stop(25%, #ffffff), color-stop(45%, #fbf8f2));
-  background-image: -webkit-linear-gradient(bottom, #ffffff, #ffffff 25%, #fbf8f2 45%);
-  background-image: -moz-linear-gradient(bottom, #ffffff, #ffffff 25%, #fbf8f2 45%);
-  background-image: -o-linear-gradient(bottom, #ffffff, #ffffff 25%, #fbf8f2 45%);
-  background-image: linear-gradient(bottom, #ffffff, #ffffff 25%, #fbf8f2 45%);
+  background-color: #fefcfc;
+  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #ffffff), color-stop(25%, #ffffff), color-stop(45%, #fefcfc));
+  background-image: -webkit-linear-gradient(bottom, #ffffff, #ffffff 25%, #fefcfc 45%);
+  background-image: -moz-linear-gradient(bottom, #ffffff, #ffffff 25%, #fefcfc 45%);
+  background-image: -o-linear-gradient(bottom, #ffffff, #ffffff 25%, #fefcfc 45%);
+  background-image: linear-gradient(bottom, #ffffff, #ffffff 25%, #fefcfc 45%);
 }
 
 /* line 307, ../scss/widgets/_tab.scss */
 .x-tab-disabled {
-  border-color: #e7e1d5;
+  border-color: #e6e3e3;
 }
 /* line 312, ../scss/widgets/_tab.scss */
 .x-tab-disabled button {
@@ -8380,12 +8387,12 @@ textarea.x-form-invalid-field {
   background-image: none;
   background: transparent;
   background-image: none;
-  background-color: #faf8f3;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #faf8f3), color-stop(100%, #fffefd));
-  background-image: -webkit-linear-gradient(top, #faf8f3, #fffefd);
-  background-image: -moz-linear-gradient(top, #faf8f3, #fffefd);
-  background-image: -o-linear-gradient(top, #faf8f3, #fffefd);
-  background-image: linear-gradient(top, #faf8f3, #fffefd);
+  background-color: #fdfdfd;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdfdfd), color-stop(100%, #ffffff));
+  background-image: -webkit-linear-gradient(top, #fdfdfd, #ffffff);
+  background-image: -moz-linear-gradient(top, #fdfdfd, #ffffff);
+  background-image: -o-linear-gradient(top, #fdfdfd, #ffffff);
+  background-image: linear-gradient(top, #fdfdfd, #ffffff);
 }
 
 /* line 333, ../scss/widgets/_tab.scss */
@@ -8393,12 +8400,12 @@ textarea.x-form-invalid-field {
   background-image: none;
   background: transparent;
   background-image: none;
-  background-color: #faf8f3;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #faf8f3), color-stop(100%, #fffefd));
-  background-image: -webkit-linear-gradient(bottom, #faf8f3, #fffefd);
-  background-image: -moz-linear-gradient(bottom, #faf8f3, #fffefd);
-  background-image: -o-linear-gradient(bottom, #faf8f3, #fffefd);
-  background-image: linear-gradient(bottom, #faf8f3, #fffefd);
+  background-color: #fdfdfd;
+  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #fdfdfd), color-stop(100%, #ffffff));
+  background-image: -webkit-linear-gradient(bottom, #fdfdfd, #ffffff);
+  background-image: -moz-linear-gradient(bottom, #fdfdfd, #ffffff);
+  background-image: -o-linear-gradient(bottom, #fdfdfd, #ffffff);
+  background-image: linear-gradient(bottom, #fdfdfd, #ffffff);
 }
 
 /* line 363, ../scss/widgets/_tab.scss */
@@ -8891,7 +8898,7 @@ svg, vml {
 
 /* line 354, ../scss/widgets/_panel.scss */
 .x-panel-header-text-taco {
-  color: #444444;
+  color: #323232;
   font-weight: normal;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   line-height: 15px;
@@ -8900,7 +8907,7 @@ svg, vml {
 /* line 364, ../scss/widgets/_panel.scss */
 .x-panel-body-taco {
   border-color: #999691;
-  color: #444444;
+  color: #323232;
 }
 
 /* line 379, ../scss/widgets/_panel.scss */
@@ -8963,6 +8970,48 @@ svg, vml {
   background-position: 0 bottom;
 }
 
+/* panel specific styles, move to separate file */
+/* line 44, ../scss/taco/widgets/_panel.scss */
+.taco-producttype-attribute-panel > .x-panel-header .x-panel-header-body {
+  border-bottom: 1px dashed #999691;
+  margin-bottom: 10px;
+}
+/* line 49, ../scss/taco/widgets/_panel.scss */
+.taco-producttype-attribute-panel > .x-panel-header .x-panel-header-text {
+  font-size: 1.25em;
+  line-height: 1.25em;
+}
+/* line 55, ../scss/taco/widgets/_panel.scss */
+.taco-producttype-attribute-panel > .x-panel-body {
+  background-color: #f2f0ed;
+}
+/* line 59, ../scss/taco/widgets/_panel.scss */
+.taco-producttype-attribute-panel .taco-draghandle {
+  display: inline-block;
+  margin: 0px;
+  vertical-align: middle;
+}
+/* line 64, ../scss/taco/widgets/_panel.scss */
+.taco-producttype-attribute-panel .taco-attribute-item-header-text {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1em;
+  padding-top: 0.5em;
+  vertical-align: middle;
+}
+/* line 72, ../scss/taco/widgets/_panel.scss */
+.taco-producttype-attribute-panel .taco-attribute-item-body {
+  border-top: 1px solid white;
+  font-size: 14px;
+  padding: 0.5em 0.5em 0.5em 36px;
+  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1) inset;
+  -moz-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1) inset;
+  -webkit-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1) inset;
+  -o-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1) inset;
+  -ms-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1) inset;
+}
+
 /* CORE GRID STYLES */
 /* line 6, ../scss/taco/widgets/_grid.scss */
 .x-panel .x-grid-body {
@@ -8979,68 +9028,99 @@ svg, vml {
   padding-bottom: 5px;
 }
 
-/* line 24, ../scss/taco/widgets/_grid.scss */
+/* line 23, ../scss/taco/widgets/_grid.scss */
+.x-grid-cell-selected {
+  background-color: #bdf9ff !important;
+}
+
+/* line 28, ../scss/taco/widgets/_grid.scss */
 .x-grid-row {
   vertical-align: middle;
 }
-/* line 27, ../scss/taco/widgets/_grid.scss */
+/* line 31, ../scss/taco/widgets/_grid.scss */
 .x-grid-row .x-grid-cell-special {
   background-color: white;
   background-image: none;
   border-right: 0px none;
 }
 
-/* line 36, ../scss/taco/widgets/_grid.scss */
+/* line 40, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-alt .x-grid-cell-special {
   background-color: #fafafa;
 }
 
-/* line 43, ../scss/taco/widgets/_grid.scss */
+/* line 47, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-over .x-grid-cell-special {
   background-color: #efefef;
   border-color: #dddddd;
 }
 
-/* line 51, ../scss/taco/widgets/_grid.scss */
+/* line 55, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-focused .x-grid-cell-special {
   background-color: #efefef;
   border-color: #dddddd;
 }
 
-/* line 58, ../scss/taco/widgets/_grid.scss */
+/* line 62, ../scss/taco/widgets/_grid.scss */
 .x-grid-rowwrap-div .x-grid-cell-special {
   background-color: transparent;
 }
 
-/* line 64, ../scss/taco/widgets/_grid.scss */
+/* line 68, ../scss/taco/widgets/_grid.scss */
 .x-column-header {
   border: 0px none;
   font-size: 14px;
   font-weight: bold;
   line-height: 14px;
+  text-shadow: none;
 }
-/* line 71, ../scss/taco/widgets/_grid.scss */
+/* line 76, ../scss/taco/widgets/_grid.scss */
 .x-column-header.x-column-header-last .x-column-header-trigger {
   display: block !important;
 }
 
-/* line 77, ../scss/taco/widgets/_grid.scss */
+/* line 82, ../scss/taco/widgets/_grid.scss */
 .x-column-header-inner {
-  padding-top: 11px !important;
+  padding-top: 15px !important;
 }
 
-/* line 82, ../scss/taco/widgets/_grid.scss */
+/* line 87, ../scss/taco/widgets/_grid.scss */
 .x-column-header-over .x-column-header-trigger {
   display: none;
 }
 
 /* PLUGINS, MIXINS, COLUMNS, ETC. */
-/* line 91, ../scss/taco/widgets/_grid.scss */
-.x-column-header-checkbox .x-column-header-inner {
-  padding-top: 7px !important;
+/* line 95, ../scss/taco/widgets/_grid.scss */
+.x-grid-cell-inner span.overridden {
+  background-color: #3778d5;
+  display: inline-block;
+  font-size: 0px;
+  height: 8px;
+  line-height: 0px;
+  overflow: hidden;
+  text-indent: -9999px;
+  vertical-align: middle;
+  width: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  border-radius: 8px;
 }
 
-/* line 97, ../scss/taco/widgets/_grid.scss */
+/* line 112, ../scss/taco/widgets/_grid.scss */
+.x-column-header-checkbox .x-column-header-inner {
+  padding-top: 11px !important;
+}
+
+/* line 118, ../scss/taco/widgets/_grid.scss */
+.taco-expandercollapser {
+  color: #164588;
+  font-size: 10pt;
+  padding: 6px 0;
+}
+
+/* line 125, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-expander {
   background-image: none;
   border-bottom: 5px solid transparent;
@@ -9060,8 +9140,12 @@ svg, vml {
   -o-transition: -o-transform 0.1s;
   transition: transform 0.1s;
 }
+/* line 137, ../scss/taco/widgets/_grid.scss */
+.x-grid-row-expander.empty {
+  visibility: hidden;
+}
 
-/* line 111, ../scss/taco/widgets/_grid.scss */
+/* line 143, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-collapsed .x-grid-row-expander {
   background-image: none;
   -webkit-transform: rotate(0deg);
@@ -9070,12 +9154,12 @@ svg, vml {
   -o-transform: rotate(0deg);
   transform: rotate(0deg);
 }
-/* line 115, ../scss/taco/widgets/_grid.scss */
+/* line 147, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-collapsed .x-grid-row-body {
   display: none;
 }
 
-/* line 121, ../scss/taco/widgets/_grid.scss */
+/* line 153, ../scss/taco/widgets/_grid.scss */
 .taco-draghandle {
   cursor: move;
   display: block;
@@ -9086,13 +9170,57 @@ svg, vml {
   background-position: 0 -717px;
 }
 
-/* line 131, ../scss/taco/widgets/_grid.scss */
+/* line 164, ../scss/taco/widgets/_grid.scss */
 .x-grid-cell-draghandlecolumn .x-grid-cell-inner {
   padding: 0px;
 }
 
+/* line 172, ../scss/taco/widgets/_grid.scss */
+.x-border-box .x-grid-editor .x-form-item-body {
+  padding: 2px;
+}
+/* line 175, ../scss/taco/widgets/_grid.scss */
+.x-border-box .x-grid-editor .x-form-text {
+  height: 30px;
+  padding-bottom: 5px;
+}
+
+/* line 184, ../scss/taco/widgets/_grid.scss */
+.taco-menu-col-cell .x-grid-cell-inner {
+  padding-bottom: 1px;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -webkit-justify-content: flex-start;
+  -webkit-align-items: stretch;
+  -webkit-align-content: stretch;
+}
+
+/* line 190, ../scss/taco/widgets/_grid.scss */
+.taco-grid-row-menu-trigger {
+  cursor: pointer;
+  height: 30px;
+  width: 50px;
+  background-position: 0 -1775px;
+}
+
+/* line 198, ../scss/taco/widgets/_grid.scss */
+.taco-grid-row-menu .x-menu-body {
+  border: 1px solid;
+  font-size: 0.8125em;
+  border-color: #cccccc;
+}
+/* line 204, ../scss/taco/widgets/_grid.scss */
+.taco-grid-row-menu .x-menu-item {
+  padding: 6px;
+}
+/* line 208, ../scss/taco/widgets/_grid.scss */
+.taco-grid-row-menu + .taco-grid-row-menu {
+  margin-top: -1px;
+}
+
 /* CONTAINERS, TOOLBARS, ETC. */
-/* line 144, ../scss/taco/widgets/_grid.scss */
+/* line 222, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group .x-form-radio {
   background-color: #edeae6;
   background-image: none;
@@ -9106,13 +9234,13 @@ svg, vml {
   -moz-box-shadow: 0 1px 0 white inset;
   box-shadow: 0 1px 0 white inset;
 }
-/* line 157, ../scss/taco/widgets/_grid.scss */
+/* line 235, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group .x-form-cb-checked .x-form-radio {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 163, ../scss/taco/widgets/_grid.scss */
+/* line 241, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(1) .x-form-radio {
   background: url('../images/card-s44a9b55566.png') 0 -48px;
   -webkit-border-radius: 3px 0px 0px 3px;
@@ -9121,7 +9249,7 @@ svg, vml {
   -o-border-radius: 3px 0px 0px 3px;
   border-radius: 3px 0px 0px 3px;
 }
-/* line 168, ../scss/taco/widgets/_grid.scss */
+/* line 246, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(1) .x-form-cb-checked .x-form-radio {
   background: url('../images/card-s44a9b55566.png') 0 -72px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
   background: url('../images/card-s44a9b55566.png') 0 -72px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
@@ -9130,11 +9258,11 @@ svg, vml {
   background: url('../images/card-s44a9b55566.png') 0 -72px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
   background-color: #70d2db;
 }
-/* line 175, ../scss/taco/widgets/_grid.scss */
+/* line 253, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(2) .x-form-radio {
   background: url('../images/card-s44a9b55566.png') 0 0;
 }
-/* line 179, ../scss/taco/widgets/_grid.scss */
+/* line 257, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(2) .x-form-cb-checked .x-form-radio {
   background: url('../images/card-s44a9b55566.png') 0 -24px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
   background: url('../images/card-s44a9b55566.png') 0 -24px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
@@ -9143,7 +9271,7 @@ svg, vml {
   background: url('../images/card-s44a9b55566.png') 0 -24px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
   background-color: #70d2db;
 }
-/* line 186, ../scss/taco/widgets/_grid.scss */
+/* line 264, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-last-of-type(1) .x-form-radio {
   border-right: 1px solid #5e5c5a;
   -webkit-border-radius: 0px 3px 3px 0px;
@@ -9153,13 +9281,13 @@ svg, vml {
   border-radius: 0px 3px 3px 0px;
 }
 
-/* line 195, ../scss/taco/widgets/_grid.scss */
+/* line 273, ../scss/taco/widgets/_grid.scss */
 .taco-pager {
   background: none #edeae6;
   border: 1px solid #999691;
   padding: 7px;
 }
-/* line 200, ../scss/taco/widgets/_grid.scss */
+/* line 278, ../scss/taco/widgets/_grid.scss */
 .taco-pager .taco-action {
   background-color: #faf8f5;
   height: 28px;
@@ -9174,7 +9302,7 @@ svg, vml {
   -o-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 210, ../scss/taco/widgets/_grid.scss */
+/* line 288, ../scss/taco/widgets/_grid.scss */
 .taco-pager .taco-action.active {
   background-color: #70d2db;
   color: white;
@@ -9209,11 +9337,11 @@ svg, vml {
 .taco-foldertree.x-tree-arrows .x-tree-elbow, .taco-foldertree.x-tree-arrows .x-tree-elbow-end {
   height: 24px;
   width: 34px;
-  background-position: 0 -2766px;
+  background-position: 0 -2828px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow.icon-folder-hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end.icon-folder-hover {
-  background-position: 0 -2790px;
+  background-position: 0 -2852px;
 }
 /* line 35, ../scss/taco/widgets/_tree.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end:hover {
@@ -9228,11 +9356,11 @@ svg, vml {
 .taco-foldertree.x-tree-arrows .x-tree-elbow-plus, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus {
   height: 24px;
   width: 34px;
-  background-position: 0 -2766px;
+  background-position: 0 -2828px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus.icon-folder-hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus.icon-folder-hover {
-  background-position: 0 -2790px;
+  background-position: 0 -2852px;
 }
 /* line 45, ../scss/taco/widgets/_tree.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus:hover {
@@ -9281,7 +9409,7 @@ svg, vml {
 
 /* line 3, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav {
-  background-color: #e6e2d9;
+  background-color: white;
 }
 /* line 6, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-primary-menu-trigger {
@@ -9293,7 +9421,7 @@ svg, vml {
   -webkit-box-shadow: 1px 0px white;
   -moz-box-shadow: 1px 0px white;
   box-shadow: 1px 0px white;
-  background-position: 0 -2584px;
+  background-position: 0 -2621px;
   -webkit-transition: background-color 0.4s;
   -moz-transition: background-color 0.4s;
   -o-transition: background-color 0.4s;
@@ -9302,12 +9430,12 @@ svg, vml {
 /* line 16, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-primary-menu-trigger.expanded {
   background-color: #4c4942;
-  background-position: 0 -2549px;
+  background-position: 0 -2672px;
 }
 /* line 24, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon {
   border-right: 1px solid #999691;
-  color: #444444;
+  color: #323232;
   display: inline-block;
   height: 35px;
   padding: 10px 15px 0px 50px;
@@ -9337,7 +9465,7 @@ svg, vml {
 }
 /* line 50, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-catalog::before {
-  background-position: 0 -1949px;
+  background-position: 0 -1979px;
 }
 /* line 53, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-marketing::before {
@@ -9364,7 +9492,7 @@ svg, vml {
 }
 /* line 73, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb ul li a {
-  color: #444444;
+  color: #323232;
   display: inline-block;
   font-size: 14px;
   height: 35px;
@@ -9398,7 +9526,7 @@ svg, vml {
 
 /* line 109, ../scss/taco/_navmenu.scss */
 .taco-primary-menu-ct {
-  margin-top: 35px;
+  margin-top: 51px;
   opacity: 1;
   visibility: visible !important;
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4c4942), color-stop(100%, #61605e));
@@ -9411,20 +9539,20 @@ svg, vml {
   -webkit-box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.4);
   -o-box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.4);
   -ms-box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.4);
-  -webkit-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear, left 0s linear;
-  -moz-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear, left 0s linear;
-  -o-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear, left 0s linear;
-  transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear, left 0s linear;
+  -webkit-transition: margin 0.15s linear, opacity 0.15s linear, top 0s linear, left 0s linear;
+  -moz-transition: margin 0.15s linear, opacity 0.15s linear, top 0s linear, left 0s linear;
+  -o-transition: margin 0.15s linear, opacity 0.15s linear, top 0s linear, left 0s linear;
+  transition: margin 0.15s linear, opacity 0.15s linear, top 0s linear, left 0s linear;
 }
 /* line 117, ../scss/taco/_navmenu.scss */
 .taco-primary-menu-ct.x-hide-offsets {
   margin-top: 0px;
   opacity: 0;
-  -webkit-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear, left 0s linear;
-  -webkit-transition-delay: 0s, 0s, 0.2s, 0.2s;
-  -moz-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear 0.2s, left 0s linear 0.2s;
-  -o-transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear 0.2s, left 0s linear 0.2s;
-  transition: margin 0.2s linear, opacity 0.2s linear, top 0s linear 0.2s, left 0s linear 0.2s;
+  -webkit-transition: margin 0.15s linear, opacity 0.15s linear, top 0s linear, left 0s linear;
+  -webkit-transition-delay: 0s, 0s, 0.15s, 0.15s;
+  -moz-transition: margin 0.15s linear, opacity 0.15s linear, top 0s linear 0.15s, left 0s linear 0.15s;
+  -o-transition: margin 0.15s linear, opacity 0.15s linear, top 0s linear 0.15s, left 0s linear 0.15s;
+  transition: margin 0.15s linear, opacity 0.15s linear, top 0s linear 0.15s, left 0s linear 0.15s;
 }
 
 /* line 123, ../scss/taco/_navmenu.scss */
@@ -9466,7 +9594,7 @@ svg, vml {
 }
 /* line 152, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-catalog::before {
-  background-position: 0 -1984px;
+  background-position: 0 -2014px;
 }
 /* line 155, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-marketing::before {
@@ -9494,7 +9622,7 @@ svg, vml {
 }
 /* line 175, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-catalog::before {
-  background-position: 0 -1865px;
+  background-position: 0 -1895px;
 }
 /* line 178, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-marketing::before {
@@ -9510,7 +9638,7 @@ svg, vml {
 }
 /* line 190, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-active a.taco-menu-item-link {
-  color: #ff9c33;
+  color: #d2463c;
 }
 /* line 195, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item ul {
@@ -9539,34 +9667,7 @@ svg, vml {
 }
 /* line 215, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item ul li.taco-submenu-item-active a {
-  color: #ff9c33;
-}
-
-/* line 3, ../scss/taco/_header.scss */
-.taco-masthead {
-  background: url("/admin/Scripts/resources/images/fabric-2.png");
-  color: white;
-  font-size: 14px;
-  line-height: 1.5em;
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(9%, rgba(0, 0, 0, 0)), color-stop(100%, rgba(0, 0, 0, 0.3))), url(/admin/Scripts/resources/images/fabric-2.png);
-  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0.3) 100%), url(/admin/Scripts/resources/images/fabric-2.png);
-  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0.3) 100%), url(/admin/Scripts/resources/images/fabric-2.png);
-  background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0.3) 100%), url(/admin/Scripts/resources/images/fabric-2.png);
-  background: linear-gradient(top, rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0.3) 100%), url(/admin/Scripts/resources/images/fabric-2.png);
-}
-/* line 13, ../scss/taco/_header.scss */
-.taco-masthead .taco-action {
-  color: #f2f0ed;
-}
-/* line 17, ../scss/taco/_header.scss */
-.taco-masthead .taco-mozulogo {
-  font-size: 0px;
-  height: 50px;
-  line-height: 0px;
-  overflow: hidden;
-  text-indent: -10000px;
-  width: 150px;
-  background-position: 0 -447px;
+  color: #d2463c;
 }
 
 /* line 5, ../scss/taco/_content.scss */
@@ -9617,50 +9718,53 @@ svg, vml {
 /* line 44, ../scss/taco/_content.scss */
 .taco-content-sidebar {
   background-color: white;
+  border-style: solid none none solid;
+  border-width: 1px 0px 0px 1px;
+  border-color: #cccccc;
 }
-/* line 48, ../scss/taco/_content.scss */
+/* line 50, ../scss/taco/_content.scss */
 .taco-content-sidebar .taco-sidebarlist {
   margin: 0 30px;
 }
-/* line 50, ../scss/taco/_content.scss */
+/* line 52, ../scss/taco/_content.scss */
 .taco-content-sidebar .taco-sidebarlist h1 {
   padding: 0 0 15px;
   margin: 0 0 15px;
   font-size: 16pt;
   font-weight: normal;
-  border-bottom: 1px dashed #999;
+  border-bottom: 1px dashed #999999;
 }
-/* line 57, ../scss/taco/_content.scss */
+/* line 59, ../scss/taco/_content.scss */
 .taco-content-sidebar .taco-sidebarlist .taco-sidebarlist-list-item {
   margin: 6px 0;
   font-size: 9pt;
 }
-/* line 60, ../scss/taco/_content.scss */
+/* line 62, ../scss/taco/_content.scss */
 .taco-content-sidebar .taco-sidebarlist .taco-sidebarlist-list-item.x-item-selected {
   font-weight: bold;
 }
 
 /* why */
-/* line 69, ../scss/taco/_content.scss */
+/* line 71, ../scss/taco/_content.scss */
 em {
   font-style: italic;
 }
 
 /* Let's get this party started */
-/* line 75, ../scss/taco/_content.scss */
+/* line 77, ../scss/taco/_content.scss */
 ::-webkit-scrollbar {
   width: 5px;
 }
 
 /* Track */
-/* line 80, ../scss/taco/_content.scss */
+/* line 82, ../scss/taco/_content.scss */
 ::-webkit-scrollbar-track {
   -webkit-border-radius: 10px;
   border-radius: 10px;
 }
 
 /* Handle */
-/* line 87, ../scss/taco/_content.scss */
+/* line 89, ../scss/taco/_content.scss */
 ::-webkit-scrollbar-thumb {
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -9668,12 +9772,12 @@ em {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
 }
 
-/* line 93, ../scss/taco/_content.scss */
+/* line 95, ../scss/taco/_content.scss */
 ::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(255, 0, 0, 0);
 }
 
-/* line 97, ../scss/taco/_content.scss */
+/* line 99, ../scss/taco/_content.scss */
 .widget-source {
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
   color: #505050;
@@ -9694,7 +9798,7 @@ em {
   border-radius: 5px;
 }
 
-/* line 108, ../scss/taco/_content.scss */
+/* line 110, ../scss/taco/_content.scss */
 .dropzone-shim {
   -webkit-transition: all 1s;
   -moz-transition: all 1s;
@@ -9702,15 +9806,15 @@ em {
   transition: all 1s;
 }
 
-/* line 111, ../scss/taco/_content.scss */
+/* line 113, ../scss/taco/_content.scss */
 .dropzone-shim-hover {
   background-color: #CFC;
 }
 
-/* line 114, ../scss/taco/_content.scss */
+/* line 116, ../scss/taco/_content.scss */
 .taco-reorderable-widget {
   background-color: #FFF;
-  border: 1px solid #CCC;
+  border: 1px solid #cccccc;
   color: #333;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -9719,10 +9823,10 @@ em {
   border-radius: 2px;
 }
 
-/* line 121, ../scss/taco/_content.scss */
+/* line 123, ../scss/taco/_content.scss */
 .taco-reorderable-placeholder {
   background-color: #FFF;
-  border: 1px solid #CCC;
+  border: 1px solid #cccccc;
   color: #333;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -9757,30 +9861,39 @@ em {
   -ms-box-shadow: 0 0.7em 3.5em rgba(0, 0, 0, 0.3);
 }
 /* line 19, ../scss/taco/widgets/_modal.scss */
+.taco-modal .taco-modal-title {
+  border-bottom: 1px dashed #999691;
+  font-size: 1.25em;
+  font-weight: normal;
+  margin-left: -28px;
+  padding: 0px 28px 1em;
+  width: 700px;
+}
+/* line 28, ../scss/taco/widgets/_modal.scss */
 .taco-modal .taco-body {
   min-height: 3.5em;
 }
-/* line 24, ../scss/taco/widgets/_modal.scss */
+/* line 33, ../scss/taco/widgets/_modal.scss */
 .taco-modal .taco-actions .taco-action {
   float: right;
   margin: 0.7em 0 0 0.7em;
 }
-/* line 31, ../scss/taco/widgets/_modal.scss */
+/* line 40, ../scss/taco/widgets/_modal.scss */
 .taco-modal .taco-actions a.taco-action {
   margin: 1.2em 1em 0 1em;
   font-size: 0.9em;
 }
-/* line 37, ../scss/taco/widgets/_modal.scss */
+/* line 46, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-content {
   max-width: 1100px;
   min-width: 960px;
 }
-/* line 41, ../scss/taco/widgets/_modal.scss */
+/* line 50, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-content.taco-auto-size {
   min-width: 0;
   max-width: 5000px;
 }
-/* line 45, ../scss/taco/widgets/_modal.scss */
+/* line 54, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-content.taco-auto-size .taco-content-body {
   border: 0;
   -webkit-box-shadow: none;
@@ -9792,7 +9905,7 @@ em {
   -o-border-radius: 0;
   border-radius: 0;
 }
-/* line 53, ../scss/taco/widgets/_modal.scss */
+/* line 62, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-drawer {
   min-width: 960px;
   max-width: 1080px;
@@ -9803,25 +9916,25 @@ em {
   top: 10px;
   opacity: 0;
 }
-/* line 63, ../scss/taco/widgets/_modal.scss */
+/* line 72, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-drawer .taco-actions {
   min-height: 300px;
 }
-/* line 70, ../scss/taco/widgets/_modal.scss */
+/* line 79, ../scss/taco/widgets/_modal.scss */
 .taco-modal .taco-content-container .taco-content-header {
   padding: 0 0 28px 0;
 }
-/* line 74, ../scss/taco/widgets/_modal.scss */
+/* line 83, ../scss/taco/widgets/_modal.scss */
 .taco-modal .taco-content-container .taco-content-header h1 {
   font-size: 21px;
   line-height: 21px;
   font-weight: normal;
 }
-/* line 82, ../scss/taco/widgets/_modal.scss */
+/* line 91, ../scss/taco/widgets/_modal.scss */
 .taco-modal .taco-content-container .taco-content-body {
   padding: 0;
 }
-/* line 92, ../scss/taco/widgets/_modal.scss */
+/* line 101, ../scss/taco/widgets/_modal.scss */
 .taco-modal .taco-close {
   position: absolute;
   right: 0;
@@ -9834,13 +9947,13 @@ em {
   cursor: pointer;
   background-position: 0 0;
 }
-/* line 112, ../scss/taco/widgets/_modal.scss */
+/* line 121, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-mini-modal:before {
   content: "";
   position: absolute;
   margin: 0;
 }
-/* line 119, ../scss/taco/widgets/_modal.scss */
+/* line 128, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-mini-modal[data-align-to-target="t-b"]:before {
   left: 50%;
   top: -16px;
@@ -9850,7 +9963,7 @@ em {
   border-right: 16px solid transparent;
   border-top: 0;
 }
-/* line 130, ../scss/taco/widgets/_modal.scss */
+/* line 139, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-mini-modal[data-align-to-target="r-l"]:before {
   top: 50%;
   right: -16px;
@@ -9860,21 +9973,21 @@ em {
   border-bottom: 16px solid transparent;
   border-right: 0;
 }
-/* line 142, ../scss/taco/widgets/_modal.scss */
+/* line 151, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-toolbar-modal {
   width: auto;
   max-width: auto;
 }
-/* line 146, ../scss/taco/widgets/_modal.scss */
+/* line 155, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-toolbar-modal .taco-body {
   min-height: auto;
 }
-/* line 149, ../scss/taco/widgets/_modal.scss */
+/* line 158, ../scss/taco/widgets/_modal.scss */
 .taco-modal.taco-toolbar-modal .taco-body input {
   min-width: 20em;
 }
 
-/* line 157, ../scss/taco/widgets/_modal.scss */
+/* line 166, ../scss/taco/widgets/_modal.scss */
 .taco-order-modal .order-modal-title {
   border-bottom: 1px dashed #999691;
   font-size: 1.25em;
@@ -9883,30 +9996,30 @@ em {
   padding: 0px 28px 1em;
   width: 700px;
 }
-/* line 166, ../scss/taco/widgets/_modal.scss */
+/* line 175, ../scss/taco/widgets/_modal.scss */
 .taco-order-modal .order-modal-description {
   color: rgba(68, 68, 68, 0.5);
   font-style: italic;
   line-height: 1.5em;
 }
-/* line 171, ../scss/taco/widgets/_modal.scss */
+/* line 180, ../scss/taco/widgets/_modal.scss */
 .taco-order-modal .order-modal-description p {
   margin-bottom: 1em;
   margin-top: 1em;
 }
-/* line 177, ../scss/taco/widgets/_modal.scss */
+/* line 186, ../scss/taco/widgets/_modal.scss */
 .taco-order-modal .order-modal-subtitle {
   font-weight: normal;
   margin: 1em 0;
 }
-/* line 182, ../scss/taco/widgets/_modal.scss */
+/* line 191, ../scss/taco/widgets/_modal.scss */
 .taco-order-modal .order-modal-body {
   max-height: 300px;
   overflow-x: visible;
   overflow-y: auto;
 }
 
-/* line 189, ../scss/taco/widgets/_modal.scss */
+/* line 198, ../scss/taco/widgets/_modal.scss */
 .taco-cover {
   position: fixed;
   display: none;
@@ -9924,7 +10037,7 @@ em {
   background: radial-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
 }
 
-/* line 202, ../scss/taco/widgets/_modal.scss */
+/* line 211, ../scss/taco/widgets/_modal.scss */
 .taco-card-animated {
   display: block !important;
   left: 288px;
@@ -9935,14 +10048,14 @@ em {
   transition: all 1s;
 }
 
-/* line 210, ../scss/taco/widgets/_modal.scss */
+/* line 219, ../scss/taco/widgets/_modal.scss */
 .taco-windowcardpanel .x-panel-body {
   display: -webkit-flex;
   -webkit-flex-direction: row;
   -webkit-flex-wrap: none;
 }
 
-/* line 217, ../scss/taco/widgets/_modal.scss */
+/* line 226, ../scss/taco/widgets/_modal.scss */
 .taco-card-flex {
   display: block !important;
   min-width: 0px;
@@ -9953,45 +10066,45 @@ em {
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
 }
-/* line 225, ../scss/taco/widgets/_modal.scss */
+/* line 234, ../scss/taco/widgets/_modal.scss */
 .taco-card-flex .x-grid-row .x-grid-cell {
   background-color: white;
 }
-/* line 230, ../scss/taco/widgets/_modal.scss */
+/* line 239, ../scss/taco/widgets/_modal.scss */
 .taco-card-flex:nth-of-type(1) {
   margin-left: -100% !important;
   -webkit-flex: 1 0 100% !important;
 }
-/* line 235, ../scss/taco/widgets/_modal.scss */
+/* line 244, ../scss/taco/widgets/_modal.scss */
 .taco-card-flex.taco-card-flex-active {
   margin-left: 0px !important;
   -webkit-flex: 1 0 100%;
 }
-/* line 239, ../scss/taco/widgets/_modal.scss */
+/* line 248, ../scss/taco/widgets/_modal.scss */
 .taco-card-flex.taco-card-flex-active .taco-treelist {
   padding: 2px;
 }
-/* line 243, ../scss/taco/widgets/_modal.scss */
+/* line 252, ../scss/taco/widgets/_modal.scss */
 .taco-card-flex.taco-card-flex-active .taco-treelist > .x-grid-header-ct,
 .taco-card-flex.taco-card-flex-active .taco-treelist > .x-grid-body {
   border: 0px none !important;
 }
-/* line 248, ../scss/taco/widgets/_modal.scss */
+/* line 257, ../scss/taco/widgets/_modal.scss */
 .taco-card-flex.taco-card-flex-active > .x-docked-top {
   background-color: white;
   padding: 10px 14px;
 }
-/* line 254, ../scss/taco/widgets/_modal.scss */
+/* line 263, ../scss/taco/widgets/_modal.scss */
 .taco-card-flex.taco-card-flex-active:nth-of-type(1) > .x-docked-top {
   border: 0px none !important;
   padding: 0px;
 }
-/* line 258, ../scss/taco/widgets/_modal.scss */
+/* line 267, ../scss/taco/widgets/_modal.scss */
 .taco-card-flex.taco-card-flex-active:nth-of-type(1) > .x-grid-body {
   border: 0px none !important;
 }
 
-/* line 267, ../scss/taco/widgets/_modal.scss */
+/* line 276, ../scss/taco/widgets/_modal.scss */
 .taco-toolbox,
 .x-window-ghost {
   background-color: white;
@@ -10006,7 +10119,7 @@ em {
   -moz-box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
 }
-/* line 274, ../scss/taco/widgets/_modal.scss */
+/* line 283, ../scss/taco/widgets/_modal.scss */
 .taco-toolbox .x-window-header,
 .x-window-ghost .x-window-header {
   background-color: white;
@@ -10018,15 +10131,15 @@ em {
   -o-border-radius: 6px 6px 0px 0px;
   border-radius: 6px 6px 0px 0px;
 }
-/* line 280, ../scss/taco/widgets/_modal.scss */
+/* line 289, ../scss/taco/widgets/_modal.scss */
 .taco-toolbox .x-window-header .x-window-header-text,
 .x-window-ghost .x-window-header .x-window-header-text {
-  color: #444444;
+  color: #323232;
   font-size: 1.25em;
   font-weight: normal;
   line-height: normal;
 }
-/* line 288, ../scss/taco/widgets/_modal.scss */
+/* line 297, ../scss/taco/widgets/_modal.scss */
 .taco-toolbox .x-window-body,
 .x-window-ghost .x-window-body {
   background-color: white;
@@ -10044,29 +10157,29 @@ em {
 @-webkit-keyframes dirtyPulse {
   /* line 8, ../scss/taco/widgets/_actions.scss */
   from {
-    background-color: #ff9c33;
-    border-color: #ff9c33;
-    -webkit-box-shadow: 0 0 0 #ff8300;
-    -moz-box-shadow: 0 0 0 #ff8300;
-    box-shadow: 0 0 0 #ff8300;
+    background-color: #d2463c;
+    border-color: #d2463c;
+    -webkit-box-shadow: 0 0 0 #b23229;
+    -moz-box-shadow: 0 0 0 #b23229;
+    box-shadow: 0 0 0 #b23229;
   }
 
   /* line 14, ../scss/taco/widgets/_actions.scss */
   50% {
-    background-color: #ff8300;
-    border-color: #ff8300;
-    -webkit-box-shadow: 0 0 3px #ff8300;
-    -moz-box-shadow: 0 0 3px #ff8300;
-    box-shadow: 0 0 3px #ff8300;
+    background-color: #b23229;
+    border-color: #b23229;
+    -webkit-box-shadow: 0 0 3px #b23229;
+    -moz-box-shadow: 0 0 3px #b23229;
+    box-shadow: 0 0 3px #b23229;
   }
 
   /* line 20, ../scss/taco/widgets/_actions.scss */
   to {
-    background-color: #ff9c33;
-    border-color: #ff9c33;
-    -webkit-box-shadow: 0 0 0 #ff8300;
-    -moz-box-shadow: 0 0 0 #ff8300;
-    box-shadow: 0 0 0 #ff8300;
+    background-color: #d2463c;
+    border-color: #d2463c;
+    -webkit-box-shadow: 0 0 0 #b23229;
+    -moz-box-shadow: 0 0 0 #b23229;
+    box-shadow: 0 0 0 #b23229;
   }
 }
 
@@ -10120,9 +10233,9 @@ button.taco-action:disabled {
 }
 /* line 61, ../scss/taco/widgets/_actions.scss */
 button.taco-action.taco-action-primary:not(:disabled) {
-  background-color: #ff9c33;
+  background-color: #d2463c;
   color: white;
-  border-color: #ff8300;
+  border-color: #b23229;
   text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
@@ -10130,11 +10243,11 @@ button.taco-action.taco-action-primary:not(:disabled) {
 }
 /* line 68, ../scss/taco/widgets/_actions.scss */
 button.taco-action.taco-action-primary:not(:disabled):hover {
-  background-color: #ffa647;
+  background-color: #d2463c;
 }
 /* line 72, ../scss/taco/widgets/_actions.scss */
 button.taco-action.taco-action-primary:not(:disabled):active {
-  background-color: #ff8d14;
+  background-color: #9e352e;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -10159,11 +10272,11 @@ button.taco-action.loading {
 }
 /* line 95, ../scss/taco/widgets/_actions.scss */
 .x-form-file-btn:hover .x-btn-center {
-  background-color: #ffa647;
+  background-color: #d2463c;
 }
 /* line 98, ../scss/taco/widgets/_actions.scss */
 .x-form-file-btn:hover .x-btn-center:active {
-  background-color: #ff8d14;
+  background-color: #9e352e;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -10182,9 +10295,9 @@ button.taco-action.loading {
   white-space: nowrap;
   background: red;
   vertical-align: middle;
-  background-color: #ff9c33;
+  background-color: #d2463c;
   color: white;
-  border-color: #ff8300;
+  border-color: #b23229;
   text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
@@ -10211,6 +10324,82 @@ button.taco-action.loading {
   color: white;
   font-family: 'Lucida Grande';
   font-size: 1em;
+}
+
+/* line 4, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist-with-hidden-selections .x-boundlist-selected {
+  display: none;
+}
+
+/* line 9, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist-item-drag {
+  cursor: move;
+  display: block;
+  font-size: 0px;
+  height: 34px;
+  left: 0px;
+  line-height: 0px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: -9999px;
+  top: 0px;
+  width: 16px;
+}
+/* line 22, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist-item-drag::after {
+  border-left: 4px double #999691;
+  content: "";
+  display: block;
+  height: 28px;
+  left: 5px;
+  position: absolute;
+  top: 3px;
+  width: 4px;
+}
+
+/* line 34, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist-item-close {
+  cursor: pointer;
+  display: block;
+  font-size: 0px;
+  height: 20px;
+  line-height: 0px;
+  overflow: hidden;
+  position: absolute;
+  right: 0px;
+  text-indent: -9999px;
+  top: 7px;
+  width: 20px;
+}
+/* line 47, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist-item-close::after {
+  background-color: #999691;
+  color: white;
+  content: "×";
+  font-size: 14px;
+  height: 16px;
+  left: 0px;
+  line-height: 1em;
+  position: absolute;
+  text-align: center;
+  text-indent: 0px;
+  top: 2px;
+  width: 16px;
+  -webkit-border-radius: 14px;
+  -moz-border-radius: 14px;
+  -ms-border-radius: 14px;
+  -o-border-radius: 14px;
+  border-radius: 14px;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -webkit-justify-content: center;
+  -webkit-align-items: center;
+  -webkit-align-content: center;
+}
+/* line 65, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist-item-close:hover::after {
+  background-color: silver;
 }
 
 /* line 3, ../scss/taco/_messages.scss */
@@ -10259,17 +10448,17 @@ button.taco-action.loading {
 
 /* line 38, ../scss/taco/_messages.scss */
 .taco-content-messages.status, .taco-message-status {
-  background-color: #00ffcc;
+  background-color: #ccffcc;
 }
 
 /* line 41, ../scss/taco/_messages.scss */
 .taco-content-messages.warning, .taco-message-warning {
-  background-color: #00ffcc;
+  background-color: #ccffcc;
 }
 
 /* line 44, ../scss/taco/_messages.scss */
 .taco-content-messages.error, .taco-message-error {
-  background-color: #00cccc;
+  background-color: #cccccc;
 }
 
 /* line 4, ../scss/taco/_dashboard.scss */
@@ -10449,7 +10638,7 @@ input:-moz-placeholder {
 /* line 20, ../scss/taco/widgets/_form.scss */
 a {
   text-decoration: none;
-  color: #33bfcb;
+  color: #164588;
 }
 /* line 24, ../scss/taco/widgets/_form.scss */
 a:hover {
@@ -10470,7 +10659,7 @@ a:hover {
 }
 /* line 37, ../scss/taco/widgets/_form.scss */
 .taco-formeditor-links ul li {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #dddddd;
   font-size: 15px;
   padding: 7px 14px;
   -webkit-box-shadow: inset 0px 1px white;
@@ -10810,8 +10999,8 @@ a:hover {
 }
 /* line 253, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item .featured {
-  background-color: #ff9c33;
-  border-color: #ff8300;
+  background-color: #d2463c;
+  border-color: #b23229;
   color: white;
   display: none;
   font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
@@ -10880,51 +11069,51 @@ a:hover {
 }
 /* line 299, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item .actions .action.download {
-  background-position: 0 -2244px;
+  background-position: 0 -2274px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.download:hover, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout_hover, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout-hover {
-  background-position: 0 -2268px;
+  background-position: 0 -2298px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.download:active, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout_active, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout-active {
-  background-position: 0 -2358px;
+  background-position: 0 -2388px;
 }
 /* line 302, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item .actions .action.delete {
-  background-position: 0 -2334px;
+  background-position: 0 -2364px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.delete:hover, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash_hover, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash-hover {
-  background-position: 0 -2310px;
+  background-position: 0 -2340px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.delete:active, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash_active, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash-active {
-  background-position: 0 -2445px;
+  background-position: 0 -2475px;
 }
 /* line 305, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item .actions .action.duplicate {
-  background-position: 0 -2397px;
+  background-position: 0 -2427px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.duplicate:hover, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile_hover, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile-hover {
-  background-position: 0 -2421px;
+  background-position: 0 -2451px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.duplicate:active, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile_active, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile-active {
-  background-position: 0 -2501px;
+  background-position: 0 -2531px;
 }
 /* line 308, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item .actions .action.remove {
-  background-position: 0 -2220px;
+  background-position: 0 -2250px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.remove:hover, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove_hover, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove-hover {
-  background-position: 0 -2196px;
+  background-position: 0 -2226px;
 }
-/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .x-panel .taco-thumbnail-item .actions .action.remove:active, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove_active, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove-active {
-  background-position: 0 -2525px;
+  background-position: 0 -2555px;
 }
 /* line 315, ../scss/taco/widgets/_form.scss */
 .x-panel .taco-thumbnail-item:hover.draggable .container {
@@ -10949,7 +11138,7 @@ a:hover {
   background-color: transparent;
   text-align: center;
   background-image: -webkit-linear-gradient(left top, #d7d5d2, #9a9a9a);
-  border: 2px solid #CCC;
+  border: 2px solid #cccccc;
   display: inline-block;
   position: relative;
   height: 140px;
@@ -11023,9 +11212,9 @@ a:hover {
   padding: 2px 30px 2px 30px;
   -webkit-transform: rotate(-45deg);
   font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  background-color: #ff9c33;
+  background-color: #d2463c;
   color: white;
-  border-color: #ff8300;
+  border-color: #b23229;
   -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
@@ -11033,11 +11222,11 @@ a:hover {
 
 /* line 405, ../scss/taco/widgets/_form.scss */
 .taco-datalist-item.x-item-selected {
-  background-image: -webkit-linear-gradient(left top, #d70000, #f2f0ed);
+  background-image: -webkit-linear-gradient(left top, #d7d5d2, #f2f0ed);
 }
 /* line 408, ../scss/taco/widgets/_form.scss */
 .taco-datalist-item.x-item-selected .name {
-  color: #640000;
+  color: #5e5c5a;
 }
 
 /* line 413, ../scss/taco/widgets/_form.scss */
@@ -11913,7 +12102,7 @@ a:hover {
 .x-menu .x-menu-item-unchecked .x-menu-item-icon,
 .x-grid-table .x-grid-row-checker,
 .x-grid-header-ct .x-column-header-checkbox .x-column-header-text {
-  background-position: 0 -2469px;
+  background-position: 0 -2499px;
 }
 
 /* line 1160, ../scss/taco/widgets/_form.scss */
@@ -11922,12 +12111,12 @@ a:hover {
 .x-menu .x-menu-item-checked .x-menu-item-icon,
 .x-grid-table .x-grid-row-selected .x-grid-row-checker,
 .x-grid-header-ct .x-grid-hd-checker-on .x-column-header-text {
-  background-position: 0 -1775px;
+  background-position: 0 -1805px;
 }
 
 /* line 1163, ../scss/taco/widgets/_form.scss */
 .x-field .x-form-radio {
-  background-position: 0 -1791px;
+  background-position: 0 -1821px;
 }
 
 /* line 1166, ../scss/taco/widgets/_form.scss */
@@ -11982,16 +12171,16 @@ a:hover {
 /* line 1211, ../scss/taco/widgets/_form.scss */
 .x-border-box .x-form-invalid .x-form-text,
 .x-border-box .x-form-invalid .x-field-default-toolbar .x-form-text {
-  border-color: #ff9c33;
-  -webkit-box-shadow: 0 0 2px #ff9c33;
-  -moz-box-shadow: 0 0 2px #ff9c33;
-  box-shadow: 0 0 2px #ff9c33;
+  border-color: #d2463c;
+  -webkit-box-shadow: 0 0 2px #d2463c;
+  -moz-box-shadow: 0 0 2px #d2463c;
+  box-shadow: 0 0 2px #d2463c;
 }
 
 /* line 1218, ../scss/taco/widgets/_form.scss */
 .x-form-invalid-under {
   font: normal 12px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: #ff9c33;
+  color: #d2463c;
   background: none;
   padding: 0;
   padding-top: 7px;
@@ -12132,7 +12321,7 @@ a:hover {
   -o-border-radius: 4px;
   border-radius: 4px;
   background-color: #76CFDB;
-  border: 1px solid #76CFDB;
+  border: 1px solid #76cfdb;
   color: #FFF;
   cursor: default;
   margin: 1px 1px 1px 5px;
@@ -12161,7 +12350,7 @@ a:hover {
 /* line 1361, ../scss/taco/widgets/_form.scss */
 .x-field:not(.x-item-disabled) .x-boxselect-item:hover {
   background: #FDBE9F;
-  border: 1px solid #F0A27A;
+  border: 1px solid #f0a27a;
   color: #DE5E1E;
 }
 /* line 1366, ../scss/taco/widgets/_form.scss */
@@ -12179,8 +12368,8 @@ a:hover {
 
 /* line 1378, ../scss/taco/widgets/_form.scss */
 .x-field:not(.x-item-disabled) .x-boxselect-item.selected {
-  background: #DE5E1E !important;
-  border: 1px solid #DE5E1E !important;
+  background: #de5e1e !important;
+  border: 1px solid #de5e1e !important;
   color: #FFF;
 }
 /* line 1383, ../scss/taco/widgets/_form.scss */
@@ -12385,7 +12574,7 @@ a:hover {
 .x-datepicker table.x-datepicker-inner .x-datepicker-selected a {
   border-color: transparent;
   background: none;
-  color: #33bfcb;
+  color: #164588;
 }
 /* line 1589, ../scss/taco/widgets/_form.scss */
 .x-datepicker table.x-datepicker-inner a:hover {
@@ -12426,7 +12615,7 @@ a:hover {
 /* line 1616, ../scss/taco/widgets/_form.scss */
 .x-datepicker .taco-datepicker-time span.taco-selected {
   font-weight: bold;
-  color: #33bfcb;
+  color: #164588;
 }
 /* line 1621, ../scss/taco/widgets/_form.scss */
 .x-datepicker .taco-datepicker-time span:hover {
@@ -12440,7 +12629,7 @@ a:hover {
 }
 /* line 1632, ../scss/taco/widgets/_form.scss */
 .x-datepicker .x-datepicker-footer a {
-  color: #33bfcb;
+  color: #164588;
   font: normal 12px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
 }
 
@@ -12920,7 +13109,7 @@ a:hover {
   border-top: none;
   border-radius: 0 0 4px 4px;
   padding: 6px 8px 0;
-  text-shadow: 0 0 4px #666;
+  text-shadow: 0 0 4px #666666;
 }
 
 @-webkit-keyframes animate-out-actions {
@@ -13028,7 +13217,7 @@ a:hover {
 }
 /* line 92, ../scss/taco/widgets/_shim.scss */
 .taco-site-editor .taco-shim .taco-hint-widget > table .taco-hint-actions .taco-widgethandle {
-  background-position: 0 -2906px;
+  background-position: 0 -2968px;
   display: block;
   font-size: 0px;
   height: 11px;
@@ -13254,7 +13443,7 @@ a:hover {
 .taco-theme-swatch {
   width: 208px;
   height: 233px;
-  box-shadow: 6px 6px 12px #aaa;
+  box-shadow: 6px 6px 12px #aaaaaa;
   margin: 20px 33px 33px 0;
   background-color: silver;
   background-position: 50%;
@@ -13468,225 +13657,39 @@ a:hover {
   width: 425px;
 }
 
-/* line 2, ../scss/taco/_viewport.scss */
+/* line 3, ../scss/taco/_viewport.scss */
 .x-body {
-  background-color: white;
+  background-color: #e6e6e6;
 }
 
-/* line 5, ../scss/taco/_viewport.scss */
+/* line 7, ../scss/taco/_viewport.scss */
 .taco-viewport-header {
   -webkit-box-shadow: 0px -1px 6px black;
   -moz-box-shadow: 0px -1px 6px black;
   box-shadow: 0px -1px 6px black;
 }
 
-/* line 10, ../scss/taco/_viewport.scss */
-.taco-simplegrid {
-  width: 100%;
-}
-/* line 14, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-checkbox {
-  background-repeat: no-repeat;
-  border: 0px none;
-  display: inline-block;
-  font-size: 16px;
-  height: 16px;
-  overflow: hidden;
-  width: 16px;
-  background-position: 0 -2469px;
-}
-/* line 24, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-checkbox.taco-simplegrid-checkbox-checked {
-  background-position: 0 -1775px;
-}
-/* line 29, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-cell {
-  border: 0px none #999691;
+/* line 11, ../scss/taco/_viewport.scss */
+.taco-masthead {
+  background-color: #323232;
+  border-top: 5px solid #d2463c;
+  color: white;
   font-size: 14px;
   line-height: 1.5em;
-  overflow: hidden;
-  padding: 10px 14px;
-  vertical-align: middle;
 }
-/* line 37, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-cell.taco-simplegrid-cell-align-left {
-  text-align: left;
+/* line 18, ../scss/taco/_viewport.scss */
+.taco-masthead .taco-action {
+  color: #f2f0ed;
 }
-/* line 41, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-cell.taco-simplegrid-cell-align-center {
-  text-align: center;
-}
-/* line 45, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-cell.taco-simplegrid-cell-align-right {
-  text-align: right;
-}
-/* line 49, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-cell.taco-check-column {
-  width: 44px;
-}
-/* line 53, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-cell.taco-actions-column {
-  width: 200px;
-}
-/* line 59, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-row {
-  border-left: 1px solid #999691;
-  border-right: 1px solid #999691;
-}
-/* line 63, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-row .taco-simplegrid-cell {
-  background-color: #faf8f5;
-}
-/* line 66, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-row .taco-simplegrid-cell.taco-simplegrid-cell-editing {
-  background-color: #bdf9ff !important;
-  padding-bottom: 4px;
-  padding-top: 4px;
-  z-index: 101;
-}
-/* line 72, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-row .taco-simplegrid-cell.taco-simplegrid-cell-editing .x-form-field {
-  opacity: 1;
-}
-/* line 76, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-row .taco-simplegrid-cell.taco-simplegrid-cell-editing .innards {
-  display: none;
-}
-/* line 83, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-row:nth-last-of-type(1) {
-  border-bottom: 1px solid #999691;
-}
-/* line 88, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-row:nth-of-type(2n) .taco-simplegrid-cell {
-  background-color: #f2f0ed;
-}
-/* line 94, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-row:hover .taco-simplegrid-cell {
-  background-color: white;
-}
-/* line 100, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-row.taco-simplegrid-row-selected .taco-simplegrid-cell {
-  background-color: #bdf9ff;
-}
-/* line 106, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-row.taco-simplegrid-row-editing .taco-actions-column * {
-  visibility: hidden;
-}
-/* line 113, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-column-header-row {
-  border: 1px solid #999691;
-}
-/* line 118, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-column-header-row .taco-simplegrid-cell {
-  background-color: #edeae6;
-  border-color: #999691;
-  border-style: none;
-  border-width: 0px;
-  cursor: default;
-  font-size: 16px;
-  position: relative;
-}
-/* line 127, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-column-header-row .taco-simplegrid-cell .edit {
-  background-color: crimson;
+/* line 22, ../scss/taco/_viewport.scss */
+.taco-masthead .taco-mozulogo {
   font-size: 0px;
-  height: 16px;
+  height: 50px;
+  line-height: 0px;
   overflow: hidden;
-  position: absolute;
-  right: 2px;
   text-indent: -10000px;
-  top: 12px;
-  visibility: hidden;
-  width: 16px;
-}
-/* line 141, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-column-header-row .taco-simplegrid-cell.taco-simplegrid-cell-align-right .edit {
-  left: 2px;
-  right: auto;
-}
-/* line 148, ../scss/taco/_viewport.scss */
-.taco-simplegrid .taco-simplegrid-column-header-row .taco-simplegrid-cell:hover .edit {
-  visibility: visible;
-}
-/* line 156, ../scss/taco/_viewport.scss */
-.taco-simplegrid.taco-simplegrid-products {
-  width: 100%;
-}
-/* line 159, ../scss/taco/_viewport.scss */
-.taco-simplegrid.taco-simplegrid-products .taco-simplegrid-cell {
-  left: 0px;
-  position: relative;
-  -webkit-transition: left 0.4s ease-in-out;
-  -moz-transition: left 0.4s ease-in-out;
-  -o-transition: left 0.4s ease-in-out;
-  transition: left 0.4s ease-in-out;
-}
-/* line 164, ../scss/taco/_viewport.scss */
-.taco-simplegrid.taco-simplegrid-products .taco-simplegrid-cell[data-index="price"] {
-  width: 120px;
-}
-/* line 167, ../scss/taco/_viewport.scss */
-.taco-simplegrid.taco-simplegrid-products .taco-simplegrid-cell[data-index="productCode"] {
-  width: 180px;
-}
-/* line 170, ../scss/taco/_viewport.scss */
-.taco-simplegrid.taco-simplegrid-products .taco-simplegrid-cell[data-index="stockOnHand"] {
-  width: 120px;
-}
-/* line 173, ../scss/taco/_viewport.scss */
-.taco-simplegrid.taco-simplegrid-products .taco-simplegrid-cell[data-index="isActive"] {
-  width: 160px;
-}
-/* line 176, ../scss/taco/_viewport.scss */
-.taco-simplegrid.taco-simplegrid-products .taco-simplegrid-cell.taco-being-hidden {
-  background-color: #bdf9ff;
-  color: rgba(0, 0, 0, 0);
-  z-index: 2;
-}
-/* line 181, ../scss/taco/_viewport.scss */
-.taco-simplegrid.taco-simplegrid-products .taco-simplegrid-cell.taco-being-hidden * {
-  visibility: hidden;
-}
-
-/* line 190, ../scss/taco/_viewport.scss */
-.taco-simplegrid-column-edit-actions {
-  background-color: #555;
-  border-color: #999691;
-  border-style: solid solid none;
-  border-width: 1px 1px 0px;
-  border-radius: 6px 6px 0px 0px;
-}
-/* line 197, ../scss/taco/_viewport.scss */
-.taco-simplegrid-column-edit-actions a {
-  margin-right: 10px;
-}
-
-/* line 202, ../scss/taco/_viewport.scss */
-.taco-simplegrid-row-edit-actions a {
-  margin-right: 10px;
-}
-
-/* line 211, ../scss/taco/_viewport.scss */
-.x-dd-drag-ghost {
-  background-color: transparent;
-  border: 0px none;
-}
-/* line 215, ../scss/taco/_viewport.scss */
-.x-dd-drag-ghost > .taco-simplegrid-cell {
-  background-color: #faf8f5;
-  display: block;
-  font-size: 14px;
-  line-height: 1.5em;
-  padding: 10px 14px;
-}
-/* line 222, ../scss/taco/_viewport.scss */
-.x-dd-drag-ghost > .taco-simplegrid-cell:nth-of-type(2n+1) {
-  background-color: #f2f0ed;
-}
-/* line 225, ../scss/taco/_viewport.scss */
-.x-dd-drag-ghost > .taco-simplegrid-cell.taco-simplegrid-column-header {
-  background-color: #edeae6;
-  font-size: 16px;
+  width: 125px;
+  background-position: 0 -519px;
 }
 
 /* line 2, ../scss/taco/_product.scss */
@@ -13840,7 +13843,7 @@ a:hover {
 .taco-customer-section .taco-customer-section-card-container {
   margin-left: 24px;
   padding-left: 18px;
-  border-left: 1px solid #ccc;
+  border-left: 1px solid #cccccc;
 }
 /* line 72, ../scss/taco/widgets/_phoneOrders.scss */
 .taco-customer-section .taco-customer-section-card label, .taco-customer-section .taco-customer-section-card .taco-boxselect {
