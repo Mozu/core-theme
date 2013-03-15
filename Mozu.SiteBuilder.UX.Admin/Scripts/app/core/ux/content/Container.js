@@ -5,16 +5,11 @@
 Ext.define('Taco.core.ux.content.Container', {
     extend: 'Ext.container.Container',
     alias: 'widget.contentcontainer',
-    requires: ['Taco.core.ux.content.Header','Taco.core.ux.content.Body'],
+    requires: ['Taco.core.ux.content.Header', 'Taco.core.ux.content.Body', 'Taco.core.ux.content.Sidebar'],
     headerCls: 'Taco.core.ux.content.Header', 
     bodyCls: 'Taco.core.ux.content.Body', 
 
     bubbleEvents: ['add', 'remove', 'save', 'cancel'],
-
-    layout: {
-        align: 'stretch',
-        type: 'vbox'
-    },
 
     cls: 'taco-content-container',
 
@@ -51,16 +46,44 @@ Ext.define('Taco.core.ux.content.Container', {
 
     arrangePanels: function() {
         var me = this;
-        Ext.applyIf(this, {
-            header: {},
-            body: {}
-        });
 
-        me.header = Ext.create(me.headerCls, me.header);
+        me.header = Ext.create(me.headerCls, me.header || {});
 
-        me.body = Ext.create(me.bodyCls, me.body);
+        me.body = Ext.create(me.bodyCls, me.body || {});
 
-        me.items = [me.header, me.body];
+        if (me.sidebar || me.hasSidebar) {
+
+            me.layout = {
+                type: 'border'
+            };
+
+            me.cls = 'taco-content-container';
+
+            me.main = Ext.create('Ext.Container', {
+                region: 'center',
+                cls: Taco.baseCSSPrefix + 'content-container',
+                // flex: 1,
+                layout: {
+                    align: 'stretch',
+                    type: 'vbox'
+                },
+                items: [me.header, me.body]
+            });
+
+            me.sidebar = me.sidebar || {};
+
+            // create the sidebar unless some subclass has created it!
+            if (!me.sidebar.$className) me.sidebar = Ext.widget('sidebar', me.sidebar);
+
+            me.items = [me.main, me.sidebar];
+        } else {
+            me.layout = {
+                align: 'stretch',
+                type: 'vbox'
+            };
+            me.cls = 'taco-content-container-with-sidebar';
+            me.items = [me.header, me.body];
+        }
     },
 
     subscribeEvents: function() {

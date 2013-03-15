@@ -3,7 +3,7 @@
  * A classic index page for a collection of objects. Includes a sidebar where filters go.
  */
 Ext.define('Taco.core.ux.browser.BrowserPage', {
-    extend: 'Taco.core.ux.content.ContainerWithSidebar',
+    extend: 'Taco.core.ux.content.Container',
     alias: 'widget.browserpage',
     requires: ['Taco.core.ux.grid.Panel', 'Taco.core.ux.TilePanel', 'Taco.core.ux.grid.Pager', 'Ext.util.Inflector', 'Ext.form.Panel', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.modal.Confirmation', 'Taco.core.ux.browser.ItemBrowser', 'Ext.selection.CheckboxModel', 'Taco.core.ux.browser.FilterList', 'Taco.core.ux.browser.Modal'],
 
@@ -14,6 +14,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     gridPanelClass: 'Taco.core.ux.grid.Panel',
     tilePanelClass: 'Taco.core.ux.TilePanel', 
     filterProperty: 'name',
+    hasSidebar: true,
 
     header: {
         actions: [
@@ -329,7 +330,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         if (this.useTilePanel) this.createTilePanel(this.tilePanelConf || {});
         this.createItemBrowser();
         this.layoutItemBrowser();
-        this.createSidebar();
+        if (this.hasSidebar) this.createSidebar();
         this.callParent(arguments);
         this.store.load();
     }
