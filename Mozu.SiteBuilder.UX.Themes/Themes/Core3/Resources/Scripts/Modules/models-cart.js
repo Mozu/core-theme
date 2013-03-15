@@ -3,7 +3,6 @@
     var CartItem = KnockoutVM.extend({
         mozuType: 'cartitem',
         statics: {
-            parentCart: '',
             CartItemId: '',
             Product: ''
         },
@@ -12,7 +11,6 @@
             Total: { numeric: 2 },
             UnitPrice: {}
         },
-        doNotSubmit: ['parentCart'],
         remove: function () {
             var me = this;
             this.del().then(function () {
