@@ -70,7 +70,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
             xtype: 'container',
             componentCls: Taco.baseCSSPrefix + 'form-tab-bar',
             itemId: 'tabBar',
-            margin: '20 0 20 160',
+            margin: '0 0 0 160',
             items: [
                this.addButton,
                this.picker

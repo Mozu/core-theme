@@ -4,7 +4,7 @@
 
   .#{$prefix}panel {
     .#{$prefix}grid-body {
-      border-top-color: $color-grid-border; // defaults to header background-color
+      border-top-color: $panel-body-border-color; // defaults to header background-color
 
       &~ .#{$prefix}docked-bottom {
         border-top-color: $color-neutral-white;
@@ -15,23 +15,37 @@
   // grid cells
   .#{$prefix}grid-with-row-lines {
     .#{$prefix}grid-cell-inner {
-      line-height: $grid-row-cell-font-size + 5;
+      line-height: $grid-row-cell-line-height;
       padding-bottom: $grid-cell-inner-padding-bottom;
     }
   }
 
   .#{$prefix}grid-cell-selected {
-    background-color: $color-highlighted-background-light !important;
+    background-color: $color-selected !important;
   }
 
   // grid rows
   .#{$prefix}grid-row {
     vertical-align: middle;
 
+    .#{$prefix}grid-cell {
+      border-top-color: transparentize($color-neutral-white, 0.9) !important;
+    }
+
     .#{$prefix}grid-cell-special {
       background-color: $grid-row-cell-background;
       background-image: none;
       border-right: 0px none;
+    }
+  }
+
+  .#{$prefix}grid-rowwrap-div {
+    border-top-color: transparentize($color-neutral-white, 0.9) !important;
+  }
+
+  .#{$prefix}grid-row-selected {
+    .#{$prefix}grid-rowwrap-div {
+      border-color: $color-theme-support-dark;
     }
   }
 
@@ -75,6 +89,7 @@
     &.#{$prefix}column-header-last {
       .#{$prefix}column-header-trigger {
         display: block !important;
+        @include icons-sprite(icon-columns);
       }
     }
   }
@@ -117,8 +132,7 @@
   // expandercollapser
   .#{$vprefix}expandercollapser {
     color: $color-action-link;
-    font-size: 10pt;
-    padding: 6px 0;
+    font-size: px-to-rem(14);
   }
 
   // rowexpander overrides
@@ -190,19 +204,29 @@
   .#{$vprefix}grid-row-menu-trigger {
     cursor: pointer;
     height: 30px;
+    visibility: hidden;
     width: 50px;
     @include icons-sprite(icon-rowactions);
+  }
+  .#{$prefix}grid-row-over {
+    .#{$vprefix}grid-row-menu-trigger {
+      visibility: visible;
+    }
+  }
+  .#{$prefix}grid-row-focused {
+    .#{$vprefix}grid-row-menu-trigger {
+      visibility: visible !important;
+    }
   }
 
   .#{$vprefix}grid-row-menu {
     .#{$prefix}menu-body {
-      border: 1px solid;
-      font-size: 0.8125em;
-      @include dark-border($color-neutral-white);
+      border: 1px solid border-for($menu-background-color);
+      font-size: px-to-rem(13);
     }
 
     .#{$prefix}menu-item {
-      padding: 6px;
+      padding: px-to-rem(6);
     }
 
     &+ .#{$vprefix}grid-row-menu {
@@ -220,74 +244,65 @@
     .#{$prefix}form-radio-group {
 
       .#{$prefix}form-radio {
-        background-color: $color-neutral-light;
         background-image: none;
-        border: 1px solid $color-neutral-darkest;
-        height: 24px;
-        opacity: 0.8;
-        width: 26px;
+        border: 1px solid border-for($color-neutral-95);
+        height: 30px;
+        width: 40px;
         top: 0px;
-        border-right: 0;
-        @include box-shadow(0 1px 0 #FFF inset);
-      }
-
-      .#{$prefix}form-cb-checked {
-        .#{$prefix}form-radio {
-          @include box-shadow(none);
-        }
       }
 
       &:nth-of-type(1) {
         .#{$prefix}form-radio {
           @include background(sprite($card-map, card-gridview));
-          @include border-radius(3px 0px 0px 3px);
+          background-color: $color-neutral-95;
         }
         .#{$prefix}form-cb-checked {
           .#{$prefix}form-radio {
-            @include background(sprite($card-map, card-gridview-selected), $gradient-selected);
-            background-color: $color-highlighted-background;
+            // @include background(sprite($card-map, card-gridview-selected), $gradient-selected);
+            background-color: border-for($color-neutral-95);
           }
         }
       }
       &:nth-of-type(2) {
         .#{$prefix}form-radio {
           @include background(sprite($card-map, card-tileview));
+          background-color: $color-neutral-95;
         }
         .#{$prefix}form-cb-checked {
           .#{$prefix}form-radio {
-            @include background(sprite($card-map, card-tileview-selected), $gradient-selected);
-            background-color: $color-highlighted-background;
+            // @include background(sprite($card-map, card-tileview-selected), $gradient-selected);
+            background-color: border-for($color-neutral-95);
           }
         }
       }
-      &:nth-last-of-type(1) {
-        .#{$prefix}form-radio {
-          border-right: 1px solid $color-neutral-darkest;
-          @include border-radius(0px 3px 3px 0px);
-        }
-      }
+      // &:nth-last-of-type(1) {
+      //   .#{$prefix}form-radio {
+      //     border-right: 1px solid $color-neutral-darkest;
+      //     @include border-radius(0px 3px 3px 0px);
+      //   }
+      // }
     }
   }
 
   // pager styles
   .#{$vprefix}pager {
-    background: none $color-neutral-light;
-    border: 1px solid $color-grid-border;
+    background: none $base-color;
+    border: 1px solid border-for($color-neutral-white);
     padding: 7px;
 
     .#{$vprefix}action {
-      background-color: $color-grid-row;
+      background-color: $color-neutral-95;
+      display: inline-block;
       height: 28px;
+      margin: 2px;
       min-width: 28px;
       padding-top: 6px;
-      margin:2px;
       text-align: center;
-      display:inline-block;
-      @include border-radius(6px);
+      @include border-radius(2px);
       
       &.active{
-        background-color: $color-highlighted-background;
-        color:$color-highlighted-foreground;
+        background-color: $color-theme-accent;
+        color: $color-neutral-white;
       }
     }
   }
