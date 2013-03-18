@@ -39,11 +39,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
 
             public bool Equals(PageTemplateDefinition x, PageTemplateDefinition y)
             {
-                if (x.Id == null && y.Id == null)
+                if (x  == null && y  == null)
                 {
                     return true;
                 }
-                if (x.Id == null || y.Id == null)
+                if (x  == null || y  == null)
                 {
                     return false;
                 }
@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
 
             public int GetHashCode(PageTemplateDefinition obj)
             {
-                if (obj == null)
+                if (obj == null || obj.Id == null )
                 {
                     return -1;
                 }
