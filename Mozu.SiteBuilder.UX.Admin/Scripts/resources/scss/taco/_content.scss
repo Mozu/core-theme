@@ -1,25 +1,42 @@
 @mixin taco-content {
-  
+
+  /* GENERIC */
+
+  a {
+    text-decoration: none;
+    color: $color-action-link;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  /* CONTENT CONTAINER */
+
   .#{$vprefix}content-container {
 
     .#{$vprefix}content-header {
-      padding: 14px 28px 7px;
+      margin: 0px 30px;
+      padding: 17px 0px;
       z-index: 2;
       @include box-shadow(rgba(0,0,0,0) 0 -5px 10px 0px);
       @include transition(box-shadow 1s ease);
 
       
       h1 {
-        color: $color-neutral-darkest;
-        font: $font-page-title;
         float: left;
-        display: inline;
+        font-size: px-to-rem(24);
+        font-weight: normal;
+        line-height: 1.25em;
       }
 
       p {
-        color: $color-neutral-darkest;
         font: $font-message;
-        padding-top: 7px;
+        // padding-top: 7px;
       }
       
       .#{$vprefix}action {
@@ -33,7 +50,9 @@
     }
     
     .#{$vprefix}content-body {
-      padding: 7px 28px;
+      border-top: 1px solid border-for($color-neutral-white);
+      margin: 0px 30px;
+      padding: 19px 0px 10px;
 
       .#{$prefix}table-layout-cell {
         vertical-align: top;
@@ -43,9 +62,9 @@
 	
 	.#{$vprefix}content-sidebar {
     background-color: $color-neutral-white;
+    border-color: border-for($color-neutral-white);
     border-style: solid none none solid;
     border-width: 1px 0px 0px 1px;
-    @include dark-border($color-neutral-white);
 
 		.#{$vprefix}sidebarlist {
 			margin: 0 30px;
@@ -66,35 +85,8 @@
 		}
 	
 	}
-
-  /* why */
-  em {
-	font-style: italic;
-  }
   
-  
-  /* Let's get this party started */
-  ::-webkit-scrollbar {
-      width: 5px;
-  }
-   
-  /* Track */
-  ::-webkit-scrollbar-track {
-      //-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-      -webkit-border-radius: 10px;
-      border-radius: 10px;
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-      -webkit-border-radius: 5px;
-      border-radius: 5px;
-      background: rgba(0,0,0,0.1); 
-      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
-  }
-  ::-webkit-scrollbar-thumb:window-inactive {
-    background: rgba(255,0,0,0); 
-  }
+  /* SITE EDITOR */
 
   .widget-source {
 	box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);

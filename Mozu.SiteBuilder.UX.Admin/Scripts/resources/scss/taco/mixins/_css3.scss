@@ -1,6 +1,20 @@
+/* BORDERS */
+
 @mixin dark-border ($color: $color-neutral-white) {
   border-color: adjust-color($color, $red: -51, $green: -51, $blue: -51);
 }
+
+@mixin important-no-border-radius {
+  //we need to hard code this so we can declare !important
+  -moz-border-radius: 0 !important;
+  -webkit-border-radius: 0 !important;
+  -o-border-radius: 0 !important;
+  -ms-border-radius: 0 !important;
+  -khtml-border-radius: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* SHADOWS */
 
 @mixin outer-shadow ($strength: 0.3, $radius: 5px, $x: 0, $y: 0) {
   box-shadow: $x $y $radius rgba(0,0,0,$strength);
@@ -18,12 +32,16 @@
   -ms-box-shadow: $x $y $radius rgba(0,0,0,$strength) inset;
 }
 
- @mixin facade-transitions ($speed: 0.3s, $easing: ease-in-out) {
-    transition: box-shadow $speed $easing, transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
-    -webkit-transition: -webkit-box-shadow $speed $easing, -webkit-transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
-    -moz-transition: -moz-box-shadow $speed $easing, -moz-transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
-    -o-transition: -o-box-shadow $speed $easing, -o-transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
-  }
+/* ANIMATIONS */
+
+@mixin facade-transitions ($speed: 0.3s, $easing: ease-in-out) {
+  transition: box-shadow $speed $easing, transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
+  -webkit-transition: -webkit-box-shadow $speed $easing, -webkit-transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
+  -moz-transition: -moz-box-shadow $speed $easing, -moz-transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
+  -o-transition: -o-box-shadow $speed $easing, -o-transform $speed $easing, background $speed $easing, border $speed $easing, color $speed $easing, text-shadow $speed $easing;
+}
+
+/* FLEXBOX */
 
 @mixin flexbox ($direction: row, $wrap: nowrap, $justify: flex-start, $alignItems: stretch, $alignContent: stretch) {
   // display: box;
@@ -50,26 +68,17 @@
   -webkit-flex: $grow $shrink $basis;
 }
 
-@mixin no-select {
-    user-select: none;
-    -o-user-select: none;
-    -ms-user-select: none;
-    -moz-user-select: -moz-none;
-    -webkit-user-select: none;
-    
-    cursor:default;
-}
+/* OTHER */
 
-@mixin important-no-border-radius {
-    //we need to hard code this so we can declare !important
-    -moz-border-radius: 0 !important;
-    -webkit-border-radius: 0 !important;
-    -o-border-radius: 0 !important;
-    -ms-border-radius: 0 !important;
-    -khtml-border-radius: 0 !important;
-    border-radius: 0 !important;
+@mixin no-select {
+  cursor: default;
+  user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
 }
 
 .#{$vprefix}no-select {
-	@include no-select;
+  @include no-select;
 }

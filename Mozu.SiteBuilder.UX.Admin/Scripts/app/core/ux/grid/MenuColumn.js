@@ -101,11 +101,8 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
             item: item
         });
 
-        if (this.menu && this.menu.isVisible()) {
-            this.menu.hide();
-        } else {
-            this.showMenuBy(trigger, eventData);
-        }
+        grid.getSelectionModel().select(record, false);
+        this.showMenuBy(trigger, eventData);
     },
 
     /**
