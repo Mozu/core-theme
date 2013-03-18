@@ -1068,9 +1068,7 @@
     <Content Include="Scripts\makedocsasjson.bat" />
     <Content Include="Scripts\resources\css\taco.css" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.svg" />
-    <Content Include="Scripts\resources\images\align-s0f469144e6.png" />
-    <Content Include="Scripts\resources\images\card-sd7c19700b9.png" />
-    <Content Include="Scripts\resources\images\icons-s8bb1093809.png" />
+    <Content Include="Scripts\resources\images\*.png" />
     <Content Include="Scripts\resources\images\legacy\AddPhotos.png" />
     <Content Include="Scripts\resources\images\legacy\background-alpha.png" />
     <Content Include="favicon.ico" />
@@ -1096,7 +1094,6 @@
     <Content Include="Scripts\resources\images\legacy\fabric-2.png" />
     <Content Include="Scripts\resources\images\legacy\indicator.mp3" />
     <Content Include="Scripts\resources\images\legacy\loading.gif" />
-    <Content Include="Scripts\resources\images\picker-sa04364cd82.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-carousel.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-grid.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-slider.png" />
