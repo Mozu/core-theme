@@ -51,6 +51,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
         }
 
         
+         
+
+
         /// <summary>
         /// Private implementation of <code>IThemeMetaData</code>
         /// </summary>
@@ -60,11 +63,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
             var tmd = new ThemeMetaData();
             tmd.Id = id;
             int intId;
-            var devPrefix = _config["devThemeBasePath"];
+            
             string themePath = null;
             if (int.TryParse(id, out intId))
             {
-                themePath = Path.GetFullPath(devPrefix + "//devshare//" + id);
+                themePath = Path.GetFullPath(DevThemePath + id);
                 /*work around for busted service
                 var res=_tenantsWebApiClient.GetSiteEntitlement(_apiContext.SiteId.GetValueOrDefault(), _apiContext.TenantId,intId ).Result;
                 if (res.ResponseMessage.StatusCode == HttpStatusCode.OK)
@@ -82,8 +85,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
             }
             else
             {
-                var localPath = new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/";
-                themePath = Path.GetFullPath(localPath +"//"+ id);
+                
+                themePath = Path.GetFullPath(LocalThemePath +"//"+ id);
             }
             tmd.ThemePath = themePath;
 
@@ -146,6 +149,28 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
             
             return tmd;
 
+        }
+
+        private string DevThemePath
+        {
+            get
+            {
+                var devPrefix = _config["devThemeBasePath"];
+                return Path.GetFullPath(devPrefix + "//devshare//");
+            }
+        }
+
+        public IEnumerable< string> ThemePaths
+        {
+            get {
+                yield return DevThemePath;
+                yield return LocalThemePath;
+            }
+        }
+
+        public string LocalThemePath
+        {
+            get { return Path.GetFullPath(new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/"); }
         }
     }
 }

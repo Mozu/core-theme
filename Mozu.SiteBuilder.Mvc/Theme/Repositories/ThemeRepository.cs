@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
 using Mozu.SiteBuilder.Mvc.Themes.Factories;
@@ -22,8 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Repositories
         private readonly IThemeMetaDataProvider _themeMetaDataProvider;
         private const string DEFAULT_THEME = "Core3";
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Theme> _themes = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
-       
-
+        private static List<System.IO.FileSystemWatcher> _watchers = null;
         public bool IsInitialized { get; private set; }
 
         /// <summary>
@@ -54,6 +54,21 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Repositories
 
         Theme CreateTheme(string name)
         {
+
+            if (_watchers == null)
+            {
+                lock (_themes)
+                {
+                    if (_watchers == null)
+                    {
+                        _watchers = new List<FileSystemWatcher>();
+                        foreach (string dir in _themeMetaDataProvider.ThemePaths)
+                        {
+                            _watchers.Add(CreateWatcher(dir));
+                        }
+                    }
+                }
+            }
             var tmd = _themeMetaDataProvider.GetTheme(name, true );
             if (tmd == null)
             {
@@ -62,6 +77,24 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Repositories
             return _themeFactory.Build(tmd, this);
         }
 
+        private void watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+             _themes = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase );
+        }
+
+        private FileSystemWatcher CreateWatcher(string path)
+          {
+              var watcher = new FileSystemWatcher(path)
+              {
+
+              };
+              watcher.IncludeSubdirectories = true;
+              watcher.Changed += watcher_Changed;
+              watcher.Created += watcher_Changed;
+              watcher.Deleted += watcher_Changed;
+              watcher.EnableRaisingEvents = true;
+              return watcher;
+          }
 
         /// <summary>
         /// Finds a theme by name.
