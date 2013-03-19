@@ -7,7 +7,7 @@ Ext.define('Taco.view.pendingchange.Cms', {
 
     typeName: 'Pending Changes',
     modelName: 'Taco.model.CmsDocumentDraft',
-    storeName: 'Taco.store.CmsDocumentDrafts',
+    store: { type: 'Taco.store.CmsDocumentDrafts' },
     filterProperty: 'productName',
     useTilePanel: false,
 

@@ -12,7 +12,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
     filterProperty: 'title',
     bodyPadding: '12 0 0 0',
     useGridPanel: true,
-    useTilePanel: true,
+    useTilePanel: false,
 
     createItemStore: function() {
         this.itemStore = this.itemStore || Ext.data.StoreManager.lookup(this.itemStoreId);
@@ -119,7 +119,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         return me.expanderCollapser;
     },
 
-    createToggleGroup: function() {
+    createToggleGroup: function () {
         var me = this;
         me.toggleGroup = Ext.widget('togglegroup', {
             columns: 2,

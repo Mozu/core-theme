@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (products == null || !products.Any())
                 return Message3<List<Product>>(false, "No products were edited because they were not sent correctly. Please try again.");
-
+        
             var editedProducts = await _productMapper.PerformAction(products, p => _productClient.UpdateProduct(p, p.ProductCode));
             return List2(editedProducts.ToList());
         }
