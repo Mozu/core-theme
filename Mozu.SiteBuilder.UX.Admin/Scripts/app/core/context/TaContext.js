@@ -134,11 +134,11 @@ Ext.define('Taco.core.context.TaContext', {
     getSiteGroupId: function () {
         if (this == this.getCurrentContext()) {
             if (this.siteCollections.length == 1) {
-                return this.siteCollections[0].getSiteId();
+                return this.siteCollections[0].getSiteGroupId();
             }
             return null;
         }
-        return this.getCurrentContext().getSiteId();
+        return this.getCurrentContext().getSiteGroupId();
     },
 
     getStore: function() {

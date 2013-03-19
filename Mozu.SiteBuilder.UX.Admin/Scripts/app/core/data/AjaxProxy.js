@@ -28,6 +28,7 @@
             this.callParent(arguments);
             if (success && request && request.action != 'read' && this.model && this.model.$className) {
                 this.signalCacheFlush();
+                Taco.core.data.StoreManager.fireEvent('afterproxyrequest', request, success, this.model);
             }
             
         },

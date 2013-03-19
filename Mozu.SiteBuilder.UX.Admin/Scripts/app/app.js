@@ -146,6 +146,11 @@ Ext.application({
                     datachanged: function () {
                         this.dirtyStateCheck();
                     },
+                    beforeload: function(store,operation) {
+                        if (store.remoteFilter === false) {
+                            operation.filters = [];
+                        }
+                    },
                     scope: this
                 });
             },
@@ -237,6 +242,17 @@ Ext.application({
             }
         });
 
+        Ext.override(Ext.data.Connection , {
+            onStateChange: function (request) {
+                if (request && request.xhr && request.xhr.readyState == 4) {
+                    this.clearTimeout(request);
+                    this.onComplete(request);
+                    this.cleanup(request);
+                    Ext.EventManager.idleEvent.fire();
+                }
+            }
+        });
+        
         Ext.override(Ext.data.StoreManager, {
             lookup: function (cfg) {
                 if (cfg && !cfg.isStore && (cfg.type || cfg.model)) {
