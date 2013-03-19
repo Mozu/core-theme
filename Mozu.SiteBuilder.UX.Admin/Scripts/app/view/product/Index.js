@@ -77,6 +77,7 @@ Ext.define('Taco.view.product.Index', {
             menuItems:[{
                 itemId: 'preview',
                 text: 'Preview in',
+                hideOnClick :false,
                 menu: {
                     plain: true,
                     shadow: false,
@@ -133,7 +134,9 @@ Ext.define('Taco.view.product.Index', {
                 eventData.record.productInSitesStore().each(function(record) {
                     previewAction.menu.add(Ext.applyIf({
                         text: 'site ' + record.getId(),
-                        menuColumnHandler: function() {
+                        menuColumnHandler: function (item, eventData) {
+                            window.open('/_gosite/' + record.getId() + '?redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
+                           
                             console.log(arguments);
                         }
                     }, defaults));
