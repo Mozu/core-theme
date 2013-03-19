@@ -58,9 +58,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         if (me.store) {
             return me.store = Taco.core.data.StoreManager.getOrCreate(me.store);
         }
-        if (me.storeName) {
-            return me.store = Taco.core.data.StoreManager.getOrCreate({ type: me.storeName, clearFilters: true, clearSort: true });
-        }
+       
     },
 
     createGridPager: function () {

@@ -8,7 +8,7 @@ Ext.define('Taco.view.product.Index', {
 
     typeName: 'Product',
     modelName: 'Taco.model.Product',
-    storeName: 'Taco.store.Products',
+    store: { type: 'Taco.store.Products' },
     editorName: 'Taco.view.product.Edit',
     filterProperty: 'productName',
 
