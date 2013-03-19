@@ -211,14 +211,18 @@
             store: this.selectionStore,
             ddReorder: true,
             width: this.containerWidth,
+            displayField: 'value',
+            valueField: 'id',
             margin: '0 40',
+           
             listConfig: {
-                selModel: { mode: 'MULTI' },
+               
                 itemTpl: [
                     '<span class="x-boundlist-item-drag">Drag </span>',
                     '<span class="x-boundlist-item-content">{value}</span>',
                     '<span class="x-boundlist-item-close"> Close</span>'
                 ],
+               
                 listeners: {
                     itemclick: function (boundlist, record, item, index, e) {
                         if(!Ext.fly(e.target).hasCls('x-boundlist-item-close')) {
@@ -232,7 +236,8 @@
                 }
             }
         });
-
+        //setting the sel css to be dummy.  Need selection for drag drop.
+        me.boundList.selectedItemCls = 'dummy';
         this.insert(this.items.getCount() - 1, valuesField);
         this.insert(this.items.getCount() - 1, selectionsField);
     },
