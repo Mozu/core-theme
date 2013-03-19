@@ -9,5 +9,11 @@
         model: 'Taco.model.Product',
         pageSize: 25,
         remoteSort: true,
-        remoteFilter: true
+        remoteFilter: true,
+        storeManagerConfig: {
+            clearFilters: true,
+            contextLevel: 'c',
+            clearSort: true,
+            autoLoad: true
+        }
     });

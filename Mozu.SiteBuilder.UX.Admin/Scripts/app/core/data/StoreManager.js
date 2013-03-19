@@ -10,26 +10,56 @@ Ext.define('Taco.core.data.StoreManager', {
     constructor: function (config) {
         var me = this;
         me.stores = new Ext.util.MixedCollection();
-        
+        me.mixins.observable.constructor.call(me, config);
         me.callParent(arguments);
+        me.on('afterproxyrequest', me.afterProxyRequest, me);
     },
 
-    getOrCreate: function (config) {
-        var me = this, store, needsRefresh;
+    getOrCreate: function (config, contextSuffix) {
+        var me = this, store, needsRefresh, ctxLvl,id;
         if (Ext.isString(config)) {
             config = { type: config };
         }
-        config.id = config.id || config.type || config.model;
-        store = me.stores.getByKey(config.id);
+        if (config.isStore) {
+            store = config;
+            config = store.storeManagerConfig || {};
+            id = config.id || store.id || store.$className;
+        } else {
+            id = config.id || config.type || config.model;
+            if (contextSuffix) {
+                id += contextSuffix;
+            }
+            store = me.stores.getByKey(id);
+            
+        }
         if (!store) {
             config.type = config.type || 'Ext.data.Store';
-            var cc = Ext.apply({}, config);
+            var cc = Ext.apply({ runtimeContext: contextSuffix }, config);
             delete(cc.autoLoad);
             store = Ext.create(config.type, cc);
+            
             if (!config.createOnly) {
-                me.stores.add(config.id, store);
+                me.stores.add(id, store);
             }
         }
+        if (store.storeManagerConfig) {
+            config = Ext.applyIf(config, store.storeManagerConfig);
+        }
+        if (config.contextLevel && !contextSuffix) {
+            
+            if (config.contextLevel == 'c') {
+                ctxLvl = '-c=' + Taco.app.context.getSiteGroupId();
+            }else if (config.contextLevel == 's') {
+                ctxLvl = '-s=' + Taco.app.context.getSiteId();
+            }
+            if (store.runtimeContext != ctxLvl) {
+                return this.getOrCreate(config, ctxLvl);
+            }
+
+            
+            
+        }
+
         if (config.clearFilters ) {
             
             if (store.isFiltered() || (store.filters && store.filters.length)) {
@@ -51,15 +81,34 @@ Ext.define('Taco.core.data.StoreManager', {
                 }
             }
         }
-        
+        if (store.hasUpdates) {
+            needsRefresh = true;
+        }
 
         if (needsRefresh) {
             store.load();
+            store.hasUpdates = null;
         }
+       
         if (config.autoLoad && !store.hasLoaded()) {
             store.load();
         }
         return store;
+    },
+    afterProxyRequest:function(request, success, model) {
+        
+        this.stores.each(function(store) {
+            if (model.$className != store.model.$className) {
+                return true;
+            }
+            if (request.records && request.records[0].stores && request.records[0].stores.indexOf(store) > -1) {
+                return true;
+            }
+            store.hasUpdates = true;
+            store.lastUpdate = request.action;
+            store.fireEvent('afterproxyrequest',store, request, success, model);
+            return true;
+        });
     }
 
     

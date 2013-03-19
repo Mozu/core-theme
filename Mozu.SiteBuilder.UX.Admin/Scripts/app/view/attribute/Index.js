@@ -8,7 +8,9 @@ Ext.define('Taco.view.attribute.Index', {
     requires: ['Taco.model.Attribute', 'Taco.store.Attributes', 'Taco.view.attribute.Edit'],
 
     modelName: 'Taco.model.Attribute',
-    storeName: 'Taco.store.Attributes',
+    store: {
+        type: 'Taco.store.Attributes'
+    },
     editorName: 'Taco.view.attribute.Edit',
     filterProperty: 'name',
     typeName: 'Attribute',

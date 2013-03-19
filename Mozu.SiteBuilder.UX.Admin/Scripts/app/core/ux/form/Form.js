@@ -149,7 +149,10 @@ Ext.define('Taco.core.ux.form.Form', {
         this.saveTasks.on({
             complete: function () {
                 this.resetOriginalValues();
-                this.fireEvent('savesuccess', this);
+                Ext.defer(function() {
+                    this.fireEvent('savesuccess', this);
+                },1, this);
+               
             },
             scope: this
         });

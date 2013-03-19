@@ -26,6 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
 
         private static string GetFilter(FilterCollectionItem filter)
         {
+            
             switch (filter.property.ToLowerInvariant())
             {
                 case "id":

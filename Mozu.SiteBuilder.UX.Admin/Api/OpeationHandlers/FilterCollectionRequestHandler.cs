@@ -41,6 +41,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers
                     ms.Position = 0;
                     col = (FilterCollection)_ser.ReadObject(ms);
                 }
+                int cnt = 0;
+                while (cnt < col.Count)
+                {
+                    if (string.IsNullOrEmpty(col[cnt].property) && string.IsNullOrEmpty(col[cnt].field))
+                    {
+                        col.RemoveAt(cnt);
+                    }
+                    else
+                    {
+                        cnt++;
+                    }
+                }
                 foreach (var item in col.Where(i => !string.IsNullOrWhiteSpace(i.field)))
                 {
                     if (item.field.StartsWith("-"))

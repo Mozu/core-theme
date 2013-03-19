@@ -20,11 +20,13 @@
         this.attributeStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Attributes',
             remoteFilter: false,
-            id: 'product-type-available-attributes-' + this.filterProperty
+            clearFilters: true,
+            clearSort:true,
+            id: 'attributes',
+            autoLoad:true
         });
 
-        this.attributeStore.load();
-
+        
         this.createFilter = function (attributeRecord) {
             return !me.ptAttributeStore.containsById(attributeRecord);
         };

@@ -7,7 +7,13 @@
 Ext.define('Taco.store.Attributes', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.Attribute',
-    pageSize: 25,
-    remoteSort: true,
-    remoteFilter: true
+    pageSize: 600,
+    remoteSort: false,
+    remoteFilter: false,
+    storeManagerConfig: {
+        clearFilters: true,
+        contextLevel: 'c',
+        clearSort: true,
+        autoLoad: true
+    }
 });

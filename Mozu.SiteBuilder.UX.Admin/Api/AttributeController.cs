@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(editedAttributes.ToList());
         }
 
-        [WebInvoke(UriTemplate = "destory", Method = "POST")]
+        [WebInvoke(UriTemplate = "destroy", Method = "POST")]
         public async Task<Response<List<Attribute>>> DeleteAttribute(List<Attribute> attributes)
         {
             if (attributes == null || !attributes.Any())

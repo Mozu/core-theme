@@ -55,7 +55,12 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
 
     acquireStore: function() {
         var me = this;
-        if (me.storeName) return me.store = Taco.core.data.StoreManager.getOrCreate({ type: me.storeName, clearFilters: true, clearSort: true });
+        if (me.store) {
+            return me.store = Taco.core.data.StoreManager.getOrCreate(me.store);
+        }
+        if (me.storeName) {
+            return me.store = Taco.core.data.StoreManager.getOrCreate({ type: me.storeName, clearFilters: true, clearSort: true });
+        }
     },
 
     createGridPager: function () {
@@ -332,7 +337,10 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         this.layoutItemBrowser();
         if (this.hasSidebar) this.createSidebar();
         this.callParent(arguments);
-        this.store.load();
+        if (!this.store.hasLoaded()) {
+            this.store.load();
+        }
+        
     }
 
 });
