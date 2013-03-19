@@ -16,8 +16,9 @@ Ext.define('Taco.view.pendingchange.Cms', {
     publishAll: function (type) {
         var me = this;
         me.store.publishAll(type, function () {
-            var notice = type ? 'All ' + type + ' changes published!' : 'All changes published!';
-            Taco.app.fireEvent('setmessage', notice, 'success');
+            // removing notification per TFS #7653 and #7655
+            //var notice = type ? 'All ' + type + ' changes published!' : 'All changes published!';
+            //Taco.app.fireEvent('setmessage', notice, 'success');
             me.store.reload();
         });
     },
