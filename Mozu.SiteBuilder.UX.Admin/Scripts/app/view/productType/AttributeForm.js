@@ -237,7 +237,7 @@
             }
         });
         //setting the sel css to be dummy.  Need selection for drag drop.
-        me.boundList.selectedItemCls = 'dummy';
+        selectionsField.boundList.selectedItemCls = 'dummy';
         this.insert(this.items.getCount() - 1, valuesField);
         this.insert(this.items.getCount() - 1, selectionsField);
     },
