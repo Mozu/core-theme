@@ -198,7 +198,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(x => x.Discount, op => op.Ignore())
                 ;
 
-            Mapper.AssertConfigurationIsValid(ProfileName);
+            //Mapper.AssertConfigurationIsValid(ProfileName);
         }
     }
 }
