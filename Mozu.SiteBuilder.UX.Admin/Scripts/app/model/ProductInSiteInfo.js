@@ -91,11 +91,11 @@ Ext.define('Taco.model.ProductInSiteInfo', {
             "type": "auto",
             persist: false,
             convert: function (value, record) {
-                if (this.site == null) {
+                if (record.site == null) {
                     var siteId = record.get('siteId');
-                    this.site= Taco.app.context.findSite(siteId);
+                    record.site = Taco.app.context.findSite(siteId);
                 }
-                return this.site;
+                return record.site;
 
             }
         },
