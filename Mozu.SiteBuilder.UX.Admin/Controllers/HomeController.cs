@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var tenantRes = await _tenantsWebApi.GetTenant( _apiContext.TenantId);
            // var siteCol = _tenantsWebApi.AsBreadthFirstEnumerable();
 
-            var siteUsers = await _usersRepo.Get(pageSize: 200, responseGroups:" ", filter: string.Format("roletenantid eq {0}", _apiContext.TenantId));
+            var siteUsers = await _usersRepo.Get(pageSize: 200, responseGroups: " ", filter: string.Format("scopeid eq {0}", _apiContext.TenantId));
 
 
             if (tenantRes.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
