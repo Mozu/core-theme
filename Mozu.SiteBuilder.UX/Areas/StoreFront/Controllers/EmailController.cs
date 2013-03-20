@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Autofac;
 using Mozu.Core.Messaging.Contracts.Notification;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -26,7 +27,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     public class EmailController : CmsPagesController
     {
         private readonly IOrderService _orderService;
+        private readonly IViewEngine _viewEngine;
+        private readonly ILifetimeScope _lifetimeScope;
         private static List<EmailTypeInfo> g_emailTypeInfos;
+        public class UserServiceMessageTopics
+        {
+            public const string PasswordReset = "user.passwordreset";
+            public const string NewUserCreated = "user.created";
+            public const string AdminUserInvited = "user.admin.invited";
+            public const string AdminRoleAdded = "user.admin.roleadded";
+        }
+
         static EmailController ()
         {
             g_emailTypeInfos = new List<EmailTypeInfo>()
@@ -36,28 +47,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                ModelType = typeof (ResetPasswordEmailMessage),
                                                Template = "email/resetpassword",
                                                CmsDoc="resetpassword",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, /*UserServiceMessageTopics.PasswordReset*/ "")
+                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, UserServiceMessageTopics.PasswordReset )
                                            },
                                        new EmailTypeInfo()
                                            {
                                                ModelType =  typeof (NewUserEmailMessage),
                                                Template = "email/newuser",
                                                CmsDoc="newuser",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, /*UserServiceMessageTopics.NewUserCreated*/ "")
+                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, UserServiceMessageTopics.NewUserCreated)
                                            },
                                         new EmailTypeInfo()
                                            {
                                                ModelType = typeof (Invitation),
                                                Template = "email/admininvite",
                                                CmsDoc="userinvited",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, /*UserServiceMessageTopics.AdminUserInvited*/ "")
+                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, UserServiceMessageTopics.AdminUserInvited)
                                            },
                                            new EmailTypeInfo()
                                            {
                                                ModelType = typeof (Invitation),
                                                Template = "email/adminroleadded",
                                                CmsDoc="adminroleadded",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, /*UserServiceMessageTopics.AdminRoleAdded*/ "")
+                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, UserServiceMessageTopics.AdminRoleAdded)
                                            },
                                        new EmailTypeInfo()
                                            {
@@ -102,10 +113,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             IProvisioningHelper provHelper,
             ICmsServiceWrapper cmsService,
             IOrderService orderService,
-            ICmsTypeHelper cmsTypeHelper)
+            ICmsTypeHelper cmsTypeHelper,
+            IViewEngine viewEngine)
             : base(docRepo, docTypeRepo, context, provHelper, cmsService, cmsTypeHelper, null, null)
         {
             _orderService = orderService;
+            _viewEngine = viewEngine;
         }
 
         //
@@ -149,7 +162,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult>  Render()
+        public  async Task<ActionResult>  Render()
         {
         	string topic;
         	string innerPayload;
@@ -189,16 +202,58 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             object model  = Convert(innerPayload , emailTypeInfo );
 
-            var viewString = RenderViewToString(emailTypeInfo.Template , model, cmdContent);
-            var response = new EmailResponse
+            //var viewString = RenderViewToString(emailTypeInfo.Template , model, cmdContent);
+            //var response = new EmailResponse
+            //                   {
+            //                       Subject = "TEST SUBJECT " + emailTypeInfo.Topic ,
+            //                       Body = viewString
+            //                   };
+
+            return new EmailRenderActionResult(emailTypeInfo, emailTypeInfo.Template, model, cmdContent,_viewEngine );
+
+
+        }
+        class EmailRenderActionResult : JsonResult
+        {
+            private readonly EmailTypeInfo _emailInfo;
+            private readonly string _viewName;
+            private readonly object _model;
+            private readonly object _cmsDoc;
+            private readonly IViewEngine _viewEngine;
+
+            public EmailRenderActionResult(EmailTypeInfo emailInfo, string viewName, object model, object cmsDoc, IViewEngine viewEngine)
+            {
+                _emailInfo = emailInfo;
+                _viewName = viewName;
+                _model = model;
+                _cmsDoc = cmsDoc;
+                _viewEngine = viewEngine;
+            }
+
+            public override void ExecuteResult(ControllerContext context)
+            {
+                 var viewString = RenderViewToString(_emailInfo.Template , _model, _cmsDoc, context );
+                var response = new EmailResponse
                                {
-                                   Subject = "TEST SUBJECT " + emailTypeInfo.Topic ,
+                                   Subject = "TEST SUBJECT " + _emailInfo.Topic ,
                                    Body = viewString
                                };
-
-            return Json(response);
-
-
+                this.Data = response;
+                base.ExecuteResult(context);
+            }
+            private string RenderViewToString(string viewName, object model, object cmsDoc, ControllerContext context)
+            {
+              
+                using (var sw = new StringWriter())
+                {
+                    var viewResult = _viewEngine.FindView(context, viewName, null, true);
+                    var viewContext = new ViewContext(context, viewResult.View, new ViewDataDictionary(model), new TempDataDictionary(), sw);
+                    viewContext.ViewData["content"] = cmsDoc;
+                    viewResult.View.Render(viewContext, sw);
+                    viewResult.ViewEngine.ReleaseView(context, viewResult.View);
+                    return sw.GetStringBuilder().ToString();
+                }
+            }
         }
 
         private static object Convert(string json, EmailTypeInfo eti)
@@ -215,19 +270,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return jobj;
         }
 
-        private string RenderViewToString(string viewName, object model, object cmsDoc)
-        {
-            ViewData.Model = model;
-            using (var sw = new StringWriter())
-            {
-                var viewResult = ViewEngines.Engines.FindView(ControllerContext, viewName, null);
-                var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
-                viewContext.ViewData["content"] = cmsDoc;
-                viewResult.View.Render(viewContext, sw);
-                viewResult.ViewEngine.ReleaseView(ControllerContext, viewResult.View);
-                return sw.GetStringBuilder().ToString();
-            }
-        }
+        
     }
 
     public class EmailResponse

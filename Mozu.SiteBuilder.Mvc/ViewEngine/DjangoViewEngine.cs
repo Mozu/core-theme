@@ -28,9 +28,10 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             get
             {
                 return AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<MozuVirtualPathProvider>();
-             
+            
             }
         }
+
 
 
         public System.IO.TextReader GetTemplate(string path)
@@ -79,7 +80,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         private ITemplateManager _templateManager;
         private ISiteBuilderContext _siteBuilderContext;
-        public DjangoMozuViewEngine( ITemplateManager templateManager , MozuVirtualPathProvider  mozuVirtualPathProvider, ISiteBuilderContext siteBuilderContext )
+        public DjangoMozuViewEngine( ITemplateManager templateManager , MozuVirtualPathProvider  mozuVirtualPathProvider, ISiteBuilderContext siteBuilderContext  )
            
     {
             _templateManager = templateManager;
@@ -301,7 +302,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
-            return new DjangoMozuView(TemplateManger, viewPath);
+            return new DjangoMozuView(TemplateManger, _siteBuilderContext,viewPath);
         }
 
 
