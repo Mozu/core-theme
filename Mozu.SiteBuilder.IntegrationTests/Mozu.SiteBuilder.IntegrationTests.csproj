@@ -197,8 +197,9 @@
     <Reference Include="Mozu.CustomShippingRates.Contracts">
       <HintPath>..\packages\Mozu.CustomShippingRates.Contracts.0.0.12339.6\lib\Mozu.CustomShippingRates.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Order.Contracts">
-      <HintPath>..\packages\Mozu.Order.Contracts.0.0.12338.2\lib\Mozu.Order.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Order.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Order.Contracts.0.0.13062.1\lib\Mozu.Order.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

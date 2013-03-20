@@ -10,8 +10,8 @@ using Mozu.Order.Contracts.Clients;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using OrderContract = Mozu.Order.Contracts.Order;
-using OrderItemContract = Mozu.Order.Contracts.OrderItem;
+//using OrderContract = Mozu.Order.Contracts.Order;
+//using OrderItemContract = Mozu.Order.Contracts.OrderItem;
 using RuntimeProductContract = Mozu.ProductRuntime.Contracts.Product;
 using RuntimeProductDTO = Mozu.SiteBuilder.UX.Admin.Api.Models.PhoneOrder.RuntimeProduct;
 using RuntimeProductSearchResultContract = Mozu.ProductRuntime.Contracts.ProductSearchResult;
@@ -75,23 +75,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2<RuntimeProductContract>(r.Items);
         }
 
-        [WebInvoke(Method="POST",UriTemplate = "order/stuffit")]
-        public async Task<Response<OrderDTO>> StuffAnOrderIntoABox(OrderDTO order)
-        {
-            var o = new OrderContract();
+        //[WebInvoke(Method="POST",UriTemplate = "order/stuffit")]
+        //public async Task<Response<OrderDTO>> StuffAnOrderIntoABox(OrderDTO order)
+        //{
+        //    var o = new OrderContract();
 
-            o.Items.AddRange(order.Items);
+        //    o.Items.AddRange(order.Items);
 
-            OrderContract r = (await _orderClient.CreateOrder(o)).ReadAsSync();
+        //    OrderContract r = (await _orderClient.CreateOrder(o)).ReadAsSync();
 
-            return Single2<OrderDTO>(order);
-        }
+        //    return Single2<OrderDTO>(order);
+        //}
 
-        [DataContract]
-        public class OrderDTO
-        {
-            [DataMember]
-            public List<OrderItemContract> Items { get; set; }
-        }
+        //[DataContract]
+        //public class OrderDTO
+        //{
+        //    [DataMember]
+        //    public List<OrderItemContract> Items { get; set; }
+        //}
     }
 }

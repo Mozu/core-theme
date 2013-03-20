@@ -72,35 +72,35 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            },
                                        new EmailTypeInfo()
                                            {
-                                               ModelType = typeof (Mozu.Order.Contracts.Order),
+                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Order.Order ),
                                                MappingType = typeof(OrderInformation),
                                                Template = "email/orderstatus",
                                                CmsDoc="orderstatus",
-                                               Topic = string.Format("{0}.{1}.{2}",EmailNotification.PrimaryTopic,OrderNotificationTopics.TopicBase ,OrderNotificationTopics.Open ) //todo: fix this one...
+                                               Topic = string.Format("{0}.{1}.{2}",EmailNotification.PrimaryTopic,"fuck", "me")//OrderNotificationTopics.TopicBase ,OrderNotificationTopics.Open ) //todo: fix this one...
                                            },
                                             new EmailTypeInfo()
                                            {
-                                               ModelType = typeof (Mozu.Order.Contracts.Order),
+                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Order.Order ),
                                                MappingType = typeof(OrderInformation),
                                                Template = "email/orderstatus",
                                                CmsDoc="orderstatus",
-                                               Topic = string.Format("{0}.{1}.{2}",EmailNotification.PrimaryTopic,OrderNotificationTopics.TopicBase ,OrderNotificationTopics.Cancelled   ) //todo: fix this one...
+                                               Topic = string.Format("{0}.{1}.{2}",EmailNotification.PrimaryTopic,"fuck", "me")//,OrderNotificationTopics.TopicBase ,OrderNotificationTopics.Cancelled   ) //todo: fix this one...
                                            },
                                             new EmailTypeInfo()
                                            {
-                                               ModelType = typeof (Mozu.Order.Contracts.Order),
+                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Order.Order ),
                                                MappingType = typeof(OrderInformation),
                                                Template = "email/orderstatus",
                                                CmsDoc="orderstatus",
-                                               Topic = string.Format("{0}.{1}.{2}",EmailNotification.PrimaryTopic, OrderNotificationTopics.TopicBase , OrderNotificationTopics.Shipped   ) //todo: fix this one...
+                                               Topic = string.Format("{0}.{1}.{2}",EmailNotification.PrimaryTopic,"fuck", "me")// OrderNotificationTopics.TopicBase , OrderNotificationTopics.Shipped   ) //todo: fix this one...
                                            },
                                             new EmailTypeInfo()
                                            {
-                                               ModelType = typeof (Mozu.Order.Contracts.Order),
+                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Order.Order ),
                                                MappingType = typeof(OrderInformation),
                                                Template = "email/orderstatus",
                                                CmsDoc="orderstatus",
-                                               Topic = string.Format("{0}.{1}.{2}",EmailNotification.PrimaryTopic, OrderNotificationTopics.TopicBase , "fulfilled" ) //todo: fix this one...
+                                               Topic = string.Format("{0}.{1}.{2}",EmailNotification.PrimaryTopic,"fuck", "me")// OrderNotificationTopics.TopicBase , "fulfilled" ) //todo: fix this one...
                                            },
 
                                    };

@@ -46,25 +46,25 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
             _userWebApiClient.With(x => x.UpdateUser(_user, _lightweightUser.UserId), _user);
         }
 
-        [Test]
-        public void Index_should_apply_filter_to_GetOrders()
-        {
-            var id = 12345;
-            var expectedFilter = "OrderStatus ne \"New\" and CustomerAccountId eq \"12345\" and OrderNumber ne null";
-            var orders = new List<Mozu.Order.Contracts.Order>();
+        //[Test]
+        //public void Index_should_apply_filter_to_GetOrders()
+        //{
+        //    var id = 12345;
+        //    var expectedFilter = "OrderStatus ne \"New\" and CustomerAccountId eq \"12345\" and OrderNumber ne null";
+        //    var orders = new List<Mozu.Order.Contracts.Order>();
 
-            var customerAccount = new CustomerAccount { Id = id };
-            _orderWebApiClient.With(x => x.GetOrders(0, 25, null, expectedFilter), new OrderCollection { Items = orders });
-            _customerRepository.With(x => x.GetByUserId(Guid.Empty.ToString("n")), customerAccount);
+        //    var customerAccount = new CustomerAccount { Id = id };
+        //    _orderWebApiClient.With(x => x.GetOrders(0, 25, null, expectedFilter), new OrderCollection { Items = orders });
+        //    _customerRepository.With(x => x.GetByUserId(Guid.Empty.ToString("n")), customerAccount);
 
-            var controller = GetController();
+        //    var controller = GetController();
 
-            var result = controller.Index().Result as ViewResult;
-            var model = result.Model as CustomerAccount;
+        //    var result = controller.Index().Result as ViewResult;
+        //    var model = result.Model as CustomerAccount;
 
-            model.ShouldNotBeNull();
-            model.Id.ShouldEqual(id);
-        }
+        //    model.ShouldNotBeNull();
+        //    model.Id.ShouldEqual(id);
+        //}
 
         [Test]
         public void ChangePassword_should_assign_true_to_Data_if_no_exceptions_are_thrown()
