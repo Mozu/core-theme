@@ -14,6 +14,11 @@ Ext.define('Taco.model.Product', {
         "type": "string",
         "useNull": true
     },
+  {
+      name: "productTypeId",
+      type: "int",
+      useNull : true
+  },
     {
         "name": "createDate",
         "type": "date",
