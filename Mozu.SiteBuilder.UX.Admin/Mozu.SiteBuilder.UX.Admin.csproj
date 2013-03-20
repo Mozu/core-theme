@@ -531,6 +531,7 @@
     <Content Include="Scripts\app\core\ux\form\field\MultiSelect.js" />
     <Content Include="Scripts\app\core\ux\grid\MenuColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\HeaderDropZone.js" />
+    <Content Include="Scripts\app\core\ux\ComboFilter.js" />
     <Content Include="Scripts\app\core\ux\SidebarList.js" />
     <Content Include="Scripts\app\core\ux\grid\Header.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />
@@ -1060,9 +1061,11 @@
     <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-top-sides.gif" />
     <Content Include="Scripts\ext\resources\themes\images\default\window\window-default-corners.gif" />
     <Content Include="Scripts\ext\resources\themes\images\default\window\window-default-sides.gif" />
+    <Content Include="Scripts\ext\ux\form\field\BoxSelect.js" />
     <Content Include="Scripts\ext\ux\form\ItemSelector.js" />
     <Content Include="Scripts\ext\ux\form\MultiSelect.js" />
     <Content Include="Scripts\ext\ux\IFrame.js" />
+    <Content Include="Scripts\ext\ux\layout\component\field\BoxSelectField.js" />
     <Content Include="Scripts\index.html" />
     <Content Include="Scripts\jsduck-4.3.2.exe" />
     <Content Include="Scripts\makedocsasjson.bat" />
@@ -1109,7 +1112,6 @@
     <Content Include="Scripts\app\core\ux\CustomerGroupComboBox.js" />
     <Content Include="Scripts\app\core\ux\form\BackgroundImageField.js" />
     <Content Include="Scripts\app\core\ux\form\BackgroundImagePicker.js" />
-    <Content Include="Scripts\app\core\ux\form\BoxSelectField.js" />
     <Content Include="Scripts\app\core\ux\form\FontField.js" />
     <Content Include="Scripts\app\core\ux\form\FontPicker.js" />
     <Content Include="Scripts\app\core\ux\form\Form.js" />
@@ -2880,6 +2882,7 @@
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.ttf" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.woff" />
     <Content Include="Scripts\resources\scss\taco\variables\_form.scss" />
+    <Content Include="Scripts\resources\scss\taco\widgets\_boxselect.scss" />
     <None Include="Scripts\resources\scss\taco\widgets\_checkout.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_panel.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_phoneOrders.scss" />

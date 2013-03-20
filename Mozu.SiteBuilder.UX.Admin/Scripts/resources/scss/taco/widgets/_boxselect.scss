@@ -1,0 +1,79 @@
+@mixin taco-boxselect {
+
+  .#{$prefix}boxselect {
+    input {
+      background: none transparent;
+      border: 0px none;
+      line-height: 18px;
+      height: 20px;
+      width: 100%;
+    }
+
+    ul.#{$prefix}boxselect-list {
+      padding: 1px 3px;
+    }
+
+    &.#{$prefix}form-text {
+      cursor: text;
+      height: auto;
+      overflow-y: auto;
+      padding: 0px;
+    }
+  }
+
+  ul.#{$prefix}boxselect-list {
+    &.#{$prefix}boxselect-singleselect {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+
+  .#{$prefix}-boxselect-input {
+    display: inline-block;
+    position: relative;
+  }
+
+  .#{$prefix}boxselect-item {
+    background-color: #DEE7F8;
+    cursor: default;
+    display: inline-block;
+    padding: 0px 1px 0px 5px !important;
+    position: relative;
+    margin: 1px 1px 1px 0;
+    background-color: #DEE7F8;
+    @include border-radius(6px);
+  }
+  .#{$prefix}boxselect-stacked {
+    .#{$prefix}boxselect-item {
+      display: block;
+    }
+  }
+  .#{$prefix}field:not(.#{$prefix}item-disabled) {
+    .#{$prefix}boxselect-item {
+      &:hover {
+        background-color: #BBCEF1;
+        border: 1px solid #6D95E0;
+      }
+      &.selected {
+        background-color: #658FDC !important;
+        border: 1px solid #316AD3 !important;
+      }
+    }
+  }
+
+  .#{$prefix}boxselect-item-text {
+    line-height: 16px;
+    padding-right: 20px !important;
+  }
+
+  .#{$prefix}boxselect-item-close {
+    cursor: pointer;
+  }
+
+  .#{$prefix}boxselect-hideselections {
+    .#{$prefix}boundlist-selected {
+      display: none;
+    }
+  }
+
+}

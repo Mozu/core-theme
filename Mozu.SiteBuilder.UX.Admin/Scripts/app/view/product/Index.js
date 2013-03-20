@@ -11,6 +11,7 @@ Ext.define('Taco.view.product.Index', {
     store: { type: 'Taco.store.Products' },
     editorName: 'Taco.view.product.Edit',
     filterProperty: 'productName',
+    useTilePanel: true,
 
     gridPanelConf: {
         columns: [{

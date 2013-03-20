@@ -27,8 +27,8 @@
  */
 Ext.define('Taco.core.ux.form.BoxSelect', {
     extend: 'Ext.form.field.ComboBox',
-    alias: ['widget.comboboxselect', 'widget.boxselect'],
-    requires: ['Ext.selection.Model', 'Ext.data.Store', 'Taco.core.ux.form.BoxSelectField'],
+    alias: ['widget.taco.boxselect'],
+    requires: ['Ext.selection.Model', 'Ext.data.Store', 'Ext.ux.layout.component.field.BoxSelectField'],
 
     /**
     * @cfg {Boolean} multiSelect
