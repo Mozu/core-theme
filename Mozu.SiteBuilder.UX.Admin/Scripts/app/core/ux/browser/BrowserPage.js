@@ -10,7 +10,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     typeName: 'Item',
     createButtonPrefix: "Create New ",
     useGridPanel: true,
-    useTilePanel: true,
+    useTilePanel: false,
     gridPanelClass: 'Taco.core.ux.grid.Panel',
     tilePanelClass: 'Taco.core.ux.TilePanel', 
     filterProperty: 'name',
@@ -120,75 +120,76 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             flex: 1,
             isCollectionContext: Taco.app.context.getCurrent().contextType === "c",
             gridPanel: me.gridPanel,
-            tilePanel: me.tilePanel
+            tilePanel: me.tilePanel,
+            useGridPanel: me.useGridPanel,
+            useTilePanel: me.useTilePanel
         });
 
-        me.itemBrowser.on({
-            deleteitem: function (panel, record) {
-                console.log('itembrowser delete fired', arguments);
+        // me.itemBrowser.on({
+        //     deleteitem: function (panel, record) {
+        //         console.log('itembrowser delete fired', arguments);
 
-                Ext.create('Taco.core.ux.modal.Confirmation', {
-                    autoShow: true,
-                    content: {
-                        html: 'Are you sure you want to delete this ' + me.typeName.toLowerCase() + '?'
-                    },
-                    listeners: {
-                        cancel: function () { },
-                        confirm: function () {
-                            panel.setLoading(true);
-                            me.store.remove(record);
-                            me.store.sync({
-                                success: function (m) {
-                                    panel.setLoading(false);
-                                    Taco.app.fireEvent('setmessage', me.typeName + ' deleted.', 'status', m);
-                                },
-                                failure: function (m) {
-                                    panel.setLoading(false);
-                                    Taco.app.fireEvent('setmessage', me.typeName + ' deletion failed.', 'error', m);
-                                }
-                            });
-                            console.log('sync complete');
-                        }
-                    }
-                });
-            },
-            duplicateitem: function (panel, record) {
+        //         Ext.create('Taco.core.ux.modal.Confirmation', {
+        //             autoShow: true,
+        //             content: {
+        //                 html: 'Are you sure you want to delete this ' + me.typeName.toLowerCase() + '?'
+        //             },
+        //             listeners: {
+        //                 cancel: function () { },
+        //                 confirm: function () {
+        //                     panel.setLoading(true);
+        //                     me.store.remove(record);
+        //                     me.store.sync({
+        //                         success: function (m) {
+        //                             panel.setLoading(false);
+        //                             Taco.app.fireEvent('setmessage', me.typeName + ' deleted.', 'status', m);
+        //                         },
+        //                         failure: function (m) {
+        //                             panel.setLoading(false);
+        //                             Taco.app.fireEvent('setmessage', me.typeName + ' deletion failed.', 'error', m);
+        //                         }
+        //                     });
+        //                     console.log('sync complete');
+        //                 }
+        //             }
+        //         });
+        //     },
+        //     duplicateitem: function (panel, record) {
                
-                record.duplicate({
-                    success: function (copy) {
-                       // panel.setLoading(false);k
-                        Taco.app.fireEvent('setmessage', me.typeName + ' copied.', 'status', copy);
-                        if (record.stores) {
-                            Ext.Array.each(record.stores, function(store) {
-                                if ( !store.getById(copy.getId())) {
-                                    store.add(copy);
-                                }
+        //         record.duplicate({
+        //             success: function (copy) {
+        //                // panel.setLoading(false);k
+        //                 Taco.app.fireEvent('setmessage', me.typeName + ' copied.', 'status', copy);
+        //                 if (record.stores) {
+        //                     Ext.Array.each(record.stores, function(store) {
+        //                         if ( !store.getById(copy.getId())) {
+        //                             store.add(copy);
+        //                         }
                                     
-                            });
-                        }
+        //                     });
+        //                 }
                       
-                        me.launchEditor(copy);
-                        Taco.app.StateManager.addState(me.token + '/edit/' + copy.getId() || -1, { id: copy.getId() || -1 });
-                    },
-                    failure: function (m, operation) {
-                        panel.setLoading(false);
-                        Taco.app.fireEvent('setmessage', me.typeName + ' failed to copy.', 'error', m);
-                    }
-                });
-            },
-            viewitem: function (panel, record) {
-                window.open('/' + me.token + '/' + record.getId() + ((record.get('isActive'))? '':'?iseditmode=true'   ), 'preview');
-            }
-        });
+        //                 me.launchEditor(copy);
+        //                 Taco.app.StateManager.addState(me.token + '/edit/' + copy.getId() || -1, { id: copy.getId() || -1 });
+        //             },
+        //             failure: function (m, operation) {
+        //                 panel.setLoading(false);
+        //                 Taco.app.fireEvent('setmessage', me.typeName + ' failed to copy.', 'error', m);
+        //             }
+        //         });
+        //     },
+        //     viewitem: function (panel, record) {
+        //         window.open('/' + me.token + '/' + record.getId() + ((record.get('isActive'))? '':'?iseditmode=true'   ), 'preview');
+        //     }
+        // });
 
-        if( this.record && this.record.isModel ) {
+        if (this.record && this.record.isModel) {
             this.on({
                 afterrender: function () {
-                    this.launchLoadedEditor( this.record );        
+                    this.launchLoadedEditor(this.record);
                 },
                 scope: this
             });
-            
         }
     },
 
@@ -215,7 +216,6 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             } else {
                 me.store.clearFilter();
             }
-
         });
     },
 
@@ -228,8 +228,8 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         if (itemInStore !== model) {
             itemInStore.copyData(model);
         }
-
     },
+
     onNavigate: function (newState) {
         // navigation events that i can totes handle include: 
         var md = newState.getMetaData();
@@ -245,6 +245,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             columns: this.bulkEditorColumns || this.gridPanelConf.columns
         });
     },
+
     launchEditor: function (record, options) {
         var me = this,
             modelClass = Ext.ClassManager.get(me.modelName);
@@ -258,6 +259,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         }
         me.launchLoadedEditor(record, options);
     },
+
     launchLoadedEditor: function(record, options){
         var me = this,
             editToken = me.token + '/edit/',
@@ -326,7 +328,6 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     },
 
     initComponent: function () {
-        
         this.updateRecordTypeName();
         this.store = Taco.core.data.StoreManager.getOrCreate(this.store);
         if (this.useGridPanel) this.createGridPanel(this.gridPanelConf || {});
@@ -338,7 +339,5 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         if (!this.store.hasLoaded()) {
             this.store.load();
         }
-        
     }
-
 });

@@ -78,7 +78,6 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                         '<div>',
                             '<span class="record-total-count">{totalCount}</span> ',
                             '<span class="record-unit">',
-                            //'{unit}',
                             '<tpl if="totalCount == 1">{[Ext.util.Inflector.singularize(values.unit)]}<tpl else>{unit}</tpl>',
                             '</span>',
                         '</div>'
@@ -127,7 +126,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             margin: '0 5 0 10',
             items: [
                 { name: 'cardselect', inputValue: '0', fieldCls: 'toggle-gridview', checked: true },
-                { name: 'cardselect', inputValue: '1', fieldCls: 'toggle-iconview' }
+                { name: 'cardselect', inputValue: '1', fieldCls: 'toggle-tileview' }
             ],
             listeners: {
                 change: function (group, selected) {

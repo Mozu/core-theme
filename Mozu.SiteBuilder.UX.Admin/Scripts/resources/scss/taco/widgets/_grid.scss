@@ -286,12 +286,12 @@
 
   // pager styles
   .#{$vprefix}pager {
-    background: none $base-color;
-    border: 1px solid border-for($color-neutral-white);
+    background: none $color-neutral-95;
+    border: 1px solid border-for($color-neutral-95);
     padding: 7px;
 
     .#{$vprefix}action {
-      background-color: $color-neutral-95;
+      background-color: $color-neutral-90;
       display: inline-block;
       height: 28px;
       margin: 2px;
