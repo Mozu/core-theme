@@ -131,9 +131,10 @@ Ext.define('Taco.view.product.Index', {
                     defaults = eventData.header.menuItemDefaults;
 
                 previewAction.menu.removeAll();
-                eventData.record.productInSitesStore().each(function(record) {
+                eventData.record.productInSitesStore().each(function (record) {
+                    var site = record.get('site');
                     previewAction.menu.add(Ext.applyIf({
-                        text: 'site ' + record.getId(),
+                        text: (site ? site.name : 'n/a'),
                         menuColumnHandler: function (item, eventData) {
                             window.open('/_gosite/' + record.getId() + '?redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
                            
