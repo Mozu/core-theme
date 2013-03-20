@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using Autofac;
 using NDjango.Interfaces;
 using Mozu.SiteBuilder.Mvc.Security;
 
@@ -16,13 +17,14 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
     class DjangoMozuView : IView, IViewDataContainer, IViewPathContainer
     {
-
+        private readonly ISiteBuilderContext _siteBuilderContext;
         internal string viewPath;
 
-        public DjangoMozuView(ITemplateManager manager, string viewPath)
+        public DjangoMozuView(ITemplateManager manager, ISiteBuilderContext siteBuilderContext, string viewPath)
         {
             // TODO: Complete member initialization
             this.TemplateManager = manager;
+            _siteBuilderContext = siteBuilderContext;
             this.viewPath = viewPath;
         }
 
@@ -67,9 +69,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             requestContext["Model"] = requestContext["model"] = viewContext.ViewData.Model;
             requestContext["Session"] = requestContext["session"] = viewContext.HttpContext.Session;
             //requestContext["Templates"] = new TemplateLocator(html, this.TemplateManager);
-            requestContext["SiteContext"] = requestContext["siteContext"] = SiteBuilderContext.Current;
-            requestContext["ThemeSettings"] = requestContext["themeSettings"] = SiteBuilderContext.Current.ThemeSettings;
-            requestContext["PageContext"] = requestContext["pageContext"] = SiteBuilderContext.Current.PageContext;
+            requestContext["SiteContext"] = requestContext["siteContext"] = _siteBuilderContext ;
+            requestContext["ThemeSettings"] = requestContext["themeSettings"] = _siteBuilderContext.ThemeSettings;
+            requestContext["PageContext"] = requestContext["pageContext"] = _siteBuilderContext.PageContext;
             requestContext["User"] = requestContext["user"] = user;
 
             var reader = TemplateManager.RenderTemplate(viewPath, requestContext);
