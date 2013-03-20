@@ -38,6 +38,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SalePrice, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).SalePrice))
                 .ForMember(x => x.StockOnHand, op => op.MapFrom(dc => dc.StockOnHand))
                 .ForMember(x => x.IsHiddenWhenOutOfStock, op => op.MapFrom(dc => dc.IsHiddenWhenOutOfStock))
+                .ForMember(x => x.ProductTypeId, op => op.MapFrom(dc => dc.ProductTypeId))
+
                 .ForMember(x => x.IsBackOrderAllowed, op => op.MapFrom(dc => dc.IsBackOrderAllowed))
                 .ForMember(x => x.PackageWeight, op => op.MapFrom(dc => dc.PackageWeight == null ? null : dc.PackageWeight.Value))
                 .ForMember(x => x.PackageHeight, op => op.MapFrom(dc => dc.PackageHeight == null ? null : dc.PackageHeight.Value))
@@ -61,6 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Product, DC.Product>()
                 .ForMember(dc => dc.ProductCode, op => op.MapFrom(p => p.ProductCode))
                 .ForMember(dc => dc.BaseProductCode, op => op.MapFrom(p => p.BaseProductCode))
+                .ForMember(dc => dc.ProductTypeId, op => op.MapFrom(dc => dc.ProductTypeId))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(p =>
                 {
                     var images = Mapper.Map<List<DC.ProductLocalizedImage>>(p.Images);

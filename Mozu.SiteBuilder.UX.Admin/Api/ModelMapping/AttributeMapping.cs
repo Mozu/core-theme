@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AttributeFQN, opt => opt.MapFrom(dc => dc.AttributeFQN))
                 .ForMember(x => x.Index, opt => opt.MapFrom(dc => dc.Order))                
                 .ForMember(x => x.IsRequired, opt => opt.MapFrom(dc => dc.IsRequiredByAdmin))
-                .ForMember(x => x.AllowMulti, opt => opt.MapFrom(dc => dc.IsMultiSelectProperty))
+                .ForMember(x => x.AllowMulti, opt => opt.MapFrom(dc => dc.IsMultiValueProperty ))
                 .ForMember(x => x.IsHidden, opt => opt.MapFrom(dc => dc.IsHiddenProperty))
                 .ForMember(x => x.IsLocked, opt => opt.MapFrom(dc => dc.IsInheritedFromBaseType))
                 .ForMember(x => x.AllValues, opt => opt.MapFrom(dc => dc.Attribute.VocabularyValues))
@@ -101,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.IsHiddenProperty, opt => opt.MapFrom(x => x.IsHidden))
                 .ForMember(dc => dc.IsInheritedFromBaseType, opt => opt.MapFrom(x => x.IsLocked))
                 .ForMember(dc => dc.IsRequiredByAdmin, opt => opt.MapFrom(x => x.IsRequired))
-                .ForMember(dc => dc.IsMultiSelectProperty, opt => opt.MapFrom(x => x.AllowMulti))
+                .ForMember(dc => dc.IsMultiValueProperty  , opt => opt.MapFrom(x => x.AllowMulti))
                 .ForMember(dc => dc.VocabularyValues, opt => opt.ResolveUsing(x => MapSelectedValuesToVocabularyValueInProductTypeList(x.SelectedValues)))
                 ;
 
