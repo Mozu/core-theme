@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using AutoMapper;
 using Mozu.Cart.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Order;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
@@ -84,7 +85,7 @@ namespace Mozu.SiteBuilder.Mvc.Orders
 
             try
             {
-                var shippingRates = _orderWebApiClient.GetAvailableShippingMethods(order.Id).Result.ReadAsAsync().Result;
+                var shippingRates = _orderWebApiClient.GetAvailableShipmentMethods(order.Id).Result.ReadAsAsync().Result;
                 var rates = shippingRates.Select(x => new ShippingMethodInformation { Name = x.ShippingMethodName, Price = x.Price, Id = x.ShippingMethodCode, OrderId = order.Id, IsValid = x.IsValid ?? false });
                 return new AvailableShippingMethods(rates.Where(x => x.IsValid));
             }

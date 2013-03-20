@@ -40,35 +40,35 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Controllers
             orderWebApiClient = Substitute.For<IOrderWebApiClient>();
         }
 
-        [Test, Ignore("Lots of underlying features changed since this test was first written. It probably needs to be removed and other parts tested. I'm not even sure it's a useful test any longer.")]
-        public void UpdateShippingInformation_should_update_only_expected_fields()
-        {
-            var controller = GetController();
+        //[Test, Ignore("Lots of underlying features changed since this test was first written. It probably needs to be removed and other parts tested. I'm not even sure it's a useful test any longer.")]
+        //public void UpdateShippingInformation_should_update_only_expected_fields()
+        //{
+        //    var controller = GetController();
 
-            var info = new ShipmentInformation
-            {
-                Address1 = "123 fake st",
-                Address2 = "apt 5000",
-                CityOrTown = "Anytown",
-                CountryCode = "USA",
-                FirstName = "firsty",
-                LastName = "lasty",
-                PostalOrZipCode = "12345",
-                StateOrProvince = "XX",
-            };
+        //    var info = new ShipmentInformation
+        //    {
+        //        Address1 = "123 fake st",
+        //        Address2 = "apt 5000",
+        //        CityOrTown = "Anytown",
+        //        CountryCode = "USA",
+        //        FirstName = "firsty",
+        //        LastName = "lasty",
+        //        PostalOrZipCode = "12345",
+        //        StateOrProvince = "XX",
+        //    };
 
-            var result = controller.UpdateShippingAddress(info) as JsonResult;
-            var model = result.Data as Mozu.Order.Contracts.Order;
+        //    var result = controller.UpdateShippingAddress(info) as JsonResult;
+        //    var model = result.Data as Mozu.Order.Contracts.Order;
 
-            model.Shipment.ShippingAddress.FirstName.ShouldEqual(info.FirstName);
-            model.Shipment.ShippingAddress.LastNameOrSurname.ShouldEqual(info.LastName);
-            model.Shipment.ShippingAddress.Address.Address1.ShouldEqual(info.Address1);
-            model.Shipment.ShippingAddress.Address.Address2.ShouldEqual(info.Address2);
-            model.Shipment.ShippingAddress.Address.CityOrTown.ShouldEqual(info.CityOrTown);
-            model.Shipment.ShippingAddress.Address.StateOrProvince.ShouldEqual(info.StateOrProvince);
-            model.Shipment.ShippingAddress.Address.CountryCode.ShouldEqual(info.CountryCode);
-            model.Shipment.ShippingAddress.Address.PostalOrZipCode.ShouldEqual(info.PostalOrZipCode);
-        }
+        //    model.Shipment.ShippingAddress.FirstName.ShouldEqual(info.FirstName);
+        //    model.Shipment.ShippingAddress.LastNameOrSurname.ShouldEqual(info.LastName);
+        //    model.Shipment.ShippingAddress.Address.Address1.ShouldEqual(info.Address1);
+        //    model.Shipment.ShippingAddress.Address.Address2.ShouldEqual(info.Address2);
+        //    model.Shipment.ShippingAddress.Address.CityOrTown.ShouldEqual(info.CityOrTown);
+        //    model.Shipment.ShippingAddress.Address.StateOrProvince.ShouldEqual(info.StateOrProvince);
+        //    model.Shipment.ShippingAddress.Address.CountryCode.ShouldEqual(info.CountryCode);
+        //    model.Shipment.ShippingAddress.Address.PostalOrZipCode.ShouldEqual(info.PostalOrZipCode);
+        //}
 
         [Test]
         public void Create_checkout_viewModel_information_for_knockout()

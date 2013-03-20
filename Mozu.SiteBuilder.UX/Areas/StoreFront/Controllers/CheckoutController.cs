@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (string.IsNullOrWhiteSpace(id))
                 return LastOrderId != null ? RedirectToAction("Confirmation") : RedirectToAction("Index", "Cart");
 
-            Order.Contracts.Order model = _orderWebApiClient.GetOrder(id).Result.ReadAsAsync().Result;
+            var model = _orderWebApiClient.GetOrder(id).Result.ReadAsAsync().Result;
             if (model == null)
                 return RedirectToAction("Index", "Cart");
 
