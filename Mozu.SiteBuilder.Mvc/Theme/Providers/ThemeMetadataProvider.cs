@@ -110,7 +110,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                        {
                            return jSerializer.Deserialize<WidgetDefinition>(new JsonTextReader(stream));
                        }
-                   }).ToList();
+                   }).Where(x => x != null).ToList();
 
             tmd.PageTypes = tmd.FileListing.Where(x => x.VirtualPath.StartsWith( pageTypesMetaDataDir, StringComparison.OrdinalIgnoreCase) && x.Name.Equals("definition.json", StringComparison.OrdinalIgnoreCase))
                .Select(x =>
@@ -119,7 +119,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                    {
                        return jSerializer.Deserialize<PageTemplateDefinition>(new JsonTextReader(stream));
                    }
-               }).ToList();
+               }).Where(x => x != null).ToList();
 
 
 
