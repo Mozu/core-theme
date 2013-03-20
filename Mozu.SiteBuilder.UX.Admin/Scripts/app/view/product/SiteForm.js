@@ -45,7 +45,9 @@ Ext.define('Taco.view.product.SiteForm', {
             persistChangesToModel: true
         };
 
-        subFormReadOnlyCfg = Ext.apply(subFormCfg, { readOnly: true, record: this.product });
+        subFormReadOnlyCfg = Ext.apply({}, subFormCfg, {
+            readOnly: !this.isSingleSite, record: this.product
+        });
         
         this.items = [
             {

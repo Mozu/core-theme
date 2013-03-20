@@ -19,4 +19,3 @@ Ext.define('Taco.store.ProductTypes', {
         autoLoad: true
     }
 });
-

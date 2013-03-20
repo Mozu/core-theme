@@ -10,23 +10,33 @@ Ext.define('Taco.view.product.subform.General', {
     title: 'General',
 
     initComponent: function () {
+        var readOnly;
+
+        this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
+
+        
+
         this.defaults = {
             width: 200,
             product: this.product,
             productInSiteInfo: this.productInSiteInfo,
+            labelAlign: 'top',
+            labelSeparator: '',
             persistChangesToModel: true
         };
 
         this.record = this.product;
 
+        readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
+
+        console.log('length = ', this.productTypeStore.data.length, readOnly);
+
         this.items = [{
             fieldLabel: 'Code',
             name: 'productCode',
             emptyText: '#######',
-            readOnly:  (this.product && !this.product.phantom),
+            readOnly: readOnly,
             required: true,
-            labelAlign: 'top',
-            labelSeparator: '',
             width: 200,
             xtype: 'textfield'
         }, {
@@ -36,6 +46,7 @@ Ext.define('Taco.view.product.subform.General', {
             width: '100%',
             items: [{
                 fieldLabel: 'Name',
+
                 name: 'productName',
                 emptyText: 'Some product description',
                 width: "100%",
@@ -67,6 +78,16 @@ Ext.define('Taco.view.product.subform.General', {
                 emptyText: 'Enter the sale price here',
                 cls: Taco.baseCSSPrefix + 'flex-field-spacing'
             }]
+        }, {
+            fieldLabel: 'Product Type',
+            name: 'productTypeId',
+            readOnly: readOnly,
+            required: true,
+            width: 200,
+            xtype: 'selectfield',
+            displayField: 'name',
+            valueField: 'id',
+            store: this.productTypeStore
         }];
 
         this.callParent( arguments );
