@@ -87,9 +87,36 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'selectfield',
             displayField: 'name',
             valueField: 'id',
-            store: this.productTypeStore
+            store: this.productTypeStore,
+            listeners: {
+                change: this.onProductTypeChange
+            }
         }];
 
         this.callParent( arguments );
+    },
+
+    onProductTypeChange: function (selectField, value) {
+        var parentForm, propertiesForm;
+
+        if (!this.propertiesForm) {
+
+
+            parentForm = this.up('productsiteform, productglobalform');
+
+            if (!parentForm) {
+                return;
+            }
+
+            propertiesForm = parentForm.down('productpropertiesform');
+
+            if (!propertiesForm) {
+                return;
+            }
+
+            this.propertiesForm = propertiesForm;
+        }
+
+        this.propertiesForm.loadByProductTypeId(value);
     }
 });
