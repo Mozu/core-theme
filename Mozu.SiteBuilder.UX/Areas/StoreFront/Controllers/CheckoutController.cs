@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (model == null)
                 return RedirectToAction("Index", "Cart");
 
-            return View("checkout", new { order = model, paymentApiBase = _pciSettingsProvider.GetPaymentApiBase() , availableCountries = _orderService.GetShippableCountries().Select(x => new { code = x.Key, name = x.Value } as object).ToList() });
+            return View("checkout", new { order = model, paymentApiBase = _pciSettingsProvider.GetPaymentApiBase() , availableCountries = _orderService.GetShippableCountries().Select(x => new { code = x.Key, name = x.Value } as object).ToList(), availableShippingMethods = _orderWebApiClient.GetAvailableShippingMethods(id).Result.ReadAsSync()});
         }
 
         protected string LastOrderId
