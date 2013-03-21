@@ -142,18 +142,7 @@
             basegridview.mon(basegridview, 'itemclick', me.onItemClick, me);
         },
 
-        onGlobalModelSave: function (model) {
-            var me = this,
-                itemInStore = me.store.getById(model.getId());
-            if (itemInStore == null) {
-                me.store.add([model]);
-                return;
-            }
-            if (itemInStore !== model) {
-                itemInStore.copyData(model);
-            }
-        },
-
+        
         onNavigate: function (newState) {
             var md = newState.getMetaData();
             if (md.controller && md.controller === "customers" && md.action === "edit") {

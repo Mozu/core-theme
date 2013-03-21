@@ -62,14 +62,14 @@ Ext.define('Taco.core.StateManager', {
     attemptNavigate: function (uriOrState, metadata, useReplace) {
         console.log("attemptNavigate", this, uriOrState);
         var me = this,
-            newState = uriOrState.isAppState ? uriOrState : this.createState(uriOrState),
+            newState = uriOrState.isAppState ? uriOrState : this.createState(uriOrState, metadata),
             retryFn = function () { me.attemptNavigate(newState); };
         if (this.fireEvent('beforenavigate', newState, retryFn) !== false) {
             this.suspendAllHandlers = true;
             this.addState(newState, metadata, useReplace);
             this.suspendAllHandlers = false;
             if (this.fireEvent('navigate', newState) !== false) {
-                this.dispatchController(newState.getMetaData());
+                this.dispatchController(newState.getMetaData(true));
             }
             this.fireEvent('statechange', newState);
         }
@@ -241,8 +241,9 @@ Ext.define('Taco.core.StateManager', {
                 break;
             }
         }
-        if (controller&&controller[params.action]) {
-            return controller[params.action].apply(controller, params.args);
+        if (controller && controller[params.action]) {
+            
+            return controller[params.action].apply(controller, Ext.Array.union(params.args , [params]));
         } else {
             Taco.app.getController("Errors").Http404();
             //Taco.app.fireEvent('error', 'Error 404: No page or panel found.');

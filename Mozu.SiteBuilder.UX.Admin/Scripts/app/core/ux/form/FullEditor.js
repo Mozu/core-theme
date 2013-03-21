@@ -11,6 +11,11 @@
 
     initComponent: function () {
 
+        
+         
+       
+        
+
         this.initWrapper();
 
         this.body = {
@@ -24,5 +29,6 @@
         };
 
         this.callParent(arguments);
-    }
+    },
+   
 });

@@ -1,100 +1,100 @@
 ﻿[{
     "id": "dashboard",
     "label": "Dashboard",
-    "address": "/admin/dashboard",
+    "address": "dashboard",
     "icon": "dashboard"
 }, {
     "id": "store",
     "label": "Store",
-    "address": "/admin/orders",
+    "address": "orders",
     "icon": "store",
     "items": [{
         "id": "orders",
         "label": "Orders",
-        "address": "/admin/orders"
+        "address": "orders"
     }, {
         "id": "phoneorders",
         "label": "Phone Orders",
-        "address": "/admin/phoneorders"
+        "address": "phoneorders"
     }, {
         "id": "customers",
         "label": "Customers",
-        "address": "/admin/customers"
+        "address": "customers"
     }]
 }, {
     "id": "catalog",
     "label": "Catalog",
-    "address": "/admin/products",
+    "address": "products",
     "icon": "catalog",
     "items": [{
         "id": "products",
         "label": "Products",
-        "address": "/admin/products"
+        "address": "products"
     }, {
         "id": "categories",
         "label": "Categories",
-        "address": "/admin/categories"
+        "address": "categories"
     }, {
         "id": "attributes",
         "label": "Attributes",
-        "address": "/admin/attributes"
+        "address": "attributes"
     }, {
         "id": "productTypes",
         "label": "Product Types",
-        "address": "/admin/producttypes"
+        "address": "producttypes"
         }]
 }, {
     "id": "marketing",
     "label": "Marketing",
-    "address": "/admin/email",
+    "address": "email",
     "icon": "marketing",
     "items": [{
         "id": "discounts",
         "label": "Discounts",
-        "address": "/admin/discounts"
+        "address": "discounts"
     }, {
         "id": "promotions",
         "label": "Promotions",
-        "address": "/admin/email"
+        "address": "email"
     }, {
         "id": "campaigns",
         "label": "Campaigns",
-        "address": "/admin/email"
+        "address": "email"
     }]
 }, {
     "id": "settings",
     "label": "Settings",
-    "address": "/admin/generalsettings",
+    "address": "generalsettings",
     "icon": "settings",
     "items": [{
         "id": "emailsettings",
         "label": "Email",
-        "address": "/admin/email"
+        "address": "email"
     }, {
         "id": "paymentcheckout",
         "label": "Payment/Checkout",
-        "address": "/admin/paymentAndCheckout"
+        "address": "paymentAndCheckout"
     }, {
         "id": "tax",
         "label": "Tax",
-        "address": "/admin/tax"
+        "address": "tax"
     }, {
         "id": "shipping",
         "label": "Shipping",
-        "address": "/admin/shipping"
+        "address": "shipping"
     }, {
         "id": "themes",
         "label": "Themes",
-        "address": "/admin/themes"
+        "address": "themes"
     }, {
         "id": "themesettings",
         "label": "Theme Settings",
-        "address": "/admin/themesettings"
+        "address": "themesettings"
     }]
 }, {
     "id": "publishing",
     "label": "Publishing",
-    "address": "/admin/pendingchanges",
+    "address": "pendingchanges",
     "icon": "settings",
     "items": [{
         "id": "cmspublishing",
@@ -108,7 +108,7 @@
 }, {
     "id": "sites",
     "label": "Edit Website",
-    "address": "/admin/sites/pages",
+    "address": "sites/pages",
     "icon": "website",
     "items":[
         {"id": "templates",
@@ -119,6 +119,6 @@
 }, {
     "id": "fileManagement",
     "label": "File Manager",
-    "address": "/admin/fileManagement",
+    "address": "fileManagement",
     "icon": "settings"
 }]

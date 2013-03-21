@@ -27,7 +27,7 @@ Ext.define('Taco.view.discounts.Index', {
 
         me.store = Ext.create('Taco.store.Discounts', { filters: me.filters });
 
-        me.mon(Taco.app.eventbus, "Taco.model.Discount.savesuccess", me.onGlobalModelSave, me);
+        
 
         me.basegrid = Ext.create('Taco.core.ux.BaseGrid', {
             store: me.store,
@@ -211,19 +211,7 @@ Ext.define('Taco.view.discounts.Index', {
         basegridview.mon(basegridview, 'itemclick', me.onItemClick, me);
     },
 
-    /**
-    * Handler for the global save event on the model that this view is interested in
-    */
-    onGlobalModelSave: function (model) {
-        var itemInStore = this.store.getById(model.getId());
-        if (itemInStore == null) {
-            this.store.add([model]);
-            return;
-        }
-        if (itemInStore !== model) {
-            itemInStore.copyData(model);
-        }
-    },
+   
 
     /**
     * Handler for when the user attempts to navigate away from this view
