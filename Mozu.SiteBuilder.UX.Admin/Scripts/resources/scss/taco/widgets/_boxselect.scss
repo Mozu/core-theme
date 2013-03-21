@@ -4,20 +4,21 @@
     input {
       background: none transparent;
       border: 0px none;
-      line-height: 18px;
-      height: 20px;
+      font-size: $font-size;
+      line-height: 1.333em;
+      height: 28px;
       width: 100%;
     }
 
     ul.#{$prefix}boxselect-list {
-      padding: 1px 3px;
+      padding: 2px 8px 1px;
     }
 
     &.#{$prefix}form-text {
       cursor: text;
       height: auto;
       overflow-y: auto;
-      padding: 0px;
+      padding: 0px !important; // TODO: remove !important hack once generic field styling is fixed
     }
   }
 
@@ -28,20 +29,19 @@
     }
   }
 
-  .#{$prefix}-boxselect-input {
+  .#{$prefix}boxselect-input {
     display: inline-block;
     position: relative;
   }
 
   .#{$prefix}boxselect-item {
-    background-color: #DEE7F8;
+    background-color: #fcc;
     cursor: default;
     display: inline-block;
+    margin: 2px 8px 2px 0px;
     padding: 0px 1px 0px 5px !important;
     position: relative;
-    margin: 1px 1px 1px 0;
-    background-color: #DEE7F8;
-    @include border-radius(6px);
+    @include border-radius(2px);
   }
   .#{$prefix}boxselect-stacked {
     .#{$prefix}boxselect-item {
@@ -51,18 +51,17 @@
   .#{$prefix}field:not(.#{$prefix}item-disabled) {
     .#{$prefix}boxselect-item {
       &:hover {
-        background-color: #BBCEF1;
-        border: 1px solid #6D95E0;
+        background-color: #ccf;
       }
       &.selected {
-        background-color: #658FDC !important;
-        border: 1px solid #316AD3 !important;
+        background-color: #cfc !important;
       }
     }
   }
 
   .#{$prefix}boxselect-item-text {
-    line-height: 16px;
+    font-size: $font-size;
+    line-height: 1.5em;
     padding-right: 20px !important;
   }
 
