@@ -1,7 +1,7 @@
 ﻿/**
 * The discount editor view
 */
-Ext.define('Taco.view.discounts.Edit', {
+Ext.define('Taco.view.discount.Edit', {
     extend: 'Taco.core.ux.form.Editor',
     requires: ['Taco.model.CouponCode', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.BoxSelect', 'Taco.store.ProductComboBox', 'Taco.core.ux.modal.Content', 'Taco.core.ux.modal.ContentWithActions', 'Taco.core.ux.form.UnitField', 'Taco.core.ux.form.CurrencyField'],
     title: 'New Discount',
