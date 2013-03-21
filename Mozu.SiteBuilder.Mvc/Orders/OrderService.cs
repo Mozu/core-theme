@@ -4,14 +4,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using AutoMapper;
-using Mozu.Cart.Contracts.Clients;
-using Mozu.CommerceRuntime.Contracts.Order;
+using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
-using Mozu.Order.Contracts;
-using Mozu.Order.Contracts.Clients;
+//using Mozu.SiteBuilder.UX.Models.Orders;
 using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.SiteSettings.Shipping.Contracts.Clients;
@@ -21,7 +20,7 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.Specifications;
 using Mozu.SiteBuilder.UX.Models.Checkout;
 using Mozu.SiteBuilder.UX.Models.Customers;
-using Mozu.User.Contracts;
+
 using Mozu.User.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.Mvc.Orders

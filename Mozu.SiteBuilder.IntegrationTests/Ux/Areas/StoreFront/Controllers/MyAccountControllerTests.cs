@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using Mozu.CommerceRuntime.Contracts.Clients;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
 using Mozu.Core;
-using Mozu.Order.Contracts;
-using Mozu.Order.Contracts.Clients;
+
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Customers;
 using Mozu.SiteBuilder.Mvc.Security;

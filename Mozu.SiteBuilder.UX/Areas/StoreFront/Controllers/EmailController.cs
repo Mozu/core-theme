@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Messaging.Contracts;
-using Mozu.Order.Contracts;
+
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            },
                                        new EmailTypeInfo()
                                            {
-                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Order.Order ),
+                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Orders.Order ),
                                                MappingType = typeof(OrderInformation),
                                                Template = "email/orderstatus",
                                                CmsDoc="orderstatus",
@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            },
                                             new EmailTypeInfo()
                                            {
-                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Order.Order ),
+                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Orders.Order ),
                                                MappingType = typeof(OrderInformation),
                                                Template = "email/orderstatus",
                                                CmsDoc="orderstatus",
@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            },
                                             new EmailTypeInfo()
                                            {
-                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Order.Order ),
+                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Orders.Order ),
                                                MappingType = typeof(OrderInformation),
                                                Template = "email/orderstatus",
                                                CmsDoc="orderstatus",
@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            },
                                             new EmailTypeInfo()
                                            {
-                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Order.Order ),
+                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Orders.Order ),
                                                MappingType = typeof(OrderInformation),
                                                Template = "email/orderstatus",
                                                CmsDoc="orderstatus",

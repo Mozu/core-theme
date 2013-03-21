@@ -3,7 +3,7 @@ using AutoMapper;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
-    using Contracts = Mozu.Order.Contracts;
+    using Contracts = Mozu.CommerceRuntime.Contracts.Orders;
     using VM = Mozu.SiteBuilder.UX.Models.Orders;
     public class OrderMapping : Profile
     {

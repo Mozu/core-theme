@@ -4,8 +4,8 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
-using Mozu.Cart.Contracts.Clients;
-using Mozu.Order.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Carts;
+using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models;
@@ -13,6 +13,7 @@ using VMCart = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.Cart;
 using CartItem = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.CartItem;
 using VM=Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Linq;
+using IOrderWebApiClient = Mozu.CommerceRuntime.Contracts.Clients.IOrderWebApiClient ;
 using Product = Mozu.ProductRuntime.Contracts.Product;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -84,7 +85,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public JsonDCResult UpdateCart(VMCart cart)
         {
-            var c = Mapper.Map<Mozu.CommerceRuntime.Contracts.Cart.Cart>(cart);
+            
+            var c = Mapper.Map<Cart>(cart);
             var ret = _cartClient.UpdateCart(c).Result.ReadAsAsync().Result;
 
             return new JsonDCResult()
@@ -115,7 +117,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public JsonDCResult AddCartItem(CartItem item)
         {
-            var cartItem = Mapper.Map<Mozu.CommerceRuntime.Contracts.Cart.CartItem>(item);
+            var cartItem = Mapper.Map<Mozu.CommerceRuntime.Contracts.Carts.CartItem>(item);
             var ret = _cartClient.AddItemToCart(cartItem).Result.ReadAsAsync().Result;
             var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
 
@@ -128,14 +130,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public JsonDCResult AddProduct(VM.ProductConfigurationRequest item)
         {
-            var cartItem = Mapper.Map<Mozu.CommerceRuntime.Contracts.Cart.CartItem>(item);
+            var cartItem = Mapper.Map<Mozu.CommerceRuntime.Contracts.Carts.CartItem>(item);
             var addItemResponse = _cartClient.AddItemToCart(cartItem).Result;
 
             if (addItemResponse.HasException)
                 throw addItemResponse.ReadException();
 
             var addedCartItem = addItemResponse.ReadAsAsync().Result;
-            CommerceRuntime.Contracts.Cart.Cart cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
+            CommerceRuntime.Contracts.Carts.Cart cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
 
             return new JsonDCResult()
             {

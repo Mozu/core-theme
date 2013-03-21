@@ -93,8 +93,14 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 using (var stream = content.ReadAsStreamAsync().Result)
                 {
                     stream.Position = 0;
-                    set = Serializer.ReadObject(stream) as NavigationSet;
 
+                    try
+                    {
+                        set = Serializer.ReadObject(stream) as NavigationSet;
+                    }
+                    catch
+                    {
+                    }
                     if (set == null || set.Nodes == null)
                     {
                         set = NavigationSet.Default;

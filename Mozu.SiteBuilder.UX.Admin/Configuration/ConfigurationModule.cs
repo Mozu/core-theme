@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AdminUser.Contracts.Clients.BehaviorWebApiClient).Assembly);
 
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Order.Contracts.Clients.OrderWebApiClient).Assembly);
+            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.CommerceRuntime.Contracts.Products.Product ).Assembly);
 
             builder.RegisterClassesMatchingInterfaceName(typeof(Mvc.CookieProvider).Assembly);
             builder.RegisterInstance<System.Runtime.Caching.ObjectCache>(System.Runtime.Caching.MemoryCache.Default);
