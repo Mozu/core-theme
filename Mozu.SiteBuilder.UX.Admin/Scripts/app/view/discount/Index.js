@@ -1,15 +1,130 @@
 ﻿/**
 * The Discount list (grid) view
 */
-Ext.define('Taco.view.discounts.Index', {
-    extend: 'Taco.core.ux.content.Container',
+Ext.define('Taco.view.discount.Index', {
+    extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.discountlist',
-    requires: ['Ext.Date', 'Taco.store.TargetedShippingMethods', 'Taco.view.discounts.Edit', 'Ext.form.Panel', 'Taco.core.ux.BaseGrid', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView'],
-    mixins: {
-        protectable: 'Taco.core.util.Protectable'
+    requires: ['Ext.Date', 'Taco.store.TargetedShippingMethods', 
+        'Ext.form.Panel', 'Taco.core.ux.BaseGrid', 
+        'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 
+        'Taco.core.ux.FilterableDataView'
+    ],
+    modelName: 'Taco.model.Discount',
+    store: { type: 'Taco.store.Discounts' },
+    editorName: 'Taco.view.discounts.Edit',
+    typeName: 'Discount',
+
+    gridPanelConf: {
+        columns: [{
+            xtype: 'gridcolumn',
+            dataIndex: 'name',
+            text: 'Name',
+            hideable: false,
+            flex: 1,
+            minWidth: 150,
+            renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+                return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
+            }
+        }, {
+            xtype: 'gridcolumn',
+            dataIndex: 'amountType',
+            text: 'Type',
+            width: 150,
+            renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+
+                // percentage
+                if (value == "Percentage") {
+                    return record.get("amount") + "% OFF";
+                }
+
+                // amount
+                if (value == "Amount") {
+                    return "$" + record.get("amount") + " OFF";
+                }
+
+                // freeShipping
+                if (value == "FreeShipping") {
+                    return "Free Shipping";
+                }
+
+                return Ext.emptyString;
+            }
+        }, {
+            xtype: 'gridcolumn',
+            dataIndex: 'target',
+            text: 'Applies To',
+            width: 180,
+            hidden: false,
+            renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+
+                var val = "";
+
+                if (record.get("targetType") == "allproducts") {
+                    val = "All products";
+                    return val;
+                }
+
+                if (record.get("products").length > 0) {
+                    val = record.get("products").length + ((record.get("products").length > 1) ? " Products" : " Product");
+                }
+
+                if (record.get("categories").length) {
+                    val += ((record.get("products").length > 0) ? " &amp; " : Ext.emptyString) + record.get("categories").length + ((record.get("categories").length > 1) ? " Categories" : " Category");
+                }
+
+                if (record.get("targetType") == "Order") {
+                    val = "Min. Order ($" + record.get("minimumOrderAmount") + ")";
+                }
+
+                return val;
+            }
+        }, {
+            xtype: 'datecolumn',
+            dataIndex: 'startDate',
+            width: 100,
+            text: 'Start Date'
+        }, {
+            xtype: 'datecolumn',
+            dataIndex: 'endDate',
+            width: 100,
+            text: 'End Date',
+            renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+
+                var val = "";
+
+                if (!record.get("endDate")) {
+                    val = "Never";
+                    return val;
+                }
+
+                return Ext.Date.format(value, "n/j/Y");
+            }
+        }, {
+            xtype: 'gridcolumn',
+            dataIndex: 'status',
+            text: 'Status'
+        }, {
+            xtype: 'gridcolumn',
+            dataIndex: 'couponCode',
+            text: 'Coupon Code',
+            width: 130,
+            hidden: false
+        }, {
+            xtype: 'numbercolumn',
+            dataIndex: 'currentRedemptionCount',
+            format: "0",
+            text: 'Used',
+            width: 80,
+            hidden: false
+        }],
+        actions: [{
+            tooltip: 'Delete',
+            iconCls: 'taco-action-delete',
+            eventName: 'deletediscount'
+        }],
     },
-    filters: [],
-    initComponent: function (eOpts) {
+
+    initComponent2: function (eOpts) {
         var me = this,
                 basegridview;
 
@@ -26,8 +141,6 @@ Ext.define('Taco.view.discounts.Index', {
         };
 
         me.store = Ext.create('Taco.store.Discounts', { filters: me.filters });
-
-        
 
         me.basegrid = Ext.create('Taco.core.ux.BaseGrid', {
             store: me.store,
@@ -58,114 +171,6 @@ Ext.define('Taco.view.discounts.Index', {
                             }
                         }
                     }]
-            }],
-
-            columns: [{
-                xtype: 'gridcolumn',
-                dataIndex: 'name',
-                text: 'Name',
-                hideable: false,
-                flex: 1,
-                minWidth: 150,
-                renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-                }
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'amountType',
-                text: 'Type',
-                width: 150,
-                renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-
-                    // percentage
-                    if (value == "Percentage") {
-                        return record.get("amount") + "% OFF";
-                    }
-
-                    // amount
-                    if (value == "Amount") {
-                        return "$" + record.get("amount") + " OFF";
-                    }
-
-                    // freeShipping
-                    if (value == "FreeShipping") {
-                        return "Free Shipping";
-                    }
-
-                    return Ext.emptyString;
-                }
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'target',
-                text: 'Applies To',
-                width: 180,
-                hidden: false,
-                renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-
-                    var val = "";
-
-                    if (record.get("targetType") == "allproducts") {
-                        val = "All products";
-                        return val;
-                    }
-
-                    if (record.get("products").length > 0) {
-                        val = record.get("products").length + ((record.get("products").length > 1) ? " Products" : " Product");
-                    }
-
-                    if (record.get("categories").length) {
-                        val += ((record.get("products").length > 0) ? " &amp; " : Ext.emptyString) + record.get("categories").length + ((record.get("categories").length > 1) ? " Categories" : " Category");
-                    }
-
-                    if (record.get("targetType") == "Order") {
-                        val = "Min. Order ($" + record.get("minimumOrderAmount") + ")";
-                    }
-
-                    return val;
-                }
-            }, {
-                xtype: 'datecolumn',
-                dataIndex: 'startDate',
-                width: 100,
-                text: 'Start Date'
-            }, {
-                xtype: 'datecolumn',
-                dataIndex: 'endDate',
-                width: 100,
-                text: 'End Date',
-                renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-
-                    var val = "";
-
-                    if (!record.get("endDate")) {
-                        val = "Never";
-                        return val;
-                    }
-
-                    return Ext.Date.format(value, "n/j/Y");
-                }
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'status',
-                text: 'Status'
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'couponCode',
-                text: 'Coupon Code',
-                width: 130,
-                hidden: false
-            }, {
-                xtype: 'numbercolumn',
-                dataIndex: 'currentRedemptionCount',
-                format: "0",
-                text: 'Used',
-                width: 80,
-                hidden: false
-            }],
-            actions: [{
-                tooltip: 'Delete',
-                iconCls: 'taco-action-delete',
-                eventName: 'deletediscount'
             }],
 
             listeners: {
@@ -210,8 +215,6 @@ Ext.define('Taco.view.discounts.Index', {
         basegridview = me.basegrid.view;
         basegridview.mon(basegridview, 'itemclick', me.onItemClick, me);
     },
-
-   
 
     /**
     * Handler for when the user attempts to navigate away from this view

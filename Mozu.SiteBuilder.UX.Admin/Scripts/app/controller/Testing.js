@@ -245,6 +245,46 @@ Ext.define('Taco.controller.Testing', {
         });
     },
 
+    foscount: function() {
+
+        var discountStore = Ext.data.StoreManager.lookup('Taco.store.Discounts');
+
+        this.createContentView('Taco.core.ux.content.Container', {
+
+            header: {
+                title: "Discounts"
+            },
+
+            body: {
+                layout: 'auto',
+                items: [{
+                    xtype: 'button',
+                    text: "Click to create a Discount",
+                    handler: function() {
+                        var randomInteger = Math.round(1 + Math.random() * 1000),
+                            p = Ext.create('Taco.model.Discount', {
+                              name: "foster special " + randomInteger,
+                              amount: 10,
+                              amountType: "Amount"
+                            });
+
+
+                        p.phantom = true;
+                        p.save( { 
+                            success: function (record, operation) {
+                                alert("successfully created " + record.getId());
+                            },
+                            failure: function(record, operation)
+                            {
+                                alert("fail");
+                            }
+                        });
+                    }
+                }]
+            }
+        });
+    },
+
     fostercms: function() {
 
 

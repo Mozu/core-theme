@@ -26,11 +26,4 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "val")]
         public decimal? Val { get; set; }
     }
-
-    [DataContract]
-    public class Discount
-    {
-        [DataMember(EmitDefaultValue = false, Name ="id")]
-        public int? DiscountId { get; set; }   
-    }
 }

@@ -1,197 +1,222 @@
-﻿//using System;
-//using System.Linq;
-//using System.Net.Http;
-//using System.ServiceModel;
-//using System.ServiceModel.Web;
-//using System.Threading.Tasks;
-//using AutoMapper;
-//using Mozu.ProductAdmin.Contracts;
-//using Mozu.ProductAdmin.Contracts.Clients;
-//using Mozu.SiteBuilder.UX.Admin.Api.Models;
-//using System.Collections.Generic;
-//using Mozu.SiteBuilder.UX.Admin.Api.Models.Discount;
-//using Mozu.SiteBuilder.UX.Admin.Filters;
-//using Mozu.SiteSettings.Shipping.Contracts.Clients;
-//using Mozu.ShippingRuntime.Contracts.Clients;
-////using Volusion.UspsShippingAdmin.WebApi.Clients;
-//using Discount = Mozu.SiteBuilder.UX.Admin.Api.Models.Discount.Discount;
-//using TargetedShippingMethod = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.TargetedShippingMethod;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.ServiceModel;
+using System.ServiceModel.Web;
+using System.Threading.Tasks;
+using AutoMapper;
+using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.Core.Api.Client.Exceptions;
+using DC = Mozu.ProductAdmin.Contracts;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Discount;
 
-//namespace Mozu.SiteBuilder.UX.Admin.Api
-//{
-//    [ServiceContract]
-//    public class DiscountController : BaseController
-//    {
-//        private readonly IDiscountWebApiClient _discountWebClient;
-//        private readonly IShippingRateWebApiClient _shippingRateClient;
-//        private readonly IShippingSettingsWebApiClient  _siteShippingSettingsClient;
-//        private readonly IShippingWebApiClient _uspsShippingSharedClient;
+namespace Mozu.SiteBuilder.UX.Admin.Api
+{
+    /// <summary>
+    /// Controller for discounts.
+    /// </summary>
+    [ServiceContract]
+    public class DiscountController : BaseController
+    {
+        private readonly IDiscountWebApiClient _discountWebClient;
 
-//        public DiscountController(IDiscountWebApiClient discountWebClient, IShippingRateWebApiClient shippingRateClient, IShippingSettingsWebApiClient siteShippingSettingsClient, IShippingWebApiClient uspsShippingSharedClient)
-//        {
-//            if (discountWebClient == null)
-//            {
-//                throw new ArgumentNullException("discountWebClient");
-//            }
+        /// <summary>
+        /// Public constructor.
+        /// </summary>
+        public DiscountController(IDiscountWebApiClient discountWebClient)
+        {
+            _discountWebClient = discountWebClient;
+        }
 
-//            if (shippingRateClient == null)
-//            {
-//                throw new ArgumentNullException("shippingRateClient");
-//            }
+        /// <summary>
+        /// Get a list of discounts.
+        /// </summary>
+        [WebGet(UriTemplate = "read")]
+        public async Task<Response<List<Discount>>> ReadDiscount(PagingParamaters pagingParams, FilterCollection extFilter)
+        {
+            if (pagingParams.id != null)
+            {
+                var singleDiscount = (await _discountWebClient.GetDiscount(pagingParams.NumericId)).ReadAsSync();
 
-//            if (siteShippingSettingsClient == null)
-//            {
-//                throw new ArgumentNullException("siteShippingSettingsClient");
-//            }
+                return List2(Mapper.Map<Discount>(singleDiscount));
+            }
 
-//            if (uspsShippingSharedClient == null)
-//            {
-//                throw new ArgumentNullException("uspsShippingSharedClient");
-//            }
+            string filter = null;
+            string productCode;
+            if (extFilter.TryGetValue<string>("productCode", out productCode))
+            {
+                filter = string.Format("Target.Products.Code eq \"{0}\"", productCode);
+            }
 
-//            _shippingRateClient = shippingRateClient;
-//            _siteShippingSettingsClient = siteShippingSettingsClient;
-//            _uspsShippingSharedClient = uspsShippingSharedClient;
-//            _discountWebClient = discountWebClient;
-//        }
+            string name;
 
-//        [WebInvoke(UriTemplate = "create")]
-//        public async Task<Response<List<Discount>>> CreateDiscount(List<Discount> discounts)
-//        {
-//            var responseList = new List<Discount>();
+            if (extFilter.TryGetValue<string>("name", out name))
+            {
+                filter = string.Format("content.name cont \"{0}\"", name);
+            }
 
-//            foreach (var discount in discounts)
-//            {
-//                var response =
-//                    _discountWebClient.CreateDiscount(Mapper.Map<Mozu.ProductAdmin.Contracts.Discount>(discount)).Result.
-//                        ReadAsAsync();
-//                responseList.Add(Mapper.Map<Discount>(response));
-//            }
+            try
+            {
+                var discountList = (await _discountWebClient.GetDiscounts(null, null, null, filter, null)).ReadAsSync();
 
-//            return await List(responseList);
-//        }
+                var discounts = Mapper.Map<List<Discount>>(discountList.Items);
 
-//        [ApiAuthorize]
-//        [WebGet(UriTemplate = "read")]
-//        public async Task<Response<List<Discount>>> ReadDiscount(PagingParamaters pagingParams, FilterCollection extFilter)
-//        {
-//            if (pagingParams.id == null)
-//            {
-//                string filter = null;
-//                string productCode;
-//                if (extFilter.TryGetValue<string>("productCode", out productCode))
-//                {
-//                    filter = string.Format("Target.Products.Code eq \"{0}\"", productCode);
-//                }
+                return List2(discounts);
+            }
+            catch (ApiWebClientConnectionException e)
+            {
+                return this.FailureList2<Discount>(e.Message);
+            }
+        }
 
-//                string name;
+        [WebInvoke(UriTemplate = "create")]
+        public async Task<Response<List<Discount>>> CreateDiscount(List<Discount> discounts)
+        {
+            var responseList = new List<Discount>();
 
-//                if (extFilter.TryGetValue<string>("name", out name))
-//                {
-//                    filter = string.Format("content.name cont \"{0}\"", name);
-//                }
 
-//                var discountList = await _discountWebClient.GetDiscounts(null, null, null, filter, null).Result.ReadAsAsync();
+            foreach (var discount in discounts)
+            {
+                var dc = Mapper.Map<DC.Discount>(discount);
 
-//                var discounts = discountList.Items.Select(Mapper.Map<Discount>).ToList();
+                // the Mozu service does not accept a null StartDate, even though the field is nullable.
+                // TODO: this may be fixed in the future on their end.
+                if (dc.StartDate == null)
+                    dc.StartDate = DateTime.UtcNow;
 
-//                return List2(discounts);
-//            }
+                var response = (await _discountWebClient.CreateDiscount(dc)).ReadAsSync();
+                responseList.Add(Mapper.Map<Discount>(response));
+            }
 
-//            var disc = await _discountWebClient.GetDiscount(pagingParams.NumericId).Result.ReadAsAsync();
+            return List2(responseList);
+        }
 
-//            return List2(Mapper.Map<Discount>(disc));
-//        }
+        //        [ApiAuthorize]
+        //        [WebGet(UriTemplate = "read")]
+        //        public async Task<Response<List<Discount>>> ReadDiscount(PagingParamaters pagingParams, FilterCollection extFilter)
+        //        {
+        //            if (pagingParams.id == null)
+        //            {
+        //                string filter = null;
+        //                string productCode;
+        //                if (extFilter.TryGetValue<string>("productCode", out productCode))
+        //                {
+        //                    filter = string.Format("Target.Products.Code eq \"{0}\"", productCode);
+        //                }
 
-//        [WebInvoke(UriTemplate = "edit?id={id}")]
-//        public async Task<Response<List<Discount>>> EditDiscount(List<Discount> discountList, int? id = null)
-//        {
-//            var retList = new List<Discount>();
+        //                string name;
 
-//            foreach (var discount in discountList)
-//            {
-//                var task = await _discountWebClient.UpdateDiscount(Mapper.Map<ProductAdmin.Contracts.Discount>(discount), discount.DiscountId);
-//                retList.Add(Mapper.Map<Discount>(task.ReadAsSync()));
-//            }
+        //                if (extFilter.TryGetValue<string>("name", out name))
+        //                {
+        //                    filter = string.Format("content.name cont \"{0}\"", name);
+        //                }
 
-//            return List2(retList);
-//        }
+        //                var discountList = await _discountWebClient.GetDiscounts(null, null, null, filter, null).Result.ReadAsAsync();
 
-//        [WebInvoke(Method = "POST", UriTemplate = "delete")]
-//        public async Task<Response<Discount>> DeleteProduct(List<Discount> discounts)
-//        {
-//            foreach (var d in discounts)
-//            {
-//                await _discountWebClient.DeleteDiscount(d.DiscountId);
-//            }
+        //                var discounts = discountList.Items.Select(Mapper.Map<Discount>).ToList();
 
-//            return Single2(default(Discount), discounts.Count);
-//        }
+        //                return List2(discounts);
+        //            }
 
-//        [WebGet(UriTemplate = "generatecoupon")]
-//        public async Task<Response<CouponCode>> GenerateCoupon(PagingParamaters pagingParams)
-//        {
-//            var coupon = await _discountWebClient.GenerateRandomCoupon().Result.ReadAsAsync();
+        //            var disc = await _discountWebClient.GetDiscount(pagingParams.NumericId).Result.ReadAsAsync();
 
-//            return Single2(new CouponCode {Code = coupon});
-//        }
+        //            return List2(Mapper.Map<Discount>(disc));
+        //        }
 
-//        [WebGet(UriTemplate = "targetedshippingmethods/read")]
-//        public async Task<Response<List<TargetedShippingMethod>>> GetTargetedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
-//        {
-//            var res = await _siteShippingSettingsClient.GetShippingMethods().Result.ReadAsAsync();
-//            var methods = res.Select(siteShippingMethod => new TargetedShippingMethod { Code = siteShippingMethod.Code, Name = siteShippingMethod.Content.Name }).ToList();
+        //        [WebInvoke(UriTemplate = "edit?id={id}")]
+        //        public async Task<Response<List<Discount>>> EditDiscount(List<Discount> discountList, int? id = null)
+        //        {
+        //            var retList = new List<Discount>();
 
-//            /*
-//            var activeRateProvider = _siteShippingSettingsClient.GetActiveRateProvider().Result.ReadAsAsync().Result;
+        //            foreach (var discount in discountList)
+        //            {
+        //                var task = await _discountWebClient.UpdateDiscount(Mapper.Map<ProductAdmin.Contracts.Discount>(discount), discount.DiscountId);
+        //                retList.Add(Mapper.Map<Discount>(task.ReadAsSync()));
+        //            }
 
-//            var methods = new List<TargetedShippingMethod>();
+        //            return List2(retList);
+        //        }
 
-            
-//            if(activeRateProvider.Id == 1)
-//            {
-//                // Get the custom rates and convert them into shared methods
-//                var custom = _shippingRateClient.GetShippingRates(null, null, null, null).Result.ReadAsAsync().Result;
+        //        [WebInvoke(Method = "POST", UriTemplate = "delete")]
+        //        public async Task<Response<Discount>> DeleteProduct(List<Discount> discounts)
+        //        {
+        //            foreach (var d in discounts)
+        //            {
+        //                await _discountWebClient.DeleteDiscount(d.DiscountId);
+        //            }
 
-//                methods.AddRange(custom.Items.Select(rate => new TargetedShippingMethod
-//                {
-//                    Name = rate.Content.Name, Code = rate.ShippingRateId.ToString()
-//                }));
-//            }
-//            else
-//            {
-//                // Get the USPS rates
-//                //var usps = _uspsShippingSharedClient.GetSharedOrGlobalShippingMethods(null, null, null, null).Result.ReadAsAsync().Result;
+        //            return Single2(default(Discount), discounts.Count);
+        //        }
 
-//                //UspsConfiguration res = null;
+        //        [WebGet(UriTemplate = "generatecoupon")]
+        //        public async Task<Response<CouponCode>> GenerateCoupon(PagingParamaters pagingParams)
+        //        {
+        //            var coupon = await _discountWebClient.GenerateRandomCoupon().Result.ReadAsAsync();
 
-//                try
-//                {
-//                    var res = _uspsShippingInstanceClient.GetUspsConfiguration().Result.ReadAsAsync().Result;
+        //            return Single2(new CouponCode {Code = coupon});
+        //        }
 
-//                    methods.AddRange(res.ShippingMethods.Select(rate => new TargetedShippingMethod
-//                    {
-//                        Code = rate.Code,
-//                        Name = rate.Content.Name
-//                    }));
-//                }
-//                catch (Exception)
-//                {
-//                    // Ugh... if a config doesn't exist it throws an error. Return null.    
-//                }    
-//            }
-//            */
+        //        [WebGet(UriTemplate = "targetedshippingmethods/read")]
+        //        public async Task<Response<List<TargetedShippingMethod>>> GetTargetedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
+        //        {
+        //            var res = await _siteShippingSettingsClient.GetShippingMethods().Result.ReadAsAsync();
+        //            var methods = res.Select(siteShippingMethod => new TargetedShippingMethod { Code = siteShippingMethod.Code, Name = siteShippingMethod.Content.Name }).ToList();
 
-//            return List2(methods);
-//        }
+        //            /*
+        //            var activeRateProvider = _siteShippingSettingsClient.GetActiveRateProvider().Result.ReadAsAsync().Result;
 
-//        [WebGet(UriTemplate = "selectedshippingmethods/read")]
-//        public async Task<Response<List<TargetedShippingMethod>>> GetSelectedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
-//        {
-//            var res = await _siteShippingSettingsClient.GetShippingMethods().Result.ReadAsAsync();
-//            var methods = res.Select(siteShippingMethod => new TargetedShippingMethod {Code = siteShippingMethod.Code, Name = siteShippingMethod.Content.Name}).ToList();
+        //            var methods = new List<TargetedShippingMethod>();
 
-//            return List2(methods);
-//        }
-//    }
-//}
+
+        //            if(activeRateProvider.Id == 1)
+        //            {
+        //                // Get the custom rates and convert them into shared methods
+        //                var custom = _shippingRateClient.GetShippingRates(null, null, null, null).Result.ReadAsAsync().Result;
+
+        //                methods.AddRange(custom.Items.Select(rate => new TargetedShippingMethod
+        //                {
+        //                    Name = rate.Content.Name, Code = rate.ShippingRateId.ToString()
+        //                }));
+        //            }
+        //            else
+        //            {
+        //                // Get the USPS rates
+        //                //var usps = _uspsShippingSharedClient.GetSharedOrGlobalShippingMethods(null, null, null, null).Result.ReadAsAsync().Result;
+
+        //                //UspsConfiguration res = null;
+
+        //                try
+        //                {
+        //                    var res = _uspsShippingInstanceClient.GetUspsConfiguration().Result.ReadAsAsync().Result;
+
+        //                    methods.AddRange(res.ShippingMethods.Select(rate => new TargetedShippingMethod
+        //                    {
+        //                        Code = rate.Code,
+        //                        Name = rate.Content.Name
+        //                    }));
+        //                }
+        //                catch (Exception)
+        //                {
+        //                    // Ugh... if a config doesn't exist it throws an error. Return null.    
+        //                }    
+        //            }
+        //            */
+
+        //            return List2(methods);
+        //        }
+
+        //        [WebGet(UriTemplate = "selectedshippingmethods/read")]
+        //        public async Task<Response<List<TargetedShippingMethod>>> GetSelectedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
+        //        {
+        //            var res = await _siteShippingSettingsClient.GetShippingMethods().Result.ReadAsAsync();
+        //            var methods = res.Select(siteShippingMethod => new TargetedShippingMethod {Code = siteShippingMethod.Code, Name = siteShippingMethod.Content.Name}).ToList();
+
+        //            return List2(methods);
+        //        }
+        //    }
+        //}
+    }
+}
