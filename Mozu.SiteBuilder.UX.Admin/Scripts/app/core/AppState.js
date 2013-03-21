@@ -93,7 +93,12 @@ Ext.define('Taco.core.AppState', {
         */
         metaData: {}
     },
-
+    getMetaData : function(includeComplex) {
+        if (includeComplex) {
+            return this.complexMetaData;
+        }
+        return this.metaData;
+    },
     constructor: function () {
         this.callParent(arguments);
         this.addEvents(
@@ -110,7 +115,14 @@ Ext.define('Taco.core.AppState', {
         );
         this.uri = this.self.fixupUrl(this.uri);
         this.metaData = Ext.apply(this.self.parseMetaData(this.uri), this.metaData || {});
+        
+        this.complexMetaData =  this.metaData.complexMetaData || {};
+        this.complexMetaData.record = this.complexMetaData.record || this.metaData.record;
+       
+        delete this.metaData.complexMetaData;
+        delete this.metaData.record;
 
+        Ext.applyIf(this.complexMetaData, this.metaData);
         // set a sequential-ish state ID.
         this.metaData._stateid = Number((new Date().getTime().toString()) + Math.round(Math.random() * 100000));
 

@@ -63,20 +63,31 @@ Ext.define('Taco.core.Controller', {
         });
     },
 
-    edit: function (id) {
-        Taco.model[this.modelName].load(id, {
-            success: function(record) {
+    edit: function (id, additionalParams, appState) {
+        var record = appState ? appState.record : null, 
+            options= appState ? appState.options : null;
+        if (record) {
+            this.createContentView(this.getEditorView(), {
+                record: record,
+                options:options
+            });
+        }else{
+            Taco.model[this.modelName].load(id, {
+                    success: function(record) {
 
-                this.createContentView(this.getEditorView(), {
-                    record: record
+                        this.createContentView(this.getEditorView(), {
+                            record: record,
+                            options:options
+                        });
+                    },
+                    scope: this
                 });
-            },
-            scope: this
-        });
+        }
     },
 
-    create: function () {
-        var record = Ext.create('Taco.model.' + this.modelName);
+    create: function (id, additionalParams, appState) {
+        var record = appState ? appState.record : Ext.create('Taco.model.' + this.modelName);;
+      
         this.createContentView(this.getEditorView(), {
             record: record
         });

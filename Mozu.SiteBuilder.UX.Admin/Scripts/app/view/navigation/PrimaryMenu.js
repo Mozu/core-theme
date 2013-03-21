@@ -33,6 +33,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     },
 
     bindStore: function (store, initial) {
+        this.store = store;
         this.mixins.bindable.bindStore.apply(this, arguments);
 
         this.view = Ext.create('Taco.view.navigation.PrimaryMenuView', {
@@ -40,6 +41,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         });
 
         this.add(this.view);
+        this.onStateChange(Taco.core.StateManager.getCurrentState());
     },
 
     /**
@@ -50,7 +52,46 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
      * @template
      */
     onStateChange: function (appState) {
-        var md = appState.getMetaData();
+        var controller = appState.metaData.controller,
+       parentRecord, selectedRecord;
+        
+        
+        if (!controller || !this.store) {
+            return;
+        }
+        controller = controller.toLowerCase();
+        
+        this.store.each(function (topParent) {
+            if ((topParent.data.address || '').toLowerCase() == controller) {
+                parentRecord = topParent;
+                selectedRecord = topParent;
+            }
+            topParent.items().each(function (subItem) {
+                if ((subItem.data.address || '').toLowerCase() == controller) {
+                    parentRecord = topParent;
+                    selectedRecord = subItem;
+                }
+            });
+        });
+        if (selectedRecord) {
+
+            this.syncBreadcrumb(parentRecord, selectedRecord);
+        }
+        
+
+    },
+    syncBreadcrumb: function (parent, selected) {
+        var bc = this.breadcrumb,
+            data = Ext.apply({ selected: parent == selected }, parent.getData()),
+            subData = [];
+       
+        parent.items().each(function (subRecord) {
+            subData.push(Ext.apply({ selected: subRecord == selected }, subRecord.getData()));
+        });
+
+
+        Ext.apply(data, { items: subData });
+        bc.update(data);
     },
 
     /**

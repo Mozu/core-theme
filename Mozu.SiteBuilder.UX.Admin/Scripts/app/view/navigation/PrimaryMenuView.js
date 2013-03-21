@@ -35,6 +35,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
             select: this.syncSelection,
             scope: this
         });
+      
     },
 
     injectSubmenus: function () {
@@ -91,6 +92,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
      * @private
      */
     syncSelection: function (selModel, record) {
+        return;
         var view = selModel.view,
             menuId = view.getId();
 
@@ -114,20 +116,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
      * @param  {Taco.view.navigation.PrimarySubMenu} subMenu The submenu's view, if no parent
      * @param  {Ext.data.Model} subItem The selected record, if no parent
      */
-    syncBreadcrumb: function (record, subMenu, subItem) {
-        var bc = this.menu.breadcrumb,
-            data = record.getData(),
-            subData = [];
-
-        if (subMenu) {
-            subMenu.getStore().each(function (subRecord) {
-                subData.push(subRecord.getData());
-            }, this);
-        }
-
-        Ext.apply(data, { items: subData });
-        bc.update(data);
-    },
+    
 
     /**
      * Parses a URI from an href or address field into an array of its constituents.
