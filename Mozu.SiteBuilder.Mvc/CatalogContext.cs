@@ -5,8 +5,7 @@
 // -----------------------------------------------------------------------
 
 using AutoMapper;
-using Mozu.Cart.Contracts;
-using Mozu.Cart.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Cart;

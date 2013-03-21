@@ -6,7 +6,10 @@ using System.Net;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Mozu.Order.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Orders;
+using Mozu.Core.Api.Contracts.Client;
+
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Orders;
@@ -51,9 +54,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var model = _orderWebApiClient.GetOrder(id).Result.ReadAsAsync().Result;
             if (model == null)
                 return RedirectToAction("Index", "Cart");
+            List<ShippingRate> rates = null;
 
-            return View("checkout", new { order = model, paymentApiBase = _pciSettingsProvider.GetPaymentApiBase() , availableCountries = _orderService.GetShippableCountries().Select(x => new { code = x.Key, name = x.Value } as object).ToList(), availableShippingMethods = _orderWebApiClient.GetAvailableShippingMethods(id).Result.ReadAsSync()});
+            if (model.Shipment != null && model.Shipment.ShippingAddress != null && model.Shipment.ShippingAddress.Address  != null)
+            {
+                rates = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
+            }
+           
+
+
+
+
+            return View("checkout", new { order = model, paymentApiBase = _pciSettingsProvider.GetPaymentApiBase(), availableCountries = _orderService.GetShippableCountries().Select(x => new { code = x.Key, name = x.Value } as object).ToList(), availableShippingMethods = rates });
         }
+
+     
 
         protected string LastOrderId
         {

@@ -2,7 +2,10 @@
     $(document).ready(function () {
 
         var $checkoutView = $('#mz-checkout-form'),
-            checkoutData = $checkoutView.mozuData('mz-checkout');
+            checkoutData = $checkoutView.mozuData('mz-checkout'),
+            shippingMethodData = $checkoutView.mozuData('mz-shippingmethods');
+
+        checkoutData.availableShippingMethods = shippingMethodData;
 
         checkoutData.paymentApiBase = $checkoutView.mozuData('mz-paymentapibase');
 

@@ -560,6 +560,8 @@
                 if (self[smName].apiModel && self[smName].apiModel.data) self[smName].apiModel.data.orderId = self.Id;
             });
 
+            this.Shipment.availableShippingMethods(this.availableShippingMethods);
+
             var ALLCOMPLETE = "completecompletecomplete",
                 SUBMITTING = "submitting",
                 errorTimer,

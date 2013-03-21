@@ -4,21 +4,21 @@ using Mozu.Core.Api.Contracts;
 using AppliedDiscount = Mozu.SiteBuilder.UX.Models.Orders.AppliedDiscount;
 using Category = Mozu.SiteBuilder.UX.Models.Orders.Category;
 using Measurement = Mozu.SiteBuilder.UX.Models.Orders.Measurement;
-using Order = Mozu.CommerceRuntime.Contracts.Order  ;
-using OrderItem = Mozu.CommerceRuntime.Contracts.Order.OrderItem;
-using OrderNote = Mozu.CommerceRuntime.Contracts.Order.OrderNote;
-using PackageMeasurements = Mozu.CommerceRuntime.Contracts.CartOrder.PackageMeasurements ;
-using PaymentCardReference = Mozu.CommerceRuntime.Contracts.Order.PaymentCardReference;
-using PaymentReference = Mozu.CommerceRuntime.Contracts.Order.PaymentReference;
-using PaymentTransaction = Mozu.CommerceRuntime.Contracts.Order.PaymentTransaction;
-using PaymentTransactionInteraction = Mozu.CommerceRuntime.Contracts.Order.PaymentTransactionInteraction;
-using Product = Mozu.CommerceRuntime.Contracts.CartOrder.Product ;
-using ProductOption = Mozu.CommerceRuntime.Contracts.CartOrder.ProductOption;
-using ProductPrice = Mozu.CommerceRuntime.Contracts.CartOrder.ProductPrice;
-using ProductStock = Mozu.CommerceRuntime.Contracts.CartOrder.ProductStock;
-using Shipment = Mozu.CommerceRuntime.Contracts.Order.Shipment;
-using ShippingPrice = Mozu.CommerceRuntime.Contracts.Order.ShippingPrice;
-using ShopperNotes = Mozu.CommerceRuntime.Contracts.Order.ShopperNotes;
+using Order = Mozu.CommerceRuntime.Contracts.Orders   ;
+using OrderItem = Mozu.CommerceRuntime.Contracts.Orders.OrderItem ;
+using OrderNote = Mozu.CommerceRuntime.Contracts.Orders.OrderNote;
+using PackageMeasurements = Mozu.CommerceRuntime.Contracts.Commerce.PackageMeasurements ;
+using PaymentCardReference = Mozu.CommerceRuntime.Contracts.Orders.PaymentCardReference;
+using PaymentReference = Mozu.CommerceRuntime.Contracts.Orders.PaymentReference;
+using PaymentTransaction = Mozu.CommerceRuntime.Contracts.Orders.PaymentTransaction;
+using PaymentTransactionInteraction = Mozu.CommerceRuntime.Contracts.Orders.PaymentTransactionInteraction;
+using Product = Mozu.CommerceRuntime.Contracts.Products.Product ;
+using ProductOption = Mozu.CommerceRuntime.Contracts.Products.ProductOption;
+using ProductPrice = Mozu.CommerceRuntime.Contracts.Products.ProductPrice;
+using ProductStock = Mozu.CommerceRuntime.Contracts.Products.ProductStock;
+using Shipment = Mozu.CommerceRuntime.Contracts.Orders.Shipment;
+using ShippingPrice = Mozu.CommerceRuntime.Contracts.Orders.ShippingPrice;
+using ShopperNotes = Mozu.CommerceRuntime.Contracts.Orders.ShopperNotes;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 {
@@ -191,13 +191,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
             Mapper.CreateMap<OrderNote, Models.Orders.OrderNote>();
 
-            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.CartOrder.AppliedDiscount, Models.Orders.AppliedDiscount>()
+            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Discounts.AppliedDiscount, Models.Orders.AppliedDiscount>()
                 .ForMember(x => x.Discount, op => op.Ignore())
                 ;
-            Mapper.CreateMap<Models.Orders.AppliedDiscount, Mozu.CommerceRuntime.Contracts.CartOrder.AppliedDiscount>()
+            Mapper.CreateMap<Models.Orders.AppliedDiscount, Mozu.CommerceRuntime.Contracts.Discounts.AppliedDiscount>()
                 .ForMember(x => x.Discount, op => op.Ignore())
                 ;
 
+            
             //Mapper.AssertConfigurationIsValid(ProfileName);
         }
     }

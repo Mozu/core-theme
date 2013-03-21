@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             // TODO: Complete member initialization
             this.TemplateManager = manager;
-            _siteBuilderContext = siteBuilderContext;
+            _siteBuilderContext = SiteBuilderContext.Current;
             this.viewPath = viewPath;
         }
 

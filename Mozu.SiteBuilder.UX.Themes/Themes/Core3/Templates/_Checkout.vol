@@ -17,7 +17,7 @@
 <form id="mz-checkout-form" class="mz-checkout-form" style="visibility: hidden" method="post" action="" onsubmit="return false;" 
     data-mz-checkout="{% json_attribute Model.order %}" 
     data-mz-paymentapibase="{{ Model.paymentApiBase }}" 
-    data-mz-shippingmethods="{{ Model.availableShippingMethods }}"
+    data-mz-shippingmethods="{% json_attribute Model.availableShippingMethods %}"
     data-bind="css: { 'mz-submitting': submitting }">
     <h1 class="mz-page-header">
         Checkout{% if not user.email %}
@@ -475,7 +475,7 @@
                 <label data-bind="html: Address.stateprovLabel() + '<span class=\'mz-required-field\' data-bind=\'visible: Address.StateOrProvince.required\'> *</span>:'"></label>
             </div>
             <div class="mz-form-field-cell">
-                <select data-bind="options: Address.stateprovList, optionsText: 'Value', optionsValue: 'Code', optionsCaption: 'Choose...', value: Address.StateOrProvince(), css: { 'mz-invalid': Address.StateOrProvince.invalid() }">
+                <select data-bind="options: Address.stateprovList, optionsText: 'Value', optionsValue: 'Code', optionsCaption: 'Choose...', value: Address.StateOrProvince, css: { 'mz-invalid': Address.StateOrProvince.invalid() }">
                 </select>
                 <span class="mz-validation-message" data-bind="text: Address.StateOrProvince.validationMessage() || '&nbsp;'"></span>
             </div>

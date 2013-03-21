@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web.Mvc;
-using Mozu.Order.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Clients;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
