@@ -3,11 +3,11 @@
     function ($, ko, PCIaaS, ViewModelPrototype, msg, genericMsg, api) {
 
 
-        function modelObservableValueIs(obsName, desiredValue) {
-            return function () {
-                return this[obsName]() == desiredValue;
-            }
-        }
+        //function modelObservableValueIs(obsName, desiredValue) {
+        //    return function () {
+        //        return this[obsName]() == desiredValue;
+        //    }
+        //}
 
         function submitStep() {
             if (this.submit()) this.stepStatus("submitting");
@@ -15,6 +15,13 @@
 
         function editStep() {
             this.stepStatus("incomplete");
+        }
+
+        function checkStepStatus() {
+            if (!this.stepStatus) this.stepStatus = ko.observable();
+            var newStepStatus = this.validate(false) ? 'complete' : 'invalid';
+            this.stepStatus(newStepStatus);
+            return newStepStatus;
         }
 
         var PhoneNumbers = ViewModelPrototype.extend({
@@ -91,11 +98,15 @@
             });
 
             self.countryList = ko.observableArray();
+            // to prepopupate
+            var countryCode = self.CountryCode();
 
             AddressSchemesPromise.then(function (r) {
                 AddressSchemes = r.statesByCountry;
                 self.countryList(r.countries);
                 self.CountryCode.notifySubscribers();
+                self.CountryCode(countryCode);
+                self.StateOrProvince.notifySubscribers();
             });
         };
 
@@ -109,7 +120,6 @@
                 "FirstName": { required: msg.FirstNameMissing },
                 "LastNameOrSurname": { required: msg.LastNameMissing },
                 "CompanyOrOrganization": {},
-                "Email": {},
                 "stepStatus": {}
             },
             submodels: {
@@ -117,95 +127,105 @@
                 "PhoneNumbers": PhoneNumbers
             },
             edit: editStep,
-            nextStep: function() {
+            nextStep: function () {
                 if (!this.validate()) return false;
                 this.stepStatus('submitting');
                 var self = this;
-                this.getParentModel().update().then(function () {
+                var parent = this.getParentModel();
+                parent.update({ ShippingAddress: self.toJS() }).then(function () {
                     if (self.checkStepStatus() === 'complete')
-                        self.getParentModel().getShippingMethods();
-                }, function(e) {
-                    self.getParentModel().getParentModel().messages.push(e.message);
+                        parent.getShippingMethods().then(function (methodsJSON) {
+                            parent.availableShippingMethods(methodsJSON);
+                        });
+                }, function (e) {
+                    parent.getParentModel().messages.push(e.message);
                     self.stepStatus('invalid')
                 });
             },
-            checkStepStatus: function () {
-                if (!this.stepStatus) this.stepStatus = ko.observable();
-                var newStepStatus = this.validate(false) ? 'complete' : 'invalid';
-                this.stepStatus(newStepStatus);
-                return newStepStatus;
-            }
+            checkStepStatus: checkStepStatus
         }, function constructShippingAddress() {
             this.checkStepStatus();
         }),
-       
-        ShippingMethod = ViewModelPrototype.extend({
-            mozuType: 'shippingmethod',
-            //endpoint: "/resources/scripts/fixtures/checkout-updateshippingmethod.json",
-            endpoint: "/checkout/updateshippingmethod",
-            statics: {
-                "orderId": ""
-            },
+
+        Price = ViewModelPrototype.extend({
             observables: {
-                "id": { required: msg.ShippingMethodMissing },
-                "stepStatus": {},
-                "name": {},
-                "price": {
-                    numeric: 2
-                },
-                "stepStatus": {}
-            },
-            observableArrays: {
-                "availableShippingMethods": {}
-            },
-            edit: editStep,
-            nextStep: submitStep,
-            doNotSubmit: ["stepStatus", "availableShippingMethods", "price"]
-        }, function (conf) {
-            var self = this;
-            
-            // calculating this observable has side effects, namely, autoselecting the first shipping method in a list if no available method is selected
-            this.chosenMethod = ko.computed(function(){
-                var id = self.id(),
-                    available = self.availableShippingMethods(),
-                    chosen;
-                if (!available || !available.length) {
-                    self.id('');
-                    return null;
-                }
-                chosen = ko.utils.arrayFirst(available, function(m) { 
-                    return m.id == id;
-                });
-                if (!chosen) {
-                    chosen = available[0];
-                    self.id(chosen.id);
-                }
-                self.price(chosen.price);
-                self.name(chosen.name);
-                return chosen;
-            });
-        }), 
+                ISOCurrencyCode: {},
+                Cost: { numeric: 2 },
+                Price: { numeric: 2 }
+            }
+        }),
 
         Shipment = ViewModelPrototype.extend({
             mozuType: 'shipment',
             statics: {
                 "OrderId": ""
             },
+            observables: {
+                "ShippingMethodCode": { required: msg.ShippingMethodMissing },
+                "ShippingMethodName": {}
+            },
+            observableArrays: {
+                "availableShippingMethods": {}
+            },
             submodels: {
-                "ShippingAddress": ShippingAddress,
-                "ShippingMethod": ShippingMethod
+                ShippingAddress: ShippingAddress,
+                Price: Price
+            },
+            edit: editStep,
+            nextStep: function () {
+                if (!this.validate()) return false;
+                this.stepStatus('submitting');
+                var self = this;
+                var parent = this.getParentModel();
+                this.update().then(function () {
+                    if (self.checkStepStatus() === "complete") {
+                        parent.Payment.stepStatus("incomplete");
+                    }
+                });
+            },
+            checkStepStatus: function () {
+                var origStatus = checkStepStatus.apply(this);
+                if (this.ShippingAddress.stepStatus() !== "complete") {
+                    origStatus = "new";
+                    this.stepStatus(origStatus);
+                }
+                return origStatus
             }
+        }, function (conf) {
+            var self = this;
+            this.checkStepStatus();
+
+            // calculating this observable has side effects, namely, autoselecting the first shipping method in a list if no available method is selected
+            this.chosenMethod = ko.computed(function () {
+                var code = self.ShippingMethodCode(),
+                    available = self.availableShippingMethods(),
+                    chosen;
+                if (!available || !available.length) {
+                    self.ShippingMethodCode('');
+                    return null;
+                }
+                chosen = ko.utils.arrayFirst(available, function (m) {
+                    return m.ShippingMethodCode == code;
+                });
+                if (!chosen) {
+                    chosen = available[0];
+                    self.ShippingMethodCode(chosen.ShippingMethodCode);
+                }
+                self.Price.Price(chosen.Price);
+                self.ShippingMethodName(chosen.ShippingMethodName);
+                return chosen;
+            });
         }),
 
-        paymentTypeIsCreditCard = modelObservableValueIs("paymentType", "CreditCard"),
-        paymentTypeIsCheck = modelObservableValueIs("paymentType", "Check"),
-        useShippingAddressIsUnchecked = modelObservableValueIs("isSameBillingShippingAddress", false),
-        billingAddressRequired = function () {
-            return paymentTypeIsCreditCard.apply(this) && useShippingAddressIsUnchecked.apply(this);
+        paymentTypeIsCreditCard = function () {
+            return this.getParentModel().PaymentType() === "Credit Card";
+        },
+        paymentTypeIsCheck = function() {
+            return this.getParentModel().PaymentType() === "Check";
         },
         expirationDateLaterThanToday = function () {
-            var expMonth = parseInt(this.cardExpireMonth()),
-                expYear = parseInt(this.cardExpireYear()),
+            var expMonth = parseInt(this.ExpireMonth()),
+                expYear = parseInt(this.ExpireYear()),
                 exp,
                 thisMonth,
                 isValid;
@@ -219,46 +239,108 @@
 
             isValid = exp >= thisMonth;
             // small cheat here--revalidate card expire month at the same time
-            this.cardExpireMonth.invalid(!isValid);
+            this.ExpireMonth.invalid(!isValid);
             return isValid;
         },
 
-        PaymentSection = ViewModelPrototype.extend({
-            //endpoint: "/resources/scripts/fixtures/checkout-updatepaymentsection.json",
-            endpoint: "/checkout/updatepayment",
+        parentUseShippingAddressUnchecked = function () {
+            return !this.getParentModel().IsSameBillingShippingAddress();
+        },
+        grandparentUseShippingAddressUnchecked = function () {
+            return parentUseShippingAddressUnchecked.call(this.getParentModel());
+        },
+        
+
+        BillingStreetAddress = ViewModelPrototype.extend($.extend(true, {}, addressConf, {
+            observables: {
+                "Address1": {
+                    required: {
+                        message: msg.StreetMissing,
+                        onlyIf: grandparentUseShippingAddressUnchecked
+                    }
+                },
+                "CityOrTown": {
+                    required: {
+                        message: msg.CityMissing,
+                        onlyIf: grandparentUseShippingAddressUnchecked
+                    }
+                },
+                "StateOrProvince": {
+                    required: {
+                        message: msg.StateProvMissing,
+                        invalidateOnChange: false,
+                        onlyIf: grandparentUseShippingAddressUnchecked
+                    }
+                },
+                "PostalOrZipCode": {
+                    required: {
+                        message: msg.PostalCodeMissing,
+                        onlyIf: grandparentUseShippingAddressUnchecked
+                    }
+                },
+                "CountryCode": {
+                    required: {
+                        message: msg.CountryMissing,
+                        invalidateOnChange: false,
+                        onlyIf: grandparentUseShippingAddressUnchecked
+                    }
+                }
+            }
+        }), constructAddress),
+
+        BillingAddress = ViewModelPrototype.extend({
             statics: {
-                "orderId": ""
+                "Id": ""
             },
             observables: {
-                // *** Pay by card
-                "paymentType": { required: msg.PaymentMethodMissing },
-                // "paymentOrCardType": { required: msg.PaymentMethodMissing },
-                // "cardNumber": { required: msg.CardNumberMissing },
-                "cardType": {
+                "Email": {
+                    required: {
+                        onlyIf: parentUseShippingAddressUnchecked,
+                        pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i,
+                    }
+                },
+                "FirstName": {
+                    required: {
+                        onlyIf: parentUseShippingAddressUnchecked
+                    },
+                },
+                "MiddleNameOrInitial": {},
+                "LastNameOrSurname": {
+                    required: {
+                        onlyIf: parentUseShippingAddressUnchecked
+                    },
+                },
+                "CompanyOrOrganization": {}
+            },
+            submodels: {
+                "Address": BillingStreetAddress,
+                "PhoneNumbers": PhoneNumbers
+            }
+        }),
+
+        CreditCard = ViewModelPrototype.extend({
+            observables: {
+                "PaymentServiceCardId": {},
+                "PaymentOrCardType": {
                     required: {
                         message: msg.CardTypeMissing,
                         onlyIf: paymentTypeIsCreditCard
                     }
                 },
-                "nameOnCard": {
-                    required: {
-                        message: msg.CardNameMissing,
-                        onlyIf: paymentTypeIsCreditCard
-                    }
-                },
-                "cvv": {
-                    required: {
-                        message: msg.SecurityCodeMissing,
-                        onlyIf: paymentTypeIsCreditCard
-                    }
-                },
-                "cardNumberPartOrMask": {
+                "CardNumberPartOrMask": {
                     required: {
                         message: msg.CardNumberMissing,
                         onlyIf: paymentTypeIsCreditCard
                     }
                 },
-                "cardExpireMonth": {
+                "ExpireMonth": {                    required: {
+                        message: msg.CardExpInvalid,
+                        onlyIf: paymentTypeIsCreditCard,
+                        invalidateOnChange: false,
+                        fn: expirationDateLaterThanToday
+                    }
+                },
+                "ExpireYear": {
                     required: {
                         message: msg.CardExpInvalid,
                         onlyIf: paymentTypeIsCreditCard,
@@ -266,126 +348,84 @@
                         fn: expirationDateLaterThanToday
                     }
                 },
-                "cardExpireYear": {
+                "IsUsedRecurring": {},
+                "IsSameBillingShippingAddress": {},
+                "NameOnCard": {
                     required: {
-                        message: msg.CardExpInvalid,
-                        onlyIf: paymentTypeIsCreditCard,
-                        invalidateOnChange: false,
-                        fn: expirationDateLaterThanToday
+                        message: msg.CardNameMissing,
+                        onlyIf: paymentTypeIsCreditCard
                     }
                 },
-                "paymentServiceCardId": {},
-                "isCardInfoSaved": {
-                    defaultValue: true
-                },
-                "isSameBillingShippingAddress": {},
-                "firstName": {
+                "CVV": {
                     required: {
-                        onlyIf: billingAddressRequired
+                        message: msg.CardCVVMissing
                     }
                 },
-                "lastName": {
-                    required: {
-                        onlyIf: billingAddressRequired
-                    }
-                },
-                "middleName": {},
-                "address1": {
-                    required: {
-                        onlyIf: billingAddressRequired
-                    }
-                },
-                "address2": {},
-                "address3": {},
-                "cityOrTown": {
-                    required: {
-                        onlyIf: billingAddressRequired
-                    }
-                },
-                "countryCode": {
-                    required: {
-                        onlyIf: billingAddressRequired
-                    }
-                },
-                "stateOrProvince": {
-                    required: {
-                        onlyIf: billingAddressRequired,
-                        message: msg.StateProvMissing,
-                        invalidateOnChange: false
-                    }
-                },
-                "postalOrZipCode": { 
-                    required: {
-                        onlyIf: billingAddressRequired,
-                        message: msg.ZipOrPostalCodeMissing
-                    }
-                },
-
-                // *** Pay by check
-                "nameOnCheck": {
-                    required: {
-                        onlyIf: paymentTypeIsCheck
-                    }
-                },
-                "checkNumber": {
-                    required: {
-                        onlyIf: paymentTypeIsCheck
-                    }
-                },
-
-                // *** General billing info
-                "phoneNumbers": {},
-                "email": {
-                    required: {
-                        pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i,
-                        message: msg.EmailMissing
-                    }
-                },
-                // "wantSpecialOffers": {}
-
-                stepStatus: {}
+                "IsCardInfoSaved": {}
             },
-            doNotSubmit: ["stepStatus"],
-            edit: function () {
-                this.stepStatus("incomplete");
+            submodels: {
+                "BillingAddress": BillingAddress
             },
+            doNotSubmit: ["CVV"]
+        }),
+
+        Payment = ViewModelPrototype.extend({
+            //endpoint: "/resources/scripts/fixtures/checkout-updatepaymentsection.json",
+            //endpoint: "/checkout/updatepayment",
+            observables: {
+                "PaymentType": { required: msg.PaymentMethodMissing },
+            },
+            submodels: {
+                "Card": CreditCard
+            },
+            edit: editStep,
             submit: function () {
                 if (this.validate()) {
                     if (paymentTypeIsCreditCard.apply(this)) {
                         return this.pciProcessor.process();
                     } else {
-                        return PaymentSection.prototype.submit.apply(this);
+                        return 
                     }
                 } else {
                     return false;
                 }
             },
-            nextStep: submitStep
+            nextStep: submitStep,
+            checkStepStatus: function() {
+                var origStatus = checkStepStatus.apply(this);
+                if (this.getParentModel().Shipment.stepStatus() !== "complete") {
+                    origStatus = "new";
+                    this.stepStatus(origStatus);
+                }
+                return origStatus
+            }
         }, function () {
             var self = this;
 
             // on initial load, this is only complete if we are loading a saved order in progress. in case of credit card, we need to allow for the PCI holes to be refilled.
+            this.checkStepStatus();
+
             if (this.stepStatus() == "complete" && paymentTypeIsCreditCard.apply(this)) {
                 this.stepStatus("incomplete");
-                this.cardExpireMonth.validate();
-                this.cardExpireYear.validate();
+                this.ExpireMonth.validate();
+                this.ExpireYear.validate();
                 this.cvv.validate();
-                this.cardExpireYear.validationMessage(msg.ReEnterExpDate);
-                this.cvv.validationMessage(msg.ReEnterCVV);
+                this.ExpireYear.validationMessage(msg.ReEnterExpDate);
+                //this.cvv.validationMessage(msg.ReEnterCVV);
             }
 
             this.pciProcessor = PCIaaS({
                 fields: {
-                    CardType: this.cardType,
-                    CardNumber: this.cardNumberPartOrMask,
-                    CVV: this.cvv,
-                    PersistCard: this.isCardInfoSaved,
-                    HiddenCardID: this.paymentServiceCardId
+                    CardType: this.PaymentType,
+                    CardNumber: this.Card.CardNumberPartOrMask,
+                    CVV: this.Card.CVV,
+                    PersistCard: this.Card.IsCardInfoSaved,
+                    HiddenCardID: this.Card.PaymentServiceCardId
                 },
                 events: {
                     success: function () {
                         self.pciProcessor.applyMask();
-                        PaymentSection.prototype.submit.apply(self);
+                        Payment.prototype.submit.apply(self);
                     }
                 },
                 settings: {
@@ -396,9 +436,15 @@
             });
 
             // expose some of the helper functions to templates
-            this.billingAddressRequired = ko.computed($.proxy(billingAddressRequired, self));
-            this.paymentTypeIsCreditCard = ko.computed($.proxy(paymentTypeIsCreditCard, self));
-            this.paymentTypeIsCheck = ko.computed($.proxy(paymentTypeIsCheck, self));
+            this.billingAddressRequired = ko.computed(function () {
+                return self.PaymentType() === "CreditCard" && !self.Card.IsSameBillingShippingAddress();
+            });
+            this.paymentTypeIsCreditCard = ko.computed(function () {
+                return self.PaymentType() === "CreditCard";
+            });
+            this.paymentTypeIsCheck = ko.computed(function () {
+                return self.PaymentType() === "Check";
+            });
         }),
 
         OrderSummary = ViewModelPrototype.extend({
@@ -419,11 +465,12 @@
             nextStep: submitStep
         }),
 
-        isCreatingAccount = modelObservableValueIs("createAccount", true),
+        isCreatingAccount = function () {
+            return this.CreateAccount();
+        },
         isNotCreatingAccount = function () {
             return !isCreatingAccount.apply(this);
         },
-
 
         CheckoutPage = ViewModelPrototype.extend({
             mozuType: 'order',
@@ -434,11 +481,11 @@
             },
             submodels: {
                 Shipment: Shipment,
-                paymentSection: PaymentSection,
+                Payment: Payment,
                 orderSummary: OrderSummary
             },
             observables: {
-                createAccount: {},
+                CreateAccount: {},
                 agreeToTerms: { required: msg.DidNotAgreeToTerms },
                 email: {
                     blankIf: isNotCreatingAccount,
@@ -467,8 +514,7 @@
                 },
                 comments: {}
             },
-            doNotSubmit: ["messages", "shippingAddress", "shippingMethod", "paymentSection", "orderSummary", "confirmPassword"],
-            editCart: function() {
+            editCart: function () {
                 window.location = "/cart";
             },
             update: function (newData) {
@@ -500,12 +546,12 @@
                 this.endSubmit();
             };
 
-            this.paymentSection.pciProcessor.events.error = function (messages) {
+            this.Payment.pciProcessor.events.error = function (messages) {
                 self.messages(messages);
-                self.paymentSection.stepStatus("invalid");
+                self.Payment.stepStatus("invalid");
             };
 
-            this.paymentSection.pciProcessor.settings.set({
+            this.Payment.pciProcessor.settings.set({
                 apiBase: this.paymentApiBase
             });
 
@@ -520,7 +566,7 @@
                 backstop = $.proxy(this.unknownError,this);
 
             this.orderStatus = ko.computed(function () {
-                var statuses = [self.Shipment.ShippingAddress.stepStatus(), self.Shipment.ShippingMethod.stepStatus(), self.paymentSection.stepStatus()].join("");
+                var statuses = [self.Shipment.ShippingAddress.stepStatus(), self.Shipment.stepStatus(), self.Payment.stepStatus()].join("");
 
                 clearTimeout(errorTimer);
                 if (statuses.indexOf(SUBMITTING) !== -1) {
@@ -535,11 +581,7 @@
         });
 
         return {
-            ShippingAddress: ShippingAddress,
-            ShippingMethod: ShippingMethod,
-            PaymentSection: PaymentSection,
-            OrderSummary: OrderSummary,
-            CheckoutPage: CheckoutPage,
+            CheckoutPage: CheckoutPage
         }
     }
 );

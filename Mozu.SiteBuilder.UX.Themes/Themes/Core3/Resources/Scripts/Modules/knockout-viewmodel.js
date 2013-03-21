@@ -103,8 +103,7 @@
                 if (self[name] && self[name].populate && self[name].initialized) {
                     self[name].populate(obj[name]);
                 } else {
-                    self[name] = new conf(obj[name]);
-                    self[name].__parentVM = self;
+                    self[name] = new conf(obj[name], self);
                 }
                 delete obj[name];
             });
@@ -208,9 +207,10 @@
 
     return {
         extend: function (conf, initFunc) {
-            var ctor = function (obj) {
+            var ctor = function (obj, parent) {
                 var me = this;
                 this.constructor = ctor;
+                this.__parentVM = parent;
                 if (conf) $.extend(this, conf);
                 this.exclusionList = makeExclusionList(this);
                 this.eventBus = makeEventBus(this);
