@@ -14,7 +14,11 @@
     {% include "Modules/LoadingBar" %}
 </div>
 
-<form id="mz-checkout-form" class="mz-checkout-form" style="visibility: hidden" method="post" action="" onsubmit="return false;" data-mz-checkout="{% json_attribute Model.order %}" data-mz-paymentapibase="{{ Model.paymentApiBase }}" data-bind="css: { 'mz-submitting': submitting }">
+<form id="mz-checkout-form" class="mz-checkout-form" style="visibility: hidden" method="post" action="" onsubmit="return false;" 
+    data-mz-checkout="{% json_attribute Model.order %}" 
+    data-mz-paymentapibase="{{ Model.paymentApiBase }}" 
+    data-mz-shippingmethods="{{ Model.availableShippingMethods }}"
+    data-bind="css: { 'mz-submitting': submitting }">
     <h1 class="mz-page-header">
         Checkout{% if not user.email %}
         <span class="mz-page-headernote mz-auxiliary-text mz-mini-modal-parent">Registered Customer? <a class="mz-utility-link mz-login" data-mz-action="login" href="javascript:;">Sign in</a>
@@ -117,189 +121,106 @@
                 <button class="mz-edit-button" data-bind="click: edit">Edit</button>
             </h3>
             <div class="mz-panel-wrap">
-            <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + Address.CountryCode()">
-                <p class="mz-desc">Where to?</p>
-                <div class="mz-completed-summary">
-                    <span data-bind="text: FirstName() + ' ' + LastNameOrSurname()"></span>
-                    <span data-bind="text: Address.Address1() "></span>
-                    <span data-bind="text: Address.Address2(), visible: Address.Address2()"></span>
-                    <span data-bind="text: Address.Address3(), visible: Address.Address3()"></span>
-                    <span data-bind="text: Address.CityOrTown() + ', ' + Address.StateOrProvince() + ' ' + Address.PostalOrZipCode()"></span>
-                    <span data-bind="text: Address.CountryCode()"></span>
-                </div>
-                <div class="mz-form-fieldgroup mz-form-fields">
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="firstname">First Name<span class="mz-required-field" data-bind="visible: FirstName.required"> *</span>:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" id="mz-shipping-address-firstname" name="firstname" data-bind="value: FirstName, css: { 'mz-invalid': FirstName.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: FirstName.validationMessage() || '&nbsp;'"></span>
-                        </div>
+                <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + Address.CountryCode()">
+                    <p class="mz-desc">Where to?</p>
+                    <div class="mz-completed-summary" data-bind="template: 'address-summary'"></div>
+                    <div class="mz-form-fieldgroup mz-form-fields" data-bind="template: 'address-form'"></div>
+                    <div class="mz-next-step">
+                        {% include "Modules/LoadingBar" %}
+                        <button class="mz-submit-button" data-bind="click: nextStep, text: nextButtonText"></button>
                     </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="lastname">Last Name<span class="mz-required-field"> *</span>:</label>
-						</div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" id="mz-shipping-address-lastname" name="lastname" data-bind="value: LastNameOrSurname, css: { 'mz-invalid': LastNameOrSurname.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: LastNameOrSurname.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="address-line-1">Address<span class="mz-required-field" data-bind="visible: Address.Address1.required"> *</span>:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" id="mz-shipping-address-line-1" name="address-line-1" data-bind="value: Address.Address1, css: { 'mz-invalid': Address.Address1.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: Address.Address1.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell"></div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" id="mz-shipping-address-line-2" name="address-line-2" data-bind="value: Address.Address2">
-                            <span class="mz-validation-message">&nbsp;</span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="city">City<span class="mz-required-field"> *</span>:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" id="mz-shipping-address-city" name="city" data-bind="value: Address.CityOrTown, css: { 'mz-invalid': Address.CityOrTown.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: Address.CityOrTown.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="country">Country<span class="mz-required-field"> *</span>:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <select id="mz-shipping-address-country" data-bind="value: Address.CountryCode, options: Address.countryList, optionsCaption: 'Choose...', optionsText: 'CountryLabel', optionsValue: 'CountryCode', css: { 'mz-invalid': Address.CountryCode.invalid() }">
-                            </select>
-                            <span class="mz-validation-message" data-bind="text: Address.CountryCode.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row" data-bind="visible: Address.CountryCode">
-                        <div class="mz-form-field-cell">
-                            <label data-bind="html: Address.stateprovLabel() + '<span class=\'mz-required-field\' data-bind=\'visible: Address.StateOrProvince.required\'> *</span>:'"></label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <select data-bind="options: Address.stateprovList, optionsText: 'Value', optionsValue: 'Code', optionsCaption: 'Choose...', value: Address.StateOrProvince, css: { 'mz-invalid': Address.StateOrProvince.invalid() }">
-                            </select>
-                            <span class="mz-validation-message" data-bind="text: Address.StateOrProvince.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="postal-code">Zip/Postal Code<span class="mz-required-field"> *</span>:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" id="mz-shipping-address-postal-code" name="postal-code" data-bind="value: Address.PostalOrZipCode, css: { 'mz-invalid': Address.PostalOrZipCode.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: Address.PostalOrZipCode.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mz-next-step">
-                    {% include "Modules/LoadingBar" %}
-                    <button class="mz-submit-button" data-bind="click: nextStep, text: $root.Shipment.ShippingMethod.stepStatus() == 'new' ? 'Next' : 'Update'"></button>
-                </div>
-            </div><!-- .mz-inner-panel -->
+                </div><!-- .mz-inner-panel -->
             </div>
         </div><!-- Step 1 .panel -->
 
 
-        <div class="mz-panel" id="mz-shipping-method-panel" data-bind="with: Shipment.ShippingMethod, cssClassFrom: Shipment.ShippingMethod.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
+        <div class="mz-panel" id="mz-shipping-method-panel" data-bind="with: Shipment, cssClassFrom: Shipment.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
             <h3 class="mz-panel-header">
                 Shipping Method
                 <button class="mz-edit-button" data-bind="click: edit">Edit</button>
             </h3>
             <div class="mz-panel-wrap">
-            <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + availableShippingMethods()">
-                <p class="mz-desc">How to send it?</p>
-                <div class="mz-completed-summary mz-inline">
-                    <strong data-bind="text: name"></strong> (<span data-bind="currencyText: price"></span>)
-                </div>
-                <div class="mz-form-fields">
-                    <!-- ko foreach: availableShippingMethods -->
-                    <label class="mz-inline">
-                        <input type="radio" name="shippingMethod" data-bind="value: id, checked: $parent.id">
-                        <span data-bind="text: id"></span> <span class="mz-shipping-price"><span data-bind="currencyText: price"></span></span>
-                    </label>
-                    <!-- /ko -->
-
-                    <div class="mz-next-step">
-                        {% include "Modules/LoadingBar" %}
-                        <button class="mz-submit-button" data-bind="click: nextStep, text: $root.paymentSection.stepStatus() == 'new' ? 'Next' : 'Update'">Next</button>
+                <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + availableShippingMethods()">
+                    <p class="mz-desc">How to send it?</p>
+                    <div class="mz-completed-summary mz-inline">
+                        <strong data-bind="text: ShippingMethodName"></strong> (<span data-bind="currencyText: Price.Price"></span>)
                     </div>
-                </div>
-            </div><!-- .mz-inner-panel -->
+                    <div class="mz-form-fields">
+                        <div data-bind="foreach: availableShippingMethods">
+                            <label class="mz-inline">
+                                <input type="radio" name="shippingMethod" data-bind="value: ShippingMethodCode, checked: $parent.ShippingMethodCode">
+                                <span data-bind="text: ShippingMethodName"></span> <span class="mz-shipping-price"><span data-bind="currencyText: Price"></span></span>
+                            </label>
+                        </div>
+
+                        <div class="mz-next-step">
+                            {% include "Modules/LoadingBar" %}
+                            <button class="mz-submit-button" data-bind="click: nextStep, text: nextButtonText">Next</button>
+                        </div>
+                    </div>
+                </div><!-- .mz-inner-panel -->
             </div>
         </div><!-- Step 2 .panel -->
 
-        <div class="mz-panel" id="mz-payment-information-panel" data-bind="with: paymentSection, cssClassFrom: paymentSection.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
+        <div class="mz-panel" id="mz-payment-information-panel" data-bind="with: Payment, cssClassFrom: Payment.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
             <h3 class="mz-panel-header">
                 Payment Information
                 <button class="mz-edit-button" data-bind="click: edit">Edit</button>
             </h3>
             <div class="mz-panel-wrap">
-            <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + isSameBillingShippingAddress() + paymentType()">
+            <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + Card.IsSameBillingShippingAddress() + PaymentType()">
                 <div class="mz-completed-summary">
                     <h4>Payment Type</h4>
-                    <span data-bind="text: paymentType"></span>
-                    <span data-bind="visible: paymentTypeIsCreditCard, text: cardNumberPartOrMask"></span>
-                    <span data-bind="visible: paymentTypeIsCheck, text: checkNumber"></span>
+                    <span data-bind="text: PaymentType"></span>
+                    <span data-bind="visible: paymentTypeIsCreditCard, text: Card.CardNumberPartOrMask"></span>
+                    <span data-bind="visible: paymentTypeIsCheck"></span>
 
                     <!-- ko if: billingAddressRequired -->
                         <h4>Billing Address</h4>
-                        <!-- ko if: isSameBillingShippingAddress -->
-                            <span data-bind="text: $root.shippingAddress.firstName() + ' ' + $root.shippingAddress.lastName()"></span>
-                            <span data-bind="text: $root.shippingAddress.address1()"></span>
-                            <span data-bind="text: $root.shippingAddress.address2(), visible: $root.shippingAddress.address2"></span>
-                            <span data-bind="text: $root.shippingAddress.address3(), visible: $root.shippingAddress.address3"></span>
-                            <span data-bind="text: $root.shippingAddress.cityOrTown() + ', ' + $root.shippingAddress.stateOrProvince() + ' ' + $root.shippingAddress.postalOrZipCode()"></span>
-                            <span data-bind="text: $root.shippingAddress.countryCode()"></span>
+                        <!-- ko if: Card.IsSameBillingShippingAddress -->
+                            <div data-bind="template: { name: 'address-summary', data: $root.Shipment.ShippingAddress }"></div>
                         <!-- /ko -->
-                        <!-- ko if: !isSameBillingShippingAddress() -->
-                            <span data-bind="text: firstName() + ' ' + lastName()"></span>
-                            <span data-bind="text: address1"></span>
-                            <span data-bind="text: address2, visible: address2()"></span>
-                            <span data-bind="text: address3, visible: address3()"></span>
-                            <span data-bind="text: cityOrTown() + ', ' + stateOrProvince() + ' ' + postalOrZipCode()"></span>
-                            <span data-bind="text: countryCode"></span>
+                        <!-- ko if: !Card.IsSameBillingShippingAddress() -->
+                            <div data-bind="template: { name: 'address-summary', data: Card.BillingAddress }"></div>
                         <!-- /ko -->
                     <!-- /ko -->
+
                     <h4>Billing Contact Information</h4>
-                    <span>Phone: <strong data-bind="text: phoneNumbers"></strong></span>
-                    <span>Email: <strong data-bind="text: email"></strong></span>
+                    <span>Phone: <strong data-bind="text: Card.BillingAddress.PhoneNumbers.Home"></strong></span>
+                    <span>Email: <strong data-bind="text: Card.BillingAddress.Email"></strong></span>
                 </div>
 
                 <div class="mz-form-fields">
                 <p class="mz-desc">
-                    <select data-bind="value: paymentType">
+                    <select data-bind="value: PaymentType">
                         <option>Select payment method</option>
                         <option value="CreditCard">Credit Card</option>
                         <option value="Check">Check by Mail</option>
                     </select>
-                    <span class="mz-validation-message" data-bind="text: paymentType.validationMessage() || '&nbsp;'"></span>
+                    <span class="mz-validation-message" data-bind="text: PaymentType.validationMessage() || '&nbsp;'"></span>
                 </p>
 
                 <!-- ko if: paymentTypeIsCreditCard -->
-                <div class="mz-form-fieldgroup">
+                <div class="mz-form-fieldgroup" data-bind="with: Card">
                     <div class="mz-form-field-row">
                         <div class="mz-form-field-cell">
                             <label for="mz-payment-credit-card-type">Card Type<span class="mz-required-field"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <select id="mz-payment-credit-card-type" data-bind="value: cardType, css: {'mz-invalid': cardType.invalid() }">
+                            <select id="mz-payment-credit-card-type" data-bind="value: PaymentOrCardType, css: {'mz-invalid': PaymentOrCardType.invalid() }">
+                            {% comment %} TODO: Figure out how to get a live set of ccards {% endcomment %}
+                            {% comment %}
                                 <option></option>
                                 {% for card in SiteContext.Settings.Checkout.PaymentSettings.SupportedCards %}
                                 <option value="{{card.Key}}">{{card.Value}}</option>
                                 {% endfor %}
+                            {% endcomment %}
+                                <option value="VISA">Visa</option>
+                                <option value="MC">Mastercard</option>
+                                <option value="AMEX">American Express</option>
+                                <option value="DISCOVER">Discover</option>
                             </select>
-                            <span class="mz-validation-message" data-bind="text: cardType.validationMessage() || '&nbsp;'"></span>
+                            <span class="mz-validation-message" data-bind="text: PaymentOrCardType.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
                     <div class="mz-form-field-row">
@@ -307,8 +228,8 @@
                             <label for="mz-payment-credit-card-number">Card Number<span class="mz-required-field"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <input type="text" name="credit-card-number" id="mz-payment-credit-card-number" data-bind="value: cardNumberPartOrMask, css: {'mz-invalid': cardNumberPartOrMask.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: cardNumberPartOrMask.validationMessage() || '&nbsp;'"></span>
+                            <input type="text" name="credit-card-number" id="mz-payment-credit-card-number" data-bind="value: CardNumberPartOrMask, css: {'mz-invalid': CardNumberPartOrMask.invalid() }">
+                            <span class="mz-validation-message" data-bind="text: CardNumberPartOrMask.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
                     <div class="mz-form-field-row">
@@ -316,8 +237,8 @@
                             <label for="mz-payment-credit-card-name">Name on Card<span class="mz-required-field"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <input type="text" name="credit-card-name" id="mz-payment-credit-card-name" data-bind="value: nameOnCard, css: {'mz-invalid': nameOnCard.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: nameOnCard.validationMessage() || '&nbsp;'"></span>
+                            <input type="text" name="credit-card-name" id="mz-payment-credit-card-name" data-bind="value: NameOnCard, css: {'mz-invalid': NameOnCard.invalid() }">
+                            <span class="mz-validation-message" data-bind="text: NameOnCard.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
                     <div class="mz-form-field-row">
@@ -325,24 +246,23 @@
                             <label for="mz-payment-expiration-month">Expires<span class="mz-required-field"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <select class="mz-half-size" id="mz-payment-expiration-month" name="expiration-month" data-bind="value: cardExpireMonth, css: {'mz-invalid': cardExpireMonth.invalid() }">
+                            <select class="mz-half-size" id="mz-payment-expiration-month" name="expiration-month" data-bind="value: ExpireMonth, css: {'mz-invalid': ExpireMonth.invalid() }">
                                 <option></option>
-                                <option value="01">January</option>
-                                <option value="02">February</option>
-                                <option value="03">March</option>
-                                <option value="04">April</option>
-                                <option value="05">May</option>
-                                <option value="06">June</option>
-                                <option value="07">July</option>
-                                <option value="08">August</option>
-                                <option value="09">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
+                                <option value="01">01 - January</option>
+                                <option value="02">02 - February</option>
+                                <option value="03">03 - March</option>
+                                <option value="04">04 - April</option>
+                                <option value="05">05 - May</option>
+                                <option value="06">06 - June</option>
+                                <option value="07">07 - July</option>
+                                <option value="08">08 - August</option>
+                                <option value="09">09 - September</option>
+                                <option value="10">10 - October</option>
+                                <option value="11">11 - November</option>
+                                <option value="12">12 - December</option>
                             </select>
-                            <select class="mz-half-size" name="mz-payment-expiration-year" data-bind="value: cardExpireYear, css: {'mz-invalid': cardExpireYear.invalid() }">
+                            <select class="mz-half-size" name="mz-payment-expiration-year" data-bind="value: ExpireYear, css: {'mz-invalid': ExpireYear.invalid() }">
                                 <option></option>
-                                <option value="2012">2012</option>
                                 <option value="2013">2013</option>
                                 <option value="2014">2014</option>
                                 <option value="2015">2015</option>
@@ -353,8 +273,9 @@
                                 <option value="2020">2020</option>
                                 <option value="2021">2021</option>
                                 <option value="2022">2022</option>
+                                <option value="2023">2023</option>
                             </select>
-                            <span class="mz-validation-message" data-bind="visible: cardExpireYear.invalid(), text: cardExpireYear.validationMessage()">&nbsp;</span>
+                            <span class="mz-validation-message" data-bind="visible: ExpireYear.invalid(), text: ExpireYear.validationMessage()">&nbsp;</span>
                         </div>
                     </div>
                     <div class="mz-form-field-row">
@@ -362,126 +283,27 @@
                             <label for="mz-payment-security-code">Security Code<span class="mz-required-field"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <input type="text" name="security-code" id="mz-payment-security-code" class="mz-half-size" data-bind="value: cvv, css: {'mz-invalid': cvv.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: cvv.validationMessage() || '&nbsp;'"></span>
+                            <input type="text" name="security-code" id="mz-payment-security-code" class="mz-half-size" data-bind="value: CVV, css: {'mz-invalid': CVV.invalid() }">
+                            <span class="mz-validation-message" data-bind="text: CVV.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
                     <div class="mz-form-field-row">
                         <div class="mz-form-field-cell"></div>
                         <div class="mz-form-field-cell">
-                            <label class="mz-inline"><input type="checkbox" name="save-card-info" data-bind="checked: isCardInfoSaved"> Save credit card information</label>
+                            <label class="mz-inline"><input type="checkbox" name="save-card-info" data-bind="checked: IsCardInfoSaved"> Save credit card information</label>
                         </div>
                     </div>
                 </div><!-- credit card fields-->
 
                 <h4>Billing Address</h4>
-                <div class="mz-single-setting"><label class="mz-inline"><input type="checkbox" data-bind="checked: isSameBillingShippingAddress"> Use my shipping address</label></div>
-                <div class="mz-completed-summary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary" data-bind="with: $root.shippingAddress, visible: isSameBillingShippingAddress">
-                    <span data-bind="text: firstName() + ' ' + lastName()"></span>
-                    <span data-bind="text: address1"></span>
-                    <span data-bind="text: address2, visible: address2"></span>
-                    <span data-bind="text: address3, visible: address3"></span>
-                    <span data-bind="text: cityOrTown() + ', ' + stateOrProvince() + ' ' + postalOrZipCode()"></span>
-                    <span data-bind="text: countryCode"></span>
+                <div class="mz-single-setting"><label class="mz-inline"><input type="checkbox" data-bind="checked: Card.IsSameBillingShippingAddress"> Use my shipping address</label></div>
+                <div class="mz-completed-summary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary" data-bind="visible: Card.IsSameBillingShippingAddress, template: { name: 'address-summary', data: $root.Shipment.ShippingAddress}">
                 </div>
-                <!-- ko if: !isSameBillingShippingAddress() -->
-                <div class="mz-form-fieldgroup">
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="mz-billing-firstname">First Name<span class="mz-required-field"> *</span>:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" name="billing-firstname" id="mz-billing-firstname" data-bind="value: firstName, css: {'mz-invalid': firstName.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: firstName.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="mz-billing-middle-initial">Middle Initial:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" name="billing-middle-initial" id="mz-billing-middle-initial" data-bind="value: middleName">
-                            <span class="mz-validation-message">&nbsp;</span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="mz-billing-lastname">Last Name<span class="mz-required-field"> *</span>:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" name="billing-lastname" id="mz-billing-lastname" data-bind="value: lastName, css: {'mz-invalid': lastName.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: lastName.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="mz-billing-address">Address<span class="mz-required-field"> *</span>:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" name="billing-address-1" id="mz-billing-address"  data-bind="value: address1, css: {'mz-invalid': address1.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: address1.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell"></div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" name="billing-address-2" data-bind="value: address2">
-                            <span class="mz-validation-message">&nbsp;</span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="mz-billing-city">City<span class="mz-required-field"> *</span>:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" name="billing-city" id="mz-billing-city" data-bind="value: cityOrTown, css: {'mz-invalid': cityOrTown.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: cityOrTown.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="mz-billing-country">Country<span class="mz-required-field"> *</span>:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <select id="mz-billing-country" data-bind="value: countryCode, css: {'mz-invalid': countryCode.invalid() }">
-                                <option value="US">United States</option>
-                                <option value="UK">United Kingdom</option>
-                                <option value="NO">Norway</option>
-                                <option value="MXP">Mexipan</option>
-                                <option value="AU">Australia</option>
-                            </select>
-                            <span class="mz-validation-message" data-bind="text: countryCode.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="mz-billing-state">State<span class="mz-required-field"> *</span>:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <select id="mz-billing-state" data-bind="value: stateOrProvince, css: {'mz-invalid': stateOrProvince.invalid() }">
-                                <option value="TX">Texas</option>
-                                <option value="NB">Nebraska</option>
-                                <option value="WA">Washington</option>
-                                <option value="OR">Oregon</option>
-                                <option value="SC">South Carolina</option>
-                            </select>
-                            <span class="mz-validation-message" data-bind="text: stateOrProvince.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
-                            <label for="mz-billing-postal-code">Zip/Postal Code<span class="mz-required-field"> *</span>:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" name="billing-postal-code" id="mz-billing-postal-code" class="mz-half-size" data-bind="value: postalOrZipCode, css: {'mz-invalid': postalOrZipCode.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: postalOrZipCode.validationMessage() || '&nbsp;'"></span>
-                        </div>
-                    </div>
-                </div>
-                <!-- /ko -->
+                <div class="mz-form-fieldgroup mz-form-fields" data-bind="visible: !Card.IsSameBillingShippingAddress(), template: { name: 'address-form', data: Card.BillingAddress }"></div>
                 <!-- /ko -->
 
                 <div class="mz-form-fieldgroup" data-bind="visible: paymentTypeIsCheck">
+                <!--
                     <div class="mz-form-field-row">
                         <div class="mz-form-field-cell">
                             <label for="nameOnCheck">Name on check<span class="mz-required-field"> *</span>:</label>
@@ -500,8 +322,9 @@
                             <span class="mz-validation-message" data-bind="text: checkNumber.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
-                </div><!-- pay by check fields -->
                 <p><a href="#">Read more</a> about paying by check</p>
+                    -->
+                </div><!-- pay by check fields -->
 
                 <h4>Billing Contact Info</h4>
                 <div class="mz-form-fieldgroup">
@@ -510,7 +333,7 @@
                             <label for="billing-phone">Phone:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <input type="text" id="billing-phone" name="billing-phone" data-bind="value: phoneNumbers">
+                            <input type="text" id="billing-phone" name="billing-phone" data-bind="value: Card.BillingAddress.PhoneNumbers.Home">
                         </div>
                     </div>
                     <div class="mz-form-field-row">
@@ -518,8 +341,8 @@
                             <label for="billing-email">Email<span class="mz-required-field"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <input type="text" id="billing-email" name="billing-email" data-bind="value: email, css: {'mz-invalid': email.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: email.validationMessage() || '&nbsp;'"></span>
+                            <input type="text" id="billing-email" name="billing-email" data-bind="value: Card.BillingAddress.Email, css: {'mz-invalid': Card.BillingAddress.Email.invalid() }">
+                            <span class="mz-validation-message" data-bind="text: Card.BillingAddress.Email.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
                     <div class="mz-form-field-row">
@@ -538,13 +361,12 @@
             </div>
         </div><!-- Step 3 .panel -->
 
-
         <div class="mz-panel mz-checkout-reviewpanel" id="mz-checkout-reviewpanel" data-bind="css: { 'mz-stepstatus-submitting': submitting }">
             <h3 class="mz-panel-header">
                 Review & Place Order
             </h3>
             <div class="mz-panel-wrap">
-            <div class="mz-inner-panel" data-bind="changeHeightOn: createAccount(), visible: orderStatus">
+            <div class="mz-inner-panel" data-bind="changeHeightOn: CreateAccount(), visible: orderStatus">
                 <p class="mz-desc">Please review all of the information on this page and, if necessary, make changes before placing your order.</p>
 
                 <label class='inline'>
@@ -554,10 +376,10 @@
 
                 {% if  User.isAnonymous %}
                 <label class='inline'>
-                    <input type="checkbox" name="create-new-account" data-bind="checked: createAccount"> Create an account for easy checkout on future orders
+                    <input type="checkbox" name="create-new-account" data-bind="checked: CreateAccount"> Create an account for easy checkout on future orders
                 </label>
 
-                <div id="mz-create-account-fields" class="mz-create-account-fields" data-bind="visible: createAccount">
+                <div id="mz-create-account-fields" class="mz-create-account-fields" data-bind="visible: CreateAccount">
                     <label>
                         Username
                         <input type="text" name="new-account-email" data-bind="value: email, css: {'mz-invalid': email.invalid() }">
@@ -584,6 +406,91 @@
             </div>
         </div><!-- Step 4 .panel -->
     </div><!-- left .column -->
+
+    <script type="text/html" id="address-summary">
+        <span data-bind="text: FirstName() + ' ' + LastNameOrSurname()"></span>
+        <span data-bind="text: Address.Address1()"></span>
+        <span data-bind="text: Address.Address2(), visible: Address.Address2()"></span>
+        <span data-bind="text: Address.Address3(), visible: Address.Address3()"></span>
+        <span data-bind="text: Address.CityOrTown() + ', ' + Address.StateOrProvince() + ' ' + Address.PostalOrZipCode()"></span>
+        <span data-bind="text: Address.CountryCode()"></span>
+    </script>
+
+    <script type="text/html" id="address-form">
+   <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+                <label for="firstname">First Name<span class="mz-required-field" data-bind="visible: FirstName.required"> *</span>:</label>
+            </div>
+            <div class="mz-form-field-cell">
+                <input type="text" id="mz-shipping-address-firstname" name="firstname" data-bind="value: FirstName, css: { 'mz-invalid': FirstName.invalid() }">
+                <span class="mz-validation-message" data-bind="text: FirstName.validationMessage() || '&nbsp;'"></span>
+            </div>
+        </div>
+        <div class="mz-form-field-row">
+            <div class="mz-form-field-cell">
+                <label for="lastname">Last Name<span class="mz-required-field"> *</span>:</label>
+            </div>
+            <div class="mz-form-field-cell">
+                <input type="text" id="mz-shipping-address-lastname" name="lastname" data-bind="value: LastNameOrSurname, css: { 'mz-invalid': LastNameOrSurname.invalid() }">
+                <span class="mz-validation-message" data-bind="text: LastNameOrSurname.validationMessage() || '&nbsp;'"></span>
+            </div>
+        </div>
+        <div class="mz-form-field-row">
+            <div class="mz-form-field-cell">
+                <label for="address-line-1">Address<span class="mz-required-field" data-bind="visible: Address.Address1.required"> *</span>:</label>
+            </div>
+            <div class="mz-form-field-cell">
+                <input type="text" id="mz-shipping-address-line-1" name="address-line-1" data-bind="value: Address.Address1, css: { 'mz-invalid': Address.Address1.invalid() }">
+                <span class="mz-validation-message" data-bind="text: Address.Address1.validationMessage() || '&nbsp;'"></span>
+            </div>
+        </div>
+        <div class="mz-form-field-row">
+            <div class="mz-form-field-cell"></div>
+            <div class="mz-form-field-cell">
+                <input type="text" id="mz-shipping-address-line-2" name="address-line-2" data-bind="value: Address.Address2">
+                <span class="mz-validation-message">&nbsp;</span>
+            </div>
+        </div>
+        <div class="mz-form-field-row">
+            <div class="mz-form-field-cell">
+                <label for="city">City<span class="mz-required-field"> *</span>:</label>
+            </div>
+            <div class="mz-form-field-cell">
+                <input type="text" id="mz-shipping-address-city" name="city" data-bind="value: Address.CityOrTown, css: { 'mz-invalid': Address.CityOrTown.invalid() }">
+                <span class="mz-validation-message" data-bind="text: Address.CityOrTown.validationMessage() || '&nbsp;'"></span>
+            </div>
+        </div>
+        <div class="mz-form-field-row">
+            <div class="mz-form-field-cell">
+                <label for="country">Country<span class="mz-required-field"> *</span>:</label>
+            </div>
+            <div class="mz-form-field-cell">
+                <select id="mz-shipping-address-country" data-bind="value: Address.CountryCode, options: Address.countryList, optionsCaption: 'Choose...', optionsText: 'CountryLabel', optionsValue: 'CountryCode', css: { 'mz-invalid': Address.CountryCode.invalid() }">
+                </select>
+                <span class="mz-validation-message" data-bind="text: Address.CountryCode.validationMessage() || '&nbsp;'"></span>
+            </div>
+        </div>
+        <div class="mz-form-field-row" data-bind="visible: Address.CountryCode">
+            <div class="mz-form-field-cell">
+                <label data-bind="html: Address.stateprovLabel() + '<span class=\'mz-required-field\' data-bind=\'visible: Address.StateOrProvince.required\'> *</span>:'"></label>
+            </div>
+            <div class="mz-form-field-cell">
+                <select data-bind="options: Address.stateprovList, optionsText: 'Value', optionsValue: 'Code', optionsCaption: 'Choose...', value: Address.StateOrProvince(), css: { 'mz-invalid': Address.StateOrProvince.invalid() }">
+                </select>
+                <span class="mz-validation-message" data-bind="text: Address.StateOrProvince.validationMessage() || '&nbsp;'"></span>
+            </div>
+        </div>
+        <div class="mz-form-field-row">
+            <div class="mz-form-field-cell">
+                <label for="postal-code">Zip/Postal Code<span class="mz-required-field"> *</span>:</label>
+            </div>
+            <div class="mz-form-field-cell">
+                <input type="text" id="mz-shipping-address-postal-code" name="postal-code" data-bind="value: Address.PostalOrZipCode, css: { 'mz-invalid': Address.PostalOrZipCode.invalid() }">
+                <span class="mz-validation-message" data-bind="text: Address.PostalOrZipCode.validationMessage() || '&nbsp;'"></span>
+            </div>
+        </div>
+    </script>
+
 
 </form>
 

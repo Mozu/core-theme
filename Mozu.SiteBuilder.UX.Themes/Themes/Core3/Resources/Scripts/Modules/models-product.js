@@ -144,13 +144,14 @@
         toJS: function () {
             // server expects the options collection to belong to this model as well
             var j = Product.prototype.toJS.apply(this);
-            j.options = this.config.emitAllOptions();
+            //j.options = this.config.emitAllOptions();
             return {
                 Product: j,
                 Quantity: this.Quantity()
             };
         },
         submit: function () {
+            this.submitting(true);
             this.addToCart(this.toJS());
         }
     }, function constructProduct() {

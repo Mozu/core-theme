@@ -27,9 +27,11 @@
         });
         this.Quantity.subscribe(function (newValue) {
             self.parentCart.submitting(true);
-            self.apiModel.data.Quantity = newValue;
-            self.apiModel.action('update', self.apiModel.data).then(function () {
-                self.parentCart.get();
+            //self.apiModel.data.Quantity = newValue;
+            self.updateQuantity(newValue).then(function () {
+                self.parentCart.get().then(function () {
+                    self.parentCart.submitting(false);
+                });
             });
         });
     });

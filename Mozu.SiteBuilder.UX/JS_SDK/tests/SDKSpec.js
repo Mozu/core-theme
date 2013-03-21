@@ -1,14 +1,15 @@
 ﻿describe('Mozu SDK', function () {
 
     // current service URLs
-    Mozu.ApiReference.urls = {
-        "ProductService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/products/",
+    Mozu.setServiceUrls({
+        "ProductService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/commerce/catalog/storefront/products/",
         "CartService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Cart.WebApi/commerce/carts/",
-        "UserService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.User.WebApi/users/",
-        "OrderService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Order.WebApi/orders/",
-        "SearchService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/productsearch/",
-        "CmsService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Content.WebApi/documents/"
-    };
+        "UserService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.User.WebApi/platform/user/accounts/",
+        "OrderService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Order.WebApi/commerce/orders/",
+        "SearchService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/commerce/catalog/storefront/productsearch/",
+        "CmsService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Content.WebApi/content/documents/",
+        "ReferenceService": "http://aus01pdweb001.ads.volusion.com:9090/Mozu.reference.WebApi/platform/reference/"
+    });
 
     it("should expose a Mozu object", function () {
         expect(Mozu).toBeDefined();

@@ -8,6 +8,15 @@
 
         var checkoutViewModel = new CheckoutModels.CheckoutPage(checkoutData);
 
+        // add some view-only helpers
+        checkoutViewModel.Shipment.ShippingAddress.nextButtonText = ko.computed(function () {
+            return checkoutViewModel.Shipment.stepStatus() == 'new' ? 'Next' : 'Update'
+        });
+
+        checkoutViewModel.Shipment.nextButtonText = ko.computed(function () {
+            return checkoutViewModel.Shipment.stepStatus() == 'new' ? 'Next' : 'Update'
+        });
+
         ko.applyBindings(checkoutViewModel, $checkoutView[0]);
 
         // once applybindings is done, hide the loader and show the checkout view

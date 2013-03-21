@@ -85,7 +85,10 @@
                         <!-- Below button should no longer be necessary, as edits to quantity instantly "take" -->
 						<input type="button" value="Update" id="update" data-bind="click: updateItems" />
                         {% endcomment %}
-						<button id="checkout" class="mz-button mz-btn-checkout mz-btn-cta"  {% if Model.Items.Count == 0 %} disabled="disabled" {% endif %} data-bind="click: checkout">Proceed to Checkout</button>
+                        <!-- ko if: submitting -->
+                        {% include "Modules/LoadingBar" %}
+                        <!-- /ko -->
+						<button id="checkout" class="mz-button mz-btn-checkout mz-btn-cta"  {% if Model.Items.Count == 0 %} disabled="disabled" {% endif %} data-bind="click: checkout, disable: submitting, visible: !submitting()">Proceed to Checkout</button>
 					</td>
 				</tr>
 			</tfoot>

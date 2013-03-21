@@ -209,7 +209,8 @@ var ApiReference = (function () {
                 includeSelf: true,
             },
             "get-shipping-methods": {
-                template: '{+OrderService}{orderId}/shipment/methods'
+                template: '{+OrderService}{orderId}/shipment/methods',
+                returnType: 'shippingmethods'
             }
         },
         'document': {
