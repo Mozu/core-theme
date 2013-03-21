@@ -11,7 +11,7 @@ Ext.define('Taco.view.discount.Index', {
     ],
     modelName: 'Taco.model.Discount',
     store: { type: 'Taco.store.Discounts' },
-    editorName: 'Taco.view.discounts.Edit',
+    editorName: 'Taco.view.discount.Edit',
     typeName: 'Discount',
 
     gridPanelConf: {
@@ -21,10 +21,10 @@ Ext.define('Taco.view.discount.Index', {
             text: 'Name',
             hideable: false,
             flex: 1,
-            minWidth: 150,
-            renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-            }
+            minWidth: 150
+            //renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+            //    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
+            //}
         }, {
             xtype: 'gridcolumn',
             dataIndex: 'amountType',
@@ -219,7 +219,7 @@ Ext.define('Taco.view.discount.Index', {
     /**
     * Handler for when the user attempts to navigate away from this view
     */
-    onNavigate: function (newState) {
+    onNavigatez: function (newState) {
         // navigation events that i can totes handle include: 
         var md = newState.getMetaData();
         if (md.controller && md.controller === "discounts" && md.action === "edit") {
@@ -232,13 +232,13 @@ Ext.define('Taco.view.discount.Index', {
     * When a list item is clicked, this method instatiates the editor view and initializes it with a {@link Taco.core.Model}
     * @param {Model} record The model associated with the list item that was selected
     */
-    launchEditor: function (record) {
+    launchEditorz: function (record) {
         var me = this,
                 token = 'discounts/edit/',
                 editorView,
                 id = record.getId ? record.getId() : record,
 
-            editorView = Ext.create('Taco.view.discounts.Edit',
+            editorView = Ext.create('Taco.view.discount.Edit',
             {
                 logicalParent: me,
                 listeners:

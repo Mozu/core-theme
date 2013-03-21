@@ -7,7 +7,7 @@ Ext.define('Taco.controller.Discounts', {
     models: ['Taco.model.Discount'],
     stores: ['Taco.store.Discounts'],
     views: ['discount.Index'],
-    modelName: 'Taco.model.Discount',
+    modelName: 'Discount',
     
     contextPlaceholders: {
         t: function () {
