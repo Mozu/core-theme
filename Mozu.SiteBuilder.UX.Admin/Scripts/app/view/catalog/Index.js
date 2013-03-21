@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Taco.core.ux.ComboFilter'],
+    requires: ['Taco.model.ItemFilter', 'Taco.core.ux.ComboFilter'],
 
     header: {
         title: 'Catalog Testing'
@@ -26,12 +26,22 @@ Ext.define('Taco.view.catalog.Index', {
 
         // create a filter field
 
+        var filterStore = Ext.create('Ext.data.Store', {
+            fields: ['property', 'value'],
+            data: []
+        });
+
         var box = Ext.create('Taco.core.ux.ComboFilter', {
-            store: ['zero'],
-            margin: '20 0'
+            width: 500,
+            margin: '20 0',
+            itemStore: store,
+            // displayField: 'value',
+            // valueField: 'value',
+            store: undefined
         });
 
         Ext.apply(this.body, {
+            layout: 'auto',
             items: [box, list]
         });
 

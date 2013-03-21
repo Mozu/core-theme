@@ -1245,7 +1245,7 @@ Ext.define('Ext.ux.form.field.BoxSelect', {
         valueField = me.valueField,
         record, len, i, valueRecord, h,
         unknownValues = [];
-
+        
         if (Ext.isEmpty(value)) {
             value = null;
         }
