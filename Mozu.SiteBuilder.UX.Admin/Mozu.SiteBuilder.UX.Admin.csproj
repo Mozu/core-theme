@@ -586,6 +586,8 @@
     <Content Include="Scripts\app\view\attribute\Form.js" />
     <Content Include="Scripts\app\view\attribute\Index.js" />
     <Content Include="Scripts\app\view\category\Modal.js" />
+    <Content Include="Scripts\app\view\discount\Edit.js" />
+    <Content Include="Scripts\app\view\discount\Index.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\pageTemplate\Edit.js" />
@@ -2710,8 +2712,6 @@
     <Content Include="Scripts\app\view\category\Basic.js" />
     <Content Include="Scripts\app\view\category\Edit.js" />
     <Content Include="Scripts\app\view\category\Index.js" />
-    <Content Include="Scripts\app\view\discounts\Edit.js" />
-    <Content Include="Scripts\app\view\discounts\Index.js" />
     <Content Include="Scripts\app\view\fileManagement\TilePanel.js" />
     <Content Include="Scripts\app\view\fileManagement\Savable.js" />
     <Content Include="Scripts\app\view\fileManagement\folderTree.js" />
