@@ -73,7 +73,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             // apply the correct attribute validation
             Strategies.GetOrDefault(source.DataType, NoOp)(attributeValidation, source);
-
+            if (source.DataType == AttributeDataType.None)
+            {
+                if (source.InputType == AttributeInputType.TextArea)
+                {
+                    source.DataType = AttributeDataType.String;
+                }
+                if (source.InputType == AttributeInputType.YesNo )
+                {
+                    source.DataType = AttributeDataType.Bool ;
+                }
+            }
             var destination = new DC.Attribute
             {
                 AttributeCode =  (source.Name ?? "").Trim(),
