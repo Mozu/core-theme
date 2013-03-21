@@ -242,6 +242,43 @@ Ext.application({
             }
         });
 
+        Ext.override(Ext.data.proxy.Ajax, {
+            constructor: function (config) {
+
+                var me = this;
+                this.callParent([config]);
+                me.on('exception', function () {
+                    console.log('ajaxproxy-exception', arguments);
+                }, me);
+
+            },
+            afterRequest: function (request, success) {
+                var me = this;
+                this.callParent(arguments);
+                if (success && request && request.action != 'read' && this.model && this.model.$className) {
+                    Taco.app.signalCacheFlush({ model: this.model.$className });
+                    Taco.core.data.StoreManager.fireEvent('afterproxyrequest', request, success, this.model);
+                }
+
+            },
+            encodeFilters: function (filters) {
+                var min = [],
+                    length = filters.length,
+                    i = 0;
+
+                for (; i < length; i++) {
+                    min[i] = {
+                        property: filters[i].property,
+                        value: filters[i].value
+                    };
+                    if (filters[i].comparison) {
+                        min[i].comparison = filters[i].comparison;
+                    }
+                }
+                return this.applyEncoding(min);
+            },
+        });
+
         Ext.override(Ext.data.Connection , {
             onStateChange: function (request) {
                 if (request && request.xhr && request.xhr.readyState == 4) {
