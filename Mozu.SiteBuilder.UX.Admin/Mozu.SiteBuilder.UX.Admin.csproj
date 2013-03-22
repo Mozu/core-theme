@@ -342,6 +342,7 @@
     <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
     <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
     <Compile Include="Api\Models\ProductModels\ProductLocalizedImage.cs" />
+    <Compile Include="Api\Models\ProductModels\ProductProperty.cs" />
     <Compile Include="Api\ProductTypeController.cs" />
     <Compile Include="Api\WidgetInstanceDataController.cs" />
     <Compile Include="Api\IVolusionLoginHelper.cs" />

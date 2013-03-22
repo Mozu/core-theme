@@ -59,6 +59,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "price")]
         public decimal? Price { get; set; }
 
+
+        [DataMember(EmitDefaultValue = false, IsRequired = false, Name = "properties")]
+        public List<ProductProperty> Properties { get; set; }
+
+
         /// <summary>
         /// The sale price.
         /// </summary>
