@@ -178,14 +178,27 @@ var ApiReference = (function () {
                 noBody: true
             }
         },
-        'me': {
+        'user': {
+            create: {
+                verb: 'POST',
+                template: '{+UserService}'
+            },
             get: {
                 template: '{+UserService}{Id}',
                 shortcutParam: 'id'
+            },            'get-by-email': {
+                template: '{+UserService}{?emailAddress*}',
+                shortcutParam: 'emailAddress'
             },
             login: {
-                template: '{+UserService}Login'
+                verb: 'POST',
+                template: '{+UserService}Login',
+                includeSelf: true,
+                returnType: 'login'
             }
+        },
+        'login': {
+            template: '{+UserService}Login'
         },
         'order': {
             get: {
@@ -202,6 +215,44 @@ var ApiReference = (function () {
                 returnType: 'shipment',
                 includeSelf: true
             },
+            "set-user-id": {
+                verb: 'PUT',
+                template: '{+OrderService}{Id}/users',
+                noBody: true,
+                includeSelf: true,
+                returnType: 'user'
+            },
+            'apply-coupon': {
+                verb: 'PUT',
+                template: '{+OrderService}{Id}/coupons/{couponCode}',
+                shortcutParam: 'couponCode',
+                includeSelf: true,
+                noBody: true,
+                returnType: 'coupon',
+            },
+            'remove-coupon': {
+                verb: 'DELETE',
+                template: '{+OrderService}{Id}/coupons',
+                includeSelf: true
+            },
+            'get-available-actions': {
+                template: '{+OrderService}{Id}/actions',
+                includeSelf: true,
+                returnType: 'orderactions'
+            },
+            'perform-order-action': {
+                verb: 'PUT',
+                template: '{+OrderService}{Id}/actions/{actionName}',
+                shortcutParam: 'actionName',
+                includeSelf: true,
+                noBody: true
+            },
+            'add-order-note': {
+                verb: 'POST',
+                template: '{+OrderService}{Id}/notes',
+                includeSelf: true,
+                returnType: 'ordernote'
+            },
         },
         'shipment': {
             defaults: {
@@ -212,6 +263,13 @@ var ApiReference = (function () {
                 template: '{+OrderService}{orderId}/shipment/methods',
                 returnType: 'shippingmethods'
             }
+        },
+        'payment': {
+            template: '{+OrderService}{orderId}/payment',
+            includeSelf: true
+        },
+        'ordernote': {
+            template: '{+OrderService}{orderId}/notes/{Id}'
         },
         'document': {
             get: {

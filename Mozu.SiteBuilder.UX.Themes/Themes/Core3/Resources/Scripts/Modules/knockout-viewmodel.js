@@ -185,7 +185,7 @@
                 $.each(apiModel.getAvailableActions(), function (ix, actionName) {
                     (actionName in me ? apiModel : me)[actionName] = function (data) {
                         // include self by default in update action
-                        if (actionName === "update") data = data || me.toJS();
+                        if (actionName in { 'create': true, 'update': true }) data = data || me.toJS();
                         return apiModel.action(actionName, data).then(onSuccess);
                     };
                 });
