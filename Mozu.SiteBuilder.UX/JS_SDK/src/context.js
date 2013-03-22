@@ -1,6 +1,5 @@
 ﻿// BEGIN CONTEXT
 var ApiContext = function (conf) {
-    // TODO: factor out jQuery
     utils.extend(this, conf);
 },
     mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale'], //, 'bypass-cache'],

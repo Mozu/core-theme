@@ -22,6 +22,7 @@ ApiInterface.prototype = {
         }
 
         var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function (rawJSON) {
+            // update context with response headers
             deferred.resolve(rawJSON, xhr);
         }, function (error) {
             deferred.reject(error, xhr, url);
@@ -32,6 +33,15 @@ ApiInterface.prototype = {
         });
 
         return deferred.promise;
+    },
+    action: function(type, actionName, conf, isRemote) {
+        var me = this,
+            fulfill = function (rawJSON) {
+                return ApiReference.tryCreateApiObject(type, rawJSON, me);
+            };
+        isRemote = isRemote === false ? false : true;
+        return isRemote ? this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf).then(fulfill) :
+                          utils.when(utils.extend(conf, { unsynced: true }), fulfill);
     },
     all: function () {
         return utils.when.join.apply(utils.when, arguments);
@@ -45,14 +55,8 @@ ApiInterface.prototype = {
 };
 var setOp = function(fnName) {
     ApiInterface.prototype[fnName] = function (type, conf, isRemote) {
-        var me = this,
-            fulfill = function (rawJSON) {
-            return ApiReference.tryCreateApiObject(type, rawJSON, me);
-        };
-        isRemote = isRemote === false ? false : true;
-        return isRemote ? this.request(ApiReference.basicOps[fnName], ApiReference.getRequestConfig(fnName, type, conf, this.context), conf).then(fulfill) :
-                          utils.when(utils.extend(conf, { unsynced: true }), fulfill);
-    }
+        return this.action(type, fnName, conf, isRemote);
+    };
 };
 for (var i in ApiReference.basicOps) {
     if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);

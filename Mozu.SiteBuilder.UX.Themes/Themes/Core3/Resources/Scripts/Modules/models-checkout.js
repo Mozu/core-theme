@@ -1,6 +1,6 @@
 ﻿define(
-    ["jquery", "modules/knockout-plus", "pciaas", "modules/knockout-viewmodel", "i18n!nls/messages-checkout", "i18n!nls/messages", "modules/api"],
-    function ($, ko, PCIaaS, ViewModelPrototype, msg, genericMsg, api) {
+    ["jquery", "modules/knockout-plus", "pciaas", "modules/knockout-viewmodel", "i18n!nls/messages-checkout", "i18n!nls/messages", "modules/api", "modules/models-user"],
+    function ($, ko, PCIaaS, ViewModelPrototype, msg, genericMsg, api, UserModels) {
 
 
         //function modelObservableValueIs(obsName, desiredValue) {
@@ -99,14 +99,14 @@
 
             self.countryList = ko.observableArray();
             // to prepopupate
-            var countryCode = self.CountryCode();
+            var countryCode = self.CountryCode(),
+                stateOrProv = self.StateOrProvince();
 
             AddressSchemesPromise.then(function (r) {
                 AddressSchemes = r.statesByCountry;
                 self.countryList(r.countries);
-                self.CountryCode.notifySubscribers();
                 self.CountryCode(countryCode);
-                self.StateOrProvince.notifySubscribers();
+                self.StateOrProvince(stateOrProv);
             });
         };
 
@@ -220,7 +220,7 @@
         paymentTypeIsCreditCard = function () {
             return this.getParentModel().PaymentType() === "Credit Card";
         },
-        paymentTypeIsCheck = function() {
+        paymentTypeIsCheck = function () {
             return this.getParentModel().PaymentType() === "Check";
         },
         expirationDateLaterThanToday = function () {
@@ -243,46 +243,47 @@
             return isValid;
         },
 
-        parentUseShippingAddressUnchecked = function () {
-            return !this.getParentModel().IsSameBillingShippingAddress();
+        parentBillingAddressRequired = function () {
+            var parent = this.getParentModel();
+            return parent.getParentModel().PaymentType() === "CreditCard" && !parent.IsSameBillingShippingAddress();
         },
-        grandparentUseShippingAddressUnchecked = function () {
-            return parentUseShippingAddressUnchecked.call(this.getParentModel());
+        grandparentBillingAddressRequired = function () {
+            return parentBillingAddressRequired.call(this.getParentModel());
         },
-        
+
 
         BillingStreetAddress = ViewModelPrototype.extend($.extend(true, {}, addressConf, {
             observables: {
                 "Address1": {
                     required: {
                         message: msg.StreetMissing,
-                        onlyIf: grandparentUseShippingAddressUnchecked
+                        onlyIf: grandparentBillingAddressRequired
                     }
                 },
                 "CityOrTown": {
                     required: {
                         message: msg.CityMissing,
-                        onlyIf: grandparentUseShippingAddressUnchecked
+                        onlyIf: grandparentBillingAddressRequired
                     }
                 },
                 "StateOrProvince": {
                     required: {
                         message: msg.StateProvMissing,
                         invalidateOnChange: false,
-                        onlyIf: grandparentUseShippingAddressUnchecked
+                        onlyIf: grandparentBillingAddressRequired
                     }
                 },
                 "PostalOrZipCode": {
                     required: {
                         message: msg.PostalCodeMissing,
-                        onlyIf: grandparentUseShippingAddressUnchecked
+                        onlyIf: grandparentBillingAddressRequired
                     }
                 },
                 "CountryCode": {
                     required: {
                         message: msg.CountryMissing,
                         invalidateOnChange: false,
-                        onlyIf: grandparentUseShippingAddressUnchecked
+                        onlyIf: grandparentBillingAddressRequired
                     }
                 }
             }
@@ -295,19 +296,19 @@
             observables: {
                 "Email": {
                     required: {
-                        onlyIf: parentUseShippingAddressUnchecked,
+                        onlyIf: parentBillingAddressRequired,
                         pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i,
                     }
                 },
                 "FirstName": {
                     required: {
-                        onlyIf: parentUseShippingAddressUnchecked
+                        onlyIf: parentBillingAddressRequired
                     },
                 },
                 "MiddleNameOrInitial": {},
                 "LastNameOrSurname": {
                     required: {
-                        onlyIf: parentUseShippingAddressUnchecked
+                        onlyIf: parentBillingAddressRequired
                     },
                 },
                 "CompanyOrOrganization": {}
@@ -333,7 +334,8 @@
                         onlyIf: paymentTypeIsCreditCard
                     }
                 },
-                "ExpireMonth": {                    required: {
+                "ExpireMonth": {
+                    required: {
                         message: msg.CardExpInvalid,
                         onlyIf: paymentTypeIsCreditCard,
                         invalidateOnChange: false,
@@ -358,7 +360,8 @@
                 },
                 "CVV": {
                     required: {
-                        message: msg.CardCVVMissing
+                        message: msg.CardCVVMissing,
+                        onlyIf: paymentTypeIsCreditCard
                     }
                 },
                 "IsCardInfoSaved": {}
@@ -369,29 +372,48 @@
             doNotSubmit: ["CVV"]
         }),
 
+        Check = ViewModelPrototype.extend({
+            observables: {
+                NameOnCheck: {
+                    required: true
+                },
+                RoutingNumber: {
+                    required: true
+                },
+                CheckNumber: {
+                    required: true
+                }
+            }
+        }),
+
         Payment = ViewModelPrototype.extend({
             //endpoint: "/resources/scripts/fixtures/checkout-updatepaymentsection.json",
             //endpoint: "/checkout/updatepayment",
+            mozuType: 'payment',
             observables: {
                 "PaymentType": { required: msg.PaymentMethodMissing },
             },
             submodels: {
-                "Card": CreditCard
+                "Card": CreditCard,
+                "Check": Check
             },
             edit: editStep,
             submit: function () {
+                var self = this;
                 if (this.validate()) {
-                    if (paymentTypeIsCreditCard.apply(this)) {
+                    if (this.paymentTypeIsCreditCard()) {
                         return this.pciProcessor.process();
                     } else {
-                        return 
+                        return self.update().then(function () {
+                            self.checkStepStatus();
+                        });
                     }
                 } else {
                     return false;
                 }
             },
             nextStep: submitStep,
-            checkStepStatus: function() {
+            checkStepStatus: function () {
                 var origStatus = checkStepStatus.apply(this);
                 if (this.getParentModel().Shipment.stepStatus() !== "complete") {
                     origStatus = "new";
@@ -411,7 +433,7 @@
                 this.ExpireYear.validate();
                 this.cvv.validate();
                 this.ExpireYear.validationMessage(msg.ReEnterExpDate);
-                //this.cvv.validationMessage(msg.ReEnterCVV);
+                this.CVV.validationMessage(msg.ReEnterCVV);
             }
 
             this.pciProcessor = PCIaaS({
@@ -425,7 +447,9 @@
                 events: {
                     success: function () {
                         self.pciProcessor.applyMask();
-                        Payment.prototype.submit.apply(self);
+                        self.update().then(function () {
+                            self.checkStepStatus();
+                        });
                     }
                 },
                 settings: {
@@ -447,30 +471,22 @@
             });
         }),
 
-        OrderSummary = ViewModelPrototype.extend({
-            endpoint: "/checkout/updateorder",
-            statics: {
-                orderId: ""
-            },
-            observables: {
-                couponCode: {},
-                stepStatus: {},
-                subTotal: { numeric: 2 },
-                shippingTotal: { numeric: 2 },
-                taxTotal: { numeric: 2 },
-                total: { numeric: 2 },
-                items: {}
-            },
-            doNotSubmit: ["stepStatus", "subTotal", "shippingTotal", "taxTotal", "total", "items"],
-            nextStep: submitStep
-        }),
-
         isCreatingAccount = function () {
-            return this.CreateAccount();
+            return this.createAccount();
         },
         isNotCreatingAccount = function () {
             return !isCreatingAccount.apply(this);
         },
+
+        Note = ViewModelPrototype.extend({
+            mozuType: 'ordernote',
+            statics: {
+                "Id": ""
+            },
+            observables: {
+                "Text": {}
+            }
+        });
 
         CheckoutPage = ViewModelPrototype.extend({
             mozuType: 'order',
@@ -482,11 +498,19 @@
             submodels: {
                 Shipment: Shipment,
                 Payment: Payment,
-                orderSummary: OrderSummary
+                Note: Note,
+                User: UserModels.User
             },
             observables: {
-                CreateAccount: {},
+                CouponCode: {},
+                Subtotal: { numeric: 2 },
+                ShippingTotal: { numeric: 2 },
+                TaxTotal: { numeric: 2 },
+                Total: { numeric: 2 },
+                Items: {},
+                createAccount: {},
                 agreeToTerms: { required: msg.DidNotAgreeToTerms },
+                submittingCoupon: {},
                 email: {
                     blankIf: isNotCreatingAccount,
                     required: {
@@ -511,22 +535,64 @@
                         },
                         message: msg.PasswordsDoNotMatch
                     }
-                },
-                comments: {}
+                }
+            },
+            addCoupon: function() {
+                var self = this;
+                this.submittingCoupon(true);
+                this.applyCoupon(this.CouponCode()).then(function() {
+                    return self.get();
+                }).then(function() {
+                    self.submittingCoupon(false);
+                });
+            },
+            submit: function() {
+                var order = this,
+                    apiSteps = [];
+                if (!this.validate()) return false;
+                if (this.createAccount()) {
+                    apiSteps.push(function () {
+                        return order.User.create();
+                    }, function () {
+                        return order.User.login({
+                            EmailAddress: order.email(),
+                            Password: order.password()
+                        });
+                    }, function (login) {
+                        // TODO: add a cool api login method
+                        api.context.UserClaims(login.data.AuthTicket.AccessToken);
+                        return order.setUserId();
+                    });
+                }
+                if (order.Note.Text()) {
+                    apiSteps.push(function () {
+                        return order.Note.create();
+                    });
+                }
+                apiSteps.push(function () {
+                    return order.getAvailableActions();
+                }, function (availableActions) {
+                    if (availableActions.indexOf('SubmitOrder') !== -1)
+                        return order.performOrderAction('SubmitOrder');
+                    return false;
+                });
+
+                api.steps.apply(api, apiSteps).then(function (order) {
+                    console.log('derp', order);
+                }, function (error) {
+                    console.log('noooo', error, error.message);
+                    $.each(error.Items, function (ix, errorItem) {
+                        if (errorItem.ErrorCode === "MISSING_OR_INVALID_PARAMETER" && errorItem.AdditionalErrorData && errorItem.AdditionalErrorData[0] && errorItem.AdditionalErrorData[0].Value === "password" && errorItem.AdditionalErrorData[0].Name === "ParameterName") {
+                            order.password.validationMessage(errorItem.Message.substring(errorItem.Message.indexOf('Password')));
+                            order.password.invalid(true);
+                        } else {
+                            order.messages.push({ message: errorItem.Message });
+                        }
+                    });
+                });
             },
             editCart: function () {
                 window.location = "/cart";
-            },
-            update: function (newData) {
-                if (newData.model)
-                    this.populate(mapFromServer(newData));
-                this.messages(newData.messages || (newData.message ? [{ message: newData.message }] : []));
-                if (!newData.success && !newData.messages && !newData.message)
-                    this.unknownError();
-                if (newData.actions) {
-                    processActions(newData.actions);
-                }
-                this.endSubmit();
             },
             endSubmit: function () {
                 var self = this;
@@ -538,8 +604,7 @@
             errorTimeout: 30000
         }, function (conf) {
 
-            var boundUpdate = $.proxy(this.update, this),
-                self = this;
+            var self = this;
 
             this.unknownError = function () {
                 this.messages.push({ message: genericMsg.UnexpectedError });
@@ -559,6 +624,9 @@
                 self[smName].orderId = self.Id;
                 if (self[smName].apiModel && self[smName].apiModel.data) self[smName].apiModel.data.orderId = self.Id;
             });
+
+            this.User.EmailAddress = this.email;
+            this.User.Password = this.password;
 
             this.Shipment.availableShippingMethods(this.availableShippingMethods);
 

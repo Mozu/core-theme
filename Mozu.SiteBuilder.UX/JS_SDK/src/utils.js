@@ -49,12 +49,18 @@ var utils = {
         var xhr = new (window.XMLHttpRequest ? window.XMLHttpRequest : window.ActiveXObject("Microsoft.XMLHTTP"))();
         var timeout = setTimeout(function () {
             clearTimeout(timeout);
-            failure(xhr, "Request timed out.");
-        }, 20000);
+            failure({ 
+                Items: [
+                    { 
+                        Message: 'Request timed out.',
+                        ErrorCode: 'TIMEOUT'
+                    }
+                ]
+            });
+        }, 30000);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 clearTimeout(timeout);
-                if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
                     var json = null;
                     if (xhr.responseText.length > 0) {
                         try {
@@ -63,9 +69,10 @@ var utils = {
                             failure(xhr, e);
                         }
                     }
+                if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
                     success(json, xhr);
                 } else {
-                    failure(xhr);
+                    failure(json, xhr);
                 }
             }
         };

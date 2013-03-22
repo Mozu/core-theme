@@ -1,15 +1,17 @@
 ﻿describe('Mozu SDK', function () {
 
     // current service URLs
-    Mozu.setServiceUrls({
+    var serviceUrls = {
         "ProductService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/commerce/catalog/storefront/products/",
-        "CartService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Cart.WebApi/commerce/carts/",
+        "CartService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.CommerceRuntime.WebApi/commerce/carts/",
         "UserService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.User.WebApi/platform/user/accounts/",
-        "OrderService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Order.WebApi/commerce/orders/",
+        "OrderService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.CommerceRuntime.WebApi/commerce/orders/",
         "SearchService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/commerce/catalog/storefront/productsearch/",
         "CmsService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Content.WebApi/content/documents/",
         "ReferenceService": "http://aus01pdweb001.ads.volusion.com:9090/Mozu.reference.WebApi/platform/reference/"
-    });
+    };
+
+    Mozu.setServiceUrls(serviceUrls);
 
     it("should expose a Mozu object", function () {
         expect(Mozu).toBeDefined();
@@ -92,7 +94,7 @@
             it("should run an ajax request from the request method", function () {
                 spyOn(Mozu.Utils, 'ajax').andCallThrough();
 
-                req = api.request('GET', 'http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/products');
+                req = api.request('GET', serviceUrls.ProductService);
 
                 expect(Mozu.Utils.ajax).toHaveBeenCalled();
             });
@@ -104,7 +106,7 @@
             it("should send the JSON response to the .then handler of the promise", function () {
                 var req, res;
                 runs(function () {
-                    req = api.request('GET', 'http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/products/foobar');
+                    req = api.request('GET', serviceUrls.ProductService);
                     req.then(function () {
                         console.log(arguments);
                         res = arguments[0];
