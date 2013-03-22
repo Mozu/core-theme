@@ -2,11 +2,13 @@
 //using Volusion.ProductAdmin.Contracts;
 //using DC = Volusion.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts;
-using Mozu.ProductAdmin.Contracts;
+
 using System.Collections.Generic;
 using System.Linq;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
+using ProductProperty = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductProperty ;
+using ProductPropertyValue = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductPropertyValue;
 using ProductInSiteInfo = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductInSiteInfo;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
@@ -50,6 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
                 .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
                 .ForMember(x => x.ProductInSites, op => op.MapFrom(dc => dc.ProductInSites))
+                .ForMember( x=> x.Properties , op=> op.MapFrom(dc=> dc.Properties ))
                 .ForMember(x => x.Images, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductImages))
                 .AfterMap((x, y) =>
                     {
@@ -62,6 +65,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<Product, DC.Product>()
                 .ForMember(dc => dc.ProductCode, op => op.MapFrom(p => p.ProductCode))
+                .ForMember(dc => dc.Properties , op => op.MapFrom(p => p.ProductCode))
+                .ForMember(dc => dc.Properties, op => op.MapFrom(p => p.Properties))
                 .ForMember(dc => dc.BaseProductCode, op => op.MapFrom(p => p.BaseProductCode))
                 .ForMember(dc => dc.ProductTypeId, op => op.MapFrom(dc => dc.ProductTypeId))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(p =>
@@ -99,6 +104,46 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PackageWidth, op => op.MapFrom(x => new Measurement { Unit = "in", Value = x.PackageWidth }))
                 .ForMember(x => x.PackageWeight, op => op.MapFrom(x => new Measurement { Unit = "lbs", Value = x.PackageWeight }))
                 ;
+
+            Mapper.CreateMap<DC.ProductProperty, ProductProperty>()
+                  .ForMember(x => x.AttributeFQN, op => op.MapFrom(x => x.AttributeFQN))
+                  .ForMember(x => x.Values, op => op.MapFrom(x => x.Values));
+
+
+            Mapper.CreateMap<ProductProperty, DC.ProductProperty>()
+                  .ForMember(x => x.AttributeDetail, op => op.Ignore())
+                  .ForMember(x => x.AttributeFQN, op => op.MapFrom(x => x.AttributeFQN))
+                  .ForMember(x => x.Values, op => op.MapFrom(x => x.Values));
+
+
+
+            Mapper.CreateMap<ProductPropertyValue, DC.ProductPropertyValue>()
+                  .ForMember(x => x.AttributeVocabularyValueDetail, op => op.Ignore())
+                  .ForMember( x=> x.Value, op=> op.ResolveUsing( x=> x.Value ))
+                  .ForMember(x => x.Content, op => op.ResolveUsing(x =>
+                      {
+                          if (!string.IsNullOrEmpty( x.LocalizedValue ))
+                          {
+                              return new DC.ProductPropertyValueLocalizedContent()
+                                         {
+                                             StringValue = x.LocalizedValue
+                                         };
+                          }
+                          return null;
+                      }));
+
+            Mapper.CreateMap<DC.ProductPropertyValue, ProductPropertyValue>()
+                  .ForMember(x => x.Value, op => op.MapFrom(x => x.Value))
+                  .ForMember(x => x.LocalizedValue, op => op.ResolveUsing(x =>
+                      {
+                          if (x.Content != null)
+                          {
+                              return x.Content.StringValue;
+                          }
+                          return null;
+                      }));
+            
+
 
             Mapper.CreateMap<DC.ProductInSiteInfo, ProductInSiteInfo>()
                 .ForMember(x => x.SiteId, op => op.MapFrom(dc => dc.SiteId))
