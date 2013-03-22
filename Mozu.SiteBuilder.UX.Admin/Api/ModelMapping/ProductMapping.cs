@@ -10,6 +10,7 @@ using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
 using ProductProperty = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductProperty ;
 using ProductPropertyValue = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductPropertyValue;
 using ProductInSiteInfo = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductInSiteInfo;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -165,7 +166,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<ProductInSiteInfo, DC.ProductInSiteInfo>()
                 .ForMember(dc => dc.SiteId, op => op.MapFrom(pisi => pisi.SiteId))
-                .ForMember(x => x.ProductCategories, op => op.MapFrom(pisi => pisi.ProductCategories != null ? pisi.ProductCategories.Select(catid => new ProductCategory() { CategoryId = catid }).ToArray()  : null))
+                .ForMember(x => x.ProductCategories, op => op.MapFrom(pisi => pisi.ProductCategories != null ? pisi.ProductCategories.Select(catid => new DC.ProductCategory() { CategoryId = catid }).ToArray()  : null))
                 .ForMember(dc => dc.IsContentOverridden, op => op.MapFrom(pisi => pisi.IsContentOverridden))
                 .ForMember(dc => dc.IsPriceOverridden, op => op.MapFrom(pisi => pisi.IsPriceOverridden))
                 .ForMember(dc => dc.IsSEOContentOverridden, op => op.MapFrom(pisi => pisi.IsSEOContentOverridden))
