@@ -43,7 +43,7 @@ Ext.define('Taco.view.Header', {
             tpl: [
                 '<a href="{address}" class="taco-icon taco-icon-{icon}">{label}</a>',
                 '<ul><tpl for="items">',
-                    '<li class="taco-breadcrumb-item{[ values.selected ?"-selected": ""]}"> <a href="{address}">{label}</a></li>',
+                    '<li class="taco-breadcrumb-item{[ values.selected ?"-selected": ""]}"> <a href="{address}"><span>{label}</span></a></li>',
                 '</tpl></ul>'
             ]
         });
