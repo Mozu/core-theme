@@ -58,7 +58,7 @@ Ext.define('Taco.view.product.GlobalForm', {
 
     addSaveTasks: function (tasks) {
         if (this.isSingleSite) {
-            return;
+            return tasks;
         }
 
         tasks.add([{

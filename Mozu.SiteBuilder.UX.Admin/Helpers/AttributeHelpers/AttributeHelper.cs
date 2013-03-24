@@ -50,11 +50,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
             return res.Items.Select(Mapper.Map<Attribute>);
         }
 
-        public async Task<IEnumerable<Attribute>> CreateAttributes(List<Attribute> attributes)
+        public  Task<IEnumerable<Attribute>> CreateAttributes(List<Attribute> attributes)
         {
-            var results = await _attributeMapper.PerformAction(attributes, a => _attributeWebApiClient.AddAttribute(a));
-            await _attributeValueMapper.PerformAction(results.SelectMany(SelectValuesAssigned), (a, b) => _attributeWebApiClient.AddAttributeVocabularyValue(a, b.AttributeFQN));
-            return results;
+            return _attributeMapper.PerformAction(attributes, a => _attributeWebApiClient.AddAttribute(a));
+            //await _attributeValueMapper.PerformAction(results.SelectMany(SelectValuesAssigned), (a, b) => _attributeWebApiClient.AddAttributeVocabularyValue(a, b.AttributeFQN));
+            //return results;
         }
 
         private static IEnumerable<AttributeValue> SelectValuesAssigned(Attribute x)

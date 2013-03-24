@@ -14,18 +14,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
 
         [DataMember(EmitDefaultValue = false, Name = "values")]
-        public List<ProductPropertyValue> Values { get; set; }
+        public List<object> Values { get; set; }
     }
-    [DataContract]
+  //  [DataContract]
    
-    public class ProductPropertyValue
-    {
-        [DataMember(EmitDefaultValue = false, Name = "value")]
-        public object Value { get; set; }
+    ////public class ProductPropertyValue
+    ////{
+    ////    [DataMember(EmitDefaultValue = false, Name = "value")]
+    ////    public object Value { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "localizedValue")]
-        public string LocalizedValue { get; set; }
+    ////    [DataMember(EmitDefaultValue = false, Name = "localizedValue")]
+    ////    public string LocalizedValue { get; set; }
 
         
-    }
+    ////}
 }

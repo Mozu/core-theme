@@ -276,9 +276,23 @@ Ext.define('Taco.core.ux.form.Form', {
     buildTaskKey: function (key) {
         return (this.savePrefix || this.getId()) + key;
     },
+    beforeSave: function() {
+        var res = true;
+        Ext.each(this.forms, function(form) {
+            if (form.beforeSave() === false) {
+                res = false;
+                return false;
+            }
+            return true;
+        }, this);
+
+        return res;
+    },
 
     save: function () {
-
+        if (this.beforeSave() === false) {
+            return;
+        }
         this.addSaveTasks(this.saveTasks);
         this.saveTasks.execute();
     },

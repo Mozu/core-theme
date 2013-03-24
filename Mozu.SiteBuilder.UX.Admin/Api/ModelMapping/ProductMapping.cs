@@ -8,7 +8,7 @@ using System.Linq;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
 using ProductProperty = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductProperty ;
-using ProductPropertyValue = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductPropertyValue;
+
 using ProductInSiteInfo = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductInSiteInfo;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 
@@ -108,41 +108,70 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<DC.ProductProperty, ProductProperty>()
                   .ForMember(x => x.AttributeFQN, op => op.MapFrom(x => x.AttributeFQN))
-                  .ForMember(x => x.Values, op => op.MapFrom(x => x.Values));
+                  .ForMember(x => x.Values, op => op.ResolveUsing( x =>
+                      {
+                          if (x.Values  == null)
+                          {
+                              return null;
+                          }
+                          return x.Values.Select(v => v.Value).ToList();
+                      }));
 
 
             Mapper.CreateMap<ProductProperty, DC.ProductProperty>()
                   .ForMember(x => x.AttributeDetail, op => op.Ignore())
                   .ForMember(x => x.AttributeFQN, op => op.MapFrom(x => x.AttributeFQN))
-                  .ForMember(x => x.Values, op => op.MapFrom(x => x.Values));
+                  .ForMember(x => x.Values, op => op.ResolveUsing(x =>
+                   {
+                       if (x.Values == null)
+                       {
+                           return null;
+                       }
+                       return x.Values.Select(v =>
+                           {
+                               var ppv = new DC.ProductPropertyValue()
+                                             {
+                                                 Value = v
+
+                                             };
+                               if (v != null && v is string)
+                               {
+                                   ppv.Content = new DC.ProductPropertyValueLocalizedContent()
+                                                     {
+                                                         StringValue = (string) v
+                                                     };
+                               }
+                               return ppv;
+                           }).ToList();
+                   }));
 
 
 
-            Mapper.CreateMap<ProductPropertyValue, DC.ProductPropertyValue>()
-                  .ForMember(x => x.AttributeVocabularyValueDetail, op => op.Ignore())
-                  .ForMember( x=> x.Value, op=> op.ResolveUsing( x=> x.Value ))
-                  .ForMember(x => x.Content, op => op.ResolveUsing(x =>
-                      {
-                          if (!string.IsNullOrEmpty( x.LocalizedValue ))
-                          {
-                              return new DC.ProductPropertyValueLocalizedContent()
-                                         {
-                                             StringValue = x.LocalizedValue
-                                         };
-                          }
-                          return null;
-                      }));
+            //Mapper.CreateMap<ProductPropertyValue, DC.ProductPropertyValue>()
+            //      .ForMember(x => x.AttributeVocabularyValueDetail, op => op.Ignore())
+            //      .ForMember( x=> x.Value, op=> op.ResolveUsing( x=> x.Value ))
+            //      .ForMember(x => x.Content, op => op.ResolveUsing(x =>
+            //          {
+            //              if (!string.IsNullOrEmpty( x.LocalizedValue ))
+            //              {
+            //                  return new DC.ProductPropertyValueLocalizedContent()
+            //                             {
+            //                                 StringValue = x.LocalizedValue
+            //                             };
+            //              }
+            //              return null;
+            //          }));
 
-            Mapper.CreateMap<DC.ProductPropertyValue, ProductPropertyValue>()
-                  .ForMember(x => x.Value, op => op.MapFrom(x => x.Value))
-                  .ForMember(x => x.LocalizedValue, op => op.ResolveUsing(x =>
-                      {
-                          if (x.Content != null)
-                          {
-                              return x.Content.StringValue;
-                          }
-                          return null;
-                      }));
+            //Mapper.CreateMap<DC.ProductPropertyValue, ProductPropertyValue>()
+            //      .ForMember(x => x.Value, op => op.MapFrom(x => x.Value))
+            //      .ForMember(x => x.LocalizedValue, op => op.ResolveUsing(x =>
+            //          {
+            //              if (x.Content != null)
+            //              {
+            //                  return x.Content.StringValue;
+            //              }
+            //              return null;
+            //          }));
             
 
 

@@ -127,6 +127,7 @@ Ext.define('Taco.view.product.SiteForm', {
                 key: 'save-product-record',
                 saveRecord: this.product
             }]);
+            
         }
 
         return tasks;
