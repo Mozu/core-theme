@@ -32,17 +32,18 @@ Ext.define('Taco.view.catalog.Index', {
         });
 
         var box = Ext.create('Taco.core.ux.ComboFilter', {
-            width: 500,
+            width: 675,
             margin: '20 0',
-            itemStore: store,
-            // displayField: 'value',
-            // valueField: 'value',
-            store: undefined
+            itemStore: store
+        });
+
+        var bar = Ext.create('Ext.toolbar.Toolbar', {
+            items: [box]
         });
 
         Ext.apply(this.body, {
             layout: 'auto',
-            items: [box, list]
+            items: [bar, list]
         });
 
         this.callParent(arguments);

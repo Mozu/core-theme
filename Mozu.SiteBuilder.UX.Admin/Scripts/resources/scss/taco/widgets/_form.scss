@@ -1931,16 +1931,15 @@
   }
 
   .#{$vprefix}form-tab-panel {
-    $formTabColor: rgb(116, 133, 151);
-    $formTabColorBG: rgb(148, 164, 180);
-    $formTabCloseColor: ($formTabColor+$formTabColorBG)/2;
+    $formTabColor: border-for($color-neutral-white);
+    $formTabColorBG: $color-neutral-95;
+    $formTabCloseColor: $color-theme-support-dark;
 
     .#{$vprefix}form-tab {
       background-color: $formTabColorBG;
       border-color: $formTabColor;
-      border-style: solid solid solid none;
-      border-width: 1px 1px 1px 0px;
-      color: $color-neutral-white;
+      border-style: solid solid none none;
+      border-width: 1px 1px 0px 0px;
       cursor: pointer;
       display: inline-block;
       height: 40px;
@@ -1950,14 +1949,28 @@
       &:nth-of-type(1) {
         border-left-style: solid;
         border-left-width: 1px;
-        @include border-radius(3px 0px 0px 3px);
+        @include border-radius(3px 0px 0px 0px);
       }
       &:nth-last-of-type(1) {
-        @include border-radius(0px 3px 3px 0px);
+        @include border-radius(0px 3px 0px 0px);
+      }
+
+      &.#{$vprefix}form-tab-active {
+        background-color: $color-neutral-white;
+
+        &::after {
+          background-color: $color-neutral-white;
+          bottom: -1px;
+          content: "";
+          display: block;
+          height: 1px;
+          left: 0px;
+          position: absolute;
+          width: 100%;
+        }
       }
 
       &.add {
-        background-color: rgb(181, 191, 201);
         padding-left: 0px;
         padding-right: 0px;
         text-indent: -99999px;
@@ -1968,7 +1981,7 @@
         }
 
         &::before {
-          background-color: $color-neutral-white;
+          background-color: $color;
           content: "";
           height: 13px;
           left: 21px;
@@ -1977,7 +1990,7 @@
           width: 3px;
         }
         &::after {
-          background-color: $color-neutral-white;
+          background-color: $color;
           content: "";
           height: 3px;
           left: 16px;
@@ -1992,7 +2005,7 @@
         position: absolute;
         top: 0;
         right: 0;
-        border: 8px solid orange;
+        border: 8px solid $color-theme-support-dark;
         border-left-color: transparent;
         border-bottom-color: transparent;
       }
@@ -2000,10 +2013,6 @@
       &.#{$vprefix}has-overrides .#{$vprefix}override-indicator {
         display: block;
       }
-    }
-
-    .#{$vprefix}form-tab-active {
-      background-color: rgb(94, 110, 125);
     }
 
     .#{$vprefix}form-tab-close-button {
@@ -2030,18 +2039,12 @@
 
     &> .#{$prefix}panel-body {
       background-color: $color-neutral-white;
-      border-style: solid;
-      border-width: 1px;
-      @include dark-border($color-neutral-white);
+      border: 1px solid border-for($color-neutral-white);
     }
   }
 
   .#{$vprefix}form-card-nav {
-    background-color: $color-neutral-white;
-    border-style: solid none solid solid;
-    border-width: 1px 0px 1px 1px;
-    color: $color-neutral-darker;
-    @include dark-border($color-neutral-white);
+    color: $color;
 
     .#{$vprefix}form-card-nav-link {
       cursor: pointer;
@@ -2051,10 +2054,6 @@
       &:hover, &.scrollspy {
         color: $color-neutral-black;
       }
-    }
-
-    &+ .#{$prefix}panel-body {
-      border-left: 0px none;
     }
   }
 

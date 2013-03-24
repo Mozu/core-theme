@@ -4,7 +4,7 @@
     background-color: $color-neutral-white;
 
     .#{$vprefix}primary-menu-trigger {
-      border-right: 1px solid $color-grid-border;
+      border-right: 1px solid border-for($color-neutral-95);
       font-size: 0px;
       line-height: 0px;
       overflow: hidden;
@@ -22,14 +22,13 @@
     .#{$vprefix}breadcrumb {
 
       .#{$vprefix}icon {
-        border-right: 1px solid $color-grid-border;
+        border-right: 1px solid border-for($color-neutral-95);
         color: $color;
         display: inline-block;
-        height: 35px;
-        padding: 10px 15px 0px 50px;
+        height: 51px;
+        padding: 18px 15px 0px 50px;
         position: relative;
         vertical-align: top;
-        @include box-shadow(1px 0px $color-neutral-white);
 
         &::before {
           content: "";
@@ -63,46 +62,46 @@
 
       ul {
         display: inline-block;
-        height: 35px;
+        height: 51px;
+        margin-left: 10px;
         vertical-align: top;
 
         li {
           display: inline-block;
+          padding: 0px 8px;
+          position: relative;
           vertical-align: top;
 
           a {
             color: $color;
             display: inline-block;
-            font-size: 14px;
-            height: 35px;
-            padding: 12px 10px 0px;
-            position: relative;
+            font-size: px-to-rem(14);
+            height: 51px;
+            line-height: 1.5em;
+            padding: 18px 2px 12px;
+          }
 
-            &::before {
-              content: "";
-              display: block;
-              height: 35px;
-              left: 0px;
-              position: absolute;
-              top: 0px;
-              width: 1px;
-              @include background-image(linear-gradient(top, $color-neutral-mid-lighter 25%, $color-grid-border 55%, $color-neutral-mid-lighter 85%));
+          &.#{$vprefix}breadcrumb-item-selected {
+            a {
+              border-bottom: 2px solid $color-theme-base;
+              color: $color-theme-base;
             }
           }
-		  &.taco-breadcrumb-item-selected{
-			background-color: $color-neutral-95 !important;
-			@include outer-shadow(0.3, 5px, 0, 1px);
-		 
-		  }
-          &:nth-of-type(1) {
 
-            a {
-              border-left: 1px solid $color-neutral-white;
-              padding-left: 15px;
+          &::after {
+            background-color: border-for($color-neutral-70);
+            content: "";
+            display: block;
+            height: 14px;
+            position: absolute;
+            right: 0px;
+            top: 20px;
+            width: 1px;
+          }
 
-              &::before {
-                content: none;
-              }
+          &:nth-last-of-type(1) {
+            &::after {
+              content: none;
             }
           }
         }
