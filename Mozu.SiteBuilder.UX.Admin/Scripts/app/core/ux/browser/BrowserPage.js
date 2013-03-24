@@ -196,8 +196,10 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             editToken = me.token + '/edit/',
             editorView;
 
-       //todoPassOPtions
-        Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), { complexMetaData: { record: record, options: options } });
+        //todoPassOPtionsz
+        Ext.defer(function() {
+            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), { complexMetaData: { record: record, options: options } });
+        }, 1, this);
         return;
 
         editorView = Ext.create(me.editorName, {

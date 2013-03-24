@@ -81,7 +81,7 @@ Ext.define('Taco.view.product.subform.General', {
         }, {
             fieldLabel: 'Product Type',
             name: 'productTypeId',
-            readOnly: readOnly,
+            readOnly: readOnly && this.product.get('productTypeId'),
             required: true,
             width: 200,
             xtype: 'selectfield',
