@@ -39,7 +39,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected object Map(string key, Attribute attribute)
         {
-            return Strategies.GetOrDefault(attribute.DataType, NullOp)(key, attribute.Validation);
+            if (attribute.Validation != null)
+                return Strategies.GetOrDefault(attribute.DataType, NullOp)(key, attribute.Validation);
+            else
+                return null;
         }
 
         private static object MapString(string key, AttributeValidation validation)
