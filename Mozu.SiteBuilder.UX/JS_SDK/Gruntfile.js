@@ -80,6 +80,11 @@ module.exports = function (grunt) {
                 dest: '<%= pkg.main %>.js'
             }
         },
+        tfscheckout: {
+            dist: {
+                dir: 'dist'
+            }
+        },
         jasmine: {
             all: {
                 src: '<%= wrap.debug.dest %>',
@@ -141,7 +146,32 @@ module.exports = function (grunt) {
         process.stdin.resume();
     });
 
-    var order = ['clean:dist', 'concat', 'wrap', 'uglify', 'clean:tmp', 'jasmine:all'];
+    grunt.registerMultiTask('tfscheckout', 'Using Team Foundation Server, checks out the files that will be modified, so TFS is aware that changes were made.', function () {
+        var done = this.async(),
+            spawn = require('child_process').spawn,
+            child,
+            self = this;
+
+        grunt.log.writeln('Checking directory \'' + this.data.dir + '\' out from tfs');
+
+        child = spawn("C:\\Program Files\ (x86)\\Microsoft\ Visual\ Studio\ 11.0\\Common7\\IDE\\TF.exe", ["checkout", this.data.dir + "\\*"]);
+
+        child.stderr.on('data', function (data) {
+            grunt.log.error(data);
+        });
+
+        child.on('close', function (code) {
+            if (code !== 0) {
+                grunt.log.error("Could not check files out of TFS.") && grunt.fatal("TFS checkout failed.");
+                done(false);
+            } else {
+                grunt.log.ok("Checked out contents of " + self.data.dir);
+                done(true);
+            }
+        });
+    });
+
+    var order = ['clean:dist', 'concat', 'wrap', 'uglify', 'clean:tmp', 'tfscheckout', 'jasmine:all'];
 
     grunt.registerTask('default', order); // TODO: figure out real debug channel
     grunt.registerTask('test', ['jasmine:all']);
