@@ -15,7 +15,7 @@
 	<table id="mz-purchase-details" class="mz-purchase-details">
 		<thead>
 			<tr>
-				<td class="mz-field-interstitial" colspan="2">Order#: <strong>{{ Model.orderNumber }}</strong></td>
+				<td class="mz-field-interstitial" colspan="2">Order#: <strong>{{ Model.Id }}</strong></td>
 			</tr>
 		</thead>
 		{# TODO: Make template for Order by Check #}
@@ -23,54 +23,54 @@
 			<tr>
 				<td class="mz-field-interstitial" colspan="2"><hr></td>
 			</tr>
-			{% if Model.payment.paymentType == "CreditCard" %}
+			{% if Model.Payment.PaymentType == "CreditCard" %}
 			<tr>
 				<td class="mz-field-label">Billing Name:</td>
-				<td>{{ Model.payment.firstName }} {{ Model.payment.lastName }}</td>
+				<td>{{ Model.Payment.Card.BillingAddress.FirstName }} {{ Model.Payment.Card.BillingAddress.LastNameOrSurname }}</td>
 			</tr>
 			<tr>
 				<td class="mz-field-label">Billing Address:</td>
-				<td>{{ Model.payment.address1 }}</td>
+				<td>{{ Model.Payment.Card.BillingAddress.Address.Address1 }}</td>
 			</tr>
-				{% if Model.payment.address2 %}
+				{% if Model.Payment.Card.BillingAddress.Address.Address2 %}
 			<tr>
 				<td></td>
-				<td>{{ Model.payment.address2 }}</td>
+				<td>{{ Model.Payment.Card.BillingAddress.Address.Address2 }}</td>
 			</tr>
 				{% endif %}
 			<tr>
 				<td></td>
-				<td>{{ Model.payment.cityOrTown }}, {{ Model.payment.stateOrProvince }} {{ Model.payment.postalOrZipCode }}</td>
+				<td>{{ Model.Payment.Card.BillingAddress.Address.CityOrTown }}, {{ Model.Payment.Card.BillingAddress.Address.StateOrProvince }} {{ Model.Payment.Card.BillingAddress.Address.PostalOrZipCode }}</td>
 			</tr>
 			<tr>
 				<td class="mz-field-label">Phone:</td>
-				<td>{{ Model.payment.phone }}</td>
+				<td>{{ Model.Payment.Card.BillingAddress.PhoneNumbers.Home }}</td>
 			</tr>
 			<tr>
 				<td class="mz-field-label">Email:</td>
-				<td>{{ Model.payment.email }}</td>
+				<td>{{ Model.Payment.Card.BillingAddress.Email }}</td>
 			</tr>
 			<tr>
 				<td class="mz-field-interstitial" colspan="2"><hr></td>
 			</tr>
 			<tr>
-				<td class="mz-field-label">Payment Type:</td>
-				<td>{{ Model.payment.paymentType }}</td>
+				<td class="mz-field-label">Card Type:</td>
+				<td>{{ Model.Payment.Card.PaymentOrCardType }}</td>
 			</tr>
 			<tr>
 				<td class="mz-field-label">Credit Card #:</td>
-				<td>{{ Model.payment.cardNumberPartOrMask }}</td>
+				<td>{{ Model.Payment.Card.CardNumberPartOrMask }}</td>
 			</tr>
 			{% comment %} {# this isn't returned by the services #}
 			<tr>
 				<td class="mz-field-label">Expiration:</td>
-				<td>{{ Model.payment.cardExpireMonth }}.{{ Model.payment.cardExpireYear }}</td>
+				<td>{{ Model.Payment.Card.ExpireMonth }}.{{ Model.Payment.Card.ExpireYear }}</td>
 			</tr>
 			{% endcomment %}
 			{% else %} {# "Pay by Check" #}
 			<tr>
 				<td class="mz-field-label">Payment Type:</td>
-				<td>{{ Model.payment.paymentType }}</td>
+				<td>{{ Model.Payment.PaymentType }}</td>
 			</tr>
 			<tr>
 				<td></td>
@@ -78,15 +78,15 @@
 			</tr>
 			<tr>
 				<td class="mz-field-label"><strong>Mail check to:</strong></td>
-				<td>&lt;Company Name&gt;</td>
+				<td>{{ ViewData.MailCheckTo.CompanyName }}</td>
 			</tr>
 			<tr>
 				<td></td>
-				<td>&lt;999 Street Address&gt;</td>
+				<td>{{ ViewData.MailCheckTo.Address1 }}</td>
 			</tr>
 			<tr>
 				<td></td>
-				<td>&lt;City, State, Zip&gt;</td>
+				<td>{{ ViewData.MailCheckTo.CityOrTown }}, {{ ViewData.MailCheckTo.StateOrProvince }} {{ ViewData.MailCheckTo.PostalOrZipCode }} </td>
 			</tr>
 			{% endif %}
 			<tr>
@@ -95,21 +95,21 @@
 			</tr>
 			<tr>
 				<td class="mz-field-label">Ship to:</td>
-				<td>{{ Model.shipment.firstName }} {{ Model.shipment.lastName }}</td>
+				<td>{{ Model.Shipment.ShippingAddress.FirstName }} {{ Model.Shipment.ShippingAddress.LastNameOrSurname }}</td>
 			</tr>
 			<tr>
 				<td></td>
-				<td>{{ Model.shipment.address1 }}</td>
+				<td>{{ Model.Shipment.ShippingAddress.Address.Address1 }}</td>
 			</tr>
-			{% if Model.shipment.address2 %}
+			{% if Model.Shipment.ShippingAddress.Address.Address2  %}
 			<tr>
 				<td></td>
-				<td>{{ Model.shipment.address2 }}</td>
+				<td>{{ Model.Shipment.ShippingAddress.Address.Address2 }}</td>
 			</tr>
 			{% endif %}
 			<tr>
 				<td></td>
-				<td>{{ Model.shipment.cityOrTown }}, {{ Model.shipment.stateOrProvince }} {{ Model.shipment.postalOrZipCode }}</td>
+				<td>{{ Model.Shipment.ShippingAddress.Address.CityOrTown }}, {{ Model.Shipment.ShippingAddress.Address.StateOrProvince }} {{ Model.Shipment.ShippingAddress.Address.PostalOrZipCode }}</td>
 			</tr>
 			<tr>
 				<td></td>
@@ -117,7 +117,7 @@
 			</tr>
 			<tr>
 				<td class="mz-field-label">Shipping Method:</td>
-				<td><strong>{{ Model.shippingMethod }}</strong></td>
+				<td><strong>{{ Model.Shipment.ShippingMethodName }}</strong></td>
 			</tr>
 		</tbody>
 	</table><!-- #purchase-details-->
@@ -133,12 +133,12 @@
 	        </tr>
 	    </thead>
 	    <tbody>
-            {% for item in Model.items %}
+            {% for item in Model.Items %}
 	        <tr class="mz-item-row">
-	            <td>{{ item.productName }}</td>
-	            <td>{{ item.quantity }}</td>
-	            <td>{{ item.unitPrice|currency }}</td>
-	            <td>{{ item.subTotal|currency }}</td>
+	            <td>{{ item.Product.Name }}</td>
+	            <td>{{ item.Quantity }}</td>
+	            <td>{{ item.Product.Price.Price|currency }}</td>
+	            <td>{{ item.Total|currency }}</td>
 	        </tr>
             {% endfor %}
 	    </tbody>
@@ -146,29 +146,31 @@
 	        <tr>
 	            <td colspan="3">
 	                Comments:<br>
-	                {{ Model.comments }}
+                    {% for note in Model.Notes %}
+                        <p>{{ note.Text }}</p>
+                    {% endfor %}
                 </td>
 	            <td colspan="2">
 	                <table>
 	                    <tr>
 	                        <td>Subtotal:</td>
-	                        <td>{{ Model.subTotal|currency }}</td>
+	                        <td>{{ Model.Subtotal|currency }}</td>
 	                    </tr>
 	                    <tr>
 	                        <td>Coupon/Discount:</td>
-	                        <td>{{ Model.discountTotal|currency }}</td>
+	                        <td>{{ Model.DiscountTotal|currency }}</td>
 	                    </tr>
 	                    <tr>
 	                        <td>Tax:</td>
-	                        <td>{{ Model.taxTotal|currency }}</td>
+	                        <td>{{ Model.TaxTotal|currency }}</td>
 	                    </tr>
 	                    <tr>
 	                        <td>Shipping & Handling:</td>
-	                        <td>{{ Model.shippingTotal|currency }}</td>
+	                        <td>{{ Model.ShippingTotal|currency }}</td>
 	                    </tr>
 	                    <tr>
 	                        <td>Total:</td>
-	                        <td>{{ Model.total|currency }}</td>
+	                        <td>{{ Model.Total|currency }}</td>
 	                    </tr>
 	                </table>
 	            </td>
@@ -184,24 +186,25 @@
 	{% if SiteContext.GoogleAnalyticsEnabled and SiteContext.GoogleAnalyticsEcommerceEnabled %}
 	<script>
 	_gaq.push(['_addTrans',
-		'{{ Model.orderNumber }}',						
+		'{{ Model.OrderNumber }}',						
 		'{{ siteContext.settings.general.websiteName }}',
-		'{{ Model.total }}',							
-		'{{ Model.taxTotal }}',					
-		'{{ Model.shippingTotal }}',		
-		'{{ Model.shipment.cityOrTown }}',
-		'{{ Model.shipment.stateOrProvince }}',			
+		'{{ Model.Total }}',							
+		'{{ Model.TaxTotal }}',					
+		'{{ Model.ShippingTotal }}',		
+		'{{ Model.Shipment.ShippingAddress.Address.CityOrTown }}',
+		'{{ Model.Shipment.ShippingAddress.Address.StateOrProvince }}',			
 		'USA'
 	]);
 
 	{% for item in Model.items %}
 	_gaq.push(['_addItem',
-		'{{ Model.orderNumber }}',	
-		'{{ item.productCode }}',
-		'{{ item.productName }}',
+		'{{ Model.OrderNumber }}',	
+		'{{ item.Product.ProductCode }}',
+		'{{ item.Product.Name }}',
 		'',
-		'{{ item.unitPrice }}',
-		'{{ item.quantity }}',
+		'{{ item.Price.Price }}',
+		'{{ item.Quantity }}'
+
 	]);
 	{% endfor %}
 

@@ -100,10 +100,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public ActionResult Confirmation()
         {
-            var order = _orderService.GetOrder(LastOrderId);
+            var order = _orderWebApiClient.GetOrder(LastOrderId).Result.ReadAsSync();
             if (order == null)
                 return RedirectToAction("Index");
-
+            this.ViewData["MailCheckTo"] = new { CompanyName = "&lt;PLACEHOLDER&gt;", Address1 = "<123 Main St>", CityOrTown = "<Anytown", StateOrProvince = "<USA>", PostalOrZipCode = "<00000>" };
             return View("confirmation", order);
         }
 
