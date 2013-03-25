@@ -1,5 +1,5 @@
 ﻿define(
-    ["jquery", "modules/knockout-plus", "pciaas", "modules/knockout-viewmodel", "i18n!nls/messages-checkout", "i18n!nls/messages", "modules/api", "modules/models-user"],
+    ["modules/jquery-plus", "modules/knockout-plus", "pciaas", "modules/knockout-viewmodel", "i18n!nls/messages-checkout", "i18n!nls/messages", "modules/api", "modules/models-user"],
     function ($, ko, PCIaaS, ViewModelPrototype, msg, genericMsg, api, UserModels) {
 
 
@@ -75,12 +75,27 @@
                         invalidateOnChange: false
                     }
                 }
+            },
+            autofillState: function(afs) {
+                var self = this;
+                this.StateOrProvince(afs);
+                if (this.StateOrProvince() !== afs) {
+                    // doesn't fit into the dictionary, let's try to get it by key
+                    $.each(this.stateprovList(), function (i, state) {
+                        if (afs === state.Value) {
+                            self.StateOrProvince(state.Code);
+                            return false;
+                        }
+                    });
+                }
             }
         };
 
         var constructAddress = function (conf) {
             var self = this,
                 AddressSchemes = false;
+
+            this.autofilledState = ko.observable();
 
             this.stateprovLabel = ko.computed(function () {
                 var countryCode = self.CountryCode();
@@ -97,8 +112,12 @@
                 return [];
             });
 
+            self.autofilledState.subscribe(function (newValue) {
+                if (!self.StateOrProvince()) self.autofillState(newValue);
+            });
+
             self.countryList = ko.observableArray();
-            // to prepopupate
+            // to prepopulate
             var countryCode = self.CountryCode(),
                 stateOrProv = self.StateOrProvince();
 
@@ -133,10 +152,11 @@
                 var self = this;
                 var parent = this.getParentModel();
                 parent.update({ ShippingAddress: self.toJS() }).then(function () {
-                    if (self.checkStepStatus() === 'complete')
-                        parent.getShippingMethods().then(function (methodsJSON) {
-                            parent.availableShippingMethods(methodsJSON);
-                        });
+                    self.stepStatus('submitting');
+                    parent.getShippingMethods().then(function (methodsJSON) {
+                        self.stepStatus('complete');
+                        parent.availableShippingMethods(methodsJSON);
+                    });
                 }, function (e) {
                     parent.getParentModel().messages.push(e.message);
                     self.stepStatus('invalid')
@@ -184,37 +204,38 @@
                 });
             },
             checkStepStatus: function () {
-                var origStatus = checkStepStatus.apply(this);
-                if (this.ShippingAddress.stepStatus() !== "complete") {
-                    origStatus = "new";
-                    this.stepStatus(origStatus);
-                }
-                return origStatus
+                var st = "new", available = this.availableShippingMethods();
+                if (available && available.length) st = this.chosenMethod() ? "complete" : "invalid";
+                this.stepStatus(st);
+                var parent = this.getParentModel();
+                parent.Payment && parent.Payment.checkStepStatus();
+                return st;
             }
         }, function (conf) {
             var self = this;
-            this.checkStepStatus();
+            
 
             // calculating this observable has side effects, namely, autoselecting the first shipping method in a list if no available method is selected
             this.chosenMethod = ko.computed(function () {
                 var code = self.ShippingMethodCode(),
                     available = self.availableShippingMethods(),
                     chosen;
-                if (!available || !available.length) {
-                    self.ShippingMethodCode('');
+                if (!code || !available || !available.length) {
                     return null;
                 }
                 chosen = ko.utils.arrayFirst(available, function (m) {
-                    return m.ShippingMethodCode == code;
+                    return m.ShippingMethodCode && m.ShippingMethodCode.toLowerCase() == code.toLowerCase();
                 });
-                if (!chosen) {
-                    chosen = available[0];
+                if (chosen) {
                     self.ShippingMethodCode(chosen.ShippingMethodCode);
-                }
-                self.Price.Price(chosen.Price);
-                self.ShippingMethodName(chosen.ShippingMethodName);
+                    self.Price.Price(chosen.Price);
+                    self.ShippingMethodName(chosen.ShippingMethodName);
+                };
                 return chosen;
-            });
+            });
+            this.stepStatus = ko.observable('new');
+            this.checkStepStatus();
+            this.availableShippingMethods.subscribe($.proxy(this.checkStepStatus, this));
         }),
 
         paymentTypeIsCreditCard = function () {
@@ -481,7 +502,8 @@
         Note = ViewModelPrototype.extend({
             mozuType: 'ordernote',
             statics: {
-                "Id": ""
+                "Id": "",
+                "orderId": ""
             },
             observables: {
                 "Text": {}
@@ -550,6 +572,8 @@
                 var order = this,
                     apiSteps = [];
                 if (!this.validate()) return false;
+                this.submitting(true);
+                this.messages([]);
                 if (this.createAccount()) {
                     apiSteps.push(function () {
                         return order.User.create();
@@ -574,13 +598,13 @@
                 }, function (availableActions) {
                     if (availableActions.indexOf('SubmitOrder') !== -1)
                         return order.performOrderAction('SubmitOrder');
-                    return false;
+                    if (availableActions.indexOf('CancelOrder') !== -1)
+                        return successHandler(order.apiModel.data);
                 });
 
-                api.steps.apply(api, apiSteps).then(function (order) {
-                    console.log('derp', order);
-                }, function (error) {
+                var failHandler = function (error) {
                     console.log('noooo', error, error.message);
+                    order.submitting(false);
                     $.each(error.Items, function (ix, errorItem) {
                         if (errorItem.ErrorCode === "MISSING_OR_INVALID_PARAMETER" && errorItem.AdditionalErrorData && errorItem.AdditionalErrorData[0] && errorItem.AdditionalErrorData[0].Value === "password" && errorItem.AdditionalErrorData[0].Name === "ParameterName") {
                             order.password.validationMessage(errorItem.Message.substring(errorItem.Message.indexOf('Password')));
@@ -589,7 +613,20 @@
                             order.messages.push({ message: errorItem.Message });
                         }
                     });
-                });
+                }, successHandler = function (completedOrder) {
+                    $.cookie.raw = true;
+                    $.cookie('order', 'lastorderid=' + completedOrder.Id + ';', { path: '/' });
+                    return order.publish('complete');
+                };
+
+                api.steps.apply(api, apiSteps).then(function (completedOrder) {
+                    order.submitting(false);
+                    if (completedOrder.data.OrderStatus === "Open") {
+                        successHandler(completedOrder.data);
+                    } else {
+                        failHandler(completedOrder);
+                    }
+                }, failHandler);
             },
             editCart: function () {
                 window.location = "/cart";
@@ -629,6 +666,7 @@
             this.User.Password = this.password;
 
             this.Shipment.availableShippingMethods(this.availableShippingMethods);
+            this.Shipment.checkStepStatus();
 
             var ALLCOMPLETE = "completecompletecomplete",
                 SUBMITTING = "submitting",

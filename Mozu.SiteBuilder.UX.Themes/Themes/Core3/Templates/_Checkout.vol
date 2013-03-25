@@ -146,12 +146,14 @@
                         <strong data-bind="text: ShippingMethodName"></strong> (<span data-bind="currencyText: Price.Price"></span>)
                     </div>
                     <div class="mz-form-fields">
+                    <!-- ko if: availableShippingMethods().length > 0 -->
                         <div data-bind="foreach: availableShippingMethods">
                             <label class="mz-inline">
                                 <input type="radio" name="shippingMethod" data-bind="value: ShippingMethodCode, checked: $parent.ShippingMethodCode">
                                 <span data-bind="text: ShippingMethodName"></span> <span class="mz-shipping-price"><span data-bind="currencyText: Price"></span></span>
                             </label>
                         </div>
+                    <!-- /ko -->
 
                         <div class="mz-next-step">
                             {% include "Modules/LoadingBar" %}
@@ -484,6 +486,7 @@
                 <label data-bind="html: Address.stateprovLabel() + '<span class=\'mz-required-field\' data-bind=\'visible: Address.StateOrProvince.required\'> *</span>:'"></label>
             </div>
             <div class="mz-form-field-cell">
+                <input type="text" style="position: absolute; left: -99999px" name="state" id="state" data-bind="value: Address.autofilledState" />
                 <select data-bind="options: Address.stateprovList, optionsText: 'Value', optionsValue: 'Code', optionsCaption: 'Choose...', value: Address.StateOrProvince, css: { 'mz-invalid': Address.StateOrProvince.invalid() }">
                 </select>
                 <span class="mz-validation-message" data-bind="text: Address.StateOrProvince.validationMessage() || '&nbsp;'"></span>

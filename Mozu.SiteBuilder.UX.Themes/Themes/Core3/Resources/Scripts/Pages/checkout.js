@@ -5,7 +5,7 @@
             checkoutData = $checkoutView.mozuData('mz-checkout'),
             shippingMethodData = $checkoutView.mozuData('mz-shippingmethods');
 
-        checkoutData.availableShippingMethods = shippingMethodData;
+        checkoutData.availableShippingMethods = $.isArray(shippingMethodData) ? shippingMethodData : [];
 
         checkoutData.paymentApiBase = $checkoutView.mozuData('mz-paymentapibase');
 
@@ -17,7 +17,7 @@
         });
 
         checkoutViewModel.Shipment.nextButtonText = ko.computed(function () {
-            return checkoutViewModel.Shipment.stepStatus() == 'new' ? 'Next' : 'Update'
+            return checkoutViewModel.Payment.stepStatus() == 'new' ? 'Next' : 'Update'
         });
 
         ko.applyBindings(checkoutViewModel, $checkoutView[0]);
@@ -37,6 +37,10 @@
                 window.scrollTo(0, 0);
             }
             setTimeout(function () { affixer.options.offset = $rightcol.offset() }, 250);
+        });
+
+        checkoutViewModel.on('complete', function () {
+            window.location = "/storefront/checkout/confirmation";
         });
 
 

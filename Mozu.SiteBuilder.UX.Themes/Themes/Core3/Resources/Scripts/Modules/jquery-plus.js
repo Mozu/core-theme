@@ -1,4 +1,4 @@
-﻿define(["jquery"], function ($) {
+﻿define(["shim!vendor/jquery-cookie[jquery=jQuery]>jQuery"], function ($) {
 
 
     // due to a bug in jQuery.data that won't fully parse JSON embedded in attributes, we have to use a polyfill plugin.
