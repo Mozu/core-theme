@@ -70,6 +70,7 @@ Ext.application({
             'Taco.core.data.StoreManager',
             'Taco.core.data.ReadAheadProxy',
             'Taco.core.data.AjaxProxy',
+            'Taco.core.data.CategoryTreeProxy',
             'Taco.view.Viewport',
             'Taco.core.util.UploadManager',
             'Taco.core.StateManager',

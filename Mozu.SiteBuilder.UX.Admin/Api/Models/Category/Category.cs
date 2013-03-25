@@ -18,6 +18,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
         [DataMember(Name = "slug")]
         public string Slug { get; set; }
 
+        [DataMember(Name = "siteId")]
+        public int? SiteId { get; set; }
+
         //[DataMember(Name = "categoryPath")]
         //public string CategoryPath { get; set; }
 
