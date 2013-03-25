@@ -3,6 +3,7 @@
 */
 Ext.define('Taco.view.discount.Form', {
     extend: 'Taco.core.ux.form.Form',
+    requires: ['Taco.view.role.BehaviorsForm'],
     // requires: ['Taco.model.CouponCode', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.BoxSelect', 'Taco.store.ProductComboBox', 'Taco.core.ux.modal.Content', 'Taco.core.ux.modal.ContentWithActions', 'Taco.core.ux.form.UnitField', 'Taco.core.ux.form.CurrencyField'],
     
     title: 'Discount',
@@ -17,52 +18,141 @@ Ext.define('Taco.view.discount.Form', {
     },
 
     initComponent: function () {
+
+        this.buildFormComponents();
+
+        this.callParent(arguments);
+    },
+
+    buildFormComponents: function () {
         var me = this;
 
+        me.nameInput = Ext.create('Ext.form.field.Text', {
+            name: "name",
+            fieldLabel: "Name",
+            labelAlign: 'top',
+            allowBlank: false,
+            emptyText: 'Enter a discount name'
+        });
 
+        me.typeInput = Ext.create('Ext.form.field.ComboBox', {
+            name: 'amountType',
+            fieldLabel: "Type",
+            labelAlign: 'top',
+            allowBlank: false,
+            forceSelection: true,
+            store: ["Percentage", "Flat Rate", "Free Shipping"],
+            value: "Percentage"
+        });
+
+        me.appliesInput = Ext.create('Ext.form.field.ComboBox', {
+            name: 'targetType',
+            fieldLabel: "Applies to",
+            labelAlign: 'top',
+            allowBlank: false,
+            forceSelection: true,
+            displayField: 'text',
+            valueField: 'value',
+            store: Ext.create('Ext.data.ArrayStore', {
+                fields: ['text','value'],
+                data: [["All orders", "AllProducts"], ["Minimum orders of", "Order"], ["Selected Products/Categories", "Product"]]
+            }),
+            value: "All orders"
+        });
+
+        me.datesInput = Ext.create('Taco.core.ux.form.FlexBox', {
+            width: 400,
+            defaults: {
+                xtype: 'combobox',
+                labelAlign: 'top',
+                allowBlank: false,
+                forceSelection: true,
+                labelSeparator: '',
+            },
+            items: [
+                {
+                    //name: 'startDate',
+                    fieldLabel: "Starts",
+                    store: ["Now", "Soon"],
+                    value: "Now"
+                },
+                {
+                    //name: 'endDate',
+                    fieldLabel: "Ends",
+                    store: ["Never", "Someday"],
+                    value: "Never"
+                }
+            ]
+        });
+
+        me.couponInput = Ext.create('Ext.form.field.Checkbox', {
+            name: 'requiresCoupon',
+            boxLabel: "Create coupon",
+            labelAlign: 'right',
+        });
+
+        me.items = [
+            me.nameInput,
+            {
+                xtype: 'box',
+                autoEl: 'hr'
+            },
+            me.typeInput,
+            {
+                xtype: 'box',
+                autoEl: 'hr'
+            },
+            me.appliesInput,
+            {
+                xtype: 'box',
+                autoEl: 'hr'
+            },
+            me.datesInput,
+            {
+                xtype: 'box',
+                autoEl: 'hr'
+            },
+            me.couponInput,
+            {
+                xtype: 'box',
+                autoEl: 'hr'
+            }
+        ];
+
+//        me.items = [
+//            {
+//                xtype: 'textfield',
+//                labelAlign: 'top',
+//                labelSeperator: '',
+//                width: 250,
+//                name: 'name',
+//                fieldLabel: 'Name',
+//                emptyText: 'Enter a role name'
+//            }, 
+//            // me.behaviorsForm, 
+//            me.minOrderAmountContainer
+//        ];
+    },
+
+    initComponent2: function () {
+        var me = this;
 
         if (me.record.isModel && me.record.get("name") != Ext.emptyString) {
             me.title = 'Discount / ' + me.record.get("name");
         }
 
-        me.on({
-            load: {
-                fn: me.onLoad,
-                scope: me
-            },
-            beforeSave: {
-                fn: me.onBeforeSave,
-                scope: me
-            }
-        });
+//        me.on({
+//            load: {
+//                fn: me.onLoad,
+//                scope: me
+//            },
+//            beforeSave: {
+//                fn: me.onBeforeSave,
+//                scope: me
+//            }
+//        });
 
-        me.minOrderAmountContainer = Ext.create('Ext.container.Container', {
-            width: 500,
-            layout: {
-                type: 'hbox'
-            },
-            defaults: {
-                xtype: 'textfield',
-                labelAlign: 'top',
-                labelSeparator: '',
-                componentCls: 'taco-form-field-float'
-            },
-            items: [
-                {
-                    xtype: 'label',
-                    forId: 'type',
-                    width: 5,
-                    text: '$',
-                    margin: '55 5 0 0'
-                },
-                {
-                    name: 'minimumOrderAmount',
-                    width: 60,
-                    allowBlank: false,
-                    fieldLabel: '&nbsp;'
-                },
-                me.amountLabel]
-        });
+
 
         me.typeContainer = Ext.create('Ext.container.Container', {
             width: 500,
@@ -491,15 +581,17 @@ Ext.define('Taco.view.discount.Form', {
                 me.couponContainer]
         }];
 
-        me.actions = [{
-            xtype: 'secondarybutton',
-            text: 'Cancel',
-            eventName: 'cancel'
-        }, {
-            xtype: 'dirtybutton',
-            text: 'Save',
-            eventName: 'save'
-        }];
+        //me.actions = [{
+        //    xtype: 'secondarybutton',
+        //    text: 'Cancel',
+        //    eventName: 'cancel'
+        //}, {
+        //    xtype: 'dirtybutton',
+        //    text: 'Save',
+        //    eventName: 'save'
+        //}];
+
+        me.items = [ me.shippingContainer ];
 
         me.callParent(arguments);
 

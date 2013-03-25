@@ -94,6 +94,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(responseList);
         }
 
+        [WebInvoke(UriTemplate = "edit")]
+        public async Task<Response<List<Discount>>> EditDiscount(List<Discount> discountList, int? id = null)
+        {
+            var retList = new List<Discount>();
+
+            foreach (var discount in discountList)
+            {
+                var dc = Mapper.Map<DC.Discount>(discount);
+                var res = (await _discountWebClient.UpdateDiscount(dc, discount.DiscountId)).ReadAsSync();
+                retList.Add(Mapper.Map<Discount>(res));
+            }
+
+            return List2(retList);
+        }
+
         //        [ApiAuthorize]
         //        [WebGet(UriTemplate = "read")]
         //        public async Task<Response<List<Discount>>> ReadDiscount(PagingParamaters pagingParams, FilterCollection extFilter)
@@ -124,20 +139,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //            var disc = await _discountWebClient.GetDiscount(pagingParams.NumericId).Result.ReadAsAsync();
 
         //            return List2(Mapper.Map<Discount>(disc));
-        //        }
-
-        //        [WebInvoke(UriTemplate = "edit?id={id}")]
-        //        public async Task<Response<List<Discount>>> EditDiscount(List<Discount> discountList, int? id = null)
-        //        {
-        //            var retList = new List<Discount>();
-
-        //            foreach (var discount in discountList)
-        //            {
-        //                var task = await _discountWebClient.UpdateDiscount(Mapper.Map<ProductAdmin.Contracts.Discount>(discount), discount.DiscountId);
-        //                retList.Add(Mapper.Map<Discount>(task.ReadAsSync()));
-        //            }
-
-        //            return List2(retList);
         //        }
 
         //        [WebInvoke(Method = "POST", UriTemplate = "delete")]
