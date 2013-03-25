@@ -18,7 +18,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Category, Models.Category.Category>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(c => c.Id))
                 .ForMember(dest => dest.IsHidden, opt => opt.MapFrom(c => !c.IsDisplayed))
-                .ForMember(dest => dest.ParentId, opt => opt.MapFrom(c => c.ParentCategoryId))
+                .ForMember(dest => dest.SiteId, opt => opt.MapFrom(c => c.SiteId))
+                
+                .ForMember(dest => dest.ParentId, opt => opt.MapFrom(c => c.ParentCategoryId.HasValue ? c.ParentCategoryId : -1 ))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(c => ((c.Content != null) ? c.Content.Name : null)))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(c => ((c.Content != null) ? c.Content.Description : null)))
                 .ForMember(dest => dest.PageTitle, opt => opt.MapFrom(c => ((c.Content != null) ? c.Content.PageTitle : null)))
@@ -26,10 +28,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.MetaTitle, opt => opt.MapFrom(c => ((c.Content != null) ? c.Content.MetaTagTitle : null)))
                 .ForMember(dest => dest.MetaKeywords, opt => opt.MapFrom(c => ((c.Content != null) ? c.Content.MetaTagKeywords : null)))
                 .ForMember(dest => dest.Slug, opt => opt.MapFrom(c => ((c.Content != null) ? c.Content.Slug : null)))
+
                 .ForMember(dest => dest.Path, opt => opt.Ignore());
 
             Mapper.CreateMap<Category, Mozu.SiteBuilder.UX.Admin.Api.Models.Category.CategoryTreeNode>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(c => c.Id))
+                
                 .ForMember(dest => dest.ParentId, opt => opt.MapFrom(c => c.ParentCategoryId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(c => ((c.Content != null) ? c.Content.Name : null)))
                 .ForMember(dest => dest.Index, opt => opt.MapFrom(c => c.Sequence))
@@ -40,7 +44,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             // TODO: Ignore these for now  
             Mapper.CreateMap<Models.Category.Category, Category>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(c => c.Id))
-                .ForMember(dest => dest.ParentCategoryId, opt => opt.MapFrom(c => c.ParentId.GetValueOrDefault(0) == 0 ? null : c.ParentId))
+                .ForMember(dest => dest.SiteId, opt => opt.MapFrom(c => c.SiteId))
+                .ForMember(dest => dest.ParentCategoryId, opt => opt.MapFrom(c => c.ParentId.GetValueOrDefault(-1) == -1 ? null : c.ParentId))
 
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(c =>
                                                                     new CategoryLocalizedContent

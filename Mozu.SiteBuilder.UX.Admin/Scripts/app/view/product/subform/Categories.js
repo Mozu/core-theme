@@ -15,13 +15,10 @@ Ext.define('Taco.view.product.subform.Categories', {
 
         // categories are not global, we're only operating on the productInSiteInfo
         this.record = this.productInSiteInfo;
-        window.pisi = this.record;
-        this.store = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.CategoriesTree',
-            autoLoad: true
-        });
         
+
         listStore = this.record.getCategoryStore();
+
 
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         list = Ext.create('Taco.core.ux.form.field.MultiSelect', {
@@ -68,13 +65,15 @@ Ext.define('Taco.view.product.subform.Categories', {
      */
     launchModal: function () {
         var list = this.getForm().findField('categoryIds'),
-            store = list.getStore();
+            listStore = list.getStore(),
+            treeStore = Taco.core.data.StoreManager.getCategoryTreeBySite(this.record.getId());
+        
 
         Ext.destroy(this.modal);
 
         this.modal = Ext.create('Taco.view.category.Modal', {
-            store: this.store,
-            preselection: store.getRange()
+            store: treeStore,
+            preselection: listStore.getRange()
         });
 
         this.modal.on({

@@ -40,7 +40,8 @@ Ext.define('Taco.view.category.Index', {
             }]
         };
 
-        me.store = Taco.core.data.StoreManager.getOrCreate({ type: 'Taco.store.CategoriesTree' , autoLoad:true});
+        
+        me.store = Taco.core.data.StoreManager.getCategoryTreeBySite();
       //  me.store = { type: 'Taco.store.CategoriesTree' };
         me.store.on("load", function(s, node, records, successful, eOpts) {
             me.setHidden(records);

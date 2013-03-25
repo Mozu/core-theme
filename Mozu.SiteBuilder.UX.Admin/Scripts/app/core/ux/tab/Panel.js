@@ -370,7 +370,11 @@ Ext.define('Taco.core.ux.tab.Panel', {
         var tab = card.tab;
 
         if (this.rendered && this.tabBar) {
-            this.tabBar.remove(tab);
+            if (this.tabBar.getComponent(tab)) {
+                this.tabBar.remove(tab);
+            } else {
+                tab.destroy();
+            }
         }
 
         this.picker.buildCheckBoxes(this.getCheckedItems());

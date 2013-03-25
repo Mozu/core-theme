@@ -3,20 +3,22 @@
 * @author Jason Cochran
 * The Categories store
 */
-
-
-
-
-
 Ext.define('Taco.store.CategoriesTree', {
     extend: 'Taco.store.shared.TreeStore',
     model: 'Taco.model.Category',
     requires: ['Taco.model.Category'],
-  //  modelPath: 'categories',
+    remoteFilter:true,
     batchUpdateMode: "operation",
-    defaultRootId: 0,
+    defaultRootId: -1,
     nodeParam: 'nodeQuery',
     root: {
-        expanded: true
+        expanded: true,
+        isLoaded:false,
+        id:-1
+    },
+    storeManagerConfig: {
+        //clearFilters: true,
+        //clearSort: true,
+        //autoLoad: true
     }
-});
+   });

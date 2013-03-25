@@ -32,15 +32,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "read")]
-        public async Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams)
+        public async Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection, int? nodeQuery= null)
         {
             if (pagingParams.id == null)
             {
                 int start = 0;
+                var ctxLevel = TargetContextLevelType.SiteGroup;
+                
+                int siteId = -1;
+                ICategoryWebApiClient catClient = _categoriesClient;
+                if (nodeQuery.HasValue && filterCollection.TryGetValue("SiteId", out siteId))
+                {
+                    ctxLevel = TargetContextLevelType.Site;
+                    catClient = _categoriesClient.With(x => x.SiteId = siteId);
+
+                }
                 List<Category> categories = new List<Category>();
                 while (true)
                 {
-                    var cats = (await _categoriesClient.GetCategories(startIndex: start, pageSize: 600, targetContextLevel: TargetContextLevelType.SiteGroup)).ReadAsSync();
+                    var cats = (await catClient.GetCategories(startIndex: start, pageSize: 600, targetContextLevel: ctxLevel )).ReadAsSync();
                     categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
                     start = cats.PageSize + cats.StartIndex;
                     if (cats.TotalCount <= start )

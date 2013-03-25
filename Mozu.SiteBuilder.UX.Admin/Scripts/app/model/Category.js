@@ -6,7 +6,7 @@
 
 Ext.define('Taco.model.Category', {
     extend: 'Taco.core.data.Model',
-    requires: ['Taco.model.Product'],
+    requires: ['Taco.model.Product','Taco.core.data.CategoryTreeProxy'],
     //fields: ['id', 'name', 'description', 'sequence', 'isDisplayed'],
 
     fields: [
@@ -16,12 +16,19 @@ Ext.define('Taco.model.Category', {
             "type": "int",
             "useNull": true
         }, {
-            name:'expandable',
+            name: 'expandable',
             defaultValue: true,
-            persist :false
+            persist: false
         },
         {
-            name:'checked',
+            name: 'loaded',
+            convert:function(v, record) {
+                return record.get('loaded')|| record.data.id > 0;
+            },
+            persist: false
+        },
+        {
+            name: 'checked',
             defaultValue: null,
             persist: false
         },
@@ -96,24 +103,23 @@ Ext.define('Taco.model.Category', {
             "name": "metaKeywords",
             "type": "string",
             "useNull": true
+        },
+        {
+            name: 'siteId',
+            type: 'int'
         }
-
 
     ],
 
-    hasMany: {
-            model: 'Taco.model.Product',
-            name: 'products'
-        },
-    
     validations: [
         { type: 'length', name: 'name', min: 3 }
-        
+
     ],
 
     proxy: {
-        type: 'readahead',
-        forTreeStore:true,
+      //  type: 'ajax',
+        type: 'categorytree',
+        //forTreeStore:true,
         api: {
             create: '/admin/app/category/create',
             read: '/admin/app/category/read',
@@ -131,7 +137,7 @@ Ext.define('Taco.model.Category', {
             type: 'json'
         }
     },
-    
+
     mockApi: {
         read: '/admin/Scripts/app/mocks/categories.json'
     }
