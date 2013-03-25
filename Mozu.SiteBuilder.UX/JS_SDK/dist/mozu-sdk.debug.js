@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-03-14
+ * Mozu JavaScript SDK - v0.1.0 - 2013-03-25
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1545,12 +1545,18 @@ var utils = {
         var xhr = new (window.XMLHttpRequest ? window.XMLHttpRequest : window.ActiveXObject("Microsoft.XMLHTTP"))();
         var timeout = setTimeout(function () {
             clearTimeout(timeout);
-            failure(xhr, "Request timed out.");
-        }, 20000);
+            failure({ 
+                Items: [
+                    { 
+                        Message: 'Request timed out.',
+                        ErrorCode: 'TIMEOUT'
+                    }
+                ]
+            });
+        }, 30000);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 clearTimeout(timeout);
-                if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
                     var json = null;
                     if (xhr.responseText.length > 0) {
                         try {
@@ -1559,9 +1565,10 @@ var utils = {
                             failure(xhr, e);
                         }
                     }
+                if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
                     success(json, xhr);
                 } else {
-                    failure(xhr);
+                    failure(json, xhr);
                 }
             }
         };
@@ -1686,14 +1693,6 @@ var ApiReference = (function () {
             return actions;
         },
 
-        parseServiceUrls: function(tpt) {
-            // TODO: add unescape flag to uritemplates lib (fork uritemplates lib, obvs
-            for (var svcName in this.urls) {
-                tpt = tpt.replace(new RegExp('\\{\\$' + svcName + '\\}'), ApiReference.urls[svcName]);
-            }
-            return tpt;
-        },
-
         getRequestConfig: function (operation, typeName, conf, context, obj) {
             var oType = objectTypes[typeName];
             if (!oType) return typeName;
@@ -1701,27 +1700,22 @@ var ApiReference = (function () {
             if (oType[operation]) oType = oType[operation];
             if (!oType) throw "No known URL for '" + typeName + "' type.";
             if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
-            if (typeof oType === "string") return { url: this.parseServiceUrls(oType) };
+            if (typeof oType === "string") oType = { template: oType };
+            if (!oType.template) "No URL template found for '" + typeName + "'.";
             var returnObj = {};
-            if (oType.url) {
-                returnObj.url = this.parseServiceUrls(oType.url);
-            } else if (oType.template) {
-                // cache templates lazily
-                if (typeof oType.template === "string")
-                    oType.template = utils.uritemplate.parse(this.parseServiceUrls(oType.template));
-                var tptData = {};
-                if (oType.includeSelf) tptData = utils.extend(tptData, obj.data);
-                if (conf !== undefined && typeof conf !== "object") {
-                    if (!oType.shortcutParam) throw "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
-                    tptData[oType.shortcutParam] = conf;
-                } else if (conf) {
-                    utils.extend(tptData, conf.query || conf);
-                }
-                if (oType.defaultParams) tptData = utils.extend({}, oType.defaultParams, tptData);
-                returnObj.url = oType.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData, ApiReference.urls));
-            } else {
-                throw "URLs beyond simple strings and templates are not implemented."
+            // cache templates lazily
+            if (typeof oType.template === "string")
+                oType.template = utils.uritemplate.parse(oType.template);
+            var tptData = {};
+            if (oType.includeSelf) tptData = utils.extend(tptData, obj.data);
+            if (conf !== undefined && typeof conf !== "object") {
+                if (!oType.shortcutParam) throw "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
+                tptData[oType.shortcutParam] = conf;
+            } else if (conf) {
+                utils.extend(tptData, conf.query || conf);
             }
+            if (oType.defaultParams) tptData = utils.extend({}, oType.defaultParams, tptData);
+            returnObj.url = oType.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData, ApiReference.urls));
             if (oType.verb) returnObj.verbOverride = oType.verb;
             if (oType.returnType) returnObj.returnType = oType.returnType;
             if (oType.noBody) returnObj.noBody = oType.noBody;
@@ -1746,7 +1740,7 @@ var ApiReference = (function () {
     };
     var objectTypes = {
         'products': {
-            template: '{$ProductService}' + genericQueryTpt,
+            template: '{+ProductService}' + genericQueryTpt,
             defaultParams: {
                 startIndex: 0,
                 pageSize: 25
@@ -1754,7 +1748,7 @@ var ApiReference = (function () {
         },
 
         'search': {
-            template: '{$SearchService}' + genericQueryTpt,
+            template: '{+SearchService}' + genericQueryTpt,
             shortcutParam: 'q',
             defaultParams: {
 
@@ -1762,7 +1756,7 @@ var ApiReference = (function () {
         },
         'product': {
             get: {
-                template: '{$ProductService}{ProductCode}?{&allowInactive*}',
+                template: '{+ProductService}{ProductCode}?{&allowInactive*}',
                 shortcutParam: 'ProductCode',
                 defaultParams: {
                     allowInactive: false
@@ -1771,23 +1765,23 @@ var ApiReference = (function () {
             'add-to-cart': {
                 verb: 'POST',
                 returnType: 'cartitem',
-                template: '{$CartService}current/items/'
+                template: '{+CartService}current/items/'
             }
         },
         'cart': {
-            get: '{$CartService}current',
+            get: '{+CartService}current',
             'add-product': {
                 verb: 'POST',
                 returnType: 'cartitem',
-                template: '{$CartService}current/items/'
+                template: '{+CartService}current/items/'
             },
             empty: {
                 verb: 'DELETE',
-                template: '{$CartService}current/items/'
+                template: '{+CartService}current/items/'
             },
             checkout: {
                 verb: 'POST',
-                template: '{$OrderService}?cartId={Id}',
+                template: '{+OrderService}?cartId={Id}',
                 returnType: 'order',
                 noBody: true,
                 includeSelf: true
@@ -1795,54 +1789,113 @@ var ApiReference = (function () {
         },
         'cartitem': {
             defaults: {
-                template: '{$CartService}current/items/{CartItemId}',
+                template: '{+CartService}current/items/{CartItemId}',
                 shortcutParam: 'CartItemId'
             },
             'update-quantity': {
                 verb: 'PUT',
-                template: '{$CartService}current/items/{/CartItemId,quantity}',
+                template: '{+CartService}current/items{/CartItemId,quantity}',
                 shortcutParam: "quantity",
                 includeSelf: true,
                 noBody: true
             }
         },
-        'me': {
+        'user': {
+            create: {
+                verb: 'POST',
+                template: '{+UserService}'
+            },
             get: {
-                template: '{$UserService}{Id}',
+                template: '{+UserService}{Id}',
                 shortcutParam: 'id'
+            },            'get-by-email': {
+                template: '{+UserService}{?emailAddress*}',
+                shortcutParam: 'emailAddress'
             },
             login: {
-                template: '{$UserService}Login'
+                verb: 'POST',
+                template: '{+UserService}Login',
+                includeSelf: true,
+                returnType: 'login'
             }
+        },
+        'login': {
+            template: '{+UserService}Login'
         },
         'order': {
             get: {
-                template: '{$OrderService}{Id}',
+                template: '{+OrderService}{Id}',
             },
             create: {
-                template: '{$OrderService}{?cartId*}',
+                template: '{+OrderService}{?cartId*}',
                 shortcutParam: 'cartId',
                 noBody: true
             },
             "update-shipping-address": {
-                template: '{$OrderService}{Id}/shipment',
+                template: '{+OrderService}{Id}/shipment',
                 verb: 'PUT',
                 returnType: 'shipment',
                 includeSelf: true
             },
+            "set-user-id": {
+                verb: 'PUT',
+                template: '{+OrderService}{Id}/users',
+                noBody: true,
+                includeSelf: true,
+                returnType: 'user'
+            },
+            'apply-coupon': {
+                verb: 'PUT',
+                template: '{+OrderService}{Id}/coupons/{couponCode}',
+                shortcutParam: 'couponCode',
+                includeSelf: true,
+                noBody: true,
+                returnType: 'coupon',
+            },
+            'remove-coupon': {
+                verb: 'DELETE',
+                template: '{+OrderService}{Id}/coupons',
+                includeSelf: true
+            },
+            'get-available-actions': {
+                template: '{+OrderService}{Id}/actions',
+                includeSelf: true,
+                returnType: 'orderactions'
+            },
+            'perform-order-action': {
+                verb: 'PUT',
+                template: '{+OrderService}{Id}/actions/{actionName}',
+                shortcutParam: 'actionName',
+                includeSelf: true,
+                noBody: true
+            },
+            'add-order-note': {
+                verb: 'POST',
+                template: '{+OrderService}{Id}/notes',
+                includeSelf: true,
+                returnType: 'ordernote'
+            },
         },
         'shipment': {
             defaults: {
-                template: '{$OrderService}{orderId}/shipment',
+                template: '{+OrderService}{orderId}/shipment',
                 includeSelf: true,
             },
             "get-shipping-methods": {
-                template: '{$OrderService}{orderId}/shipment/methods'
+                template: '{+OrderService}{orderId}/shipment/methods',
+                returnType: 'shippingmethods'
             }
+        },
+        'payment': {
+            template: '{+OrderService}{orderId}/payment',
+            includeSelf: true
+        },
+        'ordernote': {
+            template: '{+OrderService}{orderId}/notes/{Id}'
         },
         'document': {
             get: {
-                template: '{$CmsService}{/documentListName,documentId}/?version={version}&status={status}',
+                template: '{+CmsService}{/documentListName,documentId}/{?version,status}',
                 shortcutParam: 'documentId',
                 defaultParams: {
                     documentListName: 'default'
@@ -1851,14 +1904,14 @@ var ApiReference = (function () {
         },
         'documentbyname': {
             get: {
-                template: '{$CmsService}{documentListName}/named/{documentName}/?folderPath={folderPath}&version={version}&status={status}',
+                template: '{+CmsService}{documentListName}/named/{documentName}/{?folderPath,version,status}',
                 shortcutParam: 'documentName',
                 defaultParams: {
                     documentListName: 'default'
                 }
             }
         },
-        'addressschemas': '{$ReferenceService}addressschemas'
+        'addressschemas': '{+ReferenceService}addressschemas'
     };
 
     return pub;
@@ -1891,6 +1944,7 @@ ApiInterface.prototype = {
         }
 
         var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function (rawJSON) {
+            // update context with response headers
             deferred.resolve(rawJSON, xhr);
         }, function (error) {
             deferred.reject(error, xhr, url);
@@ -1901,6 +1955,15 @@ ApiInterface.prototype = {
         });
 
         return deferred.promise;
+    },
+    action: function(type, actionName, conf, isRemote) {
+        var me = this,
+            fulfill = function (rawJSON) {
+                return ApiReference.tryCreateApiObject(type, rawJSON, me);
+            };
+        isRemote = isRemote === false ? false : true;
+        return isRemote ? this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf).then(fulfill) :
+                          utils.when(utils.extend(conf, { unsynced: true }), fulfill);
     },
     all: function () {
         return utils.when.join.apply(utils.when, arguments);
@@ -1914,14 +1977,8 @@ ApiInterface.prototype = {
 };
 var setOp = function(fnName) {
     ApiInterface.prototype[fnName] = function (type, conf, isRemote) {
-        var me = this,
-            fulfill = function (rawJSON) {
-            return ApiReference.tryCreateApiObject(type, rawJSON, me);
-        };
-        isRemote = isRemote === false ? false : true;
-        return isRemote ? this.request(ApiReference.basicOps[fnName], ApiReference.getRequestConfig(fnName, type, conf, this.context), conf).then(fulfill) :
-                          utils.when(utils.extend(conf, { unsynced: true }), fulfill);
-    }
+        return this.action(type, fnName, conf, isRemote);
+    };
 };
 for (var i in ApiReference.basicOps) {
     if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
@@ -1931,7 +1988,6 @@ for (var i in ApiReference.basicOps) {
 /*********/
 // BEGIN CONTEXT
 var ApiContext = function (conf) {
-    // TODO: factor out jQuery
     utils.extend(this, conf);
 },
     mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale'], //, 'bypass-cache'],
