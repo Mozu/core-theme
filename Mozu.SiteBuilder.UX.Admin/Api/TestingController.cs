@@ -220,8 +220,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var localThemeDir =   new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/";
             //var localThemes = Directory.GetDirectories(localThemeDir);
-            var entitlements = await _tenantClient.GetSiteEntitlements(_apiContext.TenantId, _apiContext.SiteId);
-            var localThemes = entitlements.ReadAsSync().Items.Where(x => x.ApplicationType == "Theme").Select(x => x.ApplicationVersionId.ToString() ).Union(Directory.GetDirectories(localThemeDir).Select( x=>Path.GetFileName(x)));
+            var entitlements = (await _tenantClient.GetSiteEntitlements(_apiContext.TenantId, _apiContext.SiteId)).ReadAsSync();
+           
+            var localThemes = entitlements.Items.Where(x => x.ApplicationType == "Theme")
+                .Select(x => x.ApplicationVersionId.ToString() )
+                .Union(Directory.GetDirectories(localThemeDir)
+                .Select( x=>Path.GetFileName(x)));
 
 
             var themes = localThemes

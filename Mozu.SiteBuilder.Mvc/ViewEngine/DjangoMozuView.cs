@@ -17,14 +17,14 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
     class DjangoMozuView : IView, IViewDataContainer, IViewPathContainer
     {
-       // private readonly ISiteBuilderContext _siteBuilderContext;
+    
         internal string viewPath;
 
         public DjangoMozuView(ITemplateManager manager, ISiteBuilderContext siteBuilderContext, string viewPath)
         {
             // TODO: Complete member initialization
             this.TemplateManager = manager;
-           // _siteBuilderContext = SiteBuilderContext.Current;
+      
             this.viewPath = viewPath;
         }
 
@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         public void Render(ViewContext viewContext, System.IO.TextWriter writer)
         {
             ViewData = viewContext.ViewData;
-            var siteBuilderContext = SiteBuilderContext.Current;
+            var siteBuilderContext = SiteBuilderContext.GetFromContext(viewContext.HttpContext ) ?? SiteBuilderContext.Current;
             var requestContext = new Dictionary<string, object>(viewContext.ViewData);
             var authenticationHelper = new AuthenticationHelper( viewContext.HttpContext , new CookieProvider(viewContext.HttpContext));
             var gcu = authenticationHelper.GetCurrentUser();
