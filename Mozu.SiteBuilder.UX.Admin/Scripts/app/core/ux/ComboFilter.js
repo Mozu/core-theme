@@ -20,7 +20,13 @@ Ext.define('Taco.core.ux.ComboFilter', {
     initComponent: function () {
         if (!this.store) {
             this.store = new Ext.data.Store({
-                fields: ['property', 'text', 'value', 'root'],
+                fields: [
+                    { name: 'property', type: 'string' },
+                    { name: 'value', type: 'string' },
+                    { name: 'filterFn', type: 'auto' },
+                    { name: 'text', type: 'string' },
+                    { name: 'root', type: 'string' }
+                ],
                 data: []
             });
         }
@@ -49,7 +55,9 @@ Ext.define('Taco.core.ux.ComboFilter', {
         record.endEdit();
 
         cfg = record.getData();
+        console.log(cfg);
         filter = Ext.create('Ext.util.Filter', cfg);
+        console.log(filter.filterFn);
 
         return filter;
     },
@@ -125,7 +133,14 @@ Ext.define('Taco.core.ux.ComboFilter', {
 
         Ext.Array.each(menuItems, function (menuItem) {
             function handler (item) {
-                var filter = me.buildFilter(record, { property: item.property, text: item.text });
+                var cfg, filter;
+
+                cfg = {
+                    property: item.property,
+                    filterFn: Ext.isFunction(item.filterFn) ? item.filterFn : undefined,
+                    text: item.text
+                };
+                filter = me.buildFilter(record, cfg);
 
                 me.itemStore.filter(filter);
                 me.applyMultiselectItemMarkup();
