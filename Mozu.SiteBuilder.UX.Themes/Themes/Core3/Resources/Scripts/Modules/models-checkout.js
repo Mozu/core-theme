@@ -614,8 +614,8 @@
                         }
                     });
                 }, successHandler = function (completedOrder) {
-                    $.cookie.raw = true;
-                    $.cookie('order', 'lastorderid=' + completedOrder.Id + ';', { path: '/' });
+                    //$.cookie.raw = true;
+                    //$.cookie('order', 'lastorderid=' + completedOrder.Id + ';', { path: '/' });
                     return order.publish('complete');
                 };
 

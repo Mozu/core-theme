@@ -68,6 +68,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
             new { controller = "Catalog", action = "ProductDetail" });
 
             context.MapRoute(
+            "StoreFront_checkout",
+            "checkout/{orderId}/{action}",
+            new { controller = "Checkout", action = "Index" });
+
+            context.MapRoute(
             "StoreFront_cart",
             "cart/{action}",
             new { controller = "Cart", action = "Index" });

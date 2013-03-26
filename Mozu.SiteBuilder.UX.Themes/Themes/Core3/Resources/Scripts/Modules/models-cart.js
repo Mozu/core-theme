@@ -50,9 +50,9 @@
             var self = this;
             self.submitting(true);
             this.apiModel.checkout().then(function (order) {
-                $.cookie.raw = true;
-                $.cookie('order', 'orderid=' + order.data.Id + ';', { path: '/' });
-                window.location = "/storefront/checkout";
+                //$.cookie.raw = true;
+                //$.cookie('order', 'orderid=' + order.data.Id + ';', { path: '/' });
+                window.location = "/checkout/" + order.data.Id;
             }, function (error) {
                 self.messages.push(error.message);
             });
