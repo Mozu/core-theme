@@ -10,16 +10,16 @@ Ext.define('Taco.controller.Discounts', {
     modelName: 'Discount',
     
     contextPlaceholders: {
-        t: function () {
+        tc: function () {
             return Ext.create('Taco.core.ux.content.Container', {
                 header: {
-                    title: "choose a site collection"
+                    title: "choose a site"
                 },
 
                 body: {
                     layout: 'auto',
                     items: [{
-                        html: 'placeholder for choose site collection interstitial '
+                        html: 'placeholder for choose site interstitial '
                     }]
                 }
             });

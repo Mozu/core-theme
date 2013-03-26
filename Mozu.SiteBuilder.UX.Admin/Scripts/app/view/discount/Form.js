@@ -3,7 +3,7 @@
 */
 Ext.define('Taco.view.discount.Form', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.view.role.BehaviorsForm'],
+    requires: ['Taco.core.ux.form.CurrencyField'],
     // requires: ['Taco.model.CouponCode', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.BoxSelect', 'Taco.store.ProductComboBox', 'Taco.core.ux.modal.Content', 'Taco.core.ux.modal.ContentWithActions', 'Taco.core.ux.form.UnitField', 'Taco.core.ux.form.CurrencyField'],
     
     title: 'Discount',
@@ -17,18 +17,30 @@ Ext.define('Taco.view.discount.Form', {
         labelSeparator: ''
     },
 
-    initComponent: function () {
+    initComponent: function() {
 
         this.buildFormComponents();
 
         this.callParent(arguments);
     },
 
+    //afterRender: function() {
+//    //    var me = this,
+//    //        typeInput = me.typeInput,
+//    //        typeVal = typeInput.getValue(),
+//    //        appliesInput = me.appliesInput
+//    //        appliesVal = appliesInput.getValue();
+//
+    //    // show/hide the appropriate form elements.
+    //    me.onAmountTypeChange(typeInput, typeVal);
+    //    me.onAppliesToChange(appliesInput, appliesVal);
+    //},
+
     buildFormComponents: function () {
         var me = this;
 
         me.nameInput = Ext.create('Ext.form.field.Text', {
-            name: "name",
+            name: 'name',
             fieldLabel: "Name",
             labelAlign: 'top',
             allowBlank: false,
@@ -41,8 +53,49 @@ Ext.define('Taco.view.discount.Form', {
             labelAlign: 'top',
             allowBlank: false,
             forceSelection: true,
-            store: ["Percentage", "Flat Rate", "Free Shipping"],
-            value: "Percentage"
+            displayField: 'text',
+            valueField: 'value',
+            store: Ext.create('Ext.data.ArrayStore', {
+                fields: ['text','value'],
+                data: [["Percentage", "Percentage"], ["Dollar Amount", "Amount"], ["Free Shipping", "FreeShipping"]]
+            }),
+            listeners: {
+                change: me.onAmountTypeChange,
+                scope: me
+            }
+        });
+
+        // TODO: the beforeSubTpl / afterSubTpl template does not update when the other field's value changes.
+        me.amountInput = Ext.create('Ext.form.field.Number', {
+            name: 'amount',
+            beforeSubTpl: [
+                '<tpl>',
+                    '<tpl if="this.isAmount()">',
+                        '$',
+                    '<tpl else>',
+                        '',
+                    '</tpl>',
+                '</tpl>'
+            ],
+            afterSubTpl: [
+                '<tpl>',
+                    '<tpl if="this.isPercentage()">',
+                        '% Off',
+                    '<tpl elseif="this.isAmount()">',
+                        'Off',
+                    '<tpl else>',
+                        '',
+                    '</tpl>',
+                '</tpl>',
+                {
+                    isPercentage: function() {
+                        return me.typeInput.getValue() === "Percentage";
+                    },
+                    isAmount: function() {
+                        return me.typeInput.getValue() === "Amount";
+                    }
+                }
+            ]
         });
 
         me.appliesInput = Ext.create('Ext.form.field.ComboBox', {
@@ -55,9 +108,18 @@ Ext.define('Taco.view.discount.Form', {
             valueField: 'value',
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text','value'],
-                data: [["All orders", "AllProducts"], ["Minimum orders of", "Order"], ["Selected Products/Categories", "Product"]]
+                data: [["All orders", "AllProducts"], ["Minimum orders of", "Order"], ["Selected Products/Categories", "Product"], ["Free Shipping", "FreeShipping"]]
             }),
+            listeners: {
+                change: me.onAppliesToChange,
+                scope: me
+            },
             value: "All orders"
+        });
+
+        me.minimumAmountInput = Ext.create('Ext.form.field.Number' /*'Taco.core.ux.form.CurrencyField'*/, {
+            name: 'minimumOrderAmount',
+            fieldLabel: "Minimum Foster"
         });
 
         me.datesInput = Ext.create('Taco.core.ux.form.FlexBox', {
@@ -85,6 +147,16 @@ Ext.define('Taco.view.discount.Form', {
             ]
         });
 
+        me.typeu = Ext.create('Taco.core.ux.form.FlexBox', {
+            width: 800,
+            items: [ me.typeInput, me.amountInput, me.amountLabel ]
+        });
+
+        me.appliesu = Ext.create('Taco.core.ux.form.FlexBox', {
+            width: 800,
+            items: [ me.appliesInput, me.minimumAmountInput ]
+        });
+
         me.couponInput = Ext.create('Ext.form.field.Checkbox', {
             name: 'requiresCoupon',
             boxLabel: "Create coupon",
@@ -97,12 +169,14 @@ Ext.define('Taco.view.discount.Form', {
                 xtype: 'box',
                 autoEl: 'hr'
             },
-            me.typeInput,
+            me.typeu, 
+//            me.amountInput,
+//            me.typeInput,
             {
                 xtype: 'box',
                 autoEl: 'hr'
             },
-            me.appliesInput,
+            me.appliesu,
             {
                 xtype: 'box',
                 autoEl: 'hr'
@@ -118,20 +192,76 @@ Ext.define('Taco.view.discount.Form', {
                 autoEl: 'hr'
             }
         ];
+    },
 
-//        me.items = [
-//            {
-//                xtype: 'textfield',
-//                labelAlign: 'top',
-//                labelSeperator: '',
-//                width: 250,
-//                name: 'name',
-//                fieldLabel: 'Name',
-//                emptyText: 'Enter a role name'
-//            }, 
-//            // me.behaviorsForm, 
-//            me.minOrderAmountContainer
-//        ];
+    /*
+        Alters the input label from percent to a dollar sign, or hides it entirely
+        if "Free Shipping" is chosen.
+    */
+    onAmountTypeChange: function(input, value) {
+        var me = this;
+
+        // guard against this callback being called before the entire form is rendered
+        if (!me.amountInput)
+        {
+            return;
+        }
+
+        me.amountInput.hide();
+
+        if (value === "Percentage" || value === "Amount")
+        {
+            me.amountInput.show();
+
+            if (me.appliesInput.getValue() === "FreeShipping")
+            {
+                me.appliesInput.select("AllProducts");
+            }
+
+            me.appliesInput.enable();
+        }
+        else if (value === "FreeShipping")
+        {
+            me.amountInput.hide();
+            me.appliesInput.select("FreeShipping");
+            me.appliesInput.disable();
+        }
+
+        // calling .select() does not fire the change event, fire it manually.
+        me.appliesInput.fireEvent('change', me.appliesInput, me.appliesInput.getValue());
+    },
+
+    /*
+        Shows or hides the "minimum order amount" input box based on discount type selection.
+    */
+    onAppliesToChange: function(input, value) {
+        var me = this;
+
+        // guard against this callback being called before the entire form is rendered
+        if (!me.minimumAmountInput)
+        {
+            return;
+        }
+
+        if (value === "AllProducts")
+        {
+            me.minimumAmountInput.hide();
+        }
+        else
+        {
+            me.minimumAmountInput.show();
+        }
+
+        return;
+
+        if (value === "Order" || value === "FreeShipping")
+        {
+            me.minimumAmountInput.show();
+        }
+        else
+        {
+            me.minimumAmountInput.hide();
+        }
     },
 
     initComponent2: function () {
