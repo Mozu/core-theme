@@ -589,6 +589,7 @@
     <Content Include="Scripts\app\view\attribute\Index.js" />
     <Content Include="Scripts\app\view\category\Modal.js" />
     <Content Include="Scripts\app\view\discount\Edit.js" />
+    <Content Include="Scripts\app\view\discount\Form.js" />
     <Content Include="Scripts\app\view\discount\Index.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
@@ -2865,8 +2866,8 @@
     <Content Include="Scripts\resources\scss\taco\_viewport.scss" />
     <Content Include="Scripts\makedocs.bat" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
-    <None Include="Scripts\app\locale\lang-de.csv" />
-    <None Include="Scripts\app\locale\lang-en.csv" />
+    <Content Include="Scripts\app\locale\lang-de.csv" />
+    <Content Include="Scripts\app\locale\lang-en.csv" />
     <Content Include="Scripts\resources\scss\_taco-overrides.scss" />
     <Content Include="Scripts\resources\lib\tinymce\jscripts\tiny_mce\classes\firebug\FIREBUG.LICENSE" />
     <Content Include="Scripts\resources\scss\_taco-variables.scss" />
