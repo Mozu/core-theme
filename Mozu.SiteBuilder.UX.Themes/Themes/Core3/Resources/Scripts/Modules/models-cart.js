@@ -52,7 +52,7 @@
             this.apiModel.checkout().then(function (order) {
                 //$.cookie.raw = true;
                 //$.cookie('order', 'orderid=' + order.data.Id + ';', { path: '/' });
-                window.location = "/checkout/" + order.data.Id;
+                self.publish('ordercreated', order);
             }, function (error) {
                 self.messages.push(error.message);
             });

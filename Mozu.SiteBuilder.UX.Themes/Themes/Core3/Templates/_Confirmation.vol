@@ -15,7 +15,7 @@
 	<table id="mz-purchase-details" class="mz-purchase-details">
 		<thead>
 			<tr>
-				<td class="mz-field-interstitial" colspan="2">Order#: <strong>{{ Model.Id }}</strong></td>
+				<td class="mz-field-interstitial" colspan="2">Order#: <strong>{{ Model.OrderNumber }}</strong></td>
 			</tr>
 		</thead>
 		{# TODO: Make template for Order by Check #}
@@ -78,7 +78,7 @@
 			</tr>
 			<tr>
 				<td class="mz-field-label"><strong>Mail check to:</strong></td>
-				<td>{{ ViewData.MailCheckTo.CompanyName }}</td>
+				<td>{{ ViewData.MailCheckTo.SenderName }}</td>
 			</tr>
 			<tr>
 				<td></td>
