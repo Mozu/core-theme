@@ -36,6 +36,11 @@ Ext.define('Taco.view.catalog.Index', {
             margin: '20 0',
             itemStore: store,
             filterProperties: [{
+                property: 'productCode',
+                text: 'Code',
+                isDefault: false,
+                filterFn: function (item) { return (item.get('productCode') === '0001'); }
+            }, {
                 property: 'productName',
                 text: 'Name',
                 isDefault: true
