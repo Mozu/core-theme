@@ -161,8 +161,8 @@ Ext.define('Taco.model.ProductInSiteInfo', {
 
      
       
-        { type: 'presence', name: 'productCode' },
-        { type: 'length', name: 'productCode', min: 3, max: 30 },
+        //{ type: 'presence', name: 'productCode' },
+       // { type: 'length', name: 'productCode', min: 3, max: 30 },
         { type: 'format', name: 'productCode', matcher: /^[A-z0-9\-]*$/ }
     ],
 

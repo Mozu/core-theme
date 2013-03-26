@@ -248,17 +248,6 @@ Ext.define('Taco.view.product.Index', {
             infoStore,
             infoRecord;
 
-        if (record.phantom && site) {
-            infoStore = record.productInSitesStore();
-            siteInfo = Ext.create('Taco.model.ProductInSiteInfo', {
-                siteId: site.id,
-                productCode: record.getId()
-            });
-            siteInfo.phantom = true;
-            infoStore.add(siteInfo);
-            siteInfo.set('productCode', record.getId());
-            siteInfo.phantom = true;
-        }
         this.callParent(arguments);
     }
     
