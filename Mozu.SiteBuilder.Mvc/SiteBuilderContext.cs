@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.Mvc
     [DataContract()]
     public class SiteBuilderContext : ModelBase, ISiteBuilderContext, IModelMetadataContainer , IDisposable
 	{
-        internal const string CONTEXT_KEY = "V:STORECTX";
+        public  const string CONTEXT_KEY = "V:STORECTX";
         internal const string COOKIENAME = "SBCONTEXT";
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Site> g_domainSiteLookup = new ConcurrentDictionary<string, Site>(StringComparer.OrdinalIgnoreCase);
 		//[ThreadStatic] private static ISiteBuilderContext g_sc;
@@ -43,6 +43,7 @@ namespace Mozu.SiteBuilder.Mvc
 	    private readonly IApiContext _apiContext;
 	    private readonly IGeneralSettingsWebApiClient _generalSettings;
 	    private readonly ISettings _configSettings;
+	    private readonly HttpContextBase _httpContext;
 	    Lazy<ISettingsRepository> _settings;
 	    private readonly Lazy<ICatalogContext> _catContext;
         private readonly ICookieProvider _cookieProvider;
@@ -62,10 +63,11 @@ namespace Mozu.SiteBuilder.Mvc
 	    private Lazy<bool> _googleAnalyticsEnabled;
 	    private Lazy<bool> _googleAnalyticsEcommerceEnabled;
 
-	    public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<INavigationRuntimeFactory> navFac, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, ISettings configSettings= null)
+	    public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<INavigationRuntimeFactory> navFac, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, ISettings configSettings= null, HttpContextBase httpContext= null )
 		{
 			PageContext = new PageContext();
            
+            
             _cookieProvider = cookieProvider;
             _mobileProvider = mobileProvider;
             SearchContext = searchContext;
@@ -76,9 +78,10 @@ namespace Mozu.SiteBuilder.Mvc
             _apiContext = apiContext;
 	        _generalSettings = generalSettings;
 	        _configSettings = configSettings;
+	        _httpContext = httpContext;
 	        this.SiteId = _apiContext.SiteId;
             this.TenantId = _apiContext.TenantId;
-
+	        httpContext.Items[CONTEXT_KEY] = this;
             // attempt to look up theme by value of "SBTHEME".
             HttpCookie themeCookie = _cookieProvider.GetRequestCookie("SBTHEME");
             if (themeCookie != null && !string.IsNullOrEmpty(themeCookie.Value))
@@ -148,7 +151,11 @@ namespace Mozu.SiteBuilder.Mvc
 			}
 			
 		}
+        public static ISiteBuilderContext GetFromContext ( HttpContextBase ctx )
+        {
+            return (ISiteBuilderContext) ctx.Items[SiteBuilderContext.CONTEXT_KEY];
 
+         }
 		
 
 		#region ISiteBuilderContext Members
