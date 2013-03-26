@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Taco.model.ItemFilter', 'Taco.core.ux.ComboFilter'],
+    requires: ['Taco.model.ItemFilter', 'Taco.core.ux.ComboFilter', 'Taco.core.ux.grid.Panel'],
 
     header: {
         title: 'Catalog Testing'
@@ -16,25 +16,34 @@ Ext.define('Taco.view.catalog.Index', {
             type: 'Taco.store.Products'
         });
 
-        var list = Ext.create('Ext.view.BoundList', {
+        var list = Ext.create('Taco.core.ux.grid.Panel', {
             store: store,
-            itemSelector: 'x-boundlist-item',
-            displayField: 'productName',
-            valueField: 'productCode',
-            disableSelection: true
+            columns: [{
+                flex: 1,
+                text: 'Name',
+                dataIndex: 'productName'
+            }, {
+                flex: 1,
+                text: 'Price',
+                dataIndex: 'price'
+            }]
         });
 
         // create a filter field
 
-        var filterStore = Ext.create('Ext.data.Store', {
-            fields: ['property', 'value'],
-            data: []
-        });
-
         var box = Ext.create('Taco.core.ux.ComboFilter', {
             width: 675,
             margin: '20 0',
-            itemStore: store
+            itemStore: store,
+            filterProperties: [{
+                property: 'productName',
+                text: 'Name',
+                isDefault: true
+            }, {
+                property: 'price',
+                text: 'Price',
+                isDefault: false
+            }]
         });
 
         var bar = Ext.create('Ext.toolbar.Toolbar', {
