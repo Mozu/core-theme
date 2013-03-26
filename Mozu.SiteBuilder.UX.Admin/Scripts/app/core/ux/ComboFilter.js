@@ -12,7 +12,7 @@ Ext.define('Taco.core.ux.ComboFilter', {
     forceSelection: false,
     grow: true,
     hideTrigger: true,
-    propertyField: 'property',
+    propertyField: 'text',
     queryMode: 'local',
     triggerOnClick: false,
     valueField: 'value',
@@ -20,7 +20,7 @@ Ext.define('Taco.core.ux.ComboFilter', {
     initComponent: function () {
         if (!this.store) {
             this.store = new Ext.data.Store({
-                fields: ['property', 'value'],
+                fields: ['property', 'text', 'value', 'root'],
                 data: []
             });
         }
@@ -35,35 +35,105 @@ Ext.define('Taco.core.ux.ComboFilter', {
     },
 
     /**
-     * Creates filters and applies them to the provided itemStore.
-     * @param  {Ext.data.Model[]} records Records from the valueStore.
+     * Edits a record in the valueStore and instantiates the corresponding itemStore filter.
+     * @param  {Ext.data.Model} record The valueStore record being edited
+     * @param  {Object} data An object containing key/value pairs
+     * @return {Ext.util.Filter} The instantiated filter
      * @private
      */
-    filterItemStore: function (records) {
-        var filters = Ext.Array.map(records, function (record) {
-            var cfg = Ext.applyIf(record.getData(), { root: 'data' });
-            return Ext.create('Ext.util.Filter', cfg);
-        }, this);
+    buildFilter: function (record, data) {
+        var cfg, filter;
 
+        record.beginEdit();
+        record.set(data);
+        record.endEdit();
+
+        cfg = record.getData();
+        filter = Ext.create('Ext.util.Filter', cfg);
+
+        return filter;
+    },
+
+    /**
+     * Applies an array of filters to the provided itemStore.
+     * @param  {Ext.util.Filter[]} records Records from the valueStore.
+     * @private
+     */
+    filterItemStore: function (filters) {
         this.itemStore.clearFilter(true);
         this.itemStore.filter(filters);
     },
 
-    getMenu: function () {
-        if (!this.menu) {
-            this.menu = new Ext.menu.Menu({
-                plain: true,
-                shadow: false,
-                cls: Ext.baseCSSPrefix + 'boxselect-item-menu',
-                items: this.getMenuItems()
-            });
-        }
+    /**
+     * Hydrates an array of (incomplete) valueStore records, then returns an array of corresponding filters
+     * @param  {Ext.data.Model[]} records The valueStore records
+     * @return {Ext.util.Filter[]} The itemStore filters
+     */
+    getFilters: function (records) {
+        var filters = [],
+            defaultFilter = Ext.Array.filter(this.filterProperties, function (prop) { return prop.isDefault }).pop();
+
+        Ext.Array.each(records, function (record) {
+            var value, filter;
+
+            if (record.get('root') !== 'data') {
+                value = record.get('value');
+
+                filter = this.buildFilter(record, {
+                    property: defaultFilter.property,
+                    text: defaultFilter.text,
+                    id: ['filter', value].join('-'),
+                    root: 'data'
+                });
+
+                filters.push(filter);
+            }
+        }, this);
+
+        return filters;
+    },
+
+    /**
+     * Returns a menu of available filter properties
+     * @param  {HTMLElement} el The clicked element
+     * @return {Ext.menu.Menu} The instantiated menu
+     * @private
+     */
+    getMenu: function (el) {
+        var record = this.getRecordByListItemNode(el);
+
+        Ext.destroy(this.menu);
+        this.menu = new Ext.menu.Menu({
+            plain: true,
+            shadow: false,
+            cls: Ext.baseCSSPrefix + 'boxselect-item-menu',
+            items: this.getMenuItems(record)
+        });
 
         return this.menu;
     },
 
-    getMenuItems: function () {
-        return [];
+    /**
+     * Returns an array of menu items that change a record and its corresponding filter
+     * @param  {Ext.data.Model} record The valueStore record being edited
+     * @return {Ext.menu.Item[]} The array of menu items
+     * @private
+     */
+    getMenuItems: function (record) {
+        var me = this,
+            menuItems = Ext.Array.clone(this.filterProperties);
+
+        Ext.Array.each(menuItems, function (menuItem) {
+            function handler (item) {
+                var filter = me.buildFilter(record, { property: item.property, text: item.text });
+
+                me.itemStore.filter(filter);
+                me.applyMultiselectItemMarkup();
+            }
+            Ext.apply(menuItem, { handler: handler });
+        }, this);
+
+        return menuItems;
     },
 
     /**
@@ -158,18 +228,10 @@ Ext.define('Taco.core.ux.ComboFilter', {
      * @private
      */
     onValueChange: function (field, newValue, oldValue) {
-        var records = this.valueStore.getRange();
+        var records = this.valueStore.getRange(),
+            filters = this.getFilters(records);
 
-        Ext.Array.each(records, function (record) {
-            if (Ext.isEmpty(record.get('property'))) {
-                record.set('property', 'productName');
-                record.setId(['productName', record.get('value')].join('-'));
-            }
-        }, this);
-
-        if (this.itemStore) {
-            this.filterItemStore(records);
-        }
+        this.filterItemStore(filters);
     },
 
     /**
@@ -177,7 +239,7 @@ Ext.define('Taco.core.ux.ComboFilter', {
      * @private
      */
     showMenuByListItemNode: function (el) {
-        var menu = this.getMenu();
+        var menu = this.getMenu(el);
 
         menu.showBy(el);
     }
