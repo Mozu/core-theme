@@ -17,14 +17,14 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
     class DjangoMozuView : IView, IViewDataContainer, IViewPathContainer
     {
-        private readonly ISiteBuilderContext _siteBuilderContext;
+       // private readonly ISiteBuilderContext _siteBuilderContext;
         internal string viewPath;
 
         public DjangoMozuView(ITemplateManager manager, ISiteBuilderContext siteBuilderContext, string viewPath)
         {
             // TODO: Complete member initialization
             this.TemplateManager = manager;
-            _siteBuilderContext = SiteBuilderContext.Current;
+           // _siteBuilderContext = SiteBuilderContext.Current;
             this.viewPath = viewPath;
         }
 
@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         public void Render(ViewContext viewContext, System.IO.TextWriter writer)
         {
             ViewData = viewContext.ViewData;
-
+            var siteBuilderContext = SiteBuilderContext.Current;
             var requestContext = new Dictionary<string, object>(viewContext.ViewData);
             var authenticationHelper = new AuthenticationHelper( viewContext.HttpContext , new CookieProvider(viewContext.HttpContext));
             var gcu = authenticationHelper.GetCurrentUser();
@@ -69,9 +69,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             requestContext["Model"] = requestContext["model"] = viewContext.ViewData.Model;
             requestContext["Session"] = requestContext["session"] = viewContext.HttpContext.Session;
             //requestContext["Templates"] = new TemplateLocator(html, this.TemplateManager);
-            requestContext["SiteContext"] = requestContext["siteContext"] = _siteBuilderContext ;
-            requestContext["ThemeSettings"] = requestContext["themeSettings"] = _siteBuilderContext.ThemeSettings;
-            requestContext["PageContext"] = requestContext["pageContext"] = _siteBuilderContext.PageContext;
+            requestContext["SiteContext"] = requestContext["siteContext"] = siteBuilderContext;
+            requestContext["ThemeSettings"] = requestContext["themeSettings"] = siteBuilderContext.ThemeSettings;
+            requestContext["PageContext"] = requestContext["pageContext"] = siteBuilderContext.PageContext;
             requestContext["User"] = requestContext["user"] = user;
 
             var reader = TemplateManager.RenderTemplate(viewPath, requestContext);

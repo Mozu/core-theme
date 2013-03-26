@@ -27,7 +27,7 @@
         this.callParent(arguments);
         this.on('idchange', function(editor, record) {
             Taco.app.contentView.remove(editor);
-            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId());
+            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), { record: record });
         }, this, { delay: 10, single: true, scope: this });
     }
 });
