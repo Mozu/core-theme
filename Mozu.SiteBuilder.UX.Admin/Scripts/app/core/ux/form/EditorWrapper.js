@@ -52,7 +52,8 @@
         
         if (!this.form && this.formCls) {
             this.formCfg = Ext.applyIf({
-                record: this.record
+                record: this.record,
+                overflowY: 'auto'
             }, this.formCfg);
 
             this.form = Ext.create(this.formCls, this.formCfg);

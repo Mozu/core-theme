@@ -2,7 +2,7 @@
  * @class Taco.view.site.Toolbox
  */
 Ext.define('Taco.view.site.Toolbox', {
-    extend: 'Ext.window.Window',
+    extend: 'Ext.panel.Panel',
     alias: 'widget.toolbox',
     cls: Taco.baseCSSPrefix + 'toolbox',
     autoRender: false,

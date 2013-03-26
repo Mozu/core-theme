@@ -40,6 +40,10 @@
                     scope: this
                 }
             });
+            
+            me.sidebar = {
+                items: [this.toolBox]
+            };
 
             this.toolBar = Ext.create('Ext.toolbar.Toolbar', {
                 margin: '3 0 0 0',

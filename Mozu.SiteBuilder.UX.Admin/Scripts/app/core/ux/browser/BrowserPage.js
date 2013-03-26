@@ -16,28 +16,53 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     filterProperty: 'name',
     hasSidebar: true,
 
-    header: {
-        actions: [
-        {
-            xtype: 'secondarybutton',
-            text: 'Edit Records',
-            listeners: {
-                click: function () {
-                    this.launchBulkEditor();
-                }
-            }
-        },{
-            xtype: 'primarybutton',
-            itemId: 'newbutton',
-            listeners: {
-                click: function () {
-                    this.launchEditor(Ext.create(this.modelName));
-                }
-            }
-        }]
-    },
+    header: null,
 
     cls: 'taco-content-browserpage',
+
+    constructor: function() {
+        this.acquireStore();
+        this.callParent(arguments);
+    },
+
+    initComponent: function () {
+        if (!this.header) {
+            this.header = {}
+        }
+        Ext.applyIf(this.header, {
+            actions: [{
+                xtype: 'secondarybutton',
+                text: 'Edit Records',
+                listeners: {
+                    click: function () {
+                        this.launchBulkEditor();
+                    },
+                    scope: this
+                }
+            },{
+                xtype: 'primarybutton',
+                itemId: 'newbutton',
+                listeners: {
+                    click: function () {
+                        this.launchEditor(Ext.create(this.modelName));
+                    },
+                    scope: this
+                }
+            }]
+        });
+
+        this.updateRecordTypeName();
+        this.store = Taco.core.data.StoreManager.getOrCreate(this.store);
+        if (this.useGridPanel) this.createGridPanel(this.gridPanelConf || {});
+        if (this.useTilePanel) this.createTilePanel(this.tilePanelConf || {});
+        this.createItemBrowser();
+        this.layoutItemBrowser();
+        if (this.hasSidebar) this.createSidebar();
+        this.callParent(arguments);
+        if (!this.store.hasLoaded()) {
+            this.store.load();
+        }
+    },
 
     updateRecordTypeName: function () {
         var me = this,
@@ -288,25 +313,6 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             }
             this.launchEditor(record, metaData);
          
-        }
-    },
-
-    constructor: function() {
-        this.acquireStore();
-        this.callParent(arguments);
-    },
-
-    initComponent: function () {
-        this.updateRecordTypeName();
-        this.store = Taco.core.data.StoreManager.getOrCreate(this.store);
-        if (this.useGridPanel) this.createGridPanel(this.gridPanelConf || {});
-        if (this.useTilePanel) this.createTilePanel(this.tilePanelConf || {});
-        this.createItemBrowser();
-        this.layoutItemBrowser();
-        if (this.hasSidebar) this.createSidebar();
-        this.callParent(arguments);
-        if (!this.store.hasLoaded()) {
-            this.store.load();
         }
     }
 });
