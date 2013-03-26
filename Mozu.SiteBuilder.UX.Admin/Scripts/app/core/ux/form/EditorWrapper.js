@@ -48,7 +48,8 @@
             'aftersave',
             'cancel'
         ]);
-
+        this.origionalId = this.record ? this.record.getId(): null;
+        
         if (!this.form && this.formCls) {
             this.formCfg = Ext.applyIf({
                 record: this.record
@@ -100,6 +101,10 @@
                 this.dirtybutton.setDirty(false);
                 this.onComplete();
                 this.fireEvent('aftersave', this, this.record, this.isEdit());
+                if (this.record.getId() != this.origionalId) {
+                    this.fireEvent('idchange', this, this.record, this.origionalId);
+                }
+                
             },
             titlechange: function (panel, newTitle) {
                 this.updateTitle(newTitle);

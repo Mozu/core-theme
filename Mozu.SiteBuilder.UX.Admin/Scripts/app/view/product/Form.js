@@ -19,10 +19,17 @@ Ext.define('Taco.view.product.Form', {
         var tabItems;
 
         this.inSitesStore = this.record.productInSitesStore();
+        
+
+
+
 
         this.stores = [this.inSitesStore];
 
         this.siteForms = [];
+
+
+        this.createSiteInfoCheck();
 
         this.isSingleSite = this.singleSiteCheck();
 
@@ -181,6 +188,19 @@ Ext.define('Taco.view.product.Form', {
             this.goGoMultiSite();
         }
     },
+    
+    /**
+     * Handles the use case of create in site context mode
+     */
+    createSiteInfoCheck:function() {
+        if (!this.record.phantom) {
+            return;
+        }
+        var site = Taco.app.context.getCurrentSite();
+        if (site != null) {
+            this.addSite(site.id);
+        }
+    },
 
     /**
      * Checks to see if the form is in multisite or singlesite mode
@@ -198,10 +218,10 @@ Ext.define('Taco.view.product.Form', {
      */
     addSaveTasks: function (tasks) {
 
-        tasks.add({
-            key: 'sync-productInSiteInfo-store',
-            store: this.inSitesStore
-        });
+        //tasks.add({
+        //    key: 'sync-productInSiteInfo-store',
+        //    store: this.inSitesStore
+        //});
 
         this.addChildSaveTasks(tasks);
 
@@ -213,6 +233,9 @@ Ext.define('Taco.view.product.Form', {
      * @param {String} siteId The ID of the site that will have the product
      */
     addSite: function (siteId, suspendSwitch) {
+        if (this.inSitesStore.getById(siteId)) {
+            return;
+        }
         var siteInfo = Ext.create('Taco.model.ProductInSiteInfo', {
             siteId: siteId,
             productCode:this.record.getId()
@@ -223,16 +246,17 @@ Ext.define('Taco.view.product.Form', {
         this.inSitesStore.add(siteInfo);
         siteInfo.set('productCode', this.record.getId());
         siteInfo.phantom = true;
+        if (this.rendered) {
+            siteForm = this.buildSiteForm(siteInfo);
 
-        siteForm = this.buildSiteForm(siteInfo);
+            this.siteForms.push(siteForm);
+            this.tabPanel.add(siteForm);
 
-        this.siteForms.push(siteForm);
-        this.tabPanel.add(siteForm);
-        
-        if (suspendSwitch) {
-            return;
+            if (suspendSwitch) {
+                return;
+            }
+            this.goGoSiteSwitch();
         }
-        this.goGoSiteSwitch();
     },
 
     /**

@@ -131,6 +131,19 @@ Ext.application({
 
         this.context = Ext.create('Taco.core.context.TaContext', Taco.User.taContext);
 
+        Ext.override(Ext.AbstractComponent, {
+            removeCls: function (cls) {
+                var me = this,
+                    el = me.rendered ? me.el : me.protoEl;
+                //adding null check
+                if (el) {
+                    el.removeCls.apply(el, arguments);
+                }
+                return me;
+            },
+        });
+
+
         Ext.override(Ext.data.AbstractStore, {
             constructor: function () {
                 this.callParent(arguments);

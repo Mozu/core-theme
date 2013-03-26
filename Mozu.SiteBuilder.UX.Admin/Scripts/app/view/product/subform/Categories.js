@@ -25,6 +25,7 @@ Ext.define('Taco.view.product.subform.Categories', {
             name: 'categoryIds',
             width: 400,
             store: listStore,
+            getStore: function () { return listStore; },
             displayField: 'name',
             valueField: 'id',
             listConfig: {
@@ -39,6 +40,8 @@ Ext.define('Taco.view.product.subform.Categories', {
                 }
             }
         });
+        this.listStore = listStore;
+        list.parentThing = this;
 
         this.tools = [{
             xtype: 'secondarybutton',

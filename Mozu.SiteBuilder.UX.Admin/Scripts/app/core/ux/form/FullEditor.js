@@ -4,17 +4,13 @@
         editorwrapper: 'Taco.core.ux.form.EditorWrapper'
     },
 
-    constructor: function (config) {
+    constructor: function(config) {
         this.callParent(arguments);
         this.mixins.editorwrapper.constructor.call(this, config);
     },
 
-    initComponent: function () {
+    initComponent: function() {
 
-        
-         
-       
-        
 
         this.initWrapper();
 
@@ -29,6 +25,9 @@
         };
 
         this.callParent(arguments);
-    },
-   
+        this.on('idchange', function(editor, record) {
+            Taco.app.contentView.remove(editor);
+            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId());
+        }, this, { delay: 10, single: true, scope: this });
+    }
 });

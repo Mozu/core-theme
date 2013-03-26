@@ -22,7 +22,7 @@ Ext.define('Taco.core.ux.form.field.MultiSelect', {
     setValue: function(value){
         var me = this,
             selModel = me.boundList.getSelectionModel(),
-            store = me.store;
+            store = me.getStore();
 
         // Store not loaded yet - we cannot set the value
         if (!store.data || !store.getCount()) {

@@ -48,6 +48,24 @@ Ext.define('Taco.core.data.Model', {
         this.callStore("afterreject", this);
     },
      
+    getData2: function (record, includeAssociated) {
+        var me = this,
+            fields = me.fields.items,
+            fLen = fields.length,
+            data = {},
+            name, f;
+
+        record.fields.each(function(field) {
+            if (field.persist) {
+                data[field.name] = record.get(field.name);
+            }
+        });
+        //todo
+        //if (includeAssociated === true) {
+        //    Ext.apply(data, me.getAssociatedData());
+        //}
+        return data;
+    },
     
     getOrCreateHasManyStore: function (config) {
         var me = this,
@@ -85,7 +103,7 @@ Ext.define('Taco.core.data.Model', {
                     var data = [];
                     if (store.isDirty()) {
                         Ext.each(store.data.items, function (record) {
-                            data.push(record.getData());
+                            data.push(this.getData2(record, true));
                         });
                         this.set(associationKey, data);
                     }
@@ -94,7 +112,7 @@ Ext.define('Taco.core.data.Model', {
                     var data = [];
                     if (store.isDirty()) {
                         Ext.each(store.data.items, function(record) {
-                            data.push(record.getData());
+                            data.push(this.getData2(record, true));
                         });
                         this.set(associationKey, data);
                     }

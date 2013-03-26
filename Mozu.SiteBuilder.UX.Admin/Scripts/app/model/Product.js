@@ -174,7 +174,7 @@ Ext.define('Taco.model.Product', {
     {
         "name": "productInSites",
         "type": "auto",
-        "useNull": false
+        defaultValue:[]
     },
       {
           name: "properties",
@@ -190,17 +190,28 @@ Ext.define('Taco.model.Product', {
             foreignProperty: 'product'
         });
     },
+    getProductInSites: function() {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.ProductInSiteInfo',
+            associationKey: 'productInSites',
+            foreignKey: 'productCode',
+            foreignProperty: 'product'
+        });
+    },
+    productInSitesStore:function() {
+        return this.getProductInSites();
+    },
     idProperty: 'productCode',
-    hasMany: [
-        {
-            "model":'Taco.model.ProductInSiteInfo',
-            "name": "productInSitesStore",
-            "type": "Taco.model.ProductInSiteInfo",
-            associationKey: 'productInSites'
-            //,
-            //"foreignKey": "productCode"
-        }
-    ],
+    //hasMany: [
+    //    {
+    //        "model":'Taco.model.ProductInSiteInfo',
+    //        "name": "productInSitesStore",
+    //        "type": "Taco.model.ProductInSiteInfo",
+    //        associationKey: 'productInSites'
+    //        //,
+    //        //"foreignKey": "productCode"
+    //    }
+    //],
 
     validations: [
 
