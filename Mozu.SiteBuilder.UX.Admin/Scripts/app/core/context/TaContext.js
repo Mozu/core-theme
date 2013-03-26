@@ -223,16 +223,16 @@ Ext.define('Taco.core.context.TaContext', {
     },
 
     getCurrentSite: function () {
-        var cc = this.getCurrentContext();
+        var cc = this.getCurrentContext(), sc = this.getCurrentSiteCollection();
         if (cc.contextType == 's') {
             return cc;
         }
-        
-        if (this.siteCollections.length == 1){
-            if (this.siteCollections[0].sites.length == 1) {
-                return this.siteCollections[0].sites[0];
+        if (sc != null) {
+            if (sc.sites.length == 1) {
+                return sc.sites[0];
             }
         }
+        
         return null;
     },
     findSiteCollection: function (id) {
