@@ -40,7 +40,7 @@
         });
 
         checkoutViewModel.on('complete', function () {
-            window.location = "/storefront/checkout/confirmation";
+            window.location = "/checkout/" + checkoutViewModel.apiModel.data.Id + "/confirmation";
         });
 
 
