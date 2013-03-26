@@ -7,5 +7,10 @@
         window.cartVM = cart;
 
         ko.applyBindings(cart, $cartForm[0]);
+
+        cart.on('ordercreated', function (e, order) {
+            window.location = "/checkout/" + order.data.Id;
+        });
+
     });
 });

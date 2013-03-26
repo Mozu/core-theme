@@ -199,7 +199,9 @@
                 var parent = this.getParentModel();
                 this.update().then(function () {
                     if (self.checkStepStatus() === "complete") {
-                        parent.Payment.stepStatus("incomplete");
+                        parent.get().then(function () {
+                            parent.Payment.stepStatus("incomplete");
+                        });
                     }
                 });
             },
