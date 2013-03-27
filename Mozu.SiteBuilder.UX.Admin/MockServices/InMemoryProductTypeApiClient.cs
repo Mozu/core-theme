@@ -125,21 +125,21 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
                 Properties = new List<DC.AttributeInProductType>
                 {
                     new DC.AttributeInProductType {
-                        Attribute = new ColorAttribute(),
+                        AttributeDetail = new ColorAttribute(),
                         AttributeFQN = ColorAttribute.ATTRIBUTE_FQN
                     }
                 },
                 Options = new List<DC.AttributeInProductType>
                 {
                     new DC.AttributeInProductType {
-                        Attribute = new GiftWrapAttribute(),
+                        AttributeDetail = new GiftWrapAttribute(),
                         AttributeFQN = GiftWrapAttribute.ATTRIBUTE_FQN
                     }
                 },
                 Extras = new List<DC.AttributeInProductType>
                 {
                     new DC.AttributeInProductType {
-                        Attribute = new EngravingAttribute(),
+                        AttributeDetail = new EngravingAttribute(),
                         AttributeFQN = EngravingAttribute.ATTRIBUTE_FQN
                     }
                 }
@@ -166,13 +166,13 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
                 Extras = new List<DC.AttributeInProductType>
                 {
                     new DC.AttributeInProductType {
-                        Attribute = p3attribute,
+                        AttributeDetail = p3attribute,
                         AttributeFQN = p3attribute.AttributeFQN,
                         VocabularyValues = new List<DC.AttributeVocabularyValueInProductType> {
                             new DC.AttributeVocabularyValueInProductType {
                                 Order = 1,
                                 Value = p3attribute.VocabularyValues.First().Value,
-                                VocabularyValue = p3attribute.VocabularyValues.First()
+                              //  VocabularyValue = p3attribute.VocabularyValues.First()
                             }
                         }
                     }

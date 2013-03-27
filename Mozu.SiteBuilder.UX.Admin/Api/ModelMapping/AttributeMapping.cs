@@ -74,23 +74,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<DC.AttributeInProductType, ProductTypeAttribute>()
-                .ForMember(x => x.AttributeFQN, opt => opt.MapFrom(dc => dc.AttributeFQN))
-                .ForMember(x => x.Index, opt => opt.MapFrom(dc => dc.Order))                
-                .ForMember(x => x.IsRequired, opt => opt.MapFrom(dc => dc.IsRequiredByAdmin))
-                .ForMember(x => x.AllowMulti, opt => opt.MapFrom(dc => dc.IsMultiValueProperty ))
-                .ForMember(x => x.IsHidden, opt => opt.MapFrom(dc => dc.IsHiddenProperty))
-                .ForMember(x => x.IsLocked, opt => opt.MapFrom(dc => dc.IsInheritedFromBaseType))
-                .ForMember(x => x.AllValues, opt => opt.MapFrom(dc => dc.Attribute.VocabularyValues))
+                .ForMember(x => x.AttributeFQN, opt => opt.ResolveUsing(dc => dc.AttributeFQN))
+                .ForMember(x => x.Index, opt => opt.ResolveUsing(dc => dc.Order))
+                .ForMember(x => x.IsRequired, opt => opt.ResolveUsing(dc => dc.IsRequiredByAdmin))
+                .ForMember(x => x.AllowMulti, opt => opt.ResolveUsing(dc => dc.IsMultiValueProperty))
+                .ForMember(x => x.IsHidden, opt => opt.ResolveUsing(dc => dc.IsHiddenProperty))
+                .ForMember(x => x.IsLocked, opt => opt.ResolveUsing(dc => dc.IsInheritedFromBaseType))
+                .ForMember(x => x.AllValues, opt => opt.ResolveUsing(dc => dc.AttributeDetail.VocabularyValues))
                 .ForMember(x => x.SelectedValues, opt => opt.ResolveUsing(dc => MapVocabularyValueInProductTypeListToSelectedValues(dc.VocabularyValues, dc.AttributeFQN)))
-                .ForMember(x => x.DataType, opt => opt.MapFrom(dc => dc.Attribute.DataType))
-                .ForMember(x => x.InputType, opt => opt.MapFrom(dc => dc.Attribute.InputType))
-                .ForMember(x => x.AttributeName, opt => opt.MapFrom(dc => dc.Attribute.Content != null ? dc.Attribute.Content.Name : dc.Attribute.AttributeCode ))
+                .ForMember(x => x.DataType, opt => opt.ResolveUsing(dc => dc.AttributeDetail.DataType))
+                .ForMember(x => x.InputType, opt => opt.ResolveUsing(dc => dc.AttributeDetail.InputType))
+                .ForMember(x => x.AttributeName, opt => opt.ResolveUsing(dc => dc.AttributeDetail.Content != null ? dc.AttributeDetail.Content.Name : dc.AttributeDetail.AttributeCode))
                 ;
 
             Mapper.CreateMap<ProductTypeAttribute, DC.AttributeInProductType>()
                 .ForMember(dc => dc.AttributeFQN, opt => opt.MapFrom(dc => dc.AttributeFQN))
                 .ForMember(dc => dc.Order, opt => opt.MapFrom(x => x.Index))
-                .ForMember(dc => dc.Attribute, opt => opt.MapFrom(x => new DC.Attribute
+                .ForMember(dc => dc.AttributeDetail, opt => opt.MapFrom(x => new DC.Attribute
                 {
                     AttributeFQN = x.AttributeFQN,
                     AttributeCode = x.AttributeName,

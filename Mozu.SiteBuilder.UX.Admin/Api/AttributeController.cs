@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (attributes == null || !attributes.Any())
                 return Message3<List<Attribute>>(false, "No attributes were created because they were not sent correctly. Please try again.");
 
-
+            
             try
             {
                 IEnumerable<Attribute> createdAttributes = await _attributeHelper.CreateAttributes(attributes);

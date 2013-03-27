@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -52,7 +53,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
 
         public  Task<IEnumerable<Attribute>> CreateAttributes(List<Attribute> attributes)
         {
-            return _attributeMapper.PerformAction(attributes, a => _attributeWebApiClient.AddAttribute(a));
+            
+            return _attributeMapper.PerformAction(attributes, a =>
+                {
+                    a.AttributeCode = Regex.Replace(a.AttributeCode, "[^a-zA-Z0-9]", "_");
+                    return _attributeWebApiClient.AddAttribute(a);
+                });
             //await _attributeValueMapper.PerformAction(results.SelectMany(SelectValuesAssigned), (a, b) => _attributeWebApiClient.AddAttributeVocabularyValue(a, b.AttributeFQN));
             //return results;
         }
