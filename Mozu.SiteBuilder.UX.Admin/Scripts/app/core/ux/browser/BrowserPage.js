@@ -217,78 +217,60 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     },
 
     launchLoadedEditor: function(record, options){
-        var me = this,
-            editToken = me.token + '/edit/',
-            editorView;
-
-        //todoPassOPtionsz
+        
         Ext.defer(function() {
             Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), { complexMetaData: { record: record, options: options } });
         }, 1, this);
         return;
 
-        editorView = Ext.create(me.editorName, {
-            logicalParent: me,
-            options: options,
+       
+    },
+    editMenuColumnHandler: function (item, eventData) {
+        var record = eventData.record,
+            metaData = { id: record.getId() };
+
+        this.launchEditor(record, metaData);
+    },
+    destroyMenuColumnHandler:function (item, eventData) {
+        var grid = eventData.grid,
+            record = eventData.record,
+            modal;
+
+        modal = Ext.create('Taco.core.ux.modal.Confirmation', {
+            autoShow: true,
+            content: {
+                html: 'Are you sure you want to delete this?'
+            },
             listeners: {
-                cancel: function () {
-                    editorView.destroy();
-                    Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller);
-
-                },
-                aftersave: function (editor, record, isEdit) {
-                    //editorView.destroy();
-                    //Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller);
-
-                    var md = Taco.core.StateManager.getCurrentState().metaData;
-                    if (md && md.action == 'create') {
-                        Ext.defer(function() {
-                            Taco.app.contentView.remove(editorView);
-                            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId());
-                        }, 2, me);
-
-                    }
-                    
-
-                },
-                created:function (newRecord, editor) {
-                    editorView.destroy();
-                    me.launchEditor(newRecord);
-                    Taco.app.StateManager.addState(editToken + newRecord.getId());
-                },
-                create: function (newRecord) {
-                    me.isDirty = true;
-                    editorView.destroy();
-                    me.launchEditor(newRecord);
-                    Taco.app.StateManager.addState(me.token + '/create');
-                },
-                copyrecord: function (newRecord) {
-                    editorView.destroy();
-                    if (!me.store.getById(newRecord.getId())) {
-                        me.store.insert(0, newRecord);
-                    }
-                    me.launchEditor(newRecord);
-                    Taco.app.StateManager.addState(editToken + newRecord.getId() || -1, { id: newRecord.getId() || -1 });
-                },
-                deleterecord: function () {
-                    editorView.destroy();
-                    Taco.app.StateManager.addState(me.token);
+                cancel: Ext.emptyFn,
+                confirm: function () {
+                    var store = grid.getStore();
+                    grid.setLoading(true);
+                    store.remove(record);
+                    store.sync({
+                        success: function (m) {
+                            grid.setLoading(false);
+                        },
+                        failure: function (m) {
+                            var records = store.getRemovedRecords();
+                            Ext.each(records, function(record) {
+                                store.insert(record.index, record);
+                            });
+                                        
+                            records.splice(0, records.length);
+                            grid.setLoading(false);
+                            Ext.create('Taco.core.ux.modal.Alert', {
+                                autoShow: true,
+                                text: 'Delete Failed. <br /> TODO get error text'
+                            });
+                                        
+                        }
+                        
+                    });
                 },
                 scope: this
-            },
-            record: record
+            }
         });
-
-
-        //editorView.mon(record, 'idchanged', function (record, oldId, newId, eOpts) {
-        //    if (record.phantom || record.dirty) {
-        //        return;
-        //    }
-        //    Taco.app.contentView.remove(editorView);
-        //    Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + newId);
-        //}, this, { delay: 10, single: true, scope: this});
-
-        Taco.app.contentView.add(editorView);
     },
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
         var metaData = { id: record.getId() },

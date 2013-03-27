@@ -108,6 +108,7 @@ Ext.define('Taco.view.product.Index', {
                                         grid.setLoading(false);
                                     },
                                     failure: function (m) {
+                                        store.add(store.getRemovedRecords());
                                         grid.setLoading(false);
                                     }
                                 });

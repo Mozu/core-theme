@@ -34,17 +34,35 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
      * @private
      */
     getMenu: function (eventData) {
-        var menuColumnHandler, recurseItemFn;
-
+        var menuColumnHandler, recurseItemFn,
+            getHandler = function(handler) {
+                if (Ext.isString(handler)) {
+                    return function (item, eventData) {
+                        var fnHandler, scope;
+                        if (eventData.grid[handler]) {
+                            scope = eventData.grid;
+                        } else {
+                            scope = eventData.grid.up('[' + handler + ']');
+                        }
+                        fnHandler = scope[handler];
+                        fnHandler.apply(scope, arguments);
+                    };
+                }
+                return handler;
+            };
+        
         menuColumnHandler = function (item) {
             item.menuColumnHandler(item, item.eventData);
         };
 
         recurseItemFn = function(item) {
             item.eventData = eventData;
-
+            
+            item.menuColumnHandler = getHandler(item.menuColumnHandler);
+            
             if (item.menuColumnHandler && !item.menuColumnHandlerEvent) {
                 item.menuColumnHandlerEvent = true;
+                
                 item.on('click', menuColumnHandler, item.scope || item );
             }
             if (item.menu) {
@@ -72,6 +90,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
 
         return this.menu;
     },
+    
 
     /**
      * Returns an array of items to populate the menu.
