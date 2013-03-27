@@ -22,6 +22,7 @@ Ext.define('Taco.view.attribute.Form', {
                 xtype: 'selectfield',
                 fieldLabel: 'Attribute Type',
                 name: 'attributeType',
+                isDirty:function() { return false; },
                 listeners: {
                     select: function (field, records) {
                         var record = this.up('form').record, isProperty = false, isExtra = false;

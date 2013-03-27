@@ -124,17 +124,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Options = new List<DC.AttributeInProductType> {
                     // Option - List - String
                     new DC.AttributeInProductType {
-                        Attribute = new ColorAttribute(),
+                        AttributeDetail = new ColorAttribute(),
                         AttributeFQN = ColorAttribute.ATTRIBUTE_FQN
                     },
                     // Option - List - Number
                     new DC.AttributeInProductType {
-                        Attribute = new NumberOfWheelsAttribute(),
+                        AttributeDetail = new NumberOfWheelsAttribute(),
                         AttributeFQN = NumberOfWheelsAttribute.ATTRIBUTE_FQN
                     },
                     // Option - List - DateTime
                     new DC.AttributeInProductType {
-                        Attribute = new LastTimeYouPaidTaxesAttribute(),
+                        AttributeDetail = new LastTimeYouPaidTaxesAttribute(),
                         AttributeFQN = LastTimeYouPaidTaxesAttribute.ATTRIBUTE_FQN
                     }
                 },
@@ -142,69 +142,69 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     // Extra - Date - DateTime
                     new DC.AttributeInProductType {
-                        Attribute = new ShopperDateAttribute(),
+                        AttributeDetail = new ShopperDateAttribute(),
                         AttributeFQN = ShopperDateAttribute.ATTRIBUTE_FQN
                     },
 
                     // Extra - DateTime - DateTime
                     new DC.AttributeInProductType {
-                        Attribute = new ShopperDateTimeAttribute(),
+                        AttributeDetail = new ShopperDateTimeAttribute(),
                         AttributeFQN = ShopperDateTimeAttribute.ATTRIBUTE_FQN
                     },
 
                     // Extra - TextArea - String
                     new DC.AttributeInProductType {
-                        Attribute = new EngravingParagraphAttribute(),
+                        AttributeDetail = new EngravingParagraphAttribute(),
                         AttributeFQN = EngravingParagraphAttribute.ATTRIBUTE_FQN
                     },
                     
                     // Extra - TextBox - Number
                     new DC.AttributeInProductType {
-                        Attribute = new NumberOfMissingScrewsAttribute(),
+                        AttributeDetail = new NumberOfMissingScrewsAttribute(),
                         AttributeFQN = NumberOfMissingScrewsAttribute.ATTRIBUTE_FQN
                     },
 
                     // Extra - TextBox - String
                     new DC.AttributeInProductType {
-                        Attribute = new EngravingAttribute(),
+                        AttributeDetail = new EngravingAttribute(),
                         AttributeFQN = EngravingAttribute.ATTRIBUTE_FQN
                     },
 
                     // Extra - YesNo - Boolean
                     new DC.AttributeInProductType {
-                        Attribute = new GiftWrapAttribute(),
+                        AttributeDetail = new GiftWrapAttribute(),
                         AttributeFQN = GiftWrapAttribute.ATTRIBUTE_FQN
                     }
                 },
                 Properties = new List<DC.AttributeInProductType> {
                     // Property - Date - DateTime
                     new DC.AttributeInProductType {
-                        Attribute = new NewYearsEditionAttribute(),
+                        AttributeDetail = new NewYearsEditionAttribute(),
                         AttributeFQN = NewYearsEditionAttribute.ATTRIBUTE_FQN
                     },
                     // Property - DateTime - DateTime
                     new DC.AttributeInProductType {
-                        Attribute = new AppointmentKeeperAttribute(),
+                        AttributeDetail = new AppointmentKeeperAttribute(),
                         AttributeFQN = AppointmentKeeperAttribute.ATTRIBUTE_FQN
                     },
                     // Property - TextArea - String
                     new DC.AttributeInProductType {
-                        Attribute = new EngravedPoem(),
+                        AttributeDetail = new EngravedPoem(),
                         AttributeFQN = EngravedPoem.ATTRIBUTE_FQN
                     },
                     // Property - TextBox - Number
                     new DC.AttributeInProductType {
-                        Attribute = new UnitCostAttribute(),
+                        AttributeDetail = new UnitCostAttribute(),
                         AttributeFQN = UnitCostAttribute.ATTRIBUTE_FQN
                     },
                     // Property - TextBox - String
                     new DC.AttributeInProductType {
-                        Attribute = new UPCAttribute(),
+                        AttributeDetail = new UPCAttribute(),
                         AttributeFQN = UPCAttribute.ATTRIBUTE_FQN
                     },
                     // Property - YesNo - Bool
                     new DC.AttributeInProductType {
-                        Attribute = new SmashedToPiecesAttribute(),
+                        AttributeDetail = new SmashedToPiecesAttribute(),
                         AttributeFQN = SmashedToPiecesAttribute.ATTRIBUTE_FQN
                     },
                 }
