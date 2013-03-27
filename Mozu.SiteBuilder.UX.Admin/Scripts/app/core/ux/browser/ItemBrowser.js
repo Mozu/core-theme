@@ -180,8 +180,9 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             datachanged: me.onItemStoreUpdate,
             scope: me
         });
-
+        this.on('afterrender', this.onItemStoreUpdate, this);
         this.callParent(arguments);
+        
 
         this.relayActionEvents();
     },
@@ -194,17 +195,21 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
 
     onItemStoreUpdate: function () {
         var me = this,
+            rc = me.down('#recordCount'),
         data = {
             count: me.itemStore.getCount(),
 
             totalCount: me.itemStore.getTotalCount(),
             unit: me.itemType
         };
-
-        data.totalCount = data.totalCount > data.count ? data.totalCount : data.count;
-        if (me.down('#recordCount')) {
-            me.down('#recordCount').update(data);
+        if (!rc) {
+            return;
         }
+        
+        data.totalCount = data.totalCount > data.count ? data.totalCount : data.count;
+        rc.update(data);
+        rc.renderData = data;
+       
     },
 
     onKeyUp: function (field) {
