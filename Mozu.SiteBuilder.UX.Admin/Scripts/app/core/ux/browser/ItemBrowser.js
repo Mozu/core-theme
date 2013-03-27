@@ -7,7 +7,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
     requires: ['Taco.core.ux.form.ToggleGroup', 'Ext.toolbar.Spacer'],
     alias: 'widget.itembrowser',
     cls: Taco.baseCSSPrefix + 'itembrowser',
-
+    toolbar:null,
     itemStoreId: false,
     filterProperty: 'title',
     bodyPadding: '12 0 0 0',

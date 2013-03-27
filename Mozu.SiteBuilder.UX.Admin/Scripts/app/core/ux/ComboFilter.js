@@ -54,9 +54,17 @@ Ext.define('Taco.core.ux.ComboFilter', {
         record.endEdit();
 
         cfg = record.getData();
+        
         cfg.filterFn = filterFn;
         filter = Ext.create('Ext.util.Filter', cfg);
+        filter.scope = this.scope;
+        
+        if (filterFn) {
 
+            filter.filterFn = function (record) {
+                return filterFn.apply(filter.scope || filter, [record, filter]);
+            };
+        }
         return filter;
     },
 

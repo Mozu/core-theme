@@ -5,7 +5,7 @@
 Ext.define('Taco.core.ux.modal.Alert', {
     extend: 'Taco.core.ux.modal.Modal',
     requires: ['Taco.core.ux.action.PrimaryButton'],
-
+    text:null,
     initComponent: function() {
         var me = this;
 

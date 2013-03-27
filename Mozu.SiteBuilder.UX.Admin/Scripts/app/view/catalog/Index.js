@@ -40,9 +40,8 @@ Ext.define('Taco.view.catalog.Index', {
                 property: 'tastiness',
                 text: 'Custom',
                 isDefault: false,
-                filterFn: function (item) {
-                    var isGood = item.get('tastiness') > 5;
-                    console.log(item, isGood); return isGood;
+                filterFn: function (item, filter) {
+                    return item.get('food').indexOf(filter.value) > -1 || item.get('tastiness') > 7;
                 }
             }, {
                 property: 'food',
