@@ -324,7 +324,6 @@
     <Content Include="Themes\Core3\Resources\Scripts\Modules\jquery-plus.js" />
     <Content Include="Themes\Core3\Resources\Strings\lang-de.csv" />
     <Content Include="Themes\Core3\Resources\Strings\lang-en.csv" />
-    <None Include="Themes\RESTCore\Resources\Scripts\Fixtures\RESTProduct.json" />
     <Content Include="Morrissey\morrissey.js" />
     <Content Include="Morrissey\src\lyrically.js" />
     <Content Include="Morrissey\src\optimizer.js" />
@@ -383,56 +382,6 @@
     <Content Include="Themes\Core3\Resources\Scripts\Modules\api.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\knockout-viewmodel.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Vendor\jquery-cookie.js" />
-    <Content Include="Themes\RESTCore\MetaData\build.js" />
-    <Content Include="Themes\RESTCore\MetaData\core3_thumb.jpg" />
-    <Content Include="Themes\RESTCore\MetaData\example.build.js" />
-    <Content Include="Themes\RESTCore\MetaData\ThemeSettings.xml" />
-    <Content Include="Themes\RESTCore\Resources\Images\Bootstrap\glyphicons-halflings-white.png" />
-    <Content Include="Themes\RESTCore\Resources\Images\Bootstrap\glyphicons-halflings.png" />
-    <Content Include="Themes\RESTCore\Resources\Images\content\Home_Graphic_Welcome.jpg" />
-    <Content Include="Themes\RESTCore\Resources\Images\error-exclamation.png" />
-    <Content Include="Themes\RESTCore\Resources\Images\header\wrapper_bg.jpg" />
-    <Content Include="Themes\RESTCore\Resources\Images\layout\body_bg.gif" />
-    <Content Include="Themes\RESTCore\Resources\Images\mozu-error.png" />
-    <Content Include="Themes\RESTCore\Resources\Images\period.gif" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\ajax.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\i18n.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\actions-processor.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\animatemodals.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\hal-resource.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\facebook-tools.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\images-gallery.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\jquery-sitemenu.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\knockout-plus.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\loading-bars.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\login-links.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\mixin-events.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\models-cart.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\models-product.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\product-images.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Modules\tagcloud.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\nls\fr\messages-checkout.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\nls\fr\messages.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\nls\messages-checkout.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\nls\messages.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Pages\cart.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Pages\checkout.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Pages\common.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Pages\error.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Pages\myaccount.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Pages\product.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\require.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\shim.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\text.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Vendor\Bootstrap\bootstrap-affix.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Vendor\jquery-colorbox.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Vendor\jquery-slider.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Vendor\jquery.tagcloud.0-0-1.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Vendor\knockout-latest.debug.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Vendor\knockout-latest.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Vendor\modernizr-respond.min.js" />
-    <Content Include="Themes\RESTCore\Resources\Scripts\Vendor\pci-temp.js" />
-    <Content Include="Themes\RESTCore\theme.xml" />
     <Content Include="Themes\Core3\MetaData\build.js" />
     <Content Include="Themes\Core3\MetaData\core3_thumb.jpg" />
     <Content Include="Themes\Core3\MetaData\example.build.js" />
@@ -482,17 +431,8 @@
     <Content Include="Themes\Core3\Templates\Email\_OrderStatus.vol" />
     <Content Include="Themes\Core3\Templates\Email\_ResetPassword.vol" />
     <Content Include="Themes\MobileCore\MetaData\build.js" />
-    <Content Include="Themes\MobileCore\MetaData\example.build.js" />
     <Content Include="Themes\MobileCore\MetaData\mobilecore_thumb.jpg" />
     <Content Include="Themes\MobileCore\MetaData\ThemeSettings.xml" />
-    <Content Include="Themes\MobileCore\Resources\Images\Bootstrap\glyphicons-halflings-white.png" />
-    <Content Include="Themes\MobileCore\Resources\Images\Bootstrap\glyphicons-halflings.png" />
-    <Content Include="Themes\MobileCore\Resources\Images\content\Home_Graphic_Welcome.jpg" />
-    <Content Include="Themes\MobileCore\Resources\Images\error-exclamation.png" />
-    <Content Include="Themes\MobileCore\Resources\Images\header\wrapper_bg.jpg" />
-    <Content Include="Themes\MobileCore\Resources\Images\layout\body_bg.gif" />
-    <Content Include="Themes\MobileCore\Resources\Images\mozu-error.png" />
-    <Content Include="Themes\MobileCore\Resources\Images\period.gif" />
     <Content Include="Themes\Core3\Resources\Scripts\ajax.js" />
     <Content Include="Themes\Core3\Resources\Scripts\shim.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\build.txt" />
@@ -511,12 +451,14 @@
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\Bootstrap\bootstrap-affix.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\hammer.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery-colorbox.js" />
+    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery-cookie.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery-slider.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery.specialevent.hammer.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery.tagcloud.0-0-1.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\knockout-latest.debug.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\less-1.3.0.min.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\modernizr-respond.min.js" />
+    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\pci-temp.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\superfish.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\supersubs.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\swipe.min.js" />
@@ -525,7 +467,6 @@
     <Content Include="Themes\MobileCore\Resources\Scripts\Modules\jquery-mobileevents.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Modules\login-links.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Modules\product-images.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts\Pages\cart.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Pages\checkout.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Vendor\hammer.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Vendor\jquery.specialevent.hammer.js" />
@@ -537,11 +478,9 @@
     <Content Include="Themes\MobileCore\MetaData\PageTypes\about_us1\definition.json" />
     <Content Include="Themes\MobileCore\MetaData\PageTypes\blank_page1\definition.json" />
     <Content Include="Themes\MobileCore\MetaData\PageTypes\blog\definition.json" />
-    <Content Include="Themes\MobileCore\MetaData\PageTypes\email\definition.json" />
     <Content Include="Themes\MobileCore\MetaData\PageTypes\home1\definition.json" />
     <Content Include="Themes\MobileCore\MetaData\PageTypes\landing1\definition.json" />
     <Content Include="Themes\MobileCore\MetaData\PageTypes\post\definition.json" />
-    <Content Include="Themes\MobileCore\MetaData\PageTypes\widget\definition.json" />
     <Content Include="Themes\MobileCore\Modules\TopNav.vol" />
     <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\breadcrumbs.less" />
     <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\common-elements.less" />
@@ -633,12 +572,14 @@
     <Folder Include="Themes\Core3\Resources\Fonts\" />
     <Folder Include="Themes\Core3\Resources\Images\c2Images\" />
     <Folder Include="Themes\MobileCore\Layouts\" />
+    <Folder Include="Themes\MobileCore\MetaData\PageTypes\email\" />
+    <Folder Include="Themes\MobileCore\MetaData\PageTypes\widget\" />
+    <Folder Include="Themes\MobileCore\Resources\Images\Bootstrap\" />
+    <Folder Include="Themes\MobileCore\Resources\Images\content\" />
+    <Folder Include="Themes\MobileCore\Resources\Images\header\" />
+    <Folder Include="Themes\MobileCore\Resources\Images\layout\" />
     <Folder Include="Themes\MobileCore\Resources\Scripts\nls\fr\" />
     <Folder Include="Themes\MobileCore\Templates\Email\" />
-    <Folder Include="Themes\RESTCore\MetaData\PageTypes\" />
-    <Folder Include="Themes\RESTCore\Resources\Fonts\" />
-    <Folder Include="Themes\RESTCore\Resources\Images\c2Images\" />
-    <Folder Include="Themes\RESTCore\Resources\Scripts-Built\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Tools\ThemeSettings.xsd">
@@ -840,144 +781,6 @@
     <Content Include="Themes\MobileCore\Modules\ProductImages.vol" />
     <Content Include="Themes\Core3\Modules\_LoadingBar.vol" />
     <Content Include="Themes\Core3\Modules\_LoginModal.vol" />
-    <Content Include="Themes\RESTCore\Layouts\_Default.vol" />
-    <Content Include="Themes\RESTCore\Modules\_archive.vol" />
-    <Content Include="Themes\RESTCore\Modules\_BreadCrumbs.vol" />
-    <Content Include="Themes\RESTCore\Modules\_DebugScripts.vol" />
-    <Content Include="Themes\RESTCore\Modules\_featuredproducts.vol" />
-    <Content Include="Themes\RESTCore\Modules\_Footer.vol" />
-    <Content Include="Themes\RESTCore\Modules\_Header.vol">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\RESTCore\Modules\_HeadTag.vol" />
-    <Content Include="Themes\RESTCore\Modules\_LeftNav.vol" />
-    <Content Include="Themes\RESTCore\Modules\_LoadingBar.vol" />
-    <Content Include="Themes\RESTCore\Modules\_LoginModal.vol" />
-    <Content Include="Themes\RESTCore\Modules\_Paging.vol">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\RESTCore\Modules\_PagingOptions.vol" />
-    <Content Include="Themes\RESTCore\Modules\_PriceStack.vol" />
-    <Content Include="Themes\RESTCore\Modules\_ProductImages.vol">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\RESTCore\Modules\_ProductListing.vol" />
-    <Content Include="Themes\RESTCore\Modules\_ProductStack.vol" />
-    <Content Include="Themes\RESTCore\Modules\_recentposts.vol" />
-    <Content Include="Themes\RESTCore\Modules\_RenderScripts.vol">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\RESTCore\Modules\_SearchBox.vol" />
-    <Content Include="Themes\RESTCore\Modules\_tagcloud.vol" />
-    <Content Include="Themes\RESTCore\Modules\_tagcollection.vol" />
-    <Content Include="Themes\RESTCore\Modules\_tags.vol" />
-    <Content Include="Themes\RESTCore\Modules\_TopNav.vol">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\RESTCore\Modules\_TrailingScripts.vol">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\RESTCore\Modules\_UtilityNav.vol">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\breadcrumbs.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\colorbox.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\common-elements.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\common-mixins.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\common-variables.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\content-section.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\dot-loader.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\featured-products-widget.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\icons.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\image-gallery.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\image-module.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\layout.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\messages.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\mini-modal.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\navs.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\normalize.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\paging.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\price-stack.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\product-listing.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\product-stack.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\search.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\site-footer.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\site-header.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Modules\typography.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Pages\blog.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Pages\cart.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Pages\category.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Pages\checkout.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Pages\confirmation.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Pages\error.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Pages\myaccount.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Pages\product-details.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\Pages\search-results.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\storefront.less" />
-    <Content Include="Themes\RESTCore\Resources\Stylesheets\textonly.less" />
-    <Content Include="Themes\RESTCore\Templates\_404_page.vol" />
-    <Content Include="Themes\RESTCore\Templates\_blankPage.vol" />
-    <Content Include="Themes\RESTCore\Templates\_Blog.vol" />
-    <Content Include="Themes\RESTCore\Templates\_Cart.vol" />
-    <Content Include="Themes\RESTCore\Templates\_Category.vol" />
-    <Content Include="Themes\RESTCore\Templates\_Checkout.vol" />
-    <Content Include="Themes\RESTCore\Templates\_Confirmation.vol" />
-    <Content Include="Themes\RESTCore\Templates\_error.vol" />
-    <Content Include="Themes\RESTCore\Templates\_Index.vol" />
-    <Content Include="Themes\RESTCore\Templates\_myaccount.vol" />
-    <Content Include="Themes\RESTCore\Templates\_NoResults.vol" />
-    <Content Include="Themes\RESTCore\Templates\_Post.vol" />
-    <Content Include="Themes\RESTCore\Templates\_Product.vol" />
-    <Content Include="Themes\RESTCore\Templates\_SearchResults.vol" />
-    <Content Include="Themes\RESTCore\Templates\_signin.vol" />
-    <Content Include="Themes\RESTCore\Templates\Email\_admininvite.vol" />
-    <Content Include="Themes\RESTCore\Templates\Email\_adminroleadded.vol" />
-    <Content Include="Themes\RESTCore\Templates\Email\_newuser.vol" />
-    <Content Include="Themes\RESTCore\Templates\Email\_OrderStatus.vol" />
-    <Content Include="Themes\RESTCore\Templates\Email\_ResetPassword.vol" />
-    <Content Include="Themes\RESTCore\Templates\Email\_tbd.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\aboutauthor\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\aboutauthor\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\addthis\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\addthis\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\blogarchive\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\blogarchive\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\blogRss\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\blogRss\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\columndivider\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\columndivider\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\content\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\content\template.vol">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\RESTCore\Widgets\core\content2Col\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\content2Col\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\facebookComments\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\facebookComments\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\featuredproducts\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\featuredproducts\template.vol">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\RESTCore\Widgets\core\horizontalrule\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\horizontalrule\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\image\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\image\template.vol">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\RESTCore\Widgets\core\imagesGallery\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\imagesGallery\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\paragraphWithHeader\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\paragraphWithHeader\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\pickles\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\pickles\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\recentposts\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\recentposts\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\taco\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\taco\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\tagcollection\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\tagcollection\template.vol" />
-    <Content Include="Themes\RESTCore\Widgets\core\tags\definition.json" />
-    <Content Include="Themes\RESTCore\Widgets\core\tags\template.vol" />
     <None Include="Tools\Theme.xsd">
       <SubType>Designer</SubType>
     </None>

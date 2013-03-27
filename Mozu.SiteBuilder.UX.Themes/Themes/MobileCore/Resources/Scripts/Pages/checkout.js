@@ -1,29 +1,50 @@
-﻿define(["jquery", "knockout", "modules/models-checkout", "ajax![method=post]/checkout/data"], function ($, ko, CheckoutModels, currentCheckoutModel) {
-    var checkoutViewModel = {};
+﻿define(["shim!vendor/bootstrap/bootstrap-affix[modules/jquery-plus=jQuery]>jQuery", "knockout", "modules/models-checkout"], function ($, ko, CheckoutModels) {
     $(document).ready(function () {
 
-        var $checkoutView = $('#mz-checkout-form');
+        var $checkoutView = $('#mz-checkout-form'),
+            checkoutData = $checkoutView.mozuData('mz-checkout'),
+            shippingMethodData = $checkoutView.mozuData('mz-shippingmethods');
 
-        if (currentCheckoutModel && $checkoutView[0]) {
+        checkoutData.availableShippingMethods = $.isArray(shippingMethodData) ? shippingMethodData : [];
 
-            checkoutViewModel = new CheckoutModels.CheckoutPage(CheckoutModels.mapFromServer(currentCheckoutModel));
+        checkoutData.paymentApiBase = $checkoutView.mozuData('mz-paymentapibase');
 
-            ko.applyBindings(checkoutViewModel, $checkoutView[0]);
+        var checkoutViewModel = new CheckoutModels.CheckoutPage(checkoutData);
 
-            // once applybindings is done, hide the loader and show the checkout view
-            $('#mz-checkout-loading').remove();
-            $checkoutView.css('display', 'none').css('visibility', 'visible').fadeIn(200);
+        // add some view-only helpers
+        checkoutViewModel.Shipment.ShippingAddress.nextButtonText = ko.computed(function () {
+            return checkoutViewModel.Shipment.stepStatus() == 'new' ? 'Next' : 'Update'
+        });
 
-            window.checkoutVM = checkoutViewModel;
+        checkoutViewModel.Shipment.nextButtonText = ko.computed(function () {
+            return checkoutViewModel.Payment.stepStatus() == 'new' ? 'Next' : 'Update'
+        });
 
-            var $reviewPanel = $('#mz-checkout-reviewpanel');
-            checkoutViewModel.orderStatus.subscribe(function (isReady) {
-                if (isReady) {
-                    setTimeout(function () { window.scrollTo(0, $reviewPanel.offset().top); }, 750);
-                }
-            });
+        ko.applyBindings(checkoutViewModel, $checkoutView[0]);
 
-        }
+        // once applybindings is done, hide the loader and show the checkout view
+        $('#mz-checkout-loading').remove();
+        $checkoutView.css('display', 'none').css('visibility', 'visible').fadeIn(200);
+
+        window.checkoutVM = checkoutViewModel;
+
+        checkoutViewModel.messages.subscribe(function (newValue) {
+            if (newValue) {
+                window.scrollTo(0, 0);
+            }
+            setTimeout(function () { affixer.options.offset = $rightcol.offset() }, 250);
+        });
+
+        checkoutViewModel.on('complete', function () {
+            window.location = "/checkout/" + checkoutViewModel.apiModel.data.Id + "/confirmation";
+        });
+
+
+        var $reviewPanel = $('#mz-checkout-reviewpanel');
+        checkoutViewModel.orderStatus.subscribe(function (isReady) {
+            if (isReady) {
+                setTimeout(function () { window.scrollTo(0, $reviewPanel.offset().top); }, 750);
+            }
+        });
     });
-    return checkoutViewModel;
 });

@@ -1,1 +1,1 @@
-define(["jquery","knockout","modules/models-cart"],function(e,t,n){var r=e("#mz-cart-form"),i=new n.Cart(r.data("cart"));window.cartVM=i,t.applyBindings(i,r[0]),r.on("blur",".mz-cart-item-quantity input",function(){setTimeout(function(){i.updateItems()},50)})});
+define(["modules/jquery-plus","knockout","modules/models-cart"],function(e,t,n){e(document).ready(function(){var r=e("#mz-cart-form"),i=new n.Cart(r.mozuData("cart"));window.cartVM=i,t.applyBindings(i,r[0]),i.on("ordercreated",function(e,t){window.location="/checkout/"+t.data.Id})})});
