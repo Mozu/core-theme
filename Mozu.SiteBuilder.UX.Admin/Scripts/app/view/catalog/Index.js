@@ -16,16 +16,17 @@ Ext.define('Taco.view.catalog.Index', {
             type: 'Taco.store.Products'
         });
 
+        var localStore = Ext.create('Ext.data.ArrayStore', {
+            fields: ['food', 'tastiness'],
+            data: [['cake', 7], ['pie', 8], ['brownies', 5], ['ice cream', 6], ['cookies', 10], ['pickles', 0]]
+        });
+
         var list = Ext.create('Taco.core.ux.grid.Panel', {
-            store: store,
+            store: localStore,
             columns: [{
                 flex: 1,
-                text: 'Name',
-                dataIndex: 'productName'
-            }, {
-                flex: 1,
-                text: 'Price',
-                dataIndex: 'price'
+                text: 'Food',
+                dataIndex: 'food'
             }]
         });
 
@@ -34,25 +35,43 @@ Ext.define('Taco.view.catalog.Index', {
         var box = Ext.create('Taco.core.ux.ComboFilter', {
             width: 675,
             margin: '20 0',
-            itemStore: store,
+            itemStore: localStore,
             filterProperties: [{
-                property: 'productCode',
-                text: 'Code',
+                property: 'tastiness',
+                text: 'Custom',
                 isDefault: false,
-                filterFn: function (item) { return (item.get('productCode') === '0001'); }
+                filterFn: function (item) {
+                    var isGood = item.get('tastiness') > 5;
+                    console.log(item, isGood); return isGood;
+                }
             }, {
-                property: 'productName',
-                text: 'Name',
+                property: 'food',
+                text: 'Food',
                 isDefault: true
-            }, {
-                property: 'price',
-                text: 'Price',
-                isDefault: false
             }]
         });
 
         var bar = Ext.create('Ext.toolbar.Toolbar', {
-            items: [box]
+            items: [box, {
+                xtype: 'tbtext',
+                text: 'click me',
+                listeners: {
+                    click: {
+                        scope: this,
+                        element: 'el',
+                        fn: function () {
+                            this.list.getStore().filter([{
+                                property: 'food',
+                                value: 'pi',
+                                filterFn: function (item) {
+                                    var isGood = item.get('tastiness') > 5;
+                                    console.log(item, isGood); return isGood;
+                                }
+                            }]);
+                        }
+                    }
+                }
+            }]
         });
 
         Ext.apply(this.body, {
@@ -62,6 +81,9 @@ Ext.define('Taco.view.catalog.Index', {
 
         this.callParent(arguments);
 
+        localStore.load();
+        this.grocery = localStore;
+        this.list = list;
         store.load({
             callback: function (records) { console.log(records); }
         });
