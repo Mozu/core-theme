@@ -144,7 +144,17 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             using (var stream = await content.ReadAsStreamAsync())
             {
                 stream.Position = 0;
-                var values = _serializer.ReadObject(stream) as List<FieldValue>;
+
+                List<FieldValue> values = new List<FieldValue>();
+                try
+                {
+                    values = _serializer.ReadObject(stream) as List<FieldValue>;
+                }
+                catch (Exception ex)
+                {
+                    //TODO: remove this try/catch when we fix the byte encoding problem
+                    System.Diagnostics.Debug.WriteLine(ex.ToString());
+                }
                 _cache[key] = values;
                 return values;
             }

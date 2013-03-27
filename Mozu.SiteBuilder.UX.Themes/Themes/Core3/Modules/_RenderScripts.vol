@@ -1,9 +1,11 @@
 ﻿
-<script src="/resources/scripts/require.js"></script><script>
+<script src="/resources/scripts/require.js"></script>
+<script>
     require.config({
         baseUrl: "/resources/scriptsbuilt",
         paths: {
             sdk: "../../sdk/min",
+            pciaas: "vendor/pci-temp",
             jquery: "http://code.jquery.com/jquery.min"
         },
         priority: ['jquery']

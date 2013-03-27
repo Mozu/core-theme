@@ -22,6 +22,7 @@
                 'shim',
                 'modules/api',
                 'modules/animatemodals',
+                'modules/jquery-plus',
                 'modules/jquery-sitemenu',
                 'modules/loading-bars',
                 'modules/login-links',
@@ -44,7 +45,8 @@
         {
             name: "pages/checkout",
             exclude: ["pages/common"],
-            insertRequire: ["pages/checkout"]
+            insertRequire: ["pages/checkout"],
+            exclude: ['pciaas']
         },
         {
             name: "pages/myaccount",

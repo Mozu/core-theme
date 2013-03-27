@@ -22,8 +22,8 @@
                 'ajax',
                 'shim',
                 'modules/api',
-                'modules/actions-processor',
                 'modules/animatemodals',
+                'modules/jquery-plus',
                 'modules/jquery-sitemenu',
                 'modules/loading-bars',
                 'modules/login-links',
@@ -32,22 +32,13 @@
                 'modules/knockout-plus',
                 'modules/tagcloud'
             ],
-            exclude: ['jquery', 'sdk'],
-        },
-        {
-            name: "pages/product",
-            exclude: ["pages/common"],
-            insertRequire: ["pages/product"]
+            exclude: ['jquery', 'sdk']
         },
         {
             name: "pages/checkout",
             exclude: ["pages/common"],
-            insertRequire: ["pages/checkout"]
-        },
-        {
-            name: "pages/myaccount",
-            exclude: ["pages/common"],
-            insertRequire: ["pages/myaccount"]
+            insertRequire: ["pages/checkout"],
+            exclude: ['pciaas']
         }
     ]
 });
