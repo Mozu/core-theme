@@ -23,7 +23,6 @@ Ext.define('Taco.core.ux.ComboFilter', {
                 fields: [
                     { name: 'property', type: 'string' },
                     { name: 'value', type: 'string' },
-                    { name: 'filterFn', type: 'auto' },
                     { name: 'text', type: 'string' },
                     { name: 'root', type: 'string' }
                 ],
@@ -47,7 +46,7 @@ Ext.define('Taco.core.ux.ComboFilter', {
      * @return {Ext.util.Filter} The instantiated filter
      * @private
      */
-    buildFilter: function (record, data) {
+    buildFilter: function (record, data, filterFn) {
         var cfg, filter;
 
         record.beginEdit();
@@ -55,20 +54,19 @@ Ext.define('Taco.core.ux.ComboFilter', {
         record.endEdit();
 
         cfg = record.getData();
-        console.log(cfg);
+        cfg.filterFn = filterFn;
         filter = Ext.create('Ext.util.Filter', cfg);
-        console.log(filter.filterFn);
 
         return filter;
     },
 
     /**
      * Applies an array of filters to the provided itemStore.
-     * @param  {Ext.util.Filter[]} records Records from the valueStore.
+     * @param  {Ext.util.Filter[]} filters An array of filter instances.
      * @private
      */
     filterItemStore: function (filters) {
-        this.itemStore.clearFilter(true);
+        this.itemStore.clearFilter(false);
         this.itemStore.filter(filters);
     },
 
@@ -133,16 +131,19 @@ Ext.define('Taco.core.ux.ComboFilter', {
 
         Ext.Array.each(menuItems, function (menuItem) {
             function handler (item) {
-                var cfg, filter;
+                var cfg, filter, filterCache;
 
                 cfg = {
                     property: item.property,
-                    filterFn: Ext.isFunction(item.filterFn) ? item.filterFn : undefined,
                     text: item.text
                 };
-                filter = me.buildFilter(record, cfg);
-
-                me.itemStore.filter(filter);
+                filter = me.buildFilter(record, cfg, item.filterFn);
+                
+                // the filter must be replaced, then the store's filters must be cleared and re-applied
+                // when we clear the store, filters are removed (not deactivated), so cache them
+                me.itemStore.filters.replace(filter);
+                filterCache = me.itemStore.filters.clone();
+                me.filterItemStore(filterCache.getRange());
                 me.applyMultiselectItemMarkup();
             }
             Ext.apply(menuItem, { handler: handler });
