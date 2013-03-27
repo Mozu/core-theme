@@ -27,6 +27,12 @@ Ext.define('Taco.view.catalog.Index', {
                 flex: 1,
                 text: 'Food',
                 dataIndex: 'food'
+            }, {
+                xtype: 'numbercolumn',
+                flex: 1,
+                text: 'Tastiness',
+                dataIndex: 'tastiness',
+                format: '0'
             }]
         });
 

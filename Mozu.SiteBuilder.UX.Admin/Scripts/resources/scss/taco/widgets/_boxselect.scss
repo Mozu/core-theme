@@ -11,10 +11,6 @@
       width: 100%;
     }
 
-    ul.#{$prefix}boxselect-list {
-      padding: 2px 8px;
-    }
-
     &.#{$prefix}form-text {
       cursor: text;
       // height: 30px !important; // TODO: remove !important hack once generic field styling is fixed
@@ -27,6 +23,8 @@
   ul.#{$prefix}boxselect-list {
     font-size: $font-size;
     line-height: $font-size;
+    padding: 1px 6px;
+    @include flexbox(row, wrap);
 
     &.#{$prefix}boxselect-singleselect {
       overflow: hidden;
@@ -35,20 +33,24 @@
   }
 
   .#{$prefix}boxselect-input {
-    display: inline-block;
+    // display: inline-block;
+    min-width: 100px;
     position: relative;
     vertical-align: top;
+    @include flexbox;
+    @include flex(1, 1, 100px);
   }
 
   .#{$prefix}boxselect-item {
     cursor: default;
-    display: inline-block;
+    // display: inline-block;
     height: 20px;
     margin: 2px 8px 2px 0px;
     padding: 0px 1px 0px 5px !important;
     position: relative;
     vertical-align: top;
     @include border-radius(2px);
+    @include flexbox;
   }
   .#{$prefix}boxselect-stacked {
     .#{$prefix}boxselect-item {

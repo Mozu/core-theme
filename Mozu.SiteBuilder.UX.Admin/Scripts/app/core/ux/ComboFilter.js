@@ -73,8 +73,8 @@ Ext.define('Taco.core.ux.ComboFilter', {
      * @param  {Ext.util.Filter[]} filters An array of filter instances.
      * @private
      */
-    filterItemStore: function (filters) {
-        this.itemStore.clearFilter(false);
+    filterItemStore: function (filters, clear) {
+        if (clear === true) this.itemStore.clearFilter(false);
         this.itemStore.filter(filters);
     },
 
@@ -104,6 +104,7 @@ Ext.define('Taco.core.ux.ComboFilter', {
             }
         }, this);
 
+        console.log(filters);
         return filters;
     },
 
@@ -151,7 +152,7 @@ Ext.define('Taco.core.ux.ComboFilter', {
                 // when we clear the store, filters are removed (not deactivated), so cache them
                 me.itemStore.filters.replace(filter);
                 filterCache = me.itemStore.filters.clone();
-                me.filterItemStore(filterCache.getRange());
+                me.filterItemStore(filterCache.getRange(), true);
                 me.applyMultiselectItemMarkup();
             }
             Ext.apply(menuItem, { handler: handler });
@@ -253,9 +254,12 @@ Ext.define('Taco.core.ux.ComboFilter', {
      */
     onValueChange: function (field, newValue, oldValue) {
         var records = this.valueStore.getRange(),
-            filters = this.getFilters(records);
+            filters = this.getFilters(records),
+            newValue = newValue || '',
+            oldValue = oldValue || '',
+            newFilters = Ext.Array.difference(newValue.split(', '), oldValue.split(', '));
 
-        this.filterItemStore(filters);
+        this.filterItemStore(filters, false);
     },
 
     /**
