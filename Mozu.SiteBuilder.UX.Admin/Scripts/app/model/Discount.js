@@ -56,6 +56,26 @@ Ext.define('Taco.model.Discount', {
         name: 'status',
         type: 'string'
     }],
+
+    getCategoryStore: function () {
+        var me = this;
+        if (me.categoryStore == null) {
+            me.categoryStore = Taco.core.data.StoreManager.getOrCreate(
+                {
+                    type: 'Taco.store.Categories',
+                    createOnly: true,
+                    id: this.id,
+                    autoLoad :true,
+                    filters: function(record) {
+                        return (me.get('categories') || []).indexOf(record.getId()) > -1;
+                    }
+                });
+
+        }
+        return me.categoryStore;
+    
+    },
+
     proxy: {
         type: 'ajaxproxy',
         api: {

@@ -3,7 +3,7 @@
 */
 Ext.define('Taco.view.discount.Form', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.core.ux.form.CurrencyField'],
+    requires: ['Taco.core.ux.form.CurrencyField', 'Taco.core.ux.action.SecondaryButton', 'Taco.view.category.Modal'],
     // requires: ['Taco.model.CouponCode', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.BoxSelect', 'Taco.store.ProductComboBox', 'Taco.core.ux.modal.Content', 'Taco.core.ux.modal.ContentWithActions', 'Taco.core.ux.form.UnitField', 'Taco.core.ux.form.CurrencyField'],
     
     title: 'Discount',
@@ -122,6 +122,46 @@ Ext.define('Taco.view.discount.Form', {
             fieldLabel: "Minimum Foster"
         });
 
+        var catStore = me.record.getCategoryStore();
+
+        // MultiSelect is the most optimal Field that uses BoundList without a trigger
+        me.categoryList = Ext.create('Taco.core.ux.form.field.MultiSelect', {
+            name: 'categoryIds',
+            width: 400,
+            store: catStore,
+            getStore: function () { return catStore; },
+            displayField: 'name',
+            valueField: 'id',
+            listConfig: {
+                disableSelection: true,
+                itemTpl: [
+                    '<span class="x-boundlist-item-content">{name}</span>',
+                    '<span class="x-boundlist-item-close"> Close</span>'
+                ],
+                listeners: {
+                    itemclick: me.onCategoryListItemClick,
+                    scope: this
+                }
+            }
+        });
+
+        me.categoriesBox = Ext.create('Taco.core.ux.form.FlexBox', {
+            items: [
+                {
+                    xtype: 'box',
+                    autoEl: 'hr'
+                },
+                {
+                    xtype: 'secondarybutton',
+                    text: 'Manage Scategories',
+                    click: me.launchCategoryModal,
+                    scope: me
+                },
+                me.categoryList
+            ]
+
+        });
+
         me.datesInput = Ext.create('Taco.core.ux.form.FlexBox', {
             width: 400,
             defaults: {
@@ -169,9 +209,7 @@ Ext.define('Taco.view.discount.Form', {
                 xtype: 'box',
                 autoEl: 'hr'
             },
-            me.typeu, 
-//            me.amountInput,
-//            me.typeInput,
+            me.typeu,
             {
                 xtype: 'box',
                 autoEl: 'hr'
@@ -181,6 +219,7 @@ Ext.define('Taco.view.discount.Form', {
                 xtype: 'box',
                 autoEl: 'hr'
             },
+            me.categoriesBox,
             me.datesInput,
             {
                 xtype: 'box',
@@ -195,8 +234,7 @@ Ext.define('Taco.view.discount.Form', {
     },
 
     /*
-        Alters the input label from percent to a dollar sign, or hides it entirely
-        if "Free Shipping" is chosen.
+        Sets the "Applies To" combobox to "Free Shipping" when appropriate.
     */
     onAmountTypeChange: function(input, value) {
         var me = this;
@@ -262,6 +300,65 @@ Ext.define('Taco.view.discount.Form', {
         {
             me.minimumAmountInput.hide();
         }
+    },
+
+    /**
+     * Opens a modal with a TreePanel.
+     * @private
+     */
+    launchCategoryModal: function () {
+        var list = this.categoryList,
+            listStore = list.getStore(),
+            // TODO: get site id.
+            treeStore = Taco.core.data.StoreManager.getCategoryTreeBySite();
+        
+        Ext.destroy(this.modal);
+
+        this.modal = Ext.create('Taco.view.category.Modal', {
+            store: treeStore,
+            preselection: listStore.getRange()
+        });
+
+        this.modal.on({
+            save: this.updateCategoryList,
+            scope: this
+        });
+    },
+
+    /**
+     * Removes a value from the list if the close icon was clicked.
+     * @private
+     */
+    onCategoryListItemClick: function (view, record, item, index, e) {
+        var closeBtn = e.getTarget('.x-boundlist-item-close', 10),
+            list = view.ownerCt,
+            value, store;
+
+        if (closeBtn) {
+            store = view.getStore();
+            value = Ext.Array.remove(list.getValue(), record.getId());
+
+            store.remove(record);
+            list.setValue(value);
+            console.log(value, list.getValue());
+
+            return false;
+        }
+    },
+
+    /**
+     * Populates the list with the selected values from the modal's TreePanel.
+     * @param  {Taco.core.ux.modal.Modal} modal The modal that fired the save event.
+     * @param  {Object} values An object with category data for the list.
+     * @private
+     */
+    updateCategoryList: function (modal, values) {
+        var list = this.getForm().findField('categoryIds'),
+            store = list.getStore();
+
+        store.remove(store.getRange());
+        store.add(values);
+        list.setValue(store.collect('id'));
     },
 
     initComponent2: function () {
