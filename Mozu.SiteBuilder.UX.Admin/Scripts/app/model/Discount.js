@@ -15,10 +15,12 @@ Ext.define('Taco.model.Discount', {
         type: 'auto'
     }, {
         name: 'products',
-        type: 'auto'
+        type: 'auto',
+        defaultValue: []
     }, {
         name: 'categories',
-        type: 'auto'
+        type: 'auto',
+        defaultValue: []
     }, {
         name: 'shippingMethods',
         type: 'auto'
@@ -59,18 +61,19 @@ Ext.define('Taco.model.Discount', {
 
     getProductStore: function() {
         var me = this;
+
         if (me.productStore == null) {
             me.productStore = Taco.core.data.StoreManager.getOrCreate(
                 {
                     type: 'Taco.store.Products',
                     createOnly: true,
-                    id: this.id,
-                    autoLoad :true,
+                    id: "prod-" + this.id,
+                    autoLoad: true,
+                    clearFilters: false,
                     filters: function(record) {
                         return (me.get('products') || []).indexOf(record.getId()) > -1;
                     }
                 });
-
         }
         return me.productStore;
     },
@@ -82,8 +85,9 @@ Ext.define('Taco.model.Discount', {
                 {
                     type: 'Taco.store.Categories',
                     createOnly: true,
-                    id: this.id,
-                    autoLoad :true,
+                    id: "cat-" + this.id,
+                    autoLoad: true,
+                    clearFilters: false,
                     filters: function(record) {
                         return (me.get('categories') || []).indexOf(record.getId()) > -1;
                     }
