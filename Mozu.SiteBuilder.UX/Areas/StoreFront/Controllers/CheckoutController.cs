@@ -15,6 +15,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Orders;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Checkout;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -45,8 +46,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             get { return _merchantId ?? (_merchantId = _orderService.GetMerchantId()); }
         }*/
 
-        public ActionResult Index(string orderId)
+        public async Task<ActionResult> Index(string orderId)
         {
+            var pc = this.SiteContext.PageContext;
+            pc.CmsContext = new CmsPageContext()
+            {
+                TemplateReq = new DocumentRequest()
+                {
+                    Path = "checkout"
+                }
+
+            };
             //var id = OrderId;
             var id = orderId;
             if (string.IsNullOrWhiteSpace(id)) return RedirectToAction("Index", "Cart");
@@ -61,6 +71,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 rates = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
             }
            
+            await this.AsyncInitData();
+
             return View("checkout", new { order = model, paymentApiBase = _pciSettingsProvider.GetPaymentApiBase(), availableCountries = _orderService.GetShippableCountries().Select(x => new { code = x.Key, name = x.Value } as object).ToList(), availableShippingMethods = rates });
         }
 

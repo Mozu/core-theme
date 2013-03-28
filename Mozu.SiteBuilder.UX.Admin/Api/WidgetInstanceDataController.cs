@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var docRequests = widgets.Select(x => x.Source).Distinct(DocumentRequestComparer.Default).ToList();
             foreach (var req in docRequests)
             {
-                if (!cmsHelper.ProcessDocumentRequest(req, out task))
+                if (!cmsHelper.ProcessDocumentRequest(req, null, out task))
                 {
                     continue;
                 }

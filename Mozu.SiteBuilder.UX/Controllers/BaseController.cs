@@ -19,9 +19,11 @@ namespace Mozu.SiteBuilder.UX.Controllers
 {
     public abstract class BaseController : Controller
     {
-        public BaseController()//( IComponentContext container)
+        private readonly ILifetimeScope _lifetimeScope;
+
+        public BaseController( )//( IComponentContext container)
         {
-            
+            _lifetimeScope = DependencyResolver.Current.GetService<ILifetimeScope>();
             //SiteContext = container.Resolve<ISiteBuilderContext>();
         }
 
@@ -56,6 +58,10 @@ namespace Mozu.SiteBuilder.UX.Controllers
             }
             return base.BeginExecute(requestContext, callback, state);
         }
+     
+
+ 
+
         protected override void Execute(RequestContext requestContext)
         {
            // var isEditMode = ;
@@ -92,7 +98,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
             {
                 if (_cmsService == null)
                 {
-                    _cmsService = DependencyResolver.Current.GetService<ICmsServiceWrapper>();
+                    _cmsService = _lifetimeScope.Resolve<ICmsServiceWrapper>();
                 }
                 return _cmsService;
             }
@@ -136,7 +142,11 @@ namespace Mozu.SiteBuilder.UX.Controllers
 
         protected override void OnResultExecuting(ResultExecutingContext filterContext)
         {
-
+            if (this.SiteContext.PageContext != null && this.SiteContext.PageContext.CmsContext != null && !this.SiteContext.PageContext.CmsContext.Initialized)
+            {
+             //   var task = this.AsyncInitData();
+              //  task.Wait();
+            }
             var od = this.DjangoTemplateTagArguments;
             if (od != null)
             {
