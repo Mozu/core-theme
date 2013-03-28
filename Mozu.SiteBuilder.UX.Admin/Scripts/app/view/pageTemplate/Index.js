@@ -42,10 +42,14 @@ Ext.define('Taco.view.pageTemplate.Index', {
                  
              }]
     },
-    onItemClick: function (view, record, elm, index, e) {
-        if (e.target.className === 'taco-launch-editor') {
-            e.preventDefault();
-            Taco.core.StateManager.attemptNavigate('site/templates/' + record.get('id'));
-        }
+    launchLoadedEditor: function (record, options) {
+
+        Ext.defer(function () {
+            Taco.core.StateManager.attemptNavigate('site/templates/' + record.get('id') );
+        }, 1, this);
+        return;
+
+
     }
+    
 });
