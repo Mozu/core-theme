@@ -35,7 +35,7 @@ Ext.define('Taco.view.site.Toolbox', {
                 text: 'Widgets',
                 click: function (action) {
                     var active = this.tabContainer.getEl().down('.active');
-                    this.cardPanel.getLayout().setActiveItem(0);
+                    this.cardPanel.getLayout().setActiveItem(1);
                     if (active) {
                         active.removeCls('active');
                     }
