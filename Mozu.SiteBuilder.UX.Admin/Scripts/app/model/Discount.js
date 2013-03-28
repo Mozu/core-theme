@@ -70,6 +70,7 @@ Ext.define('Taco.model.Discount', {
                     id: "prod-" + this.id,
                     autoLoad: true,
                     clearFilters: false,
+                    remoteFilter: false,
                     filters: function(record) {
                         return (me.get('products') || []).indexOf(record.getId()) > -1;
                     }
@@ -88,6 +89,7 @@ Ext.define('Taco.model.Discount', {
                     id: "cat-" + this.id,
                     autoLoad: true,
                     clearFilters: false,
+                    remoteFilter: false,
                     filters: function(record) {
                         return (me.get('categories') || []).indexOf(record.getId()) > -1;
                     }
