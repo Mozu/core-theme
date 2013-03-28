@@ -4,17 +4,48 @@
 Ext.define('Taco.view.site.Toolbox', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.toolbox',
-    cls: Taco.baseCSSPrefix + 'toolbox',
+    cls: Taco.baseCSSPrefix + 'toolbox ',
     autoRender: false,
-    title: 'Toolbox',
+    header: false,
     closeAction: 'hide',
     resizable: { handles: 'w s' },
     shadow: false,
     layout: 'fit',
-    width: 300,
-    height: 500,
+    width: 600,
     requires:['Taco.view.site.navigation.Tree','Taco.view.site.navigation.WidgetNav','Taco.view.site.navigation.Themes'],
     initComponent: function () {
+
+        this.tabContainer = Ext.create('Ext.container.Container', {
+            cls: Taco.baseCSSPrefix + 'tabs',
+            items: [{
+                xtype: 'action',
+                text: 'Pages',
+                cls: 'active',
+                click: function (action) {
+                    var active = this.tabContainer.getEl().down('.active');
+                    this.cardPanel.getLayout().setActiveItem(0);
+                    if (active) {
+                        active.removeCls('active');
+                    }
+                    action.addCls('active');
+                },
+                scope: this
+            }, {
+                xtype: 'action',
+                text: 'Widgets',
+                click: function (action) {
+                    var active = this.tabContainer.getEl().down('.active');
+                    this.cardPanel.getLayout().setActiveItem(0);
+                    if (active) {
+                        active.removeCls('active');
+                    }
+                    action.addCls('active');
+                },
+                scope: this
+            }]
+        });
+
+        this.tbar = [this.tabContainer];
 
         this.cardPanel = Ext.create('Ext.panel.Panel', {
             cls: Taco.baseCSSPrefix + 'windowcardpanel',
@@ -34,7 +65,6 @@ Ext.define('Taco.view.site.Toolbox', {
         });
 
         this.menu = Ext.create('Ext.panel.Table', {
-            cls: Taco.baseCSSPrefix + 'card-flex ' + Taco.baseCSSPrefix + 'card-flex-active',
             store: this.cardStore,
             viewType: 'tableview',
             rowLines: false,
@@ -66,18 +96,8 @@ Ext.define('Taco.view.site.Toolbox', {
         });
 
         this.navigation = Ext.create('Taco.view.site.navigation.Tree', {
+            cls: Taco.baseCSSPrefix + 'card-flex ' + Taco.baseCSSPrefix + 'card-flex-active',
             cardPanel: this.cardPanel,
-            tbar: [{
-                xtype: 'action',
-                text: 'Back',
-                click: {
-                     fn: function () { this.up('#cardPanel').getLayout().setActiveItem(0); }
-                }
-                
-            }, '->', {
-                xtype: 'tbtext',
-                text: 'Pages'
-            }],
             listeners: {
                 hide: this.ToggleCardFlexActive,
                 show: this.ToggleCardFlexActive,
@@ -126,7 +146,7 @@ Ext.define('Taco.view.site.Toolbox', {
 
         this.callParent(arguments);
 
-        this.cardPanel.add([this.menu, this.navigation, this.widgets, this.themes]);
+        this.cardPanel.add([this.navigation, this.widgets, this.themes]);
     },
 
     NavigateToMenu:function() {

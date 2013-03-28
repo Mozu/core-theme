@@ -2,6 +2,38 @@
 @mixin taco-sites {
     .#{$vprefix}toolbox {
         
+        .#{$prefix}toolbar-default {
+            background-color: white;
+            border: none;
+
+            .#{$vprefix}tabs {
+                padding: 0.8rem;
+                a {
+                    //margin: 0.3rem 0;
+                    padding: px-to-rem(5) px-to-rem(10);
+                    border: 0.1rem solid $color-action-outline;
+                    border-right-width: 0;
+                    color: $color-action-foreground;
+                    background: $color-action-background;
+                    font-size: 1.2rem;
+
+                    &:first-child {
+                        border-radius: 0.5rem 0 0 0.5rem;
+                    }
+
+                    &:last-child {
+                        border-radius: 0 0.5rem 0.5rem 0;
+                        border-right-width: 0.1rem;
+                    }
+
+                    &.active {
+                        background: $color-action-background-depressed;
+                        @include inner-shadow;
+                    }
+                }
+            }
+        }
+
         .#{$vprefix}treelist {
 
             .#{$vprefix}shit {
