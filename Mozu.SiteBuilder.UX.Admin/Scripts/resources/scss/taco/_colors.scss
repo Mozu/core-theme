@@ -67,6 +67,7 @@ $color-action-primary-outline: adjust-lightness($color-action-primary-background
 $color-action-background: $color-neutral-light;
 $color-action-background-hover: adjust-lightness($color-action-background, 2);
 $color-action-background-active: adjust-lightness($color-action-background, -3);
+$color-action-background-depressed: adjust-lightness($color-action-background, -10);
 $color-action-background-disabled: $color-neutral-light;
 $color-action-foreground: $color-neutral-darkest;
 $color-action-outline: $color-neutral-dark;
