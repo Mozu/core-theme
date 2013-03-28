@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.RequiresCoupon, op => op.MapFrom(dc => dc.RequiresCoupon))
                 .ForMember(x => x.ShippingMethods, op => op.MapFrom(dc => (from sm in dc.Target.ShippingMethods where sm.Code != null select sm.Code).ToArray()))
                 .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
-                .ForMember(x => x.TargetType, op => op.MapFrom(dc => ((bool)(dc.Target.IncludeAllProducts) ? "AllProducts" : (dc.Target.Type == "FreeShipping" || dc.Target.Type == "Product") ? "Product" : "Order")))
+                .ForMember(x => x.TargetType, op => op.ResolveUsing(dc => MapToTargetType(dc.Target)))
                 //.ForMember(x => x.StartDate, op => op.MapFrom(x => !x.StartDate.HasValue ? null :  x.StartDate.Value.ToString("ddd MMM dd yyyy H:mm:ss \"GMT\"K (CDT)")))
                 //.ForMember(x => x.EndDate, op => op.MapFrom(x => !x.ExpirationDate.HasValue ? null : x.ExpirationDate.Value.ToString("ddd MMM dd yyyy H:mm:ss \"GMT\"K (CDT)")));
                 .ForMember(x => x.StartDate, op => op.MapFrom(dc => dc.StartDate))
@@ -65,6 +65,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //.ForMember(x => x.UpdateDate, op => op.Ignore())
                 ;
 
+        }
+
+        private string MapToTargetType(DC.DiscountTarget t)
+        {
+            if (t.IncludeAllProducts == true)
+                return "AllProducts";
+            if (t.Type.Equals("FreeShipping", StringComparison.InvariantCultureIgnoreCase))
+                return "FreeShipping";
+            if (t.Type.Equals("Product", StringComparison.InvariantCultureIgnoreCase))
+                return "Product";
+            else
+                return "Order";
         }
 
         private DC.DiscountTarget MapToDiscountTarget(Discount d)
