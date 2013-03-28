@@ -3,7 +3,7 @@
 */
 Ext.define('Taco.view.discount.Form', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.core.ux.form.CurrencyField', 'Taco.core.ux.action.SecondaryButton', 'Taco.view.category.Modal'],
+    requires: ['Taco.core.ux.form.CurrencyField', 'Taco.core.ux.action.SecondaryButton', 'Taco.view.category.Modal', 'Taco.view.product.Modal'],
     // requires: ['Taco.model.CouponCode', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.BoxSelect', 'Taco.store.ProductComboBox', 'Taco.core.ux.modal.Content', 'Taco.core.ux.modal.ContentWithActions', 'Taco.core.ux.form.UnitField', 'Taco.core.ux.form.CurrencyField'],
     
     title: 'Discount',
@@ -157,9 +157,55 @@ Ext.define('Taco.view.discount.Form', {
                     click: me.launchCategoryModal,
                     scope: me
                 },
-                me.categoryList
+                me.categoryList,
+                {
+                    xtype: 'box',
+                    autoEl: 'hr'
+                },
             ]
+        });
 
+        var productStore = me.record.getProductStore();
+
+        // MultiSelect is the most optimal Field that uses BoundList without a trigger
+        me.productList = Ext.create('Taco.core.ux.form.field.MultiSelect', {
+            name: 'productIds',
+            width: 400,
+            store: productStore,
+            getStore: function () { return productStore; },
+            displayField: 'name',
+            valueField: 'id',
+            listConfig: {
+                disableSelection: true,
+                itemTpl: [
+                    '<span class="x-boundlist-item-content">{name}</span>',
+                    '<span class="x-boundlist-item-close"> Close</span>'
+                ],
+                listeners: {
+                    itemclick: me.onCategoryListItemClick,
+                    scope: this
+                }
+            }
+        });
+
+        me.productsBox = Ext.create('Taco.core.ux.form.FlexBox', {
+            items: [
+                {
+                    xtype: 'box',
+                    autoEl: 'hr'
+                },
+                {
+                    xtype: 'secondarybutton',
+                    text: 'Manage Products',
+                    click: me.launchProductModal,
+                    scope: me
+                },
+                me.productList,
+                {
+                    xtype: 'box',
+                    autoEl: 'hr'
+                },
+            ]
         });
 
         me.datesInput = Ext.create('Taco.core.ux.form.FlexBox', {
@@ -215,11 +261,8 @@ Ext.define('Taco.view.discount.Form', {
                 autoEl: 'hr'
             },
             me.appliesu,
-            {
-                xtype: 'box',
-                autoEl: 'hr'
-            },
             me.categoriesBox,
+            me.productsBox,
             me.datesInput,
             {
                 xtype: 'box',
@@ -309,13 +352,35 @@ Ext.define('Taco.view.discount.Form', {
     launchCategoryModal: function () {
         var list = this.categoryList,
             listStore = list.getStore(),
-            // TODO: get site id.
             treeStore = Taco.core.data.StoreManager.getCategoryTreeBySite();
         
         Ext.destroy(this.modal);
 
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore,
+            preselection: listStore.getRange()
+        });
+
+        this.modal.on({
+            save: this.updateCategoryList,
+            scope: this
+        });
+    },
+
+    /**
+     * Opens a modal with a list of products.
+     * @private
+     */
+    launchProductModal: function () {
+        var list = this.productList,
+            listStore = list.getStore(),
+            gridStore = Taco.core.data.StoreManager.getOrCreate( { type:'Taco.store.Products',  clearFilters: true, clearSort: true, autoLoad: true })
+        ;
+        
+        Ext.destroy(this.modal);
+
+        this.modal = Ext.create('Taco.view.product.Modal', {
+            store: gridStore,
             preselection: listStore.getRange()
         });
 
