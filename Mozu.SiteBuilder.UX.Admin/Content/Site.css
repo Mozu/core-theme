@@ -4,8 +4,8 @@ html {
 body
 {
     font: 12px MyriadWebProRegular, Helvetica, Arial, Verdana, sans-serif;
-    color: #FFF;
-    background-color: #666;
+    color: #252525;
+    background-color: #DFDFDF;
     margin:0; 
     padding:0; 
     height:100%; /* this is the key! */ 
@@ -13,15 +13,15 @@ body
 }
 
 a {
-    color: #FFF;
+    color: #d2463c;
 }
 a:hover {
-    color: #EEE;
+    color: #d2463c;
 }
 
 a.nextgen {
     /*color: #33BFCB; /* Actual nextgen anchor color */
-    color: #4CC2CC; /* Lightened for visibility against a gray background */
+    color: #d2463c; /* Lightened for visibility against a gray background */
     text-decoration: none;
 }
 a.nextgen:hover {
@@ -34,7 +34,8 @@ input[type=text], input[type=password], input[type=email] {
 
 
 #mozu-header {
-    background: #666 url("../../admin/Scripts/resources/images/legacy/fabric-2.png") repeat;
+    border-top: 5px solid #d2463c;
+    background: #252525;
     padding: 2pc 0;
     text-align: center;
 }
@@ -50,11 +51,16 @@ input[type=text], input[type=password], input[type=email] {
     margin:auto;
     padding:20px;
     width:450px;
+    
     /*border-radius: 10px; 
     -moz-border-radius: 10px; 
     -webkit-border-radius: 10px; 
     border: 2px solid #17083B;
     background-color:#E8E8E8";*/
+}
+
+.containerWrapper {
+    background: #FFF;
 }
 
 .actionContainer {
