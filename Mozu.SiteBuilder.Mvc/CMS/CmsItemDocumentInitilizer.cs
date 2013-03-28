@@ -22,19 +22,19 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             _cmsServiceWrapper = cmsServiceWrapper;
         }
 
-        public bool ProcessDocumentRequest(DocumentRequest request, out Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> task)
+        public bool ProcessDocumentRequest(DocumentRequest request, string defaultCollection  , out Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> task)
         {
             task = null;
             if (request != null)
             {
                 if (request.Id != null)
                 {
-                    task = _cmsServiceWrapper.Get(request.Collection, request.Id);
+                    task = _cmsServiceWrapper.Get((request.Collection ?? defaultCollection), request.Id);
 
                 }
                 if (request.Path != null)
                 {
-                    task = _cmsServiceWrapper.GetByPath(request.Collection, request.Path);
+                    task = _cmsServiceWrapper.GetByPath(request.Collection ?? defaultCollection, request.Path);
                 }
             }
             return task != null;
@@ -47,19 +47,20 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 return false;
             }
+            
             Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> pageTask = null;
             Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> templateTask = null;
             Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> siteTemplateTask = null;
             var tasks = new List<Task<ServiceClientResponse<Document>>>();
-            if (cmsPageContext.Page == null && ProcessDocumentRequest(cmsPageContext.PageReq, out pageTask))
+            if (cmsPageContext.Page == null && ProcessDocumentRequest(cmsPageContext.PageReq,"pages", out pageTask))
             {
                 tasks.Add(pageTask);
             }
-            if (cmsPageContext.SiteTemplate == null && ProcessDocumentRequest(cmsPageContext.SiteTemplateReq, out siteTemplateTask))
+            if (cmsPageContext.SiteTemplate == null && ProcessDocumentRequest(cmsPageContext.SiteTemplateReq, "templates",out siteTemplateTask))
             {
                 tasks.Add(siteTemplateTask);
             }
-            if (cmsPageContext.Template == null && ProcessDocumentRequest(cmsPageContext.TemplateReq, out templateTask))
+            if (cmsPageContext.Template == null && ProcessDocumentRequest(cmsPageContext.TemplateReq , "templates", out templateTask))
             {
                 tasks.Add(templateTask);
             }

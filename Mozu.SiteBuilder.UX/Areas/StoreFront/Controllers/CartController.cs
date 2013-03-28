@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
@@ -9,6 +10,7 @@ using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using VMCart = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.Cart;
 using CartItem = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.CartItem;
 using VM=Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
@@ -38,10 +40,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _cookieProvider = cookieProvider;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
+            var pc = this.SiteContext.PageContext;
+            pc.CmsContext = new CmsPageContext()
+            {
+                TemplateReq = new DocumentRequest()
+                {
+                    Path = "cart"
+                }
 
+            };
+            
+            var cart = (await _cartClient.GetOrCreateCart() ).ReadAsAsync().Result;
+
+          
+            await this.AsyncInitData();
             return View("cart", cart); //Mapper.Map<VMCart>(cart));
         }
 

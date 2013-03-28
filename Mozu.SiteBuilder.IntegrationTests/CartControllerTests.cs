@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
 
             _cartWebApiClient.With(x => x.GetOrCreateCart(), entity);
 
-            var result = controller.Index() as ViewResult;
+            var result = controller.Index().Result as ViewResult;
             var cart = result.Model as UX.Models.StoreFront.Cart.Cart;
 
             Assert.That(cart, Is.Not.Null);

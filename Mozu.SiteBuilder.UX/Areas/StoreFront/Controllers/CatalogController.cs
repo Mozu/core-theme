@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Web.Routing;
 using System.Threading.Tasks;
 using Mozu.SiteBuilder.UX.Models;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using IProductWebApiClient = Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient ;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.ProductRuntime.Contracts.Clients;
@@ -36,9 +37,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             options.MaxSize = int.MaxValue;
         }
 
-        public ActionResult ProductDetail(string productCode)
+        public async Task<ActionResult> ProductDetail(string productCode)
         {
-            var res = _productClient.GetProduct(productCode, null, null, _ctx.IsEditMode).Result;
+            var res = await _productClient.GetProduct(productCode, null, null, _ctx.IsEditMode);
             if ( !res.ResponseMessage.IsSuccessStatusCode )
             {
                 var x = res.ReadException().UnwrapAgg();
@@ -62,6 +63,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var product = Mapper.Map<Models.StoreFront.Catalog.Product>(prod);
             SiteContext.PageContext.PageType = "product";
             SiteContext.PageContext.ProductCode = productCode;
+
+
+            SiteContext.PageContext.CmsContext = new CmsPageContext()
+            {
+                TemplateReq = new DocumentRequest()
+                {
+                    Path = "product"
+                }
+
+            };
+
+
+            await this.AsyncInitData();
 
             //SiteContext.PageContext.WidgetCreationTags.Add ("product-" + productCode);
             //SiteContext.PageContext.WidgetQuery.Add ("product");
@@ -136,7 +150,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-        public ActionResult Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null)
+        public async Task<ActionResult> Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null)
         {
             _ctx.PageContext.PageType = "category";
             _ctx.PageContext.CategoryId = categoryId.ToString();
@@ -151,8 +165,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return Redirect("/store");
             }
+
+            SiteContext.PageContext.CmsContext = new CmsPageContext()
+            {
+                TemplateReq = new DocumentRequest()
+                {
+                    Path = "category"
+                }
+
+            };
             cat.ChildrenCategories = catList.Where (x => x.ParentCategoryId.GetValueOrDefault (-1) == categoryId).ToList();
 
+            await this.AsyncInitData(); 
             return View(cat);
           
             //.Result.ReadAsSync();
