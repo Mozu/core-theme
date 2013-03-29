@@ -114,6 +114,7 @@
             store: this.attributeStore,
             width: this.containerWidth,
             displayField: 'name',
+            height:325,
             valueField: 'id',
             value: attribute ? attribute.getId() : null,
             maxSelections: 1,
