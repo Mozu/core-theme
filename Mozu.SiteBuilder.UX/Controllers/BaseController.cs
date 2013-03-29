@@ -19,16 +19,22 @@ namespace Mozu.SiteBuilder.UX.Controllers
 {
     public abstract class BaseController : Controller
     {
-        private readonly ILifetimeScope _lifetimeScope;
+        private ILifetimeScope _lifetimeScope;
 
-        public BaseController( )//( IComponentContext container)
+        public BaseController() //( IComponentContext container)
         {
-            _lifetimeScope = DependencyResolver.Current.GetService<ILifetimeScope>();
-            //SiteContext = container.Resolve<ISiteBuilderContext>();
+            LifetimeScope = DependencyResolver.Current.GetService<ILifetimeScope>();
+           
         }
 
 
-        //public IComponentContext ServiceLocator
+        public ILifetimeScope LifetimeScope
+        {
+            get { return _lifetimeScope; }
+            set { _lifetimeScope = value; }
+        }
+        
+    //public IComponentContext ServiceLocator
         //{
         //    get;
         //    set;
@@ -81,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
             {
                 if (_sc == null)
                 {
-                    _sc = DependencyResolver.Current.GetService<ISiteBuilderContext>();
+                    _sc = LifetimeScope.Resolve<ISiteBuilderContext>();
                 }
                 return _sc;
             }
@@ -98,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
             {
                 if (_cmsService == null)
                 {
-                    _cmsService = _lifetimeScope.Resolve<ICmsServiceWrapper>();
+                    _cmsService = LifetimeScope.Resolve<ICmsServiceWrapper>();
                 }
                 return _cmsService;
             }
