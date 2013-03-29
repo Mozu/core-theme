@@ -49,7 +49,9 @@ Ext.define('Taco.core.data.StoreManager', {
         }
         if (config.contextLevel && !contextSuffix) {
 
-            if (config.contextLevel == 'c') {
+            if (config.contextLevel == 'sc') {
+                ctxLvl = '-sc=' + Taco.app.context.getSiteId() + ';' + Taco.app.context.getSiteGroupId();
+            } else if (config.contextLevel == 'c') {
                 ctxLvl = '-c=' + Taco.app.context.getSiteGroupId();
             } else if (config.contextLevel == 's') {
                 ctxLvl = '-s=' + Taco.app.context.getSiteId();
