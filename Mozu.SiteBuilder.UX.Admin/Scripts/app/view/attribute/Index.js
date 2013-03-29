@@ -21,7 +21,12 @@ Ext.define('Taco.view.attribute.Index', {
             text: 'Name',
             flex: 1,
             minWidth: 120
-        }, {
+        },
+            {
+                dataIndex: 'id',
+                text: 'att id',
+                minWidth: 200
+            }, {
             dataIndex: 'inputType',
             text: 'Input Type',
             width: 130

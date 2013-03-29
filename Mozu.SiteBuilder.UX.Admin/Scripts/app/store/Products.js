@@ -12,7 +12,7 @@
         remoteFilter: true,
         storeManagerConfig: {
             clearFilters: true,
-            contextLevel: 'c',
+            contextLevel: 'sc',
             clearSort: true,
             autoLoad: true
         }
