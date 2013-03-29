@@ -64,10 +64,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? pageSize = pagingParams.pageSize;
             int? startIndex = pagingParams.startIndex;
 
-            var result = await _documentClient.GetDrafts(pageSize: 200);
+            var res = (await _documentClient.GetDrafts(pageSize: 200)).ReadAsSync();
             
-            var res = result.ReadAsAsync().Result;
-
             List<DocumentDraft> items = Mapper.Map<List<DocumentDraft>>(res.Items);
 
             return List2(items, (int)res.TotalCount);
@@ -132,7 +130,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             args = args ?? new PublishArgs();
 
             // TODO: The service does not currently support "null", so we pass HACK instead.
-            string documentListName = GetDocumentListNameFromDocType(args.DocType) ;
+            string documentListName = GetDocumentListNameFromDocType(args.DocType);
 
             // TODO: The all-knowing Thom has said this method is not sufficient.
             // Since we'd have to get each page, then group by document list name and make N calls to publish
@@ -146,10 +144,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             do
             {
 
-                var getListResult = await _documentClient.GetDrafts(documentListNames: documentListName, pageSize: pageSize, startIndex: startIndex);// /*responseGroups: */ null, pageSize, startIndex);
+                var docs = (await _documentClient.GetDrafts(documentListNames: documentListName, pageSize: pageSize, startIndex: startIndex)).ReadAsSync();
 
-                var docs = getListResult.ReadAsAsync().Result;
-               
                 totalCount = (int)docs.TotalCount;
 
                 var documentListGroups = docs.Items.GroupBy(doc => doc.DocumentListName);
@@ -234,9 +230,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             switch ((type ?? "").ToLower())
             {
                 case "page":
-                    return "Pages";
+                    return "pages";
                 case "template":
-                    return "Templates";
+                    return "templates";
                 default:
                     return null;
             }
