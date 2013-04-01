@@ -132,6 +132,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Min, opt => opt.ResolveUsing(new AttributeValidationMinResolver()))
                 .ForMember(x => x.Max, opt => opt.ResolveUsing(new AttributeValidationMaxResolver()))
                 ;
+
+            Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeVocabularyValue>();
+            Mapper.CreateMap<AttributeVocabularyValue, DC.AttributeVocabularyValue>();
+
+            Mapper.CreateMap<AttributeVocabularyValueLocalizedContent, DC.AttributeVocabularyValueLocalizedContent>();
+            Mapper.CreateMap<DC.AttributeVocabularyValueLocalizedContent, AttributeVocabularyValueLocalizedContent>();
+
             #endregion
         }
 
