@@ -58,6 +58,235 @@ window.console = window.console || {
     }
 };
 
+var aprilFools = (function () {
+    var times = 0,
+        flickers = [{
+            '-webkit-transform': 'skewX(1deg)',
+            '-webkit-transform-origin': 'center',
+            '-webkit-filter': 'none',
+            'transition': '0.075s'
+        },
+        {
+            '-webkit-transform': 'skewX(-2.5deg)',
+            '-webkit-transform-origin': 'top',
+            '-webkit-filter': 'invert(75%) blur(5px)'
+        },
+        {
+            'background-image': 'http://fc01.deviantart.net/fs70/f/2011/172/9/8/tv_static_by_tbh_1138-d3jmbjq.gif',
+            '-webkit-transform': 'skewX(2.5deg)',
+            '-webkit-transform-origin': 'center'
+        },
+        {
+            '-webkit-transform': 'skewX(-0.5deg)',
+            '-webkit-filter': 'hue-rotate(100deg) blur(2px) saturate(7.5)'
+        },
+        {
+            '-webkit-transform': 'skewX(1.5deg) rotate(2deg)',
+            '-webkit-filter': 'hue-rotate(30deg) brightness(4.5) contrast(100%)',
+            'background-image': 'none'
+        },
+        {
+            '-webkit-transform': 'skewX(-1.5deg) rotate(2deg)',
+            '-webkit-filter': 'hue-rotate(70deg) brightness(7.5) contrast(100%)',
+            'background-image': 'none'
+        },
+        {
+            '-webkit-transform': 'skewX(1deg)',
+            '-webkit-filter': 'hue-rotate(174deg) saturate(3) sepia(5)'
+        }],
+        body,
+        flickerTimeout,
+        $knobContainer,
+        $appContainer,
+        numClicks = 0,
+        reBase = "\\([^\\)]+\\)";
+
+    Ext.Loader.loadScript({
+        url: '//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js',
+        onLoad: function () {
+            Ext.Loader.loadScript('https://raw.github.com/aterrien/jQuery-Knob/master/js/jquery.knob.js');
+        }
+    });
+
+    function flicker() {
+        body.setStyle(flickers[Math.floor(Math.random()*4)]);
+        flickerTimeout = setTimeout(flicker, 20 + Math.floor(Math.random()*200));
+    }
+
+    function addKnob(name, propName, coefficient, unit, min) {
+        var $inp = $('<input/>')
+        .attr({
+            'data-width': '40',
+            'data-min': '0',
+            'data-max': '100',
+            'data-skin': 'tron',
+            'data-fgColor': '#d2463c',
+            'data-thickness': '.6',
+            'data-angleArc': '120',
+            'data-angleOffset': '300',
+            'data-displayInput': 'false'
+        });
+        var $labelCont = $('<div/>')
+            .css({
+                float: 'left',
+                'text-align': 'center',
+                'margin-right': 20
+            })
+            .append('<label style="color: white; display: block; font-size: 9pt; line-height: 11pt">' + name + '</label>')
+                    .append($inp)
+
+        $labelCont.appendTo($knobContainer);
+
+        if (typeof propName === "string") {
+            var re = new RegExp(propName + reBase);
+        }
+        $inp.knob({
+            change: Ext.Function.createThrottled(typeof propName === "function" ? propName : function (val) {
+                val = min === undefined ? val * coefficient : Math.max(val * coefficient, min);
+                $appContainer.css('-webkit-filter', $appContainer.css('-webkit-filter').replace(re, propName + '(' + val + unit + ')'));
+            }, 50)
+        });
+    }
+
+    function showKnobs() {
+
+        var $body = $('body');
+
+        $appContainer = $body.css('-webkit-filter','blur(0px) hue-rotate(0deg) brightness(1) invert(0)');
+
+        $knobContainer = $('<div/>').css({
+            position: 'absolute',
+            left: 180,
+            top: 13
+        })
+        .appendTo('body');
+
+        var blurRe = new RegExp("blur" + reBase);
+        addKnob('FOCUS', 'blur', .08, 'px');
+        addKnob('HUE', 'hue-rotate', 3, 'deg');
+        addKnob('BRIGHT', 'brightness', .04, '', 1);
+        addKnob('POLARITY', 'invert', 1, '%');
+        addKnob('SKEW', function (val) {
+            $appContainer.css({
+                '-webkit-transform': 'skewX(' + (val * 0.1) + 'deg)',
+                '-webkit-transform-origin': 'top'
+            });
+        });
+        var lastGoat = 0;
+        addKnob('GOAT', function (val) {
+            if (val < 10) return $('.goat').remove();
+            if (val % 10 == 0) {
+                if (val > lastGoat) {
+                    placeGoat();
+                } else {
+                    $('.goat').last().remove();
+                }
+                lastGoat = val;
+            }
+        });
+                    
+    }
+
+    var allGoats = [
+        'http://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hausziege_04.jpg/512px-Hausziege_04.jpg',
+        'http://www.kayfabenews.com/wp-content/uploads/2013/01/goat.jpg',
+        'http://stringvisions.ovationpress.com/wp-content/uploads/2011/11/goat2a.bmp',
+        'http://www.dreamstime.com/young-pygmy-goat-thumb5205749.jpg'
+    ]
+    function provideGoat() {
+        return allGoats[Math.floor(Math.random() * allGoats.length)];
+    }
+    function placeGoat() {
+            var div = document.createElement('div');
+            div.className = "goat";
+            div.style.position = 'fixed';
+	
+            var numType = 'px';
+            var heightRandom = Math.random()*.75;
+            var windowHeight = 768;
+            var windowWidth = 1024;
+            var height = 0;
+            var width = 0;
+            var de = document.documentElement;
+            if (typeof(window.innerHeight) == 'number') {
+                windowHeight = window.innerHeight;
+                windowWidth = window.innerWidth;
+            } else if(de && de.clientHeight) {
+                windowHeight = de.clientHeight;
+                windowWidth = de.clientWidth;
+            } else {
+                numType = '%';
+                height = Math.round( height*100 )+'%';
+            }
+	
+            div.style.zIndex = 10;
+            div.style.outline = 0;
+	
+                if( numType=='px' ) div.style.top = Math.round( windowHeight*heightRandom ) + numType;
+                else div.style.top = height;
+                div.style.left = Math.round( Math.random()*90 ) + '%';
+	
+            var img = document.createElement('img');
+            img.setAttribute('src',provideGoat());
+            var ease = "all .1s linear";
+            //div.style['-webkit-transition'] = ease;
+            //div.style.webkitTransition = ease;
+            div.style.WebkitTransition = ease;
+            div.style.WebkitTransform = "rotate(1deg) scale(1.01,1.01)";
+            //div.style.MozTransition = "all .1s linear";
+            div.style.transition = "all .1s linear";
+            div.onmouseover = function() {
+                var size = 1+Math.round(Math.random()*10)/100;
+                var angle = Math.round(Math.random()*20-10);
+                var result = "rotate("+angle+"deg) scale("+size+","+size+")";
+                this.style.transform = result;
+                //this.style['-webkit-transform'] = result;
+                //this.style.webkitTransform = result;
+                this.style.WebkitTransform = result;
+                //this.style.MozTransform = result;
+                //alert(this + ' | ' + result);
+            }
+            div.onmouseout = function() {
+                var size = .9+Math.round(Math.random()*10)/100;
+                var angle = Math.round(Math.random()*6-3);
+                var result = "rotate("+angle+"deg) scale("+size+","+size+")";
+                this.style.transform = result;	
+                //this.style['-webkit-transform'] = result;
+                //this.style.webkitTransform = result;
+                this.style.WebkitTransform = result;
+                //this.style.MozTransform = result;
+            }
+            var body = document.getElementsByTagName('body')[0];
+            body.appendChild(div);
+            div.appendChild(img);	
+
+        }
+    
+
+    function listenForClicks() {
+        body.on('click', function () {
+            if (++numClicks === 2) {
+                clearTimeout(flickerTimeout);
+                body.setStyle({
+                    'background-image': 'none',
+                    '-webkit-transform': 'none',
+                    '-webkit-filter': 'none',
+                    'transition': 'none'
+                });
+                showKnobs();
+            }
+        });
+    }
+
+    return function (b) {
+        if (b) body = b;
+        listenForClicks();
+        flicker();
+    };
+        
+
+}());
+
 Ext.application({
     name: 'Taco',
     autoCreateViewport: false,
@@ -484,6 +713,9 @@ Ext.application({
         me.viewPort = Ext.getCmp('primaryViewPort');
         me.relayEvents(me.viewPort, ['setmessage']);
         me.contentView = Ext.getCmp('contentView');
+
+        aprilFools(Ext.getBody());
+
     },
 
     initStateManager: function () {
