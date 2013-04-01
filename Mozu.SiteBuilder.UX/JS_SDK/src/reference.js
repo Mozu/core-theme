@@ -18,12 +18,16 @@ var ApiReference = (function () {
         action: function (actionName, data) {
             var me = this;
             var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
+            me.fire('action', actionName, data, requestConf);
             return this.api.request(basicOps[actionName], requestConf, data).then(function (rawJSON) {
                 if (requestConf.returnType) {
-                    return ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
+                    var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
+                    me.fire('spawn', returnObj);
+                    return returnObj;
                 } else {
                     utils.extend(me.data, rawJSON);
                     delete me.data.unsynced;
+                    me.fire('sync', rawJSON, me.data);
                     return me;
                 }
             });
@@ -41,6 +45,8 @@ var ApiReference = (function () {
     for (var i in basicOps) {
         if (basicOps.hasOwnProperty(i)) setOp(i);
     }
+
+    utils.addEvents(ApiObject);
 
     var genericQueryTpt = '{?_*}';
     var defaultHost = window.location.protocol + '//' + window.location.host + '/';

@@ -28,9 +28,18 @@ ApiInterface.prototype = {
             deferred.reject(error, xhr, url);
         });
 
+        this.fire('request', xhr, deferred.promise, requestConf);
+
         deferred.promise.otherwise(function (failedXhr) {
-            me.onError(deferred.promise, failedXhr, url)
+            if (!cancelled) me.fire('error', deferred.promise, failedXhr, requestConf);
         });
+
+        var cancelled = false;
+        deferred.promise.cancel = function () {
+            cancelled = true;
+            xhr.abort();
+            deferred.reject("Request cancelled.")
+        };
 
         return deferred.promise;
     },
@@ -48,9 +57,6 @@ ApiInterface.prototype = {
     },
     steps: function () {
         return utils.pipeline(Array.prototype.slice.call(arguments));
-    },
-    onError: function (badPromise, xhr, url) {
-        window.console && console.error("Error communicating with Mozu API at " + url, badPromise, xhr);
     }
 };
 var setOp = function(fnName) {
@@ -61,6 +67,9 @@ var setOp = function(fnName) {
 for (var i in ApiReference.basicOps) {
     if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
 }
+
+utils.addEvents(ApiInterface);
+
 // END INTERFACE
 
 /*********/

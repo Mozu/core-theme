@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-03-25
+ * Mozu JavaScript SDK - v0.1.0 - 2013-03-28
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -852,6 +852,35 @@
                     global.UriTemplate = UriTemplate;
                 }
             });
+            var MicroEvent = function() {};
+            MicroEvent.prototype = {
+                bind: function(event, fct) {
+                    this._events = this._events || {};
+                    this._events[event] = this._events[event] || [];
+                    this._events[event].push(fct);
+                },
+                unbind: function(event, fct) {
+                    this._events = this._events || {};
+                    if (event in this._events === false) return;
+                    this._events[event].splice(this._events[event].indexOf(fct), 1);
+                },
+                trigger: function(event) {
+                    this._events = this._events || {};
+                    if (event in this._events === false) return;
+                    for (var i = 0; i < this._events[event].length; i++) {
+                        this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1));
+                    }
+                }
+            };
+            MicroEvent.mixin = function(destObject) {
+                var props = [ "bind", "unbind", "trigger" ];
+                for (var i = 0; i < props.length; i++) {
+                    destObject.prototype[props[i]] = MicroEvent.prototype[props[i]];
+                }
+            };
+            if (typeof module !== "undefined" && "exports" in module) {
+                module.exports = MicroEvent;
+            }
             var utils = {
                 extend: function() {
                     var src, copy, name, options, target = arguments[0], i = 1, length = arguments.length;
@@ -942,7 +971,13 @@
                     return Object.keys(ljson).join() === Object.keys(rjson).join();
                 },
                 when: amds[0],
-                uritemplate: amds[1]
+                uritemplate: amds[1],
+                addEvents: function(ctor) {
+                    MicroEvent.mixin(ctor);
+                    ctor.prototype.on = ctor.prototype.bind;
+                    ctor.prototype.off = ctor.prototype.unbind;
+                    ctor.prototype.fire = ctor.prototype.trigger;
+                }
             };
             var ApiReference = function() {
                 var basicOps = {
@@ -960,12 +995,16 @@
                     action: function(actionName, data) {
                         var me = this;
                         var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
+                        me.fire("action", actionName, data, requestConf);
                         return this.api.request(basicOps[actionName], requestConf, data).then(function(rawJSON) {
                             if (requestConf.returnType) {
-                                return ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
+                                var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
+                                me.fire("spawn", returnObj);
+                                return returnObj;
                             } else {
                                 utils.extend(me.data, rawJSON);
                                 delete me.data.unsynced;
+                                me.fire("sync", rawJSON, me.data);
                                 return me;
                             }
                         });
@@ -982,6 +1021,7 @@
                 for (var i in basicOps) {
                     if (basicOps.hasOwnProperty(i)) setOp(i);
                 }
+                utils.addEvents(ApiObject);
                 var genericQueryTpt = "{?_*}";
                 var defaultHost = window.location.protocol + "//" + window.location.host + "/";
                 var pub = {
@@ -1239,9 +1279,16 @@
                     }, function(error) {
                         deferred.reject(error, xhr, url);
                     });
+                    this.fire("request", xhr, deferred.promise, requestConf);
                     deferred.promise.otherwise(function(failedXhr) {
-                        me.onError(deferred.promise, failedXhr, url);
+                        if (!cancelled) me.fire("error", deferred.promise, failedXhr, requestConf);
                     });
+                    var cancelled = false;
+                    deferred.promise.cancel = function() {
+                        cancelled = true;
+                        xhr.abort();
+                        deferred.reject("Request cancelled.");
+                    };
                     return deferred.promise;
                 },
                 action: function(type, actionName, conf, isRemote) {
@@ -1258,9 +1305,6 @@
                 },
                 steps: function() {
                     return utils.pipeline(Array.prototype.slice.call(arguments));
-                },
-                onError: function(badPromise, xhr, url) {
-                    window.console && console.error("Error communicating with Mozu API at " + url, badPromise, xhr);
                 }
             };
             var setOp = function(fnName) {
@@ -1271,6 +1315,7 @@
             for (var i in ApiReference.basicOps) {
                 if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
             }
+            utils.addEvents(ApiInterface);
             var ApiContext = function(conf) {
                 utils.extend(this, conf);
             }, mutableAccessors = [ "app-claims", "user-claims", "callchain", "currency", "locale" ], immutableAccessors = [ "tenant", "site", "site-group" ], immutableAccessorLength = immutableAccessors.length, allAccessors = mutableAccessors.concat(immutableAccessors), allAccessorsLength = allAccessors.length, j;

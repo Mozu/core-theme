@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-03-25
+ * Mozu JavaScript SDK - v0.1.0 - 2013-03-28
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1494,6 +1494,46 @@ var UriTemplate = (function () {
     }
 ));
 
+var MicroEvent	= function(){}
+MicroEvent.prototype	= {
+	bind	: function(event, fct){
+		this._events = this._events || {};
+		this._events[event] = this._events[event]	|| [];
+		this._events[event].push(fct);
+	},
+	unbind	: function(event, fct){
+		this._events = this._events || {};
+		if( event in this._events === false  )	return;
+		this._events[event].splice(this._events[event].indexOf(fct), 1);
+	},
+	trigger	: function(event /* , args... */){
+		this._events = this._events || {};
+		if( event in this._events === false  )	return;
+		for(var i = 0; i < this._events[event].length; i++){
+			this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1))
+		}
+	}
+};
+
+/**
+ * mixin will delegate all MicroEvent.js function in the destination object
+ *
+ * - require('MicroEvent').mixin(Foobar) will make Foobar able to use MicroEvent
+ *
+ * @param {Object} the object which will support MicroEvent
+*/
+MicroEvent.mixin	= function(destObject){
+	var props	= ['bind', 'unbind', 'trigger'];
+	for(var i = 0; i < props.length; i ++){
+		destObject.prototype[props[i]]	= MicroEvent.prototype[props[i]];
+	}
+}
+
+// export in common js
+if( typeof module !== "undefined" && ('exports' in module)){
+	module.exports	= MicroEvent
+}
+
 // BEGIN UTILS
 var utils = {
     extend: function () {
@@ -1615,7 +1655,14 @@ var utils = {
     // this allows us to cleanly vendor AMD-compatible scripts without polluting scope.
     // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.
     when: amds[0],
-    uritemplate: amds[1]
+    uritemplate: amds[1],
+
+    addEvents: function (ctor) {
+        MicroEvent.mixin(ctor);
+        ctor.prototype.on = ctor.prototype.bind;
+        ctor.prototype.off = ctor.prototype.unbind;
+        ctor.prototype.fire = ctor.prototype.trigger;
+    }
 };
 // END UTILS
 
@@ -1640,12 +1687,16 @@ var ApiReference = (function () {
         action: function (actionName, data) {
             var me = this;
             var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
+            me.fire('action', actionName, data, requestConf);
             return this.api.request(basicOps[actionName], requestConf, data).then(function (rawJSON) {
                 if (requestConf.returnType) {
-                    return ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
+                    var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
+                    me.fire('spawn', returnObj);
+                    return returnObj;
                 } else {
                     utils.extend(me.data, rawJSON);
                     delete me.data.unsynced;
+                    me.fire('sync', rawJSON, me.data);
                     return me;
                 }
             });
@@ -1663,6 +1714,8 @@ var ApiReference = (function () {
     for (var i in basicOps) {
         if (basicOps.hasOwnProperty(i)) setOp(i);
     }
+
+    utils.addEvents(ApiObject);
 
     var genericQueryTpt = '{?_*}';
     var defaultHost = window.location.protocol + '//' + window.location.host + '/';
@@ -1950,9 +2003,18 @@ ApiInterface.prototype = {
             deferred.reject(error, xhr, url);
         });
 
+        this.fire('request', xhr, deferred.promise, requestConf);
+
         deferred.promise.otherwise(function (failedXhr) {
-            me.onError(deferred.promise, failedXhr, url)
+            if (!cancelled) me.fire('error', deferred.promise, failedXhr, requestConf);
         });
+
+        var cancelled = false;
+        deferred.promise.cancel = function () {
+            cancelled = true;
+            xhr.abort();
+            deferred.reject("Request cancelled.")
+        };
 
         return deferred.promise;
     },
@@ -1970,9 +2032,6 @@ ApiInterface.prototype = {
     },
     steps: function () {
         return utils.pipeline(Array.prototype.slice.call(arguments));
-    },
-    onError: function (badPromise, xhr, url) {
-        window.console && console.error("Error communicating with Mozu API at " + url, badPromise, xhr);
     }
 };
 var setOp = function(fnName) {
@@ -1983,6 +2042,9 @@ var setOp = function(fnName) {
 for (var i in ApiReference.basicOps) {
     if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
 }
+
+utils.addEvents(ApiInterface);
+
 // END INTERFACE
 
 /*********/
