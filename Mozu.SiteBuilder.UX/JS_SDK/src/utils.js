@@ -119,7 +119,14 @@ var utils = {
     // this allows us to cleanly vendor AMD-compatible scripts without polluting scope.
     // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.
     when: amds[0],
-    uritemplate: amds[1]
+    uritemplate: amds[1],
+
+    addEvents: function (ctor) {
+        MicroEvent.mixin(ctor);
+        ctor.prototype.on = ctor.prototype.bind;
+        ctor.prototype.off = ctor.prototype.unbind;
+        ctor.prototype.fire = ctor.prototype.trigger;
+    }
 };
 // END UTILS
 
