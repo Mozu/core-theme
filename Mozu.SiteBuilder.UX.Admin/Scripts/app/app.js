@@ -714,7 +714,7 @@ Ext.application({
         me.relayEvents(me.viewPort, ['setmessage']);
         me.contentView = Ext.getCmp('contentView');
 
-        aprilFools(Ext.getBody());
+        //aprilFools(Ext.getBody());
 
     },
 
