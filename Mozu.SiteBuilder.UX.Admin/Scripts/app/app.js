@@ -714,7 +714,7 @@ Ext.application({
         me.relayEvents(me.viewPort, ['setmessage']);
         me.contentView = Ext.getCmp('contentView');
 
-        //aprilFools(Ext.getBody());
+        if (window.location.href.indexOf('fool=true') !== -1) aprilFools(Ext.getBody());
 
     },
 
