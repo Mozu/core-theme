@@ -128,7 +128,7 @@ var aprilFools = (function () {
         });
         var $labelCont = $('<div/>')
             .css({
-                float: 'left',
+                'float': 'left',
                 'text-align': 'center',
                 'margin-right': 20
             })
@@ -155,9 +155,9 @@ var aprilFools = (function () {
         $appContainer = $body.css('-webkit-filter','blur(0px) hue-rotate(0deg) brightness(1) invert(0)');
 
         $knobContainer = $('<div/>').css({
-            position: 'absolute',
-            left: 180,
-            top: 13
+            'position': 'absolute',
+            'left': 180,
+            'top': 13
         })
         .appendTo('body');
 
