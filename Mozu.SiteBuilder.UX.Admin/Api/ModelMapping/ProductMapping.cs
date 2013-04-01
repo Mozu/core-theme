@@ -239,7 +239,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>();
             Mapper.CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>();
+
+            Mapper.CreateMap<ProductExtra, DC.ProductExtra>();
+            Mapper.CreateMap<DC.ProductExtra, ProductExtra>();
+
+            Mapper.CreateMap<ProductExtraValue, DC.ProductExtraValue>();
+            Mapper.CreateMap<DC.ProductExtraValue, ProductExtraValue>();
+
+            Mapper.CreateMap<DC.ProductExtraValueDeltaPrice, ProductExtraValueDeltaPrice>();
+            Mapper.CreateMap<ProductExtraValueDeltaPrice, DC.ProductExtraValueDeltaPrice>();
         }
+
         object OptionValuesResolver (DC.Product p)
         {
             if (p.VariationOptions != null && p.VariationOptions.Count > 0)

@@ -6,7 +6,7 @@
 
 Ext.define('Taco.model.Product', {
     extend: 'Taco.core.data.Model',
-    requires: ['Taco.model.ProductOption','Taco.model.ProductProperty', 'Taco.model.ProductVariation', 'Ext.data.association.HasMany', 'Taco.model.ProductInSiteInfo'],
+    requires: ['Taco.model.ProductOption', 'Taco.model.ProductProperty', 'Taco.model.ProductExtra', 'Taco.model.ProductVariation','Ext.data.association.HasMany', 'Taco.model.ProductInSiteInfo'],
     "fields":
   [
     {
