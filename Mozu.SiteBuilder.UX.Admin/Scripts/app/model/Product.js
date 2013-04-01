@@ -195,7 +195,7 @@ Ext.define('Taco.model.Product', {
             foreignProperty: 'product'
         });
     },
-    getProperties: function () {
+    getExtras: function () {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.ProductExtra',
             associationKey: 'extras',
