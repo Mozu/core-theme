@@ -66,6 +66,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             var source = (Attribute) context.SourceValue;
 
+            if (source == null)
+                return null;
+
             var attributeValidation = new AttributeValidation
             {
                 RegularExpression = source.Regex,
