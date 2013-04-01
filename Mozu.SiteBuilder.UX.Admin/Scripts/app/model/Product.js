@@ -180,6 +180,11 @@ Ext.define('Taco.model.Product', {
           name: "properties",
           type: 'auto',
           defaultValue: []
+      },
+      {
+          name: "extras",
+          type: "auto",
+          defaultValue: []
       }
     
   ],
@@ -190,7 +195,14 @@ Ext.define('Taco.model.Product', {
             foreignProperty: 'product'
         });
     },
-    getProductInSites: function() {
+    getProperties: function () {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.ProductExtra',
+            associationKey: 'extras',
+            foreignProperty: 'product'
+        });
+    },
+    getProductInSites: function () {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.ProductInSiteInfo',
             associationKey: 'productInSites',
