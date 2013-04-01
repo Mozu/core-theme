@@ -12,7 +12,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "attributeFQN")]
         public string AttributeFQN { get; set; }
 
-
         [DataMember(EmitDefaultValue = false, Name = "values")]
         public List<object> Values { get; set; }
     }
