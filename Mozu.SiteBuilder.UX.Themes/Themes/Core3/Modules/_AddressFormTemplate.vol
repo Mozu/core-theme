@@ -1,0 +1,75 @@
+﻿<script type="text/html" id="mz-tpt-address-form">
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="firstname">First Name<span class="mz-required-field" data-bind="visible: FirstName.required"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <input type="text" id="mz-shipping-address-firstname" name="firstname" data-bind="value: FirstName, css: { 'mz-invalid': FirstName.invalid() }">
+            <span class="mz-validation-message" data-bind="text: FirstName.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="lastname">Last Name<span class="mz-required-field"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <input type="text" id="mz-shipping-address-lastname" name="lastname" data-bind="value: LastNameOrSurname, css: { 'mz-invalid': LastNameOrSurname.invalid() }">
+            <span class="mz-validation-message" data-bind="text: LastNameOrSurname.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="address-line-1">Address<span class="mz-required-field" data-bind="visible: Address.Address1.required"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <input type="text" id="mz-shipping-address-line-1" name="address-line-1" data-bind="value: Address.Address1, css: { 'mz-invalid': Address.Address1.invalid() }">
+            <span class="mz-validation-message" data-bind="text: Address.Address1.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell"></div>
+        <div class="mz-form-field-cell">
+            <input type="text" id="mz-shipping-address-line-2" name="address-line-2" data-bind="value: Address.Address2">
+            <span class="mz-validation-message">&nbsp;</span>
+        </div>
+    </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="city">City<span class="mz-required-field"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <input type="text" id="mz-shipping-address-city" name="city" data-bind="value: Address.CityOrTown, css: { 'mz-invalid': Address.CityOrTown.invalid() }">
+            <span class="mz-validation-message" data-bind="text: Address.CityOrTown.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="country">Country<span class="mz-required-field"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <select id="mz-shipping-address-country" data-bind="value: Address.CountryCode, options: Address.countryList, optionsCaption: 'Choose...', optionsText: 'CountryLabel', optionsValue: 'CountryCode', css: { 'mz-invalid': Address.CountryCode.invalid() }">
+            </select>
+            <span class="mz-validation-message" data-bind="text: Address.CountryCode.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+    <div class="mz-form-field-row" data-bind="visible: Address.CountryCode">
+        <div class="mz-form-field-cell">
+            <label data-bind="html: Address.stateprovLabel() + '<span class=\'mz-required-field\' data-bind=\'visible: Address.StateOrProvince.required\'> *</span>:'"></label>
+        </div>
+        <div class="mz-form-field-cell">
+            <input type="text" style="position: absolute; left: -99999px" name="state" id="state" data-bind="value: Address.autofilledState" />
+            <select data-bind="options: Address.stateprovList, optionsText: 'Value', optionsValue: 'Code', optionsCaption: 'Choose...', value: Address.StateOrProvince, css: { 'mz-invalid': Address.StateOrProvince.invalid() }">
+            </select>
+            <span class="mz-validation-message" data-bind="text: Address.StateOrProvince.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="postal-code">Zip/Postal Code<span class="mz-required-field"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <input type="text" id="mz-shipping-address-postal-code" name="postal-code" data-bind="value: Address.PostalOrZipCode, css: { 'mz-invalid': Address.PostalOrZipCode.invalid() }">
+            <span class="mz-validation-message" data-bind="text: Address.PostalOrZipCode.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+</script>

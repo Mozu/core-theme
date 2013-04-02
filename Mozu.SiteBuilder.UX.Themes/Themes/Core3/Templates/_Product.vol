@@ -12,62 +12,17 @@
 
 	<h1 class="mz-page-header" {% data_attributes Model.Content.ProductName %}>{{ Model.Content.ProductName }}</h1>
 	
-	{% html_partial "ProductImages" Model %}
+	{% include "Modules/ProductImages" %}
 
 	<div class="mz-detail-info-wrap">
 
-		<div class="mz-messages">
-			<ul data-bind="visible: messages().length > 0, foreach: messages" class="mz-errors">
-				<li data-bind="text: message, event: { tap: $parent.removeMessage }"></li>
-			</ul>
-		</div>
+        {% include "Modules/MessageBar" %}
 
 		<div class="mz-details-full-description" {% data_attributes Model.Content.ProductFullDescription %}>
 			{{ Model.Content.ProductFullDescription }}
 		</div>
-		{% if Model.Options %}
-		<div class="mz-details-configurator-wrap">
-			<h3 class="mz-configurator-head">Choose your options...</h3>
-			<div class="mz-configurator" data-bind="visible: config.options().length > 0, foreach: config.options()">
-				<strong class="mz-option-name" data-bind="text: name"></strong>: 
-				<!-- ko if: inputType == 'Dropdown' -->
-					<select class="mz-configurable-option mz-dropdown mz-option" data-bind="disable: $root.config.submitting, value: value, options: values, optionsCaption: '[Select]', optionsText: 'value', optionsValue: 'id'">
-					</select>
-				<!-- /ko -->
-				<!-- ko if: inputType == 'Radio Group' -->
-					<!-- ko foreach: values -->
-					<label class="mz-option">
-						<input
-							class="mz-configurable-option"
-							type="radio"
-							data-bind="disable: $root.config.submitting, value: id, checked: $parent.value, attr: { name: 'mz-configurator-' + $parent.id }, enable: isEnabled"
-						>
-						<span data-bind="text: value"></span>
-					</label>
-					<!-- /ko -->
-				<!-- /ko -->
-				<!-- ko if: inputType == 'Textbox' -->
-					<input
-						class="mz-standalone-option mz-textbox mz-option"
-						type="text"
-						data-bind="value: value, disable: $root.config.submitting"
-					>
-				<!-- /ko -->
-				<!-- ko if: inputType == 'CheckBox' -->
-					<!-- ko foreach: values -->
-						<label class="mz-option">
-							<input
-								class="mz-standalone-option mz-checkbox mz-option"
-								type="checkbox"
-								data-bind="checked: isSelected"
-							> 
-							<span data-bind="text: value, disable: $root.config.submitting"></span>
-						</label>
-					<!-- /ko -->
-				<!-- /ko -->
-			</div>
-		</div>
-		{% endif %}
+        
+        {% include "Modules/ProductOptions" %}
 			
 	
 	<div class="mz-price-stack-wrap">		
@@ -86,7 +41,7 @@
 	</div>
 	<section class="mz-conversion-wrap">
 			<span class="mz-qty-label">Qty</span>
-			<input class="mz-qty-input" type="number" value="1" data-bind="value: Quantity" />
+			<input class="mz-qty-input" type="number" min="1" value="1" data-bind="value: Quantity, css: { 'mz-invalid': Quantity.invalid() }" />
 			<button class="mz-button mz-btn-cta mz-add-to-cart"
 				data-bind="click: submit, enable: isPurchasable, css: { invisible: submitting }">
 				Add To Cart
@@ -94,6 +49,7 @@
 			<span data-bind="visible: submitting">
 				{% include "Modules/LoadingBar" %}
 			</span>
+            <span class="mz-validation-message" data-bind="text: Quantity.validationMessage() || '&nbsp;'"></span>
 	</section>
 	<div class="mz-product-code mz-auxiliary-text" {% data_attributes Model.ProductCode %}>Product Code: {{ Model.ProductCode }}</div>
 

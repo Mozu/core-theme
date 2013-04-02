@@ -1,0 +1,7 @@
+﻿<tr>
+    <th class="mz-cart-col mz-cart-head-products">Product</th>
+    <th class="mz-cart-col mz-cart-head-price">Price</th>
+    <th class="mz-cart-col mz-cart-head-qty">Qty</th>
+    <th class="mz-cart-col mz-cart-head-item-total">Item Total</th>
+    <th class="mz-cart-col mz-cart-head-delete">&nbsp;</th>
+</tr>

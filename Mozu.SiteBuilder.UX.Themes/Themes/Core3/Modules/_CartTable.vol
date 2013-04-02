@@ -1,0 +1,18 @@
+﻿<table class="mz-table mz-cart">
+    <thead>
+        {% include "Modules/CartTableHeader" %}
+    </thead>
+    <tbody class="mz-cart-items" data-bind="foreach: Items">
+        {% include "Modules/CartTableRow" %}
+    </tbody>
+    <tbody data-bind="visible: isEmpty">
+        <tr align="center">
+            <td colspan="5">
+                You have no items in your cart.
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        {% include "Modules/CartTableFooter" %}
+    </tfoot>
+</table>

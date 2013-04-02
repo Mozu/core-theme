@@ -1,0 +1,28 @@
+﻿<tr class="mz-cart-product-row">
+    <td>
+        <!-- ko if: Product.ImagePath -->
+        <img class="mz-cart-item-image" data-bind="attr: { src: Product.ImagePath + '?size=50' }" />
+        <!-- /ko -->
+        <div class="mz-cart-product-item-info-wrap">
+            <span class="mz-cart-item-title" data-bind="text: Product.Name"></span>
+            <div class="mz-cart-item-options" data-bind="visible: Product.Options.length > 0, foreach: Product.Options">
+                <strong data-bind="text: OptionName + ':'"></strong>&nbsp;
+                <span data-bind="text: OptionValue"></span>
+            </div>
+            <span class="mz-cart-item-code">Product Code: <span data-bind="text: Product.ProductCode"></span></span>
+        </div>
+    </td>
+    <td align="right">
+        <span class="mz-cart-price mz-strikethrough" data-bind="visible: priceIsModified, currencyText: UnitPrice().BaseAmount"></span>
+        <span class="mz-cart-price mz-updated-price" data-bind="css: { 'mz-updated-price': !priceIsModified }, currencyText: UnitPrice().FinalAmount"></span>
+    </td>
+    <td align="center">
+        <input class="mz-cart-quantity" type="text" data-bind="value: Quantity, valueUpdate: 'afterkeydown'" />
+    </td>
+    <td align="right">
+        <span class="mz-cart-rowtotal" data-bind="currencyText: Total"></span>
+    </td>
+    <td class="mz-cart-product-remove-col">
+        <a href="javascript:;" data-bind="click: remove" class="mz-product-delete mz-icon mz-i-close-sm">X</a>
+    </td>
+</tr>

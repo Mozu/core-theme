@@ -1,0 +1,92 @@
+﻿{% comment %}
+    Note that this panel requires the AddressSummaryTemplate, AddressFormTemplate, CreditCardTemplate, and CheckingAccountTemplate modules to be present on the page, since they are bound by KnockoutJS databinds.
+{% endcomment %}
+<div class="mz-panel" id="mz-payment-information-panel" data-bind="with: Payment, cssClassFrom: Payment.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
+    <h3 class="mz-panel-header">
+        Payment Information
+        <button class="mz-edit-button" data-bind="click: edit">Edit</button>
+    </h3>
+    <div class="mz-panel-wrap">
+        <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + Card.IsSameBillingShippingAddress() + PaymentType()">
+            <p class="mz-desc">How to bill?</p>
+            <div class="mz-completed-summary">
+                <span data-bind="text: PaymentType"></span>
+                <span data-bind="visible: paymentTypeIsCheck, text: Check.CheckNumber"></span>
+                <!-- ko if: paymentTypeIsCreditCard -->
+                    <span data-bind="text: Card.CardNumberPartOrMask"></span>
+
+                    <h4>Billing Address</h4>
+                    <!-- ko if: Card.IsSameBillingShippingAddress -->
+                        <div data-bind="template: { name: 'address-summary', data: $root.Shipment.ShippingAddress }"></div>
+                    <!-- /ko -->
+                    <!-- ko if: !Card.IsSameBillingShippingAddress() -->
+                        <div data-bind="template: { name: 'address-summary', data: Card.BillingAddress }"></div>
+                    <!-- /ko -->
+
+                    <h4>Billing Contact Information</h4>
+                    <span>Phone: <strong data-bind="text: Card.BillingAddress.PhoneNumbers.Home"></strong></span>
+                    <span>Email: <strong data-bind="text: Card.BillingAddress.Email"></strong></span>
+                <!-- /ko -->
+            </div>
+
+            <div class="mz-form-fields">
+                <p class="mz-desc">
+                    <select data-bind="value: PaymentType">
+                        <option>Select payment method</option>
+                        <option disabled value="CreditCard">Credit Card</option>
+                        <option value="Check">Check by Mail</option>
+                    </select>
+                    <span class="mz-validation-message" data-bind="text: PaymentType.validationMessage() || '&nbsp;'"></span>
+                </p>
+
+                <!-- ko if: paymentTypeIsCreditCard -->
+                <div class="mz-form-fieldgroup" data-bind="template: { name: 'mz-tpt-credit-card', data: Card }">
+                </div>
+
+                <h4>Billing Address</h4>
+                <div class="mz-single-setting"><label class="mz-inline"><input type="checkbox" data-bind="checked: Card.IsSameBillingShippingAddress"> Use my shipping address</label></div>
+                <div class="mz-completed-summary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary" data-bind="visible: Card.IsSameBillingShippingAddress, template: { name: 'mz-tpt-address-summary', data: $root.Shipment.ShippingAddress}">
+                </div>
+                <div class="mz-form-fieldgroup mz-form-fields" data-bind="visible: !Card.IsSameBillingShippingAddress(), template: { name: 'mz-tpt-address-form', data: Card.BillingAddress }"></div>
+
+                <h4>Billing Contact Info</h4>
+                <div class="mz-form-fieldgroup">
+                    <div class="mz-form-field-row">
+                        <div class="mz-form-field-cell">
+                            <label for="billing-phone">Phone:</label>
+                        </div>
+                        <div class="mz-form-field-cell">
+                            <input type="text" id="billing-phone" name="billing-phone" data-bind="value: Card.BillingAddress.PhoneNumbers.Home">
+                        </div>
+                    </div>
+                    <div class="mz-form-field-row">
+                        <div class="mz-form-field-cell">
+                            <label for="billing-email">Email<span class="mz-required-field"> *</span>:</label>
+                        </div>
+                        <div class="mz-form-field-cell">
+                            <input type="text" id="billing-email" name="billing-email" data-bind="value: Card.BillingAddress.Email, css: {'mz-invalid': Card.BillingAddress.Email.invalid() }">
+                            <span class="mz-validation-message" data-bind="text: Card.BillingAddress.Email.validationMessage() || '&nbsp;'"></span>
+                        </div>
+                    </div>
+                    <div class="mz-form-field-row">
+                        <div class="mz-form-field-cell"></div>
+                        <div class="mz-form-field-cell">
+                            <label class="mz-inline"><input type="checkbox" name="special-offers" checked style="float: left; margin-right: 8px;"> Yes! I want to be receive news<br>and special offers from you!</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <div class="mz-form-fieldgroup" data-bind="visible: paymentTypeIsCheck">
+                    <div data-bind="template: { name: 'mz-tpt-checking-account', data: Check }"></div>
+                    <p><a href="#">Read more</a> about paying by check</p>
+                </div><!-- pay by check fields -->
+
+                <div class="mz-next-step">
+                    {% include "Modules/LoadingBar" %}
+                    <button class="mz-submit-button" data-bind="click: nextStep">Next</button>
+                </div>
+            </div>
+        </div><!-- .mz-inner-panel -->
+    </div><!-- .mz-panel-wrap -->
+</div><!-- Step 3 .panel -->
