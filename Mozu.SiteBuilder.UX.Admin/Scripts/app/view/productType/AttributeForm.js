@@ -105,8 +105,11 @@
     },
 
     addAttributes: function (filter, attribute) {
+
+        this.attributeStore.suspendEvents(false);
         this.attributeStore.clearFilter();
         this.attributeStore.filter(filter);
+        this.attributeStore.resumeEvents();
 
         this.insert(this.items.getCount() - 1, Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'attribute',
