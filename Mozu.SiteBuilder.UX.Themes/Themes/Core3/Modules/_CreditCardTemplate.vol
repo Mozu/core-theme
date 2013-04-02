@@ -1,0 +1,93 @@
+﻿<script type="text/html" id="mz-tpt-credit-card">
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="mz-payment-credit-card-type">Card Type<span class="mz-required-field"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <select id="mz-payment-credit-card-type" data-bind="value: PaymentOrCardType, css: {'mz-invalid': PaymentOrCardType.invalid() }">
+            {% comment %} TODO: Figure out how to get a live set of ccards {% endcomment %}
+            {% comment %}
+                <option></option>
+                {% for card in SiteContext.Settings.Checkout.PaymentSettings.SupportedCards %}
+                <option value="{{card.Key}}">{{card.Value}}</option>
+                {% endfor %}
+            {% endcomment %}
+                <option value="VISA">Visa</option>
+                <option value="MC">Mastercard</option>
+                <option value="AMEX">American Express</option>
+                <option value="DISCOVER">Discover</option>
+            </select>
+            <span class="mz-validation-message" data-bind="text: PaymentOrCardType.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="mz-payment-credit-card-number">Card Number<span class="mz-required-field"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <input type="text" name="credit-card-number" id="mz-payment-credit-card-number" data-bind="value: CardNumberPartOrMask, css: {'mz-invalid': CardNumberPartOrMask.invalid() }">
+            <span class="mz-validation-message" data-bind="text: CardNumberPartOrMask.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="mz-payment-credit-card-name">Name on Card<span class="mz-required-field"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <input type="text" name="credit-card-name" id="mz-payment-credit-card-name" data-bind="value: NameOnCard, css: {'mz-invalid': NameOnCard.invalid() }">
+            <span class="mz-validation-message" data-bind="text: NameOnCard.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="mz-payment-expiration-month">Expires<span class="mz-required-field"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <select class="mz-half-size" id="mz-payment-expiration-month" name="expiration-month" data-bind="value: ExpireMonth, css: {'mz-invalid': ExpireMonth.invalid() }">
+                <option></option>
+                <option value="01">01 - January</option>
+                <option value="02">02 - February</option>
+                <option value="03">03 - March</option>
+                <option value="04">04 - April</option>
+                <option value="05">05 - May</option>
+                <option value="06">06 - June</option>
+                <option value="07">07 - July</option>
+                <option value="08">08 - August</option>
+                <option value="09">09 - September</option>
+                <option value="10">10 - October</option>
+                <option value="11">11 - November</option>
+                <option value="12">12 - December</option>
+            </select>
+            <select class="mz-half-size" name="mz-payment-expiration-year" data-bind="value: ExpireYear, css: {'mz-invalid': ExpireYear.invalid() }">
+                <option></option>
+                <option value="2013">2013</option>
+                <option value="2014">2014</option>
+                <option value="2015">2015</option>
+                <option value="2016">2016</option>
+                <option value="2017">2017</option>
+                <option value="2018">2018</option>
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+            </select>
+            <span class="mz-validation-message" data-bind="visible: ExpireYear.invalid(), text: ExpireYear.validationMessage()">&nbsp;</span>
+        </div>
+    </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="mz-payment-security-code">Security Code<span class="mz-required-field"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <input type="text" name="security-code" id="mz-payment-security-code" class="mz-half-size" data-bind="value: CVV, css: {'mz-invalid': CVV.invalid() }">
+            <span class="mz-validation-message" data-bind="text: CVV.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell"></div>
+        <div class="mz-form-field-cell">
+            <label class="mz-inline"><input type="checkbox" name="save-card-info" data-bind="checked: IsCardInfoSaved"> Save credit card information</label>
+        </div>
+    </div>
+</script>

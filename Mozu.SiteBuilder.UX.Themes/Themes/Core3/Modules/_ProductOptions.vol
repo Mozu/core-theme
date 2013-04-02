@@ -1,0 +1,43 @@
+﻿{% if Model.Options %}
+<div class="mz-details-configurator-wrap">
+    <h3 class="mz-configurator-head">Choose your options...</h3>
+    <div class="mz-configurator" data-bind="visible: config.options().length > 0, foreach: config.options()">
+        <strong class="mz-option-name" data-bind="text: name"></strong>: 
+        <!-- ko if: inputType == 'Dropdown' -->
+            <select class="mz-configurable-option mz-dropdown mz-option" data-bind="disable: $root.config.submitting, value: value, options: values, optionsCaption: '[Select]', optionsText: 'value', optionsValue: 'id'">
+            </select>
+        <!-- /ko -->
+        <!-- ko if: inputType == 'Radio Group' -->
+            <!-- ko foreach: values -->
+            <label class="mz-option">
+                <input
+                    class="mz-configurable-option"
+                    type="radio"
+                    data-bind="disable: $root.config.submitting, value: id, checked: $parent.value, attr: { name: 'mz-configurator-' + $parent.id }, enable: isEnabled"
+                >
+                <span data-bind="text: value"></span>
+            </label>
+            <!-- /ko -->
+        <!-- /ko -->
+        <!-- ko if: inputType == 'Textbox' -->
+            <input
+                class="mz-standalone-option mz-textbox mz-option"
+                type="text"
+                data-bind="value: value, disable: $root.config.submitting"
+            >
+        <!-- /ko -->
+        <!-- ko if: inputType == 'CheckBox' -->
+            <!-- ko foreach: values -->
+                <label class="mz-option">
+                    <input
+                        class="mz-standalone-option mz-checkbox mz-option"
+                        type="checkbox"
+                        data-bind="checked: isSelected"
+                    > 
+                    <span data-bind="text: value, disable: $root.config.submitting"></span>
+                </label>
+            <!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+{% endif %}

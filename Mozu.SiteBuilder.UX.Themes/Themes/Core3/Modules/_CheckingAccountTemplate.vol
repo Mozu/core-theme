@@ -1,0 +1,29 @@
+﻿<script type="text/html" id="mz-tpt-checking-account">
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="nameOnCheck">Name on check<span class="mz-required-field"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <input type="text" name="nameOnCheck" id="nameOnCheck" data-bind="value: NameOnCheck, css: {'mz-invalid': NameOnCheck.invalid() }">
+            <span class="mz-validation-message" data-bind="text: NameOnCheck.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="checkNumber">Routing Number<span class="mz-required-field"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <input type="text" name="checkNumber" id="checkNumber" data-bind="value: RoutingNumber, css: {'mz-invalid': RoutingNumber.invalid() }">
+            <span class="mz-validation-message" data-bind="text: RoutingNumber.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>                    
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="checkNumber">Check Number<span class="mz-required-field"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+            <input type="text" name="checkNumber" id="checkNumber" data-bind="value: CheckNumber, css: {'mz-invalid': CheckNumber.invalid() }">
+            <span class="mz-validation-message" data-bind="text: CheckNumber.validationMessage() || '&nbsp;'"></span>
+        </div>
+    </div>
+</script>

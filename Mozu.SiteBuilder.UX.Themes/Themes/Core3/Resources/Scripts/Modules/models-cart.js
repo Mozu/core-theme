@@ -25,14 +25,24 @@
             var price = self.UnitPrice();
             return price.BaseAmount != price.FinalAmount;
         });
+        var origQuantity = this.Quantity();
+        var changingQuantityPromise = false;
         this.Quantity.subscribe(function (newValue) {
-            self.parentCart.submitting(true);
-            //self.apiModel.data.Quantity = newValue;
-            self.updateQuantity(newValue).then(function () {
-                self.parentCart.get().then(function () {
+            if (origQuantity && origQuantity !== newValue) {
+                origQuantity = newValue;
+                if (changingQuantityPromise) {
+                    changingQuantityPromise.cancel();
+                    changingQuantityPromise = false;
+                }
+                self.parentCart.submitting(true);
+                changingQuantityPromise = self.updateQuantity(newValue).then(function () {
+                    changingQuantityPromise = self.parentCart.get();
+                    return changingQuantityPromise;
+                }).then(function () {
                     self.parentCart.submitting(false);
+                    changingQuantityPromise = false;
                 });
-            });
+            }
         });
     });
 
@@ -54,7 +64,8 @@
                 //$.cookie('order', 'orderid=' + order.data.Id + ';', { path: '/' });
                 self.publish('ordercreated', order);
             }, function (error) {
-                self.messages.push(error.message);
+                self.submitting(false);
+                self.messages(error.Items);
             });
         }
     }, function constructCart() {
@@ -85,6 +96,10 @@
 
         this.isEmpty = ko.computed(function () {
             return self.Items().length === 0;
+        });
+
+        this.canCheckout = ko.computed(function () {
+            return !(self.submitting() || self.isEmpty());
         });
 
         // run an extra sync because we don't get a full cart in the mozuData object for some reason

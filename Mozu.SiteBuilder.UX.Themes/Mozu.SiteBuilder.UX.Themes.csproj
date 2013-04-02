@@ -383,7 +383,7 @@
     <Content Include="Themes\Core3\Resources\Scripts\Modules\knockout-viewmodel.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Vendor\jquery-cookie.js" />
     <Content Include="Themes\Core3\MetaData\build.js" />
-    <Content Include="Themes\Core3\MetaData\core3_thumb.jpg" />
+    <Content Include="Themes\Core3\MetaData\core_thumb.jpg" />
     <Content Include="Themes\Core3\MetaData\example.build.js" />
     <Content Include="Themes\Core3\Resources\Images\mozu-error.png" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-cart.js" />
@@ -545,6 +545,28 @@
     <Content Include="Themes\MobileCore\Widgets\core\tags\template.vol" />
     <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\mobile-base.less" />
     <Content Include="web.config" />
+    <Content Include="Themes\Core3\Modules\_CartTable.vol" />
+    <Content Include="Themes\Core3\Modules\_ProductOptions.vol" />
+    <Content Include="Themes\Core3\Modules\_MessageBar.vol">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Themes\Core3\Modules\_CartTableHeader.vol" />
+    <Content Include="Themes\Core3\Modules\_CartTableRow.vol" />
+    <Content Include="Themes\Core3\Modules\_CartTableFooter.vol" />
+    <Content Include="Themes\MobileCore\Modules\_MessageBar.vol">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Themes\Core3\Modules\_CheckoutOrderSummaryPanel.vol" />
+    <Content Include="Themes\Core3\Modules\_CheckoutShippingMethodPanel.vol" />
+    <Content Include="Themes\Core3\Modules\_CheckoutShippingAddressPanel.vol" />
+    <Content Include="Themes\Core3\Modules\_CreditCardTemplate.vol" />
+    <Content Include="Themes\Core3\Modules\_CheckingAccountTemplate.vol" />
+    <Content Include="Themes\Core3\Modules\_CheckoutPaymentInfoPanel.vol" />
+    <Content Include="Themes\Core3\Modules\_CheckoutReviewPanel.vol" />
+    <Content Include="Themes\Core3\Modules\_AddressFormTemplate.vol" />
+    <Content Include="Themes\Core3\Modules\_AddressSummaryTemplate.vol" />
+    <Content Include="Themes\Core3\Modules\_CheckoutCouponCodeField.vol" />
+    <Content Include="Themes\Core3\Modules\_CheckoutCommentsField.vol" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -587,22 +609,22 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core3\Modules\_archive.vol" />
+    <Content Include="Themes\Core3\Modules\_Archive.vol" />
     <Content Include="Themes\Core3\Modules\_BreadCrumbs.vol" />
-    <Content Include="Themes\Core3\Modules\_featuredproducts.vol" />
+    <Content Include="Themes\Core3\Modules\_FeaturedProducts.vol" />
     <Content Include="Themes\Core3\Modules\_Paging.vol">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Themes\Core3\Modules\_PagingOptions.vol" />
-    <Content Include="Themes\Core3\Modules\_recentposts.vol" />
+    <Content Include="Themes\Core3\Modules\_RecentPosts.vol" />
     <Content Include="Themes\Core3\Modules\_RenderScripts.vol">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Core3\Modules\_tagcloud.vol" />
-    <Content Include="Themes\Core3\Modules\_tagcollection.vol" />
-    <Content Include="Themes\Core3\Modules\_tags.vol" />
-    <Content Include="Themes\Core3\Modules\_Footer.vol" />
-    <Content Include="Themes\Core3\Modules\_Header.vol">
+    <Content Include="Themes\Core3\Modules\_TagCloud.vol" />
+    <Content Include="Themes\Core3\Modules\_TagCollection.vol" />
+    <Content Include="Themes\Core3\Modules\_Tags.vol" />
+    <Content Include="Themes\Core3\Modules\_PageFooter.vol" />
+    <Content Include="Themes\Core3\Modules\_PageHeader.vol">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Themes\Core3\Modules\_LeftNav.vol" />
@@ -649,7 +671,7 @@
     <Content Include="Themes\Core3\Resources\Stylesheets\Modules\site-header.less" />
     <Content Include="Themes\Core3\Resources\Stylesheets\storefront.less" />
     <Content Include="Themes\Core3\Resources\Stylesheets\Modules\typography.less" />
-    <Content Include="Themes\Core3\Templates\_blankPage.vol" />
+    <Content Include="Themes\Core3\Templates\_BlankPage.vol" />
     <Content Include="Themes\Core3\Templates\_404.vol" />
     <Content Include="Themes\Core3\Templates\_Blog.vol" />
     <Content Include="Themes\Core3\Templates\_Cart.vol" />
@@ -709,22 +731,22 @@
     <Content Include="Themes\Core3\Templates\_Confirmation.vol" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core3\Templates\_signin.vol" />
+    <Content Include="Themes\Core3\Templates\_SignIn.vol" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core3\Templates\Email\_admininvite.vol" />
+    <Content Include="Themes\Core3\Templates\Email\_AdminInvite.vol" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core3\Templates\Email\_adminroleadded.vol" />
+    <Content Include="Themes\Core3\Templates\Email\_AdminRoleAdded.vol" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core3\Templates\Email\_newuser.vol" />
+    <Content Include="Themes\Core3\Templates\Email\_NewUser.vol" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core3\Templates\Email\_tbd.vol" />
+    <Content Include="Themes\Core3\Templates\Email\_TBD.vol" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core3\Templates\_myaccount.vol" />
+    <Content Include="Themes\Core3\Templates\_MyAccount.vol" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core3\Resources\Stylesheets\Pages\myaccount.less" />
@@ -736,7 +758,7 @@
     <Content Include="Themes\Core3\Resources\Stylesheets\Modules\image-gallery.less" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core3\Templates\_error.vol" />
+    <Content Include="Themes\Core3\Templates\_Error.vol" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core3\Resources\Stylesheets\Pages\error.less" />

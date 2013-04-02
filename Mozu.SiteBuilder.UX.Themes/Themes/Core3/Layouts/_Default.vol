@@ -1,4 +1,4 @@
-﻿{% block Init %}{%endblock Init%}
+﻿{% block Init %}
 <!doctype html>
 
 {% comment %}
@@ -30,6 +30,7 @@
 <!--[if (gt IE 9)|(!IE) ]><!--> 
 <html class="no-js" lang="en">
 <!--<![endif]-->
+{%endblock Init%}
 
 {% block HeadTag %}
   {% include "Modules/HeadTag" %}
@@ -40,7 +41,7 @@
     <div class="mz-main-container" id="mz-main-container">
       
 	  {% block Header %}
-        {% include "Modules/Header" %}
+        {% include "Modules/PageHeader" %}
       {% endblock Header %}
 
       <div role="main" id="mz-content-section" class="{{templateVariables.ArticleClasses }} mz-content-section">
@@ -58,7 +59,7 @@
       </div>
 
       {% block Footer %}
-        {% include "Modules/Footer" %}
+        {% include "Modules/PageFooter" %}
       {% endblock Footer %}
 
     </div>

@@ -56,7 +56,8 @@
             };
         });
 
-        var addressConf = {            observables: {
+        var addressConf = {
+            observables: {
                 "Address1": { required: msg.StreetMissing },
                 "Address2": {},
                 "Address3": {},
@@ -234,7 +235,8 @@
                     self.ShippingMethodName(chosen.ShippingMethodName);
                 };
                 return chosen;
-            });
+            });
+
             this.stepStatus = ko.observable('new');
             this.checkStepStatus();
             this.availableShippingMethods.subscribe($.proxy(this.checkStepStatus, this));
@@ -612,7 +614,7 @@
                             order.password.validationMessage(errorItem.Message.substring(errorItem.Message.indexOf('Password')));
                             order.password.invalid(true);
                         } else {
-                            order.messages.push({ message: errorItem.Message });
+                            order.messages.push({ Message: errorItem.Message });
                         }
                     });
                 }, successHandler = function (completedOrder) {
@@ -646,7 +648,7 @@
             var self = this;
 
             this.unknownError = function () {
-                this.messages.push({ message: genericMsg.UnexpectedError });
+                this.messages.push({ Message: genericMsg.UnexpectedError });
                 this.endSubmit();
             };
 

@@ -1,0 +1,44 @@
+﻿<div class="mz-panel mz-checkout-reviewpanel" id="mz-checkout-reviewpanel" data-bind="css: { 'mz-stepstatus-submitting': submitting }">
+    <h3 class="mz-panel-header">
+        Review & Place Order
+    </h3>
+    <div class="mz-panel-wrap">
+    <div class="mz-inner-panel" data-bind="changeHeightOn: createAccount(), visible: orderStatus">
+        <p class="mz-desc">Please review all of the information on this page and, if necessary, make changes before placing your order.</p>
+
+        <label class='inline'>
+            <input type="checkbox" name="terms-and-conditions" id="mz-terms-and-conditions" data-bind="checked: agreeToTerms"> I agree to the <a href="javascript:;">terms &amp; conditions</a>.
+        </label>
+        <span class="mz-validation-message" data-bind="text: agreeToTerms.validationMessage() || '&nbsp;'"></span>
+
+        {% if  User.isAnonymous %}
+        <label class='inline'>
+            <input type="checkbox" name="create-new-account" data-bind="checked: createAccount"> Create an account for easy checkout on future orders
+        </label>
+
+        <div id="mz-create-account-fields" class="mz-create-account-fields" data-bind="visible: createAccount">
+            <label>
+                Username
+                <input type="text" name="new-account-email" data-bind="value: email, css: {'mz-invalid': email.invalid() }">
+                <span class="mz-validation-message" data-bind="text: email.validationMessage() || '&nbsp;'"></span>
+            </label>
+            <label>
+                Create password
+                <input type="password" name="new-account-password" data-bind="value: password, css: {'mz-invalid': password.invalid() }">
+            </label>
+            <label>
+                Confirm password
+                <input type="password" name="new-account-confirm" data-bind="value: confirmPassword, css: {'mz-invalid': confirmPassword.invalid() }">
+            </label>
+            <span class="mz-validation-message" data-bind="text: password.validationMessage() || '&nbsp;'"></span>
+            <span class="mz-validation-message" data-bind="text: confirmPassword.validationMessage() || '&nbsp;'"></span>
+        </div>
+        {% endif %}
+
+        <div class="mz-next-step">
+            {% include "Modules/LoadingBar" %}
+            <button class="mz-submit-button mz-button mz-btn-cta" data-bind="click: submit">Place Order</button>
+        </div>
+    </div><!-- .mz-inner-panel -->
+    </div>
+</div><!-- Step 4 .panel -->

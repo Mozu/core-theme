@@ -118,7 +118,7 @@
     }, function constructProductPrice() {
         var me = this;
         this.hasSalePrice = ko.computed(function () {
-            return !isNaN(me.SalePrice());
+            return !isNaN(me.SalePrice()) && me.SalePrice() !== 0;
         });
         this.hasRange = ko.computed(function () {
             return !isNaN(me.LowerBoundPrice + me.UpperBoundPrice);
@@ -132,7 +132,15 @@
             ProductCode: ''
         },
         observables: {
-            Quantity: { numeric: 0 },
+            Quantity: {
+                numeric: 0,
+                required: {
+                    message: 'Please enter a product quantity above 0',
+                    fn: function (val) {
+                        return parseInt(val) > 0;
+                    }
+                }
+            },
             VariationProductCode: {},
             PurchasableState: {}
         },
@@ -151,8 +159,10 @@
             };
         },
         submit: function () {
-            this.submitting(true);
-            this.addToCart(this.toJS());
+            if (this.validate()) {
+                this.submitting(true);
+                this.addToCart(this.toJS());
+            }
         }
     }, function constructProduct() {
         var self = this;
