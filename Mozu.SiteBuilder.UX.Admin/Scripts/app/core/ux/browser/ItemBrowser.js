@@ -4,7 +4,7 @@
  */
 Ext.define('Taco.core.ux.browser.ItemBrowser', {
     extend: 'Taco.core.ux.BaseCardPanel',
-    requires: ['Taco.core.ux.form.ToggleGroup', 'Ext.toolbar.Spacer'],
+    requires: ['Taco.core.ux.form.ToggleGroup', 'Ext.toolbar.Spacer', 'Taco.core.ux.ComboFilter'],
     alias: 'widget.itembrowser',
     cls: Taco.baseCSSPrefix + 'itembrowser',
     toolbar:null,
@@ -22,21 +22,11 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
     createTopToolbar: function() {
         var me = this,
             conf;
+       
 
         conf = {
             dock: 'top',
-            items: [{
-                xtype: 'textfield',
-                flex: 2,
-                emptyText: 'Search ' + me.typeName.toLowerCase(),
-                enableKeyEvents: true,
-                listeners: {
-                    'keyup': {
-                        fn: me.onKeyUp,
-                        scope: me
-                    }
-                }
-            }, '->', {
+            items: [ '->', {
                 xtype: 'slider',
                 hidden: true,
                 width: 100,
@@ -90,6 +80,16 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 }
             }]
         };
+        
+        if (me.filterProperties) {
+            conf.items.unshift({
+                xtype: 'taco.combofilter',
+                width: 675,
+                margin: '20 0',
+                itemStore: me.createItemStore(),
+                filterProperties: me.filterProperties
+            });
+        } 
         if (me.useGridPanel && me.useTilePanel) conf.items.push(me.createToggleGroup());
         me.topToolbar = Ext.widget('toolbar', conf);
         return me.topToolbar;

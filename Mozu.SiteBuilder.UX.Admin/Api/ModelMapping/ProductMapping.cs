@@ -34,8 +34,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.ProductCode))
                 .ForMember(x => x.BaseProductCode, op => op.MapFrom(dc => dc.BaseProductCode))
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))
-                .ForMember(x => x.ShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
-                .ForMember(x => x.FullDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
+                .ForMember(x => x.ProductShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
+                .ForMember(x => x.ProductFullDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
                 //.ForMember(x => x.ListPrice, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).ListPrice))
                 .ForMember(x => x.Price, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).Price))
                 .ForMember(x => x.SalePrice, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).SalePrice))
@@ -76,8 +76,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     return new DC.ProductLocalizedContent
                     {
                         ProductName = p.ProductName,
-                        ProductShortDescription = p.ShortDescription,
-                        ProductFullDescription = p.FullDescription,
+                        ProductShortDescription = p.ProductShortDescription,
+                        ProductFullDescription = p.ProductFullDescription,
                         ProductImages = images
                     };
                 }))

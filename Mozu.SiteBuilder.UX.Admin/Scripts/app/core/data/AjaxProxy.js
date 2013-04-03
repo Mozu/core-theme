@@ -29,13 +29,7 @@
         },
         
        
-        setException: function (operation, response) {
-            operation.setException({
-                status: response.status,
-                responseText:response.responseText,
-                statusText: response.statusText
-            });
-        },
+        
 
         
         reader: {

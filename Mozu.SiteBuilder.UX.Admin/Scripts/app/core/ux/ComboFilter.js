@@ -74,7 +74,8 @@ Ext.define('Taco.core.ux.ComboFilter', {
      * @private
      */
     filterItemStore: function (filters) {
-        this.itemStore.clearFilter(false);
+        
+        this.itemStore.clearFilter(true);
         this.itemStore.filter(filters);
     },
 

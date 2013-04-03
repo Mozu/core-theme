@@ -495,6 +495,15 @@ Ext.application({
                 }, me);
 
             },
+            setException: function (operation, response) {
+                
+                operation.setException({
+                    status: response.status,
+                    responseText: response.responseText,
+                    statusText: response.statusText,
+                    remoteException: Ext.decode(response.responseText, true)
+                });
+            },
             afterRequest: function (request, success) {
                 var me = this;
                 this.callParent(arguments);
