@@ -93,6 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 Validation = attributeValidation,
                 VocabularyValues = Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values),
                 AttributeFQN = source.Id,
+                AttributeMetadata = Mapper.Map<List<DC.AttributeMetadataItem>>(source.AttributeMetadata ),
                 Content = new DC.AttributeLocalizedContent
                 {
                     Description = "",

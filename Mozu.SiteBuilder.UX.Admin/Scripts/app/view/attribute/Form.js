@@ -134,6 +134,7 @@ Ext.define('Taco.view.attribute.Form', {
                     },
                     items: [{
                         fieldLabel: 'Rows'
+                        
                     }, {
                         fieldLabel: 'Max char.'
                     }],
