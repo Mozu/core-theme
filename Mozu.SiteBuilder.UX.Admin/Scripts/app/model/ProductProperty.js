@@ -1,5 +1,5 @@
 ﻿/**
-* @class Taco.model.ProductInSiteInfo
+* @class Taco.model.ProductProperty
 * @author James Zetlen
 * This model indicates a Product membership in a Site, and contains any overrides to the Product defaults.
 */

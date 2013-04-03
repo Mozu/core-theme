@@ -245,6 +245,49 @@ Ext.define('Taco.controller.Testing', {
         });
     },
 
+    productExtras: function() {
+
+        /*var store = Ext.data.StoreManager.lookup('Taco.store.Products'),
+            product = store.getById('23423423');
+
+        console.log(product);*/
+
+        this.createContentView('Taco.core.ux.content.Container', {
+            header: {
+                title: "Extras for Product '23423423'"
+            },
+
+            body: {
+                layout: 'auto',
+                items: [{
+                    xtype: 'button',
+                    text: 'Click to create Extra',
+                    handler: function() {
+                        var randomInteger = Math.round(1 + Math.random() * 1000),
+                            p = Ext.create('Taco.model.ProductExtra', {
+                                attributeFQN: 'Extra ' + randomInteger,
+                                product: '23423423',
+                                values: [1, 2, 3]
+                            });
+                        
+                        p.phantom = true;
+
+                        console.log(p);
+
+                        p.save({
+                            success: function (record, operation) {
+                                alert("successfully created " + record.getId());
+                            },
+                            failure: function (record, operation) {
+                                alert("fail");
+                            }
+                        });
+                    }
+                }]
+            }
+        });
+    },
+
     foscount: function() {
 
         var discountStore = Ext.data.StoreManager.lookup('Taco.store.Discounts');
