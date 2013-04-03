@@ -10,9 +10,29 @@ Ext.define('Taco.view.product.subform.Extras', {
     title: 'Extras',
 
     initComponent: function () {
+        var prod = this.product,
+            createButton = {
+                xtype: 'button',
+                text: 'Click to create Extra',
+                handler: function() {
+
+                    console.log(prod);
+                }
+            };
+
+        console.log(prod);
+        
         this.items = [{
-            xtype: 'component',
-            html: '<div style="font-size: 16px; padding: 8px">TBD</div>'
+            xtype: 'productoverride',
+            //overrideFieldName: 'extras',
+            //hideOverride: this.isSingleSite,
+            items: [createButton, {
+                fieldLabel: 'Name',
+                name: 'name'
+            }, {
+                fieldLabel: 'Delta Price',
+                name: 'delta'
+            }]
         }];
 
         this.callParent( arguments );
