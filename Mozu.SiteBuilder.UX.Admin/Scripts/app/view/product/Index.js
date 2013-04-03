@@ -10,9 +10,30 @@ Ext.define('Taco.view.product.Index', {
     modelName: 'Taco.model.Product',
     store: { type: 'Taco.store.Products' },
     editorName: 'Taco.view.product.Edit',
-    filterProperty: 'productName',
+    filterProperty: 'productName2',
     useTilePanel: true,
-
+    filterProperties: [{
+        property: 'all',
+        text: 'All',
+        isDefault: true
+    }, {
+        property: 'productName',
+        text: 'Name'
+    }, {
+        property: 'productCode',
+        text: 'Code'
+    }, {
+        property: 'categoryids',
+        text: 'Category'
+    }, {
+        property: 'producttypeid',
+        text: 'Product Type'
+    }, {
+        property: 'productFullDescription',
+        text: 'Description'
+    }],
+    
+    
     gridPanelConf: {
         columns: [{
             dataIndex: 'productCode',

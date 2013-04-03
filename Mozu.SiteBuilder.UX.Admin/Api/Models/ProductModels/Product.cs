@@ -33,14 +33,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// The product short description.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name="shortDescription")]
-        public string ShortDescription { get; set; }
+        [DataMember(EmitDefaultValue = false, Name = "productShortDescription")]
+        public string ProductShortDescription { get; set; }
 
         /// <summary>
         /// The product full description.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "fullDescription")]
-        public string FullDescription { get; set; }
+        [DataMember(EmitDefaultValue = false, Name = "productFullDescription")]
+        public string ProductFullDescription { get; set; }
 
         /// <summary>
         /// A collection of images for this product.

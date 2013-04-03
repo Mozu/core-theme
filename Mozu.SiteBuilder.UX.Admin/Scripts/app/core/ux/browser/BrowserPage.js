@@ -59,6 +59,14 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         this.layoutItemBrowser();
         if (this.hasSidebar) this.createSidebar();
         this.callParent(arguments);
+
+        this.mon(this.store.getProxy(), 'exception', function (proxy, response, operation, eOpts) {
+            if (operation.error && operation.error.remoteException && operation.error.remoteException.ExceptionDetail.Message) {
+                alert(operation.error.remoteException.ExceptionDetail.Message);
+            }
+
+        }, this);
+
         if (!this.store.hasLoaded()) {
             this.store.load();
         }
@@ -144,7 +152,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             itemStore: me.store,
             itemType: me.token,
             typeName: me.typeName,
-            filterProperty: me.filterProperty,
+            filterProperties: me.filterProperties,
             flex: 1,
             isCollectionContext: Taco.app.context.getCurrent().contextType === "c",
             gridPanel: me.gridPanel,
