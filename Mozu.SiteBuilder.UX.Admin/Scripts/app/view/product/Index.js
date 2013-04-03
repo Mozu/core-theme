@@ -45,21 +45,24 @@ Ext.define('Taco.view.product.Index', {
             minWidth: 120,
             resizable: false,
             flex: 1,
-            renderer: function(value) {
-                return '<a href="#" class="taco-launch-editor">' + value + '</a>';
+            renderer: function (value, metaData, record) {
+                return  record.getContextualValue('productName');
+
             }
         }, {
             dataIndex: 'price',
             text: 'Price',
             width: 70,
-            renderer: function (value) {
+            renderer: function (value, metaData, record) {
+                value = record.getContextualValue('price');
                 return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
             }
         }, {
             dataIndex: 'salePrice',
             text: 'Sale Price',
             width: 100,
-            renderer: function (value) {
+            renderer: function (value, metaData, record) {
+                value = record.getContextualValue('salePrice');
                 return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
             }
         }, {
@@ -108,36 +111,7 @@ Ext.define('Taco.view.product.Index', {
                 }
             }, {
                 text: 'Delete',
-                menuColumnHandler: function (item, eventData) {
-                    var grid = eventData.grid,
-                        record = eventData.record,
-                        modal;
-
-                    modal = Ext.create('Taco.core.ux.modal.Confirmation', {
-                        autoShow: true,
-                        content: {
-                            html: 'Are you sure you want to delete this product?'
-                        },
-                        listeners: {
-                            cancel: Ext.emptyFn,
-                            confirm: function () {
-                                var store = grid.getStore();
-                                grid.setLoading(true);
-                                store.remove(record);
-                                store.sync({
-                                    success: function (m) {
-                                        grid.setLoading(false);
-                                    },
-                                    failure: function (m) {
-                                        store.add(store.getRemovedRecords());
-                                        grid.setLoading(false);
-                                    }
-                                });
-                            },
-                            scope: this
-                        }
-                    });
-                }
+                menuColumnHandler: 'destroyMenuColumnHandler'
             }, {
                 text: 'Edit',
                 menuColumnHandler: function (item, eventData) {
@@ -146,7 +120,7 @@ Ext.define('Taco.view.product.Index', {
                         metaData = { id: record.getId() };
 
                     page.launchEditor(record, metaData);
-                    Taco.app.StateManager.addState(page.token + '/edit/' + record.getId(), metaData);
+                   
                 }
             }],
             onMenuShow: function(menu, eventData) {
