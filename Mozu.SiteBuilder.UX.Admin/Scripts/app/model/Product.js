@@ -188,6 +188,17 @@ Ext.define('Taco.model.Product', {
       }
     
   ],
+    getContextualValue: function (fieldName) {
+        var level=this, ctx = Taco.app.context.getCurrent();
+        if (ctx.contextType == 's') {
+            level = this.getProductInSites().getById(ctx.id);
+            if (level == null) {
+                Ext.Error.raise('missing site info for ctx ' + ctx.id + ' in product ' + this.getId());
+                level = this;
+            }
+        }
+        return level.get(fieldName);
+    },
     getProperties: function() {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.ProductProperty',
