@@ -37,6 +37,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         [JsonConverter(typeof(StringEnumConverter))]
         public AttributeValueType ValueType { get; set; }
 
+
+        [DataMember(Name = "attributeMetadata")]
+        public List<AttributeMetadataItem> AttributeMetadata { get; set; }
+
+        
+
  
 
         [DataMember(Name = "min")]
@@ -54,5 +60,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         public List<AttributeValue> Values { get; set; }
 
 
+    }
+
+
+    [DataContract]
+    public class AttributeMetadataItem
+    {
+        [DataMember(EmitDefaultValue = false, Name="key")]
+        public string Key { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "value")]
+        public string Value { get; set; }
     }
 }

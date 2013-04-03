@@ -15,6 +15,7 @@ Ext.define('Taco.model.Attribute', {
         { name: 'isProperty', type: 'boolean' },
         { name: 'min', type: 'auto' },
         { name: 'max', type: 'auto' },
+        { name: 'attributeMetadata', type: 'auto', defaultValue: [] },
         { name: 'regex', type: 'string' },
         {
             name: 'values',

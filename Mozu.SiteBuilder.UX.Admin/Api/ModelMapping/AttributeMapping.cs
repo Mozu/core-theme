@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.NumberOfProducts, opt => opt.MapFrom(dc => -1))
                 .ForMember(x => x.Options, opt => opt.ResolveUsing(dc => MapDCAttributeToAttribute(dc.Options, dc.Id)))
                 .ForMember(x => x.Properties, opt => opt.ResolveUsing(dc => MapDCAttributeToAttribute(dc.Properties, dc.Id)))
-                .ForMember(x => x.Extras, opt => opt.ResolveUsing(dc => MapDCAttributeToAttribute(dc.Extras, dc.Id)))
+              .ForMember(x => x.Extras, opt => opt.ResolveUsing(dc => MapDCAttributeToAttribute(dc.Extras, dc.Id)))
                 ;
 
             Mapper.CreateMap<ProductType, DC.ProductType>()
@@ -128,10 +128,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Values, opt => opt.MapFrom(x => x.VocabularyValues))
                 .ForMember(x => x.Id, opt => opt.MapFrom(x => x.AttributeFQN))
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Content.Name))
+                .ForMember( x=> x.AttributeMetadata , opt=> opt.MapFrom(x=> x.AttributeMetadata))
                 .ForMember(x => x.Regex, opt => opt.MapFrom(x => x.Validation.RegularExpression))
                 .ForMember(x => x.Min, opt => opt.ResolveUsing(new AttributeValidationMinResolver()))
                 .ForMember(x => x.Max, opt => opt.ResolveUsing(new AttributeValidationMaxResolver()))
                 ;
+
+            Mapper.CreateMap<DC.AttributeMetadataItem, AttributeMetadataItem>();
+            Mapper.CreateMap<AttributeMetadataItem, DC.AttributeMetadataItem>();
+
 
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeVocabularyValue>();
             Mapper.CreateMap<AttributeVocabularyValue, DC.AttributeVocabularyValue>();
