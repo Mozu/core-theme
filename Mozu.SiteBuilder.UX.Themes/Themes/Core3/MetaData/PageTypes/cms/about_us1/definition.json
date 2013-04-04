@@ -1,17 +1,18 @@
 {
-    id: "about_us1",
-    displayName: "About Us",
-    documentType: "web_page",
-    entityType: "webpage",
-    pageType:"webpage",
-    renderTemplate: "blankpage",
-    userCreatable: true,
-    widgets:[{
-            definitionId: "content",
-            zoneId: "body",
-            index: 0,
-            config: {
-                body:"<p>about us </p>"
+  "id": "about_us1",
+  "displayName": "About Us",
+  "documentType": "web_page",
+  "entityType": "webpage",
+  "pageType": "webpage",
+  "renderTemplate": "blankpage",
+  "userCreatable": true,
+  "widgets": [
+    {
+      "definitionId": "content",
+      "zoneId": "body",
+      "index": 0,
+      "config": {
+        "body": "<p>about us </p>"
             }
         }
     ] 
