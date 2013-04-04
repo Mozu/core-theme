@@ -105,4 +105,29 @@
     }
   }
 
+  .#{$vprefix}combofilter-form-menu {
+    @include border-radius(2px);
+    @include outer-shadow(0.5, 8px, 0px, 2px);
+
+    .#{$prefix}menu-body {
+      border: 0px none;
+      @include border-radius(2px);
+    }
+    .#{$prefix}field {
+      margin-left: 20px;
+    }
+
+    .#{$vprefix}combofilter-form-title {
+      border-bottom: 1px dashed border-for($color-neutral-white);
+      font-size: px-to-rem(20);
+      font-weight: normal;
+      padding: 20px;
+    }
+
+    .#{$vprefix}combofilter-form-actions {
+      padding: 20px;
+      text-align: right;
+    }
+  }
+
 }

@@ -87,6 +87,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 width: 675,
                 margin: '20 0',
                 itemStore: me.createItemStore(),
+                filterForm: me.filterFormConf,
                 filterProperties: me.filterProperties
             });
         } 

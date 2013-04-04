@@ -8,10 +8,10 @@ Ext.define('Taco.core.ux.ComboFilter', {
     alias: 'widget.taco.combofilter',
 
     createNewOnEnter: true,
-    displayField: 'value',
+    displayField: 'display',
     forceSelection: false,
     grow: true,
-    hideTrigger: true,
+    hideTrigger: false,
     propertyField: 'text',
     queryMode: 'local',
     triggerOnClick: false,
@@ -23,6 +23,7 @@ Ext.define('Taco.core.ux.ComboFilter', {
                 fields: [
                     { name: 'property', type: 'string' },
                     { name: 'value', type: 'string' },
+                    { name: 'display', type: 'string' },
                     { name: 'text', type: 'string' },
                     { name: 'root', type: 'string' }
                 ],
@@ -65,12 +66,13 @@ Ext.define('Taco.core.ux.ComboFilter', {
                 return filterFn.apply(filter.scope || filter, [record, filter]);
             };
         }
+
         return filter;
     },
 
     /**
      * Applies an array of filters to the provided itemStore.
-     * @param  {Ext.util.Filter[]} filters An array of filter instances.
+     * @param  {Ext.util.Filter[]} filters An array of filter instances
      * @private
      */
     filterItemStore: function (filters) {
@@ -80,7 +82,96 @@ Ext.define('Taco.core.ux.ComboFilter', {
     },
 
     /**
-     * Hydrates an array of (incomplete) valueStore records, then returns an array of corresponding filters
+     * Returns the attached floating FormPanel.
+     * @return {Ext.form.Panel} The attached FormPanel
+     * @private
+     */
+    getFilterForm: function () {
+        var form = this.filterForm,
+            saveAction;
+
+        if (!form.isMenu && Ext.isObject(form)) {
+            Ext.apply(form, { itemId: 'form' });
+            form = Ext.create('Taco.core.ux.form.Form', form);
+
+            saveAction = Ext.create('Taco.core.ux.action.Action', {
+                text: 'Apply'
+            });
+
+            this.filterForm = Ext.create('Ext.menu.Menu', {
+                plain: true,
+                shadow: false,
+                cls: Taco.baseCSSPrefix + 'combofilter-form-menu',
+                items: [{
+                    xtype: 'component',
+                    autoEl: 'h2',
+                    cls: Taco.baseCSSPrefix + 'combofilter-form-title',
+                    html: 'Search By'
+                }, form, {
+                    xtype: 'container',
+                    cls: Taco.baseCSSPrefix + 'combofilter-form-actions',
+                    items: [saveAction]
+                }]
+            });
+
+            this.filterForm.on({
+                show: this.updateFilterForm,
+                scope: this
+            });
+
+            this.mon(this.itemStore, 'refresh', this.updateFilterForm, this);
+
+            saveAction.on({
+                click: function () { this.filterForm.hide(); },
+                scope: this
+            });
+        }
+
+        // if (!this.form && !Ext.isEmpty(this.editors)) {
+        //     saveAction = Ext.create('Taco.core.ux.action.Action', {
+        //         text: 'Apply'
+        //     });
+
+        //     fields = this.editors;
+        //     fields.unshift({
+        //         xtype: 'component',
+        //         autoEl: 'h2',
+        //         cls: Taco.baseCSSPrefix + 'combofilter-form-title',
+        //         html: 'Search By'
+        //     });
+        //     fields.push({
+        //         xtype: 'container',
+        //         cls: Taco.baseCSSPrefix + 'combofilter-form-actions',
+        //         items: [saveAction]
+        //     });
+
+        //     this.form = Ext.create('Taco.core.ux.form.Form', {
+        //         floating: true,
+        //         plain: true,
+        //         shadow: false,
+        //         width: 600,
+        //         cls: Taco.baseCSSPrefix + 'combofilter-form',
+        //         items: fields
+        //     });
+
+        //     this.form.on({
+        //         show: this.updateAdvancedForm,
+        //         scope: this
+        //     });
+
+        //     this.mon(this.itemStore, 'refresh', this.updateAdvancedForm, this);
+
+        //     saveAction.on({
+        //         click: function () { this.form.hide(); },
+        //         scope: this
+        //     });
+        // }
+
+        return this.filterForm;
+    },
+
+    /**
+     * Hydrates an array of (incomplete) valueStore records, then returns an array of corresponding filters.
      * @param  {Ext.data.Model[]} records The valueStore records
      * @return {Ext.util.Filter[]} The itemStore filters
      */
@@ -108,12 +199,12 @@ Ext.define('Taco.core.ux.ComboFilter', {
                 filters.push(filter);
             }
         }, this);
-        
+
         return filters;
     },
 
     /**
-     * Returns a menu of available filter properties
+     * Returns a menu of available filter properties.
      * @param  {HTMLElement} el The clicked element
      * @return {Ext.menu.Menu} The instantiated menu
      * @private
@@ -133,7 +224,7 @@ Ext.define('Taco.core.ux.ComboFilter', {
     },
 
     /**
-     * Returns an array of menu items that change a record and its corresponding filter
+     * Returns an array of menu items that change a record and its corresponding filter.
      * @param  {Ext.data.Model} record The valueStore record being edited
      * @return {Ext.menu.Item[]} The array of menu items
      * @private
@@ -257,13 +348,25 @@ Ext.define('Taco.core.ux.ComboFilter', {
      * @private
      */
     onValueChange: function (field, newValue, oldValue) {
-        if (!newValue && !oldValue) {
-            return;
-        }
-        var records = this.valueStore.getRange(),
-            filters = this.getFilters(records);
+        var records, filters;
+
+        if (!newValue && !oldValue) return;
+
+        records = this.valueStore.getRange();
+        filters = this.getFilters(records);
 
         this.filterItemStore(filters);
+    },
+
+    /**
+     * Opens the attached form when the trigger is clicked, generating it if necessary.
+     * @param  {Ext.EventObject} e The click event
+     * @private
+     */
+    onTriggerClick: function (e) {
+        var form = this.getFilterForm();
+
+        if (form) form.showBy(this, 'tl-bl?', [2, 2]);
     },
 
     /**
@@ -274,5 +377,32 @@ Ext.define('Taco.core.ux.ComboFilter', {
         var menu = this.getMenu(el);
 
         menu.showBy(el);
+    },
+
+    /**
+     * Update the attached form to match a set of filters.
+     * @param  {Ext.util.Filter[]} filter The set of filter instances
+     * @private
+     */
+    updateFilterForm: function () {
+        var menu = this.filterForm,
+            filters = Ext.Array.merge([], this.itemStore.filters.getRange()),
+            form;
+
+        if (!menu) {
+            return;
+        }
+
+        form = menu.items.get('form');
+        console.log(menu.items, form);
+        form.getForm().reset();
+
+        Ext.Array.each(filters, function (filter) {
+            var field = form.getForm().findField(filter.property);
+
+            if (field) {
+                field.setValue(filter.value);
+            }
+        }, this);
     }
 });

@@ -1389,7 +1389,7 @@ Ext.define('Ext.ux.form.field.BoxSelect', {
             }, this).join(this.delimiter),
             isEqual = me.isEqual(newValue, lastValue);
 
-            if (!isEqual || ((newValue.length > 0 && valueStore.getCount() < newValue.length))) {
+            if (!isEqual || ((newValue.length > 0 && valueStore.getCount() <= newValue.length))) {
                 valueStore.suspendEvents();
                 valueStore.removeAll();
                 if (Ext.isArray(me.valueModels)) {
