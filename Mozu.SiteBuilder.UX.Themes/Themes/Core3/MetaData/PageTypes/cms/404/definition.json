@@ -1,9 +1,9 @@
 {
-    id: "404",
-    displayName: "404 Not Found",
-    documentType: "web_page",
-    entityType: "webpage",
-    pageType:"404",
-    renderTemplate: "404",
-    userCreatable: false
+  "id": "404",
+  "displayName": "404 Not Found",
+  "documentType": "web_page",
+  "entityType": "webpage",
+  "pageType": "404",
+  "renderTemplate": "404",
+  "userCreatable": false
 }

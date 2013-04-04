@@ -1,7 +1,7 @@
 {
-    id: "product",
-    displayName: "Product",
-    entityType: "product",
-    renderTemplate: "product",
-    userCreatable: false
+  "id": "product",
+  "displayName": "Product",
+  "entityType": "product",
+  "renderTemplate": "product",
+  "userCreatable": false
 }
