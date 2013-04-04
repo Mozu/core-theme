@@ -474,13 +474,6 @@
     <Content Include="Themes\MobileCore\theme.xml" />
     <Content Include="Themes\MobileCore\MetaData\lang-de.csv" />
     <Content Include="Themes\MobileCore\MetaData\lang-en.csv" />
-    <Content Include="Themes\MobileCore\MetaData\PageTypes\404\definition.json" />
-    <Content Include="Themes\MobileCore\MetaData\PageTypes\about_us1\definition.json" />
-    <Content Include="Themes\MobileCore\MetaData\PageTypes\blank_page1\definition.json" />
-    <Content Include="Themes\MobileCore\MetaData\PageTypes\blog\definition.json" />
-    <Content Include="Themes\MobileCore\MetaData\PageTypes\home1\definition.json" />
-    <Content Include="Themes\MobileCore\MetaData\PageTypes\landing1\definition.json" />
-    <Content Include="Themes\MobileCore\MetaData\PageTypes\post\definition.json" />
     <Content Include="Themes\MobileCore\Modules\TopNav.vol" />
     <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\breadcrumbs.less" />
     <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\common-elements.less" />
@@ -567,6 +560,7 @@
     <Content Include="Themes\Core3\Modules\_AddressSummaryTemplate.vol" />
     <Content Include="Themes\Core3\Modules\_CheckoutCouponCodeField.vol" />
     <Content Include="Themes\Core3\Modules\_CheckoutCommentsField.vol" />
+    <Content Include="Themes\Core3\Templates\_home.vol" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -594,8 +588,6 @@
     <Folder Include="Themes\Core3\Resources\Fonts\" />
     <Folder Include="Themes\Core3\Resources\Images\c2Images\" />
     <Folder Include="Themes\MobileCore\Layouts\" />
-    <Folder Include="Themes\MobileCore\MetaData\PageTypes\email\" />
-    <Folder Include="Themes\MobileCore\MetaData\PageTypes\widget\" />
     <Folder Include="Themes\MobileCore\Resources\Images\Bootstrap\" />
     <Folder Include="Themes\MobileCore\Resources\Images\content\" />
     <Folder Include="Themes\MobileCore\Resources\Images\header\" />

@@ -11,7 +11,7 @@
             zoneId: "body",
             index: 0,
             config: {
-                body:"<p>about us </p>\n<p>farts</p>"
+                body:"<p>about us </p>"
             }
         }
     ] 
