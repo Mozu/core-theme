@@ -1097,8 +1097,8 @@
   .#{$prefix}form-item-label-top {
     display: block;
     //font-size: 0.7em;
-    margin-bottom: 0.3em;
-    margin-top: 1.8em;
+    margin-bottom: px-to-rem(4);
+    margin-top: px-to-rem(20);
     //color: $color-neutral-darker;
     font: $font-body-copy;
     color: $color-neutral-darkest;

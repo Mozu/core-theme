@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Taco.model.ItemFilter', 'Taco.core.ux.ComboFilter', 'Taco.core.ux.grid.Panel'],
+    requires: ['Taco.model.ItemFilter', 'Taco.core.ux.ComboFilter', 'Taco.core.ux.grid.Panel', 'Taco.core.ux.form.Form'],
 
     header: {
         title: 'Catalog Testing'
@@ -18,11 +18,16 @@ Ext.define('Taco.view.catalog.Index', {
 
         var localStore = Ext.create('Ext.data.ArrayStore', {
             fields: ['food', 'tastiness'],
-            data: [['cake', 7], ['pie', 8], ['brownies', 5], ['ice cream', 6], ['cookies', 10], ['pickles', 0]]
+            data: [
+                ['chocolate cake', 7], ['cherry pie', 8], ['brownies', 5], ['ice cream', 6], ['cookies', 10],
+                ['pickles', 0], ['tapioca pudding', 2], ['pumpkin pie', 9], ['fruit cake', 1]
+            ],
+            sorters: [{ property: 'tastiness', root: 'data', direction: 'DESC' }]
         });
 
         var list = Ext.create('Taco.core.ux.grid.Panel', {
             store: localStore,
+            emptyText: '<div>There are no results that matched your filter.</div>',
             columns: [{
                 flex: 1,
                 text: 'Food',
@@ -43,40 +48,34 @@ Ext.define('Taco.view.catalog.Index', {
             margin: '20 0',
             itemStore: localStore,
             filterProperties: [{
-                property: 'tastiness',
-                text: 'Custom',
-                isDefault: false,
-                filterFn: function (item, filter) {
-                    return item.get('food').indexOf(filter.value) > -1 || item.get('tastiness') > 7;
-                }
-            }, {
                 property: 'food',
                 text: 'Food',
                 isDefault: true
+            }, {
+                property: 'tastiness',
+                text: 'Tasty',
+                isDefault: false,
+                filterFn: function (item, filter) { return item.get('tastiness') >= parseInt(filter.value); }
+            }],
+            editors: [{
+                xtype: 'formflexbox',
+                justify: false,
+                items: [{
+                    xtype: 'textfield',
+                    name: 'food',
+                    fieldLabel: 'Food',
+                    width: 160
+                }, {
+                    xtype: 'textfield',
+                    name: 'tastiness',
+                    fieldLabel: 'Tastiness',
+                    width: 160
+                }]
             }]
         });
 
         var bar = Ext.create('Ext.toolbar.Toolbar', {
-            items: [box, {
-                xtype: 'tbtext',
-                text: 'click me',
-                listeners: {
-                    click: {
-                        scope: this,
-                        element: 'el',
-                        fn: function () {
-                            this.list.getStore().filter([{
-                                property: 'food',
-                                value: 'pi',
-                                filterFn: function (item) {
-                                    var isGood = item.get('tastiness') > 5;
-                                    console.log(item, isGood); return isGood;
-                                }
-                            }]);
-                        }
-                    }
-                }
-            }]
+            items: [box]
         });
 
         Ext.apply(this.body, {

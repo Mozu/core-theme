@@ -152,6 +152,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             itemStore: me.store,
             itemType: me.token,
             typeName: me.typeName,
+            filterFormConf: me.filterFormConf,
             filterProperties: me.filterProperties,
             flex: 1,
             isCollectionContext: Taco.app.context.getCurrent().contextType === "c",

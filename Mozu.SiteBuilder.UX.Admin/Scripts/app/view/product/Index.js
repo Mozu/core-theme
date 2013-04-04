@@ -12,6 +12,38 @@ Ext.define('Taco.view.product.Index', {
     editorName: 'Taco.view.product.Edit',
     filterProperty: 'productName2',
     useTilePanel: true,
+
+    filterFormConf: {
+        width: 600,
+        cls: Taco.baseCSSPrefix + 'combofilter-form products',
+        items: [{
+            xtype: 'formflexbox',
+            justify: false,
+            defaults: {
+                xtype: 'textfield',
+                width: 560
+            },
+            items: [{
+                name: 'productCode',
+                fieldLabel: 'Product Code',
+                width: 160
+            }, {
+                name: 'productName',
+                fieldLabel: 'Name'
+            }, {
+                name: 'productFullDescription',
+                fieldLabel: 'In Description'
+            }, {
+                name: 'producttypeid',
+                fieldLabel: 'Product Type(s)'
+            }, {
+                name: 'price',
+                fieldLabel: 'Price',
+                width: 160
+            }]
+        }]
+    },
+
     filterProperties: [{
         property: 'all',
         text: 'All',
