@@ -1,17 +1,17 @@
 {
-    "id": "image",
-    "displayName": "Image",
-    "displayTemplate": "cms/image",
-    "maxWidth": 100,
-    "maxHeight": 100,
-    "minWidth": 50,
-    "minHeight": 50,
-    "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
-    "editView": "Taco.view.site.widget.JasonImage",
-    "properties": [
-        {
-            "key": "image_url",
-            "value": "{ \"src\":\"/admin/scripts/resources/images/legacy/AddPhotos.png\", \"alt\":\"food is good\" }"
-        }
-    ]
+  "id": "image",
+  "displayName": "Image",
+  "displayTemplate": "cms/image",
+  "maxWidth": 100,
+  "maxHeight": 100,
+  "minWidth": 50,
+  "minHeight": 50,
+  "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
+  "editView": "Taco.view.site.widget.JasonImage",
+  "properties": [
+    {
+      "key": "image_url",
+      "value": "{ \"src\":\"/admin/scripts/resources/images/legacy/AddPhotos.png\", \"alt\":\"food is good\" }"
+    }
+  ]
 }

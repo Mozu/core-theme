@@ -1,8 +1,8 @@
 {
-	"id": "featured_product",
-	"displayName": "Featured Products",
-	"displayTemplate": "catalog/featuredproducts",
-	"icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
-	"editView": "Taco.view.site.widget.FeaturedProducts",
-	"properties": []
+  "id": "featured_product",
+  "displayName": "Featured Products",
+  "displayTemplate": "catalog/featuredproducts",
+  "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
+  "editView": "Taco.view.site.widget.FeaturedProducts",
+  "properties": []
 }

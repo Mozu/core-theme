@@ -1,19 +1,20 @@
 {
-    id: "landing1",
-    displayName: "Landing Page",
-    documentType: "web_page",
-    entityType: "webpage",
-    pageType:"webpage",
-    renderTemplate: "blankpage",
-    siteTemplate:"promotional" ,
-    userCreatable: true,
-    widgets:[{
-            definitionId: "content",
-            zoneId: "body",
-            index: 0,
-            config: {
-                body:"<p>Landing Page Template us </p>"
-            }
-        }
-    ] 
+  "id": "landing1",
+  "displayName": "Landing Page",
+  "documentType": "web_page",
+  "entityType": "webpage",
+  "pageType": "webpage",
+  "renderTemplate": "blankpage",
+  "siteTemplate": "promotional",
+  "userCreatable": true,
+  "widgets": [
+    {
+      "definitionId": "content",
+      "zoneId": "body",
+      "index": 0,
+      "config": {
+        "body": "<p>Landing Page Template us </p>"
+      }
+    }
+  ]
 }
