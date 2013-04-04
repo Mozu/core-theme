@@ -1,8 +1,8 @@
 {
-	"id": "recent_posts",
-	"displayName": "Recent Posts",
-	"displayTemplate": "blog/recentposts",
-	"icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
-	"editView": "Taco.view.site.widget.RecentBlogPosts",
-	"properties": []
+  "id": "recent_posts",
+  "displayName": "Recent Posts",
+  "displayTemplate": "blog/recentposts",
+  "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
+  "editView": "Taco.view.site.widget.RecentBlogPosts",
+  "properties": []
 }

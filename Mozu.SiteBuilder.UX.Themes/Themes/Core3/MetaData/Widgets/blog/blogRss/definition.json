@@ -1,8 +1,8 @@
 {
-	"id": "blog_rss",
-	"displayName": "Blog Rss Link",
-	"displayTemplate": "blog/blogRss",
-	"icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
-	"minWidth": 400,
-	"properties": []
+  "id": "blog_rss",
+  "displayName": "Blog Rss Link",
+  "displayTemplate": "blog/blogRss",
+  "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
+  "minWidth": 400,
+  "properties": []
 }

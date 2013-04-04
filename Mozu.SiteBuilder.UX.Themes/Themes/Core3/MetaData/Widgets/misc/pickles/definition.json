@@ -1,11 +1,11 @@
 {
-	"id": "pickels",
-	"displayName": "Thom is a jar of Pickles",
-	"displayTemplate": "pickles/template",
-	"maxWidth": 100,
-	"maxHeight": 100,
-	"minWidth": 50,
-	"minHeight": 50,
-	"icon": "http://icons.iconarchive.com/icons/iconshock/cms/72/user-login-icon.png",
-	"properties": []
+  "id": "pickels",
+  "displayName": "Thom is a jar of Pickles",
+  "displayTemplate": "pickles/template",
+  "maxWidth": 100,
+  "maxHeight": 100,
+  "minWidth": 50,
+  "minHeight": 50,
+  "icon": "http://icons.iconarchive.com/icons/iconshock/cms/72/user-login-icon.png",
+  "properties": []
 }
