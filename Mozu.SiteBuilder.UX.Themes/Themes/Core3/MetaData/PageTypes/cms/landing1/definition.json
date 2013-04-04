@@ -1,35 +1,19 @@
 {
-  "DefaultValues": {
-    "contentCollection": "pages",
-    "items": [
-      {
-        "PropertyType": "page_type",
-        "Value": "webpage"
-      }
-    ]
-  },
-  "DisplayName": "Landing Page",
-  "DocumentType": "web_page",
-  "EntityType": "webpage",
-  "Icon": "",
-  "Id": "landing1",
-  "Template": "landing",
-  "Widgets": [
-    {
-      "items": [
-        {
-          "key": "widget_type_id",
-          "value": "content"
-        },
-        {
-          "key": "widget_zone",
-          "value": "body"
-        },
-        {
-          "key": "widget_sequence",
-          "value": 0
+    id: "landing1",
+    displayName: "Landing Page",
+    documentType: "web_page",
+    entityType: "webpage",
+    pageType:"webpage",
+    renderTemplate: "blankpage",
+    siteTemplate:"promotional" ,
+    userCreatable: true,
+    widgets:[{
+            definitionId: "content",
+            zoneId: "body",
+            index: 0,
+            config: {
+                body:"<p>Landing Page Template us </p>"
+            }
         }
-      ]
-    }
-  ]
+    ] 
 }

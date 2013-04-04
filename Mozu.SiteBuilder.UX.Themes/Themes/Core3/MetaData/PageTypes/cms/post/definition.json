@@ -1,14 +1,10 @@
 {
-  "UserCreatable": true,
-  "DefaultValues": {
-    "contentCollection": "blogs",
-    "documentType": "post",
-    "items": []
-  },
-  "DisplayName": "Blog Post",
-  "DocumentType": "post",
-  "EntityType": "post",
-  "Icon": "",
-  "Id": "post",
-  "Template": ""
+    id: "post",
+    displayName: "Post",
+    documentType: "post",
+    entityType: "post",
+    pageType:"post",
+    renderTemplate: "post",
+    userCreatable: true
+    
 }
