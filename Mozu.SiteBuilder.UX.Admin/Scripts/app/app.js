@@ -101,12 +101,7 @@ var aprilFools = (function () {
         numClicks = 0,
         reBase = "\\([^\\)]+\\)";
 
-    Ext.Loader.loadScript({
-        url: '//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js',
-        onLoad: function () {
-            Ext.Loader.loadScript('https://raw.github.com/aterrien/jQuery-Knob/master/js/jquery.knob.js');
-        }
-    });
+    
 
     function flicker() {
         body.setStyle(flickers[Math.floor(Math.random()*4)]);
@@ -279,9 +274,18 @@ var aprilFools = (function () {
     }
 
     return function (b) {
-        if (b) body = b;
-        listenForClicks();
-        flicker();
+        if (b) body = b;        Ext.Loader.loadScript({
+            url: '//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js',
+            onLoad: function () {
+                Ext.Loader.loadScript({
+                    url: 'https://raw.github.com/aterrien/jQuery-Knob/master/js/jquery.knob.js',
+                    onLoad: function () {
+                        listenForClicks();
+                        flicker();
+                    }
+                });
+            }
+        });
     };
         
 
