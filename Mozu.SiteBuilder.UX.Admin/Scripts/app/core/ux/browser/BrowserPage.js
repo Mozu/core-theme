@@ -15,7 +15,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     tilePanelClass: 'Taco.core.ux.TilePanel', 
     filterProperty: 'name',
     hasSidebar: true,
-
+    launchEditorOnClick: true,
     header: null,
 
     cls: 'taco-content-browserpage',
@@ -25,6 +25,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         this.callParent(arguments);
     },
 
+    
     initComponent: function () {
         if (!this.header) {
             this.header = {}
@@ -123,8 +124,12 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         }
         conf.store = this.store;
         this.gridPanel = Ext.create(this.gridPanelClass, conf);
+        
         this.gridPanel.view.on('itemclick', this.onItemClick, this);
-        this.gridPanel.view.on('cellclick', this.onCellClick, this);
+        
+        if (this.launchEditorOnClick) {
+            this.gridPanel.view.on('cellclick', this.onCellClick, this);
+        }
         return this.gridPanel;
     },
 

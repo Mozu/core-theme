@@ -1199,7 +1199,6 @@
     <Content Include="Scripts\app\view\generalSettings\Index.js" />
     <Content Include="Scripts\app\model\ThemeListing.js" />
     <Content Include="Scripts\app\view\inventory\Index.js" />
-    <Content Include="Scripts\app\view\inventory\ItemBrowser.js" />
     <Content Include="Scripts\app\view\product\edit\Inline.js" />
     <Content Include="Scripts\app\view\site\navigation\ExternalLinkEditor.js" />
     <Content Include="Scripts\app\view\site\navigation\Themes.js" />

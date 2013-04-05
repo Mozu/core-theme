@@ -38,7 +38,9 @@ Ext.define('Taco.model.InventoryProduct', {
         "useNull": true
     }],
     idProperty: 'productCode',
-
+    getContextualValue:function(fieldName) {
+        return this.get(fieldName);
+    },
     proxy: {
         type: 'ajax',
         api: {

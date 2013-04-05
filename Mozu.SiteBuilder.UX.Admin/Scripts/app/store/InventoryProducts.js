@@ -1,15 +1,21 @@
-﻿/**
+﻿
+/**
 * @class Taco.store.InventoryProducts
 * @author Thomas Phipps
-* The InventoryProducts store
+* The Products store
 */
 
 Ext.define('Taco.store.InventoryProducts', {
-    requires:['Taco.model.InventoryProduct'],
-    extend: 'Taco.store.shared.BaseStore',
+    requires: ['Taco.model.InventoryProduct'],
+    extend: 'Ext.data.Store',
     model: 'Taco.model.InventoryProduct',
-    autoLoad: true,
     pageSize: 25,
     remoteSort: true,
-    remoteFilter: true
+    remoteFilter: true,
+    storeManagerConfig: {
+        clearFilters: true,
+        contextLevel: 'sc',
+        clearSort: true,
+        autoLoad: true
+    }
 });
