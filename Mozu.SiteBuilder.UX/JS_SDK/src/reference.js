@@ -30,6 +30,9 @@ var ApiReference = (function () {
                     me.fire('sync', rawJSON, me.data);
                     return me;
                 }
+            }, function (errorJSON) {
+                me.fire('error', errorJSON);
+                throw errorJSON;
             });
         },
         getAvailableActions: function () {

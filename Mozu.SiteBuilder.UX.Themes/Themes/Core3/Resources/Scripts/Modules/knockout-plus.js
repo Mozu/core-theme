@@ -99,15 +99,18 @@
     * @param precision {Number} Number of decimal places to force display/
     * @return {Object} The modified 'target' observable.
     */
-    ko.extenders.numeric = function (target, precision) {
+    ko.extenders.numeric = function (target, opts) {
         //create a writeable computed observable to intercept writes to our observable
+        opts = opts || {};
+        var precision = typeof opts === "number" ? opts : opts.precision || 0,
+            nullable = opts.nullable;
         var result = ko.computed({
             read: target,  //always return the original observables value
             write: function (newValue) {
                 var current = target(),
                 roundingMultiplier = Math.pow(10, precision),
-                newValueAsNum = isNaN(newValue) ? 0 : parseFloat(+newValue),
-                valueToWrite = Math.round(newValueAsNum * roundingMultiplier) / roundingMultiplier;
+                newValueAsNum = isNaN(newValue) ? (nullable ? null : 0) : parseFloat(+newValue),
+                valueToWrite = newValueAsNum === null ? null : Math.round(newValueAsNum * roundingMultiplier) / roundingMultiplier;
 
                 //only write if it changed
                 if (valueToWrite !== current) {

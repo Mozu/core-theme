@@ -15,9 +15,9 @@
 </div>
 
 <form id="mz-checkout-form" class="mz-checkout-form" style="visibility: hidden" method="post" action="" onsubmit="return false;" 
-    data-mz-checkout="{% json_attribute Model.order %}" 
-    data-mz-paymentapibase="{{ Model.paymentApiBase }}" 
-    data-mz-shippingmethods="{% json_attribute Model.availableShippingMethods %}"
+    data-mz-checkout="{% json_attribute Model %}" 
+    data-mz-paymentapibase="{{ ViewData.paymentApiBase }}" 
+    data-mz-shippingmethods="{% json_attribute ViewData.availableShippingMethods %}"
     data-bind="css: { 'mz-submitting': submitting }">
     <h1 class="mz-page-header">
         Checkout{% if not user.email %}

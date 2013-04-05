@@ -30,8 +30,12 @@ ApiInterface.prototype = {
 
         this.fire('request', xhr, deferred.promise, requestConf);
 
-        deferred.promise.otherwise(function (failedXhr) {
-            if (!cancelled) me.fire('error', deferred.promise, failedXhr, requestConf);
+        deferred.promise.otherwise(function (error) {
+            var res;
+            if (!cancelled) {
+                me.fire('error', error, xhr, requestConf);
+                throw error;
+            }
         });
 
         var cancelled = false;
@@ -49,14 +53,21 @@ ApiInterface.prototype = {
                 return ApiReference.tryCreateApiObject(type, rawJSON, me);
             };
         isRemote = isRemote === false ? false : true;
-        return isRemote ? this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf).then(fulfill) :
-                          utils.when(utils.extend(conf, { unsynced: true }), fulfill);
+        if (isRemote) {
+            var cancelablePromise = this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf),
+                completedPromise = cancelablePromise.then(fulfill);
+            completedPromise.cancel = cancelablePromise.cancel;
+            return completedPromise;
+        } else {
+            return utils.when(conf, fulfill);
+        }
     },
     all: function () {
         return utils.when.join.apply(utils.when, arguments);
     },
     steps: function () {
-        return utils.pipeline(Array.prototype.slice.call(arguments));
+        var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
+        return utils.pipeline(Array.prototype.slice.call(args));
     }
 };
 var setOp = function(fnName) {

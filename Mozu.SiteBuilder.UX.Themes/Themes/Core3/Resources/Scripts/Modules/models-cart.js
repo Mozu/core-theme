@@ -16,6 +16,7 @@
             this.del().then(function () {
                 me.parentCart.get();
             }, function (err) {
+                me.parentCart.submitting(false);
                 me.parentCart.messages.push('Error removing item from cart.');
             });
         }
@@ -25,23 +26,34 @@
             var price = self.UnitPrice();
             return price.BaseAmount != price.FinalAmount;
         });
+        this.apiModel.on('error', function (e) {
+            self.parentCart.messages(e.Items);
+            self.parentCart.submitting(false);
+        });
         var origQuantity = this.Quantity();
         var changingQuantityPromise = false;
         this.Quantity.subscribe(function (newValue) {
-            if (origQuantity && origQuantity !== newValue) {
-                origQuantity = newValue;
-                if (changingQuantityPromise) {
-                    changingQuantityPromise.cancel();
-                    changingQuantityPromise = false;
+            if (origQuantity !== newValue) {
+                if (origQuantity === 0 && newValue > 0) {
+                    self.parentCart.unQueueRemoval(self);
                 }
-                self.parentCart.submitting(true);
-                changingQuantityPromise = self.updateQuantity(newValue).then(function () {
-                    changingQuantityPromise = self.parentCart.get();
-                    return changingQuantityPromise;
-                }).then(function () {
-                    self.parentCart.submitting(false);
-                    changingQuantityPromise = false;
-                });
+                if (newValue === 0) {
+                    self.parentCart.queueRemoval(self);
+                } else {
+                    if (changingQuantityPromise) {
+                        changingQuantityPromise.cancel && changingQuantityPromise.cancel();
+                        changingQuantityPromise = false;
+                    }
+                    self.parentCart.submitting(true);
+                    changingQuantityPromise = self.updateQuantity(newValue).then(function () {
+                        changingQuantityPromise = self.parentCart.get();
+                        return changingQuantityPromise;
+                    }).then(function () {
+                        self.parentCart.submitting(false);
+                        changingQuantityPromise = false;
+                    });
+                }
+                origQuantity = newValue;
             }
         });
     });
@@ -57,20 +69,34 @@
             hasDiscount: {},
         },
         checkout: function () {
-            var self = this;
+            var self = this,
+                items = this.Items(),
+                go = function() {
+                    self.apiModel.checkout().then(function (order) {
+                        self.publish('ordercreated', order);
+                    });
+                },
+                chain = [go];
             self.submitting(true);
-            this.apiModel.checkout().then(function (order) {
-                //$.cookie.raw = true;
-                //$.cookie('order', 'orderid=' + order.data.Id + ';', { path: '/' });
-                self.publish('ordercreated', order);
-            }, function (error) {
-                self.submitting(false);
-                self.messages(error.Items);
+            $.each(this.removalQueue, function(ix) {
+                var item = ko.utils.arrayFirst(items, function(i) {
+                    return i.CartItemId = ix;
+                });
+                if (item) chain.unshift(function () {
+                    return item.del();
+                });
             });
+            return self.apiModel.api.steps(chain);
+        },
+        queueRemoval: function (item) {
+            this.removalQueue[item.CartItemId] = item;
+        },
+        unqueueRemoval: function (item) {
+            delete this.removalQueue[item.CartItemId];
         }
     }, function constructCart() {
         var self = this;
-
+        self.removalQueue = {};
         // extract current value
         var items = this.Items();
         // private, underlying observablearray
