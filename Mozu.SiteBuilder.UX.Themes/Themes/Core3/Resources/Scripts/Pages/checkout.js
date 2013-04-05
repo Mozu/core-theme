@@ -2,12 +2,12 @@
     $(document).ready(function () {
 
         var $checkoutView = $('#mz-checkout-form'),
-            checkoutData = $checkoutView.mozuData('mz-checkout'),
-            shippingMethodData = $checkoutView.mozuData('mz-shippingmethods');
+            checkoutData = $checkoutView.mozuData('checkout'),
+            shippingMethodData = $checkoutView.mozuData('shippingmethods');
 
         checkoutData.availableShippingMethods = $.isArray(shippingMethodData) ? shippingMethodData : [];
 
-        checkoutData.paymentApiBase = $checkoutView.mozuData('mz-paymentapibase');
+        checkoutData.paymentApiBase = $checkoutView.mozuData('paymentapibase');
 
         var checkoutViewModel = new CheckoutModels.CheckoutPage(checkoutData);
 
@@ -28,7 +28,8 @@
 
         // run jquery affix manually (since the spy attributes don't work with IE in knockout)
         var $rightcol = $('#mz-checkout-rightcol');
-        var affixer = $rightcol.affix({ offset: $rightcol.offset() }).data('affix');
+        var rcOffset = $rightcol.offset();
+        var affixer = $rightcol.css('left', rcOffset.left).affix({ offset: rcOffset }).data('affix');
 
         window.checkoutVM = checkoutViewModel;
 

@@ -34,7 +34,7 @@
         //});
 
         // go to the cart when complete
-        product.on('update', function (event, cartitem) {
+        product.on('addedtocart', function (event, cartitem) {
             if (cartitem && cartitem.data && cartitem.data.CartItemId) {
                 product.submitting(true);
                 window.location.href = "/cart";

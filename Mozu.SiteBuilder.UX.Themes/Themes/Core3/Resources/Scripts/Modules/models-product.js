@@ -1,4 +1,4 @@
-﻿define(["jquery", "modules/knockout-plus", "modules/knockout-viewmodel"], function ($, ko, KnockoutVM) {
+﻿define(["jquery", "modules/knockout-plus", "modules/knockout-viewmodel", "modules/models-price"], function ($, ko, KnockoutVM, PriceModels) {
 
     var ProductOption = KnockoutVM.extend({
         statics: {
@@ -107,24 +107,6 @@
 
     });
 
-    var ProductPrice = KnockoutVM.extend({
-        observables: {
-            Price: { numeric: 2 },
-            SalePrice: { numeric: 2 },
-            DiscountId: {},
-            DiscountName: {},
-            OfferPrice: { numeric: 2 }
-        }
-    }, function constructProductPrice() {
-        var me = this;
-        this.hasSalePrice = ko.computed(function () {
-            return !isNaN(me.SalePrice()) && me.SalePrice() !== 0;
-        });
-        this.hasRange = ko.computed(function () {
-            return !isNaN(me.LowerBoundPrice + me.UpperBoundPrice);
-        });
-    });
-
     var Product = KnockoutVM.extend({
         mozuType: 'product',
         hasMessages: true,
@@ -145,7 +127,7 @@
             PurchasableState: {}
         },
         submodels: {
-            Price: ProductPrice,
+            Price: PriceModels.ProductPrice,
             config: ProductConfiguration
         },
         doNotSubmit: ["price", "config"],
@@ -159,9 +141,12 @@
             };
         },
         submit: function () {
+            var self = this;
             if (this.validate()) {
                 this.submitting(true);
-                this.addToCart(this.toJS());
+                this.addToCart(this.toJS()).then(function (item) {
+                    self.publish('addedtocart', item);
+                });
             }
         }
     }, function constructProduct() {
@@ -176,7 +161,6 @@
 
     return {
         Option: ProductOption,
-        Price: ProductPrice,
         Product: Product,
         Configuration: ProductConfiguration
     };

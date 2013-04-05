@@ -173,22 +173,32 @@
             return ko.toJS(ret);
         },
         createSDKObject: function(obj) {
-            var me = this,
-                onSuccess = function (returnObj) {
-                    // clone the apiModel before feeding it into me.populate, which destroys objects it gets
-                    if (returnObj === me.apiModel) me.populate($.extend({}, me.apiModel.data));
-                    me.publish('update', returnObj);
-                    return returnObj;
-                };
+            var me = this;
+
             this.apiPromise = api.create(this.mozuType, this.toJS(), false).then(function (apiModel) {
                 me.apiModel = apiModel;
                 $.each(apiModel.getAvailableActions(), function (ix, actionName) {
                     (actionName in me ? apiModel : me)[actionName] = function (data) {
                         // include self by default in update action
                         if (actionName in { 'create': true, 'update': true }) data = data || me.toJS();
-                        return apiModel.action(actionName, data).then(onSuccess);
+                        return apiModel.action(actionName, data);
                     };
                 });
+
+                apiModel.on('sync', function (data) {
+                    me.populate($.extend({}, data));
+                    me.publish('update', data);
+                });
+
+                if (me.hasMessages) {
+                    me.apiModel.on('error', function (errors) {
+                        me.submitting(false);
+                        me.messages(errors.Items);
+                    });
+                    me.on('update', function (newJSON) {
+                        me.messages(newJSON.Messages || []);
+                    });
+                }
             });
         },
         publish: function () {
@@ -216,7 +226,8 @@
                 this.eventBus = makeEventBus(this);
                 this.populate(obj);
                 this.initialized = true;
-                this.submitting = ko.observable(false);                if (this.mozuType) 
+                this.submitting = ko.observable(false);
+                if (this.mozuType) 
                     this.createSDKObject(obj);
                 if (this.hasMessages)
                     makeMessageBus(this);

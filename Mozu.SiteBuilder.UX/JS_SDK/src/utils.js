@@ -56,7 +56,7 @@ var utils = {
                         ErrorCode: 'TIMEOUT'
                     }
                 ]
-            });
+            }, xhr);
         }, 30000);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
@@ -66,13 +66,27 @@ var utils = {
                         try {
                             json = JSON.parse(xhr.responseText);
                         } catch (e) {
-                            failure(xhr, e);
+                            failure({
+                                Items: [
+                                    {
+                                        Message: "Unable to parse response: " + xhr.responseText,
+                                        ErrorCode: 'UNKNOWN'
+                                    }
+                                ]
+                            }, xhr, e);
                         }
                     }
                 if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
                     success(json, xhr);
                 } else {
-                    failure(json, xhr);
+                    failure(json || {
+                        Items: [
+                            {
+                                Message: 'Request failed, no response given.',
+                                ErrorCode: xhr.status
+                            }
+                        ]
+                    }, xhr);
                 }
             }
         };

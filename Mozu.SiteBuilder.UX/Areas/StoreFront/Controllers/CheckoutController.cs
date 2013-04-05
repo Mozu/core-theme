@@ -73,7 +73,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
            
             await this.AsyncInitData();
 
-            return View("checkout", new { order = model, paymentApiBase = _pciSettingsProvider.GetPaymentApiBase(), availableCountries = _orderService.GetShippableCountries().Select(x => new { code = x.Key, name = x.Value } as object).ToList(), availableShippingMethods = rates });
+            ViewData["paymentApiBase"] = _pciSettingsProvider.GetPaymentApiBase();
+            ViewData["availableCountries"] = _orderService.GetShippableCountries().Select(x => new { code = x.Key, name = x.Value } as object).ToList();
+            ViewData["availableShippingMethods"] = rates;
+            
+            return View("checkout", model);
         }
 
      

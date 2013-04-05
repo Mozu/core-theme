@@ -320,6 +320,7 @@
     <Content Include="Themes\Core3\MetaData\PageTypes\commerce\cart\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\search\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\product\definition.json" />
+    <Content Include="Themes\Core3\Resources\Scripts\Modules\models-price.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-user.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\jquery-plus.js" />
     <Content Include="Themes\Core3\Resources\Strings\lang-de.csv" />
@@ -560,7 +561,6 @@
     <Content Include="Themes\Core3\Modules\_AddressSummaryTemplate.vol" />
     <Content Include="Themes\Core3\Modules\_CheckoutCouponCodeField.vol" />
     <Content Include="Themes\Core3\Modules\_CheckoutCommentsField.vol" />
-    <Content Include="Themes\Core3\Templates\_home.vol" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
