@@ -42,6 +42,10 @@
         "id": "productTypes",
         "label": "Product Types",
         "address": "producttypes"
+        }, {
+        "id": "inventory",
+        "label": "Inventory",
+        "address": "inventory"
         }]
 }, {
     "id": "marketing",
