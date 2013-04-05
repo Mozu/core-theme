@@ -27,18 +27,6 @@ modules/tagcloud.js
 
 pages/checkout.js
 ----------------
-text.js
-shim.js
-shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
-modules/jquery-plus.js
-shim!vendor/bootstrap/bootstrap-affix[modules/jquery-plus=jQuery]>jQuery
-vendor/knockout-latest.js
-i18n.js
-nls/messages.js
-i18n!nls/messages
-modules/knockout-plus.js
-modules/api.js
-modules/knockout-viewmodel.js
 nls/messages-checkout.js
 i18n!nls/messages-checkout
 modules/models-user.js
