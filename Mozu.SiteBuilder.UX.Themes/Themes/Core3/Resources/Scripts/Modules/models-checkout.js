@@ -512,7 +512,7 @@
             observables: {
                 "Text": {}
             }
-        });
+        }),
 
         CheckoutPage = ViewModelPrototype.extend({
             mozuType: 'order',
