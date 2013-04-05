@@ -30,16 +30,6 @@ Ext.define('Taco.view.product.Index', {
             }, {
                 name: 'productName',
                 fieldLabel: 'Name'
-            }, {
-                name: 'productFullDescription',
-                fieldLabel: 'In Description'
-            }, {
-                name: 'producttypeid',
-                fieldLabel: 'Product Type(s)'
-            }, {
-                name: 'price',
-                fieldLabel: 'Price',
-                width: 160
             }]
         }]
     },
@@ -54,9 +44,6 @@ Ext.define('Taco.view.product.Index', {
     }, {
         property: 'productCode',
         text: 'Code'
-    }, {
-        property: 'categoryids',
-        text: 'Category'
     }, {
         property: 'producttypeid',
         text: 'Product Type'
@@ -78,7 +65,7 @@ Ext.define('Taco.view.product.Index', {
             resizable: false,
             flex: 1,
             renderer: function (value, metaData, record) {
-                return  record.getContextualValue('productName');
+                return record.getContextualValue('productName');
 
             }
         }, {
