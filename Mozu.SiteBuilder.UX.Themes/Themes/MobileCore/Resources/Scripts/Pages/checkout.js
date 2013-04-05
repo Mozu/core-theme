@@ -1,13 +1,13 @@
-﻿define(["shim!vendor/bootstrap/bootstrap-affix[modules/jquery-plus=jQuery]>jQuery", "knockout", "modules/models-checkout"], function ($, ko, CheckoutModels) {
+﻿define(["modules/jquery-plus", "modules/knockout-plus", "modules/models-checkout"], function ($, ko, CheckoutModels) {
     $(document).ready(function () {
 
         var $checkoutView = $('#mz-checkout-form'),
-            checkoutData = $checkoutView.mozuData('mz-checkout'),
-            shippingMethodData = $checkoutView.mozuData('mz-shippingmethods');
+            checkoutData = $checkoutView.mozuData('checkout'),
+            shippingMethodData = $checkoutView.mozuData('shippingmethods');
 
         checkoutData.availableShippingMethods = $.isArray(shippingMethodData) ? shippingMethodData : [];
 
-        checkoutData.paymentApiBase = $checkoutView.mozuData('mz-paymentapibase');
+        checkoutData.paymentApiBase = $checkoutView.mozuData('paymentapibase');
 
         var checkoutViewModel = new CheckoutModels.CheckoutPage(checkoutData);
 
@@ -32,7 +32,6 @@
             if (newValue) {
                 window.scrollTo(0, 0);
             }
-            setTimeout(function () { affixer.options.offset = $rightcol.offset() }, 250);
         });
 
         checkoutViewModel.on('complete', function () {

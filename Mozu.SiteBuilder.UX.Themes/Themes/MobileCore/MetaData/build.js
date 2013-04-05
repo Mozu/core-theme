@@ -36,9 +36,8 @@
         },
         {
             name: "pages/checkout",
-            exclude: ["pages/common"],
-            insertRequire: ["pages/checkout"],
-            exclude: ['pciaas']
+            exclude: ["pages/common", 'pciaas'],
+            insertRequire: ["pages/checkout"]
         }
     ]
 });
