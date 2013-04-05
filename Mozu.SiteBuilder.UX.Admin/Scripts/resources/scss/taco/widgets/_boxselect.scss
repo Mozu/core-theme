@@ -105,6 +105,21 @@
     }
   }
 
+  /* MENUS */
+
+  .#{$prefix}boxselect-item-menu {
+    .#{$prefix}menu-item {
+      font-size: px-to-rem(13);
+      padding: 4px 8px;
+      text-transform: uppercase;
+
+      &:hover {
+        background-color: $color-neutral-45;
+        color: $color-neutral-white;
+      }
+    }
+  }
+
   .#{$vprefix}combofilter-form-menu {
     @include border-radius(2px);
     @include outer-shadow(0.5, 8px, 0px, 2px);
