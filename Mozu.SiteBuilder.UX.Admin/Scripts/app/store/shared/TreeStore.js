@@ -47,6 +47,36 @@ Ext.define('Taco.store.shared.TreeStore', {
         this.callParent(arguments);
         this.on('beforeappend', this.onItemInsert, this);
         this.on('beforeinsert', this.onItemInsert, this);
-    }
+        
+    },
+    fillNode: function (node, newNodes) {
+        var lookup = {}, fillNodes = [];
+        console.log('fillNode');
 
+        Ext.each(newNodes, function (newNode) {
+            lookup[newNode.getId()] = newNode;
+        }, this);
+        
+        Ext.each(newNodes, function (newNode) {
+            var parent = lookup[newNode.get('parentId') || 666];
+            if (parent) {
+              //  parent.appendChild(newNode, undefined, true);
+            } else {
+                fillNodes.push(newNode);
+            }
+        }, this);
+        
+        //appendChild (node, suppressEvents, commit) 
+        this.callParent([node, fillNodes]);
+        
+        Ext.each(newNodes, function (newNode) {
+            var parent = lookup[newNode.get('parentId') || 666];
+            if (parent) {
+                parent.appendChild(newNode, undefined, true);
+            } else {
+               // fillNodes.push(newNode);
+            }
+        }, this);
+        
+    }
 });
