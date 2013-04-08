@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.ComponentModel;
+
 namespace Mozu.SiteBuilder.Mvc.Extensions
 {
     using System;
@@ -71,6 +73,41 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 return null;
             }
             return doc.Properties.Where(x => x.PropertyType == key).Select(x => x.Value).FirstOrDefault();
+        }
+
+        public static T Get<T>(this Document doc, string key)
+        {
+            return Get<T>(doc, key, default(T));
+        }
+        public static T Get<T>(this Document doc, string key, T defaulltValue)
+        {
+            if (doc.Properties == null)
+            {
+                return defaulltValue;
+            }
+            object obj = doc.Properties.Where(x => x.PropertyType == key).Select(x => x.Value).FirstOrDefault();
+            if (obj != null)
+            {
+                return (T)Convert.ChangeType(obj, typeof(T));
+                
+            }
+            return defaulltValue;
+        }
+        public static bool TryGet<T>(this Document doc, string key, out T value)
+        {
+            value = default(T);
+            if (doc.Properties == null)
+            {
+                return false ;
+            }
+            object obj = doc.Properties.Where(x => x.PropertyType == key).Select(x => x.Value).FirstOrDefault();
+            if (obj != null)
+            {
+                value= (T)Convert.ChangeType(obj, typeof(T));
+                return true;
+
+            }
+            return false;
         }
     }
 }
