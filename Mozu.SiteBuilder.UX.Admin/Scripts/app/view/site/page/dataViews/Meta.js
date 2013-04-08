@@ -39,7 +39,8 @@ Ext.define('Taco.view.site.page.dataViews.Meta', {
             },
             {
                 fieldLabel: 'Redirect',
-                name: 'redirect_url'
+                input: { type: 'url' },
+                name: 'redirect_url' 
 
             }
         ]
@@ -70,7 +71,7 @@ Ext.define('Taco.view.site.page.dataViews.Meta', {
     update: function () {
         
         var form = this.getForm(),
-            vals = form.getValues(),
+            vals = form.getValues(false,false,false,true),
             record = this.record,
             fieldNames = record.fields.keys;
         Ext.Object.each(vals, function (key, val) {

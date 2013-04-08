@@ -159,11 +159,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<ActionResult> Page(string collection, string pageName)
         {
-            if (pageName == "stuff")
-            {
-                
-            }
-
+            
 
             var pc = this.SiteContext.PageContext;
 
@@ -192,6 +188,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             pc.PageType = (string)(vm.Properties.GetValue("page_type")) ?? "cmspage";
 
             var template = ((string)(vm.Properties.GetValue("template")) ?? this.HttpContext.Request["template"] ?? "page");
+
+
+            if (!this.SiteContext.IsEditMode   )
+            {
+                if (pc.CmsContext.Page.Get<bool>("hidden", false))
+                {
+                    return new HttpNotFoundResult("not found");
+                }
+                string redir;
+                
+                if (pc.CmsContext.Page.TryGet<string>("redirect_url", out redir ))
+                {
+                    return this.Redirect(redir);
+                }
+            }
+
+
 
             //return View(template, vm);
             var vr = _viewEngine .FindView(this.ControllerContext, template, null, true);
