@@ -218,7 +218,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                     //todo: clean up create sync.
                     continue;
                 }
-                var d = _docRepo.Get(doc.CollectionName, doc.DocumentId, null, null).Result.ReadAsSync();
+                var d = _docRepo.Get(doc.CollectionName, doc.DocumentId, null, "draft").Result.ReadAsSync();
                // d.PublishState = CmsConstants.Documents.doc_state_active;
                 foreach (var item in doc.Items)
                 {
@@ -300,7 +300,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
             }
         }
-        public Task<ServiceClientResponse<DC.Document>> Get(string contentCollection, string id , bool activeVersion = true )
+        public Task<ServiceClientResponse<DC.Document>> Get(string contentCollection, string id , bool activeVersion = false )
         {
             return _docRepo.Get(contentCollection, id, null, activeVersion ? CmsConstants.Documents.doc_state_active : "draft");
         }
@@ -325,7 +325,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         DC.PropertyValue ToPropertyValue(AVM.DocumentProperty inProperty, DC.PropertyValue outProperty = null)
         {
-            var propType = _cmsTypeHelper.GetPropertyType(inProperty.Key).Result;//.GetDocumentType (doc.DocumentType).PropertyTypes.FirstOrDefault(x => string.Equals(x.Name, p.Key, StringComparison.OrdinalIgnoreCase));
+            var propType = _cmsTypeHelper.GetPropertyType(inProperty.Key);//.GetDocumentType (doc.DocumentType).PropertyTypes.FirstOrDefault(x => string.Equals(x.Name, p.Key, StringComparison.OrdinalIgnoreCase));
             if (propType == null)
             {
                 throw new Exception("unknown property" + inProperty.Key);

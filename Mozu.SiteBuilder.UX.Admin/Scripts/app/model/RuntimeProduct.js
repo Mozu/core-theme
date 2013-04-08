@@ -268,7 +268,7 @@ Ext.define('Taco.model.RuntimeProduct', {
 
     
     proxy: {
-        type: 'readahead',
+        type: 'ajax',
         api: {
             //read: '/Scripts/Taco/mocks/categories.json',
             read: '/admin/app/Product/list',

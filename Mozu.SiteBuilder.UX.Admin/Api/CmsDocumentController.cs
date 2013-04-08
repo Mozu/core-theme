@@ -84,7 +84,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 results = (await _cmsService.GetList ( new CmsListRequest ()
                 {
                     Collection = CmsConstants.Documents.default_collection_name,
-                    PageSize = int.MaxValue 
+                    PageSize = int.MaxValue ,
+                    
                 })).ReadAsSync();
                 
                 
@@ -98,7 +99,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     Items = new List<DC.Document>()
                     {
-                        (await _cmsService.Get( col, id )).ReadAsSync()
+                        (await _cmsService.Get( col, id,activeVersion:false  )).ReadAsSync()
                         
                     },
                     TotalCount =1,

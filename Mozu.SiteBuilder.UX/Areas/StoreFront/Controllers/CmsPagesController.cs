@@ -159,6 +159,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<ActionResult> Page(string collection, string pageName)
         {
+            if (pageName == "stuff")
+            {
+                
+            }
+
+
             var pc = this.SiteContext.PageContext;
 
             pc.CmsContext = new CmsPageContext()

@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             _cache = System.Runtime.Caching.MemoryCache.Default;
         }
 
-        public async Task<DocumentType> GetDocumentType(string name)
+        public  DocumentType GetDocumentType(string name)
         {
             Mozu.Content.Contracts.DocumentType doc;
             Dictionary<string, Mozu.Content.Contracts.DocumentType> dic = null;
@@ -56,7 +56,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
             if (dic == null)
             {
-                var props = await _docTypeClient.List(int.MaxValue, 0).Result.ReadAsAsync();
+                var props = _docTypeClient.List(int.MaxValue, 0).Result.ReadAsSync();
+                
                 dic = props.Items.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
                 lock (g_cache)
                 {
@@ -71,7 +72,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
             return null;
         }
-        public async Task<PropertyType> GetPropertyType(string name)
+        public PropertyType GetPropertyType(string name)
         {
             Mozu.Content.Contracts.PropertyType prop;
             Dictionary<string, Mozu.Content.Contracts.PropertyType> dic = null;
@@ -82,7 +83,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
             if (dic == null)
             {
-                var response = await _propTypeClient.GetList(int.MaxValue, 0);
+                var response = _propTypeClient.GetList(int.MaxValue, 0).Result;
                 var props = response.ReadAsAsync().Result.Items;
                 //props.ForEach(x => x.PropertyValueType.Name = x.Name == "tags" ? "tags" : x.PropertyValueType.Name);
 
