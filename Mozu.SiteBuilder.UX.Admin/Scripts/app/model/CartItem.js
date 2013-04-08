@@ -45,7 +45,7 @@ Ext.define('Taco.model.CartItem', {
     ],
     
     proxy: {
-        type: 'readahead',
+        type: 'ajax',
         api: {
             //read: '/Scripts/Taco/mocks/categories.json',
             read: '/admin/app/Product/list',

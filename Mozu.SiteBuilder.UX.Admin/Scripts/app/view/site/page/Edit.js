@@ -101,7 +101,7 @@
                         scope:this
                     },
                     {
-                        text: 'Info',
+                        text: 'Page Settings',
                         itemId: 'settings',
                         handler: this.settings,
                         scope:this
@@ -737,13 +737,49 @@
         },
 
         settings: function () {
-
-            Ext.create('Taco.core.ux.modal.Helper', {
-                form: {
-                    editors: this.adapter.editors,
-                    record: this.adapter.get()
-                }
+            var form,editors = [],record=this.adapter.get();
+            Ext.each(this.adapter.editors, function(cls) {
+                editors.push(Ext.create(cls, {
+                    record: record
+                }));
             });
+
+            form = Ext.create('Taco.core.ux.form.Form',
+                {
+                    items: editors,
+                    record: record,
+                    width: 600
+                });
+            form.add({
+                xtype: 'button',
+                handler: function () {
+                    form.save();
+                    //Ext.each(editors, function(editor) {
+                    //    if (editor.save) {
+                    //        editor.save.apply(editor, []);
+                    //    }
+                    //});
+                },
+                text: 'save stuff'
+            });
+            
+            
+            Ext.create('Taco.core.ux.modal.Modal', {
+                items: form,
+                autoShow: true
+            });
+            
+            
+            
+            //Ext.create('Taco.core.ux.form.ModalEditor', {
+            //    record: record,
+            //    formCls: 'Taco.core.ux.form.Form',
+            //    formCfg: {
+            //        content: {
+            //            items:editors
+            //        }
+            //    }
+            //});
         },
 
         navigateIframe: function (config) {

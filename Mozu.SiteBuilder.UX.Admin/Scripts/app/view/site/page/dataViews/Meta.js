@@ -6,37 +6,72 @@ Ext.define('Taco.view.site.page.dataViews.Meta', {
     requires: ['Taco.core.ux.CategoryComboBox', 'Taco.core.ux.form.SlugField', 'Taco.core.ux.form.SelectField', 'Taco.core.ux.action.DirtyButton'],
 
 
+    initComponent: function () {
 
-    defaults: {
-        xtype: 'textfield',
-        labelAlign: 'top',
-        labelSeparator: '',
-        width: 544
+        Ext.apply(this, this.formCfg);
+        this.callParent(this);
+        this.loadEditor();
     },
-    items: [
-        {
-            fieldLabel: 'Meta Title',
-            name: 'meta_title'
-
+    formCfg:{
+        defaults: {
+                    xtype: 'textfield',
+                    labelAlign: 'top',
+                    labelSeparator: '',
+                    width: 544
         },
-        {
-            fieldLabel: 'Meta Description',
-            name: 'meta_description'
+        items: [
+            {
+                fieldLabel: 'Meta Title',
+                name: 'meta_title'
 
-        }],
+            },
+            {
+                fieldLabel: 'Meta Description',
+                name: 'meta_description'
+
+            },
+            {
+                fieldLabel: 'Hide',
+                name: 'hidden',
+                xtype: 'checkbox',
+                inputValue:'true'
+
+            },
+            {
+                fieldLabel: 'Redirect',
+                name: 'redirect_url'
+
+            }
+        ]
+    },
+    loadForm: function(record, noCascade) {
+        this.callParent(arguments);
+        this.loadEditor();
+    },
+    beforeSave: function () {
+        var res = this.callParent(arguments);
+        if (res === false) {
+            return res;
+        }
+        //todo val check
+        this.update();
+        return res;
+    },
     loadEditor: function () {
         var items = this.record.get('items');
         Ext.each(items, function (item) { item.id = item.key });
 
         this.getForm().setValues(items);
-        this.callParent(arguments);
+        
     },
-
+    addSaveTasks:function() {
+        console.log('ast');
+    },
     update: function () {
-        this.callParent(arguments);
+        
         var form = this.getForm(),
             vals = form.getValues(),
-            record = this.getRecord(),
+            record = this.record,
             fieldNames = record.fields.keys;
         Ext.Object.each(vals, function (key, val) {
             if (fieldNames.indexOf(key) == -1) {

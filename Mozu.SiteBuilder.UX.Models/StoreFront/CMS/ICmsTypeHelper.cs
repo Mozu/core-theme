@@ -17,8 +17,8 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.CMS
     /// </summary>
     public interface ICmsTypeHelper
     {
-        Task<DocumentType> GetDocumentType(string name);
-        Task<PropertyType> GetPropertyType(string name);
+        DocumentType GetDocumentType(string name);
+        PropertyType GetPropertyType(string name);
 
         IEnumerable<PageTemplateDefinition> GetPageTypeDefinitions();
         WidgetDefinition GetWidgetDefintion(string id);

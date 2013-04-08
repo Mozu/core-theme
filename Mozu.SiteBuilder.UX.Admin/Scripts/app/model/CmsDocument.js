@@ -87,7 +87,7 @@ Ext.define('Taco.model.CmsDocument', {
     },
 
     proxy: {
-        type: 'readahead',
+        type: 'ajax',
         api: {
             create: '/admin/app/cmsdocument/create',
             read: '/admin/app/cmsdocument/read',
