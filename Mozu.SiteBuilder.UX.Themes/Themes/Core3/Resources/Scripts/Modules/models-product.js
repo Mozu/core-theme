@@ -135,16 +135,13 @@
             // server expects the options collection to belong to this model as well
             var j = Product.prototype.toJS.apply(this);
             //j.options = this.config.emitAllOptions();
-            return {
-                Product: j,
-                Quantity: this.Quantity()
-            };
+            return j;
         },
         submit: function () {
             var self = this;
             if (this.validate()) {
                 this.submitting(true);
-                this.addToCart(this.toJS()).then(function (item) {
+                this.addToCart(this.Quantity()).then(function (item) {
                     self.publish('addedtocart', item);
                 });
             }

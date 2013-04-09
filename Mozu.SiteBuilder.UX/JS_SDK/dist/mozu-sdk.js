@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-04-05
+ * Mozu JavaScript SDK - v0.1.0 - 2013-04-09
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1072,7 +1072,13 @@
                         var returnObj = {};
                         if (typeof oType.template === "string") oType.template = utils.uritemplate.parse(oType.template);
                         var tptData = {};
-                        if (oType.includeSelf) tptData = utils.extend(tptData, obj.data);
+                        if (oType.includeSelf) {
+                            if (oType.includeSelf.asProperty) {
+                                tptData[oType.includeSelf.asProperty] = obj.data;
+                            } else {
+                                tptData = utils.extend(tptData, obj.data);
+                            }
+                        }
                         if (conf !== undefined && typeof conf !== "object") {
                             if (!oType.shortcutParam) throw "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
                             tptData[oType.shortcutParam] = conf;
@@ -1086,6 +1092,7 @@
                         if (oType.verb) returnObj.verbOverride = oType.verb;
                         if (oType.returnType) returnObj.returnType = oType.returnType;
                         if (oType.noBody) returnObj.noBody = oType.noBody;
+                        if (oType.overridePostData) returnObj.overridePostData = tptData;
                         return returnObj;
                     },
                     tryCreateApiObject: function(type, rawJSON, api) {
@@ -1120,6 +1127,11 @@
                         },
                         "add-to-cart": {
                             verb: "POST",
+                            includeSelf: {
+                                asProperty: "Product"
+                            },
+                            overridePostData: true,
+                            shortcutParam: "Quantity",
                             returnType: "cartitem",
                             template: "{+CartService}current/items/"
                         }
@@ -1284,7 +1296,9 @@
                     if (requestConf.verbOverride) method = requestConf.verbOverride;
                     var deferred = utils.when.defer();
                     var data;
-                    if (conf && !requestConf.noBody) {
+                    if (requestConf.overridePostData) {
+                        data = requestConf.overridePostData;
+                    } else if (conf && !requestConf.noBody) {
                         data = conf.data || conf;
                     }
                     var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function(rawJSON) {
@@ -1308,19 +1322,6 @@
                     };
                     return deferred.promise;
                 },
-                action: function(type, actionName, conf, isRemote) {
-                    var me = this, fulfill = function(rawJSON) {
-                        return ApiReference.tryCreateApiObject(type, rawJSON, me);
-                    };
-                    isRemote = isRemote === false ? false : true;
-                    if (isRemote) {
-                        var cancelablePromise = this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf), completedPromise = cancelablePromise.then(fulfill);
-                        completedPromise.cancel = cancelablePromise.cancel;
-                        return completedPromise;
-                    } else {
-                        return utils.when(conf, fulfill);
-                    }
-                },
                 all: function() {
                     return utils.when.join.apply(utils.when, arguments);
                 },
@@ -1329,11 +1330,26 @@
                     return utils.pipeline(Array.prototype.slice.call(args));
                 }
             };
-            var setOp = function(fnName) {
-                ApiInterface.prototype[fnName] = function(type, conf, isRemote) {
-                    return this.action(type, fnName, conf, isRemote);
+            var setOp = function() {
+                var op = function(iface, type, actionName, conf, isRemote) {
+                    var fulfill = function(rawJSON) {
+                        return ApiReference.tryCreateApiObject(type, rawJSON, iface);
+                    };
+                    isRemote = isRemote === false ? false : true;
+                    if (isRemote) {
+                        var cancelablePromise = iface.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, iface.context), conf), completedPromise = cancelablePromise.then(fulfill);
+                        completedPromise.cancel = cancelablePromise.cancel;
+                        return completedPromise;
+                    } else {
+                        return utils.when(conf, fulfill);
+                    }
                 };
-            };
+                return function(fnName) {
+                    ApiInterface.prototype[fnName] = function(type, conf, isRemote) {
+                        return op(this, type, fnName, conf, isRemote);
+                    };
+                };
+            }();
             for (var i in ApiReference.basicOps) {
                 if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
             }

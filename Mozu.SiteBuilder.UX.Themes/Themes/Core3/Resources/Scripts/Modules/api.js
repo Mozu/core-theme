@@ -1,5 +1,5 @@
 /*
- * This store's API, as produced by the Mozu SDK. RAW!
+ * This store's API, as exposed by the Mozu SDK. EXCELSIOR!
  *
  */
 

@@ -439,7 +439,6 @@
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\build.txt" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Modules\facebook-tools.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Modules\images-gallery.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Modules\models-cart.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\nls\fr\messages-checkout.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\nls\fr\messages.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Pages\cart.js" />

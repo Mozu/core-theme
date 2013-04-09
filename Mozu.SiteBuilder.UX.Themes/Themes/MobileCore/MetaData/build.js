@@ -32,12 +32,26 @@
                 'modules/knockout-plus',
                 'modules/tagcloud'
             ],
-            exclude: ['jquery', 'sdk']
+            exclude: ['jquery', 'sdk', 'pciaas']
+        },
+        {
+            name: "pages/product",
+            exclude: ["pages/common"],
+            insertRequire: ["pages/product"]
+        },
+        {
+            name: "pages/cart",
+            exclude: ["pages/common"],
+            insertRequire: ["pages/cart"]
         },
         {
             name: "pages/checkout",
             exclude: ["pages/common", 'pciaas'],
             insertRequire: ["pages/checkout"]
-        }
-    ]
+        },
+        {
+            name: "pages/myaccount",
+            exclude: ["pages/common"],
+            insertRequire: ["pages/myaccount"]
+        }    ]
 });

@@ -25,6 +25,19 @@ modules/knockout-viewmodel.js
 shim!vendor/jquery.tagcloud.0-0-1[jquery=jQuery]
 modules/tagcloud.js
 
+pages/product.js
+----------------
+modules/models-price.js
+modules/models-product.js
+shim!vendor/swipe.min>Swipe
+modules/product-images.js
+pages/product.js
+
+pages/cart.js
+----------------
+modules/models-cart.js
+pages/cart.js
+
 pages/checkout.js
 ----------------
 nls/messages-checkout.js
@@ -32,3 +45,7 @@ i18n!nls/messages-checkout
 modules/models-user.js
 modules/models-checkout.js
 pages/checkout.js
+
+pages/myaccount.js
+----------------
+pages/myaccount.js

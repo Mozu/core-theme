@@ -396,6 +396,7 @@
     <Content Include="JS_SDK\dist\mozu-sdk.min.js" />
     <Content Include="JS_SDK\Gruntfile.js" />
     <Content Include="JS_SDK\init_debug.js" />
+    <Content Include="JS_SDK\SDK_README.html" />
     <Content Include="JS_SDK\src\utils.js" />
     <Content Include="JS_SDK\src\interface.js" />
     <Content Include="JS_SDK\src\reference.js" />

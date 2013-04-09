@@ -34,23 +34,19 @@
         },
         {
             name: "pages/product",
-            exclude: ["pages/common"],
-            insertRequire: ["pages/product"]
+            exclude: ["pages/common"]
         },
         {
             name: "pages/cart",
-            exclude: ["pages/common"],
-            insertRequire: ["pages/cart"]
+            exclude: ["pages/common"]
         },
         {
             name: "pages/checkout",
-            exclude: ["pages/common", 'pciaas'],
-            insertRequire: ["pages/checkout"]
+            exclude: ["pages/common", 'pciaas']
         },
         {
             name: "pages/myaccount",
-            exclude: ["pages/common"],
-            insertRequire: ["pages/myaccount"]
+            exclude: ["pages/common"]
         }
     ]
 });

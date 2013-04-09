@@ -1,4 +1,4 @@
-﻿define(["modules/jquery-plus", "modules/knockout-plus", "modules/models-product", "modules/product-images"], function ($, ko, ProductModels) {
+﻿require(["modules/jquery-plus", "modules/knockout-plus", "modules/models-product", "modules/product-images"], function ($, ko, ProductModels) {
     // initialize view
 
     $(document).ready(function () {

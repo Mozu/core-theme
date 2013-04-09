@@ -94,7 +94,13 @@ var ApiReference = (function () {
             if (typeof oType.template === "string")
                 oType.template = utils.uritemplate.parse(oType.template);
             var tptData = {};
-            if (oType.includeSelf) tptData = utils.extend(tptData, obj.data);
+            if (oType.includeSelf) {
+                if (oType.includeSelf.asProperty) {
+                    tptData[oType.includeSelf.asProperty] = obj.data
+                } else {
+                    tptData = utils.extend(tptData, obj.data);
+                }
+            }
             if (conf !== undefined && typeof conf !== "object") {
                 if (!oType.shortcutParam) throw "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
                 tptData[oType.shortcutParam] = conf;
@@ -106,6 +112,7 @@ var ApiReference = (function () {
             if (oType.verb) returnObj.verbOverride = oType.verb;
             if (oType.returnType) returnObj.returnType = oType.returnType;
             if (oType.noBody) returnObj.noBody = oType.noBody;
+            if (oType.overridePostData) returnObj.overridePostData = tptData;
             return returnObj;
         },
 
@@ -151,6 +158,11 @@ var ApiReference = (function () {
             },
             'add-to-cart': {
                 verb: 'POST',
+                includeSelf: {
+                    asProperty: 'Product'
+                },
+                overridePostData: true,
+                shortcutParam: 'Quantity',
                 returnType: 'cartitem',
                 template: '{+CartService}current/items/'
             }
