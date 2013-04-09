@@ -89,11 +89,17 @@ Ext.define('Taco.core.data.StoreManager', {
         }
 
         if (needsRefresh) {
+            if (config.extraParams) {
+                store.getProxy().extraParams = config.extraParams.params;
+            }
             store.load();
             store.hasUpdates = null;
         }
 
         if (config.autoLoad && !store.hasLoaded()) {
+            if (config.extraParams) {
+                store.getProxy().extraParams = config.extraParams.params;
+            }
             store.load();
         }
         return store;
