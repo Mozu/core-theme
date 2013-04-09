@@ -17,6 +17,21 @@ Ext.define('Taco.model.ProductProperty', {
         {
             "name": "values",
             type: 'auto',
+            convert: function (v, r) {
+                var idx = 0, dateVal;
+                if (v && v.length) {
+                    for (idx; idx < v.length; idx++) {
+                        if (Ext.isString(v[idx])) {
+                            dateVal = Ext.Date.parse(v[idx], 'c');
+                            if (dateVal) {
+                                v[idx] = dateVal;
+                            }
+                        }
+                    }
+
+                }
+                return v;
+            },
             defaultValue: []
         },
         {
@@ -25,7 +40,41 @@ Ext.define('Taco.model.ProductProperty', {
             persist:false
         }
     ],
+    convert: function (v, r) {
 
+        if (r.data.dataType == 'DateTime') {
+            return r.convertDate(v);
+        }
+        if (r.data.dataType == 'Bool') {
+            return r.convertBool(v);
+        }
+        if (r.data.dataType == 'Number') {
+            return r.convertNumber(v);
+        }
+
+        return v;
+    },
+    convertBool: function (v) {
+        if ((v === undefined || v === null || v === '')) {
+            return null;
+        }
+        return v === true || v === 'true' || v == 1;
+    },
+    convertDate: function (v) {
+
+        if (!v) {
+            return null;
+        }
+        if (Ext.isDate(v)) {
+            return v;
+        }
+        return Ext.Date.parse(v, 'c');
+
+    },
+    convertNumber: function (v) {
+        return v !== undefined && v !== null && v !== '' ?
+            parseFloat(String(v).replace(Ext.data.Types.stripRe, ''), 10) : null;
+    },
     idProperty: "attributeFQN"
    
 });

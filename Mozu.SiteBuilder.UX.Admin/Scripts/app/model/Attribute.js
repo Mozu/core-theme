@@ -2,7 +2,7 @@
  * @class Taco.model.Attribute
  */
 Ext.define('Taco.model.Attribute', {
-    requires:['Taco.model.AttributeValue'],
+    requires: ['Taco.model.AttributeValue'],
     extend: 'Taco.core.data.Model',
     fields: [
         { name: 'id', type: 'auto' },
@@ -13,27 +13,74 @@ Ext.define('Taco.model.Attribute', {
         { name: 'isOption', type: 'boolean' },
         { name: 'isExtra', type: 'boolean' },
         { name: 'isProperty', type: 'boolean' },
-        { name: 'min', type: 'auto' },
-        { name: 'max', type: 'auto' },
+        {
+            name: 'min',
+            type: 'auto',
+            convert: function (v, r) {
+                return r.convert(v, r);
+            }
+        },
+        {
+            name: 'max',
+            type: 'auto',
+            convert: function (v, r) {
+                return r.convert(v, r);
+            }
+        },
         { name: 'attributeMetadata', type: 'auto', defaultValue: [] },
         { name: 'regex', type: 'string' },
         {
             name: 'values',
             type: 'auto',
             defaultValue: []
-            
+
         }
-        
+
     ],
+    convert: function (v, r) {
+
+         if (r.data.dataType == 'DateTime') {
+             return r.convertDate(v);
+         }
+         if (r.data.dataType == 'Bool') {
+             return r.convertBool(v);
+         }
+         if (r.data.dataType == 'Number') {
+             return r.convertNumber(v);
+         }
+             
+         return v;
+    },
+    convertBool: function (v) {
+        if ((v === undefined || v === null || v === '')) {
+            return null;
+        }
+        return v === true || v === 'true' || v == 1;
+    },
+    convertDate: function (v) {
+
+        if (!v) {
+            return null;
+        }
+        if (Ext.isDate(v)) {
+            return v;
+        }
+        return Ext.Date.parse(v, 'c');
+        
+    },
+    convertNumber: function(v) {
+        return v !== undefined && v !== null && v !== '' ?
+            parseFloat(String(v).replace(Ext.data.Types.stripRe, ''), 10) : null;
+    },
     getAttributeValues: function () {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.AttributeValue',
             associationKey: 'values',
             foreignKey: 'attributeId',
-            foreignProperty:'attribute'
+            foreignProperty: 'attribute'
         });
-        
-        
+
+
     },
     proxy: {
         type: 'ajaxproxy',
@@ -44,10 +91,10 @@ Ext.define('Taco.model.Attribute', {
         //     destroy: '/admin/app/Test/testDestroy'
         // },
         api: {
-           create: '/admin/app/attribute/create',
-           read: '/admin/app/attribute/read',
-           update: '/admin/app/attribute/update',
-           destroy: '/admin/app/attribute/destroy'
+            create: '/admin/app/attribute/create',
+            read: '/admin/app/attribute/read',
+            update: '/admin/app/attribute/update',
+            destroy: '/admin/app/attribute/destroy'
         },
         reader: {
             type: 'json',

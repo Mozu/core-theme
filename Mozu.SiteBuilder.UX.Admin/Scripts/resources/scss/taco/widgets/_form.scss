@@ -1465,7 +1465,7 @@
   }
 
   .#{$prefix}datepicker {
-    background: #FFF;
+    background: #CCC;
     padding: 10px;
     @include border-radius(2px);
     @include box-shadow(0 5px 10px rgba(0,0,0,0.4));
@@ -1503,7 +1503,7 @@
     }
 
     .#{$prefix}datepicker-header {
-      background: none;
+      background: #333;
       height: 33px;
       border-bottom: 1px dashed $color-neutral-mid;
       margin-bottom: 10px;
@@ -1594,7 +1594,7 @@
 
     .#{$vprefix}datepicker-time {
       font: $font-body-copy-small;
-      color: $color-neutral-darkest;
+      color: #333;
       text-align: center;
       padding: 7px 0;
 
