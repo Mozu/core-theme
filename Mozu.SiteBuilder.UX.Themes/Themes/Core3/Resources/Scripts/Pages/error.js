@@ -1,4 +1,4 @@
-﻿define(["jquery"], function ($) {
+﻿require(["jquery"], function ($) {
     $('#mz-error-detail-link').click(function() {
         $('#mz-error-detail').toggleClass('mz-expanded');
     })

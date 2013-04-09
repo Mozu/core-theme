@@ -1,4 +1,4 @@
-﻿define(["shim!vendor/bootstrap/bootstrap-affix[modules/jquery-plus=jQuery]>jQuery", "modules/knockout-plus", "modules/models-checkout"], function ($, ko, CheckoutModels) {
+﻿require(["shim!vendor/bootstrap/bootstrap-affix[modules/jquery-plus=jQuery]>jQuery", "modules/knockout-plus", "modules/models-checkout"], function ($, ko, CheckoutModels) {
     $(document).ready(function () {
 
         var $checkoutView = $('#mz-checkout-form'),

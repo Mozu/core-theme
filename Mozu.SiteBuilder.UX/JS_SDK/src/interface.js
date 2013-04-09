@@ -17,12 +17,15 @@ ApiInterface.prototype = {
         var deferred = utils.when.defer();
 
         var data;
-        if (conf && !requestConf.noBody) {
+        if (requestConf.overridePostData) {
+            data = requestConf.overridePostData;
+        } else  if (conf && !requestConf.noBody) {
             data = conf.data || conf;
         }
 
         var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function (rawJSON) {
             // update context with response headers
+            me.fire('success', rawJSON, xhr, requestConf);
             deferred.resolve(rawJSON, xhr);
         }, function (error) {
             deferred.reject(error, xhr, url);
@@ -47,21 +50,6 @@ ApiInterface.prototype = {
 
         return deferred.promise;
     },
-    action: function(type, actionName, conf, isRemote) {
-        var me = this,
-            fulfill = function (rawJSON) {
-                return ApiReference.tryCreateApiObject(type, rawJSON, me);
-            };
-        isRemote = isRemote === false ? false : true;
-        if (isRemote) {
-            var cancelablePromise = this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf),
-                completedPromise = cancelablePromise.then(fulfill);
-            completedPromise.cancel = cancelablePromise.cancel;
-            return completedPromise;
-        } else {
-            return utils.when(conf, fulfill);
-        }
-    },
     all: function () {
         return utils.when.join.apply(utils.when, arguments);
     },
@@ -70,11 +58,27 @@ ApiInterface.prototype = {
         return utils.pipeline(Array.prototype.slice.call(args));
     }
 };
-var setOp = function(fnName) {
-    ApiInterface.prototype[fnName] = function (type, conf, isRemote) {
-        return this.action(type, fnName, conf, isRemote);
+var setOp = (function () {
+    var op = function(iface, type, actionName, conf, isRemote) {
+        var fulfill = function (rawJSON) {
+                return ApiReference.tryCreateApiObject(type, rawJSON, iface);
+            };
+        isRemote = isRemote === false ? false : true;
+        if (isRemote) {
+            var cancelablePromise = iface.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, iface.context), conf),
+                completedPromise = cancelablePromise.then(fulfill);
+            completedPromise.cancel = cancelablePromise.cancel;
+            return completedPromise;
+        } else {
+            return utils.when(conf, fulfill);
+        }
     };
-};
+    return function (fnName) {
+        ApiInterface.prototype[fnName] = function (type, conf, isRemote) {
+            return op(this, type, fnName, conf, isRemote);
+        };
+    };
+}());
 for (var i in ApiReference.basicOps) {
     if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
 }
