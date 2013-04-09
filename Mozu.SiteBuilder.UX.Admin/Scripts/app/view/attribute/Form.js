@@ -133,10 +133,11 @@ Ext.define('Taco.view.attribute.Form', {
                         align: 'stretch'
                     },
                     items: [{
-                        fieldLabel: 'Rows'
-                        
+                        fieldLabel: 'Rows',
+                        name: 'rows'
                     }, {
-                        fieldLabel: 'Max char.'
+                        fieldLabel: 'Max char.',
+                        name: 'maxChar'
                     }],
                     listeners: {
                         boxready: function () {
