@@ -35,9 +35,9 @@
 		float:left;
 	}
 	.mz-site-nav-link {
-		color: {{themeSettings.siteNavColor|settingtype:'color'|default:'#C5C5C5'|description:'Site Navigation Color'}};
+		color: {{themeSettings.siteNavColor}};
 		text-decoration: none;
-		font: {{themeSettings.siteNavFont|settingtype:'font'|default:'14px Tahoma, sans-serif'|description:'Site Navigation Font'}};
+		font: {{themeSettings.siteNavFont}};
 		display: inline-block;
 		padding: 10px 15px;
 		position: relative;
@@ -46,7 +46,7 @@
 		}
 		&:hover {
 			background-color: #555;
-			color: {{themeSettings.siteNavHoverColor|settingtype:'color'|default:'#C9C9C9'|description:'Site Navigation Link Hover'}};
+			color: {{themeSettings.siteNavHoverColor}};
 		}
 	}
 
