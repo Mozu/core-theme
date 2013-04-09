@@ -254,21 +254,25 @@ Ext.define('Taco.core.ux.form.Form', {
         return tasks;
     },
 
-    addSaveTasks: function (tasks) {
+    addSaveTasks: function (tasks, updateRecord, saveRecord) {
         
         if (this.cascadeChildTasks) {
             this.addChildSaveTasks(tasks);
         }
-
-        tasks.add([{
-            key: this.tasksKeyPrefix + 'update-record',
-            updateRecord: this.record,
-            updateForm: this
-        }, {
-            key: this.tasksKeyPrefix + 'save-record',
-            saveRecord: this.record,
-            dependencies: this.tasksKeyPrefix + 'update-record'
-        }]);
+        if (updateRecord !== false) {
+            tasks.add({
+                key: this.tasksKeyPrefix + 'update-record',
+                updateRecord: this.record,
+                updateForm: this
+            });
+        }
+        if (saveRecord) {
+           tasks.add({
+                key: this.tasksKeyPrefix + 'save-record',
+                saveRecord: this.record,
+                dependencies: updateRecord ? this.tasksKeyPrefix + 'update-record' : null
+            });
+        }
 
         return tasks;
     },
@@ -294,6 +298,14 @@ Ext.define('Taco.core.ux.form.Form', {
             return;
         }
         this.addSaveTasks(this.saveTasks);
+        this.saveTasks.execute();
+    },
+    
+    update: function () {
+        if (this.beforeSave() === false) {
+            return;
+        }
+        this.addSaveTasks(this.saveTasks, true, false );
         this.saveTasks.execute();
     },
 

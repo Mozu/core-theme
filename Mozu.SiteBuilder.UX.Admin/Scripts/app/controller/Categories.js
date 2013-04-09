@@ -6,12 +6,12 @@
 Ext.define('Taco.controller.Categories', {
     extend: 'Taco.core.Controller',
     requires:['Taco.view.category.Edit'],
-    editorView: 'Taco.view.category.SimpleEditor',
+    editorView: 'Taco.view.category.Edit',
     listView: null,
     models: ['Category'],
     views: ['category.Index', 'category.Index'],
     stores: ['Categories'],
-    modelName: 'Taco.model.Category',
+    modelName: 'Category',
     contextPlaceholders: {
         tc: function () {
             return Ext.create('Taco.core.ux.content.Container', {

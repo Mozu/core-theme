@@ -34,7 +34,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "read")]
         public async Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection, int? nodeQuery= null)
         {
-            if (pagingParams.id == null)
+            //getting rid of server filtering for now.  all filtering done on the client.
+            //if (pagingParams.id == null || 1==1)
             {
                 int start = 0;
                 var ctxLevel = TargetContextLevelType.SiteGroup;
