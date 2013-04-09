@@ -16,6 +16,7 @@ Ext.define('Taco.store.InventoryProducts', {
         clearFilters: true,
         contextLevel: 'sc',
         clearSort: true,
-        autoLoad: true
+        autoLoad: true,
+        extraParams: { params: { useVariations: true } }
     }
 });
