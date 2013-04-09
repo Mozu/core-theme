@@ -591,6 +591,7 @@
     <Content Include="Scripts\app\view\attribute\Edit.js" />
     <Content Include="Scripts\app\view\attribute\Form.js" />
     <Content Include="Scripts\app\view\attribute\Index.js" />
+    <Content Include="Scripts\app\view\category\Form.js" />
     <Content Include="Scripts\app\view\category\Modal.js" />
     <Content Include="Scripts\app\view\discount\Edit.js" />
     <Content Include="Scripts\app\view\discount\Form.js" />

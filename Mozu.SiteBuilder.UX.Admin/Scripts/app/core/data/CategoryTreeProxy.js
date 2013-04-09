@@ -75,7 +75,68 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
             fn();
         }, 10, this);
         ;
-    }
+    },
+    getTreeData: function () {
+        var me = this,
+            ids = me.getIds(),
+            length = ids.length,
+            records = [],
+            recordHash = {},
+            root = [],
+            i = 0,
+            Model = me.model,
+            idProperty = Model.prototype.idProperty,
+            rootLength, record, parent, parentId, children, id;
+
+        for (; i < length; i++) {
+            id = ids[i];
+
+            record = me.getRecord(id);
+
+            records.push(record);
+
+            recordHash[id] = record;
+            if (!record.parentId) {
+
+                root.push(record);
+            }
+        }
+
+        rootLength = root.length;
+
+
+        Ext.Array.sort(records, me.sortByParentId);
+
+
+        for (i = rootLength; i < length; i++) {
+            record = records[i];
+            parentId = record.parentId;
+            if (!parent || parent[idProperty] !== parentId) {
+
+                parent = recordHash[parentId];
+                parent.children = children = [];
+            }
+
+
+            children.push(record);
+        }
+
+        for (i = length; i--;) {
+            record = records[i];
+            if (!record.children && !record.leaf) {
+
+                record.loaded = true;
+            }
+        }
+
+
+        for (i = rootLength; i--;) {
+            record = root[i];
+            root[i] = new Model(record, record[idProperty], record);
+        }
+
+        return root;
+    },
 
 }
 );

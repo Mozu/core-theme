@@ -737,7 +737,7 @@
         },
 
         settings: function () {
-            var form,editors = [],record=this.adapter.get();
+            var form, editors = [], record = this.adapter.get(), modal = null;
             Ext.each(this.adapter.editors, function(cls) {
                 editors.push(Ext.create(cls, {
                     record: record
@@ -753,33 +753,18 @@
             form.add({
                 xtype: 'button',
                 handler: function () {
-                    form.save();
-                    //Ext.each(editors, function(editor) {
-                    //    if (editor.save) {
-                    //        editor.save.apply(editor, []);
-                    //    }
-                    //});
+                    form.update();
+                    modal.hide();
                 },
-                text: 'save stuff'
+                text: 'DONE'
             });
             
             
-            Ext.create('Taco.core.ux.modal.Modal', {
+            modal= Ext.create('Taco.core.ux.modal.Modal', {
                 items: form,
                 autoShow: true
             });
             
-            
-            
-            //Ext.create('Taco.core.ux.form.ModalEditor', {
-            //    record: record,
-            //    formCls: 'Taco.core.ux.form.Form',
-            //    formCfg: {
-            //        content: {
-            //            items:editors
-            //        }
-            //    }
-            //});
         },
 
         navigateIframe: function (config) {

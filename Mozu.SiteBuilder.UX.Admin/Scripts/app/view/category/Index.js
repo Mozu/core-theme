@@ -247,85 +247,16 @@ Ext.define('Taco.view.category.Index', {
         treeview.mon(treeview, 'itemclick', me.onItemClick, me);
 
     },
-    onNavigate: function (newState) {
-        // navigation events that i can totes handle include: 
-        var md = newState.getMetaData();
-        if (md.controller && md.controller === "categories" && md.action === "edit") {
-            this.launchEditor(md.args[0]);
-            return false;
-        }
-    }
-
-    ,
-    launchEditor: function (record, suppressAddState) {
-        var me = this,
-            editorView, recordId;
-
-        if (record && record.getId) {
-            recordId = record.getId();
-
-        }
-        else {
-            recordId = record;
-        }
-        editorView = Ext.create('Taco.view.category.Edit', {
-            logicalParent: me,
-            listeners: {
-                cancel: function () {
-                    editorView.destroy();
-                    Taco.core.StateManager.addState('categories');
-                    if (me.isDirty) {
-                        me.store.load();
-                        me.isDirty = false;
-                    }
-                },
-                save: function () {
-                    me.isDirty = true;
-                },
-                create: function (newRecord) {
-                    me.isDirty = true;
-                    editorView.destroy();
-                    Taco.app.StateManager.addState('categories/create', {
-                        controller: 'categories',
-                        action: 'edit'
-                    });
-                    me.launchEditor(newRecord);
-                },
-                copyrecord: function (newRecord) {
-                    var id = newRecord.getId() || -1;
-                    editorView.destroy();
-                    me.isDirty = true;
-                    Taco.app.StateManager.addState('categories/edit/' + id, {
-                        controller: 'categories',
-                        action: 'edit',
-                        id: id
-                    });
-                    me.launchEditor(newRecord);
-
-                },
-                deleterecord: function () {
-                    me.isDirty = true;
-                }
-            },
-
-            recordId: recordId
-        });
-
-        Taco.app.contentView.add(editorView);
-
+    
+    launchEditor: function (record) {
+        Ext.defer(function () {
+            Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record} });
+        }, 1, this);
+        return;
     },
 
     onItemClick: function (view, record, elm, index, e) {
-        console.log(e.target);
-        if (e.target.className === 'taco-launch-editor') {
-            e.preventDefault();
-            this.launchEditor(record);
-            Taco.app.StateManager.addState('categories/edit/' + record.getId(), {
-                controller: 'categories',
-                action: 'edit',
-                id: record.getId()
-            });
-        }
+        this.launchEditor(record);
     }
 
 });
