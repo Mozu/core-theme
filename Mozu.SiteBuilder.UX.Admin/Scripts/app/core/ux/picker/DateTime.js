@@ -6,7 +6,7 @@
 Ext.define('Taco.core.ux.picker.DateTime', {
     extend: 'Ext.picker.Date',
     alias: 'widget.datetimepicker',
-
+   
     childEls: [
         'innerEl', 'eventEl', 'prevEl', 'nextEl', 'middleBtnEl', 'footerEl'
     ],

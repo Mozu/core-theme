@@ -297,6 +297,7 @@ Ext.application({
     appFolder: '/admin/Scripts/app',
     requires: [
             'Ext.data.association.HasOne',
+            'Taco.core.data.RemoteException',
             'Taco.core.context.TaContext',
             'Taco.locale.Strings',
             'Taco.store.LocalizedStrings',
@@ -505,7 +506,7 @@ Ext.application({
                     status: response.status,
                     responseText: response.responseText,
                     statusText: response.statusText,
-                    remoteException: Ext.decode(response.responseText, true)
+                    remoteException: Ext.create('Taco.core.data.RemoteException', { response: response })
                 });
             },
             afterRequest: function (request, success) {

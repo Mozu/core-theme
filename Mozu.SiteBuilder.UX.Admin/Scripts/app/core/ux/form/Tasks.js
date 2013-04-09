@@ -53,8 +53,8 @@
                     return;
                 }
                 task.saveRecord.save({
-                    failure: function (record) {
-                        var msg = record.getMessage();
+                    failure: function (record,operation ) {
+                        var msg = operation.error.remoteException.getMessage();
                         if (msg) {
                             Taco.app.fireEvent('setmessage', msg, 'error');
                         }
@@ -89,8 +89,14 @@
                         console.log('syncstore - success');
                         tasks.callback();
                     },
-                    failure: function () {
-                        Taco.app.fireEvent('setmessage', 'store sync failed', 'error');
+                    failure: function (batch, options) {
+                        
+                        var msg = batch.operation[0].error.remoteException.getMessage();
+                        if (msg) {
+                            Taco.app.fireEvent('setmessage', msg, 'error');
+                        } else {
+                            Taco.app.fireEvent('setmessage', 'store sync failed', 'error');
+                        }
                         console.log('syncstore - failure');
                         chain.callback(false);
                     }

@@ -27,7 +27,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                     value:(values &&values.length)? values[0]:null
                 }];
             },
-            'Yes/No': function (ptAttribute,values) {
+            'YesNo': function (ptAttribute,values) {
                 return [{
                     xtype: 'checkboxfield',
                     name: this.getFieldName(ptAttribute),

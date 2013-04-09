@@ -514,6 +514,7 @@
     <Content Include="Scripts\app\core\context\Site.js" />
     <Content Include="Scripts\app\core\context\SiteCollection.js" />
     <Content Include="Scripts\app\core\data\CategoryTreeProxy.js" />
+    <Content Include="Scripts\app\core\data\RemoteException.js" />
     <Content Include="Scripts\app\core\layout\Flex.js" />
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
     <Content Include="Scripts\app\core\context\TaContext.js" />
