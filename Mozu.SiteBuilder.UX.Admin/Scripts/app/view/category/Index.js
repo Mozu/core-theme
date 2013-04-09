@@ -30,12 +30,8 @@ Ext.define('Taco.view.category.Index', {
                 xtype: 'primarybutton',
                 text: 'Create New Category',
                 click: function () {
-                    //this.findParentByType('contentheader').fireEvent('newcategory');
-                    me.launchEditor();
-                    Taco.app.StateManager.addState('categories/create', {
-                        controller: 'categories',
-                        action: 'edit'
-                    });
+                    
+                    me.launchEditor(Ext.create('Taco.model.Category'));
                 }
             }]
         };
