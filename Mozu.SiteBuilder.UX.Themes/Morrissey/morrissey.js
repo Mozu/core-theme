@@ -12,7 +12,7 @@ program
     .option('-r, --remove-untouched-files', 'Remove all files that have not been modified from the base theme.')
     //.option('-l, --check-less', 'Check LessCSS and theme settings for errors')
     .option('-v, --verbose', 'Talk a lot, mostly about emotions')
-    .option('-a, --autogenerate-theme-settings', 'Look through stylesheets for theme settings and autogenerate a simple ThemeSettings.xml file')
+    //.option('-a, --autogenerate-theme-settings', 'Look through stylesheets for theme settings and autogenerate a simple ThemeSettings.xml file')
     .option('-n, --no-inheritance', 'Do not build an inherited theme based on this theme\'s declared base theme. Not recommended.')
     .option('-d, --themes-dir [dir]', 'Parent directory for all themes. Defaults to current directory. [./]', process.cwd())
 
@@ -25,7 +25,7 @@ program
         console.log('         Compile JavaScript in the Stripes theme and remove untouched files inherited from the core theme.');
         console.log('');
         console.log('    $ node morrissey -rv Ghurka -d ../../../Themes');
-        console.log('         Removed untouched files in Ghurka, expecting Ghurka to be in the passed Themes directory.');
+        console.log('         Remove untouched files in Ghurka, expecting Ghurka to be in the passed Themes directory. Print verbose information.');
         console.log("");
         Lyrically.whine("Remember that if your theme is in TFS source control, you need to check out your entire Themes directory to use this tool.");
         console.log("");

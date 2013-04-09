@@ -306,6 +306,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
     </Compile>
+    <Content Include="Morrissey\src\fsutils.js" />
     <Content Include="Themes\Core3\Modules\_GoogleAnalyticsTrackingCode.vol">
       <SubType>Designer</SubType>
     </Content>
@@ -560,6 +561,7 @@
     <Content Include="Themes\Core3\Modules\_AddressSummaryTemplate.vol" />
     <Content Include="Themes\Core3\Modules\_CheckoutCouponCodeField.vol" />
     <Content Include="Themes\Core3\Modules\_CheckoutCommentsField.vol" />
+    <Content Include="Morrissey\README.md" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

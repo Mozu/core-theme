@@ -9,7 +9,7 @@
 
     optimizers = {
         buildJs: require('./optimizers/jscompiler'),
-        autogenerateThemeSettings: require('./optimizers/themesettingsgenerator'),
+        //autogenerateThemeSettings: require('./optimizers/themesettingsgenerator'),
         checkLessErrors: require('./optimizers/lesschecker')
     };
 
