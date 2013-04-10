@@ -18,10 +18,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
         /// </summary>
-        public static string ToFilterString(this FilterCollection extFilter)
+        public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
             if (extFilter == null || extFilter.Count == 0)
                 return null;
+
+            // TODO: If the filter needs to include products with variations, do something with 'withVariations'
+            // Note: this could change, we're waiting on changes to be applied from the services team and/or Britt G.
 
             // TODO: commenting out this next part. I can't find any way from EXT to make "query" happen.
             // if (!string.IsNullOrEmpty(extFilter.query))
