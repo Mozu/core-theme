@@ -29,5 +29,13 @@
             Taco.app.contentView.remove(editor);
             Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), { record: record });
         }, this, { delay: 10, single: true, scope: this });
+
+        this.on('cancel', function(editor) {
+            if (editor.record) {
+                editor.record.reject();
+            }
+            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/index');
+           
+        }, this, { delay: 10, single: true, scope: this });
     }
 });
