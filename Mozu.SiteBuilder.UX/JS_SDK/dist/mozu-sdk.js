@@ -1054,7 +1054,7 @@
                             if (!(a in objectTypes[typeName])) actions.push(a);
                         }
                         for (a in objectTypes[typeName]) {
-                            if (a) actions.push(utils.camelCase(a));
+                            if (a && objectTypes[typeName].hasOwnProperty(a)) actions.push(utils.camelCase(a));
                         }
                         return actions;
                     },
@@ -1188,9 +1188,7 @@
                             returnType: "login"
                         }
                     },
-                    login: {
-                        template: "{+UserService}Login"
-                    },
+                    login: "{+UserService}Login",
                     order: {
                         get: {
                             template: "{+OrderService}{Id}"
@@ -1284,117 +1282,122 @@
                 };
                 return pub;
             }();
-            var ApiInterface = function(context) {
-                if (context.Tenant() === undefined) throw "No tenant was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-                if (context.Site() === undefined) throw "No site was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-                if (context.SiteGroup() === undefined) throw "No site group was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-                this.context = context;
-            };
-            ApiInterface.prototype = {
-                request: function(method, requestConf, conf) {
-                    var me = this, url = typeof requestConf === "string" ? requestConf : requestConf.url;
-                    if (requestConf.verbOverride) method = requestConf.verbOverride;
-                    var deferred = utils.when.defer();
-                    var data;
-                    if (requestConf.overridePostData) {
-                        data = requestConf.overridePostData;
-                    } else if (conf && !requestConf.noBody) {
-                        data = conf.data || conf;
-                    }
-                    var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function(rawJSON) {
-                        deferred.resolve(rawJSON, xhr);
-                    }, function(error) {
-                        deferred.reject(error, xhr, url);
-                    });
-                    this.fire("request", xhr, deferred.promise, requestConf);
-                    deferred.promise.otherwise(function(error) {
-                        var res;
-                        if (!cancelled) {
-                            me.fire("error", error, xhr, requestConf);
-                            throw error;
+            var ApiInterface = function() {
+                var ApiInterfaceConstructor = function(context) {
+                    if (context.Tenant() === undefined) throw "No tenant was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
+                    if (context.Site() === undefined) throw "No site was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
+                    if (context.SiteGroup() === undefined) throw "No site group was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
+                    this.context = context;
+                };
+                ApiInterfaceConstructor.prototype = {
+                    request: function(method, requestConf, conf) {
+                        var me = this, url = typeof requestConf === "string" ? requestConf : requestConf.url;
+                        if (requestConf.verbOverride) method = requestConf.verbOverride;
+                        var deferred = utils.when.defer();
+                        var data;
+                        if (requestConf.overridePostData) {
+                            data = requestConf.overridePostData;
+                        } else if (conf && !requestConf.noBody) {
+                            data = conf.data || conf;
                         }
-                    });
-                    var cancelled = false;
-                    deferred.promise.cancel = function() {
-                        cancelled = true;
-                        xhr.abort();
-                        deferred.reject("Request cancelled.");
+                        var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function(rawJSON) {
+                            me.fire("success", rawJSON, xhr, requestConf);
+                            deferred.resolve(rawJSON, xhr);
+                        }, function(error) {
+                            deferred.reject(error, xhr, url);
+                        });
+                        this.fire("request", xhr, deferred.promise, requestConf);
+                        deferred.promise.otherwise(function(error) {
+                            var res;
+                            if (!cancelled) {
+                                me.fire("error", error, xhr, requestConf);
+                                throw error;
+                            }
+                        });
+                        var cancelled = false;
+                        deferred.promise.cancel = function() {
+                            cancelled = true;
+                            xhr.abort();
+                            deferred.reject("Request cancelled.");
+                        };
+                        return deferred.promise;
+                    },
+                    action: function(type, actionName, conf, isRemote) {
+                        var me = this, fulfill = function(rawJSON) {
+                            return ApiReference.tryCreateApiObject(type, rawJSON, me);
+                        };
+                        isRemote = isRemote === false ? false : true;
+                        if (isRemote) {
+                            var cancelablePromise = this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf), completedPromise = cancelablePromise.then(fulfill);
+                            completedPromise.cancel = cancelablePromise.cancel;
+                            return completedPromise;
+                        } else {
+                            return utils.when(conf, fulfill);
+                        }
+                    },
+                    all: function() {
+                        return utils.when.join.apply(utils.when, arguments);
+                    },
+                    steps: function() {
+                        var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
+                        return utils.pipeline(Array.prototype.slice.call(args));
+                    }
+                };
+                var setOp = function(fnName) {
+                    ApiInterfaceConstructor.prototype[fnName] = function(type, conf, isRemote) {
+                        return this.action(type, fnName, conf, isRemote);
                     };
-                    return deferred.promise;
-                },
-                all: function() {
-                    return utils.when.join.apply(utils.when, arguments);
-                },
-                steps: function() {
-                    var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
-                    return utils.pipeline(Array.prototype.slice.call(args));
+                };
+                for (var i in ApiReference.basicOps) {
+                    if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
                 }
-            };
-            var setOp = function() {
-                var op = function(iface, type, actionName, conf, isRemote) {
-                    var fulfill = function(rawJSON) {
-                        return ApiReference.tryCreateApiObject(type, rawJSON, iface);
-                    };
-                    isRemote = isRemote === false ? false : true;
-                    if (isRemote) {
-                        var cancelablePromise = iface.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, iface.context), conf), completedPromise = cancelablePromise.then(fulfill);
-                        completedPromise.cancel = cancelablePromise.cancel;
-                        return completedPromise;
-                    } else {
-                        return utils.when(conf, fulfill);
-                    }
-                };
-                return function(fnName) {
-                    ApiInterface.prototype[fnName] = function(type, conf, isRemote) {
-                        return op(this, type, fnName, conf, isRemote);
-                    };
-                };
+                utils.addEvents(ApiInterfaceConstructor);
+                return ApiInterfaceConstructor;
             }();
-            for (var i in ApiReference.basicOps) {
-                if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
-            }
-            utils.addEvents(ApiInterface);
-            var ApiContext = function(conf) {
-                utils.extend(this, conf);
-            }, mutableAccessors = [ "app-claims", "user-claims", "callchain", "currency", "locale" ], immutableAccessors = [ "tenant", "site", "site-group" ], immutableAccessorLength = immutableAccessors.length, allAccessors = mutableAccessors.concat(immutableAccessors), allAccessorsLength = allAccessors.length, j;
-            var setImmutableAccessor = function(propName) {
-                ApiContext.prototype[utils.camelCase(propName, true)] = function(val) {
-                    if (val === undefined) return this[propName];
-                    var newConf = this.asObject();
-                    newConf[propName] = val;
-                    return new ApiContext(newConf);
+            var ApiContext = function() {
+                var ApiContextConstructor = function(conf) {
+                    utils.extend(this, conf);
+                }, mutableAccessors = [ "app-claims", "user-claims", "callchain", "currency", "locale" ], immutableAccessors = [ "tenant", "site", "site-group" ], immutableAccessorLength = immutableAccessors.length, allAccessors = mutableAccessors.concat(immutableAccessors), allAccessorsLength = allAccessors.length, j;
+                var setImmutableAccessor = function(propName) {
+                    ApiContextConstructor.prototype[utils.camelCase(propName, true)] = function(val) {
+                        if (val === undefined) return this[propName];
+                        var newConf = this.asObject();
+                        newConf[propName] = val;
+                        return new ApiContextConstructor(newConf);
+                    };
                 };
-            };
-            var setMutableAccessor = function(propName) {
-                ApiContext.prototype[utils.camelCase(propName, true)] = function(val) {
-                    if (val === undefined) return this[propName];
-                    this[propName] = val;
-                    return this;
+                var setMutableAccessor = function(propName) {
+                    ApiContextConstructor.prototype[utils.camelCase(propName, true)] = function(val) {
+                        if (val === undefined) return this[propName];
+                        this[propName] = val;
+                        return this;
+                    };
                 };
-            };
-            ApiContext.prototype = {
-                api: function() {
-                    return this._apiInstance || (this._apiInstance = new ApiInterface(this));
-                },
-                Store: function(conf) {
-                    return new ApiContext(conf);
-                },
-                asObject: function(prefix) {
-                    var obj = {};
-                    prefix = prefix || "";
-                    for (var i = 0; i < allAccessorsLength; i++) {
-                        obj[prefix + allAccessors[i]] = this[allAccessors[i]];
-                    }
-                    return obj;
-                },
-                setServiceUrls: function(urls) {
-                    ApiReference.urls = urls;
-                },
-                currency: "usd",
-                locale: "en-US"
-            };
-            for (j = 0; j < immutableAccessors.length; j++) setImmutableAccessor(immutableAccessors[j]);
-            for (j = 0; j < mutableAccessors.length; j++) setMutableAccessor(mutableAccessors[j]);
+                ApiContextConstructor.prototype = {
+                    api: function() {
+                        return this._apiInstance || (this._apiInstance = new ApiInterface(this));
+                    },
+                    Store: function(conf) {
+                        return new ApiContextConstructor(conf);
+                    },
+                    asObject: function(prefix) {
+                        var obj = {};
+                        prefix = prefix || "";
+                        for (var i = 0; i < allAccessorsLength; i++) {
+                            obj[prefix + allAccessors[i]] = this[allAccessors[i]];
+                        }
+                        return obj;
+                    },
+                    setServiceUrls: function(urls) {
+                        ApiReference.urls = urls;
+                    },
+                    currency: "usd",
+                    locale: "en-US"
+                };
+                for (j = 0; j < immutableAccessors.length; j++) setImmutableAccessor(immutableAccessors[j]);
+                for (j = 0; j < mutableAccessors.length; j++) setMutableAccessor(mutableAccessors[j]);
+                return ApiContextConstructor;
+            }();
             var Mozu = new ApiContext();
             return Mozu;
         });

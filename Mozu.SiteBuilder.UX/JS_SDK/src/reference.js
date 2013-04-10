@@ -74,7 +74,7 @@ var ApiReference = (function () {
 
             }
             for (a in objectTypes[typeName]) {
-                if (a)
+                if (a && objectTypes[typeName].hasOwnProperty(a) && !reservedWords[a])
                     actions.push(utils.camelCase(a));
             }
             return actions;
@@ -129,8 +129,15 @@ var ApiReference = (function () {
         ApiObject: ApiObject
 
         };
-    var typeSignatures = {
-
+    var reservedWords = {
+        template: true,
+        defaultParams: true,
+        shortcutParam: true,
+        defaults: true,
+        verb: true,
+        returnType: true,
+        noBody: true,
+        includeSelf: true
     };
     var objectTypes = {
         'products': {
@@ -218,9 +225,7 @@ var ApiReference = (function () {
                 returnType: 'login'
             }
         },
-        'login': {
-            template: '{+UserService}Login'
-        },
+        'login': '{+UserService}Login',
         'order': {
             get: {
                 template: '{+OrderService}{Id}',

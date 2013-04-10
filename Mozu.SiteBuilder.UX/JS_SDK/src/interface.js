@@ -1,13 +1,15 @@
 ﻿// BEGIN INTERFACE
-var ApiInterface = function (context) {
-    if (context.Tenant() === undefined) throw "No tenant was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-    if (context.Site() === undefined) throw "No site was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-    if (context.SiteGroup() === undefined) throw "No site group was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-    //if (context.Host() === undefined) throw "API Base URL was not specified. Run Mozu.Host(host).Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-    this.context = context;
-};
+var ApiInterface = (function () {
 
-ApiInterface.prototype = {
+    var ApiInterfaceConstructor = function (context) {
+        if (context.Tenant() === undefined) throw "No tenant was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
+        if (context.Site() === undefined) throw "No site was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
+        if (context.SiteGroup() === undefined) throw "No site group was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
+        //if (context.Host() === undefined) throw "API Base URL was not specified. Run Mozu.Host(host).Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
+        this.context = context;
+    };
+
+    ApiInterfaceConstructor.prototype = {
     request: function (method, requestConf, conf) {
         var me = this,
             url = typeof requestConf === "string" ? requestConf : requestConf.url;
@@ -50,6 +52,21 @@ ApiInterface.prototype = {
 
         return deferred.promise;
     },
+    action: function (type, actionName, conf, isRemote) {
+        var me = this,
+            fulfill = function (rawJSON) {
+                return ApiReference.tryCreateApiObject(type, rawJSON, me);
+            };
+        isRemote = isRemote === false ? false : true;
+        if (isRemote) {
+            var cancelablePromise = this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf),
+                completedPromise = cancelablePromise.then(fulfill);
+            completedPromise.cancel = cancelablePromise.cancel;
+            return completedPromise;
+        } else {
+            return utils.when(conf, fulfill);
+        }
+    },
     all: function () {
         return utils.when.join.apply(utils.when, arguments);
     },
@@ -58,32 +75,19 @@ ApiInterface.prototype = {
         return utils.pipeline(Array.prototype.slice.call(args));
     }
 };
-var setOp = (function () {
-    var op = function(iface, type, actionName, conf, isRemote) {
-        var fulfill = function (rawJSON) {
-                return ApiReference.tryCreateApiObject(type, rawJSON, iface);
-            };
-        isRemote = isRemote === false ? false : true;
-        if (isRemote) {
-            var cancelablePromise = iface.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, iface.context), conf),
-                completedPromise = cancelablePromise.then(fulfill);
-            completedPromise.cancel = cancelablePromise.cancel;
-            return completedPromise;
-        } else {
-            return utils.when(conf, fulfill);
-        }
+    var setOp = function (fnName) {
+        ApiInterfaceConstructor.prototype[fnName] = function (type, conf, isRemote) {
+        return this.action(type, fnName, conf, isRemote);
     };
-    return function (fnName) {
-        ApiInterface.prototype[fnName] = function (type, conf, isRemote) {
-            return op(this, type, fnName, conf, isRemote);
-        };
-    };
-}());
+};
 for (var i in ApiReference.basicOps) {
     if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
 }
 
-utils.addEvents(ApiInterface);
+utils.addEvents(ApiInterfaceConstructor);
+
+return ApiInterfaceConstructor;
+}());
 
 // END INTERFACE
 
