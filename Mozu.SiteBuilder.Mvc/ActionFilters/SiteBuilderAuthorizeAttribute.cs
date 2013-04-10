@@ -43,13 +43,13 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                 {
                     return false;
                 }
-                int tenantId;
-                string tenantStr;
-                lwUser.Bag.TryGetValue("TenantId", out tenantStr);
-                int.TryParse(tenantStr, out tenantId);
+                int siteId;
+                string siteStr;
+                lwUser.Bag.TryGetValue("SiteId", out siteStr);
+                int.TryParse(siteStr, out siteId);
                
                 
-                if ( tenantId != SiteBuilderContext.Current.TenantId )
+                if ( siteId != SiteBuilderContext.Current.SiteId )
                 {
                     return false;
                 }

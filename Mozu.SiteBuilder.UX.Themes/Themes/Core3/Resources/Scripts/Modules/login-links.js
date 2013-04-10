@@ -28,7 +28,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: '/Auth/AjaxSignIn',
+                    url: '/user/AjaxSignIn',
                     data: data,
                     success: function (response) {
                         if (response.success) {
@@ -61,7 +61,7 @@
             .on('click', '[data-mz-role="forgotpasswordform"] :submit', function () {
                 $.ajax({
                     type: "POST",
-                    url: "/Auth/AjaxResetPassword", // TODO Confirm naming convention ( /Auth/AjaxSignIn vs /Auth/LogOut )
+                    url: "/user/AjaxResetPassword", // TODO Confirm naming convention ( /user/AjaxSignIn vs /user/LogOut )
                     data: { email: $('[data-mz-role="forgotpasswordform"] [type=email]').val() },
                     success: function (response) {
                         if (response.success) {
@@ -94,7 +94,7 @@
         $('[data-mz-action="logout"]').on('click', function () {
             $.ajax({
                 type: 'POST',
-                url: '/Auth/LogOut',
+                url: '/user/LogOut',
                 data: {},
                 success: function (response) {
                     if (response.success) {
