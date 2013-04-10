@@ -58,9 +58,6 @@ Ext.define('Taco.view.site.Toolbox', {
             data: [
                 { 'index': 1, 'title': 'Pages' },
                 { 'index': 2, 'title': 'Widgets' }
-                //,
-                //{ 'index': 3, 'title': 'Themes' },
-                //{ 'index': 4, 'title': 'Customize' }
             ]
         });
 

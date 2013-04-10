@@ -8,6 +8,10 @@ Ext.define('Taco.view.product.subform.Extras', {
     extend: 'Taco.view.product.subform.Subform',
     alias: 'widget.productextrasform',
 
+    requires: [
+        'Taco.view.product.subform.ListExtraEditor'
+    ],
+
     title: 'Extras',
 
     statics: {
@@ -28,6 +32,8 @@ Ext.define('Taco.view.product.subform.Extras', {
     },
 
     initComponent: function () {
+        this.extras = [];
+
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
 
         this.items = [this.getEmptyComponent()];
@@ -42,7 +48,6 @@ Ext.define('Taco.view.product.subform.Extras', {
     },
 
     loadByProductTypeId: function (id) {
-        
         var type ,
             extras,
             items = [];
@@ -72,6 +77,38 @@ Ext.define('Taco.view.product.subform.Extras', {
         this.add(items);
     },
 
+    addSaveTasks: function (tasks) {
+        console.log('shit fuck');
+        this.callParent(arguments);
+    },
+
+    bindExtras: function () {
+        Ext.each(this.extras, function (extra) {
+            var pExtra = this.findExtra(extra.ptAttribute),
+                field;
+            
+            if (!pExtra) {
+                pExtra = Ext.create('Taco.model.ProductExtra', {
+                    attributeFQN: extra.ptAttribute.get('attributeFQN')
+                });
+
+                this.product.getExtras().add(pExtra);
+            }
+
+            pExtra.set('isRequired', extra.checkbox.getValue());
+
+            if (extra.list) {
+                extra.list.bindExtra(pExtra);
+            } else {
+                field = this.findField(extra.fieldName);
+                pExtra.set('values', [{
+                   value: extra.ptAttribute.get('attributeName'),
+                   delta: field.getValue()
+                }]);
+            }
+        }, this);
+    },
+
 
     getEmptyComponent: function () {
         return {
@@ -80,8 +117,32 @@ Ext.define('Taco.view.product.subform.Extras', {
         };
     },
 
+    findExtra: function (ptAttribute) {
+        return this.product.getExtras().findRecord('attributeFQN', ptAttribute.get('attributeFQN'));
+    },
+
     buildContainer: function (ptAttribute) {
-        var items = [{
+        var items,
+            pExtra = this.findExtra(ptAttribute),
+            checkbox,
+            extra = {
+                ptAttribute: ptAttribute,
+                fieldName: this.getFieldName(ptAttribute)
+            },
+            editorCfg = this.buildEditor(ptAttribute, extra, pExtra);
+
+
+        this.extras.push(extra);
+
+        checkbox = Ext.widget({
+            xtype: 'checkbox',
+            boxLabel: 'Required by Shopper',
+            value: pExtra ? pExtra.get('isRequired') : false
+        });
+
+        extra.checkbox = checkbox;
+
+        items = [{
             xtype: 'formflexbox',
             items: [{
                 xtype: 'component',
@@ -91,21 +152,8 @@ Ext.define('Taco.view.product.subform.Extras', {
                 text: 'Remove',
                 hidden: ptAttribute.get('isRequired')
             }]
-        }, {
-            xtype: 'formflexbox',
-            justify: false,
-            items: [{
-                xtype: 'component',
-                html: 'Store Label',
-                width: 300
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Extra Cost'
-            }]
-        }, {
-            xtype: 'checkbox',
-            boxLabel: 'Required by Shopper'
-        }];
+        }, 
+        editorCfg, checkbox];
         
         return Ext.widget({
             xtype: 'container',
@@ -114,51 +162,37 @@ Ext.define('Taco.view.product.subform.Extras', {
         });
     },
 
-    buildContainer1: function (ptAttribute) {
-        var items = this.buildEditor(ptAttribute);
+    buildEditor: function (ptAttribute, extra, pExtra) {
+        var list;
 
-        if (!items) {
-            return;
+        //debugger;
+        if (ptAttribute.get('inputType') === 'List') {
+            list = Ext.widget({
+                xtype: 'taco.product.listextraeditor',
+                productTypeAttribute: ptAttribute,
+                product: this.product,
+                productExtra: pExtra
+            });
+
+            extra.list = list;
+
+            return list;
         }
 
-        items.unshift({
-            xtype: 'container',
-            layout: {
-                type: 'hbox',
-                align: 'stretch'
-            },
+        return {
+            xtype: 'formflexbox',
+            justify: false,
             items: [{
                 xtype: 'component',
-                flex: 1,
-                html: ptAttribute.get('attributeName')
+                html: 'Store Label',
+                width: 300
             }, {
-                xtype: 'action',
-                text: 'Remove',
-                hidden: ptAttribute.get('isRequired')
+                xtype: 'numberfield',
+                name: this.getFieldName(ptAttribute),
+                fieldLabel: 'Extra Cost',
+                value: pExtra ? pExtra.get('values')[0].delta : null
             }]
-        });
-        
-        return Ext.widget({
-            xtype: 'container',
-            cls: 'taco-attribute-form',
-            items: items        
-        });
-    },
-
-    buildEditor: function (ptAttribute) {
-        var editor = ptAttribute.get('inputType'),
-            attributeFQN = ptAttribute.get('attributeFQN'),
-            prop = this.product.getProperties().getById(attributeFQN),
-            values = prop ? prop.get('values') : null;
-        
-        if (typeof this.statics().editors[editor] !== 'function') {
-            return [{
-                xtype: 'component',
-                html: 'Error: could not find editor type: ' + editor
-            }];
-        }
-        
-        return this.statics().editors[editor].apply(this, [ptAttribute, values]);
+        };
     },
 
     getFieldName: function (ptAttribute) {
