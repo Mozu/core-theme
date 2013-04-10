@@ -435,6 +435,10 @@ Ext.define('Taco.core.ux.form.Form', {
         this.fireEvent('savablestatechange', this, newState);
     },
 
+    resetSavableState: function (isSavable) {
+        this.savableState = isSavable === true;
+    },
+
     getSavableState: function () {
         return this.savableState;
     },

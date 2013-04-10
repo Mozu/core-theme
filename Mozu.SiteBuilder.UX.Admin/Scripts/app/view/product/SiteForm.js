@@ -125,9 +125,22 @@ Ext.define('Taco.view.product.SiteForm', {
         if (this.isSingleSite) {
             tasks.add([{
                 key: 'save-product-record',
-                saveRecord: this.product
+                saveRecord: this.product,
+                dependencies: 'bind-extras'
+            }, {
+                key: 'bind-extras',
+                fn: function (tasks) {
+                    console.log('bind-extras');
+                    var extrasForm = this.down('productextrasform');
+
+                    if (extrasForm) {
+                        extrasForm.bindExtras();
+                    }
+
+                    tasks.callback();
+                },
+                scope: this
             }]);
-            
         }
 
         return tasks;

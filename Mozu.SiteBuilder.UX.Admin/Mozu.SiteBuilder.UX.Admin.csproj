@@ -576,6 +576,7 @@
     <Content Include="Scripts\app\model\ProductInSiteInfo.js" />
     <Content Include="Scripts\app\model\LocalizedString.js" />
     <Content Include="Scripts\app\model\ProductType.js" />
+    <Content Include="Scripts\app\model\ProductExtraListItem.js" />
     <Content Include="Scripts\app\model\RuntimeProduct.js" />
     <Content Include="Scripts\app\model\RuntimeProductSearchResult.js" />
     <Content Include="Scripts\app\model\SimplegridColumn.js" />
@@ -586,6 +587,7 @@
     <Content Include="Scripts\app\store\ItemFilters.js" />
     <Content Include="Scripts\app\store\LocalizedStrings.js" />
     <Content Include="Scripts\app\store\Orders.js" />
+    <Content Include="Scripts\app\store\ProductExtraListItems.js" />
     <Content Include="Scripts\app\store\RuntimeProductSearch.js" />
     <Content Include="Scripts\app\store\Attributes.js" />
     <Content Include="Scripts\app\store\WidgetInstances.js" />
@@ -622,6 +624,7 @@
     <Content Include="Scripts\app\view\product\Modal.js" />
     <Content Include="Scripts\app\view\product\SiteForm.js" />
     <Content Include="Scripts\app\view\product\subform\Categories.js" />
+    <Content Include="Scripts\app\view\product\subform\ListExtraEditor.js" />
     <Content Include="Scripts\app\view\product\subform\OverrideForm.js" />
     <Content Include="Scripts\app\view\product\subform\SEO.js" />
     <Content Include="Scripts\app\view\product\subform\Merchandising.js" />
@@ -1104,6 +1107,7 @@
     <Content Include="Scripts\resources\images\legacy\fabric-2.png" />
     <Content Include="Scripts\resources\images\legacy\indicator.mp3" />
     <Content Include="Scripts\resources\images\legacy\loading.gif" />
+    <Content Include="Scripts\resources\images\icons-s46f2c6a895.gif" />
     <Content Include="Scripts\resources\images\picker-sa04364cd82.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-carousel.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-grid.png" />
