@@ -44,10 +44,12 @@ Ext.define('Taco.model.Discount', {
         type: 'number'
     }, {
         name: 'amountType',
-        type: 'string'
+        type: 'string',
+        defaultValue: 'Amount'
     }, {
         name: 'targetType',
-        type: 'string'
+        type: 'string',
+        defaultValue: 'AllProducts'
     }, {
         name: 'startDate',
         type: 'date'
