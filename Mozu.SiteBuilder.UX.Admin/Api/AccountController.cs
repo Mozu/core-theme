@@ -207,7 +207,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             try
             {
-                var result = (await _invitationWebApiClient.CreateInvitation(invitation.RoleId, invitation.EmailAddress)).ReadAsSync();
+                var result = (await _invitationWebApiClient.CreateInvitation( new AdminUser.Contracts.Invitation(){
+                    EmailAddress = invitation.EmailAddress,
+                    RoleId = invitation.RoleId 
+                    })).ReadAsSync();
                 var newInvitation = Mapper.Map<AdminUser.Contracts.Invitation, Invitation>(result);
 
                 return Single2(newInvitation);
