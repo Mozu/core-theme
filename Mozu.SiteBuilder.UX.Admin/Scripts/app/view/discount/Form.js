@@ -18,14 +18,20 @@ Ext.define('Taco.view.discount.Form', {
         this.callParent(arguments);
     },
     buildFormComponents: function () {
-        var me = this;
-        
+        var me = this,
+            createHr = function() {
+                return {
+                    xtype: 'box',
+                    autoEl:
+                        'hr'
+                };
+            };
         me.nameInput = Ext.create('Ext.form.field.Text', {
             name: 'name',
             fieldLabel: "Name",
             labelAlign: 'top',
             allowBlank: false,
-            width: 800,
+            width: 600,
             emptyText: 'Enter a discount name'
         });
         me.amountTypeInput = Ext.create('Ext.form.field.ComboBox', {
@@ -38,13 +44,13 @@ Ext.define('Taco.view.discount.Form', {
             displayField: 'text',
             valueField: 'value',
             
-            width: 400,
+            flex:1,
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
                     ["Percentage", "Percentage"],
                     ["Dollar Amount", "Amount"],
-                    ["Free Shipping", "FreeShipping"]
+                 //   ["Free Shipping", "FreeShipping"]
                 ]
             }),
             listeners: {
@@ -58,6 +64,7 @@ Ext.define('Taco.view.discount.Form', {
                         '$',
                     '</tpl>',
                 '</tpl>'],
+            padding: '0 5 5 5',
             data: this.record.data
         });
         me.amountSuffix = Ext.create('Ext.Component', {
@@ -69,6 +76,7 @@ Ext.define('Taco.view.discount.Form', {
                             'Off',
                     '</tpl>',
                 '</tpl>'],
+            padding: '0 5 5 5',
             data: this.record.data
         });
         me.amountInput = Ext.create('Ext.form.field.Number', {
@@ -80,7 +88,7 @@ Ext.define('Taco.view.discount.Form', {
             fieldLabel: "Applies to",
             labelAlign: 'top',
             allowBlank: false,
-            width:400,
+            flex:1,
             forceSelection: true,
             displayField: 'text',
             valueField: 'value',
@@ -108,7 +116,7 @@ Ext.define('Taco.view.discount.Form', {
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         me.categoryList = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'categories',
-            width: 400,
+            flex: 1,
             store: catStore,
             getStore: function () {
                 return catStore;
@@ -154,7 +162,7 @@ Ext.define('Taco.view.discount.Form', {
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         me.productList = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'products',
-            width: 400,
+            flex:1,
             store: productStore,
             getStore: function () {
                 return productStore;
@@ -187,17 +195,18 @@ Ext.define('Taco.view.discount.Form', {
             items: [
                 me.productList,
                 {
-                xtype: 'secondarybutton',
-                text: 'Add',
-                click: me.launchProductModal,
-                scope: me
-            }
+                    xtype: 'secondarybutton',
+                    text: 'Add',
+                    click: me.launchProductModal,
+                    scope: me
+                }
                 
             ]
         });
 
 
         me.productCategoryContainer = Ext.create('Ext.container.Container', {
+            width:600,
             items: [
                 me.categoriesBox,
                 me.productsBox
@@ -209,7 +218,7 @@ Ext.define('Taco.view.discount.Form', {
                 type:'hbox',
                 align:'bottom'
             },
-            width: 400,
+            width: 600,
             defaults: {
                 xtype: 'combobox',
                 labelAlign: 'top',
@@ -234,27 +243,59 @@ Ext.define('Taco.view.discount.Form', {
             name: 'requiresCoupon',
             boxLabel: "Create coupon",
             labelAlign: 'right',
+            listeners: {
+                change: function(cb, newValue) {
+                    if (newValue) {
+                        me.couponCodeInput.show();
+                    } else {
+                        me.couponCodeInput.hide();
+                    }
+                },
+                scope:me
+            }
         });
-        me.items = [me.nameInput, {
-            xtype: 'container',
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
+        me.couponCodeInput = Ext.create('Ext.form.field.Text', {
+            name: 'couponCode',
+            width: 600,
+            hidden: !(me.record.get('couponCode') || me.record.get('requiresCoupon'))
+        });
+
+        me.items = [
+            me.nameInput,
+            createHr(),
+            {
+                xtype: 'container',
+                layout: {
+                    type: 'hbox',
+                    align: 'bottom'
+                },
+                width:600,
+                items: [
+                    me.amountTypeInput,
+                    me.amountPrefix,
+                    me.amountInput,
+                    me.amountSuffix]
             },
-            items: [me.amountTypeInput, me.amountPrefix, me.amountInput, me.amountSuffix]
-        }, {
-            xtype: 'container',
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
-            items: [me.targetTypeInput, me.minimumOrderAmountInput]
-        }, 
+            createHr(),
+            {
+                xtype: 'container',
+                layout: {
+                    type: 'hbox',
+                    align: 'bottom'
+                },
+                width: 600,
+                items: [me.targetTypeInput, me.minimumOrderAmountInput]
+            }, 
             me.productCategoryContainer,
+            createHr(),
             me.datesContainer,
-            me.requiresCouponInput
+            createHr(),
+            me.requiresCouponInput,
+            me.couponCodeInput
         ];
     },
+    
+
     /*
         Sets the "Applies To" combobox to "Free Shipping" when appropriate.
     */
@@ -303,13 +344,19 @@ Ext.define('Taco.view.discount.Form', {
         } else {
             me.minimumOrderAmountInput.hide();
             me.minimumOrderAmountInput.setValue(0);
+            me.productList.setValue([]);
+            me.categoryList.setValue([]);
 
-            // me.minimumOrderAmountInput.reset();
+            
         }
         if (value === "Product") {
             me.productCategoryContainer.show();
         } else {
             me.productCategoryContainer.hide();
+
+            me.productList.setValue([]);
+            me.categoryList.setValue([]);
+
         }
     },
         /**
