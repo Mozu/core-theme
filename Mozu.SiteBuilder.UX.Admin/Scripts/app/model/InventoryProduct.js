@@ -11,14 +11,16 @@ Ext.define('Taco.model.InventoryProduct', {
     fields: [{
         "name": "inventoryHandling",
         "type": "int",
-        "useNull": true
+        "useNull": true,
+        persist:false
     }, {
         "name": "stockOnHand",
         "type": "int",
-        "useNull": true
+        "useNull": true,
+        persist:false
     }, {
         "name": "stockOnHandAdjustment",
-        "type": "int",
+        "type": "any",
         "useNull": true
     }, {
         "name": "productCode",
@@ -31,11 +33,13 @@ Ext.define('Taco.model.InventoryProduct', {
     }, {
         "name": "optionValues",
         "type": "string",
-        "useNull": true
+        "useNull": true,
+        persist:false
     }, {
         "name": "productImages",
         "type": "auto",
-        "useNull": true
+        "useNull": true,
+        persist:false
     }, {
         "name": "productName",
         "type": "string",

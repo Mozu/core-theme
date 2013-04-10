@@ -88,28 +88,37 @@ Ext.define('Taco.view.inventory.Index', {
     },
 
     initComponent: function() {
+        var me = this;
+        
+        this.dirtyButton = Ext.widget({
+            xtype: 'dirtybutton',
+            itemId: 'indexDirtyButton',
+            text: 'Save',
+            listeners: {
+                click: function() {
+                    me.store.sync();
+                },
+                scope: this
+            }
+        });
+                
         this.header = {
             actions: [{
                     xtype: 'secondarybutton',
                     text: 'Cancel',
                     listeners: {
                         click: function() {
-                            console.log('cancel', arguments);
+                            me.store.rejectChanges();
                         },
                         scope: this
                     }
-                }, {
-                    xtype: 'dirtybutton',
-                    text: 'Save',
-                    listeners: {
-                        click: function() {
-                            console.log('save', arguments);
-                        },
-                        scope: this
-                    }
-                }]
+            }, this.dirtyButton]
         };
-
+        
         this.callParent(arguments);
+        
+        this.store.on('dirtychange', function (store, state) {
+            me.dirtyButton.setDirty(state);
+        });
     }
 });
