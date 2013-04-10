@@ -94,7 +94,7 @@ var ApiReference = (function () {
             if (typeof oType.template === "string")
                 oType.template = utils.uritemplate.parse(oType.template);
             var tptData = {};
-            if (oType.includeSelf) {
+            if (oType.includeSelf && obj) {
                 if (oType.includeSelf.asProperty) {
                     tptData[oType.includeSelf.asProperty] = obj.data
                 } else {

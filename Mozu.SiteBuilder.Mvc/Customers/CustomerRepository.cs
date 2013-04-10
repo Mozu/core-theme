@@ -36,11 +36,25 @@ namespace Mozu.SiteBuilder.Mvc.Customers
             return Mapper.Map<SB.CustomerAccount>(result);
         }
 
-        public async Task<CustomerAccount> GetByUserId(string userId)
+        public Task<CustomerAccount> GetByUserId(string userId)
         {
-            var result = await _customerAccountWebApiClient.GetCustomerAccounts(null, null, null, null, "UserId eq " + userId).Result.ReadAsAsync();
-            var account = result.Items.FirstOrDefault();
-            return Mapper.Map<CustomerAccount>(account);
+            var task = _customerAccountWebApiClient.GetCustomerAccounts(null, null, null, null, "UserId eq " + userId);
+            return task.ContinueWith<CustomerAccount>(x =>
+            {
+                var res = x.Result;
+                if (res.ResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = res.ReadAsSync();
+                    var account = result.Items.FirstOrDefault();
+                    if (account != null)
+                    {
+                        return Mapper.Map<CustomerAccount>(account);
+                    }
+                }
+                return null ;
+            });
+       
+        
         }
 
         public async Task<IEnumerable<string>> GetCustomerGroups(Predicate<string> predicate)

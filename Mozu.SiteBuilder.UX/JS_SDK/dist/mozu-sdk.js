@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-04-09
+ * Mozu JavaScript SDK - v0.1.0 - 2013-04-10
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1054,7 +1054,7 @@
                             if (!(a in objectTypes[typeName])) actions.push(a);
                         }
                         for (a in objectTypes[typeName]) {
-                            if (a && objectTypes[typeName].hasOwnProperty(a)) actions.push(utils.camelCase(a));
+                            if (a && objectTypes[typeName].hasOwnProperty(a) && !reservedWords[a]) actions.push(utils.camelCase(a));
                         }
                         return actions;
                     },
@@ -1072,7 +1072,7 @@
                         var returnObj = {};
                         if (typeof oType.template === "string") oType.template = utils.uritemplate.parse(oType.template);
                         var tptData = {};
-                        if (oType.includeSelf) {
+                        if (oType.includeSelf && obj) {
                             if (oType.includeSelf.asProperty) {
                                 tptData[oType.includeSelf.asProperty] = obj.data;
                             } else {
@@ -1103,7 +1103,16 @@
                     },
                     ApiObject: ApiObject
                 };
-                var typeSignatures = {};
+                var reservedWords = {
+                    template: true,
+                    defaultParams: true,
+                    shortcutParam: true,
+                    defaults: true,
+                    verb: true,
+                    returnType: true,
+                    noBody: true,
+                    includeSelf: true
+                };
                 var objectTypes = {
                     products: {
                         template: "{+ProductService}" + genericQueryTpt,

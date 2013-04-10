@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public ActionResult SignIn(string email, string password, string returnUrl, FormCollection collection)
         {
-            var res = _authTicketWebApiClient.CreateUserAuthTicket(  new Mozu.Core.Api.Contracts.UserAuthInfo()
+            var res = _userWebApiClient.Login( new Mozu.Core.Api.Contracts.UserAuthInfo()
             {
                 
                 EmailAddress = email,
@@ -61,8 +61,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }).Result;
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
-                var user = res.ReadAsSync();
-                _authenticationHelper.SetCurrentUser(user);
+                var user = _userWebApiClient.GetUserByEmail(email).Result.ReadAsSync();
+                if (user.IsAdminUser)
+                {
+                    return Redirect("/admin");
+                }
+                _authenticationHelper.SetCurrentUser(res.ReadAsSync().AuthTicket);
 
                 if ( string.IsNullOrEmpty(returnUrl))
                 {
@@ -76,6 +80,45 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 
                 return View("SignIn" , new { email = email });
             }
+        }
+        public JsonDCResult SignIn(string email, string password)
+        {
+            var res = _userWebApiClient.Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
+            {
+
+                EmailAddress = email,
+                Password = password
+
+            }).Result;
+            var answer = new JsonDCResult();
+            if (res.ResponseMessage.IsSuccessStatusCode)
+            {
+                var user = _userWebApiClient.GetUserByEmail(email).Result.ReadAsSync();
+                if (user.IsAdminUser)
+                {
+                    answer.Data = new
+                        {
+                            ErrorCode = "IS_ADMIN_USER",
+                            Message = String.Format("The user {0} is an administrator.", email)
+                        };
+                }
+                else
+                {
+                    _authenticationHelper.SetCurrentUser(res.ReadAsSync().AuthTicket);
+                    answer.Data = new
+                    {
+                        Message = String.Format("Logged in as {0}.", email)
+                    };
+                }
+            }
+            else
+            {
+                answer.Data = new
+                {
+                    Message = String.Format("There was an error logging in as {0}. Please check your username and password.")
+                };
+            }
+            return answer;
         }
         public JsonDCResult AjaxResetPassword(string email)
         {

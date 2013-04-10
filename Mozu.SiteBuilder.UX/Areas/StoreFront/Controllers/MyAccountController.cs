@@ -66,6 +66,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var account = _customerRepository.GetByUserId(UserId).Result;
 
+            if (account == null)
+            {
+                return new HttpNotFoundResult();
+            }
+
             var filter = string.Format("OrderStatus ne \"New\" and CustomerAccountId eq \"{0}\" and OrderNumber ne null", account.Id);
 
             var orders = await _orderWebApiClient.GetOrders(0, 25, null, filter).Result.ReadAsAsync();
