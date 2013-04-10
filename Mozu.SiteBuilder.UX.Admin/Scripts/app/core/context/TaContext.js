@@ -141,12 +141,13 @@ Ext.define('Taco.core.context.TaContext', {
         return this.getCurrentContext().getSiteGroupId();
     },
 
-    getStore: function() {
+    getStore: function(copy) {
         var me = this,
+            store = me.store,
             data = [];
 
-        if (me.store) {
-            return me.store;
+        if (copy !== true && store) {
+            return store;
         }
         data.push(me);
 
@@ -171,13 +172,17 @@ Ext.define('Taco.core.context.TaContext', {
         });
         
 
-        me.store = Ext.create('Ext.data.Store', {
+        store = Ext.create('Ext.data.Store', {
             model: 'TaContext-StoreItem',
             data:data
         });
-
-        return me.store;
+        
+        if (copy !== true) {
+            me.store = store;
+        }
+        return store;
     },
+    
 
     init: function (data) {
         var me = this;
