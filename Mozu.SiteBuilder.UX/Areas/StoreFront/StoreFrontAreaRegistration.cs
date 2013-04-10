@@ -15,6 +15,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
         public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapRoute(
+                "Storefront_MyAccount2",
+                "user/myaccount",
+                new { controller = "MyAccount", action = "Index" });
+
+
+            context.MapRoute(
               "StoreFront_home",
               "",
               new { controller = "Home", action = "Index" });
@@ -107,9 +113,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
                 "templates/{templateId}",
                 new { controller = "Templates", action = "Index" });
 
+            
             context.MapRoute(
                 "Storefront_SignIn",
-                "auth/{action}",
+                "user/{action}",
                 new { controller = "Auth", action = "SignIn" });
 
         }
