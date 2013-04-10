@@ -4,7 +4,7 @@
 Ext.define('Taco.view.inventory.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.inventoryindex',
-    requires: ['Taco.model.InventoryProduct', 'Taco.store.InventoryProducts', 'Ext.grid.plugin.CellEditing'],
+    requires: ['Taco.model.InventoryProduct', 'Taco.store.InventoryProducts', 'Ext.grid.plugin.CellEditing', 'Taco.view.inventory.QuantityEdit'],
 
     typeName: 'InventoryProduct',
     modelName: 'Taco.model.InventoryProduct',
@@ -16,11 +16,11 @@ Ext.define('Taco.view.inventory.Index', {
 
     gridPanelConf: {
         selType: 'checkbox',
-        plugins: [
-            Ext.create('Ext.grid.plugin.CellEditing', {
-                clicksToEdit: 1
-            })
-        ],
+        // plugins: [
+        //     Ext.create('Ext.grid.plugin.CellEditing', {
+        //         clicksToEdit: 1
+        //     })
+        // ],
         columns: [{
                 dataIndex: 'productCode',
                 text: 'Code',
@@ -61,15 +61,30 @@ Ext.define('Taco.view.inventory.Index', {
             }, {
                 dataIndex: 'stockOnHand',
                 text: 'Stock',
-                editor: {
-                    xtype: 'numberfield',
-                    hideTrigger: true,
-                },
                 width: 70,
-                renderer: function(value) {
-                    return Ext.isNumeric(value) ? value : '--';
+                renderer: function (value, metaData, record) {
+                    var adjustment = record.get('stockOnHandAdjustment');
+
+                    return Ext.isNumeric(value) ? value + Ext.Number.from(adjustment, 0) : '--';
                 }
-            }]
+            }],
+            listeners: {
+                cellclick: function (view, td, cellIndex, record, tr, rowIndex, e) {
+                    var column = view.getHeaderAtIndex(cellIndex),
+                        menu = column.editorMenu;
+
+                    if (Ext.isNumeric(record.get('stockOnHand'))) {
+                        if (menu) {
+                            menu.reconfigure(record).showBy(td);
+                        } else {
+                            column.editorMenu = Ext.create('Taco.view.inventory.QuantityEdit', {
+                                record: record
+                            });
+                            column.editorMenu.showBy(td);
+                        }
+                    }
+                }
+            }
     },
 
     initComponent: function() {
@@ -94,7 +109,7 @@ Ext.define('Taco.view.inventory.Index', {
                     }
                 }]
         };
+
         this.callParent(arguments);
     }
 });
-        
