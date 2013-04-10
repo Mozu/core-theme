@@ -108,5 +108,31 @@
       @include inner-shadow(0.1, 0px, 0px, 1px);
     }
   }
+
+  .#{$vprefix}quantity-edit-menu {
+
+    &>.#{$prefix}panel-body {
+      background-color: rgb(102, 102, 102) !important;
+      border-width: 0px;
+      padding: 10px;
+      @include border-radius(6px);
+    }
+
+    .#{$vprefix}formform {
+      .#{$prefix}form-item,
+      .#{$prefix}component {
+        color: $color-neutral-white;
+      }
+    }
+
+    .actions {
+      margin: 20px 10px 0px 0px;
+      text-align: right;
+
+      .#{$vprefix}action {
+        color: $color-neutral-white;
+      }
+    }
+  }
   
 }

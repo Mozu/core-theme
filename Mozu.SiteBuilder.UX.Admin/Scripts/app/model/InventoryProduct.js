@@ -17,6 +17,10 @@ Ext.define('Taco.model.InventoryProduct', {
         "type": "int",
         "useNull": true
     }, {
+        "name": "stockOnHandAdjustment",
+        "type": "int",
+        "useNull": true
+    }, {
         "name": "productCode",
         "type": "string",
         "useNull": true
