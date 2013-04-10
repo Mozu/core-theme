@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(Mapper.Map<Product>(prod));
             }
 
-            string filter = extFilter.ToFilterString();
+            string filter = extFilter.ToFilterString(withVariations);
             string sort = pagingParams.sort.ToSortString();
 
             ProductCollection res = _productClient.GetProducts(pagingParams.startIndex, pagingParams.pageSize, sort, null, filter).Result.ReadAsAsync().Result;
