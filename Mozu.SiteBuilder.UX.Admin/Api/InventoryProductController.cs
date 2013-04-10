@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
@@ -58,9 +59,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (products == null || !products.Any())
                 return Message3<List<Product>>(false, "No products were edited because they were not sent correctly. Please try again.");
+            List<Product> retProds = new List<Product>();
+            foreach (var prod in products)
+            {
+                var dcProd = _productClient.GetProduct(prod.ProductCode).Result.ReadAsSync();
+                dcProd.StockOnHandAdjustment = Mapper.Map<DC.StockOnHandAdjustment>(prod.StockOnHandAdjustment);
+                var retProd = _productClient.UpdateProduct(dcProd, dcProd.ProductCode).Result.ReadAsSync();
+                retProds.Add(Mapper.Map<Product>(retProd));
 
-            var editedProducts = await _productMapper.PerformAction(products, p => _productClient.UpdateProduct(p, p.ProductCode));
-            return List2(editedProducts.ToList());
+            }
+            HttpResponseMessage m;
+            m.Headers.Count()
+
+            //var editedProducts = await _productMapper.PerformAction(products, p => _productClient.UpdateProduct(p, p.ProductCode));
+            return List2(retProds);
         }
 
        

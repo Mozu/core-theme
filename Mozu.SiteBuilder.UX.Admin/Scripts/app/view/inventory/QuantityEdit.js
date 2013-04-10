@@ -80,16 +80,26 @@ Ext.define('Taco.view.inventory.QuantityEdit', {
             quantity = Ext.Number.from(formValues.quantity, 0),
             isAdd = formValues.addOrSet === 'add',
             stock = record.get('stockOnHand') || 0,
-            adjust = record.get('stockOnHandAdjustment') || 0,
+            //adjust = record.get('stockOnHandAdjustment') || 0,
             value;
 
         if (isAdd) {
-            value = quantity + adjust;
+            value = stock + quantity;
+            record.set('stockOnHandAdjustment', {
+                type: 'Delta',
+                value: quantity
+            });
         } else {
-            value = quantity - stock;
-        }
-        record.set('stockOnHandAdjustment', value);
+            value = quantity;
+            record.set('stockOnHandAdjustment', {
+                type: 'Absolute',
+                value: quantity
+            });
 
+        }
+        
+        record.set('stockOnHand', value);
+        
         form.reset();
         this.hide();
     }
