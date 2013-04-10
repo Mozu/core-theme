@@ -24,7 +24,7 @@ Ext.define('Taco.view.navigation.ContextSwitcherView', {
 
     initComponent: function () {
         this.store = Taco.app.context.getStore();
-
+        
         // TODO: Call addEvents() for 'contextClicked'?
 
         if (Taco.app.context.isMultiSiteCollection()) {
@@ -38,13 +38,16 @@ Ext.define('Taco.view.navigation.ContextSwitcherView', {
                 '</tpl>'
             ];
         } else {
+            this.store = Taco.app.context.getStore(true);
+            this.store.filterBy(function (record) {
+                return record.get('contextType') == 's';
+            });
             this.tpl = [
                 '<tpl for=".">',
-                    '<tpl if="values.contextType == \'s\'" >',
-                        '<li class="taco-menu-item taco-context-container">',
-                            '{name}',
-                        '</li>',
-                    '</tpl>',
+                    '<li class="taco-menu-item taco-context-container">',
+                         '{name}',
+                    '</li>',
+                    
             '</tpl>'
         ];
         }
