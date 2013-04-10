@@ -6,7 +6,9 @@
 
 {% block BodyContent %}
 
-<div id="my-account" class="mz-my-account-wrap">
+{% require_script "pages/myaccount" %}
+
+<div id="my-account" class="mz-my-account-wrap" data-mz-myaccount="{% json_attribute Model %}">
 
 	<h1 class="mz-page-header">Your Account</h1>
 
@@ -306,8 +308,6 @@
     </div>
 
 </div><!-- #my-account -->
-
-{% require_script "Pages/myaccount" %}
 
 {% endblock BodyContent %}
 
