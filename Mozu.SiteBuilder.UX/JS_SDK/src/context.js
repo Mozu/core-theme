@@ -1,7 +1,8 @@
 ﻿// BEGIN CONTEXT
-var ApiContext = function (conf) {
-    utils.extend(this, conf);
-},
+var ApiContext = (function () {
+    var ApiContextConstructor = function (conf) {
+        utils.extend(this, conf);
+    },
     mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale'], //, 'bypass-cache'],
     immutableAccessors = ['tenant', 'site', 'site-group'],
     immutableAccessorLength = immutableAccessors.length,
@@ -9,48 +10,51 @@ var ApiContext = function (conf) {
     allAccessorsLength = allAccessors.length,
     j;
 
-var setImmutableAccessor = function(propName) {
-    ApiContext.prototype[utils.camelCase(propName, true)] = function(val) {
-        if (val === undefined) return this[propName];
-        var newConf = this.asObject();
-        newConf[propName] = val;
-        return new ApiContext(newConf);
+    var setImmutableAccessor = function (propName) {
+        ApiContextConstructor.prototype[utils.camelCase(propName, true)] = function (val) {
+            if (val === undefined) return this[propName];
+            var newConf = this.asObject();
+            newConf[propName] = val;
+            return new ApiContextConstructor(newConf);
+        };
     };
-};
 
-var setMutableAccessor = function (propName) {
-    ApiContext.prototype[utils.camelCase(propName, true)] = function (val) {
-        if (val === undefined) return this[propName];
-        this[propName] = val;
-        return this;
+    var setMutableAccessor = function (propName) {
+        ApiContextConstructor.prototype[utils.camelCase(propName, true)] = function (val) {
+            if (val === undefined) return this[propName];
+            this[propName] = val;
+            return this;
+        };
     };
-};
 
-ApiContext.prototype = {
-    api: function() {
-        return this._apiInstance || (this._apiInstance = new ApiInterface(this));
-    },
-    Store: function(conf) {
-        return new ApiContext(conf);
-    },
-    asObject: function (prefix) {
-        var obj = {};
-        prefix = prefix || '';
-        for (var i = 0; i < allAccessorsLength; i++) {
-            obj[prefix + allAccessors[i]] = this[allAccessors[i]];
-        }
-        return obj;
-    },
-    setServiceUrls: function(urls) {
-        ApiReference.urls = urls;
-    },
-    currency: 'usd',
-    locale: 'en-US'
-};
+    ApiContextConstructor.prototype = {
+        api: function () {
+            return this._apiInstance || (this._apiInstance = new ApiInterface(this));
+        },
+        Store: function (conf) {
+            return new ApiContextConstructor(conf);
+        },
+        asObject: function (prefix) {
+            var obj = {};
+            prefix = prefix || '';
+            for (var i = 0; i < allAccessorsLength; i++) {
+                obj[prefix + allAccessors[i]] = this[allAccessors[i]];
+            }
+            return obj;
+        },
+        setServiceUrls: function (urls) {
+            ApiReference.urls = urls;
+        },
+        currency: 'usd',
+        locale: 'en-US'
+    };
 
-for (j = 0; j < immutableAccessors.length; j++) setImmutableAccessor(immutableAccessors[j]);
-for (j = 0; j < mutableAccessors.length; j++) setMutableAccessor(mutableAccessors[j]);
+    for (j = 0; j < immutableAccessors.length; j++) setImmutableAccessor(immutableAccessors[j]);
+    for (j = 0; j < mutableAccessors.length; j++) setMutableAccessor(mutableAccessors[j]);
 
+    return ApiContextConstructor;
+
+}());
 // END CONTEXT
 
 /********/

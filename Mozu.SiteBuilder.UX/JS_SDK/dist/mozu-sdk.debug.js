@@ -1757,7 +1757,7 @@ var ApiReference = (function () {
 
             }
             for (a in objectTypes[typeName]) {
-                if (a)
+                if (a && objectTypes[typeName].hasOwnProperty(a))
                     actions.push(utils.camelCase(a));
             }
             return actions;
@@ -1901,9 +1901,7 @@ var ApiReference = (function () {
                 returnType: 'login'
             }
         },
-        'login': {
-            template: '{+UserService}Login'
-        },
+        'login': '{+UserService}Login',
         'order': {
             get: {
                 template: '{+OrderService}{Id}',
@@ -2003,15 +2001,17 @@ var ApiReference = (function () {
 
 /***********/
 // BEGIN INTERFACE
-var ApiInterface = function (context) {
-    if (context.Tenant() === undefined) throw "No tenant was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-    if (context.Site() === undefined) throw "No site was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-    if (context.SiteGroup() === undefined) throw "No site group was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-    //if (context.Host() === undefined) throw "API Base URL was not specified. Run Mozu.Host(host).Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-    this.context = context;
-};
+var ApiInterface = (function () {
 
-ApiInterface.prototype = {
+    var ApiInterfaceConstructor = function (context) {
+        if (context.Tenant() === undefined) throw "No tenant was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
+        if (context.Site() === undefined) throw "No site was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
+        if (context.SiteGroup() === undefined) throw "No site group was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
+        //if (context.Host() === undefined) throw "API Base URL was not specified. Run Mozu.Host(host).Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
+        this.context = context;
+    };
+
+    ApiInterfaceConstructor.prototype = {
     request: function (method, requestConf, conf) {
         var me = this,
             url = typeof requestConf === "string" ? requestConf : requestConf.url;
@@ -2023,12 +2023,13 @@ ApiInterface.prototype = {
         var data;
         if (requestConf.overridePostData) {
             data = requestConf.overridePostData;
-        } else if (conf && !requestConf.noBody) {
+        } else  if (conf && !requestConf.noBody) {
             data = conf.data || conf;
         }
 
         var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function (rawJSON) {
             // update context with response headers
+            me.fire('success', rawJSON, xhr, requestConf);
             deferred.resolve(rawJSON, xhr);
         }, function (error) {
             deferred.reject(error, xhr, url);
@@ -2053,6 +2054,21 @@ ApiInterface.prototype = {
 
         return deferred.promise;
     },
+    action: function (type, actionName, conf, isRemote) {
+        var me = this,
+            fulfill = function (rawJSON) {
+                return ApiReference.tryCreateApiObject(type, rawJSON, me);
+            };
+        isRemote = isRemote === false ? false : true;
+        if (isRemote) {
+            var cancelablePromise = this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf),
+                completedPromise = cancelablePromise.then(fulfill);
+            completedPromise.cancel = cancelablePromise.cancel;
+            return completedPromise;
+        } else {
+            return utils.when(conf, fulfill);
+        }
+    },
     all: function () {
         return utils.when.join.apply(utils.when, arguments);
     },
@@ -2061,40 +2077,28 @@ ApiInterface.prototype = {
         return utils.pipeline(Array.prototype.slice.call(args));
     }
 };
-var setOp = (function () {
-    var op = function(iface, type, actionName, conf, isRemote) {
-        var fulfill = function (rawJSON) {
-                return ApiReference.tryCreateApiObject(type, rawJSON, iface);
-            };
-        isRemote = isRemote === false ? false : true;
-        if (isRemote) {
-            var cancelablePromise = iface.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, iface.context), conf),
-                completedPromise = cancelablePromise.then(fulfill);
-            completedPromise.cancel = cancelablePromise.cancel;
-            return completedPromise;
-        } else {
-            return utils.when(conf, fulfill);
-        }
+    var setOp = function (fnName) {
+        ApiInterfaceConstructor.prototype[fnName] = function (type, conf, isRemote) {
+        return this.action(type, fnName, conf, isRemote);
     };
-    return function (fnName) {
-        ApiInterface.prototype[fnName] = function (type, conf, isRemote) {
-            return op(this, type, fnName, conf, isRemote);
-        };
-    };
-}());
+};
 for (var i in ApiReference.basicOps) {
     if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
 }
 
-utils.addEvents(ApiInterface);
+utils.addEvents(ApiInterfaceConstructor);
+
+return ApiInterfaceConstructor;
+}());
 
 // END INTERFACE
 
 /*********/
 // BEGIN CONTEXT
-var ApiContext = function (conf) {
-    utils.extend(this, conf);
-},
+var ApiContext = (function () {
+    var ApiContextConstructor = function (conf) {
+        utils.extend(this, conf);
+    },
     mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale'], //, 'bypass-cache'],
     immutableAccessors = ['tenant', 'site', 'site-group'],
     immutableAccessorLength = immutableAccessors.length,
@@ -2102,48 +2106,51 @@ var ApiContext = function (conf) {
     allAccessorsLength = allAccessors.length,
     j;
 
-var setImmutableAccessor = function(propName) {
-    ApiContext.prototype[utils.camelCase(propName, true)] = function(val) {
-        if (val === undefined) return this[propName];
-        var newConf = this.asObject();
-        newConf[propName] = val;
-        return new ApiContext(newConf);
+    var setImmutableAccessor = function (propName) {
+        ApiContextConstructor.prototype[utils.camelCase(propName, true)] = function (val) {
+            if (val === undefined) return this[propName];
+            var newConf = this.asObject();
+            newConf[propName] = val;
+            return new ApiContextConstructor(newConf);
+        };
     };
-};
 
-var setMutableAccessor = function (propName) {
-    ApiContext.prototype[utils.camelCase(propName, true)] = function (val) {
-        if (val === undefined) return this[propName];
-        this[propName] = val;
-        return this;
+    var setMutableAccessor = function (propName) {
+        ApiContextConstructor.prototype[utils.camelCase(propName, true)] = function (val) {
+            if (val === undefined) return this[propName];
+            this[propName] = val;
+            return this;
+        };
     };
-};
 
-ApiContext.prototype = {
-    api: function() {
-        return this._apiInstance || (this._apiInstance = new ApiInterface(this));
-    },
-    Store: function(conf) {
-        return new ApiContext(conf);
-    },
-    asObject: function (prefix) {
-        var obj = {};
-        prefix = prefix || '';
-        for (var i = 0; i < allAccessorsLength; i++) {
-            obj[prefix + allAccessors[i]] = this[allAccessors[i]];
-        }
-        return obj;
-    },
-    setServiceUrls: function(urls) {
-        ApiReference.urls = urls;
-    },
-    currency: 'usd',
-    locale: 'en-US'
-};
+    ApiContextConstructor.prototype = {
+        api: function () {
+            return this._apiInstance || (this._apiInstance = new ApiInterface(this));
+        },
+        Store: function (conf) {
+            return new ApiContextConstructor(conf);
+        },
+        asObject: function (prefix) {
+            var obj = {};
+            prefix = prefix || '';
+            for (var i = 0; i < allAccessorsLength; i++) {
+                obj[prefix + allAccessors[i]] = this[allAccessors[i]];
+            }
+            return obj;
+        },
+        setServiceUrls: function (urls) {
+            ApiReference.urls = urls;
+        },
+        currency: 'usd',
+        locale: 'en-US'
+    };
 
-for (j = 0; j < immutableAccessors.length; j++) setImmutableAccessor(immutableAccessors[j]);
-for (j = 0; j < mutableAccessors.length; j++) setMutableAccessor(mutableAccessors[j]);
+    for (j = 0; j < immutableAccessors.length; j++) setImmutableAccessor(immutableAccessors[j]);
+    for (j = 0; j < mutableAccessors.length; j++) setMutableAccessor(mutableAccessors[j]);
 
+    return ApiContextConstructor;
+
+}());
 // END CONTEXT
 
 /********/

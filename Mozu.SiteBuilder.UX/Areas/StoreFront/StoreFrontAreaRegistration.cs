@@ -106,7 +106,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
                 "templates",
                 "templates/{templateId}",
                 new { controller = "Templates", action = "Index" });
-                
+
+            context.MapRoute(
+                "Storefront_SignIn",
+                "auth/{action}",
+                new { controller = "Auth", action = "SignIn" });
 
         }
     }
