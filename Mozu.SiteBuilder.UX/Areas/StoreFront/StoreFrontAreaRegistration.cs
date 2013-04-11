@@ -31,11 +31,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
                new { controller = "CmsPages", action = "NotFound", });
 
 
-            context.MapRoute(
-                "StoreFront_default",
-                "{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional }
-            );
 
             context.MapRoute(
                "StoreFront_pages",
@@ -113,6 +108,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
                 "templates/{templateId}",
                 new { controller = "Templates", action = "Index" });
 
+            context.MapRoute(
+                "StoreFront_default",
+                "{controller}/{action}/{id}",
+                new { action = "Index", id = UrlParameter.Optional }
+            );
             
             //context.MapRoute(
             //    "Storefront_SignIn",

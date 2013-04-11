@@ -1,21 +1,23 @@
 ﻿{% extends "default" %}
 
 {% block Init %}
-	{% setTemplateVariables BodyTagClasses="my-account" %}
+	{% setTemplateVariables BodyTagClasses="mz-my-account" %}
 {% endblock Init%}
 
 {% block BodyContent %}
 
 {% require_script "pages/myaccount" %}
 
-<div id="my-account" class="mz-my-account-wrap" data-mz-myaccount="{% json_attribute Model %}">
+<div id="mz-my-account" class="mz-my-account-wrap" 
+    data-mz-myaccount="{% json_attribute Model %}"
+    data-mz-orders="{% json_attribute ViewData.Orders %}"
+    data-mz-user="{% json_attribute ViewData.User %}">
 
 	<h1 class="mz-page-header">Your Account</h1>
 
-    {% with Model.primaryBillingContact as contact %}
     <div id="personal-info">
         <span id="display-email">
-            <strong>{{ contact.Email|default:"No email found" }}</strong> (<a href="javascript:;" id="change-email">Change email</a>)
+            <strong data-bind="text: User.EmailAddress() || 'No email found' ">{{ ViewData.User.EmailAddress|default:"No email found" }}</strong> (<a href="javascript:;" id="change-email" data-bind="click: changeEmail">Change email</a>)
         </span>
         <span id="edit-email">
             <form>
@@ -65,7 +67,6 @@
         {% if address.Address3 %}<div>{{ address.Address3 }}</div>{% endif %}
         <div>{{ address.CityOrTown }}, {{ address.StateOrProvince }} {{ address.PostalOrZipCode }}</div>
         <div>{{ address.CountryCode }}</div>
-        {% endwith %}
         
         <div>{% firstof contact.PhoneNumber.Home contact.PhoneNumber.Work contact.PhoneNumber.Mobile %}</div>
         {% endwith %}
