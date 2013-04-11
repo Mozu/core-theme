@@ -146,6 +146,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
             return base.View(viewName, masterName, model);
         }
 
+        
         protected override void OnResultExecuting(ResultExecutingContext filterContext)
         {
             if (this.SiteContext.PageContext != null && this.SiteContext.PageContext.CmsContext != null && !this.SiteContext.PageContext.CmsContext.Initialized)

@@ -66,10 +66,8 @@
                 }
             }, {
                 xtype: 'action',
-                text: 'Search',
-                click: function () {
-                    Taco.core.StateManager.attemptNavigate('/admin/testing/tenants');
-                }
+                text: 'Search'
+               
             }];
 
             this.callParent(arguments);

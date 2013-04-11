@@ -67,83 +67,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<ActionResult> NotFound()
-        {
-            
-
-            var res = await Page("pages", "404");
-            if (res is HttpNotFoundResult)
-            {
-                var ptd = _cmsTypeHelper.GetPageTypeDefinitions().First(x => (x.PageType == "404"));
-                //var ptd = _cmsTypeHelper.GetPageTypeDefinitions().First(x => x.p   .DefaultValues != null && (string)x.DefaultValues.GetValue(CmsConstants.Widgets.page_type) == "404");
-                var reqDocs = new List<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document>(){
-                    new Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document(){
-                      Items = new List<VM.Admin.DocumentProperty>()
-                      {
-                          new VM.Admin.DocumentProperty ()
-                          {
-                              Key = CmsConstants.Widgets.page_type_definition,
-                              Value = ptd.Id 
-                          }
-                      }
-                    }
-                };
-
-                var task = await _cmsService.Create ( reqDocs).First ();
-                
-
-
-                //CreatePage("Page Not Found", "404_page", "404");
-                //this.SiteContext.PageContext.WidgetCreationTags.Add("404");
-                res = await Page("pages", "404");
-            }
-
-
-            return res;
-
-
-        }
+        
         //
-        // GET: /StoreFront/Details/5
-        [HttpGet]
-        public async Task<ActionResult> Home()
-        {
-            var res = await Page("pages", "home");
-            if (res is HttpNotFoundResult)
-            {
-                var ptd = _cmsTypeHelper.GetPageTypeDefinitions().First(x => (x.PageType  == "homepage"));
-                var reqDocs = new List<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document>(){
-                    new Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document(){
-                      Items = new List<VM.Admin.DocumentProperty>()
-                      {
-                          new VM.Admin.DocumentProperty ()
-                          {
-                              Key = CmsConstants.Widgets.page_type_definition,
-                              Value = ptd.Id 
-                          }
-                      }
-                    }
-                };
-
-                var task = _cmsService.Create ( reqDocs).First ();
-                task.Wait ();
-                
-
-
-                //_cmsService.Create ( )
-                //CreatePage("home page", "home", "home");
-
-                res = await Page("pages", "home");
-            }
-            //this.SiteContext.PageContext.WidgetCreationTags.Add("home");
-            ViewResult vr = res as ViewResult;
-            vr.ViewName = "index";
-
-
-            return vr;
-        }
-
+      
         //class myOpts :IMappingOperationOptions
         //{
         //    public Func<Type, object> Resolver;
@@ -198,7 +124,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 string redir;
                 
-                if (pc.CmsContext.Page.TryGet<string>("redirect_url", out redir ))
+                if (pc.CmsContext.Page.TryGet<string>("redirect_url", out redir ) && !string.IsNullOrEmpty( redir ))
                 {
                     return this.Redirect(redir);
                 }

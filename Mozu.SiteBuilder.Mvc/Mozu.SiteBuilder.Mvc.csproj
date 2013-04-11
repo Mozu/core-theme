@@ -348,6 +348,7 @@
     <Compile Include="Customers\IAccountContactRepository.cs" />
     <Compile Include="Customers\ICustomerGroupsRepository.cs" />
     <Compile Include="Customers\ICustomerRepository.cs" />
+    <Compile Include="Debugging\RouteDebug\RouteDebug.cs" />
     <Compile Include="Extensions\ContentServiceExtentions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />

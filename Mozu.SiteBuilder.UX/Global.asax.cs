@@ -1,10 +1,12 @@
-﻿using System.Reflection;
+﻿using System.Configuration;
+using System.Reflection;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Mozu.Core.Api;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Debugging.RouteDebug;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Configuration;
 using System.Web.Routing;
@@ -33,6 +35,12 @@ namespace Mozu.SiteBuilder.UX
                
             AreaRegistration.RegisterAllAreas();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(_bs.Container ));
+
+
+            if (ConfigurationManager.AppSettings["routeDebug"] == "true")
+            {
+                RouteDebugger.RewriteRoutesForTesting(RouteTable.Routes);
+            }
         }
 
  
@@ -53,9 +61,11 @@ namespace Mozu.SiteBuilder.UX
                 {
                     return;
                 }
-
+               
                 Context.Response.RedirectToRoute("StoreFront_404");
             }
         }
     }
+
+
 }
