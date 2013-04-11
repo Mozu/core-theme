@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
             context.MapRoute(
                 "StoreFront_404",
                 "404",
-               new { controller = "CmsPages", action = "NotFound", });
+               new { controller = "Home", action = "NotFound", });
 
 
 

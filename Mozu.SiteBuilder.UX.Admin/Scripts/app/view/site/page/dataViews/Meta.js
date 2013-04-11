@@ -29,6 +29,10 @@ Ext.define('Taco.view.site.page.dataViews.Meta', {
                 fieldLabel: 'Meta Description',
                 name: 'meta_description'
 
+            }, {
+                fieldLabel: 'Link Title',
+                name: 'link_title'
+
             },
             {
                 fieldLabel: 'Hide',

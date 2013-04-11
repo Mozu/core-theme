@@ -17,7 +17,7 @@ Ext.define('Taco.model.InventoryProduct', {
         "name": "stockOnHand",
         "type": "int",
         "useNull": true,
-        persist:false
+        persist:true
     }, {
         "name": "stockOnHandAdjustment",
         "type": "any",

@@ -63,9 +63,9 @@ Ext.define('Taco.view.inventory.Index', {
                 text: 'Stock',
                 width: 70,
                 renderer: function (value, metaData, record) {
-                    var adjustment = record.get('stockOnHandAdjustment');
+                   
 
-                    return Ext.isNumeric(value) ? value + Ext.Number.from(adjustment, 0) : '--';
+                    return Ext.isNumeric(value) ? value  : '--';
                 }
             }],
             listeners: {

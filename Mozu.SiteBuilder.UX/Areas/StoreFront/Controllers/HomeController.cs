@@ -7,10 +7,12 @@ using System.Web.Mvc;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Navigation;
+using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private INavigationRuntimeFactory _navigationRuntimeFactory;
         private readonly IWebToolsRepository _webToolsRepository;
@@ -24,21 +26,49 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //
         // GET: /StoreFront/Home/
         
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             if ( _navigationRuntimeFactory.Primary != null && _navigationRuntimeFactory.Primary.Count > 0)
             {
                 var item = _navigationRuntimeFactory.Primary.FirstOrDefault(x => !string.IsNullOrEmpty(x.Url));
-                if ( item != null )
+                if ( item != null  && item.Url.Length >0 && item.Url != "/pages/home")
                 {
                     return new TransferResult(item.Url );
                 }
             }
 
-            return new TransferResult("/pages/home");
-           // return RedirectToAction("home", "CmsPages");
-            //  return RedirectToAction("index", "dashboard", new { area = "admin" });
-            //return View();
+
+            SiteContext.PageContext.CmsContext= new CmsPageContext()
+                                                    {
+                                                        Initialized=false,
+                                                        TemplateReq = new DocumentRequest()
+                                                                          {
+                                                                              Collection ="templates",
+                                                                              Path="index"
+                                                                          }
+                                                    };
+            await this.AsyncInitData();
+            
+            return this.View("index");
+
+
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> NotFound()
+        {
+
+            SiteContext.PageContext.CmsContext = new CmsPageContext()
+            {
+                Initialized = false,
+                TemplateReq = new DocumentRequest()
+                {
+                    Collection = "templates",
+                    Path = "404"
+                }
+            };
+            await this.AsyncInitData();
+            return this.View("404");
         }
 
         public async Task<ActionResult> GoogleSiteVerification(string hash)
