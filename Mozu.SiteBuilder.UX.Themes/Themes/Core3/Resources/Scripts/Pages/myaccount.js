@@ -1,36 +1,36 @@
-﻿require(['jquery', 'modules/animatemodals'], function ($, animateModals) {
+﻿require(['modules/jquery-plus', 'modules/knockout-plus', 'modules/animatemodals', 'modules/models-myaccount'], function ($, ko, animateModals, MyAccountModels) {
 
-    function ShippingAddressDataContract() {
-        return {
-            id: null,
-            contact: {
-                id: null,
-                firstName: null,
-                middleName: null,
-                lastName: null,
-                email: null,
-                companyOrOrganization: null,
-                phoneNumbers: {
-                    home: null,
-                    work: null,
-                    mobile: null
-                },
-                address: {
-                    addressId: null,
-                    address1: null,
-                    address2: null,
-                    address3: null,
-                    cityOrTown: null,
-                    stateOrProvince: null,
-                    postalOrZipCode: null,
-                    countryCode: null
-                },
-                isPrimary: false
-            },
-            isPrimary: false,
-            contactType: 1
-        };
-    }
+    //function ShippingAddressDataContract() {
+    //    return {
+    //        id: null,
+    //        contact: {
+    //            id: null,
+    //            firstName: null,
+    //            middleName: null,
+    //            lastName: null,
+    //            email: null,
+    //            companyOrOrganization: null,
+    //            phoneNumbers: {
+    //                home: null,
+    //                work: null,
+    //                mobile: null
+    //            },
+    //            address: {
+    //                addressId: null,
+    //                address1: null,
+    //                address2: null,
+    //                address3: null,
+    //                cityOrTown: null,
+    //                stateOrProvince: null,
+    //                postalOrZipCode: null,
+    //                countryCode: null
+    //            },
+    //            isPrimary: false
+    //        },
+    //        isPrimary: false,
+    //        contactType: 1
+    //    };
+    //}
 
     /**
      *
@@ -40,47 +40,37 @@
      * @param {Boolean} reverseBinding  Reverse the direction of the bind (form values to contract object)
      * @return {Object}
      */
-    function bindContractToForm( contract, form, reverseBinding ) {
-        var i,
-            isRealForm = form.nodeName === "FORM";
-        for( i in contract ) {
-            // console.log("contract["+i+"]", contract[i]);
-            if( contract[i] !== null && typeof contract[i] === 'object' )
-                bindContractToForm( contract[i], form, reverseBinding );
-            else if( form[i] ) {
-                if( reverseBinding )
-                    contract[i] = (isRealForm ? form[i].value : form[i]) || null; // *** Works for <forms> and plain objects
-                else
-                    form[i].value = contract[i];
-            }
-        }
-        return contract;
-    }
-
-
-    /**
-     * Looks through an object recursively for any nulls and replaces them
-     * with the string specified by 'replacement'.
-     *
-     * @param {Object} obj
-     * @param {String} replacement
-     * @return {Object}
-     */
-    function transmuteNulls( obj, replacement ) {
-        replacement = replacement || "";
-        for(var i in obj) {
-            if( obj[i] === null && obj.hasOwnProperty(i) ) {
-                obj[i] = replacement;
-            } else if( typeof obj[i] === 'object' ) {
-                transmuteNulls(obj[i], replacement);
-            }
-        }
-
-        return obj;
-    }
+    //function bindContractToForm( contract, form, reverseBinding ) {
+    //    var i,
+    //        isRealForm = form.nodeName === "FORM";
+    //    for( i in contract ) {
+    //        // console.log("contract["+i+"]", contract[i]);
+    //        if( contract[i] !== null && typeof contract[i] === 'object' )
+    //            bindContractToForm( contract[i], form, reverseBinding );
+    //        else if( form[i] ) {
+    //            if( reverseBinding )
+    //                contract[i] = (isRealForm ? form[i].value : form[i]) || null; // *** Works for <forms> and plain objects
+    //            else
+    //                form[i].value = contract[i];
+    //        }
+    //    }
+    //    return contract;
+    //}
 
 
     $(document).ready(function () {
+
+        var $myAccountView = $('#mz-my-account'),
+            customerData = $myAccountView.mozuData('myaccount'),
+            userData = $myAccountView.mozuData('user'),
+            ordersData = $myAccountView.mozuData('orders');
+
+        ko.applyBindings(new MyAccountModels.AccountModel({
+            Customer: customerData,
+            User: userData,
+            Orders: ordersData
+        }), $myAccountView[0]);
+
         var shippingAddressModal = $("#shipping-address-modal");
 
         // *** Event handler to show/hide shipping addresses
@@ -283,9 +273,9 @@
         /**
          * AJAX handler for changing an email
          */
-        $("#change-email").on('click', function () {
-            $("#edit-email, #display-email").toggle();
-        });
+        //$("#change-email").on('click', function () {
+        //    $("#edit-email, #display-email").toggle();
+        //});
 
         $("#edit-email :submit").on('click', function () {
             var form = $(this).closest('form')[0],

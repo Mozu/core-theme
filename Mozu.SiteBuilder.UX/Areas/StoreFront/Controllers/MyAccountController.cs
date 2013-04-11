@@ -15,6 +15,9 @@ using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Customers;
 using Mozu.User.Contracts.Clients;
 using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
+using Mozu.Customer.Contracts.Clients;
+using System.Linq;
+
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -26,12 +29,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IUserWebApiClient _userWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly IAuthenticationHelper _authenticationHelper;
+        private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
 
-        public MyAccountController(ICustomerRepository customerRepository, IAccountContactRepository accountContactRepository, IUserWebApiClient userWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthenticationHelper authenticationHelper)
+        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository, IUserWebApiClient userWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthenticationHelper authenticationHelper)
         {
             if(customerRepository == null)
             {
                 throw new ArgumentNullException("customerRepository");
+            }
+
+            if(customerAccountWebApiClient == null)
+            {
+                throw new ArgumentNullException("customerAccountWebApiClient");
             }
 
             if(accountContactRepository == null)
@@ -55,6 +64,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             _customerRepository = customerRepository;
+            _customerAccountWebApiClient = customerAccountWebApiClient;
             _accountContactRepository = accountContactRepository;
             _userWebApiClient = userWebApiClient;
             _orderWebApiClient = orderWebApiClient;
@@ -64,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SiteBuilderAuthorize()]
         public async Task<ActionResult> Index()
         {
-            var account = _customerRepository.GetByUserId(UserId).Result;
+            var account = (await _customerAccountWebApiClient.GetCustomerAccounts(null, null, null, null, "UserId eq " + CurrentUser.UserId)).ReadAsSync().Items.FirstOrDefault();
 
             if (account == null)
             {
@@ -75,14 +85,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var orders = await _orderWebApiClient.GetOrders(0, 25, null, filter).Result.ReadAsAsync();
 
-            account.Orders = Mapper.Map<List<Models.Orders.Order>>(orders.Items);
+            this.ViewData["Orders"] = orders.Items;
+
+            this.ViewData["User"] = _userWebApiClient.GetUser(CurrentUser.UserId).Result.ReadAsSync();
 
             return View("myaccount", account);
         }
 
         public async Task<ActionResult> GetAccount()
         {
-            var res = await _customerRepository.GetByUserId(UserId);
+            var res = await _customerRepository.GetByUserId(CurrentUser.UserId);
 
             return new JsonDCResult { Data = res };
         }
@@ -99,7 +111,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateCustomerContact(CustomerAccountContact contact)
         {
-            var account = await _customerRepository.GetByUserId(UserId);
+            var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
 
             var res = await _accountContactRepository.Update(contact, account.Id);
 
@@ -109,7 +121,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public async Task<ActionResult> AddCustomerContact(CustomerAccountContact contact)
         {
-            var account = await _customerRepository.GetByUserId(UserId);
+            var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
 
             var res = await _accountContactRepository.Create(contact, account.Id);
 
@@ -119,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public async Task<ActionResult> DeleteCustomerContact(CustomerAccountContact contact)
         {
-            var account = await _customerRepository.GetByUserId(UserId);
+            var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
 
             _accountContactRepository.Delete(contact, account.Id);
 
@@ -129,7 +141,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateEmail(string email)
         {
-            var userId = UserId;
+            var userId = CurrentUser.UserId;
             var user = await _userWebApiClient.GetUser(userId).Result.ReadAsAsync();
 
             user.EmailAddress = email;
@@ -143,18 +155,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<ActionResult> ChangePassword(PasswordInfo info)
         {
             var passwordInfo = new Mozu.User.Contracts.PasswordInfo { NewPassword = info.NewPassword, OldPassword = info.OldPassword };
-            var res = await _userWebApiClient.ChangePassword(passwordInfo, UserId).Result.ReadAsAsync();
+            var res = await _userWebApiClient.ChangePassword(passwordInfo, CurrentUser.UserId).Result.ReadAsAsync();
 
             return new JsonDCResult { Data = true };
         }
 
-        protected string UserId
+        protected LightweightUserClaims CurrentUser
         {
             get
             {
-                LightweightUserClaims claims = _authenticationHelper.GetCurrentUser();
-
-                return claims.UserId;
+                return _authenticationHelper.GetCurrentUser();
             }
         }
     }
