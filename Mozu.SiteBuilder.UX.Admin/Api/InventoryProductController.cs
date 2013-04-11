@@ -68,8 +68,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 retProds.Add(Mapper.Map<Product>(retProd));
 
             }
-            HttpResponseMessage m;
-            m.Headers.Count()
 
             //var editedProducts = await _productMapper.PerformAction(products, p => _productClient.UpdateProduct(p, p.ProductCode));
             return List2(retProds);
