@@ -26,30 +26,26 @@ Ext.define('Taco.view.navigation.ContextSwitcherView', {
         this.store = Taco.app.context.getStore();
         
         // TODO: Call addEvents() for 'contextClicked'?
-
-        if (Taco.app.context.isMultiSiteCollection()) {
         this.tpl = [
-            '<tpl for=".">',
-                '{% values.collectionClass = values.contextType == "c" ? "taco-context-collection" : "" %}',
-                '{% values.containerClass = values.contextType != "s" ? "taco-context-container" : "" %}',
-                '<li class="taco-menu-item {containerClass} {collectionClass}">',
-                    '{name}',
-                '</li>',
-                '</tpl>'
-            ];
-        } else {
+           '<tpl for=".">',
+               '{% values.collectionClass = values.contextType == "c" ? "taco-context-collection" : "" %}',
+               '{% values.containerClass = values.contextType != "s" ? "taco-context-container" : "" %}',
+               '<li class="taco-menu-item {containerClass} {collectionClass}">',
+                   '{name}',
+               '</li>',
+               '</tpl>'
+        ];
+        
+        if (!Taco.app.context.isMultiSiteCollection()) {
+       
+       
+            //remove tenant level if single siteCollection
             this.store = Taco.app.context.getStore(true);
             this.store.filterBy(function (record) {
-                return record.get('contextType') == 's';
+                return record.get('contextType') != 't' ;
             });
-            this.tpl = [
-                '<tpl for=".">',
-                    '<li class="taco-menu-item taco-context-container">',
-                         '{name}',
-                    '</li>',
-                    
-            '</tpl>'
-        ];
+           
+        
         }
 
         this.enableBubble('contextClicked');
