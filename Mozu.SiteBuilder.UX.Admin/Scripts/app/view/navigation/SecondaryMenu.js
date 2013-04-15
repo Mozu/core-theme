@@ -30,21 +30,21 @@
                                 fields: ['id','name','url','intraNav'],
                                 data: [
                                     [0, 'My Account', '/admin/account', true],
-                                    [1, 'Launch Pad', '/admin/auth/Launchpad', false],
+                                    //[1, 'Launch Pad', '/admin/auth/Launchpad', false],
                                     [2, 'Log Out', '/admin/auth/logout', false]
                                 ]
                             }),
                             listeners: {
-                                beforerender: function(view) {
-                                    var item;
+                                //beforerender: function(view) {
+                                //    var item;
 
-                                    if (Taco.app.context.isSingleSite()) {
-                                        item = view.store.getById(1);
-                                        if (item) {
-                                            view.store.remove(item);
-                                        }
-                                    }
-                                },
+                                //    if (Taco.app.context.isSingleSite()) {
+                                //        item = view.store.getById(1);
+                                //        if (item) {
+                                //            view.store.remove(item);
+                                //        }
+                                //    }
+                                //},
                                 itemclick: function (view, record) {
                                     if ( record.get('intraNav')) {
                                         Taco.core.StateManager.attemptNavigate(record.get('url'));

@@ -56,12 +56,15 @@
         </table>
         @Html.HiddenFor(x=> x.Invitation )
     </form>
+    
+    @if (System.Configuration.ConfigurationManager.AppSettings["showTestLogin"] != "false")
+    {
+        <ul>
+    
+            <li>Click <a href="#" onclick=" testUser() ">here</a> or <a href="#" onclick=" testUser('test_user2@volusion.com') ">here</a> for test login </li>
 
-    <ul>
-        <li><a href="/admin/auth/register">Register</a> for a new Account</li>
-        <li>Click <a href="#" onclick="testUser()">here</a> or <a href="#" onclick="testUser('test_user2@volusion.com')">here</a> for test login </li>
-
-    </ul>
+        </ul>
+    }
 
 </div>
 </div>
