@@ -162,7 +162,7 @@ Ext.define('Taco.view.site.page.hint.Zone', {
 
         if (op == 'create') {
             element = this.associatedEl.dom.ownerDocument.createElement('div');
-            element.innerHTML = data.widgetDefinition.previewHtml || '<img src="/admin/scripts/resources/images/loading.gif" />';
+            element.innerHTML = data.widgetDefinition.previewHtml || '<img src="/admin/scripts/resources/images/legacy/loading.gif" />';
 
             el = Ext.get(element);
             el.addCls('taco-widget-element');
