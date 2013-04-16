@@ -7,7 +7,7 @@
 * @requires Taco.view.site.page.inlineeditors.InlineTags
 * @requires Taco.view.site.page.inlineeditors.InlineImage
 * @requires Taco.view.site.page.Shim
-* @requires Taco.view.site.page.WidgetWindow
+
 * @xtype editsurface
 * @author James Zetlen
 * The iframe-based storefront inline editor.
@@ -42,7 +42,7 @@
             'Taco.view.site.page.inlineeditors.InlineHtml',
             'Taco.view.site.page.inlineeditors.InlineText',
             'Taco.view.site.page.inlineeditors.InlineTags',
-            'Taco.view.site.page.Shim', 'Taco.view.site.page.WidgetWindow', 'Taco.view.site.page.inlineeditors.InlineImage'
+            'Taco.view.site.page.Shim', 'Taco.view.site.page.inlineeditors.InlineImage'
             ],
 
         items: [],
@@ -93,20 +93,7 @@
 
 
 
-            this.widgetWindow = Ext.create('Taco.view.site.page.WidgetWindow', {
-                dragZoneConfig: {
-                    onBeforeDrag: function () {
-                        me.shim.show();
-                    },
-                    afterValidDrop: function () {
-                        me.shim.hide();
-                    },
-                    afterInvalidDrop: function () {
-                        me.shim.hide();
-                    }
-                }
-            }
-            );
+        
 
             this.shim = Ext.create('Taco.view.site.page.Shim', {
                 iframe: this.iframe,
@@ -641,7 +628,4 @@
 
 
 
-        openWidgetWindow: function () {
-            this.widgetWindow.show();
-        }
     });

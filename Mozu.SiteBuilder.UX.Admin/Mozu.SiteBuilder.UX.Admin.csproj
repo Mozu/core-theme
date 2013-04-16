@@ -2801,7 +2801,6 @@
     <Content Include="Scripts\app\view\site\page\SiteDirectory.js" />
     <Content Include="Scripts\app\view\site\page\WidgetDragZone.js" />
     <Content Include="Scripts\app\view\site\page\WidgetDropZone.js" />
-    <Content Include="Scripts\app\view\site\page\WidgetWindow.js" />
     <Content Include="Scripts\app\view\site\Toolbox.js" />
     <Content Include="Scripts\app\view\site\widget\BlogArchive.js" />
     <Content Include="Scripts\app\view\site\widget\ColumnDivider.js" />
