@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             ViewData = viewContext.ViewData;
             var siteBuilderContext = SiteBuilderContext.GetFromContext(viewContext.HttpContext ) ?? SiteBuilderContext.Current;
             var requestContext = new Dictionary<string, object>(viewContext.ViewData);
-            var authenticationHelper = new AuthenticationHelper( viewContext.HttpContext , new CookieProvider(viewContext.HttpContext));
+            var authenticationHelper = new AuthenticationHelper(viewContext.HttpContext, new CookieProvider(viewContext.HttpContext,Core.Settings.MozuConfigurationManager.Settings));
             var gcu = authenticationHelper.GetCurrentUser();
             var profile = authenticationHelper.GetCurrentProfileToken();
             HtmlHelper html;

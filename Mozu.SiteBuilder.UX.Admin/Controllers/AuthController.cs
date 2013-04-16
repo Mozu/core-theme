@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using AutoMapper;
+using Mozu.Core.Settings;
 using Mozu.Provisioning.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -26,8 +28,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IPasswordHelper _passwordHelper;
         private readonly Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient _merchantSignUpWebApiClient;
         private readonly IRolesHelper _rolesHelper;
+        private readonly ISettings _settings;
 
-        public AuthController(IVolusionLoginHelper loginHelper, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper, IPasswordHelper passwordHelper, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IRolesHelper rolesHelper)
+        public AuthController(IVolusionLoginHelper loginHelper, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper, IPasswordHelper passwordHelper, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IRolesHelper rolesHelper , ISettings settings )
         {
             _authenticationHelper = authHelper;
             _loginHelper = loginHelper;
@@ -38,6 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _passwordHelper = passwordHelper;
             _merchantSignUpWebApiClient = merchantSignUpWebApiClient;
             _rolesHelper = rolesHelper;
+            _settings = settings;
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
@@ -75,22 +79,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             try
             {
                 // If the user authenticates, redirect them to the admin app
-                var tenants = await _loginHelper.VolusionLogIn(login);
+                var tenants =  _loginHelper.VolusionLogIn(login);
 
                 if (tenants.Skip(1).Any()) // more than 1
                 {
+                    var contexts = Mapper.Map<List<TaContext>>(tenants);
                     // Launch Pad with Tenant Names
-                    return View("Roles", tenants);
+                    return View("Roles", contexts);
                 }
                 if (tenants.Any())
                 {
                     // Auto login to tenant
                     var taContext = tenants.First();
-
+                   
                     var tenant = await _contextSwitcher.ChangeTenant(taContext.Id);
                     if (tenant != null)
                     {
-                        return Redirect("/admin");
+                        if (_settings.AppSettings("useTenantDomainNames") == "true")
+                        {
+                            return Redirect(string.Format("http://{0}/admin", tenant.Domain.DomainName));
+                        }
+                        else
+                        {
+                            return Redirect("/admin");
+                        }
                     }
                     return null;
                 }
@@ -159,9 +171,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             // If the user authenticates, redirect them to the admin app
             try
             {
-                var contexts = await _loginHelper.VolusionLogIn(user);
-
-                if (contexts.Skip(1).Any()) // checking for "greater than 1" without enumerating the collection
+                var tenants =  _loginHelper.VolusionLogIn(user);
+                var contexts = Mapper.Map<List<TaContext>>(tenants);
+                if (tenants.Skip(1).Any()) // checking for "greater than 1" without enumerating the collection
                 {
                     return View("Roles", contexts);
                 }
@@ -229,126 +241,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var tenant = await _contextSwitcher.ChangeTenant(id);
             if (tenant != null)
             {
-                return Redirect("/admin");
+                if (_settings.AppSettings("useTenantDomainNames") == "true")
+                {
+                    return Redirect(string.Format("http://{0}/admin", tenant.Domain.DomainName));
+                }
+                else
+                {
+                    return Redirect("/admin");
+                }
+              
             }
             return View("Login");
         }
 
-/*
- * NOTE: No longer used since login attempts are made against Tenant.  (Missal 02/06/13)
- * 
-        public async Task<ActionResult> ChangeRole(int id)
-        {
-            var site = await _loginHelper.ChangeSite(id);
-            if (site != null)
-            {
-                //todo: look in config
-                //return RedirctDomain(site,site.Id, "/admin" , _authenticationHelper.GetCurrentTicket());
-
-                var ticket = _authenticationHelper.GetCurrentTicket();
-                _authenticationHelper.SetCurrentUser(ticket);
-                _sbc.Id = id;
-                _sbc.SiteId = _authenticationHelper.GetCurrentUser().SiteId.GetValueOrDefault(-1);
-                _sbc.Save();
-
-                return Redirect("/admin");
-            }
-            ModelState.AddModelError("General", "Authentication failed!");
-            return View("Login");
-        }
-*/
-
-/*
- * Note: No longer used. Keep around for a little longer to save time from looking back in history if any issues arise.  (Missal 02/06/13)
- * 
-        ActionResult RedirctDomain (Site site, int tenantId , string url , UserAuthTicket ticket  )
-        {
-            
-            //todo: move to di   
-            if ( System.Configuration.ConfigurationManager.AppSettings ["useSiteDomainNames"] != "true")
-            {
-                _authenticationHelper.SetCurrentUser(ticket);
-                _sbc.Id = tenantId;
-                _sbc.SiteId = (int)_authenticationHelper.GetCurrentUser().SiteId;
-                _sbc.Save();
-                return this.Redirect(url);
-            }
-            throw new NotImplementedException("useSiteDomainNames  feature removed");
-            //var zone = System.Configuration.ConfigurationManager.AppSettings["dnszone"];
-            //var domain = (site.Domains ?? new List<Domain>()).FirstOrDefault(x => x.IsPrimary && x.FullName.EndsWith(zone, StringComparison.OrdinalIgnoreCase)) ?? site.AssignedDomain;
-            //var host = domain.FullName;
-
-            //return Content(
-            //    string.Format("<html><body><form method=\"post\" id=\"ssoform\" action=\"http://{0}/admin/auth/SSORedirect\"><input type=\"hidden\"  name=\"url\" value=\"{1}\" /><input type=\"hidden\"  name=\"accessToken\" value=\"{2}\" /><input type=\"hidden\"  name=\"refreshToken\" value=\"{3}\" /><input type=\"hidden\"  name=\"profileToken\" value=\"{4}\" /><input type=\"hidden\"  name=\"accessTokenExpire\" value=\"{5}\" /><input type=\"hidden\"  name=\"refreshTokenExpire\" value=\"{6}\" /><input type=\"hidden\"  name=\"tenantId\" value=\"{7}\" /><input id=\"continue_btn\" type=\"submit\" value=\"continue\" /></form><script>document.getElementById('continue_btn').style.visibility = 'hidden';document.forms['ssoform'].submit()</script></body></form>",
-            //    host, 
-            //    url,
-            //    ticket.AccessToken ,
-            //    ticket.RefreshToken ,
-            //    ticket.ProfileToken ,
-            //    ticket.AccessTokenExpiration.Ticks.ToString("X2"),
-            //    ticket.RefreshTokenExpiration.Ticks.ToString("X2"),
-            //     tenantId
-                
-            //    )
-                
-            //    );
-        }
-*/
-
-/*
- * Note: No longer used. Keep around for just a bit in case we want to look back in history quicker.  (Missal 02/06/13)
- * 
-        [HttpPost ]
-        public ActionResult SSORedirect(string url, string accessToken, string refreshToken, string profileToken, string accessTokenExpire, string refreshTokenExpire, int tenantId)
-        {
-            var ticket = new UserAuthTicket()
-                            {
-                                AccessToken = accessToken,
-                                RefreshToken = refreshToken,
-                                ProfileToken = profileToken,
-                                AccessTokenExpiration = new DateTime(Int64.Parse(accessTokenExpire, NumberStyles.HexNumber)),
-                                RefreshTokenExpiration = new DateTime(Int64.Parse(refreshTokenExpire, NumberStyles.HexNumber))
-                            };
-            _authenticationHelper.SetCurrentUser(ticket);
-            _sbc.Id = tenantId;
-            _sbc.SiteId = (int)_authenticationHelper.GetCurrentUser().SiteId;
-            _sbc.Save();
-
-            return this.Redirect(url);
-        }
-*/
-        public Task<List<TaContext>> Register(Mozu.SiteBuilder.UX.Admin.Api.Models.Account.LoginUser user)
-        {
-            //var rootAuthRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
-            //var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
-
-            var res = _merchantSignUpWebApiClient.MerchantSignUp(new MerchantSignUpRequest()
-            {
-                EmailAddress = user.EmailAddress,
-                Password = user.Password,
-                Domain = user.SiteName + "." + System.Configuration.ConfigurationManager.AppSettings["dnszone"]
-
-            }).Result.ReadAsSync();
-
-
-            return _loginHelper.VolusionLogIn(user);
-        }
-
-        public ActionResult Register()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Register(LoginUser user, FormCollection collection)
-        {
-            if (ModelState.IsValidField("SiteName") && ModelState.IsValidField("EmailAddress") && ModelState.IsValidField("Password"))
-            {
-                var reg = Register(user).Result;
-                return Redirect("/admin");
-            }
-            return View(user);
-        }
 
         public ActionResult Logout()
         {

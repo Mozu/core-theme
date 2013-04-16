@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Mozu.Core.Settings;
+
 namespace Mozu.SiteBuilder.Mvc
 {
     using System;
@@ -27,13 +29,15 @@ namespace Mozu.SiteBuilder.Mvc
     {
         //private readonly string _cookieName;
         
-        public CookieProvider( HttpContextBase context = null)
+        public CookieProvider( HttpContextBase context ,ISettings settings   )
         {
             Context = context ?? new HttpContextWrapper(HttpContext.Current);
+            Domain = settings.AppSettings("authCookieDomain");
+
         }
      
         public HttpContextBase Context { get; private set; }
-
+        public string Domain { get; set; }
         public HttpCookie GetRequestCookie(string cookieName)
         {
             return Context.Request.Cookies.Get(cookieName);
@@ -42,6 +46,7 @@ namespace Mozu.SiteBuilder.Mvc
         public void SaveResponseCookie(string cookieName , HttpCookie cookie)
         {
             cookie.Name = cookieName;
+            cookie.Domain = this.Domain;
             if ( Context.Response.Cookies.AllKeys.Any( x=> x == cookieName ))
             {
                 Context.Response.Cookies.Remove(cookieName);
