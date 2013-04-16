@@ -13,5 +13,6 @@
       "key": "image_url",
       "value": "{ \"src\":\"/admin/scripts/resources/images/legacy/AddPhotos.png\", \"alt\":\"food is good\" }"
     }
-  ]
+  ],
+  "enabled":false
 }

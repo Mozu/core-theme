@@ -3,5 +3,7 @@
   "displayName": "Images Gallery",
   "displayTemplate": "cms/imagesGallery",
   "editView": "Taco.view.site.widget.ImagesGallery",
-  "properties": []
+  "properties": [],
+  "enabled":false
+
 }

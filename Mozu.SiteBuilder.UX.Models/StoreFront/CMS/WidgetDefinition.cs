@@ -47,6 +47,11 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         [XmlArray("properties")]
         [XmlArrayItem("property")]
         public List<WidgetDefintionProperty> Properties { get; set; }
+
+        [DataMember(Name = "enabled")]
+        [XmlAttribute("enabled")]
+        public bool? Enabled { get; set; }
+
     }
 
     [DataContract(Name = "widgetDefintionProperty")]
