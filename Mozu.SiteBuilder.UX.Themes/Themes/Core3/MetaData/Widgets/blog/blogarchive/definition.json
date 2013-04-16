@@ -4,5 +4,6 @@
   "displayTemplate": "blog/blogarchive",
   "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
   "editView": "Taco.view.site.widget.BlogArchive",
-  "properties": []
+  "properties": [],
+  "enabled":false
 }
