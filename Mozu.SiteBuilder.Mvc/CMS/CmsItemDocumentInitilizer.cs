@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 if (request.Id != null)
                 {
-                    task = _cmsServiceWrapper.Get((request.Collection ?? defaultCollection), request.Id);
+                    task = _cmsServiceWrapper.Get((request.Collection ?? defaultCollection), request.Id, false );
 
                 }
                 if (request.Path != null)
@@ -116,6 +116,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 var widgetRaw = (string)cmsPageContext.Page.Get(CmsConstants.Documents.widget_prop);
                 var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                var src = new DocumentRequest()
+                              {
+                                  Id = cmsPageContext.Page.Id,
+                                  Collection = cmsPageContext.Page.DocumentListName
+                              };
+                existingWidgets.ForEach(x => x.Source = src);
                 cmsPageContext.RuntimeData.AddRange(existingWidgets);
 
             }
@@ -123,6 +129,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 var widgetRaw = (string)cmsPageContext.Template.Get(CmsConstants.Documents.widget_prop);
                 var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                var src = new DocumentRequest()
+                              {
+                                  Id = cmsPageContext.Template .Id,
+                                  Collection = cmsPageContext.Template.DocumentListName
+                              };
+                existingWidgets.ForEach(x => x.Source = src);
                 cmsPageContext.RuntimeData.AddRange(existingWidgets);
 
             }
@@ -130,6 +142,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 var widgetRaw = (string)cmsPageContext.SiteTemplate.Get(CmsConstants.Documents.widget_prop);
                 var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                var src = new DocumentRequest()
+                              {
+                                  Id = cmsPageContext.SiteTemplate .Id,
+                                  Collection = cmsPageContext.SiteTemplate.DocumentListName
+                              };
+                existingWidgets.ForEach(x => x.Source = src);
                 cmsPageContext.RuntimeData.AddRange(existingWidgets);
 
             }
