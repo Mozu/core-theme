@@ -52,6 +52,16 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         [XmlAttribute("enabled")]
         public bool? Enabled { get; set; }
 
+        private string _category;
+
+        [DataMember(Name = "category")]
+        [XmlAttribute("category")]
+        public string Category
+        {
+            get { return string.IsNullOrEmpty(_category) ? "basic" : _category; }
+            set { _category = value; }
+        }
+
     }
 
     [DataContract(Name = "widgetDefintionProperty")]

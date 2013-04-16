@@ -3,5 +3,7 @@
   "displayName": "AddThis",
   "displayTemplate": "social/addthis",
   "editView": "Taco.view.site.widget.AddThis",
-  "properties": []
+  "properties": [],
+  "category":"social"
+    
 }
