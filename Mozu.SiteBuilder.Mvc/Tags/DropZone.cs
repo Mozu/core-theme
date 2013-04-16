@@ -32,6 +32,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             return Process(zoneId, scope, null);
         }
 
+        //public MvcHtmlString Process(object zoneId, object scope)
+        //{
+        //    return Process(zoneId.ToString(), (scope ?? "page").ToString(), null);
+        //}
+
         public MvcHtmlString Process(string zoneId, IDictionary<string, object> htmlAttributes)
         {
             return Process(zoneId, null, htmlAttributes);
@@ -65,11 +70,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             {
                 return new MvcHtmlString("!<-- warning:  redundant drop zone tag " + zoneId + " -->");
             }
-            if (string.IsNullOrEmpty(scope))
+            if (string.IsNullOrEmpty(scope) )
             {
                 scope = "page";
             }
-            else
+            else if ( !scope.Equals("page", StringComparison.OrdinalIgnoreCase))
             {
                 scope = scope.ToLowerInvariant();
                 if (scope != "template" && scope != "site")

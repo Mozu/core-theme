@@ -3,7 +3,7 @@
         <tr>
             {%for col in Model.config.columns %}
             <td style="width:{{col.width}}%"  width="{{col.width}}%">
-                {% dropzone col.id %}
+                {% dropzone  zoneId=col.id  scope=Model.zoneScope %}
             </td>
             {%endfor%}
         </tr>

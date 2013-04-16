@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Newtonsoft.Json.Linq;
+
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
     using System;
@@ -139,6 +141,17 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                         tagArg.ArgumentType = TagArgument.ArgumentTypes.ValueArgument;
                         tagArg.Name = "na";
                         tagArg.Value = new NDjango.Expressions.FilterExpression(this.ParsingContext, arg).Resolve(walker.context, true).Item1.Value;
+                    }
+                    var jarr = tagArg.Value as JArray;
+                    var jval = tagArg.Value as JValue;
+                    if (jval != null)
+                    {
+                        tagArg.Value = jval.Value;
+                    }
+                    else if (jarr != null )
+                    {
+                        //todo turn into some type of colletion or array.
+                        
                     }
                     arguments.Add(tagArg);
                 }
