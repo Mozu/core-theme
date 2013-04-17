@@ -196,7 +196,7 @@ namespace Mozu.SiteBuilder.Mvc
                     header[APIConstants.Headers.USER_CLAIMS] = this._apiContext.UserClaims.ToAccessToken();
                     header[APIConstants.Headers.BYPASS_CACHE] = this._apiContext.ShouldBypassCache.ToString();
 
-	                
+	               
                     var urls = new JObject();
 	                urls["ProductService"] = _configSettings.AppSettings("service-url-ProductRuntimeWebApi");
                     urls["CartService"] = _configSettings.AppSettings("service-url-CartWebApi");
@@ -206,7 +206,19 @@ namespace Mozu.SiteBuilder.Mvc
                     urls["CmsService"] = _configSettings.AppSettings("service-url-DocumentWebApi");
                     urls["ReferenceService"] = _configSettings.AppSettings("service-url-ReferenceDataWebApi");
 	                _apiClientContext["header"] = header;
+                     
                     _apiClientContext["urls"] = urls;
+                    if (_configSettings.AppSettings("ReverseProxy") == "true")
+                    {
+                        foreach (var url in urls)
+                        {
+                            var idx = ((string) url.Value).IndexOf("webapi/", StringComparison.OrdinalIgnoreCase);
+                            if (idx > 0)
+                            {
+                                urls[url.Key] = "/api" +((string)url.Value).Substring(idx + 6);
+                            }
+                        }
+                    }
 
 	            }
                 return _apiClientContext;

@@ -54,13 +54,18 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var res = await _wsRepo.GetSite(siteId);
             var site = res.ReadAsAsync().Result;
 
+            this.SiteContext.SiteId = siteId;
+            this.SiteContext.TenantId = site.TenantId;
+            this.SiteContext.SiteGroupId = site.SiteGroupId;
+            this.SiteContext.Save();
+            ;
             // fuck it.
-            string contextString = String.Format("tenant={0}&sitegroup={1}&site={2}", site.TenantId, site.SiteGroupId, site.Id);
-            var c1 = new HttpCookie("SBCONTEXT", contextString);
-            var c2 = new HttpCookie("SBCONTEXT2", contextString);
+            //string contextString = String.Format("tenant={0}&sitegroup={1}&site={2}", site.TenantId, site.SiteGroupId, site.Id);
+            //var c1 = new HttpCookie("SBCONTEXT", contextString);
+            //var c2 = new HttpCookie("SBCONTEXT2", contextString);
 
-            _cookies.SaveResponseCookie(c1.Name, c1);
-            _cookies.SaveResponseCookie(c2.Name, c2);
+            //_cookies.SaveResponseCookie(c1.Name, c1);
+            //_cookies.SaveResponseCookie(c2.Name, c2);
 
             if (!String.IsNullOrEmpty(redir))
             {
