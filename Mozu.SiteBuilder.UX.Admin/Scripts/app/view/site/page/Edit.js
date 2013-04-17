@@ -15,6 +15,9 @@
             'Taco.store.WidgetInstances'
         ],
         alias: 'widget.inlineeditor',
+
+        cls: Taco.baseCSSPrefix + 'content-inline-editor',
+
         title: 'Page Editor',
         model: 'Taco.model.Product',
         // TODO
@@ -46,6 +49,7 @@
             };
 
             this.toolBar = Ext.create('Ext.toolbar.Toolbar', {
+                cls: Taco.baseCSSPrefix + 'inline-editor-tools',
                 margin: '3 0 0 0',
                 getButton:function(key){
                    return  this.down('#'+key);

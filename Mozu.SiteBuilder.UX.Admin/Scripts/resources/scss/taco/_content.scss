@@ -17,7 +17,8 @@
 
   /* CONTENT CONTAINER */
 
-  .#{$vprefix}content-browserpage {
+  .#{$vprefix}content-browserpage,
+  .#{$vprefix}content-inline-editor {
     @include flexbox;
   }
 

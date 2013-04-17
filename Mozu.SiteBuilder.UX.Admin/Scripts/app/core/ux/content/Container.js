@@ -73,7 +73,7 @@ Ext.define('Taco.core.ux.content.Container', {
             me.items = [me.main, me.sidebar];
         } else {
             me.layout = 'auto';
-            me.cls = 'taco-content-container-with-sidebar';
+            me.cls = 'taco-content-container';
             me.items = [me.header, me.body];
         }
     },
