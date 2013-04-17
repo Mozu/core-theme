@@ -159,7 +159,8 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
             typeName: me.typeName,
             filterFormConf: me.filterFormConf,
             filterProperties: me.filterProperties,
-            flex: 1,
+            // flex: 1,
+            height: (Ext.getBody().getBox().height - 201),
             isCollectionContext: Taco.app.context.getCurrent().contextType === "c",
             gridPanel: me.gridPanel,
             tilePanel: me.tilePanel,
@@ -180,7 +181,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
 
     layoutItemBrowser: function () {
         Ext.apply(this.body, {
-            layout: 'fit',
+            layout: 'auto',
             items: [this.itemBrowser]
         });
     },

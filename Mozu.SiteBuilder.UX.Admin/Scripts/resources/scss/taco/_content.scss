@@ -17,21 +17,32 @@
 
   /* CONTENT CONTAINER */
 
+  .#{$vprefix}content-browserpage {
+    @include flexbox;
+  }
+
   .#{$vprefix}content-container {
+    min-width: 0px;
+    width: 100%;
+    @include flex($grow: 1);
 
     .#{$vprefix}content-header {
-      margin: 0px 30px;
-      padding: 17px 0px;
+      border-bottom: 1px solid border-for($color-neutral-white);
+      margin: 0px;
+      min-height: 65px;
+      padding: 17px 30px;
+      position: relative;
+      width: 100%;
       z-index: 2;
       @include box-shadow(rgba(0,0,0,0) 0 -5px 10px 0px);
+      @include flexbox($justify: space-between);
       @include transition(box-shadow 1s ease);
 
       
       h1 {
-        float: left;
         font-size: px-to-rem(24);
         font-weight: normal;
-        line-height: 1.25em;
+        line-height: px-to-rem(30);
       }
 
       p {
@@ -50,13 +61,32 @@
     }
     
     .#{$vprefix}content-body {
-      border-top: 1px solid border-for($color-neutral-white);
       margin: 0px 30px;
-      padding: 19px 0px 10px;
+      padding: 20px 0px 10px;
 
       .#{$prefix}table-layout-cell {
         vertical-align: top;
       }
+    }
+  }
+
+  .#{$vprefix}travis-scrolled {
+    .#{$vprefix}content-header {
+      background-color: $color-neutral-90;
+      left: 0px;
+      position: fixed;
+      top: 0px;
+    }
+
+    .#{$vprefix}content-body {
+      margin-top: 71px;
+    }
+
+    .#{$vprefix}content-sidebar {
+      height: 100%;
+      position: fixed;
+      right: 5px;
+      top: 0px;
     }
   }
 	
@@ -65,19 +95,21 @@
     border-color: border-for($color-neutral-white);
     border-style: solid none none solid;
     border-width: 1px 0px 0px 1px;
+    z-index: 3;
 
 		.#{$vprefix}sidebarlist {
 			margin: 0 30px;
+
 			h1 {
 				padding: 0 0 15px;
 				margin: 0 0 15px;
-				font-size: 16pt;
+				font-size: px-to-rem(20);
 				font-weight: normal;
 				border-bottom: 1px dashed #999;
 				}
 			.#{$vprefix}sidebarlist-list-item {
 				margin: 6px 0;
-				font-size: 9pt;
+				font-size: px-to-rem(12);
 				&.#{$prefix}item-selected {
 					font-weight: bold;
 				}
