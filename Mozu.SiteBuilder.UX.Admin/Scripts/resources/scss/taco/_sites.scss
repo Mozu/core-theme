@@ -1,107 +1,113 @@
-
 @mixin taco-sites {
-    .#{$vprefix}toolbox {
-        
-        .#{$prefix}toolbar-default {
-            background-color: white;
-            border: none;
 
-            .#{$vprefix}tabs {
-                padding: 0.8rem;
-                a {
-                    //margin: 0.3rem 0;
-                    padding: px-to-rem(5) px-to-rem(10);
-                    border: 0.1rem solid $color-action-outline;
-                    border-right-width: 0;
-                    color: $color-action-foreground;
-                    background: $color-action-background;
-                    font-size: 1.2rem;
+  .#{$vprefix}inline-editor-tools {
+    display: inline-block;
+    vertical-align: middle;
+  }
 
-                    &:first-child {
-                        border-radius: 0.5rem 0 0 0.5rem;
-                    }
+  .#{$vprefix}toolbox {
+    .#{$prefix}toolbar-default {
+      background-color: white;
+      border: none;
 
-                    &:last-child {
-                        border-radius: 0 0.5rem 0.5rem 0;
-                        border-right-width: 0.1rem;
-                    }
+      .#{$vprefix}tabs {
+        padding: 0.8rem;
 
-                    &.active {
-                        background: $color-action-background-depressed;
-                        @include inner-shadow;
-                    }
-                }
-            }
+        a {
+          //margin: 0.3rem 0;
+          padding: px-to-rem(5) px-to-rem(10);
+          border: 0.1rem solid $color-action-outline;
+          border-right-width: 0;
+          color: $color-action-foreground;
+          background: $color-action-background;
+          font-size: 1.2rem;
+
+          &:first-child {
+            border-radius: 0.5rem 0 0 0.5rem;
+          }
+
+          &:last-child {
+            border-radius: 0 0.5rem 0.5rem 0;
+            border-right-width: 0.1rem;
+          }
+
+          &.active {
+            background: $color-action-background-depressed;
+            @include inner-shadow;
+          }
         }
-
-        .#{$vprefix}treelist {
-
-            .#{$vprefix}shit {
-                background-color: $color-neutral-white !important;
-                font-size: 18px;
-                & > div {
-                    & > img {
-                        display: none;
-                    }
-                    padding: 14px 0px 7px;
-                }
-                &:after {
-                    background-color: $color-neutral-white;
-                    content: "Root";
-                    display: block;
-                    font-size: 0px;
-                    height: 40px;
-                    left: auto;
-                    line-height: 0px;
-                    margin: -40px 0px 0px -36px;
-                    position: absolute;
-                    top: auto;
-                    width: 36px;
-                }
-            }
-
-            tbody tr {
-
-                .#{$prefix}tree-icon-inline {
-                    height: 24px;
-                    width: 24px;
-                }
-
-                .#{$vprefix}nav-node-group {
-                    display: none;
-                }
-
-				.#{$vprefix}nav-node-folder,
-                .#{$vprefix}nav-node-category {
-                    @include icons-sprite(icon-toolbox-nav-category);
-                }
-
-				.#{$vprefix}nav-node-blog,
-                .#{$vprefix}nav-node-page,
-                .#{$vprefix}nav-node-systempage {
-                    @include icons-sprite(icon-toolbox-nav-page);
-                }
-
-                .#{$vprefix}nav-node-link {
-                    @include icons-sprite(icon-toolbox-nav-shortcut);
-                }
-                .#{$vprefix}nav-node-product {
-                    @include icons-sprite(icon-toolbox-nav-product);
-                }
-
-                .#{$vprefix}draghandle {
-                    @include single-transition(opacity);
-                    opacity: 1;
-                }
-
-                &:not(:hover) .#{$vprefix}draghandle {
-                    opacity: 0;
-                }
-
-                &:nth-child(3) .#{$prefix}tree-icon {
-                    @include icons-sprite(icon-toolbox-nav-home);
-                }
-            }
-        }
+      }
     }
+
+    .#{$vprefix}treelist {
+
+      .#{$vprefix}shit {
+        background-color: $color-neutral-white !important;
+        font-size: 18px;
+
+        & > div {
+          & > img {
+            display: none;
+          }
+          padding: 14px 0px 7px;
+        }
+        &:after {
+          background-color: $color-neutral-white;
+          content: "Root";
+          display: block;
+          font-size: 0px;
+          height: 40px;
+          left: auto;
+          line-height: 0px;
+          margin: -40px 0px 0px -36px;
+          position: absolute;
+          top: auto;
+          width: 36px;
+        }
+      }
+
+      tbody tr {
+        .#{$prefix}tree-icon-inline {
+          height: 24px;
+          width: 24px;
+        }
+
+        .#{$vprefix}nav-node-group {
+          display: none;
+        }
+
+        .#{$vprefix}nav-node-folder,
+        .#{$vprefix}nav-node-category {
+          @include icons-sprite(icon-toolbox-nav-category);
+        }
+
+        .#{$vprefix}nav-node-blog,
+        .#{$vprefix}nav-node-page,
+        .#{$vprefix}nav-node-systempage {
+          @include icons-sprite(icon-toolbox-nav-page);
+        }
+
+        .#{$vprefix}nav-node-link {
+          @include icons-sprite(icon-toolbox-nav-shortcut);
+        }
+        .#{$vprefix}nav-node-product {
+          @include icons-sprite(icon-toolbox-nav-product);
+        }
+
+        .#{$vprefix}draghandle {
+          @include single-transition(opacity);
+          opacity: 1;
+        }
+
+        &:not(:hover) .#{$vprefix}draghandle {
+          opacity: 0;
+        }
+
+        &:nth-child(3) .#{$prefix}tree-icon {
+          @include icons-sprite(icon-toolbox-nav-home);
+        }
+      }
+    }
+  }
+
 }
