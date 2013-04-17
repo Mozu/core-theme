@@ -13,6 +13,7 @@
   /* HEADER */
 
   .#{$vprefix}viewport-header {
+    width: 100%;
     @include box-shadow(0px -1px 6px $color-neutral-black);
   }
 
@@ -36,6 +37,12 @@
       width: 125px;
       @include icons-sprite(icon-mozulogo-full);
     }
+  }
+
+  /* BODY */
+
+  .#{$vprefix}content-view {
+    width: 100%;
   }
 
   /* SCROLLBARS */

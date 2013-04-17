@@ -11,14 +11,11 @@ Ext.define('Taco.core.ux.content.Body', {
 
     cls: 'taco-content-body',
     flex: 1,
-
+    // height: 2500,
   
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
-    },
+    layout: 'auto',
 
-    autoScroll: true,
+    // autoScroll: true,
     onSetMessage: function (message, type) {
         console.log (message + ', ' + type);
     }

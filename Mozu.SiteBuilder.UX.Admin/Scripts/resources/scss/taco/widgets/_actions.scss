@@ -25,20 +25,23 @@
   }
 
   button.#{$vprefix}action {
-    font: $font-body-copy;
-    min-width: 6.5em;
-    padding: 0.5em 0.7em;
-    border: 1px solid $color-action-outline;
-    white-space: nowrap;
-    vertical-align: middle;
-    color: $color-action-foreground;
     background-color: $color-action-background;
-    cursor: pointer;
-    
-
+    border: 1px solid $color-action-outline;
+    color: $color-action-foreground;
+    font-size: px-to-rem(14);
+    line-height: px-to-rem(14);
+    margin: 0px;
+    min-width: 86px;
+    padding: 8px 20px 6px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
     @include border-radius(3px);
-    @include text-shadow(0 1px 1px rgba(255,255,255,1));
-    @include box-shadow(0 1px 0 rgba(255,255,255,1) inset);
+    @include text-shadow(1px 1px transparentize($color-neutral-white, 0.75));
+
+    // @include border-radius(3px);
+    // @include text-shadow(0 1px 1px rgba(255,255,255,1));
+    // @include box-shadow(0 1px 0 rgba(255,255,255,1) inset);
     //@include transition(all 0.3s ease-in-out, left 0s, top 0s, width 0s, height 0s);
     @include no-select;
     @include facade-transitions;
@@ -60,10 +63,11 @@
 
     &.#{$vprefix}action-primary:not(:disabled) {
       background-color: $color-action-primary-background;
-      color: $color-action-primary-foreground;
       border-color: $color-action-primary-outline;
-      @include text-shadow(0 -1px 1px rgba(0,0,0,0.5));
-      @include box-shadow(0 1px 0 rgba(255,255,255,0.5) inset);
+      color: $color-action-primary-foreground;
+      @include text-shadow(1px 1px transparentize($color-neutral-black, 0.75));
+      // @include text-shadow(0 -1px 1px rgba(0,0,0,0.5));
+      // @include box-shadow(0 1px 0 rgba(255,255,255,0.5) inset);
 
       &:hover {
         background-color: $color-action-primary-background-hover;

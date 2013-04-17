@@ -53,20 +53,15 @@ Ext.define('Taco.core.ux.content.Container', {
 
         if (me.sidebar || me.hasSidebar) {
 
-            me.layout = {
-                type: 'border'
-            };
+            me.layout = 'auto';
 
             me.cls = 'taco-content-container';
 
             me.main = Ext.create('Ext.Container', {
-                region: 'center',
+                // region: 'center',
                 cls: Taco.baseCSSPrefix + 'content-container',
                 // flex: 1,
-                layout: {
-                    align: 'stretch',
-                    type: 'vbox'
-                },
+                layout: 'auto',
                 items: [me.header, me.body]
             });
 
@@ -77,10 +72,7 @@ Ext.define('Taco.core.ux.content.Container', {
 
             me.items = [me.main, me.sidebar];
         } else {
-            me.layout = {
-                align: 'stretch',
-                type: 'vbox'
-            };
+            me.layout = 'auto';
             me.cls = 'taco-content-container-with-sidebar';
             me.items = [me.header, me.body];
         }
@@ -103,7 +95,7 @@ Ext.define('Taco.core.ux.content.Container', {
         });
     },
         
-    onBodyScroll: function (e, t, eOpts) {
+    onBodyScroll: function (e, t) {
         var me = this,
             isScrolled = this.isScrolled;
         if (!isScrolled && t.scrollTop > 0) {

@@ -8,10 +8,7 @@ Ext.define('Taco.core.ux.content.Header', {
     requires: ['Taco.core.ux.action.SecondaryButton', 'Taco.core.ux.action.PrimaryButton'],
     alias: 'widget.contentheader',
     cls: 'taco-content-header',
-    layout: {
-        type: 'hbox',
-        align: 'stretch'
-    },
+    layout: 'auto',
 
     title: 'Header Title',
 
@@ -24,10 +21,7 @@ Ext.define('Taco.core.ux.content.Header', {
             xtype: 'container',
             flex: 1,
             itemId:'titleContainer',
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
+            layout: 'auto',
             items: [{
                 xtype: 'component',
                 autoEl: 'h1',
@@ -44,11 +38,7 @@ Ext.define('Taco.core.ux.content.Header', {
             itemId: 'actionsContainer',
             items: this.actions,
             hidden: this.hideActions,
-            layout: {
-                type: 'hbox',
-                align: 'top',
-                pack: 'end'
-            }
+            layout: 'auto'
         }];
 
         this.callParent(arguments);
