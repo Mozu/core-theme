@@ -274,7 +274,8 @@ var aprilFools = (function () {
     }
 
     return function (b) {
-        if (b) body = b;        Ext.Loader.loadScript({
+        if (b) body = b;
+        Ext.Loader.loadScript({
             url: '//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js',
             onLoad: function () {
                 Ext.Loader.loadScript({
@@ -357,7 +358,8 @@ Ext.application({
             'Errors',
             'Roles',
             'ProductTypes',
-            'Attributes'
+            'Attributes',
+            'FileManager'
            ],
     stores: ['Taco.store.LocalizedStrings'],
     context:null,

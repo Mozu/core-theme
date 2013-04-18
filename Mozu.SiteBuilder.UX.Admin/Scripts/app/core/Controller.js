@@ -43,7 +43,7 @@ Ext.define('Taco.core.Controller', {
 
     getIndexView: function () {
         if (!this.indexView) {
-            console.log(this.id);
+            //console.log(this.id);
             this.indexView = 'Taco.view.' + Ext.String.uncapitalize(Ext.util.Inflector.singularize(this.id)) + '.Index';
         }
         return this.indexView;
@@ -51,7 +51,7 @@ Ext.define('Taco.core.Controller', {
     
     getEditorView: function () {
         if (!this.editorView) {
-            console.log(this.id);
+            //console.log(this.id);
             this.editorView = 'Taco.view.' + Ext.String.uncapitalize(Ext.util.Inflector.singularize(this.id)) + '.Edit';
         }
         return this.editorView;

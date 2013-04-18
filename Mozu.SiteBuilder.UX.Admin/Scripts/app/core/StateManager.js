@@ -60,7 +60,7 @@ Ext.define('Taco.core.StateManager', {
     * @return {Taco.core.AppState} The new AppState object that has been pushed.
     */
     attemptNavigate: function (uriOrState, metadata, useReplace) {
-        console.log("attemptNavigate", this, uriOrState);
+        //console.log("attemptNavigate", this, uriOrState);
         var me = this,
             newState = uriOrState.isAppState ? uriOrState : this.createState(uriOrState, metadata),
             retryFn = function () { me.attemptNavigate(newState); };
