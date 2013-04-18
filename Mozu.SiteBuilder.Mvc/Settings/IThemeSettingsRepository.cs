@@ -7,9 +7,9 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 {
     public interface IThemeSettingsRepository
     {
-        Task<RuntimeConfigurationFieldCollection> GetRuntimeValues();
-        Task<List<FieldValue>> SaveInstanceValues(List<FieldValue> values);
-        Task<List<FieldValue>> GetInstanceValues();
-        DateTime GetTimeStamp();
+        Task<RuntimeConfigurationFieldCollection> GetRuntimeValues(string themeId);
+        Task<List<FieldValue>> SaveInstanceValues(List<FieldValue> values, string themeId);
+        Task<List<FieldValue>> GetInstanceValues(string themeId);
+        DateTime GetTimeStamp(string themeId);
     }
 }

@@ -23,7 +23,7 @@ Ext.define('Taco.view.themesettings.Index', {
         var me = this;
         me.sections = [];
         me.header = {
-            title: 'Theme Settings',
+            title: 'Theme Settings ' + (me.theme ? ':  ' + me.theme.get('name') : ''),
             actions: [{
                 xtype: 'dirtybutton',
                 intentCls: 'save',
@@ -187,7 +187,7 @@ Ext.define('Taco.view.themesettings.Index', {
         }
 
         Ext.Ajax.request({
-            url: '/admin/app/themesetting/instance/save',
+            url: '/admin/app/themesetting/instance/save/'+ this.themeId,
             method: "POST",
             jsonData: data,
             success: function (response) {

@@ -28,7 +28,9 @@ Ext.define('Taco.view.theme.ThemeView', {
                             '<span>Set as Theme</span>',
                             '<br>',
                             '<a href="javascript:;" class="preview">Preview</a>',
+                           
                         '</div>',
+                        '<div ><a href="javascript:;" class="settings">Settings</a></div>',
                         '<div class="taco-theme-title">{name}</div>',
                     '</div>',
                     '<div class="taco-theme-platform">',
@@ -70,7 +72,7 @@ Ext.define('Taco.view.theme.ThemeView', {
 
             itemclick: function (view, model, element, idx, eventObj) {
                 var targetFly = Ext.fly(eventObj.target),
-                    width, height;
+                    width, height, id;
 
                 // *** Deselect the theme
                 if( targetFly.hasCls(Taco.baseCSSPrefix + 'deselect-theme') ) {
@@ -81,15 +83,22 @@ Ext.define('Taco.view.theme.ThemeView', {
                     this.store.sync();
                 }
 
-                // *** Preview the theme
-                else if( targetFly.hasCls('preview') ) {
+                    // *** Preview the theme
+                else if (targetFly.hasCls('settings')) {
+                
+                     
+                     Ext.defer(function () {
+                         Taco.core.StateManager.attemptNavigate('themesettings/edit/' + model.getId(), { complexMetaData: { record: model} });
+                     }, 1, this);
+                }
+                else if (targetFly.hasCls('preview')) {
                     height = Taco.app.viewPort.getHeight();
                     width = Taco.app.viewPort.getWidth();
 
                     Ext.util.Cookies.set('SBTHEME', model.getId());
 
                     Ext.create('Ext.window.Window', {
-                        title:  model.getId() + ' Theme Preview',
+                        title: model.getId() + ' Theme Preview',
                         height: height - 20,
                         width: width - 20,
                         layout: 'fit',
@@ -103,7 +112,6 @@ Ext.define('Taco.view.theme.ThemeView', {
                         }
                     }).show();
                 }
-
                 // *** Attempt to select the theme
                 else if (!model.get('isSelectedDesktop') || !model.get('isSelectedMobile')) {
                     // you may delete the below as soon as you have found it :)  // *** Hugs 4 Zetlen

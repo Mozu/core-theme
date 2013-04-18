@@ -43,6 +43,8 @@ Ext.define('Taco.core.ux.form.FontField', {
             fontFamily: this.font.fontFamily,
             fontSize: this.fontSize
         };
+        
+        //todo:  make only one per page.  See if it exists or is being created before creating another one.
 
         this.iframe = Ext.create('Ext.ux.IFrame', {
             hidden: true,
