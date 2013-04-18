@@ -2,7 +2,8 @@
  * @class Taco.view.site.page.entityAdapters.BaseEntityAdapter
  */
 Ext.define('Taco.view.site.page.entityAdapters.BaseEntityAdapter', {
-	extend: 'Ext.util.Observable',
+    extend: 'Ext.util.Observable',
+    requires: ['Taco.view.site.page.settings.General', 'Taco.view.site.page.settings.Templates', 'Taco.view.site.page.settings.Seo', 'Taco.view.site.page.settings.Facets'],
 	allowedActions:{add:true,copy:true,settings:true,preview:true,destroy:true},
 	load: function() {
 		var me = this,
@@ -29,7 +30,8 @@ Ext.define('Taco.view.site.page.entityAdapters.BaseEntityAdapter', {
 		if ( add ){
 			this.getStore().add(this.model);
 		}
-        
+
+	    // TODO Z make sure this acrees with the features/options for each page type in http://vconfluence.ads.volusion.com/display/Product/Pages+-+V1
 		var actions = Ext.applyIf( Ext.apply ( {}, this.allowedActions)  , { add: true, settings: this.editors, hide: this.setHidden != Ext.emptyFn, formView: !!this.doFormView });
 		this.editor.toolBar.enableButtons(actions);
 		this.editor.toolBar.getButton('hide').toggle(this.isHidden(), true);
@@ -62,5 +64,14 @@ Ext.define('Taco.view.site.page.entityAdapters.BaseEntityAdapter', {
 	
 	getId: function() {
 		
+	},
+
+	getPageSettings: function () {
+
+	},
+
+	setPageSettings: function () {
+
 	}
+
 });

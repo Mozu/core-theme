@@ -222,7 +222,8 @@
       -webkit-flex-wrap: none;
     }
   }
-
+  // 2013/04/18 sorry jimmy, we have to back this out and wait on the transitions for a bit -- z
+  /* 
   .#{$vprefix}card-flex {
     display: block !important;
     min-width: 0px;
@@ -270,7 +271,7 @@
 
       }
     }
-  }
+  }*/
 
   .#{$vprefix}toolbox,
   .#{$prefix}window-ghost {
