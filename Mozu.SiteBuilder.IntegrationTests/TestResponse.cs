@@ -32,7 +32,8 @@ namespace Mozu.SiteBuilder.IntegrationTests
             };
 
             ReadAsSync = () => {
-                throw new Exception("You probably want to use ReadAsAsync here... Just sayin.");
+                return Result;
+                // throw new Exception("You probably want to use ReadAsAsync here... Just sayin.");
             };
             ResponseMessage = new HttpResponseMessage();
         }

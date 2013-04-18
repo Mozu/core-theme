@@ -383,6 +383,7 @@
     <Compile Include="Navigation\INavigationRuntimeFactory.cs" />
     <Compile Include="Navigation\NavigationFactory.cs" />
     <Compile Include="Navigation\NavigationRepository.cs" />
+    <Compile Include="Navigation\NavigationRepositoryThom.cs" />
     <Compile Include="Orders\IOrderService.cs" />
     <Compile Include="Orders\IPciSettingsProvider.cs" />
     <Compile Include="Orders\OrderService.cs" />

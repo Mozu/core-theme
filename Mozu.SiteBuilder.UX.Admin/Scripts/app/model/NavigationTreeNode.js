@@ -8,7 +8,20 @@ Ext.define('Taco.model.NavigationTreeNode', {
             name: 'id',
             type: 'string',
             useNull: true
-        }, {
+        }, 
+        {
+            name: 'expandable',
+            defaultValue: true,
+            persist: false
+        },
+        {
+            name: 'loaded',
+            convert:function(v, record) {
+                return record.get('loaded')|| record.data.id != "root";
+            },
+            persist: false
+        },
+        {
             name: 'parentId',
             type: 'string',
             useNull: true
@@ -36,7 +49,7 @@ Ext.define('Taco.model.NavigationTreeNode', {
             type: 'ajaxproxy',
             api: {
                 create: '/admin/app/navigation/create',
-                read: '/admin/app/navigation/read',
+                read: '/admin/app/navigation/list',
                 update: '/admin/app/navigation/update',
                 destroy: '/admin/app/navigation/delete'
             },
@@ -50,6 +63,7 @@ Ext.define('Taco.model.NavigationTreeNode', {
 
             writer: {
                 allowSingle: false,
+                writeAllFields: true,
                 type: 'json'
             }
         }

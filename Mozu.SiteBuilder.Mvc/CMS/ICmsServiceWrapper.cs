@@ -22,7 +22,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         Task<ServiceClientResponse<List<Mozu.Content.Contracts.Facet>>> GetFacets(string contentCollection,  string propertyName);
 
-        System.Collections.Generic.IEnumerable<System.Threading.Tasks.Task<Mozu.Content.Contracts.Document>> Update(System.Collections.Generic.List<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document> docs);
+        IEnumerable<Task<Mozu.Content.Contracts.Document>> Update(List<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document> docs);
+
+        IEnumerable<Task<Mozu.Content.Contracts.Document>> Update(List<Mozu.Content.Contracts.Document> docs);
+        Task<Mozu.Content.Contracts.Document> Update(Mozu.Content.Contracts.Document doc);
+
+
 
         bool BypassCache { get; set; }
     }
