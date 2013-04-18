@@ -117,8 +117,8 @@
         }]
     
 }, {
-    "id": "fileManagement",
+    "id": "fileManager",
     "label": "File Manager",
-    "address": "fileManagement",
+    "address": "fileManager",
     "icon": "settings"
 }]

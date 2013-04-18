@@ -507,6 +507,7 @@
     <Content Include="Scripts\.sencha\app\plugin.xml" />
     <Content Include="Scripts\.sencha\workspace\plugin.xml" />
     <Content Include="Scripts\app\controller\Attributes.js" />
+    <Content Include="Scripts\app\controller\FileManager.js" />
     <Content Include="Scripts\app\controller\PageTemplates.js" />
     <Content Include="Scripts\app\controller\ProductTypes.js" />
     <Content Include="Scripts\app\controller\PendingChanges.js" />
@@ -573,6 +574,7 @@
     <Content Include="Scripts\app\model\Behavior.js" />
     <Content Include="Scripts\app\model\CartItem.js" />
     <Content Include="Scripts\app\model\CmsDocumentDraft.js" />
+    <Content Include="Scripts\app\model\File.js" />
     <Content Include="Scripts\app\model\ProductExtra.js" />
     <Content Include="Scripts\app\model\ProductTypeAttribute.js" />
     <Content Include="Scripts\app\model\ItemFilter.js" />
@@ -587,6 +589,7 @@
     <Content Include="Scripts\app\store\Behaviors.js" />
     <Content Include="Scripts\app\store\CartItems.js" />
     <Content Include="Scripts\app\store\CmsDocumentDrafts.js" />
+    <Content Include="Scripts\app\store\Files.js" />
     <Content Include="Scripts\app\store\ItemFilters.js" />
     <Content Include="Scripts\app\store\LocalizedStrings.js" />
     <Content Include="Scripts\app\store\Orders.js" />
@@ -603,6 +606,8 @@
     <Content Include="Scripts\app\view\discount\Edit.js" />
     <Content Include="Scripts\app\view\discount\Form.js" />
     <Content Include="Scripts\app\view\discount\Index.js" />
+    <Content Include="Scripts\app\view\fileManager\Index.js" />
+    <Content Include="Scripts\app\view\fileManager\util\Uploadable.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\pageTemplate\Edit.js" />
