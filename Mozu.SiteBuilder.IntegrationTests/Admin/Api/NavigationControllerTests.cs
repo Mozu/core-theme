@@ -392,7 +392,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
                     return new TestResponse<Document>(doc).Task;
                 });
 
-            return new NavigationController(_siteBuilderContext, _navigationRepository, _categoryWebApiClient, _cmsServiceWrapper);
+            var gandalf = new NavigationGandalf(_navigationRepository, _categoryWebApiClient, _cmsServiceWrapper);
+            return new NavigationController(_navigationRepository, _categoryWebApiClient, _cmsServiceWrapper, gandalf);
         }
     }
 }

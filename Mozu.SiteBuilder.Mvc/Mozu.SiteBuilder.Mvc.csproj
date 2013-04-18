@@ -382,6 +382,7 @@
     <Compile Include="Navigation\INavigationRepository.cs" />
     <Compile Include="Navigation\INavigationRuntimeFactory.cs" />
     <Compile Include="Navigation\NavigationFactory.cs" />
+    <Compile Include="Navigation\NavigationGandalf.cs" />
     <Compile Include="Navigation\NavigationRepository.cs" />
     <Compile Include="Navigation\NavigationRepositoryThom.cs" />
     <Compile Include="Orders\IOrderService.cs" />
