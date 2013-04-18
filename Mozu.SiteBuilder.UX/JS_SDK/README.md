@@ -237,7 +237,7 @@ api.get('product','OXFORDSHIRT1').then(function(product){
 }).then(function(){
     return api.get('cart');
 }).then(function(cart){
-    return cart.checkout();
+    return cart.action('checkout');
 }).then(function(order) {
     window.location = "/orders/" + order.data.Id;
 });

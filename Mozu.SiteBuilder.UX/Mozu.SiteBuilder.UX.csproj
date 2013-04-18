@@ -387,7 +387,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="JS_SDK\banner.tpl" />
-    <None Include="JS_SDK\jshintrc.json" />
     <None Include="JS_SDK\README.md" />
     <None Include="JS_SDK\definewrapper.tpl" />
     <None Include="JS_SDK\package.json" />
