@@ -37,11 +37,11 @@ Ext.define('Taco.core.ux.form.Editor', {
         });
 
 
-        me.sideBar = Ext.create('Ext.container.Container', {
-            items: [],
-            flex:0,
-            width:200
-        });
+        //me.sideBar = Ext.create('Ext.container.Container', {
+        //    items: [],
+        //    flex:0,
+        //    width:200
+        //});
         me.body = {
             items: [{
                 xtype: 'container',

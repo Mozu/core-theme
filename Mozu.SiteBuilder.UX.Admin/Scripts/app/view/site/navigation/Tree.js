@@ -2,25 +2,12 @@
  * @class Taco.view.site.navigation.Tree
  */
 Ext.define('Taco.view.site.navigation.Tree', {
-    extend: 'Ext.panel.Panel',
+    extend: 'Taco.view.site.ToolboxPanel',
     requires: ['Taco.model.NavigationTreeNode', 'Taco.store.NavigationTreeNodes'],
-
     layout: {
         type: 'vbox',
         align: 'stretch'
     },
-    height: 460,
-    cls: 'taco-card-flex taco-navigation',
-
-    // listeners: {
-    //     hide: function() {
-    //         this.getEl().toggleCls('taco-card-flex-active');
-    //     },
-    //     show: function() {
-    //         this.getEl().toggleCls('taco-card-flex-active');
-    //     }
-    // },
-
     bubbleEvents: ['editlink'],
     navigate: function (record) {
         var url = record.get('url');

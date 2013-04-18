@@ -1,5 +1,6 @@
 ﻿/**
  * @class Taco.view.site.navigation.Themes
+ * @deprecated
  */
 Ext.define('Taco.view.site.navigation.Themes', {
     extend: 'Taco.core.ux.BaseGrid',

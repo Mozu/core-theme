@@ -269,9 +269,9 @@
 
             this.body.addCls('taco-site-editor');
 
-            this.sideBar.on('boxready', function () {
-                console.log('boxready', this);
-            });
+            //this.sideBar.on('boxready', function () {
+            //    console.log('boxready', this);
+            //});
         },
 
 
@@ -315,19 +315,22 @@
         entityTypeEditConfig: {
             blog: {
                 editors: ["Taco.view.site.page.dataViews.Blog", "Taco.view.site.page.dataViews.Meta"],
-                adapter: 'Taco.view.site.page.entityAdapters.DocumentEntityAdapter'
+                adapter: 'Taco.view.site.page.entityAdapters.DocumentEntityAdapter',
             },
             "default": {
                 editors: ["Taco.view.site.page.dataViews.Meta"],
-                adapter: 'Taco.view.site.page.entityAdapters.DocumentEntityAdapter'
+                adapter: 'Taco.view.site.page.entityAdapters.DocumentEntityAdapter',
+                settingsPanels: ['Taco.view.site.settings.General', 'Taco.view.site.settings.Templates', 'Taco.view.site.settings.Seo']
             },
             category: {
                 editors: ["Taco.view.category.Basic"],
-                adapter: 'Taco.view.site.page.entityAdapters.CategoryEntityAdapter'
+                adapter: 'Taco.view.site.page.entityAdapters.CategoryEntityAdapter',
+                settingsPanels: ['Taco.view.site.settings.General', 'Taco.view.site.settings.Templates', 'Taco.view.site.settings.Seo', 'Taco.view.site.settings.Facets']
             },
             product: {
                 editors: ["Taco.view.product.edit.Inline"],
-                adapter: 'Taco.view.site.page.entityAdapters.ProductEntityAdapter'
+                adapter: 'Taco.view.site.page.entityAdapters.ProductEntityAdapter',
+                settingsPanels: ['Taco.view.site.settings.General', 'Taco.view.site.settings.Templates', 'Taco.view.site.settings.Seo']
             },
             link: {
                 editors: [],

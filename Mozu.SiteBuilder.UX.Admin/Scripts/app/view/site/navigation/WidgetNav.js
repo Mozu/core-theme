@@ -2,27 +2,11 @@
  * @class Taco.view.site.navigation.WidgetNav
  */
 Ext.define('Taco.view.site.navigation.WidgetNav', {
-    extend: 'Ext.panel.Panel',
-    requires:['Taco.store.WidgetDefinitions'],
-    layout: {
-        type: 'fit',
-        align: 'stretch'
-    },
-    height: 460,
-    cls: Taco.baseCSSPrefix + 'card-flex ' + Taco.baseCSSPrefix + 'navigation',
-
-    // listeners: {
-    //     hide: function() {
-    //         this.getEl().toggleCls('taco-card-flex-active');
-    //     },
-    //     show: function() {
-    //         this.getEl().toggleCls('taco-card-flex-active');
-    //     }
-    // },
+    extend: 'Taco.view.site.ToolboxPanel',
+    requires: ['Taco.store.WidgetDefinitions'],
 
     initComponent: function () {
 
-        
         this.view = Ext.create('Ext.view.View', {
             flex: 1,
             itemSelector: 'div.widget-source',

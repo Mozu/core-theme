@@ -593,6 +593,7 @@
     <Content Include="Scripts\app\store\ProductExtraListItems.js" />
     <Content Include="Scripts\app\store\RuntimeProductSearch.js" />
     <Content Include="Scripts\app\store\Attributes.js" />
+    <Content Include="Scripts\app\store\shared\ContainerStore.js" />
     <Content Include="Scripts\app\store\WidgetInstances.js" />
     <Content Include="Scripts\app\view\attribute\Edit.js" />
     <Content Include="Scripts\app\view\attribute\Form.js" />
@@ -647,6 +648,10 @@
     <Content Include="Scripts\app\view\option\Edit2.js" />
     <Content Include="Scripts\app\view\option\EditModal.js" />
     <Content Include="Scripts\app\view\option\Form.js" />
+    <Content Include="Scripts\app\view\site\page\PageSettingsPanel.js" />
+    <Content Include="Scripts\app\view\site\page\settings\General.js" />
+    <Content Include="Scripts\app\view\site\ToolboxPanel.js" />
+    <Content Include="Scripts\app\view\site\navigation\PageSettings.js" />
     <Content Include="Scripts\app\view\themeSettings\Group.js" />
     <Content Include="Scripts\app\view\themeSettings\Section.js" />
     <Content Include="Scripts\app\view\theme\ThemeView.js" />
@@ -2849,7 +2854,6 @@
     <Folder Include="Models\" />
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
-    <Folder Include="Scripts\app\view\site\page\settings\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
