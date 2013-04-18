@@ -10,10 +10,14 @@ Ext.define('Taco.controller.Themesettings', {
 
     // TODO: This is temporary. Using this for the settings re-design
     index: function (params) {
-        var me = this;
-
+        return this.edit(params);
+    },
+    edit: function (id, additionalParams, appState) {
+        var me=this, theme = appState ? appState.record : null;
+     
+        
         Ext.Ajax.request({
-            url: '/admin/app/themesetting/config/read',
+            url: '/admin/app/themesetting/config/read/' + id,
             method: "GET",
             success: function (response) {
 
@@ -22,13 +26,15 @@ Ext.define('Taco.controller.Themesettings', {
                 cfg = res.items;
 
                 Ext.Ajax.request({
-                    url: '/admin/app/themesetting/instance/read',
+                    url: '/admin/app/themesetting/instance/read/' + id,
                     method: "GET",
                     success: function (r) {
                         var values = Ext.JSON.decode(r.responseText);
 
                         me.createContentView('Taco.view.themesettings.Index', {
                             settingsConfig: cfg,
+                            themeId: id,
+                            theme: theme,
                             settingsValues: values.items
                         });
                     },

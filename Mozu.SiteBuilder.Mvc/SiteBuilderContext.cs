@@ -212,7 +212,8 @@ namespace Mozu.SiteBuilder.Mvc
                     {
                         foreach (var url in urls)
                         {
-                            var idx = ((string) url.Value).IndexOf("webapi/", StringComparison.OrdinalIgnoreCase);
+                            
+                            var idx = (((string) url.Value) ?? "").IndexOf("webapi/", StringComparison.OrdinalIgnoreCase);
                             if (idx > 0)
                             {
                                 urls[url.Key] = "/api" +((string)url.Value).Substring(idx + 6);
@@ -334,7 +335,7 @@ namespace Mozu.SiteBuilder.Mvc
 
         public UX.Models.Admin.ThemeSettings.RuntimeConfigurationFieldCollection ThemeSettings
         {
-            get { return _themeSettingsRepo.Value.GetRuntimeValues().Result; }
+            get { return _themeSettingsRepo.Value.GetRuntimeValues( this.Theme.Id ).Result; }
         }
         
 

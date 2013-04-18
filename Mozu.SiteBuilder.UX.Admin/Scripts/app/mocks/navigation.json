@@ -90,10 +90,6 @@
         "id": "themes",
         "label": "Themes",
         "address": "themes"
-    }, {
-        "id": "themesettings",
-        "label": "Theme Settings",
-        "address": "themesettings"
     }]
 }, {
     "id": "publishing",
