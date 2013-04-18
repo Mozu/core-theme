@@ -8,7 +8,7 @@ Ext.define('Taco.view.site.navigation.ExternalLinkEditor', {
     isEditMode: false,
 
     navigationStoreId: 'navigationTreeNodeStore',
-    navigationParentNodeId: 'group^^nav',
+    navigationParentNodeId: '_unlinked',
     modelType: 'Taco.model.NavigationTreeNode',
     nodeType: 'link',
     iconCls: 'link',

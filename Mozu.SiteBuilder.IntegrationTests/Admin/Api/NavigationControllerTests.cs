@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NSubstitute;
-using NUnit.Framework;
-using Should;
+using System.Threading.Tasks;
 using Mozu.Content.Contracts;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.UX.Admin.Api;
-using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Navigation;
-using MozuCategory = Mozu.ProductAdmin.Contracts.Category;
+using NSubstitute;
+using NUnit.Framework;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 {
@@ -23,205 +22,377 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private ISiteBuilderContext _siteBuilderContext;
         private ICategoryWebApiClient _categoryWebApiClient;
         private ICmsServiceWrapper _cmsServiceWrapper;
-        private IProductWebApiClient _productWebApiClient;
-        private INavigationRepository _navigationRepository;
+        private INavigationRepositoryAsync _navigationRepository;
+
+        private NavigationSet _mockNavigation {
+            get {
+                return new NavigationSet
+                {
+                    Nodes = new List<NavigationNode> {
+                        new NavigationNode {
+                            Id = "page^^pages^^b54c5602-5a14-07e8-c88b-8ac300007629",
+                            Index = 2,
+                            Leaf = false,
+                            Name = "Foodoc",
+                            NodeType = "page",
+                            ParentId = NavigationController.ROOT_NODE_NAME,
+                            Url = "/pages/foodoc"
+                        }
+                    }
+                };
+            }
+        }
+
+        private CategoryPagedCollection _mockCategories { 
+            get { 
+                return new CategoryPagedCollection
+                {
+                    Items = new List<Category>
+                    {
+                        new Category {
+                            Id = 1,
+                            Sequence = 0,
+                            ParentCategoryId = null,
+                            Content = new CategoryLocalizedContent {
+                                LocaleCode = "en-US",
+                                Name = "cat foo"
+                            }
+                        },
+                        new Category {
+                            Id = 2,
+                            Sequence = 1,
+                            ParentCategoryId = null,
+                            Content = new CategoryLocalizedContent {
+                                LocaleCode = "en-US",
+                                Name = "cat bar"
+                            }
+                        },
+                        new Category {
+                            Id = 3,
+                            Sequence = 0,
+                            ParentCategoryId = 1,
+                            Content = new CategoryLocalizedContent {
+                                LocaleCode = "en-US",
+                                Name = "Cat foo sub"
+                            }
+                        }
+                    }
+                };
+            }
+        }
+
+        private PagedCollection<Document> _mockPages { 
+            get { 
+                return new PagedCollection<Document>
+                {
+                    Items = new List<Document> {
+                        new Document {
+                            DocumentListName = "pages",
+                            DocumentType = "web_page",
+                            Name = "Foodoc",
+                            Id = "b54c5602-5a14-07e8-c88b-8ac300007629",
+                            Properties = new List<PropertyValue> {
+                                new PropertyValue {
+                                    PropertyType = "title",
+                                    Value = "Foodoc"
+                                }
+                            }
+                        }
+                    }
+                };
+            }
+        }
+
+        private PagedCollection<Document> _mockEmptyDocumentList {
+            get { 
+                return new PagedCollection<Document>
+                {
+                    Items = new List<Document>(),
+                    TotalCount = 0
+                };
+            }
+        }
 
         [SetUp]
         public void SetUp()
         {
             _siteBuilderContext = Substitute.For<ISiteBuilderContext>();
-            _categoryWebApiClient = Substitute.For<ICategoryWebApiClient>();
-            _cmsServiceWrapper = Substitute.For<ICmsServiceWrapper>();
-            _productWebApiClient = Substitute.For<IProductWebApiClient>();
-            _navigationRepository = Substitute.For<INavigationRepository>();
         }
 
         [Test]
-        public void Search_should_combine_results_from_products_and_categories()
+        public void List_should_return_expected()
         {
-            var products = new ProductCollection
+            var controller = GetApi();
+            List<NavigationTreeNode> res = controller.List().Result.Items;
+
+            // there should be an items for each category and page.
+            foreach (var cat in _mockCategories.Items)
             {
-                Items = new List<Product>
-                {
-                    new Product { ProductCode = "ABC" },
-                    new Product { ProductCode = "XYZ" },
-                    new Product { ProductCode = "One" },
-                    new Product { ProductCode = "Two" },
-                    new Product { ProductCode = "Six" },
-                }
-            };
-            var categories = new CategoryPagedCollection
-            {
-                Items = new List<Category>
-                {
-                    new MozuCategory { Id = 123 },
-                    new MozuCategory { Id = 987 },
-                }
-            };
-            _productWebApiClient.WithAny(x => x.GetProducts(null, null, null, null, null), products);
-            _categoryWebApiClient.WithAny(x => x.GetCategories(null, null, null, null, null), categories);
-
-            var api = GetApi();
-
-            var results = api.Search(new PagingParamaters(), new FilterCollection()).Result;
-
-            results.Items.ShouldNotBeEmpty();
-            results.Items.Count.ShouldEqual(products.Items.Count + categories.Items.Count);
-            results.Items.Count(x => x.NodeType == "category").ShouldEqual(categories.Items.Count);
-            results.Items.Count(x => x.NodeType == "product").ShouldEqual(products.Items.Count);
-        }
-
-        [Test]
-        public void Delete_should_determine_how_to_delete_a_product_based_on_id()
-        {
-            var id = "product^^something";
-            var nodes = new List<NavigationTreeNode> { new NavigationTreeNode { Id = id } };
-            _productWebApiClient.With(x => x.DeleteProduct("something"), TestResponse.Void);
-
-            var api = GetApi();
-
-            api.Delete(nodes);
-
-            _productWebApiClient.Received(1).DeleteProduct("something");
-            _categoryWebApiClient.DidNotReceive().DeleteCategoryById(Arg.Any<int?>(), Arg.Any<bool?>());
-        }
-
-        [Test]
-        public void Delete_should_determine_how_to_delete_a_category_based_on_id()
-        {
-            var id = "category^^123456";
-            var nodes = new List<NavigationTreeNode> { new NavigationTreeNode { Id = id } };
-            _categoryWebApiClient.With(x => x.DeleteCategoryById(123456, true), TestResponse.Void);
-
-            var api = GetApi();
-
-            api.Delete(nodes);
-
-            _categoryWebApiClient.Received(1).DeleteCategoryById(123456, true);
-            _productWebApiClient.DidNotReceive().DeleteProduct(Arg.Any<string>());
-        }
-
-        [Test]
-        public void Create_should_save_Default_NavigationSet_if_any_items_are_named_reset()
-        {
-            var nodes = new List<NavigationTreeNode> { new NavigationTreeNode { Name = "reset" } };
-            var api = GetApi();
-            //_navigationRepository.With(x => x.GetSet(), null);
-
-            api.Create(nodes);
-
-            _navigationRepository.Received(1).SaveSet(NavigationSet.Default);
-        }
-
-        [Test]
-        public void Create_should_save_all_NavigationTreeNodes_as_links()
-        {
-            var nodeNames = new[] { "diet", "coke", "pepsi", "water" };
-            var nodes = nodeNames.Select(x => new NavigationTreeNode { Name = x }).ToList();
-            _navigationRepository.GetSet().Returns(new NavigationSet());
-            var api = GetApi();
-
-            var result = api.Create(nodes);
-
-            _navigationRepository.Received(1).SaveSet(Arg.Is<NavigationSet>(set => set.Nodes.All(node => nodeNames.Contains(node.Name))));
-            result.Items.Select(x => x.Name).ShouldEqual(nodeNames);
-            result.Items.ForEach(x => x.Id.ShouldStartWith("link"));
-        }
-
-        [Test]
-        public void Read_without_id_should_return_root_NavigationSet()
-        {
-            _navigationRepository.GetSet().Returns(new NavigationSet());
-            _categoryWebApiClient.WithAny(x => x.GetChildCategories(null), new CategoryCollection { Items = new List<Category> { new Category { ParentCategoryId = 12 } } });
-
-            WithCmsList("pages", new Document { Id = "home" }, new Document { Id = "contact" }, new Document { Id = "404" });
-            WithCmsList("blogs", new Document { Id = "blogger" }, new Document { Id = "hello-world" });
-
-            var api = GetApi();
-
-            var response = api.Read(null).Result;
-
-            response.ShouldNotBeNull();
-            response.Items.Select(x => x.Name).ShouldEqual(new[]{ "Navigation", "Non-Linked Pages", "System Pages" });
-            response.Items.Select(x => x.Id).ShouldEqual(new[]{ "group^^nav", "group^^nonLinked", "group^^sp" });
-            response.Items.All(x => x.Expanded).ShouldBeTrue();
-            response.Items.Any(x => x.AllowDrag).ShouldBeFalse();
-            response.Items.All(x => x.AllowDrop).ShouldBeTrue();
-            response.Items.Any(x => x.Leaf).ShouldBeFalse();
-        }
-
-        [Test]
-        public void Read_with_folder_id_should_return_pages_with_expected_properties()
-        {
-            var id = "folder^^things^^123";
-            _navigationRepository.GetSet().Returns(new NavigationSet());
-            var pages = new List<Document>
-                {
-                    new Document { DocumentListName  = "scauses", Id = Guid.NewGuid().ToString("n"), Name = "Dropbox", Properties = new List<PropertyValue>() },
-                    new Document { DocumentListName = "scauses", Id = Guid.NewGuid().ToString("n"), Name = "Drive", Properties = new List<PropertyValue>() },
-                };
-            _cmsServiceWrapper.WithAny(x => x.GetList(null), new PagedCollection<Document> { Items = pages });
-
-            var api = GetApi();
-
-            var response = api.Read(id).Result;
-
-            response.Items.ShouldNotBeEmpty();
-            response.Items.All(x => x.Leaf).ShouldBeTrue();
-            response.Items.All(x => x.AllowDrag).ShouldBeFalse();
-            response.Items.All(x => x.AllowDrop).ShouldBeFalse();
-            response.Items.All(x => x.NodeType == "page").ShouldBeTrue();
-
-            for (var i = 0; i < response.Items.Count; i++)
-            {
-                var item = response.Items[i];
-                item.Url.ShouldContain(pages[i].DocumentListName);
-                item.Url.ShouldContain(pages[i].Name);
+                Assert.That(res.Any(n => n.Name == cat.Content.Name), "Expected to find " + cat.Content.Name);
             }
+            foreach (var page in _mockPages.Items)
+            {
+                Assert.That(res.Any(n => n.Name == page.Name), "Expected to find " + page.Name);
+            }
+
+            // the page that we added (Foodoc) should belong to the root and be indexed accordingly.
+            NavigationNode foodocMock = _mockNavigation.Nodes.First(n => n.Name == "Foodoc");
+            NavigationTreeNode foodocResult = res.First(n => n.Name == "Foodoc");
+
+            // the Foodoc should not exist more than once.
+            Assert.AreEqual(1, res.Where(n => n.Id == foodocMock.Id).Count());
+
+            Assert.AreEqual(foodocMock.ParentId, foodocResult.ParentId);
+            Assert.AreEqual(foodocMock.Index, foodocResult.Index);
+        }
+
+        [Test]
+        public void List_should_have_non_linked_pages_at_bottom()
+        {
+            var controller = GetApi();
+            List<NavigationTreeNode> res = controller.List().Result.Items;
+
+            var unlinkedNode = res.First(i => i.Id == NavigationController.UNLINKED_PAGES_NODE_ID);
+            Assert.That(unlinkedNode.Index.HasValue, "unlinkedNode should have an index value.");
+            Assert.False(res.Where(n => n.ParentId == unlinkedNode.ParentId && n.Id != unlinkedNode.Id).Any(n => n.Index >= unlinkedNode.Index), "No sibling nodes of UNLINKED_PAGES_NODE should have a higher index.");
+        }
+
+        [Test]
+        public void List_should_ignore_deleted_pages()
+        {
+            NavigationSet navSetWithADeletedPage = new NavigationSet
+            {
+                Nodes = new List<NavigationNode> {
+                    new NavigationNode {
+                        Id = "page^^pages^^deleteme",
+                        Index = 2,
+                        Leaf = false,
+                        Name = "Deleteme",
+                        NodeType = "page",
+                        ParentId = NavigationController.ROOT_NODE_NAME,
+                        Url = "/pages/deleteme"
+                    }
+                }
+            };
+
+            var controller = GetApi(navigationSet: navSetWithADeletedPage);
+
+            List<NavigationTreeNode> res = controller.List().Result.Items;
+
+            // there should be 3 items: 2 categories and 1 page.
+            Assert.IsFalse(res.Any(n => n.Name == "Deleteme"));
+        }
+
+        [Test]
+        public void Test_should_not_return_two_items_with_the_same_index()
+        {
+            var aMockCategory = _mockCategories.Items.First(c => c.ParentCategoryId != null);
+            var aMockPage = _mockPages.Items.First();
+
+            var pageNavigationNode = aMockPage.Map<NavigationTreeNode>();
+
+            // make the navigation parent id and index of this page identical to the category
+            pageNavigationNode.Index = aMockCategory.Sequence;
+            pageNavigationNode.ParentId = "category^^" + aMockCategory.ParentCategoryId;
+
+            var mockNavigationSet = new NavigationSet
+            {
+                Nodes = new List<NavigationNode> {
+                    pageNavigationNode.Map<NavigationNode>()
+                }
+            };
+
+            var controller = GetApi(navigationSet: mockNavigationSet);
+            List<NavigationTreeNode> res = controller.List().Result.Items;
+
+            var resPage = res.First(n => n.Id == pageNavigationNode.Id);
+            var resCat = res.First(n => n.Id == "category^^" + aMockCategory.Id);
+
+            Assert.AreEqual(resPage.ParentId, resCat.ParentId);
+
+            // the page should appear in the list before the category
+            Assert.Less(resPage.Index.Value, resCat.Index.Value, "the page should appear in the list before the category");
+        }
+
+        [Test]
+        public void Edit_reorder_a_page_should_work()
+        {
+            var controller = GetApi();
+            var items = controller.List().Result.Items;
+
+            var page = items.Last(i => i.NodeType == "page");
+            var oldIndex = page.Index;
+            var newIndex = oldIndex - 1;
+
+            items.Where(i => i.Index >= newIndex && i.Index <= oldIndex && i.Id != page.Id).ToList().ForEach(i => i.Index--);
+            page.Index = newIndex;
+
+            var res = controller.Edit(items).Result.Items;
+
+            _navigationRepository
+                .Received()
+                .SaveSetAsync(Arg.Is<NavigationSet>(ns => ns.Nodes.Any(n => n.Id == page.Id && n.Index == newIndex)));
+        }
+
+        [Test]
+        public void Edit_reorder_categories_should_work()
+        {
+            var controller = GetApi();
+            var items = controller.List().Result.Items;
+
+            var cat = items.Last(i => i.NodeType == "category");
+            var oldIndex = cat.Index;
+            var newIndex = oldIndex - 1;
+
+            // items.Where(i => i.Index >= newIndex && i.Index <= oldIndex && i.Id != cat.Id).ToList().ForEach(i => i.Index++);
+            items.Where(i => i.NodeType == "category" && i.ParentId == cat.ParentId && i.Index >= newIndex && i.Index <= oldIndex).ToList().ForEach(i => i.Index++);
+
+            cat.Index = newIndex;
+
+            var res = controller.Edit(items).Result.Items;
+            var resCat = res.First(i => i.Id == cat.Id);
+
+            int realCatId = Convert.ToInt32(cat.IdParts[1]);
+
+            _categoryWebApiClient
+                .Received()
+                // .UpdateCategory(Arg.Any<Category>(), Arg.Is<int?>(cat.Index), Arg.Any<bool?>());
+                .UpdateCategory(Arg.Is<Category>(arg => arg.Sequence == newIndex), Arg.Is<int?>(realCatId), Arg.Any<bool?>());
+        }
+
+        [Test]
+        public void Edit_move_page_under_category_should_work()
+        {
+            var controller = GetApi();
+            var items = controller.List().Result.Items;
+
+            var page = items.First(i => i.NodeType == "page");
+            var oldParentId = page.ParentId;
+            var newParent = items.First(i => i.NodeType == "category" && i.Id != oldParentId);
+
+            page.ParentId = newParent.Id;
+            page.Index = 0;
+
+            var res = controller.Edit(items).Result.Items;
+
+            _navigationRepository
+                .Received()
+                .SaveSetAsync(Arg.Is<NavigationSet>(arg => arg.Nodes.First(n => n.Id == page.Id).ParentId == newParent.Id));
+        }
+
+        [Test]
+        public void Edit_move_category_to_child_of_another_category_should_work()
+        {
+            var controller = GetApi();
+            var items = controller.List().Result.Items;
+
+            var cat = items.First(i => i.NodeType == "category");
+            var oldParent = cat.ParentId;
+            var newParent = items.First(i => i.NodeType == "category" && i.Id != oldParent && i.Id != cat.Id);
+
+            cat.ParentId = newParent.Id;
+            cat.Index = 0;
+
+            int catId = Convert.ToInt32(cat.IdParts[1]);
+
+            var res = controller.Edit(items).Result.Items;
+
+            _categoryWebApiClient
+                .Received()
+                .UpdateCategory(Arg.Is<Category>(c => c.Id == catId), Arg.Is<int?>(catId), Arg.Any<bool?>());
+        }
+
+
+        [Test]
+        public void Edit_rename_page_should_work()
+        {
+            var controller = GetApi();
+            var items = controller.List().Result.Items;
+
+            var page = items.First(i => i.NodeType == "page");
+            string newName = page.Name = page.Name + "_newhotness";
+
+            var res = controller.Edit(items).Result;
+
+            _cmsServiceWrapper
+                .Received()
+                .Update(Arg.Is<Document>(arg => newName == arg.Get<string>("link_title")));
+        }
+
+        [Test]
+        public void Edit_rename_category_should_work()
+        {
+            var controller = GetApi();
+            var items = controller.List().Result.Items;
+
+            var cat = items.First(i => i.NodeType == "category");
+
+            var newName = cat.Name = cat.Name + "_newcatness";
+            int catId = Convert.ToInt32(cat.IdParts[1]);
+
+            var res = controller.Edit(items).Result;
+            
+            _categoryWebApiClient
+                .Received()
+                .UpdateCategory(Arg.Is<Category>(c => c.Id == catId && c.Content.Name == newName), Arg.Is<int?>(catId), Arg.Any<bool?>());
         }
 
         /// <summary>
-        /// TODO: Refactor this method... This test is a beast :\
+        /// Gets a new NavigationController for testing.
         /// </summary>
-        /// <param name="nodeType"></param>
-        [Ignore("until this method gets refactored, there's really not much worth testing for all the code that will be needed to set it up...")]
-        [TestCase("product")]
-        [TestCase("category")]
-        [TestCase("page")]
-        [TestCase("link")]
-        [TestCase("blog")]
-        public void Edit(string nodeType)
+        private NavigationController GetApi(NavigationSet navigationSet = null, CategoryPagedCollection categories = null, PagedCollection<Document> pages = null)
         {
-            var nodeNames = new[] { "diet", "coke", "pepsi", "water" };
-            var nodes = nodeNames.Select((x, i) => new NavigationTreeNode
+            if (navigationSet == null)
+                navigationSet = _mockNavigation;
+            if (categories == null)
+                categories = _mockCategories;
+            if (pages == null)
+                pages = _mockPages;
+
+            _categoryWebApiClient = Substitute.For<ICategoryWebApiClient>();
+            _cmsServiceWrapper = Substitute.For<ICmsServiceWrapper>();
+            _navigationRepository = Substitute.For<INavigationRepositoryAsync>();
+
+            // set up navigation repo mock.
+            _navigationRepository.GetSetAsync().Returns(
+                args => Task.Run<NavigationSet>(() => navigationSet)
+            );
+
+            // set up category client mock.
+            _categoryWebApiClient.GetCategories().Returns(
+                args => new TestResponse<CategoryPagedCollection>(categories).Task
+            );
+
+            _categoryWebApiClient.GetCategory(Arg.Any<int?>(), Arg.Any<Core.Api.Contracts.TargetContextLevelType>()).Returns(
+                args =>
                 {
-                    Name = x,
-                    NodeType = nodeType,
-                    Id = NavigationNode.JoinParts(nodeType, "blah"),
-                    ParentId = i.ToString(),
-                }).ToList();
-            var products = new ProductCollection { Items = nodes.Select(x => new Product { ProductCode = NavigationNode.SplitParts(x.Id)[1] }).ToList() };
+                    int? catId = args.Arg<int?>();
+                    return new TestResponse<Category>(categories.Items.FirstOrDefault(c => c.Id == catId)).Task;
+                }
+            );
 
-            _navigationRepository.GetSet().Returns(new NavigationSet());
-            _productWebApiClient.WithAny(x => x.GetProducts(null, null, null, null, null), products);
-            _productWebApiClient.WithAny(x => x.UpdateProduct(null, null), new Product());
+            // set up pages client mock.
+            _cmsServiceWrapper.GetList(Arg.Any<CmsListRequest>()).Returns(
+                args =>
+                {
+                    if (args.Arg<CmsListRequest>().Collection == "pages")
+                        return new TestResponse<PagedCollection<Document>>(pages).Task;
+                    else
+                        return new TestResponse<PagedCollection<Document>>(_mockEmptyDocumentList).Task;
+                }
+            );
 
-            var api = GetApi();
+            _cmsServiceWrapper.GetByPath(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(
+                args =>
+                {
+                    string collection = (string)args[0];
+                    string docId = (string)args[1];
 
-            api.Edit(nodes);
-        }
+                    Document doc = pages.Items.FirstOrDefault(p => p.DocumentListName == collection && p.Id == docId);
+                    return new TestResponse<Document>(doc).Task;
+                });
 
-        public void WithCmsList(string collectionKey, params Document[] documents)
-        {
-            foreach (var d in documents) d.Properties = d.Properties ?? new List<PropertyValue>();
-
-            var docs = new[] { new PagedCollection<Document> { Items = documents.ToList() } };
-            _cmsServiceWrapper.With(x => x.GetList(Arg.Is<CmsListRequest>(c => c.Collection == collectionKey)), docs);
-        }
-
-        private NavigationController GetApi()
-        {
-            return new NavigationController(_siteBuilderContext, _categoryWebApiClient, _cmsServiceWrapper, _productWebApiClient, _navigationRepository);
+            return new NavigationController(_siteBuilderContext, _navigationRepository, _categoryWebApiClient, _cmsServiceWrapper);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using AutoMapper;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
@@ -31,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         protected override void Configure()
         {
             Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.Navigation.NavigationTreeNode, Mozu.SiteBuilder.UX.Models.Navigation.NavigationNode>()
-                 .ForMember(x => x.IdParts, opt => opt.Ignore());
+                 // .ForMember(x => x.IdParts, opt => opt.Ignore());
                 ;
 
             Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.Navigation.NavigationNode, Mozu.SiteBuilder.UX.Models.Navigation.NavigationTreeNode>()
@@ -58,7 +59,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<Mozu.Content.Contracts.Document, Mozu.SiteBuilder.UX.Models.Navigation.NavigationTreeNode>()
                .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("page", x.DocumentListName, x.Id)))
-               .ForMember(dest => dest.Name, opt => opt.MapFrom(x => x.Properties.Where  ( prop=> prop.PropertyType == "title").Select( val=> val.Value ).FirstOrDefault () ?? x.Name ))
+               // .ForMember(dest => dest.Name, opt => opt.MapFrom(x => x.Properties.Where  ( prop=> prop.PropertyType == "title").Select( val=> val.Value ).FirstOrDefault () ?? x.Name ))
+               .ForMember(dest => dest.Name, opt => opt.MapFrom(x => x.Get("link_title") ?? x.Get("title") ?? x.Name))
                .ForMember(dest => dest.NodeType, opt => opt.UseValue("page"))
                .ForMember(dest => dest.Leaf, opt => opt.MapFrom (x=> x.DocumentType =="blog") )
                .ForMember(dest => dest.Url, opt => opt.MapFrom(x => "/" + x.DocumentListName + "/" + x.Name));

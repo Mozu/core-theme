@@ -20,6 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
     using Mozu.SiteBuilder.Mvc;
     using Mozu.SiteBuilder.Mvc.Logging;
     using Mozu.SiteBuilder.Mvc.Models.CMS;
+    using Mozu.SiteBuilder.Mvc.Navigation;
     using Mozu.SiteBuilder.Mvc.Security;
     using Mozu.SiteBuilder.Mvc.Themes.Providers;
     using Mozu.SiteBuilder.Mvc.Themes.Repositories;
@@ -73,6 +74,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.RegisterType<ThemeFactory>().InstancePerLifetimeScope();
 
+            builder.RegisterType<NavigationRepositoryThom>().As<NavigationRepositoryThom>();
+            builder.RegisterType<NavigationRepository>().As<INavigationRepositoryAsync>();
 
             // builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 

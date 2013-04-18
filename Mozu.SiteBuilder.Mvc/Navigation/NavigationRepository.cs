@@ -1,162 +1,128 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
-using Mozu.Core.Api.Client;
-using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc.CMS;
-using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Models.Navigation;
-using Document = Mozu.Content.Contracts.Document;
+using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
-    public class NavigationRepository : INavigationRepository
+    public class NavigationRepository : INavigationRepositoryAsync
     {
         private const string NavigationContentCollection = "settings";
         private const string NavigationFileName = "navigation2";
-        
+        private IDocumentWebApiClient _docWebApiClient;
+        private ICmsServiceWrapper _cmsService;
+        private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(NavigationSet), new[] { typeof(object), typeof(List<NavigationNode>), typeof(NavigationNode), typeof(string), typeof(int) });
 
-        private readonly IDocumentWebApiClient _docWebApiClient;
-        private readonly ICmsServiceWrapper _cmsService;
-        private readonly IStorefrontCache _cache;
-
-        private readonly DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(NavigationSet), new[] { typeof(object), typeof(List<NavigationNode>), typeof(NavigationNode), typeof(string), typeof(int) });
-
-        public NavigationRepository(IDocumentWebApiClient docWebApiClient, ICmsServiceWrapper cmsService , IStorefrontCache cache )
+        /// <summary>
+        /// Public constructor.
+        /// </summary>
+        public NavigationRepository(IDocumentWebApiClient docWebApiClient, ICmsServiceWrapper cmsService)
         {
             _docWebApiClient = docWebApiClient;
             _cmsService = cmsService;
-            _cache = cache;
+
+            // TaskExtensions;
         }
 
-        public virtual DataContractJsonSerializer Serializer
+        /// <summary>
+        /// Gets the navigation set stored for the current site.
+        /// </summary>
+        public Task<NavigationSet> GetSetAsync()
         {
-            get { return serializer; }
+            // retrieve the document id
+            Task<NavigationSet> set = GetNavMetaDocumentFromCms()
+                .ContinueWith(doc =>
+                {
+                // retrieve the document content
+                    return _docWebApiClient.GetDocumentContent(doc.Result.DocumentListName, doc.Result.Id);
+                })
+                .Unwrap()
+                .ContinueWith(content =>
+                {
+                    return content.Result.ResponseMessage.Content.ReadAsStreamAsync();
+                })
+                .Unwrap()
+                .ContinueWith(contentstream =>
+                {
+                    using (var stream = contentstream.Result)
+                    {
+                        stream.Position = 0;
+
+                        try
+                        {
+                            return _serializer.ReadObject(stream) as NavigationSet;
+                        }
+                        catch
+                        {
+                            // fuck the world
+                            return null;
+                        }
+                        //if (set == null || set.Nodes == null)
+                        //{
+                        //    set = NavigationSet.Default;
+                        //    UpdateNavigation(set, docId);
+                        //}
+                    }
+                });
+            
+            return set;
         }
 
+        /// <summary>
+        /// Saves the navigation set for the current site.
+        /// </summary>
+        public Task SaveSetAsync(NavigationSet set)
+        {
+            return GetNavMetaDocumentFromCms().ContinueWith(r =>
+            {
+                var doc = r.Result;
+                return SaveSetInternal(set, doc.Id);
+            });
+        }
+
+        private Task SaveSetInternal(NavigationSet set, string docId)
+        {
+            var stream = new MemoryStream();
+            _serializer.WriteObject(stream, set);
+            stream.Position = 0;
+
+            var task = _docWebApiClient.UpdateDocumentContent(NavigationContentCollection, docId, stream);
+
+            return task;
+        }
+
+        /// <summary>
+        /// Synchronous access to GetSet().
+        /// </summary>
+        [Obsolete]
         public NavigationSet GetSet()
         {
-            return (ReadNavigation()) ?? NavigationSet.Default;
+            // return GetSetAsync().Result;
+            return new NavigationSet();
         }
 
+        /// <summary>
+        /// Synchronous access to SaveSet().
+        /// </summary>
+        [Obsolete]
         public void SaveSet(NavigationSet set)
         {
-            var docId = GetNavMetaDocumentId();
-
-            UpdateNavigation(set, docId);
+            SaveSetAsync(set).RunSynchronously();
         }
 
-        private void UpdateNavigation(NavigationSet navigation, string documentId)
+        private Task<DC.Document> GetNavMetaDocumentFromCms()
         {
-            using (var stream = new MemoryStream())
+            var document = (_cmsService.GetByPath(NavigationContentCollection, NavigationFileName, null)).ContinueWith(r =>
             {
-                Serializer.WriteObject(stream, navigation);
-                stream.Position = 0;
-                var svc = (ServiceClientBase) _docWebApiClient;
-                var handler = svc.Handler;
+                return r.Result.ReadAsSync();
+            });
 
-                var relpath = NavigationContentCollection + "/" + documentId;
-
-                var task = _docWebApiClient.UpdateDocumentContent(NavigationContentCollection, documentId, stream);
-              //  var updateTask = handler.SendAsync<StreamContent, Stream>("PUT", relpath, stream, svc.ServiceId, svc.Options); //_docWebApiClient.UpdateDocumentContent(NavigationContentCollection, documentId/*, stream*/))
-
-                if (task.Result.HasException)
-                    throw task.Result.ReadException();
-            }
-        }
-
-
-
-        private NavigationSet ReadNavigation()
-        {
-            try
-            {
-                var docId = GetNavMetaDocumentId();
-                //var document = _docWebApiClient.FindByName(NavigationContentCollection, "navigation", null, null, CmsConstants.Documents.doc_state_active).Result.ReadAsSync();
-
-                string key = typeof(NavigationSet) + docId;
-                var set = _cache[key] as NavigationSet;
-                if ( set != null )
-                {
-                    return set;
-                }
-                //var resp = _docWebApiClient.GetDocumentContent(NavigationContentCollection, docId).Result;
-                //if (resp.ResponseMessage.IsSuccessStatusCode)
-                //{
-                    
-                //}
-                using (var content = _docWebApiClient.GetDocumentContent(NavigationContentCollection, docId).Result.ResponseMessage.Content)
-                using (var stream = content.ReadAsStreamAsync().Result)
-                {
-                    stream.Position = 0;
-
-                    try
-                    {
-                        set = Serializer.ReadObject(stream) as NavigationSet;
-                    }
-                    catch
-                    {
-                    }
-                    if (set == null || set.Nodes == null)
-                    {
-                        set = NavigationSet.Default;
-                        UpdateNavigation(set, docId);
-                    }
-                    _cache[key] = set;
-                    return set;
-                }
-            }
-            catch (AggregateException)
-            {
-                // Collection might not exist yet
-                //LoggingService.LoggerFor<NavigationSetApi>().Warn("ReadNavigation", ex.UnwrapAgg()); // TODO: Should this be logged?
-                return null;
-            }
-        }
-
-        string _docId;
-
-        public string GetNavMetaDocumentId()
-        {
-            if (_docId == null)
-            {
-                var document = _cmsService.GetByPath(NavigationContentCollection, NavigationFileName, null).Result.ReadAsSync();
-
-                if (document == null)
-                {
-                    document = new Document
-                                      {
-                                          Name = NavigationFileName,
-                                          DocumentType = "document",
-                                          DocumentListName  = NavigationContentCollection,
-                                      };
-
-                    var response = _docWebApiClient.Create(document.DocumentListName, document).Result;
-
-                    if (response.HasException)
-                    {
-                        var ex = response.ReadException();
-                        throw ex;
-                    }
-
-                    if (response.ResponseMessage.IsSuccessStatusCode)
-                    {
-                        document = response.ReadAsSync();
-                        return _docId = document.Id;
-                    }
-
-                    return null;
-                }
-                else
-                {
-                    _docId = document.Id;
-                }
-            }
-            return _docId;
+            return document;
         }
     }
 }

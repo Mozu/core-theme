@@ -246,6 +246,23 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         }
 
+        public IEnumerable<Task<Mozu.Content.Contracts.Document>> Update(List<DC.Document> docs)
+        {
+            List<Task<DC.Document>> tasks = new List<Task<DC.Document>>();
+            foreach (var doc in docs)
+            {
+                tasks.Add(Update(doc));
+            }
+
+            return tasks;
+        }
+
+        public Task<Mozu.Content.Contracts.Document> Update(DC.Document doc)
+        {
+            return _docRepo.Update(doc.DocumentListName, doc.Id, doc).ContinueWith<DC.Document>(x => x.Result.ReadAsSync());
+        }
+
+
         public Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetList(CmsListRequest request)
         {
             return _docRepo.List(request.Collection, request.ToFilterString(), null, request.Recurse, request.DocumentStatus ?? "draft", request.ToSortString(), request.PageSize, request.StartIndex);

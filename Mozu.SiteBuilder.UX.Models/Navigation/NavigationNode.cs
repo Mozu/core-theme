@@ -7,6 +7,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
     [DataContract]
     public class NavigationNode
     {
+
         const string _STRINGSPLITDELIM = "^^";
         public static string JoinParts(params object[] parts)
         {
@@ -50,13 +51,43 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public int? Index { get; set; }
 
        
-        public string[] IdParts
+        protected string[] IdParts
         {
             get{ if ( _idParts == null )
             {
                 _idParts = SplitParts(_id ?? "");
             }
                 return _idParts;
+            }
+        }
+
+        public string CollectionName
+        {
+            get
+            {
+                if (_idParts.Length >= 3) 
+                    return _idParts[2];
+                else
+                    return null;
+            }
+        }
+
+        public string OriginalId
+        {
+            get
+            {
+                if (IdParts.Length >= 3)
+                    return IdParts[2];
+                else
+                    return IdParts[1];
+            }
+        }
+
+        public int OriginalIdInt
+        {
+            get
+            {
+                return Convert.ToInt32(OriginalId);
             }
         }
 
