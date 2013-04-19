@@ -149,7 +149,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         Class = "taco-nav",
                         AllowDrag = false,
                         Id = UNLINKED_PAGES_NODE_ID,
-                        Items = null,
                         ParentId = ROOT_NODE_NAME,
                         Index = masterList.Count
                     });
@@ -163,7 +162,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         /// <summary>
         /// Build a hierarchical list of navigation nodes, ideal for consumption by NDjango templates and front-end javascript.
-        /// </summary>
+        /// </summary>t
         public Task<List<NavigationRuntimeNode>> GetTreeNavigation(bool draft = false)
         {
             return GetFlatList(draft)

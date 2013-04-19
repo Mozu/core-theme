@@ -63,7 +63,6 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
 
             Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.Navigation.NavigationNode, Mozu.SiteBuilder.UX.Models.Navigation.NavigationTreeNode>()
                 //.ForMember(dest => dest.Leaf , opt => opt.MapFrom(x => x.ChildNodes == null || x.ChildNodes.Count == 0))
-                  .ForMember(dest => dest.Items, opt => opt.Ignore())
                   .ForMember(x => x.IdParts, opt => opt.Ignore());
 
             Mapper.CreateMap<Mozu.Content.Contracts.Document, Mozu.SiteBuilder.UX.Models.Navigation.NavigationTreeNode>()
