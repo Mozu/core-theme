@@ -26,10 +26,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private ITenantCmsServiceWrapper _cmsService;
 
-        public FileManagementController(IProvisioningHelper provHeler, ICmsServiceWrapper cmsService, ITenantCmsServiceWrapper tenantCmsServiceWrapper)
+        public FileManagementController(ICmsServiceWrapper cmsService, ITenantCmsServiceWrapper tenantCmsServiceWrapper)
         {
             _cmsService = tenantCmsServiceWrapper;
-            provHeler.ProvisionCms();
         }
 
         [WebGet(UriTemplate = "file/list")]

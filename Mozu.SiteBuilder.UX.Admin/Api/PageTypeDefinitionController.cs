@@ -33,7 +33,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public PageTypeDefinitionController(
             IDocumentWebApiClient docRepo,
             IApiContext apiContext,
-            IProvisioningHelper provHelper,
             ICmsTypeHelper cmsTypeHelper,
             ICmsServiceWrapper cmsService ,
             ISiteBuilderContext siteBuilderContext)//, IPageTypeProvider pageTypeProvider)

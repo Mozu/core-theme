@@ -29,7 +29,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public CmsDocumentController(IDocumentWebApiClient docRepo ,
       
             IApiContext apiContext,
-            IProvisioningHelper provHelper,
           //  ISessionDocumentStore sessionDocStore,
             ICmsTypeHelper cmsTypeHelper,
              ICmsServiceWrapper cmsService

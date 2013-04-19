@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public const string NODE_TYPE_PAGE = "page";
         public const string NODE_TYPE_LINK = "link";
 
-        private INavigationRepositoryAsync _navRepo;
+        private INavigationRepository _navRepo;
         private ICategoryWebApiClient _catClient;
         private ICmsServiceWrapper _cmsService;
         private NavigationGandalf _gandalf;
@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         ///  Public constructor.
         /// </summary>
-        public NavigationController(INavigationRepositoryAsync navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService, NavigationGandalf gandalf)
+        public NavigationController(INavigationRepository navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService, NavigationGandalf gandalf)
         {
             _navRepo = navRepo;
             _catClient = catClient;

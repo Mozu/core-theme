@@ -7,6 +7,8 @@ using System.Dynamic;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings;
 using Mozu.SiteBuilder.Mvc.Settings;
+using Mozu.SiteBuilder.UX.Models.Navigation;
+using System.Collections.Generic;
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -24,7 +26,8 @@ namespace Mozu.SiteBuilder.Mvc
         ISearchContext SearchContext { get; set; }
         object this[string key] { get; set; }
         RuntimeConfigurationFieldCollection ThemeSettings { get;  }
-        INavigationRuntimeFactory Navigation { get; }
+        // INavigationRuntimeFactory Navigation { get; }
+        List<NavigationRuntimeNode> Navigation { get; }
         ISettingsRepository Settings { get; }
         void Save();
 

@@ -38,7 +38,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
           
             IDocumentTypeWebApiClient docTypeRepo,
             ISiteBuilderContext context,
-            IProvisioningHelper provHelper,
              ICmsServiceWrapper cmsService,
             ICmsTypeHelper cmsTypeHelper
 

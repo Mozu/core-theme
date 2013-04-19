@@ -74,8 +74,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.RegisterType<ThemeFactory>().InstancePerLifetimeScope();
 
-            builder.RegisterType<NavigationRepositoryThom>().As<NavigationRepositoryThom>();
-            builder.RegisterType<NavigationRepository>().As<INavigationRepositoryAsync>();
+            builder.RegisterType<NavigationRepository>().As<INavigationRepository>();
 
             // builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 

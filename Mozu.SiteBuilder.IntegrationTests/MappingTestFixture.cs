@@ -20,16 +20,16 @@ namespace Mozu.SiteBuilder.IntegrationTests
             AutoMapper.Mapper.AddProfile<FileManagementModelMapping>();
             AutoMapper.Mapper.AddProfile<GeneralSettingsMapping>();
             AutoMapper.Mapper.AddProfile<UX.Admin.Api.ModelMapping.GeneralSettingsMapping>();
-            AutoMapper.Mapper.AddProfile<UX.Admin.Api.ModelMapping.NavigationMapping>();
             AutoMapper.Mapper.AddProfile<UX.Admin.Api.ModelMapping.UserMapping>();
             AutoMapper.Mapper.AddProfile<UX.Admin.Api.ModelMapping.AttributeMapping>();
-            AutoMapper.Mapper.AddProfile<NavigationMapping>();
             AutoMapper.Mapper.AddProfile<OptionMapping>();
             AutoMapper.Mapper.AddProfile<TaxMapping>();
             AutoMapper.Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.CustomerMapping>();
             AutoMapper.Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.OrderMapping>();
             AutoMapper.Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.ProductMapping>();
             AutoMapper.Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.CmsPagesMapping>();
+            AutoMapper.Mapper.AddProfile<Mozu.SiteBuilder.Mvc.Models.Mappings.NavigationMapping>();
+
         }
     }
 

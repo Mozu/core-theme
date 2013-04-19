@@ -41,7 +41,6 @@ namespace Mozu.SiteBuilder.Mvc.CMS
  
         public CmsServiceWrapper(IDocumentWebApiClient docRepo,
             IApiContext apiContext,
-            IProvisioningHelper provHelper,
             ICmsTypeHelper cmsTypeHelper,
             IFolderWebApiClient folderRepo,
             IFacetsWebApiClient facetsRepo
@@ -51,7 +50,6 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             _folderRepo = folderRepo;
             _docRepo = docRepo;
             _cmsTypeHelper = cmsTypeHelper;
-            provHelper.ProvisionCms();
         }
         public IEnumerable<Task<Tuple<bool,ServiceClientResponse<StreamContent>>>> Delete(IEnumerable<AVM.Document> docs)
         {

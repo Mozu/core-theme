@@ -39,7 +39,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public WidgetInstanceController(IDocumentWebApiClient docRepo,
       
             IApiContext apiContext,
-            IProvisioningHelper provHelper,
           //  ISessionDocumentStore sessionDocStore,
             ICmsTypeHelper cmsTypeHelper,
              ICmsServiceWrapper cmsService,

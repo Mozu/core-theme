@@ -28,14 +28,14 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public const string NODE_TYPE_PAGE = "page";
         public const string NODE_TYPE_LINK = "link";
 
-        private INavigationRepositoryAsync _navRepo;
+        private INavigationRepository _navRepo;
         private ICategoryWebApiClient _catClient;
         private ICmsServiceWrapper _cmsService;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationGandalf(INavigationRepositoryAsync navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService)
+        public NavigationGandalf(INavigationRepository navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService)
         {
             _navRepo = navRepo;
             _catClient = catClient;
@@ -178,7 +178,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         group node by node.ParentId into g
                         select g;
 
-                    var rootLevel = Mapper.Map<List<NavigationRuntimeNode>>(grouped.Where(g => g.Key == ROOT_NODE_NAME));
+                    var rootLevel = Mapper.Map<List<NavigationRuntimeNode>>(grouped.First(g => g.Key == ROOT_NODE_NAME).ToList());
                     BuildTree(rootLevel, grouped);
 
                     return rootLevel;
@@ -195,8 +195,12 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
             foreach (var node in rootLevel)
             {
-                node.Items = Mapper.Map<List<NavigationRuntimeNode>>(allObjects.Where(g => g.Key == node.Id));
-                BuildTree(node.Items, allObjects);
+                var childItems = allObjects.FirstOrDefault(g => g.Key == node.Id);
+                if (childItems != null)
+                {
+                    node.Items = Mapper.Map<List<NavigationRuntimeNode>>(childItems.ToList());
+                    BuildTree(node.Items, allObjects);
+                }
             }
         }
     }

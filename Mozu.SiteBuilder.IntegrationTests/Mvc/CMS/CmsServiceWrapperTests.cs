@@ -12,7 +12,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.CMS
     {
         private IDocumentWebApiClient _documentWebApiClient;
         private IApiContext _apiContext;
-        private IProvisioningHelper _provisingHelper;
         private ICmsTypeHelper _cmsTypeHelper;
         private IFolderWebApiClient _folderWebApiClient;
         private IFacetsWebApiClient _facetsWebApiClient;
@@ -22,7 +21,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.CMS
         {
             _documentWebApiClient = Substitute.For<IDocumentWebApiClient>();
             _apiContext = Substitute.For<IApiContext>();
-            _provisingHelper = Substitute.For<IProvisioningHelper>();
             _cmsTypeHelper = Substitute.For<ICmsTypeHelper>();
             _folderWebApiClient = Substitute.For<IFolderWebApiClient>();
             _facetsWebApiClient = Substitute.For<IFacetsWebApiClient>();
@@ -36,7 +34,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.CMS
 
         private CmsServiceWrapper GetWrapper()
         {
-            return new CmsServiceWrapper(_documentWebApiClient, _apiContext, _provisingHelper, _cmsTypeHelper, _folderWebApiClient, _facetsWebApiClient);
+            return new CmsServiceWrapper(_documentWebApiClient, _apiContext, _cmsTypeHelper, _folderWebApiClient, _facetsWebApiClient);
         }
     }
 }
