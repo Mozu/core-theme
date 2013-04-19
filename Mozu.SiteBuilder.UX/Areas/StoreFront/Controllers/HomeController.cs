@@ -14,12 +14,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     public class HomeController : BaseController
     {
-        private INavigationRuntimeFactory _navigationRuntimeFactory;
+        // private INavigationRuntimeFactory _navigationRuntimeFactory;
         private readonly IWebToolsRepository _webToolsRepository;
 
-        public HomeController(INavigationRuntimeFactory navigationRuntimeFactory, IWebToolsRepository webToolsRepository)
+        public HomeController(IWebToolsRepository webToolsRepository)
         {
-            _navigationRuntimeFactory = navigationRuntimeFactory;
             _webToolsRepository = webToolsRepository;
         }
 
@@ -28,9 +27,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         
         public async Task<ActionResult> Index()
         {
-            if ( _navigationRuntimeFactory.Primary != null && _navigationRuntimeFactory.Primary.Count > 0)
+            var nav = SiteContext.Navigation;
+            if ( nav != null && nav.Count > 0)
             {
-                var item = _navigationRuntimeFactory.Primary.FirstOrDefault(x => !string.IsNullOrEmpty(x.Url));
+                var item = nav.FirstOrDefault(x => !string.IsNullOrEmpty(x.Url));
                 if ( item != null  && item.Url.Length >0 && item.Url != "/pages/home")
                 {
                     return new TransferResult(item.Url );

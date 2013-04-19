@@ -17,6 +17,7 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Mobile;
+using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.TempMocks;
 using Mozu.SiteBuilder.Mvc.Users;
@@ -103,6 +104,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 		    builder.RegisterType<MockProductCategoryRuntimeWebApiClient>().As<IProductCategoryRuntimeWebApiClient>();
             builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 
+            builder.RegisterType<NavigationGandalf>();
            // builder.RegisterType<MozuServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
 		}
 

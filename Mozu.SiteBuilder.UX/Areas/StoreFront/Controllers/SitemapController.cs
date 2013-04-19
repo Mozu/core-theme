@@ -20,16 +20,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     public class SitemapController : Controller
     {
         INavigationRepository _nav;
-        INavigationRuntimeFactory _navFac;
         ISiteBuilderContext _sbctx;
         private readonly ISitesWebApiClient _sitesWebApi;
+        private NavigationGandalf _gandalf;
 
-        public SitemapController(INavigationRepository navigationRepository, INavigationRuntimeFactory navFac, ISiteBuilderContext sbctx , ISitesWebApiClient sitesWebApi
+        public SitemapController(INavigationRepository navigationRepository, NavigationGandalf gandalf, ISiteBuilderContext sbctx , ISitesWebApiClient sitesWebApi
  
             )
         {
             _nav = navigationRepository;
-            _navFac = navFac;
+            _gandalf = gandalf;
             _sbctx = sbctx;
             _sitesWebApi = sitesWebApi;
         }
@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         // GET: /sitemap.xml
         public async Task<ActionResult> Index()
         {
-            var primaryNav = _navFac.Primary;
+            var primaryNav = _gandalf.GetTreeNavigation().Result;
             string domain = (await GetSitePrimaryDomain()).TrimEnd('/');
 
             //SiteBuilderContext.Current.PageContext.CanonicalUrl

@@ -353,7 +353,6 @@
     <Compile Include="Admin\Api\Models\Attributes\AttributeValidationRangeTests.cs" />
     <Compile Include="Admin\Api\Models\Attributes\MockAttributesTests.cs" />
     <Compile Include="Admin\Api\NavigationControllerTests.cs" />
-    <Compile Include="Admin\Api\NavigationOldControllerTests.cs" />
     <Compile Include="Admin\Api\ProductTypeControllerTests.cs" />
     <Compile Include="Admin\Api\Models\Attributes\ModelTests.cs" />
     <Compile Include="Admin\Api\PagingParamatersRequestHandlersTests.cs" />

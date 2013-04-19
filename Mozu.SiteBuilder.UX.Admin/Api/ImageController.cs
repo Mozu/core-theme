@@ -25,16 +25,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public ImageController(
             ICmsServiceWrapper cmsService,
             IDocumentWebApiClient docRepo,
-            IFolderWebApiClient folderRepo,
+            IFolderWebApiClient folderRepo
         //    IDocumentTypeWebApiClient docTypeRepo,
-            Mozu.SiteBuilder.Mvc.CMS.IProvisioningHelper provHelper) 
+        ) 
         {
 
             _cmsService = cmsService;
             _docRepo = docRepo;
             _folderRepo = folderRepo;
           //  _docTypeRepo = docTypeRepo;
-            provHelper.ProvisionCms();
             //Provision();
         }
 

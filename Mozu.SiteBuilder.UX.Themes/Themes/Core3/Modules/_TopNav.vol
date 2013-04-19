@@ -1,6 +1,6 @@
 ﻿<nav class="mz-site-nav-wrapper">
     <ul data-mz-role="sitemenu" class="mz-site-nav">
-        {%for link in SiteContext.Navigation.Primary %}
+        {%for link in SiteContext.Navigation %}
             <li data-mz-role="sitemenu-item" class="mz-site-nav-item">
                 <a class="mz-site-nav-link" href="{{link.url}}">{{link.name}}</a>
                 {% if link.items %}

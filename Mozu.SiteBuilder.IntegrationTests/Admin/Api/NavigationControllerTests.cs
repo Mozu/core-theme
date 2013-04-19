@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private ISiteBuilderContext _siteBuilderContext;
         private ICategoryWebApiClient _categoryWebApiClient;
         private ICmsServiceWrapper _cmsServiceWrapper;
-        private INavigationRepositoryAsync _navigationRepository;
+        private INavigationRepository _navigationRepository;
 
         private NavigationSet _mockNavigation {
             get {
@@ -351,7 +351,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             _categoryWebApiClient = Substitute.For<ICategoryWebApiClient>();
             _cmsServiceWrapper = Substitute.For<ICmsServiceWrapper>();
-            _navigationRepository = Substitute.For<INavigationRepositoryAsync>();
+            _navigationRepository = Substitute.For<INavigationRepository>();
 
             // set up navigation repo mock.
             _navigationRepository.GetSetAsync().Returns(

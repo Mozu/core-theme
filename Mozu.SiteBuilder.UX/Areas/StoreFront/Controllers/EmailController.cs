@@ -110,12 +110,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public EmailController(IDocumentWebApiClient docRepo,
             IDocumentTypeWebApiClient docTypeRepo,
             ISiteBuilderContext context,
-            IProvisioningHelper provHelper,
             ICmsServiceWrapper cmsService,
             IOrderService orderService,
             ICmsTypeHelper cmsTypeHelper,
             IViewEngine viewEngine)
-            : base(docRepo, docTypeRepo, context, provHelper, cmsService, cmsTypeHelper, null, null)
+            : base(docRepo, docTypeRepo, context, cmsService, cmsTypeHelper, null, null)
         {
             _orderService = orderService;
             _viewEngine = viewEngine;

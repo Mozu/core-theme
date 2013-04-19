@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         ICmsServiceWrapper _cmsService;
         
 
-        public WidgetsController(  IViewEngine viewEngine, IProductWebApiClient productClient, ISiteBuilderContext context, ICmsTypeHelper cmsTypeHelper, IProvisioningHelper provHelper, ICmsServiceWrapper cmsService)
+        public WidgetsController(  IViewEngine viewEngine, IProductWebApiClient productClient, ISiteBuilderContext context, ICmsTypeHelper cmsTypeHelper, ICmsServiceWrapper cmsService)
         {
             _viewEngine = viewEngine;
             _productClient = productClient;
@@ -41,7 +41,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
 
             _cmsTypeHelper = cmsTypeHelper;
-            provHelper.ProvisionCms();
         }
 
 

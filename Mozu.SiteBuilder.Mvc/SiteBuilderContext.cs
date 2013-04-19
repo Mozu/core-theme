@@ -19,6 +19,7 @@ using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
 using Mozu.SiteBuilder.Mvc.Themes.Repositories;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
+using Mozu.SiteBuilder.UX.Models.Navigation;
 using Mozu.SiteSettings.General.Contracts;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.Tenant.Contracts;
@@ -58,12 +59,12 @@ namespace Mozu.SiteBuilder.Mvc
         /// Theme according to the cookie 
         /// </summary>
         private readonly Theme  _cookieTheme = null;
-        Lazy<INavigationRuntimeFactory> _nav;
         private Lazy<string> _googleAnalyticsCode;
 	    private Lazy<bool> _googleAnalyticsEnabled;
 	    private Lazy<bool> _googleAnalyticsEcommerceEnabled;
+        private Lazy<NavigationGandalf> _gandalf;
 
-	    public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<INavigationRuntimeFactory> navFac, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, ISettings configSettings= null, HttpContextBase httpContext= null )
+	    public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, Lazy<NavigationGandalf> gandalf, ISettings configSettings= null, HttpContextBase httpContext= null )
 		{
 			PageContext = new PageContext();
            
@@ -71,7 +72,6 @@ namespace Mozu.SiteBuilder.Mvc
             _cookieProvider = cookieProvider;
             _mobileProvider = mobileProvider;
             SearchContext = searchContext;
-            _nav = navFac;
             _settings = settings;
             _catContext = catContext;
             _themeSettingsRepo = themeRepo;
@@ -79,6 +79,8 @@ namespace Mozu.SiteBuilder.Mvc
 	        _generalSettings = generalSettings;
 	        _configSettings = configSettings;
 	        _httpContext = httpContext;
+            _gandalf = gandalf;
+
 	        this.SiteId = _apiContext.SiteId;
             this.TenantId = _apiContext.TenantId;
 	        httpContext.Items[CONTEXT_KEY] = this;
@@ -324,14 +326,21 @@ namespace Mozu.SiteBuilder.Mvc
         }
 
 
-        public INavigationRuntimeFactory Navigation
+        // public INavigationRuntimeFactory Navigation
+        // {
+        //     get
+        //     {
+        //         return _nav.Value;
+        //     }
+        // }
+
+        public List<NavigationRuntimeNode> Navigation
         {
             get
             {
-                return _nav.Value;
+                return _gandalf.Value.GetTreeNavigation().Result;
             }
         }
-
 
         public UX.Models.Admin.ThemeSettings.RuntimeConfigurationFieldCollection ThemeSettings
         {

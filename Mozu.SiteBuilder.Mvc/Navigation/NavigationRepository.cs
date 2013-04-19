@@ -10,7 +10,7 @@ using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
-    public class NavigationRepository : INavigationRepositoryAsync
+    public class NavigationRepository : INavigationRepository
     {
         private const string NavigationContentCollection = "settings";
         private const string NavigationFileName = "navigation2";
@@ -94,25 +94,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             var task = _docWebApiClient.UpdateDocumentContent(NavigationContentCollection, docId, stream);
 
             return task;
-        }
-
-        /// <summary>
-        /// Synchronous access to GetSet().
-        /// </summary>
-        [Obsolete]
-        public NavigationSet GetSet()
-        {
-            // return GetSetAsync().Result;
-            return new NavigationSet();
-        }
-
-        /// <summary>
-        /// Synchronous access to SaveSet().
-        /// </summary>
-        [Obsolete]
-        public void SaveSet(NavigationSet set)
-        {
-            SaveSetAsync(set).RunSynchronously();
         }
 
         private Task<DC.Document> GetNavMetaDocumentFromCms()

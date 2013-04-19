@@ -336,7 +336,6 @@
     <Compile Include="CMS\IWebToolsRepository.cs" />
     <Compile Include="CMS\IWidgetProvider.cs" />
     <Compile Include="CMS\PageTypeProvider.cs" />
-    <Compile Include="CMS\ProvisionHelper.cs" />
     <Compile Include="CMS\ISessionDocumentStore.cs" />
     <Compile Include="CMS\TenantCmsServiceWrapper.cs" />
     <Compile Include="CMS\WebToolsRepository.cs" />
@@ -380,11 +379,8 @@
     <Compile Include="Models\Mapping\ProductMapping.cs" />
     <Compile Include="Models\Mapping\SettingsMapping.cs" />
     <Compile Include="Navigation\INavigationRepository.cs" />
-    <Compile Include="Navigation\INavigationRuntimeFactory.cs" />
-    <Compile Include="Navigation\NavigationFactory.cs" />
     <Compile Include="Navigation\NavigationGandalf.cs" />
     <Compile Include="Navigation\NavigationRepository.cs" />
-    <Compile Include="Navigation\NavigationRepositoryThom.cs" />
     <Compile Include="Orders\IOrderService.cs" />
     <Compile Include="Orders\IPciSettingsProvider.cs" />
     <Compile Include="Orders\OrderService.cs" />
