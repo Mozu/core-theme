@@ -382,7 +382,6 @@
     <Compile Include="Api\Models\Checkout\PreAuthorizationDefinition.cs" />
     <Compile Include="Api\Models\Checkout\PreAuthorizeTransactionTypeDataContract.cs" />
     <Compile Include="Api\Models\Checkout\Setting.cs" />
-    <Compile Include="Api\Models\Navigation\NavigationNode.cs" />
     <Compile Include="Api\Models\Cms\Document.cs" />
     <Compile Include="Api\Models\Cms\DocumentProperty.cs" />
     <Compile Include="Api\Models\Discount\CouponCode.cs" />
@@ -400,7 +399,6 @@
     <Compile Include="Api\Models\Category\Category.cs" />
     <Compile Include="Api\Models\Category\CategoryTreeNode.cs" />
     <Compile Include="Api\Models\Metadata\ModelDescription.cs" />
-    <Compile Include="Api\Models\Navigation\NavigationSet.cs" />
     <Compile Include="Api\Models\Options\Option.cs" />
     <Compile Include="Api\Models\Options\ProductOption.cs" />
     <Compile Include="Api\Models\Options\ProductProperty.cs" />

@@ -55,9 +55,6 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         [DataMember(Name = "url")]
         public string Url { get; set; }
 
-        [DataMember(Name = "items", EmitDefaultValue = false)]
-        public List<NavigationTreeNode> Items { get; set; }
-
         [DataMember(Name = "leaf")]
         public bool Leaf { get; set; }
         
