@@ -76,6 +76,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.RegisterType<NavigationRepository>().As<INavigationRepository>();
 
+            builder.RegisterType<NavigationGandalf>().InstancePerLifetimeScope();
+
             // builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 
         }

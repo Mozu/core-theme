@@ -18,6 +18,7 @@ using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
 using Mozu.SiteBuilder.Mvc.Themes.Repositories;
 using Mozu.SiteBuilder.UX.Models;
+using Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings;
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using Mozu.SiteSettings.General.Contracts;
@@ -95,6 +96,10 @@ namespace Mozu.SiteBuilder.Mvc
                 catch (ThemeNotFoundException)
                 { }
             }
+
+
+	        RuntimeConfigurationFieldCollection col;
+        
 
             // needs to be lazy because _settings is lazy
             _desktopTheme = new Lazy<Theme >(() =>

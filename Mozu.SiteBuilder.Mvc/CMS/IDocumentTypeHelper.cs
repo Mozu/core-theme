@@ -6,6 +6,7 @@
 
 using System.Threading.Tasks;
 using Mozu.Content.Contracts;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
@@ -25,22 +26,20 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     {
         IDocumentTypeWebApiClient _docTypeClient;
         IPropertyTypeWebApiClient _propTypeClient;
-        ISiteBuilderContext _ctx;
-        //private readonly IWidgetProvider _widgetProvider;
-        //private readonly IPageTypeProvider _pageTypeProvider;
-        private readonly ISiteBuilderContext _siteBuilderContext;
+        private readonly IApiContext _apiContext;
         System.Runtime.Caching.ObjectCache _cache;
         //static ConcurrentDictionary<string, Mozu.Content.Contracts.DocumentType> _tenantDocDic = new ConcurrentDictionary<string, ContentService.Contracts.DocumentType>();
         static Hashtable g_cache = new Hashtable();
 
 
-        public CmsTypeHelper(IDocumentTypeWebApiClient docTypeClient, IPropertyTypeWebApiClient propClient, ISiteBuilderContext ctx, ISiteBuilderContext siteBuilderContext)
+        public CmsTypeHelper(IDocumentTypeWebApiClient docTypeClient, IPropertyTypeWebApiClient propClient, IApiContext apiContext)
         {
-            _ctx = ctx;
+            
             //_widgetProvider = widgetProvider;
            // _pageTypeProvider = pageTypeProvider;
-            _siteBuilderContext = siteBuilderContext;
+            
             _propTypeClient = propClient;
+            _apiContext = apiContext;
             _docTypeClient = docTypeClient;
             _cache = System.Runtime.Caching.MemoryCache.Default;
         }
@@ -49,7 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         {
             Mozu.Content.Contracts.DocumentType doc;
             Dictionary<string, Mozu.Content.Contracts.DocumentType> dic = null;
-            string key = typeof(CmsTypeHelper) + "doc" + _ctx.SiteId;
+            string key = typeof(CmsTypeHelper) + "doc" + _apiContext.SiteId;
             lock (g_cache)
             {
                 dic = (Dictionary<string, Mozu.Content.Contracts.DocumentType>)g_cache[key]; ;
@@ -76,7 +75,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         {
             Mozu.Content.Contracts.PropertyType prop;
             Dictionary<string, Mozu.Content.Contracts.PropertyType> dic = null;
-            string key = typeof(CmsTypeHelper) + "prop" + _ctx.SiteId;
+            string key = typeof(CmsTypeHelper) + "prop" + _apiContext.SiteId;
             lock (g_cache)
             {
                 dic = (Dictionary<string, Mozu.Content.Contracts.PropertyType>)g_cache[key];// _cache.Get(key);
@@ -105,16 +104,27 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         }
 
+       
+    }
+
+    public class ThemeEntityDefinitionProvider:IThemeEntityDefinitionProvider
+    {
+        private readonly ISiteBuilderContext _siteBuilderContext;
+
+        public ThemeEntityDefinitionProvider (ISiteBuilderContext siteBuilderContext)
+        {
+            _siteBuilderContext = siteBuilderContext;
+        }
         public WidgetDefinition GetWidgetDefintion(string id)
         {
             return _siteBuilderContext.Theme.Widgets.FirstOrDefault(x => x.Id == id);
-           
+
         }
 
         public PageTemplateDefinition GetPageTypeDefinition(string id)
         {
             return _siteBuilderContext.Theme.PageTypes.FirstOrDefault(x => x.Id == id);
-          
+
         }
 
         public IEnumerable<PageTemplateDefinition> GetPageTypeDefinitions()

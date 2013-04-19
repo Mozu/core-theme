@@ -20,6 +20,11 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.CMS
         DocumentType GetDocumentType(string name);
         PropertyType GetPropertyType(string name);
 
+    }
+
+
+    public interface IThemeEntityDefinitionProvider
+    {
         IEnumerable<PageTemplateDefinition> GetPageTypeDefinitions();
         WidgetDefinition GetWidgetDefintion(string id);
         PageTemplateDefinition GetPageTypeDefinition(string id);
