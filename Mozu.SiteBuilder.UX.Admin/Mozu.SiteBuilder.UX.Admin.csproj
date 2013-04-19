@@ -654,6 +654,9 @@
     <Content Include="Scripts\app\view\option\EditModal.js" />
     <Content Include="Scripts\app\view\option\Form.js" />
     <Content Include="Scripts\app\view\site\page\PageSettingsPanel.js" />
+    <Content Include="Scripts\app\view\site\page\settings\Facets.js" />
+    <Content Include="Scripts\app\view\site\page\settings\Seo.js" />
+    <Content Include="Scripts\app\view\site\page\settings\Templates.js" />
     <Content Include="Scripts\app\view\site\page\settings\General.js" />
     <Content Include="Scripts\app\view\site\ToolboxPanel.js" />
     <Content Include="Scripts\app\view\site\navigation\PageSettings.js" />
