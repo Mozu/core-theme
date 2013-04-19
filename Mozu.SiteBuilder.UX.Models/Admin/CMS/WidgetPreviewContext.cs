@@ -74,9 +74,10 @@ using System.Runtime.Serialization;
             
             var mmd  = GetModelMetadata("___");
             //return mmd;
-            var wid = this.TypeHelper.GetWidgetDefintion(this.DefinitionId.ToString());
+           // var wid = this.TypeHelper.GetWidgetDefintion(this.DefinitionId.ToString());
             var jobj = Newtonsoft.Json.Linq.JObject.FromObject(this);
-            jobj["editView"] = wid.EditView;
+          //  jobj["editView"] = wid.EditView;
+
             mmd.AdditionalValues["data-attribute-name"] = "data-editing-widget";
             mmd.AdditionalValues["data-editing"] = jobj;
             

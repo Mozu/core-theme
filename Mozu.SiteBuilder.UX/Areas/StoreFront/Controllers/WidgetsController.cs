@@ -27,18 +27,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IViewEngine _viewEngine;
         private readonly IProductWebApiClient _productClient;
 
-        ISiteBuilderContext _context;
+        
         ICmsTypeHelper _cmsTypeHelper;
         ICmsServiceWrapper _cmsService;
-        
+        private readonly IThemeEntityDefinitionProvider _themeEntityDefinitionProvider;
 
-        public WidgetsController(  IViewEngine viewEngine, IProductWebApiClient productClient, ISiteBuilderContext context, ICmsTypeHelper cmsTypeHelper, ICmsServiceWrapper cmsService)
+
+        public WidgetsController(  IViewEngine viewEngine, IProductWebApiClient productClient,  ICmsTypeHelper cmsTypeHelper, ICmsServiceWrapper cmsService, IThemeEntityDefinitionProvider themeEntityDefinitionProvider)
         {
             _viewEngine = viewEngine;
             _productClient = productClient;
-            _context = context;
-            _cmsService = cmsService;
             
+            _cmsService = cmsService;
+            _themeEntityDefinitionProvider = themeEntityDefinitionProvider;
+
 
             _cmsTypeHelper = cmsTypeHelper;
         }
@@ -82,11 +84,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
            
 
-            _context.IsEditMode = true;
+            this.SiteContext.IsEditMode = true;
 
 
 
-            var def = _context.Theme.Widgets .First(x => x.Id == wrd.DefinitionId);
+            var def = SiteContext.Theme.Widgets.First(x => x.Id == wrd.DefinitionId);
 
             wrd.Definition = def;
             wrd.IsPreview = true;
@@ -181,14 +183,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                Content = "<!--sof " + zoneId + "-->"
                            };
             }
-            if (_context.PageContext == null || _context.PageContext.CmsContext == null || _context.PageContext.CmsContext.RuntimeData == null)
+            if (SiteContext.PageContext == null || SiteContext.PageContext.CmsContext == null || SiteContext.PageContext.CmsContext.RuntimeData == null)
             {
                 return new ContentResult()
                            {
                                Content = ""
                            };
             }
-            var zoneWidgets = _context.PageContext.CmsContext.RuntimeData.Where(_ => string.Equals(_.ZoneId, zoneId, StringComparison.OrdinalIgnoreCase)).OrderBy( x=> x.Index ).ToList();
+            var zoneWidgets = SiteContext.PageContext.CmsContext.RuntimeData.Where(_ => string.Equals(_.ZoneId, zoneId, StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.Index).ToList();
 
             //StringBuilder sb = new StringBuilder();
             var tw = new StringWriter();
@@ -196,7 +198,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 if (zw.Definition == null)
                 {
-                   zw.Definition =  _cmsTypeHelper.GetWidgetDefintion(zw.DefinitionId);
+                   zw.Definition =  _themeEntityDefinitionProvider.GetWidgetDefintion(zw.DefinitionId);
                 }
                 if (zw.Definition == null)
                 {

@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.CMS
 
         private CmsServiceWrapper GetWrapper()
         {
-            return new CmsServiceWrapper(_documentWebApiClient, _apiContext, _cmsTypeHelper, _folderWebApiClient, _facetsWebApiClient);
+            return new CmsServiceWrapper(_documentWebApiClient, _apiContext,_cmsTypeHelper, _folderWebApiClient, _facetsWebApiClient, null);
         }
     }
 }

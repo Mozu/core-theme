@@ -38,15 +38,18 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         ICmsTypeHelper _cmsTypeHelper;
         IFolderWebApiClient _folderRepo;
         IFacetsWebApiClient _facetsRepo;
- 
+        private readonly IThemeEntityDefinitionProvider _themeEntityDefinitionProvider;
+
         public CmsServiceWrapper(IDocumentWebApiClient docRepo,
             IApiContext apiContext,
             ICmsTypeHelper cmsTypeHelper,
             IFolderWebApiClient folderRepo,
-            IFacetsWebApiClient facetsRepo
+            IFacetsWebApiClient facetsRepo,
+            IThemeEntityDefinitionProvider themeEntityDefinitionProvider
             )
         {
             _facetsRepo = facetsRepo;
+            _themeEntityDefinitionProvider = themeEntityDefinitionProvider;
             _folderRepo = folderRepo;
             _docRepo = docRepo;
             _cmsTypeHelper = cmsTypeHelper;
@@ -86,7 +89,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                     throw new InvalidOperationException("missing documentTypeId");
                 }
 
-                var pageTypeDef = _cmsTypeHelper.GetPageTypeDefinition(documentTypeId);
+                var pageTypeDef = _themeEntityDefinitionProvider.GetPageTypeDefinition(documentTypeId);
 
 
 
