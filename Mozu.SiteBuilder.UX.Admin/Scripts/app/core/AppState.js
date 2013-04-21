@@ -24,7 +24,7 @@ Ext.define('Taco.core.AppState', {
         
         beginSlashRE: /^\//,
         endSlashRE: /\/$/,
-        contextRE: RegExp('^[tcs]:{1}[0-9]+'),
+        contextRE: RegExp('^[tcs]-{1}[0-9]+'),
         defaultParams: {
             controller: 'dashboard',
             action: 'index'

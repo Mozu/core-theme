@@ -15,7 +15,7 @@
        
         Ext.apply(me, config);
         me.callParent([config]);
-        me.urlToken = me.contextType +':'+ me.id;
+        me.urlToken = me.contextType +'-'+ me.id;
     },
     getSiteId: function () {
         

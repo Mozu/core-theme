@@ -106,7 +106,7 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
      */
     lookupContextNameFromToken: function ( urlContext ) {
         // *** urlContext takes the form of *:######, where * is 't', 'c', or 's' for Tenant, SiteCollection, or Site respectively.
-        var contextType     = urlContext.split(':')[0],
+        var contextType     = urlContext.split('-')[0],
             siteCollections = Taco.app.context.siteCollections,
             displayName     = 'All', // *** Default to 'All' (context is likely t:Id)
 
