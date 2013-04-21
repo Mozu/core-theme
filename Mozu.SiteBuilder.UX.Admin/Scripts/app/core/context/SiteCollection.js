@@ -14,7 +14,7 @@
         
         me.callParent([config]);
 
-        me.urlToken = me.contextType +':'+ me.id;
+        me.urlToken = me.contextType +'-'+ me.id;
         
         Ext.each(me.sites, function (site, idx) {
             site.siteCollection = me;

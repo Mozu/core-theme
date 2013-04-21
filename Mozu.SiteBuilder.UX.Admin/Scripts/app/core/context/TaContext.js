@@ -186,7 +186,7 @@ Ext.define('Taco.core.context.TaContext', {
 
     init: function (data) {
         var me = this;
-        me.urlToken = me.contextType +':'+ data.id;
+        me.urlToken = me.contextType +'-'+ data.id;
         me.currentCtx = me;
         
         Ext.each(data.siteCollections, function(sc,idx) {
