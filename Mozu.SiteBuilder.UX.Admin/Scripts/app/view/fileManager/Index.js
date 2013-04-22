@@ -31,6 +31,13 @@ Ext.define('Taco.view.fileManager.Index', {
 
     gridPanelConf: {
         columns: [{
+            text: 'Image',
+            renderer:function(value, metaData, record) {
+                return '<img height="60" src="/admin/img/files/' + record.getId() +'?size=60" />';
+            },
+            dataIndex: 'name',
+            flex: 1
+        }, {
             text: 'Name',
             editor: {
                 xtype: 'taco.textfield',
