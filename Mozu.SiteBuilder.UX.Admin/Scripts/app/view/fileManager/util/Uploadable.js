@@ -74,7 +74,7 @@ Ext.define('Taco.view.fileManager.util.Uploadable', {
             uploadRequest = Taco.core.util.UploadManager.requestUpload({
                 document: doc,
                 file: file,
-                url: '/admin/app/fileMangment/file/upload/{docid}'
+                url: '/admin/app/fileManagement/file/upload/{docid}'
             });
 
             newDocs.push(doc);

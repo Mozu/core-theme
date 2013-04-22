@@ -62,8 +62,8 @@ Ext.define('Taco.model.File', {
     idProperty: 'id',
 
     validations: [
-        { type: 'length', name: name, min: 3, max: 20 },
-        { type: 'presence', name: name }
+        { type: 'length', name: 'name', min: 3, max: 20 },
+        { type: 'presence', name: 'name' }
     ],
 
     proxy: {
