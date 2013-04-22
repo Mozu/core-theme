@@ -13,14 +13,14 @@ Ext.define('Taco.view.site.page.entityAdapters.DocumentEntityAdapter', {
         return this.pageProps.pageContext.collectionId + "_" + this.pageProps.pageContext.documentId;
     },
 
-    constructor:function() {
-        this.settingsPanels = this.createSettingsPannels();
+    constructor: function () {
+        this.pageSettings = this.getPageSettings();
         this.callParent(arguments);
     },
 
-    createSettingsPannels: function() {
+    getPageSettings: function () {
         var me = this;
-        return [
+        return this.pageSettings || [
             {
                 panelCls: 'Taco.view.site.page.settings.General',
                 getRecord: function() {
