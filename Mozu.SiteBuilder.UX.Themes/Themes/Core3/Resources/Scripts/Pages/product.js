@@ -47,7 +47,7 @@
         ko.applyBindings(product, $productView[0]);
 
         // reveal bound view, now that it's not an ugly template
-        $productView.css('visibility', 'visible');
+        $productView.noFlickerFadeIn();
 
         // changing any of the options should result in an update
         $optionContainer.on('change keyup blur', function (e) {

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-04-10
+ * Mozu JavaScript SDK - v0.1.0 - 2013-04-21
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1196,6 +1196,11 @@
                             includeSelf: true,
                             returnType: "login"
                         }
+                    },
+                    customer: {
+                        template: "{+CustomerService}{Id}",
+                        shortcutParam: "Id",
+                        includeSelf: true
                     },
                     login: "{+UserService}Login",
                     order: {

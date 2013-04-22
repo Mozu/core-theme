@@ -11,22 +11,25 @@
 <div id="mz-my-account" class="mz-my-account-wrap" 
     data-mz-myaccount="{% json_attribute Model %}"
     data-mz-orders="{% json_attribute ViewData.Orders %}"
-    data-mz-user="{% json_attribute ViewData.User %}">
+    data-mz-user="{% json_attribute ViewData.User %}"
+    style="visibility: hidden"
+    >
 
 	<h1 class="mz-page-header">Your Account</h1>
 
     <div id="personal-info">
         <span id="display-email">
-            <strong data-bind="text: User.EmailAddress() || 'No email found' ">{{ ViewData.User.EmailAddress|default:"No email found" }}</strong> (<a href="javascript:;" id="change-email" data-bind="click: changeEmail">Change email</a>)
+            <strong data-bind="text: Customer.EmailAddress() || 'No email found' ">{{ ViewData.User.EmailAddress|default:"No email found" }}</strong> (<a href="javascript:;" id="change-email" >Change email</a>)
         </span>
-        <span id="edit-email">
+        <span id="edit-email" data-bind="with: Customer">
             <form>
-                <input type="email" name="newEmail" value='{{ contact.Email|default:"No email found" }}'>
-                <input type="hidden" name="oldEmail" value='{{ contact.Email|default:"No email found" }}'>
-                <input type="submit" value="Save">
+                <input type="email" name="newEmail" data-bind="value: EmailAddress" value='{{ contact.Email|default:"No email found" }}'>
+                <button data-bind="click: updateEmail">Save</button>
+                (<a id="cancel-change-email" href="javascript:;" data-bind="click: revertEmail">Cancel</a>)
             </form>
         </span>
         | (<a href="javascript:;" id="change-password">Change password</a>)
+        <div class="mz-modal-mask"></div>
         <div class="mz-modal" id="change-password-modal">
             <h3>Change Password</h3>
             <form>
@@ -48,7 +51,6 @@
                 <button>Save</button>
             </div>
         </div>
-        <div class="mz-modal-mask"></div>
     </div>
     <div>
         <label>

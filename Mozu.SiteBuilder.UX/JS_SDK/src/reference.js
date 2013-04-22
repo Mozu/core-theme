@@ -225,6 +225,11 @@ var ApiReference = (function () {
                 returnType: 'login'
             }
         },
+        customer: {
+            template: '{+CustomerService}{Id}',
+            shortcutParam: 'Id',
+            includeSelf: true
+        },
         'login': '{+UserService}Login',
         'order': {
             get: {

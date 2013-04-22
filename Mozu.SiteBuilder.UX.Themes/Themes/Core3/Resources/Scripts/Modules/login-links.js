@@ -3,13 +3,32 @@
         animateModals({ jqSelector: '[data-mz-action="login"]' });
 
         $('[data-mz-minimodal="login"]').each(function () {
-            var miniModal = $(this),
-                mmForms = miniModal.find('[data-mz-ajaxform="true"]').each(function () {
+            var $miniModal = $(this),
+                $slidingWindow = $miniModal.find('.mz-hbox-sliding-window'),
+
+                showPasswordPanel = function (yes) {
+                    if (yes) {
+                        $slidingWindow.addClass('showright');
+                    } else {
+                        $slidingWindow.removeClass('showright');
+                    }
+                },
+
+                $responseField = $miniModal.find('[data-mz-role="ajaxresponse"]'),
+                hideMessages = function () {
+                    $responseField.removeClass('error').hide().html('');
+                }
+                showMessage = function (msg, isError) {
+                    if (isError) $responseField.addClass('error');
+                    $responseField.html(msg).show();
+                },
+
+                mmForms = $miniModal.find('[data-mz-role$="form"]').each(function () {
                     var $this = $(this);
-                    $this.find('[type=email], [type=password]').on('keyup', function (e) {
+                    $this.find('input').on('keyup', function (e) {
                         // *** 'Enter' key pressed
                         if (e.which == 13) {
-                            $this.find('[type=submit]').click();
+                            $this.find('[data-mz-role="ajaxform-submit"]').click();
                         }
                     })
                 });
@@ -17,15 +36,18 @@
             /**
               * AJAX handlers for Login/Logout
               */
-            miniModal.on('click', '[data-mz-role="loginform"] :submit', function () {
-                var firstForm = mmForms.first(),
-                    email = firstForm.find("[type=email]"),
-                    password = firstForm.find("[type=password]"),
+
+            var $loginForm = mmForms.filter('[data-mz-role="login-form"]'),
+                $forgotPasswordForm = mmForms.filter('[data-mz-role="forgotpassword-form"]');
+
+            $loginForm.on('click', '[data-mz-role="ajaxform-submit"]', function () {
+                var email = $loginForm.find("[name=email]"),
+                    password = $loginForm.find("[type=password]"),
                     data = {
                         email: email.val(),
                         password: password.val()
                     };
-
+                hideMessages();
                 $.ajax({
                     type: 'POST',
                     url: '/auth/AjaxSignIn',
@@ -35,8 +57,12 @@
                             console.log('Welcome ' + response.data.firstName);
                             window.location.reload(true);
                         } else {
+                            showMessage(response.message, true);
                             console.log(response.message);
                         }
+                    },
+                    error: function(response) {
+                        showMessage(response.message, true);
                     },
                     dataType: 'json'
                 });
@@ -49,27 +75,26 @@
               */
             .on("click", '[data-mz-action="forgotpassword"]', function () {
                 // *** Preserve any text already entered into email field
-                mmForms.find('[type=email]').val(mmForms.filter(':visible').find('input[name="email"]').first().val());
-                mmForms.toggle();
+                $forgotPasswordForm.find('[name="email"]').val($loginForm.find('[name="email"]').val());
+                showPasswordPanel(true);
 
                 return false;
-            })
+            });
 
             /**
               * AJAX handler for Forgot Password
               */
-            .on('click', '[data-mz-role="forgotpasswordform"] :submit', function () {
+            $forgotPasswordForm.on('click', '[data-mz-role="ajaxform-submit"]', function () {
                 $.ajax({
                     type: "POST",
                     url: "/auth/AjaxResetPassword", // TODO Confirm naming convention ( /auth/AjaxSignIn vs /auth/LogOut )
-                    data: { email: $('[data-mz-role="forgotpasswordform"] [type=email]').val() },
+                    data: { email: $forgotPasswordForm.find('[type=email]').val() },
                     success: function (response) {
                         if (response.success) {
                             mmForms.hide();
 
-                            // *** Show the message from the response (default text if response.message is null)
-                            var ajaxres = miniModal.find('[data-mz-role="ajaxresponse"]').show().text(response.message || Messages.PasswordResetEmailSent),
-                                $body = $(document.body);
+                            // *** Show the message from the response (default text if response.message is null)                            showMessage(response.message || Messages.PasswordResetEmailSent);
+                            var $body = $(document.body);
 
                             // *** Close the modal after 3.5 seconds
                             setTimeout(function () {
@@ -78,14 +103,24 @@
 
                             // *** Hook into "afterclose" event of animated modal
                             $body.one('onAnimatedModalClose', function () {
-                                mmForms.first().add(ajaxres).toggle();
+                                hideMessages();
+                                showPasswordPanel(false);
                             });
                         } else {
-                            alert(Messages.NoAccountFound);
+                            showMessage(Messages.NoAccountFound, true);
                         }
                     },
                     dataType: 'json'
                 });
+
+                return false;
+            })
+
+                /**
+              * Toggle back to login
+              */
+            .on("click", '[data-mz-action="back-login"]', function () {
+                showPasswordPanel(false);
 
                 return false;
             });

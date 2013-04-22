@@ -9,7 +9,7 @@
 
 <div id="mz-layout-container" class="mz-layout-container mz-cart-page mz-content-inner-wrap">
 	<h1 class="mz-page-header">Your Cart</h1>
-	<form method="post" action="/cart/checkout" id="mz-cart-form" data-mz-cart="{% json_attribute Model %}" data-bind="visible: true" style="display: none">
+	<form method="post" action="/cart/checkout" id="mz-cart-form" data-mz-cart="{% json_attribute Model %}" style="visibility: hidden">
         {% include "Modules/MessageBar" %}
         {% include "Modules/CartTable" %}
 	</form>

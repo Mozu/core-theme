@@ -12,5 +12,7 @@
             window.location = "/checkout/" + order.data.Id;
         });
 
+        //display view
+        $cartForm.noFlickerFadeIn();
     });
 });
