@@ -48,113 +48,11 @@
                 items: [this.toolBox]
             };
 
-            this.toolBar = Ext.create('Ext.toolbar.Toolbar', {
-                cls: Taco.baseCSSPrefix + 'inline-editor-tools',
-                margin: '3 0 0 0',
-                getButton:function(key){
-                   return  this.down('#'+key);
-                },
-                resetButtons:function()
-                {
-                    this.enableButtons( {
-                        add:true,
-                        copy:false,
-                        preview:false,
-                        settings:false,
-                        hide:false,
-                        destroy: false,
-                        formView:false
-                    });
-                },
-                enableButtons: function (config) {
-                    Ext.Object.each(config, function(key, value){
-                        this.getButton(key).setDisabled(!value);
-                    },this);
-                },
-                listeners: {
-                    added: function (me) {
-                        me.resetButtons();
-                    }
-                },
-                items: [
-                    {
-                        text: 'Edit in Form View',
-                        itemId: 'formView',
-                        handler: this.doFormView,
-                        scope: this
-                    },
-                    {
-                        xtype: 'tbseparator'
-                    },
-                    {
-                        text: 'Add',
-                        itemId:'add',
-                        handler:this.createRecord,
-                        scope:this
-                    },
-                    {
-                        text: 'Copy',
-                        itemId: 'copy',
-                        handler:function(){alert('tbd')},
-                        scope:this
-                    },
-                    {
-                        text: 'Preview',
-                        itemId: 'preview',
-                        handler:this.viewPage,
-                        scope:this
-                    },
-                    {
-                        text: 'Page Settings',
-                        itemId: 'settings',
-                        handler: this.settings,
-                        scope:this
-                    },
-                    //{
-                    //    text:'food',
-                    //    handler: function () {
-                    //        cbp = me.toolBox.down('#cardPanel');
-                    //        fc = me.down('#newCardPanel');
-                    //    }
-                    //},
-                    {
-                        text: 'Hide',
-                        itemId: 'hide',
-                        enableToggle: true,
-                        listeners: {
-                            toggle: function (btn, pressed) {
-                                this.adapter.setHidden(pressed);
-                            },
-                            scope: this
-                        }
-                    },
-                    {
-                        text: 'Delete',
-                        itemId: 'destroy',
-                        handler: this.deleteRecord,
-                        scope:this
-                    },
-                    {
-                        xtype:'tbseparator'
-                    },
-                    {
-                        text: 'ToolBox',
-                        itemId: 'toolBox',
-                        enableToggle: true,
-                        listeners: {
-                            toggle: function (btn, pressed) {
-                                this.toolBox[pressed ? 'show' : 'hide']();
-                            },
-                            scope: this
-                        }
-                        
-                    }
-             
-
-                ]
+            this.toolBar = Ext.create('Taco.view.site.Toolbar', {
+                editor: this
             });
 
-            this.widgets = new Ext.create('Taco.store.WidgetInstances', {
+            this.widgets = Ext.create('Taco.store.WidgetInstances', {
                 listeners: {
                     add: this.onFormStateChange,
                     datachanged: this.onFormStateChange,
@@ -163,7 +61,7 @@
                 }
             });
             window.pageEditor = this;
-            this.cmsDocs = new Ext.create('Taco.store.CmsDocuments', {
+            this.cmsDocs = Ext.create('Taco.store.CmsDocuments', {
                 listeners: {
                     add: this.onFormStateChange,
                     datachanged: this.onFormStateChange,
@@ -173,7 +71,7 @@
             });
 
 
-            this.products = new Ext.create('Taco.store.Products', {
+            this.products = Ext.create('Taco.store.Products', {
                 listeners: {
                     add: this.onFormStateChange,
                     datachanged: this.onFormStateChange,
@@ -181,7 +79,7 @@
                     scope: this
                 }
             });
-            this.categories = new Ext.create('Taco.store.Categories', {
+            this.categories = Ext.create('Taco.store.Categories', {
                 listeners: {
                     add: this.onFormStateChange,
                     datachanged: this.onFormStateChange,
@@ -261,9 +159,9 @@
 
             this.callParent(arguments);
 
-            this.on('destroy', function (cmp) {
-                cmp.toolBox.close();
-            });
+            //this.on('destroy', function (cmp) {
+            //    cmp.toolBox.close();
+            //});
 
             this.pagesSelectField = this.down('#pagesSelectField');
 
@@ -282,9 +180,9 @@
             }
             this.editSurface.setDirty(isDirty);
             if (isDirty) {
-                this.toolBox.down('#navigationTree').disable();
+                this.toolBox.navigation.disable();
             } else {
-                this.toolBox.down('#navigationTree').enable();
+                this.toolBox.navigation.enable();
             }
 
         },
@@ -315,22 +213,19 @@
         entityTypeEditConfig: {
             blog: {
                 editors: ["Taco.view.site.page.dataViews.Blog", "Taco.view.site.page.dataViews.Meta"],
-                adapter: 'Taco.view.site.page.entityAdapters.DocumentEntityAdapter',
+                adapter: 'Taco.view.site.page.entityAdapters.DocumentEntityAdapter'
             },
             "default": {
                 editors: ["Taco.view.site.page.dataViews.Meta"],
-                adapter: 'Taco.view.site.page.entityAdapters.DocumentEntityAdapter',
-                settingsPanels: ['Taco.view.site.settings.General', 'Taco.view.site.settings.Templates', 'Taco.view.site.settings.Seo']
+                adapter: 'Taco.view.site.page.entityAdapters.DocumentEntityAdapter'
             },
             category: {
                 editors: ["Taco.view.category.Basic"],
-                adapter: 'Taco.view.site.page.entityAdapters.CategoryEntityAdapter',
-                settingsPanels: ['Taco.view.site.settings.General', 'Taco.view.site.settings.Templates', 'Taco.view.site.settings.Seo', 'Taco.view.site.settings.Facets']
+                adapter: 'Taco.view.site.page.entityAdapters.CategoryEntityAdapter'
             },
             product: {
                 editors: ["Taco.view.product.edit.Inline"],
-                adapter: 'Taco.view.site.page.entityAdapters.ProductEntityAdapter',
-                settingsPanels: ['Taco.view.site.settings.General', 'Taco.view.site.settings.Templates', 'Taco.view.site.settings.Seo']
+                adapter: 'Taco.view.site.page.entityAdapters.ProductEntityAdapter'
             },
             link: {
                 editors: [],
@@ -342,11 +237,10 @@
 
         onDocumentLoad: function (e, d) {
 
-            var cfg, initter, me = this,
+            var cfg, me = this,
                 key, fn, editors, doc;
 
-            this.toolBar.resetButtons();
-
+            
             if (!d || !d.pageContext) {
                 return;
             }
@@ -363,7 +257,11 @@
                     load: function () { console.log('load', arguments); }
                 }
             });
-            this.adapter.load();
+            this.adapter.load();
+            this.toolBar.populate(this.adapter);
+
+            this.toolBox.populate(this.adapter);
+
             return;
         },
 

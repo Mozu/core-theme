@@ -5,6 +5,13 @@ Ext.define('Taco.view.site.navigation.PageSettings', {
     extend: 'Taco.view.site.ToolboxPanel',
     requires: ['Taco.view.site.page.PageSettingsPanel'],
     layout: 'card',
+    populate: function(adapter) {
+        var newPages = Ext.Array.map(adapter.settingsPanels, function (panelInfo) {
+            return Ext.create(panelInfo.panelCls, {
+                record: panelInfo.getRecord()
+            });
+        });
+    },
     initComponent: function () {
 
         this.chooser = Ext.widget('dataview', {

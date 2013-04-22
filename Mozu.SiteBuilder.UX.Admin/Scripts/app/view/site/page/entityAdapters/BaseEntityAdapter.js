@@ -63,14 +63,6 @@ Ext.define('Taco.view.site.page.entityAdapters.BaseEntityAdapter', {
 
 	
 	getId: function() {
-		
-	},
-
-	getPageSettings: function () {
-
-	},
-
-	setPageSettings: function () {
 
 	}
 
