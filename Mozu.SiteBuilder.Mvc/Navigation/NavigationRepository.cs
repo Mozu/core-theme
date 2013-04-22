@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
@@ -35,11 +36,33 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public Task<NavigationSet> GetSetAsync()
         {
             // retrieve the document id
-            Task<NavigationSet> set = GetNavMetaDocumentFromCms()
-                .ContinueWith(doc =>
+            Task<NavigationSet> set = 
+                _cmsService.GetByPath(NavigationContentCollection, NavigationFileName)
+                .ContinueWith(docResultIntermediate =>
                 {
-                // retrieve the document content
-                    return _docWebApiClient.GetDocumentContent(doc.Result.DocumentListName, doc.Result.Id);
+                    var serviceClientResponse = docResultIntermediate.Result;
+                    // if the document doesn't exist, create it first.
+                    if (serviceClientResponse != null && serviceClientResponse.ResponseMessage != null && serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        var doc = new DC.Document
+                        {
+                            Name = NavigationFileName,
+                            DocumentType = "document",
+                            DocumentListName = NavigationContentCollection,
+                        };
+                        
+                        return _docWebApiClient.Create(doc.DocumentListName, doc);
+                    }
+
+                    // otherwise, pass through the result.
+                    return docResultIntermediate;
+                })
+                .Unwrap()
+                .ContinueWith(docResult => 
+                {
+                    var doc = docResult.Result.ReadAsSync();
+                    // retrieve the document content
+                    return _docWebApiClient.GetDocumentContent(doc.DocumentListName, doc.Id);
                 })
                 .Unwrap()
                 .ContinueWith(content =>
@@ -78,11 +101,13 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// </summary>
         public Task SaveSetAsync(NavigationSet set)
         {
-            return GetNavMetaDocumentFromCms().ContinueWith(r =>
-            {
-                var doc = r.Result;
-                return SaveSetInternal(set, doc.Id);
-            });
+            return 
+                _cmsService.GetByPath(NavigationContentCollection, NavigationFileName)
+                .ContinueWith(r =>
+                {
+                    var doc = r.Result.ReadAsSync();
+                    return SaveSetInternal(set, doc.Id);
+                });
         }
 
         private Task SaveSetInternal(NavigationSet set, string docId)
@@ -94,16 +119,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             var task = _docWebApiClient.UpdateDocumentContent(NavigationContentCollection, docId, stream);
 
             return task;
-        }
-
-        private Task<DC.Document> GetNavMetaDocumentFromCms()
-        {
-            var document = (_cmsService.GetByPath(NavigationContentCollection, NavigationFileName, null)).ContinueWith(r =>
-            {
-                return r.Result.ReadAsSync();
-            });
-
-            return document;
         }
     }
 }
