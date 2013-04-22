@@ -62,8 +62,8 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         this.callParent(arguments);
 
         this.mon(this.store.getProxy(), 'exception', function (proxy, response, operation, eOpts) {
-            if (operation.error && operation.error.remoteException && operation.error.remoteException.ExceptionDetail.Message) {
-                alert(operation.error.remoteException.ExceptionDetail.Message);
+            if (operation.error && operation.error.remoteException) {
+                alert(operation.error.remoteException.getMessage());
             }
 
         }, this);
