@@ -2,24 +2,36 @@
  * @class Taco.view.site.page.entityAdapters.DocumentEntityAdapter
  */
 Ext.define('Taco.view.site.page.entityAdapters.DocumentEntityAdapter', {
-	extend: 'Taco.view.site.page.entityAdapters.BaseEntityAdapter',
-	modelName: 'Taco.model.CmsDocument',
-	getStore:function(){
-		return this.editor.cmsDocs;
-	},
-	
+    extend: 'Taco.view.site.page.entityAdapters.BaseEntityAdapter',
+    modelName: 'Taco.model.CmsDocument',
+    getStore: function () {
+        return this.editor.cmsDocs;
+    },
 
-	getId: function() {
-		return this.pageProps.pageContext.collectionId + "_" + this.pageProps.pageContext.documentId;
-	},
 
-	//getPageSettings: function () {
-	//    return Ext.JSON.decode(this.model.get('settings'));
-	//},
+    getId: function () {
+        return this.pageProps.pageContext.collectionId + "_" + this.pageProps.pageContext.documentId;
+    },
 
-	//setPageSettings: function (newSettings) {
-	//    this.model.set('settings', Ext.JSON.encode(newSettings));
-	//},
+    constructor:function() {
+        this.settingsPanels = this.createSettingsPannels();
+        this.callParent(arguments);
+    },
 
-	settingsPanels: ['Taco.view.site.page.settings.General', 'Taco.view.site.page.settings.Templates', 'Taco.view.site.page.settings.Seo']
+    createSettingsPannels: function() {
+        var me = this;
+        return [
+            {
+                panelCls: 'Taco.view.site.page.settings.General',
+                getRecord: function() {
+                    return me.get();
+                }
+            },
+            {
+                panelCls: 'Taco.view.site.page.settings.Seo',
+                getRecord: function() {
+                    return me.get();
+                }
+            }];
+    }
 });
