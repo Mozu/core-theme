@@ -44,7 +44,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\CI\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisLogFile>bin\Debug\Mozu.SiteBuilder.Mvc.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -62,7 +62,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Demo\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisLogFile>bin\Debug\Mozu.SiteBuilder.Mvc.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -80,7 +80,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Dev\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisLogFile>bin\Debug\Mozu.SiteBuilder.Mvc.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
