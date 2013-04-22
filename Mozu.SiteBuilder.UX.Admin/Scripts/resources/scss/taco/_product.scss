@@ -2,10 +2,10 @@
 
   .#{$vprefix}product-admin-form {
     // *** For readability
-    padding-bottom: 100px;
+    // padding-bottom: 100px;
 
     .#{$vprefix}formform .x-panel-header {
-      margin-top: 24px;
+      // margin-top: 24px;
     }
   }
 
@@ -17,26 +17,27 @@
     }
 
     .#{$vprefix}flex-field-spacing {
-      margin-left: 20px;
+      // margin-left: 20px;
     }
   }
 
   .#{$vprefix}override-form {
-    $overrideOffset: 14px;
     overflow: visible;
     // border: 1px dashed orange;
     // padding: 0 $overrideOffset $overrideOffset;
     // margin-left: -$overrideOffset;
 
     &.active {
+      margin-top: 30px;
       position: relative;
-      margin-top: 25px;
 
-      border: 1px dashed orange;
-      margin-left: -$overrideOffset;
+      // border: 1px dashed orange;
+      // margin-left: -$overrideOffset;
 
       .x-container {
-        padding: 0 $overrideOffset $overrideOffset;
+        border: 1px dashed border-for($color-neutral-white);
+        padding: 0px 20px 20px;
+        // padding: 0 $overrideOffset $overrideOffset;
       }
 
       .#{$vprefix}override-checkbox {
@@ -46,33 +47,41 @@
 
     // *** For the subitems
     .x-container {
-      display: -webkit-flex;
-      -webkit-justify-content: flex-start;
-      -webkit-flex-wrap: wrap;
-      -webkit-flex-direction: row;
+      // @include flexbox($wrap: wrap);
     }
 
     .x-mask {
-      background-color: #f1f0ec;
+      background-color: transparent;
+      background-image: -webkit-repeating-linear-gradient(-45deg, $color-neutral-white 0%, $color-neutral-white 25.5%, $color-neutral-black 25.5%, $color-neutral-black 51%, $color-neutral-white 51%, $color-neutral-white 76.5%, $color-neutral-black 76.5%, $color-neutral-black 100%);
+      background-size: 6px 6px;
+      opacity: 0.06;
       // opacity: 0.4;
     }
 
     // *** Raise opacity of subitems and their labels
-    .x-item-disabled {
-      .x-form-field, .x-form-item-label, .x-form-cb-label {
-        opacity: 1
-      }
-    }
+    // .x-item-disabled {
+    //   .x-form-field, .x-form-item-label, .x-form-cb-label {
+    //     opacity: 1
+    //   }
+    // }
 
     .#{$vprefix}override-checkbox {
       display: none; // *** Hide checkbox when not in an .active container
-      z-index: 101; // *** Matches value of modal mask; this sits just under b/c mask comes later in the DOM
-      background-color: #f1f0ec;
-      outline: 5px solid #f1f0ec;
+      // outline: 5px solid #f1f0ec;
       //padding: 0 12px;
       position: absolute;
-      top: -14px;
+      // top: -14px;
+      top: 0px;
       right: 100px;
+      z-index: 101; // *** Matches value of modal mask; this sits just under b/c mask comes later in the DOM
+
+      .#{$prefix}form-cb-wrap {
+        background-color: $color-neutral-white;
+        border-color: border-for($color-neutral-white);
+        border-style: dashed;
+        border-width: 0px 1px 1px;
+        padding: 4px 8px;
+      }
 
       &.#{$vprefix}auto-z-index {
         z-index: auto;

@@ -25,19 +25,33 @@ Ext.define('Taco.core.ux.tab.Panel', {
     navigation: false,
 
     initComponent: function () {
-        var lbar,
-            tbar;
+        var lbar, tbar, navStore;
 
         if (!this.pickerCfg) {
             this.pickerCfg = {};
         }
 
         if (this.navigation) {
+            navStore = Ext.create('Ext.data.Store', {
+                fields: ['text', 'target'],
+                data: []
+            });
+
             lbar = Ext.widget({
-                xtype: 'container',
+                xtype: 'dataview',
                 componentCls: Taco.baseCSSPrefix + 'form-card-nav',
-                width: 160,
-                items: []
+                width: 200,
+                store: navStore,
+                itemSelector: 'li.taco-form-card-nav-link',
+                tpl: [
+                    '<div class="taco-form-card-nav-body"><ul><tpl for=".">',
+                        '<li class="taco-form-card-nav-link">{text}</li>',
+                    '</tpl></ul></div>'
+                ],
+                listeners: {
+                    itemclick: function (view, record, item) { this.scrollCard(record.get('target')); },
+                    scope: this
+                }
             });
         }
 
@@ -70,7 +84,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
             xtype: 'container',
             componentCls: Taco.baseCSSPrefix + 'form-tab-bar',
             itemId: 'tabBar',
-            margin: '0 0 0 160',
+            margin: '0 0 0 200',
             items: [
                this.addButton,
                this.picker
@@ -204,15 +218,16 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
     /**
      * Scrolls to the card top of the given item
-     * @param  {Ext.container.Container} card The container or panel to scroll
-     * @param  {Ext.Component} item The given Component inside the container to scroll to.
-     * @return {Taco.core.ux.tab.panel}      Returns itself for chaining when complete.
+     * @param  {String} target The id of the element to scroll to.
+     * @return {Taco.core.ux.tab.Panel} Returns itself for chaining when complete.
      */
-    scrollCard: function (card, item) {
-        var cardEl = card.body || card.getEl(),
-            itemEl = item.getEl();
+    scrollCard: function (target) {
+        var wrapper = Ext.getBody().down('.taco-shell'),
+            targetY = Ext.get(target).getY();
 
-        cardEl.scrollBy(0, itemEl.getY() - cardEl.getY(), true);
+        wrapper.scrollTo('top', targetY, true);
+
+        return this;
     },
 
     /**
@@ -389,25 +404,30 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
         card.items.each(function (item) {
             if( item.title ) {
-                var link = Ext.widget({
-                    xtype: 'component',
-                    componentCls: Taco.baseCSSPrefix + 'form-card-nav-link',
-                    target: item,
-                    html: item.title,
-                    listeners: {
-                        click: {
-                            scope: this,
-                            element: 'el',
-                            fn: function () { this.scrollCard(card, item); }
-                        }
-                    }
-                });
-                item.sideNavLink = link;
-                links.push(link);
+                // var link = Ext.widget({
+                //     xtype: 'component',
+                //     componentCls: Taco.baseCSSPrefix + 'form-card-nav-link',
+                //     target: item,
+                //     html: item.title,
+                //     listeners: {
+                //         click: {
+                //             scope: this,
+                //             element: 'el',
+                //             fn: function () { this.scrollCard(card, item); }
+                //         }
+                //     }
+                // });
+                // item.sideNavLink = link;
+                // links.push(link);
+                links.push({ text: item.title, target: item.id });
             }
         }, this);
 
-        this.navigationBar.removeAll();
-        this.navigationBar.add(links);
+        console.log(links);
+        this.navigationBar.getStore().removeAll();
+        this.navigationBar.getStore().add(links);
+
+        // this.navigationBar.removeAll();
+        // this.navigationBar.add(links);
     }
 });
