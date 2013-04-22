@@ -12,7 +12,7 @@ Ext.define('Taco.view.site.navigation.PageSettings', {
                 record: panelInfo.getRecord()
             });
         });
-        Ext.Array.forEach(this.settingsPanels, function (panel) {
+        if (this.settingsPanels) Ext.Array.forEach(this.settingsPanels, function (panel) {
             me.remove(panel, true);
         });
         this.settingsPanels = newPanels;
