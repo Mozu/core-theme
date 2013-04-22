@@ -136,7 +136,7 @@ Ext.define('Taco.view.product.subform.Properties', {
     getEmptyComponent: function () {
         return {
             xtype: 'component',
-            html: 'Super sorry, but this product type does not have any properties associated to it....<small style="color: #eee;">    <i>idiot</i></small>'
+            html: 'Sorry, but this product type does not have any properties associated to it.'
         };
     },
 

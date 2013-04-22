@@ -113,7 +113,7 @@ Ext.define('Taco.view.product.subform.Extras', {
     getEmptyComponent: function () {
         return {
             xtype: 'component',
-            html: 'Super sorry, but this product type does not have any extras associated to it....<small style="color: #eee;">    <i>idiot</i></small>'
+            html: 'Sorry, but this product type does not have any extras associated to it.'
         };
     },
 
