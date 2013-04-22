@@ -2,32 +2,18 @@
  * @class Taco.view.fileManagement.Savable
  */
 Ext.define('Taco.view.fileManager.util.Uploadable', {
-    requires: ['Taco.core.ux.modal.Alert', 'Taco.model.FileManagementFile'],
-    onSaveFiles: function (fileList, e, callback) {
+    requires: ['Taco.core.ux.modal.Alert'],
+
+    onUploadFile: function (fileList, e, callback) {
         var me = this,
-            foldertree = me.foldertree || me.down('foldertree'),
-            folderId = foldertree.getSelectedNode().getId(),
             imageType = /image.*/,
             shouldBreak = false,
             newDocs = [],
-            files = [],
-            folderRecord = null,
-            target = null;
+            files = [];
 
-        if (e && e.getTarget) {
-            target = e.getTarget('.x-grid-row');
-        }
-
-        if (target) {
-            folderRecord = foldertree.getView().getRecord(target);
-            if (folderRecord) {
-                folderId = folderRecord.getId();
-                foldertree.getSelectionModel().select([folderRecord]);
-            }
-        }
         Ext.each(fileList, function (file) { files.push(file); });
         Ext.each(files, function (file) {
-            if (me.filesStore.find('name', file.name) > -1) {
+            if (me.store.find('name', file.name) > -1) {
 
                 Ext.create('Taco.core.ux.modal.Alert', {
                     autoShow: true,
@@ -55,11 +41,10 @@ Ext.define('Taco.view.fileManager.util.Uploadable', {
 
             reader = new FileReader();
 
-            doc = Ext.create('Taco.model.FileManagementFile', {
+            doc = Ext.create('Taco.model.File', {
                 name: file.name,
                 fileType: file.type,
                 isUploaded: false,
-                folderId: folderId,
                 thumbnail: '/admin/Scripts/resources/images/file-icon.png',
                 file: file
             });

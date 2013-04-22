@@ -11,7 +11,8 @@ Ext.define('Taco.view.fileManager.Index', {
         'Taco.core.ux.form.FileInputButton',
         'Taco.core.ux.DragDropZone',
         'Taco.store.Files',
-        'Taco.core.ux.form.TextField'
+        'Taco.core.ux.form.TextField',
+        'Taco.core.ux.form.FileInputButton'
     ],
 
     mixins: {
@@ -21,7 +22,8 @@ Ext.define('Taco.view.fileManager.Index', {
     typeName: 'File',
     modelName: 'Taco.model.File',
     store: {
-        type: 'Taco.store.Files'
+        type: 'Taco.store.Files',
+        autoSync: true
     },
     useTilePanel: true,
 
@@ -80,38 +82,23 @@ Ext.define('Taco.view.fileManager.Index', {
     },
 
     initComponent: function () {
-        this.nameEditor = Ext.widget({
-            xtype: 'taco.textfield',
-            listeners: {
-                aftersetvalue: function (field, val) {
-                    var index = val.lastIndexOf('.');
 
-                    if (index < 1) {
-                        return;
-                    }
-
-                    field.suspendEvents(false);
-                    field.selectText(0, index);
-
-                    Ext.defer(function () {
-                        field.resumeEvents();    
-                    }, 100);
-                    
+        this.header = {
+            actions: [{
+                xtype: 'secondarybutton',
+                text: 'Manage Tags',
+                click: this.manageTags,
+                scope: this
+            }, {
+                xtype: 'tacofilefield',
+                text: 'Upload',
+                listeners: {
+                    filechange: this.onUploadFile,
+                    scope: this
                 }
-            }
-        });
-
-        this.gridPanelConf.columns[0].editor1 = this.nameEditor;
+            }]
+        };
 
         this.callParent(arguments);
-
-        this.gridPanel.on({
-            edit: this.onEdit,
-            scope: this
-        });
-    },
-
-    onEdit: function (editor, e) {
-        e.record.commit();
     }
 });
