@@ -12,7 +12,7 @@ Ext.define('Taco.model.File', {
         type: 'string',
         useNull: true
     }, {
-        name: name,
+        name: 'name',
         type: 'string',
         useNull: true
     }, {
@@ -37,7 +37,6 @@ Ext.define('Taco.model.File', {
         name: 'dateModified',
         type: 'date', 
         useNull: true,
-        dateFormat: 'MS',
         persist: false
     }, {
         name: 'fileType',
