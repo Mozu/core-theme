@@ -291,7 +291,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         var metaData = { id: record.getId() },
             header = view.getHeaderAtIndex(cellIndex);
         
-        if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation!==false ) {
+        if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation!==false && this.allowNavigation !== false) {
             e.preventDefault();
             if (e.target) {
                 metaData = Ext.apply(metaData, e.target.dataset);
