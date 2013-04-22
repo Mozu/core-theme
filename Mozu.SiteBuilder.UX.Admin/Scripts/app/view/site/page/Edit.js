@@ -257,12 +257,15 @@
                     load: function () { console.log('load', arguments); }
                 }
             });
-            this.adapter.load();
-            this.toolBar.populate(this.adapter);
 
-            this.toolBox.populate(this.adapter);
+            this.adapter.on('load', function () {
+                this.toolBar.populate(this.adapter);
 
-            return;
+                this.toolBox.populate(this.adapter);
+            }, this);
+
+            this.adapter.load();
+
         },
 
         getPageConfig: function () {

@@ -6,15 +6,21 @@ Ext.define('Taco.view.site.navigation.PageSettings', {
     requires: ['Taco.view.site.page.PageSettingsPanel'],
     layout: 'card',
     populate: function(adapter) {
-        var newPages = Ext.Array.map(adapter.settingsPanels, function (panelInfo) {
+        var me = this;
+        var newPanels = Ext.Array.map(adapter.getPageSettings(), function (panelInfo) {
             return Ext.create(panelInfo.panelCls, {
                 record: panelInfo.getRecord()
             });
         });
+        Ext.Array.forEach(this.settingsPanels, function (panel) {
+            me.remove(panel, true);
+        });
+        this.settingsPanels = newPanels;
+        this.add(newPanels);
     },
-    initComponent: function () {
-
-        this.chooser = Ext.widget('dataview', {
+    createChooser: function () {
+        var me = this;
+        return this.chooser = Ext.widget('dataview', {
             store: Ext.create('Taco.store.shared.ContainerStore', {
                 fields: ['index', 'title', 'isChooser'],
                 container: this
@@ -42,10 +48,12 @@ Ext.define('Taco.view.site.navigation.PageSettings', {
                 }
             }
         });
+    },
+    initComponent: function () {
 
         this.pageStore = null;
 
-        this.items = [this.chooser];
+        this.items = [this.createChooser];
 
         this.callParent(arguments);
 
