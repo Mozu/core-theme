@@ -1093,7 +1093,6 @@
     <Content Include="Scripts\makedocsasjson.bat" />
     <Content Include="Scripts\resources\css\taco.css" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.svg" />
-    <Content Include="Scripts\resources\images\align-s0f469144e6.png" />
     <Content Include="Scripts\resources\images\card-sd7c19700b9.png" />
     <Content Include="Scripts\resources\images\icons-s46f2c6a895.png" />
     <Content Include="Scripts\resources\images\legacy\AddPhotos.png" />

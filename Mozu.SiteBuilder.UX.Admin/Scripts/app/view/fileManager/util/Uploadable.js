@@ -82,7 +82,7 @@ Ext.define('Taco.view.fileManager.util.Uploadable', {
 
         });
         if (newDocs.length > 0) {
-            me.filesStore.insert(0, newDocs);
+          //  me.store.insert(0, newDocs);
             if (callback && Ext.isFunction(callback)) {
                 callback(newDocs);
             }

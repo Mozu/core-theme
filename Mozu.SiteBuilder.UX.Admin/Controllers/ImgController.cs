@@ -4,12 +4,14 @@ using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using Mozu.Core;
+using Mozu.Core.Api;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -20,7 +22,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         IApiContext _appCtx;
         public ImgController(IDocumentWebApiClient docRepo, IApiContext appCtx)
         {
-            _docRepo = docRepo;
+            _docRepo = docRepo.With(x => { x.SiteId = null; });
+           
             _appCtx =appCtx;
             ((ServiceClientBase)_docRepo).Options.MaxSize = int.MaxValue;
         }
