@@ -25,14 +25,32 @@ Ext.define('Taco.view.fileManager.Index', {
     },
     useTilePanel: true,
 
+    allowNavigation: false,
+
     gridPanelConf: {
         columns: [{
             text: 'Name',
             editor: {
-                
+                xtype: 'taco.textfield',
+                listeners: {
+                    aftersetvalue: function (field, val) {
+                        var index = val.lastIndexOf('.');
+
+                        if (index < 1) {
+                            return;
+                        }
+
+                        field.suspendEvents(false);
+                        field.selectText(0, index);
+
+                        Ext.defer(function () {
+                            field.resumeEvents();    
+                        }, 100);
+                        
+                    }
+                }
             },
             dataIndex: 'name',
-            allowNavigation: false,
             flex: 1
         }, {
             text: 'Date Modified',
@@ -56,7 +74,7 @@ Ext.define('Taco.view.fileManager.Index', {
         selType: 'cellmodel',
         plugins: [
             Ext.create('Ext.grid.plugin.CellEditing', {
-                clicksToEdit: 1
+                clicksToEdit: 2
             })
         ],
     },
@@ -83,7 +101,7 @@ Ext.define('Taco.view.fileManager.Index', {
             }
         });
 
-        this.gridPanelConf.columns[0].editor = this.nameEditor;
+        this.gridPanelConf.columns[0].editor1 = this.nameEditor;
 
         this.callParent(arguments);
 
