@@ -34,7 +34,7 @@
       padding: 17px 30px;
       position: relative;
       width: 100%;
-      z-index: 2;
+      z-index: 200;
       @include box-shadow(rgba(0,0,0,0) 0 -5px 10px 0px);
       @include flexbox($justify: space-between);
       @include transition(box-shadow 1s ease);
@@ -71,7 +71,7 @@
     }
   }
 
-  .#{$vprefix}travis-scrolled {
+  .#{$vprefix}shell-scrolled {
     .#{$vprefix}content-header {
       background-color: $color-neutral-90;
       left: 0px;
@@ -90,66 +90,66 @@
       top: 0px;
     }
   }
-	
-	.#{$vprefix}content-sidebar {
+
+  .#{$vprefix}content-sidebar {
     background-color: $color-neutral-white;
     border-color: border-for($color-neutral-white);
     border-style: solid none none solid;
     border-width: 1px 0px 0px 1px;
     z-index: 3;
 
-		.#{$vprefix}sidebarlist {
-			margin: 0 30px;
+    .#{$vprefix}sidebarlist {
+      margin: 0 30px;
 
-			h1 {
-				padding: 0 0 15px;
-				margin: 0 0 15px;
-				font-size: px-to-rem(20);
-				font-weight: normal;
-				border-bottom: 1px dashed #999;
-				}
-			.#{$vprefix}sidebarlist-list-item {
-				margin: 6px 0;
-				font-size: px-to-rem(12);
-				&.#{$prefix}item-selected {
-					font-weight: bold;
-				}
-			}
-		}
-	
-	}
+      h1 {
+        padding: 0 0 15px;
+        margin: 0 0 15px;
+        font-size: px-to-rem(20);
+        font-weight: normal;
+        border-bottom: 1px dashed #999;
+      }
+      .#{$vprefix}sidebarlist-list-item {
+        font-size: px-to-rem(12);
+        margin: 6px 0px;
+
+        &.#{$prefix}item-selected {
+          font-weight: bold;
+        }
+      }
+    }
+  }
   
   /* SITE EDITOR */
 
   .widget-source {
-	box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
-	color: #505050;
-	height: 38px !important;
-	margin: 10px !important;
-	padding: 10px !important;
-	text-align: center;
-	width: 90%;
-	@include background(linear-gradient(rgba(255, 255, 255, 1), rgba(239, 239, 239, 1)));
-	@include border-radius(5px);
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
+    color: #505050;
+    height: 38px !important;
+    margin: 10px !important;
+    padding: 10px !important;
+    text-align: center;
+    width: 90%;
+    @include background(linear-gradient(rgba(255, 255, 255, 1), rgba(239, 239, 239, 1)));
+    @include border-radius(5px);
   }
   .dropzone-shim {
-	@include transition;
+    @include transition;
   }
   .dropzone-shim-hover {
-	background-color: #CFC;
+    background-color: #CFC;
   }
   .#{$vprefix}reorderable-widget {
-	background-color: #FFF;
-	border: 1px solid #CCC;
-	color: #333;
-	@include border-radius(2px);
+    background-color: #FFF;
+    border: 1px solid #CCC;
+    color: #333;
+    @include border-radius(2px);
   }
 
   .#{$vprefix}reorderable-placeholder {
-	background-color: #FFF;
-	border: 1px solid #CCC;
-	color: #333;
-	@include border-radius(2px);
+    background-color: #FFF;
+    border: 1px solid #CCC;
+    color: #333;
+    @include border-radius(2px);
   }
   
 }

@@ -13,7 +13,8 @@ Ext.define('Taco.view.Viewport', {
 
         this.items = [{
             xtype: 'container',
-            itemId: 'travis',
+            itemId: 'shell',
+            componentCls: 'taco-shell',
             overflowX: 'hidden',
             overflowY: 'auto',
             items: [
@@ -32,7 +33,7 @@ Ext.define('Taco.view.Viewport', {
     },
 
     attachScrollEvents: function () {
-        var el = this.items.get('travis').getEl();
+        var el = this.items.get('shell').getEl();
 
         el.on({
             scroll: this.onViewportScroll,
@@ -45,10 +46,10 @@ Ext.define('Taco.view.Viewport', {
 
         if (!isScrolled && t.scrollTop > 106) {
             isScrolled = true;
-            Ext.fly(t).addCls('taco-travis-scrolled');
+            Ext.fly(t).addCls('taco-shell-scrolled');
         } else if (isScrolled && t.scrollTop <= 106) {
             isScrolled = false;
-            Ext.fly(t).removeCls('taco-travis-scrolled');
+            Ext.fly(t).removeCls('taco-shell-scrolled');
         }
         this.isScrolled = isScrolled;
     }
