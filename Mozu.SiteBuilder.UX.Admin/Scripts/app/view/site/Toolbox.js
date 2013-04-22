@@ -13,6 +13,9 @@ Ext.define('Taco.view.site.Toolbox', {
     layout: 'fit',
     //width: 600,
     requires: ['Taco.view.site.navigation.Tree', 'Taco.view.site.navigation.WidgetNav', 'Taco.view.site.navigation.PageSettings', 'Taco.store.shared.ContainerStore'],
+    populate: function (adapter) {
+        this.pageSettings.populate(adapter);
+    },
     initComponent: function () {
         var me = this;
 

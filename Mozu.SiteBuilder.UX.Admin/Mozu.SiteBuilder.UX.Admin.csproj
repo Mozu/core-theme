@@ -650,6 +650,7 @@
     <Content Include="Scripts\app\view\option\Edit2.js" />
     <Content Include="Scripts\app\view\option\EditModal.js" />
     <Content Include="Scripts\app\view\option\Form.js" />
+    <Content Include="Scripts\app\view\site\Toolbar.js" />
     <Content Include="Scripts\app\view\site\page\PageSettingsPanel.js" />
     <Content Include="Scripts\app\view\site\page\settings\Facets.js" />
     <Content Include="Scripts\app\view\site\page\settings\Seo.js" />
