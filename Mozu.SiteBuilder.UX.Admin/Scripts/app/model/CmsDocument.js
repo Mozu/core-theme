@@ -12,12 +12,6 @@ Ext.define('Taco.model.CmsDocument', {
             data.id = data.collectionName + '_' + data.documentId;
         }
 
-        // cache of fields
-        var realFields = this.realFields = {};
-        Ext.Array.forEach(this.self.prototype.fields, function(f) {
-            realFields[f.name] = true;
-        });
-
         this.callParent(arguments);
     },
 
@@ -54,13 +48,13 @@ Ext.define('Taco.model.CmsDocument', {
         }
     ],
     set: function(k, v) {
-        if (k in this.realFields) {
+        if (k in this.self.realFields) {
             return this.callParent(arguments);
         }
         return this.setItem.apply(this, arguments);
     },
     get: function(k) {
-        if (k in this.realFields) {
+        if (k in this.self.realFields) {
             return this.callParent(arguments);
         }
         return this.getItem.apply(this, arguments);
@@ -123,5 +117,14 @@ Ext.define('Taco.model.CmsDocument', {
             type: 'json'
         }
     }
+
+}, function() {
+
+    // cache of fields
+    var realFields = this.realFields = {};
+
+    this.prototype.fields.each(function (f) {
+        realFields[f.name] = true;
+    });
 
 });

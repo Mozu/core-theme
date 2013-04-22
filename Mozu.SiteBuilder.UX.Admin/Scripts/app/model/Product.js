@@ -199,6 +199,14 @@ Ext.define('Taco.model.Product', {
         }
         return level.get(fieldName);
     },
+    getProductInSite: function () {
+        var siteId = Taco.app.context.getSiteId();
+        if (siteId) {
+            return this.getProductInSites().getById(siteId);
+            
+        }
+        return null;
+    },
     getProperties: function() {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.ProductProperty',
