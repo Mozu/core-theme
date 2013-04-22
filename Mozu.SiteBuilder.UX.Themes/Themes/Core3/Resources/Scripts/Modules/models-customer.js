@@ -26,7 +26,21 @@
                     required: true
                 },
                 "Id": {}
+            },
+            updateEmail: function () {
+                var me = this, newEmail = this.EmailAddress();
+                this.update({
+                    EmailAddress: newEmail
+                }).then(function () {
+                    me.oldEmail = newEmail;
+                    me.publish('emailupdated');
+                });
+            },
+            revertEmail: function () {
+                this.EmailAddress(this.oldEmail);
             }
+        }, function constructCustomer(obj) {
+            this.oldEmail = obj.EmailAddress;
         });
 
         return {

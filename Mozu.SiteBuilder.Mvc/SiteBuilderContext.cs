@@ -209,6 +209,7 @@ namespace Mozu.SiteBuilder.Mvc
 	                urls["ProductService"] = _configSettings.AppSettings("service-url-ProductRuntimeWebApi");
                     urls["CartService"] = _configSettings.AppSettings("service-url-CartWebApi");
                     urls["UserService"] = _configSettings.AppSettings("service-url-UserWebApi");
+                    urls["CustomerService"] = _configSettings.AppSettings("service-url-CustomerAccountWebApi");
                     urls["OrderService"] = _configSettings.AppSettings("service-url-OrderWebApi");
                     urls["SearchService"] = _configSettings.AppSettings("service-url-ProductSearchWebApi");
                     urls["CmsService"] = _configSettings.AppSettings("service-url-DocumentWebApi");

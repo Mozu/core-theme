@@ -24,7 +24,7 @@
 
         // once applybindings is done, hide the loader and show the checkout view
         $('#mz-checkout-loading').remove();
-        $checkoutView.css('display', 'none').css('visibility', 'visible').fadeIn(200);
+        $checkoutView.noFlickerFadeIn();
 
         // run jquery affix manually (since the spy attributes don't work with IE in knockout)
         var $rightcol = $('#mz-checkout-rightcol');

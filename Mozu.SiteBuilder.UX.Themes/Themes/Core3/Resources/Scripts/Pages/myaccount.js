@@ -1,4 +1,4 @@
-﻿require(['modules/jquery-plus', 'modules/knockout-plus', 'modules/animatemodals', 'modules/models-myaccount'], function ($, ko, animateModals, MyAccountModels) {
+﻿require(['shim!vendor/jquery-colorbox[modules/jquery-plus=jQuery]>jQuery', 'modules/knockout-plus', 'modules/animatemodals', 'modules/models-myaccount'], function ($, ko, animateModals, MyAccountModels) {
 
     //function ShippingAddressDataContract() {
     //    return {
@@ -63,15 +63,34 @@
         var $myAccountView = $('#mz-my-account'),
             customerData = $myAccountView.mozuData('myaccount'),
             userData = $myAccountView.mozuData('user'),
-            ordersData = $myAccountView.mozuData('orders');
+            ordersData = $myAccountView.mozuData('orders'),
 
-        ko.applyBindings(new MyAccountModels.AccountModel({
-            Customer: customerData,
-            User: userData,
-            Orders: ordersData
-        }), $myAccountView[0]);
+            myAccountViewModel = new MyAccountModels.AccountModel({
+                Customer: customerData,
+                User: userData,
+                Orders: ordersData
+            });
+
+        ko.applyBindings(myAccountViewModel, $myAccountView[0]);
+
+        // prepare view
+        var $editEmail = $('#edit-email').css('display', 'none'),
+            $displayEmail = $('#display-email'),
+            showEmailEditor = function () {
+                $displayEmail.fadeOut('normal', $.proxy($editEmail.fadeIn, $editEmail));
+            },
+            hideEmailEditor =  function () {
+                $editEmail.fadeOut('normal', $.proxy($displayEmail.fadeIn, $displayEmail));
+            };
+        $("#change-email").on('click', showEmailEditor);
+        $("#cancel-change-email").on('click', hideEmailEditor);
+        myAccountViewModel.on('emailupdated', hideEmailEditor);
+
+        // preparations complete, show view
+        $myAccountView.noFlickerFadeIn();
 
         var shippingAddressModal = $("#shipping-address-modal");
+
 
         // *** Event handler to show/hide shipping addresses
         $("#toggle-shipping-addresses a").on('click', function () {
@@ -87,7 +106,7 @@
         // *** Add modal animation
         animateModals({ jqSelector: "#add-new-shipping-address a" });
         animateModals({ jqSelector: "#shipping-addresses", delegatedSelector: ".actions .edit" });
-        animateModals({ jqSelector: "#change-password" });
+        //animateModals({ jqSelector: "#change-password" });
 
 
         // *** Bind to-be-edited data to modal form fields
@@ -270,36 +289,30 @@
         }).end();
 
 
-        /**
-         * AJAX handler for changing an email
-         */
-        //$("#change-email").on('click', function () {
-        //    $("#edit-email, #display-email").toggle();
+
+        //$("#edit-email :submit").on('click', function () {
+        //    var form = $(this).closest('form')[0],
+        //        oldEmail = form.oldEmail.value,
+        //        newEmail = form.newEmail.value;
+
+        //    if( oldEmail === newEmail ) {
+        //        alert("Email addresses are identical, not attempting to change.");
+        //    } else {
+        //        $.ajax(
+        //            '/myaccount/updateemail',
+        //            {
+        //                type: 'POST',
+        //                data: JSON.stringify({ email: newEmail }),
+        //                dataType: 'json',
+        //                contentType: 'application/json'
+        //            }
+        //        ).done(function (response) {
+        //            $("#edit-email, #display-email").toggle();
+        //            console.log("Email updated response:", response);
+        //        });
+        //    }
+
+        //    return false;
         //});
-
-        $("#edit-email :submit").on('click', function () {
-            var form = $(this).closest('form')[0],
-                oldEmail = form.oldEmail.value,
-                newEmail = form.newEmail.value;
-
-            if( oldEmail === newEmail ) {
-                alert("Email addresses are identical, not attempting to change.");
-            } else {
-                $.ajax(
-                    '/myaccount/updateemail',
-                    {
-                        type: 'POST',
-                        data: JSON.stringify({ email: newEmail }),
-                        dataType: 'json',
-                        contentType: 'application/json'
-                    }
-                ).done(function (response) {
-                    $("#edit-email, #display-email").toggle();
-                    console.log("Email updated response:", response);
-                });
-            }
-
-            return false;
-        });
     });
 });
