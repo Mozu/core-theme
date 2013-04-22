@@ -4,6 +4,7 @@
 Ext.define('Taco.view.site.page.entityAdapters.BaseEntityAdapter', {
     extend: 'Ext.util.Observable',
     requires: ['Taco.view.site.page.settings.General', 'Taco.view.site.page.settings.Templates', 'Taco.view.site.page.settings.Seo', 'Taco.view.site.page.settings.Facets'],
+    settingsPanels:[],
 	allowedActions:{add:true,copy:true,settings:true,preview:true,destroy:true},
 	load: function() {
 		var me = this,
@@ -65,5 +66,6 @@ Ext.define('Taco.view.site.page.entityAdapters.BaseEntityAdapter', {
 	getId: function() {
 
 	}
+
 
 });

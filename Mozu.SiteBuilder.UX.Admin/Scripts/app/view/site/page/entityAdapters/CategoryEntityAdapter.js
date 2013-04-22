@@ -19,6 +19,6 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
 		return this.pageProps.pageContext.categoryId;
 	},
 
-	settingsPanels: ['Taco.view.site.page.settings.General', 'Taco.view.site.page.settings.Templates', 'Taco.view.site.page.settings.Seo', 'Taco.view.site.page.settings.Facets']
-	
+	//settingsPanels: ['Taco.view.site.page.settings.General', 'Taco.view.site.page.settings.Templates', 'Taco.view.site.page.settings.Seo', 'Taco.view.site.page.settings.Facets']
+	//settingsPanels:[]
 });
