@@ -10,7 +10,8 @@ Ext.define('Taco.view.fileManager.Index', {
     requires: [
         'Taco.core.ux.form.FileInputButton',
         'Taco.core.ux.DragDropZone',
-        'Taco.store.Files'
+        'Taco.store.Files',
+        'Taco.core.ux.form.TextField'
     ],
 
     mixins: {
@@ -24,70 +25,75 @@ Ext.define('Taco.view.fileManager.Index', {
     },
     useTilePanel: true,
 
-
-    filterFormConf: {
-        width: 600,
-        cls: Taco.baseCSSPrefix + 'combofilter-form products',
-        items: [{
-            xtype: 'formflexbox',
-            justify: false,
-            defaults: {
-                xtype: 'textfield',
-                width: 560
-            },
-            items: [{
-                name: 'productCode',
-                fieldLabel: 'Product Code',
-                width: 160
-            }, {
-                name: 'productName',
-                fieldLabel: 'Name'
-            }]
-        }]
-    },
-
-    filterProperties: [{
-        property: 'all',
-        text: 'All',
-        isDefault: true
-    }, {
-        property: 'productName',
-        text: 'Name'
-    }, {
-        property: 'productCode',
-        text: 'Code'
-    }, {
-        property: 'producttypeid',
-        text: 'Product Type'
-    }, {
-        property: 'productFullDescription',
-        text: 'Description'
-    }],
-
     gridPanelConf: {
         columns: [{
+            text: 'Name',
+            editor: {
+                
+            },
             dataIndex: 'name',
-            text: 'Name'
-        }]
+            allowNavigation: false,
+            flex: 1
+        }, {
+            text: 'Date Modified',
+            dataIndex: 'dateModified',
+            width: 150,
+            renderer: function (val) {
+                return Ext.Date.format(val, 'M j, Y g:i a');
+            }
+        }, {
+            text: 'Type',
+            dataIndex: 'fileType',
+            align: 'right',
+            renderer: function (val) {
+                return val.toUpperCase();
+            }
+        }, {
+            text: 'Size',
+            dataIndex: 'fileSize',
+            align: 'right'
+        }],
+        selType: 'cellmodel',
+        plugins: [
+            Ext.create('Ext.grid.plugin.CellEditing', {
+                clicksToEdit: 1
+            })
+        ],
     },
 
-    tilePanelConf: {
-        actions: [{
-            iconCls: 'download',
-            tooltip: 'View Product',
-            eventName: 'viewitem'
-        }, {
-            iconCls: 'duplicate',
-            tooltip: 'Duplicate Product',
-            eventName: 'duplicateitem'
-        }, {
-            iconCls: 'delete',
-            tooltip: 'Delete Product',
-            eventName: 'deleteitem'
-        }],
-        imageCollection: 'productImages',
-        imageField: 'imagePath',
-        isDragable: false,
-        nameField: 'productName'
+    initComponent: function () {
+        this.nameEditor = Ext.widget({
+            xtype: 'taco.textfield',
+            listeners: {
+                aftersetvalue: function (field, val) {
+                    var index = val.lastIndexOf('.');
+
+                    if (index < 1) {
+                        return;
+                    }
+
+                    field.suspendEvents(false);
+                    field.selectText(0, index);
+
+                    Ext.defer(function () {
+                        field.resumeEvents();    
+                    }, 100);
+                    
+                }
+            }
+        });
+
+        this.gridPanelConf.columns[0].editor = this.nameEditor;
+
+        this.callParent(arguments);
+
+        this.gridPanel.on({
+            edit: this.onEdit,
+            scope: this
+        });
     },
+
+    onEdit: function (editor, e) {
+        e.record.commit();
+    }
 });
