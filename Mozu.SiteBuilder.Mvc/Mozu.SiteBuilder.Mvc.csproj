@@ -383,6 +383,7 @@
     <Compile Include="Models\Mapping\ProductMapping.cs" />
     <Compile Include="Models\Mapping\SettingsMapping.cs" />
     <Compile Include="NavigationContext.cs" />
+    <Compile Include="Navigation\ICategoryNavigationProvider.cs" />
     <Compile Include="Navigation\INavigationRepository.cs" />
     <Compile Include="Navigation\NavigationGandalf.cs" />
     <Compile Include="Navigation\NavigationRepository.cs" />

@@ -10,6 +10,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.UX.Admin.Api;
+using Mozu.SiteBuilder.UX.Admin.Navigation;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using NSubstitute;
 using NUnit.Framework;
@@ -392,7 +393,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
                     return new TestResponse<Document>(doc).Task;
                 });
 
-            var gandalf = new NavigationGandalf(_navigationRepository, _categoryWebApiClient, _cmsServiceWrapper);
+            // TODO: broke the isolation
+            var adminCategoryProvider = new CategoryNavigationProvider(_categoryWebApiClient);
+            var gandalf = new NavigationGandalf(_navigationRepository, adminCategoryProvider, _cmsServiceWrapper);
             return new NavigationController(_navigationRepository, _categoryWebApiClient, _cmsServiceWrapper, gandalf);
         }
     }

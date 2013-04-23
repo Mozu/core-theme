@@ -14,12 +14,14 @@ using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Configuration;
 using Mozu.SiteBuilder.Mvc.Mobile;
+using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Admin.MockServices;
+using Mozu.SiteBuilder.UX.Admin.Navigation;
+using Mozu.User.Contracts.Clients;
 using NDjango;
 using NDjango.Interfaces;
 using Api = Mozu.SiteBuilder.UX.Admin.Api;
-using Mozu.User.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Admin.MockServices;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
@@ -96,6 +98,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>();
             builder.RegisterType<System.Web.Mvc.RazorViewEngine>().As<IViewEngine>();
 
+            builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>();
            
 
             // TODO: This binding will be unnecessary once the DocumentWebApiClient works better.
