@@ -50,18 +50,19 @@ Ext.define('Taco.view.product.SiteForm', {
         });
         
         this.items = [
-            {
-                xtype: 'combobox',
-                fieldLabel: 'Status',
-                labelAlign: 'top',
-                allowBlank: false,
-                editable: false,
-                forceSelection: true,
-                listConfig: { shadow: false },
-                shrinkWrap: 3,
-                store: ['Hide in website', 'Show on website'],
-                value: 'Hide in website'
-            },
+            //{
+            //    xtype: 'combobox',
+            //    fieldLabel: 'Status',
+            //    name:'isActive',
+            //    labelAlign: 'top',
+            //    allowBlank: false,
+            //    editable: false,
+            //    forceSelection: true,
+            //    listConfig: { shadow: false },
+            //    shrinkWrap: 3,
+            //    store: [[false, 'Hide in website'], [true, 'Show on website']],
+            //    value: false
+            //},
             Ext.create('Taco.view.product.subform.General', subFormCfg),
             Ext.create('Taco.view.product.subform.Inventory', subFormReadOnlyCfg),
             Ext.create('Taco.view.product.subform.Properties', subFormReadOnlyCfg),

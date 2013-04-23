@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Represents whether the product is active in this site.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "isActive")]
+        [DataMember(EmitDefaultValue = true, Name = "isActive")]
         public bool IsActive { get; set; }
 
 
