@@ -14,12 +14,12 @@ namespace Mozu.SiteBuilder.UX.Navigation
     /// </summary>
     public class CategoryNavigationProvider : ICategoryNavigationProvider
     {
-        private IRuntimeCatalogTreeProvider _categoryTreeProvider;
+        private ICategoryTreeProvider _categoryTreeProvider;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public CategoryNavigationProvider(IRuntimeCatalogTreeProvider categoryTreeProvider)
+        public CategoryNavigationProvider(ICategoryTreeProvider categoryTreeProvider)
         {
             _categoryTreeProvider = categoryTreeProvider;
         }

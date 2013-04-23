@@ -66,9 +66,9 @@ namespace Mozu.SiteBuilder.Mvc
 	    private Lazy<bool> _googleAnalyticsEnabled;
 	    private Lazy<bool> _googleAnalyticsEcommerceEnabled;
         private Lazy<NavigationGandalf> _gandalf;
-        private IRuntimeCatalogTreeProvider _categoryTreeProvider;
+        private ICategoryTreeProvider _categoryTreeProvider;
 
-        public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, IRuntimeCatalogTreeProvider categoryTreeProvider, Lazy<NavigationGandalf> gandalf, ISettings configSettings = null, HttpContextBase httpContext = null)
+        public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, ICategoryTreeProvider categoryTreeProvider, Lazy<NavigationGandalf> gandalf, ISettings configSettings = null, HttpContextBase httpContext = null)
 		{
 			PageContext = new PageContext();
            

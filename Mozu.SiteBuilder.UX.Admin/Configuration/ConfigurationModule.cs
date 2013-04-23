@@ -12,6 +12,7 @@ using Mozu.Core.Api.Handlers.Message;
 using Mozu.Core.Configuration;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Configuration;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
@@ -98,6 +99,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>();
             builder.RegisterType<System.Web.Mvc.RazorViewEngine>().As<IViewEngine>();
 
+            builder.RegisterType<AdminCategoryTreeProvider>().As<ICategoryTreeProvider>();
             builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>();
            
 

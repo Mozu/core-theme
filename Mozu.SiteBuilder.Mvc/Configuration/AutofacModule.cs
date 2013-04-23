@@ -79,7 +79,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.RegisterType<NavigationGandalf>().InstancePerLifetimeScope();
 
-            builder.RegisterType<RuntimeCatalogTreeProvider>().As<IRuntimeCatalogTreeProvider>();
+            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>();
 
             // builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 
