@@ -21,8 +21,6 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         private string _id;
         private string[] _idParts;
 
-        public const string TopcatID = "topcat";
-
         public NavigationNode()
         {
            // ChildNodes = new List<NavigationNode>();
