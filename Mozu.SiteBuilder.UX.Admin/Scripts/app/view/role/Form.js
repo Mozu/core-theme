@@ -9,11 +9,12 @@ Ext.define('Taco.view.role.Form', {
     editTitle: 'Edit Role',
     createTitle: 'Create a Role',
     layout: {
-        type: 'vbox',
-        align: 'stretch'
+        type: 'auto',
+        //align: 'stretch'
     },
     initComponent: function () {
 
+        this.height = (Ext.getBody().getBox().height - 201);
         this.buildFormComponents();
 
         this.callParent(arguments);

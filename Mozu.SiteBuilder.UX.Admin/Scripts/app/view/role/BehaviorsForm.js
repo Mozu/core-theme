@@ -6,22 +6,23 @@
 Ext.define('Taco.view.role.BehaviorsForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.store.Behaviors'],
+    
     layout: {
-        type: 'fit',
-        align: 'stretch'
+        type: 'auto',
+      //  align: 'stretch'
     },
     flex:1,
     initComponent: function () {
         this.store = Ext.create('Taco.store.Behaviors', {
-            filters: [{
-                property: 'roleId',
-                value: this.roleId
-            }]
+            nodeParam:'roleId',
+            defaultRootId: this.roleId,
         });
         this.stores = [this.store];
+      
         this.buildFormComponents();
         this.callParent(arguments);
         
+
     },
 
     addSaveTasks: function (tasks) {
@@ -47,6 +48,7 @@ Ext.define('Taco.view.role.BehaviorsForm', {
             Ext.create('Taco.core.ux.TreeList', {
                 enableRowReorder: false,
                 disableSelection: true,
+                flex:1,
                 store: this.store,
                 columns: [{
                     xtype: 'treecolumn',
