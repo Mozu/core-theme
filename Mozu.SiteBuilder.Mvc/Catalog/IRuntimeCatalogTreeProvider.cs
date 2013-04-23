@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 
 namespace Mozu.SiteBuilder.Mvc.Catalog
@@ -9,6 +10,6 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
     /// </summary>
     public interface IRuntimeCatalogTreeProvider
     {
-        List<Category> GetAllCategories();
+        Task<List<Category>> GetAllCategories();
     }
 }

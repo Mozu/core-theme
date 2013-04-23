@@ -325,7 +325,7 @@ namespace Mozu.SiteBuilder.Mvc
             get {
                 var cc = _catContext.Value;
                 if (cc.AllCategories == null)
-                    cc.AllCategories = _categoryTreeProvider.GetAllCategories();
+                    cc.AllCategories = _categoryTreeProvider.GetAllCategories().Result;
 
                 return _catContext.Value; 
             }

@@ -30,14 +30,15 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public const string NODE_TYPE_LINK = "link";
 
         private INavigationRepository _navRepo;
-        private ICategoryWebApiClient _catClient;
+        private ICategoryNavigationProvider _catClient;
         private ICmsServiceWrapper _cmsService;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationGandalf(INavigationRepository navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService)
+        public NavigationGandalf(INavigationRepository navRepo, ICategoryNavigationProvider catClient, ICmsServiceWrapper cmsService)
         {
+            
             _navRepo = navRepo;
             _catClient = catClient;
             _cmsService = cmsService;
@@ -52,6 +53,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             var masterList = new List<NavigationTreeNode>();
 
             // get the list of categories
+            // var catTask = _catClient.GetCategories();
+            // var catTask = new Task<DC.CategoryPagedCollection>(() => new DC.CategoryPagedCollection { Items = new List<DC.Category>() });
             var catTask = _catClient.GetCategories();
 
             // get the list of pages
@@ -66,19 +69,19 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             return Task.WhenAll(catTask, pageTask, blogTask, navTask)
                 .ContinueWith(_ =>
                 {
-                    DC.CategoryPagedCollection cats = catTask.Result.ReadAsSync();
+                    List<NavigationTreeNode> cats = catTask.Result; //.ReadAsSync();
                     DCC.PagedCollection<DCC.Document> pages = pageTask.Result.ReadAsSync();
                     DCC.PagedCollection<DCC.Document> blogs = blogTask.Result.ReadAsSync();
                     NavigationSet navSet = navTask.Result;
 
                     // build the masterlist. Step 1: put the top level categories in.
-                    var sortedCats =
-                        from c in cats.Items
-                        let node = c.Map<NavigationTreeNode>()
-                        let __ = node.ParentId = c.ParentCategoryId.HasValue ? "category^^" + c.ParentCategoryId : ROOT_NODE_NAME
-                        orderby node.ParentId, node.Index
-                        select node;
-                    // sortedCats.Each(c => c.ParentId = ROOT_NODE_NAME);
+                    var sortedCats = cats.OrderBy(node => node.ParentId).ThenBy(node => node.Index);
+                    // var sortedCats =
+                    //     from c in cats.Items
+                    //     let node = c.Map<NavigationTreeNode>()
+                    //     let __ = node.ParentId = c.ParentCategoryId.HasValue ? "category^^" + c.ParentCategoryId : ROOT_NODE_NAME
+                    //     orderby node.ParentId, node.Index
+                    //     select node;
 
                     masterList.AddRange(sortedCats);
 
