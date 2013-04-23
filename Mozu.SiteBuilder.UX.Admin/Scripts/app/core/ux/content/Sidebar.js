@@ -10,7 +10,7 @@ Ext.define('Taco.core.ux.content.Sidebar', {
     collapsible: true,
     componentCls: Taco.baseCSSPrefix + 'content-sidebar',
     floatable: false,
-    layout: 'fit',
+    layout: 'auto',
     shrinkWrap: false,
     // region: 'east',
     width: 300

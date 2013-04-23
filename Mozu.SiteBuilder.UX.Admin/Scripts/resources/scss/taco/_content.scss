@@ -97,6 +97,7 @@
     border-style: solid none none solid;
     border-width: 1px 0px 0px 1px;
     z-index: 3;
+    @include flexbox;
 
     .#{$vprefix}sidebarlist {
       margin: 0 30px;

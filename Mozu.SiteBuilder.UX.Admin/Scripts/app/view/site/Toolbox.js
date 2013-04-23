@@ -2,23 +2,23 @@
  * @class Taco.view.site.Toolbox
  */
 Ext.define('Taco.view.site.Toolbox', {
-    extend: 'Ext.panel.Panel',
+    extend: 'Ext.container.Container',
     alias: 'widget.toolbox',
+    requires: ['Taco.view.site.navigation.Tree', 'Taco.view.site.navigation.WidgetNav', 'Taco.view.site.navigation.PageSettings', 'Taco.store.shared.ContainerStore'],
+
     cls: Taco.baseCSSPrefix + 'toolbox ',
-    autoRender: false,
     header: false,
     closeAction: 'hide',
-    resizable: { handles: 'w s' },
+    resizable: { handles: 'w' },
     shadow: false,
-    layout: 'fit',
-    //width: 600,
-    requires: ['Taco.view.site.navigation.Tree', 'Taco.view.site.navigation.WidgetNav', 'Taco.view.site.navigation.PageSettings', 'Taco.store.shared.ContainerStore'],
+    layout: 'auto',
+        
     populate: function (adapter) {
         this.pageSettings.populate(adapter);
     },
+    
     initComponent: function () {
         var me = this;
-
         
         this.cardPanel = Ext.create('Ext.panel.Panel', {
             cls: Taco.baseCSSPrefix + 'windowcardpanel',
@@ -61,7 +61,6 @@ Ext.define('Taco.view.site.Toolbox', {
             title: 'Page Settings'
         });
 
-        this.items = [this.cardPanel];
         this.tabContainer = Ext.widget('dataview', {
             store: this.panelStore,
             cls: Taco.baseCSSPrefix + 'toolbox-menu',
@@ -84,7 +83,9 @@ Ext.define('Taco.view.site.Toolbox', {
             }
         });
 
-        this.tbar = [this.tabContainer];
+        this.items = [this.tabContainer, this.cardPanel];
+
+        // this.tbar = [this.tabContainer];
 
         this.tabContainer.getSelectionModel().allowDeselect = false;
 
