@@ -45,6 +45,14 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("category", x.CategoryId)))
                 .ForMember(dest => dest.ParentId, opt => opt.MapFrom(x => JoinParts("category", x.ParentCategoryId.GetValueOrDefault(0))));
 
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, NavigationTreeNode>()
+                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Name))
+                .ForMember(d => d.Url, opt => opt.MapFrom(x => "/category/" + x.CategoryId))
+                .ForMember(d => d.Index, opt => opt.MapFrom(x => x.Index))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("category", x.CategoryId)))
+                .ForMember(dest => dest.ParentId, opt => opt.MapFrom(x => JoinParts("category", x.ParentCategoryId.GetValueOrDefault(0))));
+
+
             Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Category, Mozu.SiteBuilder.UX.Models.Navigation.NavigationTreeNode>()
                .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("category", x.Id)))
                .ForMember(dest => dest.Name, opt => opt.MapFrom(x => x.Content.Name))

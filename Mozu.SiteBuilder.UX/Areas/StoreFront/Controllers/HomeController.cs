@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var nav = SiteContext.NavigationContext;
             if ( nav != null && nav.Count() > 0)
             {
-                var item = nav.FirstOrDefault(x => !string.IsNullOrEmpty(x.Url));
+                var item = nav.FirstOrDefault(x => x.NodeType != "link" && !string.IsNullOrEmpty(x.Url));
                 if ( item != null  && item.Url.Length >0 && item.Url != "/pages/home")
                 {
                     return new TransferResult(item.Url );
