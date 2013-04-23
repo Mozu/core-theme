@@ -10,6 +10,7 @@ using Autofac.Integration.Mvc;
 using Mozu.Core;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Cms;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
@@ -65,8 +66,9 @@ namespace Mozu.SiteBuilder.Mvc
 	    private Lazy<bool> _googleAnalyticsEnabled;
 	    private Lazy<bool> _googleAnalyticsEcommerceEnabled;
         private Lazy<NavigationGandalf> _gandalf;
+        private IRuntimeCatalogTreeProvider _categoryTreeProvider;
 
-	    public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, Lazy<NavigationGandalf> gandalf, ISettings configSettings= null, HttpContextBase httpContext= null )
+        public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, IRuntimeCatalogTreeProvider categoryTreeProvider, Lazy<NavigationGandalf> gandalf, ISettings configSettings = null, HttpContextBase httpContext = null)
 		{
 			PageContext = new PageContext();
            
@@ -81,6 +83,7 @@ namespace Mozu.SiteBuilder.Mvc
 	        _generalSettings = generalSettings;
 	        _configSettings = configSettings;
 	        _httpContext = httpContext;
+            _categoryTreeProvider = categoryTreeProvider;
             _gandalf = gandalf;
 
 	        this.SiteId = _apiContext.SiteId;
@@ -319,7 +322,13 @@ namespace Mozu.SiteBuilder.Mvc
         [AlternateName("catalog")]
         public ICatalogContext CatalogContext
         {
-            get { return _catContext.Value; }
+            get {
+                var cc = _catContext.Value;
+                if (cc.AllCategories == null)
+                    cc.AllCategories = _categoryTreeProvider.GetAllCategories();
+
+                return _catContext.Value; 
+            }
             set { throw new NotImplementedException(); }
         }
 
@@ -341,14 +350,14 @@ namespace Mozu.SiteBuilder.Mvc
         //     }
         // }
 
-        public List<NavigationRuntimeNode> Navigation
+        public NavigationContext NavigationContext
         {
             get
             {
                 if (_navigationTree  == null)
                     _navigationTree = _gandalf.Value.GetTreeNavigation().Result;
 
-                return _navigationTree;
+                return new NavigationContext(_navigationTree);
             }
         }
 

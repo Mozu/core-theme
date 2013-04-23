@@ -325,6 +325,8 @@
     <Compile Include="ActionFilters\SiteBuilderAuthorizeAttribute.cs" />
     <Compile Include="ActionFilters\TenantSiteHeadersResolverActionFilter.cs" />
     <Compile Include="CatalogContext.cs" />
+    <Compile Include="Catalog\IRuntimeCatalogTreeProvider.cs" />
+    <Compile Include="Catalog\RuntimeCatalogTreeProvider.cs" />
     <Compile Include="CMS\CmsItemDocumentInitilizer.cs" />
     <Compile Include="CMS\CmsPageContext.cs" />
     <Compile Include="CMS\CmsServiceWrapper.cs" />
@@ -360,7 +362,9 @@
     <Compile Include="Filters\LtFilter.cs" />
     <Compile Include="Filters\Stylesheet.cs" />
     <Compile Include="Filters\Template.cs" />
+    <Compile Include="ICatalogContext.cs" />
     <Compile Include="ICookieProvider.cs" />
+    <Compile Include="ISearchContext.cs" />
     <Compile Include="ISiteBuilderContext.cs" />
     <Compile Include="IStorefrontCache.cs" />
     <Compile Include="JasonDcResult.cs" />
@@ -378,6 +382,7 @@
     <Compile Include="Models\Mapping\NavigationMapping.cs" />
     <Compile Include="Models\Mapping\ProductMapping.cs" />
     <Compile Include="Models\Mapping\SettingsMapping.cs" />
+    <Compile Include="NavigationContext.cs" />
     <Compile Include="Navigation\INavigationRepository.cs" />
     <Compile Include="Navigation\NavigationGandalf.cs" />
     <Compile Include="Navigation\NavigationRepository.cs" />
@@ -385,6 +390,7 @@
     <Compile Include="Orders\IPciSettingsProvider.cs" />
     <Compile Include="Orders\OrderService.cs" />
     <Compile Include="Orders\OrderStatusProvider.cs" />
+    <Compile Include="SearchContext.cs" />
     <Compile Include="Security\AuthenticationExtensions.cs" />
     <Compile Include="Security\IAuthenticationHelper.cs" />
     <Compile Include="Security\SbAuthenticationModule.cs" />
