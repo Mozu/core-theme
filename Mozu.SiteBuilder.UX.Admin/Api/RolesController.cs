@@ -21,13 +21,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "read")]
-        public async Task<Response<List<Mozu.SiteBuilder.UX.Models.Users.BehaviorTree.BehaviorTreeNode >>> GetRoleBehaviors( FilterCollection extFilter)
+        public async Task<Response<List<Mozu.SiteBuilder.UX.Models.Users.BehaviorTree.BehaviorTreeNode>>> GetRoleBehaviors(int? roleId ,FilterCollection extFilter)
         {
-            int roleId = extFilter.GetValue("roleId", -1);
+          
             RoleBehavior roleBehavior = null;
-            if (roleId > -1)
+            if (roleId.HasValue )
             {
-                roleBehavior = await _permissionsRepository.GetRoleBehavior(roleId);
+                roleBehavior = await _permissionsRepository.GetRoleBehavior(roleId.Value );
             }
             else
             {
