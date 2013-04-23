@@ -55,7 +55,10 @@ Ext.define('Taco.view.product.SiteForm', {
                 fieldLabel: 'Status',
                 labelAlign: 'top',
                 allowBlank: false,
+                editable: false,
                 forceSelection: true,
+                listConfig: { shadow: false },
+                shrinkWrap: 3,
                 store: ['Hide in website', 'Show on website'],
                 value: 'Hide in website'
             },

@@ -1,5 +1,6 @@
 /* NEUTRAL COLORS */
 
+$color-neutral-transparent:     transparentize(rgb(255, 255, 255), 1);
 $color-neutral-white:           rgb(255, 255, 255);
 $color-neutral-lightest:        rgb(242, 240, 237);
 $color-neutral-light:           rgb(237, 234, 230);
@@ -13,6 +14,7 @@ $color-neutral-black:           rgb(0, 0, 0);
 
 $color-neutral-95:              rgb(242, 242, 242); // #F2F2F2 gray 95%
 $color-neutral-90:              rgb(230, 230, 230); // #E6E6E6 gray 90%
+$color-neutral-75:              rgb(191, 191, 191); // #BFBFBF gray 75%
 $color-neutral-70:              rgb(179, 179, 179); // #B3B3B3 gray 70%
 $color-neutral-45:              rgb(114, 114, 114); // #727272 gray 45%
 $color-neutral-30:              rgb(75, 75, 75);    // #4B4B4B gray 30%
