@@ -15,8 +15,9 @@ Ext.define('Taco.view.product.Edit', {
     formCls: 'Taco.view.product.Form',
 
     initComponent: function() {
-        var me = this,
-            moreStore = Ext.create('Ext.data.Store', {
+        var me = this;
+
+        this.moreStore = Ext.create('Ext.data.Store', {
                 fields: [
                     'text',
                     { name: 'fn', type: 'string' },
@@ -25,16 +26,16 @@ Ext.define('Taco.view.product.Edit', {
                 ]
             });
 
-        moreStore.add([
+        this.moreStore.add([
             { text: 'More', id: 0 },
-            { text: 'Delete', id: 1, fn: 'destroyRecord' }
+            { text: 'Preview In', id: 1},
+            { text: 'Delete', id: 2, fn: 'destroyRecord' }
         ]);
 
-        this.record.getProductInSites().each(function(pis) {
-            var site = pis.get('site');
-            moreStore.insert(1, { text: 'Preview In ' + site.name, id:  pis.id , fn: 'preview', state:[pis] });
-        });
 
+        this.updateMoreStore();
+
+        this.mon(this.record.getProductInSites(), 'datachanged', this.updateMoreStore, this);
 
         this.additionalActions = [
             {
@@ -44,7 +45,10 @@ Ext.define('Taco.view.product.Edit', {
                 queryMode: 'local',
                 style: { 'display': 'inline-table' },
                 value: 0,
-                store: moreStore,
+                store: this.moreStore,
+                listConfig : {
+                    itemTpl: '<tpl if="isPreview">&nbsp;&nbsp;</tpl>{text}'
+                },
                 listeners: {
                     select: function(combo, records, eOpts) {
                         var fn = records[0].get('fn'), state = records[0].get('state');
@@ -58,6 +62,18 @@ Ext.define('Taco.view.product.Edit', {
         ];
         this.formCfg = Ext.apply(this.formCfg || {}, { options: this.options });
         this.callParent(arguments);
+    },
+    
+    updateMoreStore: function () {
+
+        var me = this;
+        this.moreStore.filterBy(function(record) {
+            return record.get('isPreview') !== true;
+        });
+        Ext.each(me.record.getProductInSites().data.items,function (pis) {
+            var site = pis.get('site');
+            me.moreStore.insert(2, { text: '  '+  site.name, id: pis.id, fn: 'preview', state: [pis] , isPreview:true});
+        });
     },
 
     preview: function(pis) {
