@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Mozu.Content.Contracts;
+using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using System.Web.Routing;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -27,6 +29,20 @@ namespace Mozu.SiteBuilder.UX.Controllers
            
         }
 
+        //tbd move to an action filter
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+
+            if (!filterContext.IsChildAction && (this.ApiContext.TenantId < 0 || !this.ApiContext.SiteId.HasValue))
+            {
+                var settings = LifetimeScope.Resolve<ISettings>();
+                var redirUrl = settings.AppSettings("missingContextRedirect") ?? "/admin";
+                filterContext.Result = new RedirectResult(redirUrl);
+               
+
+            }
+            base.OnActionExecuting(filterContext);
+        }
 
         public ILifetimeScope LifetimeScope
         {
@@ -95,6 +111,21 @@ namespace Mozu.SiteBuilder.UX.Controllers
             {
                 _sc = value;
             }
+        }
+
+        private IApiContext _apiContext;
+
+        public IApiContext ApiContext
+        {
+            get
+            {
+                if (_apiContext == null)
+                {
+                    _apiContext = LifetimeScope.Resolve<IApiContext>();
+                }
+                return _apiContext;
+            }
+            set { _apiContext = value; }
         }
 
         private ICmsServiceWrapper _cmsService;

@@ -31,12 +31,9 @@ Ext.define('Taco.view.fileManager.Index', {
 
     gridPanelConf: {
         columns: [{
-            text: 'Image',
-            renderer:function(value, metaData, record) {
-                return '<img height="60" src="/admin/img/files/' + record.getId() +'?size=60" />';
-            },
-            dataIndex: 'name',
-            flex: 1
+            xtype: 'templatecolumn',
+            header: 'Image',
+            tpl: '<tpl if="localthumbnail"><div class="taco-basegrid-thumbnail"><img width="60" src="{localthumbnail}" /></div><tpl else><div class="taco-basegrid-thumbnail"><img width="60" src="{thumbnail}?size=60" /></div></tpl>'
         }, {
             text: 'Name',
             editor: {
@@ -107,5 +104,14 @@ Ext.define('Taco.view.fileManager.Index', {
         };
 
         this.callParent(arguments);
+
+        this.mon(this.store, 'beforesync', this.onBeforeSyncStore, this);
+
+    },
+    //removes create operations and returns false if 
+    onBeforeSyncStore: function (operations) {
+        delete operations.create;
+        return operations.update || operations.destroy;
+
     }
 });
