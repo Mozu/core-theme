@@ -273,16 +273,18 @@
     }
   }*/
 
-  .#{$vprefix}toolbox,
-  .#{$prefix}window-ghost {
-    background-color: $color-neutral-white; //yellow
+  // .#{$prefix}window-ghost,
+  .#{$vprefix}toolbox {
+    background-color: $color-neutral-white;
     border: 0px none;
+    min-width: 300px;
     padding: 0px;
-    @include border-radius(6px);
-    @include box-shadow(0px 0px 50px rgba(0, 0, 0, 0.4));
+    width: 300px;
+    // @include border-radius(6px);
+    // @include box-shadow(0px 0px 50px rgba(0, 0, 0, 0.4));
 
     .#{$prefix}window-header {
-      background-color: $color-neutral-white; //crimson
+      background-color: $color-neutral-white;
       border: 0px none;
       padding: 14px;
       @include border-radius(6px 6px 0px 0px);
@@ -296,7 +298,7 @@
     }
 
     .#{$prefix}window-body {
-      background-color: $color-neutral-white; //blue
+      background-color: $color-neutral-white;
       border-color: $color-grid-border;
       border-style: dashed none none;
       border-width: 1px 0px 0px;
