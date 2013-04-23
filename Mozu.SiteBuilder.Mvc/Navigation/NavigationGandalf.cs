@@ -25,9 +25,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         // the special node to assign unlinked pages as a child of.
         public const string UNLINKED_PAGES_NODE_ID = "_unlinked";
 
-        public const string NODE_TYPE_CATEGORY = "category";
-        public const string NODE_TYPE_PAGE = "page";
-        public const string NODE_TYPE_LINK = "link";
 
         private INavigationRepository _navRepo;
         private ICategoryNavigationProvider _catClient;
@@ -107,14 +104,14 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                                     continue;
                                 }
                                 break;
-                            case NODE_TYPE_LINK:
+                            case "link":
                                 node = new NavigationTreeNode
                                 {
                                     Name = navmeta.Name,
                                     Url = navmeta.Url,
                                     Index = navmeta.Index,
                                     ParentId = navmeta.ParentId,
-                                    NodeType = NODE_TYPE_LINK,
+                                    NodeType = "link",
                                 };
                                 break;
                             default:

@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.Mvc
         /// </summary>
         public NavigationContext(List<NavigationRuntimeNode> _navigationTree)
         {
-            this._navigationTree = _navigationTree;
+            this._navigationTree = _navigationTree ?? new List<NavigationRuntimeNode>();
         }
 
         /// <summary>

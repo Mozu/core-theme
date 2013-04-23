@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Navigation
                 {
                     DC.CategoryPagedCollection cats = t.Result.ReadAsSync();
 
-                    return Mapper.Map<List<NavigationTreeNode>>(cats);
+                    return Mapper.Map<List<NavigationTreeNode>>(cats.Items);
                 });
         }
     }
