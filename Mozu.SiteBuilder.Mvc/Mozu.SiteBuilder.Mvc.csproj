@@ -325,8 +325,9 @@
     <Compile Include="ActionFilters\SiteBuilderAuthorizeAttribute.cs" />
     <Compile Include="ActionFilters\TenantSiteHeadersResolverActionFilter.cs" />
     <Compile Include="CatalogContext.cs" />
-    <Compile Include="Catalog\IRuntimeCatalogTreeProvider.cs" />
-    <Compile Include="Catalog\RuntimeCatalogTreeProvider.cs" />
+    <Compile Include="Catalog\AdminCategoryTreeProvider.cs" />
+    <Compile Include="Catalog\ICategoryTreeProvider.cs" />
+    <Compile Include="Catalog\RuntimeCategoryTreeProvider.cs" />
     <Compile Include="CMS\CmsItemDocumentInitilizer.cs" />
     <Compile Include="CMS\CmsPageContext.cs" />
     <Compile Include="CMS\CmsServiceWrapper.cs" />

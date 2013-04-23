@@ -11,11 +11,11 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
     /// <summary>
     /// Provides the runtime Catalog Tree to SiteContext.
     /// </summary>
-    public class RuntimeCatalogTreeProvider : IRuntimeCatalogTreeProvider
+    public class RuntimeCategoryTreeProvider : ICategoryTreeProvider
     {
         private IProductCategoryRuntimeWebApiClient _productCategoryRuntimeWebApiClient;
 
-        public RuntimeCatalogTreeProvider(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient)
+        public RuntimeCategoryTreeProvider(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient)
         {
             _productCategoryRuntimeWebApiClient = productCategoryRuntimeWebApiClient;
         }

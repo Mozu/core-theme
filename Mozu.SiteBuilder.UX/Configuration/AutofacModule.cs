@@ -14,6 +14,7 @@ using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Configuration;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Mobile;
@@ -105,6 +106,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 		  //  builder.RegisterType<MockProductCategoryRuntimeWebApiClient>().As<IProductCategoryRuntimeWebApiClient>();
             builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 
+            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>();
             builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>();
 		    
 		    // builder.RegisterType<MozuServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
