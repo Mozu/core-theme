@@ -40,5 +40,8 @@
 
             }, this, { delay: 10, single: true, scope: this });
         }
+        this.on('destroyrecord', function(editor, records, operation) {
+            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/index');
+        }, this, { delay: 10, single: true, scope: this });
     }
 });
