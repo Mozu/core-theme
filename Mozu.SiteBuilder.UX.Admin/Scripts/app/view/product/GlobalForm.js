@@ -36,18 +36,6 @@ Ext.define('Taco.view.product.GlobalForm', {
         };
 
         this.items = [
-            {
-                xtype: 'combobox',
-                fieldLabel: 'Status',
-                labelAlign: 'top',
-                allowBlank: false,
-                editable: false,
-                forceSelection: true,
-                listConfig: { shadow: false },
-                shrinkWrap: 3,
-                store: ['Hide in website', 'Show on website'],
-                value: 'Hide in website'
-            },
             Ext.create('Taco.view.product.subform.General', subformCfg),
             Ext.create('Taco.view.product.subform.Inventory', subformCfg),
             Ext.create('Taco.view.product.subform.Properties', subformCfg),

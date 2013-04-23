@@ -40,6 +40,30 @@ Ext.define('Taco.view.product.subform.General', {
             width: 200,
             xtype: 'textfield'
         }, {
+            xtype:'formform',
+            persistChangesToModel: true,
+            record: this.productInSiteInfo,
+            hidden: this.isGlobal,
+            width: "100%",
+            header:false,
+            items: [
+                {
+                    xtype: 'combobox',
+                    fieldLabel: 'Status',
+                    name: 'isActive',
+                    labelAlign: 'top',
+                    hidden: this.isGlobal,
+                    allowBlank: false,
+                    editable: false,
+                    forceSelection: true,
+                    listConfig: { shadow: false },
+                    shrinkWrap: 3,
+                    store: [[false, 'Hide in website'], [true, 'Show on website']],
+                    value: this.productInSiteInfo ? this.productInSiteInfo .get('isActive') : false
+                }
+            ]
+
+        }, {
             xtype: 'productoverride',
             overrideFieldName: 'isContentOverridden',
             hideOverride: this.isSingleSite,
