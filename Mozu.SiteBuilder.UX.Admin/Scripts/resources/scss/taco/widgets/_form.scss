@@ -15,11 +15,41 @@
     }
   }
 
+  // combobox styles
+  .#{$prefix}form-trigger-input-cell {
+    .#{$prefix}form-text {
+      padding-right: 30px;
+    }
+  }
+  .#{$prefix}pickerfield-open {
+    .#{$prefix}form-text {
+      background-color: $color-neutral-75;
+      border-color: $color-neutral-75;
+    }
+  }
+
+  .#{$prefix}trigger-cell {
+    margin-left: -27px;
+    position: absolute;
+  }
+
+  .#{$prefix}form-arrow-trigger {
+    background: none transparent;
+    border-color: $color-neutral-20 $color-neutral-transparent;
+    border-style: solid;
+    border-width: 6px 5px 0px;
+    font-size: px-to-rem(12);
+    height: 0px !important;
+    margin: 12px 0px 0px 6px;
+    position: absolute;
+    width: 0px;
+  }
+
   // textarea styles
   .#{$prefix}webkit {
-      textarea.#{$prefix}form-empty-field {
-          line-height: normal;
-      }
+    textarea.#{$prefix}form-empty-field {
+      line-height: normal;
+    }
   }
 
   // label styles
@@ -165,28 +195,6 @@
     background-color: $color-neutral-white;
   }
 
-  // .#{$vprefix}form-tab-close-button {
-  //   display: inline-block;
-  //   width: 17px;
-  //   padding: 1px;
-  //   margin: 0 -8px 0 12px;
-  //   position: relative;
-  //   top: -2px;
-  //   line-height: 1;
-  //   border-radius: 50%;
-  //   border: 1px solid $formTabCloseColor;
-  //   background-color: $color-neutral-white;
-  //   color: $formTabCloseColor;
-  //   text-align: center;
-  //   font-size: 13px;
-
-  //   &:hover {
-  //     border-color: $color-neutral-white;
-  //     background-color: $formTabCloseColor;
-  //     color: $color-neutral-white;
-  //   }
-  // }
-
   // form navigation
   .#{$vprefix}form-card-nav-body {
     background-color: $color-neutral-95;
@@ -222,6 +230,15 @@
       border: 1px solid border-for($color-neutral-95);
       margin-top: 20px;
       padding: 39px;
+
+      .#{$prefix}panel-header-body-taco-top {
+        border-bottom: 1px solid border-for($color-neutral-95);
+        padding-bottom: 20px;
+      }
+    }
+
+    .#{$vprefix}product-admin-subform {
+      padding-top: 30px;
     }
   }
 

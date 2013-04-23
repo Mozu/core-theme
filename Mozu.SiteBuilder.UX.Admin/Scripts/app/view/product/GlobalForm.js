@@ -41,7 +41,10 @@ Ext.define('Taco.view.product.GlobalForm', {
                 fieldLabel: 'Status',
                 labelAlign: 'top',
                 allowBlank: false,
+                editable: false,
                 forceSelection: true,
+                listConfig: { shadow: false },
+                shrinkWrap: 3,
                 store: ['Hide in website', 'Show on website'],
                 value: 'Hide in website'
             },

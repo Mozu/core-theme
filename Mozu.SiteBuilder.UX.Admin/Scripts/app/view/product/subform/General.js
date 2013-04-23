@@ -79,12 +79,13 @@ Ext.define('Taco.view.product.subform.General', {
                 cls: Taco.baseCSSPrefix + 'flex-field-spacing'
             }]
         }, {
+            xtype: 'selectfield',
             fieldLabel: 'Product Type',
             name: 'productTypeId',
             readOnly: readOnly && this.product.get('productTypeId'),
             required: true,
-            width: 200,
-            xtype: 'selectfield',
+            // width: 200,
+            shrinkWrap: 3,
             displayField: 'name',
             valueField: 'id',
             store: this.productTypeStore,
