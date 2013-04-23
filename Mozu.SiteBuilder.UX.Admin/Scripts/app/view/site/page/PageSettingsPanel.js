@@ -3,6 +3,24 @@
  */
 Ext.define('Taco.view.site.page.PageSettingsPanel', {
     extend: 'Taco.view.site.ToolboxPanel',
+    xtype: 'widget.pagesettingspanel',
+    isPageSettingsPanel: true,
+    createBackButton: function () {
+        var me = this;
+        this.tbar = [{
+            xtype: 'action',
+            text: 'Back',
+            click: {
+                fn: function () {
+                    me.toolbox.cardPanel.showItem(me.settingsChooser);
+                }
+            }
+        }, '->', {
+            xtype: 'tbtext',
+            text: this.title
+        }];
+    },
+
     requires: ['Taco.core.ux.form.Form'],
     cls: Taco.baseCSSPrefix + 'card-flex ' + Taco.baseCSSPrefix + 'navigation ' + Taco.baseCSSPrefix + 'pagesettings',
     initComponent: function () {

@@ -3,6 +3,7 @@
  */
 Ext.define('Taco.view.site.page.settings.Seo', {
     extend: 'Taco.view.site.page.PageSettingsPanel',
+    title: 'SEO',
     form: {
         
     }
