@@ -24,15 +24,14 @@ Ext.define('Taco.core.ux.form.Form', {
     trackResetOnLoad: true,
     createTitle: 'Create',
     editTitle: 'Edit',
+    header: { layout: 'auto' },
     persistChangesToModel: false,
     tasksKeyPrefix: '',
     cascadeChildTasks: true,
     cascadeRecordLoad: true,
     flexLayout: false,
 
-
     initComponent: function () {
-
         var formCfg;
 
         if (!this.formCfg) {

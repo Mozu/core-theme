@@ -9,17 +9,15 @@ Ext.define('Taco.view.product.subform.Subform', {
     requires: ['Taco.view.product.subform.OverrideForm'],
 
     bodyCls: Taco.baseCSSPrefix + 'product-admin-subform',
-    // bodyStyle: {
-    //     '-webkit-justify-content': 'flex-start'
-    // },
-    cascadeRecordLoad: false,
-
     defaults: {
         xtype: 'textfield',
         labelAlign: 'top',
         labelSeparator: '',
         width: 250
     },
+
+    cascadeRecordLoad: false,
+
     initComponent:function() {
         this.callParent(arguments);
         if (this.readOnly != undefined) {
