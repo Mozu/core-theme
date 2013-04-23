@@ -82,7 +82,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     masterList.AddRange(sortedCats);
 
                     // build the masterlist. Step 2: put in navigation items we know about.
-                    foreach (var navmeta in navSet.Nodes)
+                    foreach (var navmeta in (navSet.Nodes ?? new List<NavigationNode>()))
                     {
                         NavigationTreeNode node;
                         switch (navmeta.NodeType)
@@ -177,10 +177,14 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         group node by node.ParentId into g
                         select g;
 
-                    var rootLevel = Mapper.Map<List<NavigationRuntimeNode>>(grouped.First(g => g.Key == ROOT_NODE_NAME).ToList());
-                    BuildTree(rootLevel, grouped);
+                    var rootLevel = grouped.FirstOrDefault(g => g.Key == ROOT_NODE_NAME);
+                    if (rootLevel == null)
+                        return null;
 
-                    return rootLevel;
+                    var rootLevelMapped = Mapper.Map<List<NavigationRuntimeNode>>(rootLevel.ToList());
+                    BuildTree(rootLevelMapped, grouped);
+
+                    return rootLevelMapped;
                 });
         }
 
