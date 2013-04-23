@@ -20,12 +20,9 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
     },
 
 
-    constructor:function() {
-        this.settingsPanels = this.createSettingsPannels();
-        this.callParent(arguments);
-    },
+   
 
-    createSettingsPannels: function() {
+    getPageSettings: function () {
         var me = this;
         return [
             {

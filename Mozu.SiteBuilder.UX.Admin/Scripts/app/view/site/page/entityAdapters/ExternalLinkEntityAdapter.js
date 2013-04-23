@@ -40,7 +40,9 @@ Ext.define('Taco.view.site.page.entityAdapters.ExternalLinkEntityAdapter', {
     },
 
 
-
+    getPageSettings: function() {
+        return [];
+    },
 
 
     getId: function () {

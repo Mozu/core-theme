@@ -24,14 +24,10 @@ Ext.define('Taco.view.site.page.entityAdapters.ProductEntityAdapter', {
         Taco.core.StateManager.attemptNavigate('products/edit/' + this.get().getId());
     },
 
-    constructor: function () {
-        this.settingsPanels = this.createSettingsPannels();
-        this.callParent(arguments);
-    },
 
 
 
-    createSettingsPannels: function () {
+    getPageSettings: function () {
         var me = this;
         return [
             {
