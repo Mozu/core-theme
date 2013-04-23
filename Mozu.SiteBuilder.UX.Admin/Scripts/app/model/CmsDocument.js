@@ -15,6 +15,8 @@ Ext.define('Taco.model.CmsDocument', {
         this.callParent(arguments);
     },
 
+    hasDictField: true,
+
     fields: [
         {
             "name": "id",
@@ -48,13 +50,13 @@ Ext.define('Taco.model.CmsDocument', {
         }
     ],
     set: function(k, v) {
-        if (k in this.self.realFields) {
+        if (k in this.self.realFields || !k || typeof k !== "string") {
             return this.callParent(arguments);
         }
         return this.setItem.apply(this, arguments);
     },
-    get: function(k) {
-        if (k in this.self.realFields) {
+    get: function (k) {
+        if (k in this.self.realFields || !k || typeof k !== "string") {
             return this.callParent(arguments);
         }
         return this.getItem.apply(this, arguments);

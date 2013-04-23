@@ -5,7 +5,8 @@ Ext.define('Taco.view.site.page.settings.General', {
     extend: 'Taco.view.site.page.PageSettingsPanel',
     title: 'General',
     form: {
-        fields: [
+        layout: 'vbox',
+        items: [
             {
                 xtype: 'button',
                 fieldLabel: 'Show in website',

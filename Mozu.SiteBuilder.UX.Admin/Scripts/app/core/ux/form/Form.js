@@ -128,8 +128,8 @@ Ext.define('Taco.core.ux.form.Form', {
         this.on({
             change: function (field, newValue) {
                 this.savableStateCheck();
-                
-                if (!this.record || !this.persistChangesToModel || !Ext.Array.contains(this.trackedFields, field) || !this.record.fields.getByKey(field.name)) {
+
+                if (!this.record || !this.persistChangesToModel || !Ext.Array.contains(this.trackedFields, field) || (!this.record.fields.getByKey(field.name) && !this.record.hasDictField)) {
                     return;
                 }
 
