@@ -27,8 +27,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         
         public async Task<ActionResult> Index()
         {
-            var nav = SiteContext.Navigation;
-            if ( nav != null && nav.Count > 0)
+            var nav = SiteContext.NavigationContext;
+            if ( nav != null && nav.Count() > 0)
             {
                 var item = nav.FirstOrDefault(x => !string.IsNullOrEmpty(x.Url));
                 if ( item != null  && item.Url.Length >0 && item.Url != "/pages/home")

@@ -23,13 +23,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     public class CatalogController : BaseController
     {
-        IProductCategoryRuntimeWebApiClient _catClient;
         IProductWebApiClient   _productClient;
         ISiteBuilderContext _ctx;
-        public CatalogController(IProductCategoryRuntimeWebApiClient catClient , ISiteBuilderContext ctx , IProductWebApiClient productClient)
+        public CatalogController(ISiteBuilderContext ctx , IProductWebApiClient productClient)
         {
             _ctx = ctx;
-            _catClient = catClient;
             _productClient = productClient;
 
             var options = ((ServiceClientBase) productClient).Options ??
@@ -61,6 +59,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             var prod = res.ReadAsAsync().Result;
             var product = Mapper.Map<Models.StoreFront.Catalog.Product>(prod);
+
+            SetCatalogContext(product);
+
             SiteContext.PageContext.PageType = "product";
             SiteContext.PageContext.ProductCode = productCode;
 
@@ -176,6 +177,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
             cat.ChildrenCategories = catList.Where (x => x.ParentCategoryId.GetValueOrDefault (-1) == categoryId).ToList();
 
+            SetCatalogContext(cat);
+
             await this.AsyncInitData(); 
             return View(cat);
           
@@ -208,27 +211,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return PartialView( products);
         }
 
-        
-        //public class ProductListingViewData 
-        //{
-        //    public string ViewName
-        //    {
-        //        get;
-        //        set;
-        //    }
-        //    public int? Count
-        //    {
-        //        get;
-        //        set;
-        //    }
-        //    public RouteValueDictionary OriginalValues
-        //    {
-        //        get;
-        //        set;
-        //    }
-        //}
-        
+        /// <summary>
+        /// Updates the SiteContext.CatalogContext with the current product.
+        /// </summary>
+        private void SetCatalogContext(Product product)
+        {
+            _ctx.CatalogContext.CurrentProduct = product;
+            _ctx.NavigationContext.SetContext(product);
+        }
 
+        private void SetCatalogContext(Category category)
+        {
+            _ctx.NavigationContext.SetContext(category);
+        }
        
     }
 }

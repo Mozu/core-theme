@@ -52,10 +52,21 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
             get;
             set;
         }
+
+        private string _parentId;
         public string ParentId
         {
-            get;
-            set;
+            get
+            {
+                if (Parent == null)
+                    return _parentId;
+                else
+                    return Parent.Id;
+            }
+            set
+            {
+                _parentId = value;
+            }
         }
         [DataMember (Name="url")]
         public string Url
@@ -86,5 +97,9 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
             get;
             set;
         }
+
+        public NavigationRuntimeNode Parent { get; set; }
+
+        public string NodeType { get; set; }
     }
 }

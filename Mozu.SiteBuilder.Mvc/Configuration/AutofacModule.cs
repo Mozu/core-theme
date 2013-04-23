@@ -18,6 +18,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
     using Autofac;
     using Mozu.Core.Logging;
     using Mozu.SiteBuilder.Mvc;
+    using Mozu.SiteBuilder.Mvc.Catalog;
     using Mozu.SiteBuilder.Mvc.Logging;
     using Mozu.SiteBuilder.Mvc.Models.CMS;
     using Mozu.SiteBuilder.Mvc.Navigation;
@@ -77,6 +78,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<NavigationRepository>().As<INavigationRepository>();
 
             builder.RegisterType<NavigationGandalf>().InstancePerLifetimeScope();
+
+            builder.RegisterType<RuntimeCatalogTreeProvider>().As<IRuntimeCatalogTreeProvider>();
 
             // builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 

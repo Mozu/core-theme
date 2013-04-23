@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -202,6 +203,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 if (childItems != null)
                 {
                     node.Items = Mapper.Map<List<NavigationRuntimeNode>>(childItems.ToList());
+                    node.Items.ForEach(n => n.Parent = node);
                     BuildTree(node.Items, allObjects);
                 }
             }
