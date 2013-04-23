@@ -19,7 +19,7 @@ Ext.define('Taco.view.site.ToolboxPanel', {
             xtype: 'action',
                 text: 'Back',
                 click: {
-                    fn: function () { me.cardPanel.getLayout().setActiveItem(0); }
+                    fn: function () { me.cardPanel.showItem(0); }
                 }
             }, '->', {
                 xtype: 'tbtext',

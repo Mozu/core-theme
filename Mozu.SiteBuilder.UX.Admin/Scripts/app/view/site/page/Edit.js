@@ -12,7 +12,8 @@
             'Taco.view.site.navigation.ExternalLinkEditor',
             'Taco.core.ux.form.Form',
             'Taco.model.WidgetInstance',
-            'Taco.store.WidgetInstances'
+            'Taco.store.WidgetInstances',
+            'Taco.view.site.Toolbar'
         ],
         alias: 'widget.inlineeditor',
 

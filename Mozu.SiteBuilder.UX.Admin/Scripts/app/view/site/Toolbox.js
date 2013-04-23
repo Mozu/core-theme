@@ -19,28 +19,43 @@ Ext.define('Taco.view.site.Toolbox', {
     initComponent: function () {
         var me = this;
 
+        
         this.cardPanel = Ext.create('Ext.panel.Panel', {
             cls: Taco.baseCSSPrefix + 'windowcardpanel',
             layout: 'card',
-            itemId: 'cardPanel'
+            itemId: 'cardPanel',
+            showItem: function (record) {
+                var cardIndex = typeof record === "number" ? record : me.panelStore.indexOf(record);
+                if (cardIndex === -1) cardIndex = me.cardPanel.items.indexOf(record);
+                if (cardIndex < me.cardPanel.items.getCount()) {
+                    me.cardPanel.getLayout().setActiveItem(cardIndex);
+                }
+            }
         });
 
+        this.panelStore = Ext.create('Taco.store.shared.ContainerStore', {
+            fields: ['index', 'title', 'isPageSettingsPanel'],
+            container: this.cardPanel
+        });
 
         this.navigation = Ext.create('Taco.view.site.navigation.Tree', {
             active: true,
             hasBackButton: false,
             index: 0,
             title: 'Pages',
+            toolbox: this,
             cardPanel: this.cardPanel
         });
 
         this.widgets = Ext.create('Taco.view.site.navigation.WidgetNav', {
+            toolbox: this,
             cardPanel: this.cardPanel,
             index: 1,
             title: 'Widgets'
         });
 
         this.pageSettings = Ext.create('Taco.view.site.navigation.PageSettings', {
+            toolbox: this,
             cardPanel: this.cardPanel,
             index: 2,
             title: 'Page Settings'
@@ -48,27 +63,23 @@ Ext.define('Taco.view.site.Toolbox', {
 
         this.items = [this.cardPanel];
         this.tabContainer = Ext.widget('dataview', {
-            store: Ext.create('Taco.store.shared.ContainerStore', {
-                fields: ['index', 'title'],
-                container: this.cardPanel
-            }),
+            store: this.panelStore,
             cls: Taco.baseCSSPrefix + 'toolbox-menu',
             tpl: new Ext.XTemplate(
                 '<ul>',
                     '<tpl for=".">',
-                        '<li class="' + Taco.baseCSSPrefix + 'toolbox-menu-item">',
-                            '<a href="javascript:;">{title}</a>',
-                        '</li>',
+                        '<tpl if="!isPageSettingsPanel">',
+                            '<li class="' + Taco.baseCSSPrefix + 'toolbox-menu-item">',
+                                '<a href="javascript:;">{title}</a>',
+                            '</li>',
+                        '</tpl>',
                     '</tpl>',
                 '</ul>'
                 ),
             itemSelector: 'li.' + Taco.baseCSSPrefix + 'toolbox-menu-item',
             listeners: {
                 itemclick: function (view, record, eOpts) {
-                    var cardIndex = record.get('index') || 0;
-                    if (cardIndex < me.cardPanel.items.length) {
-                        me.cardPanel.getLayout().setActiveItem(cardIndex);
-                    }
+                    me.cardPanel.showItem(record);
                 }
             }
         });

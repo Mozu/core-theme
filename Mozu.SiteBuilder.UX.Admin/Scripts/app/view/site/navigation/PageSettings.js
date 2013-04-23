@@ -4,36 +4,35 @@
 Ext.define('Taco.view.site.navigation.PageSettings', {
     extend: 'Taco.view.site.ToolboxPanel',
     requires: ['Taco.view.site.page.PageSettingsPanel'],
-    layout: 'card',
     populate: function(adapter) {
         var me = this;
         var newPanels = Ext.Array.map(adapter.getPageSettings(), function (panelInfo) {
             return Ext.create(panelInfo.panelCls, {
-                record: panelInfo.getRecord()
+                record: panelInfo.getRecord(),
+                toolbox: me.toolbox,
+                settingsChooser: me
             });
         });
         if (this.settingsPanels) Ext.Array.forEach(this.settingsPanels, function (panel) {
-            me.remove(panel, true);
+            me.cardPanel.remove(panel, true);
         });
         this.settingsPanels = newPanels;
-        this.add(newPanels);
+        this.cardPanel.add(newPanels);
     },
     createChooser: function () {
         var me = this;
         return this.chooser = Ext.widget('dataview', {
-            store: Ext.create('Taco.store.shared.ContainerStore', {
-                fields: ['index', 'title', 'isChooser'],
-                container: this
-            }),
-            isChooser: true,
+            store: this.toolbox.panelStore,
             cls: Taco.baseCSSPrefix + 'pagesettings-chooser',
             tpl: new Ext.XTemplate(
                 '<ul>',
                     '<tpl for=".">',
-                        '<tpl if="!isChooser">',
+                        '<tpl if="isPageSettingsPanel">',
                             '<li class="' + Taco.baseCSSPrefix + 'pagesettings-chooser-item">',
                                 '<a href="javascript:;">{title}</a>',
                             '</li>',
+                        '<tpl else>',
+                            '<li class="' + Taco.baseCSSPrefix + 'pagesettings-chooser-item" style="display:none"></li>',
                         '</tpl>',
                     '</tpl>',
                 '</ul>'
@@ -41,10 +40,7 @@ Ext.define('Taco.view.site.navigation.PageSettings', {
             itemSelector: 'li.' + Taco.baseCSSPrefix + 'pagesettings-chooser-item',
             listeners: {
                 itemclick: function (view, record, eOpts) {
-                    var cardIndex = record.get('index') || 0;
-                    if (cardIndex < me.cardPanel.items.length) {
-                        me.cardPanel.getLayout().setActiveItem(cardIndex);
-                    }
+                    me.cardPanel.showItem(record);
                 }
             }
         });
@@ -53,7 +49,7 @@ Ext.define('Taco.view.site.navigation.PageSettings', {
 
         this.pageStore = null;
 
-        this.items = [this.createChooser];
+        this.items = [this.createChooser()];
 
         this.callParent(arguments);
 
