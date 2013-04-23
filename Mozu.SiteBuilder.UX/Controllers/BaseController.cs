@@ -22,6 +22,8 @@ namespace Mozu.SiteBuilder.UX.Controllers
     public abstract class BaseController : Controller
     {
         private ILifetimeScope _lifetimeScope;
+        protected bool  SuppressMissingContextRedirect = false;
+
 
         public BaseController() //( IComponentContext container)
         {
@@ -32,8 +34,8 @@ namespace Mozu.SiteBuilder.UX.Controllers
         //tbd move to an action filter
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-
-            if (!filterContext.IsChildAction && (this.ApiContext.TenantId < 0 || !this.ApiContext.SiteId.HasValue))
+           
+            if (!SuppressMissingContextRedirect && !filterContext.IsChildAction && (this.ApiContext.TenantId < 0 || !this.ApiContext.SiteId.HasValue))
             {
                 var settings = LifetimeScope.Resolve<ISettings>();
                 var redirUrl = settings.AppSettings("missingContextRedirect") ?? "/admin";

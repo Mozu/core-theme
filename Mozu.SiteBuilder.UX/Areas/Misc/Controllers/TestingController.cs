@@ -22,7 +22,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             _wsRepo = wsRepo;
             _tRepo = tRepo;
             _cookies = cookies;
+            SuppressMissingContextRedirect = true;
         }
+
+     
 
         //
         // GET: /Misc/Testing/

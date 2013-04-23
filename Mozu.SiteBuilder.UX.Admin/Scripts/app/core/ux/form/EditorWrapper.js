@@ -46,7 +46,8 @@
             'beforeload',
             'afterload',
             'aftersave',
-            'cancel'
+            'cancel',
+            'destroyrecord'
         ]);
         this.origionalId = this.record ? this.record.getId(): null;
         
@@ -161,7 +162,17 @@
         this.dirtybutton.setLoading(true);
         this.form.save();
     },
-
+    destroyRecord: function () {
+        var me = this;
+        me.dirtybutton.setLoading(true);
+        me.record.destroy({
+            callback: function(records, operation, success) {
+                if (operation.success) {
+                    me.fireEvent('destroyrecord', this, records, operation);
+                }
+            }
+        });
+    },
     /**
      * Cancels the form
      */
