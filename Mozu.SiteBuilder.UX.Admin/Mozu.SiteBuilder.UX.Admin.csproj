@@ -525,6 +525,7 @@
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\browser\FilterList.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
+    <Content Include="Scripts\app\core\ux\PanelHeader.js" />
     <Content Include="Scripts\app\core\ux\form\field\Base.js" />
     <Content Include="Scripts\app\core\ux\form\field\Container.js" />
     <Content Include="Scripts\app\core\ux\form\field\MultiSelect.js" />

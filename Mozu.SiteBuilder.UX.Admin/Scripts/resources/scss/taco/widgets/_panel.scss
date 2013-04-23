@@ -39,6 +39,16 @@
     $ui-body-font-size: null
   );
 
+  /* HEADER */
+  .#{$prefix}panel-header-body-taco {
+    @include flexbox($alignItems: center);
+
+    .#{$prefix}panel-header-text-container {
+      padding: 0px;
+      @include flex($grow: 1);
+    }
+  }
+
   /* MENUS */
 
   .#{$prefix}menu {
