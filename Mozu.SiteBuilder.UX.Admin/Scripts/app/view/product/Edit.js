@@ -27,7 +27,6 @@ Ext.define('Taco.view.product.Edit', {
             });
 
         this.moreStore.add([
-            { text: 'More', id: 0 },
             { text: 'Preview In', id: 1},
             { text: 'Delete', id: 2, fn: 'destroyRecord' }
         ]);
@@ -47,17 +46,21 @@ Ext.define('Taco.view.product.Edit', {
                 value: 0,
                 store: this.moreStore,
                 listConfig : {
-                    itemTpl: '<tpl if="isPreview">&nbsp;&nbsp;</tpl>{text}'
+                    itemTpl: '<tpl if="isPreview">&nbsp;&nbsp;</tpl>{text}',
+                    listeners: {
+                        beforeitemclick: function (boundList, record) {
+                            var fn = record.get('fn'), state = record.get('state');
+                            if (fn) {
+                                return this[fn].apply(this, state);
+                            } else {
+                                return false;
+                            }
+                        },
+                        scope: this
+                    }
                 },
-                listeners: {
-                    select: function(combo, records, eOpts) {
-                        var fn = records[0].get('fn'), state = records[0].get('state');
-                        if (fn) {
-                            this[fn].apply(this, state);
-                        }
-                    },
-                    scope: this
-                }
+                displayTpl:'More',
+                
             }
         ];
         this.formCfg = Ext.apply(this.formCfg || {}, { options: this.options });
@@ -72,7 +75,7 @@ Ext.define('Taco.view.product.Edit', {
         });
         Ext.each(me.record.getProductInSites().data.items,function (pis) {
             var site = pis.get('site');
-            me.moreStore.insert(2, { text: '  '+  site.name, id: pis.id, fn: 'preview', state: [pis] , isPreview:true});
+            me.moreStore.insert(1, { text: '  '+  site.name, id: pis.id, fn: 'preview', state: [pis] , isPreview:true});
         });
     },
 

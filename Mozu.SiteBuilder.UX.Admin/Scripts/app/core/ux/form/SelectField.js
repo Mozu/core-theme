@@ -13,7 +13,7 @@ Ext.define('Taco.core.ux.form.SelectField', {
     listConfig: {
         shadow: false
     },
-    do_dumb_shit: false,
+    
 
     initComponent: function () {
 
