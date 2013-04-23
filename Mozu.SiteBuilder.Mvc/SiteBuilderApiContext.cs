@@ -43,10 +43,12 @@ namespace Mozu.SiteBuilder.Mvc
         private readonly AuthenticationHelper _authenticationHelper;
         internal const string CONTEXT_KEY = "V:STORECTX";
         internal const string COOKIENAME = "SBCONTEXT";
+        
 
         public SiteBuilderApiContext(System.Web.HttpContextBase context, Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper authHelper, ICookieProvider cookieProvider , ISettings settings , AuthenticationHelper authenticationHelper )
             : base()
         {
+            TenantId = -1;
             _settings = settings;
             _authenticationHelper = authenticationHelper;
 
@@ -60,6 +62,7 @@ namespace Mozu.SiteBuilder.Mvc
         {
             this.LocaleCode = "en-US";
             this.CurrencyCode = "usd";
+            int? tenantCookie;
             this.UserClaims = _authenticationHelper.GetCurrentUser();
             HttpRequestBase req = null;
             try
@@ -73,9 +76,12 @@ namespace Mozu.SiteBuilder.Mvc
             {
                 
             }
+            
             if (req != null)
             {
-                if ( req.Headers.AllKeys.Any(x => x == Mozu.Core.Api.Contracts.Constants.Headers.TENANT ))
+                
+
+                if (req.Headers.AllKeys.Any(x => x == Mozu.Core.Api.Contracts.Constants.Headers.TENANT))
                 {
 
                     var headers = new HttpRequestMessage().Headers;
@@ -86,45 +92,56 @@ namespace Mozu.SiteBuilder.Mvc
                     }
 
                     this.InitFromHeaders(headers);
-                    return;
-                }
-
-                string host = req.Url.Host;
-                Site site = g_domainSiteLookup.GetOrAdd(host, LookupSiteByDomain);
-
-                if (site != null)
-                {
-                    this.SiteId = site.Id;
-                    this.SiteGroupId = site.SiteGroupId;
-                    this.TenantId = site.TenantId;
-                    return;
-                }
-
-                var cookie = cookieProvider.GetRequestCookie(COOKIENAME);
-                if (cookie != null && cookie.HasKeys)
-                {
-                 
-                    int tmpInt;
-                    if (int.TryParse(cookie["site"], out tmpInt))
-                    {
-                        this.SiteId = tmpInt;
-                    }
-                    if (int.TryParse(cookie["tenant"], out tmpInt))
-                    {
-                        this.TenantId = tmpInt;
-                    }
-                    if (int.TryParse(cookie["sitegroup"], out tmpInt))
-                    {
-                        this.SiteGroupId  = tmpInt;
-                    }
                     
-                    return;
                 }
+                else
+                {
+                    string host = req.Url.Host;
+                    Site site = g_domainSiteLookup.GetOrAdd(host, LookupSiteByDomain);
+
+                    if (site != null)
+                    {
+                        this.SiteId = site.Id;
+                        this.SiteGroupId = site.SiteGroupId;
+                        this.TenantId = site.TenantId;
+                        return;
+                    }    
+                }
+                InitFromCookie(cookieProvider);
+                    
+                
+
+               
+               
             }
             
-           // this.SiteId = int.Parse(System.Configuration.ConfigurationManager.AppSettings["default-site"]);
-           this.TenantId = int.Parse(System.Configuration.ConfigurationManager.AppSettings["default-tenant"]);
             
+        }
+
+        private void InitFromCookie(ICookieProvider cookieProvider)
+        {
+            var cookie = cookieProvider.GetRequestCookie(COOKIENAME);
+            if (cookie != null && cookie.HasKeys)
+            {
+                int tmpInt;
+                if (int.TryParse(cookie["site"], out tmpInt))
+                {
+                    this.SiteId = tmpInt;
+                }
+                if (int.TryParse(cookie["tenant"], out tmpInt))
+                {
+                    //if set from header and doesnt match cookie then return
+                    if (this.TenantId > 0 && this.TenantId != tmpInt)
+                    {
+                        return;
+                    }
+                    this.TenantId = tmpInt;
+                }
+                if (int.TryParse(cookie["sitegroup"], out tmpInt))
+                {
+                    this.SiteGroupId = tmpInt;
+                }
+            }
         }
 
         Site LookupSiteByDomain(string host )
