@@ -28,28 +28,42 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
         if (this.form.loadRecord) {
             this.form.loadRecord(this.record);
         } else {
-            this.form.record = this.record;            this.form.fbar = [{
-                xtype: 'secondarybutton',
-                text: 'Cancel',
-                listeners: {
-                    click: function () {
-                        this.form.resetOriginalValues();
-                    },
-                    scope: this
-                }
-            }, {
-                xtype: 'primarybutton',
-                text: 'Apply',
-                listeners: {
-                    click: function () {
-                        this.form.update();
-                    },
-                    scope: this
-                }
-            }];
+            this.form.record = this.record;
+            this.form.fbar = [{
+                    xtype: 'secondarybutton',
+                    text: 'Cancel',
+                    listeners: {
+                        click: function() {
+                            this.form.resetOriginalValues();
+                        },
+                        scope: this
+                    }
+                }, {
+                    xtype: 'dirtybutton',
+                    text: 'Apply',
+                    itemId: 'pageSettingsPanelDirtyButton',
+                    listeners: {
+                        click: function() {
+                            this.form.updateForm();
+                        },
+                        scope: this
+                    }
+                }];
             this.form = Ext.widget('formform', this.form);
+            this.dirtyButton = this.form.down('#pageSettingsPanelDirtyButton');
+            this.form.on({
+                savablestatechange: function(form, isSavable) {
+                    this.dirtyButton.setDirty(isSavable);
+                },
+                savesuccess: function() {
+                    console.log('savesuccess');
+                    //this.dirtybutton.setLoading(false);
+                    this.dirtyButton.setDirty(false);
+                },
+                scope: this
+            });
+
         }
-       
         this.items = [this.form];
         this.callParent(arguments);
     }

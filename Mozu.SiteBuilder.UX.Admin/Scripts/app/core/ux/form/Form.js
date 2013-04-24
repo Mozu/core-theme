@@ -389,7 +389,7 @@ Ext.define('Taco.core.ux.form.Form', {
         this.saveTasks.execute();
     },
     
-    update: function () {
+    updateForm: function () {
         if (this.beforeSave() === false) {
             return;
         }
