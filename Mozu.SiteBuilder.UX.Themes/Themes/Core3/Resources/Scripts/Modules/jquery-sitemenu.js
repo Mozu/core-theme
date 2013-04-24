@@ -1,6 +1,5 @@
 ﻿define(["jquery"], function($){
 
-    // replace 'pluginName' with the name of your plugin
     $.fn.sitemenu = function (options) {
         // plugin default options
         var defaults = {
@@ -31,7 +30,7 @@
                     //.css({"min-width": t.parents(".mz-site-nav-li").outerWidth(true) + "px"});
             })
 
-            firstLevelLIs.hover(function () {
+            firstLevelLIs.on('mouseover', function () {
                     var t = $(this),
                     slideout = t.find('[data-mz-role="sitemenu-slideout-l2"]');
                     if(Modernizr.cssanimations){
@@ -44,7 +43,7 @@
                             .animate({ height: slideout.data("navHeight") + "px" }, 600);
                     }
 
-                }, function () {
+                }).on('mouseout', function () {
                     var t = $(this), 
                     slideout = t.find('[data-mz-role="sitemenu-slideout-l2"]');
                     if(Modernizr.cssanimations){
@@ -57,14 +56,14 @@
                     }
             });
 
-            secondLevelLIs.hover(function () {
+            secondLevelLIs.on('mouseover',function () {
                 var t = $(this);
                 t.parents('[data-mz-role="sitemenu-slideout-l2"]')
                         .css({
                             "overflow": "visible"
                         });
 
-                }, function () {
+            }).on('mouseout', function () {
                     var t = $(this);
                     t.parents('[data-mz-role="sitemenu-slideout-l2"]')
                         .css({

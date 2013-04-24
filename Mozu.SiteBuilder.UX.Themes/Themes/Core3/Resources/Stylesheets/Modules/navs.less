@@ -23,17 +23,56 @@
 }
 
 /* Main Site Nav ------------------------------- */
+@navHeight: 37px;
 .mz-site-nav-wrapper {
 	width: 100%;
 	position: absolute;
 	left: 0;
 	bottom: 0px;
 	background: #333;
-	overflow: hidden;
+    height: @navHeight;
 
-	.mz-site-nav-item {
-		float:left;
-	}
+    .mz-site-nav-item {
+        float: left;
+        position: relative;
+
+        &:hover .mz-site-nav-sub {
+            visibility: visible;
+            .transition-delay(0s);
+        }
+    }
+
+    .mz-site-nav-sub {
+        background: #333;
+        top: @navHeight - 1;
+        position: absolute;
+        z-index: 1;
+        visibility: hidden;
+        .transition(visibility 0s ease-out .25s);
+    }
+
+    .mz-site-nav-item.mz-site-nav-l2 {
+        clear: both;
+        width: 100%;
+        .mz-site-nav-link {
+            .transition-property(~"height, padding, opacity");
+            .transition-duration(~".25s, .25s, .08s");
+            .transition-delay(~"0s, 0s, .05s");
+            height: 0px;
+            opacity: 0;
+            padding: 0;
+            display: block;
+            white-space: nowrap;
+        }
+    }
+
+    .mz-site-nav-item:hover .mz-site-nav-link {
+        height: 20px;
+        padding: 10px 15px;
+        opacity: 1;
+
+    }
+
 	.mz-site-nav-link {
 		color: {{themeSettings.siteNavColor}};
 		text-decoration: none;
@@ -48,18 +87,6 @@
 			background-color: #555;
 			color: {{themeSettings.siteNavHoverColor}};
 		}
-	}
-
-	.no-cssanimations .mz-site-nav-a:hover {
-		text-decoration: underline;
-	}
-
-	.mz-site-nav-slideout {
-		display:none
-	}
-
-	.mz-site-nav-sub {
-		// TODO: complete nav
 	}
 }
 
