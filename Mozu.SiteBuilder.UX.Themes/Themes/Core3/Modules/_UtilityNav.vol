@@ -20,7 +20,8 @@
          <li class="mz-utility-nav-item">
          	<a class="mz-utility-link" href="/cart">
          		<!-- <i class="icon-shopping-cart"></i> -->
-         		View Cart (<span class="mz-cart-item-indicator" id="my-cart-count">{{siteContext.catalog.cartAbstract.itemCount|default:0}}</span>)
+         		View Cart (<span class="mz-cart-item-indicator" id="mz-cart-count">{{SiteContext.CatalogContext.CartAbstract.itemCount|default:0}}</span>)
+                {% require_script "modules/cart-monitor" %}
          	</a>
          </li>
      </ul>

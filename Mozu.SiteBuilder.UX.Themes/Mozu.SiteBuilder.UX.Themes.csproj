@@ -321,6 +321,7 @@
     <Content Include="Themes\Core3\MetaData\PageTypes\commerce\cart\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\search\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\product\definition.json" />
+    <Content Include="Themes\Core3\Resources\Scripts\Modules\cart-monitor.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-myaccount.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-address.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-customer.js" />

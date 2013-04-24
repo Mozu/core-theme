@@ -55,7 +55,9 @@ var ApiInterface = (function () {
     action: function (type, actionName, conf, isRemote) {
         var me = this,
             fulfill = function (rawJSON) {
-                return ApiReference.tryCreateApiObject(type, rawJSON, me);
+                var newApiObject = ApiReference.tryCreateApiObject(type, rawJSON, me);
+                me.fire('spawn', newApiObject);
+                return newApiObject;
             };
         isRemote = isRemote === false ? false : true;
         if (isRemote) {

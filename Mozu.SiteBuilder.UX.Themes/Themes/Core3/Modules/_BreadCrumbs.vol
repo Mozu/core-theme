@@ -3,10 +3,8 @@
 	Obviously, the below template is a placeholder. Breadcrumb functionality is not yet complete.
 {% endcomment %}
 <div class="mz-breadcrumb-wrap">
-	
-	<a href="/" class="mz-breadcrumb">Home</a> &gt; 
-	<a href="/" class="mz-breadcrumb">First Floor</a> &gt; 
-	<a href="/" class="mz-breadcrumb mz-breadcrumb-active">Second Floor</a> 
-	
+	{% for crumb in SiteContext.Navigation.Breadcrumbs %}
+        <a href="{{crumb.url}}" class="mz-breadcrumb{% if forloop.first %} mz-breadcrumb-first{% endif %}{% if forloop.last %} mz-breadcrumb-active{% endif %}">{{crumb.name}}</a> {% if not forloop.last %}&gt;{% endif %}
+    {% endfor %}
 </div>
 {% endblock Breadcrumb %}
