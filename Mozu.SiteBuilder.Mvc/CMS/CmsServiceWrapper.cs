@@ -228,7 +228,15 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
                     if (prop == null)
                     {
-                        d.Properties.Add(ToPropertyValue(item));
+                        
+                        try
+                        {
+                            var cProp = ToPropertyValue(item);
+                            d.Properties.Add(cProp);
+                        }
+                        catch
+                        {
+                        }
 
                     }
                     else
