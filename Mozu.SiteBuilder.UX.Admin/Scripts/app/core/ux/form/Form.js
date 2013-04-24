@@ -229,29 +229,36 @@ Ext.define('Taco.core.ux.form.Form', {
         });
     },
 
+    loadSingleValue: function (fieldName, value) {
+        var field;
+        
+        Ext.each(this.trackedFields, function (trackedField) {
+            if (trackedField && trackedField.name === fieldName) {
+                field = trackedField;
+                return false;
+            }
+        });
+
+        if (!field) {
+            return;
+        }
+
+        field.setValue(value);
+        if (this.getForm().trackResetOnLoad) {
+            field.resetOriginalValue();
+        }
+    },
+
+
     loadRecord: function(record, cascade) {
         if (cascade) {
             return this.callParent([record]);
         }
 
-        Ext.iterate(record.data, function (fieldName, value) {
-            var field;
-            
-            Ext.each(this.trackedFields, function (trackedField) {
-                if (trackedField && trackedField.name === fieldName) {
-                    field = trackedField;
-                    return false;
-                }
-            });
+        Ext.iterate(record.data, this.loadSingleValue, this);
 
-            if (!field) {
-                return;
-            }
-
-            field.setValue(value);
-            if (this.getForm().trackResetOnLoad) {
-                field.resetOriginalValue();
-            }
+        if (record.dictField) Ext.iterate(record.get(record.dictField), function (kvp) {
+            this.loadSingleValue(kvp.key, kvp.value);
         }, this);
     },
 
