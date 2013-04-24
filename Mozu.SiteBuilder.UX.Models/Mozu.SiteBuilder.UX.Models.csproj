@@ -341,6 +341,7 @@
     <Compile Include="IStartUpTask.cs" />
     <Compile Include="Messages.cs" />
     <Compile Include="Navigation\NavigationNode.cs" />
+    <Compile Include="Navigation\NavigationNodeType.cs" />
     <Compile Include="Navigation\NavigationRuntimeExtensions.cs" />
     <Compile Include="Navigation\NavigationRuntimeNode.cs" />
     <Compile Include="Navigation\NavigationSet.cs" />

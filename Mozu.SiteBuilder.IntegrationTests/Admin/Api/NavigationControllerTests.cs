@@ -221,7 +221,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var controller = GetApi();
             var items = controller.List().Result.Items;
 
-            var page = items.Last(i => i.NodeType == "page");
+            var page = items.Last(i => i.NodeType.IsPage);
             var oldIndex = page.Index;
             var newIndex = oldIndex - 1;
 
@@ -241,12 +241,12 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var controller = GetApi();
             var items = controller.List().Result.Items;
 
-            var cat = items.Last(i => i.NodeType == "category");
+            var cat = items.Last(i => i.NodeType.IsCategory);
             var oldIndex = cat.Index;
             var newIndex = oldIndex - 1;
 
             // items.Where(i => i.Index >= newIndex && i.Index <= oldIndex && i.Id != cat.Id).ToList().ForEach(i => i.Index++);
-            items.Where(i => i.NodeType == "category" && i.ParentId == cat.ParentId && i.Index >= newIndex && i.Index <= oldIndex).ToList().ForEach(i => i.Index++);
+            items.Where(i => i.NodeType.IsCategory && i.ParentId == cat.ParentId && i.Index >= newIndex && i.Index <= oldIndex).ToList().ForEach(i => i.Index++);
 
             cat.Index = newIndex;
 
@@ -267,9 +267,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var controller = GetApi();
             var items = controller.List().Result.Items;
 
-            var page = items.First(i => i.NodeType == "page");
+            var page = items.First(i => i.NodeType.IsPage);
             var oldParentId = page.ParentId;
-            var newParent = items.First(i => i.NodeType == "category" && i.Id != oldParentId);
+            var newParent = items.First(i => i.NodeType.IsCategory && i.Id != oldParentId);
 
             page.ParentId = newParent.Id;
             page.Index = 0;
@@ -287,9 +287,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var controller = GetApi();
             var items = controller.List().Result.Items;
 
-            var cat = items.First(i => i.NodeType == "category");
+            var cat = items.First(i => i.NodeType.IsCategory);
             var oldParent = cat.ParentId;
-            var newParent = items.First(i => i.NodeType == "category" && i.Id != oldParent && i.Id != cat.Id);
+            var newParent = items.First(i => i.NodeType.IsCategory && i.Id != oldParent && i.Id != cat.Id);
 
             cat.ParentId = newParent.Id;
             cat.Index = 0;
@@ -310,7 +310,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var controller = GetApi();
             var items = controller.List().Result.Items;
 
-            var page = items.First(i => i.NodeType == "page");
+            var page = items.First(i => i.NodeType.IsPage);
             string newName = page.Name = page.Name + "_newhotness";
 
             var res = controller.Edit(items).Result;
@@ -326,7 +326,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var controller = GetApi();
             var items = controller.List().Result.Items;
 
-            var cat = items.First(i => i.NodeType == "category");
+            var cat = items.First(i => i.NodeType.IsCategory);
 
             var newName = cat.Name = cat.Name + "_newcatness";
             int catId = Convert.ToInt32(cat.IdParts[1]);

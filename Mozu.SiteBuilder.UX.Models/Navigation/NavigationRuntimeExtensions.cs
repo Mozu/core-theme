@@ -11,7 +11,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public static NavigationRuntimeNode FindByCategory(this List<NavigationRuntimeNode> nodes, Category category)
         {
             return (from n in nodes
-             where n.NodeType == "category"
+             where n.NodeType.IsCategory
              where n.Id == "category^^" + category.CategoryId
              select n).FirstOrDefault();
         }
@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public static NavigationRuntimeNode FindByProduct(this List<NavigationRuntimeNode> nodes, Product product)
         {
             return (from n in nodes
-             where n.NodeType == "product"
+             where n.NodeType.IsProduct
              where n.Id == "product^^" + product.ProductCode
              select n).FirstOrDefault();
         }

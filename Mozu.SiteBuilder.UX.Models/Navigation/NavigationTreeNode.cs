@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Models.Navigation
@@ -49,8 +50,12 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
+        public NavigationNodeType NodeType { get; set; }
+
+        // plain string for easy serialization.
+        [Obsolete]
         [DataMember(Name = "nodeType")]
-        public string NodeType { get; set; }
+        public string NodeTypeString { get; set; }
 
         [DataMember(Name = "url")]
         public string Url { get; set; }
@@ -68,7 +73,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public string Class { get; set; }
 
         [DataMember(Name = "iconCls", EmitDefaultValue = false)]
-        public string IconClass { get { return "taco-nav-node-" + (NodeType ?? "unknown").ToLower(); } set { } }
+        public string IconClass { get { return "taco-nav-node-" + (NodeType ?? "unknown"); } set { } }
         
         [DataMember(Name = "allowDrag")]
         public bool AllowDrag { get; set; }

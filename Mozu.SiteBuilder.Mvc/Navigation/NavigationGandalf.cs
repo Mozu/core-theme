@@ -86,36 +86,38 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     foreach (var navmeta in (navSet.Nodes ?? new List<NavigationNode>()))
                     {
                         NavigationTreeNode node;
-                        switch (navmeta.NodeType)
-                        {
-                            case "page":
-                                string pageId = navmeta.OriginalId;
-                                var page = (pages != null && pages.Items != null) ? pages.Items.FirstOrDefault(p => p.Id == pageId) : null;
 
-                                if (page != null)
-                                {
-                                    node = Mapper.Map<NavigationTreeNode>(page);
-                                    node.Index = navmeta.Index;
-                                    node.ParentId = navmeta.ParentId;
-                                }
-                                else
-                                {
-                                    // ignore pages in the navigation document that don't exist in the cms.
-                                    continue;
-                                }
-                                break;
-                            case "link":
-                                node = new NavigationTreeNode
-                                {
-                                    Name = navmeta.Name,
-                                    Url = navmeta.Url,
-                                    Index = navmeta.Index,
-                                    ParentId = navmeta.ParentId,
-                                    NodeType = "link",
-                                };
-                                break;
-                            default:
+                        if (navmeta.NodeType.IsPage)
+                        {
+                            string pageId = navmeta.OriginalId;
+                            var page = (pages != null && pages.Items != null) ? pages.Items.FirstOrDefault(p => p.Id == pageId) : null;
+
+                            if (page != null)
+                            {
+                                node = Mapper.Map<NavigationTreeNode>(page);
+                                node.Index = navmeta.Index;
+                                node.ParentId = navmeta.ParentId;
+                            }
+                            else
+                            {
+                                // ignore pages in the navigation document that don't exist in the cms.
                                 continue;
+                            }
+                        }
+                        else if (navmeta.NodeType.IsLink)
+                        {
+                            node = new NavigationTreeNode
+                            {
+                                Name = navmeta.Name,
+                                Url = navmeta.Url,
+                                Index = navmeta.Index,
+                                ParentId = navmeta.ParentId,
+                                NodeType = NavigationNodeType.Link,
+                            };
+                        }
+                        else
+                        {
+                            continue;
                         }
 
                         // if we want to insert a node with an index that's already taken, we need to move the others
@@ -144,7 +146,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     masterList.Add(new NavigationTreeNode()
                     {
                         Name = "Non-Linked Pages",
-                        NodeType = "group",
+                        NodeType = NavigationNodeType.Group,
                         Expanded = true,
                         Expandable = false,
                         Class = "taco-nav",

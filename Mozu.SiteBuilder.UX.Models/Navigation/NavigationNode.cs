@@ -92,8 +92,13 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         [DataMember(Name = "leaf")]
         public bool Leaf { get; set; }
 
+        public NavigationNodeType NodeType { get; set; }
+
+        // plain string for easy serialization.
+        [Obsolete]
         [DataMember(Name = "nodeType", EmitDefaultValue = false)]
-        public string NodeType { get; set; }
+        public string NodeTypeString { get { return NodeType; } set { NodeType = value; } }
+
 
         [DataMember(Name = "url", EmitDefaultValue = false)]
         public string Url { get; set; }
