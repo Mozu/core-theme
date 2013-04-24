@@ -20,7 +20,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private const bool USE_MOCK_DATA = false;
 
         // the top level name in EXT's tree thing (a root pseudo-node).
-        public const string ROOT_NODE_NAME = "root";
+        public const string SUPER_ROOT_NODE_NAME = "root";
+
+        // the top level name in EXT's tree thing (a root pseudo-node).
+        public const string NAV_ROOT_NODE_NAME = "_navigation";
 
         // the special node to assign unlinked pages as a child of.
         public const string UNLINKED_PAGES_NODE_ID = "_unlinked";
@@ -170,7 +173,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 int categoryId = Convert.ToInt32(change.OriginalId);
                 var newCategoryParent = originalTree.First(n => n.Id == change.ParentId);
 
-                int? newCategoryParentId = newCategoryParent.Id == ROOT_NODE_NAME ? null : (int?)Convert.ToInt32(newCategoryParent.OriginalId);
+                int? newCategoryParentId = newCategoryParent.Id == NAV_ROOT_NODE_NAME ? null : (int?)Convert.ToInt32(newCategoryParent.OriginalId);
                 tasks.Add(
                     _catClient.GetCategory(categoryId)
                     .ContinueWith(t =>

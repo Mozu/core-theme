@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
                             IsLeaf = false,
                             Name = "Foodoc",
                             NodeType = "page",
-                            ParentId = NavigationController.ROOT_NODE_NAME,
+                            ParentId = NavigationController.NAV_ROOT_NODE_NAME,
                             Url = "/pages/foodoc"
                         }
                     }
@@ -170,7 +170,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
                         IsLeaf = false,
                         Name = "Deleteme",
                         NodeType = "page",
-                        ParentId = NavigationController.ROOT_NODE_NAME,
+                        ParentId = NavigationController.NAV_ROOT_NODE_NAME,
                         Url = "/pages/deleteme"
                     }
                 }
