@@ -6,34 +6,37 @@
 
 Ext.define('Taco.core.ux.browser.Browsable', {
 
-    typeName: 'Item',
-    createButtonPrefix: "Create New ",
-    useGridPanel: true,
-    useTilePanel: false,
-    gridPanelClass: 'Taco.core.ux.grid.Panel',
-    tilePanelClass: 'Taco.core.ux.TilePanel', 
-    filterProperty: 'name',
-    hasSidebar: true,
-    launchEditorOnClick: true,
-    header: null,
+    config: {
+        typeName: 'Item',
+        createButtonPrefix: "Create New ",
+        useGridPanel: true,
+        useTilePanel: false,
+        gridPanelClass: 'Taco.core.ux.grid.Panel',
+        tilePanelClass: 'Taco.core.ux.TilePanel', 
+        filterProperty: 'name',
+        hasSidebar: true,
+        launchEditorOnClick: true,
+        header: null,
 
-    cls: 'taco-content-browserpage',
+        cls: 'taco-content-browserpage',
 
-    gridPanelDefaults: {
-        enableColumnHide: true,
-        paged: true,
-        selModel: Ext.create('Ext.selection.CheckboxModel', { // must pass instantiated selModel, config-only is bugged
-            selType: 'checkboxmodel',
-            checkOnly: true,
-            showHeaderCheckbox: true
-        })
-    },
+        gridPanelDefaults: {
+            enableColumnHide: true,
+            paged: true,
+            selModel: Ext.create('Ext.selection.CheckboxModel', { // must pass instantiated selModel, config-only is bugged
+                selType: 'checkboxmodel',
+                checkOnly: true,
+                showHeaderCheckbox: true
+            })
+        },
 
-    tilePanelDefaults: {
+        tilePanelDefaults: {
 
+        }
     },
 
     initBrowserConfig: function () {
+
         if (!this.header) {
             this.header = {};
         }
@@ -80,6 +83,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
     },
 
     initBrowserListeners: function () {
+        
         this.mon(this.store.getProxy(), 'exception', function (proxy, response, operation, eOpts) {
             if (operation.error && operation.error.remoteException) {
                 alert(operation.error.remoteException.getMessage());

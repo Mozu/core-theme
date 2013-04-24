@@ -607,6 +607,7 @@
     <Content Include="Scripts\app\view\discount\Edit.js" />
     <Content Include="Scripts\app\view\discount\Form.js" />
     <Content Include="Scripts\app\view\discount\Index.js" />
+    <Content Include="Scripts\app\view\fileManager\Associator.js" />
     <Content Include="Scripts\app\view\fileManager\Index.js" />
     <Content Include="Scripts\app\view\fileManager\util\Uploadable.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
@@ -634,6 +635,7 @@
     <Content Include="Scripts\app\view\product\Modal.js" />
     <Content Include="Scripts\app\view\product\SiteForm.js" />
     <Content Include="Scripts\app\view\product\subform\Categories.js" />
+    <Content Include="Scripts\app\view\product\subform\ImageField.js" />
     <Content Include="Scripts\app\view\product\subform\ListExtraEditor.js" />
     <Content Include="Scripts\app\view\product\subform\OverrideForm.js" />
     <Content Include="Scripts\app\view\product\subform\SEO.js" />

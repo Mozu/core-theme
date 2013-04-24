@@ -6,6 +6,9 @@
 
 Ext.define('Taco.view.product.subform.General', {
     extend: 'Taco.view.product.subform.Subform',
+    requires: [
+        'Taco.view.product.subform.ImageField'
+    ],
 
     title: 'General',
 
@@ -13,8 +16,6 @@ Ext.define('Taco.view.product.subform.General', {
         var readOnly;
 
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
-
-        
 
         this.defaults = {
             width: 200,
@@ -29,8 +30,6 @@ Ext.define('Taco.view.product.subform.General', {
 
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
 
-        console.log('length = ', this.productTypeStore.data.length, readOnly);
-
         this.items = [{
             fieldLabel: 'Code',
             name: 'productCode',
@@ -44,7 +43,7 @@ Ext.define('Taco.view.product.subform.General', {
             persistChangesToModel: true,
             record: this.productInSiteInfo,
             hidden: this.isGlobal,
-            width: "100%",
+            width: '100%',
             header:false,
             items: [
                 {
@@ -73,15 +72,21 @@ Ext.define('Taco.view.product.subform.General', {
 
                 name: 'productName',
                 emptyText: 'Some product description',
-                width: "100%",
+                width: '100%',
                 required: true
             }, {
                 fieldLabel: 'Description',
                 name: 'productFullDescription',
                 emptyText: 'Words, words, and more words.  Also, with lists.',
                 xtype: 'textarea',
-                width: "100%",
+                width: '100%',
                 required: true
+            }, {
+                fieldLabel: 'Product Image',
+                name: 'productImages',
+                hidden: this.isGlobal,
+                xtype: 'productimagefield',
+                width: '100%'
             }]
         }, {
             xtype: 'productoverride',
