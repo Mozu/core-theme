@@ -195,6 +195,12 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     var rootLevelMapped = Mapper.Map<List<NavigationRuntimeNode>>(rootLevel.ToList());
                     BuildTree(rootLevelMapped, grouped);
 
+                    if (rootLevelMapped != null)
+                    {
+                        var homePage = rootLevelMapped.FirstOrDefault(node => !node.NodeType.IsLink && !String.IsNullOrEmpty(node.Url));
+                        if (homePage != null)
+                            homePage.IsHomePage = true;
+                    }
                     return rootLevelMapped;
                 });
         }

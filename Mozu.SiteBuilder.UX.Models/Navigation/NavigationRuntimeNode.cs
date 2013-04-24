@@ -106,5 +106,10 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         [Obsolete]
         [DataMember(Name = "nodeType")]
         public string NodeTypeString { get { return NodeType; } set { NodeType = value; } }
+
+        /// <summary>
+        /// Whether or not this node is the home page.
+        /// </summary>
+        public bool IsHomePage { get; set; }
     }
 }
