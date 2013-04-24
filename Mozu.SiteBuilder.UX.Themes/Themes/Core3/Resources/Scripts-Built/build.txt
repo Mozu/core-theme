@@ -10,7 +10,6 @@ modules/api.js
 modules/animatemodals.js
 shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
 modules/jquery-plus.js
-modules/jquery-sitemenu.js
 modules/loading-bars.js
 i18n.js
 nls/messages.js
@@ -40,9 +39,14 @@ shim!vendor/bootstrap/bootstrap-affix[modules/jquery-plus=jQuery]>jQuery
 nls/messages-checkout.js
 i18n!nls/messages-checkout
 modules/models-user.js
+modules/models-address.js
 modules/models-checkout.js
 pages/checkout.js
 
 pages/myaccount.js
 ----------------
+shim!vendor/jquery-colorbox[modules/jquery-plus=jQuery]>jQuery
+modules/models-customer.js
+modules/models-user.js
+modules/models-myaccount.js
 pages/myaccount.js

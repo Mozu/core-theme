@@ -10,7 +10,6 @@ modules/api.js
 modules/animatemodals.js
 shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
 modules/jquery-plus.js
-modules/jquery-sitemenu.js
 modules/loading-bars.js
 i18n.js
 nls/messages.js
@@ -23,6 +22,7 @@ modules/tagcloud.js
 
 pages/product.js
 ----------------
+modules/models-price.js
 modules/models-product.js
 shim!vendor/jquery-colorbox[jquery=jQuery]
 modules/product-images.js
@@ -35,24 +35,18 @@ pages/cart.js
 
 pages/checkout.js
 ----------------
-text.js
-shim.js
-shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
-modules/jquery-plus.js
 shim!vendor/bootstrap/bootstrap-affix[modules/jquery-plus=jQuery]>jQuery
-vendor/knockout-latest.js
-i18n.js
-nls/messages.js
-i18n!nls/messages
-modules/knockout-plus.js
-modules/api.js
-modules/knockout-viewmodel.js
 nls/messages-checkout.js
 i18n!nls/messages-checkout
 modules/models-user.js
+modules/models-address.js
 modules/models-checkout.js
 pages/checkout.js
 
 pages/myaccount.js
 ----------------
+shim!vendor/jquery-colorbox[modules/jquery-plus=jQuery]>jQuery
+modules/models-customer.js
+modules/models-user.js
+modules/models-myaccount.js
 pages/myaccount.js
