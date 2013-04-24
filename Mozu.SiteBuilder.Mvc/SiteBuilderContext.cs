@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.Mvc
 	    private readonly Lazy<ICatalogContext> _catContext;
         private readonly ICookieProvider _cookieProvider;
         private readonly IMobileDetectionProvider _mobileProvider;
-        private List<NavigationRuntimeNode> _navigationTree;
+        private NavigationContext _navigationContext;
 
 	    private readonly Dictionary<string, Lazy<object>> _stateBag =
 			new Dictionary<string, Lazy<object>>(StringComparer.OrdinalIgnoreCase);
@@ -354,10 +354,13 @@ namespace Mozu.SiteBuilder.Mvc
         {
             get
             {
-                if (_navigationTree  == null)
-                    _navigationTree = _gandalf.Value.GetTreeNavigation().Result;
+                if (_navigationContext == null)
+                {
+                    var navigationTree = _gandalf.Value.GetTreeNavigation().Result;
+                    _navigationContext = new NavigationContext(navigationTree);
+                }
 
-                return new NavigationContext(_navigationTree);
+                return _navigationContext;
             }
         }
 

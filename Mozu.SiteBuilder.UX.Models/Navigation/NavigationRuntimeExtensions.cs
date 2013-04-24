@@ -10,18 +10,36 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
     {
         public static NavigationRuntimeNode FindByCategory(this List<NavigationRuntimeNode> nodes, Category category)
         {
-            return (from n in nodes
-             where n.NodeType.IsCategory
-             where n.Id == "category^^" + category.CategoryId
-             select n).FirstOrDefault();
+            foreach (var n in nodes)
+            {
+                if (n.NodeType.IsCategory && n.Id == "category^^" + category.CategoryId)
+                    return n;
+                if (n.Items != null && n.Items.Count > 0)
+                {
+                    NavigationRuntimeNode foundCat = FindByCategory(n.Items, category);
+                    if (foundCat != null)
+                        return foundCat;
+                }
+            }
+
+            return null;
         }
 
         public static NavigationRuntimeNode FindByProduct(this List<NavigationRuntimeNode> nodes, Product product)
         {
-            return (from n in nodes
-             where n.NodeType.IsProduct
-             where n.Id == "product^^" + product.ProductCode
-             select n).FirstOrDefault();
+            foreach (var n in nodes)
+            {
+                if (n.NodeType.IsProduct && n.Id == "product^^" + product.ProductCode)
+                    return n;
+                if (n.Items != null && n.Items.Count > 0)
+                {
+                    NavigationRuntimeNode foundProduct = FindByProduct(n.Items, product);
+                    if (foundProduct != null)
+                        return foundProduct;
+                }
+            }
+
+            return null;
         }
     }
 }

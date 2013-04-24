@@ -94,7 +94,7 @@ namespace Mozu.SiteBuilder.Mvc
 
             if (productNode == null)
             {
-                productNode = Mapper.Map<NavigationRuntimeNode>(product);
+                productNode = Mapper.Map<NavigationRuntimeNode>( Mapper.Map<NavigationNode>(product) );
 
                 if (product.Categories != null && product.Categories.Count > 0)
                 {
@@ -122,7 +122,7 @@ namespace Mozu.SiteBuilder.Mvc
 
             if (categoryNode == null)
             {
-                categoryNode = Mapper.Map<NavigationRuntimeNode>(category);
+                categoryNode = Mapper.Map<NavigationRuntimeNode>( Mapper.Map<NavigationNode>(category) );
                 _navigationTree.Add(categoryNode);
             }
 
