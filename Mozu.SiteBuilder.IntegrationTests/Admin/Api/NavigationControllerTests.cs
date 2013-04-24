@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
                         new NavigationNode {
                             Id = "page^^pages^^b54c5602-5a14-07e8-c88b-8ac300007629",
                             Index = 2,
-                            Leaf = false,
+                            IsLeaf = false,
                             Name = "Foodoc",
                             NodeType = "page",
                             ParentId = NavigationController.ROOT_NODE_NAME,
@@ -167,7 +167,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
                     new NavigationNode {
                         Id = "page^^pages^^deleteme",
                         Index = 2,
-                        Leaf = false,
+                        IsLeaf = false,
                         Name = "Deleteme",
                         NodeType = "page",
                         ParentId = NavigationController.ROOT_NODE_NAME,
@@ -253,7 +253,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var res = controller.Edit(items).Result.Items;
             var resCat = res.First(i => i.Id == cat.Id);
 
-            int realCatId = Convert.ToInt32(cat.IdParts[1]);
+            int realCatId = Convert.ToInt32(cat.OriginalId);
 
             _categoryWebApiClient
                 .Received()
@@ -294,7 +294,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             cat.ParentId = newParent.Id;
             cat.Index = 0;
 
-            int catId = Convert.ToInt32(cat.IdParts[1]);
+            int catId = Convert.ToInt32(cat.OriginalId);
 
             var res = controller.Edit(items).Result.Items;
 
@@ -329,7 +329,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var cat = items.First(i => i.NodeType.IsCategory);
 
             var newName = cat.Name = cat.Name + "_newcatness";
-            int catId = Convert.ToInt32(cat.IdParts[1]);
+            int catId = Convert.ToInt32(cat.OriginalId);
 
             var res = controller.Edit(items).Result;
             

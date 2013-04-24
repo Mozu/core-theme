@@ -7,82 +7,75 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
 {
     public class NavigationMapping : Profile
     {
-        public override string ProfileName
-        {
-            get
-            {
-                return this.GetType().FullName;
-            }
-        }
+        public override string ProfileName  { get { return this.GetType().FullName; } }
 
         protected override void Configure()
         {
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.Navigation.NavigationTreeNode, Mozu.SiteBuilder.UX.Models.Navigation.NavigationNode>()
-                // .ForMember(x => x.IdParts, opt => opt.Ignore());
-                ;
-
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, NavigationRuntimeNode>()
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, NavigationNode>()
+                .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("product", x.ProductCode)))
+                .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.ProductName))
                 .ForMember(d => d.Url, opt => opt.MapFrom(x => "/product/" + x.ProductCode))
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("product", x.ProductCode )));
-
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product , NavigationRuntimeNode>()
-              .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.ProductName))
-              .ForMember(d => d.Url, opt => opt.MapFrom(x => "/product/" + x.ProductCode))
-              .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("product", x.ProductCode)));
-
-            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Product, Mozu.SiteBuilder.UX.Models.Navigation.NavigationTreeNode>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("product", x.ProductCode)))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(x => x.Content.ProductName))
                 .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Product))
-                .ForMember(dest => dest.Leaf, opt => opt.UseValue(true))
-                .ForMember(dest => dest.Url, opt => opt.MapFrom(x => ("/product/" + x.ProductCode)));
-
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, NavigationRuntimeNode>()
-                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Name))
-                .ForMember(d => d.Url, opt => opt.MapFrom(x => "/category/" + x.CategoryId))
-                .ForMember(d=>d.Index, opt=> opt.MapFrom( x=>x.Index ))
-                .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Category))
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("category", x.CategoryId)))
-                .ForMember(dest => dest.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null));
-
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, NavigationTreeNode>()
-                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Name))
-                .ForMember(d => d.Url, opt => opt.MapFrom(x => "/category/" + x.CategoryId))
-                .ForMember(d => d.Index, opt => opt.MapFrom(x => x.Index))
-                .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Category))
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("category", x.CategoryId)))
-                .ForMember(dest => dest.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null));
-
-
-            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Category, Mozu.SiteBuilder.UX.Models.Navigation.NavigationTreeNode>()
-               .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("category", x.Id)))
-               .ForMember(dest => dest.Name, opt => opt.MapFrom(x => x.Content.Name))
-               .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Category))
-               .ForMember(dest => dest.Leaf, opt => opt.UseValue(false))
-               .ForMember(dest => dest.Index, opt => opt.MapFrom(x => x.Sequence.GetValueOrDefault(0)))
-               .ForMember(dest => dest.Url, opt => opt.MapFrom(x => ("/category/" + x.Id)))
-               .ForMember(dest => dest.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null));
-
-
-            Mapper.CreateMap<NavigationNode , NavigationRuntimeNode>()
-                .ForMember(d => d.Id , opt => opt.MapFrom(x => x.Id ));
-
-            Mapper.CreateMap<NavigationTreeNode, NavigationRuntimeNode>()
+                .ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
                 ;
 
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.Navigation.NavigationNode, Mozu.SiteBuilder.UX.Models.Navigation.NavigationTreeNode>()
-                //.ForMember(dest => dest.Leaf , opt => opt.MapFrom(x => x.ChildNodes == null || x.ChildNodes.Count == 0))
-                  .ForMember(x => x.IdParts, opt => opt.Ignore());
+            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product, NavigationNode>()
+                .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("product", x.ProductCode)))
+                .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.ProductCode))
+                .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.ProductName))
+                .ForMember(d => d.Url, opt => opt.MapFrom(x => "/product/" + x.ProductCode))
+                .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Product))
+                .ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
+                ;
 
-            Mapper.CreateMap<Mozu.Content.Contracts.Document, Mozu.SiteBuilder.UX.Models.Navigation.NavigationTreeNode>()
-               .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("page", x.DocumentListName, x.Id)))
-                // .ForMember(dest => dest.Name, opt => opt.MapFrom(x => x.Properties.Where  ( prop=> prop.PropertyType == "title").Select( val=> val.Value ).FirstOrDefault () ?? x.Name ))
-               .ForMember(dest => dest.Name, opt => opt.MapFrom(x => x.Get("link_title") ?? x.Get("title") ?? x.Name))
-               .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Page))
-               .ForMember(dest => dest.Leaf, opt => opt.MapFrom(x => x.DocumentType == "blog"))
-               .ForMember(dest => dest.Url, opt => opt.MapFrom(x => "/" + x.DocumentListName + "/" + x.Name));
+            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Product, NavigationNode>()
+                .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("product", x.ProductCode)))
+                .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.ProductCode))
+                .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.ProductName))
+                .ForMember(d => d.Url, opt => opt.MapFrom(x => "/product/" + x.ProductCode))
+                .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Product))
+                .ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
+                ;
 
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, NavigationNode>()
+                .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("category", x.CategoryId)))
+                .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.CategoryId))
+                .ForMember(d => d.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null))
+                .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Name))
+                .ForMember(d => d.Url, opt => opt.MapFrom(x => "/category/" + x.CategoryId))
+                .ForMember(d => d.NodeType, opt => opt.UseValue(NavigationNodeType.Category))
+                .ForMember(d => d.Index, opt => opt.MapFrom(x => x.Index))
+                .ForMember(d => d.IsLeaf, opt => opt.UseValue(false))
+                ;
+
+            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Category, NavigationNode>()
+                .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("category", x.Id)))
+                .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.Id))
+                .ForMember(d => d.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null))
+                .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.Name))
+                .ForMember(d => d.Url, opt => opt.MapFrom(x => "/category/" + x.Id))
+                .ForMember(d => d.NodeType, opt => opt.UseValue(NavigationNodeType.Category))
+                .ForMember(d => d.Index, opt => opt.MapFrom(x => x.Sequence))
+                .ForMember(d => d.IsLeaf, opt => opt.UseValue(false))
+                ;
+
+            Mapper.CreateMap<Mozu.Content.Contracts.Document, NavigationNode>()
+               .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("page", x.DocumentListName, x.Id)))
+               .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.Id))
+               .ForMember(d => d.ParentId, opt => opt.UseValue(null))
+               .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Get("link_title") ?? x.Get("title") ?? x.Name))
+               .ForMember(d => d.Url, opt => opt.MapFrom(x => "/" + x.DocumentListName + "/" + x.Name))
+               .ForMember(d => d.NodeType, opt => opt.UseValue(NavigationNodeType.Page))
+               .ForMember(d => d.Index, opt => opt.UseValue(null))
+               .ForMember(d => d.IsLeaf, opt => opt.MapFrom(x => x.DocumentType == "blog"))
+               ;
+
+            Mapper.CreateMap<NavigationNode, NavigationRuntimeNode>()
+                ;
+
+            Mapper.CreateMap<NavigationNode, NavigationTreeNode>()
+                ;
         }
 
         const string _STRINGSPLITDELIM = "^^";
