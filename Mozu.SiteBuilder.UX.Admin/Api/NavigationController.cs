@@ -25,10 +25,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         // the special node to assign unlinked pages as a child of.
         public const string UNLINKED_PAGES_NODE_ID = "_unlinked";
 
-        public const string NODE_TYPE_CATEGORY = "category";
-        public const string NODE_TYPE_PAGE = "page";
-        public const string NODE_TYPE_LINK = "link";
-
         private INavigationRepository _navRepo;
         private ICategoryWebApiClient _catClient;
         private ICmsServiceWrapper _cmsService;
@@ -62,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var navSet = await _navRepo.GetSetAsync();
 
-            int currentHighestLinkIndex = navSet.Nodes.Where(n => n.NodeType == "link").Select<NavigationNode, int?>(n => n.OriginalIdInt).OrderBy(i => i).LastOrDefault() ?? 0;
+            int currentHighestLinkIndex = navSet.Nodes.Where(n => n.NodeType.IsLink).Select<NavigationNode, int?>(n => n.OriginalIdInt).OrderBy(i => i).LastOrDefault() ?? 0;
 
             foreach (var item in items)
             {
@@ -116,7 +112,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
             // step 4. detect any page reorder.
-            var newPageOrder = items.Where(i => i.NodeType == NODE_TYPE_PAGE).GroupBy(co => co.ParentId);
+            var newPageOrder = items.Where(i => i.NodeType.IsPage).GroupBy(co => co.ParentId);
             NavigationSet pageOrderNavSet = null;
 
             foreach (var group in newPageOrder)
@@ -158,11 +154,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var parentChanges =
                 from i in changeTree
                 let original = originalTree.First(o => o.Id == i.Id)
-                where i.NodeType == NODE_TYPE_PAGE || i.NodeType == NODE_TYPE_CATEGORY || i.NodeType == NODE_TYPE_LINK
+                where i.NodeType.IsPage || i.NodeType.IsCategory || i.NodeType.IsLink
                 where i.ParentId != original.ParentId
                 select i;
 
-            foreach (var change in parentChanges.Where(ch => ch.NodeType == NODE_TYPE_CATEGORY))
+            foreach (var change in parentChanges.Where(ch => ch.NodeType.IsCategory))
             {
                 int categoryId = Convert.ToInt32(change.IdParts[1]);
                 var newCategoryParent = originalTree.First(n => n.Id == change.ParentId);
@@ -180,7 +176,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     .Unwrap()
                 );
             }
-            var navChanges = parentChanges.Where(ch => ch.NodeType == NODE_TYPE_PAGE || ch.NodeType == NODE_TYPE_LINK);
+            var navChanges = parentChanges.Where(ch => ch.NodeType.IsPage || ch.NodeType.IsLink);
             if (navChanges.Count() > 0)
             {
                 tasks.Add(
@@ -220,14 +216,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var nameChanges =
                 from i in changeTree
                 let original = originalTree.First(o => o.Id == i.Id)
-                where i.NodeType == NODE_TYPE_PAGE || i.NodeType == NODE_TYPE_CATEGORY
+                where i.NodeType.IsPage || i.NodeType.IsCategory
                 where i.Name != original.Name
                 select i;
 
             foreach (var change in nameChanges)
             {
                 // issue changes to categories immediately.
-                if (change.NodeType == NODE_TYPE_CATEGORY)
+                if (change.NodeType.IsCategory)
                 {
                     int categoryId = Convert.ToInt32(change.IdParts[1]);
 
@@ -244,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     );
                 }
                 // name changes are in CMS, so issue those immediately too.
-                else if (change.NodeType == NODE_TYPE_PAGE)
+                else if (change.NodeType.IsPage)
                 {
                     string docCollection = change.IdParts[1];
                     string docId = change.IdParts[2];
@@ -341,8 +337,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             return
                 from n in nodes
-                where n.NodeType == "category"
-                let canonicalIndex = nodes.Where(no => no.NodeType == "category" && no.ParentId == n.ParentId).OrderBy(no => no.Index).ToList().IndexOf(n)
+                where n.NodeType.IsCategory
+                let canonicalIndex = nodes.Where(no => no.NodeType.IsCategory && no.ParentId == n.ParentId).OrderBy(no => no.Index).ToList().IndexOf(n)
                 select new CategoryOrderInformation { Id = n.Id, ParentId = n.ParentId, Index = n.Index.HasValue ? n.Index.Value : 0, CanonicalIndex = canonicalIndex, Node = n };
         }
 
@@ -353,7 +349,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             return
                 from n in nodes
-                where n.NodeType == "page"
+                where n.NodeType.IsPage
                 select new CategoryOrderInformation { Id = n.Id, ParentId = n.ParentId, Index = n.Index.HasValue ? n.Index.Value : 0, Node = n };
         }
     }

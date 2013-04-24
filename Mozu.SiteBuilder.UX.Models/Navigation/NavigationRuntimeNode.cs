@@ -100,6 +100,11 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
         public NavigationRuntimeNode Parent { get; set; }
 
-        public string NodeType { get; set; }
+        public NavigationNodeType NodeType { get; set; }
+
+        // plain string for easy serialization.
+        [Obsolete]
+        [DataMember(Name = "nodeType")]
+        public string NodeTypeString { get; set; }
     }
 }
