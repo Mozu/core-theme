@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-04-21
+ * Mozu JavaScript SDK - v0.1.0 - 2013-04-24
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -986,7 +986,11 @@
                     MicroEvent.mixin(ctor);
                     ctor.prototype.on = ctor.prototype.bind;
                     ctor.prototype.off = ctor.prototype.unbind;
-                    ctor.prototype.fire = ctor.prototype.trigger;
+                    ctor.prototype.fire = function() {
+                        try {
+                            return ctor.prototype.trigger.apply(this, arguments);
+                        } catch (e) {}
+                    };
                 }
             };
             var ApiReference = function() {
@@ -1006,19 +1010,23 @@
                         var me = this;
                         var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
                         me.fire("action", actionName, data, requestConf);
+                        me.api.fire("action", me, actionName, data, requestConf);
                         return this.api.request(basicOps[actionName], requestConf, data).then(function(rawJSON) {
                             if (requestConf.returnType) {
                                 var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
                                 me.fire("spawn", returnObj);
+                                me.api.fire("spawn", returnObj, me);
                                 return returnObj;
                             } else {
                                 utils.extend(me.data, rawJSON);
                                 delete me.data.unsynced;
                                 me.fire("sync", rawJSON, me.data);
+                                me.api.fire("sync", me, rawJSON, me.data);
                                 return me;
                             }
                         }, function(errorJSON) {
                             me.fire("error", errorJSON);
+                            me.api.fire("error", errorJSON, me);
                             throw errorJSON;
                         });
                     },
@@ -1338,7 +1346,9 @@
                     },
                     action: function(type, actionName, conf, isRemote) {
                         var me = this, fulfill = function(rawJSON) {
-                            return ApiReference.tryCreateApiObject(type, rawJSON, me);
+                            var newApiObject = ApiReference.tryCreateApiObject(type, rawJSON, me);
+                            me.fire("spawn", newApiObject);
+                            return newApiObject;
                         };
                         isRemote = isRemote === false ? false : true;
                         if (isRemote) {

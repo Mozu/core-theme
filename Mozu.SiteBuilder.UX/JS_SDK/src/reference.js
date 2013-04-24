@@ -19,19 +19,23 @@ var ApiReference = (function () {
             var me = this;
             var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
             me.fire('action', actionName, data, requestConf);
+            me.api.fire('action', me, actionName, data, requestConf);
             return this.api.request(basicOps[actionName], requestConf, data).then(function (rawJSON) {
                 if (requestConf.returnType) {
                     var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
                     me.fire('spawn', returnObj);
+                    me.api.fire('spawn', returnObj, me);
                     return returnObj;
                 } else {
                     utils.extend(me.data, rawJSON);
                     delete me.data.unsynced;
                     me.fire('sync', rawJSON, me.data);
+                    me.api.fire('sync', me, rawJSON, me.data);
                     return me;
                 }
             }, function (errorJSON) {
                 me.fire('error', errorJSON);
+                me.api.fire('error', errorJSON, me);
                 throw errorJSON;
             });
         },

@@ -11,6 +11,8 @@
         "ReferenceService": "http://aus01pdweb001.ads.volusion.com:9090/Mozu.reference.WebApi/platform/reference/"
     };
 
+    var existingProductCode = "quux";
+
     Mozu.setServiceUrls(serviceUrls);
 
     it("should expose a Mozu object", function () {
@@ -181,7 +183,7 @@
             it("should work with simple url templates, like 'product'", function () {
                 var res;
                 runs(function () {
-                    api.get("product", { ProductCode: "foobar" }).then(function (product) {
+                    api.get("product", { ProductCode: existingProductCode }).then(function (product) {
                         res = product;
                     });
                 });
@@ -191,7 +193,7 @@
                 }, 20000);
 
                 runs(function () {
-                    expect(res.data.ProductCode).toBe("foobar");
+                    expect(res.data.ProductCode).toBe(existingProductCode);
                 });
             });
 
@@ -199,10 +201,10 @@
                 var res;
                 spyOn(Mozu.ApiReference, "getRequestConfig").andCallThrough();
                 runs(function () {
-                    api.get("product", "foobar").then(function (product) {
+                    api.get("product", existingProductCode).then(function (product) {
                         res = product;
                     });
-                    expect(Mozu.ApiReference.getRequestConfig).toHaveBeenCalledWith("get", "product", "foobar", api.context);
+                    expect(Mozu.ApiReference.getRequestConfig).toHaveBeenCalledWith("get", "product", existingProductCode, api.context);
                 });
 
                 waitsFor(function () {
@@ -210,7 +212,7 @@
                 }, 20000);
 
                 runs(function () {
-                    expect(res.data.ProductCode).toBe("foobar");
+                    expect(res.data.ProductCode).toBe(existingProductCode);
                 });
             });
 
@@ -275,23 +277,23 @@
 
         describe("the .all method of the api interface", function () {
 
-            var foobar, cart;
+            var foo, cart;
 
             it("should make a bunch of API calls at once and return them all to a handler", function () {
                 runs(
                     function () {
-                        api.all(api.get('product', 'foobar'), api.get('cart')).spread(function (f, c) {
-                            foobar = f;
+                        api.all(api.get('product', existingProductCode), api.get('cart')).spread(function (f, c) {
+                            foo = f;
                             cart = c;
                         });
                     });
 
                 waitsFor(function () {
-                    return foobar && cart;
+                    return foo && cart;
                 }), 20000;
 
                 runs(function () {
-                    expect(foobar.type).toBe("product");
+                    expect(foo.type).toBe("product");
                     expect(cart.type).toBe("cart");
                 });
             });
@@ -305,8 +307,8 @@
             it("should have an actions method that peforms common actions for the object type", function () {
                 runs(function () {
 
-                    api.get('product', 'foobar').then(function (foobar) {
-                        product = foobar;
+                    api.get('product', existingProductCode).then(function (foo) {
+                        product = foo;
                         return api.get('cart')
                     }).then(function (c) {
                         cart = c;
@@ -331,7 +333,7 @@
 
                 runs(function () {
                     expect(res.data.Items.length).toBe(1);
-                    expect(res.data.Items[0].Product.ProductCode).toBe("foobar");
+                    expect(res.data.Items[0].Product.ProductCode).toBe(existingProductCode);
                 });
                     
             });
@@ -343,7 +345,7 @@
             it("should create dummy ApiObjects with no data if you set the third 'isRemote' argument to false", function () {
                 var p, dummyProduct, m;                spyOn(Mozu.Utils, 'ajax').andCallThrough();
 
-                p = api.get('product', 'foobar', false).then(function (product) {
+                p = api.get('product', existingProductCode, false).then(function (product) {
                     m = "promise resolves immediately";
                     dummyProduct = product;
                 });
@@ -354,7 +356,7 @@
 
             it("should throw an 'action' event when you successfully run an action method and a 'sync' event if selfupdating", function () {
                 var p, actionName, requestConf, syncEventCalled;
-                api.get('product', 'foobar', false).then(function (dummyProduct) {
+                api.get('product', existingProductCode, false).then(function (dummyProduct) {
                     p = dummyProduct;
                 });
                 p.on('action', function (_a, _r) {
@@ -408,9 +410,9 @@
                 runs(function () {
 
                     api.steps(function () {
-                        return api.get('product', 'foobar');
-                    }, function (foobar) {
-                        product = foobar;
+                        return api.get('product', existingProductCode);
+                    }, function (foo) {
+                        product = foo;
                         return api.get('cart');
                     }, function (c) {
                         cart = c;
@@ -433,7 +435,7 @@
 
                 runs(function () {
                     expect(res.data.Items.length).toBe(1);
-                    expect(res.data.Items[0].Product.ProductCode).toBe("foobar");
+                    expect(res.data.Items[0].Product.ProductCode).toBe(existingProductCode);
                 });
 
             });
