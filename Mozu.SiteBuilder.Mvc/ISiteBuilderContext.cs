@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.Mvc
         PageContext PageContext { get; set; }
         ICatalogContext CatalogContext { get; set; }
         ISearchContext SearchContext { get; set; }
-        NavigationContext NavigationContext { get; }
+        NavigationContext Navigation { get; }
         object this[string key] { get; set; }
         RuntimeConfigurationFieldCollection ThemeSettings { get;  }
         ISettingsRepository Settings { get; }

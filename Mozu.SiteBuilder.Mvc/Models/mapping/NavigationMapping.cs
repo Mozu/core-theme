@@ -42,15 +42,17 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
                  .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Name))
                 .ForMember(d => d.Url, opt => opt.MapFrom(x => "/category/" + x.CategoryId))
                 .ForMember(d=>d.Index, opt=> opt.MapFrom( x=>x.Index ))
+                .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Category))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("category", x.CategoryId)))
-                .ForMember(dest => dest.ParentId, opt => opt.MapFrom(x => JoinParts("category", x.ParentCategoryId.GetValueOrDefault(0))));
+                .ForMember(dest => dest.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null));
 
             Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, NavigationTreeNode>()
                  .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Name))
                 .ForMember(d => d.Url, opt => opt.MapFrom(x => "/category/" + x.CategoryId))
                 .ForMember(d => d.Index, opt => opt.MapFrom(x => x.Index))
+                .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Category))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(x => JoinParts("category", x.CategoryId)))
-                .ForMember(dest => dest.ParentId, opt => opt.MapFrom(x => JoinParts("category", x.ParentCategoryId.GetValueOrDefault(0))));
+                .ForMember(dest => dest.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null));
 
 
             Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Category, Mozu.SiteBuilder.UX.Models.Navigation.NavigationTreeNode>()
@@ -59,8 +61,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
                .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Category))
                .ForMember(dest => dest.Leaf, opt => opt.UseValue(false))
                .ForMember(dest => dest.Index, opt => opt.MapFrom(x => x.Sequence.GetValueOrDefault(0)))
-               .ForMember(dest => dest.Url, opt => opt.MapFrom(x => ("/category/" + x.Id)));
-
+               .ForMember(dest => dest.Url, opt => opt.MapFrom(x => ("/category/" + x.Id)))
+               .ForMember(dest => dest.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null));
 
 
             Mapper.CreateMap<NavigationNode , NavigationRuntimeNode>()

@@ -127,6 +127,15 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         }
 
         /// <summary>
+        /// Object.ToString() override.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return _nodeType;
+        }
+
+        /// <summary>
         /// Allows this object to be serialized.
         /// </summary>
         public void GetObjectData(SerializationInfo info, StreamingContext context)

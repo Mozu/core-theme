@@ -105,6 +105,6 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         // plain string for easy serialization.
         [Obsolete]
         [DataMember(Name = "nodeType")]
-        public string NodeTypeString { get; set; }
+        public string NodeTypeString { get { return NodeType; } set { NodeType = value; } }
     }
 }

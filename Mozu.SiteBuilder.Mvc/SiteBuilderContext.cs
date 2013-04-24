@@ -350,7 +350,7 @@ namespace Mozu.SiteBuilder.Mvc
         //     }
         // }
 
-        public NavigationContext NavigationContext
+        public NavigationContext Navigation
         {
             get
             {

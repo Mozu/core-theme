@@ -217,12 +217,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private void SetCatalogContext(Product product)
         {
             _ctx.CatalogContext.CurrentProduct = product;
-            _ctx.NavigationContext.SetContext(product);
+            _ctx.Navigation.SetContext(product);
         }
 
         private void SetCatalogContext(Category category)
         {
-            _ctx.NavigationContext.SetContext(category);
+            _ctx.Navigation.SetContext(category);
         }
        
     }

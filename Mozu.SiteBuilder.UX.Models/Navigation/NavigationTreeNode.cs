@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         // plain string for easy serialization.
         [Obsolete]
         [DataMember(Name = "nodeType")]
-        public string NodeTypeString { get; set; }
+        public string NodeTypeString { get { return NodeType; } set { NodeType = value; } }
 
         [DataMember(Name = "url")]
         public string Url { get; set; }
@@ -82,6 +82,14 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
          [DataMember(Name = "isHidden")]
         public bool IsHidden { get; set; }
 
-         public bool AllowDrop { get; set; }
+        public bool AllowDrop { get; set; }
+
+        /// <summary>
+        /// Override Object.ToString()
+        /// </summary>
+        public override string ToString()
+        {
+            return Id;
+        }
     }
 }
