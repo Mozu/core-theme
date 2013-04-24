@@ -42,7 +42,7 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
                 text: 'Apply',
                 listeners: {
                     click: function () {
-                        this.form.save();
+                        this.form.update();
                     },
                     scope: this
                 }
