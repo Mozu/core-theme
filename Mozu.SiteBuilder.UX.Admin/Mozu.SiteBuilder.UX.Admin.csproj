@@ -2987,7 +2987,7 @@
     <Exec Command="attrib $(ProjectDir)\Scripts\build\*.* -R" IgnoreExitCode="true" />
     <Exec Command="attrib $(ProjectDir)\Scripts\resources\images\*.* -R" IgnoreExitCode="true" />
     <Exec Command="attrib $(ProjectDir)\Scripts\resources\css\*.* -R" IgnoreExitCode="true" />
-    <Exec Command="robocopy \\tfs-build01.ads.volusion.com\software\ext\ext-4.1.3\extjs-4.1.3 $(ProjectDir)\Scripts\ext /e /xd docs examples resources locale welcome builds /xf ext-all*.js" WorkingDirectory="$(ProjectDir)\Scripts" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="robocopy d:\software\ext\ext-4.1.3\extjs-4.1.3 $(ProjectDir)\Scripts\ext /e /xd docs examples resources locale welcome builds /xf ext-all*.js" WorkingDirectory="$(ProjectDir)\Scripts" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="sencha compile -classpath=ext\src,app,ext\ux,js page   -in index.html -yui -out build/index.html" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="compass clean" WorkingDirectory="$(ProjectDir)\Scripts\resources\scss" IgnoreExitCode="false" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="compass compile" WorkingDirectory="$(ProjectDir)\Scripts\resources\scss" IgnoreExitCode="false" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
