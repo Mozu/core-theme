@@ -423,7 +423,6 @@
     <Content Include="Themes\Core3\Resources\Scripts\Vendor\knockout-latest.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Vendor\modernizr-respond.min.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\facebook-tools.js" />
-    <Content Include="Themes\Core3\Resources\Scripts\Modules\jquery-sitemenu.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Vendor\jquery.tagcloud.0-0-1.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-checkout.js" />
     <Content Include="Themes\Core3\Resources\Scripts\nls\messages-checkout.js" />

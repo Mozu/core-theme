@@ -24,7 +24,6 @@
                 'modules/api',
                 'modules/animatemodals',
                 'modules/jquery-plus',
-                'modules/jquery-sitemenu',
                 'modules/loading-bars',
                 'modules/login-links',
                 'modules/message-dismisser',
