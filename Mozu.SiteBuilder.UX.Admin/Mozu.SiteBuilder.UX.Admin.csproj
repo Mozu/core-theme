@@ -521,6 +521,7 @@
     <Content Include="Scripts\app\core\context\TaContext.js" />
     <Content Include="Scripts\app\core\util\GetsParentPage.js" />
     <Content Include="Scripts\app\core\ux\action\PrimarySplitButton.js" />
+    <Content Include="Scripts\app\core\ux\browser\Browsable.js" />
     <Content Include="Scripts\app\core\ux\browser\Modal.js" />
     <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
@@ -534,6 +535,7 @@
     <Content Include="Scripts\app\core\ux\grid\MenuColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\HeaderDropZone.js" />
     <Content Include="Scripts\app\core\ux\ComboFilter.js" />
+    <Content Include="Scripts\app\core\ux\modal\BrowserModal.js" />
     <Content Include="Scripts\app\core\ux\SidebarList.js" />
     <Content Include="Scripts\app\core\ux\grid\Header.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />
