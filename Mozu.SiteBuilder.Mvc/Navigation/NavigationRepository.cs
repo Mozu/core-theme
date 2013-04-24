@@ -6,7 +6,6 @@ using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.CMS;
-using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using DC = Mozu.Content.Contracts;
 
@@ -15,10 +14,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     public class NavigationRepository : INavigationRepository
     {
         private const string NavigationContentCollection = "settings";
-        private const string NavigationFileName = "navigation";
+        private const string NavigationFileName = "navigation2";
         private IDocumentWebApiClient _docWebApiClient;
         private ICmsServiceWrapper _cmsService;
-        //private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(NavigationSet), new[] { typeof(object), typeof(List<NavigationNode>), typeof(NavigationNode), typeof(string), typeof(int) });
+        private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(NavigationSet), new[] { typeof(object), typeof(List<NavigationNode>), typeof(NavigationNode), typeof(string), typeof(int) });
         
         /// <summary>
         /// Public constructor.
@@ -37,50 +36,62 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public Task<NavigationSet> GetSetAsync()
         {
             // retrieve the document id
-            Task<NavigationSet> set =
+            Task<NavigationSet> set = 
                 _cmsService.GetByPath(NavigationContentCollection, NavigationFileName)
-                           .ContinueWith(docResultIntermediate =>
-                               {
-                                   var serviceClientResponse = docResultIntermediate.Result;
-                                   // if the document doesn't exist, create it first.
-                                   if (serviceClientResponse != null && serviceClientResponse.ResponseMessage != null && serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                                   {
-                                       var doc = new DC.Document
-                                                     {
-                                                         Name = NavigationFileName,
-                                                         DocumentType = "document",
-                                                         DocumentListName = NavigationContentCollection,
-                                                         Properties = new List<DC.PropertyValue>()
-                                                                          {
-                                                                              new DC.PropertyValue()
-                                                                                  {
-                                                                                      PropertyType = "data",
-                                                                                      Value = Newtonsoft.Json.JsonConvert.SerializeObject(new NavigationSet())
-                                                                                  }
-                                                                          }
-                                                     };
+                .ContinueWith(docResultIntermediate =>
+                {
+                    var serviceClientResponse = docResultIntermediate.Result;
+                    // if the document doesn't exist, create it first.
+                    if (serviceClientResponse != null && serviceClientResponse.ResponseMessage != null && serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        var doc = new DC.Document
+                        {
+                            Name = NavigationFileName,
+                            DocumentType = "document",
+                            DocumentListName = NavigationContentCollection,
+                        };
+                        
+                        return _docWebApiClient.Create(doc.DocumentListName, doc);
+                    }
 
-                                       return _docWebApiClient.Create(doc.DocumentListName, doc);
-                                   }
+                    // otherwise, pass through the result.
+                    return docResultIntermediate;
+                })
+                .Unwrap()
+                .ContinueWith(docResult => 
+                {
+                    var doc = docResult.Result.ReadAsSync();
+                    // retrieve the document content
+                    return _docWebApiClient.GetDocumentContent(doc.DocumentListName, doc.Id);
+                })
+                .Unwrap()
+                .ContinueWith(content =>
+                {
+                    return content.Result.ResponseMessage.Content.ReadAsStreamAsync();
+                })
+                .Unwrap()
+                .ContinueWith(contentstream =>
+                {
+                    using (var stream = contentstream.Result)
+                    {
+                        stream.Position = 0;
 
-                                   // otherwise, pass through the result.
-                                   return docResultIntermediate;
-                               })
-                           .Unwrap()
-                           .ContinueWith(docResult =>
-                               {
-                                   var doc = docResult.Result.ReadAsSync();
-                                   var jsonString = doc.Get<string>("data");
-                                   if (!string.IsNullOrEmpty(jsonString))
-                                   {
-                                       return Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
-                                   }
-                                   return new NavigationSet();
-                                   // retrieve the document content
-                                   //return _docWebApiClient.GetDocumentContent(doc.DocumentListName, doc.Id);
-
-                               });
-                
+                        try
+                        {
+                            return _serializer.ReadObject(stream) as NavigationSet;
+                        }
+                        catch
+                        {
+                            // fuck the world
+                            return null;
+                        }
+                        //if (set == null || set.Nodes == null)
+                        //{
+                        //    set = NavigationSet.Default;
+                        //    UpdateNavigation(set, docId);
+                        //}
+                    }
+                });
             
             return set;
         }
@@ -95,17 +106,19 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 .ContinueWith(r =>
                 {
                     var doc = r.Result.ReadAsSync();
-
-                    return SaveSetInternal(set, doc);
+                    return SaveSetInternal(set, doc.Id);
                 });
         }
 
-        private Task SaveSetInternal(NavigationSet set, Mozu.Content.Contracts.Document document  )
+        private Task SaveSetInternal(NavigationSet set, string docId)
         {
-             document.Set("data", Newtonsoft.Json.JsonConvert.SerializeObject(set));
-            //var task = _docWebApiClient.Update( NavigationContentCollection, docId, stream);
-            return _docWebApiClient.Update(NavigationContentCollection, document.Id, document);
-          
+            var stream = new MemoryStream();
+            _serializer.WriteObject(stream, set);
+            stream.Position = 0;
+
+            var task = _docWebApiClient.UpdateDocumentContent(NavigationContentCollection, docId, stream);
+
+            return task;
         }
     }
 }
