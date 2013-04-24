@@ -8,11 +8,13 @@ Ext.define('Taco.model.NavigationTreeNode', {
             name: 'id',
             type: 'string',
             useNull: true
-        }, 
+        },
+        {
             name: 'originalId',
             type: 'string',
             useNull: true
         }, 
+        {
             name: 'originalCollection',
             type: 'string',
             useNull: true
