@@ -2,14 +2,14 @@
  * @class Taco.view.site.Toolbox
  */
 Ext.define('Taco.view.site.Toolbox', {
-    extend: 'Ext.container.Container',
+    extend: 'Ext.panel.Panel',
     alias: 'widget.toolbox',
     requires: ['Taco.view.site.navigation.Tree', 'Taco.view.site.navigation.WidgetNav', 'Taco.view.site.navigation.PageSettings', 'Taco.store.shared.ContainerStore'],
 
     cls: Taco.baseCSSPrefix + 'toolbox ',
     header: false,
-    closeAction: 'hide',
-    resizable: { handles: 'w' },
+   // closeAction: 'hide',
+    //resizable: { handles: 'w' },
     shadow: false,
     layout: 'auto',
         
