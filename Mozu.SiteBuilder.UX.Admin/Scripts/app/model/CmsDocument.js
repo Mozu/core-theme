@@ -15,7 +15,7 @@ Ext.define('Taco.model.CmsDocument', {
         this.callParent(arguments);
     },
 
-    hasDictField: true,
+    dictField: 'items',
 
     fields: [
         {
