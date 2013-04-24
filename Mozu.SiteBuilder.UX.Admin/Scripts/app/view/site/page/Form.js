@@ -17,18 +17,18 @@ Ext.define('Taco.view.site.page.Form', {
     ],
     alias: 'widget.inlineeditor',
 
-    
-    cls:'taco-site-editor',
+    cls: 'taco-site-editor',
+    manageHeight: false,
     title: 'Page Editor',
     model: 'Taco.model.Product',
     // TODO
     type: 'product',
-    enableStoreSyncTasks:true,
-    initComponent: function () {
+    enableStoreSyncTasks: true,
 
+    initComponent: function () {
         var me = this;
 
-        this.mon ( Taco.core.StateManager, 'navigate',  me.onNavigate, this);
+        this.mon (Taco.core.StateManager, 'navigate',  me.onNavigate, this);
        
         this.toolBox.on({
             themechange: function () {
