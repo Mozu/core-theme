@@ -4,6 +4,7 @@
         editorwrapper: 'Taco.core.ux.form.EditorWrapper'
     },
 
+    bodyLayout: 'fit',
     showIndexOnCancel:true,
 
     constructor: function (config) {
@@ -15,7 +16,7 @@
         this.initWrapper();
 
         this.body = {
-            layout: 'fit',
+            layout: this.bodyLayout,
             items: [this.form]
         };
 

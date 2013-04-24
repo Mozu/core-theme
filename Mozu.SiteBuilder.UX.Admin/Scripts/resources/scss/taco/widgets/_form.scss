@@ -219,13 +219,13 @@
       margin-top: 0px;
       left: 30px;
       position: fixed;
-      top: 85px;
+      top: 90px;
     }
   }
 
   // product form
   .#{$vprefix}product-admin-form {
-    .#{$vprefix}formform {
+    &> .#{$vprefix}formform {
       background-color: $color-neutral-white;
       border: 1px solid border-for($color-neutral-95);
       margin-top: 20px;
