@@ -58,8 +58,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var navSet = await _navRepo.GetSetAsync();
 
-            int currentHighestLinkIndex = navSet.Nodes.Where(n => n.NodeType.IsLink).Select<NavigationNode, int?>(n => n.OriginalIdInt).OrderBy(i => i).LastOrDefault() ?? 0;
-
+            int currentHighestLinkIndex =
+                (from n in navSet.Nodes
+                 where n.NodeType.IsLink
+                 let stringId = n.OriginalId
+                 let id = (stringId == null ? null : (int?)Convert.ToInt32(stringId))
+                 orderby id
+                 select id
+                ).LastOrDefault() ?? 0;
+                
             foreach (var item in items)
             {
                 if (item.ParentId == null)
@@ -160,10 +167,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var change in parentChanges.Where(ch => ch.NodeType.IsCategory))
             {
-                int categoryId = Convert.ToInt32(change.IdParts[1]);
+                int categoryId = Convert.ToInt32(change.OriginalId);
                 var newCategoryParent = originalTree.First(n => n.Id == change.ParentId);
 
-                int? newCategoryParentId = newCategoryParent.Id == ROOT_NODE_NAME ? null : (int?)Convert.ToInt32(newCategoryParent.IdParts[1]);
+                int? newCategoryParentId = newCategoryParent.Id == ROOT_NODE_NAME ? null : (int?)Convert.ToInt32(newCategoryParent.OriginalId);
                 tasks.Add(
                     _catClient.GetCategory(categoryId)
                     .ContinueWith(t =>
@@ -225,7 +232,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 // issue changes to categories immediately.
                 if (change.NodeType.IsCategory)
                 {
-                    int categoryId = Convert.ToInt32(change.IdParts[1]);
+                    int categoryId = Convert.ToInt32(change.OriginalId);
 
                     tasks.Add(
                         _catClient.GetCategory(categoryId)
@@ -242,8 +249,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 // name changes are in CMS, so issue those immediately too.
                 else if (change.NodeType.IsPage)
                 {
-                    string docCollection = change.IdParts[1];
-                    string docId = change.IdParts[2];
+                    string docCollection = change.OriginalCollection;
+                    string docId = change.OriginalId;
 
                     tasks.Add(
                         _cmsService.GetByPath(docCollection, docId, "", "draft")
@@ -280,7 +287,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     if (original.Index != newCatInfo.Index)
                     {
                         // update this category.
-                        int catId = Convert.ToInt32(originalTree.First(i => i.Id == newCatInfo.Id).IdParts[1]);
+                        int catId = Convert.ToInt32(originalTree.First(i => i.Id == newCatInfo.Id).OriginalId);
 
                         tasks.Add(
                             _catClient.GetCategory(catId)

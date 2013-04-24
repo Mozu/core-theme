@@ -29,14 +29,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Navigation
         /// Retrieves categories from the Admin category client and
         /// returns a list of NavigationTreeNodes.
         /// </summary>
-        public Task<List<NavigationTreeNode>> GetCategories()
+        public Task<List<NavigationNode>> GetCategories()
         {
             return _catClient.GetCategories()
                 .ContinueWith(t =>
                 {
                     DC.CategoryPagedCollection cats = t.Result.ReadAsSync();
 
-                    return Mapper.Map<List<NavigationTreeNode>>(cats.Items);
+                    return Mapper.Map<List<NavigationNode>>(cats.Items);
                 });
         }
     }

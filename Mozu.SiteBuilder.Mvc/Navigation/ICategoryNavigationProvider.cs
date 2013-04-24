@@ -7,14 +7,14 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 {
     /// <summary>
     /// Abstracts the admin/runtime distinction of categories and
-    /// returns a list of NavigationTreeNodes.
+    /// returns a list of NavigationNodes.
     /// </summary>
     public interface ICategoryNavigationProvider
     {
         /// <summary>
         /// Abstracts the admin/runtime distinction of categories and
-        /// returns a list of NavigationTreeNodes.
+        /// returns a list of NavigationNodes.
         /// </summary>
-        Task<List<NavigationTreeNode>> GetCategories();
+        Task<List<NavigationNode>> GetCategories();
     }
 }

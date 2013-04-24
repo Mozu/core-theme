@@ -4,12 +4,12 @@ using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Models.Navigation
 {
-    [DataContract()]
+    /// <summary>
+    /// Represents a node in the navigation hierarchy 
+    /// </summary>
+    [DataContract]
     public class NavigationTreeNode
     {
-        private string _id;
-        private string[] _idParts;
-        
         [OnDeserializing ]
         void OnDeserializing(StreamingContext context)
         {
@@ -25,21 +25,15 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
             this.Expandable = true;
             this.AllowDrop = true;
         }
-        public string[] IdParts
-        {
-            get { return _idParts ?? (_idParts = NavigationNode.SplitParts(_id ?? "")); }
-        }
-        
-        [DataMember(Name = "id", EmitDefaultValue = false)]
-        public string Id
-        {
-            get { return _id; }
-            set { 
-                _id = value;
-                _idParts = null;
-            }
-        }
 
+        [DataMember(Name = "id", EmitDefaultValue = false)]
+        public string Id { get; set; }
+
+        [DataMember(Name = "originalId", EmitDefaultValue = false)]
+        public string OriginalId { get; set; }
+
+        [DataMember(Name = "originalCollection", EmitDefaultValue = false)]
+        public string OriginalCollection { get; set; }
 
         [DataMember(Name = "parentId")]
         public string ParentId { get; set; }
