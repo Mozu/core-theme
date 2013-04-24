@@ -128,7 +128,7 @@ Ext.define('Taco.core.ux.form.Form', {
             change: function (field, newValue) {
                 this.savableStateCheck();
 
-                if (!this.record || !this.persistChangesToModel || !Ext.Array.contains(this.trackedFields, field) || (!this.record.fields.getByKey(field.name) && !this.record.hasDictField)) {
+                if (!this.record || !this.persistChangesToModel || !Ext.Array.contains(this.trackedFields, field) || (!this.record.fields.getByKey(field.name) && !this.record.dictField)) {
                     return;
                 }
 
@@ -155,6 +155,63 @@ Ext.define('Taco.core.ux.form.Form', {
             },
             scope: this
         });
+
+        if (this.record.dictField) this.enableFormForDictField(this.record.dictField);
+    },
+
+    // TODO: Unhack this, JBZ. We are hardcoding some functionality out of Ext, here. It's the record that needs to get better at this, not the form.
+    enableFormForDictField: function (fieldName) {
+        var form = this.getForm().updateRecord = function (record) {
+            record = record || this._record;
+            if (!record) {
+                Ext.Error.raise("A record is required.");
+                return this;
+            }
+        
+            var fields = record.fields.items,
+                values = this.getFieldValues(),
+                obj = {},
+                i = 0,
+                j = 0,
+                len = fields.length,
+                dlen,
+                dict = Ext.clone(record.get(fieldName)),
+                dictTuple,
+                existing,
+                name;
+            dlen = dict.length;
+            for (var k in values) {
+                if (values.hasOwnProperty(k) && !(k in record.self.realFields)) {
+                    for (; j < dlen; ++j) {
+                        dictTuple = dict[j];
+                        if (dictTuple.key === k) {
+                            dictTuple.value = values[k];
+                            existing = true;
+                            break;
+                        }
+                    }
+                    if (!existing) dict.push({ key: k, value: values[k] });
+                }
+                existing = false;
+            }
+                    
+            for (; i < len; ++i) {
+                name  = fields[i].name;
+
+                if (values.hasOwnProperty(name) && name !== fieldName) {
+                    obj[name] = values[name];
+                }
+            }
+
+            obj[fieldName] = dict;
+
+            record.beginEdit();
+            record.set(obj);
+            record.endEdit();
+
+            return this;
+            
+        };
     },
 
     resetOriginalValues: function () {
