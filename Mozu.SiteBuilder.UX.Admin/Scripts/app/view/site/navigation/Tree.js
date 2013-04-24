@@ -114,7 +114,20 @@ Ext.define('Taco.view.site.navigation.Tree', {
                         marginTop: "10px"
                     }
                 }
-            }],
+            },
+                {
+                    text: 'Edit',
+                    width: 40,
+                    align: 'center',
+                    renderer: function (value, metaData, record) {
+                        return '<a href="#" class="taco-action-navigate">' + record.getId() + '</a>';
+                    },
+                    handler: function(grid, rowIndex, colIndex, actionItem, event, record, row) {
+                        Ext.Msg.alert('Editing' + (record.get('done') ? ' completed task' : '') , record.get('task'));
+                    }
+                    //_unlinked
+                }
+           ],
             listeners: {
                 select: function (rowModel, record, index, eOpts) {
                     this.isNewSelection = true;

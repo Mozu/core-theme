@@ -26,6 +26,7 @@ Ext.define('Taco.core.ux.form.Form', {
     editTitle: 'Edit',
     header: { layout: 'auto' },
     persistChangesToModel: false,
+    enableStoreSyncTasks:false,
     tasksKeyPrefix: '',
     cascadeChildTasks: true,
     cascadeRecordLoad: true,
@@ -341,7 +342,26 @@ Ext.define('Taco.core.ux.form.Form', {
             }
             tasks.add(saveTask);
         }
+        this.addStoreSaveTasks(tasks);
+        return tasks;
+    },
+    
 
+    addStoreSaveTasks: function (tasks) {
+        var recordKey = this.tasksKeyPrefix + 'save-record';
+        if (this.enableStoreSyncTasks && this.stores) {
+            Ext.each(this.stores, function(store) {
+                var saveTask = {
+                    key: store.$className,
+                    store: store,
+                };
+                if (tasks.tasks.getByKey(recordKey)) {
+                    saveTask.dependencies = [recordKey];
+                }
+                tasks.add(saveTask);
+            });
+
+        }
         return tasks;
     },
 
@@ -615,7 +635,7 @@ Ext.define('Taco.core.ux.form.Form', {
                     value = field.getValue();
 
                 if (field.filterType === 'format') {
-                    result = field.filter.test(value) ? result : false;
+                   result = field.filter.test(value) ? result : false;
                 }
                 if (field.filterType === 'exclusion') {
                     result = !fnAllowedValues(field.filter).test(value) ? result : false;

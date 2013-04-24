@@ -308,7 +308,14 @@
         },
 
         getValue: function () {
-            return this.editor.getContent();
+            try {
+                return this.editor.getContent();
+            }
+            catch (err) {
+                Ext.log({ msg: err, level: 'warn' });
+                return this.lastValue || this.originalValue;
+            }
+           
         },
 
         setValue: function (value) {

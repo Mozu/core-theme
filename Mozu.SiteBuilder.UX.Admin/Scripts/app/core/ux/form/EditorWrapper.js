@@ -103,7 +103,7 @@
                 this.dirtybutton.setDirty(false);
                 this.onComplete();
                 this.fireEvent('aftersave', this, this.record, this.isEdit());
-                if (this.record.getId() != this.origionalId) {
+                if (this.record && this.record.getId() != this.origionalId) {
                     this.fireEvent('idchange', this, this.record, this.origionalId);
                 }
                 

@@ -103,8 +103,9 @@
                 });
             };
         }
-
-        this.tasks.add(task.key, task);
+        if (task.fn) {
+            this.tasks.add(task.key, task);
+        }
     },
 
     validateDependencies: function () {

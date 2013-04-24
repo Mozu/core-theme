@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.site.navigation.WidgetNav', {
     extend: 'Taco.view.site.ToolboxPanel',
-    requires: ['Taco.store.WidgetDefinitions'],
+    requires: ['Taco.store.WidgetDefinitions', 'Taco.view.site.page.WidgetDragZone'],
 
     initComponent: function () {
 
