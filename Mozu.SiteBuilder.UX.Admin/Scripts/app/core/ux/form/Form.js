@@ -156,7 +156,9 @@ Ext.define('Taco.core.ux.form.Form', {
             scope: this
         });
 
-        if (this.record.dictField) this.enableFormForDictField(this.record.dictField);
+        if (this.record && this.record.dictField) {
+            this.enableFormForDictField(this.record.dictField);
+        }
     },
 
     // TODO: Unhack this, JBZ. We are hardcoding some functionality out of Ext, here. It's the record that needs to get better at this, not the form.
