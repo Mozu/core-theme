@@ -9,8 +9,8 @@ Ext.define('Taco.view.site.page.settings.General', {
         items: [
             {
                 xtype: 'button',
-                fieldLabel: 'Show in website',
-                name: 'showInWebsite',
+                fieldLabel: 'Hide in website',
+                name: 'hidden',
                 enableToggle: true
             },
             {
@@ -19,26 +19,25 @@ Ext.define('Taco.view.site.page.settings.General', {
             {
                 xtype: 'textfield',
                 fieldLabel: 'Navigation Link Name',
-                name: 'navLinkName'
+                name: 'link_title'
             },
-            {
-                xtype: 'checkbox',
-                fieldLabel: 'Show in Navigation',
-                name: 'showInNav'
-            },
-            {
-                xtype: 'checkbox',
-                fieldLabel: 'Use this page only to group other pages',
-                name: 'isGroupPage'
-            },
+            //{
+            //    xtype: 'checkbox',
+            //    fieldLabel: 'Show in Navigation',
+            //    name: 'showInNav'
+            //},
+            //{
+            //    xtype: 'checkbox',
+            //    fieldLabel: 'Use this page only to group other pages',
+            //    name: 'isGroupPage'
+            //},
             {
                 xtype: 'checkbox',
                 fieldLabel: 'Redirect page to:',
-                name: 'isRedirect'
             },
             {
                 xtype: 'textfield',
-                name: 'redirectUrl'
+                name: 'redirect_url'
             }
         ]
     }
