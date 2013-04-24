@@ -20,7 +20,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     public class NavigationGandalf
     {
         // the top level name in EXT's tree thing (a root pseudo-node).
-        public const string ROOT_NODE_NAME = "root";
+        public const string SUPER_ROOT_NODE_NAME = "root";
+
+        // the top level name for items that exist in the navigation tree.
+        public const string NAV_ROOT_NODE_NAME = "_navigation";
 
         // the special node to assign unlinked pages as a child of.
         public const string UNLINKED_PAGES_NODE_ID = "_unlinked";
@@ -35,7 +38,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// </summary>
         public NavigationGandalf(INavigationRepository navRepo, ICategoryNavigationProvider catClient, ICmsServiceWrapper cmsService)
         {
-            
             _navRepo = navRepo;
             _catClient = catClient;
             _cmsService = cmsService;
@@ -48,6 +50,22 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public Task<List<NavigationNode>> GetListInternal(bool draft = true)
         {
             var masterList = new List<NavigationNode>();
+
+            masterList.Add(new NavigationNode {
+                Name = "Navigation",
+                NodeType = NavigationNodeType.Group,
+                Id = NAV_ROOT_NODE_NAME,
+                ParentId = SUPER_ROOT_NODE_NAME,
+                Index = 0
+            });
+
+            masterList.Add(new NavigationNode {
+                Name = "Single Pages",
+                NodeType = NavigationNodeType.Group,
+                Id = UNLINKED_PAGES_NODE_ID,
+                ParentId = SUPER_ROOT_NODE_NAME,
+                Index = 1
+            });
 
             // get the list of categories
             var catTask = _catClient.GetCategories();
@@ -73,7 +91,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     var sortedCats = cats.OrderBy(node => node.ParentId).ThenBy(node => node.Index).ToList();
 
                     // categories with a null ParentCategoryId should belong to the top level.
-                    sortedCats.ForEach(n => n.ParentId = n.ParentId ?? ROOT_NODE_NAME);
+                    sortedCats.ForEach(n => n.ParentId = n.ParentId ?? NAV_ROOT_NODE_NAME);
 
                     masterList.AddRange(sortedCats);
 
@@ -144,15 +162,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         select Mapper.Map<NavigationNode>(p)
                     ).ToList();
 
-                    masterList.Add(new NavigationNode()
-                    {
-                        Name = "Non-Linked Pages",
-                        NodeType = NavigationNodeType.Group,
-                        Id = UNLINKED_PAGES_NODE_ID,
-                        ParentId = ROOT_NODE_NAME,
-                        Index = masterList.Count
-                    });
-
                     allUnassigned.Each(n => n.ParentId = UNLINKED_PAGES_NODE_ID);
                     masterList.AddRange(allUnassigned);
 
@@ -167,7 +176,14 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 {
                     var nodelist = res.Result;
 
-                    return Mapper.Map<List<NavigationTreeNode>>(nodelist);
+                    var nodeTree = Mapper.Map<List<NavigationTreeNode>>(nodelist);
+
+                    var root = nodeTree.First(n => n.Id == NAV_ROOT_NODE_NAME);
+                    var unlinked = nodeTree.First(n => n.Id == UNLINKED_PAGES_NODE_ID);
+                    root.Expandable = unlinked.Expandable = false;
+                    root.Expanded = unlinked.Expanded = true;
+
+                    return nodeTree;
                 });
         }
 
@@ -188,7 +204,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         group node by node.ParentId into g
                         select g;
 
-                    var rootLevel = grouped.FirstOrDefault(g => g.Key == ROOT_NODE_NAME);
+                    var rootLevel = grouped.FirstOrDefault(g => g.Key == NAV_ROOT_NODE_NAME);
                     if (rootLevel == null)
                         return null;
 
