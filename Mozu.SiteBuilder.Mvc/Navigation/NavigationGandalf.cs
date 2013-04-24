@@ -72,7 +72,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     NavigationSet navSet = navTask.Result;
 
                     // build the masterlist. Step 1: put the top level categories in.
-                    var sortedCats = cats.OrderBy(node => node.ParentId).ThenBy(node => node.Index);
+                    var sortedCats = cats.OrderBy(node => node.ParentId).ThenBy(node => node.Index).ToList();
+
+                    // categories with a null ParentCategoryId should belong to the top level.
+                    sortedCats.ForEach(n => n.ParentId = n.ParentId ?? ROOT_NODE_NAME);
+
                     // var sortedCats =
                     //     from c in cats.Items
                     //     let node = c.Map<NavigationTreeNode>()
@@ -87,7 +91,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     {
                         NavigationTreeNode node;
 
-                        if (navmeta.NodeType.IsPage)
+                        if (navmeta.NodeType == null)
+                        {
+                            continue;
+                        }
+                        else if (navmeta.NodeType.IsPage)
                         {
                             string pageId = navmeta.OriginalId;
                             var page = (pages != null && pages.Items != null) ? pages.Items.FirstOrDefault(p => p.Id == pageId) : null;

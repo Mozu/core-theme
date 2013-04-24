@@ -27,10 +27,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         
         public async Task<ActionResult> Index()
         {
-            var nav = SiteContext.NavigationContext;
+            var nav = SiteContext.Navigation;
             if ( nav != null && nav.Count() > 0)
             {
-                var item = nav.FirstOrDefault(x => x.NodeType != "link" && !string.IsNullOrEmpty(x.Url));
+                var item = nav.FirstOrDefault(x => !x.NodeType.IsLink && !string.IsNullOrEmpty(x.Url));
                 if ( item != null  && item.Url.Length >0 && item.Url != "/pages/home")
                 {
                     return new TransferResult(item.Url );

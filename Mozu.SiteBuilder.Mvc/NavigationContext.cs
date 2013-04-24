@@ -17,12 +17,14 @@ namespace Mozu.SiteBuilder.Mvc
     {
         private List<NavigationRuntimeNode> _navigationTree;
 
+        public List<NavigationRuntimeNode> Tree { get { return _navigationTree; } }
+
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationContext(List<NavigationRuntimeNode> _navigationTree)
+        public NavigationContext(List<NavigationRuntimeNode> navigationTree)
         {
-            this._navigationTree = _navigationTree ?? new List<NavigationRuntimeNode>();
+            _navigationTree = navigationTree ?? new List<NavigationRuntimeNode>();
         }
 
         /// <summary>
