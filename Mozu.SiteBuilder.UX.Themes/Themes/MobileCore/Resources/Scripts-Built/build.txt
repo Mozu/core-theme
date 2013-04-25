@@ -11,6 +11,7 @@ vendor/knockout-latest.js
 ajax.js
 modules/api.js
 modules/animatemodals.js
+modules/cart-monitor.js
 shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
 modules/jquery-plus.js
 modules/loading-bars.js
