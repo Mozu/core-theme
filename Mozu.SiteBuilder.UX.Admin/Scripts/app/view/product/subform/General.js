@@ -85,7 +85,7 @@ Ext.define('Taco.view.product.subform.General', {
                 fieldLabel: 'Full Description',
                 name: 'productFullDescription',
                 emptyText: 'Words, words, and more words.  Also, with lists.',
-                xtype: 'htmleditor',
+                xtype: 'textarea',
                 width: '100%',
                 required: true
             }, {
