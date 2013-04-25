@@ -4,28 +4,53 @@
  */
 
 Ext.define('Taco.view.product.subform.ImageField', {
-    extend: 'Ext.form.field.Base',
+    extend: 'Ext.container.Container',
+    //extend: 'Ext.form.field.Base',
+    mixins: {
+        field: 'Ext.form.field.Field'
+    },
     alias: 'widget.productimagefield',
     requires: [
         'Taco.view.fileManager.Associator'
     ],
+    labelAlign: 'top',
+    labelSeparator: '',
+    //fieldSubTpl: [
+    //    '<div>stuff goes here...</div>',
+    //    '<a href="#" data-item="upload">Upload new Image</a>',
+    //    '<a href="#" data-item="associator">Select from Associator</a>',
+    //    '<input type="hidden" id="{id}" {inputAttrTpl} >'
+    //],
+    
 
-    fieldSubTpl: [
-        '<div>stuff goes here...</div>',
-        '<a href="#" data-item="upload">Upload new Image</a>',
-        '<a href="#" data-item="associator">Select from Associator</a>',
-        '<input type="hidden" id="{id}" {inputAttrTpl} >'
-    ],
 
     initComponent: function () {
 
+       
         this.callParent(arguments);
-
+        
+        this.imageView = Ext.widget({
+            xtype: 'dataview',
+            tpl :['<div class="taco-tileview tilesize-230px">',
+                        '<tpl foreach=".">',
+                            '<div><img src="{url}?size=100" /></div>', 
+                            
+                        '</tpl>',
+            '</div>'],
+            itemSelector:'img'
+        });
+        
+        this.add([{
+            html: '<div>stuff goes here...</div>' +
+             '<a href="#" data-item="upload">Upload new Image</a>' +
+             '<a href="#" data-item="associator">Select from Associator</a>'
+        }, this.imageView]);
+        
         this.on({
             afterrender: this.onAfterRender,
             scope: this
         });
-
+        //this.add({ html: 'foodis go' });
 
     },
 
@@ -54,12 +79,26 @@ Ext.define('Taco.view.product.subform.ImageField', {
         });
     },
 
-    setValue: function (value) {
-        return this.callParent(arguments);
+    //setValue: function (value) {
+    //    return this.callParent(arguments);
+    //},
+    getValue:function() {
+        return this.value;
     },
 
+    setValue: function (value) {
+        var me = this;
+        me.imageView.update(value);
+        return me.mixins.field.setValue.call(me, value);
+    },
     onAssociatorSave: function (associator, selectedRecords) {
         this.associator.hide();
+        var value = [];
+        Ext.each(selectedRecords, function (record) {
+            //todo:change from thumbnail
+            value.push({ url: record.get('thumbnail') });
+        });
+        this.setValue(value);
         console.log(selectedRecords);
     }
 });

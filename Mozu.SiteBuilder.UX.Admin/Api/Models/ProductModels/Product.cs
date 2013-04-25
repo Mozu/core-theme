@@ -45,7 +45,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// A collection of images for this product.
         /// </summary>
-        public List<ProductLocalizedImage> Images { get; set; }
+        [DataMember(EmitDefaultValue = false, Name = "productImages")]
+        public List<ProductLocalizedImage> ProductImages { get; set; }
 
         /// <summary>
         /// The list price.
