@@ -101,9 +101,10 @@ namespace Mozu.SiteBuilder.Mvc
                 {
                     var parent = _navigationTree.FindByCategory(product.Categories.First());
                     if (parent != null)
+                    {
                         productNode.Parent = parent;
-
-                    parent.Items.Add(productNode);
+                        parent.Items.Add(productNode);
+                    }
                 }
                 else
                 {
