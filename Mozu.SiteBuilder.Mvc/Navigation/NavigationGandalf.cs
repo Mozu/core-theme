@@ -189,7 +189,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         /// <summary>
         /// Build a hierarchical list of navigation nodes, ideal for consumption by NDjango templates and front-end javascript.
-        /// </summary>t
+        /// </summary>
         public Task<List<NavigationRuntimeNode>> GetTreeNavigation(bool draft = false)
         {
             return GetListInternal(draft)

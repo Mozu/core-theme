@@ -1,7 +1,7 @@
 ﻿using System;
 using AutoMapper;
-using Mozu.SiteBuilder.UX.Models.Navigation;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Models.Navigation;
 
 namespace Mozu.SiteBuilder.Mvc.Models.Mappings
 {

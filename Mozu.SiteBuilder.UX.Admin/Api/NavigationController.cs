@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -10,6 +11,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Navigation;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -120,34 +122,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 originalTree = (await List()).Items;
             }
 
-
             // step 4. detect any page reorder.
-            var newPageOrder = items.Where(i => i.NodeType.IsPage).GroupBy(co => co.ParentId);
-            NavigationSet pageOrderNavSet = null;
-
-            foreach (var group in newPageOrder)
-            {
-                foreach (var newPage in group)
-                {
-                    var original = originalTree.First(c => c.Id == newPage.Id);
-                    if (original.Index != newPage.Index)
-                    {
-                        // lazy load pageOrderNavSet
-                        if (pageOrderNavSet == null)
-                            pageOrderNavSet = await _navRepo.GetSetAsync();
-
-                        // update this page
-                        var navPage = pageOrderNavSet.Nodes.FirstOrDefault(n => n.Id == newPage.Id);
-                        if (navPage != null)
-                            navPage.Index = newPage.Index;
-                    }
-                }
-            }
+            Task docUpdateTask = GetDocumentReorders(originalTree, items);
 
             // if there are changes, save the nav set and refresh the tree one last time.
-            if (pageOrderNavSet != null)
+            if (docUpdateTask != null)
             {
-                await _navRepo.SaveSetAsync(pageOrderNavSet);
+                await docUpdateTask;
                 originalTree = (await List()).Items;
             }
 
@@ -180,8 +161,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     .ContinueWith(t =>
                     {
                         var category = t.Result.ReadAsSync();
+
+                        Debug.WriteLine(
+                            String.Format("[cat {0}] Updating category parent and sequence. Old parent: {1}. Old sequence: {2}. New parent: {3}. New sequence: {4}", 
+                            category.Id, category.ParentCategoryId, category.Sequence, newCategoryParentId, change.Index)
+                        );
+
                         category.ParentCategoryId = newCategoryParentId;
                         category.Sequence = change.Index;
+                        
                         return _catClient.UpdateCategory(category, category.Id);
                     })
                     .Unwrap()
@@ -202,10 +190,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             if (node == null)
                             {
                                 node = Mapper.Map<NavigationNode>(change);
+
+                                Debug.WriteLine(
+                                    String.Format("[nav {0}] Adding new node. Parent: {1}. Index: {2}.",
+                                    node.Id, node.ParentId, node.Index
+                                ));
+
                                 navSet.Nodes.Add(node);
                             }
                             else
                             {
+                                Debug.WriteLine(
+                                    String.Format("[nav {0}] Updating node. Old Parent: {1}. Old Index: {2}. New Parent: {3}. New Index: {4}.",
+                                    node.Id, node.ParentId, node.Index, change.ParentId, change.Index
+                                ));
+
                                 node.ParentId = change.ParentId;
                                 node.Index = change.Index;
                             }
@@ -244,6 +243,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         {
                             var category = t.Result.ReadAsSync();
 
+                            Debug.WriteLine(
+                                String.Format("[cat {0}] Renaming category. Old Name: {1}. New Name: {2}.",
+                                category.Id, category.Content.Name, change.Name
+                            ));
+
                             category.Content.Name = change.Name;
                             return _catClient.UpdateCategory(category, category.Id);
                         })
@@ -263,6 +267,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             var page = t.Result.ReadAsSync();
                             if (page == null)
                                 throw new Exception("Document not found: " + docCollection + "/" + docId);
+
+                            Debug.WriteLine(
+                                String.Format("[doc {0}] Renaming document. Old Name: {1}. New Name: {2}.",
+                                page.Id, page.Get("link_title") ?? page.Name, change.Name
+                            ));
 
                             page.Set("link_title", change.Name);
 
@@ -305,7 +314,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                 // position is now 2, delta is -2.
                                 int delta = newCatInfo.Index - original.Index;
 
-                                cat.Sequence = cat.Sequence + delta;
+                                int newCatSequence = cat.Sequence.GetValueOrDefault(0) + delta;
+
+                                Debug.WriteLine(
+                                    String.Format("[cat {0}] Reordering category. Old Sequence: {1}. New Sequence: {2}.",
+                                    cat.Id, cat.Sequence, newCatSequence
+                                ));
+
+                                cat.Sequence = newCatSequence;
                                 return _catClient.UpdateCategory(cat, cat.Id);
                             })
                             .Unwrap()
@@ -316,52 +332,56 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return tasks;
         }
-    }
 
-    public static class NavigationNodeExtensions
-    {
-        public class CategoryOrderInformation
+        private Task GetDocumentReorders(List<NavigationTreeNode> originalTree, List<NavigationTreeNode> items)
         {
-            public string Id { get; set; }
-            public string ParentId { get; set; }
+            var newPageOrder = items.Where(i => i.NodeType.IsPage).GroupBy(co => co.ParentId);
 
-            /// <summary>
-            /// The index according to the NavigationNode
-            /// </summary>
-            public int Index { get; set; }
+            // create a list of actions to update the navset
+            // this way we can lazy-load the navset only if we need it.
+            var navPageUpdates = new List<Action<NavigationSet>>();
+            
+            foreach (var group in newPageOrder)
+            {
+                foreach (var newPage in group)
+                {
+                    var original = originalTree.First(c => c.Id == newPage.Id);
+                    if (original.Index != newPage.Index)
+                    {
+                        navPageUpdates.Add(
+                            new Action<NavigationSet>(navSet => {
+                                // update this page
+                                var navPage = navSet.Nodes.FirstOrDefault(n => n.Id == newPage.Id);
+                                if (navPage != null)
+                                {
+                                    Debug.WriteLine(
+                                        String.Format("[nav {0}] Reordering node. Old Index: {1}. New Index: {2}.",
+                                        navPage.Id, navPage.Index, newPage.Index
+                                    ));
+                                    navPage.Index = newPage.Index;
+                                }
+                            })
+                        );
+                    }
+                }
+            }
 
-            /// <summary>
-            /// The index of this category among other categories.
-            /// </summary>
-            public int CanonicalIndex { get; set; }
+            // if there are any navSet updates, 
+            // 1. load the navset
+            // 2. then execute all the updates
+            // 3. and finally save the navset.
+            if (navPageUpdates.Count > 0)
+                return _navRepo.GetSetAsync()
+                    .ContinueWith(t => {
+                        var navSet = t.Result;
 
-            /// <summary>
-            /// The original NavigationTreeNode for this element.
-            /// </summary>
-            public NavigationTreeNode Node { get; set; }
-        }
+                        navPageUpdates.ForEach(a => a.Invoke(navSet));
 
-        /// <summary>
-        /// Gets the order of just categories in a NavigationNode list.
-        /// </summary>
-        public static IEnumerable<CategoryOrderInformation> GetCategoryOrder(this List<NavigationTreeNode> nodes)
-        {
-            return
-                from n in nodes
-                where n.NodeType.IsCategory
-                let canonicalIndex = nodes.Where(no => no.NodeType.IsCategory && no.ParentId == n.ParentId).OrderBy(no => no.Index).ToList().IndexOf(n)
-                select new CategoryOrderInformation { Id = n.Id, ParentId = n.ParentId, Index = n.Index.HasValue ? n.Index.Value : 0, CanonicalIndex = canonicalIndex, Node = n };
-        }
-
-        /// <summary>
-        /// Gets the order of just pages in a NavigationNode list.
-        /// </summary>
-        public static IEnumerable<CategoryOrderInformation> GetPagesOrder(this List<NavigationTreeNode> nodes)
-        {
-            return
-                from n in nodes
-                where n.NodeType.IsPage
-                select new CategoryOrderInformation { Id = n.Id, ParentId = n.ParentId, Index = n.Index.HasValue ? n.Index.Value : 0, Node = n };
+                        return _navRepo.SaveSetAsync(navSet);
+                    })
+                    .Unwrap();
+            else
+                return null;
         }
     }
 }
