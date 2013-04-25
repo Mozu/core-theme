@@ -12,7 +12,8 @@ Ext.define('Taco.view.site.ToolboxPanel', {
     cls: Taco.baseCSSPrefix + 'card-flex ' + Taco.baseCSSPrefix + 'navigation',
 
     hasBackButton: true,
-
+    //hasNav:true,
+    showInNav:true,
     createBackButton: function () {
         var me = this;
         this.tbar = [{

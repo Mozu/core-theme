@@ -25,16 +25,29 @@ Ext.define('Taco.view.site.Toolbox', {
             layout: 'card',
             itemId: 'cardPanel',
             showItem: function (record) {
-                var cardIndex = typeof record === "number" ? record : me.panelStore.indexOf(record);
-                if (cardIndex === -1) cardIndex = me.cardPanel.items.indexOf(record);
+               
+                if (typeof (record) === "number") {
+                    record = me.panelStore.getAt(record);
+                } else if (record.isComponent) {
+                    record = me.panelStore.getAt(me.panelStore.findBy(function(r) {
+                        return r.raw == record;
+                    }));
+                }
+                var cardIndex = me.panelStore.indexOf(record);
+                
                 if (cardIndex < me.cardPanel.items.getCount()) {
+                    if (!record.get('showInNav')) {
+                        me.tabContainer.hide();
+                    } else {
+                        me.tabContainer.show();
+                    }
                     me.cardPanel.getLayout().setActiveItem(cardIndex);
                 }
             }
         });
 
         this.panelStore = Ext.create('Taco.store.shared.ContainerStore', {
-            fields: ['index', 'title', 'isPageSettingsPanel'],
+            fields: ['index', 'title', 'showInNav', 'isPageSettingsPanel'],
             container: this.cardPanel
         });
 
@@ -67,11 +80,14 @@ Ext.define('Taco.view.site.Toolbox', {
             tpl: new Ext.XTemplate(
                 '<ul>',
                     '<tpl for=".">',
-                        '<tpl if="!isPageSettingsPanel">',
+                        '<tpl if="showInNav">',
                             '<li class="' + Taco.baseCSSPrefix + 'toolbox-menu-item">',
                                 '<a href="javascript:;">{title}</a>',
                             '</li>',
+                        '<tpl else>',
+                            '<li class="' + Taco.baseCSSPrefix + 'toolbox-menu-item" ></li>',
                         '</tpl>',
+                        
                     '</tpl>',
                 '</ul>'
                 ),
@@ -91,7 +107,9 @@ Ext.define('Taco.view.site.Toolbox', {
 
         this.callParent(arguments);
 
-        this.cardPanel.add([this.navigation, this.widgets, this.pageSettings]);
+        this.cardPanel.add(0,[this.navigation, this.widgets, this.pageSettings]);
+
+      
     },
 
     
