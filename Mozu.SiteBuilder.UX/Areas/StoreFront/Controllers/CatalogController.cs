@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public async Task<ActionResult> ProductDetail(string productCode)
         {
-            var res = await _productClient.GetProduct(productCode, null, null, _ctx.IsEditMode);
+            var res = await _productClient.GetProduct(productCode, null, "Categories,Properties", _ctx.IsEditMode);
             if ( !res.ResponseMessage.IsSuccessStatusCode )
             {
                 var x = res.ReadException().UnwrapAgg();
