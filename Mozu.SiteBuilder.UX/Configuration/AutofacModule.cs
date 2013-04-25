@@ -106,7 +106,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 		  //  builder.RegisterType<MockProductCategoryRuntimeWebApiClient>().As<IProductCategoryRuntimeWebApiClient>();
             builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 
-            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>();
+            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerLifetimeScope();
             builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>();
 		    
 		    // builder.RegisterType<MozuServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
