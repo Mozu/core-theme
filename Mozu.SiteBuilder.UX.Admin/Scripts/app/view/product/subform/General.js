@@ -75,16 +75,23 @@ Ext.define('Taco.view.product.subform.General', {
                 width: '100%',
                 required: true
             }, {
-                fieldLabel: 'Description',
+                fieldLabel: 'Short Description',
+                name: 'productShortDescription',
+                emptyText: 'Words',
+                xtype: 'textarea',
+                width: '100%',
+                required: true
+            }, {
+                fieldLabel: 'Full Description',
                 name: 'productFullDescription',
                 emptyText: 'Words, words, and more words.  Also, with lists.',
-                xtype: 'textarea',
+                xtype: 'htmleditor',
                 width: '100%',
                 required: true
             }, {
                 fieldLabel: 'Product Image',
                 name: 'productImages',
-                hidden: this.isGlobal,
+               // hidden: this.isGlobal,
                 xtype: 'productimagefield',
                 width: '100%'
             }]

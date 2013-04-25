@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
                 .ForMember(x => x.ProductInSites, op => op.MapFrom(dc => dc.ProductInSites))
                 .ForMember( x=> x.Properties , op=> op.MapFrom(dc=> dc.Properties ))
-                .ForMember(x => x.Images, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductImages))
+                .ForMember(x => x.ProductImages, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductImages))
                 .AfterMap((x, y) =>
                     {
                         if (y.ProductInSites != null)
@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ProductTypeId, op => op.MapFrom(dc => dc.ProductTypeId))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(p =>
                 {
-                    var images = Mapper.Map<List<DC.ProductLocalizedImage>>(p.Images);
+                    var images = Mapper.Map<List<DC.ProductLocalizedImage>>(p.ProductImages );
                     return new DC.ProductLocalizedContent
                     {
                         ProductName = p.ProductName,
@@ -190,7 +190,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MetaTagDescription, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagDescription))
                 .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
                 .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
-                .ForMember(x => x.Images, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductImages))
+                .ForMember(x => x.ProductImages, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductImages))
                 ;
 
             Mapper.CreateMap<ProductInSiteInfo, DC.ProductInSiteInfo>()
@@ -200,7 +200,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.IsPriceOverridden, op => op.MapFrom(pisi => pisi.IsPriceOverridden))
                 .ForMember(dc => dc.IsSEOContentOverridden, op => op.MapFrom(pisi => pisi.IsSEOContentOverridden))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(pisi => {
-                    List<DC.ProductLocalizedImage> images = Mapper.Map<List<DC.ProductLocalizedImage>>(pisi.Images);
+                    List<DC.ProductLocalizedImage> images = Mapper.Map<List<DC.ProductLocalizedImage>>(pisi.ProductImages );
                     return new DC.ProductLocalizedContent
                     {
                         ProductName = pisi.ProductName,

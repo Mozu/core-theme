@@ -49,6 +49,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "productName")]
         public string ProductName { get; set; }
 
+
+        /// <summary>
+        /// A collection of images for this product.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "productImages")]
+        public List<ProductLocalizedImage> ProductImages { get; set; }
+
+
+
         /// <summary>
         /// The product short description.
         /// </summary>
@@ -60,11 +69,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// </summary>
         [DataMember(EmitDefaultValue = false, Name = "fullDescription")]
         public string FullDescription { get; set; }
-
-        /// <summary>
-        /// A collection of images for this product.
-        /// </summary>
-        public List<ProductLocalizedImage> Images { get; set; }
 
         #endregion
 
