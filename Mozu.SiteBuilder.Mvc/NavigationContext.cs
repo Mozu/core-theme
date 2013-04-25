@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AutoMapper;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 
@@ -129,6 +130,17 @@ namespace Mozu.SiteBuilder.Mvc
             CurrentNode = categoryNode;
         }
 
+        public void SetContext(Document doc)
+        {
+            var docNode = _navigationTree.FindByDocument(doc);
+
+            if (docNode == null)
+            {
+                docNode = Mapper.Map<NavigationRuntimeNode>( Mapper.Map<NavigationNode>(doc) );
+            }
+
+            CurrentNode = docNode;
+        }
 
         #region IEnumerable interface crap
         public IEnumerator<NavigationRuntimeNode> GetEnumerator()

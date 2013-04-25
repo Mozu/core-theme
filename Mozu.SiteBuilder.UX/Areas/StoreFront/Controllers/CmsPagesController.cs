@@ -104,6 +104,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page,
                                                           opt => opt.ConstructServicesUsing(_lifetimeScope .Resolve ));
 
+            SetNavigationContext(vm);
+
             //pc.WidgetCreationTags.Add(doc.ToWidgetStem());
             pc.CollectionId = collection;
             pc.DocumentId = pc.CmsContext.Page.Id;
@@ -140,6 +142,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var result = View(vr.View, vm);
 
             return result;
+        }
+
+        /// <summary>
+        /// Updates the SiteContext.NavigationContext with the current document.
+        /// </summary>
+        private void SetNavigationContext(VM.Document doc)
+        {
+            _context.Navigation.SetContext(doc);
         }
 
         //

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 
 namespace Mozu.SiteBuilder.UX.Models.Navigation
@@ -36,6 +37,23 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
                     NavigationRuntimeNode foundProduct = FindByProduct(n.Items, product);
                     if (foundProduct != null)
                         return foundProduct;
+                }
+            }
+
+            return null;
+        }
+
+        public static NavigationRuntimeNode FindByDocument(this List<NavigationRuntimeNode> nodes, Document document)
+        {
+            foreach (var n in nodes)
+            {
+                if (n.NodeType.IsPage && n.Id.EndsWith(document.Collection + "^^" + document.Id))
+                    return n;
+                if (n.Items != null && n.Items.Count > 0)
+                {
+                    NavigationRuntimeNode foundDocument = FindByDocument(n.Items, document);
+                    if (foundDocument != null)
+                        return foundDocument;
                 }
             }
 
