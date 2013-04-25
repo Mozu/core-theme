@@ -27,7 +27,11 @@ Ext.define('Taco.view.site.navigation.Tree', {
     initComponent: function () {
         var me = this;
         this.addEvents('editlink');
-
+        this.pageCreator = Ext.create('Taco.view.site.navigation.PageCreator', {
+            cardPanel: this.cardPanel
+        });
+        
+        this.cardPanel.add(this.pageCreator);
         this.mon(Taco.app, 'page-destroy', this.pageDestroyed, this);
         this.mon(Taco.app, 'page-navigate', this.pageNavigate, this);
         this.mon(Taco.app, 'pageentity-update', this.onPageEntiryUpdate, this);
@@ -116,14 +120,16 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 }
             },
                 {
-                    text: 'Edit',
-                    width: 40,
-                    align: 'center',
+                    
+                    width: 120,
+                    align: 'right',
                     renderer: function (value, metaData, record) {
-                        return '<a href="#" class="taco-action-navigate">' + record.getId() + '</a>';
-                    },
-                    handler: function(grid, rowIndex, colIndex, actionItem, event, record, row) {
-                        Ext.Msg.alert('Editing' + (record.get('done') ? ' completed task' : '') , record.get('task'));
+                        if (record.getId() == '_unlinked') {
+                            return '<a href="#" class="taco-action-navigate unlinked">+ Add Page</a>';
+                        }
+                        if (record.getId() == '_navigation') {
+                            return '<a href="#" class="taco-action-navigate linked">+ Add Page</a>';
+                        }
                     }
                     //_unlinked
                 }
@@ -143,11 +149,14 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 }
                 },*/
                 itemclick: function (v, r, elm, idx, e) {
-
+                    var cmp = Ext.fly(e.target);
                     e.preventDefault();
-
+                   
                     if (r.get('nodeType') === 'link' && !this.isNewSelection) {
                         this.fireEvent('editlink', r, elm);
+                    }
+                    if (cmp.hasCls('taco-action-navigate')) {
+                        this.cardPanel.showItem(this.pageCreator);
                     }
 
                     this.isNewSelection = false;

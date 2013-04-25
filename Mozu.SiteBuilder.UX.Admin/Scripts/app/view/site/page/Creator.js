@@ -23,7 +23,8 @@
                 eventName: 'superSaver'
             }];
 
-            me.tabs = [{
+            me.tabs = [
+                {
                 defaults: {
                     xtype: 'textfield',
                     labelAlign: 'top',

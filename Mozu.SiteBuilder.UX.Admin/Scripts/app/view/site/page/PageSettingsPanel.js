@@ -5,6 +5,7 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
     extend: 'Taco.view.site.ToolboxPanel',
     xtype: 'widget.pagesettingspanel',
     isPageSettingsPanel: true,
+    showInNav:false,
     createBackButton: function () {
         var me = this;
         this.tbar = [{
