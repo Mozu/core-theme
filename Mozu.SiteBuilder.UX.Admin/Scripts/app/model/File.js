@@ -1,14 +1,12 @@
 ﻿/**
-* @class Taco.model.File
-* The File model
-*/
-
+ * @class Taco.model.File
+ * The File model
+ */
 Ext.define('Taco.model.File', {
     extend: 'Taco.core.data.Model',
     requires: [],
-    fields:[
-    {
-        name: 'id', 
+    fields: [{
+        name: 'id',
         type: 'string',
         useNull: true
     }, {
@@ -27,7 +25,10 @@ Ext.define('Taco.model.File', {
         name: 'thumbnail',
         type: 'string',
         useNull: true,
-        persist :false
+        persist: false,
+        convert: function fullName(v, record) {
+            return record.get('localthumbnail') || '/admin/img/files/' + record.getId();
+        }
     }, {
         name: 'alt',
         type: 'string',
@@ -35,7 +36,7 @@ Ext.define('Taco.model.File', {
         persist: false
     }, {
         name: 'dateModified',
-        type: 'date', 
+        type: 'date',
         useNull: true,
         persist: false
     }, {
@@ -49,26 +50,50 @@ Ext.define('Taco.model.File', {
         useNull: true,
         persist: false
     }, {
-         name: 'isUploaded',
-         type: 'boolean',
-         useNull: true,
-         defaultValue: true
+        name: 'isUploaded',
+        type: 'boolean',
+        useNull: true,
+        defaultValue: true
     }, {
         name: 'localthumbnail',
         type: 'auto',
-        persist :false
-    }],
-
-    idProperty: 'id',
-
-    validations: [
-        { type: 'length', name: 'name', min: 3, max: 20 },
-        { type: 'presence', name: 'name' }
+        useNull: true,
+        persist: false
+    }, {
+        name: 'url',
+        type: 'string',
+        useNull: true,
+        persist: false,
+        convert: function fullName(v, record) {
+            return '/admin/img/files/' + record.getId();
+        }
+    }
     ],
-
+    idProperty: 'id',
+    validations: [{
+        type: 'length',
+        name: 'name',
+        min: 3,
+        max: 20
+    }, {
+        type: 'presence',
+        name: 'name'
+    }
+    ],
+    getThumbnail :function(size) {
+        var tn = this.get('thumbnail');
+        if (size) {
+            if (tn.indexOf('?')) {
+                tn += '&';
+            } else {
+                tn += '?';
+            }
+            tn += 'size=' + size;
+        }
+    },
     proxy: {
         type: 'readahead',
-        unfilteredParam:'unfiltered',
+        unfilteredParam: 'unfiltered',
         api: {
             read: '/admin/app/fileManagement/file/list',
             create: '/admin/app/fileManagement/file/create',
@@ -81,7 +106,6 @@ Ext.define('Taco.model.File', {
             successProperty: 'success',
             messageProperty: 'message'
         },
-
         writer: {
             allowSingle: false,
             type: 'json'

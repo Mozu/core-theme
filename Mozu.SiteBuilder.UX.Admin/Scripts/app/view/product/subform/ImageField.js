@@ -53,6 +53,23 @@ Ext.define('Taco.view.product.subform.ImageField', {
         //this.add({ html: 'foodis go' });
 
     },
+    isEqual: function (value1, value2) {
+        if (value1 == null && value2 == null) {
+            return true;
+        }
+        if (value1 == null || value2 == null) {
+            return false;
+        }
+        if (value1.length !== value2.length) {
+            return false;
+        }
+
+        if (value1.length === 0) {
+            return true;
+        }
+        return Ext.encode(value1) == Ext.encode(value2);
+
+    },
 
     onAfterRender: function (field, eOpts) {
         var associatorEl = this.getEl().down('[data-item="associator"]');
@@ -95,8 +112,8 @@ Ext.define('Taco.view.product.subform.ImageField', {
         this.associator.hide();
         var value = [];
         Ext.each(selectedRecords, function (record) {
-            //todo:change from thumbnail
-            value.push({ url: record.get('thumbnail') });
+            
+            value.push({ url: record.get('url') });
         });
         this.setValue(value);
         console.log(selectedRecords);
