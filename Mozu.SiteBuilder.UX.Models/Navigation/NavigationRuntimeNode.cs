@@ -1,43 +1,26 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="NavigationRuntimeNode.cs" company="Microsoft">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Models.Navigation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Runtime.Serialization;
-
-
-    [DataContract]
-    public class NavigationRuntimeNodeCollection : ModelBase
-    {
-        [DataMember(Name = "items")]
-        public List<NavigationRuntimeNode> Primary
-        {
-            get;
-            set;
-        }
-        [DataMember(Name = "items")]
-        public List<NavigationRuntimeNode> Secondary
-        {
-            get;
-            set;
-        }
-
-    }
-
     /// <summary>
-    /// TODO: Update summary.
+    /// Represents a node in the navigation hierarchy 
     /// </summary>
-    /// 
     [DataContract]
-    public class NavigationRuntimeNode:ModelBase 
+    public class NavigationRuntimeNode : ModelBase 
     {
+
+        /// <summary>
+        /// Public constructor.
+        /// </summary>
+        public NavigationRuntimeNode()
+        {
+            Items = new List<NavigationRuntimeNode>();
+        }
+
         public class Comparer:IComparer<NavigationRuntimeNode> 
         {
             public static readonly Comparer Default = new Comparer();
@@ -47,11 +30,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
                 return Comparer<int>.Default.Compare( x.Index .GetValueOrDefault( int.MaxValue ), y.Index.GetValueOrDefault( int.MaxValue ));
             }
         }
-        public string Id
-        {
-            get;
-            set;
-        }
+
+        public string Id { get; set; }
 
         private string _parentId;
         public string ParentId
@@ -68,35 +48,23 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
                 _parentId = value;
             }
         }
+
         [DataMember (Name="url")]
-        public string Url
-        {
-            get;
-            set;
-        }
+        public string Url { get; set; }
+
         [AlternateName("caption")]
         [DataMember(Name = "name")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
+
         [DataMember(Name = "index")]
         public int? Index { get; set; }
 
         [DataMember(Name = "count")]
-        public int Count
-        {
-            get;
-            set;
-        }
+        public int Count { get ; set; }
+        
         [AlternateName("children")]
         [DataMember(Name = "items")]
-        public List<NavigationRuntimeNode> Items
-        {
-            get;
-            set;
-        }
+        public List<NavigationRuntimeNode> Items { get; set; }
 
         public NavigationRuntimeNode Parent { get; set; }
 
