@@ -76,6 +76,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
 
             Mapper.CreateMap<NavigationNode, NavigationTreeNode>()
                 ;
+
+            Mapper.CreateMap<NavigationTreeNode, NavigationNode>()
+                ;
         }
 
         const string _STRINGSPLITDELIM = "^^";

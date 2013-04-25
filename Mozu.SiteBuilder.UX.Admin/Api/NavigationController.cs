@@ -137,8 +137,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             pageOrderNavSet = await _navRepo.GetSetAsync();
 
                         // update this page
-                        var navPage = pageOrderNavSet.Nodes.First(n => n.Id == newPage.Id);
-                        navPage.Index = newPage.Index;
+                        var navPage = pageOrderNavSet.Nodes.FirstOrDefault(n => n.Id == newPage.Id);
+                        if (navPage != null)
+                            navPage.Index = newPage.Index;
                     }
                 }
             }
