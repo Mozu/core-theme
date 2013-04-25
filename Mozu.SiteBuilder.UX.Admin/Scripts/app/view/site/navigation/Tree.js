@@ -28,7 +28,30 @@ Ext.define('Taco.view.site.navigation.Tree', {
         var me = this;
         this.addEvents('editlink');
         this.pageCreator = Ext.create('Taco.view.site.navigation.PageCreator', {
-            cardPanel: this.cardPanel
+            cardPanel: me.cardPanel,
+            listeners:{
+                cancel: function () { me.cardPanel.showItem(me); },
+                save:function(creator, record) {
+                    var newNavRecord = {
+                        "id": "page^^" + record.get('collectionName') + "^^" + record.get('documentId'),
+                        "originalId": record.get('documentId'),
+                        "originalCollection": record.get('collectionName'),
+                        "parentId": me.pageCreator.parentId,
+                        "name": record.get('name'),
+                        "nodeType": "page",
+                        "url": "/pages/" + record.get('name'),
+                        "leaf": true,
+                        "expanded": false,
+                        "expandable": true,
+                        "iconCls": "taco-nav-node-page",
+                        "allowDrag": true,
+                        "isHidden": false
+                    },
+                        parentNode = me.store.getById(me.pageCreator.parentId);
+                    parentNode.appendChild(newNavRecord);
+                    me.cardPanel.showItem(me);
+                }
+            }
         });
         
         this.cardPanel.add(this.pageCreator);
@@ -124,12 +147,11 @@ Ext.define('Taco.view.site.navigation.Tree', {
                     width: 120,
                     align: 'right',
                     renderer: function (value, metaData, record) {
-                        if (record.getId() == '_unlinked') {
-                            return '<a href="#" class="taco-action-navigate unlinked">+ Add Page</a>';
+                        var id = record.getId();
+                        if (id == '_unlinked' ||id == '_navigation') {
+                            return '<a href="#" class="taco-action-navigate" data-parent-id="'+id+'" >+ Add Page</a>';
                         }
-                        if (record.getId() == '_navigation') {
-                            return '<a href="#" class="taco-action-navigate linked">+ Add Page</a>';
-                        }
+                        
                     }
                     //_unlinked
                 }
@@ -156,6 +178,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
                         this.fireEvent('editlink', r, elm);
                     }
                     if (cmp.hasCls('taco-action-navigate')) {
+                        this.pageCreator.reset( e.target.dataset);
                         this.cardPanel.showItem(this.pageCreator);
                     }
 
