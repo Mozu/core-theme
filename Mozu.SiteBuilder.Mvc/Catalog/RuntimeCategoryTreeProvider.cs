@@ -14,6 +14,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
     public class RuntimeCategoryTreeProvider : ICategoryTreeProvider
     {
         private IProductCategoryRuntimeWebApiClient _productCategoryRuntimeWebApiClient;
+        private List<Category> _categories;
 
         public RuntimeCategoryTreeProvider(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient)
         {
@@ -22,7 +23,10 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
 
         public Task<List<Category>> GetAllCategories()
         {
-            var cats = new List<Category>();
+            if (_categories != null)
+                return Task.Run<List<Category>>(() => _categories);
+
+            _categories = new List<Category>();
 
             return _productCategoryRuntimeWebApiClient.GetCategoryTree()
                 .ContinueWith(t =>
@@ -41,7 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
                         var catPair = treeStack.Pop();
                         var cat = Mapper.Map<Category>(catPair.Item1);
                         cat.Index = catPair.Item2.IndexOf(catPair.Item1);
-                        cats.Add(cat);
+                        _categories.Add(cat);
 
 
                         if (catPair.Item1.ChildrenCategories != null)
@@ -55,9 +59,9 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
                     }
 
                     //  _cats = AutoMapper.Mapper.Map<List<Category>>(client.GetCategories(null,  0, int.MaxValue, null).Result.ReadAsSync().Items);
-                    cats.ForEach(x => x.ChildrenCategories = cats.Where(_ => _.ParentCategoryId == null).ToList());
+                    _categories.ForEach(x => x.ChildrenCategories = _categories.Where(_ => _.ParentCategoryId == null).ToList());
 
-                    return cats;
+                    return _categories;
                 });
         }
     }
