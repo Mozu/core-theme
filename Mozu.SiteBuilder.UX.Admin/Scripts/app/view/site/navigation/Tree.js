@@ -211,7 +211,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
 
                 },
                 edit: function (editor, e) {
-                    e.record.set('editAction', 'edit');
+                    e.record.set('editAction', 'rename');
                     e.record.save();
                 },
                 itemclick: function (v, r, elm, idx, e) {
