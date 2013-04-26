@@ -61,7 +61,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
         this.mon(Taco.app.eventbus, 'Taco.model.CmsDocument.savesuccess', this.refreshTree, this);
 
         this.store = Ext.data.StoreManager.lookup('navigationTreeNodeStore') || Ext.create('Taco.store.NavigationTreeNodes');
-        this.store.autoSync = true;
+        this.store.autoSync = false;
 
         this.store.on({
             write: function (store, opt) {
@@ -75,6 +75,17 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 this.fireEvent('navigationchange', store, record);
                 this.navigate(record);
             },
+            //insert: function (tree, node, refNode, eOpts) {
+            //    console.log('insert', node.get('name'));
+            //},
+            move: function (node, oldParent, newParent, index, eOpts) {
+                node.set('editAction', 'move');
+                node.save();
+                //console.log('move', node.get('name'), oldParent.get('name'), newParent.get('name'));
+            },
+            //remove: function (ni, node, isMove, eOpts) {
+            //    console.log('remove', node.get('name'));
+            //},
             scope: this
         });
 
@@ -123,16 +134,25 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 }
             }
         });
-
+        var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
+            clicksToEdit: 2
+        });
         this.tree = Ext.create('Taco.core.ux.TreeList', {
             hideHeaders: true,
             itemId: 'navigationTree',
+            plugins: [cellEditing],
+            store: this.store,
             columns: [{
                 xtype: 'treecolumn',
                 flex: 1,
                 dataIndex: 'name',
-                renderer: function (value) {
-                    return '<a href="#" class="taco-action-navigate">' + (value + '</a>');
+                renderer: function (value, metaData, record) {
+                    var id = record.getId();
+                    if (id == '_unlinked' || id == '_navigation') {
+                        return '<span style="float:left;font-weight:bold">' + value + '</span><a style="float:right" href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
+                    } else {
+                        return '<a href="#" class="taco-action-navigate">' + value + '</a>';
+                    }
                 },
                 editor: {
                     xtype: 'textfield',
@@ -142,20 +162,47 @@ Ext.define('Taco.view.site.navigation.Tree', {
                     }
                 }
             },
+           
                 {
-                    
-                    width: 120,
-                    align: 'right',
-                    renderer: function (value, metaData, record) {
-                        var id = record.getId();
-                        if (id == '_unlinked' ||id == '_navigation') {
-                            return '<a href="#" class="taco-action-navigate" data-parent-id="'+id+'" >+ Add Page</a>';
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                width:40,
+                menuItems: [{
+                        text: 'Delete',
+                        menuColumnHandler: function(item, eventData) {
+                            var nt = eventData.record.get('nodeType'),
+                            confirm = Ext.create('Taco.core.ux.modal.Confirmation', {
+                                text: 'Would you like to continue?',
+                                title:'Delete Page',
+                                confirm: function () {
+                                    me.store.remove(eventData.record);
+                                    eventData.record.destroy({
+                                        callback:function(records, operation) {
+                                            if (operation.success) {
+                                                confirm.hide();
+                                            } else {
+                                                alert('error');
+                                            }
+                                        }
+                                    });
+                                    
+                                    
+                                   
+                                },
+                                autoShow: true
+                            });
                         }
-                        
+                    }],
+                onMenuShow: function (menu, eventData) {
+                    var nt = eventData.record.get('nodeType');
+                    if (nt == 'page') {
+                        menu.items.each(function(menuItem) { menuItem.show(); });
+                    } else {
+                        menu.items.each(function (menuItem) { menuItem.hide(); });
                     }
-                    //_unlinked
+                    console.log(menu, eventData);
                 }
-           ],
+            }],
             listeners: {
                 select: function (rowModel, record, index, eOpts) {
                     this.isNewSelection = true;
@@ -163,13 +210,10 @@ Ext.define('Taco.view.site.navigation.Tree', {
 
 
                 },
-                /* beforeitemmousedown:function(v,r,item,idx,e,eOpts){
-                var bing = Ext.fly(e.getTarget());
-                if ( bing && bing.hasCls('taco-draghandle'))
-                {
-                return false;
-                }
-                },*/
+                edit: function (editor, e) {
+                    e.record.set('editAction', 'edit');
+                    e.record.save();
+                },
                 itemclick: function (v, r, elm, idx, e) {
                     var cmp = Ext.fly(e.target);
                     e.preventDefault();
@@ -177,17 +221,17 @@ Ext.define('Taco.view.site.navigation.Tree', {
                     if (r.get('nodeType') === 'link' && !this.isNewSelection) {
                         this.fireEvent('editlink', r, elm);
                     }
-                    if (cmp.hasCls('taco-action-navigate')) {
+                    if (e.target.dataset.pageCreator) {//data-page-creator
                         this.pageCreator.reset( e.target.dataset);
                         this.cardPanel.showItem(this.pageCreator);
                     }
 
                     this.isNewSelection = false;
                 },
+                
 
                 scope: this
-            },
-            store: this.store
+            }
         });
 
 

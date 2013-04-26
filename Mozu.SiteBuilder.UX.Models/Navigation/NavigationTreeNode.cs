@@ -29,6 +29,9 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         [DataMember(Name = "id", EmitDefaultValue = false)]
         public string Id { get; set; }
 
+        [DataMember(Name = "editAction", EmitDefaultValue = false)]
+        public string EditAction { get; set; }
+
         [DataMember(Name = "originalId", EmitDefaultValue = false)]
         public string OriginalId { get; set; }
 

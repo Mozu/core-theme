@@ -87,7 +87,9 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
         }
         
         recurseItemFn(this.menu);
-
+        if (this.menu.shouldExpand == false) {
+            return;
+        }
         return this.menu;
     },
     
