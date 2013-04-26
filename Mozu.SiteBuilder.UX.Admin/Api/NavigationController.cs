@@ -6,6 +6,8 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using AutoMapper;
+using Mozu.Core.Api.Contracts.Client;
+using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -90,11 +92,65 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         /// <summary>
+        /// Delete a NavigationTreeNode (a document or a link).
+        /// </summary>
+        [WebInvoke(UriTemplate = "delete")]
+        public async Task<Response<List<NavigationTreeNode>>> Delete(List<NavigationTreeNode> items)
+        {
+            var navSet = await _navRepo.GetSetAsync();
+            bool isDirty = false; 
+
+            foreach (var item in items)
+            {
+                if (item.NodeType.IsPage || item.NodeType.IsLink)
+                {
+                    var itemInNavSet = navSet.Nodes.FirstOrDefault(n => n.Id == item.Id);
+                    if (itemInNavSet != null)
+                    {
+                        navSet.Nodes.Remove(itemInNavSet);
+                        isDirty = true;
+                    }
+                }
+            }
+
+            if (isDirty)
+                await _navRepo.SaveSetAsync(navSet);
+
+            return List2(items);
+        }
+
+        /// <summary>
         /// Reorganize some part of the navigation tree.
         /// </summary>
         [WebInvoke(UriTemplate = "update")]
         public async Task<Response<List<NavigationTreeNode>>> Edit(List<NavigationTreeNode> items)
         {
+            if (items.Count > 1)
+                throw new ArgumentException("Unexpected number of updates: " + items.Count);
+
+            var item = items.First();
+
+            switch (item.EditAction)
+            {
+                case "rename":
+                    if (item.NodeType.IsCategory)
+                        await HandleCategoryRename(item);
+                    else if (item.NodeType.IsPage)
+                        await HandleCmsRename(item);
+                    else if (item.NodeType.IsLink)
+                        await HandleNavigationItemRename(item);
+                    break;
+                case "move":
+                    if (item.NodeType.IsPage || item.NodeType.IsLink)
+                        await HandleNavigationMove(item);
+                    else if (item.NodeType.IsCategory)
+                        await HandleCategoryMove(item);
+                    break;
+                default:
+                    throw new ArgumentException("Unexpected edit action: " + item.EditAction);
+            }
+
+
             var originalTree = (await List()).Items;
 
             // step 1. find any pages or categories whose parent has changed.
@@ -133,6 +189,107 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             return List2(originalTree);
+        }
+
+        /// <summary>
+        /// Handles a category rename request.
+        /// </summary>
+        private Task<ServiceClientResponse<DC.Category>> HandleCategoryRename(NavigationTreeNode change)
+        {
+            int categoryId = Convert.ToInt32(change.OriginalId);
+
+            // retrieve and update the requested category.
+            return
+                _catClient.GetCategory(categoryId)
+                .ContinueWith(t =>
+                {
+                    var category = t.Result.ReadAsSync();
+
+                    Debug.WriteLine(
+                        String.Format("[cat {0}] Renaming category. Old Name: {1}. New Name: {2}.",
+                        category.Id, category.Content.Name, change.Name
+                    ));
+
+                    category.Content.Name = change.Name;
+                    return _catClient.UpdateCategory(category, category.Id);
+                })
+                .Unwrap()
+            ;
+        }
+
+        /// <summary>
+        /// Handles a page or blog rename request.
+        /// </summary>
+        private Task HandleCmsRename(NavigationTreeNode change)
+        {
+            string docCollection = change.OriginalCollection;
+            string docId = change.OriginalId;
+
+            // retrieve and update the requested category.
+            return
+                _cmsService.Get(docCollection, docId, false)
+                .ContinueWith(t =>
+                {
+                    var page = t.Result.ReadAsSync();
+                    if (page == null)
+                        throw new Exception("Document not found: " + docCollection + "/" + docId);
+
+                    Debug.WriteLine(
+                        String.Format("[doc {0}] Renaming document. Old Name: {1}. New Name: {2}.",
+                        page.Id, page.Get("link_title") ?? page.Name, change.Name
+                    ));
+
+                    page.Set("link_title", change.Name);
+
+                    return _cmsService.Update(page);
+                })
+                .Unwrap()
+            ;
+        }
+
+        /// <summary>
+        /// Handles a rename of a link item.
+        /// </summary>
+        private Task HandleNavigationItemRename(NavigationTreeNode change)
+        {
+            // retrieve and update the navigation set.
+            return
+                _navRepo.GetSetAsync()
+                .ContinueWith(t =>
+                {
+                    var navSet = t.Result;
+
+                    var originalNode = navSet.Nodes.FirstOrDefault(n => n.Id == change.Id);
+
+                    Debug.WriteLine(
+                        String.Format("[node {0}] Renaming node. Old Name: {1}. New Name: {2}.",
+                        originalNode.Id, originalNode.Name ?? change.Name
+                    ));
+
+                    originalNode.Name = change.Name;
+
+                    return _navRepo.SaveSetAsync(navSet);
+                })
+                .Unwrap()
+            ;
+        }
+
+        /// <summary>
+        /// Handles a move or reorder of something in the navigation document.
+        /// </summary>
+        private Task HandleNavigationMove(NavigationTreeNode item)
+        {
+            return
+                _navRepo.GetSetAsync()
+                .ContinueWith(t => {
+                    
+                })
+                ;
+        }
+
+        private Task HandleCategoryMove(NavigationTreeNode item)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -232,53 +389,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var change in nameChanges)
             {
-                // issue changes to categories immediately.
-                if (change.NodeType.IsCategory)
-                {
-                    int categoryId = Convert.ToInt32(change.OriginalId);
-
-                    tasks.Add(
-                        _catClient.GetCategory(categoryId)
-                        .ContinueWith(t =>
-                        {
-                            var category = t.Result.ReadAsSync();
-
-                            Debug.WriteLine(
-                                String.Format("[cat {0}] Renaming category. Old Name: {1}. New Name: {2}.",
-                                category.Id, category.Content.Name, change.Name
-                            ));
-
-                            category.Content.Name = change.Name;
-                            return _catClient.UpdateCategory(category, category.Id);
-                        })
-                        .Unwrap()
-                    );
-                }
+                if (false) { }
                 // name changes are in CMS, so issue those immediately too.
                 else if (change.NodeType.IsPage)
                 {
-                    string docCollection = change.OriginalCollection;
-                    string docId = change.OriginalId;
-
-                    tasks.Add(
-                        _cmsService.GetByPath(docCollection, docId, "", "draft")
-                        .ContinueWith(t =>
-                        {
-                            var page = t.Result.ReadAsSync();
-                            if (page == null)
-                                throw new Exception("Document not found: " + docCollection + "/" + docId);
-
-                            Debug.WriteLine(
-                                String.Format("[doc {0}] Renaming document. Old Name: {1}. New Name: {2}.",
-                                page.Id, page.Get("link_title") ?? page.Name, change.Name
-                            ));
-
-                            page.Set("link_title", change.Name);
-
-                            return _cmsService.Update(page);
-                        })
-                        .Unwrap()
-                    );
                 }
             }
 
