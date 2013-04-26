@@ -29,6 +29,10 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         [DataMember(Name = "id", EmitDefaultValue = false)]
         public string Id { get; set; }
 
+        /// <summary>
+        /// When EXT edits this node, EditAction will be set to the appropriate action:
+        /// "move" or "rename"
+        /// </summary>
         [DataMember(Name = "editAction", EmitDefaultValue = false)]
         public string EditAction { get; set; }
 

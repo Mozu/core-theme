@@ -26,43 +26,50 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
             if (_categories != null)
                 return Task.Run<List<Category>>(() => _categories);
 
-            _categories = new List<Category>();
+            lock (this)
+            {
+                if (_categories != null)
+                    return Task.Run<List<Category>>(() => _categories);
 
-            return _productCategoryRuntimeWebApiClient.GetCategoryTree()
-                .ContinueWith(t =>
-                {
-                    var srvTree = t.Result.ReadAsSync();
-                    // var srvTree = new CategoryCollection() { Items = new List<ProductRuntime.Contracts.Category>() };
+                var categories = new List<Category>();
 
-                    var treeStack =
-                        new Stack<Tuple<Mozu.ProductRuntime.Contracts.Category, List<Mozu.ProductRuntime.Contracts.Category>>>(
-                            srvTree.Items.Select(x =>
-                                new Tuple<Mozu.ProductRuntime.Contracts.Category, List<Mozu.ProductRuntime.Contracts.Category>>
-                                    (x, srvTree.Items)));
-
-                    while (treeStack.Count() > 0)
+                return _productCategoryRuntimeWebApiClient.GetCategoryTree()
+                    .ContinueWith(t =>
                     {
-                        var catPair = treeStack.Pop();
-                        var cat = Mapper.Map<Category>(catPair.Item1);
-                        cat.Index = catPair.Item2.IndexOf(catPair.Item1);
-                        _categories.Add(cat);
+                        var srvTree = t.Result.ReadAsSync();
+                        // var srvTree = new CategoryCollection() { Items = new List<ProductRuntime.Contracts.Category>() };
 
+                        var treeStack =
+                            new Stack<Tuple<Mozu.ProductRuntime.Contracts.Category, List<Mozu.ProductRuntime.Contracts.Category>>>(
+                                srvTree.Items.Select(x =>
+                                    new Tuple<Mozu.ProductRuntime.Contracts.Category, List<Mozu.ProductRuntime.Contracts.Category>>
+                                        (x, srvTree.Items)));
 
-                        if (catPair.Item1.ChildrenCategories != null)
+                        while (treeStack.Count() > 0)
                         {
-                            catPair.Item1.ChildrenCategories.ForEach(
-                                x =>
-                                treeStack.Push(
-                                    new Tuple<Mozu.ProductRuntime.Contracts.Category, List<Mozu.ProductRuntime.Contracts.Category>>(x, catPair.Item1.ChildrenCategories)))
-                            ;
+                            var catPair = treeStack.Pop();
+                            var cat = Mapper.Map<Category>(catPair.Item1);
+                            cat.Index = catPair.Item2.IndexOf(catPair.Item1);
+                            categories.Add(cat);
+
+
+                            if (catPair.Item1.ChildrenCategories != null)
+                            {
+                                catPair.Item1.ChildrenCategories.ForEach(
+                                    x =>
+                                    treeStack.Push(
+                                        new Tuple<Mozu.ProductRuntime.Contracts.Category, List<Mozu.ProductRuntime.Contracts.Category>>(x, catPair.Item1.ChildrenCategories)))
+                                ;
+                            }
                         }
-                    }
 
-                    //  _cats = AutoMapper.Mapper.Map<List<Category>>(client.GetCategories(null,  0, int.MaxValue, null).Result.ReadAsSync().Items);
-                    _categories.ForEach(x => x.ChildrenCategories = _categories.Where(_ => _.ParentCategoryId == null).ToList());
+                        //  _cats = AutoMapper.Mapper.Map<List<Category>>(client.GetCategories(null,  0, int.MaxValue, null).Result.ReadAsSync().Items);
+                        categories.ForEach(x => x.ChildrenCategories = categories.Where(_ => _.ParentCategoryId == null).ToList());
 
-                    return _categories;
-                });
+                        _categories = categories;
+                        return categories;
+                    });
+            }
         }
     }
 }
