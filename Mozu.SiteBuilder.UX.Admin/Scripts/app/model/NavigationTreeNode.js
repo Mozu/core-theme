@@ -54,6 +54,10 @@ Ext.define('Taco.model.NavigationTreeNode', {
         }, {
             name: 'name',
             type: 'string'
+
+        },{
+            name: 'editAction',
+            type: 'string'
         }],
         proxy: {
             type: 'ajaxproxy',
