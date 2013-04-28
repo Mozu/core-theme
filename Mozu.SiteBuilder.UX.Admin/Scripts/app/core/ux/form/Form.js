@@ -24,7 +24,7 @@ Ext.define('Taco.core.ux.form.Form', {
     trackResetOnLoad: true,
     createTitle: 'Create',
     editTitle: 'Edit',
-    header: { layout: 'auto' },
+   // header: { layout: 'auto' },
     persistChangesToModel: false,
     enableStoreSyncTasks:false,
     tasksKeyPrefix: '',

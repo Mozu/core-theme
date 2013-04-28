@@ -53,6 +53,7 @@
         
         if (!this.form && this.formCls) {
             this.formCfg = Ext.applyIf({
+                autoTitle:this.autoTitle,
                 record: this.record,
                 overflowY: 'auto'
             }, this.formCfg);

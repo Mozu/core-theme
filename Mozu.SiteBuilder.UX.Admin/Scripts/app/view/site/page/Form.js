@@ -40,7 +40,7 @@ Ext.define('Taco.view.site.page.Form', {
             },
             editlink: function (record, element) {
                 console.log('editlink');
-                this.createModal.loadLink(record, element, [0, -20]);
+                //this.createModal.loadLink(record, element, [0, -20]);
             },
             scope: this
         });
@@ -114,9 +114,9 @@ Ext.define('Taco.view.site.page.Form', {
         
 
 
-        this.createModal = Ext.create('Taco.view.site.CreateModal', {
-            editor: this
-        });
+        //this.createModal = Ext.create('Taco.view.site.CreateModal', {
+        //    editor: this
+        //});
 
         this.actions = [
             this.toolBar,
@@ -591,7 +591,7 @@ Ext.define('Taco.view.site.page.Form', {
     },
 
     createRecord: function () {
-        this.createModal.show(this.toolBar.getButton('add'), 't-b');
+        //this.createModal.show(this.toolBar.getButton('add'), 't-b');
     },
 
     doFormView: function () {

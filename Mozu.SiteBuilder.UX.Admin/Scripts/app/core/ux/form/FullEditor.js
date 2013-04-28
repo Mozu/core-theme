@@ -3,7 +3,7 @@
     mixins: {
         editorwrapper: 'Taco.core.ux.form.EditorWrapper'
     },
-
+    autoTitle:true,
     bodyLayout: 'fit',
     showIndexOnCancel:true,
 

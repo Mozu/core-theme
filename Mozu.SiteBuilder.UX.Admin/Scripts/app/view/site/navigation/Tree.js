@@ -1,6 +1,7 @@
 /**
  * @class Taco.view.site.navigation.Tree
  */
+
 Ext.define('Taco.view.site.navigation.Tree', {
     extend: 'Taco.view.site.ToolboxPanel',
     requires: ['Taco.model.NavigationTreeNode', 'Taco.store.NavigationTreeNodes'],
@@ -8,22 +9,26 @@ Ext.define('Taco.view.site.navigation.Tree', {
         type: 'vbox',
         align: 'stretch'
     },
+
+//todo editlnik
     bubbleEvents: ['editlink'],
     navigate: function (record) {
         var url = record.get('url');
         if (url) {
             if (record.get('nodeType') == 'link') {
-                Taco.core.StateManager.attemptNavigate(
-                    Ext.create('Taco.core.AppState', {
-                        uri: '/sites/external-link',
-                        metaData: record.getData()
-                    }));
+                
+                //Taco.core.StateManager.attemptNavigate(
+                //    Ext.create('Taco.core.AppState', {
+                //        uri: '/sites/external-link',
+                //        metaData: record.getData()
+                //    }));
             }
             else {
                 Taco.core.StateManager.attemptNavigate('/sites' + url);
             }
         }
     },
+    
     initComponent: function () {
         var me = this;
         this.addEvents('editlink');
@@ -31,28 +36,19 @@ Ext.define('Taco.view.site.navigation.Tree', {
             cardPanel: me.cardPanel,
             listeners:{
                 cancel: function () { me.cardPanel.showItem(me); },
-                save:function(creator, record) {
-                    var newNavRecord = {
-                        "id": "page^^" + record.get('collectionName') + "^^" + record.get('documentId'),
-                        "originalId": record.get('documentId'),
-                        "originalCollection": record.get('collectionName'),
-                        "parentId": me.pageCreator.parentId,
-                        "name": record.get('name'),
-                        "nodeType": "page",
-                        "url": "/pages/" + record.get('name'),
-                        "leaf": true,
-                        "expanded": false,
-                        "expandable": true,
-                        "iconCls": "taco-nav-node-page",
-                        "allowDrag": true,
-                        "isHidden": false
-                    },
-                        parentNode = me.store.getById(me.pageCreator.parentId);
-                    parentNode.appendChild(newNavRecord);
+                save: function (creator, record) {
+                    var parentNode = me.store.getById(me.pageCreator.parentId);
+                    
+                   
+                    parentNode.appendChild(record);
+                    record.save();
                     me.cardPanel.showItem(me);
                 }
             }
         });
+        
+        //todo add shortcut form... ahh this is shitty.
+       
         
         this.cardPanel.add(this.pageCreator);
         this.mon(Taco.app, 'page-destroy', this.pageDestroyed, this);
@@ -75,17 +71,12 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 this.fireEvent('navigationchange', store, record);
                 this.navigate(record);
             },
-            //insert: function (tree, node, refNode, eOpts) {
-            //    console.log('insert', node.get('name'));
-            //},
+          
             move: function (node, oldParent, newParent, index, eOpts) {
                 node.set('editAction', 'move');
                 node.save();
-                //console.log('move', node.get('name'), oldParent.get('name'), newParent.get('name'));
             },
-            //remove: function (ni, node, isMove, eOpts) {
-            //    console.log('remove', node.get('name'));
-            //},
+           
             scope: this
         });
 
@@ -116,7 +107,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 }
             }
         });
-
+        
         this.searchGrid = Ext.widget('grid', {
 
 
@@ -167,7 +158,16 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 width:40,
-                menuItems: [{
+                menuItems: [
+                {
+                    nodeTypes:['link'],
+                    text: 'Edit',
+                    menuColumnHandler: function (item, eventData) {
+                        me.editLink(eventData.record, item);
+                    }
+                },
+                    {
+                        nodeTypes: ['page', 'link'],
                         text: 'Delete',
                         menuColumnHandler: function(item, eventData) {
                             var nt = eventData.record.get('nodeType'),
@@ -175,7 +175,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
                                 text: 'Would you like to continue?',
                                 title:'Delete Page',
                                 confirm: function () {
-                                    me.store.remove(eventData.record);
+                                    eventData.record.remove();
                                     eventData.record.destroy({
                                         callback:function(records, operation) {
                                             if (operation.success) {
@@ -193,14 +193,16 @@ Ext.define('Taco.view.site.navigation.Tree', {
                             });
                         }
                     }],
-                onMenuShow: function (menu, eventData) {
+                onMenuShow: function(menu, eventData) {
                     var nt = eventData.record.get('nodeType');
-                    if (nt == 'page') {
-                        menu.items.each(function(menuItem) { menuItem.show(); });
-                    } else {
-                        menu.items.each(function (menuItem) { menuItem.hide(); });
-                    }
-                    console.log(menu, eventData);
+                    menu.items.each(function(menuItem) {
+                        if (menuItem.nodeTypes.indexOf(nt)>-1) {
+                            menuItem.show();
+                        } else {
+                            menuItem.hide();
+                        }
+
+                    });
                 }
             }],
             listeners: {
@@ -218,9 +220,9 @@ Ext.define('Taco.view.site.navigation.Tree', {
                     var cmp = Ext.fly(e.target);
                     e.preventDefault();
                    
-                    if (r.get('nodeType') === 'link' && !this.isNewSelection) {
-                        this.fireEvent('editlink', r, elm);
-                    }
+                    //if (r.get('nodeType') === 'link' && !this.isNewSelection) {
+                    //    this.fireEvent('editlink', r, elm);
+                    //}
                     if (e.target.dataset.pageCreator) {//data-page-creator
                         this.pageCreator.reset( e.target.dataset);
                         this.cardPanel.showItem(this.pageCreator);
@@ -249,57 +251,14 @@ Ext.define('Taco.view.site.navigation.Tree', {
         var sel = this.tree.getSelectionModel();
         sel.setSelectionMode('SINGLE');
 
-        // sel.onRowMouseDown=function(view, record, item, index, e) {
-        //     if (!this.allowRightMouseSelection(e)) {
-        //         return;
-        //     }
-        //     console.log('onRowMouseDown');
-        //     var dom = Ext.fly(e.getTarget());
-        //     if ( dom && dom.hasCls('taco-draghandle'))
-        //     {
-        //         return ;
-        //     }
-        //     if (e.button === 0 || !this.isSelected(record)) {
-        //         this.selectWithEvent(record, e);
-        //     }
-        // };
-
-        //this.on({
-        //    render: function () {
-        //        this.store.load();
-        //    },
-        //    scope: this
-        //});
-
-        // this.tree.on({
-        //     render: this.afterTreeRender,
-        //     scope: this
-        // });
+      
 
         this.addEvents('navigationchange');
         this.enableBubble('navigationchange');
 
     },
 
-    // afterTreeRender: function () {
-    //     this.treeView = this.tree.getView()
-
-    //     this.treeView.on({
-    //         itemupdate: function (record) {
-    //             console.log('itemupdate', record.data.name);
-    //         },
-    //         itemadd: function (recordArray) {
-    //             Ext.each(recordArray, function (record) {
-
-    //                 console.log('itemadd', record.data.name);
-    //             })
-
-    //         },
-    //         scope: this
-    //     });
-
-
-    // },
+   
     refreshTree: function () {
         this.tree.store.load();
 
@@ -366,6 +325,38 @@ Ext.define('Taco.view.site.navigation.Tree', {
             this.resultPanel.getLayout().setActiveItem(this.searchGrid);
             return;
         }
+
+    },
+    editLink: function(record, target) {
+
+
+        var me = this;
+        me.linkEditor = Ext.create('Taco.core.ux.modal.Mini',
+            {
+                width: 400,
+                height: 200,
+                destroyOnHide: true,
+               
+                items: [
+                    Ext.create('Taco.view.site.navigation.ExternalLinkEditor', {
+                            isEditMode: true,
+                            record: record,
+                            listeners: {
+                                savesuccess: function() {
+
+                                    record.set('editAction', 'rename');
+                                    record.save();
+                                    me.linkEditor.hide();
+                                },
+                                cancel: function(editor) {
+                                    me.linkEditor.hide();
+                                }
+                            }
+                        }
+                    )
+                ]
+            });
+        me.linkEditor.show(target, 'r-l');
 
     },
     pageDestroyed: function (url, record) {
