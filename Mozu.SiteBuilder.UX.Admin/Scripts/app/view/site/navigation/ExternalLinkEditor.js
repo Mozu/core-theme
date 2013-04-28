@@ -2,29 +2,39 @@
  * @class Taco.view.site.navigation.ExternalLinkEditor
  */
 Ext.define('Taco.view.site.navigation.ExternalLinkEditor', {
-    extend: 'Ext.form.Panel',
+    extend: 'Taco.core.ux.form.Form',
 
-    title: 'External Link Configurator',
-    isEditMode: false,
+   // title: 'External Link Configurator',
+    isEditMode: true,
 
     navigationStoreId: 'navigationTreeNodeStore',
     navigationParentNodeId: '_unlinked',
     modelType: 'Taco.model.NavigationTreeNode',
     nodeType: 'link',
     iconCls: 'link',
-
+    width: 300,
+   // height: 300,
+    layout:{type:'auto'},
     initComponent: function () {
-        this.addEvents('aftersave')
+        this.addEvents('save');
 
         this.items = [{
             xtype: 'textfield',
             name: 'name',
-            emptyText: 'Link name...',
+            emptyText: 'Label',
+            fieldStyle: {
+                width:'100%'
+            },
+            width:250,
             flex: 1
         }, {
             xtype: 'textfield',
             name: 'url',
-            emptyText: 'http://',
+            emptyText: 'URL',
+            fieldStyle: {
+                width: '100%'
+            },
+            width: 250,
             flex: 1
         }, {
             xtype: 'container',
@@ -33,7 +43,7 @@ Ext.define('Taco.view.site.navigation.ExternalLinkEditor', {
                 text: 'Cancel',
                 click: {
                     fn: function () {
-                        this.up().getLayout().setActiveItem(0);
+                        this.fireEvent('cancel');
                     },
                     scope: this
                 }
@@ -41,7 +51,9 @@ Ext.define('Taco.view.site.navigation.ExternalLinkEditor', {
                 xtype: 'primarybutton',
                 text: 'Save',
                 click: {
-                    fn: this.save,
+                    fn: function () {
+                        this.updateForm();
+                    },
                     scope: this
                 }
             }]
@@ -63,11 +75,9 @@ Ext.define('Taco.view.site.navigation.ExternalLinkEditor', {
                 nodeType: this.nodeType,
                 iconCls: this.iconCls
             })
-            Ext.data.StoreManager
-                .get(this.navigationStoreId)
-                .getById(this.navigationParentNodeId)
-                .appendChild(this.record)
+            
         }
-        this.fireEvent('aftersave')
+        this.fireEvent('save', this, this.record);
+        
     }
 })

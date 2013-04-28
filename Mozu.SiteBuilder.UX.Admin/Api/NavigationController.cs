@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             int currentHighestLinkIndex =
                 (from n in navSet.Nodes
-                 where n.NodeType.IsLink
+                 where n.NodeType != null && n.NodeType.IsLink
                  let stringId = n.OriginalId
                  let id = (stringId == null ? null : (int?)Convert.ToInt32(stringId))
                  orderby id
@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 
             foreach (var item in items)
             {
-                if (item.ParentId == null)
+                if (string.IsNullOrEmpty( item.ParentId ))
                     item.ParentId = UNLINKED_PAGES_NODE_ID;
 
 
@@ -263,7 +263,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     Debug.WriteLine(
                         String.Format("[node {0}] Renaming node. Old Name: {1}. New Name: {2}.",
-                        originalNode.Id, originalNode.Name ?? change.Name
+`                        originalNode.Id, originalNode.Name , change.Name
                     ));
 
                     originalNode.Name = change.Name;
