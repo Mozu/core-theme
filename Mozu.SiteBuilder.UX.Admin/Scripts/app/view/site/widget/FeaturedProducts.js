@@ -43,7 +43,7 @@ Ext.define('Taco.view.site.widget.FeaturedProducts', {
         this.field = Ext.create('Ext.form.field.Hidden', {
             name: 'productCodes',
             isValid: function () {
-                return this.getValue().split(',').length === 4;
+                return this.getValue().split(',').length > 0;
             }
         });
 

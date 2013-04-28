@@ -11,7 +11,7 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
             flex: 1,
             itemSelector: 'div.widget-source',
             tpl: '<tpl for="."><div class="widget-source">{displayName}-{category}</div></tpl>',
-            store: Ext.create('Taco.store.WidgetDefinitions'),
+            store: Taco.core.data.StoreManager.getOrCreate('Taco.store.WidgetDefinitions'),
             autoScroll: true,
             listeners: {
                 render: {
