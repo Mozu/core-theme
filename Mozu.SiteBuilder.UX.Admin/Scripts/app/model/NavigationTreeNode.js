@@ -2,9 +2,9 @@
  * @class Taco.model.NavigationTreeNode
  */
 Ext.define('Taco.model.NavigationTreeNode', {
-        extend: 'Taco.core.data.Model',
+    extend: 'Taco.core.data.Model',
 
-        fields: [{
+    fields: [{
             name: 'id',
             type: 'string',
             useNull: true
@@ -13,12 +13,12 @@ Ext.define('Taco.model.NavigationTreeNode', {
             name: 'originalId',
             type: 'string',
             useNull: true
-        }, 
+        },
         {
             name: 'originalCollection',
             type: 'string',
             useNull: true
-        }, 
+        },
         {
             name: 'expandable',
             defaultValue: true,
@@ -26,8 +26,8 @@ Ext.define('Taco.model.NavigationTreeNode', {
         },
         {
             name: 'loaded',
-            convert:function(v, record) {
-                return record.get('loaded')|| record.data.id != "root";
+            convert: function(v, record) {
+                return record.get('loaded') || record.data.id != "root";
             },
             persist: false
         },
@@ -54,31 +54,52 @@ Ext.define('Taco.model.NavigationTreeNode', {
         }, {
             name: 'name',
             type: 'string'
-
-        },{
+        }, {
             name: 'editAction',
             type: 'string'
         }],
-        proxy: {
-            type: 'ajaxproxy',
-            api: {
-                create: '/admin/app/navigation/create',
-                read: '/admin/app/navigation/list',
-                update: '/admin/app/navigation/update',
-                destroy: '/admin/app/navigation/delete'
-            },
+    initExpandable: function(model) {
+        Ext.data.NodeInterface.decorate(model);
+        if (this.isExpandable != this.isExpandableOverride) {
 
-            reader: {
-                type: 'json',
-                root: 'items',
-                successProperty: 'success',
-                messageProperty: 'message'
-            },
-
-            writer: {
-                allowSingle: false,
-                writeAllFields: true,
-                type: 'json'
-            }
+            model.override({
+                isExpandable: this.isExpandableOverride
+            });
         }
-    });
+
+    },
+    isExpandableOverride:
+        function() {
+            var me = this;
+            if (me.get('nodeType') == 'category') {
+                return true;
+            }
+            if (me.get('expandable')) {
+                return !(me.isLeaf() ||
+                    (me.isLoaded() && !me.hasChildNodes()));
+            }
+            return false;
+        },
+    proxy: {
+        type: 'ajaxproxy',
+        api: {
+            create: '/admin/app/navigation/create',
+            read: '/admin/app/navigation/list',
+            update: '/admin/app/navigation/update',
+            destroy: '/admin/app/navigation/delete'
+        },
+
+        reader: {
+            type: 'json',
+            root: 'items',
+            successProperty: 'success',
+            messageProperty: 'message'
+        },
+
+        writer: {
+            allowSingle: false,
+            writeAllFields: true,
+            type: 'json'
+        }
+    }
+});
