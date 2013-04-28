@@ -184,7 +184,8 @@
                                 hint: hint,
                                 widget: Ext.getDom(hint.associatedEl),
                                 pageData: this.documentData
-                            };
+                            }, widgetDev;
+                            
                             eventData.metaData = Ext.decode(eventData.widget.getAttribute('data-editing-widget'));
                             eventData.callback = function (config){
                                 var el = Ext.get(eventData.widget);
@@ -192,9 +193,10 @@
                                 el.remove();
                                 me.onRecalcShim();
                             };
+                            eventData.widgetDefinition = me.widgetDefinitions.getById(eventData.metaData.definitionId);
                             
-                            if (eventData.metaData.editView) {
-                                me.createWidgetEditor( eventData);
+                            if (eventData.widgetDefinition && eventData.widgetDefinition.get('editView')){//}eventData.metaData.editView) {
+                                me.createWidgetEditor(eventData);
                             }
                             
                             return false;
@@ -301,6 +303,7 @@
         createWidgetEditor: function (eventData ) {
             var me = this,
             editor,
+            widgetEditorCls,
             widgetModel;
             if (!me.widgets) {
                 return;
@@ -310,11 +313,13 @@
                 me.widgets.loadData([eventData.metaData], true);
                 widgetModel = me.widgets.getById(eventData.metaData.id);
             }
+            //todo    allow for complex json def;
+            widgetEditorCls = eventData.widgetDefinition.get('editView');
            
            
             eventData.model = widgetModel;
 
-           editor = Ext.create(eventData.metaData.editView, {
+            editor = Ext.create(widgetEditorCls, {
                 widgetEditData: eventData,
                 metaData: eventData.metaData,
                 autoShow:true,

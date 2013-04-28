@@ -59,6 +59,9 @@ Ext.define('Taco.view.site.page.Form', {
                 scope: this
             }
         });
+
+        this.widgetDefinitions = Taco.core.data.StoreManager.getOrCreate('Taco.store.WidgetDefinitions');
+
         window.pageEditor = this;
         this.cmsDocs = Ext.create('Taco.store.CmsDocuments', {
             listeners: {
@@ -97,6 +100,7 @@ Ext.define('Taco.view.site.page.Form', {
             pageSrc: this.pageSrc,
             cmsDocs: this.cmsDocs,
             widgets: this.widgets,
+            widgetDefinitions: this.widgetDefinitions,
             listeners: {
                 documentload: this.onDocumentLoad,
                 beforeedit: this.onBeforeEdit,
