@@ -263,7 +263,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     Debug.WriteLine(
                         String.Format("[node {0}] Renaming node. Old Name: {1}. New Name: {2}.",
-`                        originalNode.Id, originalNode.Name , change.Name
+                        originalNode.Id, originalNode.Name , change.Name
                     ));
 
                     originalNode.Name = change.Name;
