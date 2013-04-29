@@ -1,4 +1,4 @@
-﻿define(["shim!vendor/jquery-cookie[jquery=jQuery]>jQuery", "knockout", "modules/knockout-viewmodel", "i18n!nls/messages"], function ($, ko, KnockoutVM, genericMsg) {
+﻿define(["shim!vendor/jquery-cookie[jquery=jQuery]>jQuery", "knockout", "modules/knockout-viewmodel", "i18n!nls/messages", "modules/function-throttler"], function ($, ko, KnockoutVM, genericMsg, throttle) {
 
     var CartItem = KnockoutVM.extend({
         mozuType: 'cartitem',
@@ -22,6 +22,7 @@
         }
     }, function constructItem() {
         var self = this;
+        this.parentCart = this.getParentModel();
         this.priceIsModified = ko.computed(function () {
             var price = self.UnitPrice();
             return price.BaseAmount != price.FinalAmount;
@@ -30,95 +31,51 @@
             self.parentCart.messages(e.Items);
             self.parentCart.submitting(false);
         });
-        var origQuantity = this.Quantity();
-        var changingQuantityPromise = false;
-        this.Quantity.subscribe(function (newValue) {
+        var origQuantity = this.Quantity(), newValue, xhrCanceller;
+        function hangOnToXhr(xhr, canceller, p, conf, data) {
+            if (data === newValue) {
+                xhrCanceller = canceller;
+            }
+        }
+        this.Quantity.subscribe(throttle(function (val) {
+            newValue = val;
             if (origQuantity !== newValue) {
-                if (origQuantity === 0 && newValue > 0) {
-                    self.parentCart.unQueueRemoval(self);
-                }
-                if (newValue === 0) {
-                    self.parentCart.queueRemoval(self);
-                } else {
-                    if (changingQuantityPromise) {
-                        changingQuantityPromise.cancel && changingQuantityPromise.cancel();
-                        changingQuantityPromise = false;
-                    }
-                    self.parentCart.submitting(true);
-                    changingQuantityPromise = self.updateQuantity(newValue).then(function () {
-                        changingQuantityPromise = self.parentCart.get();
-                        return changingQuantityPromise;
-                    }).then(function () {
-                        self.parentCart.submitting(false);
-                        changingQuantityPromise = false;
-                    });
-                }
+                if (xhrCanceller) xhrCanceller();
+                self.apiModel.api.on('request', hangOnToXhr);
+                self.parentCart.submitting(true);
+                self.updateQuantity(newValue).then(function () {
+                    xhrCanceller = null;
+                    self.apiModel.api.off('request', hangOnToXhr);
+                    return self.parentCart.get();
+                }).then(function () {
+                    self.parentCart.submitting(false);
+                });
                 origQuantity = newValue;
             }
-        });
+        }, 1000, false));
     });
 
     var Cart = KnockoutVM.extend({
         mozuType: 'cart',
         hasMessages: true,
-        observableArrays: {
-            Items: {}
+        submodelArrays: {
+            Items: CartItem
         },
         observables: {
             Total: {},
             hasDiscount: {},
         },
-        checkout: function () {
-            var self = this,
-                items = this.Items(),
-                go = function() {
-                    self.apiModel.checkout().then(function (order) {
-                        self.publish('ordercreated', order);
-                    });
-                },
-                chain = [go];
+        proceedToCheckout: function () {
+            var self = this;
             self.submitting(true);
-            $.each(this.removalQueue, function(ix) {
-                var item = ko.utils.arrayFirst(items, function(i) {
-                    return i.CartItemId = ix;
-                });
-                if (item) chain.unshift(function () {
-                    return item.del();
-                });
+            return self.checkout().then(function (order) {
+                return self.publish('ordercreated', order);
+            }, function () {
+                self.submitting(false);
             });
-            return self.apiModel.api.steps(chain);
-        },
-        queueRemoval: function (item) {
-            this.removalQueue[item.CartItemId] = item;
-        },
-        unqueueRemoval: function (item) {
-            delete this.removalQueue[item.CartItemId];
         }
     }, function constructCart() {
         var self = this;
-        self.removalQueue = {};
-        // extract current value
-        var items = this.Items();
-        // private, underlying observablearray
-        var _items = ko.observableArray();
-        // public proxy observable
-        this.Items = ko.computed({
-            write: function (newArray) {
-                if ($.isArray(newArray)) {
-                    _items($.map(newArray, function (itemConf) {
-                        itemConf.parentCart = self;
-                        return new CartItem(itemConf);
-                    }));
-                } else {
-                    // allow blanking the array out
-                    _items(null);
-                }
-            },
-            read: _items
-        });
-
-        // now populate it
-        this.Items(items);
 
         this.isEmpty = ko.computed(function () {
             return self.Items().length === 0;

@@ -1,6 +1,16 @@
 ﻿define(
-    ["modules/knockout-viewmodel"],
-    function (ViewModelPrototype) {
+    ["modules/knockout-plus", "modules/knockout-viewmodel", "modules/models-address"],
+    function (ko, ViewModelPrototype, AddressModels) {
+
+        var Contact = ViewModelPrototype.extend({
+            observables: {
+                IsPrimary: {}
+            },
+            submodels: {
+                Address: AddressModels.StreetAddress,
+                PhoneNumbers: AddressModels.PhoneNumbers
+            }
+        });
 
         var Customer = ViewModelPrototype.extend({
             mozuType: 'customer',
@@ -8,7 +18,6 @@
                 Id: ""
             },
             observableArrays: {
-                "Contacts": [],
                 "Groups": [],
                 "Notes": [],
             },
@@ -20,12 +29,14 @@
                     }
                 },
                 "LocaleCode": {},
-                "FirstName": {},
-                "LastName": {},
                 "Password": {
                     required: true
                 },
-                "Id": {}
+                "Id": {},
+                "primaryBillingContact": {}
+            },
+            submodelArrays: {
+                "Contacts": Contact
             },
             updateEmail: function () {
                 var me = this, newEmail = this.EmailAddress();
@@ -40,7 +51,16 @@
                 this.EmailAddress(this.oldEmail);
             }
         }, function constructCustomer(obj) {
+            var self = this;
+
             this.oldEmail = obj.EmailAddress;
+
+            this.primaryBillingContact = ko.computed(function () {
+                return ko.utils.arrayFirst(self.Contacts(), function (c) {
+                    return c.IsPrimary();
+                });
+            });
+
         });
 
         return {

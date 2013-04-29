@@ -9,7 +9,7 @@
 {% require_script "pages/myaccount" %}
 
 <div id="mz-my-account" class="mz-my-account-wrap" 
-    data-mz-myaccount="{% json_attribute Model %}"
+    data-mz-customer="{% json_attribute Model %}"
     data-mz-orders="{% json_attribute ViewData.Orders %}"
     data-mz-user="{% json_attribute ViewData.User %}"
     style="visibility: hidden"
@@ -28,27 +28,27 @@
                 (<a id="cancel-change-email" href="javascript:;" data-bind="click: revertEmail">Cancel</a>)
             </form>
         </span>
-        | (<a href="javascript:;" id="change-password">Change password</a>)
-        <div class="mz-modal-mask"></div>
-        <div class="mz-modal" id="change-password-modal">
-            <h3>Change Password</h3>
-            <form>
-                <label>
-                    Old Password
-                    <input type="password" name="oldPassword">
-                </label>
-                <label>
-                    New Password
-                    <input type="password" name="newPassword">
-                </label>
-                <label>
-                    Confirm New Password
-                    <input type="password" name="confirmPassword">
-                </label>
-            </form>
-            <div class="mz-action-bar">
-                <a href="javascript:;" class="mz-close-modal">Cancel</a>
-                <button>Save</button>
+        | (<a href="#change-password-modal" id="change-password">Change password</a>)
+        <div class="mz-cbox-modal-container">
+            <div id="change-password-modal" class="mz-cbox-modal">
+                <h3>Change Password</h3>
+                    <label>
+                        Old Password
+                        <input type="password" name="oldPassword" id="mz-old-password">
+                    </label>
+                    <label>
+                        New Password
+                        <input type="password" name="newPassword" id="mz-new-password">
+                    </label>
+                    <label>
+                        Confirm New Password
+                        <input type="password" name="confirmPassword" id="mz-confirm-password">
+                    </label>
+                <div class="mz-action-bar">
+                    <p class="mz-message"></p>
+                    <a href="javascript:;" class="mz-close-modal">Cancel</a>
+                    <button class="mz-save-button">Save</button>
+                </div>
             </div>
         </div>
     </div>
@@ -59,19 +59,16 @@
         </label>
     </div>
     
-    <div id="billing-address">
+    <div id="billing-address" data-bind="with: Customer.primaryBillingContact">
         <h3>Billing and Shipping Address</h3>
-        <div>{{ contact.FirstName }} {{ contact.MiddleNameOrInitial }} {{ contact.LastNameOrSurname }}</div>
-        
-        {% with contact.Address as address %}
-        <div>{{ address.Address1 }}</div>
-        {% if address.Address2 %}<div>{{ address.Address2 }}</div>{% endif %}
-        {% if address.Address3 %}<div>{{ address.Address3 }}</div>{% endif %}
-        <div>{{ address.CityOrTown }}, {{ address.StateOrProvince }} {{ address.PostalOrZipCode }}</div>
+        <div><span data-bind="text: $parent.FirstName"></span> <span data-bind="text: $parent.LastName"></span></div>
+        <div data-bind="text: Address.Address1"></div>
+        <div data-bind="visible: Address.Address2, text: Address.Address2"></div>
+        <div data-bind="visible: Address.Address3, text: Address.Address3"></div>
+        <div><span data-bind="visible: Address.CityOrTown"></span>, {{ address.StateOrProvince }} {{ address.PostalOrZipCode }}</div>
         <div>{{ address.CountryCode }}</div>
         
         <div>{% firstof contact.PhoneNumber.Home contact.PhoneNumber.Work contact.PhoneNumber.Mobile %}</div>
-        {% endwith %}
         <div id="toggle-shipping-addresses">
             <a href="javascript:;">
                 <span>Add/Edit Shipping Addresses</span>

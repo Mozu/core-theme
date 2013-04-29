@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-04-24
+ * Mozu JavaScript SDK - v0.1.0 - 2013-04-25
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1914,6 +1914,11 @@ var ApiReference = (function () {
                 template: '{+UserService}Login',
                 includeSelf: true,
                 returnType: 'login'
+            },
+            'change-password': {
+                verb: 'POST',
+                includeSelf: true,
+                template: '{+UserService}{Id}/changepassword'
             }
         },
         customer: {
@@ -2055,7 +2060,7 @@ var ApiInterface = (function () {
             deferred.reject(error, xhr, url);
         });
 
-        this.fire('request', xhr, deferred.promise, requestConf);
+        this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
 
         deferred.promise.otherwise(function (error) {
             var res;
@@ -2065,12 +2070,12 @@ var ApiInterface = (function () {
             }
         });
 
-        var cancelled = false;
-        deferred.promise.cancel = function () {
-            cancelled = true;
-            xhr.abort();
-            deferred.reject("Request cancelled.")
-        };
+        var cancelled = false,
+            canceller = function () {
+                cancelled = true;
+                xhr.abort();
+                deferred.reject("Request cancelled.")
+            };
 
         return deferred.promise;
     },

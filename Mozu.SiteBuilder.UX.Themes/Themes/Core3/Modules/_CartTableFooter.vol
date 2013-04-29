@@ -25,6 +25,6 @@
         <!-- ko if: submitting -->
         {% include "Modules/LoadingBar" %}
         <!-- /ko -->
-        <button id="checkout" class="mz-button mz-btn-checkout mz-btn-cta"  {% if Model.Items.Count == 0 %} disabled="disabled" {% endif %} data-bind="click: checkout, enable: canCheckout, visible: !submitting()">Proceed to Checkout</button>
+        <button id="checkout" class="mz-button mz-btn-checkout mz-btn-cta"  {% if Model.Items.Count == 0 %} disabled="disabled" {% endif %} data-bind="click: proceedToCheckout, enable: canCheckout, visible: !submitting()">Proceed to Checkout</button>
     </td>
 </tr>

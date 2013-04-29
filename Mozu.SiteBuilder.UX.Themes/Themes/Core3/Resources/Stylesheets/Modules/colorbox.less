@@ -1,12 +1,23 @@
 ﻿#cboxOverlay {
     background-color: rgba(0, 0, 0, 0.25);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
 }
 #colorbox {
     .box-shadow(0 0 25px rgba(0,0,0,0.5));
     background: #fff;
+    z-index: 4;
 }
 #cboxContent {
 	position: relative;
+    margin: 1.4em 1.8em;
+    h1, h2, h3, h4, h5 {
+        margin-top: 0;
+    }
 }
 #cboxLoadedContent {
 	position: relative;
@@ -14,7 +25,9 @@
 }
 #cboxClose {
 	cursor: pointer;
-	position: relative;
-	z-index: 2;
+	position: absolute;
+	z-index: 5;
+    top: -5px;
+    right: -5px;
 }
 

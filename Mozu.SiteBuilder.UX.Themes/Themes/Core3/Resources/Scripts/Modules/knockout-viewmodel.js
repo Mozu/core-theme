@@ -89,6 +89,7 @@
         observables: {},
         observableArrays: {},
         submodels: {},
+        submodelArrays: {},
         statics: {},
         populate: function (obj) {
             var self = this,
@@ -104,6 +105,43 @@
                     self[name].populate(obj[name]);
                 } else {
                     self[name] = new conf(obj[name], self);
+                }
+                delete obj[name];
+            });
+            $.each(this.submodelArrays, function (name, conf) {
+                if (self[name] && typeof self[name] === "function" && self[name].push) {
+                    self[name](obj[name]);
+                } else {
+                    var underlying = ko.observableArray(),
+                        ctorSet = function(item) {
+                            return item instanceof conf? item : new conf(item, self);
+                        };
+                    self[name] = ko.computed({
+                        write: function(newArray) {
+                            if ($.isArray(newArray)) {
+                                underlying($.map(newArray, ctorSet));
+                            } else {
+                                underlying(null);
+                            }
+                        },
+                        read: underlying
+                    });
+
+                    // proxying array methods
+                    $.each(['pop','indexOf','slice','shift','reverse','sort','splice','remove','removeAll'], function(ix, fName) {
+                        self[name][fName] = underlying[fName];
+                    });
+                    $.each(['push', 'unshift'], function (ix, fName) {
+                        self[name][fName] = function(raws) {
+                            if ($.isArray(raws)) {
+                                underlying[fname]($.map(raws, ctorSet));
+                            } else {
+                                underlying[fname](ctorSet(raws));
+                            }
+                        };
+                    });
+
+                    self[name](obj[name]);
                 }
                 delete obj[name];
             });
@@ -131,9 +169,13 @@
                     }
                 });
             });
-            $.each(this.submodels, function (k) {
+            var validateSubmodel = function (k) {
                 if (self[k].validate && !self[k].validate(loudly))
                     invalidCount++;
+            };
+            $.each(this.submodels, validateSubmodel);
+            $.each(this.submodelArrays, function (kA) {
+                $.each(kA, validateSubmodel);
             });
             console.log('validation error count:', invalidCount);
             return invalidCount === 0;
@@ -165,7 +207,7 @@
             var ret = {}, self = this;
             iterate = makeIterator(self, ret);
             $.each(
-                [this.statics, this.observables, this.observableArrays, this.submodels],
+                [this.statics, this.observables, this.observableArrays, this.submodels, this.submodelArrays],
                 function (ix, collection) {
                     $.each(collection, iterate);
                 }
