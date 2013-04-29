@@ -1,33 +1,35 @@
 @mixin taco-shim {
 
+  $active-opacity: 1;
+  $inactive-opacity: 0;
 
   @-webkit-keyframes animate-out-actions {
     0% { 
-      opacity: 1;
+      opacity: $active-opacity;
       display: block;
     }
     99% {
       display: block;
-      opacity: 0;
+      opacity: $inactive-opacity;
     }
     100% {
       display: none;
-      opacity: 0;
+      opacity: $inactive-opacity;
     }
   }
   
   @-webkit-keyframes animate-in-actions {
     0% { 
-      opacity: 0;
+      opacity: $inactive-opacity;
       display: none;
     }
     1% {
       display: block;
-      opacity: 0;
+      opacity: $inactive-opacity;
     }
     100% {
       display: block;
-      opacity: 1;
+      opacity: $active-opacity;
     }
   }
   
@@ -45,118 +47,27 @@
   	
   	.#{$vprefix}shim {
   	  
-  	  .#{$vprefix}hint-widget {
-  		  cursor: pointer;
-  		  position: absolute;
-  		  z-index: 100;
-        
-        > table {
-          width: 100%;
-          height: 100%;
-          border: 1px solid transparent;
-          border-collapse: separate;
-          border-spacing: 0;
-          @include border-radius(3px);
-          @include transition(border 0.3s ease-out);
-          
-          > tbody > tr > td {
-            opacity: 0;
-            @include transition(background 0.3s ease-out);
-            
-            > img {
-              height: 3px;
-              width: 3px;
-            }
-          }
-          
-          > tbody > tr:nth-child(2) > td:nth-child(2) {
-            background: none;
-            width: 100%;
-            height: 100%;
-            opacity: 1;
-            border: 1px dashed transparent;
-            @include transition(border 0.3s ease-out);
-          }
-          
-          > tbody > tr:nth-child(3) > td {
-            font-size: 0;
-          }
-          
-          .#{$vprefix}hint-actions {
-            .#{$vprefix}action {
-              color: black;
-              font-weight: bold;
-              font-size: 10px;
-              padding: 2px 0;
-            }
-    			.#{$vprefix}widgethandle {
-    			  @include icons-sprite(icon-widgethandle);
-    			  display: block;
-    			  font-size: 0px;
-    			  height: 11px;
-    			  line-height: 0px;
-    			  opacity: 1;
-    			  text-indent: -9999px;
-    			  width: 26px;
-    			  
-    			  .#{$prefix}mask {
-    				background: none transparent;
-    				cursor: move;
-    	   		opacity: 0;
-    			  }
-    			}
-          }
-        }
-  		  
-  		  &.#{$vprefix}hint-active {
-  		    z-index: 101;
-          
-          > table {
-            border-color: $color-neutral-dark;
-            
-            > tbody > tr > td {
-              opacity: 1;
-              background: rgb(100, 211, 222);
-            }
-            
-            > tbody > tr:nth-child(2) > td:nth-child(2) {
-              opacity: 1;
-              border-color: $color-neutral-darker;
-              background: transparent;
-            }
-          }
-          
-          &.#{$vprefix}soft {
-            > table > tbody > tr > td {
-              background: $color-neutral-mid-light;
-            }
-            
-            > tbody > tr:nth-child(2) > td:nth-child(2) {
-              background: transparent;
-            }
-          }
-  		  }
-  	  }
-      
-  	  
   	  .#{$vprefix}hint-element {
   		  border: 1px solid transparent;
   		  cursor: pointer;
   		  position: absolute;
-  		  @include transition(border 0.3s ease-out);
+  		  //@include transition(border 0.3s ease-out);
   		  
   		  &.#{$vprefix}hint-active {
-  		    border-color: rgb(86,184,195);
+  		    //border-color: rgb(86,184,195);
   		  }
   	  }
   	  
   	  .#{$vprefix}hint-zone {
   	    position: absolute;
   		  border: 1px solid transparent;
+        //@include flexbox($direction: column);
   		  
   		  &.#{$vprefix}hint-active {
           border-color: rgba(255,0,0,1);
         }
+
+
   	  }
   	}
   	
@@ -215,5 +126,96 @@
     .columns-input {
       text-align: center;
     }
+  }
+
+
+
+    .#{$vprefix}hints-subcontainer {
+      //background: rgba(0,255,0,0.5);
+      //@include flex($grow: 1);
+      height: 100%;
+    }
+   
+
+  .#{$vprefix}hint-widget {
+    cursor: pointer;
+    position: absolute;
+    z-index: 100;
+    opacity: $inactive-opacity;
+    border: 1px solid $color-neutral-darkest;
+    @include border-radius(0px);
+    @include transition(opacity 0.2s ease-out, border-radius 60s linear);
+
+    //@include flexbox($direction: column);
+
+    .#{$vprefix}hint-actions {
+      padding: 5px 8px;
+      height: 28px;
+      position: absolute;
+      top: 0;
+      @include flexbox;
+      z-index: 102;
+      background: transparentize($color-neutral-darkest, 0.1);
+    }
+
+    .#{$vprefix}action {
+      color: black;
+      font-weight: bold;
+      font-size: 10px;
+      padding: 2px 0;
+    }
+
+    .#{$vprefix}widgethandle {
+      @include icons-sprite(icon-widgethandle);
+      display: block;
+      font-size: 0px;
+      height: 11px;
+      line-height: 0px;
+      opacity: $active-opacity;
+      text-indent: -9999px;
+      width: 26px;
+      
+      .#{$prefix}mask {
+        background: none transparent;
+        cursor: move;
+        opacity: $inactive-opacity;
+      }
+    }
+
+    &.#{$vprefix}hint-active {
+      z-index: 101;
+      opacity: $active-opacity;
+      @include border-radius(0 0 30px 30px);
+    }
+
+    &.#{$vprefix}hint-inactive {
+      opacity: $inactive-opacity;
+    }
+  }
+
+  .#{$vprefix}widget-drag {
+    width: 3px;
+    height: 15px;
+    opacity: 0.9;
+    cursor: move;
+    @include flex($grow: 1);
+    margin-right: 100px;
+    @include icons-sprite(icon-widget-drag);
+  }
+
+  .#{$vprefix}widget-edit {
+    width: 18px;
+    height: 18px;
+    margin-right: 15px;
+    opacity: 0.9;
+   @include icons-sprite(icon-widget-edit); 
+  }
+
+  .#{$vprefix}widget-remove {
+    width: 15px;
+    height: 18px;
+    opacity: 0.9;
+    @include icons-sprite(icon-widget-remove);
+
   }
 }

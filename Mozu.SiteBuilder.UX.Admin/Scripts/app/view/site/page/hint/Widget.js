@@ -14,12 +14,7 @@ Ext.define('Taco.view.site.page.hint.Widget', {
         'editwidget',
         'aftereditwidget'
     ],
-    hintMargin: 4,
-    
-    layout: {
-        type: 'table',
-        columns: 3
-    },
+    hintMargin: 0,
     
     defaults: {
         xtype: 'image',
@@ -47,23 +42,9 @@ Ext.define('Taco.view.site.page.hint.Widget', {
         //this.remove(this.hints);
         this.buildActions();
         
-        this.add([{
-                html: ''
-            },
-            this.actions, {
-                html: ''
-            }, {
-                xtype: 'component'
-            },
-            this.hints, {
-                xtype: 'component'
-            }, {
-                html: ''
-            }, {
-                xtype: 'component'
-            }, {
-                html: ''
-            }
+        this.add([
+            this.actions,
+            this.hints
         ]);
         
         this.on({
@@ -150,19 +131,22 @@ Ext.define('Taco.view.site.page.hint.Widget', {
     },
     
     alignToEl: function (offsetX, offsetY) {
-        var offset = this.hintMargin,
-            extra = 2 * this.hintMargin;
-        this.callParent([
-            (offsetX || 0) + offset,
-            (offsetY || 0) + offset + 11,
-            extra,
-            extra + 12,
-            this.hintMargin,
-            this.hintMargin + 12
-        ]);
+        // var offset = this.hintMargin,
+        //     extra = 2 * this.hintMargin;
+        // this.callParent([
+        //     (offsetX || 0) + offset,
+        //     (offsetY || 0) + offset + 11,
+        //     extra,
+        //     extra + 12,
+        //     this.hintMargin,
+        //     this.hintMargin + 12
+        // ]);
         //this.callParent(arguments);
         
         //this.actions.setHeight(30);
+        
+        this.callParent([offsetX + 1 , offsetY, 0]);
+        
         this.actions.setWidth(this.associatedEl.getWidth());
     },
     
@@ -172,32 +156,27 @@ Ext.define('Taco.view.site.page.hint.Widget', {
     buildActions: function() {
         this.actions = Ext.create('Ext.container.Container', {
             cls: 'taco-hint-actions',
-            layout: 'hbox',
-            items: [
+            layout: 'auto',
+            items: [{
+                    xtype: 'component',
+                    cls: 'taco-widget-drag'
+                },
                 Ext.create('Taco.core.ux.action.Action', {
-                    cls: 'taco-edit-widget',
-                    text: 'EDIT',
+                    cls: 'taco-widget-edit',
+                    text: '',
                     listeners: {
                         click: {
                             fn: function () {
+                                console.log('you clicjked it!');
                                 this.fireEvent('editwidget', this);
                             },
                             scope: this
                         }
                     }
-                }), {
-                    xtype: 'tbfill'
-                },
+                }),
                 Ext.create('Taco.core.ux.action.Action', {
-                    cls: 'taco-widgethandle',
-                    text: 'drag',
-                    disabled: true
-                }), {
-                    xtype: 'tbfill'
-                },
-                Ext.create('Taco.core.ux.action.Action', {
-                    cls: 'taco-widget-delete',
-                    text: 'X',
+                    cls: 'taco-widget-remove',
+                    text: '',
                     listeners: {
                         click: {
                             fn: function () {

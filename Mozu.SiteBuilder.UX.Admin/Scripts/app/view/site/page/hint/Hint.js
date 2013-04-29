@@ -68,7 +68,9 @@ Ext.define('Taco.view.site.page.hint.Hint', {
             'deactivate'
         );
         
-        this.hints = Ext.create('Ext.container.Container');
+        this.hints = Ext.create('Ext.container.Container', {
+            cls: 'taco-hints-subcontainer'
+        });
         this.add(this.hints);
         
         if (this.nodeData.branches) {
