@@ -496,7 +496,6 @@
     <Compile Include="MockServices\Mocks\Attributes.cs" />
     <Compile Include="MockServices\TestResponse.cs" />
     <Compile Include="Navigation\CategoryNavigationProvider.cs" />
-    <Compile Include="Navigation\NavigationTreeNodeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

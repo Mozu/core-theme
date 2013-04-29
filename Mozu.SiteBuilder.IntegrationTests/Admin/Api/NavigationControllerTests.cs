@@ -185,12 +185,12 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         }
 
         [Test]
-        public void Test_should_not_return_two_items_with_the_same_index()
+        public void List_should_not_return_two_items_with_the_same_index()
         {
             var aMockCategory = _mockCategories.Items.First(c => c.ParentCategoryId != null);
             var aMockPage = _mockPages.Items.First();
 
-            var pageNavigationNode = aMockPage.Map<NavigationTreeNode>();
+            var pageNavigationNode = aMockPage.Map<NavigationNode>();
 
             // make the navigation parent id and index of this page identical to the category
             pageNavigationNode.Index = aMockCategory.Sequence;
@@ -199,7 +199,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var mockNavigationSet = new NavigationSet
             {
                 Nodes = new List<NavigationNode> {
-                    pageNavigationNode.Map<NavigationNode>()
+                    pageNavigationNode
                 }
             };
 
@@ -225,10 +225,10 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var oldIndex = page.Index;
             var newIndex = oldIndex - 1;
 
-            items.Where(i => i.Index >= newIndex && i.Index <= oldIndex && i.Id != page.Id).ToList().ForEach(i => i.Index--);
             page.Index = newIndex;
+            page.EditAction = "move";
 
-            var res = controller.Edit(items).Result.Items;
+            var res = controller.Edit(new List<NavigationTreeNode> { page }).Result;
 
             _navigationRepository
                 .Received()
@@ -245,20 +245,17 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var oldIndex = cat.Index;
             var newIndex = oldIndex - 1;
 
-            // items.Where(i => i.Index >= newIndex && i.Index <= oldIndex && i.Id != cat.Id).ToList().ForEach(i => i.Index++);
-            items.Where(i => i.NodeType.IsCategory && i.ParentId == cat.ParentId && i.Index >= newIndex && i.Index <= oldIndex).ToList().ForEach(i => i.Index++);
-
             cat.Index = newIndex;
+            cat.EditAction = "move";
 
-            var res = controller.Edit(items).Result.Items;
-            var resCat = res.First(i => i.Id == cat.Id);
+            var res = controller.Edit(new List<NavigationTreeNode> { cat }).Result;
 
             int realCatId = Convert.ToInt32(cat.OriginalId);
 
             _categoryWebApiClient
                 .Received()
                 // .UpdateCategory(Arg.Any<Category>(), Arg.Is<int?>(cat.Index), Arg.Any<bool?>());
-                .UpdateCategory(Arg.Is<Category>(arg => arg.Sequence == newIndex), Arg.Is<int?>(realCatId), Arg.Any<bool?>());
+                .UpdateCategory(Arg.Any<Category>(), Arg.Is<int?>(realCatId), Arg.Any<bool?>());
         }
 
         [Test]
@@ -273,8 +270,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             page.ParentId = newParent.Id;
             page.Index = 0;
+            page.EditAction = "move";
 
-            var res = controller.Edit(items).Result.Items;
+            var res = controller.Edit(new List<NavigationTreeNode> { page }).Result.Items;
 
             _navigationRepository
                 .Received()
@@ -293,16 +291,16 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             cat.ParentId = newParent.Id;
             cat.Index = 0;
+            cat.EditAction = "move";
 
             int catId = Convert.ToInt32(cat.OriginalId);
 
-            var res = controller.Edit(items).Result.Items;
+            var res = controller.Edit(new List<NavigationTreeNode> { cat }).Result;
 
             _categoryWebApiClient
                 .Received()
-                .UpdateCategory(Arg.Is<Category>(c => c.Id == catId), Arg.Is<int?>(catId), Arg.Any<bool?>());
+                .UpdateCategory(Arg.Is<Category>(c => c.ParentCategoryId == Convert.ToInt32(newParent.OriginalId)), Arg.Is<int?>(catId), Arg.Any<bool?>());
         }
-
 
         [Test]
         public void Edit_rename_page_should_work()
@@ -312,8 +310,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             var page = items.First(i => i.NodeType.IsPage);
             string newName = page.Name = page.Name + "_newhotness";
+            page.EditAction = "rename";
 
-            var res = controller.Edit(items).Result;
+            var res = controller.Edit(new List<NavigationTreeNode> { page }).Result;
 
             _cmsServiceWrapper
                 .Received()
@@ -329,9 +328,11 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var cat = items.First(i => i.NodeType.IsCategory);
 
             var newName = cat.Name = cat.Name + "_newcatness";
+            cat.EditAction = "rename";
+
             int catId = Convert.ToInt32(cat.OriginalId);
 
-            var res = controller.Edit(items).Result;
+            var res = controller.Edit(new List<NavigationTreeNode> { cat }).Result;
             
             _categoryWebApiClient
                 .Received()
@@ -384,6 +385,16 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             );
 
             _cmsServiceWrapper.GetByPath(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(
+                args =>
+                {
+                    string collection = (string)args[0];
+                    string docName = (string)args[1];
+
+                    Document doc = pages.Items.FirstOrDefault(p => p.DocumentListName == collection && p.Name == docName);
+                    return new TestResponse<Document>(doc).Task;
+                });
+
+            _cmsServiceWrapper.Get(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>()).Returns(
                 args =>
                 {
                     string collection = (string)args[0];

@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// Build a flat list of NavigationNodes (which can have a ParentId to imply a hiearchy)
         /// This list can then be transformed to a List<NavigationRuntimeNode> or List<NavigationTreeNode>
         /// </summary>
-        public Task<List<NavigationNode>> GetListInternal(bool draft = true)
+        private Task<List<NavigationNode>> GetListInternal(bool draft = true)
         {
             var masterList = new List<NavigationNode>();
 
@@ -169,6 +169,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 });
         }
 
+        /// <summary>
+        /// Build a flat list of NavigationNodes (which can have a ParentId to imply a hiearchy)
+        /// This list can then be transformed to a List<NavigationRuntimeNode> or List<NavigationTreeNode>
+        /// </summary>
         public Task<List<NavigationTreeNode>> GetFlatList(bool draft = true)
         {
             return GetListInternal(draft)
