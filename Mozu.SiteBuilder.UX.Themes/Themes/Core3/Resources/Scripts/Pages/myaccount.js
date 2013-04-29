@@ -1,67 +1,9 @@
 ﻿require(['shim!vendor/jquery-colorbox[modules/jquery-plus=jQuery]>jQuery', 'modules/knockout-plus', 'modules/animatemodals', 'modules/models-myaccount'], function ($, ko, animateModals, MyAccountModels) {
 
-    //function ShippingAddressDataContract() {
-    //    return {
-    //        id: null,
-    //        contact: {
-    //            id: null,
-    //            firstName: null,
-    //            middleName: null,
-    //            lastName: null,
-    //            email: null,
-    //            companyOrOrganization: null,
-    //            phoneNumbers: {
-    //                home: null,
-    //                work: null,
-    //                mobile: null
-    //            },
-    //            address: {
-    //                addressId: null,
-    //                address1: null,
-    //                address2: null,
-    //                address3: null,
-    //                cityOrTown: null,
-    //                stateOrProvince: null,
-    //                postalOrZipCode: null,
-    //                countryCode: null
-    //            },
-    //            isPrimary: false
-    //        },
-    //        isPrimary: false,
-    //        contactType: 1
-    //    };
-    //}
-
-    /**
-     *
-     *
-     * @param {Object} contract
-     * @param {DOM} form
-     * @param {Boolean} reverseBinding  Reverse the direction of the bind (form values to contract object)
-     * @return {Object}
-     */
-    //function bindContractToForm( contract, form, reverseBinding ) {
-    //    var i,
-    //        isRealForm = form.nodeName === "FORM";
-    //    for( i in contract ) {
-    //        // console.log("contract["+i+"]", contract[i]);
-    //        if( contract[i] !== null && typeof contract[i] === 'object' )
-    //            bindContractToForm( contract[i], form, reverseBinding );
-    //        else if( form[i] ) {
-    //            if( reverseBinding )
-    //                contract[i] = (isRealForm ? form[i].value : form[i]) || null; // *** Works for <forms> and plain objects
-    //            else
-    //                form[i].value = contract[i];
-    //        }
-    //    }
-    //    return contract;
-    //}
-
-
     $(document).ready(function () {
 
         var $myAccountView = $('#mz-my-account'),
-            customerData = $myAccountView.mozuData('myaccount'),
+            customerData = $myAccountView.mozuData('customer'),
             userData = $myAccountView.mozuData('user'),
             ordersData = $myAccountView.mozuData('orders'),
 
@@ -71,7 +13,8 @@
                 Orders: ordersData
             });
 
-        ko.applyBindings(myAccountViewModel, $myAccountView[0]);
+        window.accountVM = myAccountViewModel;
+
 
         // prepare view
         var $editEmail = $('#edit-email').css('display', 'none'),
@@ -82,12 +25,55 @@
             hideEmailEditor =  function () {
                 $editEmail.fadeOut('normal', $.proxy($displayEmail.fadeIn, $displayEmail));
             };
-        $("#change-email").on('click', showEmailEditor);
-        $("#cancel-change-email").on('click', hideEmailEditor);
+        $myAccountView
+            .on("click", "#change-email", showEmailEditor)
+            .on('click', "#cancel-change-email", hideEmailEditor);
         myAccountViewModel.on('emailupdated', hideEmailEditor);
 
-        // preparations complete, show view
+        // change password
+        var $changePasswordForm = $('#change-password-modal');
+        $('#change-password').colorbox({ inline: true, speed: 200, href: $changePasswordForm });
+        $changePasswordForm.on('click', '.mz-save-button', function () {
+            var $passwordFormMessage = $changePasswordForm.find('.mz-message').removeClass('mz-error').html('');
+            var oldPW = $('#mz-old-password').val(),
+                newPW = $('#mz-new-password').val(),
+                confirmPW = $('#mz-confirm-password').val();
+
+            if (!newPW || !oldPW || !confirmPW) {
+                $passwordFormMessage.addClass('mz-error').html('Please fill out all fields.');
+            } else if (newPW !== confirmPW) {
+                $passwordFormMessage.addClass('mz-error').html('Passwords do not match!');
+            } else {
+                myAccountViewModel.User.changePassword({ oldPassword: oldPW, newPassword: newPW}).then(function (apiUser) {
+                    setTimeout(function () { $.colorbox.close(); }, 2000);
+                    $passwordFormMessage.html('Successfully updated!');
+                }, function (error) {
+                    if (error.Items[0].Message === "Missing or invalid parameter: password ") {
+                        $passwordFormMessage.addClass('mz-error').html('Old password is invalid.');
+                    } else {
+                        $passwordFormMessage.addClass('mz-error').html('Unknown error.');
+                    }
+                });
+            }
+
+            return false;
+        });
+
+
+        // any given modal close
+        $(document).on('click', '.mz-close-modal', function () {
+            $.colorbox.close()
+        }).on('cbox_closed', function () {
+            var $modalContent = $('.mz-cbox-modal');
+            $modalContent.find('.mz-message').html('').removeClass('mz-error');
+            $modalContent.find('input').val('');
+        });
+
+        // preparations complete, bind and show view
+        ko.applyBindings(myAccountViewModel, $myAccountView[0]);
         $myAccountView.noFlickerFadeIn();
+
+        // NEW CODE ENDS HERE
 
         var shippingAddressModal = $("#shipping-address-modal");
 
@@ -258,35 +244,35 @@
         /**
          * AJAX handler for changing a password
          */
-        var pwModal = $("#change-password-modal").find("button").on('click', function () {
-            var form = pwModal.find('form')[0],
-                oldPW = form.oldPassword.value,
-                newPW = form.newPassword.value,
-                confirmPW = form.confirmPassword.value;
+        //var pwModal = $("#change-password-modal").find("button").on('click', function () {
+        //    var form = pwModal.find('form')[0],
+        //        oldPW = form.oldPassword.value,
+        //        newPW = form.newPassword.value,
+        //        confirmPW = form.confirmPassword.value;
 
-            if( newPW !== confirmPW ) {
-                alert("New passwords do not match!");
-            } else {
-                $.ajax(
-                    '/myaccount/changepassword',
-                    {
-                        type: 'POST',
-                        data: JSON.stringify({ oldPassword: oldPW, newPassword: newPW }),
-                        dataType: 'json',
-                        contentType: 'application/json'
-                    }
-                ).done(function (response) {
-                    $(document.body).trigger('click.close-animated-modal');
-                    form.reset();
+        //    if( newPW !== confirmPW ) {
+        //        alert("New passwords do not match!");
+        //    } else {
+        //        $.ajax(
+        //            '/myaccount/changepassword',
+        //            {
+        //                type: 'POST',
+        //                data: JSON.stringify({ oldPassword: oldPW, newPassword: newPW }),
+        //                dataType: 'json',
+        //                contentType: 'application/json'
+        //            }
+        //        ).done(function (response) {
+        //            $(document.body).trigger('click.close-animated-modal');
+        //            form.reset();
 
-                    console.log("Update password:", response);
+        //            console.log("Update password:", response);
 
-                    alert("Password has been updated.");
-                });
-            }
+        //            alert("Password has been updated.");
+        //        });
+        //    }
 
-            return false;
-        }).end();
+        //    return false;
+        //}).end();
 
 
 

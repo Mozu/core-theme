@@ -102,3 +102,32 @@
     .box-shadow(0 0 25px rgba(0,0,0,0.5));
     z-index: 1001;
 }
+
+.mz-cbox-modal-container {
+    display: none;
+}
+
+.mz-cbox-modal {
+    label {
+      color: #7f7f7f;
+    }
+
+    .mz-action-bar {
+      text-align: right;
+      margin-top: 20px;
+
+      * {
+        margin-left: 8px;
+      }
+
+      .mz-message {
+        margin: 0;
+        margin-left: 0;
+        float: left;
+        &.mz-error {
+            color: red;
+        }
+      }
+
+    }
+}

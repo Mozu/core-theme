@@ -9,7 +9,7 @@ Ext.define('Taco.view.site.page.settings.General', {
         items: [
             {
                 xtype: 'button',
-                fieldLabel: 'Hide in website',
+                text: 'Hide in website',
                 name: 'hidden',
                 enableToggle: true
             },

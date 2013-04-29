@@ -227,6 +227,11 @@ var ApiReference = (function () {
                 template: '{+UserService}Login',
                 includeSelf: true,
                 returnType: 'login'
+            },
+            'change-password': {
+                verb: 'POST',
+                includeSelf: true,
+                template: '{+UserService}{Id}/changepassword'
             }
         },
         customer: {

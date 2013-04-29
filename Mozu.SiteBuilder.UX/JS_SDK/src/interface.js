@@ -33,7 +33,7 @@ var ApiInterface = (function () {
             deferred.reject(error, xhr, url);
         });
 
-        this.fire('request', xhr, deferred.promise, requestConf);
+        this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
 
         deferred.promise.otherwise(function (error) {
             var res;
@@ -43,12 +43,12 @@ var ApiInterface = (function () {
             }
         });
 
-        var cancelled = false;
-        deferred.promise.cancel = function () {
-            cancelled = true;
-            xhr.abort();
-            deferred.reject("Request cancelled.")
-        };
+        var cancelled = false,
+            canceller = function () {
+                cancelled = true;
+                xhr.abort();
+                deferred.reject("Request cancelled.")
+            };
 
         return deferred.promise;
     },
