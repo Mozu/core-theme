@@ -19,16 +19,6 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
             Items = new List<NavigationRuntimeNode>();
         }
 
-        public class Comparer:IComparer<NavigationRuntimeNode> 
-        {
-            public static readonly Comparer Default = new Comparer();
-
-            public int Compare(NavigationRuntimeNode x, NavigationRuntimeNode y)
-            {
-                return Comparer<int>.Default.Compare( x.Index .GetValueOrDefault( int.MaxValue ), y.Index.GetValueOrDefault( int.MaxValue ));
-            }
-        }
-
         public string Id { get; set; }
 
         private string _parentId;
@@ -55,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public string Name { get; set; }
 
         [DataMember(Name = "index")]
-        public int? Index { get; set; }
+        public int Index { get; set; }
 
         [DataMember(Name = "count")]
         public int Count { get ; set; }
