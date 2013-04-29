@@ -150,6 +150,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     throw new ArgumentException("Unexpected edit action: " + item.EditAction);
             }
 
+            return List2(items);
 
             var originalTree = (await List()).Items;
 
@@ -277,25 +278,224 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Handles a move or reorder of something in the navigation document.
         /// </summary>
-        private Task HandleNavigationMove(NavigationTreeNode item)
+        private Task HandleNavigationMove(NavigationTreeNode change)
         {
             return
                 _navRepo.GetSetAsync()
                 .ContinueWith(t => {
-                    
+                    var navSet = t.Result;
+
+                    var original = navSet.Nodes.FirstOrDefault(n => n.Id == change.Id);
+                    if (original == null)
+                    {
+                        original = change.Map<NavigationNode>();
+                        navSet.Nodes.Add(original);
+                    }
+
+                    // reorder within same parent
+                    if (original.ParentId == change.ParentId)
+                    {
+                        var siblings =
+                            from n in navSet.Nodes
+                            where n.ParentId == change.ParentId
+                            where n.Id != change.Id
+                            select n;
+
+                        // if new value is closer to the bottom of the list, then some displaced items need to decrease in index.
+                        if (change.Index > original.Index)
+                        {
+                            siblings.Where(n => n.Index > original.Index && n.Index <= change.Index).ToList().ForEach(n => n.Index--);
+                        }
+                        // if new value is closer to the top of the list, then some displaced items need to increase in index.
+                        else if (change.Index < original.Index)
+                        {
+                            siblings.Where(n => n.Index >= change.Index && n.Index < original.Index).ToList().ForEach(n => n.Index++);
+                        }
+
+                        // set the index
+                        original.Index = change.Index;
+                    }
+                    // change of parent
+                    else
+                    {
+                        var oldSiblings =
+                            from n in navSet.Nodes
+                            where n.ParentId == original.ParentId
+                            where n.Id != change.Id
+                            select n;
+
+                        var newSiblings =
+                            from n in navSet.Nodes
+                            where n.ParentId == change.ParentId
+                            where n.Id != change.Id
+                            select n;
+
+                        // any old siblings that came after this node need to move closer to the top.
+                        oldSiblings.Where(n => n.Index > original.Index).ToList().ForEach(n => n.Index--);
+
+                        // any new siblings that will be displaced by this node need to move closer to the bottom.
+                        newSiblings.Where(n => n.Index <= change.Index).ToList().ForEach(n => n.Index++);
+
+                        // set the index and parent
+                        original.Index = change.Index;
+                        original.ParentId = change.ParentId;
+                    }
+
+                    // finally, save the document.
+                    _navRepo.SaveSetAsync(navSet);
                 })
                 ;
         }
 
-        private Task HandleCategoryMove(NavigationTreeNode item)
+        private Task HandleCategoryMove(NavigationTreeNode change)
         {
-            throw new NotImplementedException();
+            int categoryId = Convert.ToInt32(change.OriginalId);
+
+            var navTask = _navRepo.GetSetAsync();
+            var catTask = _catClient.GetCategory(categoryId);
+            var listTask = _gandalf.GetFlatList();
+
+            return 
+                Task.WhenAll(navTask, catTask, listTask)
+                    .ContinueWith(_ => {
+                        var list = listTask.Result;
+                        var originalCat = catTask.Result.ReadAsSync();
+                        var navSet = navTask.Result;
+                        List<Task> updateTasks = new List<Task>();
+
+                        var originalNav = list.FirstOrDefault(n => n.Id == change.Id);
+                        if (originalNav == null)
+                            return Task.Run(() => null);
+
+                        // reorder within same parent
+                        if (originalNav.ParentId == change.ParentId)
+                        {
+                            var navSiblings =
+                                from n in navSet.Nodes
+                                where n.ParentId == change.ParentId
+                                select n;
+
+                            var catSiblings =
+                                from n in list
+                                where n.ParentId == change.ParentId
+                                where n.NodeType.IsCategory
+                                where n.Id != change.Id
+                                select n;
+
+                            var changedCatSiblings = catSiblings.Where(n => n.Index > originalNav.Index && n.Index <= change.Index).ToList();
+
+                            // if new value is closer to the bottom of the list, then some displaced items need to decrease in index.
+                            if (change.Index > originalNav.Index)
+                            {
+                                navSiblings.Where(n => n.Index > originalNav.Index && n.Index <= change.Index).ToList().ForEach(n => n.Index--);
+                                var catIds = catSiblings.Where(n => n.Index > originalNav.Index && n.Index <= change.Index).Select(n => Convert.ToInt32(n.OriginalId));
+                                updateTasks.AddRange(ReorderCategories(catIds, ReorderDirection.Decrease));
+
+                                // update the original category's sequence.
+                                originalCat.Sequence = originalCat.Sequence + catIds.Count();
+                            }
+                            // if new value is closer to the top of the list, then some displaced items need to increase in index.
+                            else if (change.Index < originalNav.Index)
+                            {
+                                navSiblings.Where(n => n.Index >= change.Index && n.Index < originalNav.Index).ToList().ForEach(n => n.Index++);
+                                var catIds = catSiblings.Where(n => n.Index >= change.Index && n.Index < originalNav.Index).Select(n => Convert.ToInt32(n.OriginalId));
+                                updateTasks.AddRange(ReorderCategories(catIds, ReorderDirection.Increase));
+
+                                // update the original category's sequence.
+                                originalCat.Sequence = originalCat.Sequence - catIds.Count();
+                            }
+
+                            updateTasks.Add(_catClient.UpdateCategory(originalCat, originalCat.Id));
+                            updateTasks.Add(_navRepo.SaveSetAsync(navSet));
+                        }
+                        // change of parent
+                        else
+                        {
+                            var oldSiblingsNav =
+                                from n in navSet.Nodes
+                                where n.ParentId == originalNav.ParentId
+                                where n.Id != change.Id
+                                select n;
+
+                            var oldSiblingsCat =
+                                from n in list
+                                where n.ParentId == originalNav.ParentId
+                                where n.Id != change.Id
+                                where n.NodeType.IsCategory
+                                select n;
+
+                            var newSiblingsNav =
+                                from n in navSet.Nodes
+                                where n.ParentId == change.ParentId
+                                where n.Id != change.Id
+                                select n;
+
+                            var newSiblingsCat =
+                                from n in list
+                                where n.ParentId == change.ParentId
+                                where n.NodeType.IsCategory
+                                where n.Id != change.Id
+                                select n;
+
+                            // any old siblings that came after this node need to move closer to the top.
+                            oldSiblingsNav.Where(n => n.Index > originalNav.Index).ToList().ForEach(n => n.Index--);
+                            var oldCatIds = oldSiblingsCat.Where(n => n.Index > originalNav.Index).Select(n => Convert.ToInt32(n.OriginalId));
+                            updateTasks.AddRange(ReorderCategories(oldCatIds, ReorderDirection.Decrease));
+
+                            // any new siblings that will be displaced by this node need to move closer to the bottom.
+                            newSiblingsNav.Where(n => n.Index <= change.Index).ToList().ForEach(n => n.Index++);
+                            var newCatIds = newSiblingsCat.Where(n => n.Index > originalNav.Index).Select(n => Convert.ToInt32(n.OriginalId));
+                            updateTasks.AddRange(ReorderCategories(newCatIds, ReorderDirection.Increase));
+
+                            // update the sequence and parent id of the original category.
+                            originalCat.Sequence = change.Index - newSiblingsNav.Count(n => n.Index <= change.Index);
+                            originalCat.ParentCategoryId = Convert.ToInt32( list.First(n => n.Id == change.ParentId).OriginalId );
+
+                            updateTasks.Add(_catClient.UpdateCategory(originalCat, originalCat.Id));
+                            updateTasks.Add(_navRepo.SaveSetAsync(navSet));
+                        }
+
+                        return Task.WhenAll(updateTasks);
+                    })
+                    .Unwrap()
+                ;
+        }
+
+        private enum ReorderDirection {
+            Increase,
+            Decrease
+        }
+
+        private List<Task<ServiceClientResponse<DC.Category>>> ReorderCategories(IEnumerable<int> categories, ReorderDirection direction)
+        {
+            var returnList = new List<Task<ServiceClientResponse<DC.Category>>>();
+
+            foreach (int catId in categories)
+            {
+                returnList.Add(
+                    _catClient.GetCategory(catId)
+                    .ContinueWith(t => {
+                        var cat = t.Result.ReadAsSync();
+
+
+                        if (direction == ReorderDirection.Decrease) 
+                            cat.Sequence--; 
+                        else 
+                            cat.Sequence++;
+
+                        return _catClient.UpdateCategory(cat, catId);
+                    }).Unwrap()
+                );
+            }
+
+            return returnList;
         }
 
         /// <summary>
         /// Compares originalTree with changeTree and returns a list of tasks to update categories and navigation 
         /// for items whose ParentId changed.
         /// </summary>
+        [Obsolete]
         private List<Task> GetCategoryAndDocumentMoveTasks(List<NavigationTreeNode> originalTree, List<NavigationTreeNode> changeTree)
         {
             var tasks = new List<Task>();
@@ -376,6 +576,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return tasks;
         }
 
+        [Obsolete]
         private List<Task> GetRenameTasks(List<NavigationTreeNode> originalTree, List<NavigationTreeNode> changeTree)
         {
             var tasks = new List<Task>();
@@ -399,12 +600,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return tasks;
         }
 
+        [Obsolete]
         private List<Task> GetCategoryReorders(List<NavigationTreeNode> originalTree, List<NavigationTreeNode> changeTree)
         {
             var tasks = new List<Task>();
 
-            var origCatOrder = originalTree.GetCategoryOrder();
-            var newCatOrder = changeTree.GetCategoryOrder().GroupBy(co => co.ParentId);
+            IEnumerable<NavigationTreeNode> origCatOrder = null;//  originalTree.GetCategoryOrder();
+            IEnumerable<IGrouping<string, NavigationTreeNode>> newCatOrder = null;// changeTree.GetCategoryOrder().GroupBy(co => co.ParentId);
 
             foreach (var group in newCatOrder)
             {
@@ -426,7 +628,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                 // ex: if the original position was 1, and now the position is 5,
                                 // delta is +4. Conversely, if the original position was 4 and the
                                 // position is now 2, delta is -2.
-                                int delta = newCatInfo.Index - original.Index;
+                                int delta = newCatInfo.Index.GetValueOrDefault(0) - original.Index.GetValueOrDefault(0);
 
                                 int newCatSequence = cat.Sequence.GetValueOrDefault(0) + delta;
 
@@ -447,6 +649,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return tasks;
         }
 
+        [Obsolete]
         private Task GetDocumentReorders(List<NavigationTreeNode> originalTree, List<NavigationTreeNode> items)
         {
             var newPageOrder = items.Where(i => i.NodeType.IsPage).GroupBy(co => co.ParentId);
