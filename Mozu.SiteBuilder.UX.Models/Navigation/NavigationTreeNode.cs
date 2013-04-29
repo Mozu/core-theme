@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public string ParentId { get; set; }
 
         [DataMember(Name = "index")]
-        public int? Index { get; set; }
+        public int Index { get; set; }
 
         [DataMember(Name = "name")]
         public string Name { get; set; }

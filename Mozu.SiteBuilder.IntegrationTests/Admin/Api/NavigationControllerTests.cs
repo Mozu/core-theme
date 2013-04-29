@@ -154,7 +154,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             List<NavigationTreeNode> res = controller.List().Result.Items;
 
             var unlinkedNode = res.First(i => i.Id == NavigationController.UNLINKED_PAGES_NODE_ID);
-            Assert.That(unlinkedNode.Index.HasValue, "unlinkedNode should have an index value.");
             Assert.False(res.Where(n => n.ParentId == unlinkedNode.ParentId && n.Id != unlinkedNode.Id).Any(n => n.Index >= unlinkedNode.Index), "No sibling nodes of UNLINKED_PAGES_NODE should have a higher index.");
         }
 
@@ -193,7 +192,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             var pageNavigationNode = aMockPage.Map<NavigationNode>();
 
             // make the navigation parent id and index of this page identical to the category
-            pageNavigationNode.Index = aMockCategory.Sequence;
+            pageNavigationNode.Index = aMockCategory.Sequence.GetValueOrDefault(0);
             pageNavigationNode.ParentId = "category^^" + aMockCategory.ParentCategoryId;
 
             var mockNavigationSet = new NavigationSet
@@ -212,7 +211,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             Assert.AreEqual(resPage.ParentId, resCat.ParentId);
 
             // the page should appear in the list before the category
-            Assert.Less(resPage.Index.Value, resCat.Index.Value, "the page should appear in the list before the category");
+            Assert.Less(resPage.Index, resCat.Index, "the page should appear in the list before the category");
         }
 
         [Test]

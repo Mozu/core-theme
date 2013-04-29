@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     masterList.AddRange(sortedCats);
 
                     // build the masterlist. Step 2: put in navigation items we know about.
-                    foreach (var navmeta in (navSet.Nodes ?? new List<NavigationNode>()))
+                    foreach (var navmeta in (navSet.Nodes ?? new List<NavigationNode>()).OrderBy(n => n.ParentId).ThenBy(n => n.Index))
                     {
                         NavigationNode node;
 
@@ -140,11 +140,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         }
 
                         // if we want to insert a node with an index that's already taken, we need to move the others
-                        var nodesToChange = masterList.Where(n => n.ParentId == node.ParentId && n.Index.HasValue && n.Index == node.Index);
+                        var nodesToChange = masterList.Where(n => n.ParentId == node.ParentId && n.Index == node.Index);
                         while (nodesToChange.Count() > 0)
                         {
-                            int newIndex = nodesToChange.First().Index.Value + 1;
-                            var newNodesToChange = masterList.Where(n => n.ParentId == node.ParentId && n.Index.HasValue && n.Index == newIndex).ToList();
+                            int newIndex = nodesToChange.First().Index + 1;
+                            var newNodesToChange = masterList.Where(n => n.ParentId == node.ParentId && n.Index == newIndex).ToList();
                             nodesToChange.Each(n => n.Index = newIndex);
                             nodesToChange = newNodesToChange;
                         }

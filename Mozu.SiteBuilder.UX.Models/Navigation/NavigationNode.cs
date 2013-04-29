@@ -18,26 +18,26 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         /// <summary>
         /// The unique identifier of this NavigationNode.
         /// </summary>
-        [DataMember(Name = "id", EmitDefaultValue = false)]
+        [DataMember(Name = "id", EmitDefaultValue = true)]
         public string Id { get; set; }
 
         /// <summary>
         /// This node's parent id, if any.
         /// </summary>
-        [DataMember(Name = "parentId", EmitDefaultValue = false)]
+        [DataMember(Name = "parentId", EmitDefaultValue = true)]
         public string ParentId { get; set; }
 
         /// <summary>
         /// This node's name.
         /// </summary>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
+        [DataMember(Name = "name", EmitDefaultValue = true)]
         public string Name { get; set; }
 
         /// <summary>
         /// This node's index position in a tree.
         /// </summary>
-        [DataMember(Name = "index", EmitDefaultValue = false)]
-        public int? Index { get; set; }
+        [DataMember(Name = "index", EmitDefaultValue = true)]
+        public int Index { get; set; }
 
         /// <summary>
         /// Whether this node can have children.
