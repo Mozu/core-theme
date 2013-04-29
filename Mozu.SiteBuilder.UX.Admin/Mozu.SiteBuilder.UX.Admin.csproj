@@ -1103,6 +1103,7 @@
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.svg" />
     <Content Include="Scripts\resources\images\card-sd7c19700b9.png" />
     <Content Include="Scripts\resources\images\icons-s46f2c6a895.png" />
+    <Content Include="Scripts\resources\images\icons-sd559c483fc.png" />
     <Content Include="Scripts\resources\images\legacy\AddPhotos.png" />
     <Content Include="Scripts\resources\images\legacy\background-alpha.png" />
     <Content Include="favicon.ico" />
