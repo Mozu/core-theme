@@ -80,7 +80,8 @@
     }
   }
 
-  /* panel specific styles, move to separate file */
+  /* SPECIFIC PANELS */
+
   .#{$vprefix}producttype-attribute-panel {
     &> .#{$prefix}panel-header {
       .#{$prefix}panel-header-body {
@@ -137,6 +138,55 @@
       .#{$vprefix}action {
         color: $color-neutral-white;
       }
+    }
+  }
+
+  .#{$vprefix}toolbox {
+    background-color: $color-neutral-white;
+    border: 0px none;
+    min-width: 299px;
+    padding: 0px;
+    width: 299px;
+  }
+
+  .#{$vprefix}toolbox-tabpanel {
+    &> .#{$prefix}tab-bar {
+      .#{$prefix}tab-bar-body {
+        text-align: center;
+      }
+    }
+  }
+
+  /* TABS */
+
+  .#{$prefix}tab {
+    em {
+      border-left: 1px solid $tab-background; // need to change this border-color for any different tab states
+      margin-left: -1px;
+      padding-left: 19px;
+      padding-right: 19px;
+    }
+
+    .#{$prefix}tab-inner {
+      height: auto;
+      line-height: $tab-height - (top($tab-top-border-width) * 2);
+    }
+
+    &.#{$prefix}tab-active {
+      em {
+        border-left-color: $tab-background-active;
+      }
+    }
+    &:nth-of-type(1) {
+      @include border-radius(2px 0px 0px 2px);
+
+      em {
+        border-left-width: 0px;
+        margin-left: 0px;
+      }
+    }
+    &:nth-last-of-type(1) {
+      @include border-radius(0px 2px 2px 0px);
     }
   }
   
