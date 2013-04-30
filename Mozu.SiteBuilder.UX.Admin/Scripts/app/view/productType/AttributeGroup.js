@@ -4,11 +4,6 @@
     requires: ['Taco.view.productType.AttributeForm'],
 
     layout: 'card',
-    header: {
-        margin: '0 0 7'
-    },
-    cls: Taco.baseCSSPrefix + 'producttype-attribute-panel',
-    margin: '0 0 21',
 
     attributeItemTpl: [
         '<tpl for=".">',
@@ -18,6 +13,8 @@
     ],
 
     initComponent: function () {
+        this.cls = [this.cls, Taco.baseCSSPrefix + 'producttype-attribute-panel', Taco.baseCSSPrefix + 'form-section'].join(' ').trim();
+
         this.tools = [{
             xtype: 'primarybutton',
             text: 'Add',
