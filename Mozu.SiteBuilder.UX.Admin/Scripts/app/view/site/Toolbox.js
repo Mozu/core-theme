@@ -147,6 +147,8 @@ Ext.define('Taco.view.site.Toolbox', {
     },
 
     populate: function (adapter) {
+        //todo refdo page settings
+        return;
         this.pageSettings.populate(adapter);
     }
 });

@@ -169,11 +169,13 @@ Ext.define('Taco.view.site.page.Form', {
         return true;
     },
     onFormStateChange: function () {
+        
         var isDirty = this.isDirty();
         if (this.dirtyButton) {
             this.dirtyButton.setDirty(isDirty);
         }
         this.editSurface.setDirty(isDirty);
+        return;
         if (isDirty) {
             this.toolBox.navigation.disable();
         } else {
