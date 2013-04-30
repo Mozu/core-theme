@@ -307,6 +307,7 @@
     <Compile Include="Properties\AssemblyInfo.cs">
     </Compile>
     <Content Include="Morrissey\src\fsutils.js" />
+    <Content Include="Scripts\backbone.d.ts" />
     <Content Include="Themes\Core3\Modules\_GoogleAnalyticsTrackingCode.vol">
       <SubType>Designer</SubType>
     </Content>
@@ -322,6 +323,7 @@
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\search\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\product\definition.json" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\cart-monitor.js" />
+    <Content Include="Themes\Core3\Resources\Scripts\Modules\models-cart.ts" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\function-throttler.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-myaccount.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-address.js" />
@@ -542,6 +544,10 @@
     <Content Include="Themes\MobileCore\Widgets\core\tags\definition.json" />
     <Content Include="Themes\MobileCore\Widgets\core\tags\template.vol" />
     <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\mobile-base.less" />
+    <Content Include="Scripts\_references.ts" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Scripts\knockout.d.ts" />
+    <Content Include="Scripts\require.d.ts" />
     <Content Include="web.config" />
     <Content Include="Themes\Core3\Modules\_CartTable.vol" />
     <Content Include="Themes\Core3\Modules\_ProductOptions.vol" />
