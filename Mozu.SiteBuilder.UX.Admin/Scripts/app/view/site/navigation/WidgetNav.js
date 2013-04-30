@@ -2,7 +2,7 @@
  * @class Taco.view.site.navigation.WidgetNav
  */
 Ext.define('Taco.view.site.navigation.WidgetNav', {
-    extend: 'Taco.view.site.ToolboxPanel',
+    extend: 'Ext.panel.Panel',
     requires: ['Taco.store.WidgetDefinitions', 'Taco.view.site.page.WidgetDragZone'],
 
     initComponent: function () {

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @class Taco.core.ux.TreeList
  */
 Ext.define('Taco.core.ux.TreeList', {
@@ -17,6 +17,12 @@ Ext.define('Taco.core.ux.TreeList', {
     preventHeader: true,
     sortableColumns: false,
     autoSync: true,
+    viewConfig: {
+        overflowY: 'scroll',
+        plugins: [{
+            ptype: 'classhandleddragdrop'
+        }]
+    },
 
     initComponent: function () {
 
@@ -68,7 +74,7 @@ Ext.define('Taco.core.ux.TreeList', {
             return false;
         });
 
-    },
+    }
 
 //    destroy: function () {
 //        var me = this;
@@ -77,11 +83,4 @@ Ext.define('Taco.core.ux.TreeList', {
 //        });
 //        this.callParent(arguments);
 //    },
-
-    viewConfig: {
-        overflowY: 'scroll',
-        plugins: [{
-            ptype: 'classhandleddragdrop'
-        }]
-    }
 });
