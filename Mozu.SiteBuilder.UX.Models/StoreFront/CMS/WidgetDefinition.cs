@@ -35,6 +35,11 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         [XmlAttribute("editView")]
         public string EditView { get; set; }
 
+        [DataMember(Name = "editViewConfig")]
+        [XmlAttribute("editViewConfig")]
+        public string  EditViewConfig { get; set; }
+
+
         [DataMember(Name = "displayTemplate")]
         [XmlAttribute("displayTemplate")]
         public string DisplayTemplate { get; set; }

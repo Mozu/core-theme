@@ -65,6 +65,19 @@ Ext.define('Taco.model.WidgetDefinition', {
              type: "string",
              useNull: true
          },
+        {
+            name: "editViewConfig",
+            type: "auto",
+            convert: function (v, record) {
+                if (v) {
+                    return eval("(" + v + ')');
+                }
+                return null;
+
+            },
+            useNull: true
+        },
+        
          {
              name: "properties",
              type: "auto"
