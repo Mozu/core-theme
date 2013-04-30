@@ -1,6 +1,7 @@
 @charset "IBM437";
-/* line 794, icons/*.png */
-.icons-sprite, .x-panel-header img.x-tool-expand-top, .x-panel-header img.x-tool-collapse-top, .x-panel-header img.x-tool-expand-bottom, .x-panel-header img.x-tool-collapse-bottom, .taco-draghandle, .taco-grid-row-menu-trigger, .taco-foldertree.x-tree-arrows .x-tree-elbow, .taco-foldertree.x-tree-arrows .x-tree-elbow-end, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus, .taco-viewport-nav .taco-primary-menu-trigger, .taco-viewport-nav .taco-primary-menu-trigger.expanded, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-dashboard::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-store::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-catalog::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-marketing::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-website::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-settings::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-dashboard::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-store::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-catalog::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-marketing::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-website::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-settings::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-dashboard::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-store::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-catalog::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-marketing::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-website::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-settings::before, .taco-modal .taco-close, .x-panel .taco-thumbnail-item .actions .action.download, .x-panel .taco-thumbnail-item .actions .action.delete, .x-panel .taco-thumbnail-item .actions .action.duplicate, .x-panel .taco-thumbnail-item .actions .action.remove, .x-item-selected .taco-datalist-selection, .x-item-selected .taco-datalist-deselection, .taco-option-value-view .taco-option-value-row:before, .x-field .x-form-checkbox,
+/* IMPORTS */
+/* line 818, icons/*.png */
+.icons-sprite, .x-column-header.x-column-header-last .x-column-header-trigger, .taco-draghandle, .taco-grid-row-menu-trigger, .taco-foldertree.x-tree-arrows .x-tree-elbow, .taco-foldertree.x-tree-arrows .x-tree-elbow-end, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus, .taco-viewport-nav .taco-primary-menu-trigger, .taco-viewport-nav .taco-primary-menu-trigger.expanded, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-dashboard::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-store::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-catalog::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-marketing::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-website::before, .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-settings::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-dashboard::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-store::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-catalog::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-marketing::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-website::before, .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-settings::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-dashboard::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-store::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-catalog::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-marketing::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-website::before, .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-settings::before, .taco-modal .taco-close, .x-field .x-form-checkbox,
 .x-grid-cell-inner .x-tree-checkbox,
 .x-menu .x-menu-item-unchecked .x-menu-item-icon,
 .x-grid-table .x-grid-row-checker,
@@ -8,18 +9,21 @@
 .x-grid-cell-inner .x-tree-checkbox-checked,
 .x-menu .x-menu-item-checked .x-menu-item-icon,
 .x-grid-table .x-grid-row-selected .x-grid-row-checker,
-.x-grid-header-ct .x-grid-hd-checker-on .x-column-header-text, .x-field .x-form-radio, .x-form-cb-checked .x-form-radio, .taco-boxselect .x-form-trigger, .taco-site-editor .taco-shim .taco-hint-widget > table .taco-hint-actions .taco-widgethandle, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-folder,
+.x-grid-header-ct .x-grid-hd-checker-on .x-column-header-text, .x-field .x-form-radio, .x-form-cb-checked .x-form-radio, .taco-hint-widget .taco-widgethandle, .taco-widget-drag, .taco-widget-edit, .taco-widget-remove, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-folder,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-category, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-blog,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-page,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-systempage, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-link, .taco-toolbox .taco-treelist tbody tr .taco-nav-node-product, .taco-toolbox .taco-treelist tbody tr:nth-child(3) .x-tree-icon, .taco-masthead .taco-mozulogo {
-  background: url('../images/icons-seceae125a5.png') no-repeat;
+  background: url('../images/icons-s93077bd124.png') no-repeat;
 }
 
 /* NEUTRAL COLORS */
 /* THEME COLORS */
 /* MESSAGE COLORS */
 /* ACTION COLORS */
+/* HIGHLIGHT COLORS */
 /* OLD COLORS */
+/* FUNCTIONS */
+/* VARIABLES */
 /**
  * @var {string} $prefix 
  * The prefix to be applied to all CSS selectors. If this is changed, it must also be changed in your 
@@ -225,6 +229,8 @@
 /* TOOLBARS */
 /* MENUS */
 /* LAYOUTS */
+/* FORMS */
+/* FIELDS */
 /* Generated by Font Squirrel (http://www.fontsquirrel.com) on November 21, 2011 */
 @font-face {
   font-family: 'MyriadWebProRegular';
@@ -345,7 +351,7 @@ input, textarea, select {
 /* line 1, ../scss/core/_core.scss */
 .x-body {
   color: #323232;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
 }
 
@@ -839,7 +845,7 @@ tr.x-container:before {
   border: 1px solid #cdcdcd;
   background-color: #eeeeee;
   color: #222222;
-  font: normal 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: normal 2rem "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
 }
 
 /**
@@ -887,7 +893,7 @@ tr.x-container:before {
   padding-left: 20px;
   white-space: nowrap;
   color: #000;
-  font: normal 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: normal 2rem "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   border: 1px solid;
   border-color: #dddddd #bbbbbb #bbbbbb #dddddd;
   background-color: #fff;
@@ -2273,14 +2279,19 @@ tr.x-container:before {
   unicode-bidi: bidi-override;
 }
 
-/* line 73, ../scss/taco/mixins/_css3.scss */
+/* BORDERS */
+/* SHADOWS */
+/* ANIMATIONS */
+/* FLEXBOX */
+/* OTHER */
+/* line 82, ../scss/taco/mixins/_css3.scss */
 .taco-no-select {
+  cursor: default;
   user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
-  cursor: default;
 }
 
 /* line 3, ../scss/taco/_errors.scss */
@@ -2334,17 +2345,16 @@ tr.x-container:before {
 }
 
 /* line 42, picker/*.png */
-.picker-sprite, .taco-date-field .x-form-date-trigger,
-.taco-date-field .x-form-trigger-wrap-focus .x-form-date-trigger {
+.picker-sprite {
   background: url('../images/picker-sa04364cd82.png') no-repeat;
 }
 
 /* line 6, ../scss/widgets/_boundlist.scss */
 .x-boundlist {
   border-width: 1px;
-  border-style: solid none none;
-  border-color: #999691;
-  background: white;
+  border-style: none;
+  border-color: #bfbfbf;
+  background: rgba(255, 255, 255, 0);
 }
 /* line 12, ../scss/widgets/_boundlist.scss */
 .x-boundlist .x-toolbar {
@@ -2359,32 +2369,32 @@ tr.x-container:before {
 
 /* line 29, ../scss/widgets/_boundlist.scss */
 .x-boundlist-item {
-  padding: 9px 24px 7px;
+  padding: 5px 29px 5px 9px;
+  cursor: default;
   user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
-  cursor: default;
   cursor: pointer;
   cursor: hand;
   position: relative;
   /*allow hover in IE on empty items*/
   border-width: 1px;
-  border-style: none solid solid;
-  border-color: #999691;
+  border-style: solid;
+  border-color: #bfbfbf;
 }
 
 /* line 43, ../scss/widgets/_boundlist.scss */
 .x-boundlist-selected {
-  background: #bdf9ff !important;
-  border-color: #999691;
+  background: #e4efff !important;
+  border-color: #bfbfbf;
 }
 
 /* line 48, ../scss/widgets/_boundlist.scss */
 .x-boundlist-item-over {
-  background: #f2f0ed;
-  border-color: #999691;
+  background: #e6e6e6;
+  border-color: #bfbfbf;
 }
 
 /* line 53, ../scss/widgets/_boundlist.scss */
@@ -2652,7 +2662,7 @@ tr.x-container:before {
 
 /* line 643, ../scss/widgets/_button.scss */
 .x-btn-default-small .x-btn-inner {
-  font-size: 15px;
+  font-size: 2rem;
   font-weight: normal;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   color: #333333;
@@ -2867,7 +2877,7 @@ tr.x-container:before {
 
 /* line 643, ../scss/widgets/_button.scss */
 .x-btn-default-medium .x-btn-inner {
-  font-size: 15px;
+  font-size: 2rem;
   font-weight: normal;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   color: #333333;
@@ -3082,7 +3092,7 @@ tr.x-container:before {
 
 /* line 643, ../scss/widgets/_button.scss */
 .x-btn-default-large .x-btn-inner {
-  font-size: 15px;
+  font-size: 2rem;
   font-weight: normal;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   color: #333333;
@@ -3291,7 +3301,7 @@ tr.x-container:before {
 
 /* line 643, ../scss/widgets/_button.scss */
 .x-btn-default-toolbar-small .x-btn-inner {
-  font-size: 15px;
+  font-size: 2rem;
   font-weight: normal;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   color: #333333;
@@ -3494,7 +3504,7 @@ tr.x-container:before {
 
 /* line 643, ../scss/widgets/_button.scss */
 .x-btn-default-toolbar-medium .x-btn-inner {
-  font-size: 15px;
+  font-size: 2rem;
   font-weight: normal;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   color: #333333;
@@ -3697,7 +3707,7 @@ tr.x-container:before {
 
 /* line 643, ../scss/widgets/_button.scss */
 .x-btn-default-toolbar-large .x-btn-inner {
-  font-size: 15px;
+  font-size: 2rem;
   font-weight: normal;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   color: #333333;
@@ -3951,7 +3961,7 @@ tr.x-container:before {
 
 /* line 80, ../scss/widgets/_btn-group.scss */
 .x-btn-group-header-text-default-framed {
-  font: normal 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: normal 2rem "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   color: #848484;
 }
 
@@ -4131,7 +4141,7 @@ table.x-datepicker-inner a {
   padding-right: 4px;
   display: block;
   zoom: 1;
-  font: normal 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: normal 2rem "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   color: black;
   text-decoration: none;
   text-align: right;
@@ -4227,7 +4237,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 .x-monthpicker-item {
   float: left;
   margin: 4px 0 5px 0;
-  font: normal 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: normal 2rem "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   text-align: center;
   vertical-align: middle;
   height: 18px;
@@ -4380,12 +4390,12 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 
 /* line 6, ../scss/widgets/_menu.scss */
 .x-menu-body {
+  cursor: default;
   user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
-  cursor: default;
   background: white !important;
   padding: 0px;
 }
@@ -4476,8 +4486,8 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 
 /* line 96, ../scss/widgets/_menu.scss */
 .x-menu-item-text {
-  font-size: 15px;
-  color: #222222;
+  font-size: 2rem;
+  color: #323232;
 }
 
 /* line 101, ../scss/widgets/_menu.scss */
@@ -4595,15 +4605,15 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 
 /* line 211, ../scss/widgets/_menu.scss */
 .x-menu-item .x-form-item-label {
-  font-size: 15px;
-  color: #222222;
+  font-size: 2rem;
+  color: #323232;
   padding-left: 34px;
 }
 
 /* line 8, ../scss/widgets/_grid.scss */
 .x-panel .x-grid-body {
   background: white;
-  border-color: #999691;
+  border-color: #cccccc;
   border-style: solid;
   border-width: 1px;
   border-top-color: #323232;
@@ -4618,7 +4628,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 
 /* line 23, ../scss/widgets/_grid.scss */
 .x-grid-header-hidden .x-grid-body {
-  border-top-color: #999691 !important;
+  border-top-color: #cccccc !important;
 }
 
 /* line 27, ../scss/widgets/_grid.scss */
@@ -4655,7 +4665,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   cursor: default;
   zoom: 1;
   padding: 0;
-  border: 1px solid #999691;
+  border: 1px solid #cccccc;
   border-bottom-color: #323232;
   background-image: none;
   background-color: #323232;
@@ -4682,7 +4692,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   border-bottom: 0 none;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
   color: white;
-  font: normal 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: normal 2rem "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   background-image: none;
   background-color: #323232;
 }
@@ -4705,7 +4715,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   zoom: 1;
   position: relative;
   white-space: nowrap;
-  line-height: 14px;
+  line-height: 1.4rem;
   padding: 15px 5px 11px;
 }
 /* line 116, ../scss/widgets/_grid.scss */
@@ -4720,14 +4730,14 @@ table.x-datepicker-inner .x-datepicker-disabled a {
   border-left-color: #e7d8d8;
   border-right-color: #e7d8d8;
   background-image: none;
-  background-color: #f2f0ed;
+  background-color: #4b4b4b;
 }
 
 /* line 149, ../scss/widgets/_grid.scss */
 .x-column-header-trigger {
   display: none;
   height: 100%;
-  width: 14px;
+  width: 40px;
   background: no-repeat left center;
   background-color: #c3daf9;
   background-image: url('../../ext/resources/themes/images/default/grid/grid3-hd-btn.gif');
@@ -4783,7 +4793,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 }
 /* line 199, ../scss/widgets/_grid.scss */
 .x-grid-row .x-grid-cell {
-  font: normal 15px/20px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: normal 1.4rem/1.9rem "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   background-color: white;
   border-color: #ededed;
   border-style: solid;
@@ -4793,29 +4803,29 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 
 /* line 212, ../scss/widgets/_grid.scss */
 .x-grid-with-row-lines .x-grid-cell {
-  border-width: 1px 0;
+  border-width: 1px 0px;
 }
 
 /* line 216, ../scss/widgets/_grid.scss */
 .x-grid-rowwrap-div {
-  border-width: 1px 0;
-  border-color: #ededed;
-  border-style: solid;
-  border-top-color: #fafafa;
+  border-width: 1px 0px;
+  border-color: #cccccc;
+  border-style: solid none;
+  border-top-color: #d9d9d9;
   overflow: hidden;
 }
 
 /* line 226, ../scss/widgets/_grid.scss */
 .x-grid-row-alt .x-grid-cell,
 .x-grid-row-alt .x-grid-rowwrap-div {
-  background-color: #fafafa;
+  background-color: whitesmoke;
 }
 
 /* line 231, ../scss/widgets/_grid.scss */
 .x-grid-row-over .x-grid-cell,
 .x-grid-row-over .x-grid-rowwrap-div {
-  border-color: #dddddd;
-  background-color: #efefef;
+  border-color: #bfbfbf;
+  background-color: #f2f2f2;
 }
 
 /* line 238, ../scss/widgets/_grid.scss */
@@ -4829,7 +4839,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 .x-grid-row-selected .x-grid-cell,
 .x-grid-row-selected .x-grid-rowwrap-div,
 .x-grid-row-selected .x-grid-cell-rowbody {
-  background-color: #bdf9ff !important;
+  background-color: #e4efff !important;
 }
 
 /* line 250, ../scss/widgets/_grid.scss */
@@ -4876,7 +4886,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 
 /* line 294, ../scss/widgets/_grid.scss */
 .x-grid-with-row-lines .x-grid-cell-inner {
-  line-height: 18px;
+  line-height: -0.1rem;
   padding-bottom: 6px;
 }
 
@@ -4932,12 +4942,12 @@ browsers will do whacky things with it.
 .x-grid-row-selected .x-grid-cell-special {
   border-right: 1px solid #e7d8d8;
   background-image: none;
-  background-color: #bdf9ff;
-  background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #bdf9ff), color-stop(100%, #a4f7ff));
-  background-image: -webkit-linear-gradient(left, #bdf9ff, #a4f7ff);
-  background-image: -moz-linear-gradient(left, #bdf9ff, #a4f7ff);
-  background-image: -o-linear-gradient(left, #bdf9ff, #a4f7ff);
-  background-image: linear-gradient(left, #bdf9ff, #a4f7ff);
+  background-color: #e4efff;
+  background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #e4efff), color-stop(100%, #cae0ff));
+  background-image: -webkit-linear-gradient(left, #e4efff, #cae0ff);
+  background-image: -moz-linear-gradient(left, #e4efff, #cae0ff);
+  background-image: -o-linear-gradient(left, #e4efff, #cae0ff);
+  background-image: linear-gradient(left, #e4efff, #cae0ff);
 }
 
 /* line 344, ../scss/widgets/_grid.scss */
@@ -4980,12 +4990,12 @@ browsers will do whacky things with it.
 
 /* line 402, ../scss/widgets/_grid.scss */
 .x-unselectable {
+  cursor: default;
   user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
-  cursor: default;
 }
 
 /* line 406, ../scss/widgets/_grid.scss */
@@ -5098,7 +5108,7 @@ browsers will do whacky things with it.
 /* line 518, ../scss/widgets/_grid.scss */
 .x-grid-group-title {
   color: #7b7b7b;
-  font: bold 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: bold 2rem "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
 }
 
 /* line 524, ../scss/widgets/_grid.scss */
@@ -5339,7 +5349,7 @@ browsers will do whacky things with it.
 }
 /* line 741, ../scss/widgets/_grid.scss */
 .x-grid-row-editor .x-form-display-field {
-  font: normal 15px/15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: normal 2rem/15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   padding-top: 0;
   padding-left: 2px;
 }
@@ -5366,7 +5376,7 @@ browsers will do whacky things with it.
 
 /* line 771, ../scss/widgets/_grid.scss */
 .x-grid-editor .x-form-text, .x-grid-row-editor .x-form-text {
-  font: normal 15px/15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: normal 2rem/15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   height: 18px;
 }
 
@@ -5573,13 +5583,13 @@ browsers will do whacky things with it.
 .x-form-item-label {
   display: block;
   padding: 3px 0 0;
-  font-size: 16px;
+  font-size: 1.4rem;
+  cursor: default;
   user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
-  cursor: default;
 }
 
 /* line 79, ../scss/widgets/form/_all.scss */
@@ -5598,7 +5608,7 @@ browsers will do whacky things with it.
 .x-form-invalid-under {
   padding: 2px 2px 2px 18px;
   color: #c0272b;
-  font: normal 15px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: normal 2rem "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   line-height: 16px;
   background: no-repeat 0 2px;
   background-image: url('../../ext/resources/themes/images/default/form/exclamation.gif');
@@ -5632,8 +5642,8 @@ browsers will do whacky things with it.
 .x-form-field,
 .x-form-display-field {
   margin: 0 0 0 0;
-  font: normal 16px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: black;
+  font: normal 1.6rem "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  color: #323232;
 }
 
 /* line 14, ../scss/widgets/form/_field.scss */
@@ -5644,40 +5654,38 @@ browsers will do whacky things with it.
 /* line 19, ../scss/widgets/form/_field.scss */
 .x-form-text,
 textarea.x-form-field {
-  padding: 1px 3px;
+  padding: 4px 10px;
   background: repeat-x 0 0;
   border: 1px solid;
   background-color: white;
-  background-image: url('../../ext/resources/themes/images/default/form/text-bg.gif');
-  border-color: #b5b8c8;
+  border-color: #bfbfbf;
 }
 
 /* line 36, ../scss/widgets/form/_field.scss */
 .x-form-text {
-  height: 18px;
-  line-height: 15px;
+  height: 20px;
+  line-height: 17px;
   vertical-align: top;
 }
 
 /* line 43, ../scss/widgets/form/_field.scss */
 .x-ie8m .x-form-text {
-  line-height: 15px;
+  line-height: 17px;
 }
 
 /* line 48, ../scss/widgets/form/_field.scss */
 .x-border-box .x-form-text {
-  height: 22px;
+  height: 30px;
 }
 
 /* line 52, ../scss/widgets/form/_field.scss */
 textarea.x-form-field {
-  color: black;
+  color: #323232;
   overflow: auto;
   height: auto;
   line-height: normal;
   background: repeat-x 0 0;
   background-color: white;
-  background-image: url('../../ext/resources/themes/images/default/form/text-bg.gif');
   resize: none;
 }
 
@@ -5694,32 +5702,29 @@ textarea.x-form-field {
 /* line 76, ../scss/widgets/form/_field.scss */
 .x-form-focus,
 textarea.x-form-focus {
-  border-color: #bbbbbb;
+  border-color: #3778d5;
 }
 
 /* line 81, ../scss/widgets/form/_field.scss */
 .x-form-invalid-field,
 textarea.x-form-invalid-field {
   background-color: white;
-  background-image: url('../../ext/resources/themes/images/default/grid/invalid_line.gif');
-  background-repeat: repeat-x;
-  background-position: bottom;
-  border-color: #cc3300;
+  border-color: #d2463c;
 }
 
 /* line 91, ../scss/widgets/form/_field.scss */
 .x-form-item {
-  font: normal 16px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: bold 1.4rem "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
 }
 
 /* line 95, ../scss/widgets/form/_field.scss */
 .x-form-empty-field, textarea.x-form-empty-field {
-  color: gray;
+  color: #cbcbcb;
 }
 
 /* line 100, ../scss/widgets/form/_field.scss */
 .x-webkit .x-form-empty-field {
-  line-height: 15px;
+  line-height: 17px;
 }
 
 /* line 105, ../scss/widgets/form/_field.scss */
@@ -5746,14 +5751,14 @@ textarea.x-form-invalid-field {
 
 /* line 126, ../scss/widgets/form/_field.scss */
 .x-ie .x-form-file {
-  height: 23px;
+  height: 31px;
   line-height: 18px;
   vertical-align: middle;
 }
 
 /* line 135, ../scss/widgets/form/_field.scss */
 .x-field-default-toolbar .x-form-text {
-  height: 16px;
+  height: 10px;
 }
 
 /* line 139, ../scss/widgets/form/_field.scss */
@@ -5792,7 +5797,7 @@ textarea.x-form-invalid-field {
 
 /* line 29, ../scss/widgets/form/_fieldset.scss */
 .x-fieldset-header {
-  font: 15px/14px bold "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+  font: 2rem/14px bold "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   color: #71504e;
   padding: 0 3px 1px;
   overflow: hidden;
@@ -5928,7 +5933,7 @@ textarea.x-form-invalid-field {
   position: absolute;
   top: -4px;
   right: -2px;
-  height: 30px;
+  height: 38px;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
   /* Yes, there's actually a good reason for this...
@@ -6216,7 +6221,7 @@ textarea.x-form-invalid-field {
 
 /* line 177, ../scss/widgets/form/_triggerfield.scss */
 .x-quirks .prefixie6 .x-form-trigger-input-cell {
-  height: 22px;
+  height: 30px;
 }
 /* line 180, ../scss/widgets/form/_triggerfield.scss */
 .x-quirks .prefixie6 .x-field-default-toolbar .x-form-trigger-input-cell {
@@ -6398,12 +6403,12 @@ textarea.x-form-invalid-field {
 
 /* line 37, ../scss/widgets/_panel.scss */
 .x-panel-header-horizontal {
-  padding: 4px 5px;
+  padding: 0px;
 }
 
 /* line 40, ../scss/widgets/_panel.scss */
 .x-panel-header-vertical {
-  padding: 5px 4px 5px 4px;
+  padding: 0px 0px 0px 0px;
 }
 
 /* line 45, ../scss/widgets/_panel.scss */
@@ -6485,12 +6490,12 @@ textarea.x-form-invalid-field {
 /* line 124, ../scss/widgets/_panel.scss */
 .x-panel-header-text,
 .x-window-header-text {
+  cursor: default;
   user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
-  cursor: default;
   white-space: nowrap;
 }
 
@@ -6531,7 +6536,7 @@ textarea.x-form-invalid-field {
 
 /* line 269, ../scss/widgets/_panel.scss */
 .x-panel-header-default {
-  font-size: 15px;
+  font-size: 2rem;
   border-color: #d4cccc;
   border-width: 0px;
   border-style: solid;
@@ -6547,7 +6552,7 @@ textarea.x-form-invalid-field {
 /* line 354, ../scss/widgets/_panel.scss */
 .x-panel-header-text-default {
   color: #7a3535;
-  font-size: 15px;
+  font-size: 2rem;
   font-weight: bold;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   line-height: 15px;
@@ -6556,7 +6561,7 @@ textarea.x-form-invalid-field {
 /* line 364, ../scss/widgets/_panel.scss */
 .x-panel-body-default {
   background: white;
-  border-color: #999691;
+  border-color: #cccccc;
   color: black;
   border-width: 1px;
   border-style: solid;
@@ -6565,12 +6570,12 @@ textarea.x-form-invalid-field {
 /* line 379, ../scss/widgets/_panel.scss */
 .x-panel-collapsed .x-window-header-default,
 .x-panel-collapsed .x-panel-header-default {
-  border-color: #999691;
+  border-color: #cccccc;
 }
 
 /* line 384, ../scss/widgets/_panel.scss */
 .x-panel-header-default-vertical {
-  border-color: #999691;
+  border-color: #cccccc;
 }
 
 /* line 391, ../scss/widgets/_panel.scss */
@@ -6634,7 +6639,7 @@ textarea.x-form-invalid-field {
 
 /* line 269, ../scss/widgets/_panel.scss */
 .x-panel-header-default-framed {
-  font-size: 15px;
+  font-size: 2rem;
   border-color: #d4cccc;
   border-width: 0px;
   border-style: solid;
@@ -6650,7 +6655,7 @@ textarea.x-form-invalid-field {
 /* line 354, ../scss/widgets/_panel.scss */
 .x-panel-header-text-default-framed {
   color: #7a3535;
-  font-size: 15px;
+  font-size: 2rem;
   font-weight: bold;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   line-height: 15px;
@@ -6659,7 +6664,7 @@ textarea.x-form-invalid-field {
 /* line 364, ../scss/widgets/_panel.scss */
 .x-panel-body-default-framed {
   background: #fafafa;
-  border-color: #999691;
+  border-color: #cccccc;
   color: black;
   border-width: 0;
   border-style: solid;
@@ -6668,12 +6673,12 @@ textarea.x-form-invalid-field {
 /* line 379, ../scss/widgets/_panel.scss */
 .x-panel-collapsed .x-window-header-default-framed,
 .x-panel-collapsed .x-panel-header-default-framed {
-  border-color: #999691;
+  border-color: #cccccc;
 }
 
 /* line 384, ../scss/widgets/_panel.scss */
 .x-panel-header-default-framed-vertical {
-  border-color: #999691;
+  border-color: #cccccc;
 }
 
 /* line 391, ../scss/widgets/_panel.scss */
@@ -6715,7 +6720,7 @@ textarea.x-form-invalid-field {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
-  padding: 4px 5px 4px 5px;
+  padding: 3px 3px 0px 3px;
   border-width: 1px 1px 0 1px;
   border-style: solid;
   background-image: none;
@@ -6741,7 +6746,7 @@ textarea.x-form-invalid-field {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
-  padding: 5px 4px 5px 4px;
+  padding: 3px 3px 3px 0px;
   border-width: 1px 1px 1px 0;
   border-style: solid;
   background-image: none;
@@ -6767,7 +6772,7 @@ textarea.x-form-invalid-field {
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
-  padding: 4px 5px 4px 5px;
+  padding: 0px 3px 3px 3px;
   border-width: 0 1px 1px 1px;
   border-style: solid;
   background-image: none;
@@ -6793,7 +6798,7 @@ textarea.x-form-invalid-field {
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
-  padding: 5px 4px 5px 4px;
+  padding: 3px 0px 3px 3px;
   border-width: 1px 0 1px 1px;
   border-style: solid;
   background-image: none;
@@ -6876,7 +6881,7 @@ textarea.x-form-invalid-field {
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
-  padding: 4px 5px 4px 5px;
+  padding: 3px 3px 3px 3px;
   border-width: 1px;
   border-style: solid;
   background-image: none;
@@ -6902,7 +6907,7 @@ textarea.x-form-invalid-field {
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
-  padding: 5px 4px 5px 4px;
+  padding: 3px 3px 3px 3px;
   border-width: 1px;
   border-style: solid;
   background-image: none;
@@ -6928,7 +6933,7 @@ textarea.x-form-invalid-field {
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
-  padding: 4px 5px 4px 5px;
+  padding: 3px 3px 3px 3px;
   border-width: 1px;
   border-style: solid;
   background-image: none;
@@ -6954,7 +6959,7 @@ textarea.x-form-invalid-field {
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
-  padding: 5px 4px 5px 4px;
+  padding: 3px 3px 3px 3px;
   border-width: 1px;
   border-style: solid;
   background-image: none;
@@ -7019,14 +7024,14 @@ textarea.x-form-invalid-field {
 
 /* line 31, ../scss/widgets/_qtip.scss */
 .x-tip-header-text {
+  cursor: default;
   user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
-  cursor: default;
   color: #444444;
-  font-size: 15px;
+  font-size: 2rem;
   font-weight: bold;
 }
 
@@ -7048,7 +7053,7 @@ textarea.x-form-invalid-field {
 .x-tip-body,
 .x-form-invalid-tip-body {
   color: #444444;
-  font-size: 15px;
+  font-size: 2rem;
   font-weight: normal;
 }
 /* line 59, ../scss/widgets/_qtip.scss */
@@ -7181,12 +7186,12 @@ textarea.x-form-invalid-field {
   font-size: 1px;
   -moz-outline: 0 none;
   outline: 0 none;
+  cursor: default;
   user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
-  cursor: default;
   display: block;
   overflow: hidden;
 }
@@ -7356,7 +7361,7 @@ textarea.x-form-invalid-field {
   padding: 0 5px;
   height: 18px;
   font-weight: bold;
-  font-size: 15px;
+  font-size: 2rem;
   line-height: 16px;
   text-align: center;
 }
@@ -7398,13 +7403,13 @@ textarea.x-form-invalid-field {
 
 /* line 6, ../scss/widgets/_toolbar.scss */
 .x-toolbar {
-  font-size: 15px;
+  font-size: 1.6rem;
   border: 1px solid;
   padding: 2px 0 2px 2px;
 }
 /* line 13, ../scss/widgets/_toolbar.scss */
 .x-toolbar .x-form-item-label {
-  font-size: 15px;
+  font-size: 1.6rem;
   line-height: 15px;
 }
 /* line 18, ../scss/widgets/_toolbar.scss */
@@ -7419,7 +7424,7 @@ textarea.x-form-invalid-field {
   color: #4c4c4c;
   line-height: 16px;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  font-size: 15px;
+  font-size: 1.6rem;
   font-weight: normal;
 }
 /* line 33, ../scss/widgets/_toolbar.scss */
@@ -7639,7 +7644,7 @@ textarea.x-form-invalid-field {
 
 /* line 151, ../scss/widgets/_window.scss */
 .x-window-header-default {
-  font-size: 15px;
+  font-size: 2rem;
   border-color: #c3c3c3;
   zoom: 1;
 }
@@ -7650,7 +7655,7 @@ textarea.x-form-invalid-field {
   font-weight: bold;
   line-height: 15px;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  font-size: 15px;
+  font-size: 2rem;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
@@ -7907,7 +7912,7 @@ textarea.x-form-invalid-field {
   background-image: -moz-linear-gradient(top, #f9f8f8, #ececec);
   background-image: -o-linear-gradient(top, #f9f8f8, #ececec);
   background-image: linear-gradient(top, #f9f8f8, #ececec);
-  font-size: 15px;
+  font-size: 2rem;
 }
 
 /* line 80, ../scss/widgets/_tabbar.scss */
@@ -8141,7 +8146,7 @@ textarea.x-form-invalid-field {
   padding: 0;
   margin: 0;
   -webkit-appearance: none;
-  font-size: 15px;
+  font-size: 2rem;
   font-weight: bold;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   color: #828282;
@@ -8779,12 +8784,12 @@ a.x-tab-close-btn:hover {
 
 /* line 15, ../scss/widgets/_drawcomponent.scss */
 .x-surface tspan {
+  cursor: default;
   user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
-  cursor: default;
 }
 
 /* line 19, ../scss/widgets/_drawcomponent.scss */
@@ -8872,24 +8877,15 @@ svg, vml {
   background: #ffeebb;
 }
 
-/* line 11, ../scss/taco/widgets/_panel.scss */
-.x-panel-header img.x-tool-expand-top, .x-panel-header img.x-tool-collapse-top {
-  background-position: 0 -585px;
-}
-
-/* line 14, ../scss/taco/widgets/_panel.scss */
-.x-panel-header img.x-tool-expand-bottom, .x-panel-header img.x-tool-collapse-bottom {
-  background-position: 0 -569px;
-}
-
 /* line 264, ../scss/widgets/_panel.scss */
 .x-panel-taco {
-  border-color: #999691;
+  border-color: #cccccc;
 }
 
 /* line 269, ../scss/widgets/_panel.scss */
 .x-panel-header-taco {
-  border-color: #999691;
+  font-size: 2.4rem;
+  border-color: #cccccc;
   border-width: 0px;
   border-style: solid;
   background-image: none;
@@ -8899,26 +8895,27 @@ svg, vml {
 /* line 354, ../scss/widgets/_panel.scss */
 .x-panel-header-text-taco {
   color: #323232;
-  font-weight: normal;
+  font-size: 2.4rem;
+  font-weight: bold;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  line-height: 15px;
+  line-height: 3rem;
 }
 
 /* line 364, ../scss/widgets/_panel.scss */
 .x-panel-body-taco {
-  border-color: #999691;
+  border-color: #cccccc;
   color: #323232;
 }
 
 /* line 379, ../scss/widgets/_panel.scss */
 .x-panel-collapsed .x-window-header-taco,
 .x-panel-collapsed .x-panel-header-taco {
-  border-color: #999691;
+  border-color: #cccccc;
 }
 
 /* line 384, ../scss/widgets/_panel.scss */
 .x-panel-header-taco-vertical {
-  border-color: #999691;
+  border-color: #cccccc;
 }
 
 /* line 391, ../scss/widgets/_panel.scss */
@@ -8970,40 +8967,86 @@ svg, vml {
   background-position: 0 bottom;
 }
 
+/* HEADER */
+/* line 43, ../scss/taco/widgets/_panel.scss */
+.x-panel-header-body-taco {
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -webkit-justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-align-content: stretch;
+}
+/* line 46, ../scss/taco/widgets/_panel.scss */
+.x-panel-header-body-taco .x-panel-header-text-container {
+  padding: 0px;
+  -webkit-flex: 1 1 auto;
+}
+
+/* MENUS */
+/* line 55, ../scss/taco/widgets/_panel.scss */
+.x-menu .x-panel-header {
+  font-size: 1.6rem;
+}
+/* line 58, ../scss/taco/widgets/_panel.scss */
+.x-menu .x-panel-header-text {
+  font-size: 1.6rem;
+  line-height: 1.6rem;
+}
+/* line 63, ../scss/taco/widgets/_panel.scss */
+.x-menu .x-menu-body {
+  border-style: solid;
+  border-width: 1px;
+}
+
+/* line 69, ../scss/taco/widgets/_panel.scss */
+.x-menu-item-text {
+  font-size: 1.4rem;
+}
+
+/* line 74, ../scss/taco/widgets/_panel.scss */
+.x-menu-item .x-form-item-label {
+  color: inherit;
+  font-size: 1.4rem;
+  margin-bottom: 0px;
+  margin-top: 1.4rem;
+  padding-left: 0px;
+}
+
 /* panel specific styles, move to separate file */
-/* line 44, ../scss/taco/widgets/_panel.scss */
+/* line 86, ../scss/taco/widgets/_panel.scss */
 .taco-producttype-attribute-panel > .x-panel-header .x-panel-header-body {
   border-bottom: 1px dashed #999691;
   margin-bottom: 10px;
 }
-/* line 49, ../scss/taco/widgets/_panel.scss */
+/* line 91, ../scss/taco/widgets/_panel.scss */
 .taco-producttype-attribute-panel > .x-panel-header .x-panel-header-text {
   font-size: 1.25em;
   line-height: 1.25em;
 }
-/* line 55, ../scss/taco/widgets/_panel.scss */
+/* line 97, ../scss/taco/widgets/_panel.scss */
 .taco-producttype-attribute-panel > .x-panel-body {
   background-color: #f2f0ed;
 }
-/* line 59, ../scss/taco/widgets/_panel.scss */
+/* line 101, ../scss/taco/widgets/_panel.scss */
 .taco-producttype-attribute-panel .taco-draghandle {
   display: inline-block;
   margin: 0px;
   vertical-align: middle;
 }
-/* line 64, ../scss/taco/widgets/_panel.scss */
+/* line 106, ../scss/taco/widgets/_panel.scss */
 .taco-producttype-attribute-panel .taco-attribute-item-header-text {
   display: inline-block;
-  font-size: 15px;
+  font-size: 1.5rem;
   font-weight: bold;
   line-height: 1em;
   padding-top: 0.5em;
   vertical-align: middle;
 }
-/* line 72, ../scss/taco/widgets/_panel.scss */
+/* line 114, ../scss/taco/widgets/_panel.scss */
 .taco-producttype-attribute-panel .taco-attribute-item-body {
   border-top: 1px solid white;
-  font-size: 14px;
+  font-size: 1.4rem;
   padding: 0.5em 0.5em 0.5em 36px;
   box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1) inset;
   -moz-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1) inset;
@@ -9012,10 +9055,36 @@ svg, vml {
   -ms-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1) inset;
 }
 
+/* line 124, ../scss/taco/widgets/_panel.scss */
+.taco-quantity-edit-menu > .x-panel-body {
+  background-color: #666666 !important;
+  border-width: 0px;
+  padding: 10px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+}
+/* line 133, ../scss/taco/widgets/_panel.scss */
+.taco-quantity-edit-menu .taco-formform .x-form-item,
+.taco-quantity-edit-menu .taco-formform .x-component {
+  color: white;
+}
+/* line 138, ../scss/taco/widgets/_panel.scss */
+.taco-quantity-edit-menu .actions {
+  margin: 20px 10px 0px 0px;
+  text-align: right;
+}
+/* line 142, ../scss/taco/widgets/_panel.scss */
+.taco-quantity-edit-menu .actions .taco-action {
+  color: white;
+}
+
 /* CORE GRID STYLES */
 /* line 6, ../scss/taco/widgets/_grid.scss */
 .x-panel .x-grid-body {
-  border-top-color: #999691;
+  border-top-color: #cccccc;
 }
 /* line 9, ../scss/taco/widgets/_grid.scss */
 .x-panel .x-grid-body ~ .x-docked-bottom {
@@ -9024,13 +9093,13 @@ svg, vml {
 
 /* line 17, ../scss/taco/widgets/_grid.scss */
 .x-grid-with-row-lines .x-grid-cell-inner {
-  line-height: 20px;
+  line-height: 1.9rem;
   padding-bottom: 5px;
 }
 
 /* line 23, ../scss/taco/widgets/_grid.scss */
 .x-grid-cell-selected {
-  background-color: #bdf9ff !important;
+  background-color: #e4efff !important;
 }
 
 /* line 28, ../scss/taco/widgets/_grid.scss */
@@ -9038,59 +9107,74 @@ svg, vml {
   vertical-align: middle;
 }
 /* line 31, ../scss/taco/widgets/_grid.scss */
+.x-grid-row .x-grid-cell {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+/* line 35, ../scss/taco/widgets/_grid.scss */
 .x-grid-row .x-grid-cell-special {
   background-color: white;
   background-image: none;
   border-right: 0px none;
 }
 
-/* line 40, ../scss/taco/widgets/_grid.scss */
-.x-grid-row-alt .x-grid-cell-special {
-  background-color: #fafafa;
+/* line 42, ../scss/taco/widgets/_grid.scss */
+.x-grid-rowwrap-div {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* line 47, ../scss/taco/widgets/_grid.scss */
-.x-grid-row-over .x-grid-cell-special {
-  background-color: #efefef;
-  border-color: #dddddd;
+.x-grid-row-selected .x-grid-rowwrap-div {
+  border-color: #a3b8d6;
 }
 
-/* line 55, ../scss/taco/widgets/_grid.scss */
+/* line 54, ../scss/taco/widgets/_grid.scss */
+.x-grid-row-alt .x-grid-cell-special {
+  background-color: whitesmoke;
+}
+
+/* line 61, ../scss/taco/widgets/_grid.scss */
+.x-grid-row-over .x-grid-cell-special {
+  background-color: #f2f2f2;
+  border-color: #bfbfbf;
+}
+
+/* line 69, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-focused .x-grid-cell-special {
   background-color: #efefef;
   border-color: #dddddd;
 }
 
-/* line 62, ../scss/taco/widgets/_grid.scss */
+/* line 76, ../scss/taco/widgets/_grid.scss */
 .x-grid-rowwrap-div .x-grid-cell-special {
   background-color: transparent;
 }
 
-/* line 68, ../scss/taco/widgets/_grid.scss */
+/* line 82, ../scss/taco/widgets/_grid.scss */
 .x-column-header {
   border: 0px none;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-weight: bold;
-  line-height: 14px;
+  line-height: 1.4rem;
   text-shadow: none;
 }
-/* line 76, ../scss/taco/widgets/_grid.scss */
+/* line 90, ../scss/taco/widgets/_grid.scss */
 .x-column-header.x-column-header-last .x-column-header-trigger {
   display: block !important;
+  background-position: 0 -2884px;
 }
 
-/* line 82, ../scss/taco/widgets/_grid.scss */
+/* line 97, ../scss/taco/widgets/_grid.scss */
 .x-column-header-inner {
   padding-top: 15px !important;
 }
 
-/* line 87, ../scss/taco/widgets/_grid.scss */
+/* line 102, ../scss/taco/widgets/_grid.scss */
 .x-column-header-over .x-column-header-trigger {
   display: none;
 }
 
 /* PLUGINS, MIXINS, COLUMNS, ETC. */
-/* line 95, ../scss/taco/widgets/_grid.scss */
+/* line 110, ../scss/taco/widgets/_grid.scss */
 .x-grid-cell-inner span.overridden {
   background-color: #3778d5;
   display: inline-block;
@@ -9108,19 +9192,18 @@ svg, vml {
   border-radius: 8px;
 }
 
-/* line 112, ../scss/taco/widgets/_grid.scss */
+/* line 127, ../scss/taco/widgets/_grid.scss */
 .x-column-header-checkbox .x-column-header-inner {
   padding-top: 11px !important;
 }
 
-/* line 118, ../scss/taco/widgets/_grid.scss */
+/* line 133, ../scss/taco/widgets/_grid.scss */
 .taco-expandercollapser {
   color: #164588;
-  font-size: 10pt;
-  padding: 6px 0;
+  font-size: 1.4rem;
 }
 
-/* line 125, ../scss/taco/widgets/_grid.scss */
+/* line 139, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-expander {
   background-image: none;
   border-bottom: 5px solid transparent;
@@ -9140,12 +9223,12 @@ svg, vml {
   -o-transition: -o-transform 0.1s;
   transition: transform 0.1s;
 }
-/* line 137, ../scss/taco/widgets/_grid.scss */
+/* line 151, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-expander.empty {
   visibility: hidden;
 }
 
-/* line 143, ../scss/taco/widgets/_grid.scss */
+/* line 157, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-collapsed .x-grid-row-expander {
   background-image: none;
   -webkit-transform: rotate(0deg);
@@ -9154,12 +9237,12 @@ svg, vml {
   -o-transform: rotate(0deg);
   transform: rotate(0deg);
 }
-/* line 147, ../scss/taco/widgets/_grid.scss */
+/* line 161, ../scss/taco/widgets/_grid.scss */
 .x-grid-row-collapsed .x-grid-row-body {
   display: none;
 }
 
-/* line 153, ../scss/taco/widgets/_grid.scss */
+/* line 167, ../scss/taco/widgets/_grid.scss */
 .taco-draghandle {
   cursor: move;
   display: block;
@@ -9170,22 +9253,22 @@ svg, vml {
   background-position: 0 -717px;
 }
 
-/* line 164, ../scss/taco/widgets/_grid.scss */
+/* line 178, ../scss/taco/widgets/_grid.scss */
 .x-grid-cell-draghandlecolumn .x-grid-cell-inner {
   padding: 0px;
 }
 
-/* line 172, ../scss/taco/widgets/_grid.scss */
+/* line 186, ../scss/taco/widgets/_grid.scss */
 .x-border-box .x-grid-editor .x-form-item-body {
   padding: 2px;
 }
-/* line 175, ../scss/taco/widgets/_grid.scss */
+/* line 189, ../scss/taco/widgets/_grid.scss */
 .x-border-box .x-grid-editor .x-form-text {
   height: 30px;
   padding-bottom: 5px;
 }
 
-/* line 184, ../scss/taco/widgets/_grid.scss */
+/* line 198, ../scss/taco/widgets/_grid.scss */
 .taco-menu-col-cell .x-grid-cell-inner {
   padding-bottom: 1px;
   display: -webkit-flex;
@@ -9196,115 +9279,91 @@ svg, vml {
   -webkit-align-content: stretch;
 }
 
-/* line 190, ../scss/taco/widgets/_grid.scss */
+/* line 204, ../scss/taco/widgets/_grid.scss */
 .taco-grid-row-menu-trigger {
   cursor: pointer;
   height: 30px;
+  visibility: hidden;
   width: 50px;
-  background-position: 0 -1775px;
+  background-position: 0 -1839px;
 }
 
-/* line 198, ../scss/taco/widgets/_grid.scss */
+/* line 212, ../scss/taco/widgets/_grid.scss */
+.x-grid-row-over .taco-grid-row-menu-trigger {
+  visibility: visible;
+}
+
+/* line 217, ../scss/taco/widgets/_grid.scss */
+.x-grid-row-focused .taco-grid-row-menu-trigger {
+  visibility: visible !important;
+}
+
+/* line 223, ../scss/taco/widgets/_grid.scss */
 .taco-grid-row-menu .x-menu-body {
-  border: 1px solid;
-  font-size: 0.8125em;
-  border-color: #cccccc;
+  border: 1px solid #cccccc;
+  font-size: 1.3rem;
 }
-/* line 204, ../scss/taco/widgets/_grid.scss */
+/* line 228, ../scss/taco/widgets/_grid.scss */
 .taco-grid-row-menu .x-menu-item {
-  padding: 6px;
+  padding: 0.6rem;
 }
-/* line 208, ../scss/taco/widgets/_grid.scss */
+/* line 232, ../scss/taco/widgets/_grid.scss */
 .taco-grid-row-menu + .taco-grid-row-menu {
   margin-top: -1px;
 }
 
 /* CONTAINERS, TOOLBARS, ETC. */
-/* line 222, ../scss/taco/widgets/_grid.scss */
-.taco-togglegroup .x-form-radio-group .x-form-radio {
-  background-color: #edeae6;
-  background-image: none;
-  border: 1px solid #5e5c5a;
-  height: 24px;
-  opacity: 0.8;
-  width: 26px;
-  top: 0px;
-  border-right: 0;
-  -webkit-box-shadow: 0 1px 0 white inset;
-  -moz-box-shadow: 0 1px 0 white inset;
-  box-shadow: 0 1px 0 white inset;
-}
-/* line 235, ../scss/taco/widgets/_grid.scss */
-.taco-togglegroup .x-form-radio-group .x-form-cb-checked .x-form-radio {
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
-/* line 241, ../scss/taco/widgets/_grid.scss */
-.taco-togglegroup .x-form-radio-group:nth-of-type(1) .x-form-radio {
-  background: url('../images/card-s44a9b55566.png') 0 -48px;
-  -webkit-border-radius: 3px 0px 0px 3px;
-  -moz-border-radius: 3px 0px 0px 3px;
-  -ms-border-radius: 3px 0px 0px 3px;
-  -o-border-radius: 3px 0px 0px 3px;
-  border-radius: 3px 0px 0px 3px;
-}
 /* line 246, ../scss/taco/widgets/_grid.scss */
+.taco-togglegroup .x-form-radio-group .x-form-radio {
+  background-image: none;
+  border: 1px solid #bfbfbf;
+  height: 30px;
+  width: 40px;
+  top: 0px;
+}
+/* line 255, ../scss/taco/widgets/_grid.scss */
+.taco-togglegroup .x-form-radio-group:nth-of-type(1) .x-form-radio {
+  background: url('../images/card-sd7c19700b9.png') 0 0;
+  background-color: #f2f2f2;
+}
+/* line 260, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(1) .x-form-cb-checked .x-form-radio {
-  background: url('../images/card-s44a9b55566.png') 0 -72px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
-  background: url('../images/card-s44a9b55566.png') 0 -72px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/card-s44a9b55566.png') 0 -72px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/card-s44a9b55566.png') 0 -72px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/card-s44a9b55566.png') 0 -72px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background-color: #70d2db;
+  background-color: #bfbfbf;
 }
-/* line 253, ../scss/taco/widgets/_grid.scss */
+/* line 267, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(2) .x-form-radio {
-  background: url('../images/card-s44a9b55566.png') 0 0;
+  background: url('../images/card-sd7c19700b9.png') 0 -30px;
+  background-color: #f2f2f2;
 }
-/* line 257, ../scss/taco/widgets/_grid.scss */
+/* line 272, ../scss/taco/widgets/_grid.scss */
 .taco-togglegroup .x-form-radio-group:nth-of-type(2) .x-form-cb-checked .x-form-radio {
-  background: url('../images/card-s44a9b55566.png') 0 -24px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
-  background: url('../images/card-s44a9b55566.png') 0 -24px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/card-s44a9b55566.png') 0 -24px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/card-s44a9b55566.png') 0 -24px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/card-s44a9b55566.png') 0 -24px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background-color: #70d2db;
-}
-/* line 264, ../scss/taco/widgets/_grid.scss */
-.taco-togglegroup .x-form-radio-group:nth-last-of-type(1) .x-form-radio {
-  border-right: 1px solid #5e5c5a;
-  -webkit-border-radius: 0px 3px 3px 0px;
-  -moz-border-radius: 0px 3px 3px 0px;
-  -ms-border-radius: 0px 3px 3px 0px;
-  -o-border-radius: 0px 3px 3px 0px;
-  border-radius: 0px 3px 3px 0px;
+  background-color: #bfbfbf;
 }
 
-/* line 273, ../scss/taco/widgets/_grid.scss */
+/* line 288, ../scss/taco/widgets/_grid.scss */
 .taco-pager {
-  background: none #edeae6;
-  border: 1px solid #999691;
+  background: none #f2f2f2;
+  border: 1px solid #bfbfbf;
   padding: 7px;
 }
-/* line 278, ../scss/taco/widgets/_grid.scss */
+/* line 293, ../scss/taco/widgets/_grid.scss */
 .taco-pager .taco-action {
-  background-color: #faf8f5;
+  background-color: #e6e6e6;
+  display: inline-block;
   height: 28px;
+  margin: 2px;
   min-width: 28px;
   padding-top: 6px;
-  margin: 2px;
   text-align: center;
-  display: inline-block;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
-  -o-border-radius: 6px;
-  border-radius: 6px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
 }
-/* line 288, ../scss/taco/widgets/_grid.scss */
+/* line 303, ../scss/taco/widgets/_grid.scss */
 .taco-pager .taco-action.active {
-  background-color: #70d2db;
+  background-color: #25ae90;
   color: white;
 }
 
@@ -9337,11 +9396,11 @@ svg, vml {
 .taco-foldertree.x-tree-arrows .x-tree-elbow, .taco-foldertree.x-tree-arrows .x-tree-elbow-end {
   height: 24px;
   width: 34px;
-  background-position: 0 -2828px;
+  background-position: 0 -2963px;
 }
 /* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow.icon-folder-hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end.icon-folder-hover {
-  background-position: 0 -2852px;
+  background-position: 0 -2987px;
 }
 /* line 35, ../scss/taco/widgets/_tree.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end:hover {
@@ -9356,11 +9415,11 @@ svg, vml {
 .taco-foldertree.x-tree-arrows .x-tree-elbow-plus, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus {
   height: 24px;
   width: 34px;
-  background-position: 0 -2828px;
+  background-position: 0 -2963px;
 }
 /* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus.icon-folder-hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus.icon-folder-hover {
-  background-position: 0 -2852px;
+  background-position: 0 -2987px;
 }
 /* line 45, ../scss/taco/widgets/_tree.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus:hover {
@@ -9413,7 +9472,7 @@ svg, vml {
 }
 /* line 6, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-primary-menu-trigger {
-  border-right: 1px solid #999691;
+  border-right: 1px solid #bfbfbf;
   font-size: 0px;
   line-height: 0px;
   overflow: hidden;
@@ -9421,7 +9480,7 @@ svg, vml {
   -webkit-box-shadow: 1px 0px white;
   -moz-box-shadow: 1px 0px white;
   box-shadow: 1px 0px white;
-  background-position: 0 -2621px;
+  background-position: 0 -2716px;
   -webkit-transition: background-color 0.4s;
   -moz-transition: background-color 0.4s;
   -o-transition: background-color 0.4s;
@@ -9430,22 +9489,19 @@ svg, vml {
 /* line 16, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-primary-menu-trigger.expanded {
   background-color: #4c4942;
-  background-position: 0 -2672px;
+  background-position: 0 -2767px;
 }
 /* line 24, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon {
-  border-right: 1px solid #999691;
+  border-right: 1px solid #bfbfbf;
   color: #323232;
   display: inline-block;
-  height: 35px;
-  padding: 10px 15px 0px 50px;
+  height: 51px;
+  padding: 18px 15px 0px 50px;
   position: relative;
   vertical-align: top;
-  -webkit-box-shadow: 1px 0px white;
-  -moz-box-shadow: 1px 0px white;
-  box-shadow: 1px 0px white;
 }
-/* line 34, ../scss/taco/_navmenu.scss */
+/* line 33, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon::before {
   content: "";
   display: block;
@@ -9455,76 +9511,75 @@ svg, vml {
   top: 0px;
   width: 35px;
 }
-/* line 44, ../scss/taco/_navmenu.scss */
+/* line 43, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-dashboard::before {
-  background-position: 0 -1389px;
+  background-position: 0 -1395px;
 }
-/* line 47, ../scss/taco/_navmenu.scss */
+/* line 46, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-store::before {
-  background-position: 0 -1608px;
+  background-position: 0 -1572px;
 }
-/* line 50, ../scss/taco/_navmenu.scss */
+/* line 49, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-catalog::before {
-  background-position: 0 -1979px;
+  background-position: 0 -1984px;
 }
-/* line 53, ../scss/taco/_navmenu.scss */
+/* line 52, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-marketing::before {
-  background-position: 0 -1235px;
+  background-position: 0 -1167px;
 }
-/* line 56, ../scss/taco/_navmenu.scss */
+/* line 55, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-website::before {
-  background-position: 0 -1158px;
+  background-position: 0 -1116px;
 }
-/* line 59, ../scss/taco/_navmenu.scss */
+/* line 58, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb .taco-icon.taco-icon-settings::before {
-  background-position: 0 -1312px;
+  background-position: 0 -1260px;
 }
-/* line 64, ../scss/taco/_navmenu.scss */
+/* line 63, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb ul {
   display: inline-block;
-  height: 35px;
+  height: 51px;
+  margin-left: 10px;
   vertical-align: top;
 }
 /* line 69, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb ul li {
   display: inline-block;
+  padding: 0px 8px;
+  position: relative;
   vertical-align: top;
 }
-/* line 73, ../scss/taco/_navmenu.scss */
+/* line 75, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-breadcrumb ul li a {
   color: #323232;
   display: inline-block;
-  font-size: 14px;
-  height: 35px;
-  padding: 12px 10px 0px;
-  position: relative;
+  font-size: 1.4rem;
+  height: 51px;
+  line-height: 1.5em;
+  padding: 18px 2px 12px;
 }
-/* line 81, ../scss/taco/_navmenu.scss */
-.taco-viewport-nav .taco-breadcrumb ul li a::before {
+/* line 85, ../scss/taco/_navmenu.scss */
+.taco-viewport-nav .taco-breadcrumb ul li.taco-breadcrumb-item-selected a {
+  border-bottom: 2px solid #d2463c;
+  color: #d2463c;
+}
+/* line 91, ../scss/taco/_navmenu.scss */
+.taco-viewport-nav .taco-breadcrumb ul li::after {
+  background-color: gray;
   content: "";
   display: block;
-  height: 35px;
-  left: 0px;
+  height: 14px;
   position: absolute;
-  top: 0px;
+  right: 0px;
+  top: 20px;
   width: 1px;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(25%, #e6e2d9), color-stop(55%, #999691), color-stop(85%, #e6e2d9));
-  background-image: -webkit-linear-gradient(top, #e6e2d9 25%, #999691 55%, #e6e2d9 85%);
-  background-image: -moz-linear-gradient(top, #e6e2d9 25%, #999691 55%, #e6e2d9 85%);
-  background-image: -o-linear-gradient(top, #e6e2d9 25%, #999691 55%, #e6e2d9 85%);
-  background-image: linear-gradient(top, #e6e2d9 25%, #999691 55%, #e6e2d9 85%);
 }
-/* line 95, ../scss/taco/_navmenu.scss */
-.taco-viewport-nav .taco-breadcrumb ul li:nth-of-type(1) a {
-  border-left: 1px solid white;
-  padding-left: 15px;
-}
-/* line 99, ../scss/taco/_navmenu.scss */
-.taco-viewport-nav .taco-breadcrumb ul li:nth-of-type(1) a::before {
+/* line 103, ../scss/taco/_navmenu.scss */
+.taco-viewport-nav .taco-breadcrumb ul li:nth-last-of-type(1)::after {
   content: none;
 }
 
-/* line 109, ../scss/taco/_navmenu.scss */
+/* line 112, ../scss/taco/_navmenu.scss */
 .taco-primary-menu-ct {
   margin-top: 51px;
   opacity: 1;
@@ -9544,7 +9599,7 @@ svg, vml {
   -o-transition: margin 0.15s linear, opacity 0.15s linear, top 0s linear, left 0s linear;
   transition: margin 0.15s linear, opacity 0.15s linear, top 0s linear, left 0s linear;
 }
-/* line 117, ../scss/taco/_navmenu.scss */
+/* line 120, ../scss/taco/_navmenu.scss */
 .taco-primary-menu-ct.x-hide-offsets {
   margin-top: 0px;
   opacity: 0;
@@ -9555,12 +9610,12 @@ svg, vml {
   transition: margin 0.15s linear, opacity 0.15s linear, top 0s linear 0.15s, left 0s linear 0.15s;
 }
 
-/* line 123, ../scss/taco/_navmenu.scss */
+/* line 126, ../scss/taco/_navmenu.scss */
 .taco-primary-menu {
   font-size: 15px;
   line-height: 1.2em;
 }
-/* line 127, ../scss/taco/_navmenu.scss */
+/* line 130, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item {
   cursor: pointer;
   padding: 12px 0px 12px 56px;
@@ -9570,11 +9625,11 @@ svg, vml {
   -moz-box-shadow: inset 0px -1px rgba(255, 255, 255, 0.1);
   box-shadow: inset 0px -1px rgba(255, 255, 255, 0.1);
 }
-/* line 134, ../scss/taco/_navmenu.scss */
+/* line 137, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item a.taco-menu-item-link {
   color: white;
 }
-/* line 137, ../scss/taco/_navmenu.scss */
+/* line 140, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon::before {
   content: "";
   display: block;
@@ -9584,69 +9639,69 @@ svg, vml {
   top: 0px;
   width: 42px;
 }
-/* line 146, ../scss/taco/_navmenu.scss */
-.taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-dashboard::before {
-  background-position: 0 -1424px;
-}
 /* line 149, ../scss/taco/_navmenu.scss */
-.taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-store::before {
-  background-position: 0 -1643px;
+.taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-dashboard::before {
+  background-position: 0 -1488px;
 }
 /* line 152, ../scss/taco/_navmenu.scss */
-.taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-catalog::before {
-  background-position: 0 -2014px;
+.taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-store::before {
+  background-position: 0 -1723px;
 }
 /* line 155, ../scss/taco/_navmenu.scss */
-.taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-marketing::before {
-  background-position: 0 -1116px;
+.taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-catalog::before {
+  background-position: 0 -2077px;
 }
 /* line 158, ../scss/taco/_navmenu.scss */
-.taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-website::before {
-  background-position: 0 -1193px;
+.taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-marketing::before {
+  background-position: 0 -1218px;
 }
 /* line 161, ../scss/taco/_navmenu.scss */
+.taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-website::before {
+  background-position: 0 -1311px;
+}
+/* line 164, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item a.taco-menu-item-link.taco-icon-settings::before {
   background-position: 0 -990px;
 }
-/* line 166, ../scss/taco/_navmenu.scss */
+/* line 169, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
-/* line 169, ../scss/taco/_navmenu.scss */
-.taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-dashboard::before {
-  background-position: 0 -1270px;
-}
 /* line 172, ../scss/taco/_navmenu.scss */
-.taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-store::before {
-  background-position: 0 -1466px;
+.taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-dashboard::before {
+  background-position: 0 -1353px;
 }
 /* line 175, ../scss/taco/_navmenu.scss */
-.taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-catalog::before {
-  background-position: 0 -1895px;
+.taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-store::before {
+  background-position: 0 -1530px;
 }
 /* line 178, ../scss/taco/_navmenu.scss */
+.taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-catalog::before {
+  background-position: 0 -1942px;
+}
+/* line 181, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-marketing::before {
   background-position: 0 -1074px;
 }
-/* line 181, ../scss/taco/_navmenu.scss */
+/* line 184, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-website::before {
   background-position: 0 -1032px;
 }
-/* line 184, ../scss/taco/_navmenu.scss */
+/* line 187, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-hover a.taco-icon-settings::before {
-  background-position: 0 -1347px;
+  background-position: 0 -1446px;
 }
-/* line 190, ../scss/taco/_navmenu.scss */
+/* line 193, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item.taco-menu-item-active a.taco-menu-item-link {
   color: #d2463c;
 }
-/* line 195, ../scss/taco/_navmenu.scss */
+/* line 198, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item ul {
   font-size: 13px;
   line-height: 1.2308em;
   margin-left: -5px;
 }
-/* line 200, ../scss/taco/_navmenu.scss */
+/* line 203, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item ul li {
   display: inline-block;
   margin: 4px 0px 1px;
@@ -9655,129 +9710,170 @@ svg, vml {
   -moz-box-shadow: inset -1px 0px rgba(255, 255, 255, 0.4);
   box-shadow: inset -1px 0px rgba(255, 255, 255, 0.4);
 }
-/* line 206, ../scss/taco/_navmenu.scss */
+/* line 209, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item ul li a {
   color: white;
 }
-/* line 210, ../scss/taco/_navmenu.scss */
+/* line 213, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item ul li:nth-last-of-type(1) {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 215, ../scss/taco/_navmenu.scss */
+/* line 218, ../scss/taco/_navmenu.scss */
 .taco-primary-menu li.taco-menu-item ul li.taco-submenu-item-active a {
   color: #d2463c;
 }
 
+/* GENERIC */
 /* line 5, ../scss/taco/_content.scss */
+a {
+  text-decoration: none;
+  color: #164588;
+}
+/* line 9, ../scss/taco/_content.scss */
+a:hover {
+  text-decoration: underline;
+}
+
+/* line 14, ../scss/taco/_content.scss */
+em {
+  font-style: italic;
+}
+
+/* CONTENT CONTAINER */
+/* line 21, ../scss/taco/_content.scss */
+.taco-content-browserpage,
+.taco-content-inline-editor {
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -webkit-justify-content: flex-start;
+  -webkit-align-items: stretch;
+  -webkit-align-content: stretch;
+}
+
+/* line 25, ../scss/taco/_content.scss */
+.taco-content-container {
+  min-width: 0px;
+  width: 100%;
+  -webkit-flex: 1 1 auto;
+}
+/* line 30, ../scss/taco/_content.scss */
 .taco-content-container .taco-content-header {
-  padding: 14px 28px 7px;
-  z-index: 2;
+  border-bottom: 1px solid #cccccc;
+  margin: 0px;
+  min-height: 65px;
+  padding: 17px 30px;
+  position: relative;
+  width: 100%;
+  z-index: 200;
   -webkit-box-shadow: rgba(0, 0, 0, 0) 0 -5px 10px 0px;
   -moz-box-shadow: rgba(0, 0, 0, 0) 0 -5px 10px 0px;
   box-shadow: rgba(0, 0, 0, 0) 0 -5px 10px 0px;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -webkit-justify-content: space-between;
+  -webkit-align-items: stretch;
+  -webkit-align-content: stretch;
   -webkit-transition: box-shadow 1s ease;
   -moz-transition: box-shadow 1s ease;
   -o-transition: box-shadow 1s ease;
   transition: box-shadow 1s ease;
 }
-/* line 12, ../scss/taco/_content.scss */
+/* line 43, ../scss/taco/_content.scss */
 .taco-content-container .taco-content-header h1 {
-  color: #5e5c5a;
-  font: bold 30px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  float: left;
-  display: inline;
+  font-size: 2.4rem;
+  font-weight: normal;
+  line-height: 3rem;
 }
-/* line 19, ../scss/taco/_content.scss */
+/* line 49, ../scss/taco/_content.scss */
 .taco-content-container .taco-content-header p {
-  color: #5e5c5a;
   font: italic 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  padding-top: 7px;
 }
-/* line 25, ../scss/taco/_content.scss */
+/* line 54, ../scss/taco/_content.scss */
 .taco-content-container .taco-content-header .taco-action {
   float: none;
   margin-left: 1em;
 }
-/* line 31, ../scss/taco/_content.scss */
+/* line 60, ../scss/taco/_content.scss */
 .taco-content-container.taco-content-scrolled .taco-content-header {
   -webkit-box-shadow: black 0 -5px 10px 0px;
   -moz-box-shadow: black 0 -5px 10px 0px;
   box-shadow: black 0 -5px 10px 0px;
 }
-/* line 35, ../scss/taco/_content.scss */
+/* line 64, ../scss/taco/_content.scss */
 .taco-content-container .taco-content-body {
-  padding: 7px 28px;
+  margin: 0px 30px;
+  padding: 20px 0px 10px;
 }
-/* line 38, ../scss/taco/_content.scss */
+/* line 68, ../scss/taco/_content.scss */
 .taco-content-container .taco-content-body .x-table-layout-cell {
   vertical-align: top;
 }
 
-/* line 44, ../scss/taco/_content.scss */
+/* line 75, ../scss/taco/_content.scss */
+.taco-shell-scrolled .taco-content-header {
+  background-color: #e6e6e6;
+  border-right: 5px solid rgba(255, 255, 255, 0);
+  left: 0px;
+  position: fixed;
+  top: 0px;
+}
+/* line 83, ../scss/taco/_content.scss */
+.taco-shell-scrolled .taco-content-body {
+  margin-top: 65px !important;
+}
+
+/* line 95, ../scss/taco/_content.scss */
 .taco-content-sidebar {
   background-color: white;
+  border-color: #cccccc;
   border-style: solid none none solid;
   border-width: 1px 0px 0px 1px;
-  border-color: #cccccc;
+  z-index: 3;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -webkit-justify-content: flex-start;
+  -webkit-align-items: stretch;
+  -webkit-align-content: stretch;
 }
-/* line 50, ../scss/taco/_content.scss */
+/* line 103, ../scss/taco/_content.scss */
 .taco-content-sidebar .taco-sidebarlist {
   margin: 0 30px;
 }
-/* line 52, ../scss/taco/_content.scss */
+/* line 106, ../scss/taco/_content.scss */
 .taco-content-sidebar .taco-sidebarlist h1 {
   padding: 0 0 15px;
   margin: 0 0 15px;
-  font-size: 16pt;
+  font-size: 2rem;
   font-weight: normal;
   border-bottom: 1px dashed #999999;
 }
-/* line 59, ../scss/taco/_content.scss */
+/* line 113, ../scss/taco/_content.scss */
 .taco-content-sidebar .taco-sidebarlist .taco-sidebarlist-list-item {
-  margin: 6px 0;
-  font-size: 9pt;
+  font-size: 1.2rem;
+  margin: 6px 0px;
 }
-/* line 62, ../scss/taco/_content.scss */
+/* line 117, ../scss/taco/_content.scss */
 .taco-content-sidebar .taco-sidebarlist .taco-sidebarlist-list-item.x-item-selected {
   font-weight: bold;
 }
 
-/* why */
-/* line 71, ../scss/taco/_content.scss */
-em {
-  font-style: italic;
+/* SITE EDITOR */
+/* line 127, ../scss/taco/_content.scss */
+.taco-content-inline-editor .taco-content-body {
+  margin: 0px;
+  padding: 0px;
+}
+/* line 133, ../scss/taco/_content.scss */
+.taco-content-inline-editor .taco-site-editor > .x-panel-body {
+  overflow-y: hidden !important;
 }
 
-/* Let's get this party started */
-/* line 77, ../scss/taco/_content.scss */
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-/* Track */
-/* line 82, ../scss/taco/_content.scss */
-::-webkit-scrollbar-track {
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
-}
-
-/* Handle */
-/* line 89, ../scss/taco/_content.scss */
-::-webkit-scrollbar-thumb {
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  background: rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-}
-
-/* line 95, ../scss/taco/_content.scss */
-::-webkit-scrollbar-thumb:window-inactive {
-  background: rgba(255, 0, 0, 0);
-}
-
-/* line 99, ../scss/taco/_content.scss */
+/* line 139, ../scss/taco/_content.scss */
 .widget-source {
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
   color: #505050;
@@ -9798,7 +9894,7 @@ em {
   border-radius: 5px;
 }
 
-/* line 110, ../scss/taco/_content.scss */
+/* line 150, ../scss/taco/_content.scss */
 .dropzone-shim {
   -webkit-transition: all 1s;
   -moz-transition: all 1s;
@@ -9806,12 +9902,12 @@ em {
   transition: all 1s;
 }
 
-/* line 113, ../scss/taco/_content.scss */
+/* line 153, ../scss/taco/_content.scss */
 .dropzone-shim-hover {
   background-color: #CFC;
 }
 
-/* line 116, ../scss/taco/_content.scss */
+/* line 156, ../scss/taco/_content.scss */
 .taco-reorderable-widget {
   background-color: #FFF;
   border: 1px solid #cccccc;
@@ -9823,7 +9919,7 @@ em {
   border-radius: 2px;
 }
 
-/* line 123, ../scss/taco/_content.scss */
+/* line 163, ../scss/taco/_content.scss */
 .taco-reorderable-placeholder {
   background-color: #FFF;
   border: 1px solid #cccccc;
@@ -9839,7 +9935,7 @@ em {
 .taco-modal {
   font-size: 1em;
   position: absolute;
-  z-index: 102;
+  z-index: 300;
   top: 50%;
   left: 50%;
   margin-left: -5000px;
@@ -10055,73 +10151,65 @@ em {
   -webkit-flex-wrap: none;
 }
 
-/* line 226, ../scss/taco/widgets/_modal.scss */
-.taco-card-flex {
-  display: block !important;
-  min-width: 0px;
-  overflow: hidden;
-  -webkit-flex: 0 1 0%;
-  -webkit-transition: all 0.3s ease-out;
-  -moz-transition: all 0.3s ease-out;
-  -o-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out;
-}
-/* line 234, ../scss/taco/widgets/_modal.scss */
-.taco-card-flex .x-grid-row .x-grid-cell {
-  background-color: white;
-}
-/* line 239, ../scss/taco/widgets/_modal.scss */
-.taco-card-flex:nth-of-type(1) {
-  margin-left: -100% !important;
-  -webkit-flex: 1 0 100% !important;
-}
-/* line 244, ../scss/taco/widgets/_modal.scss */
-.taco-card-flex.taco-card-flex-active {
-  margin-left: 0px !important;
-  -webkit-flex: 1 0 100%;
-}
-/* line 248, ../scss/taco/widgets/_modal.scss */
-.taco-card-flex.taco-card-flex-active .taco-treelist {
-  padding: 2px;
-}
-/* line 252, ../scss/taco/widgets/_modal.scss */
-.taco-card-flex.taco-card-flex-active .taco-treelist > .x-grid-header-ct,
-.taco-card-flex.taco-card-flex-active .taco-treelist > .x-grid-body {
-  border: 0px none !important;
-}
-/* line 257, ../scss/taco/widgets/_modal.scss */
-.taco-card-flex.taco-card-flex-active > .x-docked-top {
-  background-color: white;
-  padding: 10px 14px;
-}
-/* line 263, ../scss/taco/widgets/_modal.scss */
-.taco-card-flex.taco-card-flex-active:nth-of-type(1) > .x-docked-top {
-  border: 0px none !important;
-  padding: 0px;
-}
-/* line 267, ../scss/taco/widgets/_modal.scss */
-.taco-card-flex.taco-card-flex-active:nth-of-type(1) > .x-grid-body {
-  border: 0px none !important;
-}
+  /* 
+  .taco-card-flex {
+    display: block !important;
+    min-width: 0px;
+    overflow: hidden;
+    -webkit-flex: 0 1 0%;
+    @include transition(all 0.3s ease-out);
 
-/* line 276, ../scss/taco/widgets/_modal.scss */
-.taco-toolbox,
-.x-window-ghost {
+    .x-grid-row {
+      .x-grid-cell {
+        background-color: $color-neutral-white;
+      }
+    }
+
+    &:nth-of-type(1) {
+      margin-left: -100% !important;
+      -webkit-flex: 1 0 100% !important;
+    }
+
+    &.taco-card-flex-active {
+      margin-left: 0px !important;
+      -webkit-flex: 1 0 100%;
+
+      .taco-treelist {
+        padding: 2px;
+
+        > .x-grid-header-ct,
+        > .x-grid-body {
+          border: 0px none !important;
+        }
+      }
+
+      > .x-docked-top {
+        background-color: $color-neutral-white; //lime
+        padding: 10px 14px;
+      }
+
+      &:nth-of-type(1) {
+        > .x-docked-top {
+          border: 0px none !important;
+          padding: 0px;
+        }
+        > .x-grid-body {
+          border: 0px none !important;
+        }
+
+      }
+    }
+  }*/
+/* line 277, ../scss/taco/widgets/_modal.scss */
+.taco-toolbox {
   background-color: white;
   border: 0px none;
+  min-width: 299px;
   padding: 0px;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
-  -o-border-radius: 6px;
-  border-radius: 6px;
-  -webkit-box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
-  box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.4);
+  width: 299px;
 }
-/* line 283, ../scss/taco/widgets/_modal.scss */
-.taco-toolbox .x-window-header,
-.x-window-ghost .x-window-header {
+/* line 286, ../scss/taco/widgets/_modal.scss */
+.taco-toolbox .x-window-header {
   background-color: white;
   border: 0px none;
   padding: 14px;
@@ -10131,17 +10219,15 @@ em {
   -o-border-radius: 6px 6px 0px 0px;
   border-radius: 6px 6px 0px 0px;
 }
-/* line 289, ../scss/taco/widgets/_modal.scss */
-.taco-toolbox .x-window-header .x-window-header-text,
-.x-window-ghost .x-window-header .x-window-header-text {
+/* line 292, ../scss/taco/widgets/_modal.scss */
+.taco-toolbox .x-window-header .x-window-header-text {
   color: #323232;
   font-size: 1.25em;
   font-weight: normal;
   line-height: normal;
 }
-/* line 297, ../scss/taco/widgets/_modal.scss */
-.taco-toolbox .x-window-body,
-.x-window-ghost .x-window-body {
+/* line 300, ../scss/taco/widgets/_modal.scss */
+.taco-toolbox .x-window-body {
   background-color: white;
   border-color: #999691;
   border-style: dashed none none;
@@ -10185,107 +10271,103 @@ em {
 
 /* line 27, ../scss/taco/widgets/_actions.scss */
 button.taco-action {
-  font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  min-width: 6.5em;
-  padding: 0.5em 0.7em;
-  border: 1px solid #9a9a9a;
-  white-space: nowrap;
-  vertical-align: middle;
-  color: #5e5c5a;
   background-color: #edeae6;
-  cursor: pointer;
+  border: 1px solid #9a9a9a;
+  color: #5e5c5a;
+  font-size: 1.4rem;
+  line-height: 1.4rem;
+  margin: 0px;
+  min-width: 86px;
+  padding: 8px 20px 6px;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
   -o-border-radius: 3px;
   border-radius: 3px;
-  text-shadow: 0 1px 1px white;
-  -webkit-box-shadow: 0 1px 0 white inset;
-  -moz-box-shadow: 0 1px 0 white inset;
-  box-shadow: 0 1px 0 white inset;
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.25);
+  cursor: default;
   user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
-  cursor: default;
   transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
   -webkit-transition: -webkit-box-shadow 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
   -moz-transition: -moz-box-shadow 0.3s ease-in-out, -moz-transform 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
   -o-transition: -o-box-shadow 0.3s ease-in-out, -o-transform 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
   cursor: pointer;
 }
-/* line 47, ../scss/taco/widgets/_actions.scss */
+/* line 50, ../scss/taco/widgets/_actions.scss */
 button.taco-action:hover:not(:disabled) {
   background-color: #f1efec;
 }
-/* line 51, ../scss/taco/widgets/_actions.scss */
+/* line 54, ../scss/taco/widgets/_actions.scss */
 button.taco-action:active:not(:disabled) {
   background-color: #e7e3dd;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
 }
-/* line 56, ../scss/taco/widgets/_actions.scss */
+/* line 59, ../scss/taco/widgets/_actions.scss */
 button.taco-action:disabled {
   opacity: 0.4;
   cursor: default;
 }
-/* line 61, ../scss/taco/widgets/_actions.scss */
+/* line 64, ../scss/taco/widgets/_actions.scss */
 button.taco-action.taco-action-primary:not(:disabled) {
   background-color: #d2463c;
-  color: white;
   border-color: #b23229;
-  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  color: white;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.25);
 }
-/* line 68, ../scss/taco/widgets/_actions.scss */
+/* line 72, ../scss/taco/widgets/_actions.scss */
 button.taco-action.taco-action-primary:not(:disabled):hover {
   background-color: #d2463c;
 }
-/* line 72, ../scss/taco/widgets/_actions.scss */
+/* line 76, ../scss/taco/widgets/_actions.scss */
 button.taco-action.taco-action-primary:not(:disabled):active {
   background-color: #9e352e;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
 }
-/* line 78, ../scss/taco/widgets/_actions.scss */
+/* line 82, ../scss/taco/widgets/_actions.scss */
 button.taco-action.loading {
   -webkit-animation-name: dirtyPulse;
   -webkit-animation-duration: 2s;
   -webkit-animation-iteration-count: infinite;
 }
 
-/* line 85, ../scss/taco/widgets/_actions.scss */
+/* line 89, ../scss/taco/widgets/_actions.scss */
 .x-form-file-input {
   top: 0px !important;
 }
 
-/* line 89, ../scss/taco/widgets/_actions.scss */
+/* line 93, ../scss/taco/widgets/_actions.scss */
 .x-form-file-btn {
   background-color: transparent;
   border: 0 none;
   padding: 0;
 }
-/* line 95, ../scss/taco/widgets/_actions.scss */
+/* line 99, ../scss/taco/widgets/_actions.scss */
 .x-form-file-btn:hover .x-btn-center {
   background-color: #d2463c;
 }
-/* line 98, ../scss/taco/widgets/_actions.scss */
+/* line 102, ../scss/taco/widgets/_actions.scss */
 .x-form-file-btn:hover .x-btn-center:active {
   background-color: #9e352e;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
 }
-/* line 105, ../scss/taco/widgets/_actions.scss */
+/* line 109, ../scss/taco/widgets/_actions.scss */
 .x-form-file-btn em {
   min-height: 30px;
 }
-/* line 109, ../scss/taco/widgets/_actions.scss */
+/* line 113, ../scss/taco/widgets/_actions.scss */
 .x-form-file-btn .x-btn-center {
   font-size: 0.8em;
   min-width: 7em;
@@ -10311,27 +10393,91 @@ button.taco-action.loading {
   -moz-transition: all 0.3s ease-in-out, left 0s ease, top 0s ease;
   -o-transition: all 0.3s ease-in-out, left 0s ease, top 0s ease;
   transition: all 0.3s ease-in-out, left 0s ease, top 0s ease;
+  cursor: default;
   user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
-  cursor: default;
   cursor: pointer;
 }
-/* line 128, ../scss/taco/widgets/_actions.scss */
+/* line 132, ../scss/taco/widgets/_actions.scss */
 .x-form-file-btn .x-btn-center .x-btn-inner {
   color: white;
   font-family: 'Lucida Grande';
   font-size: 1em;
 }
 
-/* line 4, ../scss/taco/widgets/_boundlist.scss */
+/* IN-FLOW LISTS */
+/* line 5, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist {
+  font-size: 1.6rem;
+  font-weight: normal;
+  line-height: 1.8rem;
+}
+/* line 10, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist .x-boundlist-item {
+  background-color: #f2f2f2;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+}
+/* line 14, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist .x-boundlist-item.x-boundlist-item-over {
+  background-color: #e6e6e6;
+}
+/* line 17, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist .x-boundlist-item ~ .x-boundlist-item {
+  border-top-style: none;
+  padding-top: 6px;
+}
+
+/* FLOATING LISTS */
+/* line 26, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist-floating {
+  background-color: white;
+  border: 1px solid #cccccc;
+  font-size: 1.4rem;
+  line-height: 1.6rem;
+}
+/* line 32, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist-floating ul {
+  padding: 7px 0px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+}
+/* line 37, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist-floating .x-boundlist-item {
+  background-color: transparent;
+  border-style: none;
+  padding: 5px 14px 3px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px;
+}
+/* line 43, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist-floating .x-boundlist-item.x-boundlist-item-over {
+  background-color: #e4efff;
+}
+/* line 46, ../scss/taco/widgets/_boundlist.scss */
+.x-boundlist-floating .x-boundlist-item ~ .x-boundlist-item {
+  padding-top: 5px;
+}
+
+/* SPECIAL LISTS */
+/* line 55, ../scss/taco/widgets/_boundlist.scss */
 .x-boundlist-with-hidden-selections .x-boundlist-selected {
   display: none;
 }
 
-/* line 9, ../scss/taco/widgets/_boundlist.scss */
+/* line 60, ../scss/taco/widgets/_boundlist.scss */
 .x-boundlist-item-drag {
   cursor: move;
   display: block;
@@ -10345,7 +10491,7 @@ button.taco-action.loading {
   top: 0px;
   width: 16px;
 }
-/* line 22, ../scss/taco/widgets/_boundlist.scss */
+/* line 73, ../scss/taco/widgets/_boundlist.scss */
 .x-boundlist-item-drag::after {
   border-left: 4px double #999691;
   content: "";
@@ -10357,7 +10503,7 @@ button.taco-action.loading {
   width: 4px;
 }
 
-/* line 34, ../scss/taco/widgets/_boundlist.scss */
+/* line 85, ../scss/taco/widgets/_boundlist.scss */
 .x-boundlist-item-close {
   cursor: pointer;
   display: block;
@@ -10371,19 +10517,19 @@ button.taco-action.loading {
   top: 7px;
   width: 20px;
 }
-/* line 47, ../scss/taco/widgets/_boundlist.scss */
+/* line 98, ../scss/taco/widgets/_boundlist.scss */
 .x-boundlist-item-close::after {
-  background-color: #999691;
-  color: white;
+  color: #323232;
   content: "×";
   font-size: 14px;
+  font-weight: bold;
   height: 16px;
   left: 0px;
   line-height: 1em;
   position: absolute;
   text-align: center;
   text-indent: 0px;
-  top: 2px;
+  top: 0px;
   width: 16px;
   -webkit-border-radius: 14px;
   -moz-border-radius: 14px;
@@ -10397,9 +10543,182 @@ button.taco-action.loading {
   -webkit-align-items: center;
   -webkit-align-content: center;
 }
-/* line 65, ../scss/taco/widgets/_boundlist.scss */
-.x-boundlist-item-close:hover::after {
-  background-color: silver;
+
+/* line 5, ../scss/taco/widgets/_boxselect.scss */
+.x-boxselect input {
+  background: none transparent;
+  border: 0px none;
+  font-size: 1.6rem;
+  line-height: 1.6rem;
+  height: 24px;
+  width: 100%;
+}
+/* line 14, ../scss/taco/widgets/_boxselect.scss */
+.x-boxselect.x-form-text {
+  cursor: text;
+  height: auto !important;
+  overflow-y: auto;
+  padding: 0px !important;
+}
+
+/* line 23, ../scss/taco/widgets/_boxselect.scss */
+ul.x-boxselect-list {
+  font-size: 1.6rem;
+  line-height: 1.6rem;
+  padding: 1px 6px;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-flex-wrap: wrap;
+  -webkit-justify-content: flex-start;
+  -webkit-align-items: stretch;
+  -webkit-align-content: stretch;
+}
+/* line 29, ../scss/taco/widgets/_boxselect.scss */
+ul.x-boxselect-list.x-boxselect-singleselect {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* line 35, ../scss/taco/widgets/_boxselect.scss */
+.x-boxselect-input {
+  min-width: 100px;
+  position: relative;
+  vertical-align: top;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -webkit-justify-content: flex-start;
+  -webkit-align-items: stretch;
+  -webkit-align-content: stretch;
+  -webkit-flex: 1 1 100px;
+}
+
+/* line 44, ../scss/taco/widgets/_boxselect.scss */
+.x-boxselect-item {
+  cursor: default;
+  height: 20px;
+  margin: 2px 8px 2px 0px;
+  padding: 0px 1px 0px 5px !important;
+  position: relative;
+  vertical-align: top;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -webkit-justify-content: flex-start;
+  -webkit-align-items: stretch;
+  -webkit-align-content: stretch;
+}
+
+/* line 56, ../scss/taco/widgets/_boxselect.scss */
+.x-boxselect-stacked .x-boxselect-item {
+  display: block;
+}
+
+/* line 65, ../scss/taco/widgets/_boxselect.scss */
+.x-field:not(.x-item-disabled) .x-boxselect-item.selected .x-boxselect-item-text {
+  background-color: #e4efff;
+}
+
+/* line 73, ../scss/taco/widgets/_boxselect.scss */
+.x-boxselect-item-menu-trigger {
+  background-color: #727272;
+  color: white;
+  display: inline-block;
+  font-size: 1.4rem;
+  line-height: 1.4rem;
+  margin-right: 2px;
+  padding: 4px 20px 2px 4px;
+  text-transform: uppercase;
+  vertical-align: top;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+}
+
+/* line 86, ../scss/taco/widgets/_boxselect.scss */
+.x-boxselect-item-text {
+  background-color: #e6e6e6;
+  display: inline-block;
+  font-size: 1.4rem;
+  line-height: 1.4rem;
+  padding: 4px 20px 2px 4px;
+  vertical-align: top;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+}
+
+/* line 96, ../scss/taco/widgets/_boxselect.scss */
+.x-boxselect-item-close {
+  cursor: pointer;
+  right: 3px !important;
+  top: 5px !important;
+}
+
+/* line 103, ../scss/taco/widgets/_boxselect.scss */
+.x-boxselect-hideselections .x-boundlist-selected {
+  display: none;
+}
+
+/* MENUS */
+/* line 111, ../scss/taco/widgets/_boxselect.scss */
+.x-boxselect-item-menu .x-menu-item {
+  font-size: 1.3rem;
+  padding: 4px 8px;
+  text-transform: uppercase;
+}
+/* line 116, ../scss/taco/widgets/_boxselect.scss */
+.x-boxselect-item-menu .x-menu-item:hover {
+  background-color: #727272;
+  color: white;
+}
+
+/* line 123, ../scss/taco/widgets/_boxselect.scss */
+.taco-combofilter-form-menu {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.5);
+  -o-box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.5);
+  -ms-box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.5);
+}
+/* line 127, ../scss/taco/widgets/_boxselect.scss */
+.taco-combofilter-form-menu .x-menu-body {
+  border: 0px none;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+}
+/* line 131, ../scss/taco/widgets/_boxselect.scss */
+.taco-combofilter-form-menu .x-field {
+  margin-left: 20px;
+}
+/* line 135, ../scss/taco/widgets/_boxselect.scss */
+.taco-combofilter-form-menu .taco-combofilter-form-title {
+  border-bottom: 1px dashed #cccccc;
+  font-size: 2rem;
+  font-weight: normal;
+  padding: 20px;
+}
+/* line 142, ../scss/taco/widgets/_boxselect.scss */
+.taco-combofilter-form-menu .taco-combofilter-form-actions {
+  padding: 20px;
+  text-align: right;
 }
 
 /* line 3, ../scss/taco/_messages.scss */
@@ -10617,2331 +10936,130 @@ button.taco-action.loading {
   width: 60px;
 }
 
-/* line 4, ../scss/taco/widgets/_form.scss */
-input::-webkit-input-placeholder {
-  font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: silver;
-  line-height: 21px;
-  font-style: normal !important;
-  font-weight: normal !important;
+/* FIELDS */
+/* line 9, ../scss/taco/widgets/_form.scss */
+.x-form-text,
+textarea.x-form-field {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-transition: border-color 1s;
+  -moz-transition: border-color 1s;
+  -o-transition: border-color 1s;
+  transition: border-color 1s;
 }
-
-/* line 12, ../scss/taco/widgets/_form.scss */
-input:-moz-placeholder {
-  font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: silver;
-  line-height: 21px;
-  font-style: normal !important;
-  font-weight: normal !important;
+/* line 13, ../scss/taco/widgets/_form.scss */
+.x-form-text:not(.x-form-focus):hover,
+textarea.x-form-field:not(.x-form-focus):hover {
+  border-color: #b3b3b3;
 }
 
 /* line 20, ../scss/taco/widgets/_form.scss */
-a {
-  text-decoration: none;
-  color: #164588;
-}
-/* line 24, ../scss/taco/widgets/_form.scss */
-a:hover {
-  text-decoration: underline;
+.x-form-trigger-input-cell .x-form-text {
+  padding-right: 30px;
 }
 
-/* line 29, ../scss/taco/widgets/_form.scss */
-.taco-formeditor-links {
-  background-color: #f2f0ed;
-}
-/* line 32, ../scss/taco/widgets/_form.scss */
-.taco-formeditor-links ul {
-  position: fixed;
-  width: 180px;
-  -webkit-box-shadow: 0px 3px 5px -3px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0px 3px 5px -3px rgba(0, 0, 0, 0.5);
-  box-shadow: 0px 3px 5px -3px rgba(0, 0, 0, 0.5);
-}
-/* line 37, ../scss/taco/widgets/_form.scss */
-.taco-formeditor-links ul li {
-  border-top: 1px solid #dddddd;
-  font-size: 15px;
-  padding: 7px 14px;
-  -webkit-box-shadow: inset 0px 1px white;
-  -moz-box-shadow: inset 0px 1px white;
-  box-shadow: inset 0px 1px white;
+/* line 25, ../scss/taco/widgets/_form.scss */
+.x-pickerfield-open .x-form-text {
+  background-color: #bfbfbf;
+  border-color: #bfbfbf;
 }
 
-/* line 48, ../scss/taco/widgets/_form.scss */
-.taco-tabs .taco-tab-actions {
-  padding: 1em;
-}
-/* line 52, ../scss/taco/widgets/_form.scss */
-.taco-tabs .taco-tab-actions .taco-action {
-  color: #7c7b7a;
-  background: #edeae6;
-  font: bold 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  line-height: 21px;
-  padding: 6px 30px;
-  text-decoration: none;
-  border: 1px solid #9a9a9a;
-  text-shadow: 0 1px 0 white;
-  -webkit-box-shadow: 0 1px 0 white inset;
-  -moz-box-shadow: 0 1px 0 white inset;
-  box-shadow: 0 1px 0 white inset;
-}
-/* line 63, ../scss/taco/widgets/_form.scss */
-.taco-tabs .taco-tab-actions .taco-action:first-child {
-  border-right: 0;
-  -webkit-border-radius: 5px 0 0 5px;
-  -moz-border-radius: 5px 0 0 5px;
-  -ms-border-radius: 5px 0 0 5px;
-  -o-border-radius: 5px 0 0 5px;
-  border-radius: 5px 0 0 5px;
-}
-/* line 68, ../scss/taco/widgets/_form.scss */
-.taco-tabs .taco-tab-actions .taco-action:nth-last-child(2) {
-  -webkit-border-radius: 0 5px 5px 0;
-  -moz-border-radius: 0 5px 5px 0;
-  -ms-border-radius: 0 5px 5px 0;
-  -o-border-radius: 0 5px 5px 0;
-  border-radius: 0 5px 5px 0;
-}
-/* line 72, ../scss/taco/widgets/_form.scss */
-.taco-tabs .taco-tab-actions .taco-action.taco-tab-active {
-  background: #70d2db;
-  color: white;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3) inset;
-  -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3) inset;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3) inset;
-}
-/* line 78, ../scss/taco/widgets/_form.scss */
-.taco-tabs .taco-tab-actions .taco-action span {
-  top: 3px;
+/* line 31, ../scss/taco/widgets/_form.scss */
+.x-trigger-cell {
+  margin-left: -27px;
   position: absolute;
-  color: #9a9a9a;
-  font: normal 12px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  background-color: white;
-  text-align: center;
-  width: 21px;
-  height: 21px;
-  line-height: 21px;
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
-  -ms-border-radius: 25px;
-  -o-border-radius: 25px;
-  border-radius: 25px;
-  -webkit-transition: all 0.3s ease-out;
-  -moz-transition: all 0.3s ease-out;
-  -o-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out;
-}
-/* line 94, ../scss/taco/widgets/_form.scss */
-.taco-tabs .taco-tab-actions .taco-action:hover span {
-  -webkit-transform: scale(1.2);
-  -moz-transform: scale(1.2);
-  -ms-transform: scale(1.2);
-  -o-transform: scale(1.2);
-  transform: scale(1.2);
-}
-/* line 99, ../scss/taco/widgets/_form.scss */
-.taco-tabs .taco-tab-actions .taco-tab-arrow {
-  width: 0;
-  height: 0;
-  margin: 0.8em 0 0 0.8em;
-  border-left: 0.8em solid transparent;
-  border-right: 0.8em solid transparent;
-  border-top: 0.8em solid #7c7b7a;
-  position: absolute;
-  opacity: 0;
-}
-/* line 109, ../scss/taco/widgets/_form.scss */
-.taco-tabs .taco-tab-actions .taco-tab-arrow.taco-tab-active {
-  opacity: 1;
-}
-/* line 115, ../scss/taco/widgets/_form.scss */
-.taco-tabs .taco-tab-panels {
-  padding: 0 1em 1em;
 }
 
-/* line 120, ../scss/taco/widgets/_form.scss */
-.taco-associated-editor {
-  margin: 1em;
-  padding: 1em;
-  width: 300px;
-  background: #d7d5d2;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
-}
-/* line 127, ../scss/taco/widgets/_form.scss */
-.taco-associated-editor h2 {
-  text-transform: capitalize;
-  margin-bottom: 1em;
-}
-/* line 131, ../scss/taco/widgets/_form.scss */
-.taco-associated-editor a {
-  color: #444;
-}
-/* line 133, ../scss/taco/widgets/_form.scss */
-.taco-associated-editor a:hover {
-  color: #000;
-}
-
-/* line 147, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-90px .taco-thumbnail-item .featured-container {
-  padding: 5px;
-}
-/* line 151, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-90px .taco-thumbnail-item .container {
-  height: 90px;
-  width: 90px;
-}
-/* line 155, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-90px .taco-thumbnail-item .container img {
-  max-height: 90px;
-  max-width: 90px;
-}
-/* line 161, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-90px .taco-thumbnail-item .name {
-  width: 86px;
-  font-size: 0px;
-  line-height: 0px;
-}
-/* line 170, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-90px .taco-thumbnail-item .actions {
-  right: 2px;
-  top: 2px;
-}
-/* line 174, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-90px .taco-thumbnail-item .actions .action {
-  display: block !important;
-}
-/* line 181, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-90px .taco-thumbnail-item .taco-arrow {
-  border-bottom: 10px solid transparent;
-  border-top: 10px solid transparent;
-  bottom: 10px;
-  cursor: pointer;
-  height: 0px;
-  margin: -4px 10px 0 10px;
-  position: absolute;
-  width: 0px;
-}
-/* line 191, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-90px .taco-thumbnail-item .taco-arrow.taco-next {
-  border-left: 10px solid #9a9a9a;
-  border-right: 0;
-  right: 0px;
-}
-/* line 197, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-90px .taco-thumbnail-item .taco-arrow.taco-previous {
-  border-left: 0;
-  border-right: 10px solid #9a9a9a;
-  left: 0px;
-}
-/* line 147, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-160px .taco-thumbnail-item .featured-container {
-  padding: 8px;
-}
-/* line 151, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-160px .taco-thumbnail-item .container {
-  height: 160px;
-  width: 160px;
-}
-/* line 155, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-160px .taco-thumbnail-item .container img {
-  max-height: 160px;
-  max-width: 160px;
-}
-/* line 161, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-160px .taco-thumbnail-item .name {
-  width: 156px;
-}
-/* line 170, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-160px .taco-thumbnail-item .actions {
-  right: 3px;
-  top: 3px;
-}
-/* line 181, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-160px .taco-thumbnail-item .taco-arrow {
-  border-bottom: 10px solid transparent;
-  border-top: 10px solid transparent;
-  bottom: 10px;
-  cursor: pointer;
-  height: 0px;
-  margin: -4px 10px 0 10px;
-  position: absolute;
-  width: 0px;
-}
-/* line 191, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-160px .taco-thumbnail-item .taco-arrow.taco-next {
-  border-left: 10px solid #9a9a9a;
-  border-right: 0;
-  right: 0px;
-}
-/* line 197, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-160px .taco-thumbnail-item .taco-arrow.taco-previous {
-  border-left: 0;
-  border-right: 10px solid #9a9a9a;
-  left: 0px;
-}
-/* line 147, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-230px .taco-thumbnail-item .featured-container {
-  padding: 12px;
-}
-/* line 151, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-230px .taco-thumbnail-item .container {
-  height: 230px;
-  width: 230px;
-}
-/* line 155, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-230px .taco-thumbnail-item .container img {
-  max-height: 230px;
-  max-width: 230px;
-}
-/* line 161, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-230px .taco-thumbnail-item .name {
-  width: 226px;
-}
-/* line 170, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-230px .taco-thumbnail-item .actions {
-  right: 4px;
-  top: 4px;
-}
-/* line 181, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-230px .taco-thumbnail-item .taco-arrow {
-  border-bottom: 10px solid transparent;
-  border-top: 10px solid transparent;
-  bottom: 10px;
-  cursor: pointer;
-  height: 0px;
-  margin: -4px 10px 0 10px;
-  position: absolute;
-  width: 0px;
-}
-/* line 191, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-230px .taco-thumbnail-item .taco-arrow.taco-next {
-  border-left: 10px solid #9a9a9a;
-  border-right: 0;
-  right: 0px;
-}
-/* line 197, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-tileview.tilesize-230px .taco-thumbnail-item .taco-arrow.taco-previous {
-  border-left: 0;
-  border-right: 10px solid #9a9a9a;
-  left: 0px;
-}
-/* line 208, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item {
-  background-color: white;
-  display: inline-block;
-  font-size: 0px;
-  line-height: 0px;
-  margin: 10px 0px 10px 10px;
-  position: relative;
-  vertical-align: top;
-  -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 40px rgba(0, 0, 0, 0.02) inset;
-  -moz-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 40px rgba(0, 0, 0, 0.02) inset;
-  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 40px rgba(0, 0, 0, 0.02) inset;
-  -webkit-transition: all 1s;
-  -moz-transition: all 1s;
-  -o-transition: all 1s;
-  transition: all 1s;
-}
-/* line 219, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item * {
-  -webkit-transition: all 1s;
-  -moz-transition: all 1s;
-  -o-transition: all 1s;
-  transition: all 1s;
-}
-/* line 223, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item:before, .x-panel .taco-thumbnail-item:after {
-  bottom: 9px;
-  content: '';
-  height: 55%;
-  left: 10px;
-  max-height: 100px;
-  max-width: 300px;
-  position: absolute;
-  width: 70%;
-  z-index: -1;
-  -webkit-box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
-  -webkit-transform: skew(-15deg) rotate(-6deg);
-  -moz-transform: skew(-15deg) rotate(-6deg);
-  -ms-transform: skew(-15deg) rotate(-6deg);
-  -o-transform: skew(-15deg) rotate(-6deg);
-  transform: skew(-15deg) rotate(-6deg);
-}
-/* line 237, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item:after {
-  left: auto;
-  right: 10px;
-  -webkit-transform: skew(15deg) rotate(6deg);
-  -moz-transform: skew(15deg) rotate(6deg);
-  -ms-transform: skew(15deg) rotate(6deg);
-  -o-transform: skew(15deg) rotate(6deg);
-  transform: skew(15deg) rotate(6deg);
-}
-/* line 243, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item.draggable {
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
-}
-/* line 248, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item .featured-container {
-  overflow: hidden;
-  position: relative;
-}
-/* line 253, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item .featured {
-  background-color: #d2463c;
-  border-color: #b23229;
-  color: white;
-  display: none;
-  font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  left: -30px;
-  padding: 2px 30px;
-  position: absolute;
-  top: 15px;
-  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-}
-/* line 267, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item .container {
-  background-color: #f2f0ed;
-  overflow: hidden;
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: wrap;
-  -webkit-justify-content: center;
-  -webkit-align-items: center;
-  -webkit-align-content: stretch;
-}
-/* line 273, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item .name, .x-panel .taco-thumbnail-item .taco-count {
-  cursor: text;
-  font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  margin-left: 2px;
-  min-height: 16px;
-  overflow: hidden;
-  padding-top: 10px;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-/* line 284, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item .actions {
-  position: absolute;
-  visibility: hidden;
-  -webkit-transition: all 0s ease-in-out;
-  -moz-transition: all 0s ease-in-out;
-  -o-transition: all 0s ease-in-out;
-  transition: all 0s ease-in-out;
-}
-/* line 289, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item .actions .action {
-  border: 0 none;
-  cursor: pointer;
-  display: inline-block;
-  height: 24px;
-  margin-top: 2px;
-  width: 36px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-transition: background-position 0s linear;
-  -moz-transition: background-position 0s linear;
-  -o-transition: background-position 0s linear;
-  transition: background-position 0s linear;
-}
-/* line 299, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item .actions .action.download {
-  background-position: 0 -2274px;
-}
-/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
-.x-panel .taco-thumbnail-item .actions .action.download:hover, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout_hover, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout-hover {
-  background-position: 0 -2298px;
-}
-/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
-.x-panel .taco-thumbnail-item .actions .action.download:active, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout_active, .x-panel .taco-thumbnail-item .actions .action.download.icon-jumpout-active {
-  background-position: 0 -2388px;
-}
-/* line 302, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item .actions .action.delete {
-  background-position: 0 -2364px;
-}
-/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
-.x-panel .taco-thumbnail-item .actions .action.delete:hover, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash_hover, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash-hover {
-  background-position: 0 -2340px;
-}
-/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
-.x-panel .taco-thumbnail-item .actions .action.delete:active, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash_active, .x-panel .taco-thumbnail-item .actions .action.delete.icon-trash-active {
-  background-position: 0 -2475px;
-}
-/* line 305, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item .actions .action.duplicate {
-  background-position: 0 -2427px;
-}
-/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
-.x-panel .taco-thumbnail-item .actions .action.duplicate:hover, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile_hover, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile-hover {
-  background-position: 0 -2451px;
-}
-/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
-.x-panel .taco-thumbnail-item .actions .action.duplicate:active, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile_active, .x-panel .taco-thumbnail-item .actions .action.duplicate.icon-newfile-active {
-  background-position: 0 -2531px;
-}
-/* line 308, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item .actions .action.remove {
-  background-position: 0 -2250px;
-}
-/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
-.x-panel .taco-thumbnail-item .actions .action.remove:hover, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove_hover, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove-hover {
-  background-position: 0 -2226px;
-}
-/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
-.x-panel .taco-thumbnail-item .actions .action.remove:active, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove_active, .x-panel .taco-thumbnail-item .actions .action.remove.icon-remove-active {
-  background-position: 0 -2555px;
-}
-/* line 315, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item:hover.draggable .container {
-  background-color: #FFF;
-  opacity: 0.2;
-}
-/* line 319, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item:hover .actions {
-  visibility: visible;
-}
-/* line 324, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item.x-item-selected {
-  background-color: #bdf9ff;
-}
-/* line 329, ../scss/taco/widgets/_form.scss */
-.x-panel .taco-thumbnail-item:nth-of-type(1) .featured {
-  display: block;
-}
-
-/* line 336, ../scss/taco/widgets/_form.scss */
-.taco-datalist-item {
-  background-color: transparent;
-  text-align: center;
-  background-image: -webkit-linear-gradient(left top, #d7d5d2, #9a9a9a);
-  border: 2px solid #cccccc;
-  display: inline-block;
-  position: relative;
-  height: 140px;
-  margin: 10px;
-  overflow: hidden;
-  vertical-align: top;
-  width: 120px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -o-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -ms-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -webkit-transition: "height,width" 1s;
-  -moz-transition: "height,width" 1s;
-  -o-transition: "height,width" 1s;
-  transition: "height,width" 1s;
-}
-/* line 352, ../scss/taco/widgets/_form.scss */
-.taco-datalist-item p {
-  text-align: center;
-  bottom: 16px;
-  margin: 75px 16px 0;
-  font-size: 15px;
-}
-/* line 358, ../scss/taco/widgets/_form.scss */
-.taco-datalist-item .name {
-  font: bold 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: white;
-}
-/* line 362, ../scss/taco/widgets/_form.scss */
-.taco-datalist-item .alt {
-  border: 0;
-  background-color: transparent;
-  color: black;
-}
-/* line 368, ../scss/taco/widgets/_form.scss */
-.taco-datalist-item .remove {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  background-color: red;
-  color: white;
-  border-radius: 21px;
-  border-width: 1px;
+/* line 36, ../scss/taco/widgets/_form.scss */
+.x-form-arrow-trigger {
+  background: none transparent;
+  border-color: #323232 rgba(255, 255, 255, 0);
   border-style: solid;
-  font: bold 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  border-color: black;
-  padding: 2px;
-  height: 21px;
-  width: 21px;
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  cursor: pointer;
-}
-/* line 385, ../scss/taco/widgets/_form.scss */
-.taco-datalist-item .featured {
-  display: none;
-}
-/* line 390, ../scss/taco/widgets/_form.scss */
-.taco-datalist-item:first-child .featured {
-  display: block;
+  border-width: 6px 5px 0px;
+  font-size: 1.2rem;
+  height: 0px !important;
+  margin: 12px 0px 0px 6px;
   position: absolute;
-  top: 15px;
-  left: -30px;
-  padding: 2px 30px 2px 30px;
-  -webkit-transform: rotate(-45deg);
-  font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  background-color: #d2463c;
-  color: white;
-  border-color: #b23229;
-  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  width: 0px;
 }
 
-/* line 405, ../scss/taco/widgets/_form.scss */
-.taco-datalist-item.x-item-selected {
-  background-image: -webkit-linear-gradient(left top, #d7d5d2, #f2f0ed);
-}
-/* line 408, ../scss/taco/widgets/_form.scss */
-.taco-datalist-item.x-item-selected .name {
-  color: #5e5c5a;
+/* line 50, ../scss/taco/widgets/_form.scss */
+.x-webkit textarea.x-form-empty-field {
+  line-height: normal;
 }
 
-/* line 413, ../scss/taco/widgets/_form.scss */
-.taco-datalist-size-80px .taco-datalist-item {
-  height: 80px;
-  width: 80px;
-}
-/* line 416, ../scss/taco/widgets/_form.scss */
-.taco-datalist-size-80px .taco-datalist-item p {
-  font-size: 10px;
-  margin: 50px 16px 0;
-}
-
-/* line 413, ../scss/taco/widgets/_form.scss */
-.taco-datalist-size-120px .taco-datalist-item {
-  height: 120px;
-  width: 120px;
-}
-/* line 416, ../scss/taco/widgets/_form.scss */
-.taco-datalist-size-120px .taco-datalist-item p {
-  font-size: 15px;
-  margin: 75px 16px 0;
-}
-
-/* line 413, ../scss/taco/widgets/_form.scss */
-.taco-datalist-size-155px .taco-datalist-item {
-  height: 155px;
-  width: 155px;
-}
-/* line 416, ../scss/taco/widgets/_form.scss */
-.taco-datalist-size-155px .taco-datalist-item p {
-  font-size: 18px;
-  margin: 95px 16px 0;
-}
-
-/* line 431, ../scss/taco/widgets/_form.scss */
-.taco-datalist-selection .taco-datalist-deselection {
-  height: 26px;
-  width: 26px;
-  position: absolute;
-  top: 5px;
-  left: 5px;
-}
-
-/* line 441, ../scss/taco/widgets/_form.scss */
-.x-item-selected .taco-datalist-selection {
-  background-position: 0 -421px;
-}
-/* line 445, ../scss/taco/widgets/_form.scss */
-.x-item-selected .taco-datalist-deselection {
-  background-position: 0 -395px;
-}
-
-/* line 451, ../scss/taco/widgets/_form.scss */
-.taco-datalist-emptytext {
-  color: #9a9a9a;
-  text-align: center;
-  font-size: 14pt;
-  margin: 1em;
-}
-
-/* line 458, ../scss/taco/widgets/_form.scss */
-.taco-form-field-float {
-  float: left;
-  margin-right: 2em;
-}
-
-/* line 463, ../scss/taco/widgets/_form.scss */
-.taco-slug-prefix {
-  width: auto;
-  border: 1px solid #9a9a9a;
-  color: #9a9a9a;
-  height: auto;
-  font-size: 0.9em;
-  padding: 0.5em;
-  float: left;
-  position: absolute;
-  overflow: hidden;
-  -webkit-border-radius: 5px 0 0 5px;
-  -moz-border-radius: 5px 0 0 5px;
-  -ms-border-radius: 5px 0 0 5px;
-  -o-border-radius: 5px 0 0 5px;
-  border-radius: 5px 0 0 5px;
-  text-shadow: 0 1px 0 white;
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #edeae6), color-stop(100%, #d7d5d2));
-  background: -webkit-linear-gradient(#edeae6, #d7d5d2);
-  background: -moz-linear-gradient(#edeae6, #d7d5d2);
-  background: -o-linear-gradient(#edeae6, #d7d5d2);
-  background: linear-gradient(#edeae6, #d7d5d2);
-  user-select: none;
-  -o-user-select: none;
-  -ms-user-select: none;
-  -moz-user-select: -moz-none;
-  -webkit-user-select: none;
-  cursor: default;
-}
-/* line 478, ../scss/taco/widgets/_form.scss */
-.taco-slug-prefix span {
-  line-height: 18px;
-  font-size: 0.75em;
-}
-
-/* line 485, ../scss/taco/widgets/_form.scss */
-.taco-form-module {
-  border: 1px solid #999691;
-  font-size: 14px;
-  margin: 1em 0 2em;
-  min-height: 14px;
-  overflow: hidden;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
-}
-/* line 493, ../scss/taco/widgets/_form.scss */
-.taco-form-module.taco-form-module-locked {
-  border: 0px none;
-}
-/* line 496, ../scss/taco/widgets/_form.scss */
-.taco-form-module.taco-form-module-inventorycontrol {
-  border-bottom: 1px dashed #999691;
-  margin-bottom: 0px;
-  margin-top: -2em;
-  padding-bottom: 0.5em;
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
-  -o-border-radius: 0px;
-  border-radius: 0px;
-}
-/* line 503, ../scss/taco/widgets/_form.scss */
-.taco-form-module.taco-form-module-inventorycontrol .taco-form-flexbox {
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: none;
-  -webkit-justify-content: flex-start;
-  -webkit-align-items: stretch;
-  -webkit-align-content: stretch;
-}
-/* line 508, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-header {
-  padding: 14px;
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: none;
-  -webkit-justify-content: space-between;
-  -webkit-align-items: stretch;
-  -webkit-align-content: stretch;
-}
-/* line 512, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-header .taco-module-toggle {
-  cursor: pointer;
-}
-/* line 516, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-footer {
-  padding: 14px;
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: none;
-  -webkit-justify-content: flex-end;
-  -webkit-align-items: stretch;
-  -webkit-align-content: stretch;
-}
-/* line 520, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-summary {
-  padding: 14px;
-}
-/* line 524, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-disabled {
-  background-color: #edeae6;
-  border: 1px dashed #7c7b7a;
-  color: #7c7b7a;
-  cursor: pointer;
-  margin-left: 1em;
-  margin-right: 1.5em;
-  padding: 2em;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
-  -webkit-transition: all 1s;
-  -moz-transition: all 1s;
-  -o-transition: all 1s;
-  transition: all 1s;
-  text-shadow: 0 1px 0 white;
-}
-/* line 537, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-disabled div {
-  text-align: center;
-}
-/* line 540, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-disabled div:first-child {
-  font-size: 1.8em;
-  margin: 0.5em;
-}
-/* line 546, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-disabled.taco-status-animating {
-  -webkit-transition: none;
-  -moz-transition: none;
-  -o-transition: none;
-  transition: none;
-}
-/* line 550, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-disabled.taco-status-disabled {
-  position: fixed;
-  top: -5000px;
-  left: -5000px;
-}
-/* line 557, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-grid {
-  border-left: 0px none;
-  border-right: 0px none;
-}
-/* line 561, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-grid .x-grid-body, .taco-form-module .taco-form-module-grid .x-grid-header-ct {
-  border-left: 0px none;
-  border-right: 0px none;
-}
-/* line 567, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-inventory {
-  border-bottom: 1px dashed #999691;
-  padding-bottom: 10px;
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: wrap;
-  -webkit-justify-content: flex-start;
-  -webkit-align-items: stretch;
-  -webkit-align-content: stretch;
-}
-/* line 572, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-inventory .x-form-item-label-top {
-  margin-top: 0.9em;
-}
-/* line 577, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form {
-  overflow: hidden;
-  -webkit-transition: height 0.6s ease-in-out;
-  -moz-transition: height 0.6s ease-in-out;
-  -o-transition: height 0.6s ease-in-out;
-  transition: height 0.6s ease-in-out;
-}
-/* line 582, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form.taco-status-animating {
-  position: absolute;
-}
-/* line 586, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form.taco-status-disabled {
-  position: fixed;
-  top: -5000px;
-  left: -5000px;
-}
-/* line 593, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-collapse {
-  color: blue;
-  float: right;
-  margin: 1em 0 0;
-}
-/* line 598, ../scss/taco/widgets/_form.scss */
-.taco-form-module .taco-form-module-collapse + div {
-  clear: both;
-}
-
-/* line 604, ../scss/taco/widgets/_form.scss */
-.taco-bdt {
-  border: 1px dashed #d7d5d2;
-  color: #d7d5d2;
-  padding: 2em;
-  text-shadow: 0 -1px 1px #d7d5d2;
-}
-
-/* line 612, ../scss/taco/widgets/_form.scss */
-.taco-image-placeholder {
-  height: 60px;
-  margin: 0;
-  padding: 0;
-  width: 60px;
-}
-
-/* line 619, ../scss/taco/widgets/_form.scss */
-.taco-upload-preview {
-  border: 1px dashed #9a9a9a;
-  overflow: auto;
-  height: 250px;
-}
-/* line 624, ../scss/taco/widgets/_form.scss */
-.taco-upload-preview .taco-uploading-images {
-  float: left;
-}
-/* line 628, ../scss/taco/widgets/_form.scss */
-.taco-upload-preview .taco-uploading-images img {
-  margin: 5px;
-  width: 100px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -o-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -ms-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
-}
-/* line 634, ../scss/taco/widgets/_form.scss */
-.taco-upload-preview .taco-uploading-images img.taco-uploading {
-  opacity: 0.5;
-}
-/* line 638, ../scss/taco/widgets/_form.scss */
-.taco-upload-preview .taco-uploading-images img.taco-complete {
-  -webkit-box-shadow: 0 0px 5px yellow;
-  -moz-box-shadow: 0 0px 5px yellow;
-  box-shadow: 0 0px 5px yellow;
-}
-/* line 641, ../scss/taco/widgets/_form.scss */
-.taco-upload-preview .taco-uploading-images img.taco-complete.taco-complete-fade {
-  -webkit-transition: all 1s;
-  -moz-transition: all 1s;
-  -o-transition: all 1s;
-  transition: all 1s;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -o-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  -ms-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-}
-/* line 648, ../scss/taco/widgets/_form.scss */
-.taco-upload-preview .taco-uploading-images .x- progress-default {
-  border: 0;
-  padding: 2px;
-  height: 12px;
-  min-width: 12px;
-  overflow: hidden;
-  width: 90px;
-  margin: -26px 0 10px 10px;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
-  -o-border-radius: 6px;
-  border-radius: 6px;
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #5e5c5a), color-stop(100%, #5e5c5a));
-  background: -webkit-linear-gradient(#5e5c5a, #5e5c5a);
-  background: -moz-linear-gradient(#5e5c5a, #5e5c5a);
-  background: -o-linear-gradient(#5e5c5a, #5e5c5a);
-  background: linear-gradient(#5e5c5a, #5e5c5a);
-  -webkit-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-  -moz-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-  box-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-}
-/* line 661, ../scss/taco/widgets/_form.scss */
-.taco-upload-preview .taco-uploading-images .x- progress-default .x-progress-bar {
-  border: 0;
-  height: 8px;
-  max-width: 86px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #cedae2), color-stop(60%, #4a90c9), color-stop(60%, #157fd6), color-stop(100%, #0878d3));
-  background: -webkit-linear-gradient(#cedae2, #4a90c9 60%, #157fd6 60%, #0878d3);
-  background: -moz-linear-gradient(#cedae2, #4a90c9 60%, #157fd6 60%, #0878d3);
-  background: -o-linear-gradient(#cedae2, #4a90c9 60%, #157fd6 60%, #0878d3);
-  background: linear-gradient(#cedae2, #4a90c9 60%, #157fd6 60%, #0878d3);
-}
-
-/* line 676, ../scss/taco/widgets/_form.scss */
-.taco-preview-area {
-  padding: 20px;
-  border: 2px solid #9a9a9a;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
-  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
-  -o-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
-  -ms-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.95)), color-stop(100%, rgba(255, 255, 255, 0.7)));
-  background: -webkit-linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
-  background: -moz-linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
-  background: -o-linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
-  background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
-}
-/* line 684, ../scss/taco/widgets/_form.scss */
-.taco-preview-area label {
-  display: block;
-  width: 100%;
-}
-
-/* line 690, ../scss/taco/widgets/_form.scss */
-.taco-hint {
-  background-color: #9a9a9a;
-  color: #5e5c5a;
-  position: absolute;
-  float: left;
-  padding: 1.2em;
-  font-size: 0.8em;
-  opacity: 0.9;
-  border: 2px solid #9a9a9a;
-  z-index: 999;
-  overflow: visible;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.5)), color-stop(100%, rgba(255, 255, 255, 0)));
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
-  background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
-  border-radius: 10px;
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-}
-/* line 706, ../scss/taco/widgets/_form.scss */
-.taco-hint h2 {
-  font-weight: bold;
-  font-size: 1.4em;
-}
-/* line 711, ../scss/taco/widgets/_form.scss */
-.taco-hint:before, .taco-hint:after {
-  content: "";
-  position: absolute;
-  z-index: 1000;
-  border-right: 10px solid #9a9a9a;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-left: 0;
-  left: -12px;
-  top: 13px;
-}
-/* line 723, ../scss/taco/widgets/_form.scss */
-.taco-hint:before {
-  border-right-color: #9a9a9a;
-  top: 14px;
-}
-
-/* line 731, ../scss/taco/widgets/_form.scss */
-.taco-step-container .taco-form-step {
-  margin: 0 0 0 10px;
-  padding: 0 0 0 30px;
-}
-/* line 735, ../scss/taco/widgets/_form.scss */
-.taco-step-container .taco-form-step label.taco-label {
-  font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  display: block;
-  padding-top: 1.8em;
-  color: #5e5c5a;
-  text-shadow: 0 1px 0 white;
-}
-/* line 744, ../scss/taco/widgets/_form.scss */
-.taco-step-container .taco-form-step:before {
-  position: absolute;
-  margin: 41px 0 0 -40px;
-  border: 2px solid white;
-  height: 24px;
-  width: 24px;
-  text-align: center;
-  color: #FFF;
-  font-size: 1.3em;
-  line-height: 1.55em;
-  opacity: 0.7;
-  text-shadow: 0 -1px 1px #9a9a9a;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-  -o-box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-  -ms-box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-  -webkit-border-radius: 16px;
-  -moz-border-radius: 16px;
-  -ms-border-radius: 16px;
-  -o-border-radius: 16px;
-  border-radius: 16px;
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #9a9a9a), color-stop(100%, #5e5c5a));
-  background: -webkit-linear-gradient(#9a9a9a, #5e5c5a);
-  background: -moz-linear-gradient(#9a9a9a, #5e5c5a);
-  background: -o-linear-gradient(#9a9a9a, #5e5c5a);
-  background: linear-gradient(#9a9a9a, #5e5c5a);
-}
-/* line 761, ../scss/taco/widgets/_form.scss */
-.taco-step-container .taco-form-step.taco-active:before {
-  opacity: 0.9;
-}
-/* line 765, ../scss/taco/widgets/_form.scss */
-.taco-step-container .taco-form-step:nth-child(1):before {
-  content: '1';
-}
-/* line 769, ../scss/taco/widgets/_form.scss */
-.taco-step-container .taco-form-step:nth-child(2):before {
-  content: '2';
-}
-/* line 773, ../scss/taco/widgets/_form.scss */
-.taco-step-container .taco-form-step:nth-child(3):before {
-  content: '3';
-}
-/* line 777, ../scss/taco/widgets/_form.scss */
-.taco-step-container .taco-form-step:nth-child(4):before {
-  content: '4';
-}
-/* line 781, ../scss/taco/widgets/_form.scss */
-.taco-step-container .taco-form-step:nth-child(5):before {
-  content: '5';
-}
-/* line 785, ../scss/taco/widgets/_form.scss */
-.taco-step-container .taco-form-step:nth-child(6):before {
-  content: '6';
-}
-/* line 789, ../scss/taco/widgets/_form.scss */
-.taco-step-container .taco-form-step:nth-child(7):before {
-  content: '7';
-}
-
-/* line 796, ../scss/taco/widgets/_form.scss */
-.taco-option-value-view {
-  margin: 5px 0;
-}
-/* line 799, ../scss/taco/widgets/_form.scss */
-.taco-option-value-view .taco-option-value-row {
-  padding: 0 0 0 20px;
-  font-size: 1.2em;
-  background: white;
-  border: 1px solid #d7d5d2;
-  border-top-width: 0;
-}
-/* line 807, ../scss/taco/widgets/_form.scss */
-.taco-option-value-view .taco-option-value-row input {
-  padding: 7px 0 5px;
-  width: 196px;
-  font-weight: bold;
-  border: 0;
-  color: #7c7b7a;
-  @inlude transition;
-}
-/* line 815, ../scss/taco/widgets/_form.scss */
-.taco-option-value-view .taco-option-value-row input:focus {
-  color: #5e5c5a;
-}
-/* line 819, ../scss/taco/widgets/_form.scss */
-.taco-option-value-view .taco-option-value-row input::-webkit-input-placeholder {
-  font-style: italic;
-  font-weight: normal;
-}
-/* line 824, ../scss/taco/widgets/_form.scss */
-.taco-option-value-view .taco-option-value-row input:-moz-placeholder {
-  font-style: italic;
-  font-weight: normal;
-}
-/* line 830, ../scss/taco/widgets/_form.scss */
-.taco-option-value-view .taco-option-value-row span.checkbox {
-  float: right;
-  position: absolute;
-  display: block;
-  right: 5px;
-  margin-top: -22px;
-  width: 20px;
-  height: 20px;
-}
-/* line 840, ../scss/taco/widgets/_form.scss */
-.taco-option-value-view .taco-option-value-row span.remove {
-  color: white;
-  display: inline-block;
-  background: blue;
-  height: 20px;
-  width: 20px;
-  text-align: center;
-  margin: 4px 0 0 6px;
-  line-height: 1.3em;
-  padding-left: 1px;
-  opacity: 0;
-  cursor: pointer;
-  -webkit-border-radius: 26px;
-  -moz-border-radius: 26px;
-  -ms-border-radius: 26px;
-  -o-border-radius: 26px;
-  border-radius: 26px;
-  text-shadow: 0 -1px 1px #9a9a9a;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  -o-box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  -ms-box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #9a9a9a), color-stop(100%, #5e5c5a));
-  background: -webkit-linear-gradient(#9a9a9a, #5e5c5a);
-  background: -moz-linear-gradient(#9a9a9a, #5e5c5a);
-  background: -o-linear-gradient(#9a9a9a, #5e5c5a);
-  background: linear-gradient(#9a9a9a, #5e5c5a);
-  -webkit-transition: all 1s;
-  -moz-transition: all 1s;
-  -o-transition: all 1s;
-  transition: all 1s;
-}
-/* line 860, ../scss/taco/widgets/_form.scss */
-.taco-option-value-view .taco-option-value-row:hover span.remove {
-  opacity: 0.6;
-}
-/* line 866, ../scss/taco/widgets/_form.scss */
-.taco-option-value-view .taco-option-value-row:before {
-  content: "";
-  height: 36px;
-  width: 21px;
-  position: absolute;
-  display: block;
-  margin: -4px 0 0 -29px;
-  background-position: 0 -717px;
-}
-/* line 876, ../scss/taco/widgets/_form.scss */
-.taco-option-value-view .taco-option-value-row:first-child {
-  border-top-width: 1px;
-}
-
-/* line 883, ../scss/taco/widgets/_form.scss */
-.taco-inlinefield {
-  border: 1px dashed #dfdfdf;
-}
-/* line 887, ../scss/taco/widgets/_form.scss */
-.taco-inlinefield.taco-editing {
-  border: 2px dashed #afafaf;
-}
-/* line 891, ../scss/taco/widgets/_form.scss */
-.taco-inlinefield .taco-inlinefield-hint {
-  border: 1px solid #dfdfdf;
-  margin: 3px;
-}
-/* line 893, ../scss/taco/widgets/_form.scss */
-.taco-inlinefield .taco-inlinefield-hint p {
-  background-color: #dddddd;
-  *zoom: 1;
-  filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFEFEFEF', endColorstr='#FFCCCCCC');
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(100%, #cccccc));
-  background-image: -webkit-linear-gradient(top, #efefef 0%, #cccccc 100%);
-  background-image: -moz-linear-gradient(top, #efefef 0%, #cccccc 100%);
-  background-image: -o-linear-gradient(top, #efefef 0%, #cccccc 100%);
-  background-image: linear-gradient(top, #efefef 0%, #cccccc 100%);
-  margin: 0;
-  padding: 2px 5px;
-  font-size: 10pt;
-  color: #444;
-}
-/* line 907, ../scss/taco/widgets/_form.scss */
-.taco-inlinefield .taco-inlinefield-editor textarea, .taco-inlinefield .taco-inlinefield-editor input {
-  border-width: 0;
-  background: rgba(255, 255, 255, 0.8);
-}
-/* line 912, ../scss/taco/widgets/_form.scss */
-.taco-inlinefield .taco-inlinefield-editor > div {
-  border-width: 0;
-}
-
-/* line 921, ../scss/taco/widgets/_form.scss */
-.taco-color-field {
-  cursor: pointer;
-  color: transparent !important;
-  background-color: black;
-  border: 0;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-}
-
-/* line 931, ../scss/taco/widgets/_form.scss */
-.taco-background-image-field {
-  cursor: pointer;
-  display: inline-block;
-  color: white;
-  background-color: black;
-  font: bold 31px/25px "Courier New";
-  text-align: center;
-  border: 0;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  background-position: center center;
-  background-size: cover;
-}
-
-/* line 947, ../scss/taco/widgets/_form.scss */
-.taco-image-field {
-  margin: 5px 5px 15px 5px;
-  background-color: white;
-  -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25), 0 0 40px rgba(0, 0, 0, 0.02) inset;
-  -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25), 0 0 40px rgba(0, 0, 0, 0.02) inset;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25), 0 0 40px rgba(0, 0, 0, 0.02) inset;
-}
-/* line 954, ../scss/taco/widgets/_form.scss */
-.taco-image-field > * {
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-  margin: 10px;
-}
-/* line 961, ../scss/taco/widgets/_form.scss */
-.taco-image-field:before, .taco-image-field:after {
-  bottom: 22px;
-  content: '';
-  height: 55%;
-  left: 15px;
-  max-height: 100px;
-  max-width: 300px;
-  position: absolute;
-  width: 70%;
-  z-index: -1;
-  -webkit-box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 10px 7px -4px rgba(0, 0, 0, 0.3);
-  -webkit-transform: skew(-15deg) rotate(-6deg);
-  -moz-transform: skew(-15deg) rotate(-6deg);
-  -ms-transform: skew(-15deg) rotate(-6deg);
-  -o-transform: skew(-15deg) rotate(-6deg);
-  transform: skew(-15deg) rotate(-6deg);
-}
-/* line 977, ../scss/taco/widgets/_form.scss */
-.taco-image-field:after {
-  left: auto;
-  right: 5px;
-  -webkit-transform: skew(15deg) rotate(6deg);
-  -moz-transform: skew(15deg) rotate(6deg);
-  -ms-transform: skew(15deg) rotate(6deg);
-  -o-transform: skew(15deg) rotate(6deg);
-  transform: skew(15deg) rotate(6deg);
-}
-
-/* line 993, ../scss/taco/widgets/_form.scss */
-.taco-field-alignment {
-  /* go home syntax highlighting, you're drunk */
-}
-/* line 999, ../scss/taco/widgets/_form.scss */
-.taco-field-alignment table:nth-child(-n+4) .x-form-radio {
-  border: 1px solid #5e5c5a;
-  width: 26px;
-  height: 24px;
-  opacity: 0.8;
-  border-right: 0;
-  background: url('../images/align-s0f469144e6.png') 0 0;
-  -webkit-box-shadow: 0 1px 0 white inset;
-  -moz-box-shadow: 0 1px 0 white inset;
-  box-shadow: 0 1px 0 white inset;
-  background-color: #edeae6;
-}
-/* line 1013, ../scss/taco/widgets/_form.scss */
-.taco-field-alignment table:nth-child(-n+4).x-form-cb-checked .x-form-radio {
-  background: url('../images/align-s0f469144e6.png') 0 -72px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
-  background: url('../images/align-s0f469144e6.png') 0 -72px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -72px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -72px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -72px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background-color: #70d2db;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
-/* line 1025, ../scss/taco/widgets/_form.scss */
-.taco-field-alignment table:first-child .x-form-radio {
-  -moz-border-radius-topleft: 3px;
-  -webkit-border-top-left-radius: 3px;
-  border-top-left-radius: 3px;
-  -moz-border-radius-bottomleft: 3px;
-  -webkit-border-bottom-left-radius: 3px;
-  border-bottom-left-radius: 3px;
-  background: url('../images/align-s0f469144e6.png') 0 -48px;
-  background-color: #edeae6;
-}
-/* line 1033, ../scss/taco/widgets/_form.scss */
-.taco-field-alignment table:first-child.x-form-cb-checked .x-form-radio {
-  background: url('../images/align-s0f469144e6.png') 0 -144px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
-  background: url('../images/align-s0f469144e6.png') 0 -144px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -144px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -144px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -144px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background-color: #70d2db;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
-/* line 1045, ../scss/taco/widgets/_form.scss */
-.taco-field-alignment table:last-child .x-form-radio {
-  border-right: 1px solid #5e5c5a;
-  -moz-border-radius-topright: 3px;
-  -webkit-border-top-right-radius: 3px;
-  border-top-right-radius: 3px;
-  -moz-border-radius-bottomright: 3px;
-  -webkit-border-bottom-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-  background: url('../images/align-s0f469144e6.png') 0 -24px;
-  background-color: #edeae6;
-}
-/* line 1054, ../scss/taco/widgets/_form.scss */
-.taco-field-alignment table:last-child.x-form-cb-checked .x-form-radio {
-  background: url('../images/align-s0f469144e6.png') 0 -96px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(20%, rgba(0, 0, 0, 0)));
-  background: url('../images/align-s0f469144e6.png') 0 -96px, -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -96px, -moz-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -96px, -o-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background: url('../images/align-s0f469144e6.png') 0 -96px, linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%);
-  background-color: #70d2db;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
-
-/* line 1097, ../scss/taco/widgets/_form.scss */
+/* line 56, ../scss/taco/widgets/_form.scss */
 .x-form-item-label-top {
-  display: block;
-  margin-bottom: 0.3em;
-  margin-top: 1.8em;
-  font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: #5e5c5a;
-  text-shadow: 0 1px 0 white;
-}
-/* line 1107, ../scss/taco/widgets/_form.scss */
-.x-form-item-label-top.taco-first {
-  margin-top: 0;
-  padding-top: 0;
+  margin-top: 2.4rem;
+  padding-bottom: 3px;
 }
 
-/* line 1113, ../scss/taco/widgets/_form.scss */
-.x-form-field, .x-form-display-field, textarea.x-form-field {
-  font-size: 0.9em;
-  color: #5e5c5a;
-}
-/* line 1117, ../scss/taco/widgets/_form.scss */
-.x-form-field::-webkit-input-placeholder, .x-form-display-field::-webkit-input-placeholder, textarea.x-form-field::-webkit-input-placeholder {
-  font-style: italic;
-}
-/* line 1121, ../scss/taco/widgets/_form.scss */
-.x-form-field:-moz-placeholder, .x-form-display-field:-moz-placeholder, textarea.x-form-field:-moz-placeholder {
-  font-style: italic;
-}
-
-/* line 1126, ../scss/taco/widgets/_form.scss */
-.x-form-text, textarea.x-form-field {
-  padding: 0.5em;
-  background: white;
-  border: 1px solid #d7d5d2;
-  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-  -webkit-transition: -webkit-box-shadow 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-  -moz-transition: -moz-box-shadow 0.3s ease-in-out, -moz-transform 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-  -o-transition: -o-box-shadow 0.3s ease-in-out, -o-transform 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-}
-
-/* line 1133, ../scss/taco/widgets/_form.scss */
-.x-menu-item-text {
-  font-size: 14px;
-}
-
-/* line 1140, ../scss/taco/widgets/_form.scss */
+/* CONTROLS */
+/* line 66, ../scss/taco/widgets/_form.scss */
 .x-field .x-form-checkbox,
 .x-field .x-form-radio,
 .x-grid-row-checker,
 .x-column-header-checkbox .x-column-header-text {
-  height: 16px;
-  width: 16px;
+  height: 15px;
+  width: 17px;
 }
 
-/* line 1145, ../scss/taco/widgets/_form.scss */
+/* line 71, ../scss/taco/widgets/_form.scss */
 .x-field .x-form-checkbox,
 .x-field .x-form-radio {
   position: relative;
   top: -3px;
 }
 
-/* line 1153, ../scss/taco/widgets/_form.scss */
+/* line 80, ../scss/taco/widgets/_form.scss */
 .x-field .x-form-checkbox,
 .x-grid-cell-inner .x-tree-checkbox,
 .x-menu .x-menu-item-unchecked .x-menu-item-icon,
 .x-grid-table .x-grid-row-checker,
 .x-grid-header-ct .x-column-header-checkbox .x-column-header-text {
-  background-position: 0 -2499px;
+  background-position: 0 -3067px;
 }
 
-/* line 1160, ../scss/taco/widgets/_form.scss */
+/* line 87, ../scss/taco/widgets/_form.scss */
 .x-form-cb-checked .x-form-checkbox,
 .x-grid-cell-inner .x-tree-checkbox-checked,
 .x-menu .x-menu-item-checked .x-menu-item-icon,
 .x-grid-table .x-grid-row-selected .x-grid-row-checker,
 .x-grid-header-ct .x-grid-hd-checker-on .x-column-header-text {
-  background-position: 0 -1805px;
+  background-position: 0 -2304px;
 }
 
-/* line 1163, ../scss/taco/widgets/_form.scss */
+/* line 91, ../scss/taco/widgets/_form.scss */
 .x-field .x-form-radio {
-  background-position: 0 -1821px;
+  background-position: 0 -2169px;
 }
 
-/* line 1166, ../scss/taco/widgets/_form.scss */
+/* line 94, ../scss/taco/widgets/_form.scss */
 .x-form-cb-checked .x-form-radio {
-  background-position: 0 -1735px;
+  background-position: 0 -1869px;
 }
 
-/* line 1169, ../scss/taco/widgets/_form.scss */
+/* line 98, ../scss/taco/widgets/_form.scss */
 .x-form-cb-label-after {
   font-size: 0.875em;
 }
 
-/* line 1182, ../scss/taco/widgets/_form.scss */
-.x-border-box .x-form-text,
-.x-border-box .x-field-default-toolbar .x-form-text {
-  font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: #5e5c5a;
-  line-height: 20px;
-  padding: 5px;
-  height: 33px;
-  border: 1px solid silver;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
-  -webkit-box-shadow: 0 1px 0 0 white;
-  -moz-box-shadow: 0 1px 0 0 white;
-  box-shadow: 0 1px 0 0 white;
-}
-/* line 1192, ../scss/taco/widgets/_form.scss */
-.x-border-box .x-form-text:hover,
-.x-border-box .x-field-default-toolbar .x-form-text:hover {
-  border-color: #7c7b7a;
-}
-/* line 1196, ../scss/taco/widgets/_form.scss */
-.x-border-box .x-form-text.x-form-focus,
-.x-border-box .x-field-default-toolbar .x-form-text.x-form-focus {
-  border-color: #70d2db;
-  -webkit-box-shadow: 0 0 2px #70d2db;
-  -moz-box-shadow: 0 0 2px #70d2db;
-  box-shadow: 0 0 2px #70d2db;
-}
-/* line 1201, ../scss/taco/widgets/_form.scss */
-.x-border-box .x-form-text.taco-form-text-xlarge,
-.x-border-box .x-field-default-toolbar .x-form-text.taco-form-text-xlarge {
-  font-size: 24px;
-  line-height: 1.25em;
-  height: 42px;
-  padding: 7px 7px 5px;
-}
-/* line 1211, ../scss/taco/widgets/_form.scss */
-.x-border-box .x-form-invalid .x-form-text,
-.x-border-box .x-form-invalid .x-field-default-toolbar .x-form-text {
-  border-color: #d2463c;
-  -webkit-box-shadow: 0 0 2px #d2463c;
-  -moz-box-shadow: 0 0 2px #d2463c;
-  box-shadow: 0 0 2px #d2463c;
-}
-
-/* line 1218, ../scss/taco/widgets/_form.scss */
-.x-form-invalid-under {
-  font: normal 12px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: #d2463c;
-  background: none;
-  padding: 0;
-  padding-top: 7px;
-}
-
-/* line 1227, ../scss/taco/widgets/_form.scss */
-.taco-select-field .x-form-text {
-  color: #5e5c5a;
-  background-color: #edeae6;
-  text-shadow: 0 1px 1px white;
-  -webkit-box-shadow: 0 1px 0 white inset;
-  -moz-box-shadow: 0 1px 0 white inset;
-  box-shadow: 0 1px 0 white inset;
-}
-
-/* line 1236, ../scss/taco/widgets/_form.scss */
-.taco-select-picker {
-  font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: #7c7b7a;
-  border: 1px solid silver;
-  border-top: 0;
-}
-/* line 1243, ../scss/taco/widgets/_form.scss */
-.taco-select-picker .x-boundlist-item {
-  padding: 5px;
-}
-/* line 1246, ../scss/taco/widgets/_form.scss */
-.taco-select-picker .x-boundlist-item.x-boundlist-selected {
-  background: none;
-  border-color: transparent;
-}
-/* line 1251, ../scss/taco/widgets/_form.scss */
-.taco-select-picker .x-boundlist-item:hover {
-  background: #bdf9ff;
-  border-color: transparent;
-}
-/* line 1256, ../scss/taco/widgets/_form.scss */
-.taco-select-picker .x-boundlist-item.x-boundlist-item-unselectable {
-  cursor: default;
-  opacity: 0.4;
-}
-/* line 1260, ../scss/taco/widgets/_form.scss */
-.taco-select-picker .x-boundlist-item.x-boundlist-item-unselectable:hover {
-  background-color: transparent;
-}
-
-/* line 1267, ../scss/taco/widgets/_form.scss */
-.x-trigger-cell {
-  margin-left: -2em;
-  position: absolute;
-}
-
-/* line 1272, ../scss/taco/widgets/_form.scss */
-.x-form-trigger {
-  font-size: 0.9em;
-  background: none;
-  width: 0;
-  height: 0;
-  margin: 1em 0 0 0.5em;
-  position: absolute;
-  border-bottom: 0;
-  border-left: 0.5em solid transparent;
-  border-right: 0.5em solid transparent;
-  border-top: 0.5em solid #9a9a9a;
-}
-
-/* line 1285, ../scss/taco/widgets/_form.scss */
-.x-tip .x-tip-header .x-box-item {
-  padding-top: 0px;
-}
-
-/* line 1288, ../scss/taco/widgets/_form.scss */
-.x-tip-header-body {
-  padding-top: 3px;
-}
-
-/* line 1293, ../scss/taco/widgets/_form.scss */
-.taco-tabs .x-form-cb-wrap {
-  font-size: 0.9em;
-  padding-top: 1.8em;
-  color: #7c7b7a;
-}
-/* line 1299, ../scss/taco/widgets/_form.scss */
-.taco-tabs .x-form-cb-label {
-  padding-top: 0.4em;
-}
-
-/* line 1304, ../scss/taco/widgets/_form.scss */
-.taco-widget-dropzone {
-  padding: 12px 10px 10px 12px;
-}
-
-/* line 1307, ../scss/taco/widgets/_form.scss */
-.taco-widget-dropzone-hover {
-  background-color: #eeffee;
-}
-
-/* line 1312, ../scss/taco/widgets/_form.scss */
-.x-boxselect ul.x-boxselect-list,
-.x-field-default-toolbar .x-boxselect ul.x-boxselect-list {
-  cursor: text;
-  height: auto;
-  min-height: 20px;
-  padding: 0 30px 0 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-/* line 1321, ../scss/taco/widgets/_form.scss */
-.x-boxselect input, .x-boxselect .x-form-focus {
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: none;
-  border: none;
-  height: auto;
-  line-height: 18px;
-  padding: 0.5em;
-  width: 100%;
-}
-
-/* line 1330, ../scss/taco/widgets/_form.scss */
-.x-boxselect-input, .x-boxselect-item {
-  display: inline-block;
-  position: relative;
-}
-
-/* line 1334, ../scss/taco/widgets/_form.scss */
-.x-boxselect-stacked .x-boxselect-item {
-  display: block;
-}
-
-/* line 1337, ../scss/taco/widgets/_form.scss */
-.x-boxselect-item {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  background-color: #76CFDB;
-  border: 1px solid #76cfdb;
-  color: #FFF;
-  cursor: default;
-  margin: 1px 1px 1px 5px;
-  padding: 3px 1px 2px 5px !important;
-  position: relative;
-}
-/* line 1347, ../scss/taco/widgets/_form.scss */
-.x-boxselect-item:before {
-  background-color: #76CFDB;
-  content: "";
-  display: block;
-  height: 2px;
-  margin: 0;
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  width: 8px;
-  z-index: 10;
-  -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-}
-
-/* line 1361, ../scss/taco/widgets/_form.scss */
-.x-field:not(.x-item-disabled) .x-boxselect-item:hover {
-  background: #FDBE9F;
-  border: 1px solid #f0a27a;
-  color: #DE5E1E;
-}
-/* line 1366, ../scss/taco/widgets/_form.scss */
-.x-field:not(.x-item-disabled) .x-boxselect-item:hover:before {
-  background-color: #FFF;
-}
-/* line 1370, ../scss/taco/widgets/_form.scss */
-.x-field:not(.x-item-disabled) .x-boxselect-item:hover .x-boxselect-item-close:before {
-  background-color: #DE5E1E;
-}
-/* line 1373, ../scss/taco/widgets/_form.scss */
-.x-field:not(.x-item-disabled) .x-boxselect-item:hover .x-boxselect-item-close:after {
-  background-color: #FFF;
-}
-
-/* line 1378, ../scss/taco/widgets/_form.scss */
-.x-field:not(.x-item-disabled) .x-boxselect-item.selected {
-  background: #de5e1e !important;
-  border: 1px solid #de5e1e !important;
-  color: #FFF;
-}
-/* line 1383, ../scss/taco/widgets/_form.scss */
-.x-field:not(.x-item-disabled) .x-boxselect-item.selected:before {
-  background-color: #DE5E1E;
-}
-/* line 1387, ../scss/taco/widgets/_form.scss */
-.x-field:not(.x-item-disabled) .x-boxselect-item.selected .x-boxselect-item-close:before {
-  background-color: #FFF;
-}
-/* line 1390, ../scss/taco/widgets/_form.scss */
-.x-field:not(.x-item-disabled) .x-boxselect-item.selected .x-boxselect-item-close:after {
-  background-color: #DE5E1E;
-}
-
-/* line 1396, ../scss/taco/widgets/_form.scss */
-.x-boxselect-item-text {
-  line-height: 16px;
-  padding-right: 20px;
-}
-
-/* line 1400, ../scss/taco/widgets/_form.scss */
-.x-boxselect-item-close {
-  background: none transparent;
-  cursor: pointer;
-  height: 14px;
-  opacity: 1.0;
-  right: 2px;
-  top: 4px;
-  width: 14px;
-}
-/* line 1409, ../scss/taco/widgets/_form.scss */
-.x-boxselect-item-close:before {
-  background-color: #FFF;
-  border-radius: 14px;
-  content: "";
-  display: block;
-  height: 14px;
-  left: 0px;
-  margin: -7px 0 0;
-  position: absolute;
-  top: 50%;
-  width: 14px;
-}
-/* line 1421, ../scss/taco/widgets/_form.scss */
-.x-boxselect-item-close:after {
-  background-color: #76CFDB;
-  content: "";
-  display: block;
-  height: 2px;
-  left: 3px;
-  margin: -1px 0 0;
-  position: absolute;
-  top: 50%;
-  width: 8px;
-  z-index: 11;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-
-/* line 1435, ../scss/taco/widgets/_form.scss */
-.taco-boxselect .x-form-trigger-wrap {
-  width: 100%;
-}
-
-/* line 1438, ../scss/taco/widgets/_form.scss */
-.taco-boxselect .x-form-trigger {
-  background-position: 0 -830px;
-  border: 0 none;
-  height: 20px;
-  margin: 8px 0 0 6px;
-  width: 20px;
-}
-
-/* line 1450, ../scss/taco/widgets/_form.scss */
-.taco-date-field .x-form-text {
-  padding-right: 32px;
-}
-/* line 1455, ../scss/taco/widgets/_form.scss */
-.taco-date-field .x-form-date-trigger,
-.taco-date-field .x-form-trigger-wrap-focus .x-form-date-trigger {
-  width: 32px;
-  height: 32px !important;
-  border: 0;
-  margin: 0;
-  background-position: 0 0;
-}
-
-/* line 1467, ../scss/taco/widgets/_form.scss */
-.x-datepicker {
-  background: #FFF;
-  padding: 10px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px;
-  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
-  overflow: visible;
-}
-/* line 1475, ../scss/taco/widgets/_form.scss */
-.x-datepicker .taco-pointer-before,
-.x-datepicker .taco-pointer-after {
-  position: absolute;
-  margin: -16px 0 0 197px;
-  height: 0;
-  width: 0;
-  border-bottom: 6px solid rgba(0, 0, 0, 0.05);
-  border-top: 0;
-  border-right: 6px solid transparent;
-  border-left: 6px solid transparent;
-}
-/* line 1500, ../scss/taco/widgets/_form.scss */
-.x-datepicker .taco-pointer-after {
-  border-bottom: 6px solid white;
-  margin-top: -15px;
-}
-/* line 1505, ../scss/taco/widgets/_form.scss */
-.x-datepicker .x-datepicker-header {
-  background: none;
-  height: 33px;
-  border-bottom: 1px dashed silver;
-  margin-bottom: 10px;
-}
-/* line 1511, ../scss/taco/widgets/_form.scss */
-.x-datepicker .x-datepicker-header .x-datepicker-month .taco-datepicker-month {
-  font: bold 16px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  text-transform: uppercase;
-  color: #7c7b7a !important;
-}
-/* line 1521, ../scss/taco/widgets/_form.scss */
-.x-datepicker .x-datepicker-header .x-datepicker-prev,
-.x-datepicker .x-datepicker-header .x-datepicker-next {
-  width: 7px;
-}
-/* line 1525, ../scss/taco/widgets/_form.scss */
-.x-datepicker .x-datepicker-header .x-datepicker-prev a {
-  background: none;
-  width: 0;
-  height: 0;
-  border-left: 0;
-  border-top: 7px solid transparent;
-  border-bottom: 7px solid transparent;
-  border-right: 7px solid #5e5c5a;
-}
-/* line 1535, ../scss/taco/widgets/_form.scss */
-.x-datepicker .x-datepicker-header .x-datepicker-next a {
-  background: none;
-  width: 0;
-  height: 0;
-  border-right: 0;
-  border-top: 7px solid transparent;
-  border-bottom: 7px solid transparent;
-  border-left: 6px solid #5e5c5a;
-}
-/* line 1547, ../scss/taco/widgets/_form.scss */
-.x-datepicker table.x-datepicker-inner th {
-  font: bold 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: #7c7b7a;
-  border: 0;
-  background: none;
-  text-align: center;
-}
-/* line 1554, ../scss/taco/widgets/_form.scss */
-.x-datepicker table.x-datepicker-inner th span {
-  padding: 0 0 10px;
-}
-/* line 1559, ../scss/taco/widgets/_form.scss */
-.x-datepicker table.x-datepicker-inner a {
-  color: #7c7b7a;
-  font: normal 14px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  text-align: center;
-  padding: 0;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px;
-}
-/* line 1566, ../scss/taco/widgets/_form.scss */
-.x-datepicker table.x-datepicker-inner a em {
-  font-style: normal;
-}
-/* line 1570, ../scss/taco/widgets/_form.scss */
-.x-datepicker table.x-datepicker-inner a:hover {
-  background-color: #70d2db;
-}
-/* line 1575, ../scss/taco/widgets/_form.scss */
-.x-datepicker table.x-datepicker-inner .x-datepicker-prevday a, .x-datepicker table.x-datepicker-inner .x-datepicker-nextday a {
-  color: #d7d5d2;
-}
-/* line 1579, ../scss/taco/widgets/_form.scss */
-.x-datepicker table.x-datepicker-inner .x-datepicker-today a {
-  border-color: transparent;
-}
-/* line 1583, ../scss/taco/widgets/_form.scss */
-.x-datepicker table.x-datepicker-inner .x-datepicker-selected a {
-  border-color: transparent;
-  background: none;
-  color: #164588;
-}
-/* line 1589, ../scss/taco/widgets/_form.scss */
-.x-datepicker table.x-datepicker-inner a:hover {
-  background-color: #70d2db;
-  color: white;
-}
-/* line 1595, ../scss/taco/widgets/_form.scss */
-.x-datepicker .taco-datepicker-time {
-  font: normal 12px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: #5e5c5a;
-  text-align: center;
-  padding: 7px 0;
-}
-/* line 1601, ../scss/taco/widgets/_form.scss */
-.x-datepicker .taco-datepicker-time input {
-  border: 1px solid silver;
-  color: #9a9a9a;
-  text-align: center;
-  padding: 4px 4px 3px;
-  width: 40px;
-  margin: 0 3px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
-}
-/* line 1611, ../scss/taco/widgets/_form.scss */
-.x-datepicker .taco-datepicker-time span {
-  cursor: pointer;
-  padding: 3px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px;
-}
-/* line 1616, ../scss/taco/widgets/_form.scss */
-.x-datepicker .taco-datepicker-time span.taco-selected {
-  font-weight: bold;
-  color: #164588;
-}
-/* line 1621, ../scss/taco/widgets/_form.scss */
-.x-datepicker .taco-datepicker-time span:hover {
-  background-color: #70d2db;
-  color: white;
-}
-/* line 1628, ../scss/taco/widgets/_form.scss */
-.x-datepicker .x-datepicker-footer {
-  background: none;
-  border: 0;
-}
-/* line 1632, ../scss/taco/widgets/_form.scss */
-.x-datepicker .x-datepicker-footer a {
-  color: #164588;
-  font: normal 12px "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-}
-
-/* line 1639, ../scss/taco/widgets/_form.scss */
+/* CONTAINERS */
+/* line 104, ../scss/taco/widgets/_form.scss */
 .taco-form-flexbox {
   display: -webkit-flex;
   -webkit-flex-direction: row;
-  -webkit-flex-wrap: wrap;
-  -webkit-justify-content: space-between;
-  -webkit-align-items: stretch;
-  -webkit-align-content: flex-start;
-}
-/* line 1642, ../scss/taco/widgets/_form.scss */
-.taco-form-flexbox.taco-form-flexbox-start {
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: wrap;
-  -webkit-justify-content: flex-start;
-  -webkit-align-items: stretch;
-  -webkit-align-content: flex-start;
-}
-/* line 1646, ../scss/taco/widgets/_form.scss */
-.taco-form-flexbox .x-clear {
-  display: none;
-}
-
-/* line 1651, ../scss/taco/widgets/_form.scss */
-.taco-form-note-box {
-  background-color: #EEECEA;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.05) inset;
-  -moz-box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.05) inset;
-  box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.05) inset;
-}
-
-/* line 1657, ../scss/taco/widgets/_form.scss */
-.taco-label-hidden {
-  visibility: hidden;
-}
-
-/* line 1660, ../scss/taco/widgets/_form.scss */
-.taco-selectfield-pretext {
-  line-height: 33px;
-  padding-right: 18px;
-}
-
-/* line 1664, ../scss/taco/widgets/_form.scss */
-.taco-selectfield-pretext + table {
-  display: inline-table;
-}
-
-/* line 1691, ../scss/taco/widgets/_form.scss */
-.taco-orderform label {
-  margin-right: 8px;
-}
-/* line 1694, ../scss/taco/widgets/_form.scss */
-.taco-orderform .status {
-  font-size: 1.25em;
-  margin-bottom: 14px;
-}
-/* line 1700, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-heading {
-  font-size: 1.5em;
-  margin-bottom: 7px;
-  margin-top: 35px;
-  padding-left: 7px;
-  padding-right: 7px;
-}
-/* line 1708, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-customer-data {
-  border: 1px solid #999691;
-  line-height: 1.5em;
-}
-/* line 1713, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-header {
-  background-color: #5e5c5a;
-  border-bottom: 1px solid #999691;
-  color: white;
-  padding: 20px 30px;
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: none;
+  -webkit-flex-wrap: nowrap;
   -webkit-justify-content: space-between;
   -webkit-align-items: stretch;
   -webkit-align-content: stretch;
 }
-/* line 1720, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-header .order-status {
-  font-size: 1.25em;
-  margin-bottom: 14px;
-}
-/* line 1724, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-header .order-status .guid {
-  font-size: 0.6em;
-}
-/* line 1728, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-header .order-total {
-  font-size: 2em;
-}
-/* line 1733, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-merchant-actions {
-  border-bottom: 1px solid #999691;
-  padding: 0px;
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: none;
-  -webkit-justify-content: flex-start;
-  -webkit-align-items: stretch;
-  -webkit-align-content: stretch;
-}
-/* line 1738, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-merchant-actions .payment-flow-action {
-  position: absolute;
-  right: 30px;
-  top: 20px;
-}
-/* line 1743, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-merchant-actions .payment-flow-action a {
-  border: 1px solid #9a9a9a;
-  color: black;
-  cursor: pointer;
-  display: inline-block;
-  font-size: 1.25em;
-  max-width: 200px;
-  padding: 15px 24px 13px;
-  text-align: center;
-  text-decoration: none !important;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.5);
-  box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.5);
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #d7d5d2));
-  background: -webkit-linear-gradient(#ffffff, #d7d5d2);
-  background: -moz-linear-gradient(#ffffff, #d7d5d2);
-  background: -o-linear-gradient(#ffffff, #d7d5d2);
-  background: linear-gradient(#ffffff, #d7d5d2);
-}
-/* line 1759, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-merchant-actions .order-authorization, .taco-orderform .taco-orderform-merchant-actions .order-shipping {
-  padding: 20px 30px;
-  position: relative;
-  -webkit-flex: 0 0 50%;
-}
-/* line 1764, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-merchant-actions .order-authorization {
-  border-right: 1px solid #999691;
-}
-/* line 1769, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-addresses {
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: none;
-  -webkit-justify-content: flex-start;
-  -webkit-align-items: stretch;
-  -webkit-align-content: stretch;
-}
-/* line 1772, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-addresses .order-address {
-  padding: 20px 30px;
-  -webkit-flex: 0 0 50%;
-}
-/* line 1776, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-addresses .order-address .order-address-data {
-  margin: 14px 0px;
-}
-/* line 1779, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-addresses .order-address .order-address-header {
-  padding-bottom: 7px;
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: none;
-  -webkit-justify-content: space-between;
-  -webkit-align-items: stretch;
-  -webkit-align-content: stretch;
-}
-/* line 1783, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-addresses .order-address .order-address-body {
-  padding: 7px 0px;
-}
-/* line 1787, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-addresses .order-address.order-address-billing {
-  border-right: 1px solid #999691;
-}
-/* line 1802, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-totals {
-  border-left: 1px solid #999691;
-  border-right: 1px solid #999691;
-  line-height: 1.5em;
-  text-align: right;
-}
-/* line 1808, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-totals li {
-  padding-left: 14px;
-  padding-right: 14px;
-}
-/* line 1812, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-totals li .value {
-  display: inline-block;
-  min-width: 4em;
-  padding-left: 10px;
-}
-/* line 1818, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-totals .subtotal {
-  border-bottom: 1px solid #999691;
-  margin-bottom: 7px;
-  padding-bottom: 7px;
-  padding-top: 7px;
-}
-/* line 1824, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-totals .grand-total {
-  border-bottom: 1px solid #999691;
-  border-top: 1px solid #999691;
-  margin-top: 7px;
-  padding-bottom: 7px;
-  padding-top: 7px;
-}
-/* line 1834, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-cart-items .x-grid-header-ct, .taco-orderform .taco-orderform-cart-items .x-grid-body {
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
-  -o-border-radius: 0px;
-  border-radius: 0px;
-}
-/* line 1840, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-cart-contents .flexgrid-column {
-  min-width: 10%;
-  -webkit-flex: 1 1 auto;
-}
-/* line 1844, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-cart-contents .flexgrid-column.primary {
-  -webkit-flex: 3 0 auto;
-}
-/* line 1850, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-internal-notes {
-  border: 1px solid #999691;
-}
-/* line 1853, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-internal-notes .note-form {
-  padding: 14px;
-  position: relative;
-}
-/* line 1857, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-internal-notes .note-form textarea {
-  padding-right: 100px;
-}
-/* line 1860, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-internal-notes .note-form .x-btn {
-  bottom: 24px;
-  position: absolute;
-  right: 19px;
-}
-/* line 1867, ../scss/taco/widgets/_form.scss */
-.taco-orderform .taco-orderform-internal-notes .x-grid-header-ct, .taco-orderform .taco-orderform-internal-notes .x-grid-body {
-  border: 0px none !important;
-}
 
-/* line 1873, ../scss/taco/widgets/_form.scss */
-.taco-orderform-customer-note {
-  background-color: #5e5c5a;
-  border-color: #999691;
-  border-style: solid solid none;
-  border-width: 1px 1px 0px;
-  color: white;
-  padding: 14px;
-}
-
-/* line 1883, ../scss/taco/widgets/_form.scss */
-.taco-customerform .taco-customerform-data {
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: wrap;
-  -webkit-justify-content: space-between;
-  -webkit-align-items: stretch;
-  -webkit-align-content: stretch;
-}
-/* line 1886, ../scss/taco/widgets/_form.scss */
-.taco-customerform .taco-customerform-data .taco-customerform-addresses {
-  padding: 14px;
-  -webkit-flex: 0 0 400px;
-}
-/* line 1890, ../scss/taco/widgets/_form.scss */
-.taco-customerform .taco-customerform-data .taco-customerform-addresses .customer-address-header {
-  margin-bottom: 7px;
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: none;
-  -webkit-justify-content: space-between;
-  -webkit-align-items: stretch;
-  -webkit-align-content: stretch;
-}
-/* line 1895, ../scss/taco/widgets/_form.scss */
-.taco-customerform .taco-customerform-data .taco-customerform-addresses .customer-address-body {
-  margin-bottom: 7px;
-}
-/* line 1900, ../scss/taco/widgets/_form.scss */
-.taco-customerform .taco-customerform-data .taco-customerform-summary {
-  border: 1px solid #999691;
-  padding: 14px;
-  -webkit-flex: 0 0 400px;
-}
-/* line 1905, ../scss/taco/widgets/_form.scss */
-.taco-customerform .taco-customerform-data .taco-customerform-summary .customer-totals {
-  margin-bottom: 14px;
+/* line 107, ../scss/taco/widgets/_form.scss */
+.taco-form-flexbox-start {
   display: -webkit-flex;
   -webkit-flex-direction: row;
   -webkit-flex-wrap: nowrap;
@@ -12949,85 +11067,40 @@ a:hover {
   -webkit-align-items: stretch;
   -webkit-align-content: stretch;
 }
-/* line 1909, ../scss/taco/widgets/_form.scss */
-.taco-customerform .taco-customerform-data .taco-customerform-summary .customer-totals .customer-total-spent {
-  -webkit-flex: 1 0 auto;
-}
-/* line 1912, ../scss/taco/widgets/_form.scss */
-.taco-customerform .taco-customerform-data .taco-customerform-summary .customer-totals .customer-total-orders {
-  -webkit-flex: 0 0 auto;
-}
-/* line 1916, ../scss/taco/widgets/_form.scss */
-.taco-customerform .taco-customerform-data .taco-customerform-summary .customer-totals .summary-statistic {
-  font-size: 2em;
-  margin-top: 7px;
+
+/* FORMS */
+/* line 114, ../scss/taco/widgets/_form.scss */
+.taco-form-tab-bar {
+  background-color: #f2f2f2;
+  border: 1px solid #cccccc;
+  border-bottom-width: 1px !important;
 }
 
-/* line 1925, ../scss/taco/widgets/_form.scss */
-.taco-flexform {
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-flex-wrap: wrap;
-  -webkit-justify-content: space-between;
-  -webkit-align-items: stretch;
-  -webkit-align-content: stretch;
-}
-
-/* line 1929, ../scss/taco/widgets/_form.scss */
-.x-tip {
-  background-color: #f9f6d3;
-}
-
-/* line 1933, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel {
-  background-color: #f2f0ed;
-}
-/* line 1940, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel .taco-form-tab {
-  background-color: #94a4b4;
-  border-color: #748597;
-  border-style: solid solid solid none;
-  border-width: 1px 1px 1px 0px;
-  color: white;
+/* line 119, ../scss/taco/widgets/_form.scss */
+.taco-form-tab {
+  background-color: transparent;
+  border-right: 1px solid #cccccc;
   cursor: pointer;
   display: inline-block;
-  height: 40px;
-  padding: 11px 28px;
+  height: 38px;
+  padding: 10px 28px;
   position: relative;
+  vertical-align: top;
 }
-/* line 1952, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel .taco-form-tab:nth-of-type(1) {
-  border-left-style: solid;
-  border-left-width: 1px;
-  -webkit-border-radius: 3px 0px 0px 3px;
-  -moz-border-radius: 3px 0px 0px 3px;
-  -ms-border-radius: 3px 0px 0px 3px;
-  -o-border-radius: 3px 0px 0px 3px;
-  border-radius: 3px 0px 0px 3px;
-}
-/* line 1957, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel .taco-form-tab:nth-last-of-type(1) {
-  -webkit-border-radius: 0px 3px 3px 0px;
-  -moz-border-radius: 0px 3px 3px 0px;
-  -ms-border-radius: 0px 3px 3px 0px;
-  -o-border-radius: 0px 3px 3px 0px;
-  border-radius: 0px 3px 3px 0px;
-}
-/* line 1961, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel .taco-form-tab.add {
-  background-color: #b5bfc9;
+/* line 129, ../scss/taco/widgets/_form.scss */
+.taco-form-tab.add {
   padding-left: 0px;
   padding-right: 0px;
   text-indent: -99999px;
   width: 45px;
 }
-/* line 1968, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel .taco-form-tab.add.list-open {
+/* line 135, ../scss/taco/widgets/_form.scss */
+.taco-form-tab.add.list-open {
   border-radius: 0 3px 0 0;
 }
-/* line 1972, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel .taco-form-tab.add::before {
-  background-color: white;
+/* line 139, ../scss/taco/widgets/_form.scss */
+.taco-form-tab.add::before {
+  background-color: #323232;
   content: "";
   height: 13px;
   left: 21px;
@@ -13035,9 +11108,9 @@ a:hover {
   top: 13px;
   width: 3px;
 }
-/* line 1981, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel .taco-form-tab.add::after {
-  background-color: white;
+/* line 148, ../scss/taco/widgets/_form.scss */
+.taco-form-tab.add::after {
+  background-color: #323232;
   content: "";
   height: 3px;
   left: 16px;
@@ -13045,87 +11118,106 @@ a:hover {
   top: 18px;
   width: 13px;
 }
-/* line 1992, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel .taco-form-tab .taco-override-indicator {
-  display: none;
-  position: absolute;
-  top: 0;
-  right: 0;
-  border: 8px solid orange;
-  border-left-color: transparent;
-  border-bottom-color: transparent;
-}
-/* line 2002, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel .taco-form-tab.taco-has-overrides .taco-override-indicator {
+/* line 160, ../scss/taco/widgets/_form.scss */
+.taco-form-tab:hover .taco-form-tab-close-button {
   display: block;
 }
-/* line 2007, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel .taco-form-tab-active {
-  background-color: #5e6e7d;
+/* line 165, ../scss/taco/widgets/_form.scss */
+.taco-form-tab .taco-override-indicator {
+  background-color: #3778d5;
+  display: none;
+  height: 8px;
+  left: 10px;
+  position: absolute;
+  top: 15px;
+  width: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  border-radius: 8px;
 }
-/* line 2011, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel .taco-form-tab-close-button {
-  display: inline-block;
-  width: 17px;
-  padding: 1px;
-  margin: 0 -8px 0 12px;
-  position: relative;
-  top: -2px;
-  line-height: 1;
-  border-radius: 50%;
-  border: 1px solid #7f7f7f;
+/* line 176, ../scss/taco/widgets/_form.scss */
+.taco-form-tab .taco-form-tab-close-button {
+  display: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  height: 12px;
+  line-height: 1.2rem;
+  position: absolute;
+  right: 11px;
+  text-align: right;
+  top: 14px;
+  width: 12px;
+}
+/* line 189, ../scss/taco/widgets/_form.scss */
+.taco-form-tab.taco-has-overrides .taco-override-indicator {
+  display: block;
+}
+
+/* line 194, ../scss/taco/widgets/_form.scss */
+.taco-form-tab-active {
   background-color: white;
-  color: #7f7f7f;
-  text-align: center;
-  font-size: 13px;
-}
-/* line 2026, ../scss/taco/widgets/_form.scss */
-.taco-form-tab-panel .taco-form-tab-close-button:hover {
-  border-color: white;
-  background-color: #7f7f7f;
-  color: white;
 }
 
-/* line 2034, ../scss/taco/widgets/_form.scss */
-.taco-form-card-nav {
-  color: #7c7b7a;
+/* line 199, ../scss/taco/widgets/_form.scss */
+.taco-form-card-nav-body {
+  background-color: #f2f2f2;
+  border: 1px solid #bfbfbf;
+  margin-top: -40px;
+  padding: 19px 39px;
+  width: 180px;
 }
-/* line 2036, ../scss/taco/widgets/_form.scss */
-.taco-form-card-nav .taco-form-card-nav-link {
-  cursor: pointer;
-  margin-bottom: 20px;
-  padding: 2px 28px 0px;
+/* line 206, ../scss/taco/widgets/_form.scss */
+.taco-form-card-nav-body li {
+  font-size: 1.6rem;
+  line-height: 2rem;
+  margin-top: 20px;
 }
-/* line 2041, ../scss/taco/widgets/_form.scss */
-.taco-form-card-nav .taco-form-card-nav-link:hover, .taco-form-card-nav .taco-form-card-nav-link.scrollspy {
-  color: black;
+/* line 211, ../scss/taco/widgets/_form.scss */
+.taco-form-card-nav-body li:nth-of-type(1) {
+  margin-top: 0px;
 }
 
-/* line 2047, ../scss/taco/widgets/_form.scss */
-.taco-tab-picker {
-  color: white;
-  background-color: #b5bfc9;
-  border: 1px solid #748597;
-  border-top: none;
-  border-radius: 0 0 4px 4px;
-  padding: 6px 8px 0;
-  text-shadow: 0 0 4px #666666;
+/* line 218, ../scss/taco/widgets/_form.scss */
+.taco-shell-scrolled .taco-form-card-nav-body {
+  margin-top: 0px;
+  left: 30px;
+  position: fixed;
+  top: 90px;
+}
+
+/* line 228, ../scss/taco/widgets/_form.scss */
+.taco-product-admin-form > .taco-formform {
+  background-color: white;
+  border: 1px solid #bfbfbf;
+  margin-top: 20px;
+  padding: 39px;
+}
+/* line 234, ../scss/taco/widgets/_form.scss */
+.taco-product-admin-form > .taco-formform .x-panel-header-body-taco-top {
+  border-bottom: 1px solid #bfbfbf;
+  padding-bottom: 20px;
+}
+/* line 240, ../scss/taco/widgets/_form.scss */
+.taco-product-admin-form .taco-product-admin-subform {
+  padding-top: 30px;
 }
 
 @-webkit-keyframes animate-out-actions {
-  /* line 5, ../scss/taco/widgets/_shim.scss */
+  /* line 7, ../scss/taco/widgets/_shim.scss */
   0% {
     opacity: 1;
     display: block;
   }
 
-  /* line 9, ../scss/taco/widgets/_shim.scss */
+  /* line 11, ../scss/taco/widgets/_shim.scss */
   99% {
     display: block;
     opacity: 0;
   }
 
-  /* line 13, ../scss/taco/widgets/_shim.scss */
+  /* line 15, ../scss/taco/widgets/_shim.scss */
   100% {
     display: none;
     opacity: 0;
@@ -13133,157 +11225,42 @@ a:hover {
 }
 
 @-webkit-keyframes animate-in-actions {
-  /* line 20, ../scss/taco/widgets/_shim.scss */
+  /* line 22, ../scss/taco/widgets/_shim.scss */
   0% {
     opacity: 0;
     display: none;
   }
 
-  /* line 24, ../scss/taco/widgets/_shim.scss */
+  /* line 26, ../scss/taco/widgets/_shim.scss */
   1% {
     display: block;
     opacity: 0;
   }
 
-  /* line 28, ../scss/taco/widgets/_shim.scss */
+  /* line 30, ../scss/taco/widgets/_shim.scss */
   100% {
     display: block;
     opacity: 1;
   }
 }
 
-/* line 42, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-tab-panels {
-  padding: 2em;
-}
-/* line 48, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget {
-  cursor: pointer;
-  position: absolute;
-  z-index: 100;
-}
-/* line 53, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget > table {
-  width: 100%;
-  height: 100%;
-  border: 1px solid transparent;
-  border-collapse: separate;
-  border-spacing: 0;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-transition: border 0.3s ease-out;
-  -moz-transition: border 0.3s ease-out;
-  -o-transition: border 0.3s ease-out;
-  transition: border 0.3s ease-out;
-}
-/* line 62, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget > table > tbody > tr > td {
-  opacity: 0;
-  -webkit-transition: background 0.3s ease-out;
-  -moz-transition: background 0.3s ease-out;
-  -o-transition: background 0.3s ease-out;
-  transition: background 0.3s ease-out;
-}
-/* line 66, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget > table > tbody > tr > td > img {
-  height: 3px;
-  width: 3px;
-}
-/* line 72, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget > table > tbody > tr:nth-child(2) > td:nth-child(2) {
-  background: none;
-  width: 100%;
-  height: 100%;
-  opacity: 1;
-  border: 1px dashed transparent;
-  -webkit-transition: border 0.3s ease-out;
-  -moz-transition: border 0.3s ease-out;
-  -o-transition: border 0.3s ease-out;
-  transition: border 0.3s ease-out;
-}
-/* line 81, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget > table > tbody > tr:nth-child(3) > td {
-  font-size: 0;
-}
-/* line 86, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget > table .taco-hint-actions .taco-action {
-  color: black;
-  font-weight: bold;
-  font-size: 10px;
-  padding: 2px 0;
-}
-/* line 92, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget > table .taco-hint-actions .taco-widgethandle {
-  background-position: 0 -2968px;
-  display: block;
-  font-size: 0px;
-  height: 11px;
-  line-height: 0px;
-  opacity: 1;
-  text-indent: -9999px;
-  width: 26px;
-}
-/* line 102, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget > table .taco-hint-actions .taco-widgethandle .x-mask {
-  background: none transparent;
-  cursor: move;
-  opacity: 0;
-}
-/* line 111, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget.taco-hint-active {
-  z-index: 101;
-}
-/* line 114, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget.taco-hint-active > table {
-  border-color: #9a9a9a;
-}
-/* line 117, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget.taco-hint-active > table > tbody > tr > td {
-  opacity: 1;
-  background: #64d3de;
-}
-/* line 122, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget.taco-hint-active > table > tbody > tr:nth-child(2) > td:nth-child(2) {
-  opacity: 1;
-  border-color: #7c7b7a;
-  background: transparent;
-}
-/* line 130, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget.taco-hint-active.taco-soft > table > tbody > tr > td {
-  background: #d7d5d2;
-}
-/* line 134, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-widget.taco-hint-active.taco-soft > tbody > tr:nth-child(2) > td:nth-child(2) {
-  background: transparent;
-}
-/* line 142, ../scss/taco/widgets/_shim.scss */
+/* line 50, ../scss/taco/widgets/_shim.scss */
 .taco-site-editor .taco-shim .taco-hint-element {
   border: 1px solid transparent;
   cursor: pointer;
   position: absolute;
-  -webkit-transition: border 0.3s ease-out;
-  -moz-transition: border 0.3s ease-out;
-  -o-transition: border 0.3s ease-out;
-  transition: border 0.3s ease-out;
 }
-/* line 148, ../scss/taco/widgets/_shim.scss */
-.taco-site-editor .taco-shim .taco-hint-element.taco-hint-active {
-  border-color: #56b8c3;
-}
-/* line 153, ../scss/taco/widgets/_shim.scss */
+/* line 61, ../scss/taco/widgets/_shim.scss */
 .taco-site-editor .taco-shim .taco-hint-zone {
   position: absolute;
   border: 1px solid transparent;
 }
-/* line 157, ../scss/taco/widgets/_shim.scss */
+/* line 66, ../scss/taco/widgets/_shim.scss */
 .taco-site-editor .taco-shim .taco-hint-zone.taco-hint-active {
   border-color: red;
 }
 
-/* line 171, ../scss/taco/widgets/_shim.scss */
+/* line 82, ../scss/taco/widgets/_shim.scss */
 .taco-widget-editor-preview {
   width: 120px;
   height: 120px;
@@ -13293,7 +11270,7 @@ a:hover {
   padding-top: 55px;
 }
 
-/* line 180, ../scss/taco/widgets/_shim.scss */
+/* line 91, ../scss/taco/widgets/_shim.scss */
 .taco-hr-widget-container {
   display: -webkit-flex;
   -webkit-flex-direction: row;
@@ -13302,17 +11279,17 @@ a:hover {
   -webkit-align-items: stretch;
   -webkit-align-content: stretch;
 }
-/* line 183, ../scss/taco/widgets/_shim.scss */
+/* line 94, ../scss/taco/widgets/_shim.scss */
 .taco-hr-widget-container .x-form-item-label-top {
   margin: 0 0 0.3em;
 }
-/* line 187, ../scss/taco/widgets/_shim.scss */
+/* line 98, ../scss/taco/widgets/_shim.scss */
 .taco-hr-widget-container .taco-hr-line-style-label {
   width: 102px;
   display: inline-block;
   padding-left: 4px;
 }
-/* line 193, ../scss/taco/widgets/_shim.scss */
+/* line 104, ../scss/taco/widgets/_shim.scss */
 .taco-hr-widget-container .taco-hr-line-style {
   width: 100%;
   display: inline-block;
@@ -13320,38 +11297,184 @@ a:hover {
   position: relative;
   top: -2px;
 }
-/* line 201, ../scss/taco/widgets/_shim.scss */
+/* line 112, ../scss/taco/widgets/_shim.scss */
 .taco-hr-widget-container .taco-hr-preview {
   padding: 20px 0;
   border: 1px solid silver;
   margin-bottom: 50px;
 }
-/* line 206, ../scss/taco/widgets/_shim.scss */
+/* line 117, ../scss/taco/widgets/_shim.scss */
 .taco-hr-widget-container .taco-hr-preview hr {
   border: 0 solid #9a9a9a;
   margin: 0 auto;
   width: 85%;
 }
 
-/* line 215, ../scss/taco/widgets/_shim.scss */
+/* line 126, ../scss/taco/widgets/_shim.scss */
 .taco-image-gallery-widget .columns-input {
   text-align: center;
 }
 
-/* line 7, ../scss/taco/_sites.scss */
+/* line 133, ../scss/taco/widgets/_shim.scss */
+.taco-hints-subcontainer {
+  height: 100%;
+}
+
+/* line 140, ../scss/taco/widgets/_shim.scss */
+.taco-hint-widget {
+  cursor: pointer;
+  position: absolute;
+  z-index: 100;
+  opacity: 0;
+  border: 1px solid #5e5c5a;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px;
+  -webkit-transition: opacity 0.2s ease-out, border-radius 60s linear;
+  -moz-transition: opacity 0.2s ease-out, border-radius 60s linear;
+  -o-transition: opacity 0.2s ease-out, border-radius 60s linear;
+  transition: opacity 0.2s ease-out, border-radius 60s linear;
+}
+/* line 151, ../scss/taco/widgets/_shim.scss */
+.taco-hint-widget .taco-hint-actions {
+  padding: 5px 8px;
+  height: 28px;
+  position: absolute;
+  top: 0;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -webkit-justify-content: flex-start;
+  -webkit-align-items: stretch;
+  -webkit-align-content: stretch;
+  z-index: 102;
+  background: rgba(94, 92, 90, 0.9);
+}
+/* line 161, ../scss/taco/widgets/_shim.scss */
+.taco-hint-widget .taco-action {
+  color: black;
+  font-weight: bold;
+  font-size: 10px;
+  padding: 2px 0;
+}
+/* line 168, ../scss/taco/widgets/_shim.scss */
+.taco-hint-widget .taco-widgethandle {
+  background-position: 0 -3082px;
+  display: block;
+  font-size: 0px;
+  height: 11px;
+  line-height: 0px;
+  opacity: 1;
+  text-indent: -9999px;
+  width: 26px;
+}
+/* line 178, ../scss/taco/widgets/_shim.scss */
+.taco-hint-widget .taco-widgethandle .x-mask {
+  background: none transparent;
+  cursor: move;
+  opacity: 0;
+}
+/* line 185, ../scss/taco/widgets/_shim.scss */
+.taco-hint-widget.taco-hint-active {
+  z-index: 101;
+  opacity: 1;
+  -webkit-border-radius: 0 0 30px 30px;
+  -moz-border-radius: 0 0 30px 30px;
+  -ms-border-radius: 0 0 30px 30px;
+  -o-border-radius: 0 0 30px 30px;
+  border-radius: 0 0 30px 30px;
+}
+/* line 191, ../scss/taco/widgets/_shim.scss */
+.taco-hint-widget.taco-hint-inactive {
+  opacity: 0;
+}
+
+/* line 196, ../scss/taco/widgets/_shim.scss */
+.taco-widget-drag {
+  width: 3px;
+  height: 15px;
+  opacity: 0.9;
+  cursor: move;
+  -webkit-flex: 1 1 auto;
+  margin-right: 100px;
+  background-position: 0 -3116px;
+}
+
+/* line 206, ../scss/taco/widgets/_shim.scss */
+.taco-widget-edit {
+  width: 18px;
+  height: 18px;
+  margin-right: 15px;
+  opacity: 0.9;
+  background-position: 0 -2592px;
+}
+
+/* line 214, ../scss/taco/widgets/_shim.scss */
+.taco-widget-remove {
+  width: 15px;
+  height: 18px;
+  opacity: 0.9;
+  background-position: 0 -3098px;
+}
+
+/* line 3, ../scss/taco/_sites.scss */
+.taco-inline-editor-tools {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* line 9, ../scss/taco/_sites.scss */
+.taco-toolbox .x-toolbar-default {
+  background-color: white;
+  border: none;
+}
+/* line 13, ../scss/taco/_sites.scss */
+.taco-toolbox .x-toolbar-default .taco-tabs {
+  padding: 0.8rem;
+}
+/* line 16, ../scss/taco/_sites.scss */
+.taco-toolbox .x-toolbar-default .taco-tabs a {
+  padding: 0.5rem 1rem;
+  border: 0.1rem solid #9a9a9a;
+  border-right-width: 0;
+  color: #5e5c5a;
+  background: #edeae6;
+  font-size: 1.2rem;
+}
+/* line 25, ../scss/taco/_sites.scss */
+.taco-toolbox .x-toolbar-default .taco-tabs a:first-child {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+/* line 29, ../scss/taco/_sites.scss */
+.taco-toolbox .x-toolbar-default .taco-tabs a:last-child {
+  border-radius: 0 0.5rem 0.5rem 0;
+  border-right-width: 0.1rem;
+}
+/* line 34, ../scss/taco/_sites.scss */
+.taco-toolbox .x-toolbar-default .taco-tabs a.active {
+  background: #d8d1c8;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
+  -o-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
+  -ms-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) inset;
+}
+/* line 44, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist .taco-shit {
   background-color: white !important;
   font-size: 18px;
 }
-/* line 10, ../scss/taco/_sites.scss */
+/* line 48, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist .taco-shit > div {
   padding: 14px 0px 7px;
 }
-/* line 11, ../scss/taco/_sites.scss */
+/* line 49, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist .taco-shit > div > img {
   display: none;
 }
-/* line 16, ../scss/taco/_sites.scss */
+/* line 54, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist .taco-shit:after {
   background-color: white;
   content: "Root";
@@ -13365,35 +11488,35 @@ a:hover {
   top: auto;
   width: 36px;
 }
-/* line 33, ../scss/taco/_sites.scss */
+/* line 70, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr .x-tree-icon-inline {
   height: 24px;
   width: 24px;
 }
-/* line 38, ../scss/taco/_sites.scss */
+/* line 75, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-group {
   display: none;
 }
-/* line 43, ../scss/taco/_sites.scss */
+/* line 80, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-folder,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-category {
   background-position: 0 -197px;
 }
-/* line 49, ../scss/taco/_sites.scss */
+/* line 86, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-blog,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-page,
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-systempage {
   background-position: 0 -221px;
 }
-/* line 53, ../scss/taco/_sites.scss */
+/* line 90, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-link {
   background-position: 0 -125px;
 }
-/* line 56, ../scss/taco/_sites.scss */
+/* line 93, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr .taco-nav-node-product {
   background-position: 0 -149px;
 }
-/* line 60, ../scss/taco/_sites.scss */
+/* line 97, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr .taco-draghandle {
   -webkit-transition: opacity 1s;
   -moz-transition: opacity 1s;
@@ -13401,11 +11524,11 @@ a:hover {
   transition: opacity 1s;
   opacity: 1;
 }
-/* line 65, ../scss/taco/_sites.scss */
+/* line 102, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr:not(:hover) .taco-draghandle {
   opacity: 0;
 }
-/* line 69, ../scss/taco/_sites.scss */
+/* line 106, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist tbody tr:nth-child(3) .x-tree-icon {
   background-position: 0 -173px;
 }
@@ -13657,31 +11780,39 @@ a:hover {
   width: 425px;
 }
 
-/* line 3, ../scss/taco/_viewport.scss */
+/* DOCUMENT */
+/* line 5, ../scss/taco/_viewport.scss */
+.x-viewport {
+  font-size: 10px;
+}
+
+/* line 9, ../scss/taco/_viewport.scss */
 .x-body {
   background-color: #e6e6e6;
 }
 
-/* line 7, ../scss/taco/_viewport.scss */
+/* HEADER */
+/* line 15, ../scss/taco/_viewport.scss */
 .taco-viewport-header {
+  width: 100%;
   -webkit-box-shadow: 0px -1px 6px black;
   -moz-box-shadow: 0px -1px 6px black;
   box-shadow: 0px -1px 6px black;
 }
 
-/* line 11, ../scss/taco/_viewport.scss */
+/* line 20, ../scss/taco/_viewport.scss */
 .taco-masthead {
   background-color: #323232;
   border-top: 5px solid #d2463c;
   color: white;
-  font-size: 14px;
+  font-size: 1.4rem;
   line-height: 1.5em;
 }
-/* line 18, ../scss/taco/_viewport.scss */
+/* line 27, ../scss/taco/_viewport.scss */
 .taco-masthead .taco-action {
   color: #f2f0ed;
 }
-/* line 22, ../scss/taco/_viewport.scss */
+/* line 31, ../scss/taco/_viewport.scss */
 .taco-masthead .taco-mozulogo {
   font-size: 0px;
   height: 50px;
@@ -13692,75 +11823,88 @@ a:hover {
   background-position: 0 -519px;
 }
 
-/* line 2, ../scss/taco/_product.scss */
-.taco-product-admin-form {
-  padding-bottom: 200px;
-}
-/* line 6, ../scss/taco/_product.scss */
-.taco-product-admin-form .taco-formform .x-panel-header {
-  margin-top: 24px;
+/* BODY */
+/* line 44, ../scss/taco/_viewport.scss */
+.taco-content-view {
+  width: 100%;
 }
 
-/* line 11, ../scss/taco/_product.scss */
-.taco-product-admin-subform {
-  padding: 0 14px;
-}
-/* line 14, ../scss/taco/_product.scss */
-.taco-product-admin-subform label {
-  margin-top: 16px;
-}
-/* line 18, ../scss/taco/_product.scss */
-.taco-product-admin-subform .taco-flex-field-spacing {
-  margin-left: 20px;
+/* SCROLLBARS */
+/* line 51, ../scss/taco/_viewport.scss */
+::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
 }
 
-/* line 23, ../scss/taco/_product.scss */
+/* line 57, ../scss/taco/_viewport.scss */
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+/* line 64, ../scss/taco/_viewport.scss */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+/* line 70, ../scss/taco/_viewport.scss */
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(255, 0, 0, 0);
+}
+
+/* line 24, ../scss/taco/_product.scss */
 .taco-override-form {
   overflow: visible;
 }
 /* line 30, ../scss/taco/_product.scss */
 .taco-override-form.active {
+  margin-top: 30px;
   position: relative;
-  margin-top: 25px;
-  border: 1px dashed orange;
-  margin-left: -14px;
 }
 /* line 37, ../scss/taco/_product.scss */
 .taco-override-form.active .x-container {
-  padding: 0 14px 14px;
+  border: 1px dashed #cccccc;
+  padding: 0px 20px 20px;
 }
-/* line 41, ../scss/taco/_product.scss */
+/* line 43, ../scss/taco/_product.scss */
 .taco-override-form.active .taco-override-checkbox {
   display: block;
 }
-/* line 47, ../scss/taco/_product.scss */
-.taco-override-form .x-container {
-  display: -webkit-flex;
-  -webkit-justify-content: flex-start;
-  -webkit-flex-wrap: wrap;
-  -webkit-flex-direction: row;
-}
-/* line 54, ../scss/taco/_product.scss */
+/* line 53, ../scss/taco/_product.scss */
 .taco-override-form .x-mask {
-  background-color: #f1f0ec;
+  background-color: transparent;
+  background-image: -webkit-repeating-linear-gradient(-45deg, white 0%, white 25.5%, black 25.5%, black 51%, white 51%, white 76.5%, black 76.5%, black 100%);
+  background-size: 6px 6px;
+  opacity: 0.06;
 }
-/* line 61, ../scss/taco/_product.scss */
-.taco-override-form .x-item-disabled .x-form-field, .taco-override-form .x-item-disabled .x-form-item-label, .taco-override-form .x-item-disabled .x-form-cb-label {
-  opacity: 1;
-}
-/* line 66, ../scss/taco/_product.scss */
+/* line 68, ../scss/taco/_product.scss */
 .taco-override-form .taco-override-checkbox {
   display: none;
-  z-index: 101;
-  background-color: #f1f0ec;
-  outline: 5px solid #f1f0ec;
   position: absolute;
-  top: -14px;
+  top: 0px;
   right: 100px;
+  z-index: 101;
 }
-/* line 76, ../scss/taco/_product.scss */
+/* line 78, ../scss/taco/_product.scss */
+.taco-override-form .taco-override-checkbox .x-form-cb-wrap {
+  background-color: white;
+  border-color: #cccccc;
+  border-style: dashed;
+  border-width: 0px 1px 1px;
+  padding: 4px 8px;
+}
+/* line 86, ../scss/taco/_product.scss */
 .taco-override-form .taco-override-checkbox.taco-auto-z-index {
   z-index: auto;
+}
+
+/* line 92, ../scss/taco/_product.scss */
+.taco-attribute-form {
+  background: rgba(0, 0, 0, 0.1);
+  margin: 1rem;
 }
 
 /* line 5, ../scss/taco/widgets/_standaloneAccordion.scss */
