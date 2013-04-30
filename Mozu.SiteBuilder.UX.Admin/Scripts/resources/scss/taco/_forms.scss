@@ -9,8 +9,6 @@
   }
 
   .#{$vprefix}override-form {
-    overflow: visible;
-
     &.active {
       margin-top: 30px;
       position: relative;

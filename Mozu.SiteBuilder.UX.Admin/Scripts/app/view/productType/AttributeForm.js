@@ -2,11 +2,11 @@
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco.producttype.attributeform',
     requires: ['Taco.store.Attributes'],
-    flexLayout: true,
 
-    containerWidth: 150,
     height: 400,
 
+    containerWidth: 150,
+    flexLayout: true,
     ignoreParentFormTracking: true,
 
     initComponent: function () {
