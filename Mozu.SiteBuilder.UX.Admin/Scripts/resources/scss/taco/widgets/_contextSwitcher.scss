@@ -7,6 +7,12 @@
   .#{$vprefix}context-switcher {
     cursor: pointer;
     color: $fontColor;
+    .#{$prefix}mask {
+        display: none;
+    }
+    &.#{$prefix}item-disabled {
+        opacity: 0.4;
+    }
   }
 
   .#{$vprefix}context-switcher-trigger {
