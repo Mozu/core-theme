@@ -101,11 +101,17 @@
 
   /* CONTAINERS */
 
+  // formflexbox, extends Ext.Container
   .#{$vprefix}form-flexbox {
     @include flexbox($justify: space-between);
   }
   .#{$vprefix}form-flexbox-start {
     @include flexbox($justify: flex-start);
+  }
+
+  // flexform, a class on the body element of some Ext.form.Panel instances
+  .#{$vprefix}flexform {
+    @include flexbox;
   }
 
   /* FORMS */
@@ -223,22 +229,17 @@
     }
   }
 
-  // product form
-  .#{$vprefix}product-admin-form {
-    &> .#{$vprefix}formform {
-      background-color: $color-neutral-white;
-      border: 1px solid border-for($color-neutral-95);
-      margin-top: 20px;
-      padding: 39px;
+  .#{$vprefix}form-section {
+    background-color: $color-neutral-white;
+    border: 1px solid border-for($color-neutral-95);
+    margin-top: 20px;
+    padding: 39px;
 
-      .#{$prefix}panel-header-body-taco-top {
+    &> .#{$prefix}panel-header {
+      .#{$prefix}panel-header-body {
         border-bottom: 1px solid border-for($color-neutral-95);
         padding-bottom: 20px;
       }
-    }
-
-    .#{$vprefix}product-admin-subform {
-      padding-top: 30px;
     }
   }
 

@@ -87,11 +87,6 @@
         border-bottom: 1px dashed $color-grid-border;
         margin-bottom: 10px;
       }
-
-      .#{$prefix}panel-header-text {
-        font-size: 1.25em;
-        line-height: 1.25em;
-      }
     }
 
     &> .#{$prefix}panel-body {

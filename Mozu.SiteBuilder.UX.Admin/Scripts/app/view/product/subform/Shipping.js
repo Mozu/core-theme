@@ -9,7 +9,6 @@ Ext.define('Taco.view.product.subform.Shipping', {
     requires: ['Taco.core.ux.form.FlexBox'],
 
     title: 'Shipping',
-    cls: Taco.baseCSSPrefix + 'product-admin-subform-shipping',
     
     initComponent: function () {
         this.items = [{

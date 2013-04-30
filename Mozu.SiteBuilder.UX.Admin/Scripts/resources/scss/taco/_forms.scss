@@ -1,43 +1,23 @@
-﻿@mixin taco-product {
+﻿@mixin taco-forms {
+
+  /* PRODUCT FORM */
 
   .#{$vprefix}product-admin-form {
-    // *** For readability
-    // padding-bottom: 100px;
-
-    .#{$vprefix}formform .x-panel-header {
-      // margin-top: 24px;
-    }
-  }
-
-  .#{$vprefix}product-admin-subform {
-    // padding: 0 14px;
-
-    label {
-      // margin-top: 16px;
-    }
-
-    .#{$vprefix}flex-field-spacing {
-      // margin-left: 20px;
+    .#{$vprefix}product-admin-subform {
+      padding-top: 30px;
     }
   }
 
   .#{$vprefix}override-form {
     overflow: visible;
-    // border: 1px dashed orange;
-    // padding: 0 $overrideOffset $overrideOffset;
-    // margin-left: -$overrideOffset;
 
     &.active {
       margin-top: 30px;
       position: relative;
 
-      // border: 1px dashed orange;
-      // margin-left: -$overrideOffset;
-
       .x-container {
         border: 1px dashed border-for($color-neutral-white);
         padding: 0px 20px 20px;
-        // padding: 0 $overrideOffset $overrideOffset;
       }
 
       .#{$vprefix}override-checkbox {
@@ -45,35 +25,19 @@
       }
     }
 
-    // *** For the subitems
-    .x-container {
-      // @include flexbox($wrap: wrap);
-    }
-
     .x-mask {
       background-color: transparent;
       background-image: -webkit-repeating-linear-gradient(-45deg, $color-neutral-white 0%, $color-neutral-white 25.5%, $color-neutral-black 25.5%, $color-neutral-black 51%, $color-neutral-white 51%, $color-neutral-white 76.5%, $color-neutral-black 76.5%, $color-neutral-black 100%);
       background-size: 6px 6px;
       opacity: 0.06;
-      // opacity: 0.4;
     }
 
-    // *** Raise opacity of subitems and their labels
-    // .x-item-disabled {
-    //   .x-form-field, .x-form-item-label, .x-form-cb-label {
-    //     opacity: 1
-    //   }
-    // }
-
     .#{$vprefix}override-checkbox {
-      display: none; // *** Hide checkbox when not in an .active container
-      // outline: 5px solid #f1f0ec;
-      //padding: 0 12px;
+      display: none;
       position: absolute;
-      // top: -14px;
       top: 0px;
       right: 100px;
-      z-index: 101; // *** Matches value of modal mask; this sits just under b/c mask comes later in the DOM
+      z-index: 101; // matches value of modal mask; this sits just under b/c mask comes later in the DOM
 
       .#{$prefix}form-cb-wrap {
         background-color: $color-neutral-white;
@@ -93,5 +57,9 @@
     background: rgba(0, 0, 0, 0.1);
     margin: 1rem;
   }
+
+  /* PRODUCT TYPE FORM */
+
+  .#{$vprefix}producttype-attribute-panel {}
 
 }
