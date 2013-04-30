@@ -106,6 +106,8 @@ Ext.define('Taco.view.site.Toolbox', {
         this.items = [{
             xtype: 'tabpanel',
             manageHeight: false,
+            cls: Taco.baseCSSPrefix + 'toolbox-tabpanel',
+            tabBar: { plain: true, layout: 'auto' },
             items: [
                 Ext.create('Taco.core.ux.TreeList', {
                     itemId: 'pages',
