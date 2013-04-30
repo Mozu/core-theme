@@ -8,7 +8,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
         type: 'vbox',
         align: 'stretch'
     },
-    height: 1000,
+    // height: 1000,
     //todo editlnik
     bubbleEvents: ['editlink'],
     navigate: function(record) {
@@ -130,7 +130,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
             hideHeaders: true,
             itemId: 'navigationTree',
             plugins: [cellEditing],
-            height: 400,
+            // height: 400,
             store: this.store,
             columns: [{
                     xtype: 'treecolumn',

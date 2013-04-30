@@ -10,13 +10,26 @@ Ext.define('Taco.core.ux.content.Body', {
     bubbleEvents: ['add','remove','save','cancel'],
 
     cls: 'taco-content-body',
-    flex: 1,
-    // height: 2500,
-  
     layout: 'auto',
 
-    // autoScroll: true,
+    initComponent: function () {
+        this.callParent(arguments);
+
+        this.on({
+            boxready: this.setMinHeight,
+            scope: this
+        });
+    },
+
     onSetMessage: function (message, type) {
         console.log (message + ', ' + type);
+    },
+
+    setMinHeight: function () {
+        var el = this.getEl(),
+            vpHeight = Ext.getBody().getHeight() - 171;
+
+        vpHeight = Ext.dom.AbstractElement.addUnits(vpHeight, 'px');
+        Ext.fly(el).applyStyles({ minHeight: vpHeight });
     }
 });

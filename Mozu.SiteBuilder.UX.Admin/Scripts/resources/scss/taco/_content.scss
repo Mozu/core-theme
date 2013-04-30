@@ -74,13 +74,14 @@
   .#{$vprefix}shell-scrolled {
     .#{$vprefix}content-header {
       background-color: $color-neutral-90;
+      border-right: 5px solid $color-neutral-transparent;
       left: 0px;
       position: fixed;
       top: 0px;
     }
 
     .#{$vprefix}content-body {
-      margin-top: 71px;
+      margin-top: 65px !important;
     }
 
     // .#{$vprefix}content-sidebar {
