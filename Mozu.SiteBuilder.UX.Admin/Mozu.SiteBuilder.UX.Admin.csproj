@@ -2029,7 +2029,6 @@
     <Content Include="Views\Home\Index_Compiled.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Scripts\resources\scss\taco\_product.scss" />
     <Content Include="Tests\admintests.bat" />
     <Content Include="Tests\siesta-1.1.8-standard\bin\binary\LICENSE.APACHE2" />
     <Content Include="Tests\siesta-1.1.8-standard\bin\binary\LICENSE.BSD" />
@@ -2104,6 +2103,7 @@
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\resources\scss\taco\_forms.scss" />
     <None Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

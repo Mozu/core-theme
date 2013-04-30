@@ -9,6 +9,7 @@ Ext.define('Taco.view.product.subform.Subform', {
     requires: ['Taco.view.product.subform.OverrideForm'],
 
     bodyCls: Taco.baseCSSPrefix + 'product-admin-subform',
+    cls: Taco.baseCSSPrefix + 'form-section',
     defaults: {
         xtype: 'textfield',
         labelAlign: 'top',

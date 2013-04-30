@@ -9,9 +9,6 @@
 @import 'taco/sites';
 @import 'taco/errors';
 
-// Import views
-@import 'taco/product';
-
 // tinyMCE fixes
 @import 'taco/tinymce_fixes';
 
@@ -32,3 +29,6 @@
 @import 'taco/widgets/standaloneAccordion';
 @import 'taco/widgets/phoneOrders';
 @import 'taco/widgets/contextSwitcher';
+
+// Import views
+@import 'taco/forms';
