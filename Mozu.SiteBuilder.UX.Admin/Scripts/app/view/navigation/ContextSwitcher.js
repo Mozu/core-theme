@@ -41,8 +41,15 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
                     this.mon(
                         Taco.core.StateManager,
                         'statechange',
-                        function () {
+                        function (newState) {
                             this.setDisplayedValue( this.lookupContextNameFromToken( Taco.app.context.getCurrentContext().urlToken ) );
+                            var md = newState.getMetaData && newState.getMetaData();
+                            if (md && md.action === "edit") {
+                                this.disable();
+                                if (this.listIsShowing()) this.hideList();
+                            } else {
+                                this.enable();
+                            }
                         },
                         this
                     );
@@ -54,6 +61,7 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
             contextClicked: this.changeContext,
             scope: this
         });
+
     },
 
     /**
@@ -79,15 +87,42 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
 
         // console.log(this);
         // window.xxx = this;
-
-        if( !label.hasCls('showing-list') ) {
-            label.addCls('showing-list');
-            // list.showBy( label, 'tr-br', [-159, 0] );
-            list.showBy( label, 'tr-br' );
+        if (this.disabled) return;
+        if (!this.listIsShowing()) {
+            this.showList();
         } else {
-            label.removeCls('showing-list');
-            list.hide();
+            this.hideList();
         }
+    },
+    
+    /**
+     * @public
+     * @returns Taco.view.navigation.ContextSwitcher
+     * Hides the list.
+     */
+    hideList: function() {
+        this.label.removeCls('showing-list');
+        this.list.hide();
+        return this;
+    },
+
+    /**
+     * @public
+     * @return {Taco.view.navigation.ContextSwitcher}
+     * Shows the list.
+     */
+    showList: function() {
+        this.label.addCls('showing-list');
+        this.list.showBy(this.label, 'tr-br');
+    },
+
+    /**
+     * @public
+     * @return {Boolean} 
+     * Well? Is it?
+     */
+    listIsShowing: function() {
+        return this.label.hasCls('showing-list');
     },
 
     /**
