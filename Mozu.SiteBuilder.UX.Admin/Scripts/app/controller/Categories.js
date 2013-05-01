@@ -10,24 +10,24 @@ Ext.define('Taco.controller.Categories', {
     listView: null,
     models: ['Category'],
     views: ['category.Index', 'category.Index'],
-    stores: ['Categories'],
-    modelName: 'Category',
-    contextPlaceholders: {
-        tc: function () {
-            return Ext.create('Taco.core.ux.content.Container', {
-                header: {
-                    title: "choose a site"
-                },
+    stores: ['Categories']
+    //modelName: 'Category',
+    //contextPlaceholders: {
+    //    tc: function () {
+    //        return Ext.create('Taco.core.ux.content.Container', {
+    //            header: {
+    //                title: "choose a site"
+    //            },
 
-                body: {
-                    layout: 'auto',
-                    items: [{
-                        html: 'placeholder for choose site  interstitial '
-                    }]
-                }
-            });
-        }
-    }
+    //            body: {
+    //                layout: 'auto',
+    //                items: [{
+    //                    html: 'placeholder for choose site  interstitial '
+    //                }]
+    //            }
+    //        });
+    //    }
+    //}
 
     //init: function () {
 

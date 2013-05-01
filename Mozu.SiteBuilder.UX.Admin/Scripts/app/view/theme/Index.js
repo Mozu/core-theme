@@ -9,6 +9,7 @@ Ext.define('Taco.view.theme.Index', {
         , 'Taco.store.ThemeListing'
     ],
 
+    requiresContextOfType: 's',
     initComponent: function () {
         this.header = {
             title: 'Manage Themes'

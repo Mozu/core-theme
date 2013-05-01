@@ -7,24 +7,24 @@ Ext.define('Taco.controller.Discounts', {
     models: ['Taco.model.Discount'],
     stores: ['Taco.store.Discounts'],
     views: ['discount.Index'],
-    modelName: 'Discount',
+    modelName: 'Discount'
     
-    contextPlaceholders: {
-        tc: function () {
-            return Ext.create('Taco.core.ux.content.Container', {
-                header: {
-                    title: "choose a site"
-                },
+    //contextPlaceholders: {
+    //    tc: function () {
+    //        return Ext.create('Taco.core.ux.content.Container', {
+    //            header: {
+    //                title: "choose a site"
+    //            },
 
-                body: {
-                    layout: 'auto',
-                    items: [{
-                        html: 'placeholder for choose site interstitial '
-                    }]
-                }
-            });
-        }
-    }
+    //            body: {
+    //                layout: 'auto',
+    //                items: [{
+    //                    html: 'placeholder for choose site interstitial '
+    //                }]
+    //            }
+    //        });
+    //    }
+    //}
 });
 
 //    index: function (params) {

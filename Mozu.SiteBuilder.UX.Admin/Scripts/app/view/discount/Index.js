@@ -15,6 +15,7 @@ Ext.define('Taco.view.discount.Index', {
     editorName: 'Taco.view.discount.Edit',
     typeName: 'Discount',
 
+    requiresContextOfType: 's',
     gridPanelConf: {
         columns: [{
             xtype: 'gridcolumn',

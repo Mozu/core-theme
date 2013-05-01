@@ -12,8 +12,8 @@ Ext.define('Taco.view.productType.Index', {
     modelName: 'Taco.model.ProductType',
     store: { type: 'Taco.store.ProductTypes' },
     editorName: 'Taco.view.productType.Edit',
-    filterProperty: 'name',
-
+    filterProperty: 'name',
+    requiresContextOfType: ['c', 's'],
     gridPanelConf: {
         columns: [{
             dataIndex: 'id',

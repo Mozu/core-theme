@@ -4,6 +4,8 @@ Ext.define('Taco.view.site.page.Edit', {
         'Taco.view.site.page.Form'
     ],
 
+    requiresContextOfType: 's',
+
     cls: Taco.baseCSSPrefix + 'content-inline-editor',
 
     bodyLayout: 'auto',

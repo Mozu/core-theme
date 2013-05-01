@@ -31,6 +31,7 @@ Ext.define('Taco.core.ux.content.Container', {
         me.subscribeEvents();
 
         Taco.app.eventbus.fireEvent("createpageview");
+
     },
 
     setActionHandlerScope: function (scope) {
@@ -42,7 +43,8 @@ Ext.define('Taco.core.ux.content.Container', {
             }
         }
     },
-            
+
+
 
     arrangePanels: function() {
         var me = this;

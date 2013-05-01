@@ -10,24 +10,24 @@ Ext.define('Taco.controller.Inventory', {
     models: ['Taco.model.InventoryProduct'],
     stores: ['Taco.store.InventoryProducts'],
     views: ['inventory.Index'],
-    modelName: 'InventoryProduct',
+    modelName: 'InventoryProduct'
 
-    contextPlaceholders: {
-        t: function () {
-            return Ext.create('Taco.core.ux.content.Container', {
-                header: {
-                    title: "choose a site collection"
-                },
+    //contextPlaceholders: {
+    //    t: function () {
+    //        return Ext.create('Taco.core.ux.content.Container', {
+    //            header: {
+    //                title: "choose a site collection"
+    //            },
 
-                body: {
-                    layout: 'auto',
-                    items: [{
-                        html: 'placeholder for choose site collection interstitial '
-                    }]
-                }
-            });
-        }
-    }
+    //            body: {
+    //                layout: 'auto',
+    //                items: [{
+    //                    html: 'placeholder for choose site collection interstitial '
+    //                }]
+    //            }
+    //        });
+    //    }
+    //}
 });
 
 
