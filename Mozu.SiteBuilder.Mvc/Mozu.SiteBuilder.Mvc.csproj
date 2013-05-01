@@ -367,6 +367,7 @@
     <Compile Include="ICatalogContext.cs" />
     <Compile Include="ICookieProvider.cs" />
     <Compile Include="ISearchContext.cs" />
+    <Compile Include="ISiteBuilderApiContext.cs" />
     <Compile Include="ISiteBuilderContext.cs" />
     <Compile Include="IStorefrontCache.cs" />
     <Compile Include="JasonDcResult.cs" />

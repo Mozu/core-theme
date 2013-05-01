@@ -1,9 +1,10 @@
-﻿using NSubstitute;
-using NUnit.Framework;
+﻿using System;
 using Mozu.Content.Contracts.Clients;
-using Mozu.Core;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
+using NSubstitute;
+using NUnit.Framework;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Mvc.CMS
 {
@@ -11,7 +12,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.CMS
     public class CmsServiceWrapperTests
     {
         private IDocumentWebApiClient _documentWebApiClient;
-        private IApiContext _apiContext;
+        private ISiteBuilderApiContext _apiContext;
         private ICmsTypeHelper _cmsTypeHelper;
         private IFolderWebApiClient _folderWebApiClient;
         private IFacetsWebApiClient _facetsWebApiClient;
@@ -20,7 +21,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.CMS
         public void SetUp()
         {
             _documentWebApiClient = Substitute.For<IDocumentWebApiClient>();
-            _apiContext = Substitute.For<IApiContext>();
+            _apiContext = Substitute.For<ISiteBuilderApiContext>();
             _cmsTypeHelper = Substitute.For<ICmsTypeHelper>();
             _folderWebApiClient = Substitute.For<IFolderWebApiClient>();
             _facetsWebApiClient = Substitute.For<IFacetsWebApiClient>();

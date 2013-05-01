@@ -1,39 +1,29 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="CmsServiceWrapper.cs" company="Microsoft">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
-using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Newtonsoft.Json.Linq;
+using AVM = Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
+using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Mozu.Content.Contracts.Clients;
-    using Mozu.Core;
-    using AVM = Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
-    using DC = Mozu.Content.Contracts;
-    using System.Threading.Tasks;
-    using Mozu.Core.Api.Contracts.Client;
-    using System.Net.Http;
-    using Mozu.SiteBuilder.Mvc.Models.CMS;
-    using Mozu.SiteBuilder.Mvc.Extensions;
-    using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
-    using Mozu.Core.Api.Client;
+
 
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class CmsServiceWrapper : Mozu.SiteBuilder.Mvc.CMS.ICmsServiceWrapper
+    public class CmsServiceWrapper : ICmsServiceWrapper
     {
-        
+        ISiteBuilderApiContext _apiContext;
         IDocumentWebApiClient _docRepo;
         ICmsTypeHelper _cmsTypeHelper;
         IFolderWebApiClient _folderRepo;
@@ -41,19 +31,22 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         private readonly IThemeEntityDefinitionProvider _themeEntityDefinitionProvider;
 
         public CmsServiceWrapper(IDocumentWebApiClient docRepo,
-            IApiContext apiContext,
+            ISiteBuilderApiContext apiContext,
             ICmsTypeHelper cmsTypeHelper,
             IFolderWebApiClient folderRepo,
             IFacetsWebApiClient facetsRepo,
             IThemeEntityDefinitionProvider themeEntityDefinitionProvider
             )
         {
+            _apiContext = apiContext;
             _facetsRepo = facetsRepo;
             _themeEntityDefinitionProvider = themeEntityDefinitionProvider;
             _folderRepo = folderRepo;
             _docRepo = docRepo;
             _cmsTypeHelper = cmsTypeHelper;
         }
+
+        [Obsolete]
         public IEnumerable<Task<Tuple<bool,ServiceClientResponse<StreamContent>>>> Delete(IEnumerable<AVM.Document> docs)
         {
             //ServiceClientExtensions;
@@ -67,9 +60,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             
 
         }
-       
 
 
+        [Obsolete]
         public IEnumerable<Task< ServiceClientResponse<DC.Document> >> Create(IEnumerable<AVM.Document> docs)
         {
             var response = new List<AVM.Document>();
@@ -194,6 +187,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
             
         }
+
+        [Obsolete]
         public Task<Tuple<DC.FolderTree, ServiceClientResponse<DC.FolderTree>>> GetFolderTree(string collection, string parentId = null, int? levels = null)
         {
             return _folderRepo.GetFolderTree(collection, parentId, levels)
@@ -208,6 +203,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                         }
                     });
         }
+
+        [Obsolete]
         public IEnumerable<Task<DC.Document>> Update(List<AVM.Document> docs)
         {
             List<Task<DC.Document>> tasks = new List<Task<DC.Document>>();
@@ -255,6 +252,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         }
 
+        [Obsolete]
         public IEnumerable<Task<Mozu.Content.Contracts.Document>> Update(List<DC.Document> docs)
         {
             List<Task<DC.Document>> tasks = new List<Task<DC.Document>>();
@@ -266,16 +264,19 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return tasks;
         }
 
+        [Obsolete]
         public Task<Mozu.Content.Contracts.Document> Update(DC.Document doc)
         {
             return _docRepo.Update(doc.DocumentListName, doc.Id, doc).ContinueWith<DC.Document>(x => x.Result.ReadAsSync());
         }
 
-
+        [Obsolete]
         public Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetList(CmsListRequest request)
         {
             return _docRepo.List(request.Collection, request.ToFilterString(), null, request.Recurse, request.DocumentStatus ?? "draft", request.ToSortString(), request.PageSize, request.StartIndex);
         }
+
+        [Obsolete]
         public Task <ServiceClientResponse<DC.Document>> GetByPath ( string contentCollection , string name, string folderPath ,string documentState = "draft" )
         {
             return _docRepo.FindByName(contentCollection, name, folderPath, null, documentState).ContinueWith(x =>
@@ -297,6 +298,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 });
           
         }
+
+        [Obsolete]
         public bool BypassCache
         {
             get
@@ -326,13 +329,15 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
             }
         }
+
+        [Obsolete]
         public Task<ServiceClientResponse<DC.Document>> Get(string contentCollection, string id , bool activeVersion = false )
         {
             return _docRepo.Get(contentCollection, id, null, activeVersion ? CmsConstants.Documents.doc_state_active : "draft");
         }
 
-       
 
+        [Obsolete]
         class PropCompare : IEqualityComparer<Models.CMS.Admin.DocumentProperty>
         {
 
@@ -349,6 +354,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
         }
 
+        [Obsolete]
         DC.PropertyValue ToPropertyValue(AVM.DocumentProperty inProperty, DC.PropertyValue outProperty = null)
         {
             var propType = _cmsTypeHelper.GetPropertyType(inProperty.Key);//.GetDocumentType (doc.DocumentType).PropertyTypes.FirstOrDefault(x => string.Equals(x.Name, p.Key, StringComparison.OrdinalIgnoreCase));
@@ -392,37 +398,97 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return outProperty;
         }
 
-
-
-
-
-
-
-
+        [Obsolete]
         public Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetList(string contentCollection = null, string filter = null, bool? recurseFolders = null, string status = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0)
         {
             return _docRepo.List(contentCollection, filter, null, recurseFolders, status, sortBy, pageSize, startIndex);
         }
 
-
+        [Obsolete]
         public Task<ServiceClientResponse<List<DC.Facet>>> GetFacets(string contentCollection,  string propertyName)
         {
             return _facetsRepo.Get(contentCollection,propertyName);
         }
 
-
+        [Obsolete]
         public Task<ServiceClientResponse<DC.Document>> RawCreate(DC.Document doc)
         {
             return _docRepo.Create(doc.DocumentListName, doc );
         }
 
 
-     
+        public Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0)
+        {
+            return _docRepo.List(
+                    documentListName: contentCollection, 
+                              filter: filter, 
+                      responseGroups: null, 
+                shouldRecurseFolders: false, 
+                              status: _apiContext.CmsDraftState, 
+                              sortBy: sortBy, 
+                            pageSize: pageSize, 
+                          startIndex: startIndex
+            );
+        }
 
+        public Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name)
+        {
+            var task = _docRepo.FindByName(
+                documentListName: contentCollection,
+                    documentName: name,
+                      folderPath: null,
+                         version: null,
+                          status: _apiContext.CmsDraftState
+            );
 
+            return task.ContinueWith(t =>
+            {
+                if (t.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return new ServiceClientResponse<DC.Document>()
+                    {
+                        HasException = false,
+                        ResponseMessage = t.Result.ResponseMessage,
+                        ReadAsSync = () => null,
+                        ReadAsAsync = t.Result.ReadAsAsync
+                    };
+                }
 
-     
+                return t.Result;
+            });
+        }
 
-        
+        public Task<ServiceClientResponse<DC.Document>> Get2(string contentCollection, string id)
+        {
+            return _docRepo.Get(
+                documentListName: contentCollection,
+                documentId: id,
+                version: null,
+                status: _apiContext.CmsDraftState
+            );
+        }
+
+        public Task<ServiceClientResponse<DC.Document>> Update2(DC.Document doc)
+        {
+            return _docRepo.Update(doc.DocumentListName, doc.Id, doc);
+        }
+
+        public Task<ServiceClientResponse<DC.Document>> Create2(AVM.Document doc)
+        {
+            #pragma warning disable 612
+            return Create( new [] { doc } ).First();
+            #pragma warning restore 612
+        }
+
+        public Task<ServiceClientResponse<DC.Document>> RawCreate2(DC.Document doc)
+        {
+            return _docRepo.Create(doc.DocumentListName, doc);
+        }
+
+        public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(DC.Document doc)
+        {
+            return _docRepo.Delete(doc.DocumentListName, doc.Id)
+                .ContinueWith(t => new Tuple<bool, ServiceClientResponse<StreamContent>>(t.Result.ResponseMessage.IsSuccessStatusCode, t.Result));
+        }
     }
 }

@@ -80,11 +80,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                  {
                      if (_posts == null)
                      {
-                         _posts = _cmsService.GetList(new CmsListRequest() { Collection = "blogs", PageSize = 10, DocumentType = "post", Sort = new List<KeyValuePair<string, bool>>() { new KeyValuePair<string, bool>("InsertDate", false) } })
-                             // _posts = _docRepo.List("blogs", null, null, null, CmsConstants.Documents.doc_state_active, "post", null,null, int.MaxValue, 0)
-                             .Result.ReadAsSync().Items.Where(x => x.DocumentType == "post")
-                             // .OrderByDescending   ( x=> x.InsertDate )
-                             .Select(x => AutoMapper.Mapper.Map<Post>(x)).ToList();
+                         _posts = _cmsService.GetList2(contentCollection: "blogs", pageSize: 10, filter: "DocumentType eq post", sortBy: "InsertDate desc")
+                             .Result.ReadAsSync().Items
+                             .Map<List<Post>>();
                      }
                      return _posts;
                  }
@@ -117,7 +115,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                  {
                      if (_blog == null)
                      {
-                         _blog = _cmsService.GetList( new CmsListRequest() { Collection = "blogs", DocumentType = "blog" }).Result.ReadAsSync().Items.Select(x => AutoMapper.Mapper.Map<Blog>(x)).FirstOrDefault();
+                         _blog = _cmsService.GetList2(contentCollection: "blogs", filter: "DocumentType eq blog", pageSize: 1)
+                             .Result.ReadAsSync().Items.Select(x => AutoMapper.Mapper.Map<Blog>(x)).FirstOrDefault();
                          if (_blog != null)
                              _blog.Tags = Tags;
                      }
@@ -131,7 +130,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                  {
                      if (_tags == null)
                      {
-                         _tags = _cmsService.GetFacets("blogs",  "tags").Result.ReadAsSync().OrderByDescending ( x=> x.Count ).Select(x=>Mapper.Map<Facet>(x)).ToList();
+                         _tags = _cmsService.GetFacets("blogs",  "tags")
+                             .Result.ReadAsSync().OrderByDescending ( x=> x.Count ).Select(x=>Mapper.Map<Facet>(x)).ToList();
                          //_tags = this.Posts.Select(x => (x["tags"] as IEnumerable<object>)  ?? Enumerable.Empty <object>() ).SelectMany( x=> x).Select (x=>(string)x).Distinct().ToArray();
                      }
                      return _tags;
@@ -142,15 +142,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
          public ActionResult Tagged ( string id )
          {
              var blog = _cache.Blog;
-             var req = new CmsListRequest()
-             {
-                 Collection = "blogs",
-                 DocumentType = "post",
-                 PageSize  = 20
-             };
 
-             req.Filters.Add( string.Format ( "Properties.tags eq '{0}'", id))  ;
-             blog.posts = _cmsService.GetList(req ).Result.ReadAsSync().Items.Select(x => Mapper.Map<Post>(x)).ToList();
+             blog.posts = _cmsService.GetList2(contentCollection: "blogs", filter: String.Format("DocumentType eq post and Properties.tags eq '{0}'", id), pageSize: 20)
+                 .Result.ReadAsSync().Items.Select(x => Mapper.Map<Post>(x)).ToList();
              var pc = this.SiteContext.PageContext;
              pc.CollectionId = "blogs";
              pc.DocumentId = blog.Id;
@@ -288,7 +282,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
 
 
-            DC.Document doc = _cmsService.GetByPath("blogs", post, null).Result.ReadAsSync();
+            DC.Document doc = _cmsService.GetByPath2("blogs", post).Result.ReadAsSync();
 
             //pants
             if (doc == null)

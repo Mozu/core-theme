@@ -1,41 +1,70 @@
 ﻿using System;
-using System.Net.Http;
-using Mozu.Core.Api.Contracts.Client;
-using System.Threading.Tasks;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Mozu.Core.Api.Contracts.Client;
+using AVM = Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
+using DC = Mozu.Content.Contracts;
+
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
     public interface ICmsServiceWrapper
     {
-        IEnumerable<Task<ServiceClientResponse<Mozu.Content.Contracts.Document>>> Create(System.Collections.Generic.IEnumerable<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document> docs);
+        [Obsolete]
+        IEnumerable<Task<ServiceClientResponse<DC.Document>>> Create(System.Collections.Generic.IEnumerable<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document> docs);
 
-   
+        Task<ServiceClientResponse<DC.Document>> Create2(AVM.Document doc);
 
-        Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> RawCreate(Mozu.Content.Contracts.Document doc);
+        [Obsolete]
+        Task<ServiceClientResponse<DC.Document>> RawCreate(DC.Document doc);
+
+        Task<ServiceClientResponse<DC.Document>> RawCreate2(DC.Document doc);
+
+        [Obsolete]
         System.Collections.Generic.IEnumerable<System.Threading.Tasks.Task<Tuple<bool, Mozu.Core.Api.Contracts.Client.ServiceClientResponse<StreamContent>>>> Delete(System.Collections.Generic.IEnumerable<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document> docs);
-        System.Threading.Tasks.Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Mozu.Content.Contracts.Document>> GetByPath(string contentCollection, string name, string folderPath = null, string docStatus = "draft");
 
-        Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> Get(string contentCollection, string id, bool activeVersion = true);
-        Task<Tuple<Mozu.Content.Contracts.FolderTree, ServiceClientResponse<Mozu.Content.Contracts.FolderTree>>> GetFolderTree(string collection, string parentId = null, int? levels = null);
+        Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(DC.Document document);
 
-        System.Threading.Tasks.Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Mozu.Content.Contracts.PagedCollection<Mozu.Content.Contracts.Document>>> GetList(CmsListRequest request);
-        System.Threading.Tasks.Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Mozu.Content.Contracts.PagedCollection<Mozu.Content.Contracts.Document>>> GetList(string contentCollection = null, string filter = null, bool? recurseFolders = null, string status = null, string sortBy = null, int? pageSize=25, int? startIndex=0);
+        [Obsolete]
+        Task<ServiceClientResponse<DC.Document>> GetByPath(string contentCollection, string name, string folderPath = null, string docStatus = "draft");
+        Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name);
 
+        [Obsolete]
+        Task<ServiceClientResponse<DC.Document>> Get(string contentCollection, string id, bool activeVersion = true);
 
-        Task<ServiceClientResponse<List<Mozu.Content.Contracts.Facet>>> GetFacets(string contentCollection,  string propertyName);
+        Task<ServiceClientResponse<DC.Document>> Get2(string contentCollection, string id);
 
-        IEnumerable<Task<Mozu.Content.Contracts.Document>> Update(List<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document> docs);
+        [Obsolete]
+        Task<Tuple<DC.FolderTree, ServiceClientResponse<DC.FolderTree>>> GetFolderTree(string collection, string parentId = null, int? levels = null);
 
-        IEnumerable<Task<Mozu.Content.Contracts.Document>> Update(List<Mozu.Content.Contracts.Document> docs);
-        Task<Mozu.Content.Contracts.Document> Update(Mozu.Content.Contracts.Document doc);
+        [Obsolete]
+        Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetList(CmsListRequest request);
 
+        [Obsolete]
+        Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetList(string contentCollection = null, string filter = null, bool? recurseFolders = null, string status = null, string sortBy = null, int? pageSize=25, int? startIndex=0);
 
+        Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize=25, int? startIndex=0);
 
+        [Obsolete]
+        Task<ServiceClientResponse<List<DC.Facet>>> GetFacets(string contentCollection,  string propertyName);
 
+        [Obsolete]
+        IEnumerable<Task<DC.Document>> Update(List<Mozu.SiteBuilder.Mvc.Models.CMS.Admin.Document> docs);
 
+        [Obsolete]
+        IEnumerable<Task<DC.Document>> Update(List<DC.Document> docs);
+
+        [Obsolete]
+        Task<DC.Document> Update(DC.Document doc);
+
+        Task<ServiceClientResponse<DC.Document>> Update2(DC.Document document);
+
+        [Obsolete]
         bool BypassCache { get; set; }
     }
+
+    [Obsolete]
     public class CmsListRequest
     {
         public class CmsListRequestFilterItem

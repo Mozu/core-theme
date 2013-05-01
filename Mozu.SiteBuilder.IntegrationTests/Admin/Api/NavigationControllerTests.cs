@@ -315,7 +315,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 
             _cmsServiceWrapper
                 .Received()
-                .Update(Arg.Is<Document>(arg => newName == arg.Get<string>("link_title")));
+                .Update2(Arg.Is<Document>(arg => newName == arg.Get<string>("link_title")));
         }
 
         [Test]
@@ -373,17 +373,18 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             );
 
             // set up pages client mock.
-            _cmsServiceWrapper.GetList(Arg.Any<CmsListRequest>()).Returns(
+            _cmsServiceWrapper.GetList2(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int?>(), Arg.Any<int?>()).Returns(
                 args =>
                 {
-                    if (args.Arg<CmsListRequest>().Collection == "pages")
+                    string collection = (string)args[0];
+                    if (collection == "pages")
                         return new TestResponse<PagedCollection<Document>>(pages).Task;
                     else
                         return new TestResponse<PagedCollection<Document>>(_mockEmptyDocumentList).Task;
                 }
             );
 
-            _cmsServiceWrapper.GetByPath(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(
+            _cmsServiceWrapper.GetByPath2(Arg.Any<string>(), Arg.Any<string>()).Returns(
                 args =>
                 {
                     string collection = (string)args[0];
@@ -393,7 +394,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
                     return new TestResponse<Document>(doc).Task;
                 });
 
-            _cmsServiceWrapper.Get(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>()).Returns(
+            _cmsServiceWrapper.Get2(Arg.Any<string>(), Arg.Any<string>()).Returns(
                 args =>
                 {
                     string collection = (string)args[0];

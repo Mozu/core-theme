@@ -9,9 +9,7 @@ using System.Web.Http;
 using AutoMapper;
 using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.MockServices;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {

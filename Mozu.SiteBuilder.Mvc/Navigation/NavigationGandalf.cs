@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// Build a flat list of NavigationNodes (which can have a ParentId to imply a hiearchy)
         /// This list can then be transformed to a List<NavigationRuntimeNode> or List<NavigationTreeNode>
         /// </summary>
-        private Task<List<NavigationNode>> GetListInternal(bool draft = true)
+        private Task<List<NavigationNode>> GetListInternal()
         {
             var masterList = new List<NavigationNode>();
 
@@ -71,10 +71,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             var catTask = _catClient.GetCategories();
 
             // get the list of pages
-            var pageTask = _cmsService.GetList(new CmsListRequest() { Collection = "pages", PageSize = 100, DocumentStatus = (draft ? "draft" : "active") });
+            var pageTask = _cmsService.GetList2(contentCollection: "pages", pageSize: 100);
 
             // get the list of blogs
-            var blogTask = _cmsService.GetList(new CmsListRequest() { Collection = "blogs", PageSize = 1, DocumentType = "blog" });
+            var blogTask = _cmsService.GetList2(contentCollection: "blogs", pageSize: 1, filter: "DocumentType eq blog" );
 
             // get our navigation data authority
             var navTask = _navRepo.GetSetAsync();
@@ -173,9 +173,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// Build a flat list of NavigationNodes (which can have a ParentId to imply a hiearchy)
         /// This list can then be transformed to a List<NavigationRuntimeNode> or List<NavigationTreeNode>
         /// </summary>
-        public Task<List<NavigationTreeNode>> GetFlatList(bool draft = true)
+        public Task<List<NavigationTreeNode>> GetFlatList()
         {
-            return GetListInternal(draft)
+            return GetListInternal()
                 .ContinueWith(res =>
                 {
                     var nodelist = res.Result;
@@ -194,9 +194,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Build a hierarchical list of navigation nodes, ideal for consumption by NDjango templates and front-end javascript.
         /// </summary>
-        public Task<List<NavigationRuntimeNode>> GetTreeNavigation(bool draft = false)
+        public Task<List<NavigationRuntimeNode>> GetTreeNavigation()
         {
-            return GetListInternal(draft)
+            return GetListInternal()
                 .ContinueWith(res =>
                 {
                     var flatlist = res.Result;
