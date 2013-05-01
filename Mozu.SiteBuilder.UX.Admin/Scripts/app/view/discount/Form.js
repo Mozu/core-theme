@@ -2,7 +2,8 @@
  * The discount editor view
  */
 Ext.define('Taco.view.discount.Form', {
-    extend: 'Taco.core.ux.form.Form',
+    //extend: 'Taco.core.ux.form.Form',
+    extend: 'Taco.view.product.subform.Subform',
     requires: ['Taco.core.ux.form.CurrencyField', 'Taco.core.ux.action.SecondaryButton', 'Taco.view.category.Modal', 'Taco.view.product.Modal'],
     // requires: ['Taco.model.CouponCode', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.BoxSelect', 'Taco.store.ProductComboBox', 'Taco.core.ux.modal.Content', 'Taco.core.ux.modal.ContentWithActions', 'Taco.core.ux.form.UnitField', 'Taco.core.ux.form.CurrencyField'],
     title: 'Discount',
@@ -49,7 +50,7 @@ Ext.define('Taco.view.discount.Form', {
                 fields: ['text', 'value'],
                 data: [
                     ["Percentage", "Percentage"],
-                    ["Dollar Amount", "Amount"],
+                    ["Dollar Amount", "Amount"]
                  //   ["Free Shipping", "FreeShipping"]
                 ]
             }),
@@ -155,7 +156,7 @@ Ext.define('Taco.view.discount.Form', {
                     text: 'Add',
                     click: me.launchCategoryModal,
                     scope: me
-                },
+                }
             ]
         });
         var productStore = me.record.getProductStore();
@@ -262,7 +263,7 @@ Ext.define('Taco.view.discount.Form', {
 
         me.items = [
             me.nameInput,
-            createHr(),
+            //createHr(),
             {
                 xtype: 'container',
                 layout: {
@@ -276,7 +277,7 @@ Ext.define('Taco.view.discount.Form', {
                     me.amountInput,
                     me.amountSuffix]
             },
-            createHr(),
+            //createHr(),
             {
                 xtype: 'container',
                 layout: {
@@ -287,9 +288,9 @@ Ext.define('Taco.view.discount.Form', {
                 items: [me.targetTypeInput, me.minimumOrderAmountInput]
             }, 
             me.productCategoryContainer,
-            createHr(),
+           // createHr(),
             me.datesContainer,
-            createHr(),
+            //createHr(),
             me.requiresCouponInput,
             me.couponCodeInput
         ];
