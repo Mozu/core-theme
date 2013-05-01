@@ -6,13 +6,11 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
     requires: ['Taco.store.WidgetDefinitions', 'Taco.view.site.page.WidgetDragZone'],
 
     initComponent: function () {
-
         this.view = Ext.create('Ext.view.View', {
             flex: 1,
             itemSelector: 'div.widget-source',
             tpl: '<tpl for="."><div class="widget-source">{displayName}-{category}</div></tpl>',
             store: Taco.core.data.StoreManager.getOrCreate('Taco.store.WidgetDefinitions'),
-            autoScroll: true,
             listeners: {
                 render: {
                     fn: this.initializeWidgetDragZone,
@@ -22,8 +20,8 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
         });
 
         this.items=[this.view];
-        this.callParent(arguments);
 
+        this.callParent(arguments);
     },
 
     initializeWidgetDragZone: function () {
