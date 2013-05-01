@@ -33,6 +33,8 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
 
         this.callParent( arguments );
 
+        
+
         this.on({
             afterrender: function () {
                 
@@ -42,7 +44,7 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
                         Taco.core.StateManager,
                         'statechange',
                         function (newState) {
-                            this.setDisplayedValue( this.lookupContextNameFromToken( Taco.app.context.getCurrentContext().urlToken ) );
+                            this.setDisplayedValue(this.lookupContextNameFromToken(Taco.app.context.getCurrentContext().urlToken));
                             var md = newState.getMetaData && newState.getMetaData();
                             if (md && md.action === "edit") {
                                 this.disable();
@@ -54,6 +56,16 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
                         this
                     );
                 }
+
+                this.mon(
+                    Taco.app.context,
+                    'contextchange',
+                    Ext.Function.createDelayed(function () {
+                        var newContext = Taco.app.context.getCurrentContext();
+                        this.setDisplayedValue(this.lookupContextNameFromToken(newContext.urlToken));
+                    }, 1000, this),
+                    this
+                );
 
                 // *** Register click handler to show/hide submenu (ContextSwitcherView)
                 this.getEl().on('click', this.toggleSubmenu, this);
@@ -72,9 +84,9 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
      * Event listener for when an item from the submenu is selected.
      */
     changeContext: function (record, newValue) {
-        Taco.app.context.setCurrentContext( record.raw );
+        var success = Taco.app.context.setCurrentContext( record.raw );
         this.toggleSubmenu();
-        this.setDisplayedValue( newValue );
+        if (success) this.setDisplayedValue(newValue);
     },
 
     /**
@@ -143,6 +155,7 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
         // *** urlContext takes the form of *:######, where * is 't', 'c', or 's' for Tenant, SiteCollection, or Site respectively.
         var contextType     = urlContext.split('-')[0],
             siteCollections = Taco.app.context.siteCollections,
+            tenantName, 
             displayName     = 'All', // *** Default to 'All' (context is likely t:Id)
 
             // *** Callback function for Ext.each loops below that tests the current item's urlToken against the argued parameter urlContext
@@ -168,6 +181,10 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
             Ext.each( siteCollections, testItemNameAgainstContext );
         }
 
+        else if (contextType == 't') {
+            tenantName = Taco.app.context.getStore().findRecord('contextType', 't').data.name;
+            if (tenantName) displayName = tenantName;
+        }
         return displayName;
     }
 });

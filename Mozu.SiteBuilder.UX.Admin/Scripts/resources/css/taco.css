@@ -224,6 +224,7 @@
  * but this can be changed by changing the default value of $include-missing-images to
  * be true.
  */
+/* TABS */
 /* PANELS */
 /* GRIDS */
 /* TOOLBARS */
@@ -1501,7 +1502,7 @@ tr.x-container:before {
   width: 18px;
   position: relative;
   cursor: pointer;
-  height: 20px;
+  height: 30px;
   background: transparent no-repeat -18px 0;
   background-image: url('../../ext/resources/themes/images/default/tab-bar/scroll-left.gif');
 }
@@ -1554,7 +1555,7 @@ tr.x-container:before {
   width: 18px;
   position: relative;
   cursor: pointer;
-  height: 20px;
+  height: 30px;
   background: transparent no-repeat 0 0;
   background-image: url('../../ext/resources/themes/images/default/tab-bar/scroll-right.gif');
 }
@@ -7906,13 +7907,8 @@ textarea.x-form-invalid-field {
   position: relative;
   background-color: transparent;
   background-image: none;
-  background-color: #ececec;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f9f8f8), color-stop(100%, #ececec));
-  background-image: -webkit-linear-gradient(top, #f9f8f8, #ececec);
-  background-image: -moz-linear-gradient(top, #f9f8f8, #ececec);
-  background-image: -o-linear-gradient(top, #f9f8f8, #ececec);
-  background-image: linear-gradient(top, #f9f8f8, #ececec);
-  font-size: 2rem;
+  background-color: rgba(255, 255, 255, 0);
+  font-size: 1.6rem;
 }
 
 /* line 80, ../scss/widgets/_tabbar.scss */
@@ -7929,7 +7925,7 @@ textarea.x-form-invalid-field {
 /* line 90, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-body {
   border-style: solid;
-  border-color: #d4cccc;
+  border-color: #bfbfbf;
   position: relative;
   z-index: 2;
   zoom: 1;
@@ -7938,115 +7934,115 @@ textarea.x-form-invalid-field {
 /* Top Tabs */
 /* line 4, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-top .x-tab-bar-body {
-  height: 20px;
+  height: 30px;
   border-width: 1px 1px 0;
   padding: 1px 0 3px;
 }
 /* line 10, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-top .x-tab-bar-strip {
   /*position strip from top rather than bottom to avoid off-by-one error in IE6*/
-  top: 22px;
-  border-width: 1px 1px 0;
-  height: 2px;
+  top: 32px;
+  border-width: 0px;
+  height: 0px;
 }
 
 /* line 19, ../scss/widgets/_tabbar.scss */
 .x-border-box .x-tab-bar-top .x-tab-bar-body {
-  height: 25px;
+  height: 35px;
 }
 /* line 23, ../scss/widgets/_tabbar.scss */
 .x-border-box .x-tab-bar-top .x-tab-bar-strip {
-  height: 3px;
+  height: 0px;
 }
 
 /* line 4, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-top .x-tab-bar-body-default-plain {
-  height: 20px;
-  border-width: 0;
-  padding: 0 0 2px;
+  height: 30px;
+  border-width: 0px;
+  padding: 14px 0px;
 }
 /* line 10, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-top .x-tab-bar-strip-default-plain {
   /*position strip from top rather than bottom to avoid off-by-one error in IE6*/
-  top: 20px;
-  border-width: 1px 1px 0 1px;
-  height: 2px;
+  top: 44px;
+  border-width: 0px;
+  height: 0px;
 }
 
 /* line 19, ../scss/widgets/_tabbar.scss */
 .x-border-box .x-tab-bar-top .x-tab-bar-body-default-plain {
-  height: 22px;
+  height: 58px;
 }
 /* line 23, ../scss/widgets/_tabbar.scss */
 .x-border-box .x-tab-bar-top .x-tab-bar-strip-default-plain {
-  height: 3px;
+  height: 0px;
 }
 
 /* Bottom Tabs */
 /* line 32, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-bottom .x-tab-bar-body {
-  height: 20px;
+  height: 30px;
   border-width: 0 1px 1px;
   padding: 3px 0 1px;
 }
 /* line 37, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-bottom .x-tab-bar-body .x-box-inner {
   position: relative;
-  top: -1px;
+  top: 0px;
 }
 /* line 44, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-bottom .x-tab-bar-body .x-box-scroller,
 .x-tab-bar-bottom .x-tab-bar-body .x-box-scroller-left,
 .x-tab-bar-bottom .x-tab-bar-body .x-box-scroller-right {
-  height: 22px;
+  height: 31px;
 }
 /* line 49, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-bottom .x-tab-bar-strip {
   top: 0;
-  border-width: 0 1px 1px 1px;
-  height: 2px;
+  border-width: 0px;
+  height: 0px;
 }
 
 /* line 57, ../scss/widgets/_tabbar.scss */
 .x-border-box .x-tab-bar-bottom .x-tab-bar-body {
-  height: 25px;
+  height: 35px;
 }
 /* line 61, ../scss/widgets/_tabbar.scss */
 .x-border-box .x-tab-bar-bottom .x-tab-bar-strip {
-  height: 3px;
+  height: 0px;
 }
 
 /* line 32, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-bottom .x-tab-bar-body-default-plain {
-  height: 20px;
-  border-width: 0;
-  padding: 3px 0 0;
+  height: 30px;
+  border-width: 0px;
+  padding: 14px 0px;
 }
 /* line 37, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-bottom .x-tab-bar-body-default-plain .x-box-inner {
   position: relative;
-  top: -1px;
+  top: 0px;
 }
 /* line 44, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-bottom .x-tab-bar-body-default-plain .x-box-scroller,
 .x-tab-bar-bottom .x-tab-bar-body-default-plain .x-box-scroller-left,
 .x-tab-bar-bottom .x-tab-bar-body-default-plain .x-box-scroller-right {
-  height: 21px;
+  height: 44px;
 }
 /* line 49, ../scss/widgets/_tabbar.scss */
 .x-tab-bar-bottom .x-tab-bar-strip-default-plain {
-  top: 0;
-  border-width: 0 1px 1px 1px;
-  height: 2px;
+  top: 0px;
+  border-width: 0px;
+  height: 0px;
 }
 
 /* line 57, ../scss/widgets/_tabbar.scss */
 .x-border-box .x-tab-bar-bottom .x-tab-bar-body-default-plain {
-  height: 23px;
+  height: 58px;
 }
 /* line 61, ../scss/widgets/_tabbar.scss */
 .x-border-box .x-tab-bar-bottom .x-tab-bar-strip-default-plain {
-  height: 3px;
+  height: 0px;
 }
 
 /* line 141, ../scss/widgets/_tabbar.scss */
@@ -8058,73 +8054,47 @@ textarea.x-form-invalid-field {
   z-index: 1;
   border-style: solid;
   overflow: hidden;
-  border-color: #d4cccc;
-  background-color: #fefcfc;
+  border-color: #bfbfbf;
+  background-color: #bfbfbf;
   zoom: 1;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-tab-default-top {
-  -moz-border-radius-topleft: 4px;
-  -webkit-border-top-left-radius: 4px;
-  border-top-left-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  -webkit-border-top-right-radius: 4px;
-  border-top-right-radius: 4px;
-  -moz-border-radius-bottomright: 0;
-  -webkit-border-bottom-right-radius: 0;
-  border-bottom-right-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  -webkit-border-bottom-left-radius: 0;
-  border-bottom-left-radius: 0;
-  padding: 3px 3px 0 3px;
-  border-width: 1px 1px 0 1px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px;
+  padding: -1px -1px -1px -1px;
+  border-width: 1px;
   border-style: solid;
-  background-image: none;
-  background-color: #fefcfc;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f3efee), color-stop(25%, #f9f6f6), color-stop(45%, #fefcfc));
-  background-image: -webkit-linear-gradient(top, #f3efee, #f9f6f6 25%, #fefcfc 45%);
-  background-image: -moz-linear-gradient(top, #f3efee, #f9f6f6 25%, #fefcfc 45%);
-  background-image: -o-linear-gradient(top, #f3efee, #f9f6f6 25%, #fefcfc 45%);
-  background-image: linear-gradient(top, #f3efee, #f9f6f6 25%, #fefcfc 45%);
+  background-color: #f2f2f2;
 }
 
 /* line 69, ../scss/mixins/_frame.scss */
 .x-tab-default-bottom {
-  -moz-border-radius-topleft: 0;
-  -webkit-border-top-left-radius: 0;
-  border-top-left-radius: 0;
-  -moz-border-radius-topright: 0;
-  -webkit-border-top-right-radius: 0;
-  border-top-right-radius: 0;
-  -moz-border-radius-bottomright: 4px;
-  -webkit-border-bottom-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  -webkit-border-bottom-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-  padding: 0 3px 3px 3px;
-  border-width: 0 1px 1px 1px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px;
+  padding: -1px -1px -1px -1px;
+  border-width: 1px;
   border-style: solid;
-  background-image: none;
-  background-color: #fefcfc;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #f3efee), color-stop(25%, #f9f6f6), color-stop(45%, #fefcfc));
-  background-image: -webkit-linear-gradient(bottom, #f3efee, #f9f6f6 25%, #fefcfc 45%);
-  background-image: -moz-linear-gradient(bottom, #f3efee, #f9f6f6 25%, #fefcfc 45%);
-  background-image: -o-linear-gradient(bottom, #f3efee, #f9f6f6 25%, #fefcfc 45%);
-  background-image: linear-gradient(bottom, #f3efee, #f9f6f6 25%, #fefcfc 45%);
+  background-color: #f2f2f2;
 }
 
 /* line 28, ../scss/widgets/_tab.scss */
 .x-tab {
   z-index: 1;
-  margin: 0 0 0 2px;
+  margin: 0 0 0 0px;
   display: inline-block;
   zoom: 1;
   *display: inline;
   white-space: nowrap;
-  height: 20px;
-  border-color: #cac5c5;
+  height: 30px;
+  border-color: #bfbfbf;
   cursor: pointer;
   cursor: hand;
 }
@@ -8146,10 +8116,10 @@ textarea.x-form-invalid-field {
   padding: 0;
   margin: 0;
   -webkit-appearance: none;
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 1.6rem;
+  font-weight: normal;
   font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-  color: #828282;
+  color: #323232;
   outline: 0 none;
   overflow-x: visible;
 }
@@ -8177,11 +8147,11 @@ textarea.x-form-invalid-field {
 
 /* line 93, ../scss/widgets/_tab.scss */
 .x-border-box .x-tab-default-top {
-  height: 21px;
+  height: 30px;
 }
 /* line 96, ../scss/widgets/_tab.scss */
 .x-border-box .x-tab-default-bottom {
-  height: 21px;
+  height: 30px;
 }
 
 /* line 103, ../scss/widgets/_tab.scss */
@@ -8204,26 +8174,23 @@ textarea.x-form-invalid-field {
 
 /* line 124, ../scss/widgets/_tab.scss */
 .x-tab-default-top {
-  -webkit-box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
-  -moz-box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
-  box-shadow: white 0 1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
-  border-bottom: 1px solid #d4cccc !important;
+  border-bottom: 1px solid #bfbfbf !important;
 }
 /* line 134, ../scss/widgets/_tab.scss */
 .x-tab-default-top em {
-  padding-bottom: 3px;
+  padding-bottom: -1px;
 }
 /* line 139, ../scss/widgets/_tab.scss */
 .x-tab-default-top button,
 .x-tab-default-top .x-tab-inner {
-  height: 13px;
-  line-height: 13px;
+  height: 31px;
+  line-height: 31px;
 }
 
 /* line 148, ../scss/widgets/_tab.scss */
 .x-safari4 .x-tab-default-top .x-tab-inner,
 .x-safari5_0 .x-tab-default-top .x-tab-inner {
-  line-height: 11px;
+  line-height: 29px;
 }
 
 /* line 153, ../scss/widgets/_tab.scss */
@@ -8233,28 +8200,25 @@ textarea.x-form-invalid-field {
 
 /* line 157, ../scss/widgets/_tab.scss */
 .x-tab-default-top-active {
-  border-bottom-color: #fefcfc !important;
+  border-bottom-color: #bfbfbf !important;
 }
 
 /* line 163, ../scss/widgets/_tab.scss */
 .x-tab-default-bottom {
-  -webkit-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
-  -moz-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
-  box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
-  border-top: 1px solid #d4cccc !important;
-  -webkit-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
-  -moz-box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
-  box-shadow: white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  border-top: 1px solid #bfbfbf !important;
+  -webkit-box-shadow: white 0 1px 0px 0 inset, white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  -moz-box-shadow: white 0 1px 0px 0 inset, white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
+  box-shadow: white 0 1px 0px 0 inset, white 0 -1px 0px 0 inset, white -1px 0 0px 0 inset, white 1px 0 0px 0 inset;
 }
 /* line 178, ../scss/widgets/_tab.scss */
 .x-tab-default-bottom em {
-  padding-top: 3px;
+  padding-top: -1px;
 }
 /* line 183, ../scss/widgets/_tab.scss */
 .x-tab-default-bottom button,
 .x-tab-default-bottom .x-tab-inner {
-  height: 13px;
-  line-height: 13px;
+  height: 31px;
+  line-height: 31px;
 }
 
 /* line 189, ../scss/widgets/_tab.scss */
@@ -8264,24 +8228,19 @@ textarea.x-form-invalid-field {
 
 /* line 193, ../scss/widgets/_tab.scss */
 .x-tab-default-bottom-active {
-  border-top-color: #fefcfc !important;
+  border-top-color: #bfbfbf !important;
 }
 
 /* line 197, ../scss/widgets/_tab.scss */
 .x-tab-default-disabled {
   cursor: default;
-  border-color: #e6e3e3;
+  border-color: #bfbfbf;
   background-image: none;
-  background-color: #fdfdfd;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdfdfd), color-stop(100%, #ffffff));
-  background-image: -webkit-linear-gradient(top, #fdfdfd, #ffffff);
-  background-image: -moz-linear-gradient(top, #fdfdfd, #ffffff);
-  background-image: -o-linear-gradient(top, #fdfdfd, #ffffff);
-  background-image: linear-gradient(top, #fdfdfd, #ffffff);
+  background-color: #f2f2f2;
 }
 /* line 203, ../scss/widgets/_tab.scss */
 .x-tab-default-disabled button {
-  color: #c3b3b3 !important;
+  color: #323232 !important;
 }
 
 /* line 209, ../scss/widgets/_tab.scss */
@@ -8328,63 +8287,30 @@ textarea.x-form-invalid-field {
 /* line 269, ../scss/widgets/_tab.scss */
 .x-tab-top-over {
   background-image: none;
-  background-color: white;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f9f3f2), color-stop(25%, #fdf9f9), color-stop(45%, #ffffff));
-  background-image: -webkit-linear-gradient(top, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
-  background-image: -moz-linear-gradient(top, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
-  background-image: -o-linear-gradient(top, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
-  background-image: linear-gradient(top, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
+  background-color: #f2f2f2;
 }
 
 /* line 272, ../scss/widgets/_tab.scss */
 .x-tab-bottom-over {
   background-image: none;
-  background-color: white;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #f9f3f2), color-stop(25%, #fdf9f9), color-stop(45%, #ffffff));
-  background-image: -webkit-linear-gradient(bottom, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
-  background-image: -moz-linear-gradient(bottom, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
-  background-image: -o-linear-gradient(bottom, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
-  background-image: linear-gradient(bottom, #f9f3f2, #fdf9f9 25%, #ffffff 45%);
+  background-color: #f2f2f2;
 }
 
 /* line 277, ../scss/widgets/_tab.scss */
 .x-tab-active {
   z-index: 3;
 }
-/* line 283, ../scss/widgets/_tab.scss */
-.x-tab-active button {
-  color: #7d4242;
-}
 
 /* line 299, ../scss/widgets/_tab.scss */
 .x-tab-top-active {
   background-image: none;
-  background-color: #fefcfc;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(25%, #ffffff), color-stop(45%, #fefcfc));
-  background-image: -webkit-linear-gradient(top, #ffffff, #ffffff 25%, #fefcfc 45%);
-  background-image: -moz-linear-gradient(top, #ffffff, #ffffff 25%, #fefcfc 45%);
-  background-image: -o-linear-gradient(top, #ffffff, #ffffff 25%, #fefcfc 45%);
-  background-image: linear-gradient(top, #ffffff, #ffffff 25%, #fefcfc 45%);
+  background-color: #bfbfbf;
 }
 
 /* line 302, ../scss/widgets/_tab.scss */
 .x-tab-bottom-active {
   background-image: none;
-  background-color: #fefcfc;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #ffffff), color-stop(25%, #ffffff), color-stop(45%, #fefcfc));
-  background-image: -webkit-linear-gradient(bottom, #ffffff, #ffffff 25%, #fefcfc 45%);
-  background-image: -moz-linear-gradient(bottom, #ffffff, #ffffff 25%, #fefcfc 45%);
-  background-image: -o-linear-gradient(bottom, #ffffff, #ffffff 25%, #fefcfc 45%);
-  background-image: linear-gradient(bottom, #ffffff, #ffffff 25%, #fefcfc 45%);
-}
-
-/* line 307, ../scss/widgets/_tab.scss */
-.x-tab-disabled {
-  border-color: #e6e3e3;
-}
-/* line 312, ../scss/widgets/_tab.scss */
-.x-tab-disabled button {
-  color: #c3b3b3;
+  background-color: #bfbfbf;
 }
 
 /* line 328, ../scss/widgets/_tab.scss */
@@ -8392,12 +8318,7 @@ textarea.x-form-invalid-field {
   background-image: none;
   background: transparent;
   background-image: none;
-  background-color: #fdfdfd;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdfdfd), color-stop(100%, #ffffff));
-  background-image: -webkit-linear-gradient(top, #fdfdfd, #ffffff);
-  background-image: -moz-linear-gradient(top, #fdfdfd, #ffffff);
-  background-image: -o-linear-gradient(top, #fdfdfd, #ffffff);
-  background-image: linear-gradient(top, #fdfdfd, #ffffff);
+  background-color: #f2f2f2;
 }
 
 /* line 333, ../scss/widgets/_tab.scss */
@@ -8405,12 +8326,7 @@ textarea.x-form-invalid-field {
   background-image: none;
   background: transparent;
   background-image: none;
-  background-color: #fdfdfd;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #fdfdfd), color-stop(100%, #ffffff));
-  background-image: -webkit-linear-gradient(bottom, #fdfdfd, #ffffff);
-  background-image: -moz-linear-gradient(bottom, #fdfdfd, #ffffff);
-  background-image: -o-linear-gradient(bottom, #fdfdfd, #ffffff);
-  background-image: linear-gradient(bottom, #fdfdfd, #ffffff);
+  background-color: #f2f2f2;
 }
 
 /* line 363, ../scss/widgets/_tab.scss */
@@ -9013,23 +8929,23 @@ svg, vml {
   padding-left: 0px;
 }
 
-/* panel specific styles, move to separate file */
-/* line 86, ../scss/taco/widgets/_panel.scss */
+/* SPECIFIC PANELS */
+/* line 87, ../scss/taco/widgets/_panel.scss */
 .taco-producttype-attribute-panel > .x-panel-header .x-panel-header-body {
   border-bottom: 1px dashed #999691;
   margin-bottom: 10px;
 }
-/* line 92, ../scss/taco/widgets/_panel.scss */
+/* line 93, ../scss/taco/widgets/_panel.scss */
 .taco-producttype-attribute-panel > .x-panel-body {
   background-color: #f2f0ed;
 }
-/* line 96, ../scss/taco/widgets/_panel.scss */
+/* line 97, ../scss/taco/widgets/_panel.scss */
 .taco-producttype-attribute-panel .taco-draghandle {
   display: inline-block;
   margin: 0px;
   vertical-align: middle;
 }
-/* line 101, ../scss/taco/widgets/_panel.scss */
+/* line 102, ../scss/taco/widgets/_panel.scss */
 .taco-producttype-attribute-panel .taco-attribute-item-header-text {
   display: inline-block;
   font-size: 1.5rem;
@@ -9038,7 +8954,7 @@ svg, vml {
   padding-top: 0.5em;
   vertical-align: middle;
 }
-/* line 109, ../scss/taco/widgets/_panel.scss */
+/* line 110, ../scss/taco/widgets/_panel.scss */
 .taco-producttype-attribute-panel .taco-attribute-item-body {
   border-top: 1px solid white;
   font-size: 1.4rem;
@@ -9050,7 +8966,7 @@ svg, vml {
   -ms-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1) inset;
 }
 
-/* line 119, ../scss/taco/widgets/_panel.scss */
+/* line 120, ../scss/taco/widgets/_panel.scss */
 .taco-quantity-edit-menu > .x-panel-body {
   background-color: #666666 !important;
   border-width: 0px;
@@ -9061,19 +8977,72 @@ svg, vml {
   -o-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 128, ../scss/taco/widgets/_panel.scss */
+/* line 129, ../scss/taco/widgets/_panel.scss */
 .taco-quantity-edit-menu .taco-formform .x-form-item,
 .taco-quantity-edit-menu .taco-formform .x-component {
   color: white;
 }
-/* line 133, ../scss/taco/widgets/_panel.scss */
+/* line 134, ../scss/taco/widgets/_panel.scss */
 .taco-quantity-edit-menu .actions {
   margin: 20px 10px 0px 0px;
   text-align: right;
 }
-/* line 137, ../scss/taco/widgets/_panel.scss */
+/* line 138, ../scss/taco/widgets/_panel.scss */
 .taco-quantity-edit-menu .actions .taco-action {
   color: white;
+}
+
+/* line 144, ../scss/taco/widgets/_panel.scss */
+.taco-toolbox {
+  background-color: white;
+  border: 0px none;
+  min-width: 299px;
+  padding: 0px;
+  width: 299px;
+}
+
+/* line 154, ../scss/taco/widgets/_panel.scss */
+.taco-toolbox-tabpanel > .x-tab-bar .x-tab-bar-body {
+  text-align: center;
+}
+
+/* TABS */
+/* line 163, ../scss/taco/widgets/_panel.scss */
+.x-tab em {
+  border-left: 1px solid #f2f2f2;
+  margin-left: -1px;
+  padding-left: 19px;
+  padding-right: 19px;
+}
+/* line 170, ../scss/taco/widgets/_panel.scss */
+.x-tab .x-tab-inner {
+  height: auto;
+  line-height: 28px;
+}
+/* line 176, ../scss/taco/widgets/_panel.scss */
+.x-tab.x-tab-active em {
+  border-left-color: #bfbfbf;
+}
+/* line 180, ../scss/taco/widgets/_panel.scss */
+.x-tab:nth-of-type(1) {
+  -webkit-border-radius: 2px 0px 0px 2px;
+  -moz-border-radius: 2px 0px 0px 2px;
+  -ms-border-radius: 2px 0px 0px 2px;
+  -o-border-radius: 2px 0px 0px 2px;
+  border-radius: 2px 0px 0px 2px;
+}
+/* line 183, ../scss/taco/widgets/_panel.scss */
+.x-tab:nth-of-type(1) em {
+  border-left-width: 0px;
+  margin-left: 0px;
+}
+/* line 188, ../scss/taco/widgets/_panel.scss */
+.x-tab:nth-last-of-type(1) {
+  -webkit-border-radius: 0px 2px 2px 0px;
+  -moz-border-radius: 0px 2px 2px 0px;
+  -ms-border-radius: 0px 2px 2px 0px;
+  -o-border-radius: 0px 2px 2px 0px;
+  border-radius: 0px 2px 2px 0px;
 }
 
 /* CORE GRID STYLES */
@@ -10195,46 +10164,6 @@ em {
       }
     }
   }*/
-/* line 277, ../scss/taco/widgets/_modal.scss */
-.taco-toolbox {
-  background-color: white;
-  border: 0px none;
-  min-width: 299px;
-  padding: 0px;
-  width: 299px;
-}
-/* line 286, ../scss/taco/widgets/_modal.scss */
-.taco-toolbox .x-window-header {
-  background-color: white;
-  border: 0px none;
-  padding: 14px;
-  -webkit-border-radius: 6px 6px 0px 0px;
-  -moz-border-radius: 6px 6px 0px 0px;
-  -ms-border-radius: 6px 6px 0px 0px;
-  -o-border-radius: 6px 6px 0px 0px;
-  border-radius: 6px 6px 0px 0px;
-}
-/* line 292, ../scss/taco/widgets/_modal.scss */
-.taco-toolbox .x-window-header .x-window-header-text {
-  color: #323232;
-  font-size: 1.25em;
-  font-weight: normal;
-  line-height: normal;
-}
-/* line 300, ../scss/taco/widgets/_modal.scss */
-.taco-toolbox .x-window-body {
-  background-color: white;
-  border-color: #999691;
-  border-style: dashed none none;
-  border-width: 1px 0px 0px;
-  margin-top: 1px;
-  -webkit-border-radius: 0px 0px 6px 6px;
-  -moz-border-radius: 0px 0px 6px 6px;
-  -ms-border-radius: 0px 0px 6px 6px;
-  -o-border-radius: 0px 0px 6px 6px;
-  border-radius: 0px 0px 6px 6px;
-}
-
 @-webkit-keyframes dirtyPulse {
   /* line 8, ../scss/taco/widgets/_actions.scss */
   from {
@@ -11862,32 +11791,28 @@ textarea.x-form-field:not(.x-form-focus):hover {
   padding-top: 30px;
 }
 
-/* line 11, ../scss/taco/_forms.scss */
-.taco-override-form {
-  overflow: visible;
-}
-/* line 14, ../scss/taco/_forms.scss */
+/* line 12, ../scss/taco/_forms.scss */
 .taco-override-form.active {
   margin-top: 30px;
   position: relative;
 }
-/* line 18, ../scss/taco/_forms.scss */
+/* line 16, ../scss/taco/_forms.scss */
 .taco-override-form.active .x-container {
   border: 1px dashed #cccccc;
   padding: 0px 20px 20px;
 }
-/* line 23, ../scss/taco/_forms.scss */
+/* line 21, ../scss/taco/_forms.scss */
 .taco-override-form.active .taco-override-checkbox {
   display: block;
 }
-/* line 28, ../scss/taco/_forms.scss */
+/* line 26, ../scss/taco/_forms.scss */
 .taco-override-form .x-mask {
   background-color: transparent;
   background-image: -webkit-repeating-linear-gradient(-45deg, white 0%, white 25.5%, black 25.5%, black 51%, white 51%, white 76.5%, black 76.5%, black 100%);
   background-size: 6px 6px;
   opacity: 0.06;
 }
-/* line 35, ../scss/taco/_forms.scss */
+/* line 33, ../scss/taco/_forms.scss */
 .taco-override-form .taco-override-checkbox {
   display: none;
   position: absolute;
@@ -11895,7 +11820,7 @@ textarea.x-form-field:not(.x-form-focus):hover {
   right: 100px;
   z-index: 101;
 }
-/* line 42, ../scss/taco/_forms.scss */
+/* line 40, ../scss/taco/_forms.scss */
 .taco-override-form .taco-override-checkbox .x-form-cb-wrap {
   background-color: white;
   border-color: #cccccc;
@@ -11903,12 +11828,12 @@ textarea.x-form-field:not(.x-form-focus):hover {
   border-width: 0px 1px 1px;
   padding: 4px 8px;
 }
-/* line 50, ../scss/taco/_forms.scss */
+/* line 48, ../scss/taco/_forms.scss */
 .taco-override-form .taco-override-checkbox.taco-auto-z-index {
   z-index: auto;
 }
 
-/* line 56, ../scss/taco/_forms.scss */
+/* line 54, ../scss/taco/_forms.scss */
 .taco-attribute-form {
   background: rgba(0, 0, 0, 0.1);
   margin: 1rem;

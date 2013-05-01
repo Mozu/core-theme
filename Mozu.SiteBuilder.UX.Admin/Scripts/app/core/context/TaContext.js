@@ -81,22 +81,25 @@ Ext.define('Taco.core.context.TaContext', {
         }
         
         if (this.currentCtx != cfg) {
-            if (!me.fireEvent('contextChange', me, cfg)) {
+            if (!me.fireEvent('beforecontextchange', cfg)) {
                 return false;
             }
-        }
 
-        if (navigate !== false) {
-            if (Taco.core.AppState.contextRE.test(smState.uri)) {
-                newUrl = smState.uri.replace(Taco.core.AppState.contextRE, cfg.urlToken);
-            } else {
-                newUrl = cfg.urlToken + '/' + smState.uri;
+
+            if (navigate !== false) {
+                if (Taco.core.AppState.contextRE.test(smState.uri)) {
+                    newUrl = smState.uri.replace(Taco.core.AppState.contextRE, cfg.urlToken);
+                } else {
+                    newUrl = cfg.urlToken + '/' + smState.uri;
+                }
+                Taco.core.StateManager.attemptNavigate(newUrl);
             }
-            Taco.core.StateManager.attemptNavigate(newUrl);
+
+            me.currentCtx = cfg;
+            me.setCookie();
+
+            me.fireEvent('contextchange', cfg);
         }
-        
-        me.currentCtx = cfg;
-        me.setCookie();
         return true;
     },
     setCookie: function () {
