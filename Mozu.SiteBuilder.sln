@@ -21,11 +21,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.UX.Admin",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.UX.Models", "Mozu.SiteBuilder.UX.Models\Mozu.SiteBuilder.UX.Models.csproj", "{FE9DA6F5-3477-48A3-8314-572CE5C308FB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".octopack", ".octopack", "{95323DB6-194C-4909-9E1C-9E9610356AA1}"
+	ProjectSection(SolutionItems) = preProject
+		.octopack\NuGet.exe = .octopack\NuGet.exe
+		.octopack\OctoPack.targets = .octopack\OctoPack.targets
+		.octopack\OctoPack.Tasks.dll = .octopack\OctoPack.Tasks.dll
+		.octopack\OctoPack.Tasks.pdb = .octopack\OctoPack.Tasks.pdb
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 7
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://tfs.ads.volusion.com:8080/tfs/vnext
+		SccTeamFoundationServer = http://tfs2012.corp.volusion.com:8080/tfs/vnext
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = Mozu.SiteBuilder.Mvc\\Mozu.SiteBuilder.Mvc.csproj
 		SccProjectName1 = Mozu.SiteBuilder.Mvc
