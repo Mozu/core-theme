@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Mozu.Core.Api;
-using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Users;
-using Mozu.SiteBuilder.UX.Models;
 using Mozu.Tenant.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Configuration
@@ -62,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             return;
             // Content Routes
-
+#pragma warning disable 0162
             routes.MapRoute("resources",
                 "resources/{action}/{*pathInfo}",
                 new { controller = "Resource", Action = "script", pathInfo = UrlParameter.Optional });
@@ -118,69 +112,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
             routes.MapRoute("RIA", "{*url}",
                 new { action = "Index", controller = "home" });
         }
-
-
-        //class PageHandleError : IExceptionFilter
-        //{
-
-        //    public void OnException(ExceptionContext filterContext)
-        //    {
-        //        if (!filterContext.ExceptionHandled && filterContext.RequestContext.HttpContext.Request.ContentType != "application/json")
-        //        {
-        //            filterContext.ExceptionHandled = true;
-        //            filterContext.Result = new ViewResult()
-        //            {
-        //                ViewName = "error",
-        //                ViewData = new ViewDataDictionary(filterContext.Exception)
-        //            };
-        //        }
-
-        //    }
-        //}
-
-        //class JsonHandleError : IExceptionFilter
-        //{
-
-        //    public void OnException(ExceptionContext filterContext)
-        //    {
-        //        if (!filterContext.ExceptionHandled && filterContext.RequestContext.HttpContext.Request.ContentType == "application/json")
-        //        {
-        //            filterContext.HttpContext.Response.Clear();
-        //            // Prepare the response code.
-        //            filterContext.ExceptionHandled = true;
-        //            var mc = new List<MessageContainer>()
-        //            {
-        //            };
-        //            var ex = filterContext.Exception.UnwrapAgg();
-        //            if (ex is Mozu.Core.Api.Client.Exceptions.ApiWebClientException && ex.Data != null && ex.Data.Count > 0)
-        //            {
-        //                foreach (var item in ex.Data.Values)
-        //                {
-        //                    mc.Add(new MessageContainer() { Message = item.ToString() });
-        //                }
-
-        //            }
-        //            else
-        //            {
-        //                mc.Add(new MessageContainer()
-        //                {
-        //                    Message = ex.Message,
-        //                    Stack = ex.ToString()
-        //                });
-        //            }
-        //            filterContext.Result = new JsonDCResult()
-        //            {
-
-        //                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-        //                Data = new MessageContainerCollection()
-        //                {
-        //                    Messages = mc
-        //                }
-        //            };
-        //        }
-
-        //    }
-        //}
-
+#pragma warning restore 0162
     }
 }

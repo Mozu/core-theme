@@ -60,12 +60,12 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         private async Task<StreamContent> UpdateSettings(List<FieldValue> values, string themeId)
         {
             Document doc = null;
-            var res = await _cmsService.GetByPath("settings", this.GetFileName(themeId));
+            var res = await _cmsService.GetByPath2("settings", this.GetFileName(themeId));
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 doc = res.ReadAsSync();
                 doc.Set("data", Newtonsoft.Json.JsonConvert.SerializeObject(values, Formatting.None));
-                await _cmsService.Update(doc);
+                await _cmsService.Update2(doc);
                 return null;
             }
             else
@@ -95,7 +95,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                     }
                 };
                
-                await _cmsService.RawCreate(doc);
+                await _cmsService.RawCreate2(doc);
                 return null;
             }
 
@@ -117,7 +117,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
             }
 
-            return _cmsService.GetByPath("settings", this.GetFileName(themeId)).ContinueWith<List<FieldValue>>(res =>
+            return _cmsService.GetByPath2("settings", this.GetFileName(themeId)).ContinueWith<List<FieldValue>>(res =>
                 {
                     List<FieldValue> values = new List<FieldValue>();
                     if (res.Result.ResponseMessage.IsSuccessStatusCode)
@@ -182,7 +182,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             if (!_ts.HasValue )
             {
                 _cmsService.BypassCache = true;
-                var res = _cmsService.GetByPath("settings", GetFileName(themeId)).Result;
+                var res = _cmsService.GetByPath2("settings", GetFileName(themeId)).Result;
                 _cmsService.BypassCache = false ;
                 if ( res.ResponseMessage.IsSuccessStatusCode)
                 {

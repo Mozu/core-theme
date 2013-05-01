@@ -158,7 +158,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         }
 
         [HttpPost ]
-        public async Task<ActionResult> NewAccountInvitation(LoginUser user, FormCollection form)
+        public ActionResult NewAccountInvitation(LoginUser user, FormCollection form)
         {
             if (string.IsNullOrEmpty(user.Password))
             {

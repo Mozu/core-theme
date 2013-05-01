@@ -64,7 +64,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                         throw new NotImplementedException("unable to filter on property " + filter.property);
                     }
             }
-            return "";
         }
     }
 }

@@ -187,7 +187,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             // retrieve and update the requested category.
             return
-                _cmsService.Get(docCollection, docId, false)
+                _cmsService.Get2(docCollection, docId)
                 .ContinueWith(t =>
                 {
                     var page = t.Result.ReadAsSync();
@@ -201,7 +201,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     page.Set("link_title", change.Name);
 
-                    return _cmsService.Update(page);
+                    return _cmsService.Update2(page);
                 })
                 .Unwrap()
             ;

@@ -69,12 +69,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             }
             string fileName = doc.FileName;
-            var req = new CmsListRequest(){
-                Collection = "files",
-                FolderId = productFolder.Id 
-            };
-            req.Filters.Add ( string.Format ( "name sw \"{0}\"", System.IO.Path.GetFileNameWithoutExtension(doc.FileName) ));
-            var matchingFiles = (await _cmsService.GetList(req)).ReadAsSync();
+            string filter = String.Format("FolderId eq '{0}' and name sw \"{1}\"", productFolder.Id, Path.GetFileNameWithoutExtension(fileName));
+
+            var task = _cmsService.GetList2(contentCollection: "files", filter: filter);
+
+            var matchingFiles = (await task).ReadAsSync();
 
             if (matchingFiles.TotalCount > 0 )
             {

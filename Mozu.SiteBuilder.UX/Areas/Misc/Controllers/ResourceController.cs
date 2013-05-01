@@ -132,7 +132,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 visitDeeper = true;
                 if (node is dotless.Core.Parser.Tree.Value)
                 {
-                    int f = 0;
+                    // do nothing
                 }
                 if (node is dotless.Core.Parser.Tree.Variable)
                 {
@@ -145,9 +145,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                     }
                     node = new MyVariable(inNode.Name);
-
-
-                    int f = 2;
                 }
                 return node;
 
@@ -172,8 +169,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 Rule rule = env.FindVariable(name);
                 if (Name == "headingsColor" || Name == "@headingsColor")
                 {
-
-                    int f = 0;
+                    // do nothing
                 }
 
                 if (rule == null)

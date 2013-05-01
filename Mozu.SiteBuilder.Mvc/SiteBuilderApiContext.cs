@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.Mvc
     }
     }
 
-    public class SiteBuilderApiContext : MozuServiceApiContext
+    public class SiteBuilderApiContext : MozuServiceApiContext, ISiteBuilderApiContext
     {
         private readonly ISettings _settings;
         private readonly AuthenticationHelper _authenticationHelper;
@@ -52,17 +52,26 @@ namespace Mozu.SiteBuilder.Mvc
             _settings = settings;
             _authenticationHelper = authenticationHelper;
 
+            CmsDraftState = "active";
 
             Load(context, cookieProvider);
         }
 
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Site> g_domainSiteLookup = new ConcurrentDictionary<string, Site>(StringComparer.OrdinalIgnoreCase);
 
+        /// <summary>
+        /// "active" or "draft".
+        /// </summary>
+        public string CmsDraftState
+        {
+            get;
+            set;
+        }
+
         public void Load(HttpContextBase ctx, ICookieProvider cookieProvider)
         {
             this.LocaleCode = "en-US";
             this.CurrencyCode = "usd";
-            int? tenantCookie;
             this.UserClaims = _authenticationHelper.GetCurrentUser();
             HttpRequestBase req = null;
             try
@@ -79,7 +88,8 @@ namespace Mozu.SiteBuilder.Mvc
             
             if (req != null)
             {
-                
+                if (req.QueryString["IsEditMode"] == "true")
+                    CmsDraftState = "draft";
 
                 if (req.Headers.AllKeys.Any(x => x == Mozu.Core.Api.Contracts.Constants.Headers.TENANT))
                 {

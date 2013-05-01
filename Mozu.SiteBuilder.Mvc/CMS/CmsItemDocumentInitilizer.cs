@@ -29,12 +29,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 if (request.Id != null)
                 {
-                    task = _cmsServiceWrapper.Get((request.Collection ?? defaultCollection), request.Id, false );
+                    task = _cmsServiceWrapper.Get2(request.Collection ?? defaultCollection, request.Id);
 
                 }
                 if (request.Path != null)
                 {
-                    task = _cmsServiceWrapper.GetByPath(request.Collection ?? defaultCollection, request.Path);
+                    task = _cmsServiceWrapper.GetByPath2(request.Collection ?? defaultCollection, request.Path);
                 }
             }
             return task != null;
@@ -98,7 +98,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                                                              Collection="templates"
                                                          };
                     }
-                    templateTask = _cmsServiceWrapper.GetByPath("templates", templateName);
+                    templateTask = _cmsServiceWrapper.GetByPath2("templates", templateName);
                     tasks.Add(templateTask);
                     var res = await templateTask;
                     if (templateTask.Result.ResponseMessage.IsSuccessStatusCode)
@@ -165,7 +165,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 return;
             }
 
-            task = _cmsServiceWrapper.RawCreate(
+            task = _cmsServiceWrapper.RawCreate2(
                 new Document()
                     {
                         DocumentListName = "templates",

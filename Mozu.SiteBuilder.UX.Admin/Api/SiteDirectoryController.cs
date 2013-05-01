@@ -54,12 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     leaf = false 
                 });
 
-                var blogTask = _cmsService.GetList(new CmsListRequest()
-                {
-                    Collection = "blogs", 
-                    DocumentType = "blog",
-                    PageSize = 1
-                });
+                var blogTask = _cmsService.GetList2(contentCollection: "blogs", filter: "DocumentType eq blog", pageSize: 1);
 
                 var blogDoc = (await blogTask).ReadAsSync().Items.FirstOrDefault();
                 if (blogDoc != null)
@@ -102,17 +97,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     }
                 case "folder":
                     {
-                        var pages= _cmsService.GetList ( new CmsListRequest(){
-                            FolderId = parts.Length == 3 ? parts[2] : null,
-                            PageSize = 100,
-                            Collection = parts[1]
-                        }).Result.ReadAsSync ().Items.Select(x=>
-                            new SiteDirectoryNode (){
-                                name = x.Name, 
-                                leaf = true,
-                                url = "/" + x.DocumentListName + "/" + x.Name  
+                        string filter = parts.Length == 3 ? String.Format("FolderId eq '{0}'", parts[2]) : null;
+                        var pages= _cmsService.GetList2(contentCollection: parts[1], pageSize: 100, filter: filter)
+                            .Result.ReadAsSync ().Items.Select(x=>
+                                new SiteDirectoryNode (){
+                                    name = x.Name, 
+                                    leaf = true,
+                                    url = "/" + x.DocumentListName + "/" + x.Name  
 
-                            });
+                                });
                         resItems.AddRange( pages )   ;
                         break;
                     }

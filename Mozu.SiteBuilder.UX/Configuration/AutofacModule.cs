@@ -58,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
 
-            builder.RegisterType<SiteBuilderApiContext>().As<Mozu.Core.IApiContext>().InstancePerHttpRequest();
+            builder.RegisterType<SiteBuilderApiContext>().As<Mozu.Core.IApiContext>().As<ISiteBuilderApiContext>().InstancePerHttpRequest();
             builder.RegisterType<Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper>().InstancePerHttpRequest();
             builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>().InstancePerHttpRequest();
           

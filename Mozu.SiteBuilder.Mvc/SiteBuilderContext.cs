@@ -102,9 +102,6 @@ namespace Mozu.SiteBuilder.Mvc
             }
 
 
-	        RuntimeConfigurationFieldCollection col;
-        
-
             // needs to be lazy because _settings is lazy
             _desktopTheme = new Lazy<Theme >(() =>
             {

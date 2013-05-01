@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         {
             // retrieve the document id
             Task<NavigationSet> set = 
-                _cmsService.GetByPath(NavigationContentCollection, NavigationFileName)
+                _cmsService.GetByPath2(NavigationContentCollection, NavigationFileName)
                 .ContinueWith(docResultIntermediate =>
                 {
                     var serviceClientResponse = docResultIntermediate.Result;
@@ -102,7 +102,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public Task SaveSetAsync(NavigationSet set)
         {
             return 
-                _cmsService.GetByPath(NavigationContentCollection, NavigationFileName)
+                _cmsService.GetByPath2(NavigationContentCollection, NavigationFileName)
                 .ContinueWith(r =>
                 {
                     var doc = r.Result.ReadAsSync();

@@ -1,21 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core.Api.Client;
 //using Volusion.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Category;
-using Contracts = Mozu.ProductAdmin.Contracts;
-using System.Linq;
-using Mozu.Core.Api.Client;
 using Category = Mozu.SiteBuilder.UX.Admin.Api.Models.Category.Category;
-using System.Net.Http;
-using Mozu.Core.Api.Contracts.Client;
+using Contracts = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -90,9 +88,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(categories);
             }
 
-            var category = (await _categoriesClient.GetCategory(pagingParams.NumericId)).ReadAsSync();
-
-            return List2(Mapper.Map<Category>(category));
+            // var category = (await _categoriesClient.GetCategory(pagingParams.NumericId)).ReadAsSync();
+            // 
+            // return List2(Mapper.Map<Category>(category));
         }
 
         [WebGet(UriTemplate = "autocomplete/?query={query}&value={categoryIdsString}")]

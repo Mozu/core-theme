@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Messaging.Contracts;
+using DC = Mozu.Content.Contracts;
 
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -20,6 +21,7 @@ using Mozu.SiteBuilder.UX.Models.Checkout;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Mozu.User.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
+using AutoMapper;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -28,7 +30,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         private readonly IOrderService _orderService;
         private readonly IViewEngine _viewEngine;
-        private readonly ILifetimeScope _lifetimeScope;
         private static List<EmailTypeInfo> g_emailTypeInfos;
         public class UserServiceMessageTopics
         {
@@ -129,8 +130,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var res = await Page("email", emailTempalte);
             if (res is HttpNotFoundResult)
             {
-                var reqDocs = new List<Mvc.Models.CMS.Admin.Document>(){
-                    new Mvc.Models.CMS.Admin.Document(){
+                var reqDoc = new Mvc.Models.CMS.Admin.Document(){
                       CollectionName = "email",
                       DocumentType = "email",
                       Name = emailTempalte ,
@@ -142,11 +142,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                               Value = "email"
                           }
                       }
-                    }
                 };
 
-                var task = _cmsService.Create(reqDocs).First();
-                task.Wait();
+                var task = _cmsService.Create2(reqDoc);
+                await task;
                 
                 //_cmsService.Create ( )
                 //CreatePage("home page", "home", "home");
