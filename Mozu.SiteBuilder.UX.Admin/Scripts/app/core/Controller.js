@@ -24,19 +24,20 @@ Ext.define('Taco.core.Controller', {
      * @return {undefined}
      */
     index: function () {
-        var contextType = Taco.app.context.getCurrent().contextType,
-            placeholder;
+        // Placeholders disabled for demo; instead, contentviews will cause context to switch to the first available context that they can use.
+        //var contextType = Taco.app.context.getCurrent().contextType,
+        //    placeholder;
 
-        Ext.iterate(this.contextPlaceholders, function (key, fn) {
-            if (key.indexOf(contextType) > -1 && typeof fn === 'function') {
-                placeholder = fn.apply(this);
-            }
-        }, this);
+        //Ext.iterate(this.contextPlaceholders, function (key, fn) {
+        //    if (key.indexOf(contextType) > -1 && typeof fn === 'function') {
+        //        placeholder = fn.apply(this);
+        //    }
+        //}, this);
 
-        if (placeholder) {
-            this.createContentView(placeholder);
-            return;
-        }
+        //if (placeholder) {
+        //    this.createContentView(placeholder);
+        //    return;
+        //}
 
         this.buildIndex();        
     },
@@ -134,10 +135,43 @@ Ext.define('Taco.core.Controller', {
      * @return {Taco.core.ux.content.Container}      The view created or passed.
      */
     createContentView: function (view, cfg) {
-        view = view.$className ? view : Ext.create(view, cfg);
-        Taco.app.contentView.removeAll(true);
-        Taco.app.contentView.add(view);
-        return view;
-    }
+        var viewClass = Ext.ClassManager.get(view);
+        if (this.confirmContext(viewClass)) {
+            view = view.$className ? view : Ext.create(view, cfg);
+            if (view.requiresContextOfType) {
+                view.mon(Taco.app.context, "beforecontextchange", function (newContext) {
+                    var works = this.worksInContext(view, newContext);
+                    if (!works) Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', Ext.isArray(view.requiresContextOfType) ? view.requiresContextOfType[0] : view.requiresContextOfType).raw);
+                    return works;
+                }, this);
+            }
+            Taco.app.contentView.removeAll(true);
+            Taco.app.contentView.add(view);
+            return view;
+        }
+    },
+
+    worksInContext: function (view, ctx) {
+        var ctype = ctx.contextType,
+            reqctype = view.requiresContextOfType;
+        return (!reqctype || reqctype === ctype || (Ext.isArray(reqctype) && Ext.Array.indexOf(reqctype, ctype) !== -1));
+    },
+            
+
+    confirmContext: function(viewClass) {
+        var context = Taco.app.context.getCurrentContext(),
+            requiredContextType = viewClass.prototype.requiresContextOfType;
+
+
+        if (this.worksInContext(viewClass.prototype, context)) return true;
+
+        if (Ext.isArray(requiredContextType)) requiredContextType = requiredContextType[0];
+
+        if (!requiredContextType) return true; // should never happen at this point
+
+        // at this point we know the current context is inappropriate:
+        Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', requiredContextType).raw);
+        return false;
+    },
     
 });
