@@ -106,6 +106,7 @@ Ext.define('Taco.view.site.Toolbox', {
         this.items = [{
             xtype: 'tabpanel',
             activeTab: 0,
+            height: (Ext.getBody().getBox().height - 107),
             manageHeight: false,
             cls: Taco.baseCSSPrefix + 'toolbox-tabpanel',
             tabBar: {

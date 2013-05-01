@@ -8,7 +8,6 @@ Ext.define('Taco.core.ux.TabBar', {
     getLayout: function () {
         var me = this;
         me.layout.type = 'auto';
-        console.log(me.layout);
         return me.callSuper(arguments);
     },
 
@@ -16,7 +15,7 @@ Ext.define('Taco.core.ux.TabBar', {
         var me = this;
 
         me.callSuper(arguments);
-        
+
         me.strip.setWidth(width);
         delete me.needsScroll;
     }
