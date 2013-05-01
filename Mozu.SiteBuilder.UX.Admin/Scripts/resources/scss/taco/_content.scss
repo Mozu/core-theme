@@ -27,6 +27,11 @@
     width: 100%;
     @include flex($grow: 1);
 
+    .#{$vprefix}content-container {
+      position: relative;
+      z-index: 2;
+    }
+
     .#{$vprefix}content-header {
       border-bottom: 1px solid border-for($color-neutral-white);
       margin: 0px;
@@ -96,9 +101,10 @@
     background-color: $color-neutral-white;
     border-color: border-for($color-neutral-white);
     border-style: solid none none solid;
-    border-width: 1px 0px 0px 1px;
+    border-width: 0px 0px 0px 1px;
     z-index: 3;
     @include flexbox;
+    @include flex(0, 0, 300px);
 
     .#{$vprefix}sidebarlist {
       margin: 0 30px;

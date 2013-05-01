@@ -145,8 +145,19 @@
     background-color: $color-neutral-white;
     border: 0px none;
     min-width: 299px;
+    overflow-x: hidden;
+    overflow-y: auto;
     padding: 0px;
     width: 299px;
+  }
+
+  .#{$vprefix}shell-scrolled {
+    .#{$vprefix}toolbox {
+      position: fixed;
+      right: 5px;
+      top: 0px;
+      z-index: 201;
+    }
   }
 
   .#{$vprefix}toolbox-tabpanel {
