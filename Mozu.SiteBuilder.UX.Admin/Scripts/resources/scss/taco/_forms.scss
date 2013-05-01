@@ -13,7 +13,7 @@
       margin-top: 30px;
       position: relative;
 
-      .x-container {
+      & .#{$prefix}container {
         border: 1px dashed border-for($color-neutral-white);
         padding: 0px 20px 20px;
       }
@@ -23,7 +23,7 @@
       }
     }
 
-    .x-mask {
+    .#{$prefix}mask {
       background-color: transparent;
       background-image: -webkit-repeating-linear-gradient(-45deg, $color-neutral-white 0%, $color-neutral-white 25.5%, $color-neutral-black 25.5%, $color-neutral-black 51%, $color-neutral-white 51%, $color-neutral-white 76.5%, $color-neutral-black 76.5%, $color-neutral-black 100%);
       background-size: 6px 6px;

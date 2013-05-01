@@ -1,0 +1,61 @@
+﻿@mixin taco-image-field {
+    
+    @mixin drop-zone {
+        text-align: center;
+        border: 1px dashed #B1B1B1;
+        background-color: #F8F8F8;
+        color: #A3A3A3;
+        font-weight: normal;
+        background-repeat: no-repeat;
+        padding-top: 3rem;
+        background-image: url(/admin/Scripts/resources/images/image-drop.png);
+
+        @include transition(background-color 0.3s ease-in);
+
+        &:hover {
+            background-color: #DFDFDF;
+        }
+    }
+
+    .#{$vprefix}product-image-field {
+        border: none !important;
+
+        .#{$vprefix}action {
+            font-weight: normal;
+            font-size: 1.3rem;
+        }
+        .#{$vprefix}image-tiles {
+            @include flexbox;
+        }
+        .#{$vprefix}image-tiles li {
+            list-style: none;
+            height: 150px;
+            width: 150px;
+            border: 1px solid #bfbfbf;
+            margin: 0 1.5rem 1rem 0;
+            background-color: white;
+            background-position: center center;
+            background-repeat: no-repeat;
+
+            &.active {
+
+            }
+
+            &.#{$vprefix}image-drop {
+                @include drop-zone;
+                padding-top: 3rem;
+                background-position: center 5rem;
+                background-size: 68px 70px;
+                
+            }
+        }
+    }
+
+    .#{$vprefix}product-image-drop-zone {
+        @include drop-zone;
+        height: 17rem;
+        font-size: 2rem;
+        background-position: center 6.2rem;
+        margin-bottom: 1rem;
+    }
+}
