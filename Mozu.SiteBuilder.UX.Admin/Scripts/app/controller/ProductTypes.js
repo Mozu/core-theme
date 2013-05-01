@@ -11,22 +11,22 @@ Ext.define('Taco.controller.ProductTypes', {
     models: ['Taco.model.ProductType'],
     stores: ['Taco.store.ProductTypes'],
     views: ['productType.Index'],
-    modelName: 'ProductType',
+    modelName: 'ProductType'
 
-    contextPlaceholders: {
-        t: function () {
-            return Ext.create('Taco.core.ux.content.Container', {
-                header: {
-                    title: "choose a site collection"
-                },
+    //contextPlaceholders: {
+    //    t: function () {
+    //        return Ext.create('Taco.core.ux.content.Container', {
+    //            header: {
+    //                title: "choose a site collection"
+    //            },
 
-                body: {
-                    layout: 'auto',
-                    items: [{
-                        html: 'placeholder for choose site collection interstitial '
-                    }]
-                }
-            });
-        }
-    }
+    //            body: {
+    //                layout: 'auto',
+    //                items: [{
+    //                    html: 'placeholder for choose site collection interstitial '
+    //                }]
+    //            }
+    //        });
+    //    }
+    //}
 });

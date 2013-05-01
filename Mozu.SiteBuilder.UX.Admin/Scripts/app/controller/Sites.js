@@ -8,32 +8,8 @@ Ext.define('Taco.controller.Sites', {
     views: ['option.Index'],             //<hack 
     modelName: 'Taco.model.Option',   //<hack 
 
-
-    validateContext :function() {
-        if (Taco.app.context.getCurrent().contextType == 's') {
-            return true;
-        }
-        this.createContentView('Taco.core.ux.content.Container', {
-            header: {
-                title: 'choose a site'
-            },
-
-            body: {
-                layout: 'auto',
-                items: [{
-                    html: 'placeholder for choose site  interstitial '
-                }]
-            }
-        });
-        return false;
-    },
-
     pages: function (params) {
         
-        if (!this.validateContext()) {
-            return;
-        }
-
         var url = '/';
         if (params.id) {
             url = '/pages/' + params.id;
@@ -42,11 +18,8 @@ Ext.define('Taco.controller.Sites', {
         }
         this.createContentView('Taco.view.site.page.Edit', { pageSrc: url });
     },
+
     templates: function (params) {
-        
-        if (!this.validateContext()) {
-            return;
-        }
 
         var url = '/';
         if (params.id) {
@@ -56,17 +29,9 @@ Ext.define('Taco.controller.Sites', {
         }
         this.createContentView('Taco.view.site.page.Edit', { pageSrc: url });
     },
-    
-   
-    
      
     blogs: function (params) {
         
-        if (!this.validateContext()) {
-            return;
-        }
-        
-
         var url = '/blogs';
         if (params.id) {
             url = '/blogs/' + params.id;
@@ -76,11 +41,6 @@ Ext.define('Taco.controller.Sites', {
         this.createContentView('Taco.view.site.page.Edit', { pageSrc: url });
     },
     category: function (params) {
-        
-        if (!this.validateContext()) {
-            return;
-        }
-        
 
         var url = '/';
         if (params.id) {
@@ -93,11 +53,6 @@ Ext.define('Taco.controller.Sites', {
     
     product: function (params) {
         
-        if (!this.validateContext()) {
-            return;
-        }
-        
-
         var url = '/';
         if (params.id) {
             url = '/product/' + params.id;

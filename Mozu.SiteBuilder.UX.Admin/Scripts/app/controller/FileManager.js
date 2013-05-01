@@ -8,21 +8,22 @@ Ext.define('Taco.controller.FileManager', {
     views: ['fileManager.Index'],
     modelName: 'File',
 
-    contextPlaceholders: {
-        t: function () {
-            return Ext.create('Taco.core.ux.content.Container', {
-                header: {
-                    title: "choose a site collection"
-                },
+    requiresContextOfType: ['c', 's']
+    //contextPlaceholders: {
+    //    t: function () {
+    //        return Ext.create('Taco.core.ux.content.Container', {
+    //            header: {
+    //                title: "choose a site collection"
+    //            },
 
-                body: {
-                    layout: 'auto',
-                    items: [{
-                        html: 'placeholder for choose site collection interstitial'
-                    }]
-                }
-            });
-        }
-    }
+    //            body: {
+    //                layout: 'auto',
+    //                items: [{
+    //                    html: 'placeholder for choose site collection interstitial'
+    //                }]
+    //            }
+    //        });
+    //    }
+    //}
    
 });

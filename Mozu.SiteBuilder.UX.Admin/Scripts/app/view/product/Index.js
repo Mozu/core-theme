@@ -13,6 +13,8 @@ Ext.define('Taco.view.product.Index', {
     filterProperty: 'productName2',
     useTilePanel: true,
 
+    requiresContextOfType: ['c', 's'],
+
     filterFormConf: {
         width: 600,
         cls: Taco.baseCSSPrefix + 'combofilter-form products',

@@ -11,6 +11,7 @@ Ext.define('Taco.view.pageTemplate.Index', {
     // storeName: 'Taco.store.Products',
     // editorName: 'Taco.view.product.Edit',
     filterProperty: 'displayName',
+    requiresContextOfType: 's',
     store: { model: 'Taco.model.PageTypeDefinition' },
     gridPanelConf: {
         columns: [{

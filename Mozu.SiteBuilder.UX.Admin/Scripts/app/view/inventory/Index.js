@@ -9,7 +9,8 @@ Ext.define('Taco.view.inventory.Index', {
     typeName: 'InventoryProduct',
     modelName: 'Taco.model.InventoryProduct',
     store: { type: 'Taco.store.InventoryProducts' },
-   
+
+    requiresContextOfType: ['c', 's'],
     useTilePanel: false,
     launchEditorOnClick:false,
     filterFormConf: null,
