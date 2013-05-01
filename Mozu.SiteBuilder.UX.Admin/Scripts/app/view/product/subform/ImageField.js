@@ -4,8 +4,7 @@
  */
 
 Ext.define('Taco.view.product.subform.ImageField', {
-    extend: 'Ext.container.Container',
-    //extend: 'Ext.form.field.Base',
+    extend: 'Ext.form.FieldContainer',
     mixins: {
         field: 'Ext.form.field.Field'
     },
@@ -15,44 +14,85 @@ Ext.define('Taco.view.product.subform.ImageField', {
     ],
     labelAlign: 'top',
     labelSeparator: '',
-    //fieldSubTpl: [
-    //    '<div>stuff goes here...</div>',
-    //    '<a href="#" data-item="upload">Upload new Image</a>',
-    //    '<a href="#" data-item="associator">Select from Associator</a>',
-    //    '<input type="hidden" id="{id}" {inputAttrTpl} >'
-    //],
+    cls: 'taco-product-image-field',
     
-
-
     initComponent: function () {
 
-       
-        this.callParent(arguments);
-        
+        this.emptyDropZone = Ext.widget({
+            xtype: 'component',
+            cls: 'taco-product-image-drop-zone',
+            html: 'Drag and drop images here'
+        });
+
+        this.imageDropZone = Ext.widget({
+            xtype: 'component',
+        })
+
         this.imageView = Ext.widget({
             xtype: 'dataview',
-            tpl :['<div class="taco-tileview tilesize-230px">',
-                        '<tpl foreach=".">',
-                            '<div><img src="{url}?size=100" /></div>', 
-                            
-                        '</tpl>',
-            '</div>'],
-            itemSelector:'img'
+            autoEl: {
+                tag: 'ul',
+                cls: 'taco-image-tiles'
+            },
+            tpl :[
+              //  '<ul class="taco-image-tiles">',
+                    '<tpl foreach=".">',
+                        '<li class="image" style="background-image:url({url}?size=150)"></li>',                  
+                    '</tpl>',
+                    '<li class="taco-image-drop">Drop images here</li>'
+                //'</ul>'
+            ],
+            itemSelector:'li.image',
+            
+            update : function(htmlOrData, loadScripts, cb) {
+                console.log('udpate',this.getId(), arguments);
+                var me = this,
+                    isData = (me.tpl && !Ext.isString(htmlOrData)),
+                    el;
+
+                if (isData) {
+                    me.data = htmlOrData;
+                } else {
+                    me.html = Ext.isObject(htmlOrData) ? Ext.DomHelper.markup(htmlOrData) : htmlOrData;
+                }
+
+                if (me.rendered) {
+                    el = me.isContainer ? me.layout.getRenderTarget() : me.getTargetEl();
+                    if (isData) {
+                        me.tpl[me.tplWriteMode](el, htmlOrData || {});
+                    } else {
+                        el.update(me.html, loadScripts, cb);
+                    }
+                    me.updateLayout();
+                }
+
+            }
         });
-        
-        this.add([{
-            html: '<div>stuff goes here...</div>' +
-             '<a href="#" data-item="upload">Upload new Image</a>' +
-             '<a href="#" data-item="associator">Select from Associator</a>'
-        }, this.imageView]);
-        
-        this.on({
-            afterrender: this.onAfterRender,
+
+        this.uploadAction = Ext.widget({
+            xtype: 'action',
+            text: 'upload from computer'
+        });
+
+        this.fileManagerAction = Ext.widget({
+            xtype: 'action',
+            text: 'upload from file manager',
+            click: this.onAssociatorClick,
             scope: this
         });
-        //this.add({ html: 'foodis go' });
+
+        this.items = [
+            this.emptyDropZone,
+            this.imageView,
+            this.uploadAction,
+            { xtype: 'component', html: ' | ', autoEl: { tag: 'span' } },
+            this.fileManagerAction
+        ];
+       
+        this.callParent(arguments);
 
     },
+
     isEqual: function (value1, value2) {
         if (value1 == null && value2 == null) {
             return true;
@@ -68,22 +108,10 @@ Ext.define('Taco.view.product.subform.ImageField', {
             return true;
         }
         return Ext.encode(value1) == Ext.encode(value2);
-
     },
 
-    onAfterRender: function (field, eOpts) {
-        var associatorEl = this.getEl().down('[data-item="associator"]');
+    onAssociatorClick: function () {
 
-        associatorEl.on({
-            click: this.onAssociatorClick,
-            scope: this
-        });
-    },
-
-    onAssociatorClick: function (e) {
-        e.preventDefault();
-
-        // TODO: Pass in selected images
         this.associator = Ext.create('Taco.view.fileManager.Associator', {
             selectedItems: [],
             listeners: {
@@ -96,26 +124,49 @@ Ext.define('Taco.view.product.subform.ImageField', {
         });
     },
 
-    //setValue: function (value) {
-    //    return this.callParent(arguments);
-    //},
     getValue:function() {
         return this.value;
     },
 
     setValue: function (value) {
-        var me = this;
-        me.imageView.update(value);
-        return me.mixins.field.setValue.call(me, value);
+        console.log('setValue bitch', this.getId(), value, this.imageView && this.imageView.rendered);
+        
+        // if ( this.imageView.rendered){
+        //     this.imageView.update(value);
+        // } else {
+        //     this.imageView.on( 'afterrender', function (){  
+        //         console.log(this.getEl().dom);
+        //         this.update(value);
+        //         console.log(this.getEl().dom);
+        //     });
+        // }
+
+        this.imageView.update(value);
+
+        if (value && value.length) {
+            this.emptyDropZone.hide();
+        } else {
+            this.emptyDropZone.show();
+        }
+
+        if (!value || !value.length) {
+            return;;
+        }
+
+        
+
+        return this.mixins.field.setValue.call(this, value);
     },
+
     onAssociatorSave: function (associator, selectedRecords) {
-        this.associator.hide();
         var value = [];
-        Ext.each(selectedRecords, function (record) {
-            
+        
+        this.associator.hide();
+        
+        Ext.each(selectedRecords, function (record) {    
             value.push({ url: record.get('url') });
         });
+
         this.setValue(value);
-        console.log(selectedRecords);
     }
 });
