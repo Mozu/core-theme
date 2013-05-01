@@ -178,6 +178,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13100.1\lib\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
+    <Reference Include="Mozu.BuildSupport.GetAssemblyFileVersionTask">
+      <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.0.0.13080.1\lib\Mozu.CommerceRuntime.Contracts.dll</HintPath>
@@ -570,6 +573,8 @@
     <Content Include="Configs\AppSettings.SI.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="PostDeploy.ps1" />
+    <Content Include="PreDeploy.ps1" />
     <None Include="Scripts\app\mocks\behaviors.json" />
     <Content Include="Scripts\app\model\Attribute.js" />
     <Content Include="Scripts\app\model\AttributeValue.js" />
@@ -3014,4 +3019,5 @@
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="$(SolutionDir)\.octopack\octopack.targets" />
 </Project>
