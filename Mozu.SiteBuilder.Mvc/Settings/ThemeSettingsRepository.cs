@@ -181,9 +181,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         {
             if (!_ts.HasValue )
             {
-                _cmsService.BypassCache = true;
                 var res = _cmsService.GetByPath2("settings", GetFileName(themeId)).Result;
-                _cmsService.BypassCache = false ;
                 if ( res.ResponseMessage.IsSuccessStatusCode)
                 {
                     _ts= res.ReadAsSync().UpdateDate.GetValueOrDefault(DateTime.Today);
