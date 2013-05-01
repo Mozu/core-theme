@@ -64,7 +64,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
                         }
 
                         //  _cats = AutoMapper.Mapper.Map<List<Category>>(client.GetCategories(null,  0, int.MaxValue, null).Result.ReadAsSync().Items);
-                        categories.ForEach(x => x.ChildrenCategories = categories.Where(_ => _.ParentCategoryId == null).ToList());
+                        categories.ForEach(x => x.ChildrenCategories = Mapper.Map<List<Mozu.ProductRuntime.Contracts.Category> >(categories.Where(_ => _.ParentCategoryId == null).ToList()) );
 
                         _categories = categories;
                         return categories;

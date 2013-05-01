@@ -18,7 +18,7 @@
 
         {% include "Modules/MessageBar" %}
 
-		<div class="mz-details-full-description" {% data_attributes Model.Content.ProductFullDescription %}>
+		<div class="mz-details-full-description" >
 			{{ Model.Content.ProductFullDescription }}
 		</div>
         

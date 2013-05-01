@@ -1,16 +1,18 @@
 ﻿
 <div class="clearfix">
-	<div class="mz-pager">
-		{% if Model.paging.currentPage > 1 %}
-			<a href="{{Model.paging.urlBase}}&page={{Model.paging.currentPage|add:-1}}">&lt;</a>
-		{% else %}
-			<span>&lt;</span>
-		{% endif %}
-		<span>{{Model.paging.currentPage}} of {{Model.paging.pageCount}}</span>
-		{% if Model.paging.currentPage < Model.paging.pageCount %}
-			<a href="{{Model.paging.urlBase}}&page={{Model.paging.currentPage|add:1}}">&gt;</a>
-		{% else %}
-			<span>&gt;</span>
-		{% endif %}
-	</div>
+    <div class="mz-pager">
+   
+      {% if Model.CurrentPage > 1 %}
+      <a href="{{Model.UrlBase}}&page={{Model.CurrentPage|add:-1}}">&lt;</a>
+        {% else %}
+        <span>&lt;</span>
+        {% endif %}
+        <span>{{Model.CurrentPage}} of {{Model.PageCount}}</span>
+    
+      {% if Model.CurrentPage < Model.PageCount %}
+        <a href="{{Model.UrlBase}}&page={{Model.CurrentPage|add:1}}">&gt;</a>
+        {% else %}
+        <span>&gt;</span>
+        {% endif %}
+    </div>
 </div>

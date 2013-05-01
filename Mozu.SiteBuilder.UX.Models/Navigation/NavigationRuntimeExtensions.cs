@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Mozu.ProductRuntime.Contracts;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
-using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+//using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 
 namespace Mozu.SiteBuilder.UX.Models.Navigation
 {

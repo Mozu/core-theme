@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
+using Mozu.ProductRuntime.Contracts;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -24,6 +25,7 @@ using Mozu.SiteBuilder.Mvc.Models.CMS;
 using System.Threading.Tasks;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using ProductImage = Mozu.ProductRuntime.Contracts.ProductImage;
 using ProductOption = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductOption;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -93,8 +95,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     {
                         return new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product()
                                    {
-                                       Options = new List<ProductOption>(),
-                                       ProductImages = new ProductImageCollection()
+                                       Options = new List<ProductRuntime.Contracts.ProductOption>(),
+                                       Content = new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductContent()
+                                                     {
+                                                         ProductImages = new ProductImageCollection()
+                                                     }
                                    };
                     }
                 default:
