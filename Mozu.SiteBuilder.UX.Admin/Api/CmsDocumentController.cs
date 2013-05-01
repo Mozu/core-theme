@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "update")]
         public async Task<Response<List<AVM.Document>>> Update(List<AVM.Document> docs )
         {
-            var tasks = docs.Select(doc => _cmsService.Update2(Mapper.Map<DC.Document>(doc)));
+            var tasks = docs.Select(doc => _cmsService.Update2(doc));
             await Task.WhenAll(tasks);
             var response = tasks.Select(x => x.Result.ReadAsSync()).Select(ConvertDocument).ToList();
 
