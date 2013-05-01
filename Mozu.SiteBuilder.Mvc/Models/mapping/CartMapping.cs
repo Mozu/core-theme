@@ -32,20 +32,20 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
             Mapper.CreateMap<Fee, Mozu.CommerceRuntime.Contracts.Carts.Fee>();
             Mapper.CreateMap<ProductOption, Mozu.CommerceRuntime.Contracts.Products.ProductOption>();
 
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductConfigurationRequest, Mozu.CommerceRuntime.Contracts.Carts.CartItem>()
-                .ForMember(x => x.Product, op => op.MapFrom(req =>
-                 new Mozu.CommerceRuntime.Contracts.Products.Product()
-                    {
-                        ProductCode = req.ProductCode,
-                        VariationProductCode = req.variationProductCode,
-                        Options = (req.Options ?? System.Linq.Enumerable.Empty<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductOptionSelection>()).Select(x =>
-                            new Mozu.CommerceRuntime.Contracts.Products.ProductOption()
-                            {
-                                ProductOptionValueId = x.Id ,
-                                ShopperEnteredValue = x.value
-                            }).ToList()
-                    }))
-                .ForMember(x => x.Quantity, op => op.MapFrom(req => req.Quantity))
+            //Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductConfigurationRequest, Mozu.CommerceRuntime.Contracts.Carts.CartItem>()
+            //    .ForMember(x => x.Product, op => op.MapFrom(req =>
+            //     new Mozu.CommerceRuntime.Contracts.Products.Product()
+            //        {
+            //            ProductCode = req.ProductCode,
+            //            VariationProductCode = req.variationProductCode,
+            //            Options = (req.Options ?? System.Linq.Enumerable.Empty<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductOptionSelection>()).Select(x =>
+            //                new Mozu.CommerceRuntime.Contracts.Products.ProductOption()
+            //                {
+            //                    ProductOptionValueId = x.Id ,
+            //                    ShopperEnteredValue = x.value
+            //                }).ToList()
+            //        }))
+            //    .ForMember(x => x.Quantity, op => op.MapFrom(req => req.Quantity))
                     ;
 
             //Mapper.AssertConfigurationIsValid(this.ProfileName);

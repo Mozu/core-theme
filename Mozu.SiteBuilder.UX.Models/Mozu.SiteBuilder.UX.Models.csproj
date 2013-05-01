@@ -201,6 +201,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.ProductAdmin.Contracts.0.0.13085.2\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
+    <Reference Include="Mozu.ProductRuntime.Contracts">
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.0.0.13010.3\lib\Mozu.ProductRuntime.Contracts.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.0.13022.2\lib\Mozu.SiteSettings.General.Contracts.dll</HintPath>
@@ -386,27 +389,7 @@
     <Compile Include="StoreFront\Cart\Fee.cs" />
     <Compile Include="StoreFront\Cart\Product.cs" />
     <Compile Include="StoreFront\Cart\ProductOption.cs" />
-    <Compile Include="StoreFront\Catalog\AttributeValueDateTime.cs" />
-    <Compile Include="StoreFront\Catalog\AttributeValueDecimal.cs" />
-    <Compile Include="StoreFront\Catalog\AttributeValueInteger.cs" />
-    <Compile Include="StoreFront\Catalog\AttributeValueString.cs" />
-    <Compile Include="StoreFront\Catalog\BaseProductAttribute.cs" />
-    <Compile Include="StoreFront\Catalog\BaseProductAttributeValue.cs" />
-    <Compile Include="StoreFront\Catalog\Category.cs" />
-    <Compile Include="StoreFront\Catalog\ConfiguredProduct.cs" />
-    <Compile Include="StoreFront\Catalog\Price.cs" />
     <Compile Include="StoreFront\Catalog\Product.cs" />
-    <Compile Include="StoreFront\Catalog\ProductAttribute.cs" />
-    <Compile Include="StoreFront\Catalog\ProductAttributeValue.cs" />
-    <Compile Include="StoreFront\Catalog\ProductCollection.cs" />
-    <Compile Include="StoreFront\Catalog\ProductImage.cs" />
-    <Compile Include="StoreFront\Catalog\ProductImageCollection.cs" />
-    <Compile Include="StoreFront\Catalog\ProductOption.cs" />
-    <Compile Include="StoreFront\Catalog\ProductOptionSelection.cs" />
-    <Compile Include="StoreFront\Catalog\ProductOptionValue.cs" />
-    <Compile Include="StoreFront\Catalog\ProductPurchasableState.cs" />
-    <Compile Include="StoreFront\Catalog\ProductSearchResult.cs" />
-    <Compile Include="StoreFront\Catalog\UnitOfMeasure.cs" />
     <Compile Include="Admin\CMS\Document.cs" />
     <Compile Include="Admin\CMS\DocumentProperty.cs" />
     <Compile Include="Admin\CMS\WidgetPreviewContext.cs" />

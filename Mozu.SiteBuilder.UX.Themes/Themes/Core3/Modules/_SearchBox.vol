@@ -2,7 +2,7 @@
 	<input placeholder="Search" type="search" class="mz-site-searchbox"  value="{{SiteContext.SearchContext.Query}}" name="query" />
 	<select class="mz-select mz-search-categories" name="categoryId">
 		<option value="">All</option>
-		{% for cat in SiteContext.CatalogContext.RootCategories %}
+		{% for cat in SiteContext.CatalogContext.CategoryTree %}
 		<option value="{{cat.Id}}" {% if cat.Id == SiteContext.SearchContext.CategoryId  %} selected="selected" {%endif%}>{{cat.Name}}</option>
 		{% endfor %}
 	</select>

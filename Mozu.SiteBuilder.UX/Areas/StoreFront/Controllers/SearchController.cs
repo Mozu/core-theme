@@ -51,9 +51,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             pc.Query = query;
 
-            pc.Paging.CurrentSort = sortBy;
-            pc.Paging.StartIndex = startIdx;
-            pc.Paging.UrlBase = "/search?query=" + query;
+            pc.CurrentSort = sortBy;
+           // pc.Paging.StartIndex = startIdx;
+            pc.UrlBase = "/search?query=" + query;
 
             ProcessFacetts(pc);
             if (ret.TotalCount > 0 )
@@ -88,17 +88,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var stack = new Stack<CategoryFacetItem>();
 
-            res.CategoryFacet.Items.ForEach(cf => stack.Push(cf));
+            res.CategoryFacet.Items.ForEach(cf => stack.Push(AutoMapper.Mapper.Map <CategoryFacetItem >(cf)));
 
 
 
             while (stack.Count > 0)
             {
                 var curr = stack.Pop();
+              
                 curr.Name = this.SiteContext.CatalogContext.AllCategories .Where(_cat => _cat.CategoryId == curr.CategoryId).Select(_cat => _cat.Name).FirstOrDefault();
                 curr.Url = string.Format("/search?query={0}&categoryId={1}", res.Query, curr.CategoryId);
 
-                if (curr.Children != null) curr.Children.ForEach(c => stack.Push(c));
+                if (curr.Children != null) curr.Children.ForEach(c => stack.Push(AutoMapper.Mapper.Map <CategoryFacetItem >(c)));
             }
 
             

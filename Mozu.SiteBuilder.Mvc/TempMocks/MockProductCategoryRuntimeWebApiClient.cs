@@ -33,6 +33,32 @@ namespace Mozu.SiteBuilder.Mvc.TempMocks
                                                                  };
             return (new TestResponse<ProductRuntime.Contracts.CategoryCollection>(cc)).Task;
         }
+
+
+
+        public IServiceClientMessageHandler Handler
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public ConfigOptions Options
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 
     /// <summary>

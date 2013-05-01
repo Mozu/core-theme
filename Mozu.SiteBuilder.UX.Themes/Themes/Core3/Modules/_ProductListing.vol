@@ -6,18 +6,21 @@
 	{% if Model.Items %}
 	<nav class="mz-list-control-wrap">
 		<ul class="mz-list-control" data-items-per-row="3">
-			{% for prod in Model.Items %}
-			<li class="mz-list-item {% if forloop.counter|divisibleby:3 %}mz-list-last{% endif %}">
-				<div class="mz-product-item-wrap">
-					<a class="mz-product-image-link" href="{{prod.url}}">
-						<img src="{{prod.images.main.resize.100.src}}" class="mz-product-image" />
-					</a>
-					<div class="mz-product-info-wrap">
-						<a class="mz-product-title-link" href="{{prod.url}}">{{prod.ProductName}}</a>
-						{% html_partial "modules/PriceStack" prod %}
-					</div>
-				</div>
-			</li>
+      {% for prod in Model.Items %}iii
+   
+  
+      <li class="mz-list-item {% if forloop.counter|divisibleby:3 %}mz-list-last{% endif %}">
+		   
+		        <div class="mz-product-item-wrap">
+		            <a class="mz-product-image-link" href="{{prod.Url}}">
+		                <img src="{{prod.Images.Main.Resize.100.Src}}" class="mz-product-image" />
+		            </a>
+		            <div class="mz-product-info-wrap">
+		                <a class="mz-product-title-link" href="{{prod.Url}}">{{prod.Content.ProductName}}</a>
+		                {% html_partial "modules/PriceStack" prod %}
+		            </div>
+		        </div>
+		    </li>
 			{% if forloop.counter|divisibleby:3 %}
 				<li class="mz-list-spacer"></li>
 			{% else %}

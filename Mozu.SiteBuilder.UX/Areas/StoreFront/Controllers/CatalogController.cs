@@ -90,15 +90,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             itemsPerPage = itemsPerPage.GetValueOrDefault(15);
             page = page.GetValueOrDefault(1);
             int startIdx = (page.Value - 1) * itemsPerPage.Value;
-            
-            var pcDC = _productClient.GetProducts(null, categoryId > -1 ? (int?)categoryId : null, categoryId > -1 ? (bool?)true : null, startIdx, itemsPerPage.Value, sortBy, null)
-                 .Result.ReadAsSync();
+
+            var pcDC = _productClient.GetProducts(categoryId: categoryId, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy).Result.ReadAsSync();
+
             var pc = Mapper.Map<ProductCollection>(pcDC);
            
-
-            pc.Paging.CurrentSort = sortBy;
-            pc.Paging.StartIndex = startIdx;
-            pc.Paging.UrlBase = "?";
+            //`
+            //pc.Paging.CurrentSort = sortBy;
+            //pc.Paging.StartIndex = startIdx;
+            //pc.Paging.UrlBase = "?";
 
 
 
@@ -110,45 +110,45 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var catList = _ctx.CatalogContext.AllCategories;
             var cat = new Category()
             {
-                Name = "Store Root",
-                CategoryId = -1
+                Content = new CategoryContent (){Name = "Store"}
+               
             };
             this.SiteContext.PageContext.PageType = "category";
             SiteContext.PageContext.CategoryId = "0";
-            cat.ChildrenCategories = catList.Where(x => x.ParentCategoryId== null  ).ToList();
+            cat.ChildrenCategories = Mapper.Map<List<ProductRuntime.Contracts.Category>>(catList.Where(x => x.ParentCategory == null).ToList());
             return View("Category", cat);
         }
 
-        public JsonDCResult Configure(ProductConfigurationRequest req)
-        {
+        //public JsonDCResult Configure(ProductConfigurationRequest req)
+        //{
 
-            var pc = Mapper.Map<Mozu.ProductRuntime.Contracts.ProductSelections>(req);
-
-
-
-            var res = _productClient.ConfiguredProduct(pc, req.ProductCode, true).Result.ReadAsSync();
+        //    var pc = Mapper.Map<Mozu.ProductRuntime.Contracts.ProductSelections>(req);
 
 
 
-
-            var ret = Mapper.Map<ConfiguredProduct>(res);
-            foreach (var vmItem in req.Options.Where(x => !string.IsNullOrEmpty(x.ShopperEnteredValue)))
-            {
-                var item = ret.Options.SelectMany(x => x.Values).Where(x => x.Id == vmItem.Id).FirstOrDefault();
-                if (item != null)
-                {
-                    item.StringValue = new AttributeValueString() {Value = (string) vmItem.ShopperEnteredValue};
-                }
-            }
+        //    var res = _productClient.ConfiguredProduct(pc, req.ProductCode, true).Result.ReadAsSync();
 
 
-            return new JsonDCResult()
-                       {
-                           JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                           Data = ret
-                       };
 
-        }
+
+        //    var ret = Mapper.Map<ConfiguredProduct>(res);
+        //    foreach (var vmItem in req.Options.Where(x => !string.IsNullOrEmpty(x.ShopperEnteredValue)))
+        //    {
+        //        var item = ret.Options.SelectMany(x => x.Values).Where(x => x.Id == vmItem.Id).FirstOrDefault();
+        //        if (item != null)
+        //        {
+        //            item.StringValue = new AttributeValueString() {Value = (string) vmItem.ShopperEnteredValue};
+        //        }
+        //    }
+
+
+        //    return new JsonDCResult()
+        //               {
+        //                   JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+        //                   Data = ret
+        //               };
+
+        //}
 
 
         public async Task<ActionResult> Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null)
@@ -175,7 +175,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
             };
-            cat.ChildrenCategories = catList.Where (x => x.ParentCategoryId.GetValueOrDefault (-1) == categoryId).ToList();
+            cat.ChildrenCategories = Mapper.Map<List<Mozu.ProductRuntime.Contracts.Category >>(catList.Where (x => x.ParentCategoryId.GetValueOrDefault (-1) == categoryId).ToList())
+            ;
 
             SetCatalogContext(cat);
 

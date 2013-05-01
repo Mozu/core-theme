@@ -141,23 +141,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
         }
 
-        [HttpPost]
-        public JsonDCResult AddProduct(VM.ProductConfigurationRequest item)
-        {
-            var cartItem = Mapper.Map<Mozu.CommerceRuntime.Contracts.Carts.CartItem>(item);
-            var addItemResponse = _cartClient.AddItemToCart(cartItem).Result;
+        //[HttpPost]
+        //public JsonDCResult AddProduct(VM.ProductConfigurationRequest item)
+        //{
+        //    var cartItem = Mapper.Map<Mozu.CommerceRuntime.Contracts.Carts.CartItem>(item);
+        //    var addItemResponse = _cartClient.AddItemToCart(cartItem).Result;
 
-            if (addItemResponse.HasException)
-                throw addItemResponse.ReadException();
+        //    if (addItemResponse.HasException)
+        //        throw addItemResponse.ReadException();
 
-            var addedCartItem = addItemResponse.ReadAsAsync().Result;
-            CommerceRuntime.Contracts.Carts.Cart cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
+        //    var addedCartItem = addItemResponse.ReadAsAsync().Result;
+        //    CommerceRuntime.Contracts.Carts.Cart cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
 
-            return new JsonDCResult()
-            {
-                Data = Mapper.Map<VMCart>(cart)
-            };
-        }
+        //    return new JsonDCResult()
+        //    {
+        //        Data = Mapper.Map<VMCart>(cart)
+        //    };
+        //}
 
 
         [HttpPost]

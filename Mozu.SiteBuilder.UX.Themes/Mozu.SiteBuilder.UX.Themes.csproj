@@ -213,6 +213,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.ProductAdmin.Contracts.0.0.13085.2\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
+    <Reference Include="Mozu.ProductRuntime.Contracts">
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.0.0.13010.3\lib\Mozu.ProductRuntime.Contracts.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.0.13022.1\lib\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
