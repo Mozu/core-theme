@@ -1,4 +1,21 @@
-﻿@mixin taco-product-drop-zone {
+﻿  @-webkit-keyframes drop-zone-pulse {
+    from {
+      background-color: rgba(99,163,255,0.2);
+      @include box-shadow(0 0 0 rgba(99,163,255,0.2));
+    }
+
+    50% {
+      background-color: rgba(99,163,255,0.3);
+      @include box-shadow(0 0 30px rgba(99,163,255,0.3));
+    }
+
+    to {
+      background-color: rgba(99,163,255,0.2);
+      @include box-shadow(0 0 0 rgba(99,163,255,0.2));
+    }
+  }
+
+@mixin taco-product-drop-zone {
     text-align: center;
     border: 1px dashed #B1B1B1;
     background-color: #F8F8F8;
@@ -10,14 +27,21 @@
 
     @include transition(background-color 0.3s ease-in);
 
-    &:hover {
+    &:hover, &.drag-over {
         background-color: #DFDFDF;
+    }
+
+    &:before {
+        opacity: 0;
+        content: "";
+        display: block;
+        position: absolute;
+        
+        @include transition(opacity 0.3s ease-in);
     }
 }
 
 @mixin taco-image-field {
-    
-
 
     .#{$vprefix}product-image-field {
         border: none !important;
@@ -38,6 +62,7 @@
             background-color: white;
             background-position: center center;
             background-repeat: no-repeat;
+            display: block;
 
             &.active {
 
@@ -48,16 +73,51 @@
                 padding-top: 3rem;
                 background-position: center 5rem;
                 background-size: 68px 70px;
+
+                &:before {
+                    width: 150px;
+                    height: 150px;
+                    margin-top: -3rem;
+                }
+            }
+        }
+
+        &.drag-and-drop-active {
+            .#{$vprefix}product-image-drop-zone {
+                //background-color: red !important;
                 
+                &:before {
+                    opacity: 1 !important;
+                    -webkit-animation-name: drop-zone-pulse;
+                    -webkit-animation-duration: 4s;
+                    -webkit-animation-iteration-count: infinite;
+                }
+            }
+
+            .#{$vprefix}image-drop {
+                //background-color: red !important;
+                &:before {
+                    opacity: 1 !important;
+                    -webkit-animation-name: drop-zone-pulse;
+                    -webkit-animation-duration: 4s;
+                    -webkit-animation-iteration-count: infinite;
+                }
             }
         }
     }
 
     .#{$vprefix}product-image-drop-zone {
         @include taco-product-drop-zone;
-        height: 17rem;
+        height: 170px;
         font-size: 2rem;
         background-position: center 6.2rem;
         margin-bottom: 1rem;
+
+        &:before {
+            margin-top: -3rem;
+            height: 170px;
+            //width: 159px;
+            width: 100%;
+        }
     }
 }

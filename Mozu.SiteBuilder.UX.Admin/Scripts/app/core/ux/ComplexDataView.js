@@ -98,7 +98,20 @@
             });
         },
 
+        update: function (htmlOrData) {
+             if (!this.fireEvent('beforeupdate', this, htmlOrData)) {
+                return;
+             }
+
+             this.callParent(arguments);
+
+             Ext.defer(function () {
+                this.fireEvent('afterupdate', this, htmlOrData);
+             }, 1, this);
+        },
+
         onUpdate: function(ds, record) {
+            debugger;
             // allow event to stop an update from occurring
             if (!this.fireEvent('beforeupdate', record, this.store.indexOf(record))) {
                 return;

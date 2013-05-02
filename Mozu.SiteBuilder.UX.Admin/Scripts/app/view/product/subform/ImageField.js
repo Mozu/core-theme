@@ -29,7 +29,7 @@ Ext.define('Taco.view.product.subform.ImageField', {
         })
 
         this.imageView = Ext.widget({
-            xtype: 'dataview',
+            xtype: 'complexdataview',
             autoEl: {
                 tag: 'ul',
                 cls: 'taco-image-tiles'
@@ -42,31 +42,7 @@ Ext.define('Taco.view.product.subform.ImageField', {
                     '<li class="taco-image-drop">Drop images here</li>'
                 //'</ul>'
             ],
-            itemSelector:'li.image',
-            
-            update : function(htmlOrData, loadScripts, cb) {
-                console.log('udpate',this.getId(), arguments);
-                var me = this,
-                    isData = (me.tpl && !Ext.isString(htmlOrData)),
-                    el;
-
-                if (isData) {
-                    me.data = htmlOrData;
-                } else {
-                    me.html = Ext.isObject(htmlOrData) ? Ext.DomHelper.markup(htmlOrData) : htmlOrData;
-                }
-
-                if (me.rendered) {
-                    el = me.isContainer ? me.layout.getRenderTarget() : me.getTargetEl();
-                    if (isData) {
-                        me.tpl[me.tplWriteMode](el, htmlOrData || {});
-                    } else {
-                        el.update(me.html, loadScripts, cb);
-                    }
-                    me.updateLayout();
-                }
-
-            }
+            itemSelector:'li.image'
         });
 
         this.uploadAction = Ext.widget({
@@ -90,6 +66,89 @@ Ext.define('Taco.view.product.subform.ImageField', {
         ];
        
         this.callParent(arguments);
+        
+        Taco.app.on({
+            dragenter: function (e) {
+                this.getEl().addCls('drag-and-drop-active');
+            },
+            dragleave: function (e) {
+                this.getEl().removeCls('drag-and-drop-active');
+            },
+
+            drop: function (e) {
+                
+            },
+            scope: this
+        })
+
+        this.on({
+            afterrender: function () {
+                this.emptyDropZoneEl = this.emptyDropZone.getEl();
+
+                this.emptyDropZoneEl.on({
+                    dragenter: function (e) {;
+                        this.onValidDragEnter(e, this.emptyDropZoneEl);
+                    },
+                    dragleave: function (e) {
+                        this.onValidDragLeave(e, this.emptyDropZoneEl);
+                    },
+                    drop: function (e) {
+                        var files = e.browserEvent.dataTransfer.files;
+                        e.stopPropagation();
+                        e.preventDefault();
+                        this.fireEvent('filedrop', files);
+                        this.onValidDragLeave(e, this.emptyDropZoneEl);
+                        this.getEl().removeCls('drag-and-drop-active');
+                    },
+                    scope: this
+                });
+            },
+            scope: this
+        });
+
+        this.imageView.on({
+            afterupdate: function () {
+                this.imageDropZoneEl = this.imageView.getEl().down('.taco-image-drop');
+                if (!this.imageDropZoneEl) {
+                    return;
+                }
+                this.imageDropZoneEl.on({
+                    dragenter: function (e) {
+                        this.onValidDragEnter(e, this.imageDropZoneEl);
+                    },
+                    dragleave: function (e) {
+                        this.onValidDragLeave(e, this.imageDropZoneEl);
+                    },
+                    drop: function (e) {
+                        var files = e.browserEvent.dataTransfer.files;
+                        e.stopPropagation();
+                        e.preventDefault();
+                        this.fireEvent('filedrop', files);
+                        
+                        this.onValidDragLeave(e, this.imageDropZoneEl);
+                        this.getEl().removeCls('drag-and-drop-active');
+                    },
+                    scope: this
+                });
+            },
+            scope: this
+        })
+
+    },
+
+    onValidDragEnter: function (e, el) {
+        el.addCls('drag-over');
+        Taco.app.DragDropZone.allowDrop();
+    },
+
+    onValidDragLeave: function (e, el) {
+        el.removeCls('drag-over');
+        Taco.app.DragDropZone.disallowDrop();
+    },
+
+    onAfterRender: function () {
+        this.emptyDropZoneEl = this.emptyDropZone.getEl();
+        //this.fileDropZoneEl = this.imageView.getEl().down('.taco-image-drop');
 
     },
 
@@ -129,31 +188,29 @@ Ext.define('Taco.view.product.subform.ImageField', {
     },
 
     setValue: function (value) {
-        console.log('setValue bitch', this.getId(), value, this.imageView && this.imageView.rendered);
         
-        // if ( this.imageView.rendered){
-        //     this.imageView.update(value);
-        // } else {
-        //     this.imageView.on( 'afterrender', function (){  
-        //         console.log(this.getEl().dom);
-        //         this.update(value);
-        //         console.log(this.getEl().dom);
-        //     });
-        // }
-
-        this.imageView.update(value);
+        if ( this.imageView.rendered){
+            this.imageView.update(value);
+        } else {
+            // TODO: Need to do a proper fix, some weird race condition where the view gets messed up. Ask Thom
+            this.imageView.on({
+                afterrender: function () {
+                    Ext.defer(function () {
+                        this.imageView.update(value);
+                    }, 10, this);
+                },
+                scope: this
+            });
+            
+        }
 
         if (value && value.length) {
             this.emptyDropZone.hide();
+            this.imageView.show();
         } else {
             this.emptyDropZone.show();
+            this.imageView.hide();
         }
-
-        if (!value || !value.length) {
-            return;;
-        }
-
-        
 
         return this.mixins.field.setValue.call(this, value);
     },
