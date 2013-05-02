@@ -32,6 +32,7 @@
         iframe: null,
         dropZones: null,
         dropZoneSelector: '[data-editing-zone]',
+        hideMode: 'offsets',
 
         constructor: function () {
             this.callParent(arguments);
@@ -58,15 +59,15 @@
         afterRender: function () {
             this.callParent(arguments);
 
-            this.getEl().setStyle({
-                top: '-5000px',
-                left: '-5000px'
-            });
+            // this.getEl().setStyle({
+            //     top: '-5000px',
+            //     left: '-5000px'
+            // });
 
             return;
 
             this.getEl().on('mouseleave', function () {
-                console.log('leave', this.isHinting);
+                // console.log('leave', this.isHinting);
                 if (!this.isHinting) {
                     return;
                 }
@@ -140,6 +141,8 @@
         },
 
         show: function (hint) {
+            var iframeXY;
+
             if ( Taco.logLevel == 1 ) {
             //    console.log('show', this.activeHints.length, hint);
             }
@@ -160,7 +163,9 @@
             }, 100, this);
 
             if (this.iframe.getEl()) {
-                this.el.setBox(this.iframe.getEl().getBox());
+                iframeXY = this.iframe.getEl().getXY();
+                this.el.setSize(this.iframe.getEl().getSize(false));
+                this.el.position('absolute', null, iframeXY[0], iframeXY[1]);
             }
         },
 
