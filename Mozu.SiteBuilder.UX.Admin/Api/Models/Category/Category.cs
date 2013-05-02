@@ -30,6 +30,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
         [DataMember(Name = "parentId")]
         public int? ParentId { get; set; }
 
+        [DataMember(Name = "index", EmitDefaultValue=true)]
+        public int? Index { get; set; }
+
         [DataMember(Name = "productCount")]
         public int? ProductCount { get; set; }
 

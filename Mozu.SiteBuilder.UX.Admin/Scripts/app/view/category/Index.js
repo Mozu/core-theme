@@ -129,9 +129,20 @@ Ext.define('Taco.view.category.Index', {
                 },
 
                 itemmove: function (node, oldParent, newParent, index, options) {
-                    var me = this;
-                    me.setLoading(true);
-                    me.getStore().sync({
+                    var me = this,
+                        store = me.getStore();
+
+                    // display the loading mask only if .sync() succeeds
+                    store.addListener(
+                        "beforesync", 
+                        function() { 
+                            me.setLoading(true) 
+                        },
+                        null,
+                        { single: true }
+                    );
+
+                    store.sync({
                         success: function (m) {
                             me.setLoading(false);
                             me.fireEvent('setmessage', 'Item moved successfully', 'status', m);

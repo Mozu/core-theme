@@ -8,12 +8,13 @@ using AutoMapper;
 using Mozu.Core.Api.Client;
 //using Volusion.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Category;
 using Category = Mozu.SiteBuilder.UX.Admin.Api.Models.Category.Category;
-using Contracts = Mozu.ProductAdmin.Contracts;
+using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -101,11 +102,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     .OrderBy(f => f.Content.Name);
             var catDic = allCategories.ToDictionary(x => x.Id);
 
-            List<Contracts.Category> categories = null;
+            List<DC.Category> categories = null;
             int catId;
             if (extFilter != null && extFilter.TryGetValue <int>( "id", out catId ))
             {
-                categories = new List<Contracts.Category>() { catDic[catId ] };
+                categories = new List<DC.Category>() { catDic[catId ] };
             }
             else if (!string.IsNullOrEmpty(categoryIdsString))
             {
@@ -119,7 +120,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
            
             var retList = new List<AutoCompleteField<int>>();
-            var tmpHash = new HashSet<Contracts.Category>();
+            var tmpHash = new HashSet<DC.Category>();
             foreach (var category in categories)
             {
                
@@ -167,17 +168,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "update")]
-        public async Task<Response<Category>> UpdateCategory(Category category)
+        public async Task<Response<List<Category>>> UpdateCategory(List<Category> categories)
         {
-            var updatedCategory = (await _categoriesClient.UpdateCategory(Mapper.Map<Contracts.Category>(category), category.Id, false)).ReadAsSync();
+            var tasks = new List<Task<ServiceClientResponse<DC.Category>>>();
 
-            return Single2(Mapper.Map<Category>(updatedCategory));
+            foreach (var cat in categories)
+            {
+                var dcCat = Mapper.Map<DC.Category>(cat);
+                var task = _categoriesClient.UpdateCategory(dcCat, cat.Id, false);
+                tasks.Add(task);
+            }
+
+            await Task.WhenAll(tasks);
+            var returnList = tasks.Select(t => Mapper.Map<Category>(t.Result.ReadAsSync())).ToList();
+
+            return List2(returnList);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "create")]
         public async Task<Response<Category>> CreateCategory(Category category)
         {
-            var createdCategory = (await _categoriesClient.AddCategory(Mapper.Map<Contracts.Category>(category))).ReadAsSync();
+            var createdCategory = (await _categoriesClient.AddCategory(Mapper.Map<DC.Category>(category))).ReadAsSync();
 
             return Single2(Mapper.Map<Category>(createdCategory));
         }
@@ -284,7 +295,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var node = nodes[0];
 
-            var cat = new Contracts.Category
+            var cat = new DC.Category
             {
                 //CategoryCode = node.Name + "-default",
                 //CategoryId = -1,

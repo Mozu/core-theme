@@ -21,6 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.SiteId, opt => opt.MapFrom(c => c.SiteId))
                 
                 .ForMember(dest => dest.ParentId, opt => opt.MapFrom(c => c.ParentCategoryId.HasValue ? c.ParentCategoryId : -1 ))
+                .ForMember(dest => dest.Index, opt => opt.MapFrom(c => c.Sequence))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(c => ((c.Content != null) ? c.Content.Name : null)))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(c => ((c.Content != null) ? c.Content.Description : null)))
                 .ForMember(dest => dest.PageTitle, opt => opt.MapFrom(c => ((c.Content != null) ? c.Content.PageTitle : null)))
@@ -46,6 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(c => c.Id))
                 .ForMember(dest => dest.SiteId, opt => opt.MapFrom(c => c.SiteId))
                 .ForMember(dest => dest.ParentCategoryId, opt => opt.MapFrom(c => c.ParentId.GetValueOrDefault(-1) == -1 ? null : c.ParentId))
+                .ForMember(dest => dest.Sequence, opt => opt.MapFrom(c => c.Index))
 
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(c =>
                                                                     new CategoryLocalizedContent
