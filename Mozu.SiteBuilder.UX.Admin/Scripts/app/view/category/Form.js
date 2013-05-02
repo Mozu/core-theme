@@ -3,7 +3,7 @@
  * category form
  */
 Ext.define('Taco.view.category.Form', {
-    extend: 'Taco.core.ux.form.Form',
+    extend: 'Taco.view.product.subform.Subform',
     editTitle: 'Edit category',
     createTitle: 'Create a category',
     layout: {
