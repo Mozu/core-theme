@@ -232,6 +232,9 @@ Ext.define('Taco.model.Product', {
     productInSitesStore:function() {
         return this.getProductInSites();
     },
+    reloadProductInSitesStore: function() {
+        this.getProductInSites().loadData(this.get('productInSites'));
+    },
     idProperty: 'productCode',
     //hasMany: [
     //    {

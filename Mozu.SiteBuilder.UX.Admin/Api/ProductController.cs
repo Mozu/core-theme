@@ -7,6 +7,7 @@ using System.Web.Http;
 using AutoMapper;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers;
@@ -46,9 +47,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string filter = extFilter.ToFilterString();
             string sort = pagingParams.sort.ToSortString();
 
-            ProductCollection res = _productClient.GetProducts(pagingParams.startIndex, pagingParams.pageSize, sort, null, filter).Result.ReadAsAsync().Result;
+            ProductCollection res = (await _productClient.GetProducts(pagingParams.startIndex, pagingParams.pageSize, sort, null, filter)).ReadAsSync();
 
-            return List2(Mapper.Map<List<Product>>(res.Items), (int)res.TotalCount);
+            var mapped = res.Items.Map<List<Product>>();
+            return List2(mapped, (int)res.TotalCount);
         }
 
         [WebInvoke(UriTemplate = "create")]
