@@ -52,6 +52,10 @@
     }
   }
 
+  .#{$prefix}htmleditor-iframe {
+    width: 100%;
+  }
+
   // label styles
   .#{$prefix}form-item-label-top {
     margin-top: px-to-rem(24);
