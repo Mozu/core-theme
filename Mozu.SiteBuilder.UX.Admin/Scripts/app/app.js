@@ -320,6 +320,7 @@ Ext.application({
             'Taco.core.ux.PanelHeader',
             'Taco.core.ux.form.field.Base',
             'Taco.core.ux.form.field.Container',
+            'Taco.core.ux.DragDropZone',
             'Taco.view.Header',
             'Ext.state.CookieProvider',
             'Ext.draw.Component',
@@ -740,6 +741,13 @@ Ext.application({
 
         this.StateManager.initialize();
     },
+
+    initDocumentDragAndDrop: function () {
+        this.DragDropZone = Taco.core.ux.DragDropZone;
+
+        this.DragDropZone.initDocumentListeners(this);
+    },
+
     doTheNeedful: function (state) {
 
 
@@ -749,6 +757,7 @@ Ext.application({
         var me = this;
         this.initViewPort();
         this.initStateManager();
+        this.initDocumentDragAndDrop();
 
         // add some utility stuff
         Ext.apply(Ext.form.field.VTypes, {

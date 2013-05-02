@@ -15,17 +15,81 @@
         mixins: {
             field: 'Ext.form.field.Field'
         },
+
         data:{src:'/admin/Scripts/resources/images/legacy/AddPhotos.png'},
-        setValue: function (value) {
-            var me = this;
-            if ( value && value.length >0 )
-            {
-                this.update({src: value[0].imagePath });
+
+        statics: {
+            initDocumentListeners: function (app) {
+                var interval,
+                    isOver = false,
+                    fnCheckDropAllowances;
+
+                this.disallowDrop();
+
+                app.addEvents([
+                    'dragenter',
+                    'dragleave',
+                    'dragover',
+                    'drop'
+                ]);
+
+                Ext.getDoc().on({
+                    dragenter: function (e) {
+                        fnCheckDropAllowances.call(this, e);
+                    },
+                    dragleave: function (e) {
+                        fnCheckDropAllowances.call(this, e);
+                    },
+                    dragover: function (e) {
+                        fnCheckDropAllowances.call(this, e);
+                        e.stopPropagation();
+                        e.preventDefault();
+
+                        window.clearInterval(interval);
+
+                        app.fireEvent('dragover', e);
+
+                        interval = window.setInterval(function () {
+                            isOver = false;
+                            window.clearInterval(interval);
+
+                            app.fireEvent('dragleave', e);
+                            console.log('stopfiledrag');
+                        }, 150);
+
+                        if (!isOver) {
+                            isOver = true;
+                            app.fireEvent('dragenter', e);
+
+                            console.log('startfiledrag');
+                        }
+
+                    },
+                    drop: function (e) {
+                        fnCheckDropAllowances.call(this, e);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        app.fireEvent('drop')
+                    },
+                    scope: this
+                });
+
+                fnCheckDropAllowances = function (e) {
+                    if (this._allowDrop) {
+                        return;
+                    }
+                    e.browserEvent.dataTransfer.dropEffect = 'move';
+                    e.browserEvent.dataTransfer.effectAllowed = 'none';
+                };
+            },
+            allowDrop: function () {
+                this._allowDrop = true;
+            },
+            disallowDrop: function () {
+                this._allowDrop = false;
             }
-            
-            //me.setRawValue(me.valueToRaw(value));
-            return me.mixins.field.setValue.call(me, value);
         },
+
         initComponent: function () {
             var me = this;
 
@@ -65,5 +129,16 @@
                     }
                 }
             });
+        },
+
+        setValue: function (value) {
+            var me = this;
+            if ( value && value.length >0 )
+            {
+                this.update({src: value[0].imagePath });
+            }
+            
+            //me.setRawValue(me.valueToRaw(value));
+            return me.mixins.field.setValue.call(me, value);
         }
     });
