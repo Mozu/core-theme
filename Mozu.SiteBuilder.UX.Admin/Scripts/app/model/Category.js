@@ -58,6 +58,11 @@ Ext.define('Taco.model.Category', {
             "useNull": true
         },
         {
+            "name": "index",
+            "type": "int",
+            "useNull": false
+        },
+        {
             "name": "productCount",
             "type": "int",
             "useNull": true,
@@ -134,6 +139,7 @@ Ext.define('Taco.model.Category', {
             successProperty: 'success'
         },
         writer: {
+            allowSingle: false,
             type: 'json'
         }
     },
