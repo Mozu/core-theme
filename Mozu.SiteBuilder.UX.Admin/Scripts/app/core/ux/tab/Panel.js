@@ -223,9 +223,8 @@ Ext.define('Taco.core.ux.tab.Panel', {
      */
     scrollCard: function (target) {
         var wrapper = Ext.getBody().down('.taco-shell'),
-            targetY = Ext.get(target).getY();
-
-        wrapper.scrollTo('top', targetY, true);
+            targetY = Ext.get(target).dom.offsetTop;        
+       wrapper.scrollTo('top', targetY, true);
 
         return this;
     },
