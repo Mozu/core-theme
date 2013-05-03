@@ -576,6 +576,7 @@
     </Content>
     <Content Include="PostDeploy.ps1" />
     <Content Include="PreDeploy.ps1" />
+    <Content Include="Configs\AppSettings.Prod.config" />
     <None Include="Scripts\app\mocks\behaviors.json" />
     <Content Include="Scripts\app\model\Attribute.js" />
     <Content Include="Scripts\app\model\AttributeValue.js" />
