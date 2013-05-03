@@ -111,7 +111,7 @@
         },
 
         onUpdate: function(ds, record) {
-            debugger;
+            //debugger;
             // allow event to stop an update from occurring
             if (!this.fireEvent('beforeupdate', record, this.store.indexOf(record))) {
                 return;
