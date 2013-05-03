@@ -2114,6 +2114,7 @@
     <Content Include="Scripts\resources\scss\taco\_forms.scss" />
     <Content Include="Scripts\resources\scss\taco\variables\_tabs.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_imagefield.scss" />
+    <Content Include="Scripts\resources\scss\taco\widgets\_pagesettings.scss" />
     <None Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
