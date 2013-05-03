@@ -10,7 +10,8 @@ Ext.define('Taco.controller.Categories', {
     listView: null,
     models: ['Category'],
     views: ['category.Index', 'category.Index'],
-    stores: ['Categories']
+    stores: ['Categories'],
+    modelName: 'Category',
     //modelName: 'Category',
     //contextPlaceholders: {
     //    tc: function () {

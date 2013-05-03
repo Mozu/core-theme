@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "delete")]
         public async Task<Response<List<AVM.Document>>> Delete(List<AVM.Document> docs)
         {
-            var tasks = docs.Select(doc => _cmsService.Delete2(Mapper.Map<DC.Document>(doc)));
+            var tasks = docs.Select(doc => _cmsService.Delete2(Mapper.Map<DC.Document>(doc))).ToList();
             await Task.WhenAll(tasks);
             var successes = tasks.Select(x => x.Result).Select(x => x.Item1 ? 1 : 0).Sum();
 
@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "create")]
         public async Task<Response<List<AVM.Document>>> Create(List<AVM.Document> docs)
         {
-            var tasks = docs.Select(doc => _cmsService.Create2(doc));
+            var tasks = docs.Select(doc => _cmsService.Create2(doc)).ToList();
             await Task.WhenAll(tasks);
             var response = tasks.Select(x => x.Result.ReadAsSync()).Select(ConvertDocument).ToList();
 
@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "update")]
         public async Task<Response<List<AVM.Document>>> Update(List<AVM.Document> docs )
         {
-            var tasks = docs.Select(doc => _cmsService.Update2(doc));
+            var tasks = docs.Select(doc => _cmsService.Update2(doc)).ToList();
             await Task.WhenAll(tasks);
             var response = tasks.Select(x => x.Result.ReadAsSync()).Select(ConvertDocument).ToList();
 

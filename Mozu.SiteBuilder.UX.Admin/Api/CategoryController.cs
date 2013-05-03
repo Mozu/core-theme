@@ -186,19 +186,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "create")]
-        public async Task<Response<Category>> CreateCategory(Category category)
+        public async Task<Response<List<Category>>> CreateCategory(List<Category> categories)
         {
-            var createdCategory = (await _categoriesClient.AddCategory(Mapper.Map<DC.Category>(category))).ReadAsSync();
+            var tasks =categories.Select(category => _categoriesClient.AddCategory(Mapper.Map<DC.Category>(category))).ToList();
+            await Task.WhenAll(tasks);
 
-            return Single2(Mapper.Map<Category>(createdCategory));
+            var ret = tasks.Select(res => (Mapper.Map<Category>(res.Result.ReadAsSync()))).ToList();
+            
+            return List2( ret);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "delete/?force={force}")]
-        public async Task<Response<Category>> DeleteCategory(Category category, bool force)
+        public async Task<Response<List<Category>>> DeleteCategory(List<Category> categories, [FromUri]bool force = true)
         {
             // Always force deletion of children for now
-            await _categoriesClient.DeleteCategoryById(category.Id, true);
-            return EmptySingle2<Category>();
+
+            var tasks = categories.Select(category => _categoriesClient.DeleteCategoryById( category.Id ,force )).ToList();
+            await Task.WhenAll(tasks);
+
+            var ret = tasks.Select(res => res.Result.ResponseMessage.IsSuccessStatusCode ).ToList();
+
+
+           
+            return EmptyList2<Category>();
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "duplicate/?id={id}")]
@@ -215,144 +225,144 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(Mapper.Map<Category>(newCategory));
         }
 
-        [WebGet(UriTemplate = "tree/read/?id={id}")]
-        public async Task<Response<List<CategoryTreeNode>>> ReadChildTreeNodes(int? id)
-        {
-            id = id ?? 0;
+        //[WebGet(UriTemplate = "tree/read/?id={id}")]
+        //public async Task<Response<List<CategoryTreeNode>>> ReadChildTreeNodes(int? id)
+        //{
+        //    id = id ?? 0;
 
-            if (id == 0)
-            {
-                //todo:could return more than 200 and will need to page  
-                var allCats = (await _categoriesClient.GetCategories(null, int.MaxValue, null, null, null)).ReadAsSync()
-                    .Items
-                    .OrderBy(x => x.Sequence)
-                    .Select(Mapper.Map<CategoryTreeNode>)
-                    .ToList();
-                var catDic = allCats.ToDictionary ( x=> x.Id  );
-                var retList = new List<CategoryTreeNode>();
-                foreach (var item in allCats)
-                {
-                  //  item.loaded = true;
-                    if (item.ParentId < 1)
-                    {
-                        retList.Add(item);
-                    }
-                    else
-                    {
-                        CategoryTreeNode parent;
-                        if (catDic.TryGetValue(item.ParentId, out parent))
-                        {
-                            parent.Items = parent.Items ?? new List<CategoryTreeNode>();
-                            parent.Items.Add(item);   
-                        }
-                    }
+        //    if (id == 0)
+        //    {
+        //        //todo:could return more than 200 and will need to page  
+        //        var allCats = (await _categoriesClient.GetCategories(null, int.MaxValue, null, null, null)).ReadAsSync()
+        //            .Items
+        //            .OrderBy(x => x.Sequence)
+        //            .Select(Mapper.Map<CategoryTreeNode>)
+        //            .ToList();
+        //        var catDic = allCats.ToDictionary ( x=> x.Id  );
+        //        var retList = new List<CategoryTreeNode>();
+        //        foreach (var item in allCats)
+        //        {
+        //          //  item.loaded = true;
+        //            if (item.ParentId < 1)
+        //            {
+        //                retList.Add(item);
+        //            }
+        //            else
+        //            {
+        //                CategoryTreeNode parent;
+        //                if (catDic.TryGetValue(item.ParentId, out parent))
+        //                {
+        //                    parent.Items = parent.Items ?? new List<CategoryTreeNode>();
+        //                    parent.Items.Add(item);   
+        //                }
+        //            }
 
-                    item.leaf = item.Items == null;
-                }
-                foreach (var item in allCats)
-                {
-                    item.leaf = item.Items == null;
-                }
-                return List2(retList, allCats.Count);
-            }
-            var categories = (await _categoriesClient.GetChildCategories(id)).ReadAsSync();
-            var categoryTreeNodes = Mapper.Map<List<CategoryTreeNode>>(categories.Items);
+        //            item.leaf = item.Items == null;
+        //        }
+        //        foreach (var item in allCats)
+        //        {
+        //            item.leaf = item.Items == null;
+        //        }
+        //        return List2(retList, allCats.Count);
+        //    }
+        //    var categories = (await _categoriesClient.GetChildCategories(id)).ReadAsSync();
+        //    var categoryTreeNodes = Mapper.Map<List<CategoryTreeNode>>(categories.Items);
 
-            return List2(categoryTreeNodes, (int) categories.TotalCount);
-        }
+        //    return List2(categoryTreeNodes, (int) categories.TotalCount);
+        //}
 
-        [WebInvoke(Method = "POST", UriTemplate = "tree/duplicate/?id={id}")]
-        public async Task<Response<CategoryTreeNode>> DuplicateTreeNode(int id)
-        {
-            var originalCategory = (await _categoriesClient.GetCategory(id)).ReadAsSync();
-            originalCategory.Id = -1;
-            //originalCategory.Content.CategoryId = -1;
-            //originalCategory.CategoryCode += "-COPY";
-            originalCategory.Content.Name += "-COPY";
+        //[WebInvoke(Method = "POST", UriTemplate = "tree/duplicate/?id={id}")]
+        //public async Task<Response<CategoryTreeNode>> DuplicateTreeNode(int id)
+        //{
+        //    var originalCategory = (await _categoriesClient.GetCategory(id)).ReadAsSync();
+        //    originalCategory.Id = -1;
+        //    //originalCategory.Content.CategoryId = -1;
+        //    //originalCategory.CategoryCode += "-COPY";
+        //    originalCategory.Content.Name += "-COPY";
 
-            var newCategory = (await _categoriesClient.AddCategory(originalCategory)).ReadAsSync();
+        //    var newCategory = (await _categoriesClient.AddCategory(originalCategory)).ReadAsSync();
 
-            var categoryTreeNode = Mapper.Map<CategoryTreeNode>(newCategory);
-            return Single2(categoryTreeNode);
-        }
+        //    var categoryTreeNode = Mapper.Map<CategoryTreeNode>(newCategory);
+        //    return Single2(categoryTreeNode);
+        //}
 
-        [WebInvoke(Method = "POST", UriTemplate = "tree/delete/?force={force}")]
-        public async Task<Response<CategoryTreeNode>> DeleteTreeNode(List<CategoryTreeNode> nodes, bool force)
-        {
-            // NOTE: Ugh... so the proxy has a weird "feature" when we are dealing with treestore
-            // where everything needs to come in as an array
+        //[WebInvoke(Method = "POST", UriTemplate = "tree/delete/?force={force}")]
+        //public async Task<Response<CategoryTreeNode>> DeleteTreeNode(List<CategoryTreeNode> nodes, bool force)
+        //{
+        //    // NOTE: Ugh... so the proxy has a weird "feature" when we are dealing with treestore
+        //    // where everything needs to come in as an array
  
-            var node = nodes[0];
+        //    var node = nodes[0];
 
-            // Always force deletion of children for now
-            await _categoriesClient.DeleteCategoryById(node.Id, true);
+        //    // Always force deletion of children for now
+        //    await _categoriesClient.DeleteCategoryById(node.Id, true);
 
-            return EmptySingle2<CategoryTreeNode>();
-        }
+        //    return EmptySingle2<CategoryTreeNode>();
+        //}
 
-        [WebInvoke(Method = "POST", UriTemplate = "tree/create")]
-        public async Task<Response<CategoryTreeNode>> CreateTreeNode(List<CategoryTreeNode> nodes)
-        {
-            var node = nodes[0];
+        //[WebInvoke(Method = "POST", UriTemplate = "tree/create")]
+        //public async Task<Response<CategoryTreeNode>> CreateTreeNode(List<CategoryTreeNode> nodes)
+        //{
+        //    var node = nodes[0];
 
-            var cat = new DC.Category
-            {
-                //CategoryCode = node.Name + "-default",
-                //CategoryId = -1,
-                Content = new CategoryLocalizedContent
-                {
-                    //CategoryId = -1,
-                   // Description = "Default description for " + node.Name,
-                    Name = node.Name,
-                    LocaleCode = "en-US"
-                },
-                IsDisplayed = true,
-                ParentCategoryId = node.ParentId > 0 ? (int?)node.ParentId : (int?)null,
-                //ProductSetId = 1,
-                Sequence = node.Index
-            };
+        //    var cat = new DC.Category
+        //    {
+        //        //CategoryCode = node.Name + "-default",
+        //        //CategoryId = -1,
+        //        Content = new CategoryLocalizedContent
+        //        {
+        //            //CategoryId = -1,
+        //           // Description = "Default description for " + node.Name,
+        //            Name = node.Name,
+        //            LocaleCode = "en-US"
+        //        },
+        //        IsDisplayed = true,
+        //        ParentCategoryId = node.ParentId > 0 ? (int?)node.ParentId : (int?)null,
+        //        //ProductSetId = 1,
+        //        Sequence = node.Index
+        //    };
 
-            var createdCategory = (await _categoriesClient.AddCategory(cat)).ReadAsSync();
+        //    var createdCategory = (await _categoriesClient.AddCategory(cat)).ReadAsSync();
 
-            var categoryTreeNode = Mapper.Map<CategoryTreeNode>(createdCategory);
+        //    var categoryTreeNode = Mapper.Map<CategoryTreeNode>(createdCategory);
 
-            return Single2(categoryTreeNode);
-        }
+        //    return Single2(categoryTreeNode);
+        //}
 
-        [WebInvoke(Method = "POST", UriTemplate = "tree/update")]
-        public async Task<Response<List<CategoryTreeNode>>> UpdateTreeNode(List<CategoryTreeNode> nodes)
-        {
-           // var nodeResults = new List<CategoryTreeNode>();
+        //[WebInvoke(Method = "POST", UriTemplate = "tree/update")]
+        //public async Task<Response<List<CategoryTreeNode>>> UpdateTreeNode(List<CategoryTreeNode> nodes)
+        //{
+        //   // var nodeResults = new List<CategoryTreeNode>();
 
-            var allCats = (await _categoriesClient.GetCategories(null, null, null, null, null)).ReadAsSync();
-            var tasks   = new List<System.Threading.Tasks.Task<CategoryTreeNode>>();
-            foreach (var categoryTreeNode in nodes)
-            {
-                var originalCategory = allCats.Items.FirstOrDefault(x => x.Id == categoryTreeNode.Id);// _categoriesClient.GetCategoryById(categoryTreeNode.Id).Result.ReadAsAsync().Result;
-                if (originalCategory == null)
-                {
-                    continue;
-                }
+        //    var allCats = (await _categoriesClient.GetCategories(null, null, null, null, null)).ReadAsSync();
+        //    var tasks   = new List<System.Threading.Tasks.Task<CategoryTreeNode>>();
+        //    foreach (var categoryTreeNode in nodes)
+        //    {
+        //        var originalCategory = allCats.Items.FirstOrDefault(x => x.Id == categoryTreeNode.Id);// _categoriesClient.GetCategoryById(categoryTreeNode.Id).Result.ReadAsAsync().Result;
+        //        if (originalCategory == null)
+        //        {
+        //            continue;
+        //        }
 
-                originalCategory.Content.Name = categoryTreeNode.Name;
-                originalCategory.Sequence = categoryTreeNode.Index;
-                originalCategory.ParentCategoryId = categoryTreeNode.ParentId > 0 ? (int?)categoryTreeNode.ParentId : (int?)null;
-                originalCategory.IsDisplayed = !categoryTreeNode.IsHidden;
+        //        originalCategory.Content.Name = categoryTreeNode.Name;
+        //        originalCategory.Sequence = categoryTreeNode.Index;
+        //        originalCategory.ParentCategoryId = categoryTreeNode.ParentId > 0 ? (int?)categoryTreeNode.ParentId : (int?)null;
+        //        originalCategory.IsDisplayed = !categoryTreeNode.IsHidden;
                 
-                tasks.Add(_categoriesClient.UpdateCategory(originalCategory, originalCategory.Id, false).ContinueWith ( x=> Mapper.Map<CategoryTreeNode>(x.Result .ReadAsSync())));
+        //        tasks.Add(_categoriesClient.UpdateCategory(originalCategory, originalCategory.Id, false).ContinueWith ( x=> Mapper.Map<CategoryTreeNode>(x.Result .ReadAsSync())));
 
                
-            }
+        //    }
 
-            // await with a timeout.
-            await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(60 * 1000));
+        //    // await with a timeout.
+        //    await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(60 * 1000));
 
-            var nodeResults = tasks.Select ( x=> x.Result ).ToList ();
-            //var updatedCategory = _categoriesClient.UpdateCategoryById(originalCategory, originalCategory.CategoryId).Result.ReadAsAsync().Result;
+        //    var nodeResults = tasks.Select ( x=> x.Result ).ToList ();
+        //    //var updatedCategory = _categoriesClient.UpdateCategoryById(originalCategory, originalCategory.CategoryId).Result.ReadAsAsync().Result;
 
-            //nodeResults.Add(Mapper.Map<CategoryTreeNode>(updatedCategory));
+        //    //nodeResults.Add(Mapper.Map<CategoryTreeNode>(updatedCategory));
 
-            return List2(nodeResults, nodes.Count);
-        }
+        //    return List2(nodeResults, nodes.Count);
+        //}
     }
 }

@@ -56,24 +56,25 @@ Ext.define('Taco.view.category.Index', {
                     return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
                 }
             }, {
-                text: 'Products',
-                flex: 1,
-                dataIndex: 'productCount'
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuItems: [{
+                    text: 'Delete',
+                    menuColumnHandler: 'destroyMenuColumnHandler'
+                }, {
+                    text: 'Edit',
+                    menuColumnHandler: function (item, eventData) {
+                        var record = eventData.record;
+                        Ext.defer(function () {
+                            Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
+                        }, 1, this);
+
+                    }
+                }]
+                
             }],
 
-            actions: [{
-                tooltip: 'Toggle Hidden',
-                iconCls: 'taco-action-hide',
-                eventName: 'hidecategory'
-            }, {
-                tooltip: 'Duplicate Category',
-                iconCls: 'taco-action-addsub',
-                eventName: 'duplicatecategory'
-            }, {
-                tooltip: 'Delete',
-                iconCls: 'taco-action-delete',
-                eventName: 'deletecategory'
-            }],
+          
 
             dockedItems: [{
                 xtype: 'quickadder',
@@ -100,112 +101,8 @@ Ext.define('Taco.view.category.Index', {
             }],
 
             listeners: {
-                hidecategory: function (list, index) {
-                    var model = list.store.getAt(index),
-                        row = Ext.get(list.all.elements[index]),
-                        hiddenCls = 'taco-row-hidden';
-
-                    var hidden = !model.get("isHidden");
-
-                    model.set("isHidden", hidden);
-                    model.set("cls", model.get("cls") == hiddenCls ? '' : hiddenCls);
-                    console.log(model);
-
-                    model.save({
-                        success: function (m) {
-                            Taco.app.fireEvent('setmessage', 'Category visibility changed.', 'status', list);
-                        },
-                        failure: function (m) {
-                            var msg;
-                            model.set("cls", (hidden) ? '' : hiddenCls);
-
-                            if (m.exceptions && m.exceptions.length > 0) {
-                                msg = m.exceptions[0].error;
-                            }
-
-                            Taco.app.fireEvent('setmessage', 'Category visibility change failed. This probably because it has children with different visibility settings.', 'error', list);
-                        }
-                    });
-                },
-
-                itemmove: function (node, oldParent, newParent, index, options) {
-                    var me = this,
-                        store = me.getStore();
-
-                    // display the loading mask only if .sync() succeeds
-                    store.addListener(
-                        "beforesync", 
-                        function() { 
-                            me.setLoading(true) 
-                        },
-                        null,
-                        { single: true }
-                    );
-
-                    store.sync({
-                        success: function (m) {
-                            me.setLoading(false);
-                            me.fireEvent('setmessage', 'Item moved successfully', 'status', m);
-                        },
-                        failure: function (m) {
-                            me.setLoading(false);
-                            me.fireEvent('setmessage', 'Item move failed', 'error', m);
-                        }
-                    });
-                },
-
-                duplicatecategory: function (list, index) {
-                    var me = this;
-                    var model = list.store.getAt(index);
-                    me.setLoading(true);
-
-                    model.duplicate({
-                        success: function (copy) {
-                            model.parentNode.appendChild(copy);
-
-                            me.getStore().sync({
-                                success: function (m) {
-                                    me.setLoading(false);
-                                    me.fireEvent('setmessage', 'Category copied.', 'status', copy);
-                                },
-
-                                failure: function (m) {
-                                    me.setLoading(false);
-                                    me.fireEvent('setmessage', 'Category creation failed.', 'error', m);
-                                }
-                            });
-                        },
-                        failure: function (m, operation) {
-                            me.setLoading(false);
-                            me.fireEvent('setmessage', 'Category creation failed.', 'error', model);
-                        }
-                    });
-                },
-
-                deletecategory: function (list, index, index2, actionEl, e, model) {
-                    Ext.create('Taco.core.ux.modal.Confirmation', {
-                        autoShow: true,
-                        text: 'Are you sure you want to delete this category?',
-
-                        listeners: {
-                            confirm: function () {
-                                model.remove();
-                                this.setLoading(true);
-                                this.getStore().sync({
-                                    success: function () {
-                                        this.setLoading(false);
-                                    },
-
-                                    failure: function () {
-                                        this.setLoading(false);
-                                    },
-                                    scope: this
-                                });
-                            },
-                            scope: this
-                        }
-                    });
-                }
+                cellclick: me.onCellClick,
+                scope: me
             }
         });
 
@@ -252,10 +149,60 @@ Ext.define('Taco.view.category.Index', {
         });
 
         var treeview = me.treelist.down('treeview');
-        treeview.mon(treeview, 'itemclick', me.onItemClick, me);
+       // treeview.mon(treeview, 'itemclick', me.onItemClick, me);
 
     },
-    
+    onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+        var metaData = { id: record.getId() },
+            header = view.getHeaderAtIndex(cellIndex);
+
+        if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
+            e.preventDefault();
+            if (e.target) {
+                metaData = Ext.apply(metaData, e.target.dataset);
+            }
+            this.launchEditor(record, metaData);
+        }
+
+    },
+    destroyMenuColumnHandler: function (item, eventData) {
+        var grid = eventData.grid,
+            record = eventData.record,
+            modal;
+
+        modal = Ext.create('Taco.core.ux.modal.Confirmation', {
+            autoShow: true,
+            content: {
+                html: 'Are you sure you want to delete this?'
+            },
+            listeners: {
+                cancel: Ext.emptyFn,
+                confirm: function () {
+                    var store = grid.getStore();
+                    grid.setLoading(true);
+                    record.remove();
+                    
+                    store.sync({
+                        success: function (m) {
+                            grid.setLoading(false);
+                        },
+                        failure: function (m) {
+                           
+                            grid.setLoading(false);
+                            Ext.create('Taco.core.ux.modal.Alert', {
+                                autoShow: true,
+                                text: 'Delete Failed. <br /> TODO get error text'
+                            });
+
+                        }
+
+                    });
+                },
+                scope: this
+            }
+        });
+    },
+
     launchEditor: function (record) {
         Ext.defer(function () {
             Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record} });
