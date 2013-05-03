@@ -24,7 +24,10 @@ Ext.define('Taco.view.product.subform.Properties', {
                 return [{
                     xtype: 'textareafield',
                     name: this.getFieldName(ptAttribute),
-                    value:(values &&values.length)? values[0]:null
+                    value:(values &&values.length)? values[0]:null,
+                    width: '100%',
+                    rows: 12,
+                    resizable: true
                 }];
             },
             'YesNo': function (ptAttribute,values) {
@@ -55,7 +58,8 @@ Ext.define('Taco.view.product.subform.Properties', {
                 return [{
                     xtype: 'textfield',
                     name: this.getFieldName(ptAttribute),
-                    value: (values && values.length) ? values[0] : null
+                    value: (values && values.length) ? values[0] : null,
+                    width: '100%'
                 }];
             }
         }
