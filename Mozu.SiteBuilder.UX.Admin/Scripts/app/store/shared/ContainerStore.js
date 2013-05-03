@@ -10,7 +10,7 @@
         throttle: 300,
         constructor: function () {
             var loadFn = Ext.Function.createThrottled(function () {
-                this.loadRawData(this.container.items.getRange());
+                this.loadRawData(this.container[this.useFloatingItems ? "floatingItems" : "items"].getRange());
             }, this.throttle, this);
             this.callParent(arguments);
             this.mon(this.container, {
