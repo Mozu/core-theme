@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System;
 using System.Net;
 using System.Web;
+using System.Collections.Generic;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -49,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         /// <summary>
-        /// Returns a hyperlinked list of all available sites.
+        /// Updates the sitebuildercontext and redirects the 
         /// GET: /_gosite/(siteid)?redir=...
         /// </summary>
         public async Task<ActionResult> GoSite(int siteId, string redir)
@@ -62,25 +63,43 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             this.SiteContext.SiteGroupId = site.SiteGroupId;
             this.SiteContext.Save();
             ;
-            // fuck it.
-            //string contextString = String.Format("tenant={0}&sitegroup={1}&site={2}", site.TenantId, site.SiteGroupId, site.Id);
-            //var c1 = new HttpCookie("SBCONTEXT", contextString);
-            //var c2 = new HttpCookie("SBCONTEXT2", contextString);
 
-            //_cookies.SaveResponseCookie(c1.Name, c1);
-            //_cookies.SaveResponseCookie(c2.Name, c2);
+            string domainPriority = "Primary";
+            IEnumerable<Domain> domainList;
+            switch (domainPriority)
+            {
+                case "Primary":
+                    domainList = site.Domains.OrderBy(s => s.IsPrimary);
+                    break;
+                case "Staging":
+                    domainList = site.Domains.OrderBy(s => /*s.IsStaging*/ s.IsPrimary);
+                    break;
+                default:
+                    domainList = site.Domains;
+                    break;
+            }
+                
 
+            string newHostname = (domainList.FirstOrDefault() ?? new Domain { DomainName = null }).DomainName;
+            bool doHostnameRedirect = false && !String.IsNullOrEmpty(newHostname);
+            
             if (!String.IsNullOrEmpty(redir))
             {
-                return new RedirectResult(redir);
+                string redirUrl = Uri.UnescapeDataString(redir).TrimStart('/');
+
+                if (doHostnameRedirect)
+                    redirUrl = newHostname + "/" + redirUrl;
+
+                return new RedirectResult(redirUrl);
             }
             else
             {
+                string redirUrl = doHostnameRedirect ? newHostname : "~/";
                 return new RedirectResult("~/");
             }
         }
 
-        [HttpPost ]
+        [HttpPost]
         public ActionResult ChangeSite(ChangeSiteModel model, FormCollection form)
         {
             Site  site = null;
