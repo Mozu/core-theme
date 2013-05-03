@@ -49,15 +49,7 @@ Ext.define('Taco.view.site.Toolbox', {
         //     container: this.cardPanel
         // });
 
-        // this.navigation = Ext.create('Taco.view.site.navigation.Tree', {
-        //     active: true,
-        //     hasBackButton: false,
-        //     index: 0,
-        //     title: 'Pages',
-        //     toolbox: this,
-        //     cardPanel: this.cardPanel,
-        //     manageHeight: false
-        // });
+        
 
         // this.widgets = Ext.create('Taco.view.site.navigation.WidgetNav', {
         //     toolbox: this,
@@ -77,7 +69,15 @@ Ext.define('Taco.view.site.Toolbox', {
                 plain: true
             }
         });
-
+        this.navigation = Ext.create('Taco.view.site.navigation.Tree', {
+            active: true,
+            hasBackButton: false,
+            index: 0,
+            title: 'Pages',
+            toolbox: this,
+            parentPanel: this.tabPanel,
+            manageHeight: false
+        });
         this.pageSettings = Ext.create('Taco.view.site.navigation.PageSettings', {
             toolbox: this,
             parentPanel: this.tabPanel,
@@ -86,27 +86,27 @@ Ext.define('Taco.view.site.Toolbox', {
             manageHeight: false
         });
 
-        this.navigation = Ext.create('Taco.core.ux.TreeList', {
-            itemId: 'pages',
-            title: 'Pages',
-            parentPanel: this.tabPanel,
-            hideHeaders: true,
-            manageHeight: false,
-            store: Ext.data.StoreManager.lookup('navigationTreeNodeStore') || Ext.create('Taco.store.NavigationTreeNodes'),
-            columns: [{
-                xtype: 'treecolumn',
-                flex: 1,
-                dataIndex: 'name',
-                renderer: function (value, metaData, record) {
-                    var id = record.getId();
-                    if (id == '_unlinked' || id == '_navigation') {
-                        return '<span style="float:left;font-weight:bold">' + value + '</span><a style="float:right" href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
-                    } else {
-                        return '<a href="#" class="taco-action-navigate">' + value + '</a>';
-                    }
-                }
-            }]
-        });       
+        //this.navigation = Ext.create('Taco.core.ux.TreeList', {
+        //    itemId: 'pages',
+        //    title: 'Pages',
+        //    parentPanel: this.tabPanel,
+        //    hideHeaders: true,
+        //    manageHeight: false,
+        //    store: Ext.data.StoreManager.lookup('navigationTreeNodeStore') || Ext.create('Taco.store.NavigationTreeNodes'),
+        //    columns: [{
+        //        xtype: 'treecolumn',
+        //        flex: 1,
+        //        dataIndex: 'name',
+        //        renderer: function (value, metaData, record) {
+        //            var id = record.getId();
+        //            if (id == '_unlinked' || id == '_navigation') {
+        //                return '<span style="float:left;font-weight:bold">' + value + '</span><a style="float:right" href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
+        //            } else {
+        //                return '<a href="#" class="taco-action-navigate">' + value + '</a>';
+        //            }
+        //        }
+        //    }]
+        //});       
 
         this.widgets = Ext.create('Taco.view.site.navigation.WidgetNav', {
             itemId: 'widgets',
