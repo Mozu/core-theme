@@ -46,11 +46,6 @@ Ext.define('Taco.view.site.page.Form', {
         });
 
        
-
-        this.toolBar = Ext.create('Taco.view.site.Toolbar', {
-            editor: this
-        });
-
         this.widgets = Ext.create('Taco.store.WidgetInstances', {
             listeners: {
                 add: this.onFormStateChange,
@@ -122,18 +117,7 @@ Ext.define('Taco.view.site.page.Form', {
         //    editor: this
         //});
 
-        this.actions = [
-            this.toolBar,
-            {
-                xtype: 'secondarybutton',
-                text: 'Cancel',
-                eventName: 'cancel'
-            }, {
-                xtype: 'dirtybutton',
-                text: 'Save',
-                eventName: 'save'
-            }];
-
+        
         this.cardStore = Ext.create('Ext.data.Store', {
             fields: ['index', 'title'],
             data: [
@@ -175,7 +159,6 @@ Ext.define('Taco.view.site.page.Form', {
             this.dirtyButton.setDirty(isDirty);
         }
         this.editSurface.setDirty(isDirty);
-        return;
         if (isDirty) {
             this.toolBox.navigation.disable();
         } else {
