@@ -34,13 +34,14 @@ Ext.define('Taco.view.site.Toolbar', {
         }
     },
     initComponent: function () {
-        var editor = this.editor;
         this.items = [
         {
             text: 'Edit in Form View',
             itemId: 'formView',
-            handler: this.editor.doFormView,
-            scope: this.editor
+            handler: function () {
+                this.editor.doFormView()
+            },
+            scope: this
         },
         {
             xtype: 'tbseparator'
@@ -48,26 +49,32 @@ Ext.define('Taco.view.site.Toolbar', {
         {
             text: 'Add',
             itemId: 'add',
-            handler: this.editor.createRecord,
-            scope: this.editor
+            handler: function() {
+                this.editor.createRecord()
+            },
+            scope: this
         },
         {
             text: 'Copy',
             itemId: 'copy',
             handler: function () { alert('tbd') },
-            scope: this.editor
+            scope: this
         },
         {
             text: 'Preview',
             itemId: 'preview',
-            handler: this.editor.viewPage,
-            scope: this.editor
+            handler: function() {
+                this.editor.viewPage()
+            },
+            scope: this
         },
         {
             text: 'Page Settings',
             itemId: 'settings',
-            handler: this.editor.settings,
-            scope: this.editor
+            handler: function() {
+                this.editor.settings();
+            },
+            scope: this
         },
         //{
         //    text:'food',
@@ -84,32 +91,17 @@ Ext.define('Taco.view.site.Toolbar', {
                 toggle: function (btn, pressed) {
                     this.editor.adapter.setHidden(pressed);
                 },
-                scope: this.editor
+                scope: this
             }
         },
         {
             text: 'Delete',
             itemId: 'destroy',
-            handler: this.editor.deleteRecord,
-            scope: this.editor
-        },
-        {
-            xtype: 'tbseparator'
-        },
-        {
-            text: 'ToolBox',
-            itemId: 'toolBox',
-            enableToggle: true,
-            listeners: {
-                toggle: function (btn, pressed) {
-                    this.editor.toolBox[pressed ? 'show' : 'hide']();
-                },
-                scope: this.editor
-            }
-
+            handler: function() {
+                this.editor.deleteRecord();
+            },
+            scope: this
         }
-
-
         ];
         this.callParent(arguments);
     }

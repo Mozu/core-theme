@@ -13,6 +13,7 @@ Ext.define('Taco.view.site.page.Edit', {
 
     initComponent: function() {
         this.toolBox = Ext.create('Taco.view.site.Toolbox');
+        this.toolBar = Ext.create('Taco.view.site.Toolbar');
 
         this.formCfg = {
             pageSrc: this.pageSrc,
@@ -22,7 +23,22 @@ Ext.define('Taco.view.site.page.Edit', {
         this.sidebar = {
             items: [this.toolBox]
         };
+
+        this.actions = [
+            this.toolBar,
+            {
+                xtype: 'secondarybutton',
+                text: 'Cancel',
+                eventName: 'cancel'
+            }, {
+                xtype: 'dirtybutton',
+                text: 'Save',
+                eventName: 'save'
+            }];
+
         
         this.callParent(arguments);
+
+        this.toolBar.editor = this.form;
     }
 });
