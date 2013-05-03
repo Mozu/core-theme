@@ -30,5 +30,11 @@ Ext.define('Taco.core.ux.modal.SidebarModal', {
     hide: function () {
         this.alignTo(this.sidebar.getEl(), 'tl-tr');
         this.callParent(arguments);
+    },
+    initComponent: function () {
+        this.callParent(arguments);
+        this.mon(Taco.app.viewPort, 'resize', function () {
+            if (this.rendered && !this.hidden) this.alignTo(this.sidebar.getEl(), 'tl-tl');
+        }, this);
     }
 });

@@ -82,7 +82,7 @@ Ext.define('Taco.view.site.Toolbox', {
             toolbox: this,
             parentPanel: this.tabPanel,
             index: 2,
-            title: 'Page Settings',
+            title: 'Settings',
             manageHeight: false
         });
 

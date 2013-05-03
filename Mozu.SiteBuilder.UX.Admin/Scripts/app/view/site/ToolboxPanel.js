@@ -11,34 +11,17 @@ Ext.define('Taco.view.site.ToolboxPanel', {
     height: 460,
     cls: Taco.baseCSSPrefix + 'card-flex ' + Taco.baseCSSPrefix + 'navigation',
 
-    hasBackButton: true,
-    //hasNav:true,
-    showInNav:true,
-    createBackButton: function () {
-        var me = this;
-        this.tbar = [{
-            xtype: 'action',
-                text: 'back',
-                click: {
-                    fn: function () { me.cardpanel.showitem(0); }
-                }
-            }, '->', {
-                xtype: 'tbtext',
-                text: this.title
-            }];
-    },
-
     toggleCardFlexActive: function () {
         this.getEl().toggleCls(Taco.baseCSSPrefix + 'card-flex-active');
     },
 
     initComponent: function () {
+        if (!this.parentPanel) Ext.Error.raise(this.$className + " requires a parentPanel config.");
         this.on({
             hide: this.toggleCardFlexActive,
             show: this.toggleCardFlexActive,
         });
     
-        if (this.hasBackButton) this.createBackButton();
         this.callParent(arguments);
         if (this.active) this.on('boxready', this.toggleCardFlexActive, this);
     }

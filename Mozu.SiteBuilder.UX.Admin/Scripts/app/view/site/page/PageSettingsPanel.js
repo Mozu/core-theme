@@ -35,10 +35,7 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
             xtype: 'secondarybutton',
             text: 'Cancel',
             listeners: {
-                click: function() {
-                    this.form.resetOriginalValues();
-                    this.hide();
-                },
+                click: this.hide,
                 scope: this
             }
         }, {
@@ -67,5 +64,11 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
         });
         this.items = [this.form];
         this.callParent(arguments);
+    },
+
+    hide: function() {
+        this.form.resetOriginalValues();
+        this.callParent(arguments);
     }
+
 });

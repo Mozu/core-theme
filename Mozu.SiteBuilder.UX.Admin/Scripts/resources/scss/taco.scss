@@ -38,6 +38,7 @@ $include-default: false;
  
 
 @include taco-quickadder;
+@include taco-pagesettings;
 @include taco-panel;
 @include taco-grid;
 @include taco-tree;
