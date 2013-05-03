@@ -1,12 +1,10 @@
 ﻿Ext.define('Taco.view.site.navigation.PageCreator', {
-    extend: 'Taco.view.site.ToolboxPanel',
+    extend: 'Taco.core.ux.modal.SidebarModal',
     title: 'Add Page',
-    showInNav: false,
     layout: {
         type: 'vbox',
         align: 'top'
     },
-    hasBackButton:false,
     initComponent: function () {
         var me = this;
         this.form = Ext.widget({

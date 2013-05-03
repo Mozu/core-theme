@@ -8,7 +8,6 @@ Ext.define('Taco.view.site.ToolboxPanel', {
         type: 'fit',
         align: 'stretch'
     },
-    height: 460,
     cls: Taco.baseCSSPrefix + 'card-flex ' + Taco.baseCSSPrefix + 'navigation',
 
     toggleCardFlexActive: function () {

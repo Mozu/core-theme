@@ -30,20 +30,19 @@ Ext.define('Taco.view.site.navigation.Tree', {
             navigationTreeNodeModel = Ext.ModelManager.getModel('Taco.model.NavigationTreeNode');
         this.addEvents('editlink');
         this.pageCreator = Ext.create('Taco.view.site.navigation.PageCreator', {
-            cardPanel: me.cardPanel,
+            parentPanel: me.parentPanel,
             listeners: {
                 cancel: function() {
-                    me.cardPanel.showItem(me);
+                    me.pageCreator.hide();
                 },
                 save: function(creator, record) {
                     var parentNode = me.store.getById(me.pageCreator.parentId);
                     parentNode.appendChild(record);
                     record.save();
-                    me.cardPanel.showItem(me);
+                    me.pageCreator.hide();
                 }
             }
         });
-        this.cardPanel.add(this.pageCreator);
         this.mon(Taco.app, 'page-destroy', this.pageDestroyed, this);
         this.mon(Taco.app, 'page-navigate', this.pageNavigate, this);
         this.mon(Taco.app, 'pageentity-update', this.onPageEntiryUpdate, this);
@@ -219,7 +218,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
 
                     if (e.target.dataset.pageCreator) { //data-page-creator
                         this.pageCreator.reset(e.target.dataset);
-                        this.cardPanel.showItem(this.pageCreator);
+                        this.pageCreator.show();
                     }
                     this.isNewSelection = false;
                 },
@@ -239,6 +238,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
         });
         this.items = [this.searchBox, this.resultPanel];
         this.callParent(arguments);
+        this.add(this.pageCreator);
         var sel = this.tree.getSelectionModel();
         sel.setSelectionMode('SINGLE');
         this.addEvents('navigationchange');
