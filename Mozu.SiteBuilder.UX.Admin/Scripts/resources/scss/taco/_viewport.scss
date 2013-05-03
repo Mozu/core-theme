@@ -14,7 +14,7 @@
 
   .#{$vprefix}viewport-header {
     width: 100%;
-    @include box-shadow(0px -1px 6px $color-neutral-black);
+    // @include box-shadow(0px -1px 6px $color-neutral-black);
   }
 
   .#{$vprefix}masthead {
