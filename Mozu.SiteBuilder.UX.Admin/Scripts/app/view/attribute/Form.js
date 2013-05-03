@@ -4,8 +4,8 @@
  */
 
 Ext.define('Taco.view.attribute.Form', {
-    extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.view.option.valueEditor.MultiValue'],
+    extend: 'Taco.view.product.subform.Subform',
+    requires: ['Taco.view.option.valueEditor.MultiValue', 'Taco.core.ux.form.FlexBox'],
 
     
     title: 'Attribute',
@@ -88,12 +88,9 @@ Ext.define('Taco.view.attribute.Form', {
                     attributeType,
                     dataType,
                 {
-                    xtype: 'fieldcontainer',
+                    xtype: 'formflexbox',
+                    width: 308,
                     defaults: this.defaults,
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
                     items: [{
                         fieldLabel: 'Min char/val',
                         xtype: 'numberfield',
@@ -126,12 +123,9 @@ Ext.define('Taco.view.attribute.Form', {
                 return [
                     attributeType,
                 {
-                    xtype: 'fieldcontainer',
+                    xtype: 'formflexbox',
+                    width: 308,
                     defaults: this.defaults,
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
                     items: [{
                         fieldLabel: 'Rows',
                         name: 'rows'
@@ -170,18 +164,16 @@ Ext.define('Taco.view.attribute.Form', {
                 },
                 attributeType,
                 {
-                    xtype: 'fieldcontainer',
+                    xtype: 'formflexbox',
+                    width: 339,
                     fieldLabel: 'Range',
-                    layout: {
-                        align: 'stretch',
-                        type: 'hbox'
-                    },
+                    cls: 'taco-date-value-input',
                     items: [{
                         xtype: 'datefield',
                         name: 'min'
                     }, {
-                        xtype: 'component',
-                        html: 'to'
+                        xtype: 'label',
+                        text: 'to'
                     }, {
                         xtype: 'datefield',
                         name: 'max'
