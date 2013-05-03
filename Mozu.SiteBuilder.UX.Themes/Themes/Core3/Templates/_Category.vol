@@ -9,7 +9,7 @@
         {% include "modules/LeftNav" %}
     {% endif %}
 
-    {% html_action "ProductListing" "catalog" with categoryTitle=Model.name and categoryId=Model.id and viewName="modules/productListing" as_parameter %}
+    {% html_action "ProductListing" "catalog" with categoryTitle=Model.Name and categoryId=Model.Id and viewName="modules/productListing" as_parameter %}
 </div>
 
 {% endblock BodyContent %}

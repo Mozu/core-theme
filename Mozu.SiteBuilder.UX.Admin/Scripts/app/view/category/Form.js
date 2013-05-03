@@ -45,10 +45,7 @@ Ext.define('Taco.view.category.Form', {
         fieldLabel: 'SEO Friendly URL',
         xtype: 'slugfield',
         slugPrefix: 'www.mystore.com/category/'
-    }, {
-        name: 'code',
-        fieldLabel: 'Page Code'
-    }, {
+    },  {
         name: 'pageTitle',
         fieldLabel: 'Page Title'
     }, {
