@@ -15,6 +15,44 @@
     }
   }
 
+  .taco-option-value-row{
+    .remove{
+	  padding-left:5px;
+	}
+  }
+
+  // date field styles 
+  .taco-option-value-input{
+    height: 28px; 
+    width: 150px; 
+    margin-bottom: 5px;
+  }
+
+  .taco-date-value-input{
+	label{
+	  margin-top: 5px;
+	}
+	.#{$prefix}form-trigger{
+	  width: 25px;
+	  height: 24px;
+	}
+	.#{$prefix}trigger-cell {
+	  margin-left: -26px;
+	  margin-top: 3px;
+    }
+
+	.#{$prefix}form-date-trigger{
+      @include icons-sprite(icon-calendar);
+  }
+
+  .x-form-trigger-click{
+   @include icons-sprite(icon-calendar);
+  }
+  }
+
+  
+
+
   // combobox styles
   .#{$prefix}form-trigger-input-cell {
     .#{$prefix}form-text {
@@ -71,12 +109,17 @@
     height: 15px;
     width: 17px;
   }
-  .#{$prefix}field .#{$prefix}form-checkbox,
+
   .#{$prefix}field .#{$prefix}form-radio {
     position: relative;
     top: -3px;
   }
 
+  .#{$prefix}field .#{$prefix}form-checkbox{
+    position: relative;
+    top: 2px;
+  }
+  
   .#{$prefix}field .#{$prefix}form-checkbox,
   .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox,
   .#{$prefix}menu .#{$prefix}menu-item-unchecked .#{$prefix}menu-item-icon,
