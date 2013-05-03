@@ -18,9 +18,9 @@ Ext.define('Taco.view.site.ToolboxPanel', {
         var me = this;
         this.tbar = [{
             xtype: 'action',
-                text: 'Back',
+                text: 'back',
                 click: {
-                    fn: function () { me.cardPanel.showItem(0); }
+                    fn: function () { me.cardpanel.showitem(0); }
                 }
             }, '->', {
                 xtype: 'tbtext',

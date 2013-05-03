@@ -529,6 +529,7 @@
     <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\browser\FilterList.js" />
+    <Content Include="Scripts\app\core\ux\modal\SidebarModal.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
     <Content Include="Scripts\app\core\ux\TabBar.js" />
     <Content Include="Scripts\app\core\ux\PanelHeader.js" />

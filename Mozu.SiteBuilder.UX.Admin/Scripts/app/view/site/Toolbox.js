@@ -4,7 +4,7 @@
 Ext.define('Taco.view.site.Toolbox', {
     extend: 'Ext.container.Container',
     alias: 'widget.toolbox',
-    requires: ['Taco.view.site.navigation.Tree', 'Taco.view.site.navigation.WidgetNav', 'Taco.view.site.navigation.PageSettings', 'Taco.store.shared.ContainerStore', 'Taco.core.ux.TabBar'],
+    requires: ['Taco.view.site.navigation.Tree', 'Taco.view.site.navigation.WidgetNav', 'Taco.view.site.navigation.PageSettings', 'Taco.core.ux.TabBar'],
 
     cls: Taco.baseCSSPrefix + 'toolbox ',
     header: false,
@@ -67,13 +67,53 @@ Ext.define('Taco.view.site.Toolbox', {
         //     manageHeight: false
         // });
 
-        // this.pageSettings = Ext.create('Taco.view.site.navigation.PageSettings', {
-        //     toolbox: this,
-        //     cardPanel: this.cardPanel,
-        //     index: 2,
-        //     title: 'Page Settings',
-        //     manageHeight: false
-        // });
+
+
+        this.tabPanel = Ext.widget('tabpanel', {
+            activeTab: 0,
+            manageHeight: false,
+            cls: Taco.baseCSSPrefix + 'toolbox-tabpanel',
+            tabBar: {
+                plain: true
+            }
+        });
+
+        this.pageSettings = Ext.create('Taco.view.site.navigation.PageSettings', {
+            toolbox: this,
+            parentPanel: this.tabPanel,
+            index: 2,
+            title: 'Page Settings',
+            manageHeight: false
+        });
+
+        this.navigation = Ext.create('Taco.core.ux.TreeList', {
+            itemId: 'pages',
+            title: 'Pages',
+            parentPanel: this.tabPanel,
+            hideHeaders: true,
+            manageHeight: false,
+            store: Ext.data.StoreManager.lookup('navigationTreeNodeStore') || Ext.create('Taco.store.NavigationTreeNodes'),
+            columns: [{
+                xtype: 'treecolumn',
+                flex: 1,
+                dataIndex: 'name',
+                renderer: function (value, metaData, record) {
+                    var id = record.getId();
+                    if (id == '_unlinked' || id == '_navigation') {
+                        return '<span style="float:left;font-weight:bold">' + value + '</span><a style="float:right" href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
+                    } else {
+                        return '<a href="#" class="taco-action-navigate">' + value + '</a>';
+                    }
+                }
+            }]
+        });       
+
+        this.widgets = Ext.create('Taco.view.site.navigation.WidgetNav', {
+            itemId: 'widgets',
+            title: 'Widgets',
+            parentPanel: this.tabPanel,
+            manageHeight: false
+        });
 
         // this.tabContainer = Ext.widget('dataview', {
         //     store: this.panelStore,
@@ -103,58 +143,19 @@ Ext.define('Taco.view.site.Toolbox', {
 
         // this.items = [this.tabContainer, this.cardPanel];
         // this.tbar = [this.tabContainer];
-        this.items = [{
-            xtype: 'tabpanel',
-            activeTab: 0,
-            height: (Ext.getBody().getBox().height - 107),
-            manageHeight: false,
-            cls: Taco.baseCSSPrefix + 'toolbox-tabpanel',
-            tabBar: {
-                plain: true
-            },
-            items: [
-                Ext.create('Taco.core.ux.TreeList', {
-                    itemId: 'pages',
-                    title: 'Pages',
-                    hideHeaders: true,
-                    manageHeight: false,
-                    store: Ext.data.StoreManager.lookup('navigationTreeNodeStore') || Ext.create('Taco.store.NavigationTreeNodes'),
-                    columns: [{
-                        xtype: 'treecolumn',
-                        flex: 1,
-                        dataIndex: 'name',
-                        renderer: function(value, metaData, record) {
-                            var id = record.getId();
-                            if (id == '_unlinked' || id == '_navigation') {
-                                return '<span style="float:left;font-weight:bold">' + value + '</span><a style="float:right" href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
-                            } else {
-                                return '<a href="#" class="taco-action-navigate">' + value + '</a>';
-                            }
-                        }
-                    }]
-                }),
-                Ext.create('Taco.view.site.navigation.WidgetNav', {
-                    itemId: 'widgets',
-                    title: 'Widgets',
-                    manageHeight: false
-                })
-                // Ext.create('Taco.view.site.navigation.PageSettings', {
-                //     itemId: 'settings',
-                //     title: 'Settings'
-                // })
-            ]
-        }];
+        this.items = [this.tabPanel];
 
         // this.tabContainer.getSelectionModel().allowDeselect = false;
 
         this.callParent(arguments);
+
+        this.tabPanel.add(this.navigation, this.widgets, this.pageSettings);
 
         // this.cardPanel.add(0,[this.navigation, this.widgets, this.pageSettings]);
     },
 
     populate: function (adapter) {
         //todo refdo page settings
-        return;
         this.pageSettings.populate(adapter);
     }
 });

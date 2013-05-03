@@ -97,7 +97,7 @@
     // }
   }
 
-  .#{$vprefix}content-sidebar {
+  .#{$vprefix}content-sidebar, .#{$vprefix}sidebar-modal {
     background-color: $color-neutral-white;
     border-color: border-for($color-neutral-white);
     border-style: solid none none solid;
@@ -126,7 +126,15 @@
       }
     }
   }
-  
+
+  .#{$vprefix}sidebar-modal{
+      &.sliding {
+          @include transition-property(left, right);
+          @include transition-duration(0.5s, 0.5s);
+          @include transition-timing-function(ease-out, ease-out);
+      }
+  }
+
   /* SITE EDITOR */
 
   .#{$vprefix}content-inline-editor {

@@ -3,26 +3,24 @@
  */
 Ext.define('Taco.view.site.navigation.PageSettings', {
     extend: 'Taco.view.site.ToolboxPanel',
-    requires: ['Taco.view.site.page.PageSettingsPanel'],
+    requires: ['Taco.view.site.page.PageSettingsPanel','Taco.store.shared.ContainerStore'],
     populate: function(adapter) {
         var me = this;
         var newPanels = Ext.Array.map(adapter.getPageSettings(), function (panelInfo) {
             return Ext.create(panelInfo.panelCls, {
-                record: panelInfo.getRecord(),
-                toolbox: me.toolbox,
-                settingsChooser: me
+                record: panelInfo.getRecord()
             });
         });
         if (this.settingsPanels) Ext.Array.forEach(this.settingsPanels, function (panel) {
-            me.cardPanel.remove(panel, true);
+            me.remove(panel, true);
         });
         this.settingsPanels = newPanels;
-        this.cardPanel.add(newPanels);
+        this.add(newPanels);
     },
     createChooser: function () {
         var me = this;
         return this.chooser = Ext.widget('dataview', {
-            store: this.toolbox.panelStore,
+            store: this.panelStore,
             cls: Taco.baseCSSPrefix + 'pagesettings-chooser',
             tpl: new Ext.XTemplate(
                 '<ul>',
@@ -39,15 +37,19 @@ Ext.define('Taco.view.site.navigation.PageSettings', {
                 ),
             itemSelector: 'li.' + Taco.baseCSSPrefix + 'pagesettings-chooser-item',
             listeners: {
-                itemclick: function (view, record, eOpts) {
-                    me.cardPanel.showItem(record);
+                itemclick: function (view, record, item, index) {
+                    me.settingsPanels[index].show();
                 }
             }
         });
     },
     initComponent: function () {
 
-        this.pageStore = null;
+        this.panelStore = Ext.create('Taco.store.shared.ContainerStore', {
+            fields: ['index', 'title', 'isPageSettingsPanel'],
+            container: this,
+            useFloatingItems: true
+        });
 
         this.items = [this.createChooser()];
 
