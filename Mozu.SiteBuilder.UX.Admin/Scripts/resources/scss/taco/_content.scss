@@ -33,17 +33,17 @@
     }
 
     .#{$vprefix}content-header {
-      border-bottom: 1px solid border-for($color-neutral-white);
+      border-bottom: 1px solid border-for($color-neutral-95);
       margin: 0px;
       min-height: 65px;
       padding: 17px 30px;
       position: relative;
       width: 100%;
       z-index: 200;
-      @include box-shadow(rgba(0,0,0,0) 0 -5px 10px 0px);
+      // @include box-shadow(rgba(0,0,0,0) 0 -5px 10px 0px);
+      @include box-shadow(inset 0px 1px border-for($color-neutral-95));
       @include flexbox($justify: space-between);
-      @include transition(box-shadow 1s ease);
-
+      //@include transition(box-shadow 1s ease);
       
       h1 {
         font-size: px-to-rem(24);
@@ -97,14 +97,17 @@
     // }
   }
 
-  .#{$vprefix}content-sidebar, .#{$vprefix}sidebar-modal {
+  .#{$vprefix}content-sidebar,
+  .#{$vprefix}sidebar-modal {
     background-color: $color-neutral-white;
-    border-color: border-for($color-neutral-white);
+    border-color: border-for($color-neutral-95);
     border-style: solid none none solid;
     border-width: 0px 0px 0px 1px;
+    position: relative;
     z-index: 3;
+    @include box-shadow(inset 0px 1px border-for($color-neutral-95));
     @include flexbox;
-    @include flex(0, 0, 300px);
+    @include flex(0, 0, 320px);
 
     .#{$vprefix}sidebarlist {
       margin: 0 30px;
