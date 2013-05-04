@@ -1,5 +1,6 @@
 ﻿/**
- * @class Taco.view.fileManagement.Savable
+ * @class Taco.view.fileManager.util.Uploadable
+ * @author  Jason *The Cock* Cochran
  */
 Ext.define('Taco.view.fileManager.util.Uploadable', {
     requires: ['Taco.core.ux.modal.Alert'],
@@ -13,7 +14,7 @@ Ext.define('Taco.view.fileManager.util.Uploadable', {
 
         Ext.each(fileList, function (file) { files.push(file); });
         Ext.each(files, function (file) {
-            if (me.store.find('name', file.name) > -1) {
+            if (me.store && me.store.find('name', file.name) > -1) {
 
                 Ext.create('Taco.core.ux.modal.Alert', {
                     autoShow: true,
@@ -32,6 +33,7 @@ Ext.define('Taco.view.fileManager.util.Uploadable', {
 
             }
         });
+
         if (shouldBreak) {
             return;
         }
@@ -82,10 +84,14 @@ Ext.define('Taco.view.fileManager.util.Uploadable', {
 
         });
         if (newDocs.length > 0) {
-            me.store.insert(0, newDocs);
+            if (me.store) {
+                me.store.insert(0, newDocs);
+            }
             if (callback && Ext.isFunction(callback)) {
                 callback(newDocs);
             }
+
+            this.fireEvent('beginupload', newDocs);
         }
     }
 });

@@ -16,7 +16,7 @@ Ext.define('Taco.view.fileManager.Index', {
     ],
 
     mixins: {
-        savable: 'Taco.view.fileManager.util.Uploadable'
+        uploadable: 'Taco.view.fileManager.util.Uploadable'
     },
 
     typeName: 'File',
@@ -33,7 +33,15 @@ Ext.define('Taco.view.fileManager.Index', {
         columns: [{
             xtype: 'templatecolumn',
             header: 'Image',
-            tpl: '<tpl if="localthumbnail"><div class="taco-basegrid-thumbnail"><img width="60" src="{localthumbnail}" /></div><tpl else><div class="taco-basegrid-thumbnail"><img width="60" src="{thumbnail}?size=60" /></div></tpl>'
+            tpl: [
+                '<div class="taco-basegrid-thumbnail">',
+                    '<tpl if="localthumbnail">',
+                        '<img height="60" src="{localthumbnail}">',
+                    '<tpl else>',
+                        '<img height="60" src="{thumbnail}?size=60" />',
+                    '</tpl>',
+                '</div>'
+            ]
         }, {
             text: 'Name',
             editor: {
