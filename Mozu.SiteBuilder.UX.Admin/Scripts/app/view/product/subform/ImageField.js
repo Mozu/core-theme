@@ -6,7 +6,8 @@
 Ext.define('Taco.view.product.subform.ImageField', {
     extend: 'Ext.form.FieldContainer',
     mixins: {
-        field: 'Ext.form.field.Field'
+        field: 'Ext.form.field.Field',
+        uploadable: 'Taco.view.fileManager.util.Uploadable'
     },
     alias: 'widget.productimagefield',
     requires: [
@@ -17,6 +18,15 @@ Ext.define('Taco.view.product.subform.ImageField', {
     cls: 'taco-product-image-field',
     
     initComponent: function () {
+        this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.Files');
+
+        this.selectedImages = Taco.core.data.StoreManager.getOrCreate({
+            xtype: 'Ext.data.Store',
+            fields: [
+                'sequence',
+                'url'
+            ]
+        });
 
         this.emptyDropZone = Ext.widget({
             xtype: 'component',
@@ -26,21 +36,24 @@ Ext.define('Taco.view.product.subform.ImageField', {
 
         this.imageDropZone = Ext.widget({
             xtype: 'component',
-        })
+        });
 
         this.imageView = Ext.widget({
-            xtype: 'complexdataview',
+            xtype: 'dataview',
             autoEl: {
                 tag: 'ul',
                 cls: 'taco-image-tiles'
             },
+            store: this.selectedImages,
             tpl :[
-              //  '<ul class="taco-image-tiles">',
                     '<tpl foreach=".">',
-                        '<li class="image" style="background-image:url({url}?size=150)"></li>',                  
+                        '<tpl if="uploading">',
+                            '<li class="uploading">Progress {progress}%</li>',
+                        '<tpl else>',
+                            '<li class="image" style="background-image:url({url}?size=150)"></li>',                  
+                        '</tpl>',
                     '</tpl>',
                     '<li class="taco-image-drop">Drop images here</li>'
-                //'</ul>'
             ],
             itemSelector:'li.image'
         });
@@ -82,58 +95,108 @@ Ext.define('Taco.view.product.subform.ImageField', {
         })
 
         this.on({
-            afterrender: function () {
-                this.emptyDropZoneEl = this.emptyDropZone.getEl();
-
-                this.emptyDropZoneEl.on({
-                    dragenter: function (e) {;
-                        this.onValidDragEnter(e, this.emptyDropZoneEl);
-                    },
-                    dragleave: function (e) {
-                        this.onValidDragLeave(e, this.emptyDropZoneEl);
-                    },
-                    drop: function (e) {
-                        var files = e.browserEvent.dataTransfer.files;
-                        e.stopPropagation();
-                        e.preventDefault();
-                        this.fireEvent('filedrop', files);
-                        this.onValidDragLeave(e, this.emptyDropZoneEl);
-                        this.getEl().removeCls('drag-and-drop-active');
-                    },
-                    scope: this
-                });
-            },
+            afterrender: this.onAfterRender,
+            filedrop: this.onUploadFile,
+            beginupload: this.onBeginUpload,
             scope: this
         });
 
         this.imageView.on({
-            afterupdate: function () {
-                this.imageDropZoneEl = this.imageView.getEl().down('.taco-image-drop');
-                if (!this.imageDropZoneEl) {
+            refresh: this.bindImageUpload,
+            scope: this
+        });
+
+        this.selectedImages.on({
+            datachanged: this.bindImageUpload,
+            scope: this
+        });
+
+        this.imageUploaderTimeout =0;
+
+        Taco.core.util.UploadManager.on({
+            'progress': function (e) {
+                var file = this.selectedImages.contains(e.document);
+
+                if (!file) {
                     return;
                 }
-                this.imageDropZoneEl.on({
-                    dragenter: function (e) {
-                        this.onValidDragEnter(e, this.imageDropZoneEl);
-                    },
-                    dragleave: function (e) {
-                        this.onValidDragLeave(e, this.imageDropZoneEl);
-                    },
-                    drop: function (e) {
-                        var files = e.browserEvent.dataTransfer.files;
-                        e.stopPropagation();
-                        e.preventDefault();
-                        this.fireEvent('filedrop', files);
-                        
-                        this.onValidDragLeave(e, this.imageDropZoneEl);
-                        this.getEl().removeCls('drag-and-drop-active');
-                    },
-                    scope: this
-                });
+
+                file.progress = 0;
+            },
+
+            'complete': function (e) {
+                var file = this.selectedImages.contains(e.document);
+
+                if (!file) {
+                    return;
+                }
+
+                file.progress = e.percentUploaded * 100;
+            },
+
+            scope: this
+        });
+
+    },
+
+
+
+    bindImageUpload: function () {
+        var me = this;
+
+        if (!this.imageView.rendered) {
+            return;
+        }
+
+        window.clearInterval(this.imageUploaderInterval);
+
+        this.imageDropZoneEl = this.imageView.getEl().down('.taco-image-drop');
+        
+        if (!this.imageDropZoneEl) {
+            if (this.imageUploaderTimeout++ < 50) {
+                this.imageUploaderInterval = window.setInterval(function () {
+                    me.bindImageUpload();
+                }, 100);
+            }
+
+            //console.log('not there', this.getId());
+            return;
+        }
+        this.imageUploaderTimeout = 0;
+        console.log('get there', this.getId());
+
+        this.imageDropZoneEl.on({
+            dragenter: function (e) {
+                this.onValidDragEnter(e, this.imageDropZoneEl);
+            },
+            dragleave: function (e) {
+                this.onValidDragLeave(e, this.imageDropZoneEl);
+            },
+            drop: function (e) {
+                var files = e.browserEvent.dataTransfer.files;
+                e.stopPropagation();
+                e.preventDefault();
+                this.fireEvent('filedrop', files);
+                
+                this.onValidDragLeave(e, this.imageDropZoneEl);
+                this.getEl().removeCls('drag-and-drop-active');
             },
             scope: this
-        })
+        });
+    },
 
+    onBeginUpload: function (files) {
+        var value = this.getValue();
+        if (!Array.isArray(value)) {
+            value = [];
+        }
+
+        Ext.each(files, function (file) {
+            file.uploading = true;
+            file.progress = 0;
+        });
+
+        this.setValue(value.concat(files));
     },
 
     onValidDragEnter: function (e, el) {
@@ -147,9 +210,29 @@ Ext.define('Taco.view.product.subform.ImageField', {
     },
 
     onAfterRender: function () {
-        this.emptyDropZoneEl = this.emptyDropZone.getEl();
-        //this.fileDropZoneEl = this.imageView.getEl().down('.taco-image-drop');
+        if (!this.store.data.length && !this.store.isLoading()) {
+            this.store.load();
+        }
 
+        this.emptyDropZoneEl = this.emptyDropZone.getEl();
+
+        this.emptyDropZoneEl.on({
+            dragenter: function (e) {;
+                this.onValidDragEnter(e, this.emptyDropZoneEl);
+            },
+            dragleave: function (e) {
+                this.onValidDragLeave(e, this.emptyDropZoneEl);
+            },
+            drop: function (e) {
+                var files = e.browserEvent.dataTransfer.files;
+                e.stopPropagation();
+                e.preventDefault();
+                this.fireEvent('filedrop', files, e);
+                this.onValidDragLeave(e, this.emptyDropZoneEl);
+                this.getEl().removeCls('drag-and-drop-active');
+            },
+            scope: this
+        });
     },
 
     isEqual: function (value1, value2) {
@@ -188,21 +271,20 @@ Ext.define('Taco.view.product.subform.ImageField', {
     },
 
     setValue: function (value) {
-        
-        if ( this.imageView.rendered){
-            this.imageView.update(value);
-        } else {
-            // TODO: Need to do a proper fix, some weird race condition where the view gets messed up. Ask Thom
-            this.imageView.on({
-                afterrender: function () {
-                    Ext.defer(function () {
-                        this.imageView.update(value);
-                    }, 10, this);
-                },
-                scope: this
-            });
-            
+        if (!value || !Array.isArray(value)) {
+            value = [];
         }
+
+        Ext.each(value, function (val) {
+            if (val.isModel) {
+                return;
+            }
+            if (typeof val.realBoy === 'undefined') {
+                val.realBoy = true;
+            }
+        });
+
+        this.selectedImages.loadData(value);
 
         if (value && value.length) {
             this.emptyDropZone.hide();

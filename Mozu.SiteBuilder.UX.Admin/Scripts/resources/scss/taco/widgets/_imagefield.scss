@@ -80,6 +80,10 @@
                     margin-top: -3rem;
                 }
             }
+
+            &.uploading {
+                background: lightskyblue;
+            }
         }
 
         &.drag-and-drop-active {
