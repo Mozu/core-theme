@@ -4,6 +4,7 @@
 Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
     extend: 'Taco.view.site.page.entityAdapters.BaseEntityAdapter',
     modelName:'Taco.model.Category',
+	allowedActions:{copy:false,preview:true,destroy:false},
     getStore:function(){
         return this.editor.categories;
     },
@@ -18,9 +19,6 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
     getId: function() {
         return this.pageProps.pageContext.categoryId;
     },
-
-
-   
 
     getPageSettings: function () {
         var me = this;

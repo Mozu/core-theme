@@ -17,7 +17,8 @@ Ext.define('Taco.view.site.page.Edit', {
 
         this.formCfg = {
             pageSrc: this.pageSrc,
-            toolBox: this.toolBox
+            toolBox: this.toolBox,
+            toolBar: this.toolBar
         };
         
         this.sidebar = {
@@ -38,7 +39,8 @@ Ext.define('Taco.view.site.page.Edit', {
 
         
         this.callParent(arguments);
-
-        this.toolBar.editor = this.form;
+        this.on('boxready', function () {
+            this.toolBar.editor = this.form;
+        }, this);
     }
 });

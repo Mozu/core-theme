@@ -4,6 +4,7 @@
 Ext.define('Taco.view.site.page.entityAdapters.DocumentEntityAdapter', {
     extend: 'Taco.view.site.page.entityAdapters.BaseEntityAdapter',
     modelName: 'Taco.model.CmsDocument',
+	allowedActions:{copy:true,preview:true,destroy:true},
     getStore: function () {
         return this.editor.cmsDocs;
     },

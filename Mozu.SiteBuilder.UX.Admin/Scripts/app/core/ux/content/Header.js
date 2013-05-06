@@ -8,7 +8,6 @@ Ext.define('Taco.core.ux.content.Header', {
     requires: ['Taco.core.ux.action.SecondaryButton', 'Taco.core.ux.action.PrimaryButton'],
     alias: 'widget.contentheader',
     cls: 'taco-content-header',
-    layout: 'auto',
 
     title: 'Header Title',
 
@@ -35,6 +34,7 @@ Ext.define('Taco.core.ux.content.Header', {
             }]
         }, {
             xtype: 'container',
+            cls: Taco.baseCSSPrefix + "actions",
             itemId: 'actionsContainer',
             items: this.actions,
             hidden: this.hideActions,
