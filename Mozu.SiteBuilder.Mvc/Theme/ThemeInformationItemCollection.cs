@@ -23,5 +23,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
          [XmlElement("id")]
         public string Id { get; set; }
+
+        [XmlElement("enableCoreVaraints")]
+         public bool? EnableCoreVaraints { get; set; }
     }
 }

@@ -86,6 +86,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 InheritanceString   = metadata.ThemeInfo.Extends,
                 IsDesktop           = metadata.ThemeInfo.IsDesktop,
                 IsMobile            = metadata.ThemeInfo.IsMobile,
+                EnableCoreVaraints = metadata.ThemeInfo.EnableCoreVaraints,
                 FileListing         = metadata.FileListing,
                 Widgets =metadata.Widgets,
                 PageTypes = metadata.PageTypes ,

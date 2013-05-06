@@ -17,7 +17,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
         public List<ThemeConfigurationItem> GetMergedConfigurations(Theme theme)
         {
             IEnumerable<IEnumerable<ThemeConfigurationItem>> configurationStack =
-                from t in theme.StackT.Cast<Theme>().Reverse()
+                from t in theme.Stack.Cast<Theme>().Reverse()
                 where t.NodeConfiguration != null
                 select t.NodeConfiguration;
 

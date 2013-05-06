@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web.Hosting;
 using System.Web;
 using System.IO;
+using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Themes.Providers;
 using Mozu.SiteBuilder.Mvc.Themes.Repositories;
 
@@ -98,9 +99,10 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         //}
 
 
-        public string MapLocalPath(string virtualPath, string theme)
+        public string MapLocalPath(string virtualPath, Theme  theme)
         {
-            var t=  _themeRepository.GetTheme(theme );
+
+            var t = theme;
             //var pathParts = virtualPath.Replace("\\","/").Split('/');
             //if (pathParts.Length < 3)
             //{
@@ -117,18 +119,18 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         
 
-        private ICollection<string> _themeStack;
-        public ICollection<string> ThemeStack
+        //private ICollection<string> _themeStack;
+        public ICollection<Theme> ThemeStack
         {
-            get { return _themeStack ?? (_siteBuilderContext ??SiteBuilderContext.Current ).Theme.Stack; }
-            set { _themeStack = value; }
+            get { return (_siteBuilderContext ??SiteBuilderContext.Current ).Theme.Stack; }
+    //        set { _themeStack = value; }
         }
 
 
-        IEnumerable<string> GetViewVariants(string view, string themeId)
+        IEnumerable<string> GetViewVariants(string view, Theme  theme)
         {
             yield return view;
-            if (ThemeStack.Count  == 1 || !themeId.Equals(ThemeStack.First(), StringComparison.OrdinalIgnoreCase))
+            if (theme.EnableCoreVaraints .GetValueOrDefault( false ))
             {
                 var pos = view.LastIndexOf('/');
                 if (pos > -1 && pos + 1 < view.Length)
