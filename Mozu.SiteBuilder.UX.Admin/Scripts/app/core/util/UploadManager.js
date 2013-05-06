@@ -212,7 +212,8 @@ Ext.define('Taco.core.util.UploadManager', function () {
         */
         onProgress: function (e, eventData) {
             var me = this;
-
+            eventData.document.set('progress', (e.loaded / e.total).toFixed(2));
+            
             me.fireEvent('progress', Ext.apply(Ext.create('Taco.core.util.FileUploadEvent'), Ext.apply(eventData, {
                 type: 'progress',
                 timeStamp: e.timeStamp,
@@ -238,6 +239,7 @@ Ext.define('Taco.core.util.UploadManager', function () {
         onUploadError: function (e, eventData) {
             var me = this;
 
+           
             me.fireEvent('uploaderror', Ext.apply(Ext.create('Taco.core.util.FileUploadEvent'), Ext.apply(eventData, {
                 type: 'uploaderror',
                 timeStamp: e.timeStamp
@@ -249,7 +251,7 @@ Ext.define('Taco.core.util.UploadManager', function () {
         */
         onComplete: function (e, eventData) {
             var me = this;
-
+            eventData.document.set('isUploaded', true);
             me.fireEvent('complete', Ext.apply(Ext.create('Taco.core.util.FileUploadEvent'), Ext.apply(eventData, {
                 type: 'complete',
                 timeStamp: e.timeStamp
