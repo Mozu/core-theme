@@ -1,8 +1,7 @@
 @mixin taco-sites {
 
   .#{$vprefix}inline-editor-tools {
-    display: inline-block;
-    vertical-align: middle;
+      @include flexbox;
   }
 
   .#{$vprefix}toolbox {

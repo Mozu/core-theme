@@ -4,6 +4,7 @@
 Ext.define('Taco.view.site.page.entityAdapters.ProductEntityAdapter', {
 
     extend: 'Taco.view.site.page.entityAdapters.BaseEntityAdapter',
+	allowedActions:{copy:false,preview:true,destroy:false},
     modelName: 'Taco.model.Product',
     getStore: function () {
         return this.editor.products;

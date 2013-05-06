@@ -56,6 +56,9 @@
         // padding-top: 7px;
       }
       
+      .#{$vprefix}actions {
+        @include flexbox;
+      }
       .#{$vprefix}action {
         float: none;
         margin-left: 1em;
