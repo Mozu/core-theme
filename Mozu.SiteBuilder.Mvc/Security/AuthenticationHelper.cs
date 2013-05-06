@@ -75,6 +75,24 @@ namespace Mozu.SiteBuilder.Mvc.Security
             
             SetCookie(ticket);
         }
+
+        /// <summary>
+        /// Allows current user to be set with just an accesstoken.
+        /// </summary>
+        /// <param name="accessToken"></param>
+        public void SetCurrentUser(string accessToken)
+        {
+            if (!String.IsNullOrEmpty(accessToken))
+            {
+                var claim = LightweightUserClaims.Parse(accessToken);
+                SetCurrentUser(new UserAuthTicket { AccessToken = accessToken, AccessTokenExpiration = claim.Expiration });
+            }
+            else
+            {
+                SetCurrentUser((UserAuthTicket)null);
+            }
+        }
+        
         public UserAuthTicket GetCurrentTicket ()
         {
             UserAuthTicket ticket = null;
@@ -137,7 +155,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         }
         public void LogOut()
         {
-            SetCurrentUser(null);
+            SetCurrentUser((UserAuthTicket)null);
             var cookie = new HttpCookie("")
             {
                 Expires = DateTime.MinValue,

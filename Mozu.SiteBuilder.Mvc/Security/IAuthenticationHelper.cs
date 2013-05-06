@@ -15,5 +15,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         UserAuthTicket GetCurrentTicket();
 
         void SetCurrentUser(UserAuthTicket authTicket);
+
+        void SetCurrentUser(string authToken);
     }
 }
