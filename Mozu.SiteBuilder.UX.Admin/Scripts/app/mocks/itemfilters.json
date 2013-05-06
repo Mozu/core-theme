@@ -4,22 +4,6 @@
       "id": 1,
       "name": "All",
       "configuration": null
-    },
-	{
-	  "id": 2,
-	  "name": "Named Foster",
-	  "configuration": {
-		"property": "productName",
-		"value": "foster"
-		}
-	},
-	{
-	  "id": 3,
-	  "name": "Shared with Site 30003",
-	  "configuration": {
-		"property": "siteId",
-		"value": "30003"
-		}
-	}
+    }
   ]
 }
