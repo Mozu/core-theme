@@ -27,7 +27,8 @@ Ext.define('Taco.view.product.subform.Properties', {
                     value:(values &&values.length)? values[0]:null,
                     width: '100%',
                     rows: 12,
-                    resizable: true
+                    resizable: true,
+                    resizeHandles: 's'
                 }];
             },
             'YesNo': function (ptAttribute,values) {
