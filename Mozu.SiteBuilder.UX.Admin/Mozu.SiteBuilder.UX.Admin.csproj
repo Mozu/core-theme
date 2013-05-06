@@ -575,9 +575,9 @@
     <Content Include="Configs\AppSettings.SI.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="PostDeploy.ps1" />
-    <Content Include="PreDeploy.ps1" />
     <Content Include="Configs\AppSettings.Prod.config" />
+    <Content Include="PreDeploy.ps1" />
+    <Content Include="PostDeploy.ps1" />
     <None Include="Scripts\app\mocks\behaviors.json" />
     <Content Include="Scripts\app\model\Attribute.js" />
     <Content Include="Scripts\app\model\AttributeValue.js" />
