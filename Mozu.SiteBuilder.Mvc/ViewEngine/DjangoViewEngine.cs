@@ -6,6 +6,7 @@
 
 using Autofac;
 using Autofac.Integration.Mvc;
+using Mozu.SiteBuilder.Mvc.Themes;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
@@ -150,10 +151,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
 
 
-        IEnumerable<string> GetViewVariants(string view, string themeId, ICollection<string> themes)
+        IEnumerable<string> GetViewVariants(string view, Theme theme)
         {
             yield return view;
-            if (themes.Count == 1 || !themeId.Equals(themes.First(), StringComparison.OrdinalIgnoreCase))
+
+            
+            if ( theme.EnableCoreVaraints.GetValueOrDefault(false ) )
             {
                 var pos = view.LastIndexOf('/');
                 if (pos > -1 && pos + 1 < view.Length)
@@ -169,11 +172,11 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         }
 
-        private ICollection<string>  _themeStack;
-        public ICollection<string> ThemeStack
+       // private ICollection<Theme>  _themeStack;
+        public ICollection<Theme > ThemeStack
         {
-            get { return _themeStack ?? _siteBuilderContext.Theme.Stack; }
-            set { _themeStack = value; }
+            get { return _siteBuilderContext.Theme.Stack; }
+            
         }
 
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
@@ -240,7 +243,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             {
                 foreach (var theme in sbCtx.Theme.Stack)
                 {
-                    foreach (var rp in GetViewVariants(relPath, theme, sbCtx.Theme.Stack))
+                    foreach (var rp in GetViewVariants(relPath, theme))
                     {
                         string vpath = string.Format(format, rp, null, theme, null);
                         //       searchedLocations.Add(vpath);

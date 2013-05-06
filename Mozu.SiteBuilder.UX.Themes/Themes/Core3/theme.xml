@@ -5,4 +5,8 @@
   <extends></extends>
   <isDesktop>true</isDesktop>
   <isMobile>false</isMobile>
+  
+  <!-- only set to true for core themes -->
+  <enableCoreVaraints>true</enableCoreVaraints>
+  
 </theme>

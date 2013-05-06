@@ -51,40 +51,52 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         public Theme Parent { get; set; }
 
+
+
+        /// <summary>
+        /// Interpret Under Scores
+        /// </summary>
+        public bool? EnableCoreVaraints  { get; set; }
+
         /// <summary>
         /// Contains the thumbnail for this theme or null.
         /// </summary>
         public Thumbnail Thumbnail { get; set; }
 
-        /// <summary>
-        /// Returns a complete theme inheritance stack with this theme as the first.
-        /// For legacy reasons, this property actually returns the theme names.
-        /// </summary>
-        public ICollection<string> Stack { 
-            get {
-                return StackT.Select(t => t.Id ).ToArray();
-            }
-        }
+        ///// <summary>
+        ///// Returns a complete theme inheritance stack with this theme as the first.
+        ///// For legacy reasons, this property actually returns the theme names.
+        ///// </summary>
+        //public ICollection<Theme > Stack { 
+        //    get {
+        //        return StackT;
+        //    }
+        //}
 
+        private LinkedList<Theme> _themStack;
         /// <summary>
         /// Returns a complete theme inheritance stack with this theme as the first.
         /// </summary>
-        public ICollection<Theme> StackT
+        public ICollection<Theme> Stack
         {
             get
             {
-                LinkedList<Theme> stack = new LinkedList<Theme>(new [] { this });
-
-                Theme parent = this.Parent;
-                while (parent != null)
+                if (_themStack == null)
                 {
-                    stack.AddLast(parent);
+                    LinkedList<Theme> stack = new LinkedList<Theme>(new[] { this });
 
-                    // we call this next line a parent trap
-                    parent = parent.Parent;
+                    Theme parent = this.Parent;
+                    while (parent != null)
+                    {
+                        stack.AddLast(parent);
+
+                        // we call this next line a parent trap
+                        parent = parent.Parent;
+                    }
+                    _themStack = stack;
                 }
 
-                return stack;
+                return _themStack;
             }
         }
 
