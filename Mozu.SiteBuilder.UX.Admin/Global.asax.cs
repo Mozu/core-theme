@@ -68,6 +68,9 @@ namespace Mozu.SiteBuilder.UX.Admin
 
             RouteTable.Routes.IgnoreRoute("scripts/{*.pathInfo}");
 
+            RouteTable.Routes.MapRoute("authticket", "auth/ticket",
+                new { action = "LoginTicket", controller = "auth" });
+
             RouteTable.Routes.MapRoute("auth", "auth/{action}",
                 new { action = "Index", controller = "auth" });
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
@@ -117,6 +118,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
                 return View("Index");
             }
+        }
+
+        /// <summary>
+        /// POST /auth/ticket
+        /// </summary>
+        [HttpPost]
+        public async Task<ActionResult> LoginTicket(string ticket, int tenantId, string redirectUrl = null)
+        {
+            _authenticationHelper.SetCurrentUser(ticket);
+
+            ActionResult res = await ChangeTenant(tenantId, redirectUrl);
+
+            return res;
         }
 
         public ActionResult ForgotPassword()
@@ -236,18 +250,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                        };
         }
 
-        public async Task<ActionResult> ChangeTenant(int id)
+        public async Task<ActionResult> ChangeTenant(int id, string redirectUrl = null)
         {
+            string url = String.IsNullOrEmpty(redirectUrl) ? "admin" : "admin/" + Regex.Replace(redirectUrl, "^/?admin/", "").TrimStart('/');
+
             var tenant = await _contextSwitcher.ChangeTenant(id);
             if (tenant != null)
             {
                 if (_settings.AppSettings("useTenantDomainNames") == "true")
                 {
-                    return Redirect(string.Format("http://{0}/admin", tenant.Domain.DomainName));
+                    return Redirect(string.Format("http://{0}/{1}", tenant.Domain.DomainName, url));
                 }
                 else
                 {
-                    return Redirect("/admin");
+                    return Redirect("/" + url);
                 }
               
             }

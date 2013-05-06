@@ -37,6 +37,16 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         /// <summary>
+        /// GET: /Misc/Testing/Ticket
+        /// A place to test the auth ticket login system.
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Ticket()
+        {
+            return View();
+        }
+
+        /// <summary>
         /// Returns a hyperlinked list of all available sites.
         /// GET: /Misc/Testing/SiteList
         /// </summary>
