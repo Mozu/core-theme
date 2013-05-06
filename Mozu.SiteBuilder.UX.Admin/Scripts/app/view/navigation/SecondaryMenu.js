@@ -4,6 +4,7 @@
     Ext.define('Taco.view.navigation.SecondaryMenu', {
         extend: 'Ext.container.Container',
         alias: 'widget.secondarymenu',
+        requires: ['Taco.core.ux.action.Button'],
 
         layout: {
             type: 'hbox',
@@ -16,48 +17,23 @@
             var me = this;
 
             this.items = [{
-                xtype: 'action',
+                xtype: 'taco.button',
+                autoEl: 'a',
                 text: Taco.User.name || Taco.User.email || '[user]',
-                click: function (item) {
-                    var modal = Ext.create('Taco.core.ux.modal.Mini', {
-                        target: this,
-                        autoShow: true,
-                        height:120,
-                        items: [{
-                            xtype: 'boundlist',
-                            displayField:'name',
-                            store: Ext.create('Ext.data.ArrayStore', {
-                                fields: ['id','name','url','intraNav'],
-                                data: [
-                                    [0, 'My Account', '/admin/account', true],
-                                    //[1, 'Launch Pad', '/admin/auth/Launchpad', false],
-                                    [2, 'Log Out', '/admin/auth/logout', false]
-                                ]
-                            }),
-                            listeners: {
-                                //beforerender: function(view) {
-                                //    var item;
-
-                                //    if (Taco.app.context.isSingleSite()) {
-                                //        item = view.store.getById(1);
-                                //        if (item) {
-                                //            view.store.remove(item);
-                                //        }
-                                //    }
-                                //},
-                                itemclick: function (view, record) {
-                                    if ( record.get('intraNav')) {
-                                        Taco.core.StateManager.attemptNavigate(record.get('url'));
-                                    } else {
-                                        window.location.href = record.get('url');
-                                    }
-                                    modal.hide();
-                                }
-                            }
-                        }]
-                    });
-                },
-                scope: this
+                menu: {
+                    plain: true,
+                    items: [{
+                        text: 'My Account',
+                        href: '/admin/account',
+                        padding: '4 8',
+                        plain: true
+                    }, {
+                        text: 'Log Out',
+                        href: '/admin/auth/logout',
+                        padding: '4 8',
+                        plain: true
+                    }]
+                }
             }, {
                 xtype: 'action',
                 text: 'Help',
