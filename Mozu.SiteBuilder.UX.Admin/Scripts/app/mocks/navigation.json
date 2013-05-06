@@ -50,7 +50,7 @@
 }, {
     "id": "marketing",
     "label": "Marketing",
-    "address": "email",
+    "address": "discounts",
     "icon": "marketing",
     "items": [{
         "id": "discounts",
@@ -59,11 +59,11 @@
     }, {
         "id": "promotions",
         "label": "Promotions",
-        "address": "email"
+        "address": "promotions"
     }, {
         "id": "campaigns",
         "label": "Campaigns",
-        "address": "email"
+        "address": "campaings"
     }]
 }, {
     "id": "settings",
