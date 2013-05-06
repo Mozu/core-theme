@@ -19,15 +19,15 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
             }
         });
 
-        this.items=[this.view];
+        this.items= [this.view];
 
         this.callParent(arguments);
     },
 
     initializeWidgetDragZone: function () {
-        
-        var me = this, config, es,  config;
-        es = Taco.app.viewPort.down('editsurface');
+        var me = this,
+            es = Taco.app.viewPort.down('editsurface'),
+            config;
 
         this.dragZoneConfig = {
             onBeforeDrag: function () {
@@ -44,9 +44,9 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
         config = Ext.apply(this.dragZoneConfig, {
             view: me.view
         });
+        
         this.dragZone = Ext.create('Taco.view.site.page.WidgetDragZone', this.view.getEl(), config);
 
         //this.fireEvent('dragzoneready', this.dragZone);
     }
 });
-

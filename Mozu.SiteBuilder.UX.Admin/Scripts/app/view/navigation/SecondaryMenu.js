@@ -25,13 +25,11 @@
                     items: [{
                         text: 'My Account',
                         href: '/admin/account',
-                        padding: '4 8',
-                        plain: true
+                        padding: '4 8'
                     }, {
                         text: 'Log Out',
                         href: '/admin/auth/logout',
-                        padding: '4 8',
-                        plain: true
+                        padding: '4 8'
                     }]
                 }
             }, {
@@ -49,4 +47,3 @@
             this.callParent(arguments);
         }
     });
-
