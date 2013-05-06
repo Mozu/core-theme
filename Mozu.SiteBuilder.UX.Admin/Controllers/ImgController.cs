@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Mozu.Content.Contracts.Clients;
@@ -125,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             return ImageCodecInfo.GetImageEncoders().FirstOrDefault(t => t.MimeType == mimeType);
         }
-
+        //todo: change as task
         Tuple<string,Stream > GetFromFSCache(string collection, string documentId)
         {
             byte[] header = new byte[100];
@@ -168,8 +169,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             return GetFromFSCache(collection, documentId);
             
         }
-
-        public ActionResult Index(string collection, string documentId, int size = 0, int max = 0)
+        //todo make async  test mutex carefully 
+        public  ActionResult Index(string collection, string documentId, int size = 0, int max = 0)
         {
 
             try
@@ -187,11 +188,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                         {
                             mutex = null;
                         }
-                        tpl = GetFromFSCache(collection, documentId);
+                        tpl =  GetFromFSCache(collection, documentId);
                         if (tpl == null)
                         {
-                            var content = _docRepo.GetDocumentContent(collection, documentId).Result.ResponseMessage.Content;
-                            tpl = AddToFSCache(collection, documentId, content);
+                            var docContextRes = _docRepo.GetDocumentContent(collection, documentId).Result;
+                            if (docContextRes.ResponseMessage.IsSuccessStatusCode)
+                            {
+                                tpl = AddToFSCache(collection, documentId, docContextRes.ResponseMessage.Content);
+                            }
+                            else
+                            {
+                                return Redirect("http://www.petsonline.com.my/includes/tng/styles/img_not_found.gif");
+                            }
+                           // var content = _docRepo.GetDocumentContent(collection, documentId).Result.ResponseMessage.Content;
+                            
                         }
 
                     }
@@ -233,7 +243,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex);
-                return RedirectPermanent("http://www.petsonline.com.my/includes/tng/styles/img_not_found.gif");
+                return Redirect("http://www.petsonline.com.my/includes/tng/styles/img_not_found.gif");
             }
 
         }
