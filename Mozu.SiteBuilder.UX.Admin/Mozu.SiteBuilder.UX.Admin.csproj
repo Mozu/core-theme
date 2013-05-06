@@ -576,8 +576,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Configs\AppSettings.Prod.config" />
-    <Content Include="PreDeploy.ps1" />
-    <Content Include="PostDeploy.ps1" />
     <None Include="Scripts\app\mocks\behaviors.json" />
     <Content Include="Scripts\app\model\Attribute.js" />
     <Content Include="Scripts\app\model\AttributeValue.js" />
@@ -2974,6 +2972,9 @@
       <Project>{FE9DA6F5-3477-48A3-8314-572CE5C308FB}</Project>
       <Name>Mozu.SiteBuilder.UX.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
