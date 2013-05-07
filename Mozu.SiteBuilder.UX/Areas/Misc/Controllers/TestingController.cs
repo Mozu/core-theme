@@ -75,9 +75,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             this.SiteContext.TenantId = site.TenantId;
             this.SiteContext.SiteGroupId = site.SiteGroupId;
             this.SiteContext.Save();
-            ;
 
-            string domainPriority = "Primary";
+            string domainPriority = System.Configuration.ConfigurationManager.AppSettings["gositeDomainPriority"];
             IEnumerable<Domain> domainList;
             switch (domainPriority)
             {
@@ -85,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     domainList = site.Domains.OrderBy(s => s.IsPrimary);
                     break;
                 case "Staging":
-                    domainList = site.Domains.OrderBy(s => /*s.IsStaging*/ s.IsPrimary);
+                    domainList = site.Domains.OrderBy(s => /*s.IsStaging*/ !s.IsPrimary);
                     break;
                 default:
                     domainList = site.Domains;
@@ -93,8 +92,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
 
 
-            string newHostname = domainList.Select(x => "http://"+ x.DomainName).FirstOrDefault();
-            bool doHostnameRedirect = _settings.AppSettings("EnableDomainRedirects") =="true" && !String.IsNullOrEmpty(newHostname);
+            
+            string newHostname = (domainList.FirstOrDefault() ?? new Domain { DomainName = null }).DomainName;
+            bool doHostnameRedirect = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["gositeRedirectsHostname"]) && !String.IsNullOrEmpty(newHostname);
             
             if (!String.IsNullOrEmpty(redir))
             {
@@ -102,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                 if (doHostnameRedirect)
                 {
-                    redirUrl = newHostname + "/" + redirUrl;
+                    redirUrl = "http://" + newHostname + "/" + redirUrl;
                 }
                 else
                 {
@@ -114,7 +114,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
             else
             {
-                string redirUrl = doHostnameRedirect ? newHostname : "~/";
+                string redirUrl = doHostnameRedirect ? "http://" + newHostname : "~/";
                 return new RedirectResult(redirUrl);
             }
         }
