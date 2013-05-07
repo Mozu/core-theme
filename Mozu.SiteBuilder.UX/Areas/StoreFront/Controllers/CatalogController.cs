@@ -115,7 +115,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
             this.SiteContext.PageContext.PageType = "category";
             SiteContext.PageContext.CategoryId = "0";
-            cat.ChildrenCategories = Mapper.Map<List<ProductRuntime.Contracts.Category>>(catList.Where(x => x.ParentCategory == null).ToList());
+            cat.ChildrenCategories = catList.Where(x => x.ParentCategory == null).ToList();
             return View("Category", cat);
         }
 
@@ -180,7 +180,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                            }
 
             };
-            cat.ChildrenCategories = Mapper.Map<List<Mozu.ProductRuntime.Contracts.Category >>(catList.Where (x => x.ParentCategoryId.GetValueOrDefault (-1) == categoryId).ToList())
+          
             ;
 
             SetCatalogContext(cat);
