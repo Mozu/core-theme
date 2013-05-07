@@ -524,13 +524,15 @@
     <Content Include="Scripts\app\core\context\TaContext.js" />
     <Content Include="Scripts\app\core\util\GetsParentPage.js" />
     <Content Include="Scripts\app\core\ux\action\SecondarySplitButton.js" />
-    <Content Include="Scripts\app\core\ux\action\SplitButton.js" />    <Content Include="Scripts\app\core\ux\action\Button.js" />
+    <Content Include="Scripts\app\core\ux\action\SplitButton.js" />
+    <Content Include="Scripts\app\core\ux\action\Button.js" />
     <Content Include="Scripts\app\core\ux\action\PrimarySplitButton.js" />
     <Content Include="Scripts\app\core\ux\browser\Browsable.js" />
     <Content Include="Scripts\app\core\ux\browser\Modal.js" />
     <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\browser\FilterList.js" />
+    <Content Include="Scripts\app\core\ux\GroupedView.js" />
     <Content Include="Scripts\app\core\ux\modal\SidebarModal.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
     <Content Include="Scripts\app\core\ux\TabBar.js" />
