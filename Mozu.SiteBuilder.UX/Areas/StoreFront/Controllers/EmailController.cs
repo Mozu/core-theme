@@ -131,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (res is HttpNotFoundResult)
             {
                 var reqDoc = new Mvc.Models.CMS.Admin.Document(){
-                      CollectionName = "email",
+                      DocumentListName = "email",
                       DocumentType = "email",
                       Name = emailTempalte ,
                       Items = new List<VM.Admin.DocumentProperty>()

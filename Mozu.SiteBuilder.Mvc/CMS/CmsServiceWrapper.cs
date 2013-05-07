@@ -172,7 +172,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 return null;
             }
 
-            var d = _docRepo.Get(doc.CollectionName, doc.DocumentId, null, "draft").Result.ReadAsSync();
+            var d = _docRepo.Get(doc.DocumentListName, doc.DocumentId, null, "draft").Result.ReadAsSync();
             // d.PublishState = CmsConstants.Documents.doc_state_active;
             foreach (var item in doc.Items)
             {
@@ -199,7 +199,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 }
             }
 
-            return _docRepo.Update(doc.CollectionName, doc.DocumentId, d);
+            return _docRepo.Update(doc.DocumentListName, doc.DocumentId, d);
         }
 
         private DC.PropertyValue ToPropertyValue(AVM.DocumentProperty inProperty, DC.PropertyValue outProperty = null)

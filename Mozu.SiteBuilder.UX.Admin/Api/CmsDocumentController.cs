@@ -114,9 +114,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             doc.DocumentType = result.DocumentType;
                         
             doc.Items = new List<AVM.DocumentProperty>();
-            doc.CollectionName = result.DocumentListName  ;
+            doc.DocumentListName = result.DocumentListName  ;
             doc.Name = result.Name;
-            doc.Id = doc.CollectionName + "_" + doc.DocumentId;
+            doc.Id = doc.DocumentListName + "_" + doc.DocumentId;
             foreach (var prop in result.Properties)
             {
                 doc.Items.Add(new AVM.DocumentProperty

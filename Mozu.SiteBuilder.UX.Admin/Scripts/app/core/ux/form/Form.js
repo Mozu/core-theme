@@ -147,7 +147,10 @@ Ext.define('Taco.core.ux.form.Form', {
         this.validateModel();
 
         this.saveTasks.on({
-            complete: function () {
+            complete: function (tasks) {
+                if (!tasks.complete) {
+                    return;
+                }
                 this.resetOriginalValues();
                 Ext.defer(function() {
                     this.fireEvent('savesuccess', this);
@@ -178,7 +181,7 @@ Ext.define('Taco.core.ux.form.Form', {
                 j = 0,
                 len = fields.length,
                 dlen,
-                dict = Ext.clone(record.get(fieldName)),
+                dict = Ext.clone(record.get(fieldName)||[]),
                 dictTuple,
                 existing,
                 name;
@@ -217,7 +220,8 @@ Ext.define('Taco.core.ux.form.Form', {
         };
     },
 
-    resetOriginalValues: function () {
+    resetOriginalValues: function (tasks) {
+        
         Ext.each(this.forms, function (form) {
             form.resetOriginalValues();
         });

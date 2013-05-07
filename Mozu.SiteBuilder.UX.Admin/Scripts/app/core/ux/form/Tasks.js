@@ -98,7 +98,7 @@
                             Taco.app.fireEvent('setmessage', 'store sync failed', 'error');
                         }
                         console.log('syncstore - failure');
-                        chain.callback(false);
+                        tasks.callback(true);
                     }
                 });
             };
@@ -200,7 +200,7 @@
     doFinalCallback: function () {
         console.log('final callback');
         this.complete = true;
-        this.fireEvent('complete');
+        this.fireEvent('complete', this);
         this.tasks.clear();
         if (!this.finalCallback) {
             return;

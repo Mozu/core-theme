@@ -578,6 +578,7 @@
     <Content Include="Themes\Core3\Modules\_CheckoutCouponCodeField.vol" />
     <Content Include="Themes\Core3\Modules\_CheckoutCommentsField.vol" />
     <Content Include="Morrissey\README.md" />
+    <Content Include="Themes\Core3\MetaData\PageTypes\catalog\category\definition.json" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
