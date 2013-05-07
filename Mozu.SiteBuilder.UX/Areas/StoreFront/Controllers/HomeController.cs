@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             SiteContext.PageContext.CmsContext= new CmsPageContext()
                                                     {
                                                         Initialized=false,
-                                                        TemplateReq = new DocumentRequest()
+                                                        Template = new DocumentRequest()
                                                                           {
                                                                               Collection ="templates",
                                                                               Path="index"
@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             SiteContext.PageContext.CmsContext = new CmsPageContext()
             {
                 Initialized = false,
-                TemplateReq = new DocumentRequest()
+                Template = new DocumentRequest()
                 {
                     Collection = "templates",
                     Path = "404"

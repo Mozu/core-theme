@@ -37,60 +37,66 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         public System.IO.TextReader GetTemplate(string path)
         {
-            var vpath = path;
-            if (path.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1)
+            
+            if (!Path.IsPathRooted(path))
             {
-                vpath = "layouts/" + path;
-            }
-            if (Path.GetExtension(vpath) == "")
-            {
-                vpath += ".vol";
-            }
+                var vpath = path;
+                if (path.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1)
+                {
+                    vpath = "layouts/" + path;
+                }
+                if (Path.GetExtension(vpath) == "")
+                {
+                    vpath += ".vol";
+                }
 
-            var file = this.PathProvider.GetFile(vpath);
-            if (file == null)
-            {
-                throw new InvalidOperationException(string.Format("invalid virtual path [{0}]", vpath));
+                var vFile=  this.PathProvider.GetFile(vpath);
+                if (vFile == null)
+                {
+                    throw new InvalidOperationException(string.Format("invalid virtual path [{0}]", vpath));
+                }
+                return  new StreamReader( vFile.Open());
             }
-            return new StreamReader(file.Open());
+            return new StreamReader(path);
         }
 
         public bool IsUpdated(string path, DateTime timestamp)
         {
-            // var vpath = path.StartsWith("~/themes/") ? path : GetLayoutPath(path);
-            if (path.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1)
+            if (!Path.IsPathRooted(path))
             {
-                path = "layouts/" + path;
+                if (path.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1)
+                {
+                    path = "layouts/" + path;
+                }
+                if (Path.GetExtension(path) == "")
+                {
+                    path += ".vol";
+                }
+                var file = (MozuVirtualFile)this.PathProvider.GetFile(path);
+                return file.GetLastWriteTime() > timestamp;
+
+             
             }
-            if (Path.GetExtension(path) == "")
-            {
-                path += ".vol";
-            }
-            MozuVirtualFile file = (MozuVirtualFile)this.PathProvider.GetFile(path);
-            return file.GetLastWriteTime() > timestamp;
+            
+            return System.IO.File.GetLastWriteTime(path) > timestamp;
         }
     }
 
 
-    public class DjangoMozuViewEngine : VirtualPathProviderViewEngine, NDjango.Interfaces.ITemplateLoader
+    public class DjangoMozuViewEngine : VirtualPathProviderViewEngine
     {
-        //public DjangoMozuViewEngine()
-        //{
-        //    this.TemplateManagerProvider = new NDjango.TemplateManagerProvider().WithLoader(this);
-        //}
+        
 
         private ITemplateManager _templateManager;
-        private ISiteBuilderContext _siteBuilderContext;
-        public DjangoMozuViewEngine( ITemplateManager templateManager , MozuVirtualPathProvider  mozuVirtualPathProvider, ISiteBuilderContext siteBuilderContext  )
+     
+        public DjangoMozuViewEngine( ITemplateManager templateManager , MozuVirtualPathProvider  mozuVirtualPathProvider )
            
     {
             _templateManager = templateManager;
-            _siteBuilderContext = siteBuilderContext;
          
 
             this.VirtualPathProvider = mozuVirtualPathProvider;
-          //  this.TemplateManger = this.TemplateManagerProvider.GetNewManager();
-            //server = HttpContext.Current.Server;
+          
         }
 
 
@@ -172,13 +178,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         }
 
-       // private ICollection<Theme>  _themeStack;
-        public ICollection<Theme > ThemeStack
-        {
-            get { return _siteBuilderContext.Theme.Stack; }
-            
-        }
-
+        
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
             string area = controllerContext == null ? null : AreaHelpers.GetAreaName(controllerContext.RouteData);
@@ -188,14 +188,14 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         public ViewEngineResult FindViewInternal(ControllerContext controllerContext, string viewName, string masterName, bool useCache, string area, string[] formats)
         {
-
+            var sbc = SiteBuilderContext.GetFromContext(controllerContext.HttpContext);
             string controller = controllerContext == null ? null : controllerContext.RouteData.GetRequiredString("controller");
-
+            var themeStack = sbc.Theme.Stack;
             string key = null;
             if (useCache)
             {
 
-                key = controller + ";" + viewName + ";" + area + ";" + string.Join(";", ThemeStack);
+                key = controller + ";" + viewName + ";" + area + ";" + sbc.Theme.Id;
 
                 string val = (string)System.Runtime.Caching.MemoryCache.Default[key];
                 if (!string.IsNullOrEmpty(val))
@@ -236,55 +236,15 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         string GetLayoutPath(string relPath)
         {
-            var sbCtx = SiteBuilderContext.Current;
-            //   List<string> searchedLocations = new List<string>();
-
-            foreach (var format in g_layout_formats)
+            var res =(MozuVirtualFileSystemFile ) this.VirtualPathProvider.GetFile(relPath);
+            if (res.Exists)
             {
-                foreach (var theme in sbCtx.Theme.Stack)
-                {
-                    foreach (var rp in GetViewVariants(relPath, theme))
-                    {
-                        string vpath = string.Format(format, rp, null, theme, null);
-                        //       searchedLocations.Add(vpath);
-                        if (this.FileExists(null, vpath))
-                        {
-                            return vpath;
-                        }
-                    }
-
-                }
+                return res.MappedPath;
             }
             return null;
+          
         }
 
-
-
-
-        //public NDjango.TemplateManagerProvider TemplateManagerProvider
-        //{
-        //    get;
-        //    private set;
-        //}
-        ////HttpServerUtility server;
-        //public IEnumerable<KeyValuePair<string, ITag>> InstalledTags
-        //{
-        //    get
-        //    {
-        //        object tags = this.TemplateManagerProvider.GetType().GetField("tags", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField).GetValue(this.TemplateManagerProvider);
-
-        //        return (IEnumerable<KeyValuePair<string, ITag>>)tags;
-        //    }
-        //}
-        //public IEnumerable<KeyValuePair<string, ISimpleFilter>> InstalledFilters
-        //{
-        //    get
-        //    {
-        //        object tags = this.TemplateManagerProvider.GetType().GetField("filters", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField).GetValue(this.TemplateManagerProvider);
-
-        //        return (IEnumerable<KeyValuePair<string, ISimpleFilter>>)tags;
-        //    }
-        //}
 
         
         public ITemplateManager TemplateManger
@@ -305,7 +265,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
-            return new DjangoMozuView(TemplateManger, _siteBuilderContext,viewPath);
+            var fp = GetLayoutPath(viewPath);
+            return new DjangoMozuView(TemplateManger, viewPath, fp);
         }
 
 
@@ -321,44 +282,6 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
 
 
-        #region ITemplateLoader Members
-
-        public System.IO.TextReader GetTemplate(string path)
-        {
-            var vpath = path;
-            if (path.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1)
-            {
-                vpath = "layouts/" + path;
-            }
-            if (Path.GetExtension(vpath) == "")
-            {
-                vpath += ".vol";
-            }
-
-            var file = this.VirtualPathProvider.GetFile(vpath);
-            if (file == null)
-            {
-                throw new InvalidOperationException(string.Format("invalid virtual path [{0}]", vpath));
-            }
-            return new StreamReader(file.Open());
-        }
-
-        public bool IsUpdated(string path, DateTime timestamp)
-        {
-            // var vpath = path.StartsWith("~/themes/") ? path : GetLayoutPath(path);
-            if (path.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1)
-            {
-                path = "layouts/" + path;
-            }
-            if (Path.GetExtension(path) == "")
-            {
-                path += ".vol";
-            }
-            MozuVirtualFile file = (MozuVirtualFile)this.VirtualPathProvider.GetFile(path);
-            return file.GetLastWriteTime() > timestamp;
-        }
-
-        #endregion
     }
 
 

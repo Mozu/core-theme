@@ -12,85 +12,14 @@ using Mozu.SiteBuilder.Mvc.Themes.Repositories;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
-    //public interface IMozuVirtualPathDataProvider
-    //{
-    //    Dictionary<string, string> Themes { get; }
-    //}
-
-    //class MozuVirtualPathDataProvider : IMozuVirtualPathDataProvider
-    //{
-    //    public MozuVirtualPathDataProvider(System.Collections.Specialized.NameValueCollection config = null)
-    //    {
-    //        _config = config ?? System.Configuration.ConfigurationManager.AppSettings;
-                
-    //        InitThemeLookup();
-    //    }
-    //    private readonly NameValueCollection _config;
-    //    private Dictionary<string, string> _themeLookup;
-    //    private System.Collections.Concurrent.ConcurrentDictionary<string, FileSystemWatcher> _fileSystemWatchers = new ConcurrentDictionary<string, FileSystemWatcher>(StringComparer.OrdinalIgnoreCase);
-
-    //    public Dictionary<string, string> Themes
-    //    {
-    //        get { return _themeLookup; }
-    //    }
-    //     void InitThemeLookup()
-    //    {
-
-    //        var tl = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-    //        var defThemeRoot = new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/";
-
-    //        var parentDirs = (_config["theme.dirs"] ?? string.Empty).Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-    //        parentDirs.Add(defThemeRoot);
-    //        var parentDirInfos = parentDirs.Select(x => new DirectoryInfo(x)).Where(x => x.Exists).ToList();
-    //        foreach (var parentDir in parentDirInfos)
-    //        {
-    //            foreach (var themeDir in parentDir.GetDirectories())
-    //            {
-    //                tl[themeDir.Name] = themeDir.FullName + "\\";
-    //            }
-    //            _fileSystemWatchers.GetOrAdd(parentDir.FullName, CreateWatcher);
-    //        }
-    //        this._themeLookup = tl;
-    //    }
-
-    //    void watcher_Changed(object sender, FileSystemEventArgs e)
-    //    {
-    //        this.InitThemeLookup();
-    //    }
-
-    //    private FileSystemWatcher CreateWatcher(string path)
-    //    {
-    //        var watcher = new FileSystemWatcher(path)
-    //        {
-
-    //        };
-    //        watcher.Changed += watcher_Changed;
-    //        watcher.Created += watcher_Changed;
-    //        watcher.Deleted += watcher_Changed;
-    //        watcher.EnableRaisingEvents = true;
-    //        return watcher;
-    //    }
-
-    //}
-    public class MozuVirtualPathProvider : VirtualPathProvider
+     public class MozuVirtualPathProvider : VirtualPathProvider
     {
-        //private readonly IMozuVirtualPathDataProvider _mozuVirtualPathDataProvider;
-       // private readonly IThemeMetaDataProvider _themeMetaDataProvider;
         private readonly IThemeRepository _themeRepository;
-        private readonly ISiteBuilderContext _siteBuilderContext;
+ 
 
-
-        //private DjangoMozuViewEngine _djangoMozuViewEngine;
-       
-        // List<Tuple<string,string>> _virtMap = new List<Tuple<string,string>>();
-        // string _themeRoot;
-
-
-        public MozuVirtualPathProvider(IThemeRepository themeRepository, ISiteBuilderContext siteBuilderContext)
+        public MozuVirtualPathProvider()
         {
             
-            _themeRepository = themeRepository;
-            _siteBuilderContext = siteBuilderContext;
         }
 
         //public IEnumerable<KeyValuePair<string, string>> Themes
@@ -103,14 +32,6 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
 
             var t = theme;
-            //var pathParts = virtualPath.Replace("\\","/").Split('/');
-            //if (pathParts.Length < 3)
-            //{
-            //    throw new InvalidOperationException(string.Format("invalid path [{0}]", virtualPath));
-            //}
-
-            //string theme = pathParts[2];
-            //{dev:name}
             return t.ThemePath +"\\"  + virtualPath;
 
 
@@ -119,11 +40,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         
 
-        //private ICollection<string> _themeStack;
         public ICollection<Theme> ThemeStack
         {
-            get { return (_siteBuilderContext ??SiteBuilderContext.Current ).Theme.Stack; }
-    //        set { _themeStack = value; }
+            get { return (SiteBuilderContext.Current ).Theme.Stack; }
         }
 
 

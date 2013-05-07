@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var pc = this.SiteContext.PageContext;
             pc.CmsContext = new CmsPageContext()
             {
-                TemplateReq = new DocumentRequest()
+                Template = new DocumentRequest()
                 {
                     Path = "cart"
                 }

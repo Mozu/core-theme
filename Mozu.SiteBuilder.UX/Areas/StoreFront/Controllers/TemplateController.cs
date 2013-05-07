@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             pc.CmsContext = new CmsPageContext()
             {
-                TemplateReq = new DocumentRequest()
+                Template = new DocumentRequest()
                                   {
                                     Path = pageType.Template     ,
                                     Collection="templates"
