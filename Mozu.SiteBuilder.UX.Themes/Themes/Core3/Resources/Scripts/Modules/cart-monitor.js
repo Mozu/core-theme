@@ -18,7 +18,11 @@
             }
         }
         function updateCartDetails(cartObject) {
-            $cartCount.text(cartObject.data.Items.length);
+            var sum = 0;
+            $.each(cartObject.data.Items, function (ix, item) {
+                sum += item.Quantity;
+            });
+            if (!isNaN(sum)) $cartCount.text(sum);
 
         }
         api.on('sync', checkForCartUpdates);
