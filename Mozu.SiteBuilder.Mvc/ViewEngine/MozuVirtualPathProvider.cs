@@ -14,15 +14,16 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
      public class MozuVirtualPathProvider : VirtualPathProvider
     {
-        private readonly IThemeRepository _themeRepository;
+         private readonly ISiteBuilderContext _siteBuilderContext;
+         //private readonly IThemeRepository _themeRepository;
  
 
-        public MozuVirtualPathProvider()
+        public MozuVirtualPathProvider(ISiteBuilderContext siteBuilderContext)
         {
-            
+            _siteBuilderContext = siteBuilderContext;
         }
 
-        //public IEnumerable<KeyValuePair<string, string>> Themes
+         //public IEnumerable<KeyValuePair<string, string>> Themes
         //{
         //    get { return _mozuVirtualPathDataProvider.Themes ; }
         //}
@@ -42,7 +43,16 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         public ICollection<Theme> ThemeStack
         {
-            get { return (SiteBuilderContext.Current ).Theme.Stack; }
+            get
+            {
+                
+                if (_siteBuilderContext.IsDisposed)
+                {
+                    throw new InvalidOperationException("irk");
+                }
+
+                return (_siteBuilderContext).Theme.Stack;
+            }
         }
 
 
@@ -156,11 +166,13 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         }
 
 
+         private const string HTTP_ITEMS_KEY = "MOZUVIRPATPROV";
 
-
-
-
-
+        internal void StoreInContext(HttpContextBase ctx)
+        {
+            ctx.Items[HTTP_ITEMS_KEY] = this;
+            
+        }
     }
 
     class MozuVirtualDirectory : System.Web.Hosting.VirtualDirectory

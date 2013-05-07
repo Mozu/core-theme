@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using Autofac.Integration.Mvc;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.ProductAdmin.Contracts.Clients;
@@ -32,9 +33,9 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
     {
         protected override void Load(ContainerBuilder builder)
         {
-            
 
-            builder.RegisterType<MozuVirtualPathProvider>();
+
+            builder.RegisterType<MozuVirtualPathProvider>().InstancePerHttpRequest();
          //   builder.RegisterType<WidgetProvider>().As<IWidgetProvider>();
             builder.RegisterType<Document>();
            // builder.RegisterType<WidgetInstanceData >();

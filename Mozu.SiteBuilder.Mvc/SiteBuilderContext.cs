@@ -18,6 +18,7 @@ using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
 using Mozu.SiteBuilder.Mvc.Themes.Repositories;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings;
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
@@ -46,7 +47,8 @@ namespace Mozu.SiteBuilder.Mvc
 	    private readonly IApiContext _apiContext;
 	    private readonly IGeneralSettingsWebApiClient _generalSettings;
 	    private readonly ISettings _configSettings;
-	    private readonly HttpContextBase _httpContext;
+	    private readonly ILifetimeScope _lifetimeScope;
+
 	    Lazy<ISettingsRepository> _settings;
 	    private readonly Lazy<ICatalogContext> _catContext;
         private readonly ICookieProvider _cookieProvider;
@@ -68,7 +70,7 @@ namespace Mozu.SiteBuilder.Mvc
         private Lazy<NavigationGandalf> _gandalf;
         private ICategoryTreeProvider _categoryTreeProvider;
 
-        public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, ICategoryTreeProvider categoryTreeProvider, Lazy<NavigationGandalf> gandalf, ISettings configSettings = null, HttpContextBase httpContext = null)
+        public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, ICategoryTreeProvider categoryTreeProvider, Lazy<NavigationGandalf> gandalf, ISettings configSettings = null, HttpContextBase httpContext = null, ILifetimeScope lifetimeScope= null)
 		{
 			PageContext = new PageContext();
            
@@ -82,13 +84,16 @@ namespace Mozu.SiteBuilder.Mvc
             _apiContext = apiContext;
 	        _generalSettings = generalSettings;
 	        _configSettings = configSettings;
-	        _httpContext = httpContext;
+            _lifetimeScope = lifetimeScope;
             _categoryTreeProvider = categoryTreeProvider;
             _gandalf = gandalf;
 
 	        this.SiteId = _apiContext.SiteId;
             this.TenantId = _apiContext.TenantId;
-	        httpContext.Items[CONTEXT_KEY] = this;
+            if (httpContext != null)
+            {
+                httpContext.Items[CONTEXT_KEY] = this;
+            }
             // attempt to look up theme by value of "SBTHEME".
             HttpCookie themeCookie = _cookieProvider.GetRequestCookie("SBTHEME");
             if (themeCookie != null && !string.IsNullOrEmpty(themeCookie.Value))
@@ -148,7 +153,10 @@ namespace Mozu.SiteBuilder.Mvc
                 return default(T);
             }
         }
-
+        public T Resolve<T>()
+        {
+            return _lifetimeScope.Resolve<T>();
+        }
 		public static ISiteBuilderContext Current
 		{
 			get
@@ -435,9 +443,13 @@ namespace Mozu.SiteBuilder.Mvc
             get { return _themeSettingsRepo.Value; }
         }
 
+
+
         public void Dispose()
         {
-
+            this.IsDisposed = true;
         }
+
+        public bool IsDisposed { get; set; }
     }
 }

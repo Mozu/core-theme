@@ -28,10 +28,11 @@ namespace Mozu.SiteBuilder.Mvc
         object this[string key] { get; set; }
         RuntimeConfigurationFieldCollection ThemeSettings { get;  }
         ISettingsRepository Settings { get; }
+        T Resolve<T>();
         void Save();
 
         IThemeSettingsRepository ThemeSettingsRepository { get; }
-
+        bool IsDisposed { get; }
         /// <summary>
         /// Returns true if the visitor is using a mobile device.
         /// </summary>
