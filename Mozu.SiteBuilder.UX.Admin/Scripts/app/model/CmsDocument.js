@@ -36,7 +36,8 @@ Ext.define('Taco.model.CmsDocument', {
         {
             "name": "documentId",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            defaultValue:null
         },
         {
             "name": "collectionName",
