@@ -3,25 +3,36 @@
  */
 Ext.define('Taco.view.site.navigation.WidgetNav', {
     extend: 'Ext.panel.Panel',
-    requires: ['Taco.store.WidgetDefinitions', 'Taco.view.site.page.WidgetDragZone'],
+    requires: ['Taco.store.WidgetDefinitions', 'Taco.view.site.page.WidgetDragZone', 'Taco.core.ux.GroupedView'],
 
     initComponent: function () {
-        this.view = Ext.create('Ext.view.View', {
-            flex: 1,
+        var store = Taco.core.data.StoreManager.getOrCreate('Taco.store.WidgetDefinitions');
+
+        store.group('category', 'ASC');
+
+        this.view = Ext.create('Taco.core.ux.GroupedView', {
             itemSelector: 'div.widget-source',
-            tpl: '<tpl for="."><div class="widget-source">{displayName}-{category}</div></tpl>',
-            store: Taco.core.data.StoreManager.getOrCreate('Taco.store.WidgetDefinitions'),
-            listeners: {
-                render: {
-                    fn: this.initializeWidgetDragZone,
-                    scope: this
-                }
-            }
+            store: store,
+            tpl: [
+                '<tpl for="groups">',
+                    '<div class="heading">{name}</div>',
+                    '<div class="items"><tpl for="children">',
+                        '<div class="widget-source">{[values.data.displayName]}</div>',
+                    '</tpl></div>',
+                '</tpl>'
+            ],
         });
 
         this.items= [this.view];
 
         this.callParent(arguments);
+
+        this.view.on({
+            render: {
+                fn: this.initializeWidgetDragZone,
+                scope: this
+            }
+        });
     },
 
     initializeWidgetDragZone: function () {
@@ -44,7 +55,7 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
         config = Ext.apply(this.dragZoneConfig, {
             view: me.view
         });
-        
+
         this.dragZone = Ext.create('Taco.view.site.page.WidgetDragZone', this.view.getEl(), config);
 
         //this.fireEvent('dragzoneready', this.dragZone);
