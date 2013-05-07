@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Web.Hosting;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Mozu.SiteBuilder.Mvc.Themes;
@@ -88,17 +89,20 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         
 
         private ITemplateManager _templateManager;
-     
+        private MozuVirtualPathProvider _mozuVirtualPathProvider;
         public DjangoMozuViewEngine( ITemplateManager templateManager , MozuVirtualPathProvider  mozuVirtualPathProvider )
            
     {
+            
             _templateManager = templateManager;
-         
 
+            _mozuVirtualPathProvider = mozuVirtualPathProvider;
             this.VirtualPathProvider = mozuVirtualPathProvider;
           
         }
 
+        
+ 
 
 
 
@@ -234,9 +238,10 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         }
 
 
-        string GetLayoutPath(string relPath)
+        string GetLayoutPath(ControllerContext ctx , string relPath )
         {
-            var res =(MozuVirtualFileSystemFile ) this.VirtualPathProvider.GetFile(relPath);
+            var res = (MozuVirtualFileSystemFile)this.GetPathProviderFromContext(ctx).GetFile(relPath);
+          //  var res =(MozuVirtualFileSystemFile ) this.VirtualPathProvider.GetFile(relPath);
             if (res.Exists)
             {
                 return res.MappedPath;
@@ -260,12 +265,17 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
         {
-            return base.FileExists(controllerContext, virtualPath);
+            
+            return GetPathProviderFromContext(controllerContext).FileExists(virtualPath);
+            return this.VirtualPathProvider.FileExists(virtualPath);
         }
-
+        MozuVirtualPathProvider GetPathProviderFromContext(ControllerContext controllerContext)
+        {
+            return SiteBuilderContext.GetFromContext(controllerContext.HttpContext).Resolve<MozuVirtualPathProvider>();
+        }
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
-            var fp = GetLayoutPath(viewPath);
+            var fp = GetLayoutPath(controllerContext,viewPath);
             return new DjangoMozuView(TemplateManger, viewPath, fp);
         }
 
