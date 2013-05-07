@@ -99,17 +99,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     case "site":
                         {
-                            wrd.Source = wrd.Context.SiteTemplateReq;
+                            wrd.Source = wrd.Context.SiteTemplate;
                             break;
                         }
                     case "template":
                         {
-                            wrd.Source = wrd.Context.TemplateReq;
+                            wrd.Source = wrd.Context.Template;
                             break;
                         }
                     default:
                         {
-                            wrd.Source = wrd.Context.PageReq;
+                            wrd.Source = wrd.Context.Page;
                             break;
                         }
                 }

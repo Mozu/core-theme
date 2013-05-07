@@ -23,10 +23,12 @@
                 menu: {
                     plain: true,
                     items: [{
+                        autoEl: 'a',
                         text: 'My Account',
                         href: '/admin/account',
                         padding: '4 8'
                     }, {
+                        autoEl: 'a',
                         text: 'Log Out',
                         href: '/admin/auth/logout',
                         padding: '4 8'

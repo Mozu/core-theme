@@ -20,6 +20,14 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
         return this.pageProps.pageContext.categoryId;
     },
 
+
+   getCmsPageDoc:function() {
+       //look or create in cmsDocs for *.pageContext.cms.pageDoc.Id
+       // create a doc add to cmsDocs... mark as only add if content
+       // add to cmsDocs
+       //return
+   }
+    ,
     getPageSettings: function () {
         var me = this;
         return [
@@ -32,7 +40,7 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
             {
                 panelCls: 'Taco.view.site.page.settings.Templates',
                 getRecord: function() {
-                    return me.get();
+                    return me.getCmsPageDoc();
                 }
             }, {
                 panelCls:  'Taco.view.site.page.settings.Seo',

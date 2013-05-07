@@ -19,13 +19,15 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
     {
     
         internal string viewPath;
+        private readonly string _mappedPath;
 
-        public DjangoMozuView(ITemplateManager manager, ISiteBuilderContext siteBuilderContext, string viewPath)
+        public DjangoMozuView(ITemplateManager manager, string viewPath, string mappedPath)
         {
             // TODO: Complete member initialization
             this.TemplateManager = manager;
       
             this.viewPath = viewPath;
+            _mappedPath = mappedPath;
         }
 
         public string ViewPath
@@ -74,7 +76,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             requestContext["PageContext"] = requestContext["pageContext"] = siteBuilderContext.PageContext;
             requestContext["User"] = requestContext["user"] = user;
 
-            var reader = TemplateManager.RenderTemplate(viewPath, requestContext);
+
+          //  this.
+          //  var result = ViewEngines.Engines.FindPartialView(_html.ViewContext.Controller.ControllerContext, viewPath);
+
+
+            var reader = TemplateManager.RenderTemplate(_mappedPath , requestContext);
             var buffer = new char[4096];
             int count = 0;
 
@@ -118,18 +125,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 }
             }
 
-            string GetVirtualPath()
-            {
-                var path = String.Join("/", _nameStack);
-                var result = ViewEngines.Engines.FindPartialView(_html.ViewContext.Controller.ControllerContext, path);
-                if (result.View != null)
-                {
-                    return ((DjangoMozuView)result.View).viewPath;
-                }
-                return path;
-
-            }
-
+          
             ITemplate InnerTemplate
             {
                 get
@@ -137,7 +133,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                     _templateCreated = true;
                     if (_innerTemplate == null)
                     {
-                        var path = this.GetVirtualPath();
+                        var path = String.Join("/", _nameStack);
+                       // var path = this.GetVirtualPath();
                         _innerTemplate = _templateManager.GetTemplate(path);
                     }
                     return _innerTemplate;

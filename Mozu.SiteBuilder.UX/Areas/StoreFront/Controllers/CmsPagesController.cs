@@ -90,7 +90,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             pc.CmsContext = new CmsPageContext()
             {
-                PageReq = new DocumentRequest(){
+                Page = new DocumentRequest(){
                     Path=pageName,
                     Collection = collection
                 } 
@@ -98,17 +98,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
             await this.AsyncInitData();
 
-            if (pc.CmsContext.Page  == null)
+            if (pc.CmsContext.Page.Document == null)
                 return new HttpNotFoundResult("not found");
 
-            var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page,
+            var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page.Document ,
                                                           opt => opt.ConstructServicesUsing(_lifetimeScope .Resolve ));
 
             SetNavigationContext(vm);
 
             //pc.WidgetCreationTags.Add(doc.ToWidgetStem());
             pc.CollectionId = collection;
-            pc.DocumentId = pc.CmsContext.Page.Id;
+            pc.DocumentId = pc.CmsContext.Page.Document.Id;
             pc.Title = vm.Properties.GetValue("title") as string;
             pc.MetaDescription = vm.Properties.GetValue("meta_description") as string;
             pc.MetaTitle = vm.Properties.GetValue("meta_title") as string;
@@ -119,13 +119,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (!this.SiteContext.IsEditMode   )
             {
-                if (pc.CmsContext.Page.Get<bool>("hidden", false))
+                if (pc.CmsContext.Page.Document.Get<bool>("hidden", false))
                 {
                     return new HttpNotFoundResult("not found");
                 }
                 string redir;
-                
-                if (pc.CmsContext.Page.TryGet<string>("redirect_url", out redir ) && !string.IsNullOrEmpty( redir ))
+
+                if (pc.CmsContext.Page.Document.TryGet<string>("redirect_url", out redir) && !string.IsNullOrEmpty(redir))
                 {
                     return this.Redirect(redir);
                 }

@@ -12,7 +12,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         public string Collection { get; set; }
         public string Path { get; set; }
         public string DocumentType { get; set; }
-    
+        public Mozu.Content.Contracts.Document Document { get; set; }
 
     }
 }

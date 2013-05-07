@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             SiteContext.PageContext.CmsContext = new CmsPageContext()
             {
-                TemplateReq = new DocumentRequest()
+                Template = new DocumentRequest()
                 {
                     Path = "product"
                 }
@@ -169,10 +169,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             SiteContext.PageContext.CmsContext = new CmsPageContext()
             {
-                TemplateReq = new DocumentRequest()
+                Template = new DocumentRequest()
                 {
                     Path = "category"
-                }
+                },
+                Page = new DocumentRequest()
+                           {
+                               Path ="Category-"+ categoryId 
+                           }
 
             };
             cat.ChildrenCategories = Mapper.Map<List<Mozu.ProductRuntime.Contracts.Category >>(catList.Where (x => x.ParentCategoryId.GetValueOrDefault (-1) == categoryId).ToList())

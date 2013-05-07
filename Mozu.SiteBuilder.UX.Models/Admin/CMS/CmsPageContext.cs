@@ -13,20 +13,22 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
     {
         public CmsPageContext()
         {
-            this.SiteTemplateReq= new DocumentRequest()
+            this.SiteTemplate= new DocumentRequest()
                                       {
                                           Collection="templates",
                                           Path="site/default"
                                       };
+            this.Page = new DocumentRequest();
+            this.Template = new DocumentRequest();
         }
-        [DataMember(Name = "pageDoc")]
-        public DocumentRequest PageReq { get; set; }
+        [DataMember(Name = "page")]
+        public DocumentRequest Page { get; set; }
 
-        [DataMember(Name = "templateDoc")]
-        public DocumentRequest TemplateReq { get; set; }
+        [DataMember(Name = "template")]
+        public DocumentRequest Template { get; set; }
 
-        [DataMember(Name = "siteDoc")]
-        public DocumentRequest SiteTemplateReq { get; set; }
+        [DataMember(Name = "site")]
+        public DocumentRequest SiteTemplate { get; set; }
 
         
         [IgnoreDataMember()]
@@ -40,13 +42,13 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         [IgnoreDataMember()]
         public bool Initialized { get; set; }
 
-        [IgnoreDataMember()]
-        public Mozu.Content.Contracts.Document Page { get; set; }
+        //[IgnoreDataMember()]
+        //public Mozu.Content.Contracts.Document Page { get; set; }
 
-        [IgnoreDataMember()]
-        public Mozu.Content.Contracts.Document Template { get; set; }
+        //[IgnoreDataMember()]
+        //public Mozu.Content.Contracts.Document Template { get; set; }
 
-        [IgnoreDataMember()]
-        public Mozu.Content.Contracts.Document SiteTemplate { get; set; }
+        //[IgnoreDataMember()]
+        //public Mozu.Content.Contracts.Document SiteTemplate { get; set; }
     }
 }
