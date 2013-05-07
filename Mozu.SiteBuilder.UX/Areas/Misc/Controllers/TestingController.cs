@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using System.Linq;
+using Mozu.Core.Settings;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -17,12 +18,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         ISitesWebApiClient _wsRepo;
         ITenantsWebApiClient _tRepo;
         ICookieProvider _cookies;
+        private readonly ISettings _settings;
 
-        public TestingController(ISitesWebApiClient  wsRepo, ITenantsWebApiClient tRepo, ICookieProvider cookies )
+        public TestingController(ISitesWebApiClient  wsRepo, ITenantsWebApiClient tRepo, ICookieProvider cookies, ISettings settings  )
         {
             _wsRepo = wsRepo;
             _tRepo = tRepo;
             _cookies = cookies;
+            _settings = settings;
             SuppressMissingContextRedirect = true;
         }
 
@@ -88,24 +91,31 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     domainList = site.Domains;
                     break;
             }
-                
 
-            string newHostname = (domainList.FirstOrDefault() ?? new Domain { DomainName = null }).DomainName;
-            bool doHostnameRedirect = false && !String.IsNullOrEmpty(newHostname);
+
+            string newHostname = domainList.Select(x => "http://"+ x.DomainName).FirstOrDefault();
+            bool doHostnameRedirect = _settings.AppSettings("EnableDomainRedirects") =="true" && !String.IsNullOrEmpty(newHostname);
             
             if (!String.IsNullOrEmpty(redir))
             {
                 string redirUrl = Uri.UnescapeDataString(redir).TrimStart('/');
 
                 if (doHostnameRedirect)
+                {
                     redirUrl = newHostname + "/" + redirUrl;
+                }
+                else
+                {
+                    redirUrl = "~/" + redirUrl;
+                }
+                    
 
                 return new RedirectResult(redirUrl);
             }
             else
             {
                 string redirUrl = doHostnameRedirect ? newHostname : "~/";
-                return new RedirectResult("~/");
+                return new RedirectResult(redirUrl);
             }
         }
 
