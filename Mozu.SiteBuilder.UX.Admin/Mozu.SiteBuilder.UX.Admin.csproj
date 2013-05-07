@@ -524,14 +524,14 @@
     <Content Include="Scripts\app\core\context\TaContext.js" />
     <Content Include="Scripts\app\core\util\GetsParentPage.js" />
     <Content Include="Scripts\app\core\ux\action\SecondarySplitButton.js" />
-    <Content Include="Scripts\app\core\ux\action\SplitButton.js" />
-    <Content Include="Scripts\app\core\ux\action\Button.js" />
+    <Content Include="Scripts\app\core\ux\action\SplitButton.js" />    <Content Include="Scripts\app\core\ux\action\Button.js" />
     <Content Include="Scripts\app\core\ux\action\PrimarySplitButton.js" />
     <Content Include="Scripts\app\core\ux\browser\Browsable.js" />
     <Content Include="Scripts\app\core\ux\browser\Modal.js" />
     <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\browser\FilterList.js" />
+    <Content Include="Scripts\app\core\ux\form\field\PageTemplate.js" />
     <Content Include="Scripts\app\core\ux\GroupedView.js" />
     <Content Include="Scripts\app\core\ux\modal\SidebarModal.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
@@ -606,6 +606,7 @@
     <Content Include="Scripts\app\store\ItemFilters.js" />
     <Content Include="Scripts\app\store\LocalizedStrings.js" />
     <Content Include="Scripts\app\store\Orders.js" />
+    <Content Include="Scripts\app\store\PageTypeDefinitions.js" />
     <Content Include="Scripts\app\store\ProductExtraListItems.js" />
     <Content Include="Scripts\app\store\RuntimeProductSearch.js" />
     <Content Include="Scripts\app\store\Attributes.js" />
@@ -670,6 +671,7 @@
     <Content Include="Scripts\app\view\option\Form.js" />
     <Content Include="Scripts\app\view\site\navigation\PageCreator.js" />
     <Content Include="Scripts\app\view\site\page\Form.js" />
+    <Content Include="Scripts\app\view\site\page\settings\CategoryTemplates.js" />
     <Content Include="Scripts\app\view\site\Toolbar.js" />
     <Content Include="Scripts\app\view\site\page\PageSettingsPanel.js" />
     <Content Include="Scripts\app\view\site\page\settings\Facets.js" />

@@ -46,6 +46,7 @@ Ext.define('Taco.model.CmsDocument', {
         {
             "name": "items",
             "type": "auto",
+            defaultValue:[],
             "useNull": true
         }
         

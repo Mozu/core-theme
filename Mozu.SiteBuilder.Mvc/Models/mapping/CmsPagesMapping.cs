@@ -50,10 +50,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             Mapper.CreateMap<VM.CmsProperty, DC.PropertyValue>();
             //Mapper.AssertConfigurationIsValid(this.ProfileName);
 
+           
+
+            //todo: reconsile fuck document id id and id ....
             Mapper.CreateMap<Mozu.Content.Contracts.Document, Mvc.Models.CMS.Admin.Document>()
                 .ForMember(x => x.Items, m => m.MapFrom(x => x.Properties));
             Mapper.CreateMap<Mvc.Models.CMS.Admin.Document, Mozu.Content.Contracts.Document>()
+                .ForMember(x => x.Id, opt => opt.MapFrom(_ => _.DocumentId))
                 .ForMember(x => x.Properties, m => m.MapFrom(x => x.Items));
+
+
 
             Mapper.CreateMap<Mozu.Content.Contracts.PropertyValue, Mvc.Models.CMS.Admin.DocumentProperty>()
                 .ForMember(x => x.Key, m => m.MapFrom(x => x.PropertyType));

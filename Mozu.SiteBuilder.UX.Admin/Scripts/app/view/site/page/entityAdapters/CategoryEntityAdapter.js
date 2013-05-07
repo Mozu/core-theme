@@ -3,6 +3,7 @@
  */
 Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
     extend: 'Taco.view.site.page.entityAdapters.BaseEntityAdapter',
+    requires:['Taco.view.site.page.settings.CategoryTemplates'],
     modelName:'Taco.model.Category',
 	allowedActions:{copy:false,preview:true,destroy:false},
     getStore:function(){
@@ -22,7 +23,6 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
 
 
    getCmsPageDoc:function() {
-       return me.get();
        var doc,
            me = this,
            pageReq = me.pageProps.pageContext.cms.page;
@@ -33,15 +33,21 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
            }
            return doc;
        } else {
-           doc = me.editor.cmsDocs.add([{
+           
+           doc = Taco.model.CmsDocument.create({
                name: pageReq.Path,
                documentType: 'catalog_page',
                collectionName: 'catalog_pages'
-           }])[0];
+           });
+           doc.on('afteredit', function(model) {
+               if (model.dirty) {
+                   me.editor.cmsDocs.add(model);
+               }
+           },this,{single :true} );
        }
        return doc;
-   }
-    ,
+   },
+    
     getPageSettings: function () {
         var me = this;
         return [
@@ -52,7 +58,8 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
                 }
             },
             {
-                panelCls: 'Taco.view.site.page.settings.Templates',
+                panelCls: 'Taco.view.site.page.settings.CategoryTemplates',
+                panelCfg:{},
                 getRecord: function() {
                     return me.getCmsPageDoc();
                 }

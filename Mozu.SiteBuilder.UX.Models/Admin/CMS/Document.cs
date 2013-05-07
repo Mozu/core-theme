@@ -19,13 +19,12 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
         public string DocumentId { get; set; }
 
         [DataMember(Name = "collectionName")]
-        public string CollectionName { get; set; }
+        public string DocumentListName { get; set; }
 
         [DataMember(Name = "publishState")]
         public string PublishState { get; set; }
 
-        [DataMember(Name = "contentCollection")]
-        public string ContentCollection { get; set; }
+     
 
         [DataMember(Name = "folderId")]
         public string FolderId { get; set; }
