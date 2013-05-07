@@ -51,8 +51,8 @@ namespace Mozu.SiteBuilder.Mvc
             TenantId = -1;
             _settings = settings;
             _authenticationHelper = authenticationHelper;
-
-            CmsDraftState = "active";
+            //todo:set back to active
+            CmsDraftState = "draft";// "active";
 
             Load(context, cookieProvider);
         }
@@ -89,7 +89,14 @@ namespace Mozu.SiteBuilder.Mvc
             if (req != null)
             {
                 if (req.QueryString["IsEditMode"] == "true")
+                {
                     CmsDraftState = "draft";
+                }
+                else if (req.QueryString["publishMode"] == "true")
+                {
+                    CmsDraftState = "active";
+                }
+                    
 
                 if (req.Headers.AllKeys.Any(x => x == Mozu.Core.Api.Contracts.Constants.Headers.TENANT))
                 {

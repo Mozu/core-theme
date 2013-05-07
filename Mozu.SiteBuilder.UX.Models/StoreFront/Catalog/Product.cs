@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         {
             get
             {
-
+                
                 var x = this.Price;
                 var y = this.PriceRange;
                 
@@ -33,7 +33,11 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
         [DataMember]
        public new ProductContent Content { get; set; }
-        
+
+
+        [DataMember(EmitDefaultValue = false, IsRequired = false)]
+        public new List<Category> Categories { get; set; }
+
     }
 
 
@@ -468,21 +472,43 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         
     }
     [DataContract]
-    public class Category:  Mozu.ProductRuntime.Contracts.Category
+    public class Category : Mozu.ProductRuntime.Contracts.Category
     {
+
+        public bool? ReadOnly;
+        private List<Category> _children;
+
+        [DataMember(EmitDefaultValue = false, Order = 4)]
+        public new List<Category> ChildrenCategories
+        {
+            get { return _children; }
+            set
+            {
+                if (ReadOnly.GetValueOrDefault(false))
+                {
+                    throw new NotImplementedException();
+                }
+                _children = value;
+            }
+        }
+
+        [IgnoreDataMember()]
         public int? Index
         {
             get { return this.Sequence; }
-            set { this.Sequence = value; }
+            set {  }
         }
+        [IgnoreDataMember()]
         public int? Id
         {
             get { return this.CategoryId; }
         }
+        [IgnoreDataMember()]
         public string Name
         {
             get { return this.Content == null ? null : this.Content.Name; }
         }
+        [DataMember(EmitDefaultValue = false, Order = 5)]
         public int? ParentCategoryId
         {
             get
@@ -492,7 +518,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
 
         [IgnoreDataMember()]
-        public new Category ParentCategory { get; set; }
+        public new  Category ParentCategory { get; set; }
     }
     public class ProductPrice2 : Mozu.ProductRuntime.Contracts.ProductPrice
     {
