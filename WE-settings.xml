@@ -21,7 +21,7 @@
     <CssValidateStarSelector>false</CssValidateStarSelector>
     <CssValidateZeroUnit>false</CssValidateZeroUnit>
     <EnableSpeedTyping>false</EnableSpeedTyping>
-    <HtmlEnableMustache>true</HtmlEnableMustache>
+    <HtmlEnableMustache>fakse</HtmlEnableMustache>
     <HtmlEnableZenCoding>true</HtmlEnableZenCoding>
     <JavaScriptAutoCloseBraces>true</JavaScriptAutoCloseBraces>
     <JavaScriptEnableMinification>false</JavaScriptEnableMinification>
@@ -94,9 +94,9 @@
     <LessGenerateCssFile>false</LessGenerateCssFile>
     <LessMinify>false</LessMinify>
     <LessShowPreviewWindow>true</LessShowPreviewWindow>
-    <MarkdownMargin_width>447</MarkdownMargin_width>
-    <ScssGenerateCssFile>True</ScssGenerateCssFile>
-    <ScssMinify>True</ScssMinify>
+    <MarkdownMargin_width>832</MarkdownMargin_width>
+    <ScssGenerateCssFile>False</ScssGenerateCssFile>
+    <ScssMinify>False</ScssMinify>
     <ScssShowPreviewWindow>True</ScssShowPreviewWindow>
     <TypeScriptAddGeneratedFilesToProject>true</TypeScriptAddGeneratedFilesToProject>
     <TypeScriptCompileES3>false</TypeScriptCompileES3>
