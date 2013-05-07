@@ -33,11 +33,11 @@
         &::before {
           content: "";
           display: block;
-          height: 35px;
+          height: 45px;
           left: 8px;
           position: absolute;
           top: 0px;
-          width: 35px;
+          width: 45px;
         }
         // TODO: replace these light icons with dark icons, which should be larger
         &.#{$vprefix}icon-dashboard::before {

@@ -36,6 +36,7 @@
   .#{$vprefix}context-switcher-list {
     background-color: $backgroundColor;
     border-radius: 0 0 $borderRadius $borderRadius;
+    min-width: 200px;
 
     li {
       color: $fontColor;
