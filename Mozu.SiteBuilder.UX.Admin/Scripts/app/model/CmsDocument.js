@@ -48,6 +48,7 @@ Ext.define('Taco.model.CmsDocument', {
             "type": "auto",
             "useNull": true
         }
+        
     ],
     set: function(k, v) {
         if (k in this.self.realFields || !k || typeof k !== "string") {

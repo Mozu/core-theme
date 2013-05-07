@@ -22,10 +22,24 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
 
 
    getCmsPageDoc:function() {
-       //look or create in cmsDocs for *.pageContext.cms.pageDoc.Id
-       // create a doc add to cmsDocs... mark as only add if content
-       // add to cmsDocs
-       //return
+       return me.get();
+       var doc,
+           me = this,
+           pageReq = me.pageProps.pageContext.cms.page;
+       if (pageReq.Id) {
+           doc = me.editor.cmsDocs.getById(pageReq.Id);
+           if (!doc) {
+               doc = me.editor.cmsDocs.add([pageReq.Document])[0];
+           }
+           return doc;
+       } else {
+           doc = me.editor.cmsDocs.add([{
+               name: pageReq.Path,
+               documentType: 'catalog_page',
+               collectionName: 'catalog_pages'
+           }])[0];
+       }
+       return doc;
    }
     ,
     getPageSettings: function () {

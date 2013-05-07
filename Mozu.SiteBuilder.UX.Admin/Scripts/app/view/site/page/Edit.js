@@ -30,11 +30,13 @@ Ext.define('Taco.view.site.page.Edit', {
             {
                 xtype: 'secondarybutton',
                 text: 'Cancel',
-                eventName: 'cancel'
+                click: this.cancel,
+                scope: this
             }, {
                 xtype: 'dirtybutton',
                 text: 'Save',
-                eventName: 'save'
+                click: this.save,
+                scope:this
             }];
 
         
