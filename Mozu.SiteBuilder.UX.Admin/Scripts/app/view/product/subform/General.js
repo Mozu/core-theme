@@ -7,7 +7,7 @@
 Ext.define('Taco.view.product.subform.General', {
     extend: 'Taco.view.product.subform.Subform',
     requires: [
-        'Taco.view.product.subform.ImageField', 'Ext.form.field.HtmlEditor'
+        'Taco.view.product.subform.ImageField'
     ],
 
     title: 'General',
@@ -75,17 +75,19 @@ Ext.define('Taco.view.product.subform.General', {
                 width: '100%',
                 required: true
             }, {
+                xtype: 'htmleditor',
                 fieldLabel: 'Short Description',
                 name: 'productShortDescription',
                 emptyText: 'Words',
-                xtype: 'htmleditor',
                 width: '100%',
+                fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
                 required: true
             }, {
+                xtype: 'htmleditor',
                 fieldLabel: 'Full Description',
                 name: 'productFullDescription',
                 emptyText: 'Words, words, and more words.  Also, with lists.',
-                xtype: 'htmleditor',
+                fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
                 width: '100%',
                 required: true
             }, {
