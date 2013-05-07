@@ -2,14 +2,12 @@
  * @class Taco.core.ux.action.SplitButton
  */
 Ext.define('Taco.core.ux.action.SplitButton', {
-    extend: 'Ext.button.Split',
+    extend: 'Taco.core.ux.action.Button',
     mixins: ['Taco.core.util.GetsParentPage'],
-    scale: 'small',
     menuDefaults: {
         plain: true,
         cls: Taco.baseCSSPrefix + 'splitbutton-menu',
         defaults: {
-            plain: true,
             cls: Taco.baseCSSPrefix + 'splitbutton-menu-item'
         }
     },

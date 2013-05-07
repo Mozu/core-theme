@@ -11,6 +11,7 @@ Ext.define('Taco.view.pendingchange.Cms', {
     filterProperty: 'productName',
     useTilePanel: false,
 
+    requiresContextOfType: ['c', 's'],
     publishAllText: "Publish All",
     
     publishAll: function (type) {
@@ -44,7 +45,7 @@ Ext.define('Taco.view.pendingchange.Cms', {
             xtype: 'primarysplitbutton',
             itemId: 'publishAll',
             text: '',
-            textTpl: new Ext.XTemplate('<span>{text} <em>({count} items)</em></span>'),
+            textTpl: new Ext.XTemplate('<span>{text} <em>({count} items)</em></span> &#9662;'),
             handler: function() {
                 this.getParentPage().publishAll();
             },
