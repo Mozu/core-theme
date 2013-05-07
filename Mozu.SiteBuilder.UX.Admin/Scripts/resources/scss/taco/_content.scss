@@ -179,17 +179,33 @@
     }
   }
 
-  .widget-source {
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
-    color: #505050;
-    height: 38px !important;
-    margin: 10px !important;
-    padding: 10px !important;
-    text-align: center;
-    width: 90%;
-    @include background(linear-gradient(rgba(255, 255, 255, 1), rgba(239, 239, 239, 1)));
-    @include border-radius(5px);
+  .#{$vprefix}widget-accordion-view {
+    .heading {
+      font-size: px-to-rem(20);
+      font-weight: bold;
+      line-height: px-to-rem(24);
+      margin: 20px;
+      text-transform: capitalize;
+    }
+    .items {
+      padding-left: 19px;
+      @include flexbox($wrap: wrap);
+    }
+    .widget-source {
+      background-attachment: scroll;
+      background-position: 50% 50%;
+      background-repeat: none;
+      background-size: cover;
+      height: 80px;
+      margin: 0px 20px 20px 0px;
+      text-align: center;
+      width: 80px;
+      @include border-radius(2px);
+      @include box-shadow(0px 0px 0px 1px border-for($color-neutral-95));
+      @include flexbox($justify: center, $alignItems: center);
+    }
   }
+
   .dropzone-shim {
     @include transition;
   }

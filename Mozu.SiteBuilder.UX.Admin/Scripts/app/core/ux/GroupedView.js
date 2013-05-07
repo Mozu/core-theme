@@ -5,6 +5,8 @@
 Ext.define('Taco.core.ux.GroupedView', {
     extend: 'Ext.view.View',
 
+    baseCls: Taco.baseCSSPrefix + 'grouped-view',
+
     initComponent: function () {
         this.callParent(arguments);
     },
