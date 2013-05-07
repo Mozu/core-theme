@@ -175,7 +175,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 },
                 Page = new DocumentRequest()
                            {
-                               Path ="Category-"+ categoryId ,
+                               Path ="category-"+ categoryId ,
                                Collection = "catalog_pages"
                            }
 
