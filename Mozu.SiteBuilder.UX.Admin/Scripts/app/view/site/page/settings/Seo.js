@@ -8,18 +8,29 @@ Ext.define('Taco.view.site.page.settings.Seo', {
         layout: 'vbox',
         items: [
             {
+                xtype: 'label',
+                text: 'SEO Friendly URL'
+            },
+            {
+                xtype: 'label',
+                cls: 'taco-sublabel-text',
+                text: 'http://wwww.mymozu.com/'
+            },
+            {
                 xtype: 'textfield',
-                fieldLabel: 'SEO Friendly URL',
+                width: '95%',
                 name: 'seoFriendlyUrl'
             },
             {
                 xtype: 'textfield',
                 fieldLabel: 'Title',
+                width: '95%',
                 name: 'seoTitle'
             },
             {
                 xtype: 'textarea',
                 fieldLabel: 'Meta Description',
+                width: '95%',
                 name: 'metaDescription'
             },
             {
@@ -31,14 +42,18 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                 title: "Advanced",
                 collapsible: true,
                 layout: 'vbox',
+                width: '95%',
+                cls: 'taco-sidebar-submenue',
                 items: [
                     {
                         xtype: 'textfield',
-                        title: 'Custom Meta Tags',
+                        fieldLabel: 'Custom Meta Tags',
+                        width: '100%',
                         name: 'customMetaTags'
                     },
                     {
-                        html: "<h4>Meta Robots</h4>"
+                        xtype: 'label',
+                        text: 'Meta Robots'
                     },
                     {
                         xtype: 'box',
@@ -46,6 +61,7 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                     },
                     {
                         xtype: 'radiogroup',
+                        width: '100%',
                         columns: 2,
                         items: [
                             {
@@ -67,6 +83,7 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                     },
                     {
                         xtype: 'radiogroup',
+                        width: '100%',
                         columns: 2,
                         items: [
                             {
@@ -88,6 +105,7 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                     },
                     {
                         xtype: 'checkboxgroup',
+                        width: '100%',
                         columns: 2,
                         items: [
                             {
@@ -111,10 +129,15 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                     {
                         xtype: 'textfield',
                         fieldLabel: 'Canonical URL',
+                        width: '100%',
                         name: 'canonicalURL'
                     }
                 ]
-            }
+            },
+            {
+               xtype: 'box',
+               autoEl: 'hr',
+           }
         ]
     }
 });

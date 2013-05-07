@@ -108,6 +108,11 @@
     border-width: 0px 0px 0px 1px;
     position: relative;
     z-index: 3;
+
+	.#{$prefix}panel-body-taco{
+	  max-height: 602px;
+	  overflow-y: scroll;
+	}
     @include box-shadow(inset 0px 1px border-for($color-neutral-95));
     @include flexbox;
     @include flex(0, 0, 320px);
@@ -131,6 +136,12 @@
         }
       }
     }
+
+	hr{
+		width: 100%;
+		border: 0 none;
+		border-bottom: 1px dashed #999;
+	}
   }
 
   .#{$vprefix}sidebar-modal{
@@ -139,6 +150,18 @@
           @include transition-duration(0.5s, 0.5s);
           @include transition-timing-function(ease-out, ease-out);
       }
+  }
+
+  .#{$vprefix}sidebar-submenue{
+	.#{$prefix}panel-body{
+		background: lightgray;
+	}
+	.#{$prefix}tool-collapse-top{
+		@include icons-sprite(icon-sortcolumn-desc);
+	}
+	.#{$prefix}tool-expand-bottom{
+		@include icons-sprite(icon-sortcolumn-asc);
+	}
   }
 
   /* SITE EDITOR */

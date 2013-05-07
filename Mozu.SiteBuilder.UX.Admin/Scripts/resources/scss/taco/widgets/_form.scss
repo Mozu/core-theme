@@ -15,20 +15,20 @@
     }
   }
 
-  .taco-option-value-row{
+  .#{$vprefix}option-value-row{
     .remove{
 	  padding-left:5px;
 	}
   }
 
   // date field styles 
-  .taco-option-value-input{
+  .#{$vprefix}option-value-input{
     height: 28px; 
     width: 150px; 
     margin-bottom: 5px;
   }
 
-  .taco-date-value-input{
+  .#{$vprefix}date-value-input{
 	label{
 	  margin-top: 5px;
 	}
@@ -46,12 +46,9 @@
   }
 
   .x-form-trigger-click{
-   @include icons-sprite(icon-calendar);
+     @include icons-sprite(icon-calendar);
+   }
   }
-  }
-
-  
-
 
   // combobox styles
   .#{$prefix}form-trigger-input-cell {
@@ -100,6 +97,12 @@
     padding-bottom: 3px;
   }
 
+  .#{$vprefix}sublabel-text{
+    font-size: px-to-rem(10);
+	color: lightgray;
+	font-style: italic;
+  }
+
   /* CONTROLS */
 
   .#{$prefix}field .#{$prefix}form-checkbox,
@@ -110,12 +113,8 @@
     width: 17px;
   }
 
-  .#{$prefix}field .#{$prefix}form-radio {
-    position: relative;
-    top: -3px;
-  }
-
-  .#{$prefix}field .#{$prefix}form-checkbox{
+  .#{$prefix}field .#{$prefix}form-checkbox, 
+  .#{$prefix}field .#{$prefix}form-radio{
     position: relative;
     top: 2px;
   }
