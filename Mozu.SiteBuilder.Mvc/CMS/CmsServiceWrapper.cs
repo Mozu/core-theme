@@ -45,14 +45,21 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             doc.Items = doc.Items ?? new List<AVM.DocumentProperty>();
 
             var documentTypeId = doc.Items.Where(x => x.Key == CmsConstants.Widgets.page_type_definition).Select(x => (string)x.Value).FirstOrDefault();
+            PageTemplateDefinition pageTypeDef = null;
 
             if (documentTypeId == null)
             {
-                throw new InvalidOperationException("missing documentTypeId");
+                pageTypeDef = new PageTemplateDefinition();
+                //throw new InvalidOperationException("missing documentTypeId");
             }
-
-            var pageTypeDef = _themeEntityDefinitionProvider.GetPageTypeDefinition(documentTypeId);
-
+            else
+            {
+                pageTypeDef = _themeEntityDefinitionProvider.GetPageTypeDefinition(documentTypeId);
+            }
+            if (pageTypeDef == null)
+            {
+                throw new InvalidOperationException("unknonw pageTypeDefinition " + documentTypeId);
+            }
 
 
             var d = AutoMapper.Mapper.Map<Mozu.Content.Contracts.Document>(doc);

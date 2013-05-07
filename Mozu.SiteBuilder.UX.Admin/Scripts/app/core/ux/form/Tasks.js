@@ -91,7 +91,7 @@
                     },
                     failure: function (batch, options) {
                         
-                        var msg = batch.operation[0].error.remoteException.getMessage();
+                        var msg = batch.operations[0].error.remoteException.getMessage();
                         if (msg) {
                             Taco.app.fireEvent('setmessage', msg, 'error');
                         } else {
