@@ -62,10 +62,6 @@ Ext.define('Taco.view.site.page.settings.General', {
                 xtype: 'label',
                 cls: 'taco-sublabel-text',
                 text: 'This is explanitaion copy...'
-            },
-            {
-                xtype: 'box',
-                autoEl: 'hr',
             }
         
         ]

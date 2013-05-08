@@ -28,6 +28,7 @@ Ext.define('Taco.view.site.navigation.PageSettings', {
                         '<tpl if="isPageSettingsPanel">',
                             '<li class="' + Taco.baseCSSPrefix + 'pagesettings-chooser-item">',
                                 '<a href="javascript:;">{title}</a>',
+                                '<div>&#9654;</div>',
                             '</li>',
                         '<tpl else>',
                             '<li class="' + Taco.baseCSSPrefix + 'pagesettings-chooser-item" style="display:none"></li>',

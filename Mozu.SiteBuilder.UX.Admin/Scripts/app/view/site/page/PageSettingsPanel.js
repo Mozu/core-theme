@@ -22,16 +22,35 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
 
         this.tbar = [{
             xtype: 'action',
-            text: 'back',
+            text: '&#11013;',
             click: {
                 fn: function () { me.hide(); }
             }
-        }, '->', {
+        }, {
             xtype: 'tbtext',
             text: this.title
         }];
-
-        this.form.fbar = [{
+       
+        this.form.fbar = ['->', {
+            xtype: 'secondarybutton',
+            text: 'Cancel',
+            listeners: {
+                click: this.hide,
+                scope: this
+            }
+        }, {
+            xtype: 'dirtybutton',
+            text: 'Apply',
+            itemId: 'pageSettingsPanelDirtyButton',
+            listeners: {
+                click: function () {
+                    this.form.updateForm();
+                },
+                scope: this
+            }
+        }];
+        
+        this.bbar = ['->',{
             xtype: 'secondarybutton',
             text: 'Cancel',
             listeners: {
