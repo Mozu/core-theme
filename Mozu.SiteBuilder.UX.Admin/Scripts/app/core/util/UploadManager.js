@@ -211,13 +211,14 @@ Ext.define('Taco.core.util.UploadManager', function () {
         * Handler for upload progress
         */
         onProgress: function (e, eventData) {
-            var me = this;
-            eventData.document.set('progress', (e.loaded / e.total).toFixed(2));
+            var me = this,
+                percentUploaded = (e.loaded / e.total).toFixed(2);
+            eventData.document.set('progress', percentUploaded);
             
             me.fireEvent('progress', Ext.apply(Ext.create('Taco.core.util.FileUploadEvent'), Ext.apply(eventData, {
                 type: 'progress',
                 timeStamp: e.timeStamp,
-                percentUploaded: (e.loaded / e.total).toFixed(2)
+                percentUploaded: percentUploaded
             })));
         },
 

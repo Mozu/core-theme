@@ -1,20 +1,4 @@
-﻿  @-webkit-keyframes drop-zone-pulse {
-    from {
-      background-color: rgba(99,163,255,0.2);
-      @include box-shadow(0 0 0 rgba(99,163,255,0.2));
-    }
-
-    50% {
-      background-color: rgba(99,163,255,0.3);
-      @include box-shadow(0 0 30px rgba(99,163,255,0.3));
-    }
-
-    to {
-      background-color: rgba(99,163,255,0.2);
-      @include box-shadow(0 0 0 rgba(99,163,255,0.2));
-    }
-  }
-
+﻿
 @mixin taco-product-drop-zone {
     text-align: center;
     border: 1px dashed #B1B1B1;
@@ -51,9 +35,9 @@
             font-size: 1.3rem;
         }
         .#{$vprefix}image-tiles {
-            @include flexbox;
+            @include flexbox($wrap: wrap);
         }
-        .#{$vprefix}image-tiles li {
+        .#{$vprefix}image-tiles > li {
             list-style: none;
             height: 150px;
             width: 150px;
@@ -82,7 +66,36 @@
             }
 
             &.uploading {
-                background: lightskyblue;
+                //background: lightskyblue;
+            }
+
+            .toolbar {
+                opacity: 0;
+                padding: 3px 8px;
+                background: transparentize(#000,0.4);
+                color: transparent;
+                @include transition(opacity 0.2s ease-out);
+                @include flexbox;
+            }
+
+            .drag-handle {
+                cursor: move;
+                width: 3px;
+                height: 15px;
+                margin: 1px 100px 0 0;
+                @include icons-sprite(icon-widget-drag);
+                @include flex($grow: 1);
+            }
+
+            .remove {
+                cursor: pointer;
+                width: 15px;
+                height: 18px;
+                @include icons-sprite(icon-widget-remove);
+            }
+
+            &:hover .toolbar {
+                opacity: 1;
             }
         }
 
@@ -92,9 +105,6 @@
                 
                 &:before {
                     opacity: 1 !important;
-                    -webkit-animation-name: drop-zone-pulse;
-                    -webkit-animation-duration: 4s;
-                    -webkit-animation-iteration-count: infinite;
                 }
             }
 
@@ -102,9 +112,6 @@
                 //background-color: red !important;
                 &:before {
                     opacity: 1 !important;
-                    -webkit-animation-name: drop-zone-pulse;
-                    -webkit-animation-duration: 4s;
-                    -webkit-animation-iteration-count: infinite;
                 }
             }
         }
