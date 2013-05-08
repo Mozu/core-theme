@@ -124,11 +124,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         /// POST /auth/ticket
         /// </summary>
         [HttpPost]
-        public async Task<ActionResult> LoginTicket(string ticket, int tenantId, string redirectUrl = null)
+        public async Task<ActionResult> LoginTicket(LoginTicket ticket)
         {
-            _authenticationHelper.SetCurrentUser(ticket);
+            _authenticationHelper.SetCurrentUser(ticket.AccessToken);
 
-            ActionResult res = await ChangeTenant(tenantId, redirectUrl);
+            ActionResult res = await ChangeTenant(ticket.TenantId, ticket.RedirectUrl);
 
             return res;
         }

@@ -385,7 +385,6 @@
     <Compile Include="Tags\CMS\FieldTag.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Misc\Views\Testing\Ticket.aspx" />
     <Content Include="Areas\Misc\Views\Testing\SiteList.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax">

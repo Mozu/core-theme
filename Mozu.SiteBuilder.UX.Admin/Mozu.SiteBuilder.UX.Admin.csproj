@@ -336,6 +336,7 @@
     <Compile Include="Api\ModelMapping\AttributeValidationResolver.cs" />
     <Compile Include="Api\ModelMapping\MinMaxResolver.cs" />
     <Compile Include="Api\ModelMapping\WidgetInstanceDataMapping.cs" />
+    <Compile Include="Api\Models\Account\LoginTicket.cs" />
     <Compile Include="Api\Models\Attributes\Attribute.cs" />
     <Compile Include="Api\Models\Attributes\AttributeDataType.cs" />
     <Compile Include="Api\Models\Attributes\AttributeInputType.cs" />
