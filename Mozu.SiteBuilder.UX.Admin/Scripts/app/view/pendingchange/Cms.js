@@ -45,7 +45,7 @@ Ext.define('Taco.view.pendingchange.Cms', {
             xtype: 'primarysplitbutton',
             itemId: 'publishAll',
             text: '',
-            textTpl: new Ext.XTemplate('<span>{text} <em>({count} items)</em></span> &#9662;'),
+            textTpl: new Ext.XTemplate('<span>{text} <em>({count} items)</em></span>'),
             handler: function() {
                 this.getParentPage().publishAll();
             },

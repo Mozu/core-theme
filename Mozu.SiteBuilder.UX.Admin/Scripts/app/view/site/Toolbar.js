@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.site.Toolbar', {
     extend: 'Ext.container.Container',
-    requires: ['Taco.core.ux.action.Button'],
+    requires: ['Taco.core.ux.action.Button', 'Taco.core.ux.action.SplitButton'],
 
     cls: Taco.baseCSSPrefix + 'inline-editor-tools',
     layout: 'auto',
@@ -26,7 +26,8 @@ Ext.define('Taco.view.site.Toolbar', {
                 self.editor.viewPage()
             }
         }, {
-            text: 'More &#9662;',
+            text: 'More',
+            xtype: 'taco.splitbutton',
             itemId: 'more',
             menu: {
                 plain: true,

@@ -25,6 +25,8 @@ Ext.define('Taco.view.Viewport', {
         
         this.callParent(arguments);
 
+        this.addEvents(['viewportscroll']);
+
         this.on({
             afterrender: this.attachScrollEvents,
             scope: this,
@@ -52,5 +54,6 @@ Ext.define('Taco.view.Viewport', {
             Ext.fly(t).removeCls('taco-shell-scrolled');
         }
         this.isScrolled = isScrolled;
+        this.fireEvent('viewportscroll', isScrolled);
     }
 });
