@@ -18,9 +18,10 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
                 '<tpl for="groups">',
                     '<div class="heading">{name}</div>',
                     '<div class="items"><tpl for="children">',
-                        '<div class="widget-source" style="',
-                            '<tpl if="this.hasIcon(values)">background-image: url({[values.data.icon]});</tpl>',
-                        '">{[values.data.displayName]}</div>',
+                        '<div class="widget-source">',
+                            '<div class="icon" style="<tpl if="this.hasIcon(values)">background-image: url({[values.data.icon]});</tpl>"></div>',
+                            '<div class="label">{[values.data.displayName]}</div>',
+                        '</div>',
                     '</tpl></div>',
                 '</tpl>', {
                 hasIcon: function (values) {
@@ -34,10 +35,9 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
         this.callParent(arguments);
 
         this.view.on({
-            render: {
-                fn: this.initializeWidgetDragZone,
-                scope: this
-            }
+            render: this.initializeWidgetDragZone,
+            containerclick: this.onViewClick,
+            scope: this
         });
     },
 
@@ -65,5 +65,17 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
         this.dragZone = Ext.create('Taco.view.site.page.WidgetDragZone', this.view.getEl(), config);
 
         //this.fireEvent('dragzoneready', this.dragZone);
+    },
+
+    onViewClick: function (view, e) {
+        var target = e.getTarget('.heading', 10),
+            items;
+
+        if (!target) return;
+
+        items = Ext.fly(target).next('.items', true);
+
+        Ext.fly(target).toggleCls('collapsed');
+        Ext.fly(items).setVisibilityMode(2).toggle(true);
     }
 });

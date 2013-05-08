@@ -183,26 +183,42 @@
     .heading {
       font-size: px-to-rem(20);
       font-weight: bold;
-      line-height: px-to-rem(24);
-      margin: 20px;
+      line-height: px-to-rem(20);
+      padding: 12px 20px 6px 29px;
       text-transform: capitalize;
+
+      &.collapsed {
+        @include box-shadow(0px 1px border-for($color-neutral-95));
+      }
     }
     .items {
+      border-bottom: 1px solid border-for($color-neutral-95);
+      overflow: hidden;
       padding-left: 19px;
       @include flexbox($wrap: wrap);
     }
     .widget-source {
-      background-attachment: scroll;
-      background-position: 50% 50%;
-      background-repeat: none;
-      background-size: cover;
-      height: 80px;
-      margin: 0px 20px 20px 0px;
-      text-align: center;
+      margin: 0px 10px 10px 0px;
       width: 80px;
-      @include border-radius(2px);
-      @include box-shadow(0px 0px 0px 1px border-for($color-neutral-95));
-      @include flexbox($justify: center, $alignItems: center);
+
+      .icon {
+        background-attachment: scroll;
+        background-color: $color-neutral-white;
+        background-position: 50% 50%;
+        background-repeat: none;
+        background-size: cover;
+        border: 1px solid border-for($color-neutral-95);
+        height: 75px;
+        padding: 3px;
+        width: 75px;
+        @include border-radius(2px);
+      }
+      .label {
+        font-size: px-to-rem(12);
+        line-height: px-to-rem(14);
+        padding: 9px 1px;
+        text-align: center;
+      }
     }
   }
 
