@@ -57,7 +57,7 @@ Ext.define('Taco.core.ux.content.Container', {
 
             me.layout = 'auto';
 
-            me.cls = 'taco-content-container';
+            me.cls = 'taco-content-container taco-content-container-with-sidebar';
 
             me.main = Ext.create('Ext.Container', {
                 // region: 'center',

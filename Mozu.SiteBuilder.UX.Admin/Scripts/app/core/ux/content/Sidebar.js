@@ -13,5 +13,5 @@ Ext.define('Taco.core.ux.content.Sidebar', {
     layout: 'auto',
     shrinkWrap: false,
     // region: 'east',
-    width: 300
+    width: 320
 });

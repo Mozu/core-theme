@@ -8,22 +8,12 @@
 Ext.define('Taco.core.ux.modal.SidebarModal', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.sidebarmodal',
+
+    componentCls: Taco.baseCSSPrefix + 'sidebar-modal',
     floating: true,
     shadow: false,
-    componentCls: Taco.baseCSSPrefix + 'sidebar-modal',
-    width: 300,
-    show: function () {
-    //    el.addCls('sliding showing');
-    //    ext.defer(function () {
-    //        el.removecls('sliding');
-    //    }, 500);
-        this.callParent(arguments);
-        this.alignTo(this.sidebar.getEl(), 'tl-tl');
-    },
-    hide: function () {
-        this.alignTo(this.sidebar.getEl(), 'tl-tr');
-        this.callParent(arguments);
-    },
+    width: 320,
+
     initComponent: function () {
         this.callParent(arguments);
         this.mon(Taco.app.viewPort, 'resize', function () {
@@ -34,5 +24,19 @@ Ext.define('Taco.core.ux.modal.SidebarModal', {
             this.setSize(this.sidebar.getSize());
             this.alignTo(this.sidebar.getEl(), 'tl-tr');
         }, this);
+    },
+
+    show: function () {
+    //    el.addCls('sliding showing');
+    //    ext.defer(function () {
+    //        el.removecls('sliding');
+    //    }, 500);
+        this.callParent(arguments);
+        this.alignTo(this.sidebar.getEl(), 'tl-tl');
+    },
+
+    hide: function () {
+        this.alignTo(this.sidebar.getEl(), 'tl-tr');
+        this.callParent(arguments);
     }
 });
