@@ -61,7 +61,7 @@ Ext.define('Taco.core.ux.content.Container', {
 
             me.main = Ext.create('Ext.Container', {
                 // region: 'center',
-                cls: Taco.baseCSSPrefix + 'content-container',
+                cls: Taco.baseCSSPrefix + 'content-main',
                 // flex: 1,
                 layout: 'auto',
                 items: [me.header, me.body]
@@ -72,7 +72,7 @@ Ext.define('Taco.core.ux.content.Container', {
             // create the sidebar unless some subclass has created it!
             if (!me.sidebar.$className) me.sidebar = Ext.widget('sidebar', me.sidebar);
 
-            me.items = [me.main, me.sidebar];
+            me.items = [me.sidebar, me.main];
         } else {
             me.layout = 'auto';
             me.cls = 'taco-content-container';

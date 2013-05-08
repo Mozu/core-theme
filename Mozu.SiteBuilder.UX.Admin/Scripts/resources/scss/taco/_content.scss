@@ -17,19 +17,19 @@
 
   /* CONTENT CONTAINER */
 
-  .#{$vprefix}content-browserpage,
-  .#{$vprefix}content-inline-editor {
-    @include flexbox;
-  }
-
   .#{$vprefix}content-container {
-    min-width: 0px;
-    width: 100%;
-    @include flex($grow: 1);
+    @include flexbox;
 
-    .#{$vprefix}content-container {
+    .#{$vprefix}content-sidebar {
+      @include order(2);
+    }
+
+    .#{$vprefix}content-main {
+      min-width: 0px;
       position: relative;
       z-index: 2;
+      width: 100%;
+      @include flex($grow: 1);
     }
 
     .#{$vprefix}content-header {
@@ -65,10 +65,6 @@
       }
     }
     
-    &.#{$vprefix}content-scrolled .#{$vprefix}content-header {
-      @include box-shadow(rgba(0,0,0,1) 0 -5px 10px 0px);
-    }
-    
     .#{$vprefix}content-body {
       margin: 0px 30px;
       padding: 20px 0px 10px;
@@ -88,16 +84,17 @@
       top: 0px;
     }
 
+    .#{$vprefix}content-sidebar {
+      &~ .#{$vprefix}content-main {
+        .#{$vprefix}content-header {
+          border-right: 325px solid $color-neutral-95;
+        }
+      }
+    }
+
     .#{$vprefix}content-body {
       margin-top: 65px !important;
     }
-
-    // .#{$vprefix}content-sidebar {
-    //   height: 100%;
-    //   position: fixed;
-    //   right: 5px;
-    //   top: 0px;
-    // }
   }
 
   .#{$vprefix}content-sidebar,
@@ -206,10 +203,7 @@
       width: 80px;
 
       .icon {
-        background-attachment: scroll;
-        background-color: $color-neutral-white;
-        background-position: 50% 50%;
-        background-repeat: none;
+        background: none no-repeat scroll 50% 50% $color-neutral-white;
         background-size: cover;
         border: 1px solid border-for($color-neutral-95);
         height: 75px;
