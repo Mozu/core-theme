@@ -102,6 +102,7 @@ Ext.define('Taco.view.category.Index', {
 
             listeners: {
                 cellclick: me.onCellClick,
+                itemmove: me.onItemMove,
                 scope: me
             }
         });
@@ -164,6 +165,31 @@ Ext.define('Taco.view.category.Index', {
             this.launchEditor(record, metaData);
         }
 
+    },
+    onItemMove: function (node, oldParent, newParent, index, options) {
+        var me = this,
+            store = me.store;
+
+        // display the loading mask only if .sync() succeeds
+        store.addListener(
+            "beforesync", 
+            function() { 
+                me.setLoading(true) 
+            },
+            null,
+            { single: true }
+        );
+
+        store.sync({
+            success: function (m) {
+                me.setLoading(false);
+                me.fireEvent('setmessage', 'Item moved successfully', 'status', m);
+            },
+            failure: function (m) {
+                me.setLoading(false);
+                me.fireEvent('setmessage', 'Item move failed', 'error', m);
+            }
+        });
     },
     destroyMenuColumnHandler: function (item, eventData) {
         var grid = eventData.grid,
