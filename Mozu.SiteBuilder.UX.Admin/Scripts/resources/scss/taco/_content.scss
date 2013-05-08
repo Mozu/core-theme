@@ -184,12 +184,8 @@
       font-size: px-to-rem(20);
       font-weight: bold;
       line-height: px-to-rem(20);
-      padding: 12px 20px 6px 29px;
+      padding: 12px 20px 8px 29px;
       text-transform: capitalize;
-
-      &.collapsed {
-        @include box-shadow(0px 1px border-for($color-neutral-95));
-      }
     }
     .items {
       border-bottom: 1px solid border-for($color-neutral-95);
@@ -197,6 +193,14 @@
       padding-left: 19px;
       @include flexbox($wrap: wrap);
     }
+    .collapsed {
+      @include box-shadow(inset 0px -1px border-for($color-neutral-95));
+
+      .items {
+        display: none;
+      }
+    }
+
     .widget-source {
       margin: 0px 10px 10px 0px;
       width: 80px;

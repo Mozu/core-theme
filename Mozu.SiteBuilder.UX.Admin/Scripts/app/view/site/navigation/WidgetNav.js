@@ -16,13 +16,15 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
             store: store,
             tpl: [
                 '<tpl for="groups">',
-                    '<div class="heading">{name}</div>',
-                    '<div class="items"><tpl for="children">',
-                        '<div class="widget-source">',
-                            '<div class="icon" style="<tpl if="this.hasIcon(values)">background-image: url({[values.data.icon]});</tpl>"></div>',
-                            '<div class="label">{[values.data.displayName]}</div>',
-                        '</div>',
-                    '</tpl></div>',
+                    '<div class="group group-{name}">',
+                        '<div class="heading">{name}</div>',
+                        '<div class="items"><tpl for="children">',
+                            '<div class="widget-source">',
+                                '<div class="icon" style="<tpl if="this.hasIcon(values)">background-image: url({[values.data.icon]});</tpl>"></div>',
+                                '<div class="label">{[values.data.displayName]}</div>',
+                            '</div>',
+                        '</tpl></div>',
+                    '</div>',
                 '</tpl>', {
                 hasIcon: function (values) {
                     return !Ext.isEmpty(values.data.icon);
@@ -73,9 +75,7 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
 
         if (!target) return;
 
-        items = Ext.fly(target).next('.items', true);
-
-        Ext.fly(target).toggleCls('collapsed');
-        Ext.fly(items).setVisibilityMode(2).toggle(true);
+        Ext.fly(target).parent().toggleCls('collapsed');
+        // Ext.fly(items).setVisibilityMode(2).toggle(true);
     }
 });

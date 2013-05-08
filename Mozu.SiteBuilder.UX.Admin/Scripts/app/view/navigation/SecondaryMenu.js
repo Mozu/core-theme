@@ -22,13 +22,12 @@
                 text: Taco.User.name || Taco.User.email || '[user]',
                 menu: {
                     plain: true,
+                    shadow: false,
                     items: [{
-                        autoEl: 'a',
                         text: 'My Account',
                         href: '/admin/account',
                         padding: '4 8'
                     }, {
-                        autoEl: 'a',
                         text: 'Log Out',
                         href: '/admin/auth/logout',
                         padding: '4 8'
