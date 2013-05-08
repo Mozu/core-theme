@@ -28,6 +28,10 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
             itemclick: this.navigate,
             scope: this
         });
+        var selModel = this.getSelectionModel();
+        selModel.setSelectionMode('SINGLE');
+        selModel.allowDeselect = true;
+
     },
 
     /**

@@ -92,15 +92,15 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
      * @private
      */
     syncSelection: function (selModel, record) {
-        return;
+        //return;
         var view = selModel.view,
             menuId = view.getId();
 
         if (this.getId() !== menuId) {
             this.getSelectionModel().deselectAll();
-            this.syncBreadcrumb(view.parent, view, record);
+            this.parentMenu.syncBreadcrumb(view.parent, view, record);
         } else {
-            this.syncBreadcrumb(record);
+            this.parentMenu.syncBreadcrumb(record);
         }
 
         this.subMenus.each(function (item) {
