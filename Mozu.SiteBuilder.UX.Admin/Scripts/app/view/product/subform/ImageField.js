@@ -23,6 +23,12 @@ Ext.define('Taco.view.product.subform.ImageField', {
         this.selectedImages = Ext.create('Taco.store.Files', {
             listeners: {
                 datachanged: this.onSelectedImagesDataChanged,
+                update: function (store, record, op, fields) {
+                    if (!fields) {
+                        return;
+                    }
+                    console.log('fields changed', fields.toString());
+                },
                 scope:this
             }
 
@@ -51,7 +57,12 @@ Ext.define('Taco.view.product.subform.ImageField', {
                         '<tpl if="isUploaded === false">',
                             '<li class="item uploading">Progress {progress}%</li>',
                         '<tpl else>',
-                            '<li class="item image" style="background-image:url({url}?size=150)"></li>',
+                            '<li class="item image" style="background-image:url({url}?size=150)">',
+                                '<ul class="toolbar">',
+                                    '<li class="drag-handle">Drag</li>',
+                                    '<li class="remove">Remove</li>',
+                                '</ul>',
+                            '</li>',
                         '</tpl>',
                     '</tpl>',
                     '<li class="taco-image-drop">Drop images here</li>'
@@ -104,6 +115,8 @@ Ext.define('Taco.view.product.subform.ImageField', {
 
         this.imageView.on({
             refresh: this.bindImageUpload,
+            itemclick: this.onItemClick,
+            afterrender: this.onViewAfterRender,
             scope: this
         });
 
@@ -111,12 +124,35 @@ Ext.define('Taco.view.product.subform.ImageField', {
             datachanged: this.bindImageUpload,
             scope: this
         });
-
        
 
     },
 
+    onViewAfterRender: function () {
+        var id = 'ImageFieldDD-' + Ext.id();
 
+        this.dragZone = Ext.create('Ext.view.DragZone', {
+            view: this.imageView,
+            ddGroup: id,
+            dragText: '{0} Item{1}'
+        });
+
+        this.dropZone = Ext.create('Ext.view.DropZone', {
+            view: this.imageView,
+            ddGroup: id,
+            handleNodeDrop: function (data, dropRecord, position) {
+
+            }
+        });
+    },
+
+    onItemClick: function (view, record, item, index, e) {
+        if (Ext.fly(e.target).hasCls('remove')) {
+            e.stopPropagation();
+            e.preventDefault();
+            this.selectedImages.remove(record);
+        }
+    },
 
     bindImageUpload: function () {
         var me = this;
@@ -197,6 +233,8 @@ Ext.define('Taco.view.product.subform.ImageField', {
             },
             scope: this
         });
+
+
     },
 
     isEqual: function (value1, value2) {
@@ -256,16 +294,19 @@ Ext.define('Taco.view.product.subform.ImageField', {
         Ext.each(value, function (val) {
             if (val.isModel) {
                 return;
-            }else {
+            } else {
                 val.isUploaded = true;
             }
         });
 
+        // Conditional statement prevents a stackoverflow on remove
+        if (this.isEqual(Ext.Array.pluck(value, 'url'), this.selectedImages.pluck('url'))) {
+            return this.mixins.field.setValue.call(this, value);
+        }
+
         this.selectedImages.loadData(value);
 
-       
-
-        this.onSelectedImagesDataChanged();
+        return this.onSelectedImagesDataChanged();
     },
 
     onAssociatorSave: function (associator, selectedRecords) {

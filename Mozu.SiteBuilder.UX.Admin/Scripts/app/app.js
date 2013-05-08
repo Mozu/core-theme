@@ -441,6 +441,16 @@ Ext.application({
                 });
             },
 
+            pluck: function (field) {
+                var result = [];
+
+                this.each(function (record) {
+                    result.push(record.get(field));
+                });
+
+                return result;
+            },
+
             contains: function (record) {
                 var found = false;
 
