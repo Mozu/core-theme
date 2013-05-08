@@ -99,6 +99,7 @@
 
   .#{$vprefix}content-sidebar,
   .#{$vprefix}sidebar-modal {
+  height:687px;
     background-color: $color-neutral-white;
     border-color: border-for($color-neutral-95);
     border-style: solid none none solid;
@@ -137,7 +138,7 @@
 	hr{
 		width: 100%;
 		border: 0 none;
-		border-bottom: 1px dashed #999;
+		border-bottom: 1px solid #999;
 	}
   }
 
@@ -147,17 +148,58 @@
           @include transition-duration(0.5s, 0.5s);
           @include transition-timing-function(ease-out, ease-out);
       }
+
+	  .#{$prefix}toolbar{
+		min-height: 65px;
+	  }
+
+	  .#{$prefix}panel-taco{
+		top: 35px;
+	  }
+
+	  .#{$prefix}docked-top {
+	  .#{$prefix}box-inner{
+		margin-top: 20px;
+	  }
+	  .#{$prefix}toolbar-text {
+		font-size: 2rem;
+	  }}
+
+	  .#{$vprefix}action{
+		text-decoration: none;
+	  }
+	  .#{$prefix}docked-bottom{
+	  height: 65px;
+	  top: 624px !important;
+		.#{$prefix}box-inner{
+			margin-top:20px;
+			}
+	  }
   }
 
   .#{$vprefix}sidebar-submenue{
+	.#{$prefix}panel-header-body{
+		//i feel really bad about this css, but i couldn't config the expand to the left; BF
+		.#{$prefix}box-inner{
+			margin-top:0px;
+		}
+		.#{$prefix}component{
+			left: 20px !important;
+		}
+		.#{$prefix}tool{
+			left: 0px !important;
+			top: 2px !important;
+		}
+	}
 	.#{$prefix}panel-body{
 		background: lightgray;
+		padding-left: .5rem;
 	}
 	.#{$prefix}tool-collapse-top{
 		@include icons-sprite(icon-sortcolumn-desc);
 	}
 	.#{$prefix}tool-expand-bottom{
-		@include icons-sprite(icon-sortcolumn-asc);
+		@include icons-sprite(icon-panel-collapse);
 	}
   }
 
