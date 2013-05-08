@@ -68,6 +68,10 @@
   -webkit-flex: $grow $shrink $basis;
 }
 
+@mixin order ($order) {
+  -webkit-order: $order;
+}
+
 /* OTHER */
 
 @mixin no-select {

@@ -50,19 +50,26 @@ Ext.define('Taco.core.ux.content.Header', {
         this.titleContainer = this.down('#titleContainer');
 
         this.actionsContainer = this.down('#actionsContainer');
-
-        this.on('boxready', this.monitorSize, this);
-        
     },
 
-    monitorSize: function () {
-        this.getEl().setStyle('width', this.getWidth() + "px");
-        if (this.sidebar && !this.monitoringSidebar) {
-            this.monitoringSidebar = true;
-            this.sidebar.on('expand', this.monitorSize, this);
-            this.sidebar.on('collapse', this.monitorSize, this);
-        }
-    },
+    monitorSize: Ext.emptyFn,
+
+    // if header sizing is ultimately needed, uncomment this method
+    // then attach a listener to the boxready event and give this header a reference to the sidebar
+    // 
+    // monitorSize: function () {
+    //     this.getEl().setStyle('width', this.getWidth() + "px");
+    //     if (this.sidebar) {
+    //         console.log(this.sidebar);
+    //         this.addCls(Taco.baseCSSPrefix + 'content-header-with-sidebar');
+
+    //         if (!this.monitoringSidebar) {
+    //             this.monitoringSidebar = true;
+    //             this.sidebar.on('expand', this.monitorSize, this);
+    //             this.sidebar.on('collapse', this.monitorSize, this);
+    //         }
+    //     }
+    // },
 
     getActions: function () {
         return this.actionsContainer;
