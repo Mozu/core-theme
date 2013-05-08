@@ -3,7 +3,9 @@
  */
 Ext.define('Taco.core.ux.action.SplitButton', {
     extend: 'Taco.core.ux.action.Button',
+    xtype: 'taco.splitbutton',
     mixins: ['Taco.core.util.GetsParentPage'],
+    cls: Taco.baseCSSPrefix + "splitbutton",
     menuDefaults: {
         plain: true,
         cls: Taco.baseCSSPrefix + 'splitbutton-menu',
@@ -11,6 +13,7 @@ Ext.define('Taco.core.ux.action.SplitButton', {
             cls: Taco.baseCSSPrefix + 'splitbutton-menu-item'
         }
     },
+    renderTpl: ['{text}<strong>&#9662;</strong>'],
     initComponent : function() {
         this.menu = this.createMenu();
         this.callParent(arguments);

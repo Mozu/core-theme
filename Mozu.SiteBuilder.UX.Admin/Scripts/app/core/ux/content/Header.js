@@ -51,7 +51,17 @@ Ext.define('Taco.core.ux.content.Header', {
 
         this.actionsContainer = this.down('#actionsContainer');
 
+        this.on('boxready', this.monitorSize, this);
         
+    },
+
+    monitorSize: function () {
+        this.getEl().setStyle('width', this.getWidth() + "px");
+        if (this.sidebar && !this.monitoringSidebar) {
+            this.monitoringSidebar = true;
+            this.sidebar.on('expand', this.monitorSize, this);
+            this.sidebar.on('collapse', this.monitorSize, this);
+        }
     },
 
     getActions: function () {
