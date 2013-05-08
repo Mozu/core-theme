@@ -37,6 +37,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         this.mixins.bindable.bindStore.apply(this, arguments);
 
         this.view = Ext.create('Taco.view.navigation.PrimaryMenuView', {
+            parentMenu: this,
             store: store
         });
 
