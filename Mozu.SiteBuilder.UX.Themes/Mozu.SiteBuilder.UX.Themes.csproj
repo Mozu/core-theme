@@ -603,6 +603,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Morrissey\test\theme3\" />
+    <Folder Include="Themes\BrandtleyTheme\Resources\Scripts\Modules\" />
+    <Folder Include="Themes\BrandtleyTheme\Resources\Stylesheets\Modules\" />
     <Folder Include="Themes\Core3\Resources\Fonts\" />
     <Folder Include="Themes\Core3\Resources\Images\c2Images\" />
     <Folder Include="Themes\MobileCore\Layouts\" />

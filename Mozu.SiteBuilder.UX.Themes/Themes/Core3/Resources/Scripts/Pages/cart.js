@@ -6,13 +6,15 @@
 
         window.cartVM = cart;
 
-        ko.applyBindings(cart, $cartForm[0]);
+        cart.get().then(function () {
+            ko.applyBindings(cart, $cartForm[0]);
+            //display view
+            $cartForm.noFlickerFadeIn();
+        });
 
         cart.on('ordercreated', function (e, order) {
             window.location = "/checkout/" + order.data.Id;
         });
 
-        //display view
-        $cartForm.noFlickerFadeIn();
     });
 });

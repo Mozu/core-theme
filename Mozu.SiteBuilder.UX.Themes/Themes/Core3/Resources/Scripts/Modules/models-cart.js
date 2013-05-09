@@ -78,15 +78,23 @@
         var self = this;
 
         this.isEmpty = ko.computed(function () {
-            return self.Items().length === 0;
+            var items = self.Items();
+            return items && items.length === 0;
         });
 
         this.canCheckout = ko.computed(function () {
             return !(self.submitting() || self.isEmpty());
         });
 
-        // run an extra sync because we don't get a full cart in the mozuData object for some reason
-        this.get();
+        this.count = ko.computed(function () {
+            var sum = 0;
+            $.each(self.Items(), function (ix, item) {
+                sum += this.Quantity();
+            });
+            return isNaN(sum) ? 0 : sum;
+        });
+        
+
     });
 
 
