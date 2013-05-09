@@ -8,11 +8,12 @@ Ext.define('Taco.view.productType.Index', {
     alias: 'widget.taco.index.producttype',
     requires: ['Taco.model.ProductType'],
 
-    typeName: 'ProductType',
+    typeName: 'Product Type',
     modelName: 'Taco.model.ProductType',
     store: { type: 'Taco.store.ProductTypes' },
     editorName: 'Taco.view.productType.Edit',
-    filterProperty: 'name',
+    filterProperty: 'name',
+
     requiresContextOfType: ['c', 's'],
     gridPanelConf: {
         columns: [{
