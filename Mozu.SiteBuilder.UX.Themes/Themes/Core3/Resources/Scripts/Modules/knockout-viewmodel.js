@@ -121,7 +121,7 @@
                             if ($.isArray(newArray)) {
                                 underlying($.map(newArray, ctorSet));
                             } else {
-                                underlying(null);
+                                underlying([]);
                             }
                         },
                         read: underlying
