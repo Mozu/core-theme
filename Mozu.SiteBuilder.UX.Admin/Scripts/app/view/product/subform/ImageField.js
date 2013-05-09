@@ -16,6 +16,8 @@ Ext.define('Taco.view.product.subform.ImageField', {
     labelAlign: 'top',
     labelSeparator: '',
     cls: 'taco-product-image-field',
+
+    thumbnailSize: 150,
     
     initComponent: function () {
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.Files');
@@ -51,13 +53,15 @@ Ext.define('Taco.view.product.subform.ImageField', {
                 tag: 'ul',
                 cls: 'taco-image-tiles'
             },
+            hidden: true,
+            selectedItemCls: 'active',
             store: this.selectedImages,
             tpl :[
                     '<tpl foreach=".">',
                         '<tpl if="isUploaded === false">',
                             '<li class="item uploading">Progress {progress}%</li>',
                         '<tpl else>',
-                            '<li class="item image" style="background-image:url({url}?size=150)">',
+                            '<li class="item image" style="background-image:url({url}?size=' + this.thumbnailSize + ')">',
                                 '<ul class="toolbar">',
                                     '<li class="drag-handle">Drag</li>',
                                     '<li class="remove">Remove</li>',
@@ -124,8 +128,6 @@ Ext.define('Taco.view.product.subform.ImageField', {
             datachanged: this.bindImageUpload,
             scope: this
         });
-       
-
     },
 
     onViewAfterRender: function () {
@@ -140,8 +142,70 @@ Ext.define('Taco.view.product.subform.ImageField', {
         this.dropZone = Ext.create('Ext.view.DropZone', {
             view: this.imageView,
             ddGroup: id,
-            handleNodeDrop: function (data, dropRecord, position) {
+            indicatorHtml: '<div class="taco-image-field-drop-indicator"></div>',
+            positionIndicator: function(node, data, e) {
+                var me = this,
+                    view = me.view,
+                    pos = me.getPosition(e, node),
+                    overRecord = view.getRecord(node),
+                    draggingRecords = data.records,
+                    indicatorX, indicatorY, xy;
 
+                if (!Ext.Array.contains(draggingRecords, overRecord) && (
+                    pos == 'before' && !me.containsRecordAtOffset(draggingRecords, overRecord, -1) ||
+                    pos == 'after' && !me.containsRecordAtOffset(draggingRecords, overRecord, 1)
+                )) {
+                    me.valid = true;
+
+                    if (me.overRecord != overRecord || me.currentPosition != pos) {
+
+                        xy = Ext.fly(node).getXY();
+                        indicatorY = xy[1] - view.el.getY();
+                        indicatorX = xy[0] - view.el.getX();
+                        if (pos == 'after') {
+                            //indicatorY += Ext.fly(node).getHeight();
+                            indicatorX += 125;
+                        }
+                        //me.getIndicator().setWidth(Ext.fly(view.el).getWidth()).showAt(0, indicatorY);
+                        me.getIndicator().showAt(indicatorX, indicatorY)
+                        // Cache the overRecord and the 'before' or 'after' indicator.
+                        me.overRecord = overRecord;
+                        me.currentPosition = pos;
+                    }
+                } else {
+                    me.invalidateDrop();
+                }
+            },
+
+            getPosition: function(e, node) {
+                var x = e.getXY()[0],
+                    region = Ext.fly(node).getRegion(),
+                    pos;
+
+                if ((region.right - x) >= (region.right - region.left) / 2) {
+                    pos = "before";
+                } else {
+                    pos = "after";
+                }
+                return pos;
+            },
+
+            handleNodeDrop: function (data, dropRecord, position) {
+                var view = this.view,
+                    store = view.getStore(),
+                    records = data.records,
+                    index;
+
+                data.view.store.remove(records);
+
+                index = store.indexOf(dropRecord);
+                
+                if (position === 'after') {
+                    index++;
+                }
+
+                store.insert(index, records);
+                view.getSelectionModel().select(records);
             }
         });
     },
@@ -173,7 +237,6 @@ Ext.define('Taco.view.product.subform.ImageField', {
         
         this.imageDropZoneEl.bindImageUpload = true;
     
-        console.log('get there', this.getId());
 
         this.imageDropZoneEl.on({
             dragenter: function (e) {

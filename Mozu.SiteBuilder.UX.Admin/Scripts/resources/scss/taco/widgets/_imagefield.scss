@@ -20,12 +20,14 @@
         content: "";
         display: block;
         position: absolute;
-        
+        background-color: rgba(99,163,255,0.3);
         @include transition(opacity 0.3s ease-in);
     }
 }
 
 @mixin taco-image-field {
+
+    $thumbnail-size: 150px;
 
     .#{$vprefix}product-image-field {
         border: none !important;
@@ -39,8 +41,8 @@
         }
         .#{$vprefix}image-tiles > li {
             list-style: none;
-            height: 150px;
-            width: 150px;
+            height: $thumbnail-size;
+            width: $thumbnail-size;
             border: 1px solid #bfbfbf;
             margin: 0 1.5rem 1rem 0;
             background-color: white;
@@ -49,7 +51,19 @@
             display: block;
 
             &.active {
+                border: 1px solid red;
 
+                &:before {
+                    opacity: 1;
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    background-color: rgba(60,120,255,0.4);
+                    height: $thumbnail-size;
+                    width: $thumbnail-size;
+                    
+                    @include transition(opacity 0.3s ease-in);
+                }
             }
 
             &.#{$vprefix}image-drop {
@@ -59,8 +73,8 @@
                 background-size: 68px 70px;
 
                 &:before {
-                    width: 150px;
-                    height: 150px;
+                    width: $thumbnail-size;
+                    height: $thumbnail-size;
                     margin-top: -3rem;
                 }
             }
@@ -101,7 +115,6 @@
 
         &.drag-and-drop-active {
             .#{$vprefix}product-image-drop-zone {
-                //background-color: red !important;
                 
                 &:before {
                     opacity: 1 !important;
@@ -109,7 +122,6 @@
             }
 
             .#{$vprefix}image-drop {
-                //background-color: red !important;
                 &:before {
                     opacity: 1 !important;
                 }
@@ -130,5 +142,11 @@
             //width: 159px;
             width: 100%;
         }
+    }
+
+    .#{$vprefix}image-field-drop-indicator {
+        height: $thumbnail-size;
+        width: 3px;
+        background: red;
     }
 }
