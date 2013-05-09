@@ -106,8 +106,7 @@
       }
 
       &> .#{$prefix}panel-body {
-        border-left: 0px none;
-        border-right: 0px none;
+        border: 0px none;
       }
       &> .#{$prefix}grid-header-ct {
         border: 0px none;
