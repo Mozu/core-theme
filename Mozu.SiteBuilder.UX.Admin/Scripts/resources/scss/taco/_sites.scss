@@ -39,7 +39,6 @@
     }
 
     .#{$vprefix}treelist {
-
       .#{$vprefix}shit {
         background-color: $color-neutral-white !important;
         font-size: 18px;
@@ -94,10 +93,9 @@
         }
 
         .#{$vprefix}draghandle {
-          @include single-transition(opacity);
           opacity: 1;
+          @include single-transition(opacity);
         }
-
         &:not(:hover) .#{$vprefix}draghandle {
           opacity: 0;
         }
@@ -105,6 +103,14 @@
         &:nth-child(3) .#{$prefix}tree-icon {
           @include icons-sprite(icon-toolbox-nav-home);
         }
+      }
+
+      &> .#{$prefix}panel-body {
+        border-left: 0px none;
+        border-right: 0px none;
+      }
+      &> .#{$prefix}grid-header-ct {
+        border: 0px none;
       }
     }
   }
