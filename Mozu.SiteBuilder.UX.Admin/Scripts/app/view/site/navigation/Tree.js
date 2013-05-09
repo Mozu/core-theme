@@ -7,6 +7,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
     requires: ['Taco.model.NavigationTreeNode', 'Taco.store.NavigationTreeNodes', 'Taco.view.site.navigation.PageCreator', 'Taco.view.site.navigation.ExternalLinkEditor'],
 
     layout: 'auto',
+    overflowY: 'auto',
 
     initComponent: function() {
         var me = this,

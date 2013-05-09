@@ -16,6 +16,8 @@ Ext.define('Taco.view.site.Toolbox', {
     
     initComponent: function () {
         var me = this;
+
+        this.height = Ext.getBody().getBox().height - 106;
         
         // this.cardPanel = Ext.create('Ext.panel.Panel', {
         //     itemId: 'cardPanel',
