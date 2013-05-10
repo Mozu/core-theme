@@ -19,6 +19,22 @@ Ext.define('Taco.core.ux.action.SplitButton', {
         this.menu = this.createMenu();
         this.callParent(arguments);
     },
+
+    onClick: function (e) {
+        var me = this;
+        if (me.preventDefault || (me.disabled && me.getHref()) && e) {
+            e.preventDefault();
+        }
+        if (e.button !== 0) {
+            return;
+        }
+        if (e.within(me.menutrigger, false, true)) {
+            me.maybeShowMenu();
+        } else {
+            me.doToggle();
+            me.fireHandler(e);
+        }
+    },
     
     createMenu: function () {
         if (this.menu && this.menu.$className == undefined) {
