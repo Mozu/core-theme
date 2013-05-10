@@ -326,7 +326,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(DC.Document doc)
         {
-            return _docRepo.Delete(doc.DocumentListName, doc.Id)
+            return Delete2(doc.DocumentListName, doc.Id);
+        }
+
+        public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(string documentListName, string documentId)
+        {
+            return _docRepo.Delete(documentListName, documentId, _apiContext.CmsDraftState)
                 .ContinueWith(t => new Tuple<bool, ServiceClientResponse<StreamContent>>(t.Result.ResponseMessage.IsSuccessStatusCode, t.Result));
         }
     }

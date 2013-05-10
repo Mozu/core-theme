@@ -102,12 +102,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 if (item.NodeType.IsPage || item.NodeType.IsLink)
                 {
+                    // delete item from navset.
                     var itemInNavSet = navSet.Nodes.FirstOrDefault(n => n.Id == item.Id);
                     if (itemInNavSet != null)
                     {
                         navSet.Nodes.Remove(itemInNavSet);
                         isDirty = true;
                     }
+                }
+                if (item.NodeType.IsPage)
+                {
+                    // delete item from CMS
+                    var resp = await _cmsService.Delete2(item.OriginalCollection, item.OriginalId);
+                }
+                if (item.NodeType.IsCategory)
+                {
+                    // delete item from categories
+                    int categoryId = Convert.ToInt32(item.OriginalId);
+                    await _catClient.DeleteCategoryById(categoryId);
                 }
             }
 

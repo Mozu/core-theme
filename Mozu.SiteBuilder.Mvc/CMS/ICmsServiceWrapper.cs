@@ -17,6 +17,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(DC.Document document);
 
+        Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(string documentListName, string documentId);
+
         Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name);
 
         Task<ServiceClientResponse<DC.Document>> Get2(string contentCollection, string id);
