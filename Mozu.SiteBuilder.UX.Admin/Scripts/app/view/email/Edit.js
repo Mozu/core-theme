@@ -3,6 +3,7 @@
  */
 Ext.define('Taco.view.email.Edit', {
     extend: 'Taco.core.ux.form.Editor',
+    requiresContextOfType: 's',
     requires: ['Taco.view.site.CreateModal', 'Taco.view.site.Toolbox', 'Taco.view.site.page.dataViews.Blog', 'Taco.view.site.page.dataViews.Meta',
         'Taco.view.site.page.Creator', 'Taco.model.PageTypeDefinition', 'Taco.store.TempPages', 'Taco.store.CmsDocuments', 'Taco.core.EventChain',
         'Taco.view.site.page.entityAdapters.DocumentEntityAdapter', 'Taco.view.site.page.entityAdapters.ProductEntityAdapter', 'Taco.view.site.page.entityAdapters.CategoryEntityAdapter',
