@@ -2,14 +2,6 @@
 
 $color-neutral-transparent:     transparentize(rgb(255, 255, 255), 1);
 $color-neutral-white:           rgb(255, 255, 255);
-$color-neutral-lightest:        rgb(242, 240, 237);
-$color-neutral-light:           rgb(237, 234, 230);
-$color-neutral-mid-lighter:     rgb(230, 226, 217);
-$color-neutral-mid-light:       rgb(215, 213, 210);
-$color-neutral-mid:             rgb(192, 192, 192);
-$color-neutral-dark:            rgb(154, 154, 154);
-$color-neutral-darker:          rgb(124, 123, 122);
-$color-neutral-darkest:         rgb(94, 92, 90);
 $color-neutral-black:           rgb(0, 0, 0);
 
 $color-neutral-95:              rgb(242, 242, 242); // #F2F2F2 gray 95%
@@ -56,7 +48,29 @@ $color-selected: $color-theme-support;
 
 
 
+
+
+
+
+
+
+
+
+
 /* OLD COLORS */
+
+
+
+$color-neutral-lightest:        rgb(242, 240, 237);
+$color-neutral-light:           rgb(237, 234, 230);
+$color-neutral-mid-lighter:     rgb(230, 226, 217);
+$color-neutral-mid-light:       rgb(215, 213, 210);
+$color-neutral-mid:             rgb(192, 192, 192);
+$color-neutral-dark:            rgb(154, 154, 154);
+$color-neutral-darker:          rgb(124, 123, 122);
+$color-neutral-darkest:         rgb(94, 92, 90);
+
+
 
 $color-highlighted-background: rgb(112, 210, 219);
 $color-highlighted-background-light: rgb(189, 249, 255);
@@ -87,3 +101,56 @@ $color-grid-border-light: rgb(218, 218, 216);
 
 $color-primary-menu-background-mid: rgb(97, 96, 94);
 $color-primary-menu-background-dark: rgb(76, 73, 66);
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Colors for Style Guide
+.guide-color-neutral-transparent    {background: $color-neutral-transparent;}
+.guide-color-neutral-white          {background: $color-neutral-white;}
+.guide-color-neutral-lightest       {background: $color-neutral-lightest;}
+.guide-color-neutral-light          {background: $color-neutral-light;}
+.guide-color-neutral-mid-lighter    {background: $color-neutral-mid-lighter;}
+.guide-color-neutral-mid-light      {background: $color-neutral-mid-light;}
+.guide-color-neutral-mid            {background: $color-neutral-mid;}
+.guide-color-neutral-dark           {background: $color-neutral-dark;}
+.guide-color-neutral-darker         {background: $color-neutral-darker;}
+.guide-color-neutral-darkest        {background: $color-neutral-darkest;}
+.guide-color-neutral-black          {background: $color-neutral-black;}
+.guide-color-neutral-transparent    {background: $color-neutral-transparent;}
+.guide-color-neutral-transparent    {background: $color-neutral-transparent;}
+.guide-color-neutral-95             {background: $color-neutral-95;}
+.guide-color-neutral-90             {background: $color-neutral-90;}
+.guide-color-neutral-75             {background: $color-neutral-75;}
+.guide-color-neutral-70             {background: $color-neutral-70;}
+.guide-color-neutral-45             {background: $color-neutral-45;}
+.guide-color-neutral-30             {background: $color-neutral-30;}
+.guide-color-neutral-20             {background: $color-neutral-20;}
+.guide-base-color                   {background: $base-color;}
+.guide-color-theme-base             {background: $color-theme-base;}
+.guide-color-theme-base-dark        {background: $color-theme-base-dark;}
+.guide-color-theme-accent           {background: $color-theme-accent;}
+.guide-color-theme-support          {background: $color-theme-support;}
+.guide-color-theme-support-dark     {background: $color-theme-support-dark;}
+.guide-color-theme-support-darker   {background: $color-theme-support-darker;}
+.guide-color-theme-support-darkest  {background: $color-theme-support-darkest;}
+.guide-color-status                 {background: $color-status;}
+.guide-color-warning                {background: $color-warning;}
+.guide-color-error                  {background: $color-error;}
+.guide-color-action-link            {background: $color-action-link;}
+.guide-color-action-primary-background
+                                    {background: $color-action-primary-background;}
+.guide-color-action-primary-background-hover
+                                    {background: $color-action-primary-background-hover;}
+.guide-color-action-primary-background-active
+                                    {background: $color-action-primary-background-active;}
+.guide-color-selected               {background: $color-theme-support;}
