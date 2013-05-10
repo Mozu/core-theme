@@ -4,6 +4,7 @@
 Ext.define('Taco.view.email.Index', {
     extend: 'Taco.core.ux.content.Container',
 
+    requiresContextOfType: 's',
     requires: ['Ext.form.Panel', 'Taco.core.ux.BaseGrid', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.modal.Confirmation', 'Taco.core.ux.browser.ItemBrowser'],
     mixins: {
         protectable: 'Taco.core.util.Protectable'

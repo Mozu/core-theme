@@ -12,6 +12,8 @@ Ext.define('Taco.view.generalsettings.Index', {
         align: 'stretch'
     },
 
+    requiresContextOfType: 's',
+
     initComponent: function () {
         var me = this;
         me.sections = [];

@@ -5,6 +5,7 @@ Ext.define('Taco.view.tax.Index', {
     extend: 'Taco.core.ux.content.Container',
     requires: ['Taco.store.TaxRates', 'Taco.store.StateComboBox'],
 
+    requiresContextOfType: 's',
     initComponent: function () {
         var me = this;
 

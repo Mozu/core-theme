@@ -13,6 +13,7 @@ Ext.define('Taco.view.paymentAndCheckout.Index', {
     ],
     title: 'Payment and Checkout',
     model: 'Taco.model.PaymentAndCheckout',
+    requiresContextOfType: 's',
 
     initComponent: function () {
         var me = this,
