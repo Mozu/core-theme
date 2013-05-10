@@ -5,7 +5,7 @@
  */
 
 Ext.define('Taco.core.ux.browser.Browsable', {
-
+    requires: ['Taco.core.util.ExceptionWhiner'],
     config: {
         typeName: 'Item',
         createButtonPrefix: "Create New ",
@@ -86,7 +86,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         
         this.mon(this.store.getProxy(), 'exception', function (proxy, response, operation, eOpts) {
             if (operation.error && operation.error.remoteException) {
-                alert(operation.error.remoteException.getMessage());
+                //alert(operation.error.remoteException.getMessage());
             }
 
         }, this);
@@ -250,9 +250,15 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                                         
                             records.splice(0, records.length);
                             grid.setLoading(false);
+                            
+                            var text = "Unknown error."
+                            if (m.exceptions) {
+                                text = Taco.core.util.ExceptionWhiner.createHtmlList(m.exceptions);
+                            }
+
                             Ext.create('Taco.core.ux.modal.Alert', {
                                 autoShow: true,
-                                text: 'Delete Failed. <br /> TODO get error text'
+                                text: 'Delete Failed. <br />' + text
                             });
                                         
                         }

@@ -524,6 +524,7 @@
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
     <Content Include="Scripts\app\core\context\TaContext.js" />
     <Content Include="Scripts\app\core\util\GetsParentPage.js" />
+    <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\ux\action\SplitButton.js" />
     <Content Include="Scripts\app\core\ux\action\Button.js" />
     <Content Include="Scripts\app\core\ux\action\PrimarySplitButton.js" />
