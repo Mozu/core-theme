@@ -1116,6 +1116,7 @@
     <Content Include="Scripts\makedocsasjson.bat" />
     <Content Include="Scripts\resources\css\taco.css" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.svg" />
+    <Content Include="Scripts\resources\guide\index.html" />
     <Content Include="Scripts\resources\images\card-sd7c19700b9.png" />
     <Content Include="Scripts\resources\images\icons-s93077bd124.png" />
     <Content Include="Scripts\resources\images\icons\icon-widget-drag.png" />

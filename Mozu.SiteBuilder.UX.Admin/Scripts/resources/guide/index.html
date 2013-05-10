@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Mozu Admin Style Guide</title>
+    <link href="/admin/Scripts/resources/css/taco.css" rel="stylesheet" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <style>
+        * {
+            font-family: 'Helvetica';
+        }
+        body {
+
+        }
+        h1 {
+            font-size: 5rem;
+            border-bottom: 1px solid #000;
+            background: #444;
+            color: #FFF;
+            padding: 0 2rem;
+        }
+        
+        ul.colors {
+            display: -webkit-flex;
+            -webkit-flex-wrap: wrap;
+            background-color: transparent;
+            background-image: -webkit-repeating-linear-gradient(-45deg, #FFF 0%, #FFF 25.5%, #EEE 25.5%, #EEE 51%, #FFF 51%, #FFF 76.5%, #EEE 76.5%, #EEE 100%);
+            background-size: 6px 6px;
+            white-space: pre;
+        }
+
+        li.color {
+            list-style: none;
+            margin: 1rem;
+            padding: 1rem;
+            height: 100px;
+            width: 275px;
+            display: block;
+        }
+
+        li.color span {
+            background: rgba(255,255,255,0.4);
+            padding: 0.2rem;
+            font: 0.7rem Monaco, Consolas, 'Courier New', Courier, sans-serif;
+        }
+
+        li.headline {
+            width: 100%;
+            list-style: none;
+            font-size: 3.5rem;
+            background: #999;
+            color: #FFF;
+            padding: 0 2rem;
+        }
+    </style>
+
+    <script>
+        (function ($, doc) {
+
+            var colors = {
+                'Neutral Colors': [
+                    'color-neutral-transparent',
+                    'color-neutral-white',
+                    'color-neutral-black',
+                    'color-neutral-95',
+                    'color-neutral-90',
+                    'color-neutral-75',
+                    'color-neutral-70',
+                    'color-neutral-45',
+                    'color-neutral-30',
+                    'color-neutral-20'
+                ],
+                'Theme Colors': [
+                    'base-color',
+                    'color-theme-base',
+                    'color-theme-base-dark',
+                    'color-theme-accent',
+                    'color-theme-support',
+                    'color-theme-support-dark',
+                    'color-theme-support-darker',
+                    'color-theme-support-darkest'
+                ],
+                'Message Colors': [
+                    'color-status',
+                    'color-warning',
+                    'color-error'
+                ],
+                ' Action Colors': [
+                    'color-action-link',
+                    'color-action-primary-background',
+                    'color-action-primary-background-hover',
+                    'color-action-primary-background-active'
+                ],
+                'Highlight Colors': [
+                    'color-selected'
+                ],
+                'Depricated Colors (Do Not Use)': [
+                    'color-neutral-lightest',
+                    'color-neutral-light',
+                    'color-neutral-mid-lighter',
+                    'color-neutral-mid-light',
+                    'color-neutral-mid',
+                    'color-neutral-dark',
+                    'color-neutral-darker',
+                    'color-neutral-darkest',
+                ]
+            };
+
+            $(doc).ready(function () {
+                var $colors = $('.colors');
+
+                $.each(colors, function (category, values) {
+                    $colors.append('<li class="headline">' + category + '</li>');
+
+                    $(values).each(function (index, color) {
+                        var $color = $('<li class="color guide-' + color + '"></li>'),
+                            html = '<span>$' + color + '</span>\n\n';
+
+                        $colors.append($color);
+
+                        html += '<span>' + $color.css('background-color') + '</span>';
+
+                        $color.html(html);
+                    });
+                });
+            });
+
+        }(jQuery, document));
+    </script>
+
+</head>
+<body>
+    <h1>Colors</h1>
+    <ul class="colors"></ul>
+</body>
+</html>
