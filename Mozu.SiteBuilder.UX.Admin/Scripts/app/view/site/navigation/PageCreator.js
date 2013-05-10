@@ -147,7 +147,7 @@
             record.save({
                 success: function () {
                     
-                    var newNavRecord = {
+                    var newNavRecord = Ext.create('Taco.model.NavigationTreeNode', {
                         'id': 'page^^' + record.get('collectionName') + '^^' + record.get('documentId'),
                         'originalId': record.get('documentId'),
                         'originalCollection': record.get('collectionName'),
@@ -160,8 +160,9 @@
                         'expandable': true,
                         'iconCls': 'taco-nav-node-page',
                         'allowDrag': true,
-                        'isHidden': false
-                    };
+                        'isHidden': false,
+                        'editAction': 'move'
+                    });
                     me.fireEvent('save', me, newNavRecord);
                 },
                 failure: function () {
