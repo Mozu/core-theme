@@ -101,3 +101,81 @@ Each of these technologies deserves explanation and reference material, and this
     0.  The thumbnail
  
         
+impl
+
+0.  Django Templates
+    0.  Template Architecture and Organization
+        0.  The root "Layout" template
+        0.  The Pages folder and basic inheritance
+        0.  The Modules folder
+        0.  The Widgets folder
+    0.  The Django template language and control structures
+        0.  Variable evaluation
+        0.  Tag usage
+        0.  Filter usage
+        0.  Includes
+        0.  Blocks (used only in layout)
+    0.  Variables exposed in the Django templates
+        0.  SiteContext and other globals
+        0.  Models: when they're direct from the API and when they're not
+        0.  Theme settings
+    0.  Referencing Resources
+        0.  Directory structure
+        0.  Stylesheets
+        0.  Script Modules
+    0.  Best Practices
+        0.  Template Organization
+        0.  HTML Conventions
+        0.  Classes and IDs
+        0.  Data Attributes
+        0.  KnockoutJS Templates
+0.  Stylesheets
+    0.  Stylesheet Organization
+        0.  The modules folder
+        0.  The pages folder
+        0.  The storefront stylesheet
+        0.  The textonly stylesheet and its special use
+    0.  LessCSS usage
+        0.  Variables
+        0.  Nesting
+        0.  Mixins
+    0.  Theme Settings
+    0.  Best Practices
+        0.  Technically all organization is a best practice, not a requirement
+        0.  Pixels versus rems
+        0.  Stack stylesheets in storefront.less
+        0.  Assign themesettings to variables
+        0.  Style classes, not IDs
+        0.  Use compositional classes
+        0.  Limit selector complexity
+0.  Script Modules
+    0.  AMDs and RequireJS
+        0.  Why not to use `<script>` tags
+        0.  The `require_script` tag
+        0.  The RenderScripts and DebugScripts templates
+        0.  The shim plugin
+    0.  KnockoutJS ViewModels
+        0.  Specifying fields
+        0.  Helper methods
+        0.  Events
+        0.  Populating from SDK
+        0.  Populating manually
+        0.  Builtin custom bindings
+        0.  Builtin custom extenders
+    0.  Best Practices
+        0.  Targeting HTML
+        0.  Binding ViewModels to views
+        0.  SDK use
+0.  Metadata
+    0.  The theme.xml file
+        0.  Inheritance
+        0.  Supports string
+    0.  The ThemeSettings.xml file
+        0.  Settings Types
+        0.  Availability in templates and stylesheets
+        0.  Hiding inherited theme settings
+    0.  The build.js file
+        0.  The `morrissey` tool
+    0.  The thumbnail
+ 
+        

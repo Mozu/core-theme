@@ -11624,10 +11624,9 @@ textarea.x-form-field:not(.x-form-focus):hover {
 }
 /* line 108, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist > .x-panel-body {
-  border-left: 0px none;
-  border-right: 0px none;
+  border: 0px none;
 }
-/* line 112, ../scss/taco/_sites.scss */
+/* line 111, ../scss/taco/_sites.scss */
 .taco-toolbox .taco-treelist > .x-grid-header-ct {
   border: 0px none;
 }
@@ -12006,16 +12005,16 @@ textarea.x-form-field:not(.x-form-focus):hover {
 }
 
 /* PRODUCT TYPE FORM */
-/* line 30, ../scss/taco/widgets/_imagefield.scss */
+/* line 32, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field {
   border: none !important;
 }
-/* line 33, ../scss/taco/widgets/_imagefield.scss */
+/* line 35, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field .taco-action {
   font-weight: normal;
   font-size: 1.3rem;
 }
-/* line 37, ../scss/taco/widgets/_imagefield.scss */
+/* line 39, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field .taco-image-tiles {
   display: -webkit-flex;
   -webkit-flex-direction: row;
@@ -12024,7 +12023,7 @@ textarea.x-form-field:not(.x-form-focus):hover {
   -webkit-align-items: stretch;
   -webkit-align-content: stretch;
 }
-/* line 40, ../scss/taco/widgets/_imagefield.scss */
+/* line 42, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field .taco-image-tiles > li {
   list-style: none;
   height: 150px;
@@ -12036,7 +12035,25 @@ textarea.x-form-field:not(.x-form-focus):hover {
   background-repeat: no-repeat;
   display: block;
 }
-/* line 55, ../scss/taco/widgets/_imagefield.scss */
+/* line 53, ../scss/taco/widgets/_imagefield.scss */
+.taco-product-image-field .taco-image-tiles > li.active {
+  border: 1px solid red;
+}
+/* line 56, ../scss/taco/widgets/_imagefield.scss */
+.taco-product-image-field .taco-image-tiles > li.active:before {
+  opacity: 1;
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: rgba(60, 120, 255, 0.4);
+  height: 150px;
+  width: 150px;
+  -webkit-transition: opacity 0.3s ease-in;
+  -moz-transition: opacity 0.3s ease-in;
+  -o-transition: opacity 0.3s ease-in;
+  transition: opacity 0.3s ease-in;
+}
+/* line 69, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field .taco-image-tiles > li.taco-image-drop {
   text-align: center;
   border: 1px dashed #B1B1B1;
@@ -12064,18 +12081,19 @@ textarea.x-form-field:not(.x-form-focus):hover {
   content: "";
   display: block;
   position: absolute;
+  background-color: rgba(99, 163, 255, 0.3);
   -webkit-transition: opacity 0.3s ease-in;
   -moz-transition: opacity 0.3s ease-in;
   -o-transition: opacity 0.3s ease-in;
   transition: opacity 0.3s ease-in;
 }
-/* line 61, ../scss/taco/widgets/_imagefield.scss */
+/* line 75, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field .taco-image-tiles > li.taco-image-drop:before {
   width: 150px;
   height: 150px;
   margin-top: -3rem;
 }
-/* line 72, ../scss/taco/widgets/_imagefield.scss */
+/* line 86, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field .taco-image-tiles > li .toolbar {
   opacity: 0;
   padding: 3px 8px;
@@ -12092,7 +12110,7 @@ textarea.x-form-field:not(.x-form-focus):hover {
   -webkit-align-items: stretch;
   -webkit-align-content: stretch;
 }
-/* line 81, ../scss/taco/widgets/_imagefield.scss */
+/* line 95, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field .taco-image-tiles > li .drag-handle {
   cursor: move;
   width: 3px;
@@ -12101,27 +12119,27 @@ textarea.x-form-field:not(.x-form-focus):hover {
   background-position: 0 -3116px;
   -webkit-flex: 1 1 auto;
 }
-/* line 90, ../scss/taco/widgets/_imagefield.scss */
+/* line 104, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field .taco-image-tiles > li .remove {
   cursor: pointer;
   width: 15px;
   height: 18px;
   background-position: 0 -3098px;
 }
-/* line 97, ../scss/taco/widgets/_imagefield.scss */
+/* line 111, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field .taco-image-tiles > li:hover .toolbar {
   opacity: 1;
 }
-/* line 106, ../scss/taco/widgets/_imagefield.scss */
+/* line 119, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field.drag-and-drop-active .taco-product-image-drop-zone:before {
   opacity: 1 !important;
 }
-/* line 113, ../scss/taco/widgets/_imagefield.scss */
+/* line 125, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field.drag-and-drop-active .taco-image-drop:before {
   opacity: 1 !important;
 }
 
-/* line 120, ../scss/taco/widgets/_imagefield.scss */
+/* line 132, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-drop-zone {
   text-align: center;
   border: 1px dashed #B1B1B1;
@@ -12150,16 +12168,24 @@ textarea.x-form-field:not(.x-form-focus):hover {
   content: "";
   display: block;
   position: absolute;
+  background-color: rgba(99, 163, 255, 0.3);
   -webkit-transition: opacity 0.3s ease-in;
   -moz-transition: opacity 0.3s ease-in;
   -o-transition: opacity 0.3s ease-in;
   transition: opacity 0.3s ease-in;
 }
-/* line 127, ../scss/taco/widgets/_imagefield.scss */
+/* line 139, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-drop-zone:before {
   margin-top: -3rem;
   height: 170px;
   width: 100%;
+}
+
+/* line 147, ../scss/taco/widgets/_imagefield.scss */
+.taco-image-field-drop-indicator {
+  height: 150px;
+  width: 3px;
+  background: red;
 }
 
 /* line 5, ../scss/taco/widgets/_standaloneAccordion.scss */
