@@ -11,8 +11,10 @@ Ext.define('Taco.core.ux.action.Button', {
     componentCls: Taco.baseCSSPrefix + 'action',
     componentLayout: 'autocomponent',
     hrefTarget: undefined,
-    renderTpl: ['{text}'],
+    renderTpl: ['<span id="{id}-label">{text}</span>'],
     type: 'button',
+
+    childEls: ['label'],
 
     initComponent: function() {
         this.autoEl = Ext.isString(this.autoEl) ? { tag: this.autoEl } : this.autoEl;
@@ -53,5 +55,25 @@ Ext.define('Taco.core.ux.action.Button', {
         return args;
     },
 
+    setText: function (text) {
+        text = text || '';
+        var me = this,
+            oldText = me.text || '';
+
+        if (text != oldText) {
+            if (me.rendered) {
+                me.label.update(text);
+                me.setComponentCls();
+                if (Ext.isStrict && Ext.isIE8) {
+                    // weird repaint issue causes it to not resize
+                    me.el.repaint();
+                }
+                me.updateLayout();
+            }
+            me.fireEvent('textchange', me, oldText, text);
+        }
+        return me;
+    },
+    
     onMouseMove: Ext.emptyFn
 });

@@ -24,6 +24,7 @@ Ext.define('Taco.view.pendingchange.Cms', {
         });
     },
     discardAll:function() {
+        var me = this;
         me.store.discardAll( function () {
             Taco.app.fireEvent('setmessage', 'changes discarded', 'success');
             me.store.reload();
@@ -38,7 +39,7 @@ Ext.define('Taco.view.pendingchange.Cms', {
             listeners: {
                 click: function() {
 
-                    this.getParentPage().discardAll();
+                    this.discardAll();
                 }
             }
         }, {
