@@ -28,6 +28,7 @@ var ApiContext = (function () {
     };
 
     ApiContextConstructor.prototype = {
+        constructor: ApiContextConstructor,
         api: function () {
             return this._apiInstance || (this._apiInstance = new ApiInterface(this));
         },

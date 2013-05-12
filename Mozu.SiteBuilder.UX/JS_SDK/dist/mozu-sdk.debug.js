@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-04-25
+ * Mozu JavaScript SDK - v0.1.0 - 2013-05-12
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -27,7 +27,7 @@
  * @author Brian Cavalier
  * @author John Hann
  *
- * @version 1.8.0
+ * @version 1.8.1
  */
 
 (function(define) { 'use strict';
@@ -82,43 +82,55 @@ define(function () {
 	 * whose value is promiseOrValue if promiseOrValue is an immediate value.
 	 *
 	 * @param {*} promiseOrValue
-	 * @returns Guaranteed to return a trusted Promise.  If promiseOrValue is a when.js {@link Promise}
-	 *   returns promiseOrValue, otherwise, returns a new, already-resolved, when.js {@link Promise}
-	 *   whose resolution value is:
+	 * @returns {Promise} Guaranteed to return a trusted Promise.  If promiseOrValue
+	 *   is trusted, returns promiseOrValue, otherwise, returns a new, already-resolved
+	 *   when.js promise whose resolution value is:
 	 *   * the resolution value of promiseOrValue if it's a foreign promise, or
 	 *   * promiseOrValue if it's a value
 	 */
 	function resolve(promiseOrValue) {
-		var promise, deferred;
+		var promise;
 
 		if(promiseOrValue instanceof Promise) {
 			// It's a when.js promise, so we trust it
 			promise = promiseOrValue;
 
+		} else if(isPromise(promiseOrValue)) {
+			// Assimilate foreign promises
+			promise = assimilate(promiseOrValue);
 		} else {
-			// It's not a when.js promise. See if it's a foreign promise or a value.
-			if(isPromise(promiseOrValue)) {
-				// It's a thenable, but we don't know where it came from, so don't trust
-				// its implementation entirely.  Introduce a trusted middleman when.js promise
-				deferred = defer();
-
-				// IMPORTANT: This is the only place when.js should ever call .then() on an
-				// untrusted promise. Don't expose the return value to the untrusted promise
-				promiseOrValue.then(
-					function(value)  { deferred.resolve(value); },
-					function(reason) { deferred.reject(reason); },
-					function(update) { deferred.progress(update); }
-				);
-
-				promise = deferred.promise;
-
-			} else {
-				// It's a value, not a promise.  Create a resolved promise for it.
-				promise = fulfilled(promiseOrValue);
-			}
+			// It's a value, create a fulfilled promise for it.
+			promise = fulfilled(promiseOrValue);
 		}
 
 		return promise;
+	}
+
+	/**
+	 * Assimilate an untrusted thenable by introducing a trusted middle man.
+	 * Not a perfect strategy, but possibly the best we can do.
+	 * IMPORTANT: This is the only place when.js should ever call an untrusted
+	 * thenable's then() on an. Don't expose the return value to the untrusted thenable
+	 *
+	 * @param {*} thenable
+	 * @param {function} thenable.then
+	 * @returns {Promise}
+	 */
+	function assimilate(thenable) {
+		var d = defer();
+
+		// TODO: Enqueue this for future execution in 2.0
+		try {
+			thenable.then(
+				function(value)  { d.resolve(value); },
+				function(reason) { d.reject(reason); },
+				function(update) { d.progress(update); }
+			);
+		} catch(e) {
+			d.reject(e);
+		}
+
+		return d.promise;
 	}
 
 	/**
@@ -249,7 +261,7 @@ define(function () {
 	 */
 	function defer() {
 		var deferred, promise, handlers, progressHandlers,
-			_then, _progress, _resolve;
+			_then, _notify, _resolve;
 
 		/**
 		 * The promise for the new deferred
@@ -266,15 +278,16 @@ define(function () {
 			then:     then, // DEPRECATED: use deferred.promise.then
 			resolve:  promiseResolve,
 			reject:   promiseReject,
-			// TODO: Consider renaming progress() to notify()
-			progress: promiseProgress,
+			progress: promiseNotify, // DEPRECATED: use deferred.notify
+			notify:   promiseNotify,
 
 			promise:  promise,
 
 			resolver: {
 				resolve:  promiseResolve,
 				reject:   promiseReject,
-				progress: promiseProgress
+				progress: promiseNotify, // DEPRECATED: use deferred.notify
+				notify:   promiseNotify
 			}
 		};
 
@@ -299,13 +312,13 @@ define(function () {
 				? function(update) {
 					try {
 						// Allow progress handler to transform progress event
-						deferred.progress(onProgress(update));
+						deferred.notify(onProgress(update));
 					} catch(e) {
 						// Use caught value as progress
-						deferred.progress(e);
+						deferred.notify(e);
 					}
 				}
-				: function(update) { deferred.progress(update); };
+				: function(update) { deferred.notify(update); };
 
 			handlers.push(function(promise) {
 				promise.then(onFulfilled, onRejected)
@@ -322,7 +335,7 @@ define(function () {
 		 * @private
 		 * @param {*} update progress event payload to pass to all listeners
 		 */
-		_progress = function(update) {
+		_notify = function(update) {
 			processQueue(progressHandlers, update);
 			return update;
 		};
@@ -339,7 +352,7 @@ define(function () {
 			// Replace _resolve so that this Deferred can only be resolved once
 			_resolve = resolve;
 			// Make _progress a noop, to disallow progress for the resolved promise.
-			_progress = identity;
+			_notify = identity;
 
 			// Notify handlers
 			processQueue(handlers, value);
@@ -379,10 +392,10 @@ define(function () {
 		}
 
 		/**
-		 * Wrapper to allow _progress to be replaced
+		 * Wrapper to allow _notify to be replaced
 		 */
-		function promiseProgress(update) {
-			return _progress(update);
+		function promiseNotify(update) {
+			return _notify(update);
 		}
 	}
 
@@ -420,7 +433,7 @@ define(function () {
 
 		return when(promisesOrValues, function(promisesOrValues) {
 
-			var toResolve, toReject, values, reasons, deferred, fulfillOne, rejectOne, progress, len, i;
+			var toResolve, toReject, values, reasons, deferred, fulfillOne, rejectOne, notify, len, i;
 
 			len = promisesOrValues.length >>> 0;
 
@@ -437,7 +450,7 @@ define(function () {
 				deferred.resolve(values);
 
 			} else {
-				progress = deferred.progress;
+				notify = deferred.notify;
 
 				rejectOne = function(reason) {
 					reasons.push(reason);
@@ -461,7 +474,7 @@ define(function () {
 
 				for(i = 0; i < len; ++i) {
 					if(i in promisesOrValues) {
-						when(promisesOrValues[i], fulfiller, rejecter, progress);
+						when(promisesOrValues[i], fulfiller, rejecter, notify);
 					}
 				}
 			}
@@ -639,7 +652,10 @@ define(function () {
 				resolver.reject(reason);
 				return rejected(reason);
 			},
-			resolver.progress
+			function(update) {
+				typeof resolver.notify === 'function' && resolver.notify(update);
+				return update;
+			}
 		);
 	}
 
@@ -1562,6 +1578,21 @@ var utils = {
         }
         return target;
     },
+    map: function(arr, fn, scope) {
+        var newArr = [], len = arr.length;
+        scope = scope || window;
+        for (var i = 0; i < len; i++) {
+            newArr[i] = fn.call(scope, arr[i])
+        }
+        return newArr;
+    },
+    getType: (function () {
+        var reType = /\[object (\w+)\]/;
+        return function (thing) {
+            var match = reType.exec(Object.prototype.toString.call(thing));
+            return match && match[1];
+        };
+    }()),
     camelCase: (function () {
         var rdashAlpha = /-([\da-z])/gi,
             cccb = function(match, l) {
@@ -1695,53 +1726,6 @@ var ApiReference = (function () {
         del: 'DELETE'
     };
 
-    var ApiObject = function (type, data, iapi) {
-        this.data = data;
-        this.api = iapi;
-        this.type = type;
-    }
-
-    ApiObject.prototype = {
-        action: function (actionName, data) {
-            var me = this;
-            var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
-            me.fire('action', actionName, data, requestConf);
-            me.api.fire('action', me, actionName, data, requestConf);
-            return this.api.request(basicOps[actionName], requestConf, data).then(function (rawJSON) {
-                if (requestConf.returnType) {
-                    var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
-                    me.fire('spawn', returnObj);
-                    me.api.fire('spawn', returnObj, me);
-                    return returnObj;
-                } else {
-                    utils.extend(me.data, rawJSON);
-                    delete me.data.unsynced;
-                    me.fire('sync', rawJSON, me.data);
-                    me.api.fire('sync', me, rawJSON, me.data);
-                    return me;
-                }
-            }, function (errorJSON) {
-                me.fire('error', errorJSON);
-                me.api.fire('error', errorJSON, me);
-                throw errorJSON;
-            });
-        },
-        getAvailableActions: function () {
-            return ApiReference.getActionsFor(this.type);
-        }
-    };
-
-    var setOp = function(fnName) {
-        ApiObject.prototype[fnName] = function (conf) {
-            return this.action(fnName, conf);
-        }
-    };
-    for (var i in basicOps) {
-        if (basicOps.hasOwnProperty(i)) setOp(i);
-    }
-
-    utils.addEvents(ApiObject);
-
     var genericQueryTpt = '{?_*}';
     var defaultHost = window.location.protocol + '//' + window.location.host + '/';
     var pub = {
@@ -1808,18 +1792,17 @@ var ApiReference = (function () {
         },
 
         tryCreateApiObject: function (type, rawJSON, api) {
-            return type in objectTypes ? new ApiObject(type, rawJSON, api) :
-                (ApiReference.getTypeFromObject(rawJSON) ? new ApiObject(ApiReference.getTypeFromObject(rawJSON), rawJSON, api) : rawJSON);
+            return type in objectTypes ? (
+                objectTypes[type].collectionOf ? 
+                this.createApiCollection(objectTypes[type], rawJSON, api)
+                : new ApiObject(type, rawJSON, api)
+            ) : rawJSON;
         },
 
-        getTypeFromObject: function (rawJSON) {
-            //TODO: figure out how to do typing, omg
-            return null;
-        },
-
-        ApiObject: ApiObject
-
-        };
+        createApiCollection: function (collectionType, rawJSON, api) {
+            return new ApiCollection(collectionType, rawJSON, api)
+        }
+    };
     var reservedWords = {
         template: true,
         defaultParams: true,
@@ -1836,15 +1819,35 @@ var ApiReference = (function () {
             defaultParams: {
                 startIndex: 0,
                 pageSize: 25
+            },
+            collectionOf: 'product'
+        },
+
+        'categories': {
+            template: '{+ProductService}../categories/' + genericQueryTpt,
+            defaultParams: {
+                startIndex: 0,
+                pageSize: 25
+            },
+            collectionOf: 'category'
+        },
+
+        'category': {
+            template: '{+ProductService}../categoires/{Id}?{&allowInactive*}',
+            shortcutParam: 'Id',
+            defaultParams: {
+                allowInactive: false
             }
         },
+        
 
         'search': {
             template: '{+SearchService}' + genericQueryTpt,
             shortcutParam: 'q',
             defaultParams: {
 
-            }
+            },
+            collectionOf: 'product'
         },
         'product': {
             get: {
@@ -2025,6 +2028,115 @@ var ApiReference = (function () {
 // END REFERENCE
 
 /***********/
+// BEGIN OBJECT
+var ApiObject = (function () {
+
+    var ApiObjectConstructor = function (type, data, iapi) {
+        this.data = data;
+        this.api = iapi;
+        this.type = type;
+    }
+
+    ApiObjectConstructor.prototype = {
+        constructor: ApiObjectConstructor,
+        action: function (actionName, data) {
+            var me = this;
+            var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
+            me.fire('action', actionName, data, requestConf);
+            me.api.fire('action', me, actionName, data, requestConf);
+            return this.api.request(ApiReference.basicOps[actionName], requestConf, data).then(function (rawJSON) {
+                if (requestConf.returnType) {
+                    var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
+                    me.fire('spawn', returnObj);
+                    me.api.fire('spawn', returnObj, me);
+                    return returnObj;
+                } else {
+                    utils.extend(me.data, rawJSON);
+                    delete me.data.unsynced;
+                    me.fire('sync', rawJSON, me.data);
+                    me.api.fire('sync', me, rawJSON, me.data);
+                    return me;
+                }
+            }, function (errorJSON) {
+                me.fire('error', errorJSON);
+                me.api.fire('error', errorJSON, me);
+                throw errorJSON;
+            });
+        },
+        getAvailableActions: function () {
+            return ApiReference.getActionsFor(this.type);
+        },
+        prop: function (k, v) {
+            switch (arguments.length) {
+                case 1:
+                    if (typeof k === "string") return this.data[k];
+                    if (typeof k === "object") {
+                        for (var hashkey in k) {
+                            if (k.hasOwnProperty(hashkey)) this.prop(hashkey, k[hashkey]);
+                        }
+                    }
+                    break;
+                case 2:
+                    this.data[k] = v;
+            }
+            return this;
+        }
+    };
+
+    var setOp = function(fnName) {
+        ApiObjectConstructor.prototype[fnName] = function (conf) {
+            return this.action(fnName, conf);
+        }
+    };
+    for (var i in ApiReference.basicOps) {
+        if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
+    }
+
+    utils.addEvents(ApiObjectConstructor);
+
+    return ApiObjectConstructor;
+
+}());
+// END OBJECT
+
+/***********/
+// BEGIN OBJECT
+var ApiCollection = (function () {
+
+    var ApiCollectionConstructor = function (cType, data) {
+        ApiObject.apply(this, arguments);
+        this.itemType = cType.collectionOf;
+        if (data.Items.length > 0) this.add(data.Items, true);
+    }
+
+    ApiCollectionConstructor.prototype = utils.extend(new ApiObject(), {
+        isCollection: true,
+        constructor: ApiCollectionConstructor,
+        add: function (newItems, /*private*/ noUpdate) {
+            if (utils.getType(newItems) !== "Array") newItems = [newItems];
+            Array.prototype.push.apply(this, utils.map(newItems, this.convertItem, this));
+            if (!noUpdate) {
+                var rawItems = this.prop("Items");
+                this.prop("Items", rawItems.concat(newItems));
+            }
+        },
+        remove: function(indexOrItem) {
+            throw "Not implemented";
+        },
+        convertItem: function(raw) {
+            return new ApiObject(this.itemType, raw, this.api);
+        },
+        page: function () {
+            throw "Not implemented";
+        }
+    });
+
+    return ApiCollectionConstructor;
+
+}());
+// END OBJECT
+
+/***********/
 // BEGIN INTERFACE
 var ApiInterface = (function () {
 
@@ -2037,85 +2149,87 @@ var ApiInterface = (function () {
     };
 
     ApiInterfaceConstructor.prototype = {
-    request: function (method, requestConf, conf) {
-        var me = this,
-            url = typeof requestConf === "string" ? requestConf : requestConf.url;
-        if (requestConf.verbOverride)
-            method = requestConf.verbOverride;
+        constructor: ApiInterfaceConstructor,
+        request: function (method, requestConf, conf) {
+            var me = this,
+                url = typeof requestConf === "string" ? requestConf : requestConf.url;
+            if (requestConf.verbOverride)
+                method = requestConf.verbOverride;
 
-        var deferred = utils.when.defer();
+            var deferred = utils.when.defer();
 
-        var data;
-        if (requestConf.overridePostData) {
-            data = requestConf.overridePostData;
-        } else  if (conf && !requestConf.noBody) {
-            data = conf.data || conf;
-        }
-
-        var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function (rawJSON) {
-            // update context with response headers
-            me.fire('success', rawJSON, xhr, requestConf);
-            deferred.resolve(rawJSON, xhr);
-        }, function (error) {
-            deferred.reject(error, xhr, url);
-        });
-
-        this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
-
-        deferred.promise.otherwise(function (error) {
-            var res;
-            if (!cancelled) {
-                me.fire('error', error, xhr, requestConf);
-                throw error;
+            var data;
+            if (requestConf.overridePostData) {
+                data = requestConf.overridePostData;
+            } else  if (conf && !requestConf.noBody) {
+                data = conf.data || conf;
             }
-        });
 
-        var cancelled = false,
-            canceller = function () {
-                cancelled = true;
-                xhr.abort();
-                deferred.reject("Request cancelled.")
-            };
+            var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function (rawJSON) {
+                // update context with response headers
+                me.fire('success', rawJSON, xhr, requestConf);
+                deferred.resolve(rawJSON, xhr);
+            }, function (error) {
+                deferred.reject(error, xhr, url);
+            });
 
-        return deferred.promise;
-    },
-    action: function (type, actionName, conf, isRemote) {
-        var me = this,
-            fulfill = function (rawJSON) {
-                var newApiObject = ApiReference.tryCreateApiObject(type, rawJSON, me);
-                me.fire('spawn', newApiObject);
-                return newApiObject;
-            };
-        isRemote = isRemote === false ? false : true;
-        if (isRemote) {
-            var cancelablePromise = this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf),
-                completedPromise = cancelablePromise.then(fulfill);
-            completedPromise.cancel = cancelablePromise.cancel;
-            return completedPromise;
-        } else {
-            return utils.when(conf, fulfill);
+            var cancelled = false,
+                canceller = function () {
+                    cancelled = true;
+                    xhr.abort();
+                    deferred.reject("Request cancelled.")
+                };
+
+            this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
+
+            deferred.promise.otherwise(function (error) {
+                var res;
+                if (!cancelled) {
+                    me.fire('error', error, xhr, requestConf);
+                    throw error;
+                }
+            });
+
+            
+            return deferred.promise;
+        },
+        action: function (type, actionName, conf, isRemote) {
+            var me = this,
+                fulfill = function (rawJSON) {
+                    var newApiObject = ApiReference.tryCreateApiObject(type, rawJSON, me);
+                    me.fire('spawn', newApiObject);
+                    return newApiObject;
+                };
+            isRemote = isRemote === false ? false : true;
+            if (isRemote) {
+                var cancelablePromise = this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf),
+                    completedPromise = cancelablePromise.then(fulfill);
+                completedPromise.cancel = cancelablePromise.cancel;
+                return completedPromise;
+            } else {
+                return utils.when(conf, fulfill);
+            }
+        },
+        all: function () {
+            return utils.when.join.apply(utils.when, arguments);
+        },
+        steps: function () {
+            var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
+            return utils.pipeline(Array.prototype.slice.call(args));
         }
-    },
-    all: function () {
-        return utils.when.join.apply(utils.when, arguments);
-    },
-    steps: function () {
-        var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
-        return utils.pipeline(Array.prototype.slice.call(args));
-    }
-};
-    var setOp = function (fnName) {
-        ApiInterfaceConstructor.prototype[fnName] = function (type, conf, isRemote) {
-        return this.action(type, fnName, conf, isRemote);
     };
-};
-for (var i in ApiReference.basicOps) {
-    if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
-}
+        var setOp = function (fnName) {
+            ApiInterfaceConstructor.prototype[fnName] = function (type, conf, isRemote) {
+            return this.action(type, fnName, conf, isRemote);
+        };
+    };
+    for (var i in ApiReference.basicOps) {
+        if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
+    }
 
-utils.addEvents(ApiInterfaceConstructor);
+    utils.addEvents(ApiInterfaceConstructor);
 
-return ApiInterfaceConstructor;
+    return ApiInterfaceConstructor;
 }());
 
 // END INTERFACE
@@ -2151,6 +2265,7 @@ var ApiContext = (function () {
     };
 
     ApiContextConstructor.prototype = {
+        constructor: ApiContextConstructor,
         api: function () {
             return this._apiInstance || (this._apiInstance = new ApiInterface(this));
         },
@@ -2188,6 +2303,7 @@ var Mozu = new ApiContext();
 Mozu.Utils = utils;
 Mozu.ApiContext = ApiContext;
 Mozu.ApiInterface = ApiInterface;
+Mozu.ApiObject = ApiObject;
 Mozu.ApiReference = ApiReference;
 			return Mozu;
 		});

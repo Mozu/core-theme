@@ -8,53 +8,6 @@ var ApiReference = (function () {
         del: 'DELETE'
     };
 
-    var ApiObject = function (type, data, iapi) {
-        this.data = data;
-        this.api = iapi;
-        this.type = type;
-    }
-
-    ApiObject.prototype = {
-        action: function (actionName, data) {
-            var me = this;
-            var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
-            me.fire('action', actionName, data, requestConf);
-            me.api.fire('action', me, actionName, data, requestConf);
-            return this.api.request(basicOps[actionName], requestConf, data).then(function (rawJSON) {
-                if (requestConf.returnType) {
-                    var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
-                    me.fire('spawn', returnObj);
-                    me.api.fire('spawn', returnObj, me);
-                    return returnObj;
-                } else {
-                    utils.extend(me.data, rawJSON);
-                    delete me.data.unsynced;
-                    me.fire('sync', rawJSON, me.data);
-                    me.api.fire('sync', me, rawJSON, me.data);
-                    return me;
-                }
-            }, function (errorJSON) {
-                me.fire('error', errorJSON);
-                me.api.fire('error', errorJSON, me);
-                throw errorJSON;
-            });
-        },
-        getAvailableActions: function () {
-            return ApiReference.getActionsFor(this.type);
-        }
-    };
-
-    var setOp = function(fnName) {
-        ApiObject.prototype[fnName] = function (conf) {
-            return this.action(fnName, conf);
-        }
-    };
-    for (var i in basicOps) {
-        if (basicOps.hasOwnProperty(i)) setOp(i);
-    }
-
-    utils.addEvents(ApiObject);
-
     var genericQueryTpt = '{?_*}';
     var defaultHost = window.location.protocol + '//' + window.location.host + '/';
     var pub = {
@@ -121,18 +74,17 @@ var ApiReference = (function () {
         },
 
         tryCreateApiObject: function (type, rawJSON, api) {
-            return type in objectTypes ? new ApiObject(type, rawJSON, api) :
-                (ApiReference.getTypeFromObject(rawJSON) ? new ApiObject(ApiReference.getTypeFromObject(rawJSON), rawJSON, api) : rawJSON);
+            return type in objectTypes ? (
+                objectTypes[type].collectionOf ? 
+                this.createApiCollection(objectTypes[type], rawJSON, api)
+                : new ApiObject(type, rawJSON, api)
+            ) : rawJSON;
         },
 
-        getTypeFromObject: function (rawJSON) {
-            //TODO: figure out how to do typing, omg
-            return null;
-        },
-
-        ApiObject: ApiObject
-
-        };
+        createApiCollection: function (collectionType, rawJSON, api) {
+            return new ApiCollection(collectionType, rawJSON, api)
+        }
+    };
     var reservedWords = {
         template: true,
         defaultParams: true,
@@ -149,15 +101,35 @@ var ApiReference = (function () {
             defaultParams: {
                 startIndex: 0,
                 pageSize: 25
+            },
+            collectionOf: 'product'
+        },
+
+        'categories': {
+            template: '{+ProductService}../categories/' + genericQueryTpt,
+            defaultParams: {
+                startIndex: 0,
+                pageSize: 25
+            },
+            collectionOf: 'category'
+        },
+
+        'category': {
+            template: '{+ProductService}../categoires/{Id}?{&allowInactive*}',
+            shortcutParam: 'Id',
+            defaultParams: {
+                allowInactive: false
             }
         },
+        
 
         'search': {
             template: '{+SearchService}' + genericQueryTpt,
             shortcutParam: 'q',
             defaultParams: {
 
-            }
+            },
+            collectionOf: 'product'
         },
         'product': {
             get: {

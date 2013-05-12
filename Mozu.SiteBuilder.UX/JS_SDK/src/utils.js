@@ -26,6 +26,21 @@ var utils = {
         }
         return target;
     },
+    map: function(arr, fn, scope) {
+        var newArr = [], len = arr.length;
+        scope = scope || window;
+        for (var i = 0; i < len; i++) {
+            newArr[i] = fn.call(scope, arr[i])
+        }
+        return newArr;
+    },
+    getType: (function () {
+        var reType = /\[object (\w+)\]/;
+        return function (thing) {
+            var match = reType.exec(Object.prototype.toString.call(thing));
+            return match && match[1];
+        };
+    }()),
     camelCase: (function () {
         var rdashAlpha = /-([\da-z])/gi,
             cccb = function(match, l) {

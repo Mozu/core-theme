@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-04-25
+ * Mozu JavaScript SDK - v0.1.0 - 2013-05-12
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -32,25 +32,30 @@
                         return resolve(promiseOrValue).then(onFulfilled, onRejected, onProgress);
                     }
                     function resolve(promiseOrValue) {
-                        var promise, deferred;
+                        var promise;
                         if (promiseOrValue instanceof Promise) {
                             promise = promiseOrValue;
+                        } else if (isPromise(promiseOrValue)) {
+                            promise = assimilate(promiseOrValue);
                         } else {
-                            if (isPromise(promiseOrValue)) {
-                                deferred = defer();
-                                promiseOrValue.then(function(value) {
-                                    deferred.resolve(value);
-                                }, function(reason) {
-                                    deferred.reject(reason);
-                                }, function(update) {
-                                    deferred.progress(update);
-                                });
-                                promise = deferred.promise;
-                            } else {
-                                promise = fulfilled(promiseOrValue);
-                            }
+                            promise = fulfilled(promiseOrValue);
                         }
                         return promise;
+                    }
+                    function assimilate(thenable) {
+                        var d = defer();
+                        try {
+                            thenable.then(function(value) {
+                                d.resolve(value);
+                            }, function(reason) {
+                                d.reject(reason);
+                            }, function(update) {
+                                d.progress(update);
+                            });
+                        } catch (e) {
+                            d.reject(e);
+                        }
+                        return d.promise;
                     }
                     function reject(promiseOrValue) {
                         return when(promiseOrValue, rejected);
@@ -99,18 +104,20 @@
                         return p;
                     }
                     function defer() {
-                        var deferred, promise, handlers, progressHandlers, _then, _progress, _resolve;
+                        var deferred, promise, handlers, progressHandlers, _then, _notify, _resolve;
                         promise = new Promise(then);
                         deferred = {
                             then: then,
                             resolve: promiseResolve,
                             reject: promiseReject,
-                            progress: promiseProgress,
+                            progress: promiseNotify,
+                            notify: promiseNotify,
                             promise: promise,
                             resolver: {
                                 resolve: promiseResolve,
                                 reject: promiseReject,
-                                progress: promiseProgress
+                                progress: promiseNotify,
+                                notify: promiseNotify
                             }
                         };
                         handlers = [];
@@ -120,12 +127,12 @@
                             deferred = defer();
                             progressHandler = typeof onProgress === "function" ? function(update) {
                                 try {
-                                    deferred.progress(onProgress(update));
+                                    deferred.notify(onProgress(update));
                                 } catch (e) {
-                                    deferred.progress(e);
+                                    deferred.notify(e);
                                 }
                             } : function(update) {
-                                deferred.progress(update);
+                                deferred.notify(update);
                             };
                             handlers.push(function(promise) {
                                 promise.then(onFulfilled, onRejected).then(deferred.resolve, deferred.reject, progressHandler);
@@ -133,14 +140,14 @@
                             progressHandlers.push(progressHandler);
                             return deferred.promise;
                         };
-                        _progress = function(update) {
+                        _notify = function(update) {
                             processQueue(progressHandlers, update);
                             return update;
                         };
                         _resolve = function(value) {
                             _then = value.then;
                             _resolve = resolve;
-                            _progress = identity;
+                            _notify = identity;
                             processQueue(handlers, value);
                             progressHandlers = handlers = undef;
                             return value;
@@ -155,8 +162,8 @@
                         function promiseReject(err) {
                             return _resolve(rejected(err));
                         }
-                        function promiseProgress(update) {
-                            return _progress(update);
+                        function promiseNotify(update) {
+                            return _notify(update);
                         }
                     }
                     function isPromise(promiseOrValue) {
@@ -165,7 +172,7 @@
                     function some(promisesOrValues, howMany, onFulfilled, onRejected, onProgress) {
                         checkCallbacks(2, arguments);
                         return when(promisesOrValues, function(promisesOrValues) {
-                            var toResolve, toReject, values, reasons, deferred, fulfillOne, rejectOne, progress, len, i;
+                            var toResolve, toReject, values, reasons, deferred, fulfillOne, rejectOne, notify, len, i;
                             len = promisesOrValues.length >>> 0;
                             toResolve = Math.max(0, Math.min(howMany, len));
                             values = [];
@@ -175,7 +182,7 @@
                             if (!toResolve) {
                                 deferred.resolve(values);
                             } else {
-                                progress = deferred.progress;
+                                notify = deferred.notify;
                                 rejectOne = function(reason) {
                                     reasons.push(reason);
                                     if (!--toReject) {
@@ -192,7 +199,7 @@
                                 };
                                 for (i = 0; i < len; ++i) {
                                     if (i in promisesOrValues) {
-                                        when(promisesOrValues[i], fulfiller, rejecter, progress);
+                                        when(promisesOrValues[i], fulfiller, rejecter, notify);
                                     }
                                 }
                             }
@@ -270,7 +277,10 @@
                         }, function(reason) {
                             resolver.reject(reason);
                             return rejected(reason);
-                        }, resolver.progress);
+                        }, function(update) {
+                            typeof resolver.notify === "function" && resolver.notify(update);
+                            return update;
+                        });
                     }
                     function processQueue(queue, value) {
                         var handler, i = 0;
@@ -899,6 +909,21 @@
                     }
                     return target;
                 },
+                map: function(arr, fn, scope) {
+                    var newArr = [], len = arr.length;
+                    scope = scope || window;
+                    for (var i = 0; i < len; i++) {
+                        newArr[i] = fn.call(scope, arr[i]);
+                    }
+                    return newArr;
+                },
+                getType: function() {
+                    var reType = /\[object (\w+)\]/;
+                    return function(thing) {
+                        var match = reType.exec(Object.prototype.toString.call(thing));
+                        return match && match[1];
+                    };
+                }(),
                 camelCase: function() {
                     var rdashAlpha = /-([\da-z])/gi, cccb = function(match, l) {
                         return l.toUpperCase();
@@ -1000,49 +1025,6 @@
                     create: "POST",
                     del: "DELETE"
                 };
-                var ApiObject = function(type, data, iapi) {
-                    this.data = data;
-                    this.api = iapi;
-                    this.type = type;
-                };
-                ApiObject.prototype = {
-                    action: function(actionName, data) {
-                        var me = this;
-                        var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
-                        me.fire("action", actionName, data, requestConf);
-                        me.api.fire("action", me, actionName, data, requestConf);
-                        return this.api.request(basicOps[actionName], requestConf, data).then(function(rawJSON) {
-                            if (requestConf.returnType) {
-                                var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
-                                me.fire("spawn", returnObj);
-                                me.api.fire("spawn", returnObj, me);
-                                return returnObj;
-                            } else {
-                                utils.extend(me.data, rawJSON);
-                                delete me.data.unsynced;
-                                me.fire("sync", rawJSON, me.data);
-                                me.api.fire("sync", me, rawJSON, me.data);
-                                return me;
-                            }
-                        }, function(errorJSON) {
-                            me.fire("error", errorJSON);
-                            me.api.fire("error", errorJSON, me);
-                            throw errorJSON;
-                        });
-                    },
-                    getAvailableActions: function() {
-                        return ApiReference.getActionsFor(this.type);
-                    }
-                };
-                var setOp = function(fnName) {
-                    ApiObject.prototype[fnName] = function(conf) {
-                        return this.action(fnName, conf);
-                    };
-                };
-                for (var i in basicOps) {
-                    if (basicOps.hasOwnProperty(i)) setOp(i);
-                }
-                utils.addEvents(ApiObject);
                 var genericQueryTpt = "{?_*}";
                 var defaultHost = window.location.protocol + "//" + window.location.host + "/";
                 var pub = {
@@ -1104,12 +1086,11 @@
                         return returnObj;
                     },
                     tryCreateApiObject: function(type, rawJSON, api) {
-                        return type in objectTypes ? new ApiObject(type, rawJSON, api) : ApiReference.getTypeFromObject(rawJSON) ? new ApiObject(ApiReference.getTypeFromObject(rawJSON), rawJSON, api) : rawJSON;
+                        return type in objectTypes ? objectTypes[type].collectionOf ? this.createApiCollection(objectTypes[type], rawJSON, api) : new ApiObject(type, rawJSON, api) : rawJSON;
                     },
-                    getTypeFromObject: function(rawJSON) {
-                        return null;
-                    },
-                    ApiObject: ApiObject
+                    createApiCollection: function(collectionType, rawJSON, api) {
+                        return new ApiCollection(collectionType, rawJSON, api);
+                    }
                 };
                 var reservedWords = {
                     template: true,
@@ -1127,12 +1108,29 @@
                         defaultParams: {
                             startIndex: 0,
                             pageSize: 25
+                        },
+                        collectionOf: "product"
+                    },
+                    categories: {
+                        template: "{+ProductService}../categories/" + genericQueryTpt,
+                        defaultParams: {
+                            startIndex: 0,
+                            pageSize: 25
+                        },
+                        collectionOf: "category"
+                    },
+                    category: {
+                        template: "{+ProductService}../categoires/{Id}?{&allowInactive*}",
+                        shortcutParam: "Id",
+                        defaultParams: {
+                            allowInactive: false
                         }
                     },
                     search: {
                         template: "{+SearchService}" + genericQueryTpt,
                         shortcutParam: "q",
-                        defaultParams: {}
+                        defaultParams: {},
+                        collectionOf: "product"
                     },
                     product: {
                         get: {
@@ -1309,6 +1307,98 @@
                 };
                 return pub;
             }();
+            var ApiObject = function() {
+                var ApiObjectConstructor = function(type, data, iapi) {
+                    this.data = data;
+                    this.api = iapi;
+                    this.type = type;
+                };
+                ApiObjectConstructor.prototype = {
+                    constructor: ApiObjectConstructor,
+                    action: function(actionName, data) {
+                        var me = this;
+                        var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
+                        me.fire("action", actionName, data, requestConf);
+                        me.api.fire("action", me, actionName, data, requestConf);
+                        return this.api.request(ApiReference.basicOps[actionName], requestConf, data).then(function(rawJSON) {
+                            if (requestConf.returnType) {
+                                var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
+                                me.fire("spawn", returnObj);
+                                me.api.fire("spawn", returnObj, me);
+                                return returnObj;
+                            } else {
+                                utils.extend(me.data, rawJSON);
+                                delete me.data.unsynced;
+                                me.fire("sync", rawJSON, me.data);
+                                me.api.fire("sync", me, rawJSON, me.data);
+                                return me;
+                            }
+                        }, function(errorJSON) {
+                            me.fire("error", errorJSON);
+                            me.api.fire("error", errorJSON, me);
+                            throw errorJSON;
+                        });
+                    },
+                    getAvailableActions: function() {
+                        return ApiReference.getActionsFor(this.type);
+                    },
+                    prop: function(k, v) {
+                        switch (arguments.length) {
+                          case 1:
+                            if (typeof k === "string") return this.data[k];
+                            if (typeof k === "object") {
+                                for (var hashkey in k) {
+                                    if (k.hasOwnProperty(hashkey)) this.prop(hashkey, k[hashkey]);
+                                }
+                            }
+                            break;
+
+                          case 2:
+                            this.data[k] = v;
+                        }
+                        return this;
+                    }
+                };
+                var setOp = function(fnName) {
+                    ApiObjectConstructor.prototype[fnName] = function(conf) {
+                        return this.action(fnName, conf);
+                    };
+                };
+                for (var i in ApiReference.basicOps) {
+                    if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
+                }
+                utils.addEvents(ApiObjectConstructor);
+                return ApiObjectConstructor;
+            }();
+            var ApiCollection = function() {
+                var ApiCollectionConstructor = function(cType, data) {
+                    ApiObject.apply(this, arguments);
+                    this.itemType = cType.collectionOf;
+                    if (data.Items.length > 0) this.add(data.Items, true);
+                };
+                ApiCollectionConstructor.prototype = utils.extend(new ApiObject(), {
+                    isCollection: true,
+                    constructor: ApiCollectionConstructor,
+                    add: function(newItems, noUpdate) {
+                        if (utils.getType(newItems) !== "Array") newItems = [ newItems ];
+                        Array.prototype.push.apply(this, utils.map(newItems, this.convertItem, this));
+                        if (!noUpdate) {
+                            var rawItems = this.prop("Items");
+                            this.prop("Items", rawItems.concat(newItems));
+                        }
+                    },
+                    remove: function(indexOrItem) {
+                        throw "Not implemented";
+                    },
+                    convertItem: function(raw) {
+                        return new ApiObject(this.itemType, raw, this.api);
+                    },
+                    page: function() {
+                        throw "Not implemented";
+                    }
+                });
+                return ApiCollectionConstructor;
+            }();
             var ApiInterface = function() {
                 var ApiInterfaceConstructor = function(context) {
                     if (context.Tenant() === undefined) throw "No tenant was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
@@ -1317,6 +1407,7 @@
                     this.context = context;
                 };
                 ApiInterfaceConstructor.prototype = {
+                    constructor: ApiInterfaceConstructor,
                     request: function(method, requestConf, conf) {
                         var me = this, url = typeof requestConf === "string" ? requestConf : requestConf.url;
                         if (requestConf.verbOverride) method = requestConf.verbOverride;
@@ -1333,6 +1424,11 @@
                         }, function(error) {
                             deferred.reject(error, xhr, url);
                         });
+                        var cancelled = false, canceller = function() {
+                            cancelled = true;
+                            xhr.abort();
+                            deferred.reject("Request cancelled.");
+                        };
                         this.fire("request", xhr, canceller, deferred.promise, requestConf, conf);
                         deferred.promise.otherwise(function(error) {
                             var res;
@@ -1341,11 +1437,6 @@
                                 throw error;
                             }
                         });
-                        var cancelled = false, canceller = function() {
-                            cancelled = true;
-                            xhr.abort();
-                            deferred.reject("Request cancelled.");
-                        };
                         return deferred.promise;
                     },
                     action: function(type, actionName, conf, isRemote) {
@@ -1402,6 +1493,7 @@
                     };
                 };
                 ApiContextConstructor.prototype = {
+                    constructor: ApiContextConstructor,
                     api: function() {
                         return this._apiInstance || (this._apiInstance = new ApiInterface(this));
                     },
