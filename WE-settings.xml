@@ -5,7 +5,7 @@
     <CoffeeScriptCompileToFolder>false</CoffeeScriptCompileToFolder>
     <CoffeeScriptEnableIced>false</CoffeeScriptEnableIced>
     <CoffeeScriptGenerateJsFile>true</CoffeeScriptGenerateJsFile>
-    <CoffeeScriptMinify>true</CoffeeScriptMinify>
+    <CoffeeScriptMinify>false</CoffeeScriptMinify>
     <CoffeeScriptShowPreviewWindow>true</CoffeeScriptShowPreviewWindow>
     <CoffeeScriptWrapClosure>true</CoffeeScriptWrapClosure>
     <CssAutoCloseCurlyBraces>true</CssAutoCloseCurlyBraces>
@@ -21,7 +21,7 @@
     <CssValidateStarSelector>false</CssValidateStarSelector>
     <CssValidateZeroUnit>false</CssValidateZeroUnit>
     <EnableSpeedTyping>false</EnableSpeedTyping>
-    <HtmlEnableMustache>fakse</HtmlEnableMustache>
+    <HtmlEnableMustache>false</HtmlEnableMustache>
     <HtmlEnableZenCoding>true</HtmlEnableZenCoding>
     <JavaScriptAutoCloseBraces>true</JavaScriptAutoCloseBraces>
     <JavaScriptEnableMinification>false</JavaScriptEnableMinification>

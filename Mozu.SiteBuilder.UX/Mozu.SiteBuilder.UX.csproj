@@ -400,6 +400,8 @@
     <Content Include="JS_SDK\Gruntfile.js" />
     <Content Include="JS_SDK\init_debug.js" />
     <Content Include="JS_SDK\SDK_README.html" />
+    <Content Include="JS_SDK\src\collection.js" />
+    <Content Include="JS_SDK\src\object.js" />
     <Content Include="JS_SDK\src\utils.js" />
     <Content Include="JS_SDK\src\interface.js" />
     <Content Include="JS_SDK\src\reference.js" />
@@ -509,7 +511,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\51Degrees.mobi-Lite-2012.12.04.dat" />
-    <Content Include="JS_SDK\tests\SDKSpec.coffee" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <Content Include="Web.SI.config">
       <DependentUpon>Web.config</DependentUpon>

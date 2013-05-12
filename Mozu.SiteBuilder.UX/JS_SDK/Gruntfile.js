@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-var allScripts = ['node_modules/when/when.js', 'node_modules/uritemplate/bin/uritemplate.js', 'node_modules/microevent/microevent.js', 'src/utils.js', 'src/reference.js', 'src/interface.js', 'src/context.js', 'src/init.js'];
+var allScripts = ['node_modules/when/when.js', 'node_modules/uritemplate/bin/uritemplate.js', 'node_modules/microevent/microevent.js', 'src/utils.js', 'src/reference.js', 'src/object.js', 'src/collection.js', 'src/interface.js', 'src/context.js', 'src/init.js'];
 
 module.exports = function (grunt) {
 
