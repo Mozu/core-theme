@@ -1105,6 +1105,7 @@
                 var objectTypes = {
                     products: {
                         template: "{+ProductService}" + genericQueryTpt,
+                        shortcutParam: "filter",
                         defaultParams: {
                             startIndex: 0,
                             pageSize: 25
@@ -1113,6 +1114,7 @@
                     },
                     categories: {
                         template: "{+ProductService}../categories/" + genericQueryTpt,
+                        shortcutParam: "filter",
                         defaultParams: {
                             startIndex: 0,
                             pageSize: 25

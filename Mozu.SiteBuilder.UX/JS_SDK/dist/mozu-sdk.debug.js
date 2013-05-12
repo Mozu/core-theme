@@ -1816,6 +1816,7 @@ var ApiReference = (function () {
     var objectTypes = {
         'products': {
             template: '{+ProductService}' + genericQueryTpt,
+            shortcutParam: "filter",
             defaultParams: {
                 startIndex: 0,
                 pageSize: 25
@@ -1825,6 +1826,7 @@ var ApiReference = (function () {
 
         'categories': {
             template: '{+ProductService}../categories/' + genericQueryTpt,
+            shortcutParam: "filter",
             defaultParams: {
                 startIndex: 0,
                 pageSize: 25
