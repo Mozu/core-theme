@@ -6,7 +6,6 @@
 Ext.define('Taco.view.product.subform.ImageField', {
     extend: 'Ext.form.FieldContainer',
     requires: [
-        'Ext.ux.DataView.Animated',
         'Ext.view.DragZone',
         'Ext.view.DropZone'
     ],
