@@ -58,22 +58,28 @@ Ext.define('Taco.view.product.subform.ImageField', {
                 cls: 'taco-image-tiles'
             },
             hidden: true,
-            selectedItemCls: 'active',
+            selectedItemCls: 'selected',
             store: this.selectedImages,
             tpl :[
                     '<tpl foreach=".">',
                         '<tpl if="isUploaded === false">',
-                            '<li class="item uploading">Progress {progress}%</li>',
+                            '<li class="item uploading">',
+                                '<div class="square">Progress {progress}%</div>',
+                            '</li>',
                         '<tpl else>',
-                            '<li class="item image newLoad" style="background-image:url({url}?size=' + this.thumbnailSize + ')">',
-                                '<ul class="toolbar">',
-                                    '<li class="drag-handle">Drag</li>',
-                                    '<li class="remove">Remove</li>',
-                                '</ul>',
+                            '<li class="item image newLoad">',
+                                '<div class="square" style="background-image:url({url}?size=' + this.thumbnailSize + ')">',
+                                    '<ul class="toolbar">',
+                                        '<li class="drag-handle">Drag</li>',
+                                        '<li class="remove">Remove</li>',
+                                    '</ul>',
+                                '</div>',
                             '</li>',
                         '</tpl>',
                     '</tpl>',
-                    '<li class="taco-image-drop">Drop images here</li>'
+                    '<li class="taco-image-drop">',
+                        '<div class="square">Drop images here</div>',
+                    '</li>'
             ],
             itemSelector: 'li.item'
         });
@@ -146,7 +152,16 @@ Ext.define('Taco.view.product.subform.ImageField', {
         this.dropZone = Ext.create('Ext.view.DropZone', {
             view: this.imageView,
             ddGroup: id,
-            indicatorHtml: '<div class="taco-image-field-drop-indicator"></div>',
+            indicatorCls: 'taco-image-field-drop-indicator',
+            indicatorHtml:  '<ul>'
+                                + '<li class="outer-circle">'
+                                    + '<div class="inner-circle"></div>'
+                                + '</li>'
+                                + '<li class="bar"></li>'
+                                + '<li class="outer-circle">'
+                                    + '<div class="inner-circle"></div>'
+                                + '</li>'
+                            + '</ul>',
             positionIndicator: function(node, data, e) {
                 var me = this,
                     view = me.view,
@@ -164,8 +179,8 @@ Ext.define('Taco.view.product.subform.ImageField', {
                     if (me.overRecord != overRecord || me.currentPosition != pos) {
 
                         xy = Ext.fly(node).getXY();
-                        indicatorY = xy[1] - view.el.getY();
-                        indicatorX = xy[0] - view.el.getX() - 9;
+                        indicatorY = xy[1] - view.el.getY() - 7;
+                        indicatorX = xy[0] - view.el.getX() - 11;
                         if (pos == 'after') {
                             //indicatorY += Ext.fly(node).getHeight();
                             indicatorX += 165;
@@ -179,6 +194,10 @@ Ext.define('Taco.view.product.subform.ImageField', {
                 } else {
                     me.invalidateDrop();
                 }
+            },
+
+            onStartDrag: function (x,y) {
+
             },
 
             getPosition: function(e, node) {

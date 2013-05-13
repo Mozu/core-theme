@@ -40,15 +40,20 @@
             @include flexbox($wrap: wrap);
         }
         .#{$vprefix}image-tiles > li {
-            list-style: none;
-            height: $thumbnail-size;
-            width: $thumbnail-size;
-            border: 1px solid #bfbfbf;
-            margin: 0 1.5rem 1rem 0;
-            background-color: white;
-            background-position: center center;
-            background-repeat: no-repeat;
+            //list-style: none;
+            
+            padding: 0 1.5rem 1rem 0;
+            
             display: block;
+
+            .square {
+                height: $thumbnail-size;
+                width: $thumbnail-size;
+                border: 1px solid #bfbfbf;    
+                background-color: white;
+                background-position: center center;
+                background-repeat: no-repeat;
+            }
 
             &.active {
                 border: 1px solid red;
@@ -66,7 +71,7 @@
                 }
             }
 
-            &.#{$vprefix}image-drop {
+            &.#{$vprefix}image-drop .square {
                 @include taco-product-drop-zone;
                 padding-top: 3rem;
                 background-position: center 5rem;
@@ -77,10 +82,6 @@
                     height: $thumbnail-size;
                     margin-top: -3rem;
                 }
-            }
-
-            &.uploading {
-                //background: lightskyblue;
             }
 
             .toolbar {
@@ -103,13 +104,25 @@
 
             .remove {
                 cursor: pointer;
-                width: 15px;
+                width: 18px;
                 height: 18px;
-                @include icons-sprite(icon-widget-remove);
+
+                &:before {
+                    margin: 5px 0 0 8px;
+                    content: '';
+                    height: 8px;
+                    width: 8px;
+                    display: block;
+                    @include icons-sprite(icon-x);
+                }
             }
 
-            &:hover .toolbar {
+            &:hover .toolbar, &.selected .toolbar {
                 opacity: 1;
+            }
+
+            &.selected .square {
+                border: 1px solid $color-theme-support-darker;
             }
         }
 
@@ -121,7 +134,7 @@
                 }
             }
 
-            .#{$vprefix}image-drop {
+            .#{$vprefix}image-drop .square {
                 &:before {
                     opacity: 1 !important;
                 }
@@ -145,8 +158,28 @@
     }
 
     .#{$vprefix}image-field-drop-indicator {
-        height: $thumbnail-size;
-        width: 3px;
-        background: red;
+
+        //@include transition(top 0.1s, left 0.1s);
+
+        .outer-circle {
+            width: 7px;
+            height: 7px;
+            background: $color-theme-support-darker;
+            border-radius: 4px;
+            padding: 3px;
+        }
+
+        .inner-circle {
+            width: 1px;
+            height: 1px;
+            background: $color-neutral-white;
+        }
+
+        .bar {
+            height: $thumbnail-size;
+            width: 3px;
+            margin-left: 2px;
+            background: $color-theme-support-darker;
+        }
     }
 }
