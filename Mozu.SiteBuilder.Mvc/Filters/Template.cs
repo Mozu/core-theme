@@ -31,7 +31,8 @@ namespace Mozu.SiteBuilder.Mvc.Filters
             if (result.View != null)
             {
                 var view = ((DjangoMozuView)result.View);
-                return view.TemplateManager.GetTemplate(view.viewPath);
+                return  view.GetManager(html.ViewContext.HttpContext).GetTemplate(view.viewPath);
+              //  return view.TemplateManager.GetTemplate(view.viewPath);
 
             }
             return null;
