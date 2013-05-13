@@ -131,6 +131,9 @@ namespace Mozu.SiteBuilder.Mvc
             CurrentNode = categoryNode;
         }
 
+        /// <summary>
+        /// Allows a controller to set the current node.
+        /// </summary>
         public void SetContext(Document doc)
         {
             var docNode = _navigationTree.FindByDocument(doc);
