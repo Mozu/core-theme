@@ -19,8 +19,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [ServiceContract]
     public class NavigationController : BaseController
     {
-        private const bool USE_MOCK_DATA = false;
-
         // the top level name in EXT's tree thing (a root pseudo-node).
         public const string SUPER_ROOT_NODE_NAME = "root";
 

@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Client.Exceptions;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using DC = Mozu.Content.Contracts;
@@ -35,6 +38,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// </summary>
         public Task<NavigationSet> GetSetAsync()
         {
+            DC.Document doc = null;
+
             // retrieve the document id
             Task<NavigationSet> set = 
                 _cmsService.GetByPath2(NavigationContentCollection, NavigationFileName)
@@ -44,14 +49,14 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     // if the document doesn't exist, create it first.
                     if (serviceClientResponse != null && serviceClientResponse.ResponseMessage != null && serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                     {
-                        var doc = new DC.Document
+                        var newDoc = new DC.Document
                         {
                             Name = NavigationFileName,
                             DocumentType = "document",
                             DocumentListName = NavigationContentCollection,
                         };
-                        
-                        return _docWebApiClient.Create(doc.DocumentListName, doc);
+
+                        return _docWebApiClient.Create(newDoc.DocumentListName, newDoc);
                     }
 
                     // otherwise, pass through the result.
@@ -60,9 +65,28 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 .Unwrap()
                 .ContinueWith(docResult => 
                 {
-                    var doc = docResult.Result.ReadAsSync();
+                    doc = docResult.Result.ReadAsSync();
                     // retrieve the document content
                     return _docWebApiClient.GetDocumentContent(doc.DocumentListName, doc.Id);
+                })
+                .Unwrap()
+                .ContinueWith(contentResultIntermediate =>
+                {
+                    var serviceClientResponse = contentResultIntermediate.Result;
+                    
+                    // if the document CONTENT doesn't exist, create it first.
+                    if (serviceClientResponse != null && serviceClientResponse.HasException)
+                    {
+                        var ex = serviceClientResponse.ReadException();
+
+                        if (ex is ApiWebClientException && ex.Message.EndsWith("does not have a ChunkCorrelationId"))
+                            return SaveSetInternal(new NavigationSet(), doc.Id);
+                        else
+                            throw ex;
+                    }
+
+                    // otherwise, pass through the result.
+                    return contentResultIntermediate;
                 })
                 .Unwrap()
                 .ContinueWith(content =>
@@ -110,13 +134,30 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 });
         }
 
-        private Task SaveSetInternal(NavigationSet set, string docId)
+        private Task<ServiceClientResponse<StreamContent>> SaveSetInternal(NavigationSet set, string docId)
         {
             var stream = new MemoryStream();
             _serializer.WriteObject(stream, set);
             stream.Position = 0;
 
-            var task = _docWebApiClient.UpdateDocumentContent(NavigationContentCollection, docId, stream);
+            var task = 
+                _docWebApiClient.UpdateDocumentContent(NavigationContentCollection, docId, stream)
+
+                // UpdateDocumentContent() returns a StreamContent, but it doesn't actually return the nav set we just saved.
+                // So we create a mock StreamContent and return that instead.
+                .ContinueWith(t => {
+                    var responseMessage = t.Result.ResponseMessage;
+
+                    var stream2 = new MemoryStream();
+                    _serializer.WriteObject(stream2, set);
+                    stream2.Position = 0;
+
+                    responseMessage.Content = new StreamContent(stream2);
+					responseMessage.Content.Headers.ContentLength = stream2.Length;
+                    responseMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+
+                    return new ServiceClientResponse<StreamContent> { ResponseMessage = responseMessage };
+                });
 
             return task;
         }

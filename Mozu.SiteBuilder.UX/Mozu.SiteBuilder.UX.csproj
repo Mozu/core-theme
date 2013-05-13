@@ -490,6 +490,11 @@
       <Link>Configs\AppSettings.SI.config</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Mozu.SiteBuilder.UX.Admin\Configs\AppSettings.Prod.config">
+      <Link>Configs\AppSettings.Prod.config</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
   </ItemGroup>
   <ItemGroup>
     <Content Include="Log4Net.CI.config" />
