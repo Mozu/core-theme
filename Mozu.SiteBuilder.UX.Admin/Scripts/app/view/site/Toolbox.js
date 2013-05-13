@@ -6,18 +6,13 @@ Ext.define('Taco.view.site.Toolbox', {
     alias: 'widget.toolbox',
     requires: ['Taco.view.site.navigation.Tree', 'Taco.view.site.navigation.WidgetNav', 'Taco.view.site.navigation.PageSettings', 'Taco.core.ux.TabBar'],
 
-    cls: Taco.baseCSSPrefix + 'toolbox ',
+    cls: Taco.baseCSSPrefix + 'toolbox',
     header: false,
-   // closeAction: 'hide',
-    //resizable: { handles: 'w' },
     shadow: false,
-    manageHeight: false,
-    layout: 'auto',
+    layout: { type: 'fit' },
     
     initComponent: function () {
         var me = this;
-
-        this.height = Ext.getBody().getBox().height - 106;
         
         // this.cardPanel = Ext.create('Ext.panel.Panel', {
         //     itemId: 'cardPanel',

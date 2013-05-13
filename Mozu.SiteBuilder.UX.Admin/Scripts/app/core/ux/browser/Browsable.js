@@ -157,8 +157,6 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             typeName: this.typeName,
             filterFormConf: this.filterFormConf,
             filterProperties: this.filterProperties,
-            // flex: 1,
-            height: (Ext.getBody().getBox().height - 201),
             isCollectionContext: Taco.app.context.getCurrent().contextType === "c",
             gridPanel: this.gridPanel,
             tilePanel: this.tilePanel,
@@ -178,7 +176,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
     layoutItemBrowser: function () {
         Ext.apply(this.body, {
-            layout: 'auto',
+            layout: { type: 'fit' },
             items: [this.itemBrowser]
         });
     },

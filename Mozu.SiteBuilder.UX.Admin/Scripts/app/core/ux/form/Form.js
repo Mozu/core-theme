@@ -31,6 +31,7 @@ Ext.define('Taco.core.ux.form.Form', {
     cascadeChildTasks: true,
     cascadeRecordLoad: true,
     flexLayout: false,
+    manageHeight: false,
 
     initComponent: function () {
         var formCfg;

@@ -13,7 +13,8 @@ Ext.define('Taco.view.Header', {
     autoEl: { tag: 'header' },
     componentCls: Taco.baseCSSPrefix + 'viewport-header',
     height: 106,
-    layout: 'auto',
+    hideMode: 'offsets',
+    layout: { type: 'anchor' },
 
     initComponent: function () {
         var me = this,
@@ -35,11 +36,7 @@ Ext.define('Taco.view.Header', {
         });
 
         breadcrumb = Ext.create('Ext.Component', {
-            autoEl: {
-                tag: 'div',
-                cls: Taco.baseCSSPrefix + 'breadcrumb'
-            },
-            flex: 1,
+            cls: Taco.baseCSSPrefix + 'breadcrumb',
             tpl: [
                 '<a href="{address}" class="taco-icon taco-icon-{icon}">{label}</a>',
                 '<ul><tpl for="items">',
@@ -57,38 +54,28 @@ Ext.define('Taco.view.Header', {
 
         this.items = [{
             xtype: 'container',
-            autoEl: {
-                tag: 'div',
-                cls: Taco.baseCSSPrefix + 'masthead'
-            },
-            layout: {
-                type: 'hbox',
-                align: 'middle'
-            },
+            anchor: '100%',
             height: 55,
+            cls: Taco.baseCSSPrefix + 'masthead',
+            layout: { type: 'auto' },
             items: [{
                 xtype: 'component',
+                cls: Taco.baseCSSPrefix + 'mozulogo',
                 autoEl: {
                     tag: 'a',
                     href: '/admin',
                     title: ' version:[' + Taco.apiVersion + '] date:[' + Ext.Date.format(Taco.buildDate, 'Y-m-d H:i:s') + ']',
-                    cls: Taco.baseCSSPrefix + 'mozulogo'
                 }
             }, {
-                xtype: 'secondarymenu',
-                flex: 1
+                xtype: 'secondarymenu'
             }]
         }, {
             xtype: 'container',
-            autoEl: {
-                tag: 'nav',
-                cls: Taco.baseCSSPrefix + 'viewport-nav'
-            },
-            layout: {
-                type: 'hbox',
-                align: 'middle'
-            },
+            anchor: '100%',
             height: 51,
+            cls: Taco.baseCSSPrefix + 'viewport-nav',
+            autoEl: { tag: 'nav' },
+            layout: { type: 'auto' },
             items: [primaryMenuTrigger, breadcrumb, contextSwitcherTrigger]
         }];
 
