@@ -8,7 +8,7 @@ Ext.define('Taco.view.site.page.WidgetDragZone', {
     extend: 'Ext.dd.DragZone',
 
     ddGroup: 'taco-widget-create',
-    selector: '',
+    selector: '.widget-source',
 
     getDragData: function (e) {
         var sourceEl = e.getTarget(this.selector, 10),
@@ -19,6 +19,7 @@ Ext.define('Taco.view.site.page.WidgetDragZone', {
             return;
         }
         record = this.view.getRecord(sourceEl);
+        console.log(record);
         if (!record) {
             return;
         }
