@@ -137,6 +137,8 @@ Ext.define('Taco.core.Controller', {
     createContentView: function (view, cfg) {
         var viewClass = Ext.ClassManager.get(view);
         if (this.confirmContext(viewClass)) {
+            //removing initial view  to aviod events firing from the create of the view from messin with the 
+            Taco.app.contentView.removeAll(true);
             view = view.$className ? view : Ext.create(view, cfg);
             if (view.requiresContextOfType) {
                 view.mon(Taco.app.context, "beforecontextchange", function (newContext) {
@@ -145,7 +147,7 @@ Ext.define('Taco.core.Controller', {
                     return works;
                 }, this);
             }
-            Taco.app.contentView.removeAll(true);
+            
             Taco.app.contentView.add(view);
             return view;
         }
