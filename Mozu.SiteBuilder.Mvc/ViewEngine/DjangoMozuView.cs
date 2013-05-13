@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Mvc;
 using Autofac;
+using NDjango;
 using NDjango.Interfaces;
 using Mozu.SiteBuilder.Mvc.Security;
 
@@ -15,16 +18,55 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         }
     }
 
+
+
+    //interface ITemplateManagerProvider
+    //{
+    //    ITemplateManager GetManager(HttpContextBase ctx);
+    //}
+    //public class TemplateManagerProvider:ITemplateManagerProvider
+    //{
+    //    private readonly ISiteBuilderContext _siteBuilderContext;
+        
+    //    public TemplateManagerProvider(ISiteBuilderContext siteBuilderContext)
+    //    {
+    //        _siteBuilderContext = siteBuilderContext;
+    //    }
+
+    //    public ITemplateManager GetManager(HttpContextBase ctx)
+    //    {
+    //        var sbc = SiteBuilderContext.GetFromContext(ctx);
+
+    //        var key = sbc.Theme.Id;
+
+    //        ITemplateManager manager = null;
+    //        manager = (ITemplateManager) _cache[key];
+    //        if (manager == null)
+    //        {
+    //            lock (_cache)
+    //            {
+    //                manager = (ITemplateManager)_cache[key];
+    //                if (manager == null)
+    //                {
+    //                    manager = sbc.Resolve<ITemplateManager>();
+    //                    _cache[key] = manager;
+    //                }
+    //            }
+    //        }
+    //        return manager;
+    //    }
+    //}
+
     class DjangoMozuView : IView, IViewDataContainer, IViewPathContainer
     {
-    
+        private static  System.Collections.Hashtable _cache = new Hashtable(StringComparer.OrdinalIgnoreCase);
         internal string viewPath;
         private readonly string _mappedPath;
 
         public DjangoMozuView(ITemplateManager manager, string viewPath, string mappedPath)
         {
             // TODO: Complete member initialization
-            this.TemplateManager = manager;
+            //this.TemplateManager = manager;
       
             this.viewPath = viewPath;
             _mappedPath = mappedPath;
@@ -35,11 +77,36 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             get { return viewPath; }
         }
 
-        public ITemplateManager TemplateManager
+        //public ITemplateManager TemplateManager
+        //{
+        //    get;
+        //    private set;
+        //}
+
+        public ITemplateManager GetManager(HttpContextBase ctx)
         {
-            get;
-            private set;
+            var sbc = SiteBuilderContext.GetFromContext(ctx);
+
+            var key = sbc.Theme.Id;
+
+            ITemplateManager manager = null;
+            manager = (ITemplateManager)_cache[key];
+            if (manager == null)
+            {
+                lock (_cache)
+                {
+                    manager = (ITemplateManager)_cache[key];
+                    if (manager == null)
+                    {
+                        var provider = sbc.Resolve<TemplateManagerProvider>();
+                        _cache[key] = manager = provider.GetNewManager();
+                    }
+                }
+            }
+            return manager;
         }
+
+
 
         public ViewDataDictionary ViewData
         {
@@ -80,8 +147,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
           //  this.
           //  var result = ViewEngines.Engines.FindPartialView(_html.ViewContext.Controller.ControllerContext, viewPath);
 
-
-            var reader = TemplateManager.RenderTemplate(_mappedPath , requestContext);
+            var templateManager = GetManager(viewContext.HttpContext);
+            var reader = templateManager.RenderTemplate(_mappedPath, requestContext);
             var buffer = new char[4096];
             int count = 0;
 

@@ -65,11 +65,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<NullLoggingService>().As<ILoggingService>();
             builder.RegisterType<TemplateLoader>().As<ITemplateLoader>().SingleInstance();
             builder.Register(c => new TemplateManagerProvider()
-                          .WithLibrary(typeof(NDjango.FiltersCS.AddFilter).Assembly)
-                          .WithLibrary(typeof(DjangoMozuViewEngine).Assembly)
-                          .WithLibrary(typeof(AutofacModule).Assembly)
-                          .WithSetting("settings.DEFAULT_AUTOESCAPE", false)
-                          .WithLoader(c.Resolve<ITemplateLoader>())).As<TemplateManagerProvider>().SingleInstance();
+                                      .WithLibrary(typeof (NDjango.FiltersCS.AddFilter).Assembly)
+                                      .WithLibrary(typeof (DjangoMozuViewEngine).Assembly)
+                                      .WithLibrary(typeof (AutofacModule).Assembly)
+                                      .WithSetting("settings.DEFAULT_AUTOESCAPE", false)
+                                      .WithLoader(c.Resolve<ITemplateLoader>())).As<TemplateManagerProvider>();
 
 
             builder.Register(c => c.Resolve<TemplateManagerProvider>().GetNewManager()).As<ITemplateManager>();
