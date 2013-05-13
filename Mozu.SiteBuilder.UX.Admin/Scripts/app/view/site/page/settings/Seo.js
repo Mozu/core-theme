@@ -43,7 +43,7 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                 collapsible: true,
                 layout: 'vbox',
                 width: '95%',
-                cls: 'taco-sidebar-submenue',
+                cls: 'taco-sidebar-submenu',
                 items: [
                     {
                         xtype: 'textfield',

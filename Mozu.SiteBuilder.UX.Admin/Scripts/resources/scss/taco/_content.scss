@@ -18,34 +18,10 @@
   /* CONTENT CONTAINER */
 
   .#{$vprefix}content-container {
-    &.#{$vprefix}content-container-with-sidebar {
-      @include flexbox;
-    }
-
-    .#{$vprefix}content-sidebar {
-      @include order(2);
-    }
-
-    .#{$vprefix}content-main {
-      min-width: 0px;
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      @include flex($grow: 1);
-    }
-
     .#{$vprefix}content-header {
       border-bottom: 1px solid border-for($color-neutral-95);
-      margin: 0px;
-      min-height: 65px;
       padding: 17px 30px;
-      position: relative;
-      width: 100%;
-      z-index: 200;
-      // @include box-shadow(rgba(0,0,0,0) 0 -5px 10px 0px);
-      @include box-shadow(inset 0px 1px border-for($color-neutral-95));
       @include flexbox($justify: space-between);
-      //@include transition(box-shadow 1s ease);
       
       h1 {
         font-size: px-to-rem(24);
@@ -55,47 +31,28 @@
 
       p {
         font: $font-message;
-        // padding-top: 7px;
       }
       
       .#{$vprefix}actions {
-        @include flexbox;
-      }
-      .#{$vprefix}action {
-        float: none;
-        margin-left: 1em;
-      }
-    }
-    
-    .#{$vprefix}content-body {
-      margin: 0px 30px;
-      padding: 20px 0px 10px;
+        @include flexbox($alignItems: center);
 
-      .#{$prefix}table-layout-cell {
-        vertical-align: top;
-      }
-    }
-  }
+        .#{$vprefix}action {
+          float: none;
+          margin-left: $font-size;
+        }
 
-  .#{$vprefix}shell-scrolled {
-    .#{$vprefix}content-header {
-      background-color: $color-neutral-90;
-      //border-right: 5px solid $color-neutral-transparent;
-      left: 0px;
-      position: fixed;
-      top: 0px;
-    }
-
-    .#{$vprefix}content-sidebar {
-      &~ .#{$vprefix}content-main {
-        .#{$vprefix}content-header {
-          border-right: 325px solid $color-neutral-95;
+        .#{$prefix}form-item {
+          margin: 0px;
         }
       }
     }
 
     .#{$vprefix}content-body {
-      margin-top: 65px !important;
+      padding: 20px 30px 10px;
+
+      .#{$prefix}table-layout-cell {
+        vertical-align: top;
+      }
     }
   }
 
@@ -107,9 +64,7 @@
     border-width: 0px 0px 0px 1px;
     position: relative;
     z-index: 3;
-    @include box-shadow(inset 0px 1px border-for($color-neutral-95));
     @include flexbox;
-    @include flex(0, 0, 320px);
   }
 
   .#{$vprefix}sidebar-modal {
@@ -118,42 +73,34 @@
       @include transition-duration(0.5s, 0.5s);
       @include transition-timing-function(ease-out, ease-out);
     }
+
+    hr {
+      border-color: border-for($color-neutral-95);
+      border-style: solid;
+      border-width: 1px 1px 0px 1px;
+      width: 100%;
+    }
   }
+	
+  .#{$vprefix}sidebarlist {
+    margin: 0 30px;
 
-	// .#{$prefix}panel-body-taco{
-	//   max-height: 602px;
-	//   overflow-y: scroll;
-	// }
- //    @include box-shadow(inset 0px 1px border-for($color-neutral-95));
- //    @include flexbox;
- //    @include flex(0, 0, 320px);
+    h1 {
+      padding: 0 0 15px;
+      margin: 0 0 15px;
+      font-size: px-to-rem(20);
+      font-weight: normal;
+      border-bottom: 1px dashed #999;
+    }
+    .#{$vprefix}sidebarlist-list-item {
+      font-size: px-to-rem(12);
+      margin: 6px 0px;
 
- //    .#{$vprefix}sidebarlist {
- //      margin: 0 30px;
-
- //      h1 {
- //        padding: 0 0 15px;
- //        margin: 0 0 15px;
- //        font-size: px-to-rem(20);
- //        font-weight: normal;
- //        border-bottom: 1px dashed #999;
- //      }
- //      .#{$vprefix}sidebarlist-list-item {
- //        font-size: px-to-rem(12);
- //        margin: 6px 0px;
-
- //        &.#{$prefix}item-selected {
- //          font-weight: bold;
- //        }
- //      }
- //    }
-
-	// hr{
-	// 	width: 100%;
-	// 	border: 0 none;
-	// 	border-bottom: 1px solid #999;
-	// }
- //  }
+      &.#{$prefix}item-selected {
+        font-weight: bold;
+      }
+    }
+  }
 
  //  .#{$vprefix}sidebar-modal{
  //      &.sliding {
@@ -190,7 +137,7 @@
 	//   }
  //  }
 
-  // .#{$vprefix}sidebar-submenue {
+  // .#{$vprefix}sidebar-submenu {
   //   .#{$prefix}panel-header-body { //i feel really bad about this css, but i couldn't config the expand to the left; BF
   //     .#{$prefix}box-inner {
   //       margin-top:0px;

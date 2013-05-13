@@ -10,6 +10,7 @@ Ext.define('Taco.core.ux.content.Header', {
     cls: 'taco-content-header',
 
     title: 'Header Title',
+    // height: 65,
 
     instructionText: null,
     hideActions: false,

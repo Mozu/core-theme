@@ -1,11 +1,13 @@
 ﻿Ext.define('Taco.core.ux.form.FullEditor', {
     extend: 'Taco.core.ux.content.Container',
+
     mixins: {
         editorwrapper: 'Taco.core.ux.form.EditorWrapper'
     },
-    autoTitle:true,
-    bodyLayout: 'fit',
-    showIndexOnCancel:true,
+    
+    autoTitle :true,
+    bodyLayout: { type: 'auto' },
+    showIndexOnCancel: true,
 
     constructor: function (config) {
         this.callParent(arguments);

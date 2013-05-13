@@ -6,12 +6,8 @@
         alias: 'widget.secondarymenu',
         requires: ['Taco.core.ux.action.Button'],
 
-        layout: {
-            type: 'hbox',
-            align: 'middle',
-            pack: 'end',
-            defaultMargins: { right: 21 }
-        },
+        cls: Taco.baseCSSPrefix + 'secondary-nav',
+        layout: { type: 'auto' },
 
         initComponent: function () {
             var me = this;

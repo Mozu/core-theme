@@ -6,17 +6,16 @@ Ext.define('Taco.core.ux.content.Container', {
     extend: 'Ext.container.Container',
     alias: 'widget.contentcontainer',
     requires: ['Taco.core.ux.content.Header', 'Taco.core.ux.content.Body', 'Taco.core.ux.content.Sidebar'],
-    headerCls: 'Taco.core.ux.content.Header', 
-    bodyCls: 'Taco.core.ux.content.Body', 
 
     bubbleEvents: ['add', 'remove', 'save', 'cancel'],
+    componentCls: 'taco-content-container',
+    layout: { type: 'border' },
+    region: 'center',
 
-    cls: 'taco-content-container',
-
-    flex: 1,
-    body: {},
+    headerCls: 'Taco.core.ux.content.Header',
+    bodyCls: 'Taco.core.ux.content.Body',
     header: {},
-
+    body: {},
     scopeActionHandlers: true,
 
     initComponent: function () {
@@ -44,39 +43,29 @@ Ext.define('Taco.core.ux.content.Container', {
         }
     },
 
-
-
     arrangePanels: function() {
         var me = this;
 
-        me.header = Ext.create(me.headerCls, me.header || {});
+        me.header = Ext.create(me.headerCls, Ext.apply(me.header || {}, { region: 'north' }));
 
-        me.body = Ext.create(me.bodyCls, me.body || {});
+        me.body = Ext.create(me.bodyCls, Ext.apply(me.body || {}, { region: 'center' }));
+
+        me.main = Ext.create('Ext.Container', {
+            region: 'center',
+            cls: Taco.baseCSSPrefix + 'content-main',
+            layout: { type: 'border' },
+            items: [me.header, me.body]
+        });
+
+        me.items = [me.main];
 
         if (me.sidebar || me.hasSidebar) {
-
-            me.layout = 'auto';
-
-            me.cls = 'taco-content-container taco-content-container-with-sidebar';
-
-            me.main = Ext.create('Ext.Container', {
-                // region: 'center',
-                cls: Taco.baseCSSPrefix + 'content-main',
-                // flex: 1,
-                layout: 'auto',
-                items: [me.header, me.body]
-            });
-
             me.sidebar = me.sidebar || {};
 
             // create the sidebar unless some subclass has created it!
-            if (!me.sidebar.$className) me.sidebar = Ext.widget('sidebar', me.sidebar);
+            if (!me.sidebar.$className) me.sidebar = Ext.widget('sidebar', Ext.applyIf(me.sidebar, { region: 'east' }));
 
-            me.items = [me.sidebar, me.main];
-        } else {
-            me.layout = 'auto';
-            me.cls = 'taco-content-container';
-            me.items = [me.header, me.body];
+            me.items.push(me.sidebar);
         }
     },
 

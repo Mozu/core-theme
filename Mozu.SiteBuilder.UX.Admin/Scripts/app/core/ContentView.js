@@ -12,8 +12,7 @@ Ext.define('Taco.core.ContentView' , {
         tag: 'article',
         cls: 'taco-content-view'
     },
-    flex: 1,
-    layout: { type: 'auto' },
+    layout: { type: 'border' },
 
     /**
      * Tests whether the passed argument is a Taco.core.ux.content.Container.

@@ -104,8 +104,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
         // after Ext generates dockedItems, it deletes these configs automatically
         this.lbar = lbar;
         this.tbar = tbar;
-
-        //this.enableBubble('selectionchange'); // *** This event is fired as the result of a formTabCountChange being handled.
+        
         this.callParent(arguments);
 
         this.navigationBar = lbar;
@@ -121,8 +120,6 @@ Ext.define('Taco.core.ux.tab.Panel', {
         this.picker.on({
             selectionchange: this.onTabSelectionChange,
             scope: this
-
-            //target: this.availableSiteList
         });
     },
 
@@ -403,30 +400,11 @@ Ext.define('Taco.core.ux.tab.Panel', {
 
         card.items.each(function (item) {
             if( item.title ) {
-                // var link = Ext.widget({
-                //     xtype: 'component',
-                //     componentCls: Taco.baseCSSPrefix + 'form-card-nav-link',
-                //     target: item,
-                //     html: item.title,
-                //     listeners: {
-                //         click: {
-                //             scope: this,
-                //             element: 'el',
-                //             fn: function () { this.scrollCard(card, item); }
-                //         }
-                //     }
-                // });
-                // item.sideNavLink = link;
-                // links.push(link);
                 links.push({ text: item.title, target: item.id });
             }
         }, this);
 
-        console.log(links);
         this.navigationBar.getStore().removeAll();
         this.navigationBar.getStore().add(links);
-
-        // this.navigationBar.removeAll();
-        // this.navigationBar.add(links);
     }
 });

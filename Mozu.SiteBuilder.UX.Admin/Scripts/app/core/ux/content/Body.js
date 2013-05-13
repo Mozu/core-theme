@@ -8,16 +8,19 @@ Ext.define('Taco.core.ux.content.Body', {
     alias: 'widget.contentbody',
 
     bubbleEvents: ['add','remove','save','cancel'],
-
     cls: 'taco-content-body',
     layout: 'auto',
+    overflowY: 'auto',
 
     initComponent: function () {
         this.callParent(arguments);
 
         this.on({
-            boxready: this.setMinHeight,
-            scope: this
+            scroll: {
+                fn: this.onScroll,
+                element: 'el',
+                scope: this
+            }
         });
     },
 
@@ -25,11 +28,18 @@ Ext.define('Taco.core.ux.content.Body', {
         console.log (message + ', ' + type);
     },
 
-    setMinHeight: function () {
-        var el = this.getEl(),
-            vpHeight = Ext.getBody().getHeight() - 171;
+    onScroll: function (e, t) {
+        var scroll = Ext.fly(t).getScroll().top,
+            header = Ext.getCmp('primaryViewPort').getHeader();
 
-        vpHeight = Ext.dom.AbstractElement.addUnits(vpHeight, 'px');
-        Ext.fly(el).applyStyles({ minHeight: vpHeight });
+        // gradual hiding (layout intensive but smooth)
+        header.setHeight(scroll > 106 ? 0 : 106 - scroll);
+
+        // snap hiding (performant but somewhat jarring)
+        // if (!header.isHidden() && scroll >= 100) {
+        //     header.hide();
+        // } else if (header.isHidden() && scroll <= 100) {
+        //     header.show();
+        // }
     }
 });
