@@ -5,6 +5,11 @@
 
 Ext.define('Taco.view.product.subform.ImageField', {
     extend: 'Ext.form.FieldContainer',
+    requires: [
+        'Ext.ux.DataView.Animated',
+        'Ext.view.DragZone',
+        'Ext.view.DropZone'
+    ],
     mixins: {
         field: 'Ext.form.field.Field',
         uploadable: 'Taco.view.fileManager.util.Uploadable'
@@ -61,7 +66,7 @@ Ext.define('Taco.view.product.subform.ImageField', {
                         '<tpl if="isUploaded === false">',
                             '<li class="item uploading">Progress {progress}%</li>',
                         '<tpl else>',
-                            '<li class="item image" style="background-image:url({url}?size=' + this.thumbnailSize + ')">',
+                            '<li class="item image newLoad" style="background-image:url({url}?size=' + this.thumbnailSize + ')">',
                                 '<ul class="toolbar">',
                                     '<li class="drag-handle">Drag</li>',
                                     '<li class="remove">Remove</li>',
@@ -161,10 +166,10 @@ Ext.define('Taco.view.product.subform.ImageField', {
 
                         xy = Ext.fly(node).getXY();
                         indicatorY = xy[1] - view.el.getY();
-                        indicatorX = xy[0] - view.el.getX();
+                        indicatorX = xy[0] - view.el.getX() - 9;
                         if (pos == 'after') {
                             //indicatorY += Ext.fly(node).getHeight();
-                            indicatorX += 125;
+                            indicatorX += 165;
                         }
                         //me.getIndicator().setWidth(Ext.fly(view.el).getWidth()).showAt(0, indicatorY);
                         me.getIndicator().showAt(indicatorX, indicatorY)
@@ -225,11 +230,8 @@ Ext.define('Taco.view.product.subform.ImageField', {
             return;
         }
 
-        window.clearInterval(this.imageUploaderInterval);
-
         this.imageDropZoneEl = this.imageView.getEl().down('.taco-image-drop');
         
-
 
         if (!this.imageDropZoneEl || this.imageDropZoneEl.bindImageUpload) {
             return;
