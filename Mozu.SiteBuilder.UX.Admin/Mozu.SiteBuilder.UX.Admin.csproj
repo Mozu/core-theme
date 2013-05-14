@@ -1230,7 +1230,6 @@
     <Content Include="Scripts\app\view\paymentAndCheckout\Index.js" />
     <Content Include="Scripts\app\view\paymentAndCheckout\RadioList.js" />
     <Content Include="Scripts\app\view\paymentAndCheckout\StandaloneAccordion.js" />
-    <Content Include="Scripts\app\view\product\edit\InventoryControl.js" />
     <Content Include="Scripts\app\view\site\page\entityAdapters\BaseEntityAdapter.js" />
     <Content Include="Scripts\app\view\site\page\entityAdapters\CategoryEntityAdapter.js" />
     <Content Include="Scripts\app\view\site\page\entityAdapters\DocumentEntityAdapter.js" />
@@ -1247,7 +1246,6 @@
     <Content Include="Scripts\app\view\generalSettings\Index.js" />
     <Content Include="Scripts\app\model\ThemeListing.js" />
     <Content Include="Scripts\app\view\inventory\Index.js" />
-    <Content Include="Scripts\app\view\product\edit\Inline.js" />
     <Content Include="Scripts\app\view\site\navigation\ExternalLinkEditor.js" />
     <Content Include="Scripts\app\view\site\navigation\Themes.js" />
     <EmbeddedResource Include="Api\datagen.txt" />
@@ -2805,17 +2803,6 @@
     <Content Include="Scripts\app\view\option\valueEditor\TextField.js" />
     <Content Include="Scripts\app\view\productOption\edit.js" />
     <Content Include="Scripts\app\view\product\Edit-DEPRECATED.js" />
-    <Content Include="Scripts\app\view\product\edit\Basic.js" />
-    <Content Include="Scripts\app\view\product\edit\ConfigurableOptions.js" />
-    <Content Include="Scripts\app\view\product\edit\ConfigurableOptionsGrid.js" />
-    <Content Include="Scripts\app\view\product\edit\ProductOptions.js" />
-    <Content Include="Scripts\app\view\product\edit\ProductOption.js" />
-    <Content Include="Scripts\app\view\product\edit\ProductProperties.js" />
-    <Content Include="Scripts\app\view\product\edit\Seo.js" />
-    <Content Include="Scripts\app\view\product\edit\Shipping.js" />
-    <Content Include="Scripts\app\view\product\edit\Categories.js" />
-    <Content Include="Scripts\app\view\product\edit\StandaloneOptions.js" />
-    <Content Include="Scripts\app\view\product\edit\Widgets.js" />
     <Content Include="Scripts\app\view\product\Index.js" />
     <Content Include="Scripts\app\view\shipping\CountrySelector.js" />
     <Content Include="Scripts\app\view\shipping\CustomRateEditor.js" />
