@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             try
             {
                 // If the user authenticates, redirect them to the admin app
-                var tenants =  _loginHelper.VolusionLogIn(login);
+                var tenants = _loginHelper.VolusionLogIn(login);
 
                 if (tenants.Skip(1).Any()) // more than 1
                 {
@@ -92,7 +92,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 {
                     // Auto login to tenant
                     var taContext = tenants.First();
-                   
+
                     var tenant = await _contextSwitcher.ChangeTenant(taContext.Id);
                     if (tenant != null)
                     {
@@ -111,12 +111,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 ModelState.AddModelError("General", "You don't have access to any sites.");
                 return View("Index");
             }
+
             catch (AggregateException exception)
             {
                 // Otherwise, send the login error message
                 ModelState.AddModelError("General", exception.UnwrapAgg().Message);
 
                 return View("Index");
+            }
+            catch (Mozu.Core.Api.Client.Exceptions.ApiWebClientException ex)
+            {
+                if (ex.RemoteError != null && ex.RemoteError.Items != null && ex.RemoteError.Items.Count > 0 && ex.RemoteError.Items[0].ErrorCode == "ITEM_NOT_FOUND")
+                {
+                    ModelState.AddModelError("General", "Invalid Credentials");
+                }
+                else
+                {
+                    ModelState.AddModelError("General", ex.Message);
+                }
+                
+                return View("Index");
+             
             }
         }
 
