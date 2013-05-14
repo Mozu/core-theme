@@ -31,13 +31,14 @@ Ext.define('Taco.view.site.navigation.Tree', {
         this.searchBox = Ext.widget('textfield', {
             emptyText: 'Search...',
             enableKeyEvents: true,
-            width: 300,
-            style: {
-                'margin': '0px auto'
-            },
-            fieldStyle: {
-                'border-style': 'none'
-            }
+            //  height:40,
+            width: '100%',
+            //style: {
+            //    'margin': '0px auto'
+            //},
+            //fieldStyle: {
+            //    'border-style': 'none'
+            //}
         });
 
         this.tree = Ext.create('Taco.core.ux.TreeList', {
@@ -47,127 +48,197 @@ Ext.define('Taco.view.site.navigation.Tree', {
             plugins: [cellEditing],
             store: this.store,
             columns: [{
-                xtype: 'treecolumn',
-                flex: 1,
-                dataIndex: 'name',
-                renderer: function(value, metaData, record) {
-                    var id = record.getId();
-                    if (id == '_unlinked' || id == '_navigation') {
-                        return '<span style="float:left;font-weight:bold">' + value + '</span><a style="float:right" href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
-                    } else {
-                        return '<a href="#" class="taco-action-navigate">' + value + '</a>';
-                    }
-                },
-                editor: {
-                    xtype: 'textfield',
-                    allowBlank: false,
-                    style: {
-                        marginTop: "10px"
-                    }
-                }
-            }, {
-                xtype: 'taco.menucolumn',
-                text: 'Actions',
-                width: 40,
-                menuItems: [{
-                    nodeTypes: ['link'],
-                    text: 'Edit',
-                    menuColumnHandler: function(item, eventData) {
-                        me.editLink(eventData.record, item);
+                    xtype: 'treecolumn',
+                    flex: 1,
+                    dataIndex: 'name',
+                    renderer: function(value, metaData, record) {
+                        var id = record.getId();
+                        if (id == '_unlinked' || id == '_navigation') {
+                            return '<span style="float:left;font-weight:bold">' + value + '</span><a style="float:right" href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
+                        } else {
+                            return '<a href="#" class="taco-action-navigate">' + value + '</a>';
+                        }
+                    },
+                    editor: {
+                        xtype: 'textfield',
+                        allowBlank: false,
+                        style: {
+                            marginTop: "10px"
+                        }
                     }
                 }, {
-                    nodeTypes: ['page', 'link'],
-                    text: 'Delete',
-                    menuColumnHandler: function(item, eventData) {
-                        var nt = eventData.record.get('nodeType'),
-                            confirm;
+                    xtype: 'taco.menucolumn',
+                    text: 'Actions',
+                    width: 40,
+                    menuItems: [{
+                            nodeTypes: ['category'],
+                            text: 'Show Products',
+                            menuColumnHandler: function(item, eventData) {
+                                me.showCategoryProducts(eventData.record.get('originalId'));
+                            }
+                        }, {
+                            nodeTypes: ['link'],
+                            text: 'Edit',
+                            menuColumnHandler: function(item, eventData) {
+                                me.editLink(eventData.record, item);
+                            }
+                        }, {
+                            nodeTypes: ['page', 'link'],
+                            text: 'Delete',
+                            menuColumnHandler: function(item, eventData) {
+                                var nt = eventData.record.get('nodeType'),
+                                    confirm;
 
-                        confirm = Ext.create('Taco.core.ux.modal.Confirmation', {
-                            text: 'Would you like to continue?',
-                            title: 'Delete Page',
-                            confirm: function() {
-                                eventData.record.remove();
-                                eventData.record.destroy({
-                                    callback: function(records, operation) {
-                                        if (operation.success) {
-                                            confirm.hide();
-                                        } else {
-                                            alert('error');
-                                        }
-                                    }
+                                confirm = Ext.create('Taco.core.ux.modal.Confirmation', {
+                                    text: 'Would you like to continue?',
+                                    title: 'Delete Page',
+                                    confirm: function() {
+                                        eventData.record.remove();
+                                        ecventData.record.destroy({
+                                            callback: function(records, operation) {
+                                                if (operation.success) {
+                                                    confirm.hide();
+                                                } else {
+                                                    alert('error');
+                                                }
+                                            }
+                                        });
+                                    },
+                                    autoShow: true
                                 });
-                            },
-                            autoShow: true
+                            }
+                        }
+                    ],
+                    onMenuShow: function(menu, eventData) {
+                        var nt = eventData.record.get('nodeType');
+                        menu.items.each(function(menuItem) {
+                            if (menuItem.nodeTypes.indexOf(nt) > -1) {
+                                menuItem.show();
+                            } else {
+                                menuItem.hide();
+                            }
                         });
                     }
-                }],
-                onMenuShow: function(menu, eventData) {
-                    // var nt = eventData.record.get('nodeType');
-                    // menu.items.each(function(menuItem) {
-                    //     if (menuItem.nodeTypes.indexOf(nt) > -1) {
-                    //         menuItem.show();
-                    //     } else {
-                    //         menuItem.hide();
-                    //     }
-                    // });
                 }
-            }]
+            ]
         });
 
-        // this.searchStore = Ext.create('Ext.data.Store', {
-        //     fields: ['nodeType', 'name', 'iconCls', 'url'],
-        //     proxy: {
-        //         type: 'ajaxproxy',
-        //         api: {
-        //             read: '/admin/app/navigation/search'
-        //         },
-        //         reader: {
-        //             type: 'json',
-        //             root: 'items',
-        //             successProperty: 'success',
-        //             messageProperty: 'message'
-        //         }
-        //     }
-        // });
 
-        // this.searchGrid = Ext.widget('grid', {
-        //     store: this.searchStore,
-        //     columns: [{
-        //             header: 'Result',
-        //             xtype: 'templatecolumn',
-        //             tpl: '<div class="{iconCls}"><div style="padding-left: 25px"><a href="#" class="taco-action-navigate">{name}</a></div></div>',
-        //             flex: 1
-        //         }
-        //     ],
-        //     listeners: {
-        //         select: function(rowModel, record, index, eOpts) {
-        //             me.navigate(record);
-        //         }
-        //     }
-        // });
+        //this.sideBarModal =  Ext.create('Taco.core.ux.modal.SidebarModal', {
+        //    items: [
+        //        {
+        //            html: 'hello mom'
+        //        }
+        //    ]
+        //});
 
-        // this.productGrid = Ext.create('Taco.core.ux.grid.Panel', {
-        //     columns: [
-        //         { text: 'Product Code', dataIndex: 'productCode', flex: 1 }
-        //     ],
-        //     hidden: true,
-        //     listeners: {
-        //         itemclick: function(panel, record) {
-        //             Taco.core.StateManager.attemptNavigate('/sites/product/' + record.getId());
-        //         }
-        //     },
-        //     height: 200,
-        //     store: { type: 'Taco.store.Products', id: 'xxx', autoLoad: false },
-        // });
+        this.searchStore = Ext.create('Ext.data.Store', {
+            fields: ['nodeType', 'name', 'iconCls', 'url'],
+            proxy: {
+                type: 'ajaxproxy',
+                api: {
+                    read: '/admin/app/navigation/search'
+                },
+                reader: {
+                    type: 'json',
+                    root: 'items',
+                    successProperty: 'success',
+                    messageProperty: 'message'
+                }
+            }
+        });
 
-        // this.resultPanel = Ext.widget('panel', {
-        //     flex: 1,
-        //     layout: 'card',
-        //     items: [{ xtype: 'container', layout: { type: 'vbox', align: 'stretch' }, items: [this.tree, this.productGrid] }, this.searchGrid]
-        // });
+        this.searchGrid = Ext.widget('grid', {
+            store: this.searchStore,
+            columns: [{
+                    header: 'Result',
+                    xtype: 'templatecolumn',
+                    tpl: '<div class="{iconCls}"><div style="padding-left: 25px"><a href="#" class="taco-action-navigate">{name}</a></div></div>',
+                    flex: 1
+                }
+            ],
+            listeners: {
+                select: function(rowModel, record, index, eOpts) {
+                    me.navigate(record);
+                }
+            },
+            dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    items: [
+                        '->',
+                        {
+                            xtype: 'secondaryaction',
+                            text: 'Cancel',
+                            listeners: {
+                                click: function() {
+                                    this.tabPanel.getLayout().setActiveItem(this.tree);
+                                },
+                                scope: me
+                            }
+                        }
+                    ]
+                }
+            ],
+        });
 
-        this.items = [this.searchBox, this.tree];
+        this.productGrid = Ext.create('Taco.core.ux.grid.Panel', {
+            columns: [{
+                    text: 'Product Name',
+                    dataIndex: 'productName',
+                    flex: 1
+                }
+            ],
+            hideHeaders: true,
+            // hidden: true,
+            listeners: {
+                itemclick: function(panel, record) {
+                    Taco.core.StateManager.attemptNavigate('/sites/product/' + record.getId());
+                }
+            },
+            //height: 200,
+            width: '100%',
+            dockedItems: [
+                {
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    items: [
+                        '->',
+                        {
+                            xtype: 'secondaryaction',
+                            text: 'Cancel',
+                            listeners: {
+                                click: function() {
+                                    this.tabPanel.getLayout().setActiveItem(this.tree);
+                                },
+                                scope: me
+                            }
+                        }
+                    ]
+                }
+            ],
+            store: {
+                type: 'Taco.store.Products',
+                id: 'xxx',
+                autoLoad: false
+            },
+        });
 
+        this.tabPanel = Ext.widget('panel', {
+            flex: 1,
+            layout: 'card',
+            items: [{
+                    xtype: 'container',
+                    // layout: { type: 'fit', align: 'stretch' },
+                    items: [this.tree, this.productGrid, this.searchGrid]
+                },
+                this.searchGrid
+            ]
+        });
+
+
+        // this.items = [this.searchBox, this.tree ];
+        this.items = [this.searchBox, this.tabPanel];
         this.callParent(arguments);
 
         this.addEvents('editlink', 'navigationchange');
@@ -178,10 +249,10 @@ Ext.define('Taco.view.site.navigation.Tree', {
         this.add(this.pageCreator);
 
         this.tree.getSelectionModel().setSelectionMode('SINGLE');
-        
+
     },
 
-    attachEvents: function () {
+    attachEvents: function() {
         var me = this;
 
         // this panel
@@ -223,11 +294,6 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 var cmp = Ext.fly(e.target);
                 e.preventDefault();
 
-                // if (r.get('nodeType') == 'category') {
-                //     me.showCategoryProducts(r.get('originalId'), r.get('isExpanded'));
-                // } else {
-                //     me.hideCategoryProducts();
-                // }
 
                 if (e.target.dataset.pageCreator) { //data-page-creator
                     this.pageCreator.reset(e.target.dataset);
@@ -235,12 +301,12 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 }
                 this.isNewSelection = false;
             },
-            afteritemexpand: function(node, index, item, eOpts) {
-                if (node.get('nodeType') != 'category') {
-                    return;
-                }
-                // me.showCategoryProducts(node.get('originalId'), true);
-            },
+            //afteritemexpand: function(node, index, item, eOpts) {
+            //    if (node.get('nodeType') != 'category') {
+            //        return;
+            //    }
+            //    // me.showCategoryProducts(node.get('originalId'), true);
+            //},
             scope: this
         });
 
@@ -283,24 +349,16 @@ Ext.define('Taco.view.site.navigation.Tree', {
         }
     },
 
-    hideCategoryProducts: function() {
-        if (this.productGrid) {
-            this.productGrid.hide();
-        }
-    },
-
-    showCategoryProducts: function(catId, expand) {
+    showCategoryProducts: function(catId) {
         var me = this;
 
-        if (me.productGrid.currentCateogry == catId) {
-            me.productGrid.show();
-        } else if (expand) {
-            me.productGrid.show();
-            me.productGrid.currentCateogry = catId;
-            me.productGrid.store.filter({ id: 'categoryIds', property: 'categoryIds', value: catId });
-        } else {
-            me.hideCategoryProducts();
-        }
+        this.tabPanel.getLayout().setActiveItem(this.productGrid);
+        this.productGrid.store.filter({
+            id: 'categoryIds',
+            property: 'categoryIds',
+            value: catId
+        });
+
 
     },
 
@@ -316,20 +374,20 @@ Ext.define('Taco.view.site.navigation.Tree', {
         }
 
         switch (model.modelName) {
-            case 'Taco.model.Category':
-                url = '/category/' + model.get('id');
-                isHidden = model.get('isHidden');
-                name = model.get('name');
-                break;
-            case 'Taco.model.Product':
-                url = '/product/' + model.getId();
-                isHidden = !model.get('isActive');
-                name = model.get('name');
-                break;
-            case 'Taco.model.CmsDocument':
-                url = '/pages/' + model.get('name');
-                name = mode.get('name');
-                break;
+        case 'Taco.model.Category':
+            url = '/category/' + model.get('id');
+            isHidden = model.get('isHidden');
+            name = model.get('name');
+            break;
+        case 'Taco.model.Product':
+            url = '/product/' + model.getId();
+            isHidden = !model.get('isActive');
+            name = model.get('name');
+            break;
+        case 'Taco.model.CmsDocument':
+            url = '/pages/' + model.get('name');
+            name = mode.get('name');
+            break;
         }
 
         node = this.tree.getRootNode().findChild('url', url, true);
@@ -344,6 +402,10 @@ Ext.define('Taco.view.site.navigation.Tree', {
     },
 
     keyUp: function(field) {
+
+
+        this.tabPanel.getLayout().setActiveItem(this.searchGrid);
+
         var me = this,
             store = me.searchStore,
             val = field.getValue();

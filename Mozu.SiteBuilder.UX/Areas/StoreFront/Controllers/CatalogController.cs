@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             page = page.GetValueOrDefault(1);
             int startIdx = (page.Value - 1) * itemsPerPage.Value;
 
-            var pcDC = _productClient.GetProducts(categoryId: categoryId, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy).Result.ReadAsSync();
+            var pcDC = _productClient.GetProducts(categoryId: categoryId, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, recurse:true , responseGroups:"Categories,Measurements,Properties,Options,Extras").Result.ReadAsSync();
 
             var pc = Mapper.Map<ProductCollection>(pcDC);
            
