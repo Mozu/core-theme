@@ -1,20 +1,7 @@
-// $panel-header-color: $color-neutral-darkest;
-// .#{$prefix}panel-header.#{$prefix}panel-header-default {
-// 	background-image: none !important;
-// 	background-color: transparent !important;
-// 	border: 0 dashed $color-neutral-mid;
-// 	border-bottom-width: 1px !important;
-// 	@include box-shadow(none);
-// }
 @mixin taco-panel {
 
-  // .#{$prefix}panel-header img.#{$prefix}tool-expand-top, .#{$prefix}panel-header img.#{$prefix}tool-collapse-top {
-  // 	@include icons-sprite('icon-panelcollapse');
-  // }
-  // .#{$prefix}panel-header img.#{$prefix}tool-expand-bottom, .#{$prefix}panel-header img.#{$prefix}tool-collapse-bottom {
-  // 	@include icons-sprite('icon-panelexpand');
-  // }
-
+  /* TACO UI */
+  
   @include extjs-panel-ui(
     'taco',
 
@@ -40,6 +27,7 @@
   );
 
   /* HEADER */
+
   .#{$prefix}panel-header-body-taco {
     @include flexbox($alignItems: center);
 
@@ -77,6 +65,39 @@
       margin-bottom: 0px;
       margin-top: px-to-rem(14);
       padding-left: 0px;
+    }
+  }
+
+  /* TABS */
+
+  .#{$prefix}tab {
+    em {
+      border-left: 1px solid $tab-background; // need to change this border-color for any different tab states
+      margin-left: -1px;
+      padding-left: 19px;
+      padding-right: 19px;
+    }
+
+    .#{$prefix}tab-inner {
+      height: auto;
+      line-height: $tab-height - (top($tab-top-border-width) * 2);
+    }
+
+    &.#{$prefix}tab-active {
+      em {
+        border-left-color: $tab-background-active;
+      }
+    }
+    &:nth-of-type(1) {
+      @include border-radius(2px 0px 0px 2px);
+
+      em {
+        border-left-width: 0px;
+        margin-left: 0px;
+      }
+    }
+    &:nth-last-of-type(1) {
+      @include border-radius(0px 2px 2px 0px);
     }
   }
 
@@ -140,66 +161,6 @@
       .#{$vprefix}action {
         color: $color-neutral-white;
       }
-    }
-  }
-
-  // inline editing sidebar toolbox
-  .#{$vprefix}toolbox {
-  }
-
-  .#{$vprefix}shell-scrolled {
-    .#{$vprefix}toolbox {
-      position: fixed;
-      right: 5px;
-      top: 0px;
-      z-index: 201;
-    }
-  }
-
-  .#{$vprefix}toolbox-tabpanel {
-    &> .#{$prefix}tab-bar {
-      background-color: $tabbar-base-color;
-
-      .#{$prefix}tab-bar-body {
-        text-align: center;
-      }
-    }
-
-    &> .#{$prefix}panel-body {
-      border-top: 1px solid border-for($color-neutral-95);
-    }
-  }
-
-  /* TABS */
-
-  .#{$prefix}tab {
-    em {
-      border-left: 1px solid $tab-background; // need to change this border-color for any different tab states
-      margin-left: -1px;
-      padding-left: 19px;
-      padding-right: 19px;
-    }
-
-    .#{$prefix}tab-inner {
-      height: auto;
-      line-height: $tab-height - (top($tab-top-border-width) * 2);
-    }
-
-    &.#{$prefix}tab-active {
-      em {
-        border-left-color: $tab-background-active;
-      }
-    }
-    &:nth-of-type(1) {
-      @include border-radius(2px 0px 0px 2px);
-
-      em {
-        border-left-width: 0px;
-        margin-left: 0px;
-      }
-    }
-    &:nth-last-of-type(1) {
-      @include border-radius(0px 2px 2px 0px);
     }
   }
   
