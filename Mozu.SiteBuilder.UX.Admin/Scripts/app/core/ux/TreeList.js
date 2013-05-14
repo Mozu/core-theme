@@ -25,7 +25,6 @@ Ext.define('Taco.core.ux.TreeList', {
     },
 
     initComponent: function () {
-
         var me = this;
 
         //console.dir(this.getRootNode().childNodes);
@@ -33,7 +32,7 @@ Ext.define('Taco.core.ux.TreeList', {
 
             this.columns.unshift({
                 xtype: 'draghandlecolumn',
-                width: 36
+                width: 22
             });
 
             if (this.actions) {

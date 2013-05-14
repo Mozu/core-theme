@@ -1,4 +1,3 @@
-
 @mixin taco-dashboard {
   
   .#{$vprefix}dashboard-object {
@@ -11,236 +10,230 @@
     @include border-radius;
   }
 
-	.#{$vprefix}home-page{
-		//background-color: white;
-		height: px-to-rem(900);
-		padding-top: px-to-rem(10);
-		padding-left: px-to-rem(20);
-		padding-right: px-to-rem(20);
-		.#{$vprefix}home-page-row-one{
-		  clear: left;
-		  width: 100%;
-		  height: px-to-rem(38);
-		  border: 0px;
-		  border-bottom: px-to-rem(2);
-		  border-style: dashed;
-		  border-color: lightgray;
-		  p{
-		  	float: left;
-		  	font-size: px-to-rem(20);
-		  }
+  .#{$vprefix}home-page {
+    //background-color: white;
+    height: px-to-rem(900);
+    padding-top: px-to-rem(10);
+    padding-left: px-to-rem(20);
+    padding-right: px-to-rem(20);
 
-		  select{
-		  	float:right;
-		  	width: px-to-rem(200);
-   			height: px-to-rem(25);
-		    overflow: hidden;
-		    border: 1px solid #ccc;
-		  }
-		}
+    .#{$vprefix}home-page-row-one {
+      clear: left;
+      width: 100%;
+      height: px-to-rem(38);
+      border: 0px;
+      border-bottom: px-to-rem(2);
+      border-style: dashed;
+      border-color: lightgray;
+      p{
+        float: left;
+        font-size: px-to-rem(20);
+      }
 
-		.#{$vprefix}home-page-row-two{
-		  clear: left;
-		  width: 100%;
-		  height: 11%;
-		}
- 
-		.#{$vprefix}home-page-row-three{
-		  clear: left;
-		  width: 100%;
-		  height: 25%;
-		  .#{$vprefix}home-page-large-item{
-		  	div{
-		  		p{
-		  			float: left;
-		  		}
-		  		select{
-		  			float: right;
-				  	width: px-to-rem(200);
-		   			height: px-to-rem(25);
-		   		  overflow: hidden;
-		   		  border: 1px solid #ccc;
-		  		}
-		  	}
-		  }
-		  p{
-		  	clear: right;
-		  }
-		}
+      select{
+        float:right;
+        width: px-to-rem(200);
+        height: px-to-rem(25);
+        overflow: hidden;
+        border: 1px solid #ccc;
+      }
+    }
 
-		.#{$vprefix}home-page-row-four{
-		  clear: left;
-		  width: 100%;
-		  height: 40%;
-		}
+    .#{$vprefix}home-page-row-two{
+      clear: left;
+      width: 100%;
+      height: 11%;
+    }
 
-		.#{$vprefix}home-page-row-five{
-		  clear: left;
-		  width: 100%;
-		  height: 15%;
-		  p{
-		  	float: left;
-		  }
-		  select{
-		  	float: right;
-		  	width: px-to-rem(200);
-   			height: px-to-rem(25);
-		    overflow: hidden;
-		    border: 1px solid #ccc;
-		  }
-		}
+    .#{$vprefix}home-page-row-three{
+      clear: left;
+      width: 100%;
+      height: 25%;
+      .#{$vprefix}home-page-large-item{
+        div{
+          p{
+            float: left;
+          }
+          select{
+            float: right;
+            width: px-to-rem(200);
+            height: px-to-rem(25);
+            overflow: hidden;
+            border: 1px solid #ccc;
+          }
+        }
+      }
+      p{
+        clear: right;
+      }
+    }
 
-		.#{$vprefix}home-page-row{
-		  clear: left;
-		  width: 100%;
-		}
+    .#{$vprefix}home-page-row-four{
+      clear: left;
+      width: 100%;
+      height: 40%;
+    }
 
-		.#{$vprefix}home-page-row-small{
-		  clear: left;
-		  width: 100%;
-		  height: 25%;
-		}
+    .#{$vprefix}home-page-row-five{
+      clear: left;
+      width: 100%;
+      height: 15%;
+      p{
+        float: left;
+      }
+      select{
+        float: right;
+        width: px-to-rem(200);
+        height: px-to-rem(25);
+        overflow: hidden;
+        border: 1px solid #ccc;
+      }
+    }
 
-		.#{$vprefix}home-page-row-large{
-		  clear: left;
-		  width: 100%;
-		  height: 41%;
-		}
+    .#{$vprefix}home-page-row{
+      clear: left;
+      width: 100%;
+    }
 
-		.#{$vprefix}home-page-mini-item{
-		  float: left;
-		  width: 19%;
-		  border-width: 0px;
-		  border-right: px-to-rem(2);//2px;
-		  border-style: dashed;
-		  border-color: lightgray;
-		  margin-left: px-to-rem(3);//3px;
-		  margin-top: px-to-rem(14);//14px;
-		  margin-bottom: px-to-rem(14);//14px;
-		  padding-left: px-to-rem(10);//10px;
-		  div:nth-child(n){
-		  	margin-bottom: px-to-rem(5);//5px;
-		  };
-		  .#{$vprefix}item-header{
-		  	//font-weight: bold;
-		  }
-		  .#{$vprefix}money-item{
-		  	float: left;
-		  	margin-right: px-to-rem(4);
-		  	font-weight: bold;
-		  	font-size: px-to-rem(26);
-		  }
-		  .#{$vprefix}percent-pos-item{
-		  	color: limegreen;
-		  	padding-top: px-to-rem(10);
-		  	font-size: px-to-rem(14);
-		  }
-		  .#{$vprefix}percent-neg-item{
-		  	color: red;
-		  	padding-top: px-to-rem(10);
-		  	font-size: px-to-rem(14);
-		  }
-		  .#{$vprefix}previous-text{
-		  	clear: left;
-		  	color: gray;
-		  	font-size: px-to-rem(12);
-		  }
-		}
-		.#{$vprefix}home-page-mini-item:last-child{
-		  border-width: 0px;
-		}
-		.#{$vprefix}home-page-small-item{
-		  float: left;
-		  height: 100%;
-		  width: 16.1%;//18%;//width: 23%;
-		  background: white;
-		  border-width: px-to-rem(1);
-		  border-style: solid;
-		  border-color: lightgray;
-		  margin: px-to-rem(12);//3px;
-		  //border-radius: px-to-rem(5);
-		  padding: px-to-rem(9);
-		}
+    .#{$vprefix}home-page-row-small{
+      clear: left;
+      width: 100%;
+      height: 25%;
+    }
 
-		.#{$vprefix}home-page-medium-item{
-		  float: left;
-		  height: 100%;
-		  width: 28%;//width: 37.8%;
-		  background: white;
-		  border: px-to-rem(1);
-		  border-style: solid;
-		  border-color: lightgray;
-		  margin: px-to-rem(12);
-		  //border-radius: px-to-rem(5);
-		  padding: px-to-rem(9);
+    .#{$vprefix}home-page-row-large{
+      clear: left;
+      width: 100%;
+      height: 41%;
+    }
 
-		  hr{
-		  	border: 0px;
-		  	border-bottom-width: px-to-rem(2);
-		  	border-style: dashed;
-		  	border-color: lightgray;
-		  }
-		  a{
-		  	color: rgb(0, 103, 250);
-		  	text-decoration: underline;
-		  }
-		}
-		.#{$vprefix}home-page-large-item{
-		  float: left;
-		  height: 100%;
-		  width: 76%;
-		  border: px-to-rem(1);
-		  border-style: solid;
-		  border-color: lightgray;
-		  margin: px-to-rem(3);
-		  //border-radius: px-to-rem(5);
-		  padding: px-to-rem(9);
-		}
-		.#{$vprefix}home-page-item-header{
+    .#{$vprefix}home-page-mini-item{
+      float: left;
+      width: 19%;
+      border-width: 0px;
+      border-right: px-to-rem(2);//2px;
+      border-style: dashed;
+      border-color: lightgray;
+      margin-left: px-to-rem(3);//3px;
+      margin-top: px-to-rem(14);//14px;
+      margin-bottom: px-to-rem(14);//14px;
+      padding-left: px-to-rem(10);//10px;
+      div:nth-child(n){
+        margin-bottom: px-to-rem(5);//5px;
+      };
+      .#{$vprefix}item-header{
+        //font-weight: bold;
+      }
+      .#{$vprefix}money-item{
+        float: left;
+        margin-right: px-to-rem(4);
+        font-weight: bold;
+        font-size: px-to-rem(26);
+      }
+      .#{$vprefix}percent-pos-item{
+        color: limegreen;
+        padding-top: px-to-rem(10);
+        font-size: px-to-rem(14);
+      }
+      .#{$vprefix}percent-neg-item{
+        color: red;
+        padding-top: px-to-rem(10);
+        font-size: px-to-rem(14);
+      }
+      .#{$vprefix}previous-text{
+        clear: left;
+        color: gray;
+        font-size: px-to-rem(12);
+      }
+    }
+    .#{$vprefix}home-page-mini-item:last-child{
+      border-width: 0px;
+    }
+    .#{$vprefix}home-page-small-item{
+      float: left;
+      height: 100%;
+      width: 16.1%;//18%;//width: 23%;
+      background: white;
+      border-width: px-to-rem(1);
+      border-style: solid;
+      border-color: lightgray;
+      margin: px-to-rem(12);//3px;
+      //border-radius: px-to-rem(5);
+      padding: px-to-rem(9);
+    }
 
-		}
-		.#{$vprefix}home-page-create-new{
-			margin-left: px-to-rem(27);
-			font-size: px-to-rem(12);
-		}
-		.#{$vprefix}home-page-tree{
-			font-size: px-to-rem(12);
-			margin-left: px-to-rem(8);
-			margin-top: px-to-rem(10);
-			ul{
-				margin-left: px-to-rem(19);
-				li{
-					margin-bottom: px-to-rem(5);
-				}
-			}
-			li{
-				margin-bottom: px-to-rem(5);
-			}
-		}
-		.#{$vprefix}home-page-button{
-			background: white;
-			border-radius: px-to-rem(5);
-			border-color: lightgray;
-			height: px-to-rem(30);
-			margin-left: px-to-rem(4);
-		}
-		.#{$vprefix}home-page-site-settings{
-			float: right;
-		}
+    .#{$vprefix}home-page-medium-item{
+      float: left;
+      height: 100%;
+      width: 28%;//width: 37.8%;
+      background: white;
+      border: px-to-rem(1);
+      border-style: solid;
+      border-color: lightgray;
+      margin: px-to-rem(12);
+      //border-radius: px-to-rem(5);
+      padding: px-to-rem(9);
 
-		//Classes for images
-		$image-map: sprite-map('dashboard/*.png') /* syntax highlighting bug */;
+      hr{
+        border: 0px;
+        border-bottom-width: px-to-rem(2);
+        border-style: dashed;
+        border-color: lightgray;
+      }
+      a{
+        color: rgb(0, 103, 250);
+        text-decoration: underline;
+      }
+    }
+    .#{$vprefix}home-page-large-item{
+      float: left;
+      height: 100%;
+      width: 76%;
+      border: px-to-rem(1);
+      border-style: solid;
+      border-color: lightgray;
+      margin: px-to-rem(3);
+      //border-radius: px-to-rem(5);
+      padding: px-to-rem(9);
+    }
+    .#{$vprefix}home-page-create-new {
+      margin-left: px-to-rem(27);
+      font-size: px-to-rem(12);
+    }
+    .#{$vprefix}home-page-tree{
+      font-size: px-to-rem(12);
+      margin-left: px-to-rem(8);
+      margin-top: px-to-rem(10);
+      ul{
+        margin-left: px-to-rem(19);
+        li{
+          margin-bottom: px-to-rem(5);
+        }
+      }
+      li{
+        margin-bottom: px-to-rem(5);
+      }
+    }
+    .#{$vprefix}home-page-button{
+      background: white;
+      border-radius: px-to-rem(5);
+      border-color: lightgray;
+      height: px-to-rem(30);
+      margin-left: px-to-rem(4);
+    }
+    .#{$vprefix}home-page-site-settings{
+      float: right;
+    }
 
-	 @each $screen in sales, customers, salesforce,device,bounce-rate, time-on-sites, vistors, new-returning-visitors, uptime, load-time, live-visitors, conversion-rate, opened-unopened-mail{
-	 		.#{$vprefix}home-page-#{$screen}{
-	 			@include background(sprite($image-map, #{$screen}));
-	 		}
-	 }
-	 /*
-	 .#{$vprefix}home-page-sales{
-			@include background(sprite($image-map, sales));
-		}
-*/
-	}
+    //Classes for images
+    $dashboard-map: sprite-map('dashboard/*.png') /* syntax highlighting bug */;
+
+    .#{$vprefix}home-page-sales {
+       @include background(sprite($dashboard-map, dashboard-sales));
+    }
+    .#{$vprefix}home-page-customers {
+       @include background(sprite($dashboard-map, dashboard-customers));
+    }
+  }
 
 }

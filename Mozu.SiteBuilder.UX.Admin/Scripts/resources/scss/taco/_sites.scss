@@ -39,35 +39,10 @@
     }
 
     .#{$vprefix}treelist {
-      .#{$vprefix}shit {
-        background-color: $color-neutral-white !important;
-        font-size: 18px;
-
-        & > div {
-          & > img {
-            display: none;
-          }
-          padding: 14px 0px 7px;
-        }
-        &:after {
-          background-color: $color-neutral-white;
-          content: "Root";
-          display: block;
-          font-size: 0px;
-          height: 40px;
-          left: auto;
-          line-height: 0px;
-          margin: -40px 0px 0px -36px;
-          position: absolute;
-          top: auto;
-          width: 36px;
-        }
-      }
-
       tbody tr {
         .#{$prefix}tree-icon-inline {
-          height: 24px;
-          width: 24px;
+          height: 16px;
+          width: 16px;
         }
 
         .#{$vprefix}nav-node-group {
@@ -96,7 +71,7 @@
           opacity: 1;
           @include single-transition(opacity);
         }
-        &:not(:hover) .#{$vprefix}draghandle {
+        &:not(:hover) .#{$vprefix}tree-knurling {
           opacity: 0;
         }
 
