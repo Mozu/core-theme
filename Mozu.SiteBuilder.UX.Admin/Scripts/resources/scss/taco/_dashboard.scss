@@ -227,13 +227,11 @@
 
     //Classes for images
     $dashboard-map: sprite-map('dashboard/*.png') /* syntax highlighting bug */;
-
-    .#{$vprefix}home-page-sales {
-       @include background(sprite($dashboard-map, dashboard-sales));
-    }
-    .#{$vprefix}home-page-customers {
-       @include background(sprite($dashboard-map, dashboard-customers));
-    }
+    @each $screen in sales, customers, salesforce,device,bounce-rate, time-on-sites, vistors, new-returning-visitors, uptime, load-time, live-visitors, conversion-rate, opened-unopened-mail{
+	 		.#{$vprefix}home-page-#{$screen}{
+	 			@include background(sprite($dashboard-map, dashboard-#{$screen})); 
+	 	}
+	 }
   }
 
 }
