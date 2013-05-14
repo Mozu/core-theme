@@ -25,13 +25,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly CollectionTaskUnMapper<Product, DC.Product> _productMapper = new CollectionTaskUnMapper<Product, DC.Product>();
 
         private readonly IProductWebApiClient _productClient;
+        private readonly IProductTypeWebApiClient _productTypeWebApiClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ProductController(IProductWebApiClient productClient)
+        public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient)
         {
             _productClient = productClient;
+            _productTypeWebApiClient = productTypeWebApiClient;
         }
 
         [WebGet(UriTemplate = "list")]
@@ -59,6 +61,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (products == null || !products.Any())
                 return Message3<List<Product>>(false, "No products were created because they were not sent correctly. Please try again.");
 
+           
             var createdProducts = await _productMapper.PerformAction(products, p => _productClient.AddProduct(p));
             return List2(createdProducts.ToList());
         }
@@ -68,8 +71,47 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (products == null || !products.Any())
                 return Message3<List<Product>>(false, "No products were edited because they were not sent correctly. Please try again.");
-        
-            var editedProducts = await _productMapper.PerformAction(products, p => _productClient.UpdateProduct(p, p.ProductCode));
+
+            var  productTypes = new List<ProductType>();
+            foreach (var product in products)
+            {
+                if (product.ProductTypeId.HasValue && !productTypes.Any(x => x.Id == product.ProductTypeId))
+                {
+                    var pt = (await _productTypeWebApiClient.GetProductType(product.ProductTypeId)).ReadAsSync();
+                    if (pt != null)
+                    {
+                        productTypes.Add(pt);
+                    }
+
+                }
+            }
+            
+            var editedProducts = await _productMapper.PerformAction(products, p =>
+                {
+                    var pt = productTypes.FirstOrDefault(x => p.ProductTypeId == x.Id);
+                    if (p.Properties  != null && pt != null)
+                    {
+                        foreach (var prop in p.Properties)
+                        {
+                            var def = pt.Properties.FirstOrDefault(x => prop.AttributeFQN == x.AttributeFQN && x.AttributeDetail.ValueType == "AdminEntered" && x.AttributeDetail.DataType == "String");
+                            if (def != null)
+                            {
+                                if (prop.Values != null && prop.Values.Count == 1)
+                                {
+                                    prop.Values[0].Value = def.AttributeFQN + "_value";
+                                }
+                            }
+                        }
+                        p.Properties.Select( prop=>  pt.Properties.FirstOrDefault(x=>x.AttributeFQN == prop.AttributeFQN ) )
+                            .Where( x=> x!=null&& x.AttributeDetail.ValueType =="AdminEntered" && x.AttributeDetail.DataType =="String")
+                            .ToList() 
+                            .ForEach(def =>
+                                {
+                                    
+                                });
+                    }
+                    return _productClient.UpdateProduct(p, p.ProductCode);
+                });
             return List2(editedProducts.ToList());
         }
 

@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         public void SetUp()
         {
             _productClient = Substitute.For<IProductWebApiClient>();
-            _testedController = new ProductController(_productClient);
+            _testedController = new ProductController(_productClient, null);
 
             // set up add product mock.
             _productClient.AddProduct(Arg.Any<DC.Product>()).Returns(

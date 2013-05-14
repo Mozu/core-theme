@@ -114,7 +114,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                           {
                               return null;
                           }
-                          return x.Values.Select(v => v.Value).ToList();
+                          return x.Values.Select(v =>
+                              {
+                                  if (v.Content != null && !string.IsNullOrWhiteSpace(v.Content.StringValue ))
+                                  {
+                                      return v.Content.StringValue;
+                                  }
+                                  return v.Value;
+                              }).ToList();
                       }));
 
 
