@@ -41,6 +41,8 @@ Ext.define('Taco.view.product.subform.ImageField', {
             
         });
 
+
+
         this.emptyDropZone = Ext.widget({
             xtype: 'component',
             cls: 'taco-product-image-drop-zone',
@@ -106,19 +108,21 @@ Ext.define('Taco.view.product.subform.ImageField', {
        
         this.callParent(arguments);
         
-        Taco.app.on({
-            dragenter: function (e) {
-                this.getEl().addCls('drag-and-drop-active');
-            },
-            dragleave: function (e) {
-                this.getEl().removeCls('drag-and-drop-active');
-            },
-
-            drop: function (e) {
-                
-            },
-            scope: this
-        })
+        this.mon(Taco.app, 'dragenter', function(e) {
+            var el = this.getEl();
+            if (el) {
+                el.addCls('drag-and-drop-active');
+            }
+        }, this);
+        
+        this.mon(Taco.app, 'dragleave', function(e) {
+            var el = this.getEl();
+            if (el) {
+                el.removeCls('drag-and-drop-active');
+            }
+        }, this);
+        
+        
 
         this.on({
             afterrender: this.onAfterRender,
@@ -140,6 +144,8 @@ Ext.define('Taco.view.product.subform.ImageField', {
         });
     },
 
+
+  
     onViewAfterRender: function () {
         var id = 'ImageFieldDD-' + Ext.id();
 
@@ -336,6 +342,15 @@ Ext.define('Taco.view.product.subform.ImageField', {
         }
         return Ext.encode(value1) == Ext.encode(value2);
     },
+
+    //isDirty:function() {
+    //    var isDirty = this.mixins.field.isDirty();
+    //    if (isDirty) {
+    //        isDirty = this.mixins.field.isDirty();
+    //    }
+    //    return isDirty;
+    //},
+
 
     onAssociatorClick: function () {
 

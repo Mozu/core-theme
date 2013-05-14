@@ -540,7 +540,8 @@ Ext.define('Taco.core.ux.form.Form', {
      */
     isEdit: function () {
         if (!this.isCreate) {
-            this.isCreate = !(this.record && !this.record.phantom);
+            this.isCreate = this.record && this.record.phantom;
+                //!(this.record && !this.record.phantom);
         }
         return !this.isCreate;
     },
