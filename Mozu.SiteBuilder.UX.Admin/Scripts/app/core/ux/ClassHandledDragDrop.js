@@ -42,7 +42,7 @@ Ext.define('Taco.core.ux.ClassHandledDragDrop', {
     extend: 'Ext.tree.plugin.TreeViewDragDrop',
     alias: 'plugin.classhandleddragdrop',
 
-    handleClass: 'taco-draghandle',
+    handleClass: 'taco-tree-knurling',
 
     onViewRender: function () {
         var me = this;

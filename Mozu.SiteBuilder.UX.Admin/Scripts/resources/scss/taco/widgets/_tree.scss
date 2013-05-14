@@ -1,9 +1,10 @@
 @mixin taco-tree {
+
   .#{$vprefix}treelist {
-  
     a {
+      color: $color;
       text-decoration: none !important;
-      color: #000;
+
       &:hover {
         color: $link-color;
       }
@@ -13,14 +14,17 @@
       background: none !important;
       border: none !important;
     
-      .#{prefix}btn-group {
-        border: none;
+      .#{$prefix}btn-group {
         background-color: none;
+        border-style: none;
       }
     }
   }
 
   .#{$vprefix}foldertree {
+    .#{$prefix}panel-body {
+      @include border-radius(0px 0px 3px 3px);
+    }
 
     &.#{$prefix}tree-arrows {
       .#{$prefix}grid-cell-inner {
@@ -36,8 +40,8 @@
           background-color: $color-neutral-dark !important;
           @include border-radius(3px);
         }
-  	  }
-  	  .#{$prefix}tree-elbow-plus, .#{$prefix}tree-elbow-end-plus {
+      }
+      .#{$prefix}tree-elbow-plus, .#{$prefix}tree-elbow-end-plus {
         height: 24px;
         width: 34px;
         @include icons-sprite(icon-folder);
@@ -47,9 +51,6 @@
           @include border-radius(3px);
         }
       }
-    }
-    .#{$prefix}panel-body {
-      @include border-radius(0px 0px 3px 3px);
     }
   }
 

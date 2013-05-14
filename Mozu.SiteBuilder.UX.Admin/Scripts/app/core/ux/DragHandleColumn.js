@@ -12,7 +12,7 @@ Ext.define('Taco.core.ux.DragHandleColumn', {
     tdCls: Ext.baseCSSPrefix + 'grid-cell-draghandlecolumn',
 
     renderer: function () {
-        return "<span class=\"taco-draghandle\">&#160;</span>";
+        return '<div class="taco-tree-knurling"></div>';
     },
 
     defaultRenderer: function (value) {

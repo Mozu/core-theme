@@ -48,79 +48,78 @@ Ext.define('Taco.view.site.navigation.Tree', {
             plugins: [cellEditing],
             store: this.store,
             columns: [{
-                    xtype: 'treecolumn',
-                    flex: 1,
-                    dataIndex: 'name',
-                    renderer: function(value, metaData, record) {
-                        var id = record.getId();
-                        if (id == '_unlinked' || id == '_navigation') {
-                            return '<span style="float:left;font-weight:bold">' + value + '</span><a style="float:right" href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
-                        } else {
-                            return '<a href="#" class="taco-action-navigate">' + value + '</a>';
-                        }
-                    },
-                    editor: {
-                        xtype: 'textfield',
-                        allowBlank: false,
-                        style: {
-                            marginTop: "10px"
-                        }
+                xtype: 'treecolumn',
+                flex: 1,
+                dataIndex: 'name',
+                renderer: function(value, metaData, record) {
+                    var id = record.getId();
+                    if (id == '_unlinked' || id == '_navigation') {
+                        return '<span style="float:left;font-weight:bold">' + value + '</span><a style="float:right" href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
+                    } else {
+                        return '<a href="#" class="taco-action-navigate">' + value + '</a>';
                     }
-                }, {
-                    xtype: 'taco.menucolumn',
-                    text: 'Actions',
-                    width: 40,
-                    menuItems: [{
-                            nodeTypes: ['category'],
-                            text: 'Show Products',
-                            menuColumnHandler: function(item, eventData) {
-                                me.showCategoryProducts(eventData.record.get('originalId'));
-                            }
-                        }, {
-                            nodeTypes: ['link'],
-                            text: 'Edit',
-                            menuColumnHandler: function(item, eventData) {
-                                me.editLink(eventData.record, item);
-                            }
-                        }, {
-                            nodeTypes: ['page', 'link'],
-                            text: 'Delete',
-                            menuColumnHandler: function(item, eventData) {
-                                var nt = eventData.record.get('nodeType'),
-                                    confirm;
-
-                                confirm = Ext.create('Taco.core.ux.modal.Confirmation', {
-                                    text: 'Would you like to continue?',
-                                    title: 'Delete Page',
-                                    confirm: function() {
-                                        eventData.record.remove();
-                                        ecventData.record.destroy({
-                                            callback: function(records, operation) {
-                                                if (operation.success) {
-                                                    confirm.hide();
-                                                } else {
-                                                    alert('error');
-                                                }
-                                            }
-                                        });
-                                    },
-                                    autoShow: true
-                                });
-                            }
-                        }
-                    ],
-                    onMenuShow: function(menu, eventData) {
-                        var nt = eventData.record.get('nodeType');
-                        menu.items.each(function(menuItem) {
-                            if (menuItem.nodeTypes.indexOf(nt) > -1) {
-                                menuItem.show();
-                            } else {
-                                menuItem.hide();
-                            }
-                        });
+                },
+                editor: {
+                    xtype: 'textfield',
+                    allowBlank: false,
+                    style: {
+                        marginTop: "10px"
                     }
                 }
-            ]
+            // }, {
+            //     xtype: 'taco.menucolumn',
+            //     text: 'Actions',
+            //     width: 40,
+            //     menuItems: [{
+            //             nodeTypes: ['category'],
+            //             text: 'Show Products',
+            //             menuColumnHandler: function(item, eventData) {
+            //                 me.showCategoryProducts(eventData.record.get('originalId'));
+            //             }
+            //         }, {
+            //             nodeTypes: ['link'],
+            //             text: 'Edit',
+            //             menuColumnHandler: function(item, eventData) {
+            //                 me.editLink(eventData.record, item);
+            //             }
+            //         }, {
+            //             nodeTypes: ['page', 'link'],
+            //             text: 'Delete',
+            //             menuColumnHandler: function(item, eventData) {
+            //                 var nt = eventData.record.get('nodeType'),
+            //                     confirm;
+
+            //                 confirm = Ext.create('Taco.core.ux.modal.Confirmation', {
+            //                     text: 'Would you like to continue?',
+            //                     title: 'Delete Page',
+            //                     confirm: function() {
+            //                         eventData.record.remove();
+            //                         ecventData.record.destroy({
+            //                             callback: function(records, operation) {
+            //                                 if (operation.success) {
+            //                                     confirm.hide();
+            //                                 } else {
+            //                                     alert('error');
+            //                                 }
+            //                             }
+            //                         });
+            //                     },
+            //                     autoShow: true
+            //                 });
+            //             }
+            //         }
+            //     ],
+            //     onMenuShow: function(menu, eventData) {
+            //         var nt = eventData.record.get('nodeType');
+            //         menu.items.each(function(menuItem) {
+            //             if (menuItem.nodeTypes.indexOf(nt) > -1) {
+            //                 menuItem.show();
+            //             } else {
+            //                 menuItem.hide();
+            //             }
+            //         });
+            //     }
+            }]
         });
 
 
