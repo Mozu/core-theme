@@ -154,10 +154,15 @@ Ext.define('Taco.view.category.Index', {
 
     },
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
-        var metaData = { id: record.getId() },
+        var target= Ext.fly(e.getTarget()),
+            metaData = { id: record.getId() },
             header = view.getHeaderAtIndex(cellIndex);
 
+        if (target.hasCls('x-tree-expander')) {
+            return;
+        }
         if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
+
             e.preventDefault();
             if (e.target) {
                 metaData = Ext.apply(metaData, e.target.dataset);
