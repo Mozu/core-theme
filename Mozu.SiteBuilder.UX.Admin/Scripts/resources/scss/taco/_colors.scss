@@ -17,7 +17,9 @@ $color-neutral-20:              rgb(50, 50, 50);    // #323232 gray 20%
 $base-color: $color-neutral-90;
 
 $color-theme-base:              rgb(210, 70, 60);   // #D2463C red
-$color-theme-base-dark:         rgb(158, 53, 46);   // #9E352E red
+$color-theme-base-dark:         rgb(196, 66, 57);   // #C44239 red
+$color-theme-base-darker:       rgb(158, 53, 46);   // #9E352E red
+$color-theme-base-darkest:      rgb(145, 49, 42);   // #91312A red
 
 $color-theme-accent:            rgb(37, 174, 144);  // #25AE90 green
 
@@ -26,40 +28,36 @@ $color-theme-support-dark:      rgb(163, 184, 214); // #A3B8D6 blue
 $color-theme-support-darker:    rgb(55, 120, 213);  // #3778D5 blue
 $color-theme-support-darkest:   rgb(22, 69, 136);   // #164588 blue
 
-/* MESSAGE COLORS */
-
+// message colors
 $color-status:                  rgb(204, 255, 204); // #CCFFCC green
-$color-warning:                 rgb(204, 255, 204); // #FFFFCC yellow
-$color-error:                   rgb(204, 204, 204); // #FFCCCC red
+$color-warning:                 rgb(255, 255, 204); // #FFFFCC yellow
+$color-error:                   rgb(255, 204, 204); // #FFCCCC red
 
-/* ACTION COLORS */
-
-$color-action-link: $color-theme-support-darkest;
-
-$color-action-primary-background: $color-theme-base;
-$color-action-primary-background-hover: $color-theme-base;
-$color-action-primary-background-active: $color-theme-base-dark;
-
-/* HIGHLIGHT COLORS */
-
+// highlight colors
 $color-selected: $color-theme-support;
 
+// action colors
+$color-action-link: $color-theme-support-darkest;
 
+$color-action-foreground: $color-neutral-20;
+$color-action-background: $color-neutral-95;
+$color-action-background-hover: $color-neutral-90;
+$color-action-background-active: $color-neutral-75;
+$color-action-outline: $color-neutral-75;
+$color-action-outline-hover: $color-neutral-70;
+$color-action-outline-active: $color-neutral-75;
 
-
-
-
-
-
-
-
-
+$color-action-primary-foreground: $color-neutral-white;
+$color-action-primary-background: $color-theme-base;
+$color-action-primary-background-hover: $color-theme-base-dark;
+$color-action-primary-background-active: $color-theme-base-darkest;
+$color-action-primary-outline: $color-theme-base-darker;
+$color-action-primary-outline-hover: $color-theme-base-darkest;
+$color-action-primary-outline-active: $color-theme-base-darkest;
 
 
 
 /* OLD COLORS */
-
-
 
 $color-neutral-lightest:        rgb(242, 240, 237);
 $color-neutral-light:           rgb(237, 234, 230);
@@ -70,8 +68,6 @@ $color-neutral-dark:            rgb(154, 154, 154);
 $color-neutral-darker:          rgb(124, 123, 122);
 $color-neutral-darkest:         rgb(94, 92, 90);
 
-
-
 $color-highlighted-background: rgb(112, 210, 219);
 $color-highlighted-background-light: rgb(189, 249, 255);
 $color-highlighted-foreground: $color-neutral-white;
@@ -80,17 +76,17 @@ $color-highlighted-outline: $color-neutral-dark;
 // $color-action-primary-background: rgb(255, 156, 51);
 // $color-action-primary-background-hover: adjust-lightness($color-action-primary-background, 4);
 // $color-action-primary-background-active: adjust-lightness($color-action-primary-background, -6);
-$color-action-background-disabled: $color-neutral-light;
-$color-action-primary-foreground: #FFF;
-$color-action-primary-outline: adjust-lightness($color-action-primary-background, -10);
+// $color-action-background-disabled: $color-neutral-light;
+// $color-action-primary-foreground: #FFF;
+// $color-action-primary-outline: adjust-lightness($color-action-primary-background, -10);
 
-$color-action-background: $color-neutral-light;
-$color-action-background-hover: adjust-lightness($color-action-background, 2);
-$color-action-background-active: adjust-lightness($color-action-background, -3);
-$color-action-background-depressed: adjust-lightness($color-action-background, -10);
-$color-action-background-disabled: $color-neutral-light;
-$color-action-foreground: $color-neutral-darkest;
-$color-action-outline: $color-neutral-dark;
+// $color-action-background: $color-neutral-light;
+// $color-action-background-hover: adjust-lightness($color-action-background, 2);
+// $color-action-background-active: adjust-lightness($color-action-background, -3);
+// $color-action-background-depressed: adjust-lightness($color-action-background, -10);
+// $color-action-background-disabled: $color-neutral-light;
+// $color-action-foreground: $color-neutral-darkest;
+// $color-action-outline: $color-neutral-dark;
 
 // $color-action-link: adjust-lightness($color-highlighted-background, -15);
 
@@ -104,15 +100,7 @@ $color-primary-menu-background-dark: rgb(76, 73, 66);
 
 
 
-
-
-
-
-
-
-
-
-
+/* META COLORS */
 
 // Colors for Style Guide
 .guide-color-neutral-transparent    {background: $color-neutral-transparent;}
