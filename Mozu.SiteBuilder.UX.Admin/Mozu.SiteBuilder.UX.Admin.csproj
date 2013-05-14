@@ -1134,7 +1134,8 @@
     <Content Include="Scripts\resources\images\dashboard\dashboard-uptime.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-vistors.png" />
     <Content Include="Scripts\resources\images\icons-s46f2c6a895.gif" />
-    <Content Include="Scripts\resources\images\icons-s8b1d84cd93.png" />
+    <Content Include="Scripts\resources\images\icons-sf8769ab004.png" />
+    <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-post.png" />
     <Content Include="Scripts\resources\images\icons\icon-tree-knurling.png" />
     <Content Include="Scripts\resources\images\icons\icon-widget-drag.png" />
     <Content Include="Scripts\resources\images\icons\icon-widget-edit.png" />

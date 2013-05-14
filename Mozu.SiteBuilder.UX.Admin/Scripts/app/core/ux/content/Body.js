@@ -15,13 +15,13 @@ Ext.define('Taco.core.ux.content.Body', {
     initComponent: function () {
         this.callParent(arguments);
 
-        this.on({
-            scroll: {
-                fn: this.onScroll,
-                element: 'el',
-                scope: this
-            }
-        });
+        // this.on({
+        //     scroll: {
+        //         fn: this.onScroll,
+        //         element: 'el',
+        //         scope: this
+        //     }
+        // });
     },
 
     onSetMessage: function (message, type) {
