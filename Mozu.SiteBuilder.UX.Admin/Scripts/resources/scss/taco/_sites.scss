@@ -54,17 +54,18 @@
           @include icons-sprite(icon-toolbox-nav-category);
         }
 
-        .#{$vprefix}nav-node-blog,
+        .#{$vprefix}nav-node-blog {
+          @include icons-sprite(icon-toolbox-nav-post);
+        }
+
         .#{$vprefix}nav-node-page,
-        .#{$vprefix}nav-node-systempage {
+        .#{$vprefix}nav-node-systempage,
+        .#{$vprefix}nav-node-product {
           @include icons-sprite(icon-toolbox-nav-page);
         }
 
         .#{$vprefix}nav-node-link {
           @include icons-sprite(icon-toolbox-nav-shortcut);
-        }
-        .#{$vprefix}nav-node-product {
-          @include icons-sprite(icon-toolbox-nav-product);
         }
 
         .#{$vprefix}draghandle {
@@ -73,6 +74,7 @@
         }
         &:not(:hover) .#{$vprefix}tree-knurling {
           opacity: 0;
+          @include single-transition(opacity);
         }
 
         &:nth-child(3) .#{$prefix}tree-icon {
