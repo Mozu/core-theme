@@ -12,7 +12,7 @@
   }
 
 	.#{$vprefix}home-page{
-		background-color: white;
+		//background-color: white;
 		height: px-to-rem(900);
 		padding-top: px-to-rem(10);
 		padding-left: px-to-rem(20);
@@ -44,11 +44,11 @@
 		  width: 100%;
 		  height: 11%;
 		}
-
+ 
 		.#{$vprefix}home-page-row-three{
 		  clear: left;
 		  width: 100%;
-		  height: 20%;
+		  height: 25%;
 		  .#{$vprefix}home-page-large-item{
 		  	div{
 		  		p{
@@ -93,6 +93,18 @@
 		.#{$vprefix}home-page-row{
 		  clear: left;
 		  width: 100%;
+		}
+
+		.#{$vprefix}home-page-row-small{
+		  clear: left;
+		  width: 100%;
+		  height: 25%;
+		}
+
+		.#{$vprefix}home-page-row-large{
+		  clear: left;
+		  width: 100%;
+		  height: 41%;
 		}
 
 		.#{$vprefix}home-page-mini-item{
@@ -140,24 +152,26 @@
 		.#{$vprefix}home-page-small-item{
 		  float: left;
 		  height: 100%;
-		  width: 23%;
-		  border-width: px-to-rem(1);//1px;
+		  width: 16.1%;//18%;//width: 23%;
+		  background: white;
+		  border-width: px-to-rem(1);
 		  border-style: solid;
 		  border-color: lightgray;
-		  margin: px-to-rem(3);//3px;
-		  border-radius: px-to-rem(5);//5px;
-		  padding: px-to-rem(9);//9px;
+		  margin: px-to-rem(12);//3px;
+		  //border-radius: px-to-rem(5);
+		  padding: px-to-rem(9);
 		}
 
 		.#{$vprefix}home-page-medium-item{
 		  float: left;
 		  height: 100%;
-		  width: 37.8%;
+		  width: 28%;//width: 37.8%;
+		  background: white;
 		  border: px-to-rem(1);
 		  border-style: solid;
 		  border-color: lightgray;
-		  margin: px-to-rem(3);
-		  border-radius: px-to-rem(5);
+		  margin: px-to-rem(12);
+		  //border-radius: px-to-rem(5);
 		  padding: px-to-rem(9);
 
 		  hr{
@@ -179,7 +193,7 @@
 		  border-style: solid;
 		  border-color: lightgray;
 		  margin: px-to-rem(3);
-		  border-radius: px-to-rem(5);
+		  //border-radius: px-to-rem(5);
 		  padding: px-to-rem(9);
 		}
 		.#{$vprefix}home-page-item-header{
@@ -213,6 +227,20 @@
 		.#{$vprefix}home-page-site-settings{
 			float: right;
 		}
+
+		//Classes for images
+		$image-map: sprite-map('dashboard/*.png') /* syntax highlighting bug */;
+
+	 @each $screen in sales, customers, salesforce,device,bounce-rate, time-on-sites, vistors, new-returning-visitors, uptime, load-time, live-visitors, conversion-rate, opened-unopened-mail{
+	 		.#{$vprefix}home-page-#{$screen}{
+	 			@include background(sprite($image-map, #{$screen}));
+	 		}
+	 }
+	 /*
+	 .#{$vprefix}home-page-sales{
+			@include background(sprite($image-map, sales));
+		}
+*/
 	}
 
 }
