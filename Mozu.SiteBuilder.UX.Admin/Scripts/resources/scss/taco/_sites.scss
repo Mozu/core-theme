@@ -114,4 +114,18 @@
     }
   }
 
+  .#{$vprefix}toolbox-tabpanel {
+    &> .#{$prefix}tab-bar {
+      background-color: $tabbar-base-color;
+
+      .#{$prefix}tab-bar-body {
+        text-align: center;
+      }
+    }
+
+    &> .#{$prefix}panel-body {
+      border-top: 1px solid border-for($color-neutral-95);
+    }
+  }
+
 }
