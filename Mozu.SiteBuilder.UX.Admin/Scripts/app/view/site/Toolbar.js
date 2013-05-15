@@ -45,7 +45,32 @@ Ext.define('Taco.view.site.Toolbar', {
                     }
                 }]
             }
-        }];
+        },
+        {
+            text: 'Publish',
+            xtype: 'taco.splitbutton',
+            itemId: 'publish',
+            menu: {
+                plain: true,
+                items: [{
+                    text: 'Page',
+                    itemId: 'publishPage',
+                    handler: function () {
+                        alert('tbd!');
+                    }
+                }, {
+                    text: 'All Items',
+                    itemId: 'publishAll',
+                    handler: function () {
+                        alert('tbd!');
+                    }
+                }]
+            }
+        }
+
+
+
+        ];
 
         this.callParent(arguments);
 
@@ -68,8 +93,9 @@ Ext.define('Taco.view.site.Toolbar', {
         this.enableButtons({
             copy: false,
             more: false,
-            preview: false,
-            destroy: false
+           // preview: false,
+            destroy: false,
+            publishPage: false,
         });
     },
 

@@ -85,13 +85,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("product", prod);
         }
 
-        public ActionResult ProductListing(int? categoryId, string sortBy = null, int? page = null, int? itemsPerPage = null)
+        public ActionResult ProductListing(int? categoryId= null , string sortBy = null, int? page = null, int? itemsPerPage = null,  System.Collections.IList productCodes = null)
         {
             itemsPerPage = itemsPerPage.GetValueOrDefault(15);
             page = page.GetValueOrDefault(1);
             int startIdx = (page.Value - 1) * itemsPerPage.Value;
+            var recurse = true;
+            string filter = null;
+            if (productCodes != null)
+            {
+                var productCodes2 = productCodes.Cast<object>().Select(x => string.Format("productCode eq {0}", x.ToString()));
+                filter = string.Join(" or ", productCodes2);
+                itemsPerPage = productCodes.Count;
+                recurse = false;
+            }
 
-            var pcDC = _productClient.GetProducts(categoryId: categoryId, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, recurse:true , responseGroups:"Categories,Measurements,Properties,Options,Extras").Result.ReadAsSync();
+
+            var pcDC = _productClient.GetProducts(categoryId: categoryId, filter :filter , startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, recurse: recurse, responseGroups: "Categories,Measurements,Properties,Options,Extras").Result.ReadAsSync();
 
             var pc = Mapper.Map<ProductCollection>(pcDC);
            
@@ -119,43 +129,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("Category", cat);
         }
 
-        //public JsonDCResult Configure(ProductConfigurationRequest req)
-        //{
-
-        //    var pc = Mapper.Map<Mozu.ProductRuntime.Contracts.ProductSelections>(req);
+   
 
 
-
-        //    var res = _productClient.ConfiguredProduct(pc, req.ProductCode, true).Result.ReadAsSync();
-
-
-
-
-        //    var ret = Mapper.Map<ConfiguredProduct>(res);
-        //    foreach (var vmItem in req.Options.Where(x => !string.IsNullOrEmpty(x.ShopperEnteredValue)))
-        //    {
-        //        var item = ret.Options.SelectMany(x => x.Values).Where(x => x.Id == vmItem.Id).FirstOrDefault();
-        //        if (item != null)
-        //        {
-        //            item.StringValue = new AttributeValueString() {Value = (string) vmItem.ShopperEnteredValue};
-        //        }
-        //    }
-
-
-        //    return new JsonDCResult()
-        //               {
-        //                   JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-        //                   Data = ret
-        //               };
-
-        //}
-
-
-        public async Task<ActionResult> Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null)
+        public async Task<ActionResult> Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null )
         {
             _ctx.PageContext.PageType = "category";
             _ctx.PageContext.CategoryId = categoryId.ToString();
             var catList = _ctx.CatalogContext.AllCategories;
+
 
 
             var cat = catList.Where(x => x.CategoryId == categoryId.GetValueOrDefault (-1)).FirstOrDefault();
