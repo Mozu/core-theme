@@ -31,14 +31,8 @@ Ext.define('Taco.view.site.navigation.Tree', {
         this.searchBox = Ext.widget('textfield', {
             emptyText: 'Search...',
             enableKeyEvents: true,
-            //  height:40,
-            width: '100%',
-            //style: {
-            //    'margin': '0px auto'
-            //},
-            //fieldStyle: {
-            //    'border-style': 'none'
-            //}
+            cls: Taco.baseCSSPrefix + 'toolbox-search',
+            width: '100%'
         });
 
         this.tree = Ext.create('Taco.core.ux.TreeList', {
@@ -53,8 +47,10 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 dataIndex: 'name',
                 renderer: function(value, metaData, record) {
                     var id = record.getId();
+
                     if (id == '_unlinked' || id == '_navigation') {
-                        return '<span style="float:left;font-weight:bold">' + value + '</span><a style="float:right" href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
+                        metaData.tdCls = [metaData.tdCls, Taco.baseCSSPrefix + 'treelist-inline-header'].join(' ');
+                        return '<span>' + value + '</span><a href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
                     } else {
                         return '<a href="#" class="taco-action-navigate">' + value + '</a>';
                     }
@@ -62,11 +58,10 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 editor: {
                     xtype: 'textfield',
                     allowBlank: false,
-                    style: {
-                        marginTop: "10px"
-                    }
+                    style: { marginTop: '10px' }
                 }
-                          }]
+            }],
+            viewConfig: { stripeRows: true }
         });
 
 
