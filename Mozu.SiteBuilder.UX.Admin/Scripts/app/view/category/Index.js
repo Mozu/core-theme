@@ -73,33 +73,29 @@ Ext.define('Taco.view.category.Index', {
                 }]
                 
             }],
-
-          
-
             dockedItems: [{
                 xtype: 'quickadder',
                 helperText: 'Click to add a new category'
             }, {
-                xtype: 'toolbar',
-                cls: 'taco-secondary-actions',
+                xtype: 'container',
                 dock: 'top',
-                items: [this.notifier, '->',
-                {
-                    xtype: 'button',
+                height: 30,
+                cls: 'taco-secondary-actions',
+                items: [this.notifier, {
+                    xtype: 'action',
                     text: 'Expand All',
-                    handler: function () {
+                    click: function () {
                         this.findParentByType('treelist').expandAll();
                     }
-                }, '-',
-                {
-                    xtype: 'button',
+                }, {
+                    xtype: 'action',
                     text: 'Collapse All',
-                    handler: function () {
+                    click: function () {
                         this.findParentByType('treelist').collapseAll();
                     }
                 }]
             }],
-
+            viewConfig: { stripeRows: true },
             listeners: {
                 cellclick: me.onCellClick,
                 itemmove: me.onItemMove,
