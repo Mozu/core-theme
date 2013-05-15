@@ -90,7 +90,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
             }
             tmd.ThemePath = themePath;
 
-            tmd.FileListing = new DirectoryInfo(themePath).GetFileSystemInfos("*.*", SearchOption.AllDirectories)
+            var dirinfo = new DirectoryInfo(themePath);
+
+            if (!dirinfo.Exists)
+                return null;
+
+            tmd.FileListing = dirinfo.GetFileSystemInfos("*.*", SearchOption.AllDirectories)
                                                           .Select(x => new ThemeFileSystemInfo()
                                                                            {
                                                                                Name = x.Name,
