@@ -7,10 +7,10 @@ Ext.define('Taco.view.generalsettings.Index', {
     requires: ['Ext.form.field.Hidden','Taco.core.ux.form.SelectField', 'Taco.store.TimeZones', 'Taco.store.IpRanges'],
     settings: null,
     sections: null,
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
-    },
+    //layout: {
+    //    type: 'vbox',
+    //  //  align: 'stretch'
+    //},
 
     requiresContextOfType: 's',
 
