@@ -266,14 +266,14 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             );
         }
 
-        public Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name)
+        public Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name, string status = null )
         {
             var task = _docRepo.FindByName(
                 documentListName: contentCollection,
                     documentName: name,
                       folderPath: null,
                          version: null,
-                          status: _apiContext.CmsDraftState
+                          status: status?? _apiContext.CmsDraftState
             );
 
             return task.ContinueWith(t =>
