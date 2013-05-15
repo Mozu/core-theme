@@ -54,9 +54,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         /// <summary>
         /// Updates the sitebuildercontext and redirects the 
-        /// GET: /_gosite/(siteid)?redir=...
+        /// GET: /_gosite/(siteid)?redir=...&environment=...
         /// </summary>
-        public async Task<ActionResult> GoSite(int siteId, string redir)
+        public async Task<ActionResult> GoSite(int siteId, string redir= null, string environment= "production")
         {
             var res = await _wsRepo.GetSite(siteId);
             var site = res.ReadAsAsync().Result;
@@ -66,24 +66,26 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             this.SiteContext.SiteGroupId = site.SiteGroupId;
             this.SiteContext.Save();
 
-            string domainPriority = System.Configuration.ConfigurationManager.AppSettings["gositeDomainPriority"];
-            IEnumerable<Domain> domainList;
-            switch (domainPriority)
+            //string domainPriority = System.Configuration.ConfigurationManager.AppSettings["gositeDomainPriority"];
+            IEnumerable<string> domainList;
+            switch ((environment??"").ToLower())
             {
-                case "Primary":
-                    domainList = site.Domains.OrderBy(s => s.IsPrimary);
+                case "primary":
+                    domainList = site.Domains.OrderBy(s => s.IsPrimary).Select(x => x.DomainName);
                     break;
-                case "Staging":
-                    domainList = site.Domains.OrderBy(s => /*s.IsStaging*/ !s.IsPrimary);
+                case "preview":
+                case "admin-pending":
+                case "staging":
+                    domainList = site.Domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName );
                     break;
                 default:
-                    domainList = site.Domains;
+                    domainList = site.Domains.Select(x => x.DomainName);
                     break;
             }
 
 
             
-            string newHostname = (domainList.FirstOrDefault() ?? new Domain { DomainName = null }).DomainName;
+            string newHostname = (domainList.FirstOrDefault()) ;
             bool doHostnameRedirect = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["gositeRedirectsHostname"]) && !String.IsNullOrEmpty(newHostname);
             
             if (!String.IsNullOrEmpty(redir))

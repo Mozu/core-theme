@@ -16,6 +16,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
+using Constants = Mozu.Core.Api.Contracts.Constants;
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -92,11 +93,17 @@ namespace Mozu.SiteBuilder.Mvc
                 {
                     CmsDraftState = "draft";
                 }
+                //used to demo outside of rp 
                 else if (req.QueryString["publishMode"] == "true")
                 {
                     CmsDraftState = "active";
                 }
-                    
+                DataViewModeType dmt;
+                if (Enum.TryParse<DataViewModeType>(req.Headers[Constants.Headers.DATA_VIEW_MODE], out dmt))
+                {
+                    this.DataViewMode = dmt;
+                    this.CmsDraftState = dmt == DataViewModeType.Pending ? "draft" : "active";
+                }
 
                 if (req.Headers.AllKeys.Any(x => x == Mozu.Core.Api.Contracts.Constants.Headers.TENANT))
                 {

@@ -79,6 +79,6 @@ Ext.define('Taco.view.product.Edit', {
     },
 
     preview: function (pis) {
-        window.open('/_gosite/' + pis.getId() + '?redir=' + encodeURIComponent('/product/' + this.record.getId()), 'taco-preview');
+        window.open('/_gosite/' + pis.getId() + '?environment=preview&redir=' + encodeURIComponent('/product/' + this.record.getId()), 'taco-preview');
     }
 });
