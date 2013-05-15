@@ -17,17 +17,17 @@ Ext.define('Taco.core.ux.TreeList', {
     preventHeader: true,
     sortableColumns: false,
     autoSync: true,
-    viewConfig: {
-        overflowY: 'scroll',
-        plugins: [{
-            ptype: 'classhandleddragdrop'
-        }]
-    },
 
     initComponent: function () {
         var me = this;
 
-        //console.dir(this.getRootNode().childNodes);
+        Ext.applyIf(this.viewConfig, {
+            overflowY: 'scroll',
+            plugins: [{
+                ptype: 'classhandleddragdrop'
+            }]
+        });
+
         if (this.columns[0].xtype !== 'draghandlecolumn' && this.enableRowReorder) {
 
             this.columns.unshift({
