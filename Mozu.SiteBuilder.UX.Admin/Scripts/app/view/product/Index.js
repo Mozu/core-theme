@@ -154,7 +154,7 @@ Ext.define('Taco.view.product.Index', {
                     previewAction.menu.add(Ext.applyIf({
                         text: (site ? site.name : 'n/a'),
                         menuColumnHandler: function (item, eventData) {
-                            window.open('/_gosite/' + record.getId() + '?redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
+                            window.open('/_gosite/' + record.getId() + '?environment=preview&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
                            
                             console.log(arguments);
                         }
