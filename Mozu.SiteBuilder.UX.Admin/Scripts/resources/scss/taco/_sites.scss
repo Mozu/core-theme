@@ -38,11 +38,31 @@
       // }
     }
 
+    .#{$vprefix}toolbox-search {
+      margin-bottom: 0px;
+    }
+
     .#{$vprefix}treelist {
-      tbody tr {
+      .#{$prefix}grid-row {
+
         .#{$prefix}tree-icon-inline {
           height: 16px;
           width: 16px;
+        }
+
+        .#{$vprefix}treelist-inline-header {
+          .#{$prefix}grid-cell-inner {
+            padding-right: 20px;
+            @include flexbox($justify: space-between);
+
+            a {
+              font-size: px-to-rem(12);
+            }
+
+            img {
+              display: none;
+            }
+          }
         }
 
         .#{$vprefix}nav-node-group {
@@ -72,13 +92,17 @@
           opacity: 1;
           @include single-transition(opacity);
         }
-        &:not(:hover) .#{$vprefix}tree-knurling {
-          opacity: 0;
-          @include single-transition(opacity);
+
+        &:not(:hover) {
+          .#{$vprefix}tree-knurling {
+            opacity: 0;
+          }
         }
 
-        &:nth-child(3) .#{$prefix}tree-icon {
-          @include icons-sprite(icon-toolbox-nav-home);
+        &:nth-of-type(3) {
+          .#{$prefix}tree-icon {
+            @include icons-sprite(icon-toolbox-nav-home);
+          }
         }
       }
 
