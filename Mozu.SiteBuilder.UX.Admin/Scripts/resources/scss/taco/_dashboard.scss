@@ -152,7 +152,7 @@
     .#{$vprefix}home-page-small-item{
       float: left;
       height: 100%;
-      width: 16.1%;//18%;//width: 23%;
+      width: 219px;//16.1%;//18%;//width: 23%;
       background: white;
       border-width: px-to-rem(1);
       border-style: solid;
@@ -165,7 +165,8 @@
     .#{$vprefix}home-page-medium-item{
       float: left;
       height: 100%;
-      width: 28%;//width: 37.8%;
+      width: 381px;//28%;//width: 37.8%;
+      overflow-y:scroll;
       background: white;
       border: px-to-rem(1);
       border-style: solid;
@@ -221,8 +222,19 @@
       height: px-to-rem(30);
       margin-left: px-to-rem(4);
     }
-    .#{$vprefix}home-page-site-settings{
+    .#{$vprefix}home-page-site-settings{ 
       float: right;
+    }
+
+    .#{$vprefix}home-page-item-header-main{
+    	border: 0px;
+			border-bottom: px-to-rem(1);
+			border-style: solid;
+			border-color: lightgray;
+			margin-bottom: px-to-rem(7);
+			padding-top:px-to-rem(2);
+			padding-bottom: px-to-rem(8);
+			padding-left: px-to-rem(5);
     }
 
     //Classes for images
@@ -231,6 +243,11 @@
 	 		.#{$vprefix}home-page-#{$screen}{
 	 			@include background(sprite($dashboard-map, dashboard-#{$screen})); 
 	 	}
+
+	 	.#{$vprefix}home-page-#{$screen}{
+	 			@include background(sprite($dashboard-map, dashboard-#{$screen})); 
+	 	}
+
 	 }
   }
 
