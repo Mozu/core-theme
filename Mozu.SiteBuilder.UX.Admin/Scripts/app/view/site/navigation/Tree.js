@@ -66,70 +66,9 @@ Ext.define('Taco.view.site.navigation.Tree', {
                         marginTop: "10px"
                     }
                 }
-            // }, {
-            //     xtype: 'taco.menucolumn',
-            //     text: 'Actions',
-            //     width: 40,
-            //     menuItems: [{
-            //             nodeTypes: ['category'],
-            //             text: 'Show Products',
-            //             menuColumnHandler: function(item, eventData) {
-            //                 me.showCategoryProducts(eventData.record.get('originalId'));
-            //             }
-            //         }, {
-            //             nodeTypes: ['link'],
-            //             text: 'Edit',
-            //             menuColumnHandler: function(item, eventData) {
-            //                 me.editLink(eventData.record, item);
-            //             }
-            //         }, {
-            //             nodeTypes: ['page', 'link'],
-            //             text: 'Delete',
-            //             menuColumnHandler: function(item, eventData) {
-            //                 var nt = eventData.record.get('nodeType'),
-            //                     confirm;
-
-            //                 confirm = Ext.create('Taco.core.ux.modal.Confirmation', {
-            //                     text: 'Would you like to continue?',
-            //                     title: 'Delete Page',
-            //                     confirm: function() {
-            //                         eventData.record.remove();
-            //                         ecventData.record.destroy({
-            //                             callback: function(records, operation) {
-            //                                 if (operation.success) {
-            //                                     confirm.hide();
-            //                                 } else {
-            //                                     alert('error');
-            //                                 }
-            //                             }
-            //                         });
-            //                     },
-            //                     autoShow: true
-            //                 });
-            //             }
-            //         }
-            //     ],
-            //     onMenuShow: function(menu, eventData) {
-            //         var nt = eventData.record.get('nodeType');
-            //         menu.items.each(function(menuItem) {
-            //             if (menuItem.nodeTypes.indexOf(nt) > -1) {
-            //                 menuItem.show();
-            //             } else {
-            //                 menuItem.hide();
-            //             }
-            //         });
-            //     }
-            }]
+                          }]
         });
 
-
-        //this.sideBarModal =  Ext.create('Taco.core.ux.modal.SidebarModal', {
-        //    items: [
-        //        {
-        //            html: 'hello mom'
-        //        }
-        //    ]
-        //});
 
         this.searchStore = Ext.create('Ext.data.Store', {
             fields: ['nodeType', 'name', 'iconCls', 'url'],
@@ -146,8 +85,50 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 }
             }
         });
+        this.treeContextMenu = Ext.create('Ext.menu.Menu', {
+            items: [{
+                nodeTypes: ['category'],
+                text: 'Show Products',
+                plain :true,
+                handler: function(item, eventData) {
+                    me.showCategoryProducts(item.record.get('originalId'));
+                }
+            }, {
+                nodeTypes: ['link'],
+                text: 'Edit',
+                plain: true,
+                handler: function (item, eventData) {
+                    me.editLink(item.record, item);
+                }
+            }, {
+                nodeTypes: ['page', 'link'],
+                text: 'Delete',
+                plain: true,
+                handler: function (item, eventData) {
+                    var nt = item.record.get('nodeType'),
+                        confirm;
 
-        this.searchGrid = Ext.widget('grid', {
+                    confirm = Ext.create('Taco.core.ux.modal.Confirmation', {
+                        text: 'Would you like to continue?',
+                        title: 'Delete Page',
+                        confirm: function() {
+                            item.record.remove();
+                            item.record.destroy({
+                                callback: function(records, operation) {
+                                    if (operation.success) {
+                                        confirm.hide();
+                                    } else {
+                                        alert('error');
+                                    }
+                                }
+                            });
+                        },
+                        autoShow: true
+                    });
+                }
+            }]
+    });
+    this.searchGrid = Ext.widget('grid', {
             store: this.searchStore,
             columns: [{
                     header: 'Result',
@@ -281,24 +262,29 @@ Ext.define('Taco.view.site.navigation.Tree', {
 
         // tree
         this.tree.on({
-            select: function(rowModel, record, index, eOpts) {
-                this.isNewSelection = true;
-                this.navigate(record);
-            },
+            //select: function(rowModel, record, index, eOpts) {
+            //    this.isNewSelection = true;
+            //    console.log(arguments);
+            //},
             edit: function(editor, e) {
                 e.record.set('editAction', 'rename');
                 e.record.save();
             },
-            itemclick: function(v, r, elm, idx, e) {
+
+            itemclick: function(view, record, item, index, e, eOpts) {
                 var cmp = Ext.fly(e.target);
                 e.preventDefault();
 
-
                 if (e.target.dataset.pageCreator) { //data-page-creator
+                    this.isNewSelection = false;
                     this.pageCreator.reset(e.target.dataset);
                     this.pageCreator.show();
+
+                } else {
+                    this.isNewSelection = true;
+                    this.navigate(record);
                 }
-                this.isNewSelection = false;
+
             },
             //afteritemexpand: function(node, index, item, eOpts) {
             //    if (node.get('nodeType') != 'category') {
@@ -308,6 +294,29 @@ Ext.define('Taco.view.site.navigation.Tree', {
             //},
             scope: this
         });
+
+        this.tree.getView().on({
+            itemcontextmenu: function(view, record, item, index, e, eOpts) {
+
+                var nt = record.get('nodeType'),
+                    position = e.getXY();
+                e.stopEvent();
+                this.treeContextMenu.items.each(function(menuItem) {
+                    menuItem.record = record;
+                    if (menuItem.nodeTypes.indexOf(nt) > -1) {
+                        menuItem.show();
+                    } else {
+                        menuItem.hide();
+                    }
+                });
+
+                this.treeContextMenu.showAt(position);
+            },
+            scope: this
+        });
+    
+        
+        
 
         // page creator
         this.pageCreator.on({
