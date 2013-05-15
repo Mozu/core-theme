@@ -1,15 +1,17 @@
-﻿{% for prod in Model %}
+﻿
+{% for prod in Model.Items %}
+
 	<div class="mz-featured-products-widget">
 		<figure class="mz-product-image mz-featured-product-image">
-		  <a href={{prod.url}}>
-			<img {% data_attributes prod.images.main %} src="{{prod.images.main.resize.100.src}}" height="100" />
+		  <a href={{prod.Url}}>
+			<img src="{{prod.Images.Main.Resize.100.Src}}" height="100" />
 		  </a>
 		</figure>
 		<div class="mz-featured-product-caption">
-		  <a class="mz-featured-products-link" href={{prod.url}}>
-			<span {% data_attributes prod.name %}>{{prod.name}}</span>
+		  <a class="mz-featured-products-link" href={{prod.Url}}>
+			<span >{{prod.Name}}</span>
 		  </a>
-		 <span class="mz-product-price">{{prod.price.offerPrice|currency}}</span>
+		 {% html_partial "modules/PriceStack" prod %}
 		</div>
 	</div>
 {% endfor %} 

@@ -4,7 +4,7 @@
 Ext.define('Taco.view.site.page.entityAdapters.DocumentEntityAdapter', {
     extend: 'Taco.view.site.page.entityAdapters.BaseEntityAdapter',
     modelName: 'Taco.model.CmsDocument',
-	allowedActions:{copy:true,preview:true,destroy:true},
+    allowedActions:{copy:true,preview:true,destroy:true,publishPage:true},
     getStore: function () {
         return this.editor.cmsDocs;
     },
@@ -17,7 +17,9 @@ Ext.define('Taco.view.site.page.entityAdapters.DocumentEntityAdapter', {
     constructor: function () {
         this.callParent(arguments);
     },
-
+    publish:function() {
+        
+    },
     getPageSettings: function () {
         var me = this;
         return [

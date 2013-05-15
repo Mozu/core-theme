@@ -179,6 +179,22 @@ namespace Mozu.SiteBuilder.UX.Controllers
             return base.View(viewName, masterName, model);
         }
 
+        protected override  PartialViewResult PartialView(string viewName, object model)
+        {
+            var args = this.DjangoTemplateTagArguments;
+
+            if (args != null)
+            {
+                object overrideViewName;
+                if (args.TryGetValue("viewName", out overrideViewName) && overrideViewName is string)
+                {
+                    viewName = (string)overrideViewName;
+                }
+            }
+            return base.PartialView(viewName,  model);
+        }
+       
+
         
         protected override void OnResultExecuting(ResultExecutingContext filterContext)
         {
