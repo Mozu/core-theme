@@ -42,6 +42,8 @@
                 skin_variant: 'silver',
                 theme: "advanced",
                 relative_urls: false,
+                media_strict: false,
+                valid_elements: '*',
                 plugins: 'autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,-TacoImage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template'});
 
 
@@ -112,6 +114,8 @@
                 skin: "o2k7",
                 skin_variant: 'silver',
                 theme: "advanced",
+                media_strict: false,
+                valid_elements: '*',
                 relative_urls: false,
                 plugins: 'autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,-TacoImage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template',
                 theme_advanced_buttons1: 'undo,redo,|,styleselect,|,bold,italic,underline,strikethrough,|,removeformat,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,|,link,unlink,|,numlist,bullist,|,code,|,image',
