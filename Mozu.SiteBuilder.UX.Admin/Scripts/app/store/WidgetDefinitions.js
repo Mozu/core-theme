@@ -13,5 +13,11 @@
         pageSize: 25,
         remoteSort: true,
         remoteFilter: true,
-        autoLoad: true
+        autoLoad: true,
+        storeManagerConfig: {
+            clearFilters: true,
+            contextLevel: 's',
+            clearSort: true,
+            autoLoad: true
+        },
     });
