@@ -79,8 +79,9 @@ Ext.define('Taco.model.WidgetDefinition', {
         },
         
          {
-             name: "properties",
-             type: "auto"
+             name: "defaultConfig",
+             type: "auto",
+             defaultValue: {}
          },
          {
              name: 'createView',

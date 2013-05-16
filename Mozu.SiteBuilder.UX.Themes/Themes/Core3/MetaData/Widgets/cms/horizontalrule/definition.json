@@ -1,8 +1,14 @@
 {
-  "id": "horizontal_rule",
-  "displayName": "Horizontal Rule",
-  "displayTemplate": "cms/horizontalrule",
-  "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
-  "editView": "Taco.view.site.widget.HorizontalRule",
-  "properties": []
+    "id": "horizontal_rule",
+    "displayName": "Horizontal Rule",
+    "displayTemplate": "cms/horizontalrule",
+    "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
+    "editView": "Taco.view.site.widget.HorizontalRule",
+    "defaultConfig": {
+        "hrBorderWidth": "1px",
+        "hrBorderColor": "#000",
+        "hrBorderStyle": "solid",
+        "hrMarginTop": "None",
+        "hrMarginBottom": "None"
+    }
 }
