@@ -46,7 +46,7 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
                         function (newState) {
                             this.setDisplayedValue(this.lookupContextNameFromToken(Taco.app.context.getCurrentContext().urlToken));
                             var md = newState.getMetaData && newState.getMetaData();
-                            if (md && md.action === "edit") {
+                            if (md && (md.controller =='sites' || md.action === "edit")) {
                                 this.disable();
                                 if (this.listIsShowing()) this.hideList();
                             } else {

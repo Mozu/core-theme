@@ -1133,7 +1133,8 @@
     <Content Include="Scripts\resources\css\taco.css" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.svg" />
     <Content Include="Scripts\resources\images\card-sd7c19700b9.png" />
-    <Content Include="Scripts\resources\images\icons-s93077bd124.png" />
+    <Content Include="Scripts\resources\images\dashboard-se7fbf8ad93.png" />
+    <Content Include="Scripts\resources\images\icons-sf8769ab004.png" />
     <Content Include="Scripts\resources\images\icons\icon-widget-drag.png" />
     <Content Include="Scripts\resources\images\icons\icon-widget-edit.png" />
     <Content Include="Scripts\resources\images\icons\icon-widget-remove.png" />

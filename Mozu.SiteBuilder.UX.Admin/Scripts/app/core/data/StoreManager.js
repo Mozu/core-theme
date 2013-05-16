@@ -39,7 +39,9 @@ Ext.define('Taco.core.data.StoreManager', {
             var cc = Ext.apply({ runtimeContext: contextSuffix }, config);
             delete(cc.autoLoad);
             store = Ext.create(config.type, cc);
-
+            if (store.storeManagerConfig) {
+                config = Ext.applyIf(config, store.storeManagerConfig);
+            }
             if (!config.createOnly) {
                 me.stores.add(id, store);
             }
