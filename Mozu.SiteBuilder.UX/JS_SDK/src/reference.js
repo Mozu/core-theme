@@ -76,13 +76,13 @@ var ApiReference = (function () {
         tryCreateApiObject: function (type, rawJSON, api) {
             return type in objectTypes ? (
                 objectTypes[type].collectionOf ? 
-                this.createApiCollection(objectTypes[type], rawJSON, api)
+                this.createApiCollection(type, rawJSON, api, objectTypes[type].collectionOf)
                 : new ApiObject(type, rawJSON, api)
             ) : rawJSON;
         },
 
-        createApiCollection: function (collectionType, rawJSON, api) {
-            return new ApiCollection(collectionType, rawJSON, api)
+        createApiCollection: function (type, rawJSON, api, memberType) {
+            return new ApiCollection(type, rawJSON, api, memberType)
         }
     };
     var reservedWords = {

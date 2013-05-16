@@ -8,7 +8,6 @@
 		<h1>Page Not Found</h1>
 	</header>
 	<p> Sorry, there is nothing here by that name. </p>
-	<!--<img align="center" style="margin: 1em;" src="/Resources/Images/404/wallis-opinions.gif"  />-->
 	</div>
 </div>
 {% endblock BodyContent %} 

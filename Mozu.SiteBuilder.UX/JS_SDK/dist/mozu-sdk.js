@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-05-12
+ * Mozu JavaScript SDK - v0.1.0 - 2013-05-15
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -949,7 +949,7 @@
                                 ErrorCode: "TIMEOUT"
                             } ]
                         }, xhr);
-                    }, 3e4);
+                    }, 6e4);
                     xhr.onreadystatechange = function() {
                         if (xhr.readyState === 4) {
                             clearTimeout(timeout);
@@ -1086,10 +1086,10 @@
                         return returnObj;
                     },
                     tryCreateApiObject: function(type, rawJSON, api) {
-                        return type in objectTypes ? objectTypes[type].collectionOf ? this.createApiCollection(objectTypes[type], rawJSON, api) : new ApiObject(type, rawJSON, api) : rawJSON;
+                        return type in objectTypes ? objectTypes[type].collectionOf ? this.createApiCollection(type, rawJSON, api, objectTypes[type].collectionOf) : new ApiObject(type, rawJSON, api) : rawJSON;
                     },
-                    createApiCollection: function(collectionType, rawJSON, api) {
-                        return new ApiCollection(collectionType, rawJSON, api);
+                    createApiCollection: function(type, rawJSON, api, memberType) {
+                        return new ApiCollection(type, rawJSON, api, memberType);
                     }
                 };
                 var reservedWords = {
@@ -1373,30 +1373,69 @@
                 return ApiObjectConstructor;
             }();
             var ApiCollection = function() {
-                var ApiCollectionConstructor = function(cType, data) {
+                function convertItem(raw) {
+                    return new ApiReference.tryCreateApiObject(this.itemType, raw, this.api);
+                }
+                var ApiCollectionConstructor = function(type, data, api, itemType) {
+                    var self = this;
                     ApiObject.apply(this, arguments);
-                    this.itemType = cType.collectionOf;
+                    this.itemType = itemType;
                     if (data.Items.length > 0) this.add(data.Items, true);
+                    this.on("sync", function(raw) {
+                        self.removeAll();
+                        self.add(raw.Items);
+                    });
                 };
                 ApiCollectionConstructor.prototype = utils.extend(new ApiObject(), {
                     isCollection: true,
                     constructor: ApiCollectionConstructor,
                     add: function(newItems, noUpdate) {
                         if (utils.getType(newItems) !== "Array") newItems = [ newItems ];
-                        Array.prototype.push.apply(this, utils.map(newItems, this.convertItem, this));
+                        Array.prototype.push.apply(this, utils.map(newItems, convertItem, this));
                         if (!noUpdate) {
                             var rawItems = this.prop("Items");
                             this.prop("Items", rawItems.concat(newItems));
                         }
                     },
-                    remove: function(indexOrItem) {
-                        throw "Not implemented";
+                    remove: function(indexOrItem) {},
+                    replace: function(newItems, noUpdate) {
+                        Array.prototype.splice.call(this, 0, this.length, utils.map(newItems, convertItem, this));
+                        if (!noUpdate) {
+                            this.prop("Items", rawItems);
+                        }
                     },
-                    convertItem: function(raw) {
-                        return new ApiObject(this.itemType, raw, this.api);
+                    removeAll: function(noUpdate) {
+                        Array.prototype.splice.call(this, 0, this.length);
+                        if (!noUpdate) {
+                            this.prop("Items", []);
+                        }
                     },
-                    page: function() {
-                        throw "Not implemented";
+                    firstPage: function() {
+                        var currentIndex = this.prop("StartIndex");
+                        if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
+                        return this.get({
+                            startIndex: 0
+                        });
+                    },
+                    index: function(newIndex) {
+                        return this.get({
+                            startIndex: newIndex
+                        });
+                    },
+                    prevPage: function() {
+                        var currentIndex = this.prop("StartIndex"), pageSize = this.prop("PageSize"), newIndex = currentIndex - pageSize + 1;
+                        if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
+                        return this.index(newIndex);
+                    },
+                    nextPage: function() {
+                        var currentIndex = this.prop("StartIndex"), pageSize = this.prop("PageSize"), newIndex = currentIndex + pageSize - 1;
+                        if (!(newIndex < this.prop("TotalCount"))) throw "This " + this.type + " collection is already at its last page and has no next page.";
+                        return this.index(newIndex);
+                    },
+                    lastPage: function() {
+                        var totalCount = this.prop("TotalCount"), pageSize = this.prop("PageSize"), newIndex = totalCount - pageSize;
+                        if (newIndex <= 0) throw "This " + this.type + " collection has only one page.";
+                        return this.index(newIndex);
                     }
                 });
                 return ApiCollectionConstructor;
@@ -1449,9 +1488,7 @@
                         };
                         isRemote = isRemote === false ? false : true;
                         if (isRemote) {
-                            var cancelablePromise = this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf), completedPromise = cancelablePromise.then(fulfill);
-                            completedPromise.cancel = cancelablePromise.cancel;
-                            return completedPromise;
+                            return this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf).then(fulfill);
                         } else {
                             return utils.when(conf, fulfill);
                         }

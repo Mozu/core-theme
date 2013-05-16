@@ -608,8 +608,8 @@ input, textarea, select {
   display: block !important;
   visibility: hidden !important;
   position: absolute!important;
-  left: -10000px!important;
-  top: -10000px!important;
+  left: -10000px !important;
+  top: -10000px !important;
 }
 
 /* line 76, ../scss/core/_core.scss */
@@ -1075,7 +1075,7 @@ tr.x-container:before {
   color: #000;
   font: normal 2rem "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
   border: 1px solid;
-  border-color: #dddddd #bbbbbb #bbbbbb #dddddd;
+  border-color: #ddd #bbb #bbb #ddd;
   background-color: #fff;
 }
 
@@ -2278,17 +2278,17 @@ tr.x-container:before {
 /* line 50, ../scss/widgets/_html.scss */
 .x-html h1 {
   font-size: 2em;
-  margin: 0.67em 0;
+  margin: .67em 0;
 }
 /* line 51, ../scss/widgets/_html.scss */
 .x-html h2 {
   font-size: 1.5em;
-  margin: 0.75em 0;
+  margin: .75em 0;
 }
 /* line 52, ../scss/widgets/_html.scss */
 .x-html h3 {
   font-size: 1.17em;
-  margin: 0.83em 0;
+  margin: .83em 0;
 }
 /* line 62, ../scss/widgets/_html.scss */
 .x-html h4,
@@ -4249,7 +4249,7 @@ tr.x-container:before {
 }
 /* line 108, ../scss/widgets/_datepicker.scss */
 .x-datepicker-month span {
-  color: white !important;
+  color: #fff !important;
 }
 /* line 112, ../scss/widgets/_datepicker.scss */
 .x-datepicker-month .x-btn-split-right {
@@ -4533,7 +4533,7 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 
 /* line 12, ../scss/widgets/_colorpicker.scss */
 .x-color-picker a {
-  border: 1px solid white;
+  border: 1px solid #fff;
   float: left;
   padding: 2px;
   text-decoration: none;
@@ -5135,7 +5135,7 @@ browsers will do whacky things with it.
 
 /* line 350, ../scss/widgets/_grid.scss */
 .x-grid-cell-selected {
-  background-color: #b8cfee !important;
+  background-color: #B8CFEE !important;
 }
 
 /* line 374, ../scss/widgets/_grid.scss */
@@ -6196,7 +6196,7 @@ textarea.x-form-invalid-field {
 
 /* line 12, ../scss/widgets/form/_checkboxgroup.scss */
 .x-form-invalid .x-form-checkboxgroup-body {
-  border: 1px solid #cc3300 !important;
+  border: 1px solid #c30!important;
   background: transparent repeat-x bottom;
   background-image: url('../../ext/resources/themes/images/default/grid/invalid_line.gif');
   padding: 1px 3px 0 3px;
@@ -6212,7 +6212,7 @@ textarea.x-form-invalid-field {
 /* line 27, ../scss/widgets/form/_checkboxgroup.scss */
 .x-form-check-group-label {
   color: #333;
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid #333;
   margin: 0 30px 5px 0;
   padding: 2px;
 }
@@ -9627,7 +9627,7 @@ svg, vml {
   width: 34px;
   background-position: 0 -3875px;
 }
-/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow.icon-folder-hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end.icon-folder-hover {
   background-position: 0 -3899px;
 }
@@ -9646,7 +9646,7 @@ svg, vml {
   width: 34px;
   background-position: 0 -3875px;
 }
-/* line 43, ../../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 43, ../../../../../Ruby193/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
 .taco-foldertree.x-tree-arrows .x-tree-elbow-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-plus.icon-folder-hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus:hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus.icon-folder_hover, .taco-foldertree.x-tree-arrows .x-tree-elbow-end-plus.icon-folder-hover {
   background-position: 0 -3899px;
 }
@@ -10251,7 +10251,7 @@ em {
 /* line 232, ../scss/taco/_content.scss */
 .taco-reorderable-widget {
   background-color: #FFF;
-  border: 1px solid #cccccc;
+  border: 1px solid #CCC;
   color: #333;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -10263,7 +10263,7 @@ em {
 /* line 239, ../scss/taco/_content.scss */
 .taco-reorderable-placeholder {
   background-color: #FFF;
-  border: 1px solid #cccccc;
+  border: 1px solid #CCC;
   color: #333;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -11190,7 +11190,7 @@ ul.x-boxselect-list.x-boxselect-singleselect {
   width: 20rem;
   height: 2.5rem;
   overflow: hidden;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
 }
 /* line 42, ../scss/taco/_dashboard.scss */
 .taco-home-page .taco-home-page-row-two {
@@ -11214,7 +11214,7 @@ ul.x-boxselect-list.x-boxselect-singleselect {
   width: 20rem;
   height: 2.5rem;
   overflow: hidden;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
 }
 /* line 66, ../scss/taco/_dashboard.scss */
 .taco-home-page .taco-home-page-row-three p {
@@ -11242,7 +11242,7 @@ ul.x-boxselect-list.x-boxselect-singleselect {
   width: 20rem;
   height: 2.5rem;
   overflow: hidden;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
 }
 /* line 93, ../scss/taco/_dashboard.scss */
 .taco-home-page .taco-home-page-row {
@@ -12400,7 +12400,7 @@ textarea.x-form-field:not(.x-form-focus):hover {
 .taco-theme-swatch {
   width: 208px;
   height: 233px;
-  box-shadow: 6px 6px 12px #aaaaaa;
+  box-shadow: 6px 6px 12px #aaa;
   margin: 20px 33px 33px 0;
   background-color: silver;
   background-position: 50%;
@@ -12867,7 +12867,7 @@ textarea.x-form-field:not(.x-form-focus):hover {
 /* line 74, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-field .taco-image-tiles > li.taco-image-drop .square {
   text-align: center;
-  border: 1px dashed #b1b1b1;
+  border: 1px dashed #B1B1B1;
   background-color: #F8F8F8;
   color: #A3A3A3;
   font-weight: normal;
@@ -12976,7 +12976,7 @@ textarea.x-form-field:not(.x-form-focus):hover {
 /* line 144, ../scss/taco/widgets/_imagefield.scss */
 .taco-product-image-drop-zone {
   text-align: center;
-  border: 1px dashed #b1b1b1;
+  border: 1px dashed #B1B1B1;
   background-color: #F8F8F8;
   color: #A3A3A3;
   font-weight: normal;
@@ -13117,7 +13117,7 @@ textarea.x-form-field:not(.x-form-focus):hover {
 .taco-customer-section .taco-customer-section-card-container {
   margin-left: 24px;
   padding-left: 18px;
-  border-left: 1px solid #cccccc;
+  border-left: 1px solid #ccc;
 }
 /* line 72, ../scss/taco/widgets/_phoneOrders.scss */
 .taco-customer-section .taco-customer-section-card label, .taco-customer-section .taco-customer-section-card .taco-boxselect {

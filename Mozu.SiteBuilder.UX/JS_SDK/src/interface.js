@@ -63,10 +63,7 @@ var ApiInterface = (function () {
                 };
             isRemote = isRemote === false ? false : true;
             if (isRemote) {
-                var cancelablePromise = this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf),
-                    completedPromise = cancelablePromise.then(fulfill);
-                completedPromise.cancel = cancelablePromise.cancel;
-                return completedPromise;
+                return this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf).then(fulfill);
             } else {
                 return utils.when(conf, fulfill);
             }

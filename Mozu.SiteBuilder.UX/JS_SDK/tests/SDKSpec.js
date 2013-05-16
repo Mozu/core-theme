@@ -508,8 +508,8 @@
                 it("should be an array-like object with a length property", function () {
                     expect(productsCollection.length).toBeDefined();
                 });
-                it("should have a complex type property and a string itemType property, for the collection type and the type of its items", function() {
-                    expect(typeof productsCollection.type).toBe("object");
+                it("should have a string type property and a string itemType property, for the collection type and the type of its items", function() {
+                    expect(typeof productsCollection.type).toBe("string");
                     expect(typeof productsCollection.itemType).toBe("string");
                 });
                 it("should have an .add method that adds new items", function () {
