@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (_userHelper.UserExists(user))
                 {
                     ulr = _usersRepo.Login(new Core.Api.Contracts.UserAuthInfo {EmailAddress = user.EmailAddress, Password = user.Password}).Result.ReadAsSync();
-                    
+
                     _authHelper.SetCurrentUser(ulr.AuthTicket);
                     var user1 = _authHelper.GetCurrentUser();
                     _invitationWebApiClient = new InvitationWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = user.SiteId.GetValueOrDefault(0), TenantId = user.TenantId.GetValueOrDefault(0), UserClaims = user1 }, _settings));
@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (ulr == null)
             {
                 ulr = _usersRepo.Login(new Core.Api.Contracts.UserAuthInfo { EmailAddress = user.EmailAddress, Password = user.Password }).Result.ReadAsSync ();
-
+                // var ulr2 = _usersRepo.LoginByScope(new Core.Api.Contracts.UserAuthInfo { EmailAddress = user.EmailAddress, Password = user.Password }, UserScopeType.SystemAdmin.ToString()).Result.ReadAsSync();
             }
             _authHelper.SetCurrentUser(ulr.AuthTicket);
            
