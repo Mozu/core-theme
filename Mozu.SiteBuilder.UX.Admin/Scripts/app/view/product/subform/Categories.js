@@ -28,6 +28,7 @@ Ext.define('Taco.view.product.subform.Categories', {
             getStore: function () { return listStore; },
             displayField: 'name',
             valueField: 'id',
+            value:this.record.get('categoryIds'),
             listConfig: {
                 disableSelection: true,
                 itemTpl: [
