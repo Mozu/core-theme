@@ -13,20 +13,7 @@
                 text: 'Overview',
                 listeners: {
                     click : function () {
-	                    Taco.app.StateManager.addState('account/overview', {
-
-	                        controller: 'account',
-	                        action: 'overview'
-	                    });
-	                    Ext.ModelManager.getModel('Taco.model.User').load(
-                            Taco.User.id
-                            , {
-			                success: function (data) {
-			                    Taco.app.contentView.add(Ext.create('Taco.view.account.Overview', {
-			                        recordId: data
-			                    }));
-			                }
-			            });
+                        Taco.app.StateManager.attemptNavigate('account');
                     }
                 }
 		    },
@@ -35,11 +22,7 @@
                 text: 'Billing Information',
                 listeners: {
                     click : function () {
-	                    Taco.app.StateManager.addState('account/billing', {
-	                        controller: 'account',
-	                        action: 'billing'
-	                    });
-						Taco.app.contentView.add(Ext.create('Taco.view.account.Billing'));
+                        Taco.app.StateManager.attemptNavigate('account/billing');
                     }
                 }
             },{  
@@ -47,11 +30,7 @@
                 text: 'Users',
                 listeners: {
                     click : function () {
-	                    Taco.app.StateManager.addState('account/users', {
-	                        controller: 'account',
-	                        action: 'users'
-	                    });
-						Taco.app.contentView.add(Ext.create('Taco.view.account.Users'));
+                        Taco.app.StateManager.attemptNavigate('account/users');
                     }
                 }
             }, {
@@ -59,11 +38,7 @@
                 text: 'Roles',
                 listeners: {
                     click: function () {
-                        Taco.app.StateManager.addState('roles', {
-                            controller: 'roles',
-                            action: 'index'
-                        });
-                        Taco.app.contentView.add(Ext.create('Taco.view.role.Index'));
+                        Taco.app.StateManager.attemptNavigate('account/roles');
                     }
                 }
             }

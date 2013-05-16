@@ -56,13 +56,14 @@ Ext.define('Taco.view.site.Toolbar', {
                     text: 'Page',
                     itemId: 'publishPage',
                     handler: function () {
-                        alert('tbd!');
+                        self.editor.adapter.publish();
                     }
                 }, {
                     text: 'All Items',
                     itemId: 'publishAll',
                     handler: function () {
-                        alert('tbd!');
+                       
+                        self.editor.publishAll();
                     }
                 }]
             }

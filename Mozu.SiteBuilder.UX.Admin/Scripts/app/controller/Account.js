@@ -14,9 +14,9 @@ Ext.define('Taco.controller.Account', {
             
         Ext.ModelManager.getModel('Taco.model.User').load(Taco.User.id, {
             success: function (data) {
-                me.createContentView(Ext.create('Taco.view.account.Overview', {
+                me.createContentView('Taco.view.account.Overview', {
                     recordId: data
-                }));
+                });
             }
         });
     },
@@ -30,8 +30,8 @@ Ext.define('Taco.controller.Account', {
     },
 
     roles: function (params) {
-        console.log('roles', params, arguments);
-        this.createContentView('Taco.view.account.Roles');
+       
+        this.createContentView('Taco.view.role.Index');
     }
 });
 
