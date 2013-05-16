@@ -219,11 +219,16 @@ Ext.define('Taco.core.ux.tab.Panel', {
      * @return {Taco.core.ux.tab.Panel} Returns itself for chaining when complete.
      */
     scrollCard: function (target) {
-        var wrapper = Ext.getBody().down('.taco-shell'),
+        //hack until jimmy fixes this.
+        var wrapper = Taco.app.viewPort.down('contentbody').getEl(),
             targetY = Ext.get(target).dom.offsetTop;        
        wrapper.scrollTo('top', targetY, true);
+       
+       return this;
+        
 
-        return this;
+        
+        
     },
 
     /**
