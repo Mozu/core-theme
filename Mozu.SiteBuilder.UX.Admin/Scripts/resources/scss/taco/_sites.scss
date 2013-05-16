@@ -50,6 +50,13 @@
           width: 16px;
         }
 
+        .#{$prefix}tree-elbow-line,
+        .#{$prefix}tree-elbow-empty {
+          &:nth-of-type(1) {
+            display: none;
+          }
+        }
+
         .#{$vprefix}treelist-inline-header {
           .#{$prefix}grid-cell-inner {
             padding-right: 20px;
