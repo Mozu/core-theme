@@ -433,7 +433,7 @@ Ext.define('Taco.view.site.page.Form', {
                 zoneId: dropEvent.zoneData.zoneId,
                 zoneScope: dropEvent.zoneData.zoneScope,
                 context: dropEvent.pageData.pageContext.cms,
-                configuration: dropEvent.configuration,
+                config: dropEvent.widgetDefinition.defaultConfig,
                 index: dropEvent.index
             },
             success: function (response) {
