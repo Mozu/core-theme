@@ -63,7 +63,7 @@
                     
             };
             me.body = {
-                renderData: renderDataObject,
+                renderData: renderDataObject, 
                 renderTpl: "<div class='taco-home-page'>"+
 "       <div class='taco-home-page-row-large'> "+
 "           <div class='taco-home-page-medium-item taco-home-page-sales'></div>"+
@@ -71,7 +71,7 @@
 "           <div class='taco-home-page-medium-item'>"+
 "           <div class='taco-home-page-item-header taco-home-page-item-header-main'>QUICK LINKS</div>"+
 
-"           <div class='taco-home-page-item-header'>Managae WebStite</div>" +
+"           <div class='taco-home-page-item-header'>Manage WebStite</div>" +
 //repeat this part
 "               <tpl for='store'>"+
 "                   <ul class='taco-home-page-tree'>"+
