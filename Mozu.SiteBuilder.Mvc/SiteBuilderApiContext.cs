@@ -52,8 +52,8 @@ namespace Mozu.SiteBuilder.Mvc
             TenantId = -1;
             _settings = settings;
             _authenticationHelper = authenticationHelper;
-            //todo:set back to active
-            CmsDraftState = "draft";// "active";
+            //if using the rp then default to active.  rp will send the datamode header.
+            CmsDraftState = _settings.AppSettings("ReverseProxy") =="true" ? "active": "draft";// "active";
 
             Load(context, cookieProvider);
         }
