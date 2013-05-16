@@ -75,8 +75,10 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
 
         [DataMember(Name = "widgets")]
         public WidgetInstanceData[] Widgets { get; set; }
-        
 
+
+
+        public string FullPath { get; set; }
     }
 
 }

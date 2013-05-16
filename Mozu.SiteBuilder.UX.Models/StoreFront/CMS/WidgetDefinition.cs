@@ -67,6 +67,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
             set { _category = value; }
         }
 
+
+        public string FullPath { get; set; }
     }
 
     [DataContract(Name = "widgetDefintionProperty")]

@@ -405,6 +405,32 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             return Content("images/" + pathinfo);
         }
+
+        [ClientCacheHeaders(ConfigKey = "images")]
+        public ActionResult Widget( string pathinfo )
+        {
+            int pos = pathinfo.IndexOf('/');
+            if (pos > -1)
+            {
+                var widgetId = pathinfo.Substring(0, pos);
+                var path = pathinfo.Substring(pos);
+                var widget = this.SiteContext.Theme.Widgets.FirstOrDefault(x => x.Id == widgetId);
+                if (widget != null)
+                {
+                    var fullPath = new FileInfo(widget.FullPath + path);
+                    if (fullPath.Exists)
+                    {
+                        return new FilePathResult(fullPath.FullName , GetMimeType(pathinfo));
+           
+                    }
+                }
+               
+            }
+            return new HttpNotFoundResult();
+
+
+        }
+
         [ClientCacheHeaders(ConfigKey = "templates")]
         public ActionResult Templates(string pathinfo)
         {

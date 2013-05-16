@@ -113,7 +113,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                    {
                        using (var stream = File.OpenText(x.FullPath ))
                        {
-                           return jSerializer.Deserialize<WidgetDefinition>(new JsonTextReader(stream));
+                           var ret= jSerializer.Deserialize<WidgetDefinition>(new JsonTextReader(stream));
+                           if (ret != null)
+                           {
+                               ret.FullPath = Path.GetDirectoryName(x.FullPath);
+                           }
+                           
+                           return ret;
                        }
                    }).Where(x => x != null && x.Enabled.GetValueOrDefault(true)).ToList();
 
@@ -122,7 +128,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                {
                    using (var stream = File.OpenText(x.FullPath))
                    {
-                       return jSerializer.Deserialize<PageTemplateDefinition>(new JsonTextReader(stream));
+                       var ret = jSerializer.Deserialize<PageTemplateDefinition>(new JsonTextReader(stream));
+                       if (ret != null)
+                       {
+                           ret.FullPath = Path.GetDirectoryName(x.FullPath);
+                       }
+                       return ret;
                    }
                }).Where(x => x != null).ToList();
 
