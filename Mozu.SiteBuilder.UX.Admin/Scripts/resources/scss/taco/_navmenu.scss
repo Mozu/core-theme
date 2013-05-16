@@ -139,7 +139,7 @@
     
     li.#{$vprefix}menu-item {
       cursor: pointer;
-      padding: px-to-rem(18) 0px px-to-rem(18) 70px;
+      padding: px-to-rem(13) 0px px-to-rem(13) 70px;
       position: relative;
       width: 325px;
 
@@ -159,7 +159,7 @@
           height: 40px;
           left: 10px;
           position: absolute;
-          top: 10px;
+          top: 5px;
           width: 40px;
         }
         &.#{$vprefix}icon-nav-dashboard::before {
@@ -241,6 +241,7 @@
             a {
               border-bottom: 2px solid $color-theme-base;
               color: $color-neutral-white;
+              text-decoration: none;
             }
           }
         }
