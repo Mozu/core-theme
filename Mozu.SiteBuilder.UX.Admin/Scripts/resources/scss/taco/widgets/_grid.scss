@@ -167,12 +167,6 @@
   .#{$prefix}tree-arrows {
     .#{$prefix}grid-cell-inner {
       padding: 2px 0px;
-
-      .#{$prefix}tree-elbow-line {
-        &:nth-of-type(1) {
-          display: none;
-        }
-      }
     }
   }
 

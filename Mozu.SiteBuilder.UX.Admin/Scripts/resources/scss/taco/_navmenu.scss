@@ -4,6 +4,7 @@
     background-color: $color-neutral-white;
     bottom: 0px;
     left: 0px;
+    padding-right: 30px;
     position: absolute;
     @include flexbox($alignItems: center);
 
@@ -227,8 +228,8 @@
       }
 
       ul {
-        font-size: 13px;
-        line-height: 1.2308em;
+        font-size: px-to-rem(13);
+        line-height: px-to-rem(16);
         margin-left: -5px;
 
         li {
