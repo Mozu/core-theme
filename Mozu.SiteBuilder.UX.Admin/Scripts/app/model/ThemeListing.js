@@ -29,6 +29,11 @@ Ext.define('Taco.model.ThemeListing', {
         type: 'boolean',
         isHidden: true
     }, {
+        name: 'isSelected',
+        convert: function (value, record) {
+            return record.get('isSelectedDesktop') || record.get('isSelectedMobile');
+        }
+    }, {
         name:'thumbnail',
         type:'string',
         persist: false // *** No need to send Base64 string back to server

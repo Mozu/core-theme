@@ -106,13 +106,14 @@
                 cursor: pointer;
                 width: 18px;
                 height: 18px;
-
+                
                 &:before {
                     margin: 5px 0 0 8px;
                     content: '';
                     height: 8px;
                     width: 8px;
                     display: block;
+                    @include icons-sprite(icon-x);
                 }
             }
 

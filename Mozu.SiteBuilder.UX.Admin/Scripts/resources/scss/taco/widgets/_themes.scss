@@ -1,4 +1,168 @@
-﻿@mixin taco-themes {
+@mixin taco-themes {
+
+  $applied-size: 380px;
+  $purchased-size: 220px;
+  $title-height: 30px;
+
+  .#{$vprefix}theme-selector {
+
+    h2 {
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .theme-swatch {
+      margin: 0 20px 20px 0;
+      overflow: hidden;
+      background: $color-neutral-white;
+
+      &:hover .menu {
+        opacity: 1;
+      }
+    }
+
+    .title {
+      height: 30px;
+      font-size: 13px;
+      padding: 8px 0 0 20px;
+    }
+
+    .group {
+      margin: 10px 0 20px;
+      @include flexbox;
+    }
+
+    .menu {
+      opacity: 0;
+      background: transparentize($color-neutral-black, 0.15);
+      color: $color-neutral-90;
+      position: absolute;
+      @include transition(opacity 0.3s);
+
+      .title {
+        @include flexbox;
+        span {
+          @include flex($grow: 1);
+        }
+        a {
+          height: 18px;
+          width: 22px;
+          @include icons-sprite(icon-widget-remove);
+        }
+      }
+
+      a {
+        color: $color-neutral-white;
+      }
+
+      li {
+        padding: 8px 0 8px 20px;
+        border-bottom: 1px solid $color-neutral-45;
+      }
+
+      li:last-child {
+        border-bottom: 0;
+      }
+    }
+
+    .modes {
+      font-size: 9px;
+      height: 72px;
+      padding: 0 0 0 0 !important;
+
+      @include flexbox($alignItems: flex-end);
+
+
+    }
+
+    .icon {
+      margin-left: 20px;
+      margin: 0 12px 22px 20px;
+    }
+
+    .text {
+      margin-bottom: 24px;
+    }
+
+    .icon-mobile {
+      width: 12px;
+      height: 18px;
+      @include icons-sprite(icon-theme-mobile);
+    }
+
+    .icon-desktop {
+      width: 36px;
+      height: 29px;
+      @include icons-sprite(icon-theme-desktop);
+    }
+
+
+    .actions {
+      padding: 0 !important;
+      @include flexbox;
+      a {
+        display: block;
+        font-size: 10px;
+        padding: 8px 20px;
+      }
+    }
+
+    .group-applied {
+      .menu {
+        width: $applied-size;
+      }
+
+      .modes {
+        width: $applied-size;
+      }
+
+      .theme-swatch {
+        width: $applied-size;
+      }
+
+      .thumbnail {
+        height: $applied-size;
+        width: $applied-size;
+      }
+
+      .inactive {
+        opacity: 0.25;
+      }
+    }
+
+    .group-purchased {
+      .menu {
+        width: $purchased-size;
+      }
+
+      .modes {
+        width: $purchased-size;
+      }
+
+      .theme-swatch {
+        width: $purchased-size;
+      }
+
+      .thumbnail {
+        width: $purchased-size;
+        height: $purchased-size;
+      }
+    }
+
+  }
+
+
+
+
+
+
+
+
+/*
+
+
+
+
 
   $swatchWidth: 200px;
   $swatchHeight: 225px;
@@ -220,5 +384,6 @@
 
     }
   }
+*/
 
 }

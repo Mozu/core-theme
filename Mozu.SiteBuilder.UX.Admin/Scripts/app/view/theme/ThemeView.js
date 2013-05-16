@@ -8,90 +8,67 @@
  */
 
 Ext.define('Taco.view.theme.ThemeView', {
-    extend: 'Ext.view.View',
-    xtype: 'themeview',
-    store: this.store,
+    extend: 'Taco.core.ux.GroupedView',
+    xtype: 'widget.taco.themeview',
     disableSelection: true,
-    padding: '0 0 12 0', // *** Make room for box-shadow
-    // renderSelected: false, // *** Override through config when newing up to render either the "published" or the "unpublished" theme.
-    itemSelector: 'div.taco-theme-swatch'
+    itemSelector: '.theme-swatch',
+    cls: 'taco-theme-selector',
 
-    , initComponent: function () {
-        this.tpl = new Ext.XTemplate(
-            '<tpl for=".">',
-            // this.renderSelected ? '<tpl if="selected">' : '<tpl if="!selected">',
-                '{% this.getPlatform(values); %}',
-                '<div class="taco-theme-swatch {[ values.isSelectedDesktop || values.isSelectedMobile ? "x-item-selected" : "" ]}" style="background-image: url({thumbnail})" data-selected="{selected}" data-platform="{platformCls}">',
-                    '<div class="taco-inner-theme-wrapper">',
-                        '<div class="taco-swatch-label taco-current-theme"><span>Current Theme</span></div>',
-                        '<div class="taco-swatch-label taco-set-as-theme">',
-                            '<span>Set as Theme</span>',
-                            '<br>',
-                            '<a href="javascript:;" class="preview">Preview</a>',
-                           
-                        '</div>',
-                        '<div ><a href="javascript:;" class="settings">Settings</a></div>',
-                        '<div class="taco-theme-title">{name}</div>',
-                    '</div>',
-                    '<div class="taco-theme-platform">',
-                        '{[ values.platform ]}',
-                        '<span class="taco-deselect-theme">&times;</span> ',
-                    '</div>',
-                '</div>',
-            // '</tpl>',
-            '</tpl>',
-            {
-                disableFormats: true,
-                getPlatform: function ( values ) {
-                    if( values.isMobile ) {
-                        if( values.isDesktop ) {
-                            values.platform = 'Desktop + Mobile';
-                            values.platformCls = 'both';
-                        } else {
-                            values.platform = 'Mobile';
-                            values.platformCls = 'mobile';
-                        }
-                    } else {
-                        values.platform = 'Desktop';
-                        values.platformCls = 'desktop';
-                    }
-                }
-            }
-        );
+    tpl: [
+        '<tpl for="groups">',
+            '<h2>',
+                '<tpl if="name == true">',
+                    'Applied Theme',
+                '<tpl else>',
+                    'Purchased Themes',
+                '</tpl>',
+            '</h2>',
 
+            '<ul class="group group-<tpl if="name == true">applied<tpl else>purchased</tpl>">',
+                '<tpl for="children">',
+                    '<li class="theme-swatch">',
+                        '<ul class="menu">',
+                            '<li class="title">',
+                                '<span>{[values.data.name]}</span>',
+                                '<tpl if="!values.data.isSelected">',
+                                    '<a href="#"></a>',
+                                '</tpl>',
+                            '</li>',
+                            '<li class="modes">',
+                                '<tpl if="values.data.isDesktop">',
+                                    '<div class="icon icon-desktop <tpl if="!values.data.isSelectedDesktop">inactive</tpl>"></div>',
+                                    '<div class="text <tpl if="!values.data.isSelectedDesktop">inactive</tpl>">Desktop</div>',
+                                '</tpl>',
+                                '<tpl if="values.data.isMobile">',
+                                    '<div class="icon icon-mobile <tpl if="!values.data.isSelectedMobile">inactive</tpl>"></div>',
+                                    '<div class="text <tpl if="!values.data.isSelectedMobile">inactive</tpl>">Mobile</div>',
+                                '</tpl>',
+                            '</li>',
+                            '<li class="actions">',
+                                '<a class="action-preview" href="#">Preview</a>',
+                                '<a class="action-settings" href="#">Settings</a>',
+                                '<tpl if="!values.data.isSelected">',
+                                    '<a class="action-apply" href="#">Apply</a>',
+                                '</tpl>',
+                            '</li>',
+                        '</ul>',
+                        '<div class="title">{[values.data.name]}</div>',
+                        '<img class="thumbnail" src="{[values.data.thumbnail]}">',
+                    '</li>',
+                '</tpl>',
+            '</ul>',
+        '</tpl>'
+    ],
+
+    initComponent: function() {
         this.listeners = {
-            itemmouseenter: function (view, model, element) {
-                element = element.childNodes[0];
-                Ext.fly( element ).setOpacity(1, true);
-            },
-
-            itemmouseleave: function (view, model, element, index) {
-                element = element.childNodes[0];
-                Ext.fly( element ).setOpacity(0.66, true);
-            },
-
-            itemclick: function (view, model, element, idx, eventObj) {
-                var targetFly = Ext.fly(eventObj.target),
+            itemclick: function(view, model, element, idx, eventObj) {
+                var targetEl = Ext.get(eventObj.target),
                     width, height, id;
 
-                // *** Deselect the theme
-                if( targetFly.hasCls(Taco.baseCSSPrefix + 'deselect-theme') ) {
-                    model.set({
-                        "isSelectedDesktop": false,
-                        "isSelectedMobile": false
-                    });
-                    this.store.sync();
-                }
+                eventObj.preventDefault();
 
-                    // *** Preview the theme
-                else if (targetFly.hasCls('settings')) {
-                
-                     
-                     Ext.defer(function () {
-                         Taco.core.StateManager.attemptNavigate('themesettings/edit/' + model.getId(), { complexMetaData: { record: model} });
-                     }, 1, this);
-                }
-                else if (targetFly.hasCls('preview')) {
+                if (targetEl.hasCls('action-preview')) {
                     height = Taco.app.viewPort.getHeight();
                     width = Taco.app.viewPort.getWidth();
 
@@ -103,29 +80,34 @@ Ext.define('Taco.view.theme.ThemeView', {
                         width: width - 20,
                         layout: 'fit',
                         listeners: {
-                            close: function (panel) {
+                            close: function(panel) {
                                 Ext.util.Cookies.clear('SBTHEME');
                             }
                         },
-                        items: {  // Let's put an empty grid in just to illustrate fit layout
+                        items: { // Let's put an empty grid in just to illustrate fit layout
                             html: '<iframe src="/" width=' + (width - 30) + ' height=' + (height - 30) + ' />'
                         }
                     }).show();
                 }
-                // *** Attempt to select the theme
-                else if (!model.get('isSelectedDesktop') || !model.get('isSelectedMobile')) {
-                    // you may delete the below as soon as you have found it :)  // *** Hugs 4 Zetlen
-                    // var a = document.createElement("audio");
-                    // document.body.appendChild(a);
-                    // a.src = "/admin/scripts/resources/images/indicator.mp3";
-                    // a.load();
-                    // a.play();
 
-                    if ( model.get("isDesktop") ) {
+                if (targetEl.hasCls('action-settings')) {
+                    Ext.defer(function() {
+                        Taco.core.StateManager.attemptNavigate('themesettings/edit/' + model.getId(), {
+                            complexMetaData: {
+                                record: model
+                            }
+                        });
+                    }, 1, this);
+                    return;
+                    
+                }
+
+                if (targetEl.hasCls('action-apply')) {
+                    if (model.get("isDesktop")) {
                         this.swapSelection("isSelectedDesktop", model);
                     }
 
-                    if ( model.get("isMobile") ) {
+                    if (model.get("isMobile")) {
                         this.swapSelection("isSelectedMobile", model);
                     }
 
@@ -136,7 +118,7 @@ Ext.define('Taco.view.theme.ThemeView', {
             scope: this
         };
 
-        this.callParent( arguments );
+        this.callParent(arguments);
     },
 
     /**
@@ -145,11 +127,10 @@ Ext.define('Taco.view.theme.ThemeView', {
      * @param {String} fieldName
      * @param {Ext.data.Model} model
      */
-    swapSelection: function ( fieldName, model ) {
+    swapSelection: function(fieldName, model) {
         // *** Grab the currently selected record (with matching fieldName) and set to false
         var selectedModel = this.store.findRecord(fieldName, true);
-        if( selectedModel )
-            selectedModel.set(fieldName, false);
+        if (selectedModel) selectedModel.set(fieldName, false);
         model.set(fieldName, true);
     }
 });
