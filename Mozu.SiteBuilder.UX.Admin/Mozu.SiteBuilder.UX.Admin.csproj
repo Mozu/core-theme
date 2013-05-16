@@ -174,6 +174,14 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="MongoDB.Bson, Version=1.7.1.4791, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\mongocsharpdriver.1.7.1\lib\net35\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=1.7.1.4791, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\mongocsharpdriver.1.7.1\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.AdminUser.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13100.1\lib\Mozu.AdminUser.Contracts.dll</HintPath>
@@ -204,6 +212,9 @@
     <Reference Include="Mozu.Core.Api.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.Api.Contracts.0.0.13092.3\lib\Mozu.Core.Api.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Core.Mongo">
+      <HintPath>..\packages\Mozu.Core.Mongo.0.0.13114.2\lib\Mozu.Core.Mongo.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Customer.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -394,7 +405,6 @@
     <Compile Include="Api\Models\FileManagement\FileManagementFile.cs" />
     <Compile Include="Api\Models\FileManagement\FileManagementFolder.cs" />
     <Compile Include="Api\Models\FilterCollection.cs" />
-    <Compile Include="Api\GlobalErrorHandler.cs" />
     <Compile Include="Api\MetaDataController.cs" />
     <Compile Include="Api\ModelMapping\CategoryMapping.cs" />
     <Compile Include="Api\ModelMapping\OptionMapping.cs" />
@@ -468,6 +478,7 @@
     <Compile Include="Configuration\ConfigurationModule.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\AddContextLogDataFilter.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImgController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
@@ -524,7 +535,6 @@
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
     <Content Include="Scripts\app\core\context\TaContext.js" />
     <Content Include="Scripts\app\core\util\GetsParentPage.js" />
-    <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\ux\action\SplitButton.js" />
     <Content Include="Scripts\app\core\ux\action\Button.js" />
     <Content Include="Scripts\app\core\ux\action\PrimarySplitButton.js" />
@@ -583,6 +593,11 @@
     <Content Include="Configs\AppSettings.Prod.config" />
     <Content Include="PreDeploy.ps1" />
     <Content Include="PostDeploy.ps1" />
+    <Content Include="Configs\Log4Net.CI.config" />
+    <Content Include="Configs\Log4Net.config" />
+    <Content Include="Configs\Log4Net.Debug.config" />
+    <Content Include="Configs\Log4Net.Demo.config" />
+    <Content Include="Configs\Log4Net.Release.config" />
     <None Include="Scripts\app\mocks\behaviors.json" />
     <Content Include="Scripts\app\model\Attribute.js" />
     <Content Include="Scripts\app\model\AttributeValue.js" />
@@ -1117,26 +1132,8 @@
     <Content Include="Scripts\makedocsasjson.bat" />
     <Content Include="Scripts\resources\css\taco.css" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.svg" />
-    <Content Include="Scripts\resources\guide\index.html" />
     <Content Include="Scripts\resources\images\card-sd7c19700b9.png" />
-    <Content Include="Scripts\resources\images\dashboard-se7fbf8ad93.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-bounce-rate.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-conversion-rate.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-customers.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-device.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-live-visitors.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-load-time.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-new-returning-visitors.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-opened-unopened-mail.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-sales.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-salesforce.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-time-on-sites.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-uptime.png" />
-    <Content Include="Scripts\resources\images\dashboard\dashboard-vistors.png" />
-    <Content Include="Scripts\resources\images\icons-s46f2c6a895.gif" />
-    <Content Include="Scripts\resources\images\icons-sf8769ab004.png" />
-    <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-post.png" />
-    <Content Include="Scripts\resources\images\icons\icon-tree-knurling.png" />
+    <Content Include="Scripts\resources\images\icons-s93077bd124.png" />
     <Content Include="Scripts\resources\images\icons\icon-widget-drag.png" />
     <Content Include="Scripts\resources\images\icons\icon-widget-edit.png" />
     <Content Include="Scripts\resources\images\icons\icon-widget-remove.png" />
@@ -1166,6 +1163,7 @@
     <Content Include="Scripts\resources\images\legacy\fabric-2.png" />
     <Content Include="Scripts\resources\images\legacy\indicator.mp3" />
     <Content Include="Scripts\resources\images\legacy\loading.gif" />
+    <Content Include="Scripts\resources\images\icons-s46f2c6a895.gif" />
     <Content Include="Scripts\resources\images\picker-sa04364cd82.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-carousel.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-grid.png" />
@@ -1246,6 +1244,7 @@
     <Content Include="Scripts\app\view\paymentAndCheckout\Index.js" />
     <Content Include="Scripts\app\view\paymentAndCheckout\RadioList.js" />
     <Content Include="Scripts\app\view\paymentAndCheckout\StandaloneAccordion.js" />
+    <Content Include="Scripts\app\view\product\edit\InventoryControl.js" />
     <Content Include="Scripts\app\view\site\page\entityAdapters\BaseEntityAdapter.js" />
     <Content Include="Scripts\app\view\site\page\entityAdapters\CategoryEntityAdapter.js" />
     <Content Include="Scripts\app\view\site\page\entityAdapters\DocumentEntityAdapter.js" />
@@ -1262,6 +1261,7 @@
     <Content Include="Scripts\app\view\generalSettings\Index.js" />
     <Content Include="Scripts\app\model\ThemeListing.js" />
     <Content Include="Scripts\app\view\inventory\Index.js" />
+    <Content Include="Scripts\app\view\product\edit\Inline.js" />
     <Content Include="Scripts\app\view\site\navigation\ExternalLinkEditor.js" />
     <Content Include="Scripts\app\view\site\navigation\Themes.js" />
     <EmbeddedResource Include="Api\datagen.txt" />
@@ -2159,7 +2159,6 @@
     <Content Include="Content\themes\base\jquery.ui.theme.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Log4Net.config" />
     <Content Include="Scripts\resources\fonts\journal-webfont.eot">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2819,6 +2818,17 @@
     <Content Include="Scripts\app\view\option\valueEditor\TextField.js" />
     <Content Include="Scripts\app\view\productOption\edit.js" />
     <Content Include="Scripts\app\view\product\Edit-DEPRECATED.js" />
+    <Content Include="Scripts\app\view\product\edit\Basic.js" />
+    <Content Include="Scripts\app\view\product\edit\ConfigurableOptions.js" />
+    <Content Include="Scripts\app\view\product\edit\ConfigurableOptionsGrid.js" />
+    <Content Include="Scripts\app\view\product\edit\ProductOptions.js" />
+    <Content Include="Scripts\app\view\product\edit\ProductOption.js" />
+    <Content Include="Scripts\app\view\product\edit\ProductProperties.js" />
+    <Content Include="Scripts\app\view\product\edit\Seo.js" />
+    <Content Include="Scripts\app\view\product\edit\Shipping.js" />
+    <Content Include="Scripts\app\view\product\edit\Categories.js" />
+    <Content Include="Scripts\app\view\product\edit\StandaloneOptions.js" />
+    <Content Include="Scripts\app\view\product\edit\Widgets.js" />
     <Content Include="Scripts\app\view\product\Index.js" />
     <Content Include="Scripts\app\view\shipping\CountrySelector.js" />
     <Content Include="Scripts\app\view\shipping\CustomRateEditor.js" />
@@ -2918,10 +2928,6 @@
       <Compile>False&gt;</Compile>
       <Minify>True</Minify>
     </Content>
-    <Content Include="Log4Net.CI.config" />
-    <Content Include="Log4Net.Demo.config" />
-    <Content Include="Log4Net.Debug.config" />
-    <Content Include="Log4Net.Release.config" />
     <Content Include="Scripts\resources\scss\taco\_errors.scss" />
     <Content Include="Scripts\resources\scss\taco\_viewport.scss" />
     <Content Include="Scripts\makedocs.bat" />

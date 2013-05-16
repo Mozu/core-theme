@@ -20,31 +20,15 @@ using Constants = Mozu.Core.Api.Contracts.Constants;
 
 namespace Mozu.SiteBuilder.Mvc
 {
-    public interface IUniversalSiteApiClient : ISitesWebApiClient
-    {
-    }
-
-    public class UniversalSiteApiClient : SitesWebApiClient, IUniversalSiteApiClient
-    {
-        private readonly ISettings _setting;
-        private const int VOLUSIONSITEID = 0;
-        private const int VOLUSIONTENANTID = 0;
-
-        public UniversalSiteApiClient(ISettings setting)
-            : base(new ServiceClientMessageHandler(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }, setting))
-
-    {
-        _setting = setting;
-    }
-    }
-
     public class SiteBuilderApiContext : MozuServiceApiContext, ISiteBuilderApiContext
     {
         private readonly ISettings _settings;
         private readonly AuthenticationHelper _authenticationHelper;
         internal const string CONTEXT_KEY = "V:STORECTX";
         internal const string COOKIENAME = "SBCONTEXT";
-        
+
+
+
 
         public SiteBuilderApiContext(System.Web.HttpContextBase context, Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper authHelper, ICookieProvider cookieProvider , ISettings settings , AuthenticationHelper authenticationHelper )
             : base()
@@ -63,11 +47,7 @@ namespace Mozu.SiteBuilder.Mvc
         /// <summary>
         /// "active" or "draft".
         /// </summary>
-        public string CmsDraftState
-        {
-            get;
-            set;
-        }
+        public string CmsDraftState { get; set; }
 
         public void Load(HttpContextBase ctx, ICookieProvider cookieProvider)
         {
