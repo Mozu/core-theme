@@ -563,8 +563,7 @@ Ext.define('Taco.view.site.page.Form', {
         }
     },
     viewPage: function (e) {
-        window.open(this.editSurface.pageSrc, 'preview');
-
+        window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(this.editSurface.pageSrc), 'taco-preview');
     },
     getPageTypeStore: function () {
         if (!this.pageTypeStore) {
