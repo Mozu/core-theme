@@ -72,7 +72,7 @@ var utils = {
                     }
                 ]
             }, xhr);
-        }, 30000);
+        }, 60000);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 clearTimeout(timeout);

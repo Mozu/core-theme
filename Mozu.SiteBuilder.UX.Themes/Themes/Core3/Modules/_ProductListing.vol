@@ -6,7 +6,7 @@
 	{% if Model.Items %}
 	<nav class="mz-list-control-wrap">
 		<ul class="mz-list-control" data-items-per-row="3">
-      {% for prod in Model.Items %}iii
+      {% for prod in Model.Items %}
    
   
       <li class="mz-list-item {% if forloop.counter|divisibleby:3 %}mz-list-last{% endif %}">
@@ -27,8 +27,8 @@
 			{% endif %}
 			{% endfor %}
 		</ul>
-		{% endif %}
 	</nav>
+    {% endif %}
 	{% html_partial "modules/paging" %}
 </div>
 

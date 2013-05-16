@@ -4,7 +4,7 @@
         function waitAndGetCart() {
             return setTimeout(function() {
                 api.get('cart').then(updateCartDetails);
-            }, 2500);
+            }, 500);
         }
         function checkForCartUpdates(apiObject) {
             switch (apiObject.type) {
