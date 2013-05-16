@@ -25,8 +25,14 @@ Ext.define('Taco.core.data.Model', {
             return Ext.Date.isEqual(a, b);
         }
         
+
+
+
         var ret = this.callParent(arguments);
         if (!ret && Ext.isObject(a) && Ext.isObject(b) && a.$className == undefined && b.$className == undefined) {
+            return Ext.encode(a) == Ext.encode(b);
+        }
+        if (!ret && Ext.isArray(a) && Ext.isArray(b) ) {
             return Ext.encode(a) == Ext.encode(b);
         }
         return ret;

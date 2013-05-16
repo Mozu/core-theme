@@ -24,9 +24,6 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             get
             {
                 
-                var x = this.Price;
-                var y = this.PriceRange;
-                
                 return "/product/" + this.ProductCode;
 
             }

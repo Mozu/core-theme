@@ -236,7 +236,7 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     loadSingleValue: function (fieldName, value) {
-        var field;
+        var me=this,field;
         
         Ext.each(this.trackedFields, function (trackedField) {
             if (trackedField && trackedField.name === fieldName) {
@@ -249,10 +249,16 @@ Ext.define('Taco.core.ux.form.Form', {
             return;
         }
 
-        field.setValue(value);
-        if (this.getForm().trackResetOnLoad) {
-            field.resetOriginalValue();
-        }
+        field.batchChanges(function() {
+            field.setValue(value);
+            field.initValue();
+            if (me.getForm().trackResetOnLoad) {
+                field.resetOriginalValue();
+            }
+        });
+        
+        
+        
     },
 
 
