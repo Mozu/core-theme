@@ -543,6 +543,7 @@
     <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\browser\FilterList.js" />
+    <Content Include="Scripts\app\core\ux\form\Field.js" />
     <Content Include="Scripts\app\core\ux\form\field\PageTemplate.js" />
     <Content Include="Scripts\app\core\ux\GroupedView.js" />
     <Content Include="Scripts\app\core\ux\modal\SidebarModal.js" />
@@ -1172,11 +1173,14 @@
     <Content Include="Scripts\resources\images\icons\icon-nav-sites-light.png" />
     <Content Include="Scripts\resources\images\icons\icon-nav-sites-med.png" />
     <Content Include="Scripts\resources\images\icons\icon-nav-sites.png" />
+    <Content Include="Scripts\resources\images\icons\icon-theme-desktop.png" />
+    <Content Include="Scripts\resources\images\icons\icon-theme-mobile.png" />
     <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-post.png" />
     <Content Include="Scripts\resources\images\icons\icon-tree-knurling.png" />
     <Content Include="Scripts\resources\images\icons\icon-widget-drag.png" />
     <Content Include="Scripts\resources\images\icons\icon-widget-edit.png" />
     <Content Include="Scripts\resources\images\icons\icon-widget-remove.png" />
+    <Content Include="Scripts\resources\images\icons\icon-x.png" />
     <Content Include="Scripts\resources\images\image-drop.png" />
     <Content Include="Scripts\resources\images\legacy\AddPhotos.png" />
     <Content Include="Scripts\resources\images\legacy\background-alpha.png" />
