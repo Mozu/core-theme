@@ -31,18 +31,18 @@
         color: $color;
         display: inline-block;
         height: 51px;
-        padding: 18px 15px 0px 60px;
+        padding: 18px 15px 0px 50px;
         position: relative;
         vertical-align: top;
 
         &::before {
           content: "";
           display: block;
-          height: 60px;
-          left: 0px;
+          height: 40px;
+          left: 5px;
           position: absolute;
-          top: -5px;
-          width: 60px;
+          top: 5px;
+          width: 40px;
         }
         &.#{$vprefix}icon-nav-dashboard::before {
           @include icons-sprite(icon-nav-dashboard);
@@ -147,73 +147,76 @@
         color: $color-neutral-75;
         display: inline-block;
 
+        &:hover {
+          color: $color-neutral-white;
+        }
         &.#{$vprefix}menu-item-link {
           font-weight: bold;
         }
         &.#{$vprefix}icon::before {
           content: "";
           display: block;
-          height: 60px;
-          left: 0px;
+          height: 40px;
+          left: 10px;
           position: absolute;
-          top: 0px;
-          width: 60px;
+          top: 10px;
+          width: 40px;
         }
         &.#{$vprefix}icon-nav-dashboard::before {
-          @include icons-sprite(icon-nav-dashboard);
+          @include icons-sprite(icon-nav-dashboard-med);
         }
         &.#{$vprefix}icon-nav-customers::before {
-          @include icons-sprite(icon-nav-customers);
+          @include icons-sprite(icon-nav-customers-med);
         }
         &.#{$vprefix}icon-nav-catalog::before {
-          @include icons-sprite(icon-nav-catalog);
+          @include icons-sprite(icon-nav-catalog-med);
         }
         &.#{$vprefix}icon-nav-orders::before {
-          @include icons-sprite(icon-nav-orders);
+          @include icons-sprite(icon-nav-orders-med);
         }
         &.#{$vprefix}icon-nav-marketing::before {
-          @include icons-sprite(icon-nav-marketing);
+          @include icons-sprite(icon-nav-marketing-med);
         }
         &.#{$vprefix}icon-nav-sites::before {
-          @include icons-sprite(icon-nav-sites);
+          @include icons-sprite(icon-nav-sites-med);
         }
         &.#{$vprefix}icon-nav-publishing::before {
-          @include icons-sprite(icon-nav-publishing);
+          @include icons-sprite(icon-nav-publishing-med);
         }
         &.#{$vprefix}icon-nav-files::before {
-          @include icons-sprite(icon-nav-files);
+          @include icons-sprite(icon-nav-files-med);
         }
       }
 
       &.#{$vprefix}menu-item-hover {
         background-color: $color-neutral-30;
 
-        // a {
-          // &.#{$vprefix}icon-nav-dashboard::before {
-          //   @include icons-sprite(icon-nav-dashboard-selected);
-          // }
-          // &.#{$vprefix}icon-nav-customers::before {
-          //   @include icons-sprite(icon-nav-customers-selected);
-          // }
-          // &.#{$vprefix}icon-nav-catalog::before {
-          //   @include icons-sprite(icon-nav-catalog-selected);
-          // }
-          // &.#{$vprefix}icon-nav-orders::before {
-          //   @include icons-sprite(icon-nav-orders-selected);
-          // }
-          // &.#{$vprefix}icon-nav-marketing::before {
-          //   @include icons-sprite(icon-nav-marketing-selected);
-          // }
-          // &.#{$vprefix}icon-nav-sites::before {
-          //   @include icons-sprite(icon-nav-sites-selected);
-          // }
-          // &.#{$vprefix}icon-nav-publishing::before {
-          //   @include icons-sprite(icon-nav-publishing-selected);
-          // }
-          // &.#{$vprefix}icon-nav-files::before {
-          //   @include icons-sprite(icon-nav-files-selected);
-          // }
-        // }
+        a {
+          &.#{$vprefix}icon-nav-dashboard::before {
+            @include icons-sprite(icon-nav-dashboard-light);
+          }
+          &.#{$vprefix}icon-nav-customers::before {
+            @include icons-sprite(icon-nav-customers-light);
+          }
+          &.#{$vprefix}icon-nav-catalog::before {
+            @include icons-sprite(icon-nav-catalog-light);
+          }
+          &.#{$vprefix}icon-nav-orders::before {
+            @include icons-sprite(icon-nav-orders-light);
+          }
+          &.#{$vprefix}icon-nav-marketing::before {
+            @include icons-sprite(icon-nav-marketing-light);
+          }
+          &.#{$vprefix}icon-nav-sites::before {
+            @include icons-sprite(icon-nav-sites-light);
+          }
+          &.#{$vprefix}icon-nav-publishing::before {
+            @include icons-sprite(icon-nav-publishing-light);
+          }
+          &.#{$vprefix}icon-nav-files::before {
+            @include icons-sprite(icon-nav-files-light);
+          }
+        }
       }
 
       &.#{$vprefix}menu-item-active {
@@ -233,13 +236,6 @@
           margin: 4px 0px 1px;
           padding: 0px 7px 0px 5px;
           @include box-shadow(inset -1px 0px rgba(255, 255, 255, 0.4));
-
-          a {
-
-            &:hover {
-              color: $color-neutral-white;
-            }
-          }
 
           &.#{$vprefix}submenu-item-active {
             a {
