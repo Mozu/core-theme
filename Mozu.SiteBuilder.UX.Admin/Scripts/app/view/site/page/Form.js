@@ -144,11 +144,14 @@ Ext.define('Taco.view.site.page.Form', {
 
         this.pagesSelectField = this.down('#pagesSelectField');
 
+        this.cmsDocumentDrafts = Taco.core.data.StoreManager.getOrCreate('Taco.store.CmsDocumentDrafts');
         //this.body.addCls('taco-site-editor');
 
-     
-    },
 
+    },
+    publishAll:function() {
+        this.cmsDocumentDrafts.publishAll('All');
+    },
     isEdit:function() {
         return true;
     },

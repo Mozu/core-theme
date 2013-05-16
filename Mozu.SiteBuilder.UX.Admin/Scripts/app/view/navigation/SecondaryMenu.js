@@ -21,7 +21,9 @@
                     shadow: false,
                     items: [{
                         text: 'My Account',
-                        href: '/admin/account',
+                        handler: function() {
+                            Taco.app.StateManager.attemptNavigate('account');
+                        },
                         padding: '4 8'
                     }, {
                         text: 'Log Out',
