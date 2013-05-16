@@ -1133,7 +1133,7 @@
     <Content Include="Scripts\resources\css\taco.css" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.svg" />
     <Content Include="Scripts\resources\images\card-sd7c19700b9.png" />
-    <Content Include="Scripts\resources\images\dashboard-se7fbf8ad93.png" />
+    <Content Include="Scripts\resources\images\dashboard-s4cc9e3fd7c.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-bounce-rate.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-conversion-rate.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-customers.png" />
@@ -1147,7 +1147,7 @@
     <Content Include="Scripts\resources\images\dashboard\dashboard-time-on-sites.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-uptime.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-vistors.png" />
-    <Content Include="Scripts\resources\images\icons-sb56837d426.png" />
+    <Content Include="Scripts\resources\images\icons-s37377d26ca.png" />
     <Content Include="Scripts\resources\images\icons\icon-nav-catalog-light.png" />
     <Content Include="Scripts\resources\images\icons\icon-nav-catalog-med.png" />
     <Content Include="Scripts\resources\images\icons\icon-nav-catalog.png" />
