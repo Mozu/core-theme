@@ -40,7 +40,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
             width: '100%'
         }, this.defaults || {});
 
-        // *** 'subitems' are items of child Container
+        // *** 'subitems' are items of child Containerthis.product.on
         this.subitems = this.items;
 
         this.isOverridden = this.productInSiteInfo && this.productInSiteInfo.get(this.overrideFieldName);
@@ -98,10 +98,11 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
             this.addCls('active');
             this.setOverride(this.isOverridden, false );
 
-            this.product.on({
+            this.mon(this.product, {
                 afteredit: this.onProductChange,
                 scope: this
             });
+        
         } else {
             // *** GlobalForm and SiteForm Single Site Mode
             this.record = this.product;
