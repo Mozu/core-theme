@@ -2,34 +2,25 @@
     "id": "dashboard",
     "label": "Dashboard",
     "address": "dashboard",
-    "icon": "dashboard"
+    "icon": "nav-dashboard"
 }, {
-    "id": "store",
-    "label": "Store",
-    "address": "orders",
-    "icon": "store",
-    "items": [{
-        "id": "orders",
-        "label": "Orders",
-        "address": "orders"
-    }, {
-        "id": "phoneorders",
-        "label": "Phone Orders",
-        "address": "phoneorders"
-    }, {
-        "id": "customers",
-        "label": "Customers",
-        "address": "customers"
-    }]
+    "id": "customers",
+    "label": "Customers",
+    "address": "customers",
+    "icon": "nav-customers"
 }, {
     "id": "catalog",
     "label": "Catalog",
     "address": "products",
-    "icon": "catalog",
+    "icon": "nav-catalog",
     "items": [{
         "id": "products",
         "label": "Products",
         "address": "products"
+    }, {
+        "id": "inventory",
+        "label": "Inventory",
+        "address": "inventory"
     }, {
         "id": "categories",
         "label": "Categories",
@@ -42,83 +33,88 @@
         "id": "productTypes",
         "label": "Product Types",
         "address": "producttypes"
-        }, {
-        "id": "inventory",
-        "label": "Inventory",
-        "address": "inventory"
-        }]
+    }]
+}, {
+    "id": "store",
+    "label": "Orders",
+    "address": "orders",
+    "icon": "nav-orders",
+    "items": [{
+        "id": "orders",
+        "label": "Orders",
+        "address": "orders"
+    }, {
+        "id": "phoneorders",
+        "label": "Phone Orders",
+        "address": "phoneorders"
+    }]
 }, {
     "id": "marketing",
     "label": "Marketing",
     "address": "discounts",
-    "icon": "marketing",
+    "icon": "nav-marketing",
     "items": [{
         "id": "discounts",
         "label": "Discounts",
         "address": "discounts"
-    }, {
-        "id": "promotions",
-        "label": "Promotions",
-        "address": "promotions"
-    }, {
-        "id": "campaigns",
-        "label": "Campaigns",
-        "address": "campaings"
     }]
 }, {
-    "id": "settings",
-    "label": "Settings",
-    "address": "generalsettings",
-    "icon": "settings",
-    "items": [{
-        "id": "emailsettings",
-        "label": "Email",
-        "address": "email"
-    }, {
-        "id": "paymentcheckout",
-        "label": "Payment/Checkout",
-        "address": "paymentAndCheckout"
-    }, {
-        "id": "tax",
-        "label": "Tax",
-        "address": "tax"
-    }, {
-        "id": "shipping",
-        "label": "Shipping",
-        "address": "shipping"
+    "id": "sitebuilder",
+    "label": "Site Builder",
+    "address": "sites/pages",
+    "icon": "nav-sites",
+    "items":[{
+        "id": "website",
+        "label": "Website",
+        "address": "sites/pages"
     }, {
         "id": "themes",
         "label": "Themes",
         "address": "themes"
+    }, {
+        "id": "templates",
+        "label": "Templates",
+        "address": "/pageTemplates"
     }]
+// }, {
+//     "id": "settings",
+//     "label": "Settings",
+//     "address": "generalsettings",
+//     "icon": "settings",
+//     "items": [{
+//         "id": "emailsettings",
+//         "label": "Email",
+//         "address": "email"
+//     }, {
+//         "id": "paymentcheckout",
+//         "label": "Payment/Checkout",
+//         "address": "paymentAndCheckout"
+//     }, {
+//         "id": "tax",
+//         "label": "Tax",
+//         "address": "tax"
+//     }, {
+//         "id": "shipping",
+//         "label": "Shipping",
+//         "address": "shipping"
+//     }]
 }, {
     "id": "publishing",
-    "label": "Publishing",
+    "label": "Publish",
     "address": "pendingchanges",
-    "icon": "settings",
+    "icon": "nav-publishing",
     "items": [{
-        "id": "cmspublishing",
-        "label": "CMS",
-        "address": "/pendingchanges/cms"
-    }, {
         "id": "catalogpublishing",
         "label": "Catalog",
         "address": "/pendingchanges/catalog"
+    }, {
+        "id": "cmspublishing",
+        "label": "Content",
+        "address": "/pendingchanges/cms"
     }]
-}, {
-    "id": "sites",
-    "label": "Edit Website",
-    "address": "sites/pages",
-    "icon": "website",
-    "items":[
-        {"id": "templates",
-    "label": "Templates",
-    "address": "/pageTemplates"
-        }]
-    
 }, {
     "id": "fileManager",
     "label": "File Manager",
     "address": "fileManager",
-    "icon": "settings"
+    "icon": "nav-files"
 }]

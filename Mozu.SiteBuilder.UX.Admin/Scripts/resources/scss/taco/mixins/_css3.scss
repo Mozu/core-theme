@@ -44,24 +44,24 @@
 /* FLEXBOX */
 
 @mixin flexbox ($direction: row, $wrap: nowrap, $justify: flex-start, $alignItems: stretch, $alignContent: stretch) {
-  // display: box;
-  // display: -moz-box;
-  // display: -webkit-box;
-  // display: -o-box;
-  // box-pack: $pack;
-  // box-align: $align;
-  // -moz-box-pack: $pack;
-  // -moz-box-align: $align;
-  // -webkit-box-pack: $pack;
-  // -webkit-box-align: $align;
-  // -o-box-pack: $pack;
-  // -o-box-align: $align;
+  display: -ms-flexbox;
   display: -webkit-flex;
+  display: flex;
+  -ms-flex-direction: $direction;
   -webkit-flex-direction: $direction;
+  flex-direction: $direction;
+  -ms-flex-wrap: $wrap;
   -webkit-flex-wrap: $wrap;
+  flex-wrap: $wrap;
+  -ms-flex-pack: $justify;
   -webkit-justify-content: $justify;
+  justify-content: $justify;
+  -ms-flex-align: $alignItems;
   -webkit-align-items: $alignItems;
+  align-items: $alignItems;
+  -ms-flex-line-pack: $alignContent;
   -webkit-align-content: $alignContent;
+  align-content: $alignContent;
 }
 
 @mixin flex ($grow: 0, $shrink: 1, $basis: auto) {
