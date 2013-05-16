@@ -14,48 +14,7 @@ Ext.define('Taco.view.site.Toolbox', {
     initComponent: function () {
         var me = this;
         
-        // this.cardPanel = Ext.create('Ext.panel.Panel', {
-        //     itemId: 'cardPanel',
-        //     cls: Taco.baseCSSPrefix + 'windowcardpanel',
-        //     layout: 'card',
-        //     flex: 1,
-        //     showItem: function (record) {
-               
-        //         if (typeof (record) === "number") {
-        //             record = me.panelStore.getAt(record);
-        //         } else if (record.isComponent) {
-        //             record = me.panelStore.getAt(me.panelStore.findBy(function(r) {
-        //                 return r.raw == record;
-        //             }));
-        //         }
-        //         var cardIndex = me.panelStore.indexOf(record);
-                
-        //         if (cardIndex < me.cardPanel.items.getCount()) {
-        //             if (!record.get('showInNav')) {
-        //                 me.tabContainer.hide();
-        //             } else {
-        //                 me.tabContainer.show();
-        //             }
-        //             me.cardPanel.getLayout().setActiveItem(cardIndex);
-        //         }
-        //     }
-        // });
-
-        // this.panelStore = Ext.create('Taco.store.shared.ContainerStore', {
-        //     fields: ['index', 'title', 'showInNav', 'isPageSettingsPanel'],
-        //     container: this.cardPanel
-        // });
-
         
-
-        // this.widgets = Ext.create('Taco.view.site.navigation.WidgetNav', {
-        //     toolbox: this,
-        //     cardPanel: this.cardPanel,
-        //     index: 1,
-        //     title: 'Widgets',
-        //     manageHeight: false
-        // });
-
 
 
         this.tabPanel = Ext.widget('tabpanel', {
@@ -83,28 +42,6 @@ Ext.define('Taco.view.site.Toolbox', {
             manageHeight: false
         });
 
-        //this.navigation = Ext.create('Taco.core.ux.TreeList', {
-        //    itemId: 'pages',
-        //    title: 'Pages',
-        //    parentPanel: this.tabPanel,
-        //    hideHeaders: true,
-        //    manageHeight: false,
-        //    store: Ext.data.StoreManager.lookup('navigationTreeNodeStore') || Ext.create('Taco.store.NavigationTreeNodes'),
-        //    columns: [{
-        //        xtype: 'treecolumn',
-        //        flex: 1,
-        //        dataIndex: 'name',
-        //        renderer: function (value, metaData, record) {
-        //            var id = record.getId();
-        //            if (id == '_unlinked' || id == '_navigation') {
-        //                return '<span style="float:left;font-weight:bold">' + value + '</span><a style="float:right" href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
-        //            } else {
-        //                return '<a href="#" class="taco-action-navigate">' + value + '</a>';
-        //            }
-        //        }
-        //    }]
-        //});       
-
         this.widgets = Ext.create('Taco.view.site.navigation.WidgetNav', {
             itemId: 'widgets',
             title: 'Widgets',
@@ -112,43 +49,14 @@ Ext.define('Taco.view.site.Toolbox', {
             manageHeight: false
         });
 
-        // this.tabContainer = Ext.widget('dataview', {
-        //     store: this.panelStore,
-        //     cls: Taco.baseCSSPrefix + 'toolbox-menu',
-        //     height: 65,
-        //     tpl: new Ext.XTemplate(
-        //         '<ul>',
-        //             '<tpl for=".">',
-        //                 '<tpl if="showInNav">',
-        //                     '<li class="' + Taco.baseCSSPrefix + 'toolbox-menu-item">',
-        //                         '<a href="javascript:;">{title}</a>',
-        //                     '</li>',
-        //                 '<tpl else>',
-        //                     '<li class="' + Taco.baseCSSPrefix + 'toolbox-menu-item" ></li>',
-        //                 '</tpl>',
-                        
-        //             '</tpl>',
-        //         '</ul>'
-        //         ),
-        //     itemSelector: 'li.' + Taco.baseCSSPrefix + 'toolbox-menu-item',
-        //     listeners: {
-        //         itemclick: function (view, record, eOpts) {
-        //             me.cardPanel.showItem(record);
-        //         }
-        //     }
-        // });
-
-        // this.items = [this.tabContainer, this.cardPanel];
-        // this.tbar = [this.tabContainer];
+      
         this.items = [this.tabPanel];
 
-        // this.tabContainer.getSelectionModel().allowDeselect = false;
-
+      
         this.callParent(arguments);
 
         this.tabPanel.add(this.navigation, this.widgets, this.pageSettings);
 
-        // this.cardPanel.add(0,[this.navigation, this.widgets, this.pageSettings]);
     },
 
     populate: function (adapter) {
