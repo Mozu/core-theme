@@ -5,20 +5,19 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
-using System.Linq;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
-using Mozu.SiteBuilder.UX.Admin.Api;
+using Mozu.Core.Logging;
+using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.Tenant.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.Security;
-using Mozu.SiteBuilder.UX.Admin.Filters;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
-    [SiteBuilderAuthorize]
+    [Mozu.SiteBuilder.UX.Admin.Filters.SiteBuilderAuthorize]
+    [Mozu.SiteBuilder.Mvc.ActionFilters.AddCorrelationHeaderFilter]
     public class HomeController : Controller
     {
         private readonly IAuthenticationHelper _authenticationHelper;
@@ -27,6 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ICurrentUserHelper _currentUserHelper;
         private readonly IApiContext _apiContext;
         private readonly IAdminUserWebApiClient _usersRepo;
+        private ILogger _log;
 
         public HomeController(IAdminUserWebApiClient usersRepo, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext)
         {
@@ -36,11 +36,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _apiContext = apiContext;
             _tenantsWebApi = tenantsWebApi;
             _currentUserHelper = currentUserHelper;
+
+            _log = LoggingService.LoggerFor<HomeController>();
         }
 
         // GET: /Home/
         public async Task<ActionResult> Index()
         {
+            _log.Debug("hello!");
             var user = _currentUserHelper.GetCurrentUser();
             var roles = GetUserSitesRoles(user.Id);
             var tenantRes = await _tenantsWebApi.GetTenant( _apiContext.TenantId);

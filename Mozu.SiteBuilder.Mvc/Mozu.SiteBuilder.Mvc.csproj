@@ -321,6 +321,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionFilters\AddCorrelationHeaderFilterAttribute.cs" />
     <Compile Include="ActionFilters\ClientCacheHeadersAttribute.cs" />
     <Compile Include="ActionFilters\MultiSiteTestingActionFilter.cs" />
     <Compile Include="ActionFilters\SiteBuilderAuthorizeAttribute.cs" />
@@ -374,6 +375,7 @@
     <Compile Include="JsonNetValueProviderFactory.cs" />
     <Compile Include="Localization\ILocalizationRepository.cs" />
     <Compile Include="Localization\LocalizationRepository.cs" />
+    <Compile Include="Logging\BestLayoutInTheWorld.cs" />
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Logging\NullLoggingService.cs" />
     <Compile Include="Mobile\FiftyOneDegreesMobileDetectionProvider.cs" />
@@ -476,6 +478,7 @@
     <Compile Include="Theme\ThemeInformationItemCollection.cs" />
     <Compile Include="Theme\Thumbnail.cs" />
     <Compile Include="TransferResult.cs" />
+    <Compile Include="UniversalSiteApiClient.cs" />
     <Compile Include="Users\IPermissionsRepository.cs" />
     <Compile Include="Users\PermissionsRepository.cs" />
     <Compile Include="ViewEngine\MozuVirtualPathProvider.cs" />

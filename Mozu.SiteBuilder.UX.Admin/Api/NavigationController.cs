@@ -4,13 +4,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Threading;
 using System.Threading.Tasks;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Logging;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Filters;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using DC = Mozu.ProductAdmin.Contracts;
 
@@ -32,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private ICategoryWebApiClient _catClient;
         private ICmsServiceWrapper _cmsService;
         private NavigationGandalf _gandalf;
+        private ILogger _log;
 
         /// <summary>
         ///  Public constructor.
@@ -42,15 +46,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _catClient = catClient;
             _cmsService = cmsService;
             _gandalf = gandalf;
+
+            _log = LoggingService.LoggerFor<NavigationController>();
         }
 
         /// <summary>
         /// Returns the combined navigation tree.
         /// </summary>
+        
         [WebGet(UriTemplate = "list")]
         public async Task<Response<List<NavigationTreeNode>>> List()
         {
-            return List2(await _gandalf.GetFlatList());
+            _log.Debug("Generating list.");
+            var list = await _gandalf.GetFlatList();
+            
+            return List2(list);
         }
 
         /// <summary>
@@ -72,6 +82,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 
             foreach (var item in items)
             {
+                _log.Info("Creating navigation item: " + item.Name);
+
                 if (string.IsNullOrEmpty( item.ParentId ))
                     item.ParentId = UNLINKED_PAGES_NODE_ID;
 
@@ -98,6 +110,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var item in items)
             {
+                _log.Info("Deleting navigation item: " + item.Name);
+
                 if (item.NodeType.IsPage || item.NodeType.IsLink)
                 {
                     // delete item from navset.
@@ -137,6 +151,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw new ArgumentException("Unexpected number of updates: " + items.Count);
 
             var item = items.First();
+
+            _log.Info("Updating navigation item: " + item.Name + ". Action: " + item.EditAction);
 
             switch (item.EditAction)
             {

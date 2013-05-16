@@ -2,8 +2,11 @@
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Autofac;
 using Mozu.Core.Api;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Users;
+using Mozu.SiteBuilder.UX.ActionFilters;
 using Mozu.Tenant.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Configuration
@@ -13,8 +16,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
         protected override void AddMessageHandlers(System.Web.Http.HttpConfiguration httpConfiguration)
         {
             base.AddMessageHandlers(httpConfiguration);
-            //GlobalFilters.Filters.Add(new JsonHandleError());
-            //GlobalFilters.Filters.Add(new PageHandleError());
+            GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
+            GlobalFilters.Filters.Add(new HandleAllTheErrorsFilter());
         }
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {

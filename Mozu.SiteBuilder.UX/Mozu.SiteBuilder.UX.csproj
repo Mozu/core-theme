@@ -173,6 +173,12 @@
     <Reference Include="Microsoft.Json, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\JsonValue.0.6.0\lib\40\Microsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\packages\mongocsharpdriver.1.7.1\lib\net35\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\packages\mongocsharpdriver.1.7.1\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.AdminUser.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13100.1\lib\Mozu.AdminUser.Contracts.dll</HintPath>
@@ -207,6 +213,9 @@
     <Reference Include="Mozu.Core.Messaging.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.0.13031.1\lib\Mozu.Core.Messaging.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Core.Mongo">
+      <HintPath>..\packages\Mozu.Core.Mongo.0.0.13114.2\lib\Mozu.Core.Mongo.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Customer.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Mozu.Customer.Contracts.0.0.13007.1\lib\Mozu.Customer.Contracts.dll</HintPath>
@@ -336,6 +345,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionFilters\HandleAllTheErrorsFilter.cs" />
     <Compile Include="ActionFilters\MediaTypeProcessorAttribute.cs" />
     <Compile Include="ActionFilters\WigitContexInitFilter.cs" />
     <Compile Include="Areas\Misc\Controllers\AccountController.cs" />
@@ -377,11 +387,6 @@
     </Compile>
     <Compile Include="Navigation\CategoryNavigationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StartupTasks\GlobalFilterConfigurationStartupTask.cs" />
-    <Compile Include="StartupTasks\MappingConfigurationStartupTask.cs" />
-    <Compile Include="StartupTasks\ModelMetadataStartupTask.cs" />
-    <Compile Include="StartupTasks\RegisterViewEnginesStartupTask.cs" />
-    <Compile Include="StartupTasks\RoutingConfigurationStartupTask.cs" />
     <Compile Include="Tags\CMS\FieldTag.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -462,12 +467,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Log4Net.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="appSettings.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -494,15 +493,29 @@
       <Link>Configs\AppSettings.Prod.config</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Log4Net.CI.config" />
-    <Content Include="Log4Net.Debug.config" />
-    <Content Include="Log4Net.Demo.config">
+    <Content Include="..\Mozu.SiteBuilder.UX.Admin\Configs\Log4net.CI.config">
+      <Link>Configs\Log4net.CI.config</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Mozu.SiteBuilder.UX.Admin\Configs\Log4net.config">
+      <Link>Configs\Log4Net.config</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Mozu.SiteBuilder.UX.Admin\Configs\Log4Net.Debug.config">
+      <Link>Configs\Log4Net.Debug.config</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Log4Net.Release.config" />
+    <Content Include="..\Mozu.SiteBuilder.UX.Admin\Configs\Log4Net.Demo.config">
+      <Link>Configs\Log4Net.Demo.config</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Mozu.SiteBuilder.UX.Admin\Configs\Log4Net.Release.config">
+      <Link>Configs\Log4Net.Release.config</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj">

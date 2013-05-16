@@ -62,7 +62,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<UspsShippingInstanceWebApiClient>().As<IUspsShippingInstanceWebApiClient>();
             builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>();
 
-            builder.RegisterType<NullLoggingService>().As<ILoggingService>();
+            //builder.RegisterType<NullLoggingService>().As<ILoggingService>();
             builder.RegisterType<TemplateLoader>().As<ITemplateLoader>().SingleInstance();
             builder.Register(c => new TemplateManagerProvider()
                                       .WithLibrary(typeof (NDjango.FiltersCS.AddFilter).Assembly)
