@@ -117,7 +117,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
             }
 
-            return _cmsService.GetByPath2("settings", this.GetFileName(themeId)).ContinueWith<List<FieldValue>>(res =>
+            return _cmsService.GetByPath2("settings", this.GetFileName(themeId),"active").ContinueWith<List<FieldValue>>(res =>
                 {
                     List<FieldValue> values = new List<FieldValue>();
                     if (res.Result.ResponseMessage.IsSuccessStatusCode)
@@ -173,7 +173,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
         string GetFileName(string themeId)
         {
-            return "theme_" + themeId;
+            return "theme_settings_" + themeId;
         }
 
         private DateTime? _ts;
@@ -181,7 +181,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         {
             if (!_ts.HasValue )
             {
-                var res = _cmsService.GetByPath2("settings", GetFileName(themeId)).Result;
+                var res = _cmsService.GetByPath2("settings", GetFileName(themeId),"active").Result;
                 if ( res.ResponseMessage.IsSuccessStatusCode)
                 {
                     _ts= res.ReadAsSync().UpdateDate.GetValueOrDefault(DateTime.Today);
