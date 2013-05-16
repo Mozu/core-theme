@@ -9,10 +9,13 @@ Ext.define('Taco.store.NavigationTreeNodes', {
         //  numFromEdge: 10,
         // leadingBufferZone:40,
         // trailingBufferZone:10,
-        autoSync:true,
-        storeId: 'navigationTreeNodeStore'
+        autoSync:false,
        // buffered: false,
         //remoteFilter: true
-        // remoteSort: true
+    // remoteSort: true
+        storeManagerConfig: {
+            createOnly: true,
+            autoLoad: true
+        },
     });
 

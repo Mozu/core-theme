@@ -21,8 +21,8 @@ Ext.define('Taco.view.site.navigation.Tree', {
             clicksToEdit: 2
         });
 
-        this.store = Ext.data.StoreManager.lookup('navigationTreeNodeStore') || Ext.create('Taco.store.NavigationTreeNodes');
-        this.store.autoSync = false;
+        this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes');
+        
 
         this.pageCreator = Ext.create('Taco.view.site.navigation.PageCreator', {
             parentPanel: me.parentPanel
@@ -194,7 +194,9 @@ Ext.define('Taco.view.site.navigation.Tree', {
             ],
             store: {
                 type: 'Taco.store.Products',
-                id: 'xxx',
+                storeManagerConfig: {
+                    createOnly: true
+                },
                 autoLoad: false
             },
         });
@@ -237,23 +239,26 @@ Ext.define('Taco.view.site.navigation.Tree', {
         this.mon(Taco.app.eventbus, 'Taco.model.CmsDocument.savesuccess', this.refreshTree, this);
 
         // this panel's store
-        this.store.on({
-            write: function(store, opt) {
-                var record, records = this.tree.getSelectionModel().getSelection();
-                if (records && records.length && records[0].parentNode) {
-                    record = records[0];
-                } else {
-                    record = this.tree.getRootNode().firstChild.firstChild;
-                }
-                this.fireEvent('navigationchange', store, record);
-                this.navigate(record);
-            },
-            move: function(node, oldParent, newParent, index, eOpts) {
-                node.set('editAction', 'move');
-                node.save();
-            },
-            scope: this
-        });
+        this.mon(this.store,
+            {
+                write: function(store, opt) {
+                    var record, records = this.tree.getSelectionModel().getSelection();
+                    if (records && records.length && records[0].parentNode) {
+                        record = records[0];
+                    } else {
+                        record = this.tree.getRootNode().firstChild.firstChild;
+                    }
+                    this.fireEvent('navigationchange', store, record);
+                    this.navigate(record);
+                },
+                move: function(node, oldParent, newParent, index, eOpts) {
+                    node.set('editAction', 'move');
+                    node.save();
+                },
+                scope: this
+            }
+        );
+        
 
         // tree
         this.tree.on({
