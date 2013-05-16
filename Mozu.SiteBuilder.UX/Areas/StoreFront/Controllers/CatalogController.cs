@@ -90,14 +90,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             itemsPerPage = itemsPerPage.GetValueOrDefault(15);
             page = page.GetValueOrDefault(1);
             int startIdx = (page.Value - 1) * itemsPerPage.Value;
-            var recurse = true;
+            var recurse = categoryId.HasValue ;
             string filter = null;
             if (productCodes != null)
             {
                 var productCodes2 = productCodes.Cast<object>().Select(x => string.Format("productCode eq {0}", x.ToString()));
                 filter = string.Join(" or ", productCodes2);
                 itemsPerPage = productCodes.Count;
-                recurse = false;
+             
             }
 
 
