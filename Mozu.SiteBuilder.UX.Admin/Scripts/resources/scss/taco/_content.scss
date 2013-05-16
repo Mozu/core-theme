@@ -83,18 +83,20 @@
   }
 	
   .#{$vprefix}sidebarlist {
-    margin: 0 30px;
+    margin: 0px 20px;
 
-    h1 {
-      padding: 0 0 15px;
-      margin: 0 0 15px;
-      font-size: px-to-rem(20);
+    h2 {
+      border-bottom: 1px solid border-for($color-neutral-95);
+      font-size: px-to-rem(24);
       font-weight: normal;
-      border-bottom: 1px dashed #999;
+      line-height: px-to-rem(30);
+      margin-bottom: 15px;
+      padding: 17px 10px;
     }
     .#{$vprefix}sidebarlist-list-item {
-      font-size: px-to-rem(12);
-      margin: 6px 0px;
+      font-size: px-to-rem(14);
+      line-height: px-to-rem(21);
+      margin: px-to-rem(7) 10px;
 
       &.#{$prefix}item-selected {
         font-weight: bold;
