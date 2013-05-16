@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
@@ -35,18 +36,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
         public async Task<Tenant.Contracts.Tenant> ChangeTenant(int tenantId)
         {
             //Mozu.Core.Api.Client.ServiceClientExtensions 
-            var tenant = await _tenantsWebApiClient.GetTenant(tenantId).Result.ReadAsAsync();
+            var tenant = (await _tenantsWebApiClient.GetTenant(tenantId)).ReadAsSync();
 
-           // var repo = new AuthTicketWebApiClient(new ServiceClientMessageHandler(new ApiContext() { TenantId = tenantId, UserClaims = null, IsUserAuthorizedAsAdmin = _context.IsUserAuthorizedAsAdmin }, _settings));
             var ticket = _authenticationHelper.GetCurrentTicket();
+            var claim = LightweightUserClaims.Parse(ticket.AccessToken);
 
-           // ticket = await repo.RefreshUserAuthTicket(ticket.RefreshToken).Result.ReadAsAsync();
             var authTicketForTenant = _authTicketWeb
                 .With(TargetContextLevelType.Tenant)
                 .With(x => x.TenantId = tenantId)
-                .CreateAuthTicketForTenant(new UserTokenInfo {AccessToken = ticket.AccessToken});
+                .CreateAuthTicketForTenant(new UserTokenInfo { AccessToken = ticket.AccessToken });
 
-            var userAuthTicketForTenant = authTicketForTenant.Result.ReadAsAsync().Result;
+            var userAuthTicketForTenant = (await authTicketForTenant).ReadAsSync();
 
             _authenticationHelper.SetCurrentUser(userAuthTicketForTenant);
 
@@ -57,23 +57,5 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 
             return tenant;
         }
-
-        //public async Task<Site> ChangeSite(int siteId)
-        //{
-        //    var site = _sitesWebApiClient.GetSite(siteId).Result.ReadAsSync();
-        //    var repo = new AuthTicketWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = siteId, TenantId = site.TenantId }, _settings));
-        //    var ticket = _authenticationHelper.GetCurrentTicket();
-
-        //    ticket = await repo.RefreshUserAuthTicket(ticket.RefreshToken).Result.ReadAsAsync();
-        //    ticket = await repo.CreateAuthTicketByScope(new UserTokenInfo { AccessToken = ticket.AccessToken }, "Tenant", site.TenantId)
-        //    .CreateAuthTicketForSite(new UserTokenInfo { AccessToken = ticket.AccessToken }).Result.ReadAsAsync();
-        //    _authenticationHelper.SetCurrentUser(ticket);
-
-        //    var lwU = LightweightUserClaims.Parse(ticket.AccessToken);
-        //    //_siteBuilderContext.SiteId = (int)lwU.SiteId;
-        //    _siteBuilderContext.TenantId = site.TenantId;
-        //    _siteBuilderContext.Save();
-        //    return site;
-        //}
     }
 }

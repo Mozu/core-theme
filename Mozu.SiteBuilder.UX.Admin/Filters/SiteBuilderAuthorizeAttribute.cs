@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
                 lwUser.Bag.TryGetValue("TenantId", out tenantStr);
                 int.TryParse(tenantStr, out tenantId);
 
-                if (tenantId != SiteBuilderContext.Current.TenantId  && lwUser.ScopeType != UserScopeType.SystemAdmin.ToString())
+                if (tenantId != SiteBuilderContext.Current.TenantId)
                 {
                     return false;
                 }
