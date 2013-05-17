@@ -51,6 +51,8 @@
         },
 
         initComponent: function () {
+            this._preventFinalHide = 0;
+
             this.callParent(arguments);
 
             this.activeHints = [];
@@ -157,7 +159,7 @@
             }
 
             Ext.defer(function () {
-                if (this.activeHints.length === 0) {
+                if (!this.activeHints.length && !this._preventFinalHide) {
                     this.hide();
                 }
             }, 100, this);
@@ -185,6 +187,35 @@
                     return;
                 }
             }
+
+            if (this._preventFinalHide) {
+                return;
+            }
             this.callParent(arguments);
+        },
+
+        startWidgetDrag: function () {
+            this.preventFinalHide();
+            this.getEl().addCls('show-hint-zones');
+            this.show();
+        },
+
+        stopWidgetDrag: function () {
+            this.preventFinalHide(false);
+            this.getEl().removeCls('show-hint-zones');
+            this.hide();
+        },
+
+        preventFinalHide: function (option) {
+            if (option === false) {
+                this._preventFinalHide--;
+
+                if (this._preventFinalHide < 0) {
+                    this._preventFinalHide = 0;
+                }
+                return;
+            }
+
+            this._preventFinalHide++;
         }
     });

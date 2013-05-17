@@ -50,13 +50,14 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
 
         this.dragZoneConfig = {
             onBeforeDrag: function () {
-                es.shim.show();
+                es.shim.startWidgetDrag();
+                //es.shim.show();
             },
             afterValidDrop: function () {
-                es.shim.hide();
+                es.shim.stopWidgetDrag();
             },
             afterInvalidDrop: function () {
-                es.shim.hide();
+                es.shim.stopWidgetDrag();
             }
         };
 
