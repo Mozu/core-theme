@@ -13,10 +13,10 @@ Ext.define('Taco.view.themesettings.Index', {
         'Taco.view.themesettings.Group'],
     settingsConfig: null,
     settingsValues: null,
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
-    },
+    //layout: {
+    //    type: 'vbox',
+    //    align: 'stretch'
+    //},
 
     initComponent: function () {
         
