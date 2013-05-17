@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Caching;
 using System.Web;
 using System.Web.Mvc;
 using Autofac;
@@ -59,7 +60,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
     class DjangoMozuView : IView, IViewDataContainer, IViewPathContainer
     {
-        private static  System.Collections.Hashtable _cache = new Hashtable(StringComparer.OrdinalIgnoreCase);
+
+        
         internal string viewPath;
         private readonly string _mappedPath;
 
@@ -67,7 +69,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             // TODO: Complete member initialization
             //this.TemplateManager = manager;
-      
+            
             this.viewPath = viewPath;
             _mappedPath = mappedPath;
         }
@@ -82,24 +84,34 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         //    get;
         //    private set;
         //}
-
+        private static object _managerContextKey = new Object();
         public ITemplateManager GetManager(HttpContextBase ctx)
         {
-            var sbc = SiteBuilderContext.GetFromContext(ctx);
 
-            var key = sbc.Theme.Id;
-
-            ITemplateManager manager = null;
-            manager = (ITemplateManager)_cache[key];
+            ITemplateManager manager = (ITemplateManager)ctx.Items[_managerContextKey];
             if (manager == null)
             {
-                lock (_cache)
+                var sbc = SiteBuilderContext.GetFromContext(ctx);
+                var key = typeof (ITemplateManager).ToString() +sbc.Theme.Id;
+                var cache = System.Runtime.Caching.MemoryCache.Default ;
+                ctx.Items[_managerContextKey] = manager = (ITemplateManager)cache[key];
+                if (manager == null)
                 {
-                    manager = (ITemplateManager)_cache[key];
-                    if (manager == null)
+                    lock (_managerContextKey)
                     {
-                        var provider = sbc.Resolve<TemplateManagerProvider>();
-                        _cache[key] = manager = provider.GetNewManager();
+                        manager = (ITemplateManager) cache[key];
+                        if (manager == null)
+                        {
+                            var provider = sbc.Resolve<TemplateManagerProvider>();
+                            ctx.Items[_managerContextKey]  = manager = provider.GetNewManager();
+                            //todo.... add as config or do something
+                            cache.Add(key, manager, new CacheItemPolicy()
+                                                        {
+                                                            AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10),
+                                                            Priority = CacheItemPriority.NotRemovable
+                                                        });
+
+                        }
                     }
                 }
             }

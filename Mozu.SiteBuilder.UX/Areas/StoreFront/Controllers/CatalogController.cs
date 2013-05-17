@@ -85,18 +85,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("product", prod);
         }
 
-        public ActionResult ProductListing(int? categoryId= null , string sortBy = null, int? page = null, int? itemsPerPage = null,  object productCodes = null)
+        public ActionResult ProductListing(int? categoryId= null , string sortBy = null, int? page = null, int? itemsPerPage = null,  List<object> productCodes = null)
         {
             itemsPerPage = itemsPerPage.GetValueOrDefault(15);
             page = page.GetValueOrDefault(1);
             int startIdx = (page.Value - 1) * itemsPerPage.Value;
             var recurse = categoryId.HasValue ;
             string filter = null;
-            if (productCodes != null && productCodes is System.Collections.IList)
+            if (productCodes != null && productCodes.Count > 0)
             {
-                var productCodes2 = ((System.Collections.IList) productCodes).Cast<object>().Select(x => string.Format("productCode eq {0}", x.ToString())).ToList();
+                var productCodes2 = productCodes.Select(x => string.Format("productCode eq {0}", x.ToString())).ToList();
                 filter = string.Join(" or ", productCodes2);
-                itemsPerPage = productCodes2.Count;
+                itemsPerPage = productCodes.Count;
              
             }
 
