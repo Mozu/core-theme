@@ -4,7 +4,7 @@
         statics: {
             id: '',
             inputType: '',
-            name: '',
+            name: ''
         },
         observables: {
             value: {}
@@ -16,7 +16,6 @@
         // choose serialization method at creation time   
         // TODO: is this strategy pattern enough, or should these be subclasses of ProductOption?
         this.toJS = optionSerializers[this.inputType] || optionSerializers.default;
-
 
         // process values and add an observable for selectedness, for multi-select
         var values = this.values(),

@@ -31,6 +31,7 @@ pages/product.js
 
 pages/cart.js
 ----------------
+modules/function-throttler.js
 modules/models-cart.js
 pages/cart.js
 
@@ -47,6 +48,7 @@ pages/checkout.js
 pages/myaccount.js
 ----------------
 shim!vendor/jquery-colorbox[modules/jquery-plus=jQuery]>jQuery
+modules/models-address.js
 modules/models-customer.js
 modules/models-user.js
 modules/models-myaccount.js
