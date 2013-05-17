@@ -204,13 +204,8 @@ Ext.define('Taco.view.site.navigation.Tree', {
         this.tabPanel = Ext.widget('panel', {
             flex: 1,
             layout: 'card',
-            items: [{
-                    xtype: 'container',
-                    // layout: { type: 'fit', align: 'stretch' },
-                    items: [this.tree, this.productGrid, this.searchGrid]
-                },
-                this.searchGrid
-            ]
+            items: [this.tree, this.productGrid, this.searchGrid]
+            
         });
 
 
@@ -442,7 +437,6 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 } // filtering happens on server
             }));
             store.load();
-            this.resultPanel.getLayout().setActiveItem(this.searchGrid);
             return;
         }
     },
