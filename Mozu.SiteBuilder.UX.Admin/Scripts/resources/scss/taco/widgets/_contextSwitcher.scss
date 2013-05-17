@@ -1,70 +1,71 @@
 ﻿@mixin taco-contextSwitcher {
-  $backgroundColor: #636365; // *** From wireframes
-  $borderRadius: 4px;
-  $fontColor: white;
-  $fontSize: 14px;
 
-  .#{$vprefix}context-switcher {
-    cursor: pointer;
-    color: $fontColor;
-    .#{$prefix}mask {
-        display: none;
-    }
-    &.#{$prefix}item-disabled {
-        opacity: 0.4;
-    }
-  }
+  // $backgroundColor: #636365; // *** From wireframes
+  // $borderRadius: 4px;
+  // $fontColor: white;
+  // $fontSize: 14px;
 
-  .#{$vprefix}context-switcher-trigger {
-    padding: 5px 12px;
-    margin-right: 30px;
-    background-color: $backgroundColor;
-    border-radius: $borderRadius;
-    font-size: $fontSize;
+  // .#{$vprefix}context-switcher {
+  //   cursor: pointer;
+  //   color: $fontColor;
+  //   .#{$prefix}mask {
+  //       display: none;
+  //   }
+  //   &.#{$prefix}item-disabled {
+  //       opacity: 0.4;
+  //   }
+  // }
 
-    // *** This is an action class that is assigned when it's parent element is showing the list of available contexts
-    &.showing-list {
-      border-radius: $borderRadius $borderRadius 0 0;
-    }
+  // .#{$vprefix}context-switcher-trigger {
+  //   padding: 5px 12px;
+  //   margin-right: 30px;
+  //   background-color: $backgroundColor;
+  //   border-radius: $borderRadius;
+  //   font-size: $fontSize;
 
-    // *** This <span> holds the down-triangle entity
-    span {
-      margin-left: 8px;
-    }
-  }
+  //   // *** This is an action class that is assigned when it's parent element is showing the list of available contexts
+  //   &.showing-list {
+  //     border-radius: $borderRadius $borderRadius 0 0;
+  //   }
 
-  .#{$vprefix}context-switcher-list {
-    background-color: $backgroundColor;
-    border-radius: 0 0 $borderRadius $borderRadius;
-    min-width: 200px;
+  //   // *** This <span> holds the down-triangle entity
+  //   span {
+  //     margin-left: 8px;
+  //   }
+  // }
 
-    li {
-      color: $fontColor;
-      font-size: $fontSize;
-      padding: 8px 24px 8px 12px;
-      cursor: pointer;
+  // .#{$vprefix}context-switcher-list {
+  //   background-color: $backgroundColor;
+  //   border-radius: 0 0 $borderRadius $borderRadius;
+  //   min-width: 200px;
 
-      // *** Prevents corners from unrounding on hover
-      &:first-child {
-        border-radius: $borderRadius 0 0 0;
-      }
+  //   li {
+  //     color: $fontColor;
+  //     font-size: $fontSize;
+  //     padding: 8px 24px 8px 12px;
+  //     cursor: pointer;
 
-      // *** Prevents corners from unrounding on hover
-      &:last-child {
-        border-radius: 0 0 $borderRadius $borderRadius;
-      }
+  //     // *** Prevents corners from unrounding on hover
+  //     &:first-child {
+  //       border-radius: $borderRadius 0 0 0;
+  //     }
 
-      &:hover {
-        background-color: lighten( $backgroundColor, 10% );
-      }
+  //     // *** Prevents corners from unrounding on hover
+  //     &:last-child {
+  //       border-radius: 0 0 $borderRadius $borderRadius;
+  //     }
 
-      &.#{$vprefix}context-container {
-        font-weight: bold;
-      }
+  //     &:hover {
+  //       background-color: lighten( $backgroundColor, 10% );
+  //     }
 
-      &.#{$vprefix}context-collection {
-        border-top: 1px solid lighten( $backgroundColor, 20% );
-      }
-    }
-  }
+  //     &.#{$vprefix}context-container {
+  //       font-weight: bold;
+  //     }
+
+  //     &.#{$vprefix}context-collection {
+  //       border-top: 1px solid lighten( $backgroundColor, 20% );
+  //     }
+  //   }
+  // }
 }

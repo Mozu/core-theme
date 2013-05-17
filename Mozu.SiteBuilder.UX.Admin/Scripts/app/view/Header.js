@@ -46,6 +46,24 @@ Ext.define('Taco.view.Header', {
         });
 
         contextSwitcherTrigger = Ext.create('Taco.view.navigation.ContextSwitcher');
+        // contextSwitcherTrigger = Ext.create('Ext.form.field.ComboBox', {
+        //     width: 250,
+        //     cls: Taco.baseCSSPrefix + 'context-switcher',
+        //     editable: false,
+        //     typeAhead: false,
+        //     triggerAction: 'all',
+        //     queryMode: 'local',
+        //     valueField: 'urlToken',
+        //     store: Taco.app.context.getStore(),
+        //     value: Taco.app.context.getCurrent().urlToken,
+        //     listConfig: {
+        //         shadow: false,
+        //         cls: Taco.baseCSSPrefix + 'context-switcher-menu'
+        //     },
+        //     displayTpl: '<tpl for=".">{name}</tpl>',
+        //     tpl: '<tpl for="."><div class="x-boundlist-item context-type-{contextType}">{name}</div></tpl>'
+            
+        // });
 
         this.primaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {
             trigger: primaryMenuTrigger,
@@ -79,7 +97,7 @@ Ext.define('Taco.view.Header', {
             items: [primaryMenuTrigger, breadcrumb, contextSwitcherTrigger]
         }];
 
-        this.callParent( arguments );
+        this.callParent(arguments);
 
         breadcrumb.on({
             click: {

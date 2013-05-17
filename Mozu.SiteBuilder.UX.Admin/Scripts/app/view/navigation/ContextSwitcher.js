@@ -1,190 +1,84 @@
 /**
  * @class Taco.view.navigation.ContextSwitcher
  * @author Jimmy Sanford
- * @author Michael Speed Elder
  * 
  */
 Ext.define('Taco.view.navigation.ContextSwitcher', {
-    extend: 'Ext.container.Container',
-    requires: ['Taco.view.navigation.ContextSwitcherView'],
+    extend: 'Ext.form.field.ComboBox',
+    alias: 'taco.contextswitcher',
 
-    componentCls: Taco.baseCSSPrefix + 'context-switcher',
+    width: 250,
+    editable: false,
+    typeAhead: false,
+    triggerAction: 'all',
+    queryMode: 'local',
+    valueField: 'urlToken',
+    displayTpl: '<tpl for=".">{name}</tpl>',
+    tpl: '<tpl for="."><div class="x-boundlist-item context-type-{contextType}">{name}</div></tpl>',
 
-    width: 250, // TODO: Width needs to be set to be pushed right in an Hbox.  This is shitty, and it makes me angry, and I don't know how to fix it.
-    hidden: true,
     initComponent: function () {
-        
-        this.hidden = Taco.app.context.isSingleSite();
-        
-        this.label = Ext.create('Ext.container.Container', {
-            autoEl: {
-                tag: 'div',
-                cls: Taco.baseCSSPrefix + 'context-switcher-trigger',
-                html: 'Context Switcher 9000 <span>&#9662;</span>' // &#9660 (larger triangle)
-            }
-        });
+        this.applyDefaultCfg();
 
-        this.list = Ext.create('Taco.view.navigation.ContextSwitcherView');
-
-        this.items = [
-            this.label,
-            this.list
-        ];
-
-        this.callParent( arguments );
-
-        
+        this.callParent(arguments);
 
         this.on({
-            afterrender: function () {
-                
-                // *** Set ContextSwitcher display label to current context
-                if( Taco.core.StateManager ) {
-                    this.mon(
-                        Taco.core.StateManager,
-                        'statechange',
-                        function (newState) {
-                            this.setDisplayedValue(this.lookupContextNameFromToken(Taco.app.context.getCurrentContext().urlToken));
-                            var md = newState.getMetaData && newState.getMetaData();
-                            if (md && (md.controller =='sites' || md.action === "edit")) {
-                                this.disable();
-                                if (this.listIsShowing()) this.hideList();
-                            } else {
-                                this.enable();
-                            }
-                        },
-                        this
-                    );
-                }
-
-                this.mon(
-                    Taco.app.context,
-                    'contextchange',
-                    Ext.Function.createDelayed(function () {
-                        var newContext = Taco.app.context.getCurrentContext();
-                        this.setDisplayedValue(this.lookupContextNameFromToken(newContext.urlToken));
-                    }, 1000, this),
-                    this
-                );
-
-                // *** Register click handler to show/hide submenu (ContextSwitcherView)
-                this.getEl().on('click', this.toggleSubmenu, this);
-            },
-            contextClicked: this.changeContext,
+            change: this.changeContext,
             scope: this
         });
 
+        this.mon(Taco.app.context, {
+            contextchange: this.onGlobalContextChange,
+            scope: this
+        });
+
+        this.mon(Taco.core.StateManager, {
+            statechange: this.onGlobalStateChange,
+            scope: this
+        });
     },
 
-    /**
-     * @private
-     * @param {Ext.data.Model} record An instance of the model associated with the context clicked on.
-     * @param {String} newValue The innerText of the element clicked on.
-     *
-     * Event listener for when an item from the submenu is selected.
-     */
-    changeContext: function (record, newValue) {
-        var success = Taco.app.context.setCurrentContext( record.raw );
-        this.toggleSubmenu();
-        if (success) this.setDisplayedValue(newValue);
+    applyDefaultCfg: function () {
+        this.cls = [this.cls, Taco.baseCSSPrefix + 'context-switcher'].join(' ');
+
+        this.listConfig = Ext.applyIf(this.listConfig || {}, {
+            shadow: false,
+            cls: Taco.baseCSSPrefix + 'context-switcher-menu'
+        });
+
+        if (!this.store) {
+            this.store = Taco.app.context.getStore();
+            this.value = Taco.app.context.getCurrent().urlToken;
+            console.log(this.value);
+
+            // remove tenant level if single siteCollection
+            if (!Taco.app.context.isMultiSiteCollection()) {
+                this.store.filterBy(function (record) {
+                    return record.get('contextType') != 't' ;
+                });
+            }
+        }
     },
 
-    /**
-     * @private
-     * Handles toggling visiblity of the "submenu" (ContextSwitcherView) of available contexts.
-     */
-    toggleSubmenu: function () {
-        var list = this.list,
-            label = this.label;
+    changeContext: function (field, newValue, oldValue) {
+        var record = field.getStore().getById(newValue);
+        
+        if (record) {
+            Taco.app.context.setCurrentContext(record.raw);
+        }
+    },
 
-        // console.log(this);
-        // window.xxx = this;
-        if (this.disabled) return;
-        if (!this.listIsShowing()) {
-            this.showList();
+    onGlobalContextChange: function (context) {
+        this.setValue(context.urlToken);
+        this.resetOriginalValue();
+    },
+
+    onGlobalStateChange: function (state) {
+        var md = state.getMetaData && state.getMetaData();
+
+        if (md && (md.controller =='sites' || md.action === "edit")) {
+            this.disable();
         } else {
-            this.hideList();
+            this.enable();
         }
-    },
-    
-    /**
-     * @public
-     * @returns Taco.view.navigation.ContextSwitcher
-     * Hides the list.
-     */
-    hideList: function() {
-        this.label.removeCls('showing-list');
-        this.list.hide();
-        return this;
-    },
-
-    /**
-     * @public
-     * @return {Taco.view.navigation.ContextSwitcher}
-     * Shows the list.
-     */
-    showList: function() {
-        this.label.addCls('showing-list');
-        this.list.showBy(this.label, 'tr-br');
-    },
-
-    /**
-     * @public
-     * @return {Boolean} 
-     * Well? Is it?
-     */
-    listIsShowing: function() {
-        return this.label.hasCls('showing-list');
-    },
-
-    /**
-     * @public
-     * @param {String} newVal A string to replace the content of the ContextSwitcher label
-     */
-    setDisplayedValue: function ( newVal ) {
-        this.label.update( newVal + '<span>&#9662;</span>' );
-    },
-
-    /**
-     * @private
-     * @param {String} urlContext The portion of the url that is the context, typically as specified by Taco.app.context.urlToken
-     *
-     * Retrieves the plaintext name associated with the given urlContext.
-     */
-    lookupContextNameFromToken: function ( urlContext ) {
-        // *** urlContext takes the form of *:######, where * is 't', 'c', or 's' for Tenant, SiteCollection, or Site respectively.
-        var contextType     = urlContext.split('-')[0],
-            siteCollections = Taco.app.context.siteCollections,
-            tenantName, 
-            displayName     = 'All', // *** Default to 'All' (context is likely t:Id)
-
-            // *** Callback function for Ext.each loops below that tests the current item's urlToken against the argued parameter urlContext
-            testItemNameAgainstContext = function ( item ) {
-                if( item.urlToken == urlContext ) {
-                    displayName = item.name;
-                    return false;
-                }
-            };
-
-        // *** Site
-        if( contextType == 's' ) {
-            Ext.each( siteCollections, function ( collection ) {
-                // *** Return early if inner Ext.each returns early as well
-                if( Ext.each(collection.sites, testItemNameAgainstContext) !== true ) {
-                    return false;
-                }
-            })
-        }
-
-        // *** SiteCollection
-        else if( contextType == 'c' ) {
-            Ext.each( siteCollections, testItemNameAgainstContext );
-        }
-
-        else if (contextType == 't') {
-            tenantName = Taco.app.context.getStore().findRecord('contextType', 't').data.name;
-            if (tenantName) displayName = tenantName;
-        }
-        return displayName;
     }
 });

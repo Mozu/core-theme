@@ -118,6 +118,20 @@
         }
       }
     }
+
+    .#{$vprefix}context-switcher {
+    }
+  }
+
+  .#{$vprefix}context-switcher-menu {
+    .#{$prefix}boundlist-item {
+      &.context-type-c {
+        padding-left: 28px;
+      }
+      &.context-type-s {
+        padding-left: 42px;
+      }
+    }
   }
 
   .#{$vprefix}primary-menu-ct {
@@ -247,131 +261,6 @@
           }
         }
       }
-      
-      // &> div {
-      //   overflow: hidden;
-
-      //   &> a {
-      //     width: 50px;
-      //     height: 50px;
-      //     padding: 2px;
-      //     margin: 2px;
-      //     padding-top: 16px;
-      //     display: block;
-      //     color: white;
-      //     white-space: nowrap;
-          
-      //     text-indent: 55px;
-      //     text-decoration: none;
-      //     @include border-radius;
-      //     @include outer-shadow(0);
-      //     @include single-transition(box-shadow);
-          
-      //     &.active {
-      //       // @include outer-shadow;
-      //     }
-          
-      //     &.selected {
-      //       // background-color: $color-neutral-dark !important;
-      //       // @include outer-shadow(0.3, 10px, 0, 1px);
-      //     }
-
-      //     &.#{$vprefix}icon-mozulogo {
-      //       @include icons-sprite(icon-mozulogo-mini);
-      //     }
-      //   }
-
-      //   &.collapsed .#{$vprefix}icon-collapse {
-      //     text-indent: -5000px;
-      //     @include icons-sprite(icon-expand);
-      //     @include transition(all 0.5s);
-      //   }
-
-      //   &.expanded .#{$vprefix}icon-collapse {
-      //     text-indent: -5000px;
-      //     margin-left: 95px;
-      //     @include transform(rotate(180deg));
-
-      //   }
-
-      //   & > a.selected, & > a.active {
-      //     color: $color-action-link;
-      //   }
-
-      //   &#menu-Collapse {
-      //     background-color: red;
-      //   }
-      // }
-
-
-      // ul {
-      //   position: fixed;
-      //   background: rgba(255,255,255,1);
-      //   top: -5000px;
-      //   left: -5000px;
-      //   padding: 0;
-      //   margin: 0;
-      //   z-index: 90;
-      //   width: 170px;
-      //   overflow: visible;
-      //   @include outer-shadow;
-      //   @include border-radius;
-        
-      //   li {
-      //     padding: 0;
-      //     margin: 0;
-          
-      //     a {
-      //       //border: 5px solid transparent;
-      //       margin: 5px;
-      //       padding: 7px 11px;
-      //       display: block;
-      //       //width: 100%;
-      //       text-decoration: none;
-      //       color: $color-neutral-darker;
-      //       font-size: 0.8em;
-      //       font-weight: bold;
-      //       @include border-radius;
-            
-            
-      //       &:hover {
-      //         color: $color-highlighted-foreground;
-      //         text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-      //         background-color: $color-highlighted-background;
-      //       }
-      //     }
-      //   }
-
-      //   &:before, &:after {
-      //     border-top: 7px solid transparent;
-      //     border-bottom: 7px solid transparent;
-      //     border-right: 8px solid $color-neutral-dark;
-      //     border-left: 0;
-      //     height: 0;
-      //     width: 0;
-      //     top: 13px;
-      //     left: -8px;
-      //     content: "";
-      //     position: absolute;
-      //   }
-
-      //   &:after {
-      //     border-right: 8px solid white;
-      //     left: -7px;
-      //   }
-      // }
     }
-
-    // &.expanded {
-    //   li.#{$vprefix}menu-item > div > a {
-    //     &.#{$vprefix}icon-mozulogo {
-    //       font-size: 0px;
-    //       line-height: 0px;
-    //       text-indent: -10000px;
-    //       width: 150px;
-    //       @include icons-sprite(icon-mozulogo-full);
-    //     }
-    //   }
-    // }
   }
 }

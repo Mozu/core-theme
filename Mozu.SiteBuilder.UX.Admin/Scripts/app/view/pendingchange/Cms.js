@@ -32,8 +32,7 @@ Ext.define('Taco.view.pendingchange.Cms', {
     },
 
     header: {
-        actions: [
-        {
+        actions: [{
             xtype: 'secondarybutton',
             text: 'Discard All',
             listeners: {
@@ -59,7 +58,6 @@ Ext.define('Taco.view.pendingchange.Cms', {
                 { text: 'Publish all pages', handler: function () { me.getParentPage().publishAll('page'); } },
                 { text: 'Publish all templates', handler: function () { me.getParentPage().publishAll('template'); } }];
             }
-
         }]
     },
 
@@ -80,16 +78,13 @@ Ext.define('Taco.view.pendingchange.Cms', {
         dockedItems: [{
             xtype: 'toolbar',
             dock: 'top',
-          
             items: [{
-                xtype:'primarysplitbutton',
+                xtype:'taco.splitbutton',
                 text: 'Bulk Actions',
-                handler: function(btn) {
+                handler: function (btn) {
                     btn.showMenu();
                 },
-                
-                menu:
-                 {
+                menu: {
                     xtype:'menu',
                     items: [ {
                         text: 'Publish',
