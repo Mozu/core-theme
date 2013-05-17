@@ -55,13 +55,15 @@
   		  
   		  &.#{$vprefix}hint-active {
   		    //border-color: rgb(86,184,195);
+          
   		  }
   	  }
   	  
   	  .#{$vprefix}hint-zone {
   	    position: absolute;
-  		  border: 1px solid transparent;
-        //@include flexbox($direction: column);
+  		  border: 1px dashed transparent;
+        background: transparentize($color-theme-support-darkest, 1);
+        @include transition(border 0.5s, background 1s);
   		  
   		  &.#{$vprefix}hint-active {
           border-color: rgba(255,0,0,1);
@@ -69,6 +71,15 @@
 
 
   	  }
+
+      &.show-hint-zones .#{$vprefix}hint-zone {
+        visibility: visible !important;
+        background: transparentize($color-theme-support-darkest, 0.85);
+
+        &.#{$vprefix}widget-dropzone-hover {
+          border: 1px dashed border-for($color-theme-support-dark);
+        }
+      }
   	}
   	
   	.#{$vprefix}document-frame iframe {
