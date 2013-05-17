@@ -543,7 +543,6 @@
     <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\browser\FilterList.js" />
-    <Content Include="Scripts\app\core\ux\form\Field.js" />
     <Content Include="Scripts\app\core\ux\form\field\PageTemplate.js" />
     <Content Include="Scripts\app\core\ux\GroupedView.js" />
     <Content Include="Scripts\app\core\ux\modal\SidebarModal.js" />
