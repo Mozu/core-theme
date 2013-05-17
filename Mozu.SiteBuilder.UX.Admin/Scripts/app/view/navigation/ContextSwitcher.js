@@ -14,7 +14,7 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
     queryMode: 'local',
     valueField: 'urlToken',
     displayTpl: '<tpl for=".">{name}</tpl>',
-    tpl: '<tpl for="."><div class="x-boundlist-item context-type-{contextType}">{name}</div></tpl>',
+    tpl: '<ul><tpl for="."><li role="option" class="x-boundlist-item context-type-{contextType}">{name}</li></tpl></ul>',
 
     initComponent: function () {
         this.applyDefaultCfg();
@@ -48,7 +48,6 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
         if (!this.store) {
             this.store = Taco.app.context.getStore();
             this.value = Taco.app.context.getCurrent().urlToken;
-            console.log(this.value);
 
             // remove tenant level if single siteCollection
             if (!Taco.app.context.isMultiSiteCollection()) {
@@ -63,7 +62,11 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
         var record = field.getStore().getById(newValue);
         
         if (record) {
-            Taco.app.context.setCurrentContext(record.raw);
+            var success = Taco.app.context.setCurrentContext(record.raw);
+
+            if (!success) {
+                field.reset();
+            }
         }
     },
 
