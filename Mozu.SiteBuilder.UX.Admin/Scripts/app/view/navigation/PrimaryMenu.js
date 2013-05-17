@@ -102,6 +102,8 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     showMenu: function () {
         var tBox = this.trigger.getEl().getPageBox();
 
+        Ext.getDoc().addListener('click', this.onClickDoc, this);
+
         if (Ext.isIE8m) {
             // if IE8 or less use JS to animate
             this.show(null, function () {
@@ -126,6 +128,8 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
     hideMenu: function () {
         var tBox = this.trigger.getEl().getPageBox();
 
+        Ext.getDoc().removeListener('click', this.onClickDoc, this);
+
         if (Ext.isIE8m) {
             // if IE8 or less use JS to animate
             this.animate({
@@ -143,5 +147,14 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         }
 
         this.trigger.removeCls('expanded');
+    },
+
+    /**
+     * Hides menu when you click anywhere on document.
+     * Needs a reference so listener can easily be added and removed.
+     * @private
+     */
+    onClickDoc: function (e, el) {
+        this.hideMenu();
     }
 });
