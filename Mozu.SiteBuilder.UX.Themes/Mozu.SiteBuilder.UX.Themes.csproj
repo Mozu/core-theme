@@ -314,6 +314,12 @@
     </Compile>
     <None Include="Docs\Mozu_Themeing_Concepts.md" />
     <Content Include="Morrissey\src\fsutils.js" />
+    <Content Include="SampleThemes\helloWorld\MetaData\theme.png" />
+    <Content Include="SampleThemes\helloWorld\MetaData\ThemeSettings.xml" />
+    <Content Include="SampleThemes\helloWorld\Resources\Images\hello_world\hello.png" />
+    <Content Include="SampleThemes\helloWorld\Resources\Scripts\Modules\models-hello-world.js" />
+    <Content Include="SampleThemes\helloWorld\Resources\Scripts\Pages\hello_world.js" />
+    <Content Include="SampleThemes\helloWorld\theme.xml" />
     <Content Include="Scripts\backbone.d.ts" />
     <Content Include="Themes\Core3\Modules\_GoogleAnalyticsTrackingCode.vol">
       <SubType>Designer</SubType>
@@ -579,6 +585,14 @@
     <Content Include="Themes\Core3\Modules\_CheckoutCommentsField.vol" />
     <Content Include="Morrissey\README.md" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\category\definition.json" />
+    <Content Include="Themes\Adaptive\Layouts\Default.vol" />
+    <Content Include="Themes\Core3\Templates\_home.vol" />
+    <Content Include="SampleThemes\helloWorld\Layouts\default.vol" />
+    <Content Include="SampleThemes\helloWorld\MetaData\PageTypes\cms\hello_world\definition.json" />
+    <Content Include="SampleThemes\helloWorld\MetaData\Widgets\cms\hello_world\definition.json" />
+    <Content Include="SampleThemes\helloWorld\Resources\Stylesheets\modules\layout.less" />
+    <Content Include="SampleThemes\helloWorld\Templates\Hello_world.vol" />
+    <Content Include="SampleThemes\helloWorld\Widgets\hello_world\hello_world_widget.vol" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -603,6 +617,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Morrissey\test\theme3\" />
+    <Folder Include="SampleThemes\helloWorld\MetaData\PageTypes\catalog\" />
+    <Folder Include="SampleThemes\helloWorld\MetaData\PageTypes\commerce\" />
+    <Folder Include="SampleThemes\helloWorld\Modules\" />
+    <Folder Include="SampleThemes\helloWorld\Resources\Fonts\" />
+    <Folder Include="Themes\Adaptive\Templates\" />
     <Folder Include="Themes\Core3\Resources\Fonts\" />
     <Folder Include="Themes\Core3\Resources\Images\c2Images\" />
     <Folder Include="Themes\MobileCore\Layouts\" />

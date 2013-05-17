@@ -1,0 +1,31 @@
+﻿
+html {
+	height: 100%;
+}
+body {
+	background-color: {{themeSettings.siteBackgroundColor}};
+	width: 960px;
+	height: 100%;
+	margin: 0 auto;
+}
+
+.mz-main-container {
+	background: {{themeSettings.wrapBackgroundColor}};
+	border: 3px solid #999;
+	border-top: 0;
+}
+
+.mz-layout-container  {
+	background: {{themeSettings.contentBackgroundColor}};
+}
+
+.mz-layout-right {
+	float: right;
+}
+
+.mz-column {
+	float: left;
+	+ .mz-column {
+		margin-left: @gutter;
+	}
+}

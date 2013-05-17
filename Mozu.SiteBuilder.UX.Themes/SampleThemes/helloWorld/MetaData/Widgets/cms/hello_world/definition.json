@@ -1,0 +1,14 @@
+{
+    "id": "horizontal_rule",
+    "displayName": "Horizontal Rule",
+    "displayTemplate": "hello_world/hello_world_widget",
+    "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
+    "editView": "Taco.view.site.widget.HorizontalRule",
+    "defaultConfig": {
+        "hrBorderWidth": "1px",
+        "hrBorderColor": "#000",
+        "hrBorderStyle": "solid",
+        "hrMarginTop": "None",
+        "hrMarginBottom": "None"
+    }
+}
