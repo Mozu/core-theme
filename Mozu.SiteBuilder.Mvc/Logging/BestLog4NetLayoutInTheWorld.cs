@@ -6,7 +6,7 @@ using Mozu.Core;
 
 namespace Mozu.SiteBuilder.Mvc.Logging
 {
-    public class BestLayoutInTheWorld : SimpleLayout
+    public class BestLog4NetLayoutInTheWorld : SimpleLayout
     {
         public override void Format(TextWriter writer, LoggingEvent loggingEvent)
         {

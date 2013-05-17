@@ -1,10 +1,10 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Autofac;
 using Mozu.Core.Api;
+using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
+using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.ActionFilters;
 using Mozu.Tenant.Contracts.Clients;
@@ -17,6 +17,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             base.AddMessageHandlers(httpConfiguration);
             GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
+            GlobalFilters.Filters.Add(new PreserveApiContextFilterAttribute());
             GlobalFilters.Filters.Add(new HandleAllTheErrorsFilter());
         }
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
@@ -42,11 +43,18 @@ namespace Mozu.SiteBuilder.UX.Configuration
         protected override void InitializeLoggingServiceFactory(System.Web.Http.HttpConfiguration configuration)
         {
             base.InitializeLoggingServiceFactory(configuration);
+            
+            // TODO: we really break abstraction here.
+            var fac = LoggingService.LoggingServiceFactory as Log4NetServiceFactory;
+            if (fac != null)
+                fac.AddContextProvider(new CurrentRequestLoggingContextProvider());
         }
+
         protected override void PreApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {
             LogStartupMessage<MvcApplication>("Mozu.SiteBuilder.UX");
         }
+
         protected override void RegisterControllerRoutes(System.Web.Http.HttpConfiguration httpConfiguration)
         {
             base.RegisterControllerRoutes(httpConfiguration);
