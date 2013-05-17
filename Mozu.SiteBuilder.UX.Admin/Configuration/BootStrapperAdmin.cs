@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.ServiceModel.Web;
-using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Autofac.Integration.Mvc;
-using Autofac.Integration.WebApi;
 using Mozu.Core.Api;
-using Mozu.Core.Api.ErrorHandler;
-using Mozu.Core.Api.Filters.Exception;
+using Mozu.Core.Logging;
 using Mozu.Provisioning.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers;
@@ -65,11 +60,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
         protected override void InitializeLoggingServiceFactory(System.Web.Http.HttpConfiguration configuration)
         {
             base.InitializeLoggingServiceFactory(configuration);
+
+            // TODO: we really break abstraction here. base.InitializeLoggingServiceFactory should give us an object to add context providers to.
+
+            var fac = LoggingService.LoggingServiceFactory as Log4NetServiceFactory;
+            if (fac != null)
+                fac.AddContextProvider(new CurrentRequestLoggingContextProvider());
         }
+
         protected override void PreApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {
             LogStartupMessage<MvcApplication>("Mozu.SiteBuilder.Admin");
         }
+
         protected override void RegisterControllerRoutes(System.Web.Http.HttpConfiguration httpConfiguration)
         {
             base.RegisterControllerRoutes(httpConfiguration);
