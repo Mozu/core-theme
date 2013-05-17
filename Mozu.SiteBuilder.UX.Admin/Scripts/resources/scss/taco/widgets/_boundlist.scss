@@ -113,4 +113,33 @@
     }
   }
 
+  /* MENUS */
+  .#{$prefix}menu-body {
+    font-size: px-to-rem(14);
+    line-height: px-to-rem(16);
+  }
+
+  .#{$prefix}menu-item-link {
+    margin: 0px;
+  }
+  .#{$prefix}menu-item-active {
+    .#{$prefix}menu-item-link {
+        background-image: none;
+        border: 0px none;
+        margin: 0px;
+        @include border-radius(0px);
+    }
+  }
+
+  .#{$prefix}menu-item-checked,
+  .#{$prefix}menu-item-unchecked {
+    .#{$prefix}menu-item-link {
+      padding-left: $menu-item-indent;
+    }
+  }
+
+  .#{$prefix}menu-item-arrow {
+    display: none;
+  }
+
 }
