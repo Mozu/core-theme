@@ -585,7 +585,6 @@
     <Content Include="Themes\Core3\Modules\_CheckoutCommentsField.vol" />
     <Content Include="Morrissey\README.md" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\category\definition.json" />
-    <Content Include="Themes\Adaptive\Layouts\Default.vol" />
     <Content Include="Themes\Core3\Templates\_home.vol" />
     <Content Include="SampleThemes\helloWorld\Layouts\default.vol" />
     <Content Include="SampleThemes\helloWorld\MetaData\PageTypes\cms\hello_world\definition.json" />
@@ -621,6 +620,7 @@
     <Folder Include="SampleThemes\helloWorld\MetaData\PageTypes\commerce\" />
     <Folder Include="SampleThemes\helloWorld\Modules\" />
     <Folder Include="SampleThemes\helloWorld\Resources\Fonts\" />
+    <Folder Include="Themes\Adaptive\Layouts\" />
     <Folder Include="Themes\Adaptive\Templates\" />
     <Folder Include="Themes\Core3\Resources\Fonts\" />
     <Folder Include="Themes\Core3\Resources\Images\c2Images\" />
