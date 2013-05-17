@@ -141,10 +141,6 @@
     z-index: 100;
     opacity: $inactive-opacity;
     border: 1px solid $color-neutral-darkest;
-    @include border-radius(0px);
-    @include transition(opacity 0.2s ease-out, border-radius 60s linear);
-
-    //@include flexbox($direction: column);
 
     .#{$vprefix}hint-actions {
       padding: 5px 8px;
@@ -183,7 +179,6 @@
     &.#{$vprefix}hint-active {
       z-index: 101;
       opacity: $active-opacity;
-      @include border-radius(0 0 30px 30px);
     }
 
     &.#{$vprefix}hint-inactive {
