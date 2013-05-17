@@ -591,7 +591,8 @@
     <Content Include="SampleThemes\helloWorld\MetaData\Widgets\cms\hello_world\definition.json" />
     <Content Include="SampleThemes\helloWorld\Resources\Stylesheets\modules\layout.less" />
     <Content Include="SampleThemes\helloWorld\Templates\Hello_world.vol" />
-    <Content Include="SampleThemes\helloWorld\Widgets\hello_world\hello_world_widget.vol" />
+    <Content Include="SampleThemes\helloWorld\Widgets\hello_world\hello_world_widget.vol" />    <Content Include="Themes\Core3\Resources\Stylesheets\Modules\admin-injections.less" />
+
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
