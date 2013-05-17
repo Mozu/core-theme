@@ -150,8 +150,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     }
                     else if (jarr != null )
                     {
+                        tagArg.Value= jarr.Cast<object>().ToList();
                         //todo turn into some type of colletion or array.
-                        
+
                     }
                     arguments.Add(tagArg);
                 }
