@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
 using Mozu.Core.Settings;
@@ -139,6 +140,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         [HttpPost]
         public async Task<ActionResult> LoginTicket(LoginTicket ticket)
         {
+            if (ticket == null || ticket.AccessToken == null || ticket.TenantId == 0)
+                throw new HttpException(400, "Invalid login ticket provided.");
+
             _authenticationHelper.SetCurrentUser(ticket.AccessToken);
 
             ActionResult res = await ChangeTenant(ticket.TenantId, ticket.RedirectUrl);
