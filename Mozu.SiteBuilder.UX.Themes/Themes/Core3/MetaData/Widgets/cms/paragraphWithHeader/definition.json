@@ -2,6 +2,6 @@
   "id": "content_with_header",
   "displayName": "Paragraph with Header",
   "displayTemplate": "cms/paragraphWithHeader",
-  "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
+  "icon": "_0003_text.png",
   "properties": []
 }

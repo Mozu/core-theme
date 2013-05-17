@@ -8,5 +8,6 @@
   "minHeight": 50,
   "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
   "editView": "Taco.view.site.widget.ColumnDivider",
+  "enabled": false,
   "properties": []
 }

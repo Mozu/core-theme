@@ -321,6 +321,12 @@
     <Content Include="SampleThemes\helloWorld\Resources\Scripts\Pages\hello_world.js" />
     <Content Include="SampleThemes\helloWorld\theme.xml" />
     <Content Include="Scripts\backbone.d.ts" />
+    <Content Include="Themes\Core3\MetaData\Widgets\catalog\featuredproducts\_0007_featured-products.png" />
+    <Content Include="Themes\Core3\MetaData\Widgets\cms\content\_0004_html.png" />
+    <Content Include="Themes\Core3\MetaData\Widgets\cms\horizontalrule\_0005_horizontal-divider.png" />
+    <Content Include="Themes\Core3\MetaData\Widgets\cms\paragraphWithHeader\_0003_text.png" />
+    <Content Include="Themes\Core3\MetaData\Widgets\social\addthis\_0008_share.png" />
+    <Content Include="Themes\Core3\MetaData\Widgets\social\facebookComments\_0008_share.png" />
     <Content Include="Themes\Core3\Modules\_GoogleAnalyticsTrackingCode.vol">
       <SubType>Designer</SubType>
     </Content>
@@ -591,8 +597,8 @@
     <Content Include="SampleThemes\helloWorld\MetaData\Widgets\cms\hello_world\definition.json" />
     <Content Include="SampleThemes\helloWorld\Resources\Stylesheets\modules\layout.less" />
     <Content Include="SampleThemes\helloWorld\Templates\Hello_world.vol" />
-    <Content Include="SampleThemes\helloWorld\Widgets\hello_world\hello_world_widget.vol" />    <Content Include="Themes\Core3\Resources\Stylesheets\Modules\admin-injections.less" />
-
+    <Content Include="SampleThemes\helloWorld\Widgets\hello_world\hello_world_widget.vol" />
+    <Content Include="Themes\Core3\Resources\Stylesheets\Modules\admin-injections.less" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

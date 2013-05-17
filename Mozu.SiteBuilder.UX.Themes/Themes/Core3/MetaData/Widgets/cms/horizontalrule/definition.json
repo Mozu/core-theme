@@ -2,7 +2,7 @@
     "id": "horizontal_rule",
     "displayName": "Horizontal Rule",
     "displayTemplate": "cms/horizontalrule",
-    "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
+    "icon": "_0005_horizontal-divider.png",
     "editView": "Taco.view.site.widget.HorizontalRule",
     "defaultConfig": {
         "hrBorderWidth": "1px",
