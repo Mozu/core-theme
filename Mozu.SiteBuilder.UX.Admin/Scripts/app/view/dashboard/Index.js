@@ -71,11 +71,11 @@
 "           <div class='taco-home-page-medium-item'>"+
 "           <div class='taco-home-page-item-header taco-home-page-item-header-main'>QUICK LINKS</div>"+
 
-"           <div class='taco-home-page-item-header'>Manage WebStite</div>" +
+"           <div class='taco-home-page-item-header'>Manage Sites</div>" + 
 //repeat this part
 "               <tpl for='store'>"+
 "                   <ul class='taco-home-page-tree'>"+
-"                       <li>{[values.name]} <div class='taco-home-page-site-settings'><a href='{[values.url]}'>Preview</a> | <a href='/admin/{[values.urlToken]}/sites/pages'>Edit</a> | <a href='/admin/{[values.urlToken]}/generalsettings'>Settings</a></div></li>"+
+"                       <li>{[values.name]} <div class='taco-home-page-site-settings'><a href='{[values.url]}' target='_blank'>Preview</a> | <a href='/admin/{[values.urlToken]}/sites/pages'>Edit</a> | <a href='/admin/{[values.urlToken]}/generalsettings'>Settings</a></div></li>" +
 "                       <li></li>"+
 "                   </ul>"+
 "               </tpl>"+

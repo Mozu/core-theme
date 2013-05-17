@@ -21,7 +21,7 @@
       clear: left;
       width: 100%;
       height: px-to-rem(38);
-      border: 0px; 
+      border: 0px;  
       border-bottom: px-to-rem(2);
       border-style: dashed;
       border-color: lightgray;
@@ -182,9 +182,13 @@
         border-color: lightgray; 
       }
       a{
-        color: rgb(0, 103, 250);
+        color: rgba(60,134,210,1);
         text-decoration: underline;
       }
+      a:hover{
+        color: rgba(46, 100, 158, 1);
+      }
+
     }
     .#{$vprefix}home-page-large-item{
       float: left;
