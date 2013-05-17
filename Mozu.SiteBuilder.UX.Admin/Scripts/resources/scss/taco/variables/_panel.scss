@@ -53,7 +53,11 @@ $toolbar-text-font-size: $font-size;
 /* MENUS */
 
 $menu-background-color: $color-neutral-white;
-$menu-padding: 0px;
+$menu-item-active-background-color: $color-selected;
+
+$menu-padding: 7px 0px;
+$menu-link-padding: 5px 14px 3px;
+
 $menu-text-color: $color;
 
 /* LAYOUTS */

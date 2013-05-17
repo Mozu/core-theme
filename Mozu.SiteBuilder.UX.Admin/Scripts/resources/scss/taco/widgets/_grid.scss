@@ -239,18 +239,18 @@
   }
 
   .#{$vprefix}grid-row-menu {
-    .#{$prefix}menu-body {
-      border: 1px solid border-for($menu-background-color);
-      font-size: px-to-rem(13);
-    }
+    // .#{$prefix}menu-body {
+    //   border: 1px solid border-for($menu-background-color);
+    //   font-size: px-to-rem(13);
+    // }
 
-    .#{$prefix}menu-item {
-      padding: px-to-rem(6);
-    }
+    // .#{$prefix}menu-item {
+    //   padding: px-to-rem(6);
+    // }
 
-    &+ .#{$vprefix}grid-row-menu {
-      margin-top: -1px;
-    }
+    // &+ .#{$vprefix}grid-row-menu {
+    //   margin-top: -1px;
+    // }
   }
 
   /* CONTAINERS, TOOLBARS, ETC. */

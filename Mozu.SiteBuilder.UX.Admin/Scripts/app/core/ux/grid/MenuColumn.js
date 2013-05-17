@@ -18,7 +18,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
     width: 100,
 
     menuItems: [],
-    menuItemDefaults: { plain: true },
+    menuItemDefaults: {},
 
     /**
      * Gets the menu, or creates it if it doesn't exist.
