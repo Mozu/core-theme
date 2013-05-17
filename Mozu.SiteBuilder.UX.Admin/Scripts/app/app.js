@@ -51,7 +51,7 @@
 Ext.ns('Taco');
 Taco.baseCSSPrefix = 'taco-';
 
-
+Ext.Ajax.defaultHeaders = { Accept: '*/*'};
 
 window.console = window.console || {
     log: function() {
