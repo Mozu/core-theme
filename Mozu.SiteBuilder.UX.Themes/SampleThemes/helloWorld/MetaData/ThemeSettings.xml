@@ -1,0 +1,10 @@
+﻿<?xml version="1.0"?>
+<settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\Tools\ThemeSettings.xsd">
+  <items>
+    <section id="example" label="Example settings" visible="true">
+      <items>
+        <setting id="someColor" type="color" label="Some Color" defaultValue="#FFFFFF"/>
+      
+    
+  </items>
+</settings>

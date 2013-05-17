@@ -1,0 +1,19 @@
+{
+  "id": "Hello_world",
+  "displayName": "Hello World",
+  "documentType": "web_page",
+  "entityType": "webpage",
+  "pageType": "webpage",
+  "renderTemplate": "Hello_world",
+  "userCreatable": true,
+  "widgets": [
+    {
+      "definitionId": "content",
+      "zoneId": "body",
+      "index": 0,
+      "config": {
+        "body": "<p>Hello World</p>"
+      }
+    }
+  ]
+}
