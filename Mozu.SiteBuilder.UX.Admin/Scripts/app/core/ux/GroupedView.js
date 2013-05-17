@@ -14,6 +14,9 @@ Ext.define('Taco.core.ux.GroupedView', {
     collectData: function (records, startIndex) {
         var data = [],
             i = 0,
+            groupField = this.getStore().groupField,
+            groupDir = this.getStore().groupDir,
+            grouper= this.getStore().groupers.getAt(0),
             len = records.length,
             record;
 
@@ -22,8 +25,28 @@ Ext.define('Taco.core.ux.GroupedView', {
             data[i] = this.prepareData(record.data, startIndex + i, record);
         }
 
+        
         data.groups = this.getStore().getGroups();
+        data.groups.sort(function (a, b) {
 
+            var aVal = a.children[0].get(groupField),
+                bVal = b.children[0].get(groupField),
+                ret;
+            ret = 0;
+            if (aVal == bVal) {
+                ret = 0;
+            } else if (aVal < bVal) {
+                ret = 1;
+            } else {
+                ret = -1;
+            }
+              
+            if (grouper.direction == "ASC") {
+                ret = ret * -1;
+            }
+            return ret;
+
+        });
         return data;
     },
 
