@@ -65,7 +65,9 @@
 }
 
 @mixin flex ($grow: 0, $shrink: 1, $basis: auto) {
+  -ms-flex: $grow $shrink $basis;
   -webkit-flex: $grow $shrink $basis;
+  flex: $grow $shrink $basis;
 }
 
 @mixin order ($order) {
