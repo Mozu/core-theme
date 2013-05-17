@@ -4,5 +4,6 @@
   "displayTemplate": "blog/recentposts",
   "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
   "editView": "Taco.view.site.widget.RecentBlogPosts",
+  "enabled": false,
   "properties": []
 }

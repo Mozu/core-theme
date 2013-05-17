@@ -20,7 +20,7 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
                         '<div class="heading">{name}</div>',
                         '<div class="items"><tpl for="children">',
                             '<div class="widget-source">',
-                                '<div class="icon" style="<tpl if="this.hasIcon(values)">background-image: url({[values.data.icon]});</tpl>"></div>',
+                                '<div class="icon" style="<tpl if="this.hasIcon(values)">background-image: url(/resources/widget/{[values.data.id]}/{[values.data.icon]});</tpl>"></div>',
                                 '<div class="label">{[values.data.displayName]}</div>',
                             '</div>',
                         '</tpl></div>',

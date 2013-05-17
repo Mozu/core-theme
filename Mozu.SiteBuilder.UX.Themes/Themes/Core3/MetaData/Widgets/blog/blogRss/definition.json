@@ -4,6 +4,7 @@
   "displayTemplate": "blog/blogRss",
   "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
   "minWidth": 400,
+  "enabled": false,
   "defaultConfig":
     {
         "a":123,

@@ -4,6 +4,7 @@
   "displayTemplate": "social/addthis",
   "editView": "Taco.view.site.widget.AddThis",
   "properties": [],
-  "category":"social"
+  "category":"social",
+  "icon": "_0008_share.png"
     
 }

@@ -4,5 +4,6 @@
   "displayTemplate": "blog/tagcollection",
   "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
   "editView": "Taco.view.site.widget.TagCollection",
+  "enabled": false,
   "properties": []
 }
