@@ -100,9 +100,14 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         var pluralName = Ext.util.Inflector.pluralize(this.typeName);
         this.token = this.token || pluralName.toLowerCase();
         this.header.title = pluralName;
+        var newCreateButtonText = this.createButtonPrefix + this.typeName;
         Ext.Array.some(this.header.actions, function (item) {
-            if (item.itemId === "newbutton" && !item.text) {
-                item.text = this.createButtonPrefix + this.typeName;
+            if (item.itemId === "newbutton") {
+                if (!item.rendered) {
+                    item.text = newCreateButtonText;
+                } else {
+                    item.setText(newCreateButtonText);
+                }
                 return true;
             }
         }, this);
