@@ -95,8 +95,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             string filter = null;
             if (productCodes != null && productCodes.Count > 0)
             {
-                var productCodes2 = productCodes.Select(x => string.Format("productCode eq {0}", x.ToString())).ToList();
-                filter = string.Join(" or ", productCodes2);
+                var productCodes2 = productCodes.Where( x=> !string.IsNullOrWhiteSpace(  (string)x)).Select(x => string.Format("productCode eq {0}", x.ToString())).ToList();
+                if (productCodes2.Count > 0)
+                {
+                    filter = string.Join(" or ", productCodes2);
+                }
+                
                 itemsPerPage = productCodes.Count;
              
             }
