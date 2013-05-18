@@ -87,6 +87,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public ActionResult ProductListing(int? categoryId= null , string sortBy = null, int? page = null, int? itemsPerPage = null,  List<object> productCodes = null)
         {
+            categoryId = categoryId.GetValueOrDefault(-1) <1  ? null : categoryId;
             itemsPerPage = itemsPerPage.GetValueOrDefault(15);
             page = page.GetValueOrDefault(1);
             int startIdx = (page.Value - 1) * itemsPerPage.Value;
@@ -124,7 +125,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                
             };
             this.SiteContext.PageContext.PageType = "category";
-            SiteContext.PageContext.CategoryId = "0";
+            SiteContext.PageContext.CategoryId = "-1";
             cat.ChildrenCategories = catList.Where(x => x.ParentCategory == null).ToList();
             return View("Category", cat);
         }
