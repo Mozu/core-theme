@@ -1,14 +1,30 @@
 {
-    "id": "horizontal_rule",
-    "displayName": "Horizontal Rule",
+    "id": "hello_world_widget",
+    "displayName": "Hello World",
     "displayTemplate": "hello_world/hello_world_widget",
-    "icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
-    "editView": "Taco.view.site.widget.HorizontalRule",
+    "icon": "widget_thumb.png",
+    "editView": "Taco.view.site.widget.Editor",
+    "editViewFields":[
+         {
+             "fieldLabel": "Title",
+             "name": "title", 
+             "xtype":"textfield"
+         },
+         {
+             "fieldLabel": "Transition",
+             "name": "transition", 
+             "xtype":"selectfield",
+             "store": ["elastic", "fade", "none"]
+         },
+			{
+             "fieldLabel": "Image Size",
+             "name": "imageSize", 
+             "xtype":"selectfield",
+             "store": [[100,"small"], [300,"medium"],[800,"large"]]
+         }],
     "defaultConfig": {
-        "hrBorderWidth": "1px",
-        "hrBorderColor": "#000",
-        "hrBorderStyle": "solid",
-        "hrMarginTop": "None",
-        "hrMarginBottom": "None"
+		"imageSize":300,
+        "transition": "fade",
+        "title": "helooo world"
     }
 }
