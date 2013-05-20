@@ -360,11 +360,6 @@
     <Content Include="Morrissey\src\tasks\buildjs.js" />
     <Content Include="Morrissey\src\tasks\generatethemeconfig.js" />
     <Content Include="Morrissey\src\theme.js" />
-    <Content Include="Morrissey\test\parseSettings.js" />
-    <Content Include="Morrissey\test\theme1\fluegelhorn.txt" />
-    <Content Include="Morrissey\test\theme1\trumpet.txt" />
-    <Content Include="Morrissey\test\theme2\fluegelhorn.txt" />
-    <Content Include="Morrissey\test\theme2\sax.txt" />
     <Content Include="Themes\Adaptive\MetaData\adaptive-thumb.png" />
     <Content Include="Themes\Adaptive\MetaData\ThemeSettings.xml" />
     <Content Include="Themes\Adaptive\Resources\Images\body_bgg.jpg" />
@@ -624,7 +619,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Morrissey\test\theme3\" />
     <Folder Include="SampleThemes\helloWorld\MetaData\PageTypes\catalog\" />
     <Folder Include="SampleThemes\helloWorld\MetaData\PageTypes\commerce\" />
     <Folder Include="SampleThemes\helloWorld\Modules\" />

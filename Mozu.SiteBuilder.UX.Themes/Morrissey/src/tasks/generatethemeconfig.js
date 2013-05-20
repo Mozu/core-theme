@@ -1,12 +1,10 @@
 var grunt = require('grunt'),
     util = require('util'),
-    Q = require('q'),
     async = require('async'),
     xmlbuilder = require('xmlbuilder'),
     Lyrically = require('../lyrically'),
-    Optimizer = require('../optimizer');
 
-var THEME_CONFIG_FILENAME = "theme.xml";
+    THEME_CONFIG_FILENAME = "theme.xml";
 
 module.exports = function () {
 
@@ -26,9 +24,6 @@ module.exports = function () {
     // add corevariants flag with comment
     //xmlDoc.comment('Only true for Core themes. DO NOT MODIFY.');
     //xmlDoc.ele('enableCoreVariants').txt('false');
-
-    var prompt = Q.nfbind(self.program.prompt.bind(self.program)),
-        confirm = Q.nfbind(self.program.confirm.bind(self.program));
 
     if (grunt.file.exists(THEME_CONFIG_FILENAME)) {
         self.program.confirm("Theme configuration file already exists. Overwrite? ", function (yes) {
