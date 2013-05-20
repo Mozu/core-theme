@@ -28,7 +28,7 @@ var fsCopy = function(src, dst, cb, options) {
             is = fs.createReadStream(src);
             os = fs.createWriteStream(dst);
 
-            util.pump(is, os, function (err) {
+            is.pipe(os, function (err) {
                 if (err) {
                     return cb(err);
                 }
@@ -100,5 +100,4 @@ var fsCopyRecursive = function (src, dst, cb, options) {
 
 module.exports.copy = fsCopy;
 module.exports.copyRecursive = fsCopyRecursive;
-module.exports.removeRecursive = require('rimraf');
 module.exports.walkDir = fsWalk;

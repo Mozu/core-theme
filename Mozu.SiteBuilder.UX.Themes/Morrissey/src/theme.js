@@ -1,4 +1,5 @@
-﻿var fs = require('fs'),
+﻿var util = require('util'),
+    fs = require('fs'),
     path = require('path'),
     Q = require('q'),
     elementtree = require('elementtree'),
@@ -18,17 +19,25 @@ var Theme = function (name, program) {
         throw new Error("Couldn't build theme.");
     }
 
-    var themeConfig = this.getThemeConfig();
-    if (themeConfig.extends) {
-        if (program.verbose) console.log("Extending " + name + " over " + themeConfig.extends + ".");
-        this.baseTheme = new Theme(themeConfig.extends, program);
-    }
-
 };
 
 Theme.prototype = {
 
     baseTheme: null,
+
+    getBaseTheme: function () {
+        if (this.baseTheme) return this.baseTheme;
+        var config = this.getThemeConfig();
+        if (!config) {
+            Lyrically.lament("Cannot get base theme without theme.xml config specifying a base theme.");
+            throw new Error("Ack!");
+        }
+        if (!this.baseTheme && config.extends) {
+            Lyrically.note('Extending ' + this.name + " over " + config.extends + ".")
+            this.baseTheme = new Theme(config.extends, this.program)
+        }
+        return this.baseTheme;
+    },
 
     getAncestry: function(acc) {
         acc = acc || [this];
@@ -67,26 +76,9 @@ Theme.prototype = {
     },
 
 
-    getThemeConfigFileContents: function() {
-        if (this._themeConfig) return this._themeConfig;
-        var themeXML,
-            themeTree,
-            themeConfigPath = this.getPath('themeconfig');
-        try {
-            themeXML = fs.readFileSync(themeConfigPath, 'utf-8');
-        } catch (err) {
-            Lyrically.lament('Theme config not found for ' + this.name + ' at ' + themeConfigPath);
-            process.exit(1);
-        }
-
-        return themeXML;
-    },
-
-
     _supportedThemeConfigs: ['name', 'author', 'extends', 'isDesktop', 'isMobile'],
     getThemeConfig: function() {
         if (!this.themeConfig) {
-            this.themeConfig = {};
             try {
                 var xml = this.getFileContentsSync('themeConfig', 'Theme config');
                 if (xml.indexOf('\uFEFF') === 0) {
@@ -95,6 +87,7 @@ Theme.prototype = {
                 var et = elementtree.parse(xml),
                     val,
                     sName;
+                this.themeConfig = {};
                 for (var s = 0; s < this._supportedThemeConfigs.length; s++) {
                     sName = this._supportedThemeConfigs[s];
                     val = et.findtext(sName);
@@ -104,9 +97,7 @@ Theme.prototype = {
                     this.themeConfig[sName] = val;
                 }
             } catch (err) {
-                Lyrically.lament('Could not parse theme.xml file for ' + this.name);
-                throw err;
-                process.exit(1);
+                Lyrically.lament('Could not read theme.xml file for ' + this.name);
             }
         }
         return this.themeConfig;
@@ -134,7 +125,6 @@ Theme.prototype = {
         } catch (e) {
             Lyrically.lament(descrip + ' not found for ' + this.name + ' at ' + p);
             throw e;
-            process.exit(1);
         }
 
         return this[_name];

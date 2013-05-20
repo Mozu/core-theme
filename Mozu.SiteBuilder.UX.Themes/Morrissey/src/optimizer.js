@@ -1,17 +1,19 @@
 ﻿var util = require('util'),
-    fs = require('fs'),
-    path = require('path'),
     events = require('events'),
-    Q = require("q"),
-    FSUtils = require('./fsutils'),
-    Theme = require('./theme'),
+    path = require('path'),
     Lyrically = require('./lyrically'),
+    grunt = require('grunt');
 
-    optimizers = {
-        buildJs: require('./optimizers/jscompiler'),
-        //autogenerateThemeSettings: require('./optimizers/themesettingsgenerator'),
-        checkLessErrors: require('./optimizers/lesschecker')
-    };
+var allTasks = {
+    'generatethemeconfig': 'Generates a theme.xml file from user input.',
+    'buildtemptheme': 'Generates a theme.xml file from user input.',
+    'removeuntouchedfiles': 'Removes files that are identical to the base theme version, since such files are unnecessary and will override intended changes to the base theme',
+    'buildjs': 'Generates optimized JavaScript files using r.js'
+};
+for (var taskName in allTasks) {
+    grunt.registerMultiTask(taskName, allTasks[taskName], require('./tasks/' + taskName));
+}
+
 
 var Optimizer = function (theme, program) {
 
@@ -19,134 +21,81 @@ var Optimizer = function (theme, program) {
 
     this.theme = theme;
     this.program = program;
-    this.buildTasks = [];
-    this.prepTasks = [];
-    this.taskDict = {};
+    this.tasks = [];
 
-    // marshal resources, since buildJs and others need this
-
-    if (program.inheritance) {
-        this.prepTasks.push(this.buildInheritedTheme());
-    } else {
-        this.inheritedTheme = this.theme;
+    if (!(program.generateThemeConfig || program.removeUntouchedFiles || program.buildJs)) {
+        Lyrically.whine("Please specify an action to take on the theme '" + program.currentThemeName + "'.", false);
+        Lyrically.note("Run 'moz -h' to see available actions.");
+        util.puts("");
+        process.exit(1);
     }
+
+    if (program.generateThemeConfig) {
+        this.tasks.push('generatethemeconfig');
+    } else if (!theme.has("themeConfig")) {
+        Lyrically.whine("No theme config found.");
+        this.tasks.push("generatethemeconfig");
+    }
+
 
     if (program.removeUntouchedFiles) {
-        this.prepTasks.push(this.removeUntouchedFiles());
+        this.tasks.push('removeuntouchedfiles');
     }
+
+   if (program.buildJs) {
+        this.tasks.push("buildtemptheme");
+        this.tasks.push('buildjs');
+    }
+
+    //grunt.file.setBase(theme.baseDir);
+
+    grunt.option.init({});
+
+    Optimizer.current = this;
+
 };
 
 util.inherits(Optimizer, events.EventEmitter);
 
-Optimizer.prototype.removeUntouchedFiles = function() {
-    var self = this,
-        deferred = Q.defer();
 
-    if (!this.theme.baseTheme || !this.program.inheritance) {
-        deferred.reject("This theme has no base theme or --no-inheritance was specified, therefore there are no inherited files to remove.");
-    } else {
-        var walker = FSUtils.walkDir(self.theme.baseDir, { followLinks: false });
-        walker.on("file", function (root, stat, next) {
-            var filePath = path.relative(self.theme.baseDir, path.join(root, stat.name)),
-                fullPath = path.resolve(self.theme.baseDir, filePath);
-            if (fullPath == self.theme.getPath("settings") || fullPath == self.theme.getPath("themeConfig")) return next();
-            if (self.theme.getInheritedFileContentsSync(filePath) === self.theme.baseTheme.getInheritedFileContentsSync(filePath)) {
-                fs.unlinkSync(fullPath);
-                if (self.program.verbose) console.log("deleting " + fullPath);
-            }
-            next();
-        });
-        walker.on('end', function () {
-            deferred.resolve("All files unchanged from the base theme '" + self.theme.baseTheme.name + "' have been removed from " + self.theme.name + ".");
-        });
-    }
-    return deferred.promise;
-
-};
-
-Optimizer.prototype.buildInheritedTheme = function() {
-    var deferred = Q.defer(),
-        self = this;
-    Lyrically.note("Building inherited theme.");
-    var tmpThemeName = this.theme.name + "TMP" + new Date().getTime(),
-        tmpDirPath = path.resolve(path.join(this.program.themesDir, tmpThemeName));
-    try {
-        var copyRecursive = Q.nfbind(FSUtils.copyRecursive);
-
-        this.theme.getAncestry().reduce(function (soFar, ancestor) {
-            return soFar.then(function () {
-                return copyRecursive(ancestor.baseDir, tmpDirPath)
-            });
-        }, Q.resolve(true)).then(function () {
-            self.inheritedTheme = new Theme(tmpThemeName, self.program);
-            self.inheritedThemeBuilt = true;
-            deferred.resolve();
-        })
-        .done();
-
-    } catch (e) {
-        deferred.reject(e);
-    }
-    return deferred.promise;
-};
 
 Optimizer.prototype.run = function () {
     var self = this;
-    return Q.spread(this.prepTasks, function () {
-        // arguments is the resolved promises, for future reference
-        
-        Array.prototype.slice.call(arguments).forEach(function(arg){
-            if (typeof arg === "string") Lyrically.admit(arg);
-        });
-            
-        //now fill build tasks
-        for (var opt in optimizers) {
-            if (self.program[opt]) {
-                self.taskDict[opt] = optimizers[opt].apply(self);
-                self.buildTasks.push(self.taskDict[opt]);
-            }
-        }
-        
-        Q.all(self.buildTasks).then(function () {
-            self.cleanup().then(function () {
-                self.emit('success');
-            }, function () {
-                Lyrically.whine("The theme built successfully, but cleanup failed. You may have to manually delete a temporary theme directory.");
-                self.emit('success', "Warning: The theme built successfully, but cleanup failed.");
-            });
-        }, function (e) {
-            self.cleanup().then(function () {
-                self.emit('failure', e);
-            });
-        });
 
+    // create a stupid gruntfile since stupid grunt needs one
+    var gConf = {};
+    for (var tn in allTasks) {
+        gConf[tn] = { build: {} };
+    }
+    grunt.file.write('Gruntfile.js', 'module.exports = function(grunt) { grunt.initConfig(' + JSON.stringify(gConf) + ') };');
 
-    }).fail(function (failedTask) {
-        self.cleanup().fail(function () {
-            Lyrically.whine("Build cleanup failed. You may have to manually delete a temporary theme directory.");
+    try {
+        grunt.option('optimizer', this);
+        grunt.tasks(this.tasks, { verbose: true }, function () {
+            self.cleanup();
+            self.emit('success');
         });
-        self.emit('failure', failedTask);
-    });
+        complete = true;
+    } catch (e) {
+        self.cleanup();
+        self.emit('failure', e.message);
+    }
 };
 
 Optimizer.prototype.cleanup = function () {
-    var self = this,
-        deferred = Q.defer();
-    
-    if (this.program.verbose) Lyrically.note('Deleting temporary files.');
-    if (this.inheritedThemeBuilt) {
-        FSUtils.removeRecursive(this.inheritedTheme.baseDir, function (errors) {
-            if (errors) {
-                deferred.reject(errors);
-            } else {
-                deferred.resolve();
-            }
-        });
-    } else {
-        deferred.resolve();
+    var self = this;
+    if (this.tempTheme) {
+        if (this.program.verbose) Lyrically.note('Deleting temporary files.', false);
+        //console.log(this.program.themesDir)
+        //console.log(path.resolve(this.program.themesDir))
+        //grunt.file.setBase(path.resolve(this.program.themesDir));
+        try {
+            grunt.file.delete(this.tempTheme.baseDir);
+            if (this.program.verbose) Lyrically.admit('Successfully deleted temporary files.');
+        } catch (e) {
+            Lyrically.lament("There was an error cleaning up temporary files. You may have to delete this directory manually: " + this.tempTheme.baseDir);
+        }
     }
-
-    return deferred.promise;
 };
 
 module.exports = Optimizer;
