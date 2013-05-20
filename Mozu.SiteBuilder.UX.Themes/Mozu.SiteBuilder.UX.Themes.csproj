@@ -623,7 +623,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Morrissey\src\optimizers\" />
     <Folder Include="Morrissey\test\theme3\" />
     <Folder Include="SampleThemes\helloWorld\MetaData\PageTypes\catalog\" />
     <Folder Include="SampleThemes\helloWorld\MetaData\PageTypes\commerce\" />
