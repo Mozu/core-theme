@@ -1,6 +1,5 @@
 var grunt = require('grunt'),
     util = require('util'),
-    Q = require('q'),
     fs = require('fs'),
     path = require('path'),
     FSUtils = require("../fsutils"),

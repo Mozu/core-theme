@@ -71,7 +71,7 @@ Optimizer.prototype.run = function () {
 
     try {
         grunt.option('optimizer', this);
-        grunt.tasks(this.tasks, { verbose: true }, function () {
+        grunt.tasks(this.tasks, { verbose: self.program.verbose }, function () {
             self.cleanup();
             self.emit('success');
         });
@@ -88,7 +88,8 @@ Optimizer.prototype.cleanup = function () {
         if (this.program.verbose) Lyrically.note('Deleting temporary files.', false);
         //console.log(this.program.themesDir)
         //console.log(path.resolve(this.program.themesDir))
-        //grunt.file.setBase(path.resolve(this.program.themesDir));
+        grunt.file.delete('Gruntfile.js');
+        grunt.file.setBase(path.resolve(this.program.themesDir));
         try {
             grunt.file.delete(this.tempTheme.baseDir);
             if (this.program.verbose) Lyrically.admit('Successfully deleted temporary files.');

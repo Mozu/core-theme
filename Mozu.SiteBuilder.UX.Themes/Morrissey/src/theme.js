@@ -1,7 +1,6 @@
 ﻿var util = require('util'),
     fs = require('fs'),
     path = require('path'),
-    Q = require('q'),
     elementtree = require('elementtree'),
     Lyrically = require('./lyrically');
 
