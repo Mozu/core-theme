@@ -4,4 +4,5 @@ var path = require('path');
 var fs   = require('fs');
 var root  = path.join(path.dirname(fs.realpathSync(__filename)), '../');
 
-require(root + 'morrissey').run();
+var m = require(root + 'morrissey');
+m.run();

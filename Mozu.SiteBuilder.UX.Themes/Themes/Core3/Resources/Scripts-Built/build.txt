@@ -47,7 +47,7 @@ pages/checkout.js
 
 pages/myaccount.js
 ----------------
-shim!vendor/jquery-colorbox[modules/jquery-plus=jQuery]>jQuery
+shim!vendor/jquery-colorbox[jquery=jQuery]>jQuery
 modules/models-address.js
 modules/models-customer.js
 modules/models-user.js

@@ -314,6 +314,8 @@
     </Compile>
     <None Include="Docs\Mozu_Themeing_Concepts.md" />
     <Content Include="Morrissey\src\fsutils.js" />
+    <Content Include="Morrissey\src\tasks\buildtemptheme.js" />
+    <Content Include="Morrissey\src\tasks\removeuntouchedfiles.js" />
     <Content Include="SampleThemes\helloWorld\MetaData\theme.png" />
     <Content Include="SampleThemes\helloWorld\MetaData\ThemeSettings.xml" />
     <Content Include="SampleThemes\helloWorld\Resources\Images\hello_world\hello.png" />
@@ -354,9 +356,8 @@
     <Content Include="Morrissey\morrissey.js" />
     <Content Include="Morrissey\src\lyrically.js" />
     <Content Include="Morrissey\src\optimizer.js" />
-    <Content Include="Morrissey\src\optimizers\jscompiler.js" />
-    <Content Include="Morrissey\src\optimizers\lesschecker.js" />
-    <Content Include="Morrissey\src\optimizers\themesettingsgenerator.js" />
+    <Content Include="Morrissey\src\tasks\buildjs.js" />
+    <Content Include="Morrissey\src\tasks\generatethemeconfig.js" />
     <Content Include="Morrissey\src\theme.js" />
     <Content Include="Morrissey\test\parseSettings.js" />
     <Content Include="Morrissey\test\theme1\fluegelhorn.txt" />
@@ -622,6 +623,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Morrissey\src\optimizers\" />
     <Folder Include="Morrissey\test\theme3\" />
     <Folder Include="SampleThemes\helloWorld\MetaData\PageTypes\catalog\" />
     <Folder Include="SampleThemes\helloWorld\MetaData\PageTypes\commerce\" />
@@ -631,6 +633,7 @@
     <Folder Include="Themes\Adaptive\Templates\" />
     <Folder Include="Themes\Core3\Resources\Fonts\" />
     <Folder Include="Themes\Core3\Resources\Images\c2Images\" />
+    <Folder Include="Themes\maxine\Templates\" />
     <Folder Include="Themes\MobileCore\Layouts\" />
     <Folder Include="Themes\MobileCore\Resources\Images\Bootstrap\" />
     <Folder Include="Themes\MobileCore\Resources\Images\content\" />

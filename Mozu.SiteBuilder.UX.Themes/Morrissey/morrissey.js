@@ -9,6 +9,7 @@
 program
     .version('0.1.0')
     .option('-j, --build-js', 'Compile JavaScript using r.js')
+    .option('-c, --generate-theme-config', 'Generate a theme.xml file based on your input.')
     .option('-r, --remove-untouched-files', 'Remove all files that have not been modified from the base theme.')
     //.option('-l, --check-less', 'Check LessCSS and theme settings for errors')
     .option('-v, --verbose', 'Talk a lot, mostly about emotions')
@@ -21,10 +22,10 @@ program
         console.log("");
         console.log('  Examples:');
         console.log('');
-        console.log('    $ node morrissey -rj Stripes');
+        console.log('    $ moz -rj Stripes');
         console.log('         Compile JavaScript in the Stripes theme and remove untouched files inherited from the core theme.');
         console.log('');
-        console.log('    $ node morrissey -rv Ghurka -d ../../../Themes');
+        console.log('    $ moz -rv Ghurka -d ../../../Themes');
         console.log('         Remove untouched files in Ghurka, expecting Ghurka to be in the passed Themes directory. Print verbose information.');
         console.log("");
         Lyrically.whine("Remember that if your theme is in TFS source control, you need to check out your entire Themes directory to use this tool.");
@@ -36,7 +37,7 @@ program.currentThemeName = program.args[0];
 module.exports = {
     run: function () {
         if (!program.currentThemeName) {
-            Lyrically.lament("Please supply a theme name.");
+            Lyrically.whine("Please supply a theme name. Run 'moz -h' for help.");
             util.puts("");
             process.exit(1);
         }
@@ -53,7 +54,7 @@ module.exports = {
         });
 
         optimizer.on('failure', function (errors) {
-            Lyrically.lament(errors);
+            Lyrically.lament(errors, false);
             Lyrically.lament('Your theme did not build successfully.');
             util.puts("");
             process.exit(1);
