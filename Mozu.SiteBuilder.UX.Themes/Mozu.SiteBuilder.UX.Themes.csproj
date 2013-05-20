@@ -316,7 +316,6 @@
     <Content Include="Morrissey\src\fsutils.js" />
     <Content Include="Morrissey\src\tasks\buildtemptheme.js" />
     <Content Include="Morrissey\src\tasks\removeuntouchedfiles.js" />
-    <Content Include="SampleThemes\helloWorld\MetaData\theme.png" />
     <Content Include="SampleThemes\helloWorld\MetaData\thumb.png" />
     <Content Include="SampleThemes\helloWorld\MetaData\ThemeSettings.xml" />
     <Content Include="SampleThemes\helloWorld\MetaData\Widgets\cms\hello_world\widget_thumb.png" />
