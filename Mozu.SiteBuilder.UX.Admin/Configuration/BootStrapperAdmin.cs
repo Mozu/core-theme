@@ -10,6 +10,7 @@ using System.Web.Routing;
 using Mozu.Core.Api;
 using Mozu.Core.Logging;
 using Mozu.Provisioning.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -20,10 +21,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
     public class BootStrapperAdmin : AbstractWebApiBootstrapper
     {
+        private const string APPLICATION_NAME = "Mozu.SiteBuilder.Admin";
+
         protected override void AddMessageHandlers(System.Web.Http.HttpConfiguration httpConfiguration)
         {
             base.AddMessageHandlers(httpConfiguration);
-            GlobalFilters.Filters.Add(new HandleErrorAttribute());
+            GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
+            GlobalFilters.Filters.Add(new HandleAllTheMvcErrorsFilter());
+
             //  GlobalFilters.Filters.Add(new SiteBuilderAuthorizeAttribute());
        
             //configuration.Filters.Add(new ApiExceptionFilter(new ExceptionResponseBuilderCollection { IncludeExceptionDetails = true }, new ApiExceptionFilterLogger { IsErrorLoggingEnabled = false }));
@@ -65,12 +70,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             var fac = LoggingService.LoggingServiceFactory as Log4NetServiceFactory;
             if (fac != null)
+            {
                 fac.AddContextProvider(new CurrentRequestLoggingContextProvider());
+                fac.AddContextProvider(new ApplicationNameLoggingContextProvider(APPLICATION_NAME));
+            }
         }
 
         protected override void PreApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {
-            LogStartupMessage<MvcApplication>("Mozu.SiteBuilder.Admin");
+            LogStartupMessage<MvcApplication>(APPLICATION_NAME);
         }
 
         protected override void RegisterControllerRoutes(System.Web.Http.HttpConfiguration httpConfiguration)
