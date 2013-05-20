@@ -4,7 +4,7 @@
     <section id="example" label="Example settings" visible="true">
       <items>
         <setting id="someColor" type="color" label="Some Color" defaultValue="#FFFFFF"/>
-      
-    
+      </items>
+    </section>
   </items>
 </settings>

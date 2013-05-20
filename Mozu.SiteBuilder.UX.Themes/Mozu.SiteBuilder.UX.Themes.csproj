@@ -317,10 +317,12 @@
     <Content Include="Morrissey\src\tasks\buildtemptheme.js" />
     <Content Include="Morrissey\src\tasks\removeuntouchedfiles.js" />
     <Content Include="SampleThemes\helloWorld\MetaData\theme.png" />
+    <Content Include="SampleThemes\helloWorld\MetaData\thumb.png" />
     <Content Include="SampleThemes\helloWorld\MetaData\ThemeSettings.xml" />
+    <Content Include="SampleThemes\helloWorld\MetaData\Widgets\cms\hello_world\widget_thumb.png" />
     <Content Include="SampleThemes\helloWorld\Resources\Images\hello_world\hello.png" />
     <Content Include="SampleThemes\helloWorld\Resources\Scripts\Modules\models-hello-world.js" />
-    <Content Include="SampleThemes\helloWorld\Resources\Scripts\Pages\hello_world.js" />
+    <Content Include="SampleThemes\helloWorld\Resources\Scripts\Vendor\jquery.colorbox-min.js" />
     <Content Include="SampleThemes\helloWorld\theme.xml" />
     <Content Include="Scripts\backbone.d.ts" />
     <Content Include="Themes\Core3\MetaData\Widgets\catalog\featuredproducts\_0007_featured-products.png" />
@@ -628,6 +630,7 @@
     <Folder Include="SampleThemes\helloWorld\MetaData\PageTypes\commerce\" />
     <Folder Include="SampleThemes\helloWorld\Modules\" />
     <Folder Include="SampleThemes\helloWorld\Resources\Fonts\" />
+    <Folder Include="SampleThemes\helloWorld\Resources\Scripts\Pages\" />
     <Folder Include="Themes\Adaptive\Layouts\" />
     <Folder Include="Themes\Adaptive\Templates\" />
     <Folder Include="Themes\Core3\Resources\Fonts\" />
