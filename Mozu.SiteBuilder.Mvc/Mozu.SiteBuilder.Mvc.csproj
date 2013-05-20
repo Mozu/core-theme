@@ -323,6 +323,7 @@
   <ItemGroup>
     <Compile Include="ActionFilters\AddCorrelationHeaderFilterAttribute.cs" />
     <Compile Include="ActionFilters\ClientCacheHeadersAttribute.cs" />
+    <Compile Include="ActionFilters\HandleAllTheMvcErrorsFilter.cs" />
     <Compile Include="ActionFilters\PreserveApiContextFilterAttribute.cs" />
     <Compile Include="ActionFilters\MultiSiteTestingActionFilter.cs" />
     <Compile Include="ActionFilters\SiteBuilderAuthorizeAttribute.cs" />
@@ -376,6 +377,7 @@
     <Compile Include="JsonNetValueProviderFactory.cs" />
     <Compile Include="Localization\ILocalizationRepository.cs" />
     <Compile Include="Localization\LocalizationRepository.cs" />
+    <Compile Include="Logging\ApplicationNameLoggingContextProvider.cs" />
     <Compile Include="Logging\BestLog4NetLayoutInTheWorld.cs" />
     <Compile Include="Logging\CurrentRequestLoggingContextProvider.cs" />
     <Compile Include="Logging\NullLogger.cs" />

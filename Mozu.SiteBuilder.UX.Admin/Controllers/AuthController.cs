@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
+using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -29,6 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient _merchantSignUpWebApiClient;
         private readonly IRolesHelper _rolesHelper;
         private readonly ISettings _settings;
+        private ILogger _log;
 
         public AuthController(IVolusionLoginHelper loginHelper, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper, IPasswordHelper passwordHelper, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IRolesHelper rolesHelper , ISettings settings )
         {
@@ -42,6 +44,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _merchantSignUpWebApiClient = merchantSignUpWebApiClient;
             _rolesHelper = rolesHelper;
             _settings = settings;
+
+            _log = LoggingService.LoggerFor<AuthController>();
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
@@ -145,9 +149,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             _authenticationHelper.SetCurrentUser(ticket.AccessToken);
 
-            ActionResult res = await ChangeTenant(ticket.TenantId, ticket.RedirectUrl);
-
-            return res;
+            try
+            {
+                ActionResult res = await ChangeTenant(ticket.TenantId, ticket.RedirectUrl);
+                return res;
+            }
+            catch (Exception e)
+            {
+                _log.Error("Unexpected LoginByTicket error.", e);
+                throw e;
+            }
         }
 
         public ActionResult ForgotPassword()

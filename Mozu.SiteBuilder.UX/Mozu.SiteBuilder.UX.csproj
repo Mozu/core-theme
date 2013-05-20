@@ -345,7 +345,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionFilters\HandleAllTheErrorsFilter.cs" />
     <Compile Include="ActionFilters\MediaTypeProcessorAttribute.cs" />
     <Compile Include="ActionFilters\NotFoundActionFilter.cs" />
     <Compile Include="ActionFilters\WigitContexInitFilter.cs" />

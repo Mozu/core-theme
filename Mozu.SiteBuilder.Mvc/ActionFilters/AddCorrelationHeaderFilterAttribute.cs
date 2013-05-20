@@ -9,7 +9,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     /// However, DelegatingHandlers only work for Web API controllers
     /// and sometimes we need the same functionality on MVC controllers.
     /// </summary>
-    public class AddCorrelationHeaderFilterAttribute : ActionFilterAttribute
+    public class AddCorrelationHeaderFilterAttribute : ActionFilterAttribute, IExceptionFilter
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -31,11 +31,21 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
         {
             base.OnResultExecuted(filterContext);
 
-            var response = filterContext.HttpContext.Response;
+            AddFiltersToResponse(filterContext);
+        }
+
+        public void OnException(ExceptionContext filterContext)
+        {
+            AddFiltersToResponse(filterContext);
+        }
+
+        private void AddFiltersToResponse(ControllerContext context)
+        {
+            var response = context.HttpContext.Response;
             string correlationId = Trace.CorrelationManager.ActivityId.ToString("N");
 
             if (correlationId != "00000000000000000000000000000000" && String.IsNullOrEmpty(response.Headers[Mozu.Core.Api.Contracts.Constants.Headers.CORRELATION]))
-                response.Headers.Add(Mozu.Core.Api.Contracts.Constants.Headers.CORRELATION, correlationId);
+                response.AppendHeader(Mozu.Core.Api.Contracts.Constants.Headers.CORRELATION, correlationId);
         }
     }
 }

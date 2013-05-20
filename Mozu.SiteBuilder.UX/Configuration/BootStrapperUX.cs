@@ -13,14 +13,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
 {
     public  class BootStrapperUX : AbstractWebApiBootstrapper
     {
+        private const string APPLICATION_NAME = "Mozu.SiteBuilder.UX";
+
         protected override void AddMessageHandlers(System.Web.Http.HttpConfiguration httpConfiguration)
         {
             base.AddMessageHandlers(httpConfiguration);
             GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
             GlobalFilters.Filters.Add(new PreserveApiContextFilterAttribute());
-            GlobalFilters.Filters.Add(new NotFoundActionFilter());
-
-            GlobalFilters.Filters.Add(new HandleAllTheErrorsFilter());
+            GlobalFilters.Filters.Add(new HandleAllTheMvcErrorsFilter());
         }
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {
@@ -49,12 +49,15 @@ namespace Mozu.SiteBuilder.UX.Configuration
             // TODO: we really break abstraction here.
             var fac = LoggingService.LoggingServiceFactory as Log4NetServiceFactory;
             if (fac != null)
+            {
                 fac.AddContextProvider(new CurrentRequestLoggingContextProvider());
+                fac.AddContextProvider(new ApplicationNameLoggingContextProvider(APPLICATION_NAME));
+            }
         }
 
         protected override void PreApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {
-            LogStartupMessage<MvcApplication>("Mozu.SiteBuilder.UX");
+            LogStartupMessage<MvcApplication>(APPLICATION_NAME);
         }
 
         protected override void RegisterControllerRoutes(System.Web.Http.HttpConfiguration httpConfiguration)
