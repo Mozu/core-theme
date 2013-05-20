@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using AutoMapper;
 using Mozu.Core.Api.Contracts;
@@ -38,24 +39,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<ActionResult> ProductDetail(string productCode)
         {
             var res = await _productClient.GetProduct(productCode, null, "Categories,Properties", _ctx.IsEditMode);
+        
             if ( !res.ResponseMessage.IsSuccessStatusCode )
             {
-                var x = res.ReadException().UnwrapAgg();
-                var errorCollection = x.Data["DataContract"] as ErrorCollection;
-                var apiWCE = x as Mozu.Core.Api.Client.Exceptions.ApiWebClientException;
-                if ( apiWCE!= null && apiWCE.RemoteError != null  && apiWCE.RemoteError.ExceptionDetail != null && apiWCE.RemoteError.ExceptionDetail.InnerExceptionDetail  != null )
+                if (res.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
-                    //todo: get a valid error code
-                    if (apiWCE.RemoteError.ExceptionDetail.InnerExceptionDetail.Message.Contains("no valid variations"))
-                    {
-                        return new ContentResult()
-                                   {
-                                       Content = "<h1>This product has no valid Configurations</h1><p>go to the product editor and <b>activate</b> a configuration under the <B>Configurable Options</b> section"
-                                   };
-                    }
-                    throw new ApplicationException(apiWCE.RemoteError.ExceptionDetail.InnerExceptionDetail.Message);
+                    return new HttpNotFoundResult();
                 }
-                throw x;
+               
             }
             var prod = res.ReadAsAsync().Result;
             var product = Mapper.Map<Models.StoreFront.Catalog.Product>(prod);
@@ -151,7 +142,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (cat == null)
             {
-                return Redirect("/store");
+               return new HttpNotFoundResult();
+                 
             }
 
             SiteContext.PageContext.CmsContext = new CmsPageContext()

@@ -18,6 +18,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
             base.AddMessageHandlers(httpConfiguration);
             GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
             GlobalFilters.Filters.Add(new PreserveApiContextFilterAttribute());
+            GlobalFilters.Filters.Add(new NotFoundActionFilter());
+
             GlobalFilters.Filters.Add(new HandleAllTheErrorsFilter());
         }
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
