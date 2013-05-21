@@ -9,7 +9,7 @@ Ext.define('Taco.view.site.widget.BlogArchive', {
 
     initComponent: function () {
         
-        this.items = [{
+        this.fields = [{
             xtype: 'container',
             layout: {
                 type: 'table',

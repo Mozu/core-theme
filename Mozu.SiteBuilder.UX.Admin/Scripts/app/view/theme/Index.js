@@ -19,6 +19,8 @@ Ext.define('Taco.view.theme.Index', {
         this.store = Ext.create('Taco.store.ThemeListing', {
             groupField: 'isSelected',
             groupDir: 'DESC',
+            sortOnLoad:true,
+            remoteGroup:false,
             listeners: {
                 beforesync: function() {
                     if (this.store.autoSyncSuspended) {

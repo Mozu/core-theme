@@ -7,7 +7,7 @@ Ext.define('Taco.view.site.widget.AddThis', {
     title: 'Add This',
 
     initComponent: function () {
-        this.items = [
+        this.fields = [
         {
             xtype: 'fieldcontainer',
             fieldLabel: 'Style',

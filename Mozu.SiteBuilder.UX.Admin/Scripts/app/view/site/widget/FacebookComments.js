@@ -8,7 +8,7 @@ Ext.define('Taco.view.site.widget.FacebookComments', {
 
     initComponent: function () {
 
-        this.items = [{
+        this.fields = [{
             xtype: 'slider',
             fieldLabel: 'Number of posts to display',
             labelSeparator: '',

@@ -97,7 +97,7 @@ Ext.define('Taco.view.site.widget.HorizontalRule', {
             me
         );
 
-        this.items = [ me.flex ];
+        this.fields = [me.flex];
 
         this.callParent( arguments );
     },

@@ -323,10 +323,13 @@
             }
             //todo    allow for complex json def;
             widgetEditorCls = eventData.widgetDefinition.get('editView');
-            widgetEditorConfig = eventData.widgetDefinition.get('editViewConfig') || {};
+            widgetEditorConfig = Ext.apply({}, eventData.widgetDefinition.get('editViewConfig'));
+            
+            widgetEditorConfig.fields = widgetEditorConfig.fields ||  Ext.clone(eventData.widgetDefinition.get('editViewFields'));
            
             eventData.model = widgetModel;
-            widgetEditorConfig = Ext.apply(widgetEditorConfig , {
+            widgetEditorConfig = Ext.apply(widgetEditorConfig, {
+                title: eventData.widgetDefinition.get('displayName'),
                 widgetEditData: eventData,
                 metaData: eventData.metaData,
                 autoShow: true

@@ -47,7 +47,7 @@ Ext.define('Taco.view.site.widget.FeaturedProducts', {
             }
         });
 
-        this.items = [
+        this.fields = [
             this.selector,
             this.field
         ];
