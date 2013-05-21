@@ -64,7 +64,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
                 SiteId = 3,
                 IsContentOverridden = true,
                 ProductName = "foo bar",
-                FullDescription = "blah blah blah"
+                ProductFullDescription  = "blah blah blah"
             };
 
             var response = _testedController.CreateProductInSiteInfo(new List<ProductInSiteInfo> { newPisi }).Result;
@@ -73,7 +73,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             response.Items.Count.ShouldEqual(1);
             response.Items[0].ProductCode.ShouldEqual(newPisi.ProductCode);
             response.Items[0].ProductName.ShouldEqual(newPisi.ProductName);
-            response.Items[0].FullDescription.ShouldEqual(newPisi.FullDescription);
+            response.Items[0].ProductFullDescription.ShouldEqual(newPisi.ProductFullDescription);
             response.Items[0].SiteId.ShouldEqual(newPisi.SiteId);
         }
 
