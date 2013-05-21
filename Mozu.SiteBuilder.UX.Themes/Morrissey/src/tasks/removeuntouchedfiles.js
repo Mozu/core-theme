@@ -2,7 +2,7 @@ var grunt = require('grunt'),
     util = require('util'),
     fs = require('fs'),
     path = require('path'),
-    FSUtils = require("../fsutils"),
+    walk = require("walk").walk,
     Lyrically = require('../lyrically');
 
 var TEMPLATE_EXTENSION = ".vol",
@@ -20,7 +20,7 @@ module.exports = function () {
         done(false);
     } else {
 
-        var walker = FSUtils.walkDir(theme.baseDir, { followLinks: false });
+        var walker = walk(theme.baseDir, { followLinks: false });
         walker.on("file", function (root, stat, next) {
             var prefixedFilePath = false;
             var filePath = path.relative(theme.baseDir, path.join(root, stat.name)),
@@ -38,7 +38,7 @@ module.exports = function () {
        
         walker.on('end', function () {
 
-            var secondWalker = FSUtils.walkDir(theme.baseDir, { followLinks: false });
+            var secondWalker = walk(theme.baseDir, { followLinks: false });
             secondWalker.on('directory', function (root, stat, next) {
                 var dirPath = path.resolve(root, stat.name);
                 if (fs.readdirSync(dirPath).length === 0) {

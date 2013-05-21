@@ -1,6 +1,4 @@
 var grunt = require('grunt'),
-    async = require('async'),
-    FSUtils = require('../fsutils'),
     path = require('path'),
     Theme = require('../theme'),
     Lyrically = require('../lyrically');
