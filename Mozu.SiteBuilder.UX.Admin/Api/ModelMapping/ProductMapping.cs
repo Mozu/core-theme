@@ -187,8 +187,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember( x=> x.ProductCategories, op=> op.MapFrom( dc=> dc.ProductCategories != null ? dc.ProductCategories.Select( x=> x.CategoryId ).ToList() : null))
                 .ForMember(x => x.IsPriceOverridden , op => op.MapFrom(dc => dc.IsContentOverridden))
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))
-                .ForMember(x => x.ShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
-                .ForMember(x => x.FullDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
+                .ForMember(x => x.ProductShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
+                .ForMember(x => x.ProductFullDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
                 .ForMember(x => x.IsPriceOverridden, op => op.MapFrom(dc => dc.IsPriceOverridden))
                 .ForMember(x => x.Price, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).Price))
                 .ForMember(x => x.SalePrice, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).SalePrice))
@@ -211,8 +211,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     return new DC.ProductLocalizedContent
                     {
                         ProductName = pisi.ProductName,
-                        ProductShortDescription = pisi.ShortDescription,
-                        ProductFullDescription = pisi.FullDescription,
+                        ProductShortDescription = pisi.ProductShortDescription,
+                        ProductFullDescription = pisi.ProductFullDescription,
                         ProductImages = images
                     };
                 }))

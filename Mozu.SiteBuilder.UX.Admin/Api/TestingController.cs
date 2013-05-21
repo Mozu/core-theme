@@ -235,8 +235,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         {
                             return _themeRepository.GetTheme(x);
                         }
-                        catch
+                        catch(Exception ex)
                         {
+                            System.Diagnostics.Debug.Write(ex);
                             return null;
                         }
                         
