@@ -9,7 +9,7 @@ Ext.define('Taco.view.site.widget.TagCollection', {
 
     initComponent: function () {
         
-        this.items = [{
+        this.fields = [{
             xtype: 'container',
             layout: {
                 type: 'table',

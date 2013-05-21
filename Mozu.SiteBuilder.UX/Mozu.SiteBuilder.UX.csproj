@@ -350,6 +350,7 @@
     <Compile Include="ActionFilters\WigitContexInitFilter.cs" />
     <Compile Include="Areas\Misc\Controllers\AccountController.cs" />
     <Compile Include="Areas\Misc\Controllers\CacheFlushController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Areas\Misc\Controllers\SDKResourceController.cs" />
     <Compile Include="Areas\Misc\Controllers\DeveloperDocumentationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\TemplateController.cs" />

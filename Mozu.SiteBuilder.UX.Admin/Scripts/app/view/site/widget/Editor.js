@@ -29,7 +29,10 @@ Ext.define('Taco.view.site.widget.Editor', {
         this.form = Ext.create('Ext.form.Panel', {
             bubbleEvents: ['dirtychange', 'validitychange'],
             cls: 'taco-widget-form',
-            items: this.items,
+            defaults: {
+                xtype: 'textfield'
+            },
+            items:  this.fields,
             border: false,
             trackResetOnLoad: true
         });

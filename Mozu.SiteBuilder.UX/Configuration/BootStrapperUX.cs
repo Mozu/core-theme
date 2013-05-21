@@ -21,6 +21,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
             GlobalFilters.Filters.Add(new PreserveApiContextFilterAttribute());
             GlobalFilters.Filters.Add(new HandleAllTheMvcErrorsFilter());
+            GlobalFilters.Filters.Add(new NotFoundActionFilter());
         }
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {
@@ -70,6 +71,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
         
         public void RegisterMvcRoutes(RouteCollection routes)
         {
+
+           
+         
+
+
             return;
             // Content Routes
 #pragma warning disable 0162

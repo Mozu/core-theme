@@ -76,18 +76,20 @@ Ext.define('Taco.view.product.subform.General', {
                 required: true
             }, {
                 xtype: 'htmleditor',
+                enableFont: false,
                 fieldLabel: 'Short Description',
                 name: 'productShortDescription',
                 emptyText: 'Words',
                 width: '100%',
-                fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
+                //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
                 required: true
             }, {
                 xtype: 'htmleditor',
+                enableFont:false,
                 fieldLabel: 'Full Description',
                 name: 'productFullDescription',
                 emptyText: 'Words, words, and more words.  Also, with lists.',
-                fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
+                //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
                 width: '100%',
                 required: true
             }, {

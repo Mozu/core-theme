@@ -26,37 +26,47 @@ namespace Mozu.SiteBuilder.UX
             _bs.RegisterMvcRoutes(RouteTable.Routes);
                
             AreaRegistration.RegisterAllAreas();
+
+            RegisterErrorRoutes(RouteTable.Routes);
             DependencyResolver.SetResolver(new AutofacDependencyResolver(_bs.Container ));
 
-
+       
             if (ConfigurationManager.AppSettings["routeDebug"] == "true")
             {
                 RouteDebugger.RewriteRoutesForTesting(RouteTable.Routes);
             }
         }
 
+
+        void RegisterErrorRoutes(RouteCollection routes)
+        {
+            routes.MapRoute("global04", "{*url}",
+               new { controller = "Error", action = "NotFound" }
+           );
+
+        }
  
 
-        protected void Application_EndRequest()
-        {
-            if (Context.Response.StatusCode == 404)
-            {
-                if (Context.Request.RawUrl.IndexOf ("favicon" , StringComparison.OrdinalIgnoreCase ) > -1)
-                {
-                    return;
-                }
-                if (Path.GetExtension(Context.Request.Path).Length > 0)
-                {
-                    return;
-                }
-                if (Context.Request.RawUrl.IndexOf("404") > -1)
-                {
-                    return;
-                }
+        //protected void Application_EndRequest()
+        //{
+        //    if (Context.Response.StatusCode == 404)
+        //    {
+        //        if (Context.Request.RawUrl.IndexOf ("favicon" , StringComparison.OrdinalIgnoreCase ) > -1)
+        //        {
+        //            return;
+        //        }
+        //        if (Path.GetExtension(Context.Request.Path).Length > 0)
+        //        {
+        //            return;
+        //        }
+        //        if (Context.Request.RawUrl.IndexOf("404") > -1)
+        //        {
+        //            return;
+        //        }
                
-                Context.Response.RedirectToRoute("StoreFront_404");
-            }
-        }
+        //        Context.Response.RedirectToRoute("StoreFront_404");
+        //    }
+        //}
     }
 
 

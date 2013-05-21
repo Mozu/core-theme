@@ -9,7 +9,7 @@ Ext.define('Taco.view.site.widget.RecentBlogPosts', {
 
     initComponent: function () {
         
-        this.items = [{
+        this.fields = [{
             xtype: 'container',
             layout: {
                 type: 'table',

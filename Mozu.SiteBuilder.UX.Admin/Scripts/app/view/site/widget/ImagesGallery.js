@@ -14,7 +14,7 @@ Ext.define('Taco.view.site.widget.ImagesGallery', {
         this.styleForm = this.initStyleForm();
         this.contentForm = this.initContentForm();        
 
-        this.items = [this.styleForm, this.contentForm];
+        this.fields = [this.styleForm, this.contentForm];
 
         this.callParent(arguments);
 

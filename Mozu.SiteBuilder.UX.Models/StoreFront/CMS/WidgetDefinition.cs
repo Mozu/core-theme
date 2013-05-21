@@ -36,6 +36,11 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         public string  EditViewConfig { get; set; }
 
 
+        [DataMember(Name = "editViewFields")]
+        public Newtonsoft.Json.Linq.JArray EditViewFields { get; set; }
+        
+
+
         [DataMember(Name = "displayTemplate")]
         public string DisplayTemplate { get; set; }
 

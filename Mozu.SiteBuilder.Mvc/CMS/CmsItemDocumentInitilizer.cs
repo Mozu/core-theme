@@ -40,14 +40,14 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return task != null;
         }
 
-        public async Task<bool> InitCmsPageContext(CmsPageContext cmsPageContext)
+        public Task<bool> InitCmsPageContext(CmsPageContext cmsPageContext)
         {
 
             if (cmsPageContext == null)
             {
-                return false;
+                return new TaskCompletionSource<bool>(true).Task;
             }
-            
+
             Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> pageTask = null;
             Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> templateTask = null;
             Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> siteTemplateTask = null;
@@ -56,105 +56,113 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 tasks.Add(pageTask);
             }
-            if (cmsPageContext.SiteTemplate.Document  == null && ProcessDocumentRequest(cmsPageContext.SiteTemplate, "templates",out siteTemplateTask))
+            if (cmsPageContext.SiteTemplate.Document == null && ProcessDocumentRequest(cmsPageContext.SiteTemplate, "templates", out siteTemplateTask))
             {
                 tasks.Add(siteTemplateTask);
             }
-            if (cmsPageContext.Template.Document  == null && ProcessDocumentRequest(cmsPageContext.Template , "templates", out templateTask))
+            if (cmsPageContext.Template.Document == null && ProcessDocumentRequest(cmsPageContext.Template, "templates", out templateTask))
             {
                 tasks.Add(templateTask);
             }
 
 
-            await Task.WhenAll(tasks.ToArray());
-            if (pageTask != null && pageTask.Result.ResponseMessage.IsSuccessStatusCode)
-            {
-                cmsPageContext.Page.Document  = pageTask.Result.ReadAsSync();
-                cmsPageContext.Page.Id = cmsPageContext.Page.Document.Id;
-            }
-            if (templateTask != null && templateTask.Result.ResponseMessage.IsSuccessStatusCode)
-            {
-                cmsPageContext.Template.Document  = templateTask.Result.ReadAsSync();
-                cmsPageContext.Template.Id = cmsPageContext.Template.Document.Id;
-            }
-            if (siteTemplateTask != null && siteTemplateTask.Result.ResponseMessage.IsSuccessStatusCode)
-            {
-                cmsPageContext.SiteTemplate.Document  = siteTemplateTask.Result.ReadAsSync();
-                cmsPageContext.SiteTemplate.Id =  cmsPageContext.SiteTemplate.Document.Id;
-            }
 
-            tasks.Clear();
-
-            if (templateTask == null && cmsPageContext.Page.Document != null && cmsPageContext.Page.Document.Properties != null && cmsPageContext.Page.Document.Properties != null)
-            {
-                string templateName = cmsPageContext.Page.Document.Properties.Where(x => x.PropertyType == "template").Select(x => (string)x.Value).FirstOrDefault();
-                if (templateName != null)
+            var task =Task.WhenAll(tasks.ToArray()).ContinueWith(u =>
                 {
-                    if (cmsPageContext.Template == null)
+
+
+                    if (pageTask != null && pageTask.Result.ResponseMessage.IsSuccessStatusCode)
                     {
-                        cmsPageContext.Template = new DocumentRequest()
-                                                         {
-                                                             Path = templateName ,
-                                                             Collection="templates"
-                                                         };
+                        cmsPageContext.Page.Document = pageTask.Result.ReadAsSync();
+                        cmsPageContext.Page.Id = cmsPageContext.Page.Document.Id;
                     }
-                    templateTask = _cmsServiceWrapper.GetByPath2("templates", templateName);
-                    tasks.Add(templateTask);
-                    var res = await templateTask;
-                    if (templateTask.Result.ResponseMessage.IsSuccessStatusCode)
+                    if (templateTask != null && templateTask.Result.ResponseMessage.IsSuccessStatusCode)
                     {
-                        
                         cmsPageContext.Template.Document = templateTask.Result.ReadAsSync();
                         cmsPageContext.Template.Id = cmsPageContext.Template.Document.Id;
                     }
-                }
+                    if (siteTemplateTask != null && siteTemplateTask.Result.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        cmsPageContext.SiteTemplate.Document = siteTemplateTask.Result.ReadAsSync();
+                        cmsPageContext.SiteTemplate.Id = cmsPageContext.SiteTemplate.Document.Id;
+                    }
 
-            }
+                    tasks.Clear();
 
-            cmsPageContext.RuntimeData = new List<WidgetRuntimeData>();
-            if (cmsPageContext.Page.Document != null)
-            {
-                var widgetRaw = (string)cmsPageContext.Page.Document.Get(CmsConstants.Documents.widget_prop);
-                var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
-                var src = new DocumentRequest()
-                              {
-                                  Id = cmsPageContext.Page.Document.Id,
-                                  Collection = cmsPageContext.Page.Document.DocumentListName
-                              };
-                existingWidgets.ForEach(x => x.Source = src);
-                cmsPageContext.RuntimeData.AddRange(existingWidgets);
+                    if (templateTask == null && cmsPageContext.Page.Document != null && cmsPageContext.Page.Document.Properties != null && cmsPageContext.Page.Document.Properties != null)
+                    {
+                        string templateName = cmsPageContext.Page.Document.Properties.Where(x => x.PropertyType == "template").Select(x => (string) x.Value).FirstOrDefault();
+                        if (templateName != null)
+                        {
+                            if (cmsPageContext.Template == null)
+                            {
+                                cmsPageContext.Template = new DocumentRequest()
+                                                              {
+                                                                  Path = templateName,
+                                                                  Collection = "templates"
+                                                              };
+                            }
+                            templateTask = _cmsServiceWrapper.GetByPath2("templates", templateName);
+                            //todo....
+                            
+                            tasks.Add(templateTask);
+                            //var res = await templateTask;
+                            var res = templateTask.Result;
+                            if (templateTask.Result.ResponseMessage.IsSuccessStatusCode)
+                            {
 
-            }
-            if (cmsPageContext.Template.Document  != null)
-            {
-                var widgetRaw = (string)cmsPageContext.Template.Document.Get(CmsConstants.Documents.widget_prop);
-                var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
-                var src = new DocumentRequest()
-                              {
-                                  Id = cmsPageContext.Template.Document .Id,
-                                  Collection = cmsPageContext.Template.Document.DocumentListName
-                              };
-                existingWidgets.ForEach(x => x.Source = src);
-                cmsPageContext.RuntimeData.AddRange(existingWidgets);
+                                cmsPageContext.Template.Document = templateTask.Result.ReadAsSync();
+                                cmsPageContext.Template.Id = cmsPageContext.Template.Document.Id;
+                            }
+                        }
 
-            }
-            if (cmsPageContext.SiteTemplate.Document   != null)
-            {
-                var widgetRaw = (string)cmsPageContext.SiteTemplate.Document .Get(CmsConstants.Documents.widget_prop);
-                var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
-                var src = new DocumentRequest()
-                              {
-                                  Id = cmsPageContext.SiteTemplate.Document .Id,
-                                  Collection = cmsPageContext.SiteTemplate.Document.DocumentListName
-                              };
-                existingWidgets.ForEach(x => x.Source = src);
-                cmsPageContext.RuntimeData.AddRange(existingWidgets);
+                    }
 
-            }
-            cmsPageContext.Initialized = true;
-            return true;
+                    cmsPageContext.RuntimeData = new List<WidgetRuntimeData>();
+                    if (cmsPageContext.Page.Document != null)
+                    {
+                        var widgetRaw = (string) cmsPageContext.Page.Document.Get(CmsConstants.Documents.widget_prop);
+                        var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                        var src = new DocumentRequest()
+                                      {
+                                          Id = cmsPageContext.Page.Document.Id,
+                                          Collection = cmsPageContext.Page.Document.DocumentListName
+                                      };
+                        existingWidgets.ForEach(x => x.Source = src);
+                        cmsPageContext.RuntimeData.AddRange(existingWidgets);
 
+                    }
+                    if (cmsPageContext.Template.Document != null)
+                    {
+                        var widgetRaw = (string) cmsPageContext.Template.Document.Get(CmsConstants.Documents.widget_prop);
+                        var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                        var src = new DocumentRequest()
+                                      {
+                                          Id = cmsPageContext.Template.Document.Id,
+                                          Collection = cmsPageContext.Template.Document.DocumentListName
+                                      };
+                        existingWidgets.ForEach(x => x.Source = src);
+                        cmsPageContext.RuntimeData.AddRange(existingWidgets);
 
+                    }
+                    if (cmsPageContext.SiteTemplate.Document != null)
+                    {
+                        var widgetRaw = (string) cmsPageContext.SiteTemplate.Document.Get(CmsConstants.Documents.widget_prop);
+                        var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                        var src = new DocumentRequest()
+                                      {
+                                          Id = cmsPageContext.SiteTemplate.Document.Id,
+                                          Collection = cmsPageContext.SiteTemplate.Document.DocumentListName
+                                      };
+                        existingWidgets.ForEach(x => x.Source = src);
+                        cmsPageContext.RuntimeData.AddRange(existingWidgets);
+
+                    }
+                    cmsPageContext.Initialized = true;
+                    return true;
+                });
+
+            return task;
         }
 
         public void CreateTemplate(DocumentRequest req, out Task<ServiceClientResponse<Document>> task)
