@@ -4,6 +4,7 @@
 Ext.define('Taco.view.site.page.settings.General', {
     extend: 'Taco.view.site.page.PageSettingsPanel',
     title: 'General',
+    cls: 'taco-sidebar-model-general',
     form: {
         layout: 'vbox',
         items: [
