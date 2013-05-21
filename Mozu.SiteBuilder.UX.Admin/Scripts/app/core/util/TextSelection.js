@@ -29,7 +29,10 @@ Ext.define('Taco.core.util.TextSelection', {
     /**
      * Tests for any text currently highlighted by the user. On supported browsers (non-IE), highlight selection is tested for the given element.
      * @param {HTMLInputElement} element The input element to test (non-IE support only)
-     * @return {Boolean}
+     * @return {Boolean} 
+
+
+     testing out commit bc TFS sucks
      */
     isAnyTextHighlighted: function (element) {
         return (this.getHighlightedText(element).length > 0);
