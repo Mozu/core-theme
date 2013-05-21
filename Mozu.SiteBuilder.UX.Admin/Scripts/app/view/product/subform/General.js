@@ -75,7 +75,7 @@ Ext.define('Taco.view.product.subform.General', {
                 width: '100%',
                 required: true
             }, {
-                xtype: 'textarea',
+                xtype: 'htmleditor',
                 fieldLabel: 'Short Description',
                 name: 'productShortDescription',
                 emptyText: 'Words',
@@ -83,7 +83,7 @@ Ext.define('Taco.view.product.subform.General', {
                 fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
                 required: true
             }, {
-                xtype: 'textarea',
+                xtype: 'htmleditor',
                 fieldLabel: 'Full Description',
                 name: 'productFullDescription',
                 emptyText: 'Words, words, and more words.  Also, with lists.',
