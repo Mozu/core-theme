@@ -381,7 +381,40 @@ Ext.application({
             },
         });
 
-
+        Ext.override(Ext.form.field.HtmlEditor, {
+            getValue: function () {
+                var me = this,
+                    value;
+                if (!me.rendered) {
+                    return me.value ;
+                }
+                if (!me.sourceEditMode) {
+                    me.syncValue();
+                }
+                value =  me.textareaEl.dom.value ;
+                me.value = value;
+                return value;
+            },
+            relayCmd: function (cmd, value) {
+                if (!this.rendered) {
+                    this.on('afterrender', function (html) {
+                        html.relayCmd(cmd, value);
+                    }, this, { single: true });
+                    return;
+                }
+                Ext.defer(function () {
+                    var me = this;
+                    if (!this.rendered) {
+                        me.relayCmd(cmd, value);
+                        return;
+                    }
+                    
+                    me.focus();
+                    me.execCmd(cmd, value);
+                    me.updateToolbar();
+                }, 10, this);
+            },
+        });
         Ext.override(Ext.data.AbstractStore, {
             constructor: function () {
                 this.callParent(arguments);
