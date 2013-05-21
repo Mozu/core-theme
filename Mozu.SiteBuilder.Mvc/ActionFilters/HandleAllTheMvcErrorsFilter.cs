@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using Mozu.Core.Logging;
@@ -52,20 +53,25 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             {
                 var ex = filterContext.Exception as HttpUnhandledException ?? new HttpUnhandledException(null, filterContext.Exception);
 
-                if (ex != null)
+                var response = filterContext.HttpContext.Response;
+
+                response.Clear();
+                response.StatusCode = 500;
+                response.TrySkipIisCustomErrors = true;
+                filterContext.ExceptionHandled = true;
+
+                var html = ex.GetHtmlErrorMessage();
+
+                if (Trace.CorrelationManager.ActivityId != Guid.Empty)
                 {
-                    var response = filterContext.HttpContext.Response;
-
-                    response.Clear();
-                    response.StatusCode = 500;
-                    response.TrySkipIisCustomErrors = true;
-                    filterContext.ExceptionHandled = true;
-
-                    filterContext.Result = new ContentResult {
-                        Content = ex.GetHtmlErrorMessage(),
-                        ContentType = "text/html"
-                    };
+                    string correlationId = Trace.CorrelationManager.ActivityId.ToString("N");
+                    html = html.Replace("<b> Description: </b>", "<b> Correlation Id: </b>" + correlationId + "<br /><br /><b> Description: </b>");
                 }
+
+                filterContext.Result = new ContentResult {
+                    Content = html,
+                    ContentType = "text/html"
+                };
             }
         }
     }

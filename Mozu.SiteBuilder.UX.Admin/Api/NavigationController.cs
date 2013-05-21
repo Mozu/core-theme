@@ -40,14 +40,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         ///  Public constructor.
         /// </summary>
-        public NavigationController(INavigationRepository navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService, NavigationGandalf gandalf)
+        public NavigationController(INavigationRepository navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService, NavigationGandalf gandalf, ILogger log)
         {
             _navRepo = navRepo;
             _catClient = catClient;
             _cmsService = cmsService;
             _gandalf = gandalf;
-
-            _log = LoggingService.LoggerFor<NavigationController>();
+            _log = log;
         }
 
         /// <summary>

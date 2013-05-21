@@ -478,7 +478,6 @@
     <Compile Include="Configuration\ConfigurationModule.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controllers\AddContextLogDataFilter.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImgController.cs" />
     <Compile Include="Controllers\AuthController.cs" />

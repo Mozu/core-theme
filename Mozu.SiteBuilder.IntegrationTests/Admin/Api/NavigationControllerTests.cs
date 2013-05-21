@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts;
+using Mozu.Core.Logging;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -24,6 +25,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private ICategoryWebApiClient _categoryWebApiClient;
         private ICmsServiceWrapper _cmsServiceWrapper;
         private INavigationRepository _navigationRepository;
+        private ILogger _logger;
 
         private NavigationSet _mockNavigation {
             get {
@@ -118,6 +120,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         public void SetUp()
         {
             _siteBuilderContext = Substitute.For<ISiteBuilderContext>();
+            _logger = Substitute.For<ILogger>();
         }
 
         [Test]
@@ -407,7 +410,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             // TODO: broke the isolation
             var adminCategoryProvider = new CategoryNavigationProvider(_categoryWebApiClient);
             var gandalf = new NavigationGandalf(_navigationRepository, adminCategoryProvider, _cmsServiceWrapper);
-            return new NavigationController(_navigationRepository, _categoryWebApiClient, _cmsServiceWrapper, gandalf);
+            return new NavigationController(_navigationRepository, _categoryWebApiClient, _cmsServiceWrapper, gandalf, _logger);
         }
     }
 }
