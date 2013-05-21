@@ -94,7 +94,7 @@
     <LessGenerateCssFile>false</LessGenerateCssFile>
     <LessMinify>false</LessMinify>
     <LessShowPreviewWindow>true</LessShowPreviewWindow>
-    <MarkdownMargin_width>572</MarkdownMargin_width>
+    <MarkdownMargin_width>736</MarkdownMargin_width>
     <ScssGenerateCssFile>False</ScssGenerateCssFile>
     <ScssMinify>False</ScssMinify>
     <ScssShowPreviewWindow>True</ScssShowPreviewWindow>

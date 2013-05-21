@@ -1,5 +1,4 @@
 var grunt = require('grunt'),
-    util = require('util'),
     async = require('async'),
     xmlbuilder = require('xmlbuilder'),
     Lyrically = require('../lyrically'),
