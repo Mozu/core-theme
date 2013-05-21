@@ -30,7 +30,8 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
             xtype: 'tbtext',
             text: this.title
         }];
-       
+
+       /*
         this.form.fbar = ['->', {
             xtype: 'secondarybutton',
             text: 'Cancel',
@@ -49,7 +50,7 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
                 scope: this
             }
         }];
-        
+        */
         this.bbar = ['->',{
             xtype: 'secondarybutton',
             text: 'Cancel',
@@ -68,10 +69,14 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
                 scope: this
             }
         }];
+        
         this.form = Ext.widget('formform', this.form);
-        this.dirtyButton = this.form.down('#pageSettingsPanelDirtyButton');
+       // debugger
+       // this.dirtyButton = this.form.down('#pageSettingsPanelDirtyButton');
         this.form.on({
-            savablestatechange: function(form, isSavable) {
+            savablestatechange: function (form, isSavable) {
+                //debugger
+                this.dirtyButton = this.dockedItems.items[1].items.items[2];
                 this.dirtyButton.setDirty(isSavable);
             },
             savesuccess: function() {

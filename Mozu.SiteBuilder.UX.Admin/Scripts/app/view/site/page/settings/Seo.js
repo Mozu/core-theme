@@ -4,6 +4,7 @@
 Ext.define('Taco.view.site.page.settings.Seo', {
     extend: 'Taco.view.site.page.PageSettingsPanel',
     title: 'SEO',
+    cls: 'taco-sidebar-model-seo',
     form: {
         layout: 'vbox',
         items: [
