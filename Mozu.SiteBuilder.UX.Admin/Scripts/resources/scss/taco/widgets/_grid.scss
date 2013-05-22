@@ -87,6 +87,14 @@
     text-shadow: none;
 
     &.#{$prefix}column-header-last {
+      .#{$prefix}column-header-inner {
+        padding-right: 40px;
+      }
+      .#{$prefix}column-header-text {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       .#{$prefix}column-header-trigger {
         display: block !important;
         @include icons-sprite(icon-columns);
@@ -133,6 +141,16 @@
   .#{$vprefix}expandercollapser {
     color: $color-action-link;
     font-size: px-to-rem(14);
+    line-height: px-to-rem(14);
+
+    .#{$vprefix}action {
+      display: inline-block;
+      padding: 0px 5px;
+
+      &:not(:nth-of-type(1)) {
+        border-left: 1px solid $color-action-link;
+      }
+    }
   }
 
   // rowexpander overrides
@@ -257,11 +275,12 @@
 
   // togglegroup styles
   .#{$vprefix}togglegroup {
+    margin: 0px !important;
+
     $card-map: sprite-map('card/*.png') /* syntax highlighting bug */;
     $gradient-selected: linear-gradient(top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 20%);
 
     .#{$prefix}form-radio-group {
-
       .#{$prefix}form-radio {
         background-image: none;
         border: 1px solid border-for($color-neutral-95);
@@ -294,12 +313,15 @@
           }
         }
       }
-      // &:nth-last-of-type(1) {
-      //   .#{$prefix}form-radio {
-      //     border-right: 1px solid $color-neutral-darkest;
-      //     @include border-radius(0px 3px 3px 0px);
-      //   }
-      // }
+    }
+
+    .#{$prefix}form-item {
+      margin: 0px;
+    }
+    .#{$prefix}form-checkboxgroup-body,
+    .#{$prefix}form-cb-wrap,
+    .#{$prefix}form-item-label {
+      padding: 0px;
     }
   }
 
