@@ -21,7 +21,7 @@
     .#{$vprefix}content-header {
       border-bottom: 1px solid border-for($color-neutral-95);
       padding: 17px 30px;
-      @include flexbox($justify: space-between);
+      @include flexbox($justify: space-between); 
       
       h1 {
         font-size: px-to-rem(24);
@@ -197,6 +197,92 @@
       margin-bottom: -3px;
      }
   }
+
+
+/*
+
+EXTJS Checkbox slider
+
+*/
+.#{$vprefix}onOffSwitchLabel{
+  margin-right: 6px;
+  font-size: 14px;
+  padding-top: 7px;
+}
+.#{$vprefix}onoffswitch {
+    position: relative; 
+    width: 62px;
+    height: 24px;
+    border-radius: 18px;
+    background: lightgray;
+    -webkit-user-select:none; 
+    -moz-user-select:none; 
+    -ms-user-select: none;
+    .#{$prefix}form-checkbox{
+      background: none;
+      background-color: white !important;
+      border-radius: 10px;
+      height: 20px !important;
+      width: 20px !important;
+      margin-top: -4px;
+      cursor: pointer;
+    }
+    .#{$prefix}form-item-label{
+      display: block; 
+      overflow: hidden; 
+      cursor: pointer;
+      border: 2px solid #999999; 
+      border-radius: 20px;
+    } 
+    
+    .#{$prefix}form-item-body{
+      width: 50%; 
+      height: 20px; 
+      padding: 0; 
+      line-height: 20px;
+      font-size: 14px; 
+      color: white;
+      font-weight: bold;
+      -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+      padding-top: 6px;
+      padding-bottom: 4px;
+      padding-left: 3px;
+    }
+    .#{$prefix}form-item-body:after{
+      content: 'Off';
+      padding-right: 10px;
+      color: black;
+      float: right;
+    }
+    &.#{$prefix}form-cb-checked{
+      background: #25ae90;
+      .x-form-item-body{
+        padding-top: 6px;
+        padding-right: 3px;
+        padding-left: 0px;
+      }
+      .#{$prefix}form-item-body:before{
+        content: 'On';
+        padding-left: 10px;
+        -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+        -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s;
+      }
+      .#{$prefix}form-item-body:after{
+        content: '';
+        padding-right: 0px;
+      }
+      input{
+        float: right;
+        //margin-right: 2px;
+      }
+  }
+}
+
+/*
+
+End EXTJS check box slider
+
+*/
 
   /* SITE EDITOR */
 
