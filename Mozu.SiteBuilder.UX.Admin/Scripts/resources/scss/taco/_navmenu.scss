@@ -133,12 +133,21 @@
   }
 
   .#{$vprefix}context-switcher-menu {
-    .#{$prefix}boundlist-item {
-      &.context-type-c {
-        padding-left: 28px;
-      }
-      &.context-type-s {
-        padding-left: 42px;
+    ul {
+      .#{$prefix}boundlist-item {
+        &.context-type-t {
+          font-weight: bold;
+        }
+        &.context-type-c {
+          border-top: 5px solid $color-neutral-white;
+          font-weight: bold;
+          margin-top: 7px;
+          @include box-shadow(0px -1px border-for($color-neutral-white));
+          // padding-left: 28px;
+        }
+        &.context-type-s {
+          // padding-left: 42px;
+        }
       }
     }
   }
