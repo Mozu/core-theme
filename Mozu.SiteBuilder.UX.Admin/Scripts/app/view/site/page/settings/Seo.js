@@ -134,6 +134,10 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                         name: 'canonicalURL'
                     }
                 ]
+            },
+            {
+                xtype: 'box',
+                autoEl: 'hr'
             }
         ]
     }

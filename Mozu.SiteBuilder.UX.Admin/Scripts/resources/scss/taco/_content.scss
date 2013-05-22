@@ -104,65 +104,75 @@
     }
   }
 
- //  .#{$vprefix}sidebar-modal{
- //      &.sliding {
- //          @include transition-property(left, right);
- //          @include transition-duration(0.5s, 0.5s);
- //          @include transition-timing-function(ease-out, ease-out);
- //      }
+  .#{$vprefix}sidebar-model-seo, .#{$vprefix}sidebar-model-general {
+    .#{$prefix}toolbar-docked-top{
+      border-bottom-width: px-to-rem(1);
+      border-bottom-style: solid;
+      border-bottom-color: #bfbfbf;
+      padding: 17px 30px;
+      height: px-to-rem(64);
+      .#{$prefix}toolbar-text, a{
+        font-size: 2.4rem;
+        font-weight: normal;
+        line-height: 3rem;
+        text-decoration: none;
+      }
+    }
+    .#{$prefix}panel-body{
+      overflow-y: scroll;
+      padding-top: px-to-rem(6);
+      padding-left: px-to-rem(8);
+      hr{
+        border: 0 none;
+        border-bottom-width: px-to-rem(1);
+        border-style: solid;
+        border-color: lightgray;
+      }
+    }
+    
+   .#{$vprefix}sidebar-submenu {
+     .#{$prefix}panel-header-body { 
+       .#{$prefix}box-inner {
+         margin-top: px-to-rem(0);
+       }
+       .#{$prefix}component {
+         left: 20px !important;
+       }
+       .#{$prefix}tool {
+         left: 0px !important;
+         top: 2px !important;
+       }
+     }
+     .#{$prefix}panel-body {
+       background: lightgray;
+       padding-left: px-to-rem(5);
+       padding-right: px-to-rem(5);
+       overflow-y: hidden;
 
-	//   .#{$prefix}toolbar{
-	// 	min-height: 65px;
-	//   }
+       hr{
+        border: 0 none;
+        border-bottom-width: px-to-rem(1);
+        border-style: dashed;
+        border-color: gray;
+      }
+     }
+     .#{$prefix}tool-collapse-top {
+        @include icons-sprite(icon-sortcolumn-desc);
+     }
+     .#{$prefix}tool-expand-bottom {
+        @include icons-sprite(icon-menu-col);
+     }
+   }
 
-	//   .#{$prefix}panel-taco{
-	// 	top: 35px;
-	//   }
+   .#{$vprefix}sublabel-text{
+    font-size: px-to-rem(10);
+    color: black;
+    font-style: italic;
+    margin-bottom: px-to-rem(10);
+   }
 
-	//   .#{$prefix}docked-top {
-	//   .#{$prefix}box-inner{
-	// 	margin-top: 20px;
-	//   }
-	//   .#{$prefix}toolbar-text {
-	// 	font-size: 2rem;
-	//   }}
 
-	//   .#{$vprefix}action{
-	// 	text-decoration: none;
-	//   }
-	//   .#{$prefix}docked-bottom{
-	//   height: 65px;
-	//   top: 624px !important;
-	// 	.#{$prefix}box-inner{
-	// 		margin-top:20px;
-	// 		}
-	//   }
- //  }
-
-  // .#{$vprefix}sidebar-submenu {
-  //   .#{$prefix}panel-header-body { //i feel really bad about this css, but i couldn't config the expand to the left; BF
-  //     .#{$prefix}box-inner {
-  //       margin-top:0px;
-  //     }
-  //     .#{$prefix}component {
-  //       left: 20px !important;
-  //     }
-  //     .#{$prefix}tool {
-  //       left: 0px !important;
-  //       top: 2px !important;
-  //     }
-  //   }
-  //   .#{$prefix}panel-body {
-  //     background: lightgray;
-  //     padding-left: px-to-rem(5);
-  //   }
-  //   .#{$prefix}tool-collapse-top {
-  //     // @include icons-sprite(icon-sortcolumn-desc);
-  //   }
-  //   .#{$prefix}tool-expand-bottom {
-  //     // @include icons-sprite(icon-panel-collapse);
-  //   }
-  // }
+  }
 
   /* SITE EDITOR */
 

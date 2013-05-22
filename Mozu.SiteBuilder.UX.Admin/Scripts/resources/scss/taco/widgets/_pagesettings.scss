@@ -9,15 +9,20 @@
         font-size: 2rem;
 		width: 98%;
 		list-style-type: none;
+        border: 0px;
+        border-bottom-width: 1px;
+        border-style: solid;
+        border-color: lightgray;
 		div{
 			float: right;
+            margin-right: 44px;
 		}
         &:before {
             content: "\2023 \0020";
             font-size: 4rem;
             vertical-align: middle;
             line-height: 3rem;
-			color: white;
+			color: white; 
         }
     }
 
