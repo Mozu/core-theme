@@ -62,7 +62,7 @@ Ext.define('Taco.view.inventory.Index', {
             }, {
                 dataIndex: 'stockOnHand',
                 text: 'Stock',
-                width: 70,
+                width: 100,
                 renderer: function (value, metaData, record) {
                    
 

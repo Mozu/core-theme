@@ -15,41 +15,6 @@
     }
   }
 
-  .#{$vprefix}option-value-row{
-    .remove{
-	  padding-left:5px;
-	}
-  }
-
-  // date field styles 
-  .#{$vprefix}option-value-input{
-    height: 28px; 
-    width: 150px; 
-    margin-bottom: 5px;
-  }
-
-  .#{$vprefix}date-value-input{
-	label{
-	  margin-top: 5px;
-	}
-	.#{$prefix}form-trigger{
-	  width: 25px;
-	  height: 24px;
-	}
-	.#{$prefix}trigger-cell {
-	  margin-left: -26px;
-	  margin-top: 3px;
-    }
-
-	.#{$prefix}form-date-trigger{
-      @include icons-sprite(icon-calendar);
-  }
-
-  .x-form-trigger-click{
-     @include icons-sprite(icon-calendar);
-   }
-  }
-
   // combobox styles
   .#{$prefix}form-trigger-input-cell {
     .#{$prefix}form-text {
@@ -97,12 +62,6 @@
     padding-bottom: 3px;
   }
 
-  .#{$vprefix}sublabel-text{
-    font-size: px-to-rem(10);
-	color: black;
-	font-style: italic;
-  }
-
   /* CONTROLS */
 
   .#{$prefix}field .#{$prefix}form-checkbox,
@@ -117,6 +76,7 @@
   .#{$prefix}field .#{$prefix}form-radio{
     position: relative;
     top: 2px;
+    vertical-align: top;
   }
   
   .#{$prefix}field .#{$prefix}form-checkbox,
@@ -287,6 +247,48 @@
         padding-bottom: 20px;
       }
     }
+  }
+
+  /* BF */
+  .#{$vprefix}option-value-row {
+    .remove {
+      padding-left: 5px;
+    }
+  }
+
+    // date field styles 
+  .#{$vprefix}option-value-input {
+    height: 28px; 
+    width: 150px; 
+    margin-bottom: 5px;
+  }
+
+  .#{$vprefix}date-value-input {
+    label {
+      margin-top: 5px;
+    }
+    .#{$prefix}form-trigger {
+      width: 25px;
+      height: 24px;
+    }
+    .#{$prefix}trigger-cell {
+      margin-left: -26px;
+      margin-top: 3px;
+    }
+
+    .#{$prefix}form-date-trigger {
+      @include icons-sprite(icon-calendar);
+    }
+
+    .#{$prefix}form-trigger-click {
+      @include icons-sprite(icon-calendar);
+    }
+  }
+
+  .#{$vprefix}sublabel-text {
+    color: $color;
+    font-size: px-to-rem(10);
+    font-style: italic;
   }
 
 }

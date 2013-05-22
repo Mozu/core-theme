@@ -103,6 +103,14 @@
 
   /* SPECIFIC PANELS */
 
+  // itembrowser
+  .#{$vprefix}itembrowser {
+    .#{$prefix}toolbar-docked-top {
+      min-height: 30px;
+      padding-bottom: 10px;
+    }
+  }
+
   // product type attribute panel
   .#{$vprefix}producttype-attribute-panel {
     &> .#{$prefix}panel-header {
