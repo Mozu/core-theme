@@ -34,11 +34,11 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                 width: '95%',
                 name: 'metaDescription'
             },
-            {
+            /*{
                 xtype: 'box',
                 autoEl: 'hr'
-            },
-            {
+            },*/
+            { 
                 xtype: "panel",
                 title: "Advanced",
                 collapsible: true,
@@ -63,6 +63,7 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                     {
                         xtype: 'radiogroup',
                         width: '100%',
+                        cls: 'taco-submenu-radio-group',
                         columns: 2,
                         items: [
                             {
@@ -85,6 +86,7 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                     {
                         xtype: 'radiogroup',
                         width: '100%',
+                        cls: 'taco-submenu-radio-group',
                         columns: 2,
                         items: [
                             {
@@ -134,11 +136,11 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                         name: 'canonicalURL'
                     }
                 ]
-            },
+            }/*,
             {
                 xtype: 'box',
                 autoEl: 'hr'
-            }
+            }*/
         ]
     }
 });
