@@ -61,7 +61,7 @@ Ext.define('Taco.view.site.page.settings.General', {
             },
             {
                 xtype: 'label',
-                cls: 'taco-sublabel-text',
+                cls: 'taco-sublabel-text-last',
                 text: 'This is explanitaion copy...'
             }
         

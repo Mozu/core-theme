@@ -30,7 +30,7 @@
       }
 
       p {
-        font: $font-message;
+        font: $font-message; 
       }
       
       .#{$vprefix}actions {
@@ -118,6 +118,7 @@
         text-decoration: none;
       }
     }
+
     .#{$prefix}panel-body{
       overflow-y: scroll;
       padding-top: px-to-rem(6);
@@ -128,9 +129,24 @@
         border-style: solid;
         border-color: lightgray;
       }
+      .#{$prefix}form-item-label-top {
+        margin-top: px-to-rem(4);
+        padding-bottom: 3px;
+      }
     }
     
    .#{$vprefix}sidebar-submenu {
+        border: 0px;
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+        border-color: lightgray;
+        border-style: solid; 
+        margin-top: 20px;
+        
+       .#{$prefix}panel-header-text{
+          font-size: 16px;
+       }
+
      .#{$prefix}panel-header-body { 
        .#{$prefix}box-inner {
          margin-top: px-to-rem(0);
@@ -168,10 +184,18 @@
     font-size: px-to-rem(10);
     color: black;
     font-style: italic;
-    margin-bottom: px-to-rem(10);
+    padding-top: px-to-rem(9);
    }
-
-
+    .#{$vprefix}sublabel-text-last{
+      font-size: px-to-rem(10);
+      color: black;
+      font-style: italic;
+      padding-top: px-to-rem(0);
+    }
+     .#{$vprefix}submenu-radio-group{
+      margin-top: -3px;
+      margin-bottom: -3px;
+     }
   }
 
   /* SITE EDITOR */
