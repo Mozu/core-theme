@@ -9,10 +9,20 @@ Ext.define('Taco.view.site.page.settings.General', {
         layout: 'vbox',
         items: [
             {
-                xtype: 'button',
-                text: 'Hide in website',
-                name: 'hidden',
-                enableToggle: true
+                xtype: 'container',
+                layout: 'hbox',
+                items: [
+                    {
+                        xtype: 'label',
+                        cls: 'taco-onOffSwitchLabel',
+                        text: 'Show in website'
+                    },
+                    {
+                        xtype: 'checkbox',
+                        name: 'hidden',
+                        cls: 'taco-onoffswitch'
+                    }
+                ]
             },
             {
                 xtype: 'label',
