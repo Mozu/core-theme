@@ -14,7 +14,7 @@
       &.#{$prefix}boundlist-item-over {
         background-color: $color-neutral-90;
       }
-      &~ .#{$prefix}boundlist-item {
+      &:not(:nth-of-type(1)) {
         border-top-style: none;
         padding-top: 6px;
       }
@@ -43,7 +43,7 @@
       &.#{$prefix}boundlist-item-over {
         background-color: $color-selected;
       }
-      &~ .#{$prefix}boundlist-item {
+      &:not(:nth-of-type(1)) {
         padding-top: 5px;
       }
     }
@@ -114,6 +114,7 @@
   }
 
   /* MENUS */
+
   .#{$prefix}menu-body {
     font-size: px-to-rem(14);
     line-height: px-to-rem(16);

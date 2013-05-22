@@ -165,8 +165,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 handler: function () { console.log('do bulk actions'); }
             }, '->', me.createExpanderCollapser());
         }
-
-        console.log(conf.items);
+        
         me.secondToolbar = conf.items.length > 0 ? Ext.widget('toolbar', conf) : null;
 
         return me.secondToolbar;
