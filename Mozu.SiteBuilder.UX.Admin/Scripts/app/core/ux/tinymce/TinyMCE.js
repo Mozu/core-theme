@@ -102,7 +102,7 @@
 
         requires: ['Taco.core.ux.tinymce.WindowManager', 'Taco.view.fileManagement.MultiFileAssociator'],
 
-        
+        fieldStyle:{height:'100%',width:'100%'},
 
         shadow: false,
 
@@ -173,13 +173,15 @@
                 selector: "#" + me.inputEl.id,
                 inline: false,
                 menubar: false,
-                statusbar : false,
+                
+                statusbar: false,
+                height: me.inputEl.getHeight(),
                 plugins: [
-                    "advlist autolink lists link image charmap print preview anchor",
-                    "searchreplace visualblocks code fullscreen",
-                    "insertdatetime media table contextmenu paste"
+                    "advlist autoresize autolink lists link image anchor",
+                    " code ",
+                    " table contextmenu paste"
                 ],
-                toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify |  bullist numlist outdent indent | link image | code"
+                toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify |  bullist numlist outdent indent table | link image | code"
             };
 
             me.editor = new tinymce.Editor(me.inputEl.id, me.tinymceConfig, tinymce.EditorManager);
@@ -231,11 +233,13 @@
         },
 
 
-        beforeCompleteEdit: function () {
-            var me = this;
+        beforeCompleteEdit: function (e) {
+            var me = this, targetCmp = Ext.fly(e.target);
+            if ((targetCmp &&  (targetCmp.findParent('.mce-container')|| targetCmp.findParent('.mce-widget') )) || ( e && e.target && e.target.className  && e.target.className.indexOf('mce-')>-1)){
+                return false;
+            }
             return me.editor == null || me.editor.windowManager == null || me.editor.windowManager.windows == null || me.editor.windowManager.windows.length==0;
             
-            return me.editor == null || me.editor.imageModal == null || me.editor.imageModal.getEl() == null;
         },
 
         loadTacoImagePlugin: function () {

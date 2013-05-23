@@ -105,6 +105,7 @@
         },
 
         onOverflowContent: function () {
+            return;
             var box = this.getEditableElement().getBox();
             this.editor.theme.resizeTo(box.width, box.height);
         },
