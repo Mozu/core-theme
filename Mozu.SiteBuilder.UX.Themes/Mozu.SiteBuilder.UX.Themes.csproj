@@ -484,6 +484,7 @@
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\supersubs.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\swipe.min.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\underscore.js" />
+    <Content Include="Themes\MobileCore\Resources\Scripts\Modules\force-desktop-theme.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Modules\message-dismisser.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Modules\jquery-mobileevents.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Modules\login-links.js" />
@@ -571,7 +572,7 @@
     <Content Include="Themes\Core3\Modules\_CartTableHeader.vol" />
     <Content Include="Themes\Core3\Modules\_CartTableRow.vol" />
     <Content Include="Themes\Core3\Modules\_CartTableFooter.vol" />
-    <Content Include="Themes\MobileCore\Modules\_MessageBar.vol">
+    <Content Include="Themes\MobileCore\Modules\MessageBar.vol">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Themes\Core3\Modules\_CheckoutOrderSummaryPanel.vol" />
@@ -595,6 +596,7 @@
     <Content Include="SampleThemes\helloWorld\Templates\Hello_world.vol" />
     <Content Include="SampleThemes\helloWorld\Widgets\hello_world\hello_world_widget.vol" />
     <Content Include="Themes\Core3\Resources\Stylesheets\Modules\admin-injections.less" />
+    <Content Include="Themes\MobileCore\Modules\PageFooter.vol" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -627,7 +629,6 @@
     <Folder Include="Themes\Adaptive\Templates\" />
     <Folder Include="Themes\Core3\Resources\Fonts\" />
     <Folder Include="Themes\Core3\Resources\Images\c2Images\" />
-    <Folder Include="Themes\maxine\Templates\" />
     <Folder Include="Themes\MobileCore\Layouts\" />
     <Folder Include="Themes\MobileCore\Resources\Images\Bootstrap\" />
     <Folder Include="Themes\MobileCore\Resources\Images\content\" />

@@ -7,7 +7,7 @@
             $imageContainer = $('[data-mz-role="productimages-main"]');
             $swipeBullets = $('[data-mz-role="productimages-bullets"]').children();
 
-            if (Modernizr.csstransforms) {
+            if (Modernizr.csstransforms && $imageContainer[0]) {
                 swipe = new Swipe($imageContainer[0], {
                     callback: function (e, pos) {
                         $swipeBullets.removeClass('mz-active').eq(pos).addClass('mz-active');

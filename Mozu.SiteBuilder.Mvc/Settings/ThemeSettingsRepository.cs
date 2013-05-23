@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         private async Task<StreamContent> UpdateSettings(List<FieldValue> values, string themeId)
         {
             Document doc = null;
-            var res = await _cmsService.GetByPath2("settings", this.GetFileName(themeId));
+            var res = await _cmsService.GetByPath2("settings", this.GetFileName(themeId), "active");
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 doc = res.ReadAsSync();
@@ -173,7 +173,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
         string GetFileName(string themeId)
         {
-            return "theme_settings_" + themeId;
+            return "theme_settings_" + themeId.ToLowerInvariant();
         }
 
         private DateTime? _ts;

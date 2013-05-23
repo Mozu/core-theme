@@ -1,23 +1,18 @@
 <div data-mz-role="productimages-container" class="mz-product-images-container mz-mobile-optimized">
+    {% if Model.Content.ProductImages.Count and Model.Content.ProductImages.Count > 0 %}
     <div data-mz-role="productimages-main">
-        {% if Model.images.Count > 0 %}
-            <ul>
-                <li class="mz-product-image-main">
-                    <img class="mz-product-image-main-link mz-product-image" {% data_attributes Model.images.Main %} src="{{ Model.images.Main.src }}" />
-                </li>
-                {% for image in Model.images %}
-                    {% if image.src != Model.images.Main.src %}
-                        <li class="mz-product-image-additional">
-                            <img class="mz-product-image-additional-link mz-product-image" src="{{ image.src }}">
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        {% endif %}
+        <ul>
+            {% for image in Model.Content.ProductImages %}
+            <li class="mz-product-image-{% if forloop.first %}main{% else %}-additional{% endif %}">
+                <img class="mz-product-image-{% if forloop.first %}main{% else %}-additional{% endif %}-link mz-product-image" src="{{ image.src }}" />
+            </li>
+            {% endfor %}
+        </ul>
     </div>
+    {% endif %}
     <div class="mz-product-images-sliderpos" data-mz-role="productimages-bullets">
-        {% for image in Model.images %}
-            <em id="mz-product-images-sliderbullet">&bull;</em>
+        {% for image in Model.Content.ProductImages %}
+        <em id="mz-product-images-sliderbullet">&bull;</em>
         {% endfor %}
     </div>
 </div>

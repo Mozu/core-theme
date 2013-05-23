@@ -1,0 +1,15 @@
+﻿<footer class="mz-sitefooter-wrap">
+    {% dropzone "footer" scope="site" %}
+    <div class="mz-copyright-wrap" id="mz-site-copyright">
+        <span class="mz-rights-reserved-text">
+            &copy; 1999-{% now "Y" %} {{ siteContext.settings.general.websiteName }}. All Rights Reserved.
+        </span> 
+        <span class="mz-power-by-text">
+             Powered by Volusion Shopping Cart
+        </span>
+    </div>
+  <p class="mz-mobile-override">
+    {% require_script "modules/force-desktop-theme" %}
+    You are viewing the mobile theme. <a href="#" data-mz-action="forcedesktoptheme">View desktop theme</a>
+  </p>
+</footer>

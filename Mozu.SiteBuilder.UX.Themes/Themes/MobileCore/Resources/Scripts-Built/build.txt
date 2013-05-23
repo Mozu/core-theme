@@ -4,16 +4,17 @@ pages/common.js
 pages/common.js
 text.js
 shim.js
+shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
+modules/jquery-plus.js
 shim!vendor/hammer>Hammer
 shim!vendor/jquery.specialevent.hammer[jquery=jQuery,shim!vendor/hammer>Hammer=Hammer]
 modules/jquery-mobileevents.js
+modules/force-desktop-theme.js
 vendor/knockout-latest.js
 ajax.js
 modules/api.js
 modules/animatemodals.js
 modules/cart-monitor.js
-shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
-modules/jquery-plus.js
 modules/loading-bars.js
 modules/login-links.js
 modules/message-dismisser.js
@@ -35,6 +36,7 @@ pages/product.js
 
 pages/cart.js
 ----------------
+modules/function-throttler.js
 modules/models-cart.js
 pages/cart.js
 
@@ -49,7 +51,8 @@ pages/checkout.js
 
 pages/myaccount.js
 ----------------
-shim!vendor/jquery-colorbox[modules/jquery-plus=jQuery]>jQuery
+shim!vendor/jquery-colorbox[jquery=jQuery]>jQuery
+modules/models-address.js
 modules/models-customer.js
 modules/models-user.js
 modules/models-myaccount.js
