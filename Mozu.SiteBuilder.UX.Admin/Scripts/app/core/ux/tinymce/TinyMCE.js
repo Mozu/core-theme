@@ -91,8 +91,8 @@
                         t.init();
                 });
             };
-           
-            preloader.call(tinymce, tinyMCE.settings,tinymce.ScriptLoader);
+           //todo rewrite provisioning.
+          //  preloader.call(tinymce, tinyMCE.settings,tinymce.ScriptLoader);
 
 
 
@@ -169,16 +169,35 @@
         createTinyMCE: function () {
             var me = this;
 
+            me.tinymceConfig = {
+                selector: "#" + me.inputEl.id,
+                inline: false,
+                menubar: false,
+                statusbar : false,
+                plugins: [
+                    "advlist autolink lists link image charmap print preview anchor",
+                    "searchreplace visualblocks code fullscreen",
+                    "insertdatetime media table contextmenu paste"
+                ],
+                toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify |  bullist numlist outdent indent | link image | code"
+            };
+
+            me.editor = new tinymce.Editor(me.inputEl.id, me.tinymceConfig, tinymce.EditorManager);
+            
+          
 
 
-            me.editor = new tinymce.Editor(me.inputEl.id, me.tinymceConfig);
             me.editor.extParent = me;
             me.loadTacoImagePlugin();
             // Validate value onKeyPress
             var validateContentTask = Ext.Function.createBuffered(me.validate, 250, this);
-            me.editor.onKeyPress.add(validateContentTask);
+            
+            //editor.on('init', function (args) {
+            //    // Custom logic
+            //});
+            //me.editor.onKeyPress.add(validateContentTask);
 
-            me.editor.onKeyUp.add(function (ed, e) {
+            me.editor.on('KeyUp keyup', function (e) {
                 var extEvent = new Ext.EventObjectImpl(e);
                 if (extEvent.isSpecialKey() && extEvent.getKey() !== extEvent.ENTER) {
                     me.fireEvent('specialkey', extEvent);
@@ -188,24 +207,24 @@
                 }
             }, me);
 
-            me.editor.onPostRender.add(Ext.Function.bind(function (editor, controlManager) {
-                editor.windowManager = Ext.create("Taco.core.ux.tinymce.WindowManager", {
-                    editor: me.editor
-                });
-                me.tableEl = Ext.get(me.editor.id + "_tbl");
-                me.iframeEl = Ext.get(me.editor.id + "_ifr");
+            //me.editor.onPostRender.add(Ext.Function.bind(function (editor, controlManager) {
+            //    editor.windowManager = Ext.create("Taco.core.ux.tinymce.WindowManager", {
+            //        editor: me.editor
+            //    });
+            //    me.tableEl = Ext.get(me.editor.id + "_tbl");
+            //    me.iframeEl = Ext.get(me.editor.id + "_ifr");
 
-                me.editor.focus();
+            //    me.editor.focus();
 
-                fireXBrowserMouseEvent(me.editor.dom.getRoot(), 'mouseup');
+            //    fireXBrowserMouseEvent(me.editor.dom.getRoot(), 'mouseup');
 
-                if (me.width && me.height) {
-                    editor.theme.resizeTo(me.width, me.height);
-                }
+            //    if (me.width && me.height) {
+            //        editor.theme.resizeTo(me.width, me.height);
+            //    }
 
-            }, me));
+            //}, me));
 
-            me.on('resize', me.onResize, me);
+            //me.on('resize', me.onResize, me);
 
             me.editor.render();
             tinyMCE.add(me.editor);
@@ -214,6 +233,8 @@
 
         beforeCompleteEdit: function () {
             var me = this;
+            return me.editor == null || me.editor.windowManager == null || me.editor.windowManager.windows == null || me.editor.windowManager.windows.length==0;
+            
             return me.editor == null || me.editor.imageModal == null || me.editor.imageModal.getEl() == null;
         },
 
