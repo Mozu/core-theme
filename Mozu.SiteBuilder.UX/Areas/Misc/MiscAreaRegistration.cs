@@ -26,6 +26,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
                 new { action = "GoSite", controller = "Testing" }
             );
 
+            context.MapRoute(
+                "Set Theme Override",
+                "setTheme/{themeType}",
+                new { action = "ForceTheme", controller = "Testing" }
+            );
+
             context.MapRoute("resources",
                "resources/{action}/{*pathInfo}",
                new { controller = "Resource", Action = "script", pathInfo = UrlParameter.Optional });

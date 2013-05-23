@@ -16,7 +16,9 @@
         {
             name: "pages/common",
             include: [
+                'modules/jquery-plus',
                 'modules/jquery-mobileevents',
+                'modules/force-desktop-theme',
                 'knockout',
                 'text',
                 'ajax',
@@ -24,7 +26,6 @@
                 'modules/api',
                 'modules/animatemodals',
                 'modules/cart-monitor',
-                'modules/jquery-plus',
                 'modules/loading-bars',
                 'modules/login-links',
                 'modules/message-dismisser',

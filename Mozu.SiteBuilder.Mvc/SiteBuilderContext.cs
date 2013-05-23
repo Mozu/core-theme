@@ -40,6 +40,7 @@ namespace Mozu.SiteBuilder.Mvc
     public class SiteBuilderContext : ModelBase, ISiteBuilderContext, IModelMetadataContainer , IDisposable
 	{
         public  const string CONTEXT_KEY = "V:STORECTX";
+        public const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
         internal const string COOKIENAME = "SBCONTEXT";
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Site> g_domainSiteLookup = new ConcurrentDictionary<string, Site>(StringComparer.OrdinalIgnoreCase);
 		//[ThreadStatic] private static ISiteBuilderContext g_sc;
@@ -95,7 +96,7 @@ namespace Mozu.SiteBuilder.Mvc
                 httpContext.Items[CONTEXT_KEY] = this;
             }
             // attempt to look up theme by value of "SBTHEME".
-            HttpCookie themeCookie = _cookieProvider.GetRequestCookie("SBTHEME");
+            HttpCookie themeCookie = _cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
             if (themeCookie != null && !string.IsNullOrEmpty(themeCookie.Value))
             {
                 try

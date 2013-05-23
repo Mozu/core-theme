@@ -20,6 +20,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         ICookieProvider _cookies;
         private readonly ISettings _settings;
 
+        private const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
+
+        private enum ThemeMode
+        {
+            Desktop,
+            Mobile,
+            Auto
+        }
+
         public TestingController(ISitesWebApiClient  wsRepo, ITenantsWebApiClient tRepo, ICookieProvider cookies, ISettings settings  )
         {
             _wsRepo = wsRepo;
@@ -50,6 +59,24 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             TenantCollection tenants = tRes.ReadAsAsync().Result;
 
             return View(tenants);
+        }
+
+        public ActionResult ForceTheme(string themeType = "", string redir = null)
+        {
+            ThemeMode mode = (ThemeMode)Enum.Parse(typeof(ThemeMode), themeType, true);
+            string themeName = "";
+            if (mode == ThemeMode.Auto)
+            {
+                _cookies.RemoveCookie(FORCE_THEME_COOKIE_NAME);
+                _cookies.SaveResponseCookie(FORCE_THEME_COOKIE_NAME, new HttpCookie(FORCE_THEME_COOKIE_NAME) { Expires = DateTime.Now.AddDays(-1D) });
+            }
+            else
+            {
+                if (mode == ThemeMode.Desktop) themeName = SiteContext.DesktopTheme.Name;
+                if (mode == ThemeMode.Mobile) themeName = SiteContext.MobileTheme.Name;
+                _cookies.SaveResponseCookie(FORCE_THEME_COOKIE_NAME, new HttpCookie(FORCE_THEME_COOKIE_NAME, themeName));
+            }
+            return new RedirectResult(redir ?? "/");
         }
 
         /// <summary>
