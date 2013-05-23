@@ -9,7 +9,6 @@ modules/jquery-plus.js
 shim!vendor/hammer>Hammer
 shim!vendor/jquery.specialevent.hammer[jquery=jQuery,shim!vendor/hammer>Hammer=Hammer]
 modules/jquery-mobileevents.js
-modules/force-desktop-theme.js
 vendor/knockout-latest.js
 ajax.js
 modules/api.js
@@ -23,6 +22,8 @@ nls/messages.js
 i18n!nls/messages
 modules/knockout-plus.js
 modules/knockout-viewmodel.js
+modules/models-user.js
+modules/models-address.js
 shim!vendor/jquery.tagcloud.0-0-1[jquery=jQuery]
 modules/tagcloud.js
 
@@ -44,16 +45,12 @@ pages/checkout.js
 ----------------
 nls/messages-checkout.js
 i18n!nls/messages-checkout
-modules/models-user.js
-modules/models-address.js
 modules/models-checkout.js
 pages/checkout.js
 
 pages/myaccount.js
 ----------------
 shim!vendor/jquery-colorbox[jquery=jQuery]>jQuery
-modules/models-address.js
 modules/models-customer.js
-modules/models-user.js
 modules/models-myaccount.js
 pages/myaccount.js

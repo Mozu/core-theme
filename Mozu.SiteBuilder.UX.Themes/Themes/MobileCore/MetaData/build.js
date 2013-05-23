@@ -18,7 +18,6 @@
             include: [
                 'modules/jquery-plus',
                 'modules/jquery-mobileevents',
-                'modules/force-desktop-theme',
                 'knockout',
                 'text',
                 'ajax',
@@ -30,6 +29,8 @@
                 'modules/login-links',
                 'modules/message-dismisser',
                 'modules/knockout-viewmodel',
+                'modules/models-user',
+                'modules/models-address',
                 'modules/knockout-plus',
                 'modules/tagcloud'
             ],
