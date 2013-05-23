@@ -484,7 +484,6 @@
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\supersubs.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\swipe.min.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\underscore.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts\Modules\force-desktop-theme.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Modules\message-dismisser.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Modules\jquery-mobileevents.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Modules\login-links.js" />
@@ -629,13 +628,6 @@
     <Folder Include="Themes\Adaptive\Templates\" />
     <Folder Include="Themes\Core3\Resources\Fonts\" />
     <Folder Include="Themes\Core3\Resources\Images\c2Images\" />
-    <Folder Include="Themes\MobileCore\Layouts\" />
-    <Folder Include="Themes\MobileCore\Resources\Images\Bootstrap\" />
-    <Folder Include="Themes\MobileCore\Resources\Images\content\" />
-    <Folder Include="Themes\MobileCore\Resources\Images\header\" />
-    <Folder Include="Themes\MobileCore\Resources\Images\layout\" />
-    <Folder Include="Themes\MobileCore\Resources\Scripts\nls\fr\" />
-    <Folder Include="Themes\MobileCore\Templates\Email\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Tools\ThemeSettings.xsd">
