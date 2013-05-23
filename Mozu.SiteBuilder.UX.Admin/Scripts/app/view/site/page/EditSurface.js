@@ -493,9 +493,9 @@
 
 
             if (!e.within(this.editCmp.el) && !isComponentChild(elm, this.editCmp.el)) {
-                if ( this.editCmp.beforeCompleteEdit()){
-                    this.editCmp.attemptCompleteEdit();
-                    this.editCmp.destroyEditor();
+                if (this.editCmp.beforeCompleteEdit(e, elm)) {
+                    this.editCmp.attemptCompleteEdit(e, elm);
+                    this.editCmp.destroyEditor(e, elm);
                     this.editCmp = null;
                 }
             }
