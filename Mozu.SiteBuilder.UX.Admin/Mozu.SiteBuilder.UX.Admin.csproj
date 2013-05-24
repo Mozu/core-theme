@@ -359,6 +359,8 @@
     <Compile Include="Api\Models\Attributes\ProductType.cs" />
     <Compile Include="Api\Models\Attributes\ProductTypeAttribute.cs" />
     <Compile Include="Api\Models\Attributes\ProductTypeAttributeUsageType.cs" />
+    <Compile Include="Api\Models\Order.cs" />
+    <Compile Include="Api\Models\OrderCustomer.cs" />
     <Compile Include="Api\Models\ProductModels\ProductExtra.cs" />
     <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
     <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
@@ -367,6 +369,10 @@
     <Compile Include="Api\NavigationController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Api\OrderController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Api\Order_OldController.cs" />
     <Compile Include="Api\ProductTypeController.cs" />
     <Compile Include="Api\WidgetInstanceDataController.cs" />
     <Compile Include="Api\IVolusionLoginHelper.cs" />
@@ -453,7 +459,6 @@
     <Compile Include="Api\Models\Testing\Site.cs" />
     <Compile Include="Api\OpeationHandlers\FilterCollectionRequestHandler.cs" />
     <Compile Include="Api\OpeationHandlers\PagingParamatersRequestHandlers.cs" />
-    <Compile Include="Api\OrderController.cs" />
     <Compile Include="Api\PageTypeDefinitionController.cs" />
     <Compile Include="Api\CheckoutSettingsController.cs" />
     <Compile Include="Api\PhoneOrderController.cs" />

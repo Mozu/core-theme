@@ -6,7 +6,7 @@
 
 Ext.define('Taco.controller.Testing', {
     extend: 'Taco.core.Controller',
-    requires: ['Taco.model.ProductType','Taco.model.Order', 'Taco.model.OrderItem', 'Taco.model.Product', 'Taco.store.Products', 'Taco.store.CmsDocumentDrafts'],
+    requires: ['Taco.core.data.StoreManager', 'Taco.model.ProductType','Taco.model.Order', 'Taco.model.OrderItem', 'Taco.model.Product', 'Taco.store.Products', 'Taco.store.Orders', 'Taco.store.CmsDocumentDrafts'],
 
     statics: {
         returnString: function (str) {
@@ -243,6 +243,15 @@ Ext.define('Taco.controller.Testing', {
                 }]
             }
         });
+    },
+
+    fosterOrder: function() {
+        var orderStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Orders');
+        orderStore.load({
+            callback: function (records, operation, success) {
+                window.foster = orderStore.getById("o123");
+            }
+        });        
     },
 
     productExtras: function() {
