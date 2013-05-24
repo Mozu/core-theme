@@ -1,5 +1,5 @@
 ﻿<div class="mz-messages">
     <ul data-bind="visible: messages().length > 0, foreach: messages" class="mz-errors">
-        <li data-bind="text: Message, event: { tap: $parent.removeMessage }"></li>
+        <li data-bind="text: $data.Message || 'Unknown error!', event: { tap: $parent.removeMessage }"></li>
     </ul>
 </div>
