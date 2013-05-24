@@ -43,7 +43,7 @@ Ext.define('Taco.model.OrderItem', {
         {
             "name": "options", //<== get list of options or extras
             "type":"auto",
-            default:[]
+            defaultValue:[]
         },
         //{
         //    "name": "product",
