@@ -11,6 +11,8 @@ using System.Web;
 using System.Web.Http;
 using Mozu.Core;
 using Mozu.PaymentService.Contracts;
+using Mozu.ShippingAdmin.Contracts;
+using Mozu.ShippingAdmin.Contracts.Clients;
 using Mozu.ShippingRuntime.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Themes;
@@ -35,6 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ISiteBuilderContext _siteBuilderContext;
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
         private readonly IShippingSettingsWebApiClient _shippingSettingsWebApiClient;
+        private readonly ICustomTableBasedRatesWebApiClient _customTableBasedRatesWebApiClient;
 
 
         static List<DGD> g_testData;
@@ -63,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly IGeneralSettingWrapper _generalSettingsWebApiClient;
 
-        public TestingController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ISitesWebApiClient sitesWebApiClient, IApiContext apiContext, ISiteBuilderContext siteBuilderContext, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, Mozu.SiteSettings.Shipping.Contracts.Clients.IShippingSettingsWebApiClient shippingSettingsWebApiClient)
+        public TestingController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ISitesWebApiClient sitesWebApiClient, IApiContext apiContext, ISiteBuilderContext siteBuilderContext, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, Mozu.SiteSettings.Shipping.Contracts.Clients.IShippingSettingsWebApiClient shippingSettingsWebApiClient, Mozu.ShippingAdmin.Contracts.Clients.ICustomTableBasedRatesWebApiClient customTableBasedRatesWebApiClient)
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient;
             _tenantClient = tenantClient;
@@ -72,6 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _siteBuilderContext = siteBuilderContext;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
             _shippingSettingsWebApiClient = shippingSettingsWebApiClient;
+            _customTableBasedRatesWebApiClient = customTableBasedRatesWebApiClient;
         }
 
         [WebGet(UriTemplate = "list")]
@@ -85,6 +89,47 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet (UriTemplate = "orderProvision")]
         public bool  OrderProvision()
         {
+
+            var custRates = _customTableBasedRatesWebApiClient.GetShippingRates().Result.ReadAsSync();
+
+            if (custRates.Items.Count == 0)
+            {
+                _customTableBasedRatesWebApiClient.CreateShippingRate(new Mozu.ShippingAdmin.Contracts.ShippingRate()
+                                                                          {
+                                                                              Content = new ShippingRateLocalizedContent()
+                                                                                            {
+                                                                                                Name = "Standard 1"
+                                                                                            },
+                                                                              FlatPerCartShippingRate = new FlatPerCartShippingRate()
+                                                                                                            {
+                                                                                                                Price = new ShippingRatePrice()
+                                                                                                                            {
+                                                                                                                                Amount = 10,
+                                                                                                                                IsAmountPercent = false
+                                                                                                                            }
+                                                                                                            }
+                                                                          }).Wait();
+                _customTableBasedRatesWebApiClient.CreateShippingRate(new Mozu.ShippingAdmin.Contracts.ShippingRate()
+                {
+                    Content = new ShippingRateLocalizedContent()
+                    {
+                        Name = "Standard 2"
+                    },
+                    FlatPerCartShippingRate = new FlatPerCartShippingRate()
+                    {
+                        Price = new ShippingRatePrice()
+                        {
+                            Amount = 20,
+                            IsAmountPercent = false
+                        }
+                    }
+                }).Wait();
+
+                _customTableBasedRatesWebApiClient.SyncronizeShippingRatesToSiteSettingsShippingMethods().Wait();
+            }
+
+            
+
             var paymentSettingsRes = _checkoutSettingsWebApiClient.GetPaymentSettings().Result;
            
             bool doSettings = true;
@@ -160,7 +205,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 doSettings = shippingSettings.SiteShippingOriginAddress == null || string.IsNullOrEmpty(shippingSettings.SiteShippingOriginAddress.PostalOrZipCode) || shippingSettings.ActiveRateProvider == null;
                 
             }
-            if (doSettings)
+            if ( 1==1 || doSettings)
             {
 
                 var shippingSettings = new Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings()
@@ -168,8 +213,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                                ActiveRateProvider = new ShippingFeature()
                                                                         {
                                                                             Name = "customrates"
-                                                                        },
-                                               SiteShippingOriginAddress = new SiteShippingOriginAddress()
+                                                                        }
+                                                                        ,
+                                               SiteShippingOriginAddress = new SiteShippingOriginAddress
                                                                                {
                                                                                    SenderName = "Foobulaboop d'Fummool",
                                                                                    Address1 = "1835 Kramer Ln",
@@ -177,40 +223,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                                                                    StateOrProvince = "TX",
                                                                                    Country = "US",
                                                                                    PostalOrZipCode = "78704"
-                                                                               },
-                                               SiteShippingMethods = new List<SiteShippingMethod>()
-                                                                         {
-                                                                             new SiteShippingMethod()
-                                                                                 {
-                                                                                     Code = "CUSTOM-3",
-                                                                                     Content =
-                                                                                         {
-                                                                                             ContentLocaleCode = "en-US",
-                                                                                             Name = "Standard (5-9 Day)"
-                                                                                         },
-                                                                                     IsInternational = false
-                                                                                 },
-                                                                                  new SiteShippingMethod()
-                                                                                 {
-                                                                                     Code = "CUSTOM-4",
-                                                                                     Content =
-                                                                                         {
-                                                                                             ContentLocaleCode = "en-US",
-                                                                                             Name = "Expedited (2 Days)"
-                                                                                         },
-                                                                                     IsInternational = false
-                                                                                 },
-                                                                                 new SiteShippingMethod()
-                                                                                 {
-                                                                                     Code = "CUSTOM-5",
-                                                                                     Content =
-                                                                                         {
-                                                                                             ContentLocaleCode = "en-US",
-                                                                                             Name = "Standard International (7-14 Days)"
-                                                                                         },
-                                                                                     IsInternational = true
-                                                                                 }
-                                                                         }
+                                                                               }
+                                               
                                            };
                 if (exists)
                 {
