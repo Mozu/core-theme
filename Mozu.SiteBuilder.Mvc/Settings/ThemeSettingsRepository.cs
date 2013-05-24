@@ -123,7 +123,16 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                     if (res.Result.ResponseMessage.IsSuccessStatusCode)
                     {
                         var doc = res.Result.ReadAsSync();
-                        values = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FieldValue>>(doc.Get<string>("data"));
+                        var data = doc.Get<string>("data");
+                        if (data != null)
+                        {
+                            values = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FieldValue>>(doc.Get<string>("data"));    
+                        }
+                        else
+                        {
+                            values = new List<FieldValue>();
+                        }
+                        
                         _cache[key] = values;
                     }
                     
