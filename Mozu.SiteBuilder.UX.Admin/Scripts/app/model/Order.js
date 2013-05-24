@@ -44,8 +44,8 @@ Ext.define('Taco.model.Order', {
 
 
         {
-        "name": "customerAccountId",
-        "type": "int",
+        "name": "customer",
+        "type": "auto",
         "useNull": true
         },
 
@@ -76,19 +76,17 @@ Ext.define('Taco.model.Order', {
         },
 
 
-        //{
-        //"name": "paymentStatus",
-        //"type": "string",
-        //"useNull": true
-        //},
+        {
+        "name": "paymentStatus",
+        "type": "string",
+        "useNull": true
+        },
 
-        //{
-        //"name": "fulfillmentStatus",
-        //"type": "string",
-        //"useNull": true
-        //},
-
-
+        {
+        "name": "shippingStatus",
+        "type": "string",
+        "useNull": true
+        },
 
         {
         "name": "submittedDate",
@@ -234,6 +232,11 @@ Ext.define('Taco.model.Order', {
             type: 'hasMany',
             model: 'Taco.model.OrderItem',
             name: "items"
+        },
+        {
+            type: 'hasOne',
+            model: 'Taco.model.OrderCustomer',
+            name: "customer"
         }
     ],
 
@@ -242,7 +245,7 @@ Ext.define('Taco.model.Order', {
         type: 'ajaxproxy',
         api: {
             // read: '/admin/Scripts/app/mocks/orders.json',
-            read: '/admin/app/order/read',
+            read: '/admin/app/order/list',
             create: '/admin/app/order/create',
             update: '/admin/app/order/edit',
             destroy: '/admin/app/order/delete'
