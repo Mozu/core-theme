@@ -57,7 +57,7 @@
             <label data-bind="html: Address.stateprovLabel() + '<span class=\'mz-required-field\' data-bind=\'visible: Address.StateOrProvince.required\'> *</span>:'"></label>
         </div>
         <div class="mz-form-field-cell">
-            <input type="text" style="position: absolute; left: -99999px" name="state" id="state" data-bind="value: Address.autofilledState" />
+            <input type="text" style="position: absolute; left: -99999px" tabindex="-1" name="state" id="state" data-bind="value: Address.autofilledState" />
             <select data-bind="options: Address.stateprovList, optionsText: 'Value', optionsValue: 'Code', optionsCaption: 'Choose...', value: Address.StateOrProvince, css: { 'mz-invalid': Address.StateOrProvince.invalid() }">
             </select>
             <span class="mz-validation-message" data-bind="text: Address.StateOrProvince.validationMessage() || '&nbsp;'"></span>

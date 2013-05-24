@@ -39,6 +39,19 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             xtype: 'action',
             text: 'Search'
            
+        }, {
+            xtype: 'action',
+            text: 'View Storefront',
+            click: function () {
+                window.open('/_gosite/' + Taco.app.context.getSiteId());
+            },
+            listeners: {
+                afterrender: function() {
+                    this.mon(Taco.app.context, 'contextchange', function (cfg) {
+                        this[cfg.contextType === "s" ? 'show' : 'hide']();
+                    }, this)
+                }
+            }
         }];
 
         this.callParent(arguments);

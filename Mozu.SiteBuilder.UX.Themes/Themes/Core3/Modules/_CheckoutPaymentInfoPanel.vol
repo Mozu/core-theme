@@ -7,7 +7,7 @@
         <button class="mz-edit-button" data-bind="click: edit">Edit</button>
     </h3>
     <div class="mz-panel-wrap">
-        <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + Card.IsSameBillingShippingAddress() + PaymentType()">
+        <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + Card.BillingAddress.Address.CountryCode() + Card.IsSameBillingShippingAddress() + PaymentType()">
             <p class="mz-desc">How to bill?</p>
             <div class="mz-completed-summary">
                 <span data-bind="text: PaymentType"></span>
@@ -17,10 +17,10 @@
 
                     <h4>Billing Address</h4>
                     <!-- ko if: Card.IsSameBillingShippingAddress -->
-                        <div data-bind="template: { name: 'address-summary', data: $root.Shipment.ShippingAddress }"></div>
+                        <div data-bind="template: { name: 'mz-tpt-address-summary', data: $root.Shipment.ShippingAddress }"></div>
                     <!-- /ko -->
                     <!-- ko if: !Card.IsSameBillingShippingAddress() -->
-                        <div data-bind="template: { name: 'address-summary', data: Card.BillingAddress }"></div>
+                        <div data-bind="template: { name: 'mz-tpt-address-summary', data: Card.BillingAddress }"></div>
                     <!-- /ko -->
 
                     <h4>Billing Contact Information</h4>
@@ -33,7 +33,7 @@
                 <p class="mz-desc">
                     <select data-bind="value: PaymentType">
                         <option>Select payment method</option>
-                        <option disabled value="CreditCard">Credit Card</option>
+                        <option value="CreditCard">Credit Card</option>
                         <option value="Check">Check by Mail</option>
                     </select>
                     <span class="mz-validation-message" data-bind="text: PaymentType.validationMessage() || '&nbsp;'"></span>

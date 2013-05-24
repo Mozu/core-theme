@@ -17,13 +17,7 @@
             this.stepStatus("incomplete");
         }
 
-        function checkStepStatus() {
-            if (!this.stepStatus) this.stepStatus = ko.observable();
-            var newStepStatus = this.validate(false) ? 'complete' : 'invalid';
-            this.stepStatus(newStepStatus);
-            return newStepStatus;
-        }
-
+        
         var ShippingAddress = ViewModelPrototype.extend({
             statics: {
                 "Id": ""
@@ -55,8 +49,15 @@
                     self.stepStatus('invalid')
                 });
             },
-            checkStepStatus: checkStepStatus
+            checkStepStatus: function () {
+                if (!this.stepStatus) this.stepStatus = ko.observable();
+                var newStepStatus = this.validate(false) ? 'complete' : 'invalid';
+                this.stepStatus(newStepStatus);
+                return newStepStatus;
+            }
+
         }, function constructShippingAddress() {
+            this.stepStatus = ko.observable("incomplete");
             this.checkStepStatus();
         }),
 
@@ -92,9 +93,7 @@
                 var parent = this.getParentModel();
                 this.update().then(function () {
                     if (self.checkStepStatus() === "complete") {
-                        parent.get().then(function () {
-                            parent.Payment.stepStatus("incomplete");
-                        });
+                        parent.get()
                     }
                 });
             },
@@ -103,7 +102,6 @@
                 if (available && available.length) st = this.chosenMethod() ? "complete" : "invalid";
                 this.stepStatus(st);
                 var parent = this.getParentModel();
-                parent.Payment && parent.Payment.checkStepStatus();
                 return st;
             }
         }, function (conf) {
@@ -287,18 +285,27 @@
                 "BillingAddress": BillingAddress
             },
             doNotSubmit: ["CVV"]
+        }, function () {
+            var saveInfo = this.IsCardInfoSaved();
+            if (saveInfo !== false) this.IsCardInfoSaved(true);
         }),
 
         Check = ViewModelPrototype.extend({
             observables: {
                 NameOnCheck: {
-                    required: true
+                    required: {
+                        onlyIf: paymentTypeIsCheck
+                    }
                 },
                 RoutingNumber: {
-                    required: true
+                    required: {
+                        onlyIf: paymentTypeIsCheck
+                    }
                 },
                 CheckNumber: {
-                    required: true
+                    required: {
+                        onlyIf: paymentTypeIsCheck
+                    }
                 }
             }
         }),
@@ -329,28 +336,25 @@
                     return false;
                 }
             },
-            nextStep: submitStep,
-            checkStepStatus: function () {
-                var origStatus = checkStepStatus.apply(this);
-                if (this.getParentModel().Shipment.stepStatus() !== "complete") {
-                    origStatus = "new";
-                    this.stepStatus(origStatus);
-                }
-                return origStatus
-            }
+            nextStep: submitStep
         }, function () {
             var self = this;
-
+            this.stepStatus = ko.observable();
+            var shipmentStatus = self.getParentModel().Shipment.stepStatus,
+                checkStatus = function (newValue) {
+                    self.stepStatus(newValue === "complete" ? "incomplete" : "new");
+                };
+            shipmentStatus.subscribe(checkStatus);
+            checkStatus(shipmentStatus());
+                
             // on initial load, this is only complete if we are loading a saved order in progress. in case of credit card, we need to allow for the PCI holes to be refilled.
-            this.checkStepStatus();
 
-            if (this.stepStatus() == "complete" && paymentTypeIsCreditCard.apply(this)) {
-                this.stepStatus("incomplete");
-                this.ExpireMonth.validate();
-                this.ExpireYear.validate();
-                this.cvv.validate();
-                this.ExpireYear.validationMessage(msg.ReEnterExpDate);
-                this.CVV.validationMessage(msg.ReEnterCVV);
+            if (paymentTypeIsCreditCard.apply(this.Card) && this.Card.CardNumberPartOrMask()) {
+                this.Card.ExpireMonth.validate();
+                this.Card.ExpireYear.validate();
+                this.Card.CVV.validate();
+                this.Card.ExpireYear.validationMessage(msg.ReEnterExpDate);
+                this.Card.CVV.validationMessage(msg.ReEnterCVV);
             }
 
             this.pciProcessor = PCIaaS({
@@ -370,7 +374,7 @@
                     }
                 },
                 settings: {
-                    framePath: "/../Assets/pci_receiver.html",
+                    framePath: "/Assets/pci_receiver.html",
                     siteId: api.context.Site(),
                     tenantId: api.context.Tenant()
                 }
@@ -386,6 +390,7 @@
             this.paymentTypeIsCheck = ko.computed(function () {
                 return self.PaymentType() === "Check";
             });
+
         }),
 
         isCreatingAccount = function () {
