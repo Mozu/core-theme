@@ -3,60 +3,100 @@
  */
 Ext.define('Taco.model.OrderItem', {
     extend: 'Taco.core.data.Model',
-    requires:['Ext.data.association.HasOne'],
-    fields: [{
-        "name": "id",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "originalCartItemId",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "localeCode",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "product",
-        "type": "auto",
-        "useNull": true
-    }, {
-        "name": "quantity",
-        "type": "int",
-        "useNull": true
-    }, {
-        "name": "subTotal",
-        "type": "float",
-        "useNull": true
-    }, {
-        "name": "discountTotal",
-        "type": "float",
-        "useNull": true
-    }, {
-        "name": "total",
-        "type": "float",
-        "useNull": true
-    }, {
-        "name": "productReservationId",
-        "type": "int",
-        "useNull": true
-    }, {
-        "name": "createDate",
-        "type": "date",
-        "useNull": true
-    }, {
-        "name": "createBy",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "updateDate",
-        "type": "date",
-        "useNull": true
-    }, {
-        "name": "updateBy",
-        "type": "string",
-        "useNull": true
-    }],
+    requires: ['Ext.data.association.HasOne'],
+    fields: [
+        {
+            "name": "id",
+            "type": "string",
+            "useNull": true
+        },
+        
+        /*************************************************
+        *
+        *   missing item discount object
+        *   future missing item adjustments
+        *
+        *
+        **************************************************/
+
+
+        //{
+        //    "name": "originalCartItemId",
+        //    "type": "string",
+        //    "useNull": true
+        //},
+        //{
+        //    "name": "localeCode",
+        //    "type": "string",
+        //    "useNull": true
+        //},
+        {
+            "name": "productCode",
+            "type": "string",
+            "useNull": false
+        },
+        {
+            "name": "productName",
+            "type": "string",
+            "useNull": true
+        }, 
+        {
+            "name": "options", //<== get list of options or extras
+            "type":"auto",
+            default:[]
+        },
+        //{
+        //    "name": "product",
+        //    "type": "auto",
+        //    "useNull": true
+        //},
+
+        {
+            "name": "quantity",
+            "type": "int",
+            "useNull": true
+        },
+        {
+            "name": "subTotal",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "discountTotal",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "total",
+            "type": "float",
+            "useNull": true
+        }, {
+            name: "weight",
+            type:"float" //<==foster to look into... thinks it may be shown on the prod list
+        }
+        //{
+        //    "name": "productReservationId",
+        //    "type": "int",
+        //    "useNull": true
+        //},
+        //{
+        //    "name": "createDate",
+        //    "type": "date",
+        //    "useNull": true
+        //}, {
+        //    "name": "createBy",
+        //    "type": "string",
+        //    "useNull": true
+        //}, {
+        //    "name": "updateDate",
+        //    "type": "date",
+        //    "useNull": true
+        //}, {
+        //    "name": "updateBy",
+        //    "type": "string",
+        //    "useNull": true
+        //}
+    ],
 
     associations: [
         {
