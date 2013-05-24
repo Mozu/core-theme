@@ -3,8 +3,18 @@
  */
 Ext.define('Taco.model.Order', {
     extend: 'Taco.core.data.Model',
+    /**********************************************************
+    *   missing shipping discount object
+    *   missing shipping method...
+    *   
+    *
+    *
+    ***************************************************************/
 
-    fields: [{
+
+
+    fields: [
+        {
         "name": "id",
         "type": "string",
         "useNull": true
@@ -12,92 +22,145 @@ Ext.define('Taco.model.Order', {
         "name": "orderNumber",
         "type": "int",
         "useNull": true
-    }, {
-        "name": "originalCartId",
-        "type": "string",
-        "useNull": true
-    }, {
+    },
+        //{
+        //"name": "originalCartId",
+        //"type": "string",
+        //"useNull": true
+        //},
+
+
+        {
         "name": "shopperNotes", // Taco.model.ShopperNotes
         "type": "auto",
         "useNull": true
-    }, {
-        "name": "userId",
-        "type": "string",
-        "useNull": true
-    }, {
+    },
+
+        //{
+        //"name": "userId",
+        //"type": "string",
+        //"useNull": true
+        //},
+
+
+        {
         "name": "customerAccountId",
         "type": "int",
         "useNull": true
-    }, {
-        "name": "email",
+        },
+
+    //    {
+    //    "name": "email",
+    //    "type": "string",
+    //    "useNull": true
+    //},
+
+        {
+        "name": "ipAddress", //validate that is commin from service
         "type": "string",
         "useNull": true
-    }, {
-        "name": "ipAddress",
-        "type": "string",
-        "useNull": true
-    }, {
+    },
+
+
+
+        {
         "name": "isoCurrencyCode",
         "type": "string",
         "useNull": true
-    }, {
+        },
+
+        {
         "name": "orderStatus",
         "type": "string",
         "useNull": true
-    }, {
-        "name": "paymentStatus",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "fulfillmentStatus",
-        "type": "string",
-        "useNull": true
-    }, {
+        },
+
+
+        //{
+        //"name": "paymentStatus",
+        //"type": "string",
+        //"useNull": true
+        //},
+
+        //{
+        //"name": "fulfillmentStatus",
+        //"type": "string",
+        //"useNull": true
+        //},
+
+
+
+        {
         "name": "submittedDate",
         "type": "date",
         "useNull": true,
-        "dateFormat": "MS"
-    }, {
+        
+        },
+
+        {
         "name": "cancelledDate",
         "type": "date",
         "useNull": true,
-        "dateFormat": "MS"
-    }, {
+        
+        },
+
+        {
         "name": "closedDate",
         "type": "date",
         "useNull": true,
-        "dateFormat": "MS"
-    }, {
-        "name": "notes", // Taco.model.OrderNote
-        "type": "auto",
-        "useNull": true
-    }, {
+        
+        },
+
+        //{
+        //"name": "notes", // Taco.model.OrderNote
+        //"type": "auto",
+        //"useNull": true
+        //},
+
+        {
         "name": "items", // Taco.model.OrderItem
         "type": "auto",
         "useNull": true
-    }, {
-        "name": "shipment", // Taco.model.Shipment
+        },
+
+       //{
+       // "name": "shipment", // Taco.model.Shipment
+       // "type": "auto",
+       // "useNull": true
+       // },
+
+        {
+        "name": "orderDiscount",  //<==which one is this
         "type": "auto",
         "useNull": true
-    }, {
-        "name": "orderDiscount",
-        "type": "auto",
-        "useNull": true
-    }, {
-        "name": "payment", // Taco.model.PaymentReference
-        "type": "auto",
-        "useNull": true
-    }, {
-        "name": "billingFirstName",
-        "type": "string"
-    }, {
-        "name": "billingLastName",
-        "type": "string"
-    }, {
-        "name": "paymentTransactions", // Taco.model.PaymentTransaction
-        "type": "auto",
-        "useNull": true
-    }, {
+        },
+
+        //{
+        //"name": "payment", // Taco.model.PaymentReference
+        //"type": "auto",
+        //"useNull": true
+        //},
+
+
+        //{
+        //"name": "billingFirstName",
+        //"type": "string"
+        //}
+        //,
+
+        //{
+        //"name": "billingLastName",
+        //"type": "string"
+        //},
+
+        //{
+        //"name": "paymentTransactions", // Taco.model.PaymentTransaction
+        //"type": "auto",
+        //"useNull": true
+        //},
+
+
+        {
         "name": "subTotal",
         "type": "float",
         "useNull": true
@@ -121,17 +184,19 @@ Ext.define('Taco.model.Order', {
         "name": "lastValidationDate",
         "type": "date",
         "useNull": true,
-        "dateFormat": "MS"
-    }, {
+        
+    },
+        {
         "name": "expirationDate",
         "type": "date",
         "useNull": true,
-        "dateFormat": "MS"
-    }, {
+        },
+
+        {
         "name": "createDate",
         "type": "date",
         "useNull": true,
-        "dateFormat": "MS"
+        
     }, {
         "name": "createBy",
         "type": "string",
@@ -140,12 +205,16 @@ Ext.define('Taco.model.Order', {
         "name": "updateDate",
         "type": "date",
         "useNull": true,
-        "dateFormat": "MS"
-    }, {
+        
+    },
+
+        {
         "name": "updateBy",
         "type": "string",
         "useNull": true
-    }, {
+    },
+
+        {
         "name": "availableOrderActions",
         "type": "auto"
     }, {
@@ -154,19 +223,13 @@ Ext.define('Taco.model.Order', {
     }, {
         "name": "availableShipmentActions",
         "type": "auto"
-    }],
+    }
+
+    ]
+    ,
 
     associations: [
-        //{
-        //    type: 'hasMany',
-        //    model: 'Taco.model.ShopperNotes',
-        //    name: "shopperNotes"
-        //},
-        //{
-        //    type: 'hasMany',
-        //    model: 'Taco.model.OrderNote',
-        //    name: "notes"
-        //},
+      
         {
             type: 'hasMany',
             model: 'Taco.model.OrderItem',
