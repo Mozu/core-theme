@@ -10,10 +10,16 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Mozu.Core;
+using Mozu.PaymentService.Contracts;
+using Mozu.ShippingRuntime.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Themes.Repositories;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteSettings.Order.Contracts;
+using Mozu.SiteSettings.Order.Contracts.Clients;
+using Mozu.SiteSettings.Shipping.Contracts;
+using Mozu.SiteSettings.Shipping.Contracts.Clients;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json.Linq;
@@ -27,6 +33,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IThemeRepository _themeRepository;
         private readonly IApiContext _apiContext;
         private readonly ISiteBuilderContext _siteBuilderContext;
+        private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
+        private readonly IShippingSettingsWebApiClient _shippingSettingsWebApiClient;
 
 
         static List<DGD> g_testData;
@@ -55,13 +63,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly IGeneralSettingWrapper _generalSettingsWebApiClient;
 
-        public TestingController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ISitesWebApiClient sitesWebApiClient, IApiContext apiContext, ISiteBuilderContext siteBuilderContext)
+        public TestingController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ISitesWebApiClient sitesWebApiClient, IApiContext apiContext, ISiteBuilderContext siteBuilderContext, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, Mozu.SiteSettings.Shipping.Contracts.Clients.IShippingSettingsWebApiClient shippingSettingsWebApiClient)
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient;
             _tenantClient = tenantClient;
             _themeRepository = themeRepository;
             _apiContext = apiContext;
             _siteBuilderContext = siteBuilderContext;
+            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
+            _shippingSettingsWebApiClient = shippingSettingsWebApiClient;
         }
 
         [WebGet(UriTemplate = "list")]
@@ -72,10 +82,152 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(items, g_testData.Count);
         }
 
-        [WebInvoke(UriTemplate = "testCreate")]
-        public JContainer TestCreate(JContainer ret)
+        [WebGet (UriTemplate = "orderProvision")]
+        public bool  OrderProvision()
         {
-            return ret;
+            var paymentSettingsRes = _checkoutSettingsWebApiClient.GetPaymentSettings().Result;
+           
+            bool doSettings = true;
+            bool exists = false;
+            if (paymentSettingsRes.ResponseMessage.IsSuccessStatusCode)
+            {
+                exists = true;
+                var paymentSettings = paymentSettingsRes.ReadAsSync();
+                doSettings = paymentSettings.Gateway == null || paymentSettings.Gateway.CredentialFields == null || paymentSettings.Gateway.CredentialFields.Count == 0;
+            }
+            if (doSettings)
+            {
+                doSettings = true;
+                var paymentSettings = new PaymentSettings()
+                                          {
+                                              Gateway = new GatewayAccount()
+                                                            {
+                                                                CountryCode = "us",
+                                                                IsActive = true,
+                                                                GatewayDefinitionId = "authorize.net", //gatewayToUse.Id,
+                                                                CredentialFields = new List<Mozu.PaymentService.Contracts.GatewayCredentialFieldValue>
+                                                                                       {
+                                                                                           //would actually get the names from gatewayToUse.CredentialDefinitions and the values would be admin entered
+                                
+                                                                                           //these are the PCI sandbox creds
+                                                                                           new Mozu.PaymentService.Contracts.GatewayCredentialFieldValue
+                                                                                               {
+                                                                                                   Name = "x_login",
+                                                                                                   Value = "5HdBRVtf2j46"
+                                                                                               },
+                                                                                           new Mozu.PaymentService.Contracts.GatewayCredentialFieldValue
+                                                                                               {
+                                                                                                   Name = "x_tran_key",
+                                                                                                   Value = "92F9yx5aX89tXX9s"
+                                                                                               },
+                                                                                       }
+
+
+                                                            },
+                                                            SupportedCards = new List<string>(){"AMEX","VISA"}
+                                          };
+                if (exists)
+                {
+                    _checkoutSettingsWebApiClient.UpdatePaymentSettings(paymentSettings).Wait();    
+                }
+                else
+                {
+                    _checkoutSettingsWebApiClient.CreatePaymentSettings(paymentSettings).Wait();    
+                }
+                
+            }
+
+            var opSettings = _checkoutSettingsWebApiClient.GetOrderProcessingSettings().Result;
+            if (!opSettings.ResponseMessage.IsSuccessStatusCode)
+            {
+                _checkoutSettingsWebApiClient.CreateOrderProcessingSettings(new OrderProcessingSettings()
+                                                                                {
+                                                                                    PaymentProcessingFlowType = SiteSettings.Order.Contracts.OrderProcessingSettings.PaymentProcessingFlowTypes.AuthorizeOnOrderPlacementAndCaptureOnOrderShipment.ToString()
+                                                                                }).Wait();
+            }
+             _checkoutSettingsWebApiClient.UpdateOrderProcessingSettings( new OrderProcessingSettings()
+                                                                                {
+                                                                                    PaymentProcessingFlowType = SiteSettings.Order.Contracts.OrderProcessingSettings.PaymentProcessingFlowTypes.AuthorizeOnOrderPlacementAndCaptureOnOrderShipment.ToString()
+                                                                                }).Wait();
+
+            doSettings = true;
+            exists = false;
+            var shippingSettingsRes = _shippingSettingsWebApiClient.GetSiteSettings().Result;
+            if (shippingSettingsRes.ResponseMessage.IsSuccessStatusCode)
+            {
+                exists = true;
+                var shippingSettings = shippingSettingsRes.ReadAsSync();
+                doSettings = shippingSettings.SiteShippingOriginAddress == null || string.IsNullOrEmpty(shippingSettings.SiteShippingOriginAddress.PostalOrZipCode) || shippingSettings.ActiveRateProvider == null;
+                
+            }
+            if (doSettings)
+            {
+
+                var shippingSettings = new Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings()
+                                           {
+                                               ActiveRateProvider = new ShippingFeature()
+                                                                        {
+                                                                            Name = "customrates"
+                                                                        },
+                                               SiteShippingOriginAddress = new SiteShippingOriginAddress()
+                                                                               {
+                                                                                   SenderName = "Foobulaboop d'Fummool",
+                                                                                   Address1 = "1835 Kramer Ln",
+                                                                                   CityOrTown = "Austin",
+                                                                                   StateOrProvince = "TX",
+                                                                                   Country = "US",
+                                                                                   PostalOrZipCode = "78704"
+                                                                               },
+                                               SiteShippingMethods = new List<SiteShippingMethod>()
+                                                                         {
+                                                                             new SiteShippingMethod()
+                                                                                 {
+                                                                                     Code = "CUSTOM-3",
+                                                                                     Content =
+                                                                                         {
+                                                                                             ContentLocaleCode = "en-US",
+                                                                                             Name = "Standard (5-9 Day)"
+                                                                                         },
+                                                                                     IsInternational = false
+                                                                                 },
+                                                                                  new SiteShippingMethod()
+                                                                                 {
+                                                                                     Code = "CUSTOM-4",
+                                                                                     Content =
+                                                                                         {
+                                                                                             ContentLocaleCode = "en-US",
+                                                                                             Name = "Expedited (2 Days)"
+                                                                                         },
+                                                                                     IsInternational = false
+                                                                                 },
+                                                                                 new SiteShippingMethod()
+                                                                                 {
+                                                                                     Code = "CUSTOM-5",
+                                                                                     Content =
+                                                                                         {
+                                                                                             ContentLocaleCode = "en-US",
+                                                                                             Name = "Standard International (7-14 Days)"
+                                                                                         },
+                                                                                     IsInternational = true
+                                                                                 }
+                                                                         }
+                                           };
+                if (exists)
+                {
+                    _shippingSettingsWebApiClient.UpdateSiteShippingSettings(shippingSettings).Wait();
+                }
+                else
+                {
+                    _shippingSettingsWebApiClient.CreateSiteShippingSettings(shippingSettings).Wait();
+                }
+                
+            }
+                     
+
+            
+           
+
+            return true;
         }
         [WebInvoke(UriTemplate = "testDestroy")]
         public JContainer TestDestroy(JContainer ret)
@@ -87,6 +239,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             return ret;
         }
+
+
+   
+
+
+
         [WebGet(UriTemplate = "Files?id={id}")]
         public Response<List<Node>> GetAllNode(string id)
         {
