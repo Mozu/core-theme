@@ -655,6 +655,7 @@
     <Content Include="Scripts\app\view\fileManager\Index.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
+    <Content Include="Scripts\app\view\order\Header.js" />
     <Content Include="Scripts\app\view\pageTemplate\Edit.js" />
     <Content Include="Scripts\app\view\pageTemplate\Index.js" />
     <Content Include="Scripts\app\view\pendingchange\Cms.js" />
