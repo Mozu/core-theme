@@ -369,8 +369,10 @@
                     success: function () {
                         self.pciProcessor.applyMask();
                         self.update().then(function () {
-                            self.checkStepStatus();
-                        });
+                            self.stepStatus("complete");
+                        }), function () {
+                            self.stepStatus("invalid");
+                        };
                     }
                 },
                 settings: {
