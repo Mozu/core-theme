@@ -12,7 +12,8 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
     selectedItemCls: 'taco-submenu-item-active',
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            selModel;
 
         this.tpl = [
             '<tpl for=".">',
@@ -28,10 +29,10 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
             itemclick: this.navigate,
             scope: this
         });
-        var selModel = this.getSelectionModel();
+
+        selModel = this.getSelectionModel();
         selModel.setSelectionMode('SINGLE');
         selModel.allowDeselect = true;
-
     },
 
     /**
