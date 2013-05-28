@@ -18,15 +18,40 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name = "orderNumber")]
         public int? OrderNumber { get; set; }
 
+        [DataMember(Name = "createDate")]
+        public DateTime CreateDate { get; set; }
+
         [DataMember(Name="customer")]
         public OrderCustomer Customer { get; set; }
 
         [DataMember(Name = "ipAddress")]
         public string IpAddress { get; set; }
 
+        [DataMember(Name = "items")]
+        public List<OrderItem> Items { get; set; }
+
+        [DataMember(Name = "subtotal")]
+        public decimal Subtotal { get; set; }
+
+        /// <summary>
+        /// Total of any order-level discounts.
+        /// </summary>
+        [DataMember(Name = "discountTotal")]
+        public decimal DiscountTotal { get; set; }
+
+        [DataMember(Name = "shippingTotal")]
+        public decimal ShippingTotal { get; set; }
+
+        [DataMember(Name = "taxTotal")]
+        public decimal TaxTotal { get; set; }
+
         [DataMember(Name = "total")]
         public decimal Total { get; set; }
 
+        [DataMember(Name = "customerNote")]
+        public string CustomerNote { get; set; }
+
+        #region workflow shit
         [DataMember(Name = "orderStatus")]
         public string OrderStatus { get; set; }
 
@@ -38,5 +63,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
         [DataMember(Name = "availableOrderActions")]
         public List<string> AvailableOrderActions { get; set; }
+        #endregion
     }
 }

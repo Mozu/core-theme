@@ -1,42 +1,22 @@
 ﻿/**
  * @class Taco.model.OrderItem
  */
-Ext.define('Taco.model.OrderItem', {
+Ext.define('Taco.model.OrderItemDiscount', {
     extend: 'Taco.core.data.Model',
-    requires: ['Ext.data.association.HasOne'],
+    requires: ['Ext.data.association.BelongsTo'],
     fields: [
-        {
-            "name": "id",
-            "type": "string",
-            "useNull": true
-        },        
-        {
-            "name": "productCode",
-            "type": "string",
-            "useNull": false
-        },
-        {
-            "name": "productName",
-            "type": "string",
-            "useNull": true
-        }, 
-        {
-            "name": "options", //<== get list of options or extras
-            "type": "auto",
-            "defaultValue": []
-        },
         {
             "name": "quantity",
             "type": "int",
             "useNull": true
         },
         {
-            "name": "discount",
-            "type": "auto",
+            "name": "description",
+            "type": "string",
             "useNull": true
         },
         {
-            "name": "subtotal",
+            "name": "unitPrice",
             "type": "float",
             "useNull": true
         },
@@ -44,20 +24,10 @@ Ext.define('Taco.model.OrderItem', {
             "name": "total",
             "type": "float",
             "useNull": true
-        }, 
-        {
-            "name": "weight",
-            "type": "float",
-            "defaultValue": 1,
         }
     ],
 
     associations: [
-        {
-            type: 'hasOne',
-            model: 'Taco.model.OrderItemDiscount',
-            name: 'discount'
-        },
         {
             type: 'belongsTo',
             model: 'Taco.model.Order'

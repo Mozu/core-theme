@@ -15,5 +15,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
         [DataMember(Name = "lastName")]
         public string LastName { get; set; }
+
+        [DataMember(Name = "customerSince")]
+        public DateTime CustomerSince { get; set; }
+
+        [DataMember(Name = "totalOrders")]
+        public int TotalOrders { get; set; }
+
+        [DataMember(Name = "totalSpent")]
+        public decimal TotalSpent { get; set; }
+
+        [DataMember(Name = "groups")]
+        public List<string> Groups { get; set; }
     }
 }

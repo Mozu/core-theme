@@ -249,7 +249,7 @@ Ext.define('Taco.controller.Testing', {
         var orderStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Orders');
         orderStore.load({
             callback: function (records, operation, success) {
-                window.foster = orderStore.getById("o123");
+                window.foster = orderStore.getById("o124");
             }
         });        
     },
