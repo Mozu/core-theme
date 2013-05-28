@@ -34,10 +34,6 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                 width: '95%',
                 name: 'metaDescription'
             },
-            /*{
-                xtype: 'box',
-                autoEl: 'hr'
-            },*/
             { 
                 xtype: "panel",
                 title: "Advanced",

@@ -3,31 +3,21 @@
  */
 Ext.define('Taco.view.site.page.settings.General', {
     extend: 'Taco.view.site.page.PageSettingsPanel',
+    requires: ['Taco.core.ux.form.OnOffSliderButton'],
     title: 'General',
     cls: 'taco-sidebar-model-general',
     form: {
         layout: 'vbox',
         items: [
             {
-                xtype: 'container',
-                layout: 'hbox',
-                items: [
-                    {
-                        xtype: 'label',
-                        cls: 'taco-onOffSwitchLabel',
-                        text: 'Show in website'
-                    },
-                    {
-                        xtype: 'checkbox',
-                        name: 'hidden',
-                        cls: 'taco-onoffswitch'
-                    }
-                ]
+                xtype: 'onoffsliderbutton',
+                name: 'hidden',
+                text: 'Show in website'
             },
             {
                 xtype: 'label',
                 text: 'Navigation'
-            },
+            }, 
             {
                 xtype: 'textfield',
                 fieldLabel: 'Navigation Link Name',
