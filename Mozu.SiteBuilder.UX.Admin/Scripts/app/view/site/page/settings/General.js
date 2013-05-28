@@ -5,7 +5,7 @@ Ext.define('Taco.view.site.page.settings.General', {
     extend: 'Taco.view.site.page.PageSettingsPanel',
     requires: ['Taco.core.ux.form.OnOffSliderButton'],
     title: 'General',
-    cls: 'taco-sidebar-model-general',
+    cls: 'taco-sidebar-modal-general',
     form: {
         layout: 'vbox',
         items: [
