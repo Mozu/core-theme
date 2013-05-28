@@ -1,9 +1,9 @@
 ﻿/**
- * @class Taco.view.product.subform.ImageField
+ * @class Taco.shared.view.field.Image
  * @author Travis Johnson
  */
 
-Ext.define('Taco.view.product.subform.ImageField', {
+Ext.define('Taco.shared.view.field.Image', {
     extend: 'Ext.form.FieldContainer',
     requires: [
         'Ext.view.DragZone',
@@ -11,22 +11,22 @@ Ext.define('Taco.view.product.subform.ImageField', {
     ],
     mixins: {
         field: 'Ext.form.field.Field',
-        uploadable: 'Taco.view.fileManager.util.Uploadable'
+        uploadable: 'Taco.shared.util.Uploadable'
     },
-    alias: 'widget.productimagefield',
+    alias: 'widget.taco.imagefield',
     requires: [
         'Taco.view.fileManager.Associator'
     ],
     labelAlign: 'top',
     labelSeparator: '',
-    cls: 'taco-product-image-field',
+    cls: 'taco-image-field',
 
     thumbnailSize: 150,
     
     initComponent: function () {
-        this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.Files');
+        this.store = Taco.core.data.StoreManager.getOrCreate('Taco.shared.store.Files');
 
-        this.selectedImages = Ext.create('Taco.store.Files', {
+        this.selectedImages = Ext.create('Taco.shared.store.Files', {
             listeners: {
                 datachanged: this.onSelectedImagesDataChanged,
                 update: function (store, record, op, fields) {
@@ -45,7 +45,7 @@ Ext.define('Taco.view.product.subform.ImageField', {
 
         this.emptyDropZone = Ext.widget({
             xtype: 'component',
-            cls: 'taco-product-image-drop-zone',
+            cls: 'taco-image-drop-zone',
             html: 'Drag and drop images here'
         });
 

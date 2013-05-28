@@ -4,9 +4,9 @@
 * The Files store
 */
 
-Ext.define('Taco.store.Files', {
+Ext.define('Taco.shared.store.Files', {
     extend: 'Taco.store.shared.BaseStore',
-    model: 'Taco.model.File',
+    model: 'Taco.shared.model.File',
     pageSize: 100,
     storeId: 'fileManagementFiles',
     buffered: false,

@@ -1,8 +1,8 @@
 ﻿/**
- * @class Taco.view.fileManager.util.Uploadable
+ * @class Taco.shared.util.Uploadable
  * @author  Jason *The Cock* Cochran
  */
-Ext.define('Taco.view.fileManager.util.Uploadable', {
+Ext.define('Taco.shared.util.Uploadable', {
     requires: ['Taco.core.ux.modal.Alert'],
 
     onUploadFile: function (fileList, e, callback) {
@@ -43,7 +43,7 @@ Ext.define('Taco.view.fileManager.util.Uploadable', {
 
             reader = new FileReader();
 
-            doc = Ext.create('Taco.model.File', {
+            doc = Ext.create('Taco.shared.model.File', {
                 name: file.name,
                 fileType: file.type,
                 isUploaded: false,

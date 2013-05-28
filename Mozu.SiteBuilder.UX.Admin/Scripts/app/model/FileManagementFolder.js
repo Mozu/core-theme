@@ -1,10 +1,10 @@
 ﻿/**
-* @class Taco.model.FileManagementFolder
+* @class Taco.shared.model.FileManagementFolder
 * @author no one
 * The FileManagementFolder model
 */
 
-Ext.define('Taco.model.FileManagementFolder', {
+Ext.define('Taco.shared.model.FileManagementFolder', {
     extend: 'Taco.core.data.Model',
     requires: [],
     fields:
@@ -28,7 +28,7 @@ Ext.define('Taco.model.FileManagementFolder', {
     idProperty: 'id',
         hasMany: [
             {
-                model: 'Taco.model.FileManagementFolder',
+                model: 'Taco.shared.model.FileManagementFolder',
                 name: 'items'
             }
         ],

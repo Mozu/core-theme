@@ -739,7 +739,7 @@ Ext.define('Taco.controller.Testing', {
     },
 
     mutliFileAssociator: function () {
-        Ext.create('Taco.view.fileManagement.MultiFileAssociator');
+        Ext.create('Taco.view.fileManager.Associator');
     },
     standAloneOptions: function (args) {
         var me = this;

@@ -612,7 +612,7 @@
     <Content Include="Scripts\app\model\Behavior.js" />
     <Content Include="Scripts\app\model\CartItem.js" />
     <Content Include="Scripts\app\model\CmsDocumentDraft.js" />
-    <Content Include="Scripts\app\model\File.js" />
+    <Content Include="Scripts\app\shared\model\File.js" />
     <Content Include="Scripts\app\model\ProductExtra.js" />
     <Content Include="Scripts\app\model\ProductTypeAttribute.js" />
     <Content Include="Scripts\app\model\ItemFilter.js" />
@@ -624,10 +624,12 @@
     <Content Include="Scripts\app\model\RuntimeProductSearchResult.js" />
     <Content Include="Scripts\app\model\SimplegridColumn.js" />
     <Content Include="Scripts\app\model\WidgetInstance.js" />
+    <Content Include="Scripts\app\shared\util\Uploadable.js" />
+    <Content Include="Scripts\app\shared\view\field\Image.js" />
     <Content Include="Scripts\app\store\Behaviors.js" />
     <Content Include="Scripts\app\store\CartItems.js" />
     <Content Include="Scripts\app\store\CmsDocumentDrafts.js" />
-    <Content Include="Scripts\app\store\Files.js" />
+    <Content Include="Scripts\app\shared\store\Files.js" />
     <Content Include="Scripts\app\store\ItemFilters.js" />
     <Content Include="Scripts\app\store\LocalizedStrings.js" />
     <Content Include="Scripts\app\store\Orders.js" />
@@ -647,7 +649,6 @@
     <Content Include="Scripts\app\view\discount\Index.js" />
     <Content Include="Scripts\app\view\fileManager\Associator.js" />
     <Content Include="Scripts\app\view\fileManager\Index.js" />
-    <Content Include="Scripts\app\view\fileManager\util\Uploadable.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\pageTemplate\Edit.js" />
@@ -673,7 +674,6 @@
     <Content Include="Scripts\app\view\product\Modal.js" />
     <Content Include="Scripts\app\view\product\SiteForm.js" />
     <Content Include="Scripts\app\view\product\subform\Categories.js" />
-    <Content Include="Scripts\app\view\product\subform\ImageField.js" />
     <Content Include="Scripts\app\view\product\subform\ListExtraEditor.js" />
     <Content Include="Scripts\app\view\product\subform\OverrideForm.js" />
     <Content Include="Scripts\app\view\product\subform\SEO.js" />
@@ -1235,7 +1235,6 @@
     <Content Include="Scripts\app\core\ux\form\FontField.js" />
     <Content Include="Scripts\app\core\ux\form\FontPicker.js" />
     <Content Include="Scripts\app\core\ux\form\Form.js" />
-    <Content Include="Scripts\app\core\ux\form\ImageField.js" />
     <Content Include="Scripts\app\core\ux\form\Interface.js" />
     <Content Include="Scripts\make.bat" />
     <Content Include="Scripts\.sencha\app\sencha.cfg" />
@@ -1284,7 +1283,6 @@
     <Content Include="Scripts\app\view\customers\SearchForm.js" />
     <Content Include="Scripts\app\view\email\Edit.js" />
     <Content Include="Scripts\app\view\email\Index.js" />
-    <Content Include="Scripts\app\view\fileManagement\MultiFileAssociatorGooder.js" />
     <Content Include="Scripts\app\view\inventory\QuantityEdit.js" />
     <Content Include="Scripts\app\view\order\Grid.js" />
     <Content Include="Scripts\app\view\order\modal\Address.js" />
@@ -1450,7 +1448,6 @@
     <Content Include="Scripts\resources\scss\compass_init.rb" />
     <Content Include="Scripts\resources\scss\config.rb" />
     <Content Include="Scripts\app\controller\Discounts.js" />
-    <Content Include="Scripts\app\controller\FileManagement.js" />
     <Content Include="Scripts\app\controller\Shipping.js" />
     <Content Include="Scripts\app\controller\Tax.js" />
     <Content Include="Scripts\app\controller\Themesettings.js" />
@@ -2615,13 +2612,6 @@
     <Content Include="Scripts\app\view\category\Basic.js" />
     <Content Include="Scripts\app\view\category\Edit.js" />
     <Content Include="Scripts\app\view\category\Index.js" />
-    <Content Include="Scripts\app\view\fileManagement\TilePanel.js" />
-    <Content Include="Scripts\app\view\fileManagement\Savable.js" />
-    <Content Include="Scripts\app\view\fileManagement\folderTree.js" />
-    <Content Include="Scripts\app\view\fileManagement\GridPanel.js" />
-    <Content Include="Scripts\app\view\fileManagement\Index.js" />
-    <Content Include="Scripts\app\view\fileManagement\MultiFileAssociator.js" />
-    <Content Include="Scripts\app\view\fileManagement\UpdateBar.js" />
     <Content Include="Scripts\app\view\image\Uploader.js" />
     <Content Include="Scripts\app\view\image\UploadItem.js" />
     <Content Include="Scripts\app\view\image\UploadModal.js" />

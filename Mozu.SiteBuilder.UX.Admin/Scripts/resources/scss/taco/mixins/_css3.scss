@@ -88,3 +88,10 @@
 .#{$vprefix}no-select {
   @include no-select;
 }
+
+@mixin background-with-border ($background-color, $border-style: solid, $border-width: 1px) {
+  background-color: $background-color;
+  border-width: $border-width;
+  border-style: $border-style;
+  border-color: border-for($background-color);
+}

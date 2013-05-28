@@ -74,7 +74,8 @@
 
       &.show-hint-zones .#{$vprefix}hint-zone {
         visibility: visible !important;
-        background: transparentize($color-theme-support-darkest, 0.85);
+        //background: transparentize($color-theme-support-darkest, 0.85);
+        background: $color-theme-support;
 
         &.#{$vprefix}widget-dropzone-hover {
           border: 1px dashed border-for($color-theme-support-dark);
