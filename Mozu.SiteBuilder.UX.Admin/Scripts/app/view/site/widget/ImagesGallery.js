@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.site.widget.ImagesGallery', {
     extend: 'Taco.view.site.widget.Editor',
-    requires: ['Taco.core.ux.form.TextAlignment', 'Taco.view.fileManagement.MultiFileAssociatorGooder'],
+    requires: ['Taco.core.ux.form.TextAlignment', 'Taco.view.fileManager.Associator'],
 
     title: 'Image Gallery',
     autoSize: false,
@@ -165,7 +165,7 @@ Ext.define('Taco.view.site.widget.ImagesGallery', {
     },
 
     initContentForm: function () {
-        this.associator = Ext.create('Taco.view.fileManagement.MultiFileAssociatorGooder', {
+        this.associator = Ext.create('Taco.view.fileManager.Associator', {
             initialSelected: this.widgetConfig.images,
             listeners: {
                 selectionchange: function (images) {

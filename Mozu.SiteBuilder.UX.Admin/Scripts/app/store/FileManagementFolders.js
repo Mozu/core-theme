@@ -7,7 +7,7 @@
 
 Ext.define('Taco.store.FileManagementFolders', {
     extend: 'Taco.store.shared.TreeStore',
-    model: 'Taco.model.FileManagementFolder',
+    model: 'Taco.shared.model.FileManagementFolder',
     autoSync: true,
     pageSize: 100,
     //  numFromEdge: 10,

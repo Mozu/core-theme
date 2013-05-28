@@ -7,7 +7,7 @@
 
 Ext.define('Taco.store.FileManagementFiles', {
     extend: 'Taco.store.shared.BaseStore',
-    model: 'Taco.model.FileManagementFile',
+    model: 'Taco.shared.model.FileManagementFile',
     pageSize: 100,
     //  numFromEdge: 10,
     // leadingBufferZone:40,

@@ -2,7 +2,7 @@
  * @class Taco.core.ux.tinymce.TinyMCE
  * @extends Ext.form.field.TextArea
  * @requires Taco.core.ux.tinymce.WindowManager
- * @requires Taco.view.fileManagement.MultiFileAssociator
+ * @requires Taco.view.fileManager.Associator
  *
  * The Initial Developer of the Original Code is daanlib with some methods of
  * Fady Khalife (http://code.google.com/p/ext-js-4-tinymce-ux/source/browse/trunk/ux/form/TinyMCE.js)
@@ -100,7 +100,7 @@
         extend: 'Ext.form.field.TextArea',
         alias: 'widget.tinymcefield',
 
-        requires: ['Taco.core.ux.tinymce.WindowManager', 'Taco.view.fileManagement.MultiFileAssociator'],
+        requires: ['Taco.core.ux.tinymce.WindowManager', 'Taco.view.fileManager.Associator'],
 
         fieldStyle:{height:'100%',width:'100%'},
 
@@ -266,7 +266,7 @@
                             }];
                         }
 
-                        ed.imageModal = Ext.create('Taco.view.fileManagement.MultiFileAssociator', {
+                        ed.imageModal = Ext.create('Taco.view.fileManager.Associator', {
                             style: {
                                 zIndex: 20001
                             },

@@ -2,7 +2,7 @@
  * @class Taco.view.site.widget.JasonImage
  */
 Ext.define('Taco.view.site.widget.JasonImage', {
-    extend: 'Taco.view.fileManagement.MultiFileAssociator',
+    extend: 'Taco.view.fileManager.Associator',
 
     autoShow: true,
     allowMultiple: false,

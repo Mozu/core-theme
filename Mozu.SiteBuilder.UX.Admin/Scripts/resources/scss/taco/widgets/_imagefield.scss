@@ -1,9 +1,8 @@
 ﻿
-@mixin taco-product-drop-zone {
+@mixin taco-image-drop-zone {
     text-align: center;
-    border: 1px dashed #B1B1B1;
-    background-color: #F8F8F8;
-    color: #A3A3A3;
+    @include background-with-border($color-neutral-95, dashed);
+    color: $color-neutral-70;
     font-weight: normal;
     background-repeat: no-repeat;
     padding-top: 3rem;
@@ -12,7 +11,7 @@
     @include transition(background-color 0.3s ease-in);
 
     &:hover, &.drag-over {
-        background-color: #DFDFDF;
+        @include background-with-border($color-neutral-90, $border-style: dashed);
     }
 
     &:before {
@@ -20,7 +19,7 @@
         content: "";
         display: block;
         position: absolute;
-        background-color: rgba(99,163,255,0.3);
+        background-color: transparentize($color-theme-support-darker, 0.8);
         @include transition(opacity 0.3s ease-in);
     }
 }
@@ -29,7 +28,7 @@
 
     $thumbnail-size: 150px;
 
-    .#{$vprefix}product-image-field {
+    .#{$vprefix}image-field {
         border: none !important;
 
         .#{$vprefix}action {
@@ -72,7 +71,7 @@
             }
 
             &.#{$vprefix}image-drop .square {
-                @include taco-product-drop-zone;
+                @include taco-image-drop-zone;
                 padding-top: 3rem;
                 background-position: center 5rem;
                 background-size: 68px 70px;
@@ -127,7 +126,7 @@
         }
 
         &.drag-and-drop-active {
-            .#{$vprefix}product-image-drop-zone {
+            .#{$vprefix}image-drop-zone {
                 
                 &:before {
                     opacity: 1 !important;
@@ -142,8 +141,8 @@
         }
     }
 
-    .#{$vprefix}product-image-drop-zone {
-        @include taco-product-drop-zone;
+    .#{$vprefix}image-drop-zone {
+        @include taco-image-drop-zone;
         height: 170px;
         font-size: 2rem;
         background-position: center 6.2rem;

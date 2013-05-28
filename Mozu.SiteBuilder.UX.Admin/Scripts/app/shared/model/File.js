@@ -1,8 +1,8 @@
 ﻿/**
- * @class Taco.model.File
+ * @class Taco.shared.model.File
  * The File model
  */
-Ext.define('Taco.model.File', {
+Ext.define('Taco.shared.model.File', {
     extend: 'Taco.core.data.Model',
     requires: [],
     fields: [{

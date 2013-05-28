@@ -7,7 +7,7 @@
 Ext.define('Taco.view.product.subform.General', {
     extend: 'Taco.view.product.subform.Subform',
     requires: [
-        'Taco.view.product.subform.ImageField'
+        'Taco.shared.view.field.Image'
     ],
 
     title: 'General',
@@ -95,8 +95,7 @@ Ext.define('Taco.view.product.subform.General', {
             }, {
                 fieldLabel: 'Product Image',
                 name: 'productImages',
-               // hidden: this.isGlobal,
-                xtype: 'productimagefield',
+                xtype: 'taco.imagefield',
                 width: '100%'
             }]
         }, {

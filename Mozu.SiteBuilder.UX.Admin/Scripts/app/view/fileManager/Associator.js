@@ -10,19 +10,19 @@ Ext.define('Taco.view.fileManager.Associator', {
     requires: [
         'Taco.core.ux.form.FileInputButton',
         'Taco.core.ux.DragDropZone',
-        'Taco.store.Files',
+        'Taco.shared.store.Files',
         'Taco.core.ux.form.TextField',
         'Taco.core.ux.form.FileInputButton'
     ],
 
     mixins: {
-        savable: 'Taco.view.fileManager.util.Uploadable'
+        savable: 'Taco.shared.util.Uploadable'
     },
 
     typeName: 'File',
-    modelName: 'Taco.model.File',
+    modelName: 'Taco.shared.model.File',
     store: {
-        type: 'Taco.store.Files',
+        type: 'Taco.shared.store.Files',
         autoSync: true
     },
     useTilePanel: true,

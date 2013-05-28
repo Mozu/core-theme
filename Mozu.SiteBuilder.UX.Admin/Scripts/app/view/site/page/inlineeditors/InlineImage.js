@@ -2,7 +2,7 @@
  * @class Taco.view.site.page.inlineeditors.InlineImage
  */
 Ext.define('Taco.view.site.page.inlineeditors.InlineImage', {
-    extend: 'Taco.view.fileManagement.MultiFileAssociator',
+    extend: 'Taco.view.fileManager.Associator',
 
     autoShow: true,
     allowMultiple: false,

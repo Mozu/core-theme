@@ -33,7 +33,7 @@
  * @requires Taco.controller.Catalog
  * @requires Taco.controller.Sites
  * @requires Taco.controller.Testing
- * @requires Taco.controller.FileManagement
+ * @requires Taco.controller.FileManager
  * @requires Taco.controller.Discounts
  * @requires Taco.controller.PaymentAndCheckout
  * @requires Taco.controller.Tax
@@ -344,7 +344,6 @@ Ext.application({
             'Catalog',
             'Sites',
             'Testing',
-            'FileManagement',
             'Discounts',
             'PaymentAndCheckout',
             'PageTemplates',

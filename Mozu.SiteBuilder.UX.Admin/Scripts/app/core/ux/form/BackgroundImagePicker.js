@@ -5,7 +5,7 @@
 Ext.define('Taco.core.ux.form.BackgroundImagePicker', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.backgroundimagepicker',
-    requires: ['Taco.core.ux.form.ImageField'],
+    requires: ['Taco.shared.view.field.Image'],
 
     initComponent: function () {
         this.items = [{
