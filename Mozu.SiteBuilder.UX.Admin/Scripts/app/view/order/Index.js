@@ -83,16 +83,15 @@ Ext.define('Taco.view.order.Index', {
         }, {
             dataIndex: 'createDate',
             text: 'Order Date',
-            minWidth: 120,
-            resizable: false,
+            minWidth: 180,
+            //resizable: false,
             flex: 1
         }, {
             dataIndex: 'customer',
             text: 'Last Name',
-            width: 70,
-            sortable: true,
+            width: 120,
             getSortParam: function () {
-                return 'lastName';
+                return 'customer.lastName';
             },
             renderer: function (value, metaData, record) {
                 return value.lastName;
@@ -100,10 +99,9 @@ Ext.define('Taco.view.order.Index', {
         }, {
             dataIndex: 'customer',
             text: 'First Name',
-            width: 100,
-            sortable: true,
+            width: 120,
             getSortParam: function () {
-                return 'firstName';
+                return 'customer.firstName';
             },
             renderer: function (value, metaData, record) {
                 return value.firstName;
@@ -111,17 +109,15 @@ Ext.define('Taco.view.order.Index', {
         }, {
             dataIndex: 'total',
             text: 'Order Total',
-            sortable: false,
-            width: 120
+            width: 100
         }, {
             dataIndex: 'orderStatus',
             text: 'Order Status',
-            sortable: false,
             width: 100
         }, {
             dataIndex: 'shippingStatus',
             text: 'Shipping Status',
-            width: 70
+            width: 120
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',
