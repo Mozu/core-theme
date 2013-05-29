@@ -6,7 +6,8 @@ Ext.define('Taco.controller.Orders', {
     extend: 'Taco.core.Controller',
     modelName: 'Taco.model.Order',
     requires: ['Taco.view.order.Index'],
-    views: ['order.Index'],
+    views: ['order.Index']
+    /*,
 
     index: function (params) {
         this.createContentView('Taco.view.order.Index');
@@ -26,4 +27,7 @@ Ext.define('Taco.controller.Orders', {
             }
         });
     }
+    */
 });
+
+
