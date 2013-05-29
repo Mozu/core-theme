@@ -4,8 +4,12 @@
  */
 Ext.define('Taco.controller.Orders', {
     extend: 'Taco.core.Controller',
-    modelName: 'Taco.model.Order',
-    requires: ['Taco.view.order.Index'],
+    modelName: 'Order',
+    requires: [
+        'Taco.view.order.Index',
+        'Taco.view.order.Edit'
+    ],
+    editorView: 'Taco.view.order.Edit',
     views: ['order.Index']
     /*,
 
