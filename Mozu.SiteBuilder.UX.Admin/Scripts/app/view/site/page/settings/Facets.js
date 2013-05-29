@@ -18,6 +18,35 @@ Ext.define('Taco.view.site.page.settings.Facets', {
         });
         attributesStore.load();
         var facetsStore = this.record.getFacets();
+        this.selectedFacetsView = Ext.create('Taco.core.ux.form.field.MultiSelect', {
+            name: 'facets',
+            width: 250,
+            store: facetsStore,
+            listConfig: {
+                itemTpl: new Ext.XTemplate(
+                '<span class="x-boundlist-item-drag">Drag </span>',
+                '<span class="x-boundlist-item-content">{name}</span>',
+                '<tpl if="facetType == \'RangeQuery\'">',
+                '<span class="x-boundlist-item-settings">Settings </span>',
+                '</tpl>',
+                '<tpl if="!validity">',
+                '<span class="x-boundlist-item-problem">Problem </span>',
+                '</tpl>',
+                '<tpl if="this.isThisCategory(categoryId)">',
+                '<span class="x-boundlist-item-hide">Hide </span>',
+                '<tpl else>',
+                '<span class="x-boundlist-item-close">Close </span>',
+                '</tpl>',
+                {
+                    isThisCategory: function (categoryId) {
+                        return categoryId == me.record.get('id');
+                    }
+                }
+            )
+            },
+            ddReorder: true
+        });
+        this.selectedFacetsView.boundList.selectedItemCls = 'dummy';
         this.form = {
             layout: 'vbox',
             items: [
@@ -42,32 +71,7 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                         }
                     }
                 },
-                Ext.create('Taco.core.ux.form.field.MultiSelect', {
-                    store: facetsStore,
-                    listConfig: {
-                        itemTpl: new Ext.XTemplate(
-                        '<span class="x-boundlist-item-drag">Drag </span>',
-                        '<span class="x-boundlist-item-content">{name}</span>',
-                        '<tpl if="facetType == \'RangeQuery\'">',
-                        '<span class="x-boundlist-item-settings">Settings </span>',
-                        '</tpl>',
-                        '<tpl if="!validity">',
-                        '<span class="x-boundlist-item-problem">Problem </span>',
-                        '</tpl>',
-                        '<tpl if="this.isThisCategory(categoryId)">',
-                        '<span class="x-boundlist-item-hide">Hide </span>',
-                        '<tpl else>',
-                        '<span class="x-boundlist-item-close">Close </span>',
-                        '</tpl>',
-                        {
-                            isThisCategory: function (categoryId) {
-                                return categoryId == me.record.get('id');
-                            }
-                        }
-                    )
-                    },
-                    ddReorder: true
-                })
+                this.selectedFacetsView
             ]
         };
         this.callParent(arguments);

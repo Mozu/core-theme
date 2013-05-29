@@ -1968,6 +1968,7 @@
     <Content Include="Scripts\resources\lib\tinymce\skins\lightgray\fonts\icomoon.ttf" />
     <Content Include="Scripts\resources\lib\tinymce\skins\lightgray\fonts\icomoon.woff" />
     <Content Include="Scripts\resources\lib\tinymce\skins\lightgray\fonts\readme.md" />
+    <Content Include="Scripts\app\mocks\facets.json" />
     <None Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
