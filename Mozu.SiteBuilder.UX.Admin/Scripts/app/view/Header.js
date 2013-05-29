@@ -22,7 +22,7 @@ Ext.define('Taco.view.Header', {
 
         primaryMenuTrigger = Ext.create('Taco.core.ux.action.Action', {
             xtype: 'action',
-            text: 'menu',
+            text: '',
             width: 56,
             height: 51,
             cls: Taco.baseCSSPrefix + 'primary-menu-trigger',

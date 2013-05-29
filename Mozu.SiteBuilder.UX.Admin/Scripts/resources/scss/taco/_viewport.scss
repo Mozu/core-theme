@@ -42,11 +42,9 @@
     }
 
     .#{$vprefix}mozulogo {
-      font-size: 0px;
+      display: block;
       height: 50px;
-      line-height: 0px;
       overflow: hidden;
-      text-indent: -10000px;
       width: 125px;
       @include icons-sprite(icon-mozulogo-full);
     }
