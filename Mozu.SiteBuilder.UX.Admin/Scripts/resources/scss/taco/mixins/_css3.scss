@@ -44,23 +44,28 @@
 /* FLEXBOX */
 
 @mixin flexbox ($direction: row, $wrap: nowrap, $justify: flex-start, $alignItems: stretch, $alignContent: stretch) {
+  $standardFlexboxValues: flex inline-flex flex-start flex-end center space-between space-around baseline stretch;
+  $ieFlexboxValues: flexbox inline-flexbox start end center justify distribute baseline stretch;
+
   display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
   -ms-flex-direction: $direction;
-  -webkit-flex-direction: $direction;
-  flex-direction: $direction;
   -ms-flex-wrap: $wrap;
+  -ms-flex-pack: nth($ieFlexboxValues, index($standardFlexboxValues, $justify));
+  -ms-flex-align: nth($ieFlexboxValues, index($standardFlexboxValues, $alignItems));
+  -ms-flex-line-pack: nth($ieFlexboxValues, index($standardFlexboxValues, $alignContent));
+
+  display: -webkit-flex;
+  -webkit-flex-direction: $direction;
   -webkit-flex-wrap: $wrap;
-  flex-wrap: $wrap;
-  -ms-flex-pack: $justify;
   -webkit-justify-content: $justify;
-  justify-content: $justify;
-  -ms-flex-align: $alignItems;
   -webkit-align-items: $alignItems;
-  align-items: $alignItems;
-  -ms-flex-line-pack: $alignContent;
   -webkit-align-content: $alignContent;
+
+  display: flex;
+  flex-direction: $direction;
+  flex-wrap: $wrap;
+  justify-content: $justify;
+  align-items: $alignItems;
   align-content: $alignContent;
 }
 
@@ -71,7 +76,9 @@
 }
 
 @mixin order ($order) {
+  -ms-flex-order: $order;
   -webkit-order: $order;
+  order: $order;
 }
 
 /* OTHER */

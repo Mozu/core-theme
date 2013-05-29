@@ -10,10 +10,8 @@
 
     .#{$vprefix}primary-menu-trigger {
       border-right: 1px solid border-for($color-neutral-95);
-      font-size: 0px;
-      line-height: 0px;
+      display: block;
       overflow: hidden;
-      text-indent: -10000px;
       @include box-shadow(1px 0px $color-neutral-white);
       @include icons-sprite(icon-primarymenu);
       @include single-transition(background-color, 0.4s);
