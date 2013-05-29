@@ -1,0 +1,24 @@
+﻿{
+  "items":
+  [
+    {
+        "id": "price",
+        "name": "Price",
+        "type": "Element",
+        "categoryId": 1,
+        "facetType": "RangeQuery",
+        "order": 1,
+        "isHidden": false,
+        "isValid": true,
+        "validityReason": "",
+        "rangeQueries": [
+            {
+                "rangeQueryStart": 
+        ]
+
+    }
+  ],
+  "message":"Some message",
+  "success":true,
+  "total":1
+}
