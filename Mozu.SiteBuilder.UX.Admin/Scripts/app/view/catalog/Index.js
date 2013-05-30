@@ -3,94 +3,123 @@
  */
 Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Taco.model.ItemFilter', 'Taco.core.ux.ComboFilter', 'Taco.core.ux.grid.Panel', 'Taco.core.ux.form.Form'],
+    requires: ['Taco.core.ux.EditContainer'],
 
     header: {
         title: 'Catalog Testing'
     },
 
     initComponent: function () {
-
-        // list all products
-        var store = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.Products'
-        });
-
-        var localStore = Ext.create('Ext.data.ArrayStore', {
-            fields: ['food', 'tastiness'],
-            data: [
-                ['chocolate cake', 7], ['cherry pie', 8], ['brownies', 5], ['ice cream', 6], ['cookies', 10],
-                ['pickles', 0], ['tapioca pudding', 2], ['pumpkin pie', 9], ['fruit cake', 1]
-            ],
-            sorters: [{ property: 'tastiness', root: 'data', direction: 'DESC' }]
-        });
-
-        var list = Ext.create('Taco.core.ux.grid.Panel', {
-            store: localStore,
-            emptyText: '<div>There are no results that matched your filter.</div>',
-            columns: [{
-                flex: 1,
-                text: 'Food',
-                dataIndex: 'food'
-            }, {
-                xtype: 'numbercolumn',
-                flex: 1,
-                text: 'Tastiness',
-                dataIndex: 'tastiness',
-                format: '0'
-            }]
-        });
-
-        // create a filter field
-
-        var box = Ext.create('Taco.core.ux.ComboFilter', {
-            width: 675,
-            margin: '20 0',
-            itemStore: localStore,
-            filterProperties: [{
-                property: 'food',
-                text: 'Food',
-                isDefault: true
-            }, {
-                property: 'tastiness',
-                text: 'Tasty',
-                isDefault: false,
-                filterFn: function (item, filter) { return item.get('tastiness') >= parseInt(filter.value); }
+        this.mono = Ext.create('Ext.panel.Panel', {
+            width: 1000,
+            height: 400,
+            padding: 39,
+            border: true,
+            style: {
+                backgroundColor: 'white',
+                border: '1px solid #bfbfbf'
+            },
+            items: [{
+                xtype: 'component',
+                html: 'hello world'
             }],
-            editors: [{
-                xtype: 'formflexbox',
-                justify: false,
+            dockedItems: [{
+                xtype: 'container',
+                dock: 'top',
+                height: 50,
+                border: '0 0 1',
+                padding: '0 0 20',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '24px',
+                    lineHeight: '30px',
+                    color: '#323232',
+                    borderWidth: '0px 0px 1px',
+                    borderStyle: 'solid',
+                    borderColor: '#bfbfbf'
+                },
                 items: [{
-                    xtype: 'textfield',
-                    name: 'food',
-                    fieldLabel: 'Food',
-                    width: 160
+                    xtype: 'component',
+                    html: 'Custom Panel',
+                    flex: 1
                 }, {
-                    xtype: 'textfield',
-                    name: 'tastiness',
-                    fieldLabel: 'Tastiness',
-                    width: 160
-                }]
-            }]
+                    xtype: 'container',
+                    itemId: 'actionsCt',
+                    hidden: true,
+                    layout: {
+                        type: 'hbox',
+                        defaultMargins: '0 0 0 10'
+                    },
+                    items: [{
+                        xtype: 'taco.button',
+                        text: 'Save',
+                        handler: function () {
+                            var toolbar = this.up('container[dock=top]');
+
+                            if (toolbar) {
+                                toolbar.toggleActions();
+                            }
+                        }
+                    }, {
+                        xtype: 'taco.button',
+                        text: 'Cancel',
+                        handler: function () {
+                            var toolbar = this.up('container[dock=top]');
+
+                            if (toolbar) {
+                                toolbar.toggleActions();
+                            }
+                        }
+                    }]
+                }, {
+                    xtype: 'button',
+                    itemId: 'gear',
+                    text: ' ',
+                    menu: {
+                        plain: true,
+                        items: [{
+                            text: 'lorem',
+                            handler: function () {
+                                var toolbar = this.up('container[dock=top]');
+
+                                if (toolbar) {
+                                    toolbar.toggleActions();
+                                }
+                            }
+                        }, {
+                            text: 'ipsum'
+                        }]
+                    }
+                }],
+                toggleActions: function () {
+                    var tool = this.items.get('gear'),
+                        actions = this.items.get('actionsCt');
+
+                    if (tool.isHidden()) {
+                        actions.hide();
+                        tool.show();
+                    } else {
+                        actions.show();
+                        tool.hide();
+                    }
+                }
+            }],
         });
 
-        var bar = Ext.create('Ext.toolbar.Toolbar', {
-            items: [box]
+        this.thing = Ext.create('Taco.core.ux.EditContainer', {
+            height: 400,
+            width: 1000,
+            title: 'Hello World'
         });
 
         Ext.apply(this.body, {
-            layout: 'auto',
-            items: [bar, list]
+            items: [this.thing]
         });
 
         this.callParent(arguments);
-
-        localStore.load();
-        this.grocery = localStore;
-        this.list = list;
-        store.load({
-            callback: function (records) { console.log(records); }
-        });
-
     }
 });
