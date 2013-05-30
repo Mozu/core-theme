@@ -6,7 +6,7 @@
 
 Ext.define('Taco.model.Category', {
     extend: 'Taco.core.data.Model',
-    requires: ['Taco.model.Product','Taco.core.data.CategoryTreeProxy', 'Taco.model.Facet'],
+    requires: ['Taco.model.Product','Taco.core.data.CategoryTreeProxy', 'Taco.model.Facet', 'Taco.model.Facetable'],
     //fields: ['id', 'name', 'description', 'sequence', 'isDisplayed'],
 
     fields: [
@@ -114,7 +114,12 @@ Ext.define('Taco.model.Category', {
             type: 'int'
         },
         {
-            name: 'facets',
+            name: 'configuredFacets',
+            type: 'auto',
+            defaultValue: []
+        },
+        {
+            name: 'availableFacets',
             type: 'auto',
             defaultValue: []
         }
@@ -125,10 +130,19 @@ Ext.define('Taco.model.Category', {
         { type: 'length', name: 'name', min: 3 }
 
     ],
-    getFacets: function () {
+    getConfiguredFacets: function () {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.Facet',
-            associationKey: 'facets',
+            associationKey: 'configuredFacets',
+            foreignKey: 'categoryId',
+            foreignProperty: 'category'
+        });
+    },
+
+    getAvailableFacets: function () {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.Facetable',
+            associationKey: 'availableFacets',
             foreignKey: 'categoryId',
             foreignProperty: 'category'
         });
