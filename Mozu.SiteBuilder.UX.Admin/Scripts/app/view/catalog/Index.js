@@ -119,11 +119,38 @@ Ext.define('Taco.view.catalog.Index', {
                 shadow: true,
                 items: [{
                     text: 'lorem',
-                    handler: function () { console.log('hello world'); }
+                    handler: function () {
+                        var ct = this.up('[isEditContainer]');
+                        ct.
+                        ct.toggleActions();
+                    }
                 }, {
                     text: 'ipsum'
                 }]
             },
+            tools: [{
+                xtype: 'button',
+                text: ' ',
+                menu: {
+                    plain: true,
+                    shadow: false,
+                    items: [{
+                        text: 'Edit',
+                        handler: function () {
+                            var ct = this.up('[isEditContainer]');
+                            ct.toggleActions();
+                        }
+                    }]
+                }
+            }],
+            actions: [{
+                xtype: 'taco.button',
+                text: 'Cancel',
+                handler: function () {
+                    var ct = this.up('[isEditContainer]');
+                    ct.toggleActions();
+                }
+            }],
             items: [{
                 xtype: 'component',
                 html: 'what'
