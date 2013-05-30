@@ -245,6 +245,13 @@
     width: 50px;
     @include icons-sprite(icon-rowactions);
   }
+
+  // over ride of default menu trigger icon to make it a remove icon instead of a gear menu icon
+  .#{$vprefix}grid-row-menu-trigger-remove {    
+    @include icons-sprite(icon-remove);
+  }
+
+
   .#{$prefix}grid-row-over {
     .#{$vprefix}grid-row-menu-trigger {
       visibility: visible;
@@ -255,6 +262,12 @@
       visibility: visible !important;
     }
   }
+
+  // over ride of default menu trigger focused and over behavior when the grid panel is readonly mode.
+  .#{$vprefix}grid-row-menu-trigger-disabled {    
+    visibility: hidden;
+  }
+
 
   .#{$vprefix}grid-row-menu {
     // .#{$prefix}menu-body {

@@ -1,6 +1,26 @@
 ﻿/**
  * @class Taco.model.OrderItem
  */
+
+/*
+{
+                        "id": "i123",
+                        "productCode": "HOBO-LL",
+                        "productName": "Slouchy leather... lace hobo",
+                        "unitPrice": 90.0,
+                        "quantity": 2,
+                        "discount": {
+                            "quantity": 2,
+                            "description": "$10 off all leather bags",
+                            "unitPrice": 10.0,
+                            "total": 20.0
+                        },
+                        "subtotal": 180.0,
+                        "total": 160.0
+                    }
+*/
+
+
 Ext.define('Taco.model.OrderItem', {
     extend: 'Taco.core.data.Model',
     requires: ['Ext.data.association.HasOne'],
@@ -19,9 +39,9 @@ Ext.define('Taco.model.OrderItem', {
             "name": "productName",
             "type": "string",
             "useNull": true
-        }, 
+        },
         {
-            "name": "options", //<== get list of options or extras
+            "name": "unitPrice",
             "type": "auto",
             "defaultValue": []
         },
@@ -44,12 +64,21 @@ Ext.define('Taco.model.OrderItem', {
             "name": "total",
             "type": "float",
             "useNull": true
-        }, 
+        },
+        
+        // not currently in json
         {
             "name": "weight",
             "type": "float",
             "defaultValue": 1,
-        }
+        },
+        
+        // not currently in json
+        {
+            "name": "options", //<== get list of options or extras
+            "type": "auto",
+            "defaultValue": []
+        },
     ],
 
     associations: [
