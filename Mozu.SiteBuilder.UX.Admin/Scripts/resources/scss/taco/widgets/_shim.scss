@@ -205,7 +205,7 @@
     cursor: move;
     @include flex($grow: 1);
     margin-right: 100px;
-    @include icons-sprite(icon-widget-drag);
+    @include icons-sprite(icon-tree-knurling);
   }
 
   .#{$vprefix}widget-edit {

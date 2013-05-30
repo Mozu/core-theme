@@ -4,15 +4,13 @@
 Ext.define('Taco.model.Facet', {
     extend: 'Taco.core.data.Model',
     fields: [
-        { name: 'id', type: 'auto' },
-        { name: 'name', type: 'string' },
-        { name: 'type', type: 'string' },
+        { name: 'id', type: 'int' },
+        { name: 'source', type: 'auto', defaultValue: {}},
         { name: 'categoryId', type: 'int' },
         { name: 'facetType', type: 'string' },
         { name: 'order', type: 'int' },
         { name: 'isHidden', type: 'boolean' },
-        { name: 'isValid', type: 'boolean' },
-        { name: 'validityReason', type: 'string' },
+        { name: 'validity', type: 'auto', defaultValue: {}},
         { name: 'rangeQueries', type: 'auto', defaultValue: [] }
     ],
     proxy: {
