@@ -13,6 +13,7 @@ Ext.define('Taco.view.order.subform.Payment', {
     style: {
         borderColor: "red",
         borderStyle: "solid",
+        margin: "10px 0 0 0",
         //borderWidth: "20px",
         padding: 0
     },

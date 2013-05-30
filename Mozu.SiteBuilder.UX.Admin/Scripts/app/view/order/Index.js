@@ -109,6 +109,7 @@ Ext.define('Taco.view.order.Index', {
         }, {
             dataIndex: 'total',
             text: 'Order Total',
+            renderer: 'usMoney',
             width: 100
         }, {
             dataIndex: 'orderStatus',
