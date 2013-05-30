@@ -9,43 +9,39 @@ Ext.define('Taco.core.ux.EditContainer', {
 
     componentCls: Taco.baseCSSPrefix + 'editcontainer',
 
+    isEditContainer: true,
+
     initComponent: function () {
         var items = this.items || [],
             headerConfig = this.header || {},
             header;
 
         header = this.buildHeader(headerConfig);
+        this.header = header;
         
         if (Ext.isArray(items)) {
             items.unshift(header);
         }
 
         this.callParent(arguments);
-
-        this.header = header;
     },
 
     buildHeader: function (config) {
-        var title = this.title,
-            menu = this.menu,
-            items = [],
-            toolConfig = {},
-            tool,
+        var items = [],
+            tools,
             actions,
+            title,
             header;
 
-        toolConfig = {
-            itemId: 'tool',
-            text: ' '
-        };
-
-        if (menu) {
-            Ext.applyIf(menu, { plain: true, shadow: false });
-            Ext.apply(toolConfig, { menu: menu });
-        }
-
-        tool = Ext.create('Ext.button.Button', toolConfig);
-        items.push(tool);
+        tools = Ext.create('Ext.container.Container', {
+            itemId: 'tools',
+            layout: {
+                type: 'hbox',
+                align: 'middle'
+            },
+            items: this.tools || []
+        });
+        items.unshift(tools);
 
         actions = Ext.create('Ext.container.Container', {
             itemId: 'actions',
@@ -60,7 +56,7 @@ Ext.define('Taco.core.ux.EditContainer', {
 
         title = Ext.create('Ext.Component', {
             itemId: 'title',
-            html: title || ' ',
+            html: this.title || ' ',
             flex: 1
         });
         items.unshift(title);
@@ -74,22 +70,29 @@ Ext.define('Taco.core.ux.EditContainer', {
                 type: 'hbox',
                 align: 'middle'
             },
-            items: items
+            items: items,
+            tools: tools,
+            actions: actions,
+            title: title
         });
+
+        delete this.tools;
+        delete this.actions;
+        delete this.title;
 
         return header;
     },
 
     toggleActions: function () {
-        var tool = this.header.items.get('tool'),
+        var tools = this.header.items.get('tools'),
             actions = this.header.items.get('actions');
 
-        if (tool.isHidden()) {
+        if (tools.isHidden()) {
             actions.hide();
-            tool.show();
+            tools.show();
         } else {
             actions.show();
-            tool.hide();
+            tools.hide();
         }
     }
 });
