@@ -1,9 +1,134 @@
-﻿/**
+﻿
+/**
  * @class Taco.view.order.Edit
  */
 Ext.define('Taco.view.order.Edit', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Taco.core.ux.BaseGrid', 'Taco.model.Order', 'Taco.model.OrderNote', 'Taco.store.OrderNotes', 'Taco.view.order.modal.Address', 'Taco.view.order.modal.PaymentAction', 'Taco.view.order.modal.ShipmentAction', 'Taco.model.PaymentAndCheckout', 'Ext.grid.feature.Grouping'],
+    requires: [
+   //     'Taco.core.ux.BaseGrid',
+       'Taco.model.Order',
+        'Taco.view.order.Header',
+        'Taco.view.order.subform.Detail',
+        'Taco.view.order.subform.Payment'
+   //     'Taco.model.OrderNote',
+   //     'Taco.store.OrderNotes',
+   //     'Taco.view.order.modal.Address', 'Taco.view.order.modal.PaymentAction', 'Taco.view.order.modal.ShipmentAction', 'Taco.model.PaymentAndCheckout', 'Ext.grid.feature.Grouping'
+    ],
+
+    model: 'Taco.model.Order',
+
+    initComponent: function (eOpts) {
+        var me = this,
+            dataTpl, dataCmp, internalNotes;
+
+
+        // todos move taco-orders-header-status to the scss file
+        // may need to convert orderStatus to readible text if it camelcase
+        this.header = {
+            title: 'Order No. ' + this.record.get('orderNumber') + ' <span class="' + Taco.baseCSSPrefix + 'orders-header-status" style="padding-left:20px;font-size: 0.9em; font-weight: normal;color:#d2463c">' + this.record.get("orderStatus") + '</span><br/>'
+        };
+
+        this.orderHeader = Ext.create('Taco.view.order.Header');
+
+
+        /*
+          // TODOs:
+          // split this out as a seperate reusable class and create its own scss definition;
+          // add support to Taco.core.ux.content.Container to utilize this by configuration;
+          // add suppourt for bolding the appropriate link when the user has passed focus to the container
+          // clicking on items in this container should scroll the bound container to the appropriate sub component of the bound container.
+          // 
+        */
+        this.cardNav = Ext.create('Ext.container.Container', {
+
+            // scrollable container which this component will be bound to;
+            boundContainer: me,
+
+            // target items which should be linked to and be reflected in this component as active when they are scrolled into the target area of focus.
+            boundItems: [],
+            
+            // number of pixels 
+
+            width: 180,
+            shadow:false,
+            x: 30,
+            y:20,
+            floating: true,
+            constrain: true,
+
+            cls: "taco-form-card-nav-body",
+            // need to override taco-form-card-nav-body to remove a negative margin in the styling of this class
+            style: "margin-top: 0px;",
+            
+            listeners: {
+                afterrender: {
+                    fn: function () {
+
+                        me.cardNav.el.on('click', function() {
+                            // call the onClick method on this class which will scroll the boundContainer.
+                        });
+                    },
+                     scope:this
+                }
+            },
+            html: '<ul><li class="taco-form-card-nav-link">Order Detail</li><li class="taco-form-card-nav-link">Payment & Billing</li><li class="taco-form-card-nav-link">Shipment & Shipping</li><li class="taco-form-card-nav-link">RMA</li><li class="taco-form-card-nav-link">Notes & History</li></ul>'
+        });
+        //listen for events in the cardNav widget and scroll the page to the appropriate 
+
+
+        
+        this.orderDetail = Ext.create('Taco.view.order.subform.Detail', {
+            
+        });
+        
+        this.orderPayment = Ext.create('Taco.view.order.subform.Payment', {
+
+        });
+
+        
+        //show the cardNav after the container is rendered
+        this.on('afterrender', function () {
+            this.cardNav.show();
+        }, this);
+
+        Ext.apply(me.body, {
+            items: [
+                this.cardNav,
+                {
+                    xtype:"panel",
+                    margin: "0 0 0 200 ",
+                    items: [
+                        this.orderHeader,
+                        this.orderDetail,
+                        this.orderPayment
+                    
+                    ]
+                }
+            ],
+            layout: { type: 'auto' },
+            cls: Taco.baseCSSPrefix + 'content-body ' + Taco.baseCSSPrefix + 'orderform'
+        });
+
+        this.callParent(arguments);
+
+    }
+});
+
+
+
+
+/**
+ * @class Taco.view.order.Edit
+ */
+/*
+Ext.define('Taco.view.order.Edit', {
+    extend: 'Taco.core.ux.content.Container',
+    requires: [
+        'Taco.core.ux.BaseGrid',
+        'Taco.model.Order',
+        'Taco.model.OrderNote',
+        'Taco.store.OrderNotes',
+        'Taco.view.order.modal.Address', 'Taco.view.order.modal.PaymentAction', 'Taco.view.order.modal.ShipmentAction', 'Taco.model.PaymentAndCheckout', 'Ext.grid.feature.Grouping'],
 
     model: 'Taco.model.Order',
 
@@ -367,3 +492,5 @@ Ext.define('Taco.view.order.Edit', {
         }, this);
     }
 });
+
+*/
