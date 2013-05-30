@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using NSubstitute;
-using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCc = Mozu.Customer.Contracts;
 using DCclient = Mozu.Core.Api.Contracts.Client;
+using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -30,10 +31,53 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // _customerWebApiClient = MockByProckstomer();
         }
 
+        public static List<Order> DoSort<TKey>(List<Order> orders, Func<Order, TKey> keySelector, bool isAscending)
+        {
+            if (isAscending)
+                return orders.OrderBy(keySelector).ToList();
+            else
+                return orders.OrderByDescending(keySelector).ToList();
+        }
+
         [WebGet(UriTemplate = "list")]
-        public async Task<Response<List<Order>>> List()
+        public async Task<Response<List<Order>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var orders = await GetMock();
+
+
+            
+            SortingCollectionItem sort = pagingParams.sort == null ? null : pagingParams.sort.FirstOrDefault();
+            if (sort != null)
+            {
+                switch (sort.property)
+                {
+                    case "orderId":
+                        orders = DoSort(orders, o => o.Id, sort.IsAscending);
+                        break;
+                    case "orderNumber":
+                        orders = DoSort(orders, o => o.OrderNumber, sort.IsAscending);
+                        break;
+                    case "createDate":
+                        orders = DoSort(orders, o => o.CreateDate, sort.IsAscending);
+                        break;
+                    case "customer.firstName":
+                        orders = DoSort(orders, o => o.Customer.FirstName, sort.IsAscending);
+                        break;
+                    case "customer.lastName":
+                        orders = DoSort(orders, o => o.Customer.LastName, sort.IsAscending);
+                        break;
+                    case "total":
+                        orders = DoSort(orders, o => o.Total, sort.IsAscending);
+                        break;
+                    case "orderStatus":
+                        orders = DoSort(orders, o => o.OrderStatus, sort.IsAscending);
+                        break;
+                    case "shippingStatus":
+                        orders = DoSort(orders, o => o.ShippingStatus, sort.IsAscending);
+                        break;
+                }
+            }
+
             return List2(orders);
         }
 
