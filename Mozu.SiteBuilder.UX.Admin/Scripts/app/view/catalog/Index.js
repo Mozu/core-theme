@@ -113,7 +113,21 @@ Ext.define('Taco.view.catalog.Index', {
         this.thing = Ext.create('Taco.core.ux.EditContainer', {
             height: 400,
             width: 1000,
-            title: 'Hello World'
+            title: 'Hello World',
+            menu: {
+                plain: true,
+                shadow: true,
+                items: [{
+                    text: 'lorem',
+                    handler: function () { console.log('hello world'); }
+                }, {
+                    text: 'ipsum'
+                }]
+            },
+            items: [{
+                xtype: 'component',
+                html: 'what'
+            }]
         });
 
         Ext.apply(this.body, {

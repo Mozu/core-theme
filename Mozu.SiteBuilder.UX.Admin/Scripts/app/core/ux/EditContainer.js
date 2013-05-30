@@ -7,17 +7,22 @@ Ext.define('Taco.core.ux.EditContainer', {
     extend: 'Ext.container.Container',
     alias: 'widget.taco.editcontainer',
 
+    componentCls: Taco.baseCSSPrefix + 'editcontainer',
+
     initComponent: function () {
-        var dockedItems = this.dockedItems || [],
+        var items = this.items || [],
             headerConfig = this.header || {},
             header;
 
         header = this.buildHeader(headerConfig);
-        dockedItems.unshift(this.header);
-
-        this.dockedItems = dockedItems;
+        
+        if (Ext.isArray(items)) {
+            items.unshift(header);
+        }
 
         this.callParent(arguments);
+
+        this.header = header;
     },
 
     buildHeader: function (config) {
@@ -61,17 +66,18 @@ Ext.define('Taco.core.ux.EditContainer', {
         items.unshift(title);
 
         header = Ext.create(Ext.container.Container, {
-            dock: 'top',
-            weight: 100,
             height: 50,
             border: '0 0 1',
             padding: '0 0 20',
+            componentCls: this.componentCls + '-header',
             layout: {
                 type: 'hbox',
                 align: 'middle'
             },
             items: items
         });
+
+        return header;
     },
 
     toggleActions: function () {
