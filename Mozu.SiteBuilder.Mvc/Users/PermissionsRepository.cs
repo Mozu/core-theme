@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.AdminUser.Contracts.Clients;
+using Mozu.Core;
 using Mozu.Reference.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models.Users;
 
@@ -13,18 +14,20 @@ namespace Mozu.SiteBuilder.Mvc.Users
 {
     public class PermissionsRepository : IPermissionsRepository
     {
-        private readonly IRoleWebApiClient _rolesWebApiClient;
+        private readonly IMultiScopeRoleWebApiClient _rolesWebApiClient;
         private readonly IReferenceDataWebApiClient _referenceWebApiClient;
+        private readonly IApiContext _apiContext;
 
-        public PermissionsRepository(IRoleWebApiClient rolesWebApiClient, IReferenceDataWebApiClient referenceWebApiClient)
+        public PermissionsRepository(IMultiScopeRoleWebApiClient rolesWebApiClient, IReferenceDataWebApiClient referenceWebApiClient, IApiContext apiContext)
         {
             _rolesWebApiClient = rolesWebApiClient;
             _referenceWebApiClient = referenceWebApiClient;
+            _apiContext = apiContext;
         }
 
         public Task<List<Role>> GetRoles()
         {
-            var response = _rolesWebApiClient.GetRoles().Result;
+            var response = _rolesWebApiClient.GetRoles(UserScopeType.Tenant.ToString( ), _apiContext.TenantId).Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
                 return InTask(new List<Role>(0));
@@ -36,7 +39,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
         public Task<Role> GetRole(int? id)
         {
-            var response = _rolesWebApiClient.GetRole(id).Result;
+            var response = _rolesWebApiClient.GetRole(id, UserScopeType.Tenant.ToString(), _apiContext.TenantId).Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
                 return null;
@@ -49,7 +52,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
         public Task<Role> AddRole(Role role)
         {
             var mapped = Mapper.Map<Core.Api.Contracts.Role>(role);
-            var response = _rolesWebApiClient.CreateRole(mapped).Result;
+            var response = _rolesWebApiClient.CreateRole(mapped, UserScopeType.Tenant.ToString(), _apiContext.TenantId).Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
                 return null;
@@ -61,13 +64,13 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
         public Task<StreamContent> DeleteRole(Role role)
         {
-            return _rolesWebApiClient.DeleteRole(role.Id).Result.ReadAsAsync();
+            return _rolesWebApiClient.DeleteRole(role.Id, UserScopeType.Tenant.ToString(), _apiContext.TenantId).Result.ReadAsAsync();
         }
 
         public Task<Role> UpdateRole(Role role)
         {
             var mapped = Mapper.Map<Core.Api.Contracts.Role>(role);
-            var response = _rolesWebApiClient.UpdateRole(mapped, role.Id).Result;
+            var response = _rolesWebApiClient.UpdateRole(mapped, role.Id, UserScopeType.Tenant.ToString(), _apiContext.TenantId).Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
                 return null;

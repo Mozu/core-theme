@@ -6,9 +6,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     public class UserHelper : IUserHelper
     {
-        private readonly IAdminUserWebApiClient _adminUserWebApiClient;
+        private readonly Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
 
-        public UserHelper(IAdminUserWebApiClient adminUserWebApiClient)
+        public UserHelper(IMultiScopeAdminUserWebApiClient adminUserWebApiClient)
         {
             _adminUserWebApiClient = adminUserWebApiClient;
         }

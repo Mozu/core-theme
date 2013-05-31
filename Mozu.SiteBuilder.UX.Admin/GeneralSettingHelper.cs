@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin
             if (res.HasException && res.ResponseMessage != null && res.ResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 generalSettings = new Mozu.SiteSettings.General.Contracts.GeneralSettings();
-                _provisioningWebApiClient.CreateSite(new Mozu.Core.Api.Contracts.SiteProvisionMessage());
+         
                 
             }
             else

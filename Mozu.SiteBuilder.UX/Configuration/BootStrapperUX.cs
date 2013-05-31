@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Mozu.Core.Api;
+using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Logging;
@@ -15,9 +17,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
     {
         private const string APPLICATION_NAME = "Mozu.SiteBuilder.UX";
 
-        protected override void AddMessageHandlers(System.Web.Http.HttpConfiguration httpConfiguration)
+        protected override void AddMessageHandlers(HttpConfiguration httpConfiguration, IHttpMessageHandlerErrorHandler messageErrorHandler)
         {
-            base.AddMessageHandlers(httpConfiguration);
+            base.AddMessageHandlers(httpConfiguration, messageErrorHandler);
             GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
             GlobalFilters.Filters.Add(new PreserveApiContextFilterAttribute());
             GlobalFilters.Filters.Add(new HandleAllTheMvcErrorsFilter());

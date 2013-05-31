@@ -11,12 +11,12 @@ namespace Mozu.SiteBuilder.IntegrationTests
     [TestFixture]
     public class UserHelperTests
     {
-        private IAdminUserWebApiClient _userWebApiClient;
+        private IMultiScopeAdminUserWebApiClient _userWebApiClient;
 
         [SetUp]
         public void SetUp()
         {
-            _userWebApiClient = Substitute.For<IAdminUserWebApiClient>();
+            _userWebApiClient = Substitute.For<IMultiScopeAdminUserWebApiClient>();
         }
 
         [Test]

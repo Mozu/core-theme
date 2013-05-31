@@ -1,6 +1,7 @@
 using System.Linq;
 using AutoMapper;
 using Mozu.Core.Api.Contracts;
+using Mozu.SiteBuilder.UX.Models.Orders;
 using AppliedDiscount = Mozu.SiteBuilder.UX.Models.Orders.AppliedDiscount;
 using Category = Mozu.SiteBuilder.UX.Models.Orders.Category;
 using Measurement = Mozu.SiteBuilder.UX.Models.Orders.Measurement;
@@ -8,16 +9,16 @@ using Order = Mozu.CommerceRuntime.Contracts.Orders   ;
 using OrderItem = Mozu.CommerceRuntime.Contracts.Orders.OrderItem ;
 using OrderNote = Mozu.CommerceRuntime.Contracts.Orders.OrderNote;
 using PackageMeasurements = Mozu.CommerceRuntime.Contracts.Commerce.PackageMeasurements ;
-using PaymentCardReference = Mozu.CommerceRuntime.Contracts.Orders.PaymentCardReference;
-using PaymentReference = Mozu.CommerceRuntime.Contracts.Orders.PaymentReference;
-using PaymentTransaction = Mozu.CommerceRuntime.Contracts.Orders.PaymentTransaction;
-using PaymentTransactionInteraction = Mozu.CommerceRuntime.Contracts.Orders.PaymentTransactionInteraction;
+//using PaymentCardReference = Mozu.CommerceRuntime.Contracts.Orders.PaymentCardReference;
+//using PaymentReference = Mozu.CommerceRuntime.Contracts.Orders.PaymentReference;
+//using PaymentTransaction = Mozu.CommerceRuntime.Contracts.Orders.PaymentTransaction;
+//using PaymentTransactionInteraction = Mozu.CommerceRuntime.Contracts.Orders.PaymentTransactionInteraction;
 using Product = Mozu.CommerceRuntime.Contracts.Products.Product ;
 using ProductOption = Mozu.CommerceRuntime.Contracts.Products.ProductOption;
 using ProductPrice = Mozu.CommerceRuntime.Contracts.Products.ProductPrice;
 using ProductStock = Mozu.CommerceRuntime.Contracts.Products.ProductStock;
-using Shipment = Mozu.CommerceRuntime.Contracts.Orders.Shipment;
-using ShippingPrice = Mozu.CommerceRuntime.Contracts.Orders.ShippingPrice;
+//using Shipment = Mozu.CommerceRuntime.Contracts.Orders.Shipment;
+//using ShippingPrice = Mozu.CommerceRuntime.Contracts.Orders.ShippingPrice;
 using ShopperNotes = Mozu.CommerceRuntime.Contracts.Orders.ShopperNotes;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping

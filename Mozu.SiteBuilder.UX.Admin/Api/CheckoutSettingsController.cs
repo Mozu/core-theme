@@ -23,16 +23,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
         //IProvisioningWebApiClient _provisioningWebApiClient;
-        private readonly Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient   _merchantServiceWebApiClient;
 
-        public CheckoutSettingsController(ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, IMerchantSignUpWebApiClient merchantServiceWebApiClient)
+
+        public CheckoutSettingsController(ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient)
         {
             if(checkoutSettingsWebApiClient == null)
             {
                 throw new ArgumentNullException("checkoutSettingsWebApiClient");
             }
             //_provisioningWebApiClient = provisioningWebApiClient;
-            _merchantServiceWebApiClient = merchantServiceWebApiClient;
+   
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
         }
 

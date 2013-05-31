@@ -160,28 +160,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //}
 
 
-        [HttpPost]
-        public JsonDCResult UpdateCartItem(CartItem item)
-        {
-            var cartItem = _cartClient.GetIndividualCartItem(item.Id).Result.ReadAsAsync().Result;
-            cartItem.Quantity = item.Quantity;
+        //[HttpPost]
+        //public JsonDCResult UpdateCartItem(CartItem item)
+        //{
+        //    var cartItem = _cartClient.GetIndividualCartItem(item.Id).Result.ReadAsAsync().Result;
+        //    cartItem.Quantity = item.Quantity;
 
-            try
-            {
-                var ret = _cartClient.UpdateIndividualCartItem(cartItem, cartItem.Id).Result.ReadAsAsync().Result;
-            }
-            catch(Exception)
-            {
-                // This can cause a serialization error but delete works so sink it for now.
-            }
+        //    try
+        //    {
+        //        var ret = _cartClient.UpdateIndividualCartItem(cartItem, cartItem.Id).Result.ReadAsAsync().Result;
+        //    }
+        //    catch(Exception)
+        //    {
+        //        // This can cause a serialization error but delete works so sink it for now.
+        //    }
             
-            var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
+        //    var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
 
-            return new JsonDCResult()
-            {
-                Data = Mapper.Map<VMCart>(cart)
-            };
-        }
+        //    return new JsonDCResult()
+        //    {
+        //        Data = Mapper.Map<VMCart>(cart)
+        //    };
+        //}
 
         public ActionResult DeleteCartItem(string id)
         {

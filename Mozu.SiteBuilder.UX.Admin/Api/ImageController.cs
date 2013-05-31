@@ -18,21 +18,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class ImageController : BaseController
     {
       //  private readonly IContentCollectionWebApiClient   _contentCollecitonRepo;
-        private readonly IDocumentWebApiClient _docRepo;
+        private readonly IDocumentListWebApiClient _docRepo;
         ICmsServiceWrapper _cmsService;
       //  private readonly IDocumentTypeWebApiClient  _docTypeRepo;
-        IFolderWebApiClient _folderRepo;
+    //    IFolderWebApiClient _folderRepo;
         public ImageController(
             ICmsServiceWrapper cmsService,
-            IDocumentWebApiClient docRepo,
-            IFolderWebApiClient folderRepo
+            IDocumentListWebApiClient docRepo
+      //      IFolderWebApiClient folderRepo
         //    IDocumentTypeWebApiClient docTypeRepo,
         ) 
         {
 
             _cmsService = cmsService;
             _docRepo = docRepo;
-            _folderRepo = folderRepo;
+        //    _folderRepo = folderRepo;
           //  _docTypeRepo = docTypeRepo;
             //Provision();
         }
@@ -62,16 +62,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //    //    Value = doc.ProductId
             //    //}            
             //};
-            var productFolder = (await _folderRepo.GetByPath("files", "/products")).ReadAsSync();
-            if (productFolder == null)
-            {
-                productFolder = (await _folderRepo.Create("files", new DC.Folder() { DocumentListName = "files", Name = "products", Path = "/" })).ReadAsSync();
+            //var productFolder = (await _folderRepo.GetByPath("files", "/products")).ReadAsSync();
+            //if (productFolder == null)
+            //{
+            //    productFolder = (await _folderRepo.Create("files", new DC.Folder() { DocumentListName = "files", Name = "products", Path = "/" })).ReadAsSync();
 
-            }
+            //}
             string fileName = doc.FileName;
-            string filter = String.Format("FolderId eq '{0}' and name sw \"{1}\"", productFolder.Id, Path.GetFileNameWithoutExtension(fileName));
+           // string filter = String.Format("FolderId eq '{0}' and name sw \"{1}\"", productFolder.Id, Path.GetFileNameWithoutExtension(fileName));
 
-            var task = _cmsService.GetList2(contentCollection: "files", filter: filter);
+            var task = _cmsService.GetList2(contentCollection: "files" );
 
             var matchingFiles = (await task).ReadAsSync();
 
@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var cmsDoc = new DC.Document()
             {
                 DocumentType = "image",
-                FolderId = productFolder.Id,
+              //  FolderId = productFolder.Id,
                 //Properties = properties,
                 DocumentListName = "files",
                 //ContentSummary = new ContentStreamSummary()
@@ -101,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Name = fileName
             };
             
-            var result = (await _docRepo.Create("files", cmsDoc)).ReadAsSync();
+            var result = (await _docRepo.CreateDocument("files", cmsDoc)).ReadAsSync();
             
             // TODO: Get AutoMapper set up
             doc.Id = result.Id;

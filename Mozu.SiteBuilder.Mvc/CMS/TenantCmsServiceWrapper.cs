@@ -15,12 +15,12 @@
 //{
 //    public class TenantCmsServiceWrapper : ITenantCmsServiceWrapper
 //    {
-//        private readonly IDocumentWebApiClient _docRepo;
+//        private readonly IDocumentListWebApiClient _docRepo;
 //        private readonly IFolderWebApiClient _folderWebApiClient;
 //        private readonly ISiteBuilderContext _siteBuilderContext;
 //        private const TargetContextLevelType _targetContextLevelType = TargetContextLevelType.SiteGroup;
 
-//        public TenantCmsServiceWrapper(IDocumentWebApiClient docRepo, IFolderWebApiClient folderWebApiClient, ISiteBuilderContext siteBuilderContext)
+//        public TenantCmsServiceWrapper(IDocumentListWebApiClient docRepo, IFolderWebApiClient folderWebApiClient, ISiteBuilderContext siteBuilderContext)
 //        {
 //            _docRepo = docRepo;
 //            _folderWebApiClient = folderWebApiClient;

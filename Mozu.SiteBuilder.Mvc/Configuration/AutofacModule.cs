@@ -48,13 +48,13 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<ThemeMetadataProvider>().As<IThemeMetaDataProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeRepository>().As<IThemeRepository>().InstancePerLifetimeScope();
 
-            builder.RegisterType<RoleWebApiClient>().As<IRoleWebApiClient>();
-            builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
+          //  builder.RegisterType<RoleWebApiClient>().As<IMultiScopeRoleWebApiClient>();
+         //   builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
             builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>();
 
             builder.RegisterType<ReferenceDataWebApiClient>().As<IReferenceDataWebApiClient>();
 
-            builder.RegisterType<RoutableShippingWebApiClient>().As<IShippingWebApiClient>();
+       //     builder.RegisterType<RoutableShippingWebApiClient>().As<IShippingWebApiClient>();
             builder.RegisterType<ShippingClassWebApiClient>().As<IShippingClassWebApiClient>();
            // builder.RegisterType<ShippingRateWebApiClient>().As<IShippingRateWebApiClient>();
             builder.RegisterType<ShippingSettingsWebApiClient>().As<IShippingSettingsWebApiClient>();

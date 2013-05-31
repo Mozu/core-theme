@@ -8,9 +8,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
     public class CurrentUserHelper : ICurrentUserHelper
     {
         private readonly IAuthenticationHelper _authenticationHelper;
-        private readonly IAdminUserWebApiClient _adminUserWebApiClient;
+        private readonly IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
 
-        public CurrentUserHelper(IAuthenticationHelper authenticationHelper, IAdminUserWebApiClient adminUserWebApiClient)
+        public CurrentUserHelper(IAuthenticationHelper authenticationHelper, IMultiScopeAdminUserWebApiClient adminUserWebApiClient)
         {
             _authenticationHelper = authenticationHelper;
             _adminUserWebApiClient = adminUserWebApiClient;

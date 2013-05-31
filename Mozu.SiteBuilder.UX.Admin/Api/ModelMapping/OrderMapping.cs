@@ -42,17 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<VM.PackageMeasurements, Mozu.CommerceRuntime.Contracts.Commerce.PackageMeasurements>();
             Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Commerce.PackageMeasurements, VM.PackageMeasurements>();
 
-            Mapper.CreateMap<VM.PaymentCardReference, OrdersDC.PaymentCardReference>();
-            Mapper.CreateMap<OrdersDC.PaymentCardReference, VM.PaymentCardReference>();
-
-            Mapper.CreateMap<VM.PaymentReference, OrdersDC.PaymentReference>();
-            Mapper.CreateMap<OrdersDC.PaymentReference, VM.PaymentReference>();
-
-            Mapper.CreateMap<VM.PaymentTransaction, OrdersDC.PaymentTransaction>();
-            Mapper.CreateMap<OrdersDC.PaymentTransaction, VM.PaymentTransaction>();
-
-            Mapper.CreateMap<VM.PaymentTransactionInteraction, OrdersDC.PaymentTransactionInteraction>();
-            Mapper.CreateMap<OrdersDC.PaymentTransactionInteraction, VM.PaymentTransactionInteraction>();
+ 
 
             Mapper.CreateMap<VM.Product, ProductsDC .Product>();
             Mapper.CreateMap<ProductsDC.Product, VM.Product>();
@@ -66,11 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<VM.ProductStock, ProductsDC.ProductStock>();
             Mapper.CreateMap<ProductsDC.ProductStock, VM.ProductStock>();
 
-            Mapper.CreateMap<VM.Shipment, OrdersDC.Shipment>();
-            Mapper.CreateMap<OrdersDC.Shipment, VM.Shipment>();
-
-            Mapper.CreateMap<VM.ShippingPrice, OrdersDC.ShippingPrice>();
-            Mapper.CreateMap<OrdersDC.ShippingPrice, VM.ShippingPrice>();
+     
 
             Mapper.CreateMap<VM.ShopperNotes, OrdersDC.ShopperNotes>();
             Mapper.CreateMap<OrdersDC.ShopperNotes, VM.ShopperNotes>();

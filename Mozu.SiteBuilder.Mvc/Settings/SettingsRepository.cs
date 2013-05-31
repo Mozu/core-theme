@@ -85,7 +85,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                     var settings = System.Web.HttpRuntime.Cache.Get(key) as Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings;
                     if (settings == null)
                     {
-                        settings = _shippingSettingsWebApiClient.GetSiteSettings().Result.ReadAsSync();
+                        settings = _shippingSettingsWebApiClient.GetSiteShippingSettings().Result.ReadAsSync();
                         System.Web.HttpRuntime.Cache.Insert(key, settings, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 0, 3));
                     }
                     return settings;

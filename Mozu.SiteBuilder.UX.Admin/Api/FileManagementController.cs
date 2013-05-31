@@ -26,10 +26,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [ServiceContract]
     public class FileManagementController : BaseController
     {
-        private readonly IDocumentWebApiClient _documentWebApiClient;
-       // private Mozu.Content.Contracts.Clients.IDocumentWebApiClient  _cmsService;
+        private readonly IDocumentListWebApiClient _documentWebApiClient;
+       // private Mozu.Content.Contracts.Clients.IDocumentListWebApiClient  _cmsService;
 
-        public FileManagementController(ICmsServiceWrapper cmsService, IDocumentWebApiClient documentWebApiClient)
+        public FileManagementController(ICmsServiceWrapper cmsService, IDocumentListWebApiClient documentWebApiClient)
         {
             _documentWebApiClient = documentWebApiClient.With(x => { x.SiteId = null; });
 
@@ -45,7 +45,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (!string.IsNullOrEmpty(pagingParams.id))
             {
                 //var ret = _docClient.Get("files", pagingParams.id, null, null).Result.ReadAsSync();
-                var ret = (await _documentWebApiClient.Get("files", pagingParams.id, null, null)).ReadAsSync();
+                var ret = (await _documentWebApiClient.GetDocument(
+                    documentListName : "files", 
+                    documentId :pagingParams.id
+                    )).ReadAsSync();
                 vm = new List<FileManagementFile>() { Mapper.Map<FileManagementFile>(ret) };
                 totalCount = 1;
             }
@@ -53,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 
                 var tasks =extFilter.Where(x => x.field == "id").Select(
-                    extF => _documentWebApiClient.Get("files", (string)extF.value, null, CmsConstants.Documents.doc_state_active)).ToArray();
+                    extF => _documentWebApiClient.GetDocument("files", documentId:(string)extF.value )).ToArray();
                     //extF => _docClient.Get("files", (string)extF.value, null, CmsConstants.Documents.doc_state_active)).ToArray();
 
                 
@@ -66,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 
              
 
-                var ret =( await _documentWebApiClient.List("files", null, null, null, null, null, 200, 0)).ReadAsSync();
+                var ret =( await _documentWebApiClient.GetDocuments(documentListName : "files", pageSize : 200)).ReadAsSync();
 
                 
                 vm = ret.Items.Select(x => AutoMapper.Mapper.Map<FileManagementFile>(x)).ToList();
@@ -113,7 +116,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 //}
 
                //dm = _docClient.Create("files", dm).Result.ReadAsSync();
-                dm = (await _documentWebApiClient.Create("files", dm)).ReadAsSync();
+                dm = (await _documentWebApiClient.CreateDocument("files", dm)).ReadAsSync();
                 var vm = Mapper.Map<FileManagementFile>(dm);
                 vmList.Add(vm);
             }
@@ -128,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach ( var file in files)
             {
                 //b = _docClient.Delete("files", file.id, null).Result.ResponseMessage.IsSuccessStatusCode;
-                b = (await _documentWebApiClient.Delete("files", file.id, null)).ResponseMessage.IsSuccessStatusCode;
+                b = (await _documentWebApiClient.DeleteDocument(documentListName: "files", documentId :file.id)).ResponseMessage.IsSuccessStatusCode;
 
             
             }
@@ -216,11 +219,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var file in files)
             {
                 //var dm = _docClient.Get("files", file.id, null, CmsConstants.Documents.doc_state_active ).Result.ReadAsSync();
-                var dm = (await _documentWebApiClient.Get(documentListName : "files", documentId: file.id)).ReadAsSync();
+                var dm = (await _documentWebApiClient.GetDocument(documentListName : "files", documentId: file.id)).ReadAsSync();
                 dm.Name = file.name;
                // dm.FolderId = file.folderId;
                 //var ret = _docClient.Update ( "files", dm.Id,  dm).Result.ReadAsSync();
-                var ret = (await _documentWebApiClient.Update("files", dm.Id, dm)).ReadAsSync();
+                var ret = (await _documentWebApiClient.UpdateDocument("files", dm.Id, dm)).ReadAsSync();
 
                 var vm = Mapper.Map<FileManagementFile>(ret);
                 vms.Add(vm);

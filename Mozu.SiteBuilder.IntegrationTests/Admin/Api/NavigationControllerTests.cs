@@ -84,9 +84,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             }
         }
 
-        private PagedCollection<Document> _mockPages { 
-            get { 
-                return new PagedCollection<Document>
+        private DocumentCollection  _mockPages { 
+            get {
+                return new DocumentCollection
                 {
                     Items = new List<Document> {
                         new Document {
@@ -106,9 +106,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             }
         }
 
-        private PagedCollection<Document> _mockEmptyDocumentList {
+        private DocumentCollection _mockEmptyDocumentList {
             get { 
-                return new PagedCollection<Document>
+                return new DocumentCollection
                 {
                     Items = new List<Document>(),
                     TotalCount = 0
@@ -344,7 +344,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         /// <summary>
         /// Gets a new NavigationController for testing.
         /// </summary>
-        private NavigationController GetApi(NavigationSet navigationSet = null, CategoryPagedCollection categories = null, PagedCollection<Document> pages = null)
+        private NavigationController GetApi(NavigationSet navigationSet = null, CategoryPagedCollection categories = null, DocumentCollection pages = null)
         {
             if (navigationSet == null)
                 navigationSet = _mockNavigation;
@@ -381,9 +381,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
                 {
                     string collection = (string)args[0];
                     if (collection == "pages")
-                        return new TestResponse<PagedCollection<Document>>(pages).Task;
+                        return new TestResponse<DocumentCollection>(pages).Task;
                     else
-                        return new TestResponse<PagedCollection<Document>>(_mockEmptyDocumentList).Task;
+                        return new TestResponse<DocumentCollection>(_mockEmptyDocumentList).Task;
                 }
             );
 

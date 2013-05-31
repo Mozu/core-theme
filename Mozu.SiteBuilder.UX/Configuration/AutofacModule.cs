@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 		    builder.RegisterClassesMatchingInterfaceName(typeof (Mozu.SiteBuilder.Mvc.CatalogContext).Assembly);
 		    builder.RegisterClassesMatchingInterfaceName(typeof (Mozu.SiteBuilder.Mvc.Customers.CustomerRepository).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Customer.Contracts.Clients.CustomerAccountWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AdminUser.Contracts.Clients.RoleWebApiClient).Assembly);
+            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AdminUser.Contracts.Clients.IMultiScopeInvitationWebApiClient ).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Content.Contracts.Clients.DocumentListWebApiClient    ).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductAdmin.Contracts.Category  ).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductRuntime.Contracts.Clients.ProductRuntimeWebApiClient ).Assembly);
@@ -83,8 +83,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
             
             builder.RegisterType<FiftyOneDegreesMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerHttpRequest();
 
-            builder.RegisterType<RoleWebApiClient>().As<IRoleWebApiClient>();
-            builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
+          
+          //  builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
             builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>();
 
             builder.RegisterModule(new AutofacWebTypesModule());
@@ -98,10 +98,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterType<DefaultStorefrontCache>().As<IStorefrontCache>().InstancePerLifetimeScope();
 		    builder.RegisterType<ServiceClientMessageHandler>().InstancePerLifetimeScope();
 
-            builder.Register(c => new GeneralSettingsWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IGeneralSettingsWebApiClient>().InstancePerLifetimeScope();
-            builder.Register(c => new DocumentWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IDocumentWebApiClient>().InstancePerLifetimeScope();
-            builder.Register(c => new ProductCategoryRuntimeWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IProductCategoryRuntimeWebApiClient>().InstancePerLifetimeScope();
-            builder.Register(c => new ProductRuntimeWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IProductRuntimeWebApiClient>().InstancePerLifetimeScope();
+            //builder.Register(c => new GeneralSettingsWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IGeneralSettingsWebApiClient>().InstancePerLifetimeScope();
+            //builder.Register(c => new DocumentWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IDocumentListWebApiClient>().InstancePerLifetimeScope();
+            //builder.Register(c => new ProductCategoryRuntimeWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IProductCategoryRuntimeWebApiClient>().InstancePerLifetimeScope();
+            //builder.Register(c => new ProductRuntimeWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IProductRuntimeWebApiClient>().InstancePerLifetimeScope();
 
 		  //  builder.RegisterType<MockProductCategoryRuntimeWebApiClient>().As<IProductCategoryRuntimeWebApiClient>();
 		    builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerHttpRequest();

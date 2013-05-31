@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         public void SetCurrentUser(UserAuthTicket ticket)
         {
             LightweightUserClaims id;
-            ProfileToken pt = null;
+            UserProfile pt = null;
             if (ticket == null || String.IsNullOrEmpty(ticket.AccessToken))
             {
                 id = LightweightUserClaims.CreateAnonymous(scopeType : UserScopeType.Tenant);
@@ -55,22 +55,21 @@ namespace Mozu.SiteBuilder.Mvc.Security
             else
             {
                 id = LightweightUserClaims.Parse(ticket.AccessToken);
-                if ( !string.IsNullOrEmpty( ticket.ProfileToken ) )
-                {
-                    pt = ProfileToken.Parse(ticket.ProfileToken);
-                }
+               
+                //if ( !string.IsNullOrEmpty( ticket.User ) )
+                //{
+                //    pt = ticket.User;
+                //}
             }
-
+           
             Thread.CurrentPrincipal = id;
             if (_httpContext != null)
             {
                 _httpContext.Items["ticket"] = ticket;
                 _httpContext.User = id;
-                _httpContext.Items["profileToken"] = pt;
+                _httpContext.Items["UserProfile"] = ticket.User ;
             }
 
-            if (ticket == null)
-                return;
 
             
             SetCookie(ticket);
@@ -92,7 +91,9 @@ namespace Mozu.SiteBuilder.Mvc.Security
                 SetCurrentUser((UserAuthTicket)null);
             }
         }
-        
+     
+
+
         public UserAuthTicket GetCurrentTicket ()
         {
             UserAuthTicket ticket = null;
@@ -104,9 +105,10 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
         }
 
-        public ProfileToken GetCurrentProfileToken()
+        public Mozu.Core.Api.Contracts.UserProfile GetCurrentProfileToken()
         {
-            return _httpContext.Items["profileToken"] as ProfileToken;
+
+            return _httpContext.Items["UserProfile"] as Mozu.Core.Api.Contracts.UserProfile;
         }
 
         public LightweightUserClaims GetCurrentUser()
@@ -142,14 +144,15 @@ namespace Mozu.SiteBuilder.Mvc.Security
         public UserAuthTicket CreateAnonymousTicket()
         {
             var user = LightweightUserClaims.CreateAnonymous(scopeType: UserScopeType.Tenant);
-            var profile = new ProfileToken()
-            {
-                UserId = user.UserId
-            };
+
+           
             return new UserAuthTicket()
             {
                 AccessToken = user.ToAccessToken(),
-                ProfileToken = profile.ToToken(),
+                User = new Core.Api.Contracts.UserProfile()
+                           {
+                               UserId = user.UserId 
+                           },
                 AccessTokenExpiration = user.Expiration
             };
         }
@@ -162,5 +165,8 @@ namespace Mozu.SiteBuilder.Mvc.Security
             };
             CookieProvider.SaveResponseCookie(CookieName, cookie);
         }
+
+
+       
     }
 }

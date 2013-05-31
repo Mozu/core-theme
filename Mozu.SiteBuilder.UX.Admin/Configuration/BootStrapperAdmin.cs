@@ -8,6 +8,7 @@ using System.Web.Http.Controllers;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Mozu.Core.Api;
+using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Logging;
 using Mozu.Provisioning.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -22,10 +23,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
     public class BootStrapperAdmin : AbstractWebApiBootstrapper
     {
         private const string APPLICATION_NAME = "Mozu.SiteBuilder.Admin";
-
-        protected override void AddMessageHandlers(System.Web.Http.HttpConfiguration httpConfiguration)
+     
+        protected override void AddMessageHandlers(HttpConfiguration httpConfiguration, IHttpMessageHandlerErrorHandler messageErrorHandler)
         {
-            base.AddMessageHandlers(httpConfiguration);
+            base.AddMessageHandlers(httpConfiguration, messageErrorHandler);
             GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
             GlobalFilters.Filters.Add(new HandleAllTheMvcErrorsFilter());
 
@@ -52,7 +53,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             containerFactory
                 .UsingAssembly(Assembly.Load("Mozu.Core.Api"))
                 .UsingAssembly(typeof(ISitesWebApiClient).Assembly)
-                .UsingAssembly(typeof(IMerchantSignUpWebApiClient).Assembly)
                 .UsingAssembly(typeof(IPermissionsRepository).Assembly)
                 .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc"))
                 .UsingAssembly(Assembly.GetExecutingAssembly())

@@ -17,10 +17,10 @@ Disallow: /admin/";
 
         public const string ContentCollection = "settings";
 
-        private readonly IDocumentWebApiClient _documentWebApiClient;
+        private readonly IDocumentListWebApiClient _documentWebApiClient;
         private readonly ICmsServiceWrapper _cmsServiceWrapper;
 
-        public WebToolsRepository(IDocumentWebApiClient documentWebApiClient, ICmsServiceWrapper cmsServiceWrapper)
+        public WebToolsRepository(IDocumentListWebApiClient documentWebApiClient, ICmsServiceWrapper cmsServiceWrapper)
         {
             _documentWebApiClient = documentWebApiClient;
             _cmsServiceWrapper = cmsServiceWrapper;
@@ -150,7 +150,7 @@ Disallow: /admin/";
                 DocumentListName = ContentCollection,
             };
 
-            var response = await _documentWebApiClient.Create(ContentCollection, document);
+            var response = await _documentWebApiClient.CreateDocument(ContentCollection, document);
 
            
 

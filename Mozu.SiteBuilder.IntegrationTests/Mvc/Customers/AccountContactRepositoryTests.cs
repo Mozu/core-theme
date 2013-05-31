@@ -20,30 +20,30 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc.Customers
         private CustomerAccountContactCollection _allCustomers;
         private CustomerAccountContact _createdCustomer;
 
-        [SetUp]
-        public void SetUp()
-        {
-            _customerAccountWebApiClient = Substitute.For<ICustomerAccountWebApiClient>();
+        //[SetUp]
+        //public void SetUp()
+        //{
+        //    _customerAccountWebApiClient = Substitute.For<ICustomerAccountWebApiClient>();
 
-            var contact = new Contact { FirstName = "Zetlen" };
-            var updatedContact = new Contact { LastNameOrSurname = "???" };
-            var createdContact = new Contact { CompanyOrOrganization = "Jimmy's All-Natural Unicorn Blood" };
+        //    var contact = new Contact { FirstName = "Zetlen" };
+        //    var updatedContact = new Contact { LastNameOrSurname = "???" };
+        //    var createdContact = new Contact { CompanyOrOrganization = "Jimmy's All-Natural Unicorn Blood" };
 
-            _customer = new CustomerAccountContact { Id = 321, Contact = contact };
-            _updatedCustomer = new CustomerAccountContact { Id = 1337,  Contact = updatedContact };
-            _createdCustomer = new CustomerAccountContact { Id = 666, Contact = createdContact };
-            _allCustomers = new CustomerAccountContactCollection { Items = new List<CustomerAccountContact>
-                {
-                    new CustomerAccountContact { Id = 4894 },
-                    new CustomerAccountContact { Id = 9841 },
-                    new CustomerAccountContact { Id = 3595 },
-                }};
+        //    _customer = new CustomerAccountContact { Id = 321, Contact = contact };
+        //    _updatedCustomer = new CustomerAccountContact { Id = 1337,  Contact = updatedContact };
+        //    _createdCustomer = new CustomerAccountContact { Id = 666, Contact = createdContact };
+        //    _allCustomers = new CustomerAccountContactCollection { Items = new List<CustomerAccountContact>
+        //        {
+        //            new CustomerAccountContact { Id = 4894 },
+        //            new CustomerAccountContact { Id = 9841 },
+        //            new CustomerAccountContact { Id = 3595 },
+        //        }};
 
-            _customerAccountWebApiClient.WithAny(x => x.GetCustomerAccountContact(null, null), _customer);
-            _customerAccountWebApiClient.WithAny(x => x.GetCustomerAccountContacts(null, null, null, null, null), _allCustomers);
-            _customerAccountWebApiClient.WithAny(x => x.UpdateCustomerAccountContact(null, null, null), _updatedCustomer);
-            _customerAccountWebApiClient.WithAny(x => x.AddCustomerAccountContact(null, null), _createdCustomer);
-        }
+        //    _customerAccountWebApiClient.WithAny(x => x.GetCustomerAccountContact(null, null), _customer);
+        //    _customerAccountWebApiClient.WithAny(x => x.GetCustomerAccountContacts(null, null, null, null, null), _allCustomers);
+        //    _customerAccountWebApiClient.WithAny(x => x.UpdateCustomerAccountContact(null, null, null), _updatedCustomer);
+        //    _customerAccountWebApiClient.WithAny(x => x.AddCustomerAccountContact(null, null), _createdCustomer);
+        //}
 
         [Test]
         public void Get_should_return_mapped_CustomerAccount()
