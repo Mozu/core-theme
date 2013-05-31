@@ -64,5 +64,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name = "availableOrderActions")]
         public List<string> AvailableOrderActions { get; set; }
         #endregion
+
+        public List<string> AvailablePaymentActions { get; set; }
+
+        public List<string> AvailableShipmentActions { get; set; }
     }
 }

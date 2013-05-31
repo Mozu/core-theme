@@ -1,12 +1,13 @@
 using AutoMapper;
-
+using System.Linq;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
+using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
+using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
+using CustomerDC = Mozu.Customer.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
-    using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
-    using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
-    using ProductsDC = Mozu.CommerceRuntime.Contracts.Products ;
-    using VM = Mozu.SiteBuilder.UX.Models.Orders;
     public class OrderMapping : Profile
     {
         public override string ProfileName
@@ -16,50 +17,54 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
-            Mapper.CreateMap<VM.Order, OrdersDC.Order>();
-            Mapper.CreateMap<OrdersDC.Order, VM.Order>()
-                .ForMember(x => x.BillingFirstName, op => op.Ignore())
-                .ForMember(x => x.BillingLastName, op => op.Ignore());
+            Mapper.CreateMap<OrdersDC.Order, Order>()
+                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
+                .ForMember(x => x.OrderNumber, op => op.MapFrom(dc => dc.OrderNumber))
+                .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.CreateDate))
+                .ForMember(x => x.IpAddress, op => op.MapFrom(dc => dc.IPAddress))
+                .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
+                .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
+                .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.DiscountTotal))
+                .ForMember(x => x.ShippingTotal, op => op.MapFrom(dc => dc.ShippingTotal))
+                .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Total))
+                .ForMember(x => x.CustomerNote, op => op.MapFrom(dc => dc.ShopperNotes != null ? dc.ShopperNotes.Comments : null))
+                .ForMember(x => x.OrderStatus, op => op.MapFrom(dc => dc.Status))
+                .ForMember(x => x.ShippingStatus, op => op.MapFrom(dc => dc.ShipmentStatus))
+                .ForMember(x => x.PaymentStatus, op => op.MapFrom(dc => dc.PaymentStatus))
+                //.ForMember(x => x.AvailableOrderActions, op => op.MapFrom(dc => dc.AvailableOrderActions))
+                //.ForMember(x => x.AvailablePaymentActions, op => op.MapFrom(dc => dc.AvailablePaymentActions))
+                //.ForMember(x => x.AvailableShipmentActions, op => op.MapFrom(dc => dc.AvailableShipmentActions))
+                ;
 
-            Mapper.CreateMap<VM.AppliedDiscount, DiscountDC.AppliedDiscount>();
-            Mapper.CreateMap<DiscountDC.AppliedDiscount, VM.AppliedDiscount>();
+            Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
+                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
+                .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.Product.ProductCode))
+                // TODO: options .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options))
+                .ForMember(x => x.ProductName, op => op.MapFrom(dc => dc.Product.Name))
+                .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.Product.Price))
+                .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
+                .ForMember(x => x.Discount, op => op.MapFrom(dc => dc.Product.Price.Discount))
+                .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options != null ? dc.Product.Options.Select(o => o.OptionValue) : null))
+                // TODO: shopper entered value
+                ;
 
-            Mapper.CreateMap<VM.Category, ProductsDC.Category>();
-            Mapper.CreateMap<ProductsDC.Category, VM.Category>();
+            Mapper.CreateMap<DiscountDC.AppliedProductDiscount, OrderItemDiscount>()
+                .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.ProductQuantity))
+                .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Discount.Name))
+                .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.ImpactPerUnit))
+                .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Impact))
+                ;
 
-            //Mapper.CreateMap<VM.Discount, OrdersDC.Discount>();
-            //Mapper.CreateMap<OrdersDC.Discount, VM.Discount>();
-
-            Mapper.CreateMap<VM.Measurement, Mozu.Core.Api.Contracts.Measurement>();
-            Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, VM.Measurement>();
-
-            Mapper.CreateMap<VM.OrderItem, OrdersDC.OrderItem>();
-            Mapper.CreateMap<OrdersDC.OrderItem, VM.OrderItem>();
-
-            Mapper.CreateMap<VM.OrderNote, OrdersDC.OrderNote>();
-            Mapper.CreateMap<OrdersDC.OrderNote, VM.OrderNote>();
-
-            Mapper.CreateMap<VM.PackageMeasurements, Mozu.CommerceRuntime.Contracts.Commerce.PackageMeasurements>();
-            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Commerce.PackageMeasurements, VM.PackageMeasurements>();
-
- 
-
-            Mapper.CreateMap<VM.Product, ProductsDC .Product>();
-            Mapper.CreateMap<ProductsDC.Product, VM.Product>();
-
-            Mapper.CreateMap<VM.ProductOption, ProductsDC.ProductOption>();
-            Mapper.CreateMap<ProductsDC.ProductOption, VM.ProductOption>();
-
-            Mapper.CreateMap<VM.ProductPrice, ProductsDC.ProductPrice>();
-            Mapper.CreateMap<ProductsDC.ProductPrice, VM.ProductPrice>();
-
-            Mapper.CreateMap<VM.ProductStock, ProductsDC.ProductStock>();
-            Mapper.CreateMap<ProductsDC.ProductStock, VM.ProductStock>();
-
-     
-
-            Mapper.CreateMap<VM.ShopperNotes, OrdersDC.ShopperNotes>();
-            Mapper.CreateMap<OrdersDC.ShopperNotes, VM.ShopperNotes>();
+            Mapper.CreateMap<CustomerDC.CustomerAccount, OrderCustomer>()
+                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
+                .ForMember(x => x.FirstName, op => op.MapFrom(dc => dc.Contacts != null && dc.Contacts.Count > 0 ? dc.Contacts.First().FirstName : null))
+                .ForMember(x => x.LastName, op => op.MapFrom(dc => dc.Contacts != null && dc.Contacts.Count > 0 ? dc.Contacts.First().LastNameOrSurname : null))
+                .ForMember(x => x.CustomerSince, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
+                .ForMember(x => x.TotalOrders, op => op.MapFrom(dc => dc.OrderSummary.OrderCount))
+                .ForMember(x => x.TotalSpent, op => op.MapFrom(dc => dc.OrderSummary.TotalOrderAmount))
+                .ForMember(x => x.Groups, op => op.MapFrom(dc => dc.Groups.Select(g => g.Name)))
+                ;
+            
         }
     }
 }

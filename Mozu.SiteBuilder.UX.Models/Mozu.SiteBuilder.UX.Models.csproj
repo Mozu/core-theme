@@ -174,8 +174,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.0.0.13148.12\lib\Mozu.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api">
-      <HintPath>..\packages\Mozu.Core.Api.0.0.13148.1\lib\Mozu.Core.Api.dll</HintPath>
+    <Reference Include="Mozu.Core.Api, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Api.0.0.13151.2\lib\Mozu.Core.Api.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Client">
       <HintPath>..\packages\Mozu.Core.Api.Client.0.0.13142.1\lib\Mozu.Core.Api.Client.dll</HintPath>
