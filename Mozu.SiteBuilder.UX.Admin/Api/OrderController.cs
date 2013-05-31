@@ -78,6 +78,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
 
+            if (pagingParams.id != null)
+                return List2( orders.Where(o => o.Id == pagingParams.id).ToList() );
+
             return List2(orders);
         }
 
