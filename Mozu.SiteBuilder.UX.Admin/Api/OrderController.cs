@@ -186,7 +186,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         OrderNumber = 12,
                         CreateDate = new DateTime(2013, 03, 22),
                         IPAddress = "127.0.0.1",
-                        AvailableOrderActions = new List<string>(),
+                        
+                        //AvailableOrderActions = new List<string>(),
                     },
                     new DCo.Order {
                         Id = "o124",
@@ -220,7 +221,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private ICustomerAccountWebApiClient MockByProckstomer()
         {
             var api = Substitute.For<ICustomerAccountWebApiClient>();
-            
+          
             api.GetCustomerAccount(Arg.Any<int?>()).Returns(args => {
                 int? custId = args.Arg<int?>();
                 DCc.CustomerAccount cust;
@@ -231,32 +232,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         cust = new DCc.CustomerAccount {
                             Id = 1,
                             Groups = new List<DCc.CustomerAccountGroup>(),
-                            Contacts = new List<DCc.CustomerAccountContact> {
-                                new DCc.CustomerAccountContact {
-                                    Id = 1,
-                                    IsPrimary = true,
-                                    Contact = new Core.Api.Contracts.Contact {
-                                        FirstName = "Ben",
-                                        LastNameOrSurname = "Franklin",
-                                    }
-                                }
-                            }
+                            //Contacts = new List<DCc.CustomerAccountContact> {
+                            //    new DCc.CustomerAccountContact {
+                            //        Id = 1,
+                            //        IsPrimary = true,
+                            //        Contact = new  Mozu.Customer.Contracts.Contact {
+                            //            FirstName = "Ben",
+                            //            LastNameOrSurname = "Franklin",
+                            //        }
+                            //    }
+                            //}
                         };
                         break;
                     case 2:
                         cust = new DCc.CustomerAccount {
                             Id = 1,
                             Groups = (new string[] { "VIP", "Company ABC", "Coupon User" }).Select(g => new DCc.CustomerAccountGroup { Name = g }).ToList(),
-                            Contacts = new List<DCc.CustomerAccountContact> {
-                                new DCc.CustomerAccountContact {
-                                    Id = 2,
-                                    IsPrimary = true,
-                                    Contact = new Core.Api.Contracts.Contact {
-                                        FirstName = "John",
-                                        LastNameOrSurname = "Smith",
-                                    }
-                                }
-                            }
+                            //Contacts = new List<DCc.CustomerAccountContact> {
+                            //    new DCc.CustomerAccountContact {
+                            //        Id = 2,
+                            //        IsPrimary = true,
+                            //        //Contact = new Core.Api.Contracts.Contact {
+                            //        //    FirstName = "John",
+                            //        //    LastNameOrSurname = "Smith",
+                            //        //}
+                            //    }
+                            //}
                         };
                         break;
                     default:
