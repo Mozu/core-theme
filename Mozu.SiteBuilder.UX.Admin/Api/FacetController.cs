@@ -50,8 +50,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "set/edit")]
         public async Task<Response<List<FacetSet>>> UpdateFacetSet(FacetSet set )
         {
-            var facets = AutoMapper.Mapper.Map<List<DC.Facet>>(set.Configured);
-            var serverFacets = (await _facetWebApiClient.GetFacetCategoryList(set.CategoryId)).ReadAsSync().Configured  ?? new List<DC.Facet >();
+            var facets = AutoMapper.Mapper.Map<List<DC.Facet>>(set.Configured.Where(x => x.CategoryId == set.CategoryId).ToList() );
+            var serverFacets = ((await _facetWebApiClient.GetFacetCategoryList(set.CategoryId)).ReadAsSync().Configured ?? new List<DC.Facet>()).Where(x => x.CategoryId == set.CategoryId).ToList();
 
             var newFacets = facets.Where(x => !x.FacetId.HasValue).Select(x => _facetWebApiClient.AddFacet(x)).ToList();
             var updateFacets = facets.Where(x => x.FacetId.HasValue).Select(x => _facetWebApiClient.UpdateFacet( x, x.FacetId)).ToList();
