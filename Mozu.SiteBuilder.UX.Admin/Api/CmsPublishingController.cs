@@ -32,15 +32,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class CmsPublishingController : BaseController
     {
        
-        private IDocumentWebApiClient _documentClient;
+        private IDocumentListWebApiClient _documentClient;
+        private readonly IDocumentPublishingWebApiClient _documentPublishingWebApiClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
         //public CmsPublishingController(IMoreAwesomeDocumentWebApiClient documentClient)
-       public CmsPublishingController(IDocumentWebApiClient documentClient)
+       public CmsPublishingController(IDocumentListWebApiClient documentClient, IDocumentPublishingWebApiClient documentPublishingWebApiClient)
         {
             _documentClient = documentClient;
+            _documentPublishingWebApiClient = documentPublishingWebApiClient;
         }
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? pageSize = pagingParams.pageSize;
             int? startIndex = pagingParams.startIndex;
 
-            var res = (await _documentClient.GetDrafts(pageSize: 200)).ReadAsSync();
+            var res = (await _documentPublishingWebApiClient.ListDocumentDraftSummaries(pageSize: 200)).ReadAsSync();
             
             List<DocumentDraft> items = Mapper.Map<List<DocumentDraft>>(res.Items);
 
@@ -84,14 +86,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return FailureList2<string>("No DocumentDrafts provided were marked for publish. Be sure to set IsPublished=true.");
             }
 
-            IEnumerable<IGrouping<string, DocumentDraft>> documentListGroups = draftsReadyForPublishing.GroupBy(doc => doc.DocumentListName);
 
-            foreach (IGrouping<string, DocumentDraft> docGroup in documentListGroups)
+            var docsToDel = draftsReadyForPublishing.Select(x => x.Id).ToList();
+            var result = await _documentPublishingWebApiClient.PublishDocuments(documentIds: docsToDel);
+
+            if (result.HasException)
             {
-                List<string> docIds = docGroup.Select(doc => doc.Id).ToList();
-                var result = await _documentClient.PublishDocuments(/*documentListName: */ docGroup.Key, /*documentIds: */ docIds);
-                returnedIds.AddRange(result.ReadAsAsync().Result);
+                throw result.ReadException();
             }
+           // IEnumerable<IGrouping<string, DocumentDraft>> documentListGroups = draftsReadyForPublishing.GroupBy(doc => doc.DocumentListName);
+
+            //foreach (IGrouping<string, DocumentDraft> docGroup in documentListGroups)
+            //{
+            //    List<string> docIds = docGroup.Select(doc => doc.Id).ToList();
+            //    var result = await _documentPublishingWebApiClient.PublishDocuments(documentIds:docGroup.Key.ToList() /*documentListName: */ docGroup.Key, /*documentIds: */ docIds);
+            //    returnedIds.AddRange(result.ReadAsAsync().Result);
+            //}
 
             return List2(returnedIds);
         }
@@ -102,17 +112,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "discard")]
         public async Task<Response<List<string>>> Discard(List<DocumentDraft> docs)
         {
-            List<string> discardedDocIds = new List<string>();
+            List<string> discardedDocIds = docs.Select(x => x.Id).ToList();
 
-            IEnumerable<IGrouping<string, DocumentDraft>> documentListGroups = docs.GroupBy(doc => doc.DocumentListName);
 
-            foreach (IGrouping<string, DocumentDraft> docGroup in documentListGroups)
+
+            var result = await _documentPublishingWebApiClient.DeleteDocumentDrafts(documentIds: discardedDocIds);
+
+            if (result.HasException)
             {
-                List<string> docIds = docGroup.Select(doc => doc.Id).ToList();
-
-                var result = await _documentClient.Discard(/*documentListName: */ docGroup.Key, /*documentIds: */ docIds);
-                List<string> returnedIds = result.ReadAsAsync().Result;
-                discardedDocIds.AddRange(returnedIds);
+                throw result.ReadException();
             }
 
             return List2(discardedDocIds);
@@ -130,47 +138,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // TODO: The service does not currently support "null", so we pass HACK instead.
             string documentListName = GetDocumentListNameFromDocType(args.DocType);
 
-            // TODO: The all-knowing Thom has said this method is not sufficient.
-            // Since we'd have to get each page, then group by document list name and make N calls to publish
-            // We should wait for the Mozu service to support a PublishAll().
-            // See related note in DiscardAll.
-            List<string> publishedDocIds = new List<string>();
-            int startIndex = 0;
-            int pageSize = 200;
-            int totalCount = Int32.MaxValue;
 
-            do
+            if (documentListName == null)
             {
-
-                var docs = (await _documentClient.GetDrafts(documentListNames: documentListName, pageSize: pageSize, startIndex: startIndex)).ReadAsSync();
-
-                totalCount = (int)docs.TotalCount;
-
-                var documentListGroups = docs.Items.GroupBy(doc => doc.DocumentListName);
-
-                foreach (var docGroup in documentListGroups)
+                var res = await _documentPublishingWebApiClient.PublishDocuments(null);
+                if (res.HasException)
                 {
-
-                    //ugg
-                    //if (documentListName != HACK)
-                    //{
-                    //    // TODO: currently the server ignores documentListName, so we double-check that we only got results from the list we expected.
-                    //    if (!String.IsNullOrEmpty(documentListName) && docGroup.Key.ToLower() != documentListName.ToLower())
-                    //        continue;
-                    //}
-
-
-                    List<string> docIds = docGroup.Select(doc => doc.Id.ToString()).ToList();
-
-                    var publishResult = await _documentClient.PublishDocuments(/*documentListName: */ docGroup.Key, /*documentIds: */ docIds);
-                    List<string> returnedIds = publishResult.ReadAsAsync().Result;
-                    publishedDocIds.AddRange(returnedIds);
+                    throw res.ReadException();
                 }
+            }
+            else
+            {
+                var res = await _documentPublishingWebApiClient.PublishDocuments(null, documentLists: documentListName);
+                if (res.HasException)
+                {
+                    throw res.ReadException();
+                }
+            }
+           
 
-                startIndex = docs.StartIndex + docs.PageSize;
-            } while (startIndex < totalCount);
-
-            return List2(publishedDocIds);
+            return List2(new List<string>());
         }
 
         /// <summary>
@@ -187,36 +174,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // TODO: This method implementation should be thrown away when the Mozu service supports a DiscardAll().
             // See related note in PublishAll().
 
-            List<string> discardedDocIds = new List<string>();
-            int startIndex = 0;
-            int pageSize = 200;
-            int totalCount = Int32.MaxValue;
-
-            do
+            if (documentListName == null)
             {
-                var getListResult = await _documentClient.GetDrafts(documentListNames :documentListName,pageSize:pageSize , startIndex:startIndex );
-                var  docs = getListResult.ReadAsAsync().Result;
-                totalCount = (int)docs.TotalCount;
-
-                var documentListGroups = docs.Items.GroupBy(doc => doc.DocumentListName);
-
-                foreach (var docGroup in documentListGroups)
+                var res = await _documentPublishingWebApiClient.DeleteDocumentDrafts(null);
+                if (res.HasException)
                 {
-                    // TODO: currently the server ignores documentListName, so we double-check that we only got results from the list we expected.
-                    if (!String.IsNullOrEmpty(documentListName) && docGroup.Key.ToLower() != documentListName.ToLower())
-                        continue;
-
-                    List<string> docIds = docGroup.Select(doc => doc.Id.ToString( )).ToList();
-
-                    var discardResult = await _documentClient.Discard(/*documentListName: */ docGroup.Key, /*documentIds: */ docIds);
-                    List<string> returnedIds = discardResult.ReadAsAsync().Result;
-                    discardedDocIds.AddRange(returnedIds);
+                    throw res.ReadException();
                 }
+            }
+            else
+            {
+                var res = await _documentPublishingWebApiClient.DeleteDocumentDrafts(null, documentLists: documentListName);
+                if (res.HasException)
+                {
+                    throw res.ReadException();
+                }
+            }
 
-                startIndex = docs.StartIndex + docs.PageSize;
-            } while (startIndex < totalCount);
 
-            return List2(discardedDocIds);
+
+            return List2(new List<string>());
         }
 
         /// <summary>

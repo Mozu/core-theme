@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             base.OnException(filterContext);
 
             var log = LoggingService.LoggerFor<HandleAllTheMvcErrorsFilter>();
-            log.Error("Unhandled exception was caught by global exception filter.", filterContext.Exception);
+             log.Error("Unhandled exception was caught by global exception filter.", filterContext.Exception);
 
             // render a custom error
             if (filterContext.HttpContext.IsCustomErrorEnabled)

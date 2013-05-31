@@ -22,16 +22,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class PageTypeDefinitionController : BaseController
     {
          //static HashSet<int> g_provisioned = new HashSet<int>();
-        //private readonly IDocumentWebApiClient _docRepo;
+        //private readonly IDocumentListWebApiClient _docRepo;
         ICmsTypeHelper _cmsTypeHelper;
-        IDocumentWebApiClient _docRepo;
+        IDocumentListWebApiClient _docRepo;
         ICmsServiceWrapper _cmsService;
         private readonly ISiteBuilderContext _siteBuilderContext;
         //ISessionDocumentStore _sessionDocStore;
        // private IPageTypeProvider _pageTypeProvider;
 
         public PageTypeDefinitionController(
-            IDocumentWebApiClient docRepo,
+            IDocumentListWebApiClient docRepo,
             IApiContext apiContext,
             ICmsTypeHelper cmsTypeHelper,
             ICmsServiceWrapper cmsService ,

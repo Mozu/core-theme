@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Controllers
         {
             order = new OrderInformation();
             orderService = Substitute.For<IOrderService>();
-            orderService.GetOrder(Arg.Any<string>()).Returns(order);
+           // orderService.GetOrder(Arg.Any<string>()).Returns(order);
             orderWebApiClient = Substitute.For<IOrderWebApiClient>();
         }
 

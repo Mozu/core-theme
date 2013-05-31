@@ -89,6 +89,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             }
             var destination = new DC.Attribute
             {
+                AdminName = source.AdminName ,
                 AttributeCode =  (source.Name ?? "").Trim(),
                 Validation = attributeValidation,
                 VocabularyValues = Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values),

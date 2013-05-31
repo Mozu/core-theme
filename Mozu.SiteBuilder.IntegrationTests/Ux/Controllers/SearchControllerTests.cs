@@ -46,30 +46,30 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Controllers
             result.ViewName.ShouldEqual(expectedViewName);
         }
 
-        [Test]
-        public void Index_should_ProcessFacets_if_search_result_contains_them()
-        {
-            var searchResult = new ProductSearchResult
-            {
-                TotalCount = 10,
-                CategoryFacet = new CategoryFacet
-                {
-                    Items = new List<CategoryFacetItem>
-                        {
-                            new CategoryFacetItem { CategoryId = 12, Count = 3 },
-                            new CategoryFacetItem { CategoryId = 16, Count = 11 },
-                        }
-                }
-            };
-            _searchClient.WithAny(x => x.Search(null, null, null, null, null, null, null, null, null, null), searchResult);
+        //[Test]
+        //public void Index_should_ProcessFacets_if_search_result_contains_them()
+        //{
+        //    var searchResult = new ProductSearchResult
+        //    {
+        //        TotalCount = 10,
+        //        CategoryFacet = new CategoryFacet
+        //        {
+        //            Items = new List<CategoryFacetItem>
+        //                {
+        //                    new CategoryFacetItem { CategoryId = 12, Count = 3 },
+        //                    new CategoryFacetItem { CategoryId = 16, Count = 11 },
+        //                }
+        //        }
+        //    };
+        //    _searchClient.WithAny(x => x.Search(null, null, null, null, null, null, null, null, null, null), searchResult);
 
-            var controller = GetController();
+        //    var controller = GetController();
 
-            var result = controller.Index("", 0, "", 1, 25) as ViewResult;
-            var model = result.Model as UX.Models.StoreFront.Catalog.ProductSearchResult;
+        //    var result = controller.Index("", 0, "", 1, 25) as ViewResult;
+        //    var model = result.Model as UX.Models.StoreFront.Catalog.ProductSearchResult;
 
-            model.CategoryFacet.ShouldNotBeNull();
-        }
+        //    model.CategoryFacet.ShouldNotBeNull();
+        //}
 
         private SearchController GetController()
         {

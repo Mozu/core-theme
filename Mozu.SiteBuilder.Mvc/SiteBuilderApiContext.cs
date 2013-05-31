@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.Mvc
             _settings = settings;
             _authenticationHelper = authenticationHelper;
             //if using the rp then default to active.  rp will send the datamode header.
-            CmsDraftState = _settings.AppSettings("ReverseProxy") =="true" ? "active": "draft";// "active";
+            CmsDraftState = _settings.AppSettings("ReverseProxy") == "true" ? Mozu.Content.Contracts.PublishStates.Active  : Mozu.Content.Contracts.PublishStates.Latest;// "active";
 
             Load(context, cookieProvider);
         }
@@ -71,18 +71,18 @@ namespace Mozu.SiteBuilder.Mvc
             {
                 if (req.QueryString["IsEditMode"] == "true")
                 {
-                    CmsDraftState = "draft";
+                    CmsDraftState = Mozu.Content.Contracts.PublishStates.Latest;
                 }
                 //used to demo outside of rp 
                 else if (req.QueryString["publishMode"] == "true")
                 {
-                    CmsDraftState = "active";
+                    CmsDraftState = Mozu.Content.Contracts.PublishStates.Active;
                 }
                 DataViewModeType dmt;
                 if (Enum.TryParse<DataViewModeType>(req.Headers[Constants.Headers.DATA_VIEW_MODE], out dmt))
                 {
                     this.DataViewMode = dmt;
-                    this.CmsDraftState = dmt == DataViewModeType.Pending ? "draft" : "active";
+                    this.CmsDraftState = dmt == DataViewModeType.Pending ?  Mozu.Content.Contracts.PublishStates.Latest : Mozu.Content.Contracts.PublishStates.Active;
                 }
 
                 if (req.Headers.AllKeys.Any(x => x == Mozu.Core.Api.Contracts.Constants.Headers.TENANT))

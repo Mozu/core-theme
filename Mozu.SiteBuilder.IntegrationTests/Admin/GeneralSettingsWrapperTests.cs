@@ -100,47 +100,33 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin
             _generalSettingsWebApiClient.DidNotReceive().DeleteIPBlock(102);
         }
 
-        [Test]
-        public void ReadSettings_should_return_settings_from_service_if_found()
-        {
-            var wrapper = GetWrapper();
-            var serviceSettings = new MozuGeneralSettings { WebsiteName = "Monte Dickerson's Fancy Knickers" };
-
-            _generalSettingsWebApiClient.With(x => x.GetGeneralSettings(null), serviceSettings);
-
-            var settings = wrapper.ReadSettings();
-
-            _provisioningWebApiClient.DidNotReceive().CreateSite(Arg.Any<SiteProvisionMessage>());
-
-            settings.WebsiteName.ShouldEqual(serviceSettings.WebsiteName);
-        }
         
-        [Test]
-        public void ReadSettings_should_create_when_response_has_exception_and_no_settings_found()
-        {
-            var wrapper = GetWrapper();
-            _generalSettingsWebApiClient.WithException(x => x.GetGeneralSettings(null), new Exception("settings not found"), message => message.StatusCode = HttpStatusCode.NotFound);
+        //[Test]
+        //public void ReadSettings_should_create_when_response_has_exception_and_no_settings_found()
+        //{
+        //    var wrapper = GetWrapper();
+        //    _generalSettingsWebApiClient.WithException(x => x.GetGeneralSettings(null), new Exception("settings not found"), message => message.StatusCode = HttpStatusCode.NotFound);
 
-            wrapper.ReadSettings();
+        //    wrapper.ReadSettings();
 
-            _provisioningWebApiClient.Received().CreateSite(Arg.Any<SiteProvisionMessage>());
-        }
+        //    _provisioningWebApiClient.Received().CreateSite(Arg.Any<SiteProvisionMessage>());
+        //}
 
-        [Test]
-        public void GetIPBlocks_should_return_mapped_items_from_service()
-        {
-            var wrapper = GetWrapper();
-            var serviceBlocks = Enumerable.Range(127, 72).Select(x => new IPBlock { RangeStart = x + ".0.0.1", RangeEnd = x + ".0.0.255", Id = 1000 + x });
-            var blockCollection = new IPBlockCollection { Items = serviceBlocks.ToList() };
+        //[Test]
+        //public void GetIPBlocks_should_return_mapped_items_from_service()
+        //{
+        //    var wrapper = GetWrapper();
+        //    var serviceBlocks = Enumerable.Range(127, 72).Select(x => new IPBlock { RangeStart = x + ".0.0.1", RangeEnd = x + ".0.0.255", Id = 1000 + x });
+        //    var blockCollection = new IPBlockCollection { Items = serviceBlocks.ToList() };
 
-            _generalSettingsWebApiClient.With(x => x.GetIPBlocks(), blockCollection);
+        //    _generalSettingsWebApiClient.With(x => x.GetIPBlocks(), blockCollection);
 
-            var blocks = wrapper.GetIPBlocks();
+        //    var blocks = wrapper.GetIPBlocks();
 
-            var mapped = blocks.Select(x => new { Id = x.Id ?? 0, x.RangeStart, x.RangeEnd });
-            var server = blockCollection.Items.Select(x => new { x.Id, x.RangeStart, x.RangeEnd });
-            CollectionAssert.AreEqual(mapped, server);
-        }
+        //    var mapped = blocks.Select(x => new { Id = x.Id ?? 0, x.RangeStart, x.RangeEnd });
+        //    var server = blockCollection.Items.Select(x => new { x.Id, x.RangeStart, x.RangeEnd });
+        //    CollectionAssert.AreEqual(mapped, server);
+        //}
 
         [Test]
         public void GetTimesZones_should_return_mapped_values_from_service()

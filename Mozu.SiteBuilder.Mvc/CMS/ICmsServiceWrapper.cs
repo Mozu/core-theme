@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         Task<ServiceClientResponse<DC.Document>> Get2(string contentCollection, string id);
 
-        Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize=25, int? startIndex=0);
+        Task<ServiceClientResponse<DC.DocumentCollection>> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0);
 
         [Obsolete]
         Task<Tuple<DC.FolderTree, ServiceClientResponse<DC.FolderTree>>> GetFolderTree(string collection, string parentId = null, int? levels = null);

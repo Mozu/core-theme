@@ -30,19 +30,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         //private const string WIDGETPROPNAME = "slug";
         //static HashSet<int> g_provisioned = new HashSet<int>();
-        //private readonly IDocumentWebApiClient _docRepo;
+        //private readonly IDocumentListWebApiClient _docRepo;
         ICmsTypeHelper _cmsTypeHelper;
 
         ICmsServiceWrapper _cmsService;
-        private IDocumentWebApiClient _documentWebApi;
+        private IDocumentListWebApiClient  _documentWebApi;
         //ISessionDocumentStore _sessionDocStore;
-        public WidgetInstanceController(IDocumentWebApiClient docRepo,
+        public WidgetInstanceController(IDocumentListWebApiClient docRepo,
       
             IApiContext apiContext,
           //  ISessionDocumentStore sessionDocStore,
             ICmsTypeHelper cmsTypeHelper,
              ICmsServiceWrapper cmsService,
-            IDocumentWebApiClient documentWebApi 
+            IDocumentListWebApiClient documentWebApi 
             )
         {
 
@@ -134,7 +134,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 
 
 
-                await _documentWebApi.Update(doc.DocumentListName, doc.Id, doc, TargetContextLevelType.NotSpecified);
+                await _documentWebApi.UpdateDocument(doc.DocumentListName, doc.Id, doc);
 
 
 

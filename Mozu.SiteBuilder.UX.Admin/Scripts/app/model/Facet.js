@@ -1,40 +1,61 @@
 ﻿/**
- * @class Taco.model.Facet
+ * @class Taco.model.File
+ * The File model
  */
 Ext.define('Taco.model.Facet', {
     extend: 'Taco.core.data.Model',
-    fields: [
-        { name: 'id', type: 'int' },
-        { name: 'source', type: 'auto', defaultValue: {}},
-        { name: 'categoryId', type: 'int' },
-        { name: 'facetType', type: 'string' },
-        { name: 'order', type: 'int' },
-        { name: 'isHidden', type: 'boolean' },
-        { name: 'validity', type: 'auto', defaultValue: {}},
-        { name: 'rangeQueries', type: 'auto', defaultValue: [] }
-    ],
-    proxy: {
-        type: 'ajaxproxy',
-        //api: {
-        //    create: '/admin/app/facet/create',
-        //    read: '/admin/app/facet/read',
-        //    update: '/admin/app/facet/update',
-        //    destroy: '/admin/app/facet/destroy'
-        //},
-        api: {
-            create: '/admin/Scripts/app/mocks/facets.json',
-            read: '/admin/Scripts/app/mocks/facets.json',
-            update: '/admin/Scripts/app/mocks/facets.json',
-            destroy: '/admin/Scripts/app/mocks/facets.json'
-        },
-        reader: {
-            type: 'json',
-            root: 'items',
-            successProperty: 'success'
-        },
-        writer: {
-            type: 'json',
-            allowSingle: false
-        }
+    requires: [],
+    fields: [{
+        name: 'id',
+        type: 'int',
+        useNull: true
+    }, {
+        name: 'sourceId',
+        type: 'string',
+        useNull: true
+    }, {
+        name: 'sourceName',
+        type: 'string',
+        useNull: true
+    }, {
+        name: 'sourceType',
+        type: 'string',
+        useNull: true
+    }, {
+        name: 'facetType',
+        type: 'string',
+        useNull: true
+    }, {
+        name: 'order',
+        type: 'int',
+        useNull: true
+    }, {
+        name: 'categoryId',
+        type: 'int',
+        useNull: true
+    }, {
+        name: 'overrideFacetId',
+        type: 'int',
+        useNull: true
+    }, {
+        name: 'isHidden',
+        type: 'int',
+        useNull: true
+    }, {
+        name: 'isvalid',
+        type: 'boolean',
+        useNull: true
+    }, {
+        name: 'validityCode',
+        type: 'int',
+        useNull: true
+    }, {
+        name: 'ranges',
+        type: 'auto',
+        useNull: true,
+        defaultValue:[]
     }
+    ]
+
+    
 });

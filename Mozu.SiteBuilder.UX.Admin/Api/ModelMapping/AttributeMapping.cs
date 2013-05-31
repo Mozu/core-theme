@@ -125,6 +125,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Attribute, DC.Attribute>().ConvertUsing(new AttributeToContractConverter());
 
             Mapper.CreateMap<DC.Attribute, Attribute>()
+                .ForMember(x => x.AdminName, op => op.MapFrom(x => x.AdminName))
                 .ForMember(x => x.Values, opt => opt.MapFrom(x => x.VocabularyValues))
                 .ForMember(x => x.Id, opt => opt.MapFrom(x => x.AttributeFQN))
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Content.Name))

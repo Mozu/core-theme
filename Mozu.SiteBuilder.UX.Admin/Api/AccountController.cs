@@ -20,10 +20,10 @@ using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.Tenant.Contracts.Clients;
 using AdminUser2 = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
 using ApiRole = Mozu.Core.Api.Contracts.Role;
-using IAuthTicketWebApiClient = Mozu.AdminUser.Contracts.Clients.IAuthTicketWebApiClient;
-using IInvitationWebApiClient = Mozu.AdminUser.Contracts.Clients.IInvitationWebApiClient;
+using IAuthTicketWebApiClient = Mozu.User.Contracts.Clients.IAuthTicketWebApiClient;
+using IInvitationWebApiClient = Mozu.AdminUser.Contracts.Clients.IMultiScopeInvitationWebApiClient ;
 using Invitation = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.Invitation;
-using IRoleWebApiClient = Mozu.AdminUser.Contracts.Clients.IRoleWebApiClient;
+using IMultiScopeRoleWebApiClient = Mozu.AdminUser.Contracts.Clients.IMultiScopeRoleWebApiClient;
 //using DC = Mozu.Core.Api.Contracts;
 using PasswordInfo = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.PasswordInfo;
 using Role = Mozu.SiteBuilder.UX.Models.Users.Role;
@@ -36,16 +36,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private List<ApiRole> _roles;
 
-        private readonly IAdminUserWebApiClient _usersRepo;
-        private readonly IRoleWebApiClient _rolesRepo;
+        private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
+        private readonly IMultiScopeRoleWebApiClient _rolesRepo;
         private readonly IAuthenticationHelper _authHelper;
         private IInvitationWebApiClient _invitationWebApiClient;
-        private readonly  IAdminUserWebApiClient _adminUserWebApiClient;
+        private readonly  IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
         private readonly ISettings _settings;
         private readonly IContextSwitcher _contextSwitcher;
         private readonly IUserHelper _userHelper;
+        private readonly IApiContext _apiContext;
 
-        public AccountController(IAdminUserWebApiClient user, IRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, IAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings, IContextSwitcher contextSwitcher, IUserHelper userHelper)
+        public AccountController(IMultiScopeAdminUserWebApiClient user, IMultiScopeRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings, IContextSwitcher contextSwitcher, IUserHelper userHelper, IApiContext apiContext)
         {
             _usersRepo = user;
             _rolesRepo = role;
@@ -55,6 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _settings = settings;
             _contextSwitcher = contextSwitcher;
             _userHelper = userHelper;
+            _apiContext = apiContext;
         }
 
         [WebInvoke(UriTemplate = "logoff")]
@@ -143,7 +145,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (_roles != null)
                 return _roles;
 
-            var roles = (await _rolesRepo.GetRoles()).ReadAsSync();
+            var roles = (await _rolesRepo.GetRoles(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ReadAsSync();
             return _roles = roles.Items;
         }
 
@@ -189,7 +191,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "users/delete")]
         public async Task<Response<AccountUser>> DeleteUser(AccountUser accountUser)
         {
-            await _adminUserWebApiClient.RemoveUserRole(accountUser.Id, accountUser.RoleId);
+            await _adminUserWebApiClient.RemoveUserRole(accountUser.Id, accountUser.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId);
 
             return EmptySingle2<AccountUser>();
         }
@@ -224,7 +226,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "users/list")]
         public async Task<Response<List<AccountUser>>> GetAccountUsers()
         {
-            var admins = (await _adminUserWebApiClient.Get(null, null, null, null, null)).ReadAsSync().Items;
+            var admins = (await _adminUserWebApiClient.GetUsers(scopeType :UserScopeType.Tenant.ToString(),scopeId : _apiContext.TenantId )).ReadAsSync().Items;
             var invites = (await _invitationWebApiClient.GetInvitations(null)).ReadAsSync().Items;
             var invitations = Mapper.Map<List<Invitation>>(invites);
             foreach (var invitation in invitations)
@@ -252,8 +254,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             try
             {
-                var remove = _adminUserWebApiClient.RemoveUserRole(info.UserId, info.OldRole);
-                var add = _adminUserWebApiClient.AddUserRole(info.UserId, info.NewRole);
+                var remove = _adminUserWebApiClient.RemoveUserRole(info.UserId, info.OldRole, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId);
+                var add = _adminUserWebApiClient.AddUserRole(info.UserId, info.NewRole, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId);
                 await Task.WhenAll(remove, add);
             }
             catch (Exception e)

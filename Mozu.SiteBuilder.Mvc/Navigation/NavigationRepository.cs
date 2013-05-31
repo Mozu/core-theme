@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationRepository(IDocumentWebApiClient docWebApiClient, ICmsServiceWrapper cmsService)
+        public NavigationRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService)
         {
 
             _cmsService = cmsService;
@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
 
 
-            return _cmsService.GetByPath2(NavigationContentCollection, NavigationFileName, "active")
+            return _cmsService.GetByPath2(NavigationContentCollection, NavigationFileName)
                               .ContinueWith(docResultIntermediate =>
                                   {
                                       var serviceClientResponse = docResultIntermediate.Result;
@@ -101,7 +101,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// </summary>
         public Task SaveSetAsync(NavigationSet set)
         {
-            return _cmsService.GetByPath2(NavigationContentCollection, NavigationFileName, "active")
+            return _cmsService.GetByPath2(NavigationContentCollection, NavigationFileName)
                               .ContinueWith(docResultIntermediate =>
                                   {
                                       var doc = docResultIntermediate.Result.ReadAsSync();

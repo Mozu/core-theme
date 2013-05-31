@@ -27,12 +27,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IContextSwitcher _contextSwitcher;
         private readonly IUserHelper _userHelper;
         private readonly IPasswordHelper _passwordHelper;
-        private readonly Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient _merchantSignUpWebApiClient;
+        
         private readonly IRolesHelper _rolesHelper;
         private readonly ISettings _settings;
         private ILogger _log;
 
-        public AuthController(IVolusionLoginHelper loginHelper, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper, IPasswordHelper passwordHelper, Mozu.Provisioning.Contracts.Clients.IMerchantSignUpWebApiClient merchantSignUpWebApiClient, IRolesHelper rolesHelper , ISettings settings )
+        public AuthController(IVolusionLoginHelper loginHelper, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper, IPasswordHelper passwordHelper, IRolesHelper rolesHelper , ISettings settings )
         {
             _authenticationHelper = authHelper;
             _loginHelper = loginHelper;
@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _contextSwitcher = contextSwitcher;
             _userHelper = userHelper;
             _passwordHelper = passwordHelper;
-            _merchantSignUpWebApiClient = merchantSignUpWebApiClient;
+            
             _rolesHelper = rolesHelper;
             _settings = settings;
 

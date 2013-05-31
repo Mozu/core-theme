@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     public class CmsPagesController : BaseController
     {
 
-        protected IDocumentWebApiClient _docRepo;
+        protected IDocumentListWebApiClient _docRepo;
         protected IDocumentTypeWebApiClient _docTypeRepo;
         protected ICmsServiceWrapper _cmsService;
         protected ISiteBuilderContext _context;
@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IViewEngine _viewEngine;
 
         public CmsPagesController(
-            IDocumentWebApiClient docRepo,
+            IDocumentListWebApiClient docRepo,
             IDocumentTypeWebApiClient docTypeRepo,
             ISiteBuilderContext context,
             ICmsServiceWrapper cmsService,

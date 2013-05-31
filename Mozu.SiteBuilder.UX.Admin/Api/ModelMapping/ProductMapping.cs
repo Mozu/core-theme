@@ -100,10 +100,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         SalePrice = p.SalePrice
                     }
                 ))
-                .ForMember(x => x.PackageHeight, op => op.MapFrom(x => new Measurement { Unit = "in", Value = x.PackageHeight }))
-                .ForMember(x => x.PackageLength, op => op.MapFrom(x => new Measurement { Unit = "in", Value = x.PackageLength }))
-                .ForMember(x => x.PackageWidth, op => op.MapFrom(x => new Measurement { Unit = "in", Value = x.PackageWidth }))
-                .ForMember(x => x.PackageWeight, op => op.MapFrom(x => new Measurement { Unit = "lbs", Value = x.PackageWeight }))
+                .ForMember(x => x.PackageHeight, op => op.MapFrom(x => x.PackageHeight == null ? null: new Measurement { Unit = "in", Value = x.PackageHeight }))
+                .ForMember(x => x.PackageLength, op => op.MapFrom(x => x.PackageLength == null ? null : new Measurement { Unit = "in", Value = x.PackageLength }))
+                .ForMember(x => x.PackageWidth, op => op.MapFrom(x => x.PackageWidth == null ? null : new Measurement { Unit = "in", Value = x.PackageWidth }))
+                .ForMember(x => x.PackageWeight, op => op.MapFrom(x => x.PackageWeight == null ? new Measurement { Unit = "lbs", Value = 0} : new Measurement { Unit = "lbs", Value = x.PackageWeight }))
                 ;
 
             Mapper.CreateMap<DC.ProductProperty, ProductProperty>()
@@ -261,7 +261,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             if (p.VariationOptions != null && p.VariationOptions.Count > 0)
             {
-                return string.Join(", ", p.VariationOptions.Select(x => x.AttributeValueInternal));
+                return string.Join(", ", p.VariationOptions.Where( x=> x.Value != null).Select(x =>  x.Value.ToString()  ));
             }
             return null;
         }

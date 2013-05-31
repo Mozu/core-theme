@@ -46,7 +46,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             page = page.GetValueOrDefault(1);
             int startIdx = (page.Value - 1) * itemsPerPage.Value;
 
-            var ret = _searchClient.Search(query, null, categoryId, categoryId == null ? false : true, sortBy, itemsPerPage, startIdx, true, true, null).Result.ReadAsAsync().Result;
+            if (categoryId.HasValue)
+            {
+                throw new NotImplementedException("categoryid not implemented in search yet.  Call the poll lice");
+            }
+
+            var ret = _searchClient.Search(query: query, sortBy: sortBy, startIndex: startIdx, pageSize: itemsPerPage).Result.ReadAsAsync().Result;
+           // var ret = _searchClient.Search(query, null, categoryId, categoryId == null ? false : true, sortBy, itemsPerPage, startIdx, true, true, null).Result.ReadAsAsync().Result;
             var pc = AutoMapper.Mapper.Map<ProductSearchResult>(ret);
 
             pc.Query = query;
@@ -56,7 +62,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             pc.UrlBase = "/search?query=" + query;
 
             ProcessFacetts(pc);
-            if (ret.TotalCount > 0 )
+            if (ret.TotalCount  > 0 )
             {
                 return View("searchresults", pc);
             }

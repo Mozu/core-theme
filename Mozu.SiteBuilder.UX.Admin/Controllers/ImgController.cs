@@ -19,9 +19,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
     public class ImgController : Controller
     {
 
-        IDocumentWebApiClient  _docRepo;
+        IDocumentListWebApiClient  _docRepo;
         IApiContext _appCtx;
-        public ImgController(IDocumentWebApiClient docRepo, IApiContext appCtx)
+        public ImgController(IDocumentListWebApiClient docRepo, IApiContext appCtx)
         {
             _docRepo = docRepo.With(x => { x.SiteId = null; });
            
@@ -312,7 +312,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         
         public ActionResult Download(string collection, string documentId)
         {
-            var doc = _docRepo.Get(collection, documentId, null, null).Result.ReadAsSync();
+            var doc = _docRepo.GetDocument( documentListName:collection, documentId:documentId ).Result.ReadAsSync();
             var content = _docRepo.GetDocumentContent(collection, documentId).Result.ResponseMessage.Content;
             var stream = content.ReadAsStreamAsync().Result;
 

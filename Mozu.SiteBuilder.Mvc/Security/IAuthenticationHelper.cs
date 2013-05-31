@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
         LightweightUserClaims GetCurrentUser();
 
-        ProfileToken GetCurrentProfileToken();
+        Mozu.Core.Api.Contracts.UserProfile GetCurrentProfileToken();
 
         UserAuthTicket GetCurrentTicket();
 

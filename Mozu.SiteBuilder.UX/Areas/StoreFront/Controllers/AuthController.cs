@@ -59,13 +59,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 Password = password
 
             }).Result;
+           
+
+            
+            
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 var user = _userWebApiClient.GetUserByEmail(email).Result.ReadAsSync();
-                if (user.IsAdminUser)
-                {
-                    return Redirect("/admin");
-                }
+                //if (user.IsAdminUser)
+                //{
+                //    return Redirect("/admin");
+                //}
                 _authenticationHelper.SetCurrentUser(res.ReadAsSync().AuthTicket);
 
                 if ( string.IsNullOrEmpty(returnUrl))
@@ -94,15 +98,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 var user = _userWebApiClient.GetUserByEmail(email).Result.ReadAsSync();
-                if (user.IsAdminUser)
-                {
-                    answer.Data = new
-                        {
-                            ErrorCode = "IS_ADMIN_USER",
-                            Message = String.Format("The user {0} is an administrator.", email)
-                        };
-                }
-                else
+                //if (user.IsAdminUser)
+                //{
+                //    answer.Data = new
+                //        {
+                //            ErrorCode = "IS_ADMIN_USER",
+                //            Message = String.Format("The user {0} is an administrator.", email)
+                //        };
+                //}
+                //else
                 {
                     _authenticationHelper.SetCurrentUser(res.ReadAsSync().AuthTicket);
                     answer.Data = new

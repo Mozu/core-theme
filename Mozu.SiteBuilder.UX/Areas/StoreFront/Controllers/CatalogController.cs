@@ -95,10 +95,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 itemsPerPage = productCodes.Count;
              
             }
+            if (categoryId.HasValue)
+            {
+                if ( !string.IsNullOrWhiteSpace( filter))
+                {
+                    filter = "(categoryid eq " + categoryId + ") and (" + filter + ")";
+                }
+                else
+                {
+                    filter ="categoryid eq " + categoryId;
+                }
+            }
+            //todo do i need to replace recurese
+            // recurse: recurse,
 
-
-            var pcDC = _productClient.GetProducts(categoryId: categoryId, filter :filter , startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, recurse: recurse, responseGroups: "Categories,Measurements,Properties,Options,Extras").Result.ReadAsSync();
-
+            var pcDC = _productClient.GetProducts( filter :filter , startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options").Result.ReadAsSync();
+          
             var pc = Mapper.Map<ProductCollection>(pcDC);
            
             //`
@@ -175,27 +187,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
        
 
-        public ActionResult FeaturedProducts(System.Collections.IList productCodes)
-        {
-            if (productCodes == null || productCodes.Count == 0)
-            {
-                return new  EmptyResult();
-            }
-
-            var productCodes2 = productCodes.Cast<object>().Select(x => string.Format("productCode eq {0}", x.ToString()));
-
-
-
-            var filter = string.Join(" or ", productCodes2);
-
-            var products =_productClient.GetProducts ( filter , null, null, 0, int.MaxValue, null, null)
-                .Result.ReadAsSync ().Items
-                .Select ( x=> AutoMapper.Mapper.Map <Product>( x))
-                .ToList ();
-
-            return PartialView( products);
-        }
-
+        
         /// <summary>
         /// Updates the SiteContext.CatalogContext with the current product.
         /// </summary>

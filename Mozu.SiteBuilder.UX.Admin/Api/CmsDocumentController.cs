@@ -22,12 +22,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class CmsDocumentController : BaseController
     {
         //static HashSet<int> g_provisioned = new HashSet<int>();
-        //private readonly IDocumentWebApiClient _docRepo;
+        //private readonly IDocumentListWebApiClient _docRepo;
         ICmsTypeHelper _cmsTypeHelper;
 
         ICmsServiceWrapper _cmsService;
         //ISessionDocumentStore _sessionDocStore;
-        public CmsDocumentController(IDocumentWebApiClient docRepo ,
+        public CmsDocumentController(IDocumentListWebApiClient docRepo ,
       
             IApiContext apiContext,
           //  ISessionDocumentStore sessionDocStore,
@@ -79,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "read")]
         public async Task<Response<List<AVM.Document>>> ReadDocument([FromUri]PagingParamaters pagingParams)
         {
-            DC.PagedCollection<DC.Document> results = null;
+            DC.DocumentCollection  results = null;
             if (pagingParams.id == null)
             {
                 results = (await _cmsService.GetList2(contentCollection: CmsConstants.Documents.default_collection_name, pageSize: int.MaxValue)).ReadAsSync();
@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var idx= pagingParams.id.IndexOf ('_');
                 var col =  pagingParams.id.Substring ( 0,idx);
                 var id = pagingParams.id.Substring (idx+1);
-                results = new DC.PagedCollection<DC.Document>()
+                results = new DC.DocumentCollection()
                 {
                     Items = new List<DC.Document>()
                     {

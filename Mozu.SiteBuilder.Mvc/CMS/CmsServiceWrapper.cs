@@ -18,24 +18,22 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     public class CmsServiceWrapper : ICmsServiceWrapper
     {
         ISiteBuilderApiContext _apiContext;
-        IDocumentWebApiClient _docRepo;
+        IDocumentListWebApiClient _docRepo;
         ICmsTypeHelper _cmsTypeHelper;
-        IFolderWebApiClient _folderRepo;
-        IFacetsWebApiClient _facetsRepo;
+      
         private readonly IThemeEntityDefinitionProvider _themeEntityDefinitionProvider;
 
-        public CmsServiceWrapper(IDocumentWebApiClient docRepo,
+        public CmsServiceWrapper(IDocumentListWebApiClient docRepo,
             ISiteBuilderApiContext apiContext,
             ICmsTypeHelper cmsTypeHelper,
-            IFolderWebApiClient folderRepo,
-            IFacetsWebApiClient facetsRepo,
+          
             IThemeEntityDefinitionProvider themeEntityDefinitionProvider
             )
         {
             _apiContext = apiContext;
-            _facetsRepo = facetsRepo;
+     
             _themeEntityDefinitionProvider = themeEntityDefinitionProvider;
-            _folderRepo = folderRepo;
+        
             _docRepo = docRepo;
             _cmsTypeHelper = cmsTypeHelper;
         }
@@ -125,43 +123,44 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
             //tbd get this shit out of here
 
-            if (documentTypeId == "post")
-            {
-                string folderPath = DateTime.Now.ToString("MM-yyyy");
-                var res = _folderRepo.GetByPath("blogs", folderPath).Result.ReadAsSync();
+            //if (documentTypeId == "post")
+            //{
+            //    string folderPath = DateTime.Now.ToString("MM-yyyy");
+            //    var res = _folderRepo.GetByPath("blogs", folderPath).Result.ReadAsSync();
 
-                if (res != null)
-                {
-                    d.FolderId = res.Id;
-                }
-                else
-                {
-                    var folder = _folderRepo.Create("blogs", new DC.Folder() { Name = folderPath, DocumentListName = "blogs" }).Result.ReadAsSync();
-                    d.FolderId = folder.Id;
-                }
+            //    if (res != null)
+            //    {
+            //        d.FolderId = res.Id;
+            //    }
+            //    else
+            //    {
+            //        var folder = _folderRepo.Create("blogs", new DC.Folder() { Name = folderPath, DocumentListName = "blogs" }).Result.ReadAsSync();
+            //        d.FolderId = folder.Id;
+            //    }
 
 
 
-            }
+            //}
 
-            var task = _docRepo.Create(d.DocumentListName, d);
+            var task = _docRepo.CreateDocument( d.DocumentListName, d);
             return task;
         }
 
         [Obsolete]
         public Task<Tuple<DC.FolderTree, ServiceClientResponse<DC.FolderTree>>> GetFolderTree(string collection, string parentId = null, int? levels = null)
         {
-            return _folderRepo.GetFolderTree(collection, parentId, levels)
-                .ContinueWith ( x=>  
-                    {
-                        if ( x.Result.ResponseMessage .IsSuccessStatusCode )
-                        {
-                            return new Tuple<DC.FolderTree,ServiceClientResponse<DC.FolderTree>>( x.Result.ReadAsSync (), x.Result  );
-                        }
-                        else{
-                            return new Tuple<DC.FolderTree, ServiceClientResponse<DC.FolderTree>>(null, x.Result );
-                        }
-                    });
+            throw new NotImplementedException();
+            //return _folderRepo.GetFolderTree(collection, parentId, levels)
+            //    .ContinueWith ( x=>  
+            //        {
+            //            if ( x.Result.ResponseMessage .IsSuccessStatusCode )
+            //            {
+            //                return new Tuple<DC.FolderTree,ServiceClientResponse<DC.FolderTree>>( x.Result.ReadAsSync (), x.Result  );
+            //            }
+            //            else{
+            //                return new Tuple<DC.FolderTree, ServiceClientResponse<DC.FolderTree>>(null, x.Result );
+            //            }
+            //        });
         }
 
         public Task<ServiceClientResponse<DC.Document>> UpdateInternal(AVM.Document doc)
@@ -172,10 +171,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 return null;
             }
 
-            var d = _docRepo.Get(doc.DocumentListName, doc.DocumentId, null, "draft").Result.ReadAsSync();
+            var d = _docRepo.GetDocument( documentListName : doc.DocumentListName, documentId : doc.DocumentId ).Result.ReadAsSync();
             // d.PublishState = CmsConstants.Documents.doc_state_active;
             foreach (var item in doc.Items)
             {
+                
                 var prop = d.Properties.FirstOrDefault(x => string.Equals(x.PropertyType, item.Key, StringComparison.OrdinalIgnoreCase));
 
 
@@ -199,7 +199,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 }
             }
 
-            return _docRepo.Update(doc.DocumentListName, doc.DocumentId, d);
+            return _docRepo.UpdateDocument(doc.DocumentListName, doc.DocumentId, d);
         }
 
         private DC.PropertyValue ToPropertyValue(AVM.DocumentProperty inProperty, DC.PropertyValue outProperty = null)
@@ -248,18 +248,17 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         [Obsolete]
         public Task<ServiceClientResponse<List<DC.Facet>>> GetFacets(string contentCollection,  string propertyName)
         {
-            return _facetsRepo.Get(contentCollection,propertyName);
+            return _docRepo.GetFacets(contentCollection,propertyName);
         }
 
 
-        public Task<ServiceClientResponse<DC.PagedCollection<DC.Document>>> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0)
+        public Task<ServiceClientResponse<DC.DocumentCollection >> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0)
         {
-            return _docRepo.List(
+            return _docRepo.GetDocuments( 
                     documentListName: contentCollection, 
                               filter: filter, 
-                      responseGroups: null, 
-                shouldRecurseFolders: false, 
-                              status: _apiContext.CmsDraftState, 
+       
+                              publishState : _apiContext.CmsDraftState, 
                               sortBy: sortBy, 
                             pageSize: pageSize, 
                           startIndex: startIndex
@@ -268,12 +267,10 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name, string status = null )
         {
-            var task = _docRepo.FindByName(
+            var task = _docRepo.GetTreeDocument(  
                 documentListName: contentCollection,
                     documentName: name,
-                      folderPath: null,
-                         version: null,
-                          status: status?? _apiContext.CmsDraftState
+                    publishState : status?? _apiContext.CmsDraftState
             );
 
             return task.ContinueWith(t =>
@@ -295,11 +292,10 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.Document>> Get2(string contentCollection, string id)
         {
-            return _docRepo.Get(
+            return _docRepo.GetDocument(
                 documentListName: contentCollection,
                 documentId: id,
-                version: null,
-                status: _apiContext.CmsDraftState
+                publishState : _apiContext.CmsDraftState
             );
         }
 
@@ -311,7 +307,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.Document>> Update2(DC.Document doc)
         {
-            return _docRepo.Update(doc.DocumentListName, doc.Id, doc);
+            return _docRepo.UpdateDocument(doc.DocumentListName, doc.Id, doc);
         }
 
         public Task<ServiceClientResponse<DC.Document>> Create2(AVM.Document doc)
@@ -321,7 +317,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.Document>> RawCreate2(DC.Document doc)
         {
-            return _docRepo.Create(doc.DocumentListName, doc);
+            return _docRepo.CreateDocument(doc.DocumentListName, doc,publishState:"draft");
         }
 
         public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(DC.Document doc)
@@ -331,7 +327,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(string documentListName, string documentId)
         {
-            return _docRepo.Delete(documentListName, documentId, _apiContext.CmsDraftState)
+            return _docRepo.DeleteDocument(documentListName, documentId, _apiContext.CmsDraftState)
                 .ContinueWith(t => new Tuple<bool, ServiceClientResponse<StreamContent>>(t.Result.ResponseMessage.IsSuccessStatusCode, t.Result));
         }
     }

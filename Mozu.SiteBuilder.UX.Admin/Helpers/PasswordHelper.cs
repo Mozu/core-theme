@@ -5,9 +5,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
     public class PasswordHelper : IPasswordHelper
     {
-        private readonly IAdminUserWebApiClient _adminUserWebApiClient;
+        private readonly IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
 
-        public PasswordHelper(IAdminUserWebApiClient adminUserWebApiClient)
+        public PasswordHelper(IMultiScopeAdminUserWebApiClient adminUserWebApiClient)
         {
             _adminUserWebApiClient = adminUserWebApiClient;
         }

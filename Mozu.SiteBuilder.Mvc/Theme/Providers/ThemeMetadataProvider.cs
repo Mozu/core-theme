@@ -171,8 +171,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
         {
             get
             {
-                var devPrefix = _config["devThemeBasePath"];
-                return Path.GetFullPath(devPrefix + "//devshare//");
+                var devPrefix = _config["AppDevFileShare"];
+                return Path.GetFullPath(devPrefix +"\\" );
             }
         }
 

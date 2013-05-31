@@ -200,6 +200,12 @@ Ext.define('Taco.view.attribute.Form', {
         this.stores = [this.valuesStore];
 
         this.callParent(arguments);
+        
+
+       
+        if (this.record.get('inputType')) {
+            this.setAttributeInputType(this.record.get('inputType'));
+        }
     },
 
     buildFormComponents: function () {
@@ -225,11 +231,35 @@ Ext.define('Taco.view.attribute.Form', {
             }
         });
 
+       
+
         this.items = [{
             fieldLabel: 'Name',
             name: 'name',
             allowBlank: false,
-            emptyText: 'Enter an attribute name'
+            emptyText: 'Enter an attribute name',
+            enableKeyEvents :true,
+            listeners:{
+                keyup: function(field, e, eOpts) {
+                    var adminName = this.findField('adminName');
+                    if ( !adminName.getValue() ||  (!this.record.get('adminName') && !field.hadKeyEvent) ) {
+                        adminName.setValue(field.getValue());
+                    }
+                },
+                scope:this
+            }
+        }, {
+            fieldLabel: 'Administation Name',
+            name: 'adminName',
+            allowBlank: false,
+            emptyText: 'Enter an attribute name',
+            enableKeyEvents: true,
+            listeners: {
+                keyup: function (field, e, eOpts) {
+                    field.hadKeyEvent = true;
+                },
+                scope: this
+            }
         }, {
             xtype: 'selectfield',
             fieldLabel: 'Input Type',
@@ -247,10 +277,21 @@ Ext.define('Taco.view.attribute.Form', {
                 scope: this
             }
         }, this.subform];
+        
+
+
+
+        
     },
 
+
+
+
     onInputTypeChange: function (input, value) {
-        var buildForms = this.statics().subformCfg[value],
+        this.setAttributeInputType(value);
+    },
+    setAttributeInputType: function (inputType) {
+        var buildForms = this.statics().subformCfg[inputType],
             form;
 
         if (!buildForms) {

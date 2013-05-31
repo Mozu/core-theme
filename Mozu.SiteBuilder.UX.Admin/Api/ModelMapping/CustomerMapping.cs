@@ -66,8 +66,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Type, m => m.ResolveUsing(x => x.GetType().Name.ToLowerInvariant()))
                 ;
             Mapper.CreateMap<AP.User, AC.AccountUser>()
-                .ForMember(x => x.RoleId, m => m.ResolveUsing(x => x.Roles == null || x.Roles.Count()==0 ? -1: x.Roles.Max(r => r.Id)))
-                .ForMember(x => x.Role, m => m.ResolveUsing(x => x.Roles == null || x.Roles.Count()==0 ? "n/a" :x.Roles.OrderByDescending(r => r.Id).First().Name))
+                .ForMember(x => x.RoleId, m => m.ResolveUsing(x => x.Roles == null || x.Roles.Count()==0 ? -1: x.Roles.Select( _=> _.RoleId ).FirstOrDefault( )))
+                .ForMember(x => x.Role, m => m.ResolveUsing(x => x.Roles == null || x.Roles.Count()==0 ? "n/a" :x.Roles.Select( _=> _.RoleName  ).FirstOrDefault( )))
                 .ForMember(x => x.Type, m => m.ResolveUsing(x => x.GetType().Name.ToLowerInvariant()))
                 .ForMember(x => x.Activity, m => m.ResolveUsing(x =>
                 {

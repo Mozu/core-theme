@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.FileManagement
         public long? fileSize { get; set; }
         public bool? isUploaded { get; set; }
         public string folderId { get; set; }
-        public long height { get; set; }
-        public long width { get; set; }
+        public double height { get; set; }
+        public double width { get; set; }
     }
 }

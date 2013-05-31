@@ -108,7 +108,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
 
         }
-        public EmailController(IDocumentWebApiClient docRepo,
+        public EmailController(IDocumentListWebApiClient docRepo,
             IDocumentTypeWebApiClient docTypeRepo,
             ISiteBuilderContext context,
             ICmsServiceWrapper cmsService,

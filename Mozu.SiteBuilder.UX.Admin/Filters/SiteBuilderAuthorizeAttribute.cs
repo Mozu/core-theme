@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Mozu.AdminUser.Contracts;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
@@ -9,31 +10,32 @@ using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.AdminUser.Contracts.Clients;
+using Mozu.User.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Filters
 {
     public class SiteBuilderAuthorizeAttribute : AuthorizeAttribute
     {
         private IAuthTicketWebApiClient _authTicketWebApiClient;
-        private IAdminUserWebApiClient _adminUserWebApiClient;
+        private IPublicAdminAuthTicketWebApiClient _adminUserWebApiClient;
 
-        public IAuthTicketWebApiClient  TicketApi
+        //public IAuthTicketWebApiClient  TicketApi
+        //{
+        //    get
+        //    {
+        //        return _authTicketWebApiClient ?? (_authTicketWebApiClient = DependencyResolver.Current.GetService<IAuthTicketWebApiClient>());
+        //    }
+        //    set
+        //    {
+        //        _authTicketWebApiClient = value;
+        //    }
+        //}
+
+        public IPublicAdminAuthTicketWebApiClient AdminUserWebApiClient
         {
             get
             {
-                return _authTicketWebApiClient ?? (_authTicketWebApiClient = DependencyResolver.Current.GetService<IAuthTicketWebApiClient>());
-            }
-            set
-            {
-                _authTicketWebApiClient = value;
-            }
-        }
-
-        public IAdminUserWebApiClient AdminUserWebApiClient
-        {
-            get
-            {
-                return _adminUserWebApiClient ?? (_adminUserWebApiClient = DependencyResolver.Current.GetService<IAdminUserWebApiClient>());
+                return _adminUserWebApiClient ?? (_adminUserWebApiClient = DependencyResolver.Current.GetService<IPublicAdminAuthTicketWebApiClient>());
             }
             set
             {
@@ -48,24 +50,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
             var isTesting = httpContext.Request["testHarnessMode"] == "true";
             if (!isAuthorized && isTesting )
             {
-                var testAccountRaw = System.Configuration.ConfigurationManager.AppSettings["testAccountInfo"];
-                var testAccount = (dynamic)Newtonsoft.Json.JsonConvert.DeserializeObject(testAccountRaw);
-                var adminTicket = AdminUserWebApiClient.Login(new UserAuthInfo()
-                                                             {
-                                                                 EmailAddress = testAccount.emailAddress,
-                                                                 Password = testAccount.password
-                                                             }).Result.ReadAsSync();
 
-                var  settings =DependencyResolver.Current.GetService<ISettings>();
-                //var tenantTicketRepo = new AuthTicketWebApiClient(new ServiceClientMessageHandler(new ApiContext() { TenantId = (int)testAccount.tenantId }, settings));
-                var authHelper = DependencyResolver.Current.GetService<IAuthenticationHelper>();
+                throw new NotImplementedException();
 
-                var ticket = _authTicketWebApiClient.With( TargetContextLevelType.Tenant ).With(x => x.TenantId=(int)testAccount.tenantId).CreateAuthTicketForTenant(new UserTokenInfo()
-                                                               {
-                                                                   AccessToken = adminTicket.AuthTicket.AccessToken
-                                                               }).Result.ReadAsSync();
-                authHelper.SetCurrentUser(ticket);
-                isAuthorized = true;
+                //var testAccountRaw = System.Configuration.ConfigurationManager.AppSettings["testAccountInfo"];
+                //var testAccount = (dynamic)Newtonsoft.Json.JsonConvert.DeserializeObject(testAccountRaw);
+                //var adminTicket = AdminUserWebApiClient .CreateUserAuthTicket( userAuthInfo : new UserAuthInfo()
+                //                                             {
+                //                                                 EmailAddress = testAccount.emailAddress,
+                //                                                 Password = testAccount.password
+                //                                             }).Result.ReadAsSync();
+
+                //var  settings =DependencyResolver.Current.GetService<ISettings>();
+       
+                //var authHelper = DependencyResolver.Current.GetService<IAuthenticationHelper>();
+
+
+                
+
+
+                //var ticket = _authTicketWebApiClient.With( TargetContextLevelType.Tenant ).With(x =>  x.TenantId=(int)testAccount.tenantId).CreateAuthTicketForTenant(new UserTokenInfo()
+                //                                               {
+                //                                                   AccessToken = adminTicket.AuthTicket.AccessToken
+                //                                               }).Result.ReadAsSync();
+                //authHelper.SetCurrentUser(ticket);
+                //isAuthorized = true;
             }
             return isAuthorized;
         }
@@ -114,10 +123,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
                     var ticket = authHelper.GetCurrentTicket();
                     if ( ticket != null && ticket.RefreshTokenExpiration > DateTime.UtcNow )
                     {
-                        var res = TicketApi.RefreshUserAuthTicket(ticket.RefreshToken).Result;
+                        var res = AdminUserWebApiClient.RefreshAuthTicket(
+                            existingAuthTicket: new TenantAdminUserAuthTicket()
+                                                    {
+                                                        RefreshToken = ticket.RefreshToken
+                                                    },
+                            tenantId: tenantId).Result;
                         if (res.ResponseMessage.IsSuccessStatusCode)
                         {
-                            ticket = res.ReadAsSync();
+                            var tat = res.ReadAsSync();
+                            ticket = new UserAuthTicket()
+                                         {
+
+                                             AccessToken = tat.AccessToken,
+                                             AccessTokenExpiration = tat.AccessTokenExpiration,
+                                             User = tat.User,
+                                             GrantedBehaviors = tat.GrantedBehaviors ,
+                                             RefreshTokenExpiration = tat.RefreshTokenExpiration,
+                                             RefreshToken = tat.RefreshToken
+                                         };
+                                              
+                         
                             authHelper.SetCurrentUser(ticket);
                             lwUser = authHelper.GetCurrentUser();
                         }

@@ -25,10 +25,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ITenantsWebApiClient _tenantsWebApi;
         private readonly ICurrentUserHelper _currentUserHelper;
         private readonly IApiContext _apiContext;
-        private readonly IAdminUserWebApiClient _usersRepo;
+        private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
         private ILogger _log;
 
-        public HomeController(IAdminUserWebApiClient usersRepo, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext)
         {
             _usersRepo = usersRepo;
             _authenticationHelper = authHelper;
@@ -45,11 +45,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             _log.Debug("hello!");
             var user = _currentUserHelper.GetCurrentUser();
-            var roles = GetUserSitesRoles(user.Id);
+            var roles = GetUserSitesRoles(_authenticationHelper.GetCurrentUser().UserId);
             var tenantRes = await _tenantsWebApi.GetTenant( _apiContext.TenantId);
            // var siteCol = _tenantsWebApi.AsBreadthFirstEnumerable();
 
-            var siteUsers = await _usersRepo.Get(pageSize: 200, responseGroups: " ", filter: string.Format("scopeid eq {0}", _apiContext.TenantId));
+            var siteUsers = await _usersRepo.GetUsers(scopeType :UserScopeType.Tenant.ToString(),scopeId : _apiContext.TenantId,pageSize: 200, startIndex:0);
 
 
             if (tenantRes.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -59,10 +59,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             var tenant = tenantRes.ReadAsSync();
 
-            if (roles.IsNullOrEmpty())
-            {
-                _authenticationHelper.LogOut();
-            }
+            //if (roles.IsNullOrEmpty())
+            //{
+            //    _authenticationHelper.LogOut();
+            //}
            // var sites = siteRes.ReadAsSync();
 
            // var site = new Mozu.Tenant.Contracts.Site();
@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public List<Role> GetUserSitesRoles(string userId)
         {
-            var res = _usersRepo.GetUserRoles(userId, null).Result;
+            var res = _usersRepo.GetUserRoles(userId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId).Result;
 
             // var rootUserRepo = new AdminUserWebApiClient(new ServiceClientMessageHandler2(new ApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
             // var res = rootUserRepo.GetUser(userId, null).Result;

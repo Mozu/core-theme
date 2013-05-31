@@ -63,19 +63,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var model = _orderWebApiClient.GetOrder(id).Result.ReadAsAsync().Result;
             if (model == null) return RedirectToAction("Index", "Cart");
-            if (model.OrderStatus == "Open") return RedirectToAction("Confirmation", new { orderId = model.Id });
-            List<ShippingRate> rates = null;
+            if (model.Status == "Open") return RedirectToAction("Confirmation", new { orderId = model.Id });
+           
+            
+          
 
-            if (model.Shipment != null && model.Shipment.ShippingAddress != null && model.Shipment.ShippingAddress.Address  != null)
+            if (model.ShippingInfo != null && model.ShippingInfo.ShippingContact  != null && model.ShippingInfo.ShippingContact .Address  != null)
             {
-                rates = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
+                ViewData["availableShippingMethods"] = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
             }
            
             await this.AsyncInitData();
 
             ViewData["paymentApiBase"] = _pciSettingsProvider.GetPaymentApiBase();
             ViewData["availableCountries"] = _orderService.GetShippableCountries().Select(x => new { code = x.Key, name = x.Value } as object).ToList();
-            ViewData["availableShippingMethods"] = rates;
+            
             
             return View("checkout", model);
         }
@@ -199,8 +201,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //    private ContactInformation GetContact()
         //    {
-        //        var profileToken = _authenticationHelper.GetCurrentProfileToken();
-        //        var contact = _orderService.GetOrderContact(profileToken);
+        //        var UserProfile = _authenticationHelper.GetCurrentProfileToken();
+        //        var contact = _orderService.GetOrderContact(UserProfile);
 
         //        return contact ?? new ContactInformation();
         //    }

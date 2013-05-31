@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 {
     public class ThemeSettingsRepository : IThemeSettingsRepository
     {
-        private readonly IDocumentWebApiClient _docWebApiClient;
+        private readonly IDocumentListWebApiClient _docWebApiClient;
         private readonly ICmsServiceWrapper _cmsService;
         private readonly DataContractJsonSerializer _serializer;
         //private readonly List<SettingConfiguration> _coreConfig = null;
@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         //private RuntimeConfigurationFieldCollection _runtimeValues;
         private readonly IStorefrontCache _cache;
 
-        public ThemeSettingsRepository(IDocumentWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, ISiteBuilderContext siteContext, IStorefrontCache cache)
+        public ThemeSettingsRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, ISiteBuilderContext siteContext, IStorefrontCache cache)
         {
             if (docWebApiClient == null)
             {
@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         private async Task<StreamContent> UpdateSettings(List<FieldValue> values, string themeId)
         {
             Document doc = null;
-            var res = await _cmsService.GetByPath2("settings", this.GetFileName(themeId), "active");
+            var res = await _cmsService.GetByPath2("settings", this.GetFileName(themeId));
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 doc = res.ReadAsSync();
@@ -117,7 +117,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
             }
 
-            return _cmsService.GetByPath2("settings", this.GetFileName(themeId),"active").ContinueWith<List<FieldValue>>(res =>
+            return _cmsService.GetByPath2("settings", this.GetFileName(themeId)).ContinueWith<List<FieldValue>>(res =>
                 {
                     List<FieldValue> values = new List<FieldValue>();
                     if (res.Result.ResponseMessage.IsSuccessStatusCode)
@@ -190,7 +190,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         {
             if (!_ts.HasValue )
             {
-                var res = _cmsService.GetByPath2("settings", GetFileName(themeId),"active").Result;
+                var res = _cmsService.GetByPath2("settings", GetFileName(themeId)).Result;
                 if ( res.ResponseMessage.IsSuccessStatusCode)
                 {
                     _ts= res.ReadAsSync().UpdateDate.GetValueOrDefault(DateTime.Today);

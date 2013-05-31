@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Mozu.AdminUser.Contracts;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -8,6 +9,7 @@ using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.Tenant.Contracts.Clients;
+using Mozu.User.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
@@ -20,9 +22,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
         
         private readonly ISettings _settings;
         private readonly IApiContext _context;
-        private readonly IAuthTicketWebApiClient _authTicketWeb;
+        private readonly Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminAuthTicketWebApiClient  _authTicketWeb;
 
-        public ContextSwitcher(ITenantsWebApiClient tenantsWebApiClient, ISitesWebApiClient sitesWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderContext siteBuilderContext, ISettings settings , IApiContext context, IAuthTicketWebApiClient authTicketWeb)
+        public ContextSwitcher(ITenantsWebApiClient tenantsWebApiClient, ISitesWebApiClient sitesWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderContext siteBuilderContext, ISettings settings, IApiContext context, IMultiScopeAdminAuthTicketWebApiClient authTicketWeb)
         {
             _tenantsWebApiClient = tenantsWebApiClient;
             _sitesWebApiClient = sitesWebApiClient;
@@ -35,18 +37,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 
         public async Task<Tenant.Contracts.Tenant> ChangeTenant(int tenantId)
         {
+         
             //Mozu.Core.Api.Client.ServiceClientExtensions 
-            var tenant = (await _tenantsWebApiClient.GetTenant(tenantId)).ReadAsSync();
+            var tenant = (await _tenantsWebApiClient.GetTenant(tenantId))   .ReadAsSync();
 
             var ticket = _authenticationHelper.GetCurrentTicket();
             var claim = LightweightUserClaims.Parse(ticket.AccessToken);
 
-            var authTicketForTenant = _authTicketWeb
-                .With(TargetContextLevelType.Tenant)
-                .With(x => x.TenantId = tenantId)
-                .CreateAuthTicketForTenant(new UserTokenInfo { AccessToken = ticket.AccessToken });
 
-            var userAuthTicketForTenant = (await authTicketForTenant).ReadAsSync();
+            var authTicketForTenant= _authTicketWeb.RefreshUserAuthTicket(
+                
+                
+                
+                existingAuthTicket: new MultiScopeAdminUserAuthTicket()
+                                        {
+                                            AccessToken = ticket.AccessToken,
+                                            RefreshToken = ticket.RefreshToken
+                                        },
+                scopeType: UserScopeType.Tenant.ToString(),
+                scopeId: tenantId
+                );
+
+            var userAuthTicketForTenant = (await authTicketForTenant).ReadAsSync(); 
+
+         
 
             _authenticationHelper.SetCurrentUser(userAuthTicketForTenant);
 

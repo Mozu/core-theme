@@ -12,6 +12,7 @@ Ext.define('Taco.model.Attribute', {
         { name: 'valueType', type: 'string' },
         { name: 'isOption', type: 'boolean' },
         { name: 'isExtra', type: 'boolean' },
+        { name: 'adminName', type: 'string' },
         { name: 'isProperty', type: 'boolean' },
         {
             name: 'min',
@@ -82,6 +83,14 @@ Ext.define('Taco.model.Attribute', {
 
 
     },
+    validations: [
+
+        { type: 'length', name: 'name', min: 3, max: 100 },
+        { type: 'presence', name: 'name' },
+        { type: 'length', name: 'adminName', min: 3, max: 100 },
+        { type: 'presence', name: 'adminName' },
+       // { type: 'format', name: 'productCode', matcher: /^[A-z0-9\-]*$/ }
+    ],
     proxy: {
         type: 'ajaxproxy',
         // api: {

@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ISiteBuilderContext _siteBuilderContext;
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
         private readonly IShippingSettingsWebApiClient _shippingSettingsWebApiClient;
-        private readonly ICustomTableBasedRatesWebApiClient _customTableBasedRatesWebApiClient;
+        //private readonly ICustomTableBasedRatesWebApiClient _customTableBasedRatesWebApiClient;
 
 
         static List<DGD> g_testData;
@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly IGeneralSettingWrapper _generalSettingsWebApiClient;
 
-        public TestingController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ISitesWebApiClient sitesWebApiClient, IApiContext apiContext, ISiteBuilderContext siteBuilderContext, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, Mozu.SiteSettings.Shipping.Contracts.Clients.IShippingSettingsWebApiClient shippingSettingsWebApiClient, Mozu.ShippingAdmin.Contracts.Clients.ICustomTableBasedRatesWebApiClient customTableBasedRatesWebApiClient)
+        public TestingController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ISitesWebApiClient sitesWebApiClient, IApiContext apiContext, ISiteBuilderContext siteBuilderContext, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, Mozu.SiteSettings.Shipping.Contracts.Clients.IShippingSettingsWebApiClient shippingSettingsWebApiClient )
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient;
             _tenantClient = tenantClient;
@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _siteBuilderContext = siteBuilderContext;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
             _shippingSettingsWebApiClient = shippingSettingsWebApiClient;
-            _customTableBasedRatesWebApiClient = customTableBasedRatesWebApiClient;
+            
         }
 
         [WebGet(UriTemplate = "list")]
@@ -89,44 +89,50 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet (UriTemplate = "orderProvision")]
         public bool  OrderProvision()
         {
+       
 
-            var custRates = _customTableBasedRatesWebApiClient.GetShippingRates().Result.ReadAsSync();
+         
+            Mozu.ShippingAdmin.Contracts.Clients.CarrierConfigurationGlobalWebApiClient gcl;
+          
+       
+           
+            //var custRates = _customTableBasedRatesWebApiClient.GetShippingRates().Result.ReadAsSync();
 
-            if (custRates.Items.Count == 0)
-            {
-                _customTableBasedRatesWebApiClient.CreateShippingRate(new Mozu.ShippingAdmin.Contracts.ShippingRate()
-                                                                          {
-                                                                              Content = new ShippingRateLocalizedContent()
-                                                                                            {
-                                                                                                Name = "Standard 1"
-                                                                                            },
-                                                                              FlatPerCartShippingRate = new FlatPerCartShippingRate()
-                                                                                                            {
-                                                                                                                Price = new ShippingRatePrice()
-                                                                                                                            {
-                                                                                                                                Amount = 10,
-                                                                                                                                IsAmountPercent = false
-                                                                                                                            }
-                                                                                                            }
-                                                                          }).Wait();
-                _customTableBasedRatesWebApiClient.CreateShippingRate(new Mozu.ShippingAdmin.Contracts.ShippingRate()
-                {
-                    Content = new ShippingRateLocalizedContent()
-                    {
-                        Name = "Standard 2"
-                    },
-                    FlatPerCartShippingRate = new FlatPerCartShippingRate()
-                    {
-                        Price = new ShippingRatePrice()
-                        {
-                            Amount = 20,
-                            IsAmountPercent = false
-                        }
-                    }
-                }).Wait();
+            //if (custRates.Items.Count == 0)
+            //{
+            //    _customTableBasedRatesWebApiClient.CreateShippingRate(new Mozu.ShippingAdmin.Contracts.ShippingRate()
+            //                                                              {
+            //                                                                  Content = new ShippingRateLocalizedContent()
+            //                                                                                {
+            //                                                                                    Name = "Standard 1"
+            //                                                                                },
+            //                                                                  FlatPerCartShippingRate = new FlatPerCartShippingRate()
+            //                                                                                                {
+            //                                                                                                    Price = new ShippingRatePrice()
+            //                                                                                                                {
+            //                                                                                                                    Amount = 10,
+            //                                                                                                                    IsAmountPercent = false
+            //                                                                                                                }
+            //                                                                                                }
+            //                                                              }).Wait();
+            //    _customTableBasedRatesWebApiClient.CreateShippingRate(new Mozu.ShippingAdmin.Contracts.ShippingRate()
+            //    {
+            //        Content = new ShippingRateLocalizedContent()
+            //        {
+            //            Name = "Standard 2"
+            //        },
+            //        FlatPerCartShippingRate = new FlatPerCartShippingRate()
+            //        {
+            //            Price = new ShippingRatePrice()
+            //            {
+            //                Amount = 20,
+            //                IsAmountPercent = false
+            //            }
+            //        }
+            //    }).Wait();
 
-                _customTableBasedRatesWebApiClient.SyncronizeShippingRatesToSiteSettingsShippingMethods().Wait();
-            }
+            //    _customTableBasedRatesWebApiClient.SyncronizeShippingRatesToSiteSettingsShippingMethods().Wait();
+            //}
 
             
 
@@ -197,45 +203,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             doSettings = true;
             exists = false;
-            var shippingSettingsRes = _shippingSettingsWebApiClient.GetSiteSettings().Result;
-            if (shippingSettingsRes.ResponseMessage.IsSuccessStatusCode)
-            {
-                exists = true;
-                var shippingSettings = shippingSettingsRes.ReadAsSync();
-                doSettings = shippingSettings.SiteShippingOriginAddress == null || string.IsNullOrEmpty(shippingSettings.SiteShippingOriginAddress.PostalOrZipCode) || shippingSettings.ActiveRateProvider == null;
-                
-            }
-            if ( 1==1 || doSettings)
-            {
-
-                var shippingSettings = new Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings()
-                                           {
-                                               ActiveRateProvider = new ShippingFeature()
-                                                                        {
-                                                                            Name = "customrates"
-                                                                        }
-                                                                        ,
-                                               SiteShippingOriginAddress = new SiteShippingOriginAddress
-                                                                               {
-                                                                                   SenderName = "Foobulaboop d'Fummool",
-                                                                                   Address1 = "1835 Kramer Ln",
-                                                                                   CityOrTown = "Austin",
-                                                                                   StateOrProvince = "TX",
-                                                                                   Country = "US",
-                                                                                   PostalOrZipCode = "78704"
-                                                                               }
-                                               
-                                           };
-                if (exists)
-                {
-                    _shippingSettingsWebApiClient.UpdateSiteShippingSettings(shippingSettings).Wait();
-                }
-                else
-                {
-                    _shippingSettingsWebApiClient.CreateSiteShippingSettings(shippingSettings).Wait();
-                }
-                
-            }
+           
                      
 
             

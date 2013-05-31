@@ -83,8 +83,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 .ContinueWith(_ =>
                 {
                     List<NavigationNode> cats = catTask.Result;
-                    DCC.PagedCollection<DCC.Document> pages = pageTask.Result.ReadAsSync();
-                    DCC.PagedCollection<DCC.Document> blogs = blogTask.Result.ReadAsSync();
+                    DCC.DocumentCollection  pages = pageTask.Result.ReadAsSync();
+                    DCC.DocumentCollection blogs = blogTask.Result.ReadAsSync();
                     NavigationSet navSet = navTask.Result;
 
                     // build the masterlist. Step 1: put the top level categories in.

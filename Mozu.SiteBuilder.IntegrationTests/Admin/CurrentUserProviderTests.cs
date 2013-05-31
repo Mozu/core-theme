@@ -14,20 +14,20 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin
     public class CurrentUserProviderTests
     {
         private IAuthenticationHelper _authenticationHelper;
-        private IAdminUserWebApiClient _adminUserWebApiClient;
+        private IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
 
         [SetUp]
         public void SetUp()
         {
             _authenticationHelper = Substitute.For<IAuthenticationHelper>();
-            _adminUserWebApiClient = Substitute.For<IAdminUserWebApiClient>();
+            _adminUserWebApiClient = Substitute.For<IMultiScopeAdminUserWebApiClient>();
         }
 
         [Test]
         public void GetCurrentUser_should_return_user_if_found_by_token_UserId()
         {
             var expectedId = "youzer eye dee";
-            _authenticationHelper.GetCurrentProfileToken().Returns(new ProfileToken { UserId = expectedId });
+            _authenticationHelper.GetCurrentProfileToken().Returns(new Mozu.Core.Api.Contracts.UserProfile { UserId = expectedId });
             _adminUserWebApiClient.With(x => x.GetUser(expectedId, null), new Mozu.Core.Api.Contracts.User { Id = expectedId });
 
             var provider = GetProvider();
@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin
         [Test]
         public void GetCurrentUser_should_return_new_Unauthenticated_User_if_NotFound()
         {
-            _authenticationHelper.GetCurrentProfileToken().Returns(new ProfileToken());
+            _authenticationHelper.GetCurrentProfileToken().Returns(new Mozu.Core.Api.Contracts.UserProfile());
             _adminUserWebApiClient.WithAny(x => x.GetUser(null, null), null, msg => msg.StatusCode = HttpStatusCode.NotFound);
 
             var provider = GetProvider();
