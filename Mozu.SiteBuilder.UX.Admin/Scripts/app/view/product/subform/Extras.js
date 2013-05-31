@@ -86,14 +86,6 @@ Ext.define('Taco.view.product.subform.Extras', {
         Ext.each(this.extras, function (extra) {
             var pExtra = this.findExtra(extra.ptAttribute),
                 field;
-            
-            if (!pExtra) {
-                pExtra = Ext.create('Taco.model.ProductExtra', {
-                    attributeFQN: extra.ptAttribute.get('attributeFQN')
-                });
-
-                this.product.getExtras().add(pExtra);
-            }
 
             pExtra.set('isRequired', extra.checkbox.getValue());
 
@@ -129,10 +121,20 @@ Ext.define('Taco.view.product.subform.Extras', {
                 ptAttribute: ptAttribute,
                 fieldName: this.getFieldName(ptAttribute)
             },
-            editorCfg = this.buildEditor(ptAttribute, extra, pExtra);
+            editorCfg;
 
 
         this.extras.push(extra);
+            
+        if (!pExtra) {
+            pExtra = Ext.create('Taco.model.ProductExtra', {
+                attributeFQN: extra.ptAttribute.get('attributeFQN')
+            });
+
+            this.product.getExtras().add(pExtra);
+        }
+
+        editorCfg = this.buildEditor(ptAttribute, extra, pExtra);
 
         checkbox = Ext.widget({
             xtype: 'checkbox',
