@@ -12,6 +12,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Mozu.Core;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
@@ -29,10 +30,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
     {
         private readonly ITenantsWebApiClient _tenantsWebApiClient;
         private readonly IApiContext _apiContext;
+        private readonly ISettings _settings;
         //  private const string METADATA_SCHEMA_PATH = "~/tools/Theme.xsd";
        // private const string SETTINGS_SCHEMA_PATH = "~/tools/ThemeSettings.xsd";
         //private const string METADATA_FILE_NAME = "theme.xml";
-        private readonly NameValueCollection _config;
+      
 
         private static  XmlSerializer   _themeInformationMetadataSerialzer=  new System.Xml.Serialization.XmlSerializer(typeof (ThemeInformationMetadata));
         private static XmlSerializer    _configurationItemCollectionSerializer = new XmlSerializer(typeof(ThemeConfigurationItemCollection));
@@ -43,11 +45,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
         /// Constructor.
         /// The project's <code>DjangoVolusionViewEngine</code> contains the <code>VirtualPathProvider</code> we need to get to.
         /// </summary>
-        public ThemeMetadataProvider( Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient , IApiContext apiContext, System.Collections.Specialized.NameValueCollection config = null )
+        public ThemeMetadataProvider( Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient , IApiContext apiContext, ISettings settings )
         {
             _tenantsWebApiClient = tenantsWebApiClient;
             _apiContext = apiContext;
-            _config = config ?? System.Configuration.ConfigurationManager.AppSettings;
+            _settings = settings;
         }
 
         
@@ -171,7 +173,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
         {
             get
             {
-                var devPrefix = _config["AppDevFileShare"];
+                var devPrefix = _settings.AppSettings("AppDevFileShare");
                 return Path.GetFullPath(devPrefix +"\\" );
             }
         }
@@ -186,7 +188,23 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
 
         public string LocalThemePath
         {
-            get { return Path.GetFullPath(new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/"); }
+            get
+            {
+                var coreThemeDir = _settings.AppSettings("coretheme_directory");
+                if (string.IsNullOrWhiteSpace(coreThemeDir))
+                {
+                    coreThemeDir = Path.GetFullPath(new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/");
+                }
+                else
+                {
+                    if (!Path.IsPathRooted(coreThemeDir))
+                    {
+                         coreThemeDir = Path.GetFullPath(HostingEnvironment.MapPath(coreThemeDir));
+                     
+                    }
+                }
+                return coreThemeDir;
+            }
         }
     }
 }
