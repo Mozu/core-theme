@@ -68,6 +68,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Facets
         [DataMember(EmitDefaultValue = false, Name = "ranges")]
         public List<FacetRangeQuery> RangeQueries { get; set; }
 
+
+        [DataMember(EmitDefaultValue = false, Name = "allowsRangeQuery")]
+        public bool? AllowsRangeQuery { get; set; }
+
        
     }
     [DataContract]
@@ -91,5 +95,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Facets
 
         [DataMember(EmitDefaultValue = false, Name = "sourceName")]
         public string Name { get; set; }
+
+
+        [DataMember(EmitDefaultValue = false, Name = "allowsRangeQuery")]
+        public bool? AllowsRangeQuery { get; set; }
+
+        
     }
 }

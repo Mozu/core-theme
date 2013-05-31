@@ -32,10 +32,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.SourceName, op => op.MapFrom(x => x.Source.Name))
                   .ForMember(x => x.SourceType, op => op.MapFrom(x => x.Source.Type))
                   .ForMember(x => x.ValidityIsValid, op => op.MapFrom(x => x.Validity.IsValid))
+                  .ForMember(x => x.AllowsRangeQuery, op => op.MapFrom(x => x.Source.AllowsRangeQuery))
                   
                   .ForMember(x => x.ValidityReasonCode, op => op.MapFrom(x => x.Validity.ReasonCode));
-                   
 
+           
 
             // To data contract
             Mapper.CreateMap<Facet, DC.Facet>()
