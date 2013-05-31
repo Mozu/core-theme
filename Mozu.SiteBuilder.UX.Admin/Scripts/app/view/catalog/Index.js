@@ -10,104 +10,59 @@ Ext.define('Taco.view.catalog.Index', {
     },
 
     initComponent: function () {
-        this.mono = Ext.create('Ext.panel.Panel', {
-            width: 1000,
-            height: 400,
-            padding: 39,
-            border: true,
-            style: {
-                backgroundColor: 'white',
-                border: '1px solid #bfbfbf'
+        this.mono = Ext.create('Ext.Component', {
+            xtype: 'component',
+            cls: Taco.baseCSSPrefix + 'order-detail-header',
+            renderData: {
+                customer: {
+                    address: '1308 Horseback Hollow, Austin TX 78732, United States',
+                    companyName: 'Company ABC',
+                    customerSince: '2011-03-18T00:00:00',
+                    firstName: 'John',
+                    groups: ['VIP', 'Coupon User'],
+                    id: 'c12346',
+                    lastName: 'Smith',
+                    totalOrders: 4,
+                    totalSpent: 597.96
+                },
+                customerNote: 'Please take special care in packaging. Thanks!',
+                discountTotal: 0,
+                expirationDate: null,
+                id: 'o124',
+                ipAddress: '173.194.46.2',
+                lastValidationDate: null,
+                orderNumber: 107363,
+                orderStatus: 'Processing Order',
+                paymentStatus: '',
+                shippingStatus: '',
+                shippingTotal: 0,
+                subTotal: null,
+                taxTotal: 0,
+                total: 229.48
             },
-            items: [{
-                xtype: 'component',
-                html: 'hello world'
-            }],
-            dockedItems: [{
-                xtype: 'container',
-                dock: 'top',
-                height: 50,
-                border: '0 0 1',
-                padding: '0 0 20',
-                layout: {
-                    type: 'hbox',
-                    align: 'middle'
-                },
-                style: {
-                    fontWeight: 'bold',
-                    fontSize: '24px',
-                    lineHeight: '30px',
-                    color: '#323232',
-                    borderWidth: '0px 0px 1px',
-                    borderStyle: 'solid',
-                    borderColor: '#bfbfbf'
-                },
-                items: [{
-                    xtype: 'component',
-                    html: 'Custom Panel',
-                    flex: 1
-                }, {
-                    xtype: 'container',
-                    itemId: 'actionsCt',
-                    hidden: true,
-                    layout: {
-                        type: 'hbox',
-                        defaultMargins: '0 0 0 10'
-                    },
-                    items: [{
-                        xtype: 'taco.button',
-                        text: 'Save',
-                        handler: function () {
-                            var toolbar = this.up('container[dock=top]');
-
-                            if (toolbar) {
-                                toolbar.toggleActions();
-                            }
-                        }
-                    }, {
-                        xtype: 'taco.button',
-                        text: 'Cancel',
-                        handler: function () {
-                            var toolbar = this.up('container[dock=top]');
-
-                            if (toolbar) {
-                                toolbar.toggleActions();
-                            }
-                        }
-                    }]
-                }, {
-                    xtype: 'button',
-                    itemId: 'gear',
-                    text: ' ',
-                    menu: {
-                        plain: true,
-                        items: [{
-                            text: 'lorem',
-                            handler: function () {
-                                var toolbar = this.up('container[dock=top]');
-
-                                if (toolbar) {
-                                    toolbar.toggleActions();
-                                }
-                            }
-                        }, {
-                            text: 'ipsum'
-                        }]
-                    }
-                }],
-                toggleActions: function () {
-                    var tool = this.items.get('gear'),
-                        actions = this.items.get('actionsCt');
-
-                    if (tool.isHidden()) {
-                        actions.hide();
-                        tool.show();
-                    } else {
-                        actions.show();
-                        tool.hide();
-                    }
+            renderTpl: [
+                '<div class="taco-order-detail-header-section">',
+                    '<label>Order Total</label>',
+                    '<h2>{total}</h2>',
+                    '<div class="status">{orderStatus}</div>',
+                '</div>',
+                '<div class="taco-order-detail-header-section">',
+                    '<label>Customer</label>',
+                    '<h2>{[values.customer.firstName]} {[values.customer.lastName]}</h2>',
+                    '<div class="company">{[values.customer.companyName]}</div>',
+                    '<div class="address">{[values.customer.address]}</div>',
+                '</div>',
+                '<div class="taco-order-detail-header-section">',
+                    '<label>Customer Profile</label>',
+                    '<div>Customer since: <strong>{[values.customer.customerSince]}</strong></div>',
+                    '<div>Total orders: <strong>{[values.customer.totalOrders]}</strong></div>',
+                    '<div>Total spent: <strong>{[values.customer.totalSpent]}</strong></div>',
+                    '<div>Groups: <strong>{[this.join(values.customer.groups, ", ")]}</strong></div>',
+                '</div>',
+                {
+                    join: function (values, separator) { return values.join(separator); }
                 }
-            }],
+            ]
         });
 
         this.thing = Ext.create('Taco.core.ux.EditContainer', {
@@ -158,7 +113,7 @@ Ext.define('Taco.view.catalog.Index', {
         });
 
         Ext.apply(this.body, {
-            items: [this.thing]
+            items: [this.mono]
         });
 
         this.callParent(arguments);
