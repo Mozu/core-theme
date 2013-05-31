@@ -78,7 +78,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public ActionResult ProductListing(int? categoryId= null , string sortBy = null, int? page = null, int? itemsPerPage = null,  List<object> productCodes = null)
         {
-            return new ContentResult();
+
+            
+
             categoryId = categoryId.GetValueOrDefault(-1) <1  ? null : categoryId;
             itemsPerPage = itemsPerPage.GetValueOrDefault(15);
             page = page.GetValueOrDefault(1);
@@ -109,19 +111,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             //todo do i need to replace recurese
             // recurse: recurse,
-
-            var pcDC = _productClient.GetProducts( filter :filter , startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options").Result.ReadAsSync();
-          
-            var pc = Mapper.Map<ProductCollection>(pcDC);
-           
-            //`
-            //pc.Paging.CurrentSort = sortBy;
-            //pc.Paging.StartIndex = startIdx;
-            //pc.Paging.UrlBase = "?";
+            try
+            {
 
 
+                var pcDC = _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options").Result.ReadAsSync();
 
-            return PartialView(pc);
+                var pc = Mapper.Map<ProductCollection>(pcDC);
+
+                //`
+                //pc.Paging.CurrentSort = sortBy;
+                //pc.Paging.StartIndex = startIdx;
+                //pc.Paging.UrlBase = "?";
+
+
+
+                return PartialView(pc);
+            }
+            catch (Exception ex)
+            {
+                return new ContentResult() {Content = "[product service error]: " + ex.Message};
+            }
         }
 
         public ActionResult Store ()
