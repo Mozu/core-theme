@@ -130,6 +130,10 @@ Ext.define('Taco.model.Category', {
         { type: 'length', name: 'name', min: 3 }
 
     ],
+    loadFacets:function(cfg) {
+        Taco.model.FacetSet.load(this.getId(), cfg);
+    },
+
     getConfiguredFacets: function () {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.Facet',
