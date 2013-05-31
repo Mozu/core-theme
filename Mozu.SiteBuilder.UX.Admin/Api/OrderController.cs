@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -12,6 +13,7 @@ using NSubstitute;
 using DCc = Mozu.Customer.Contracts;
 using DCclient = Mozu.Core.Api.Contracts.Client;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
+using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -42,11 +44,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "list")]
         public async Task<Response<List<Order>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            var orders = await GetMock();
-
-
-            
+            int? startIndex = pagingParams.startIndex;
+            int? pageSize = pagingParams.pageSize ?? 20;
             SortingCollectionItem sort = pagingParams.sort == null ? null : pagingParams.sort.FirstOrDefault();
+
+            // var dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), "" /* TODO: filter */)).ReadAsSync();
+
+            var orders = await GetMock();
+            // var orders2 = Mapper.Map<List<Order>>(dcOrders.Items);
+
             if (sort != null)
             {
                 switch (sort.property)

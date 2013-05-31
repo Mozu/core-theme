@@ -203,7 +203,7 @@
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.0.0.13148.1\lib\Mozu.Core.Api.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.0.0.13151.2\lib\Mozu.Core.Api.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Client, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -509,6 +509,8 @@
     <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
     <Compile Include="Helpers\ContextSwitcher.cs" />
+    <Compile Include="Helpers\OrderHelpers\OrderFilterExtensions.cs" />
+    <Compile Include="Helpers\OrderHelpers\OrderSortExtensions.cs" />
     <Compile Include="Helpers\CurrentUserHelper.cs" />
     <Compile Include="Helpers\IContextSwitcher.cs" />
     <Compile Include="Helpers\ICurrentUserHelper.cs" />

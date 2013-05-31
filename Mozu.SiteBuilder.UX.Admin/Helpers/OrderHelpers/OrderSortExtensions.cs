@@ -1,0 +1,62 @@
+﻿using System;
+using System.Linq;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+
+namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
+{
+    internal static class OrderSortExtensions
+    {
+        private const string ORDER_ID_PROPERTY = "productinsites.productcategories.categoryId";
+        private const string ORDER_NUMBER_PROPERTY = "productinsites.isActive";
+        private const string FIRST_NAME_PROPERTY = "stockOnHand";
+        private const string LAST_NAME_PROPERTY = "stockAvailable";
+        private const string CREATE_DATE_PROPERTY = "createDate";
+        private const string TOTAL_PROPERTY = "updateDate";
+        private const string SHIPPING_STATUS_PROPERTY = "shipmentStatus";
+        private const string ORDER_STATUS_PROPERTY = "status";
+
+        /// <summary>
+        /// Converts a SortingCollection for Product to a mozu services-compatible sort string.
+        /// </summary>
+        /// <param name="useSiteContext">
+        /// By default, sort occurs on global-level content or price parameters.
+        /// Pass true to force sort on content and price fields nested inside ProductInSites.
+        /// </param>
+        public static string ToSortString(this SortingCollection sortCollection)
+        {
+            if (sortCollection == null)
+                return null;
+
+            return string.Join(" and ", sortCollection.Select(x => GetFilter(x) + (x.IsAscending ? " asc" : " desc")));
+        }
+
+        private static string GetFilter(SortingCollectionItem item)
+        {
+
+
+            switch (item.property.ToLowerInvariant())
+            {
+                case "orderid":
+                    return ORDER_ID_PROPERTY;
+                case "ordernumber":
+                    return ORDER_NUMBER_PROPERTY;
+                case "customer.firstname":
+                    return FIRST_NAME_PROPERTY;
+                case "customer.lastname":
+                    return LAST_NAME_PROPERTY;
+                case "total":
+                    return TOTAL_PROPERTY;
+                case "orderstatus":
+                    return ORDER_STATUS_PROPERTY;
+                case "shippingstatus":
+                    return SHIPPING_STATUS_PROPERTY;
+
+
+                case "createdate":
+                    return CREATE_DATE_PROPERTY;
+                default:
+                    throw new InvalidOperationException("unknown sort.property " + item.property);
+            }
+        }
+    }
+}
