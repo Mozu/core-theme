@@ -1975,6 +1975,7 @@
     <Content Include="Scripts\resources\lib\tinymce\skins\lightgray\fonts\readme.md" />
     <Content Include="Scripts\app\mocks\facets.json" />
     <Content Include="Scripts\app\mocks\facetables.json" />
+    <Content Include="Scripts\resources\scss\taco\_order.scss" />
     <None Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
