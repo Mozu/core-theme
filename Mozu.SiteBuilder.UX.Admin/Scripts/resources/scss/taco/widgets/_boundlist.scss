@@ -14,10 +14,6 @@
       &.#{$prefix}boundlist-item-over {
         background-color: $color-neutral-90;
       }
-      &:not(:nth-of-type(1)) {
-        border-top-style: none;
-        padding-top: 6px;
-      }
     }
   }
 
@@ -57,29 +53,64 @@
     }
   }
 
+  .#{$prefix}boundlist-draggable .#{$prefix}boundlist-item {
+    @include flexbox(row, nowrap, flex-start, center, center);
+
+    padding: 3px 4px;
+
+    margin: 0 0 3px;
+
+    > * {
+        @include flex(0);
+    }
+    .#{$prefix}boundlist-item-content {
+        @include flex(1);
+    }
+  }
+
+  
+
+  .#{$prefix}boundlist-item-name {
+    font-size: px-to-rem(12px);
+    display: block;
+  }
+
+  .#{$prefix}boundlist-item-type {
+    color: $color-neutral-70;
+    text-transform: uppercase;
+    display: block;
+    font-size: px-to-rem(12px);
+  }
+
   .#{$prefix}boundlist-item-drag {
     cursor: move;
     display: block;
     font-size: 0px;
-    height: 34px;
+    height: 20px;
     left: 0px;
     line-height: 0px;
     overflow: hidden;
-    position: absolute;
     text-indent: -9999px;
     top: 0px;
     width: 16px;
-
+    @include flexbox(row, nowrap, center, flex-start, center);
+    @include icons-sprite(icon-tree-knurling);
+    padding-right: 25px;
+    margin-left: -8px;
+    &::after {
+        width: 8px;
+        @include flexbox(row, nowrap, center, flex-start, center);
+    }
   }
 
-  .#{$prefix}boundlist-item-close {
+  .#{$prefix}boundlist-item-action {
     cursor: pointer;
     display: block;
     font-size: 0px;
     height: 20px;
     line-height: 0px;
     overflow: hidden;
-    position: absolute;
+    @include flexbox(row, nowrap, center, flex-end, stretch);
     right: 0px;
     text-indent: -9999px;
     top: 7px;
@@ -87,20 +118,26 @@
 
     &::after {
       color: $color-neutral-20;
-      content: "×";
       font-size: 14px;
       font-weight: bold;
       height: 16px;
       left: 0px;
       line-height: 1em;
-      position: absolute;
       text-align: center;
       text-indent: 0px;
       top: 0px;
       width: 16px;
       @include border-radius(14px);
-      @include flexbox(row, nowrap, center, center, center);
-    }
+    @include flexbox(row, nowrap, center, flex-end, stretch);
+   }
+  }
+
+  .#{$prefix}boundlist-item-close::after {
+    content: "×";
+  }
+
+  .#{$prefix}boundlist-item-settings::after {
+    content: "⚙";
   }
 
   /* MENUS */

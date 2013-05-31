@@ -6,49 +6,17 @@ Ext.define('Taco.view.site.page.settings.Facets', {
     requires: ['Taco.core.ux.form.field.MultiSelect'],
     title: "Facets",
     initComponent: function () {
-        var me = this,
-            configuredFacetsStore = this.record.getConfiguredFacets(),
-            availableFacetsStore = this.record.getAvailableFacets();
+        var me = this;
 
-        configuredFacetsStore.load();
-        availableFacetsStore.load();
+        this.record.loadFacets({
+            callback: function (facetSet) {
+                var configuredFacetsStore = facetSet.getConfigured(),
+                    availableFacetsStore = facetSet.getAvailable();
 
-        this.configuredFacetsView = window.cfv = Ext.create('Taco.core.ux.form.field.MultiSelect', {
-            name: 'facets',
-            width: 250,
-            store: configuredFacetsStore,
-            maxSelections: 1,
-            ignoreSelectChange: true,
-            listConfig: {
-                selModel: { mode: 'SINGLE' },
-                itemTpl: new Ext.XTemplate(
-                '<span class="x-boundlist-item-drag">Drag </span>',
-                '<span class="x-boundlist-item-content">{source.name}</span>',
-                '<tpl if="source.isRangeQueryable">',
-                '<span class="x-boundlist-item-settings">Settings </span>',
-                '</tpl>',
-                '<tpl if="!validity.isValid">',
-                '<span class="x-boundlist-item-problem">Problem </span>',
-                '</tpl>',
-                '<tpl if="this.isThisCategory(categoryId)">',
-                '<span class="x-boundlist-item-close">Close </span>',
-                '<tpl else>',
-                '<span class="x-boundlist-item-hide">Hide </span>',
-                '</tpl>',
-                {
-                    isThisCategory: function (categoryId) {
-                        return categoryId == me.record.get('id');
-                    }
-                }
-            )
-            },
-            ddReorder: true
-        });
-        this.configuredFacetsView.boundList.selectedItemCls = 'dummy';
-        this.form = {
-            layout: 'vbox',
-            items: [
-                {
+                configuredFacetsStore.load();
+                availableFacetsStore.load();
+
+                me.availableFacetsDropdown = Ext.widget('combobox', {
                     xtype: 'combobox',
                     queryMode: 'local',
                     forceSelection: true,
@@ -65,19 +33,58 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                         select: function (me, selectedRecords) {
                             var theRecord = selectedRecords && selectedRecords[0];
                             availableFacetsStore.remove(theRecord);
-                            var newFacet = Ext.create('Taco.model.Facet', {
-                                source: theRecord.raw,
-                                facetType: theRecord.raw.facetType,
-                                order: configuredFacetsStore.count()
-                            });
+                            var newFacet = Ext.create('Taco.model.Facet', theRecord.raw);
                             configuredFacetsStore.add(newFacet);
                             me.reset();
                         }
                     }
-                },
-                this.configuredFacetsView
-            ]
+                });
+
+                me.configuredFacetsView = window.cfv = Ext.create('Taco.core.ux.form.field.MultiSelect', {
+                    name: 'facets',
+                    width: 250,
+                    store: configuredFacetsStore,
+                    maxSelections: 1,
+                    ignoreSelectChange: true,
+                    listConfig: {
+                        selModel: { mode: 'SINGLE' },
+                        cls: 'x-boundlist-draggable',
+                        itemTpl: new Ext.XTemplate(
+                        '<span class="x-boundlist-item-drag">Drag </span>',
+                        '<span class="x-boundlist-item-content">',
+                            '<span class="x-boundlist-item-name">{source.name}</span>',
+                            '<span class="x-boundlist-item-type">{source.type}</span>',
+                        '</span>',
+                        '<tpl if="source.isRangeQueryable">',
+                        '<span class="x-boundlist-item-action x-boundlist-item-settings">Settings </span>',
+                        '</tpl>',
+                        '<tpl if="!validity.isValid">',
+                        '<span class="x-boundlist-item-action x-boundlist-item-problem">Problem </span>',
+                        '</tpl>',
+                        '<tpl if="this.isThisCategory(categoryId)">',
+                        '<span class="x-boundlist-item-action x-boundlist-item-close">Close </span>',
+                        '<tpl else>',
+                        '<span class="x-boundlist-item-action x-boundlist-item-hide">Hide </span>',
+                        '</tpl>',
+                        {
+                            isThisCategory: function (categoryId) {
+                                return categoryId == me.record.get('id');
+                            }
+                        }
+                    )
+                    },
+                    ddReorder: true
+                });
+                me.configuredFacetsView.boundList.selectedItemCls = 'dummy';
+
+                me.form.add([me.availableFacetsDropdown, me.configuredFacetsView]);
+            }
+        });
+            
+        this.form = {
+            layout: 'vbox',
         };
+
         this.callParent(arguments);
     }
 });

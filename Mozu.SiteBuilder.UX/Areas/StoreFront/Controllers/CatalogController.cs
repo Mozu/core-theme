@@ -78,6 +78,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public ActionResult ProductListing(int? categoryId= null , string sortBy = null, int? page = null, int? itemsPerPage = null,  List<object> productCodes = null)
         {
+            return new ContentResult();
             categoryId = categoryId.GetValueOrDefault(-1) <1  ? null : categoryId;
             itemsPerPage = itemsPerPage.GetValueOrDefault(15);
             page = page.GetValueOrDefault(1);
@@ -99,11 +100,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 if ( !string.IsNullOrWhiteSpace( filter))
                 {
-                    filter = "(categoryid eq " + categoryId + ") and (" + filter + ")";
+                    filter = "(category eq " + categoryId + ") and (" + filter + ")";
                 }
                 else
                 {
-                    filter ="categoryid eq " + categoryId;
+                    filter ="category eq " + categoryId;
                 }
             }
             //todo do i need to replace recurese
