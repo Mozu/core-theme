@@ -121,7 +121,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
     },
 
     onListItemChange: function (field, newValue) {
-        field.extraValueObj.delta = newValue;
+        field.extraValueObj.delta = parseFloat(newValue) || 0;
         this.updateProductExtra();
     },
 

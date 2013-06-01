@@ -95,7 +95,7 @@ Ext.define('Taco.view.product.subform.Extras', {
                 field = this.findField(extra.fieldName);
                 pExtra.set('values', [{
                    value: extra.ptAttribute.get('attributeName'),
-                   delta: field.getValue()
+                   delta: parseFloat(field.getValue()) || 0
                 }]);
             }
         }, this);

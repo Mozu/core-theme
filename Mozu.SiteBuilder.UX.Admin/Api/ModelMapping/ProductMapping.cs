@@ -250,11 +250,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ProductExtra, DC.ProductExtra>();
             Mapper.CreateMap<DC.ProductExtra, ProductExtra>();
 
-            Mapper.CreateMap<ProductExtraValue, DC.ProductExtraValue>();
-            Mapper.CreateMap<DC.ProductExtraValue, ProductExtraValue>();
+            Mapper.CreateMap<ProductExtraValue, DC.ProductExtraValue>()
+                  .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => new DC.ProductExtraValueDeltaPrice()
+                                                                               {
+                                                                                   CurrencyCode = "usd",
+                                                                                   DeltaPrice = x.DeltaPrice
+                                                                               }));
 
-            Mapper.CreateMap<DC.ProductExtraValueDeltaPrice, ProductExtraValueDeltaPrice>();
-            Mapper.CreateMap<ProductExtraValueDeltaPrice, DC.ProductExtraValueDeltaPrice>();
+            Mapper.CreateMap<DC.ProductExtraValue, ProductExtraValue>()
+                  .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPrice != null ? x.DeltaPrice.DeltaPrice : 0));
+
+            
         }
 
         object OptionValuesResolver (DC.Product p)
