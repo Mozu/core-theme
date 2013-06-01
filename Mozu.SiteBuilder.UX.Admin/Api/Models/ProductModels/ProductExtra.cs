@@ -5,15 +5,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 {
     using Attributes;
 
-    [DataContract]
-    public class ProductExtraValueDeltaPrice
-    {
-        [DataMember(EmitDefaultValue = false, Name = "currencyCode")]
-        public string CurrencyCode { get; set; }
+    //[DataContract]
+    //public class ProductExtraValueDeltaPrice
+    //{
+    //    [DataMember(EmitDefaultValue = false, Name = "currencyCode")]
+    //    public string CurrencyCode { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "deltaPrice")]
-        public decimal DeltaPrice { get; set; }
-    }
+    //    [DataMember(EmitDefaultValue = false, Name = "deltaPrice")]
+    //    public decimal DeltaPrice { get; set; }
+    //}
 
     [DataContract]
     public class ProductExtraValue
@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         public object Value { get; set; }
 
         [DataMember(EmitDefaultValue = false, Name = "delta")]
-        public ProductExtraValueDeltaPrice DeltaPrice { get; set; }
+        public decimal DeltaPrice { get; set; }
 
         [DataMember(EmitDefaultValue = false, Name = "deltaWeight")]
         public decimal? DeltaWeight { get; set; }

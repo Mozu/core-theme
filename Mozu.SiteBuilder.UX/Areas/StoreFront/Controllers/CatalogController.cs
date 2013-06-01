@@ -102,11 +102,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 if ( !string.IsNullOrWhiteSpace( filter))
                 {
-                    filter = "(category eq " + categoryId + ") and (" + filter + ")";
+                    filter = "(categoryId eq " + categoryId + ") and (" + filter + ")";
                 }
                 else
                 {
-                    filter ="category eq " + categoryId;
+                    filter = "categoryId eq " + categoryId;
                 }
             }
             //todo do i need to replace recurese
