@@ -13,13 +13,13 @@ Ext.define('Taco.view.order.subform.Detail', {
     cls: Taco.baseCSSPrefix + 'orderform-detail',
     
     // todos:remove border and style info after base class css is setup.
-    border: 1,
+    // border: 1,
     style: {
-        margin:"10px 0 0 0",
-        borderColor: "#666",
-        borderStyle: "solid",
+        // margin:"10px 0 0 0",
+        // borderColor: "#666",
+        // borderStyle: "solid",
         backgroundColor:"#fff",
-        padding: 0
+        // padding: 0
     },
     
     initComponent: function (eOpts) {
