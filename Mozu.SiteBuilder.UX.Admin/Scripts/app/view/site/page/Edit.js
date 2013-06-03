@@ -41,8 +41,10 @@ Ext.define('Taco.view.site.page.Edit', {
 
         
         this.callParent(arguments);
+        this.form.dirtyButton = this.down('dirtybutton');
         this.on('boxready', function () {
             this.toolBar.editor = this.form;
+            
         }, this);
     }
 });
