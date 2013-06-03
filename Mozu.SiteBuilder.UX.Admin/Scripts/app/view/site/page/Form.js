@@ -182,15 +182,11 @@ Ext.define('Taco.view.site.page.Form', {
     },
 
     isDirty: function () {
-        return this.widgets.getNewRecords().length > 0 ||
-                this.widgets.getUpdatedRecords().length > 0 ||
-                this.widgets.getRemovedRecords().length > 0 ||
-                this.cmsDocs.getNewRecords().length > 0 ||
-                this.cmsDocs.getUpdatedRecords().length > 0 ||
-                this.cmsDocs.getRemovedRecords().length > 0 ||
-                this.categories.getUpdatedRecords().length > 0 ||
-                this.products.getUpdatedRecords().length > 0;
-
+        return this.widgets.isDirty() ||
+            this.cmsDocs.isDirty() ||
+            this.categories.isDirty() ||
+            this.products.isDirty() ||
+            ( this.adapter && this.adapter.isDirty());
     },
 
     entityTypeEditConfig: {

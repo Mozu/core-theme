@@ -122,7 +122,7 @@ Ext.define('Taco.model.Category', {
 
    
     
-    getFacetSet: function () {
+    getFacetSets: function () {
         if (this.facetSetStore) {
             return this.facetSetStore;
         }

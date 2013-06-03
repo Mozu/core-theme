@@ -56,6 +56,12 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
            });
        }
    },
+   isDirty:function() {
+       if (this.model && this.model.facetSetStore) {
+           return this.model.facetSetStore.isDirty();
+       }
+       return false;
+   },
     getPageSettings: function () {
         var me = this;
         return [
@@ -79,10 +85,10 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
             }, {
                 panelCls: 'Taco.view.site.page.settings.Facets',
                 getRecord: function () {
-                    var fs = me.get().getFacetSet();
+                    var fs = me.get().getFacetSets();
                     if (!fs.pageEditor) {
                         fs.pageEditor = me.editor;
-                        me.model.getFacetSet().on('dirtychange', me.editor.onFormStateChange, me.editor);
+                        me.model.getFacetSets().on('dirtychange', me.editor.onFormStateChange, me.editor);
                     }
                     return me.get();
                 }
