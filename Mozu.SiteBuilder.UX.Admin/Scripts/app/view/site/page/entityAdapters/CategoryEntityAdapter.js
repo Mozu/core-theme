@@ -47,13 +47,14 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
        }
        return doc;
    },
-   initSaveTasks: function (chain) {
+   addSaveTasks: function (tasks) {
        if (this.model.facetSetStore) {
-           chain.addSyncStoreTask({
+           
+           tasks.add({
                key: 'facetSetStore',
-               depends: [],
                store: this.model.facetSetStore
            });
+          
        }
    },
    isDirty:function() {

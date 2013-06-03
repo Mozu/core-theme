@@ -254,48 +254,58 @@ Ext.define('Taco.view.site.page.Form', {
     onBeforeEdit: function (e) {
         // TODO: ???
     },
-
-    initSaveTasks: function (chain) {
-        var me = this;
-
-        chain.addSyncStoreTask({
-            key: 'cmsDocs',
-            depends: [],
-            store: me.cmsDocs
-        });
-        chain.addSyncStoreTask({
-            key: 'widgets',
-            depends: [],
-            store: me.widgets
-        });
-        chain.addSyncStoreTask({
-            key: 'inlineProducts',
-            depends: [],
-            store: me.products
-        });
-        chain.addSyncStoreTask({
-            key: 'inlineCategories',
-            depends: [],
-            store: me.categories
-        });
-        chain.add({
-            key: 'dirtybtn',
-            depends: ['inlineProducts', 'cmsDocs', 'widgets'],
-            fn: function (chn) {
-                me.onFormStateChange();
-                chn.callback();
-            }
-        });
-        
-        if (this.adapter) {
-            this.adapter.initSaveTasks(chain);
-        }
-        
-        
-
-
+    
+    addChildSaveTasks: function (tasks) {
         this.callParent(arguments);
+        if (this.adapter) {
+            this.adapter.addSaveTasks(tasks);
+        }
+        return tasks;
     },
+    
+    
+    //initSaveTasks: function (chain) {
+    //    var me = this;
+
+    //    chain.addSyncStoreTask({
+    //        key: 'cmsDocs',
+    //        depends: [],
+    //        store: me.cmsDocs
+    //    });
+    //    chain.addSyncStoreTask({
+    //        key: 'widgets',
+    //        depends: [],
+    //        store: me.widgets
+    //    });
+    //    chain.addSyncStoreTask({
+    //        key: 'inlineProducts',
+    //        depends: [],
+    //        store: me.products
+    //    });
+    //    chain.addSyncStoreTask({
+    //        key: 'inlineCategories',
+    //        depends: [],
+    //        store: me.categories
+    //    });
+    //    chain.add({
+    //        key: 'dirtybtn',
+    //        depends: ['inlineProducts', 'cmsDocs', 'widgets'],
+    //        fn: function (chn) {
+    //            me.onFormStateChange();
+    //            chn.callback();
+    //        }
+    //    });
+        
+        
+        
+        
+
+
+    //    this.callParent(arguments);
+    //},
+    
+
+
     onEdit: function (value, props) {
         var me = this,
             key, doc, product, widget, parts, widgetConfig;
