@@ -290,6 +290,13 @@ Ext.define('Taco.view.site.page.Form', {
                 chn.callback();
             }
         });
+        
+        if (this.adapter) {
+            this.adapter.initSaveTasks(chain);
+        }
+        
+        
+
 
         this.callParent(arguments);
     },
@@ -557,6 +564,7 @@ Ext.define('Taco.view.site.page.Form', {
                     me.cmsDocs.removeAll();
                     me.products.removeAll();
                     me.editSurface.setDirty(false);
+                    me.adapter.unload();
                     continueFn();
                 },
                 autoShow: true
@@ -564,6 +572,7 @@ Ext.define('Taco.view.site.page.Form', {
             return false;
 
         }
+        
     },
     viewPage: function (e) {
         window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(this.editSurface.pageSrc), 'taco-preview');
@@ -693,10 +702,7 @@ Ext.define('Taco.view.site.page.Form', {
                     metaData: md,
                     editor: this,
                     editors: config.editors,
-                    listeners: {
-                        destroy: function (record) { Taco.app.fireEvent('page-destroy', this.editor.pageSrc, record); },
-                        load: function () { console.log('load', arguments); }
-                    }
+                   
                 });
                 this.adapter.load();
                 return false;
