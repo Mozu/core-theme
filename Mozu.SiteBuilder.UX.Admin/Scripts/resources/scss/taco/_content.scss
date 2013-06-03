@@ -104,7 +104,7 @@
     }
   }
 
-  .#{$vprefix}sidebar-model-seo, .#{$vprefix}sidebar-model-general {
+  .#{$vprefix}sidebar-modal-seo, .#{$vprefix}sidebar-modal-general {
     .#{$prefix}toolbar-docked-top{
       border-bottom-width: px-to-rem(1);
       border-bottom-style: solid;
@@ -234,7 +234,7 @@ EXTJS Checkbox slider
       border-radius: 20px;
     } 
     
-    .#{$prefix}form-item-body{
+    .#{$prefix}form-item-body{ 
       width: 50%; 
       height: 20px; 
       padding: 0; 
