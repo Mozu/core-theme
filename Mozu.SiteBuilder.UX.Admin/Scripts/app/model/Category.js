@@ -120,27 +120,28 @@ Ext.define('Taco.model.Category', {
 
     ],
 
-    loadFacets: function (cfg) {
-        var me = this;
-        if (cfg.callback) {
-            cfg.callback = Ext.Function.createSequence(cfg.callback, function (facetSet) {
-                me.facetSet = facetSet;
-            });
-        }
-        Taco.model.FacetSet.load(this.getId(), cfg);
-    },
-
-    updateFacets: function () {
-        if (me.facetSet) {
-            me.fireEvent("facetchange");
-        }
-    },
-
-    initComponent: function() {
-        this.addEvents(['facetchange']);
-        this.callParent(arguments);
-    },
+   
     
+    getFacetSet: function () {
+        if (this.facetSetStore) {
+            return this.facetSetStore;
+        }
+        
+        this.facetSetStore = Ext.create('Ext.data.Store', {
+            model: 'Taco.model.FacetSet',
+           autoLoad: false
+        });
+        this.facetSetStore.load({
+            params: {
+               id: this.getId()
+            },
+        });
+
+        return this.facetSetStore;
+    },
+
+    
+
 
     proxy: {
       //  type: 'ajax',
