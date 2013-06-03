@@ -61,6 +61,7 @@ $include-default: false;
 @include taco-image-field;
 @include taco-standaloneAccordion;
 @include taco-phoneOrders;
+@include taco-order;
 @include taco-contextSwitcher;
 
 // This line changes the location of your images when creating UIs to be relative instead of within the ExtJS directory.

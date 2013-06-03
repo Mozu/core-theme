@@ -43,7 +43,7 @@ Ext.define('Taco.view.catalog.Index', {
             renderTpl: [
                 '<div class="taco-order-detail-header-section">',
                     '<label>Order Total</label>',
-                    '<h2>{total}</h2>',
+                    '<h2>{total:usMoney}</h2>',
                     '<div class="status">{orderStatus}</div>',
                 '</div>',
                 '<div class="taco-order-detail-header-section">',
@@ -56,7 +56,7 @@ Ext.define('Taco.view.catalog.Index', {
                     '<label>Customer Profile</label>',
                     '<div>Customer since: <strong>{[values.customer.customerSince]}</strong></div>',
                     '<div>Total orders: <strong>{[values.customer.totalOrders]}</strong></div>',
-                    '<div>Total spent: <strong>{[values.customer.totalSpent]}</strong></div>',
+                    '<div>Total spent: <strong>{[Ext.util.Format.usMoney(values.customer.totalSpent)]}</strong></div>',
                     '<div>Groups: <strong>{[this.join(values.customer.groups, ", ")]}</strong></div>',
                 '</div>',
                 {
