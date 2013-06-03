@@ -27,6 +27,10 @@ Ext.define('Taco.view.site.page.settings.Facets', {
 
         this.facetSetStore.on('load', function () {
             var facetSet = me.facetSetStore.getAt(0);
+            if (!facetSet) {
+                Taco.app.fireEvent('setmessage', 'No facet set found!', 'error')
+                return;
+            }
             var configuredFacetsStore = me.configuredFacetsStore = facetSet.getConfigured(),
                 availableFacetsStore = facetSet.getAvailable(),
                 thisCategoryId = me.record.get('id');
@@ -63,7 +67,7 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                 model: 'Taco.model.Facet'
             });
             inheritedFacetsStore.add(configuredFacetsStore.queryBy(function (record, id) {
-                return thisCategoryId !== record.get('id');
+                return thisCategoryId !== record.get('categoryId');
             }).getRange());
 
             configuredFacetsStore.filter("categoryId", thisCategoryId);
@@ -123,7 +127,7 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                         '</tpl>',
                         '<span class="x-boundlist-item-action x-boundlist-item-close">Close </span>',
                     '</span>',
-                    '<div class="x-facet-ranges"></div>',
+                    '<div class="x-facet-ranges" data-for-sourceid="{sourceId}" ></div>',
                     '<tpl if="!isvalid">',
                         '<p class="x-facet-validityreason">{validityCode}</p>',
                     '</tpl>'
@@ -134,19 +138,35 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                                     configuredFacetsStore.remove(record);
                                     break;
                                 case 'settings':
-                                    var eItem = Ext.get(item),
-                                        rId = record.get('id'),
+                                    var rId = record.get('sourceId'),
                                         rangeQueryForm = me.rangeQueryForms[rId];
-                                    if (!rangeQueryForm) rangeQueryForm = me.rangeQueryForms[rId] = Ext.widget('taco.rangequeryform', {
-                                        record: record,
-                                        renderTo: eItem.down('.x-facet-ranges')
-                                    });
+                                    if (!rangeQueryForm) {
+                                        rangeQueryForm = me.rangeQueryForms[rId] = Ext.widget('taco.rangequeryform', {
+                                            record: record,
+                                            renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]')
+                                        });
+                                        me.form.forms.push(rangeQueryForm);
+                                    }
                                     if (rangeQueryForm.isHidden()) { rangeQueryForm.show() } else { rangeQueryForm.hide(); }
                                     break;
                             }
                         }
                     }
+                },
+                listeners: {
+                    drop: function () {
+                        for (var rId in me.rangeQueryForms) {
+                            var wasHidden = me.rangeQueryForms[rId].isHidden();
+                            me.rangeQueryForms[rId].destroy();
+                            me.rangeQueryForms[rId] = Ext.widget('taco.rangequeryform', {
+                                hidden: wasHidden,
+                                record: configuredFacetsStore.find('sourceId',rId),
+                                renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]')
+                            });
+                        }
+                    }
                 }
+                
             });
             me.configuredFacetsView.boundList.selectedItemCls = 'dummy';
             me.form.add([me.availableFacetsDropdown, me.inheritedFacetsView, me.configuredFacetsView]);
