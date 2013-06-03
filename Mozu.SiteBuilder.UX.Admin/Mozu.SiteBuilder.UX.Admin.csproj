@@ -478,8 +478,6 @@
     <Compile Include="Api\RolesController.cs" />
     <Compile Include="Api\PermissionsController.cs" />
     <Compile Include="Api\AccountController.cs" />
-    <Compile Include="Api\ProductOptionsController.cs" />
-    <Compile Include="Api\ProductPropertyController.cs" />
     <Compile Include="Api\ProductVariationController.cs" />
     <Compile Include="Api\ShippingController.cs" />
     <Compile Include="Api\SiteDirectoryController.cs" />

@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var serverFacets = ((await _facetWebApiClient.GetFacetCategoryList(set.CategoryId)).ReadAsSync().Configured ?? new List<DC.Facet>()).Where(x => x.CategoryId == set.CategoryId).ToList();
 
             var newFacets = facets.Where(x => !x.FacetId.HasValue).Select(x => _facetWebApiClient.AddFacet(x)).ToList();
-            var updateFacets = facets.Where(x => x.FacetId.HasValue).Select(x => _facetWebApiClient.UpdateFacet( x, x.FacetId)).ToList();
+          //  var updateFacets = facets.Where(x => x.FacetId.HasValue).Select(x => _facetWebApiClient.UpdateFacet( x, x.FacetId)).ToList();
             var deleteFacets = serverFacets.Where(x => !facets.Any(y => x.FacetId == y.FacetId)).Select(x=>_facetWebApiClient.DeleteFacetById( x.FacetId )).ToList();
 
             if (newFacets.Count > 0)
@@ -62,10 +62,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 await  Task.WhenAll(newFacets);
             }
 
-            if (updateFacets.Count > 0)
-            {
-               // await  Task.WhenAll(updateFacets);
-            }
+            //if (updateFacets.Count > 0)
+            //{
+            //    await  Task.WhenAll(updateFacets);
+            //}
 
             if (deleteFacets.Count > 0)
             {
