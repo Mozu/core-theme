@@ -18,6 +18,9 @@ Ext.define('Taco.model.FacetSource', {
         type: 'string',
         useNull: true,
         defaultValue: []
+    }, {
+        name: 'allowsRangeQuery',
+        type: 'boolean'
     }
     ],
     idProperty: 'sourceId'

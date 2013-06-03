@@ -717,8 +717,11 @@
     <Content Include="Scripts\app\view\option\EditModal.js" />
     <Content Include="Scripts\app\view\option\Form.js" />
     <Content Include="Scripts\app\view\site\navigation\PageCreator.js" />
+    <Content Include="Scripts\app\view\site\page\FacetRangeQueryGroup.js" />
     <Content Include="Scripts\app\view\site\page\Form.js" />
     <Content Include="Scripts\app\view\site\page\settings\CategoryTemplates.js" />
+    <Content Include="Scripts\app\view\site\page\FacetRangeQuery.js" />
+    <Content Include="Scripts\app\view\site\page\FacetRangeQueryForm.js" />
     <Content Include="Scripts\app\view\site\Toolbar.js" />
     <Content Include="Scripts\app\view\site\page\PageSettingsPanel.js" />
     <Content Include="Scripts\app\view\site\page\settings\Facets.js" />

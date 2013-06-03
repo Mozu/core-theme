@@ -22,6 +22,9 @@ Ext.define('Taco.model.Facet', {
         type: 'string',
         useNull: true
     }, {
+        name: 'allowsRangeQuery',
+        type: 'boolean'
+    }, {
         name: 'facetType',
         type: 'string',
         useNull: true
