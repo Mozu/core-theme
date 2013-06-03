@@ -4,6 +4,7 @@
 Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.view.site.page.FacetRangeQueryGroup'],
+    cls: Taco.baseCSSPrefix + 'rangequeryform',
     xtype: 'taco.rangequeryform',
     header: false,
     hidden: true,
@@ -28,6 +29,7 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
             ]
         });
         me.numRanges = Ext.widget('selectfield', {
+            forceSelection: true,
             fieldLabel: 'Number of ranges',
             labelAlign: 'left',
             store: [
@@ -38,6 +40,11 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
                 7
             ],
             value: 5
+            //setValue: function (v) {
+            //    var args = Array.prototype.slice.call(arguments, 1);
+            //    args.unshift(v || 5);
+            //    this.callParent(args);
+            //}
         });
         me.rangeQueries = Ext.widget('taco.rangequerygroup', {
             xtype: 'taco.rangequerygroup',
@@ -59,7 +66,9 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
             }
         });
         me.rangeQueries.relayEvents(me.numRanges, ['select']);
-        me.rangeQueries.fireEvent('select', me.numRanges);
+        me.rangeQueries.on('change', function (rqs, nV) {
+            me.numRanges.setValue(Math.max(nV.length, 3));
+        });
         //me.displayStyle.fireEvent('change', me.displayStyle, me.displayStyle.getValue());
     }
 });

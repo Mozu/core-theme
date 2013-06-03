@@ -24,7 +24,7 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
     initComponent: function () {
         var me = this;
         me.startField = Ext.widget('textfield', {
-            width: 60,
+            width: 90,
             flex: 0,
             defaultValue: null,
             initComponent: function () {
@@ -33,8 +33,9 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
                 this.on('blur', function () {
                     if (me.first) return;
                     var val = this.getValue();
-                    var prevField = me.getPreviousField(),
-                        prevVal = prevField.endField.getValue();
+                    var prevField = me.getPreviousField();
+                    if (!prevField) return;
+                    var prevVal = prevField.endField.getValue();
                     if ((!prevVal && prevVal !== 0) && prevField.endField.inputEl.dom == document.activeElement) {
                         prevField.endField.setValue(val);
                     }
@@ -44,7 +45,7 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
             }
         });
         me.endField = Ext.widget('textfield', {
-            width: 60,
+            width: 90,
             flex: 0,
             defaultValue: null,
             initComponent: function () {
@@ -53,8 +54,9 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
                 this.on('blur', function () {
                     if (me.last) return;
                     var val = this.getValue();
-                    var nextField = me.getNextField(),
-                        nextVal = nextField.startField.getValue();
+                    var nextField = me.getNextField();
+                    if (!nextField) return;
+                    var nextVal = nextField.startField.getValue();
                     if ((!nextVal && nextVal !== 0) && nextField.startField.inputEl.dom == document.activeElement) {
                         nextField.startField.setValue(val);
                     }
