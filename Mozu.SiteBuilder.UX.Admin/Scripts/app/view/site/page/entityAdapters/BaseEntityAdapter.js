@@ -28,7 +28,7 @@ Ext.define('Taco.view.site.page.entityAdapters.BaseEntityAdapter', {
     isDirty:function() {
         return false;
     },
-	initSaveTasks: Ext.emptyFn,
+    addSaveTasks: Ext.emptyFn,
 	unload: Ext.emptyFn,
 	set:function(model, add){
 		this.isLoading= false;
