@@ -9,6 +9,11 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
 
     requires: ['Taco.core.ux.form.Form'],
     cls: Taco.baseCSSPrefix + 'card-flex ' + Taco.baseCSSPrefix + 'navigation ' + Taco.baseCSSPrefix + 'pagesettings',
+
+    applyChanges: function() {
+        this.form.updateForm();
+    },
+
     initComponent: function () {
         var me = this;
         if (!this.form || !this.record) return Ext.Error.raise('Instance of PageSettingsPanel requires a .form configuration. and a record.');
@@ -19,6 +24,8 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
         }
 
         this.form.header = false;
+
+        this.form.cls = Taco.baseCSSPrefix + "pagesettings-form";
 
         this.tbar = [{
             xtype: 'action',
@@ -63,9 +70,7 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
             text: 'Apply',
             itemId: 'pageSettingsPanelDirtyButton',
             listeners: {
-                click: function () {
-                    this.form.updateForm();
-                },
+                click: this.applyChanges,
                 scope: this
             }
         }];
@@ -76,7 +81,7 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
         this.form.on({
             savablestatechange: function (form, isSavable) {
                 //debugger
-                this.dirtyButton = this.dockedItems.items[1].items.items[2];
+                this.dirtyButton = this.dirtyButton || this.dockedItems.items[1].items.items[2]; // TODO: wat
                 this.dirtyButton.setDirty(isSavable);
             },
             savesuccess: function() {

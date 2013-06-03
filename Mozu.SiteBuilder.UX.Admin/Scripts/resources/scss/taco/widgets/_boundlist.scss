@@ -53,18 +53,20 @@
     }
   }
 
-  .#{$prefix}boundlist-draggable .#{$prefix}boundlist-item {
-    @include flexbox(row, nowrap, flex-start, center, center);
-
-    padding: 3px 4px;
-
+  .#{$prefix}boundlist-draggable .#{$prefix}boundlist-item, .#{$prefix}boundlist-undraggable .#{$prefix}boundlist-item {
+    padding: 0;
     margin: 0 0 3px;
+    .#{$prefix}boundlist-item-contents {
+        @include flexbox(row, nowrap, flex-start, center, center);
 
-    > * {
-        @include flex(0);
-    }
-    .#{$prefix}boundlist-item-content {
-        @include flex(1);
+        padding: 3px 4px;
+
+        > * {
+            @include flex(0);
+        }
+        .#{$prefix}boundlist-item-content {
+            @include flex(1);
+        }
     }
   }
 
