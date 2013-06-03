@@ -29,7 +29,7 @@
         float: left;
         font-size: px-to-rem(20);
       }
-
+	   
       select{
         float:right;
         width: px-to-rem(200);
@@ -111,15 +111,15 @@
       float: left;
       width: 19%;
       border-width: 0px;
-      border-right: px-to-rem(2);//2px;
+      border-right: px-to-rem(2);
       border-style: dashed;
       border-color: lightgray;
-      margin-left: px-to-rem(3);//3px;
-      margin-top: px-to-rem(14);//14px;
-      margin-bottom: px-to-rem(14);//14px;
-      padding-left: px-to-rem(10);//10px;
+      margin-left: px-to-rem(3);
+      margin-top: px-to-rem(14);
+      margin-bottom: px-to-rem(14);
+      padding-left: px-to-rem(10);
       div:nth-child(n){
-        margin-bottom: px-to-rem(5);//5px;
+        margin-bottom: px-to-rem(5);
       };
       .#{$vprefix}item-header{
         //font-weight: bold;
@@ -166,14 +166,14 @@
       float: left;
       height: 100%;
       width: 362px;//28%;//width: 37.8%;
-      overflow-y:scroll;
+      //overflow-y:scroll;
       background: white;
       border: px-to-rem(1);
       border-style: solid;
       border-color: lightgray;
       margin: px-to-rem(12);
       //border-radius: px-to-rem(5);
-      padding: px-to-rem(9);
+      //padding: px-to-rem(9);
 
       hr{
         border: 0px;
@@ -236,12 +236,19 @@
 			border-style: solid;
 			border-color: lightgray;
 			margin-bottom: px-to-rem(7);
-			padding-top:px-to-rem(2);
+			padding-top:px-to-rem(9);
 			padding-bottom: px-to-rem(10);
-			padding-left: px-to-rem(5);
+			padding-left: px-to-rem(14);
       color: #333;
       font-size: 14px;
     }
+
+    .#{$vprefix}home-page-item-body{
+      overflow-y: scroll;
+      height: 100%;
+      padding: .9rem;      
+    }
+
 
     //Classes for images
     $dashboard-map: sprite-map('dashboard/*.png') /* syntax highlighting bug */;

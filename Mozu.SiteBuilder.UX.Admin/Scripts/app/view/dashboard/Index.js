@@ -69,8 +69,8 @@
 "           <div class='taco-home-page-medium-item taco-home-page-sales'></div>"+
 "           <div class='taco-home-page-medium-item taco-home-page-customers'></div>"+
 "           <div class='taco-home-page-medium-item'>"+
-"           <div class='taco-home-page-item-header taco-home-page-item-header-main'>QUICK LINKS</div>"+
-
+"           <div class='taco-home-page-item-header taco-home-page-item-header-main'>QUICK LINKS</div>" +
+"           <div class='taco-home-page-item-body'>"+
 "           <div class='taco-home-page-item-header'>Manage Sites</div>" + 
 //repeat this part
 "               <tpl for='store'>"+
@@ -95,7 +95,8 @@
 "                       </li>"+
 "                   </ul>"+
 "               </tpl>"+
-//stop repeat here for web sites  
+//stop repeat here for web sites 
+"       </div>"+
 "       </div>"+
 "       </div>"+
 "       <div class='taco-home-page-row-small'>"+
