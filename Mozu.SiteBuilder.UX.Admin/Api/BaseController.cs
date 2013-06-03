@@ -106,16 +106,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(default(List<T>));
         }
 
-        public Task<Response<List<T>, VariantMetaData>> ListWithMetaData<T>(List<T> list, VariantMetaData metaData, int? total = null)
-        {
-            return Task<Response<List<T>, VariantMetaData>>.Factory.StartNew(() => new Response<List<T>, VariantMetaData>()
-            {
-                Items = list,
-                Success = true,
-                Total = total ?? (list == null ? 0 : list.Count),
-                MetaData = metaData,
-            });
-        }
+        //public Task<Response<List<T>, VariantMetaData>> ListWithMetaData<T>(List<T> list, VariantMetaData metaData, int? total = null)
+        //{
+        //    return Task<Response<List<T>, VariantMetaData>>.Factory.StartNew(() => new Response<List<T>, VariantMetaData>()
+        //    {
+        //        Items = list,
+        //        Success = true,
+        //        Total = total ?? (list == null ? 0 : list.Count),
+        //        MetaData = metaData,
+        //    });
+        //}
 
         [Obsolete]
         public Task<Response<List<T>>> FailureList<T>(string errorMessage)

@@ -64,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (updateFacets.Count > 0)
             {
-                await  Task.WhenAll(updateFacets);
+               // await  Task.WhenAll(updateFacets);
             }
 
             if (deleteFacets.Count > 0)
