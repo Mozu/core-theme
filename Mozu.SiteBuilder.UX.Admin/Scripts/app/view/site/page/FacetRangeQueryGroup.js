@@ -14,6 +14,7 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
         });
     },
     setValue: function(rawRq) {
+        this.fireEvent('change', this, rawRq, this.getValue());
         Ext.defer(function () {
             this.items.each(function (rq) {
                 if (!rq.isHidden()) rq.setValue(rawRq.shift());

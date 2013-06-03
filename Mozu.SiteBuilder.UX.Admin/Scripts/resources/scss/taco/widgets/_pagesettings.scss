@@ -30,4 +30,11 @@
         padding: 1rem;
 		padding-left: 1.5rem;
     }
+
+    .#{$vprefix}rangequeryform {
+        padding: 1rem;
+        .#{$prefix}form-item {
+            font-weight: normal;
+        }
+    }
 }
