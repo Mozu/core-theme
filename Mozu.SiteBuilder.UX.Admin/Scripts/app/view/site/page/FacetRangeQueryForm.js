@@ -7,9 +7,9 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
     xtype: 'taco.rangequeryform',
     header: false,
     hidden: true,
-    items: [
-        {
-            xtype: 'radiogroup',
+    initComponent: function () {
+        var me = this;
+        me.displayStyle = Ext.widget('radiogroup', {
             fieldLabel: 'Display Style',
             labelAlign: 'left',
             columns: 2,
@@ -26,9 +26,8 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
                     checked: true
                 }
             ]
-        },
-        {
-            xtype: 'selectfield',
+        });
+        me.numRanges = Ext.widget('selectfield', {
             fieldLabel: 'Number of ranges',
             labelAlign: 'left',
             store: [
@@ -38,19 +37,29 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
                 6,
                 7
             ],
-            value: 5,
-            itemId: 'numRanges'
-        },
-        {
+            value: 5
+        });
+        me.rangeQueries = Ext.widget('taco.rangequerygroup', {
             xtype: 'taco.rangequerygroup',
-            itemId: 'rangeQueries'
-        }
-    ],
-    initComponent: function () {
+            name: 'rangeQueries'
+        });
+        this.items = [
+            me.displayStyle,
+            me.numRanges,
+            me.rangeQueries
+        ];
         this.callParent(arguments);
-        var numRanges = this.down('#numRanges'),
-            rangeQueries = this.down('#rangeQueries');
-        rangeQueries.relayEvents(numRanges, ['select']);
-        rangeQueries.fireEvent('select', numRanges);
+        me.displayStyle.on('change', function (rg, newValue) {
+            if (newValue.facetType == "RangeQuery") {
+                me.numRanges.show();
+                me.rangeQueries.show();
+            } else {
+                me.numRanges.hide();
+                me.rangeQueries.hide();
+            }
+        });
+        me.rangeQueries.relayEvents(me.numRanges, ['select']);
+        me.rangeQueries.fireEvent('select', me.numRanges);
+        //me.displayStyle.fireEvent('change', me.displayStyle, me.displayStyle.getValue());
     }
 });

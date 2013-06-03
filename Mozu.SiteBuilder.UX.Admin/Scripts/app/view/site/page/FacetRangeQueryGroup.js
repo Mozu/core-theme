@@ -7,8 +7,22 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
     requires: ['Taco.view.site.page.FacetRangeQuery'],
     xtype: 'taco.rangequerygroup',
     defaultType: 'taco.rangequery',
+    mixins: ['Ext.form.field.Field'],
+    getValue: function() {
+        return this.items.collect(function (rq) {
+            return rq.isHidden() ? null : rq.getValue();
+        });
+    },
+    setValue: function(rawRq) {
+        Ext.defer(function () {
+            this.items.each(function (rq) {
+                if (!rq.isHidden()) rq.setValue(rawRq.shift());
+            });
+        }, 200, this);
+    },
 
     initComponent: function () {
+        this.defaults = { parentQueryGroup: this };
         this.callParent(arguments);
         var itemsToShowOrHide = this.items.getRange(2, 5); // the four middle ones.
         this.on('select', function (numRanges) {
