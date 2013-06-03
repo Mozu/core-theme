@@ -3,6 +3,7 @@
   .#{$vprefix}order-detail-header {
     background-color: $color-neutral-white;
     border: 1px solid border-for($color-neutral-95);
+    margin-bottom: 20px;
     // width: 960px;
     @include flexbox;
   }

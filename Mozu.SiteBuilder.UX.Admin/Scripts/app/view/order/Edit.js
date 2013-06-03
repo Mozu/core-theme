@@ -92,20 +92,22 @@ Ext.define('Taco.view.order.Edit', {
         }, this);
 
         Ext.apply(me.body, {
-            items: [
-                this.cardNav,
-                {
-                    xtype:"panel",
-                    margin: "0 0 0 200 ",
-                    items: [
-                        this.orderHeader,
-                        this.orderDetail,
-                        this.orderPayment
-                    
-                    ]
-                }
-            ],
-            layout: { type: 'auto' },
+            items: [{
+                xtype: 'panel',
+                manageHeight: false,
+                items: [
+                    this.orderHeader,
+                    this.orderDetail,
+                    this.orderPayment
+                ],
+                dockedItems: [{
+                    xtype: 'container',
+                    dock: 'left',
+                    width: 200,
+                    items: this.cardNav
+                }]
+            }],
+            layout: { type: 'vbox', align: 'stretch' },
             cls: Taco.baseCSSPrefix + 'content-body ' + Taco.baseCSSPrefix + 'orderform'
         });
 
