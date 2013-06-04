@@ -143,7 +143,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                
             };
             this.SiteContext.PageContext.PageType = "category";
-            SiteContext.PageContext.CategoryId = "-1";
+            SiteContext.PageContext.CategoryId = -1;
             cat.ChildrenCategories = catList.Where(x => x.ParentCategory == null).ToList();
             return View("Category", cat);
         }
@@ -154,7 +154,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<ActionResult> Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null )
         {
             _ctx.PageContext.PageType = "category";
-            _ctx.PageContext.CategoryId = categoryId.ToString();
+            _ctx.PageContext.CategoryId = categoryId;
             var catList = _ctx.CatalogContext.AllCategories;
 
 

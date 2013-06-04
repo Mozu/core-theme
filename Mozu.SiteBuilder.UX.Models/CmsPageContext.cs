@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.Mvc.Cms
        [DataMember(Name = "productCode")]
        public string ProductCode { get; set; }
        [DataMember(Name = "categoryId")]
-       public string CategoryId { get; set; }
+       public int? CategoryId { get; set; }
        [DataMember(Name = "pageStem")]
        public string PageStem { get; set; }
        [DataMember(Name = "pageType")]
