@@ -76,14 +76,15 @@ Ext.define('Taco.view.site.page.Form', {
                 scope: this
             }
         });
-        this.categories = Ext.create('Taco.store.Categories', {
-            listeners: {
-                add: this.onFormStateChange,
-                datachanged: this.onFormStateChange,
-                update: this.onFormStateChange,
-                scope: this
-            }
+        this.categories = Taco.core.data.StoreManager.getOrCreate('Taco.store.Categories');
+
+        this.mon(this.categories, {
+            add: this.onFormStateChange,
+            datachanged: this.onFormStateChange,
+            update: this.onFormStateChange,
+            scope: this
         });
+
 
         this.stores = [this.widgets, this.cmsDocs, this.products, this.categories];
 
