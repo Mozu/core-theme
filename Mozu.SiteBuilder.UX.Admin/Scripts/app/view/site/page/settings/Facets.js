@@ -92,12 +92,13 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                     cls: 'x-boundlist-undraggable',
                     itemTpl: new Ext.XTemplate(
                         '<span class="x-boundlist-item-contents">',
+                            '<span class="x-boundlist-item-drag">Drag </span>',
                             '<span class="x-boundlist-item-content">',
                                 '<span class="x-boundlist-item-name">{sourceName}</span>',
                                 '<span class="x-boundlist-item-type">{sourceType}</span>',
                             '</span>',
-                        '</span>',
-                        '<span class="x-boundlist-item-action x-boundlist-item-hide">Hide </span>'
+                            '<span class="x-boundlist-item-action x-boundlist-item-hide">Hide </span>',
+                        '</span>'
                     )
                 }
             });
@@ -175,7 +176,7 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                 }
                 
             });
-            me.configuredFacetsView.boundList.selectedItemCls = 'dummy';
+            me.configuredFacetsView.boundList.selectedItemCls = me.inheritedFacetsView.boundList.selectedItemCls = me.inheritedFacetsView.boundList.overItemCls = 'dummy';
             me.form.add([me.availableFacetsDropdown, me.inheritedFacetsView, me.configuredFacetsView]);
         });
             

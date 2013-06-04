@@ -30,6 +30,10 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
         this.numRanges = numRanges;
     },
 
+    getVisibleFields: function() {
+        return this.items.filterBy(function(q) { return !q.isHidden(); });
+    },
+
     initComponent: function () {
         this.defaults = { parentQueryGroup: this };
         this.callParent(arguments);
@@ -42,12 +46,12 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
         }, this);
     },
     items: [
-        {first: true},
+        {startFieldEmptyText: 'Below', isEnd: true},
         {},
         {hidden: true},
         {hidden: true},
         {},
         {},
-        {last: true}
+        {endFieldEmptyText: 'Above', isEnd: true}
     ]
 });

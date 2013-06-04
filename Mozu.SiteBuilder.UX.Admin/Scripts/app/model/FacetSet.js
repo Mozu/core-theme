@@ -27,7 +27,7 @@ Ext.define('Taco.model.FacetSet', {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.Facet',
             associationKey: 'configured',
-            foreignKey: 'categoryId',
+            foreignKey: 'categoryId2',
             foreignProperty: 'facetSet'
         });
     },
@@ -35,7 +35,7 @@ Ext.define('Taco.model.FacetSet', {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.FacetSource',
             associationKey: 'available',
-            foreignKey: 'categoryId',
+            foreignKey: 'categoryId2',
             foreignProperty: 'facetSet'
         });
     },
