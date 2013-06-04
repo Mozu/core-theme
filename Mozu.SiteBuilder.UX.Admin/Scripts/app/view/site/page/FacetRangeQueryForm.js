@@ -70,6 +70,7 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
             me.numRanges.setValue(nV && nV.length);
         });
         this.callParent(arguments);
+        me.loadRecord(me.record);
         //me.displayStyle.fireEvent('change', me.displayStyle, me.displayStyle.getValue());
     }
 });
