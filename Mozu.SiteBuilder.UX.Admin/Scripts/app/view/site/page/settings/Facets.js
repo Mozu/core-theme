@@ -6,7 +6,7 @@ Ext.define('Taco.view.site.page.settings.Facets', {
     requires: ['Taco.core.ux.form.field.MultiSelect', 'Taco.view.site.page.FacetRangeQueryForm'],
     title: "Facets",
     layout: 'fit',
-
+    cls: Taco.baseCSSPrefix + 'sidebar-modal-facets',
     applyChanges: function () {
         //this.setIndices();
         this.callParent(arguments);

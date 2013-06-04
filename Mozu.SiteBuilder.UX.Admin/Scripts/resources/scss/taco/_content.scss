@@ -99,12 +99,12 @@
       margin: px-to-rem(7) 10px;
 
       &.#{$prefix}item-selected {
-        font-weight: bold;
+        font-weight: bold; 
       }
     }
   }
 
-  .#{$vprefix}sidebar-modal-seo, .#{$vprefix}sidebar-modal-general {
+  .#{$vprefix}sidebar-modal-seo, .#{$vprefix}sidebar-modal-general, .#{$vprefix}sidebar-modal-facets {
     .#{$prefix}toolbar-docked-top{
       border-bottom-width: px-to-rem(1);
       border-bottom-style: solid;
