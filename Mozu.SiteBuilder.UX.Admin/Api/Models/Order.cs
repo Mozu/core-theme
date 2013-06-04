@@ -45,6 +45,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name = "taxTotal")]
         public decimal TaxTotal { get; set; }
 
+        [DataMember(Name = "feeTotal")]
+        public decimal FeeTotal { get; set; }
+
         [DataMember(Name = "total")]
         public decimal Total { get; set; }
 
