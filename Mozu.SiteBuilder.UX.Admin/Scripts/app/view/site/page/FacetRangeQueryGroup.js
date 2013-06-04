@@ -14,30 +14,38 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
         });
     },
     setValue: function(rawRq) {
+        if (!rawRq || !(length in rawRq)) return;
+        if (rawRq.length !== this.numRanges) this.setNumRanges(rawRq.length);
+        this.items.each(function (rq) {
+            if (!rq.isHidden()) rq.setValue(rawRq.shift());
+        });
         this.fireEvent('change', this, rawRq, this.getValue());
-        Ext.defer(function () {
-            this.items.each(function (rq) {
-                if (!rq.isHidden()) rq.setValue(rawRq.shift());
-            });
-        }, 200, this);
+    },
+
+    setNumRanges: function (numRanges) {
+        var val = (numRanges && numRanges > 2 && numRanges < 8 ? numRanges : 5) - 3;
+        Ext.Array.forEach(this.itemsToShowOrHide, function (item, index) {
+            item[val - index < 1 ? 'hide' : 'show']();
+        });
+        this.numRanges = numRanges;
     },
 
     initComponent: function () {
         this.defaults = { parentQueryGroup: this };
         this.callParent(arguments);
-        var itemsToShowOrHide = this.items.getRange(2, 5); // the four middle ones.
-        this.on('select', function (numRanges) {
-            var val = numRanges.getValue() - 3;
-            Ext.Array.forEach(itemsToShowOrHide, function (item, index) {
-                item[val - index < 1 ? 'hide' : 'show']();
-            });
-        });
+        this.numRanges = 5;
+        this.itemsToShowOrHide = this.items.getRange(2, 5); // the four middle ones.
+        this.on('select', function (numRangesPicker) {
+            var newNum = numRangesPicker.getValue();
+            if (newNum != this.numRanges)
+                this.setNumRanges(newNum);
+        }, this);
     },
     items: [
         {first: true},
         {},
-        {},
-        {},
+        {hidden: true},
+        {hidden: true},
         {},
         {},
         {last: true}
