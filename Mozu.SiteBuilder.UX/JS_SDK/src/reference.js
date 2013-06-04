@@ -14,11 +14,12 @@ var ApiReference = (function () {
 
         basicOps: basicOps,
         urls: {
-            "ProductService": defaultHost + 'mozu.ProductRuntime.WebApi/products/',
+            "ProductService": defaultHost + 'mozu.ProductRuntime.WebApi/commerce/catalog/storefront/products/',
             "CartService": defaultHost + 'mozu.Cart.WebApi/commerce/carts/',
-            "UserService": defaultHost + 'mozu.User.WebApi/users/',
-            "OrderService": defaultHost + 'mozu.Order.WebApi/orders/',
-            "SearchService": defaultHost + 'mozu.ProductRuntime.WebApi/productsearch/',
+            "UserService": defaultHost + 'mozu.User.WebApi/platform/user/accounts/',
+            "CustomerService": defaultHost + 'mozu.Customer.WebApi/commerce/customer/accounts',
+            "OrderService": defaultHost + 'mozu.CommerceRuntime.WebApi/commerce/orders',
+            "SearchService": defaultHost + 'mozu.ProductRuntime.WebApi/commerce/catalog/storefront/productsearch',
             "CmsService": defaultHost + 'mozu.Content.WebApi/documents/',
         },
 
@@ -126,10 +127,11 @@ var ApiReference = (function () {
         
 
         'search': {
-            template: '{+SearchService}' + genericQueryTpt,
+            template: '{+SearchService}searchz' + genericQueryTpt,
             shortcutParam: 'q',
             defaultParams: {
-
+                startIndex: 0,
+                pageSize: 25
             },
             collectionOf: 'product'
         },

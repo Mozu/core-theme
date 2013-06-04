@@ -11,12 +11,7 @@ Ext.define('Taco.view.site.page.settings.Facets', {
         //this.setIndices();
         this.callParent(arguments);
     },
-    
-    //setIndices: function() {
-    //    this.configuredFacetsStore.each(function (facet, index) {
-    //        facet.set('order', index);
-    //    });
-    //},
+
 
     initComponent: function () {
         var me = this;
@@ -152,7 +147,7 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                                             record: record,
                                             renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]')
                                         });
-                                        me.form.forms.push(rangeQueryForm);
+                                        //me.form.forms.push(rangeQueryForm);
                                     }
                                     if (rangeQueryForm.isHidden()) { rangeQueryForm.show() } else { rangeQueryForm.hide(); }
                                     break;
@@ -161,8 +156,7 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                     }
                 },
                 listeners: {
-                    // TODO: this needs to be generalized to occur on rerenders
-                    drop: function () {
+                    afterrender: function () {
                         for (var rId in me.rangeQueryForms) {
                             var wasHidden = me.rangeQueryForms[rId].isHidden();
                             me.rangeQueryForms[rId].destroy();
@@ -181,7 +175,11 @@ Ext.define('Taco.view.site.page.settings.Facets', {
         });
             
         this.form = {
-            layout: 'vbox',
+            layout: 'vbox',            beforeSave: function () {
+                Ext.iterate(me.rangeQueryForms, function (sourceId, form) {
+                    form.updateForm();
+                });
+            }
         };
 
         this.callParent(arguments);

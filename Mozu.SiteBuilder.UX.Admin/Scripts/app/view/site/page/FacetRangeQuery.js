@@ -6,9 +6,13 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
     xtype: 'taco.rangequery',
     layout: 'hbox',
     getValue: function() {
+        var rqS = parseInt(this.startField.getValue()),
+            rqE = parseInt(this.endField.getValue());
+        if (isNaN(rqS)) rqS = null;
+        if (isNaN(rqE)) rqE = null;
         return {
-            rangeQueryStart: this.startField.getValue(),
-            rangeQueryEnd: this.endField.getValue()
+            rangeQueryStart: rqS,
+            rangeQueryEnd: rqE
         };
     },
     setValue: function(rq) {
@@ -47,6 +51,7 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
             width: 90,
             flex: 0,
             defaultValue: null,
+            vtype: 'nullableint',
             initComponent: createTextFieldInit(-1,'endField')
         });
         me.endField = Ext.widget('textfield', {
@@ -54,6 +59,7 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
             width: 90,
             flex: 0,
             defaultValue: null,
+            vtype: 'nullableint',
             initComponent: createTextFieldInit(1, 'startField')
         });
         this.items = [
