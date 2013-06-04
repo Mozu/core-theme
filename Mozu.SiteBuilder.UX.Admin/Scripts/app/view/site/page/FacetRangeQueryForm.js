@@ -66,10 +66,13 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
             }
         });
         me.rangeQueries.relayEvents(me.numRanges, ['select']);
-        me.rangeQueries.on('change', function (rqs, nV) {
-            console.log('rq change', this, arguments);
-            me.numRanges.setValue(nV && nV.length);
-            me.savableStateCheck();
+        me.rangeQueries.on({
+            change: function (rqs, nV) {
+                me.savableStateCheck();
+            },
+            select: function (rqs, nV) {
+                me.numRanges.setValue(nV && nV.length);
+            }
         });
         this.callParent(arguments);
         me.loadRecord(me.record);

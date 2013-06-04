@@ -82,10 +82,6 @@ Ext.define('Taco.view.site.page.settings.Facets', {
             configuredFacetsStore.filter("categoryId", thisCategoryId);
 
             configuredFacetsStore.on({
-                datachanged: function () {
-                    // doesn't fire by itself
-                    me.form.fireEvent('savablestatechange', me.form, true);
-                },
                 remove: function (s, record) {
                     availableFacetsStore.add(record.raw);
                 }
@@ -174,10 +170,6 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                 listeners: {
                     drop: me.preserveRangeQueryForms,
                     scope: me
-                },
-                fireEvent: function () {
-                    console.log("configuredfacetsview firing", this, arguments);
-                    Ext.util.Observable.prototype.fireEvent.apply(this, arguments);
                 }
                 
             });
