@@ -11,8 +11,8 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
         if (isNaN(rqS)) rqS = null;
         if (isNaN(rqE)) rqE = null;
         return {
-            rangeQueryStart: rqS,
-            rangeQueryEnd: rqE
+            start: rqS,
+            end: rqE
         };
     },
     setValue: function(rq) {
@@ -20,8 +20,8 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
             this.startField.setValue(null);
             this.endField.setValue(null);
         } else {
-            if (rq.rangeQueryStart !== null) this.startField.setValue(rq.rangeQueryStart)
-            if (rq.rangeQueryEnd !== null) this.endField.setValue(rq.rangeQueryEnd)
+            if (rq.start !== null) this.startField.setValue(rq.start)
+            if (rq.end !== null) this.endField.setValue(rq.end)
         }
     },
     getFieldAt: function(relativeIndex) {
@@ -48,7 +48,7 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
 
         me.startField = Ext.widget('textfield', {
             emptyText: me.startFieldEmptyText,
-            width: 90,
+            width: 91,
             flex: 0,
             defaultValue: null,
             vtype: 'nullableint',
@@ -56,7 +56,7 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
         });
         me.endField = Ext.widget('textfield', {
             emptyText: me.endFieldEmptyText,
-            width: 90,
+            width: 91,
             flex: 0,
             defaultValue: null,
             vtype: 'nullableint',
@@ -72,7 +72,5 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
             me.endField
         ];
         this.callParent(arguments);
-        me.relayEvents(me.startField, ['change']);
-        me.relayEvents(me.endField, ['change']);
     }
 });

@@ -47,9 +47,6 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
             if (newNum != this.numRanges)
                 this.setNumRanges(newNum);
         }, this);
-        this.items.each(function(i) {
-            me.relayEvents(i, ['change']);
-        });
     },
     items: [
         {startFieldEmptyText: 'Below', isEnd: true},
