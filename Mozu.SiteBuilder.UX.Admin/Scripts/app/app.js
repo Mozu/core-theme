@@ -572,7 +572,12 @@ Ext.application({
             },
             num: function (v) {
                 return v !== "" && !isNaN(v);
-            }
+            },
+            numMask: /[\d\.]/,
+            nullableint: function (v) {
+                return v === "" || !isNaN(parseInt(v));
+            },
+            nullableintMask: /\d/
         });
 
         // initiate quicktips

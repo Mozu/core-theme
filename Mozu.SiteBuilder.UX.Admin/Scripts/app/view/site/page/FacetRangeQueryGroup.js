@@ -9,9 +9,11 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
     defaultType: 'taco.rangequery',
     mixins: ['Ext.form.field.Field'],
     getValue: function() {
-        return this.items.collect(function (rq) {
-            return rq.isHidden() ? null : rq.getValue();
+        var ret = [];
+        this.getVisibleFields().each(function (rq, i) {
+            ret[i] = rq.getValue();
         });
+        return ret;
     },
     setValue: function(rawRq) {
         if (!rawRq || !(length in rawRq)) return;
