@@ -8,8 +8,8 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
     getValue: function() {
         var rqS = parseInt(this.startField.getValue()),
             rqE = parseInt(this.endField.getValue());
-        if (isNaN(rqS)) rqS = null;
-        if (isNaN(rqE)) rqE = null;
+        if (isNaN(rqS)) rqS = -1000000;
+        if (isNaN(rqE)) rqE = 1000000;
         return {
             start: rqS,
             end: rqE
@@ -20,8 +20,8 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
             this.startField.setValue(null);
             this.endField.setValue(null);
         } else {
-            if (rq.start !== null) this.startField.setValue(rq.start)
-            if (rq.end !== null) this.endField.setValue(rq.end)
+            if (rq.start !== -1000000 && rq.start !== null) this.startField.setValue(rq.start)
+            if (rq.end !== 1000000 && rq.end !== null) this.endField.setValue(rq.end)
         }
     },
     getFieldAt: function(relativeIndex) {
