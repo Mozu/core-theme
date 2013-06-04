@@ -23,30 +23,12 @@ Ext.define('Taco.core.ContentView' , {
     isContentView: function (obj) {
         return obj instanceof Taco.core.ux.content.Container
     },
-
-    /**
-     * Hide all items but the passed item. The passed item should be a Taco.core.ux.content.Container.
-     * @param  {Taco.core.ux.content.Container} that Item to show.
-     * @return {undefined} 
-     */
-    hideEverythingBut: function (that) {
-        var me = this;
-        me.items.each(function(item, ix, l) {
-            if (me.isContentView(item) && item !== that) {
-                item.hide()
-            }
-        });
+    add:function() {
+        this.removeAll();
+        this.callParent(arguments);
     },
-    destroyEverythingBut: function (that) {
-        var me = this;
-        me.items.each(function(item, ix, l) {
-            if (me.isContentView(item) && item !== that) {
-                
-                Ext.defer(function() { item.destroy(); }, 1);
-                
-            }
-        });
-    }
+   
+   
 
 });
 // Copyright (c) 2012 Volusion, Inc.

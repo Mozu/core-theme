@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
           
             RoleBehavior roleBehavior = null;
-            if (roleId.HasValue )
+            if (roleId.HasValue && roleId.Value > -1 )
             {
                 roleBehavior = await _permissionsRepository.GetRoleBehavior(roleId.Value );
             }

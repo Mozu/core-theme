@@ -211,6 +211,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var result = (await _invitationWebApiClient.CreateInvitation( new AdminUser.Contracts.Invitation(){
                     EmailAddress = invitation.EmailAddress,
+                    UserScopeType =UserScopeType.Tenant.ToString(),
+                    UserScopeId = _apiContext.TenantId ,
                     RoleId = invitation.RoleId 
                     })).ReadAsSync();
                 var newInvitation = Mapper.Map<AdminUser.Contracts.Invitation, Invitation>(result);
@@ -226,7 +228,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "users/list")]
         public async Task<Response<List<AccountUser>>> GetAccountUsers()
         {
-            var admins = (await _adminUserWebApiClient.GetUsers(scopeType :UserScopeType.Tenant.ToString(),scopeId : _apiContext.TenantId )).ReadAsSync().Items;
+            var admins = (await _adminUserWebApiClient.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, startIndex: 0, pageSize: 600, responseGroups: "UserRoles")).ReadAsSync().Items;
             var invites = (await _invitationWebApiClient.GetInvitations(null)).ReadAsSync().Items;
             var invitations = Mapper.Map<List<Invitation>>(invites);
             foreach (var invitation in invitations)
