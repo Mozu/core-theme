@@ -18,7 +18,7 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
     },
 	
     getId: function() {
-        return this.pageProps.pageContext.categoryId;
+        return parseInt(this.pageProps.pageContext.categoryId, 10);
     },
 
 

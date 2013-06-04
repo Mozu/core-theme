@@ -31,8 +31,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "read")]
-        public async Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection, int? nodeQuery= null)
+        public async Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection, int? nodeQuery= null, int? id=null)
         {
+            if (id.HasValue)
+            {
+                var cat = (await _categoriesClient.GetCategory(id)).ReadAsSync();
+                var retList = new List<Category> {Mapper.Map<Category>(cat)};
+                return List2(retList);
+               
+
+            }
             //getting rid of server filtering for now.  all filtering done on the client.
             //if (pagingParams.id == null || 1==1)
             {
