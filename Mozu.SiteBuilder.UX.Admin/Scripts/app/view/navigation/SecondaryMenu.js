@@ -39,7 +39,8 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             xtype: 'action',
             text: 'Search'
            
-        }, {
+        }
+        /*, {
             xtype: 'action',
             text: 'View Storefront',
             click: function () {
@@ -52,7 +53,9 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                     }, this)
                 }
             }
-        }];
+        }
+        */
+        ];
 
         this.callParent(arguments);
     }
