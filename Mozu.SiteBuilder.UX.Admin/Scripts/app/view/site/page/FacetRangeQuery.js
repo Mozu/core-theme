@@ -12,8 +12,13 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
         };
     },
     setValue: function(rq) {
-        if (rq.rangeQueryStart !== null) this.startField.setValue(rq.rangeQueryStart)
-        if (rq.rangeQueryEnd !== null) this.endField.setValue(rq.rangeQueryEnd)
+        if (!rq) {
+            this.startField.setValue(null);
+            this.endField.setValue(null);
+        } else {
+            if (rq.rangeQueryStart !== null) this.startField.setValue(rq.rangeQueryStart)
+            if (rq.rangeQueryEnd !== null) this.endField.setValue(rq.rangeQueryEnd)
+        }
     },
     getNextField: function() {
         return this.parentQueryGroup.items.filterBy(function (q) { return !q.isHidden(); }).getAt(this.parentQueryGroup.items.indexOf(this) + 1);

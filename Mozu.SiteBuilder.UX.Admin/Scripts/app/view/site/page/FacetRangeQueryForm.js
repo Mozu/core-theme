@@ -40,18 +40,22 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
                 7
             ],
             width: 160,
-            value: 5
+            value: 5,
+            setValue: function (v) {
+                var args = Array.prototype.slice.call(arguments, 1);
+                args.unshift(!v || v < 3 ? 5 : v);
+                this.self.prototype.setValue.apply(this, args);
+            }
         });
         me.rangeQueries = Ext.widget('taco.rangequerygroup', {
             xtype: 'taco.rangequerygroup',
-            name: 'rangeQueries'
+            name: 'ranges'
         });
         this.items = [
             me.displayStyle,
             me.numRanges,
             me.rangeQueries
         ];
-        this.callParent(arguments);
         me.displayStyle.on('change', function (rg, newValue) {
             if (newValue.facetType == "RangeQuery") {
                 me.numRanges.show();
@@ -63,8 +67,9 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
         });
         me.rangeQueries.relayEvents(me.numRanges, ['select']);
         me.rangeQueries.on('change', function (rqs, nV) {
-            me.numRanges.setValue(Math.max(nV.length, 3));
+            me.numRanges.setValue(nV && nV.length);
         });
+        this.callParent(arguments);
         //me.displayStyle.fireEvent('change', me.displayStyle, me.displayStyle.getValue());
     }
 });

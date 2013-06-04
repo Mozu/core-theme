@@ -133,13 +133,19 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                     '</tpl>'
                     ),                    listeners: {
                         itemclick: function (list, record, item, index, e) {
+                            var rId;
                             switch (e.target.className.split('-').pop()) {
                                 case 'close':
+                                    rId = record.get('sourceId');
+                                    if (me.rangeQueryForms[rId]) {
+                                        me.rangeQueryForms[rId].destroy();
+                                        delete me.rangeQueryForms[rId];
+                                    }
                                     configuredFacetsStore.remove(record);
                                     break;
                                 case 'settings':
-                                    var rId = record.get('sourceId'),
-                                        rangeQueryForm = me.rangeQueryForms[rId];
+                                    rId = record.get('sourceId');
+                                    var rangeQueryForm = me.rangeQueryForms[rId];
                                     if (!rangeQueryForm) {
                                         rangeQueryForm = me.rangeQueryForms[rId] = Ext.widget('taco.rangequeryform', {
                                             record: record,
@@ -154,6 +160,7 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                     }
                 },
                 listeners: {
+                    // TODO: this needs to be generalized to occur on rerenders
                     drop: function () {
                         for (var rId in me.rangeQueryForms) {
                             var wasHidden = me.rangeQueryForms[rId].isHidden();
