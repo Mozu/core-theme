@@ -376,6 +376,7 @@
     <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
     <Compile Include="Api\Models\ProductModels\ProductLocalizedImage.cs" />
     <Compile Include="Api\Models\ProductModels\ProductProperty.cs" />
+    <Compile Include="Api\Models\ProductModels\ProductVariation.cs" />
     <Compile Include="Api\NavigationController.cs">
       <SubType>Code</SubType>
     </Compile>
