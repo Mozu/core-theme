@@ -12,6 +12,18 @@ Ext.define('Taco.view.site.page.settings.Facets', {
         this.callParent(arguments);
     },
 
+    preserveRangeQueryForms: function() {
+        var me = this;
+        for (var rId in me.rangeQueryForms) {
+            var wasHidden = me.rangeQueryForms[rId].isHidden();
+            me.rangeQueryForms[rId].destroy();
+            me.rangeQueryForms[rId] = Ext.widget('taco.rangequeryform', {
+                hidden: wasHidden,
+                record: this.configuredFacetsStore.find('sourceId',rId),
+                renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]')
+            });
+        }
+    },
 
     initComponent: function () {
         var me = this;
@@ -156,17 +168,14 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                     }
                 },
                 listeners: {
-                    afterrender: function () {
-                        for (var rId in me.rangeQueryForms) {
-                            var wasHidden = me.rangeQueryForms[rId].isHidden();
-                            me.rangeQueryForms[rId].destroy();
-                            me.rangeQueryForms[rId] = Ext.widget('taco.rangequeryform', {
-                                hidden: wasHidden,
-                                record: configuredFacetsStore.find('sourceId',rId),
-                                renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]')
-                            });
-                        }
-                    }
+                    drop: me.preserveRangeQueryForms,
+                    dirtychange: me.preserveRangeQueryForms,
+                    move: me.preserveRangeQueryForms,
+                    scope: me
+                },
+                fireEvent: function () {
+                    console.log("configuredfacetsview firing", this, arguments);
+                    Ext.util.Observable.prototype.fireEvent.apply(this, arguments);
                 }
                 
             });
