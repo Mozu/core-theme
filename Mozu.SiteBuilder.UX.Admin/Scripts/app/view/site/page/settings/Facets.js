@@ -22,6 +22,8 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                 record: this.configuredFacetsStore.find('sourceId',rId),
                 renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]')
             });
+            me.rangeQueryForms[rId].savableState = false;
+            me.form.relayEvents(me.rangeQueryForms[rId],  ['savablestatechange']);
         }
     },
 
@@ -159,6 +161,8 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                                             record: record,
                                             renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]')
                                         });
+                                        rangeQueryForm.savableState = false;
+                                        me.form.relayEvents(rangeQueryForm, ['savablestatechange']);
                                         //me.form.forms.push(rangeQueryForm);
                                     }
                                     if (rangeQueryForm.isHidden()) { rangeQueryForm.show() } else { rangeQueryForm.hide(); }
@@ -169,8 +173,6 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                 },
                 listeners: {
                     drop: me.preserveRangeQueryForms,
-                    dirtychange: me.preserveRangeQueryForms,
-                    move: me.preserveRangeQueryForms,
                     scope: me
                 },
                 fireEvent: function () {

@@ -37,6 +37,7 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
     },
 
     initComponent: function () {
+        var me = this;
         this.defaults = { parentQueryGroup: this };
         this.callParent(arguments);
         this.numRanges = 5;
@@ -46,6 +47,9 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
             if (newNum != this.numRanges)
                 this.setNumRanges(newNum);
         }, this);
+        this.items.each(function(i) {
+            me.relayEvents(i, ['change']);
+        });
     },
     items: [
         {startFieldEmptyText: 'Below', isEnd: true},

@@ -72,5 +72,7 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
             me.endField
         ];
         this.callParent(arguments);
+        me.relayEvents(me.startField, ['change']);
+        me.relayEvents(me.endField, ['change']);
     }
 });
