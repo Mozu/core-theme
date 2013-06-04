@@ -70,7 +70,15 @@
     }
   }
 
-  
+    .#{$prefix}boundlist-undraggable {
+    .#{$prefix}boundlist-item {
+      border-style: dashed;
+      opacity: 0.7;
+    }
+    .#{$prefix}boundlist-item-drag {
+      visibility: hidden;
+    }
+  }
 
   .#{$prefix}boundlist-item-name {
     font-size: px-to-rem(12px);

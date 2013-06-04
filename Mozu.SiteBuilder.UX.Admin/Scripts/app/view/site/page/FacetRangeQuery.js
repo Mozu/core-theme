@@ -20,55 +20,41 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
             if (rq.rangeQueryEnd !== null) this.endField.setValue(rq.rangeQueryEnd)
         }
     },
-    getNextField: function() {
-        return this.parentQueryGroup.items.filterBy(function (q) { return !q.isHidden(); }).getAt(this.parentQueryGroup.items.indexOf(this) + 1);
-    },
-    getPreviousField: function () {
-        return this.parentQueryGroup.items.filterBy(function (q) { return !q.isHidden(); }).getAt(this.parentQueryGroup.items.indexOf(this) - 1);
+    getFieldAt: function(relativeIndex) {
+        var visibleFields = this.parentQueryGroup.getVisibleFields();
+        return visibleFields.getAt(visibleFields.indexOf(this) + relativeIndex);
     },
     initComponent: function () {
-        var me = this;
-        me.startField = Ext.widget('textfield', {
-            width: 90,
-            flex: 0,
-            defaultValue: null,
-            initComponent: function () {
-                if (me.first) this.emptyText = "Below";
+
+        var me = this,
+        createTextFieldInit = function (prevOrNext, endOrBegin) {
+            return function () {
                 this.callParent(arguments);
                 this.on('blur', function () {
-                    if (me.first) return;
-                    var val = this.getValue();
-                    var prevField = me.getPreviousField();
-                    if (!prevField) return;
-                    var prevVal = prevField.endField.getValue();
-                    if ((!prevVal && prevVal !== 0) && prevField.endField.inputEl.dom == document.activeElement) {
-                        prevField.endField.setValue(val);
-                    }
+                    var field = me.getFieldAt(prevOrNext);
+                    if (!field) return;
+                    field = field[endOrBegin];
+                    var prevVal = field.getValue();
+                    if ((!prevVal && prevVal !== 0) && field.inputEl.dom === document.activeElement) field.setValue(this.getValue());
                 }, this, {
                     delay: 200
                 });
             }
+        };
+
+        me.startField = Ext.widget('textfield', {
+            emptyText: me.startFieldEmptyText,
+            width: 90,
+            flex: 0,
+            defaultValue: null,
+            initComponent: createTextFieldInit(-1,'endField')
         });
         me.endField = Ext.widget('textfield', {
+            emptyText: me.endFieldEmptyText,
             width: 90,
             flex: 0,
             defaultValue: null,
-            initComponent: function () {
-                if (me.last) this.emptyText = "Above";
-                this.callParent(arguments);
-                this.on('blur', function () {
-                    if (me.last) return;
-                    var val = this.getValue();
-                    var nextField = me.getNextField();
-                    if (!nextField) return;
-                    var nextVal = nextField.startField.getValue();
-                    if ((!nextVal && nextVal !== 0) && nextField.startField.inputEl.dom == document.activeElement) {
-                        nextField.startField.setValue(val);
-                    }
-                }, this, {
-                    delay: 200
-                });
-            }
+            initComponent: createTextFieldInit(1, 'startField')
         });
         this.items = [
             me.startField,
