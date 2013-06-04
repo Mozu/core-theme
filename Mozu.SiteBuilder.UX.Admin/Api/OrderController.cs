@@ -29,8 +29,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public OrderController(IOrderWebApiClient orderWebApiClient)
         {
             _orderWebApiClient = orderWebApiClient;
-            // _orderWebApiClient = MockByProck();
-            // _customerWebApiClient = MockByProckstomer();
         }
 
         public static List<Order> DoSort<TKey>(List<Order> orders, Func<Order, TKey> keySelector, bool isAscending)
@@ -48,10 +46,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? pageSize = pagingParams.pageSize ?? 20;
             SortingCollectionItem sort = pagingParams.sort == null ? null : pagingParams.sort.FirstOrDefault();
 
-            var dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), "" /* TODO: filter */)).ReadAsSync();
+            DCo.OrderCollection dcOrders = null;
+            try
+            {
+                dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), "" /* TODO: filter */)).ReadAsSync();
+            }
+            catch { } 
 
-            var orders = await GetMock();
-            // var orders2 = Mapper.Map<List<Order>>(dcOrders.Items);
+            var orders1 = await GetMock();
+            var orders2 = dcOrders != null ? Mapper.Map<List<Order>>(dcOrders.Items) : new List<Order>();
+
+            var orders = new List<Order>();
+            orders.AddRange(orders1);
+            orders.AddRange(orders2);
 
             if (sort != null)
             {
@@ -142,9 +149,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 IpAddress = "173.194.46.2",
                 Customer = jsCustomer,
                 Subtotal = 220m,
-                ShippingTotal = 9.48m,
+                ShippingCost = 9.48m,
+                ShippingDescription = "USPS Standard",
+                ShippingDiscount = -5m,
+                ShippingDiscountDescription = "Cheap Shipping SUPER SAVER",
+                ShippingTotal = 4.48m,
                 TaxTotal = 0m,
                 FeeTotal = 0m,
+                AdjustmentDescription = "Friends and family discount",
+                AdjustmentTotal = 10m,
                 Total = 229.48m,
                 CustomerNote = "Please take special care in packaging. Thanks!",
                 Items = new List<OrderItem>

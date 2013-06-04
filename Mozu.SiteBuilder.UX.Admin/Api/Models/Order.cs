@@ -34,24 +34,52 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public decimal Subtotal { get; set; }
 
         /// <summary>
-        /// Total of any order-level discounts.
+        /// Description of order-level discount, if one exists.
         /// </summary>
-        [DataMember(Name = "discountTotal")]
-        public decimal DiscountTotal { get; set; }
+        [DataMember(Name = "orderDiscountDescription", EmitDefaultValue = false)]
+        public decimal OrderDiscountDescription { get; set; }
+
+        /// <summary>
+        /// Value order-level discount, if one exists.
+        /// </summary>
+        [DataMember(Name = "orderDiscountTotal", EmitDefaultValue = false)]
+        public decimal OrderDiscountTotal { get; set; }
+
+        #region Shipping
+        [DataMember(Name = "shippingCost")]
+        public decimal ShippingCost;
+
+        [DataMember(Name = "shippingDescription")]
+        public string ShippingDescription { get; set; }
+
+        [DataMember(Name = "shippingDiscount", EmitDefaultValue = false)]
+        public decimal ShippingDiscount { get; set; }
+
+        [DataMember(Name = "shippingDiscountDescription", EmitDefaultValue = false)]
+        public string ShippingDiscountDescription { get; set; }
 
         [DataMember(Name = "shippingTotal")]
         public decimal ShippingTotal { get; set; }
+        #endregion
 
-        [DataMember(Name = "taxTotal")]
+        #region Taxes, fees, and adjustments
+        [DataMember(Name = "taxTotal", EmitDefaultValue = true)]
         public decimal TaxTotal { get; set; }
 
-        [DataMember(Name = "feeTotal")]
+        [DataMember(Name = "feeTotal", EmitDefaultValue = false)]
         public decimal FeeTotal { get; set; }
+
+        [DataMember(Name = "adjustmentDescription", EmitDefaultValue = false)]
+        public string AdjustmentDescription { get; set; }
+
+        [DataMember(Name = "adjustmentTotal", EmitDefaultValue = false)]
+        public decimal AdjustmentTotal { get; set; }
+        #endregion
 
         [DataMember(Name = "total")]
         public decimal Total { get; set; }
 
-        [DataMember(Name = "customerNote")]
+        [DataMember(Name = "customerNote", EmitDefaultValue = false)]
         public string CustomerNote { get; set; }
 
         #region workflow shit
@@ -64,12 +92,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name = "paymentStatus")]
         public string PaymentStatus { get; set; }
 
+        [Obsolete]
         [DataMember(Name = "availableOrderActions")]
         public List<string> AvailableOrderActions { get; set; }
         #endregion
-
-        public List<string> AvailablePaymentActions { get; set; }
-
-        public List<string> AvailableShipmentActions { get; set; }
     }
 }

@@ -55,6 +55,26 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         }, 
         {
+            "name": "shippingCost",
+            "type": "float",
+            "useNull": true
+        }, 
+        {
+            "name": "shippingDescription",
+            "type": "string",
+            "useNull": true
+        }, 
+        {
+            "name": "shippingDiscount",
+            "type": "float",
+            "useNull": true
+        }, 
+        {
+            "name": "shippingDiscountDescription",
+            "type": "string",
+            "useNull": true
+        }, 
+        {
             "name": "shippingTotal",
             "type": "float",
             "useNull": true
@@ -65,7 +85,17 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         }, 
         {
-            "name": "total",
+            "name": "feeTotal",
+            "type": "float",
+            "useNull": true
+        }, 
+        {
+            "name": "adjustmentDescription",
+            "type": "string",
+            "useNull": true
+        }, 
+        {
+            "name": "adjustmentTotal",
             "type": "float",
             "useNull": true
         }, 
@@ -73,7 +103,7 @@ Ext.define('Taco.model.Order', {
             "name": "total",
             "type": "float",
             "useNull": true
-        },
+        }, 
         {
             "name": "customerNote",
             "type": "string",
