@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using DC = Mozu.ProductAdmin.Contracts;
@@ -29,6 +30,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             _productClient = productClient;
             _productTypeWebApiClient = productTypeWebApiClient;
+        }
+
+        [WebGet(UriTemplate = "read")]
+        public async Task<Response<List<ProductVariation >>> ListProducts([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter,string productCode)
+        {
+            var res = (await _productClient.GetProductVariations(productCode, pagingParams.startIndex, pagingParams.pageSize)).ReadAsSync();
+            var mappedRes = AutoMapper.Mapper.Map<ProductVariation>(res.Items);
+            return this.List2(mappedRes, total: (int)res.TotalCount);
+
         }
     }
 

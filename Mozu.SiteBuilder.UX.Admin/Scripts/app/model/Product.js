@@ -6,7 +6,7 @@
 
 Ext.define('Taco.model.Product', {
     extend: 'Taco.core.data.Model',
-    requires: ['Taco.model.ProductOption', 'Taco.model.ProductProperty', 'Taco.model.ProductExtra', 'Taco.model.ProductVariation','Ext.data.association.HasMany', 'Taco.model.ProductInSiteInfo'],
+    requires: ['Taco.model.ProductOption', 'Taco.model.ProductProperty', 'Taco.model.ProductExtra', 'Taco.model.ProductVariation', 'Ext.data.association.HasMany', 'Taco.model.ProductInSiteInfo', 'Taco.model.ProductVariation'],
     "fields":
   [
     {
@@ -235,6 +235,27 @@ Ext.define('Taco.model.Product', {
     reloadProductInSitesStore: function() {
         this.getProductInSites().loadData(this.get('productInSites'));
     },
+    
+    getVariations: function () {
+        if (this.productVariationStore) {
+            return this.productVariationStore;
+        }
+
+        this.productVariationStore = Ext.create('Ext.data.Store', {
+            model: 'aco.model.ProductVariation',
+            autoLoad: false
+        });
+        this.productVariationStore.load({
+            params: {
+                productCode: this.getId()
+            },
+        });
+
+        return this.productVariationStore;
+    },
+
+
+
     idProperty: 'productCode',
     //hasMany: [
     //    {
