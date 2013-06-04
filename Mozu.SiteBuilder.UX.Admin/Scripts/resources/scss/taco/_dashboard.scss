@@ -166,8 +166,8 @@
       float: left;
       height: 100%;
       width: 362px;//28%;//width: 37.8%;
-      //overflow-y:scroll;
-      background: white;
+      overflow-y:hidden;
+      background: white; 
       border: px-to-rem(1);
       border-style: solid;
       border-color: lightgray;
