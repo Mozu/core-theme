@@ -4,7 +4,7 @@
 Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.view.site.page.FacetRangeQueryGroup'],
-    cls: Taco.baseCSSPrefix + 'rangequeryform',
+    //cls: Taco.baseCSSPrefix + 'rangequeryform',
     xtype: 'taco.rangequeryform',
     header: false,
     hidden: true,
