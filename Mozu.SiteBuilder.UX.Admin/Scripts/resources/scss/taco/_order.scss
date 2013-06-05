@@ -87,6 +87,9 @@
       font-size: px-to-rem(24);
       line-height: px-to-rem(30);
     }
+    .#{$vprefix}editcontainer-menu-button {
+      @include icons-sprite('icon-rowactions');
+    }
   }
 
 }
