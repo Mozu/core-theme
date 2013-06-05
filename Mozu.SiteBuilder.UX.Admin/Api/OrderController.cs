@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), "" /* TODO: filter */)).ReadAsSync();
             }
-            catch { } 
+            catch { }
 
             var orders1 = await GetMock();
             var orders2 = dcOrders != null ? Mapper.Map<List<Order>>(dcOrders.Items) : new List<Order>();
@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             if (pagingParams.id != null)
-                return List2( orders.Where(o => o.Id == pagingParams.id).ToList() );
+                return List2(orders.Where(o => o.Id == pagingParams.id).ToList());
 
             return List2(orders);
         }
@@ -99,7 +99,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Order>>> CapturePayment(string orderId, decimal amount)
         {
             // Possible actions can be "Create," "Capture," "Void," "AuthCapture," or "ReceiveCheck."
-            var action = new DCp.PaymentAction {
+            var action = new DCp.PaymentAction
+            {
                 ActionName = "Capture",
                 ISOCurrencyCode = "USD",
                 Amount = amount
@@ -109,7 +110,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // _orderWebApiClient.payment
             var order = (await _orderWebApiClient.CreatePaymentAction(orderId, action)).ReadAsSync();
 
-            return List2( order.Map<Order>() );
+            return List2(order.Map<Order>());
         }
 
 
@@ -120,18 +121,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private Task<List<Order>> GetMock()
         {
             var allTheOrders = new List<Order>();
-
-            var bfCustomer = new OrderCustomer
-            {
-                Id = "c12345",
-                FirstName = "Ben",
-                LastName = "Franklin",
-                CustomerSince = new DateTime(2011, 01, 01),
-                TotalOrders = 1,
-                TotalSpent = 99.05m,
-                Groups = new List<string>()
-            };
-
 
             var jsCustomer = new OrderCustomer
             {
@@ -146,41 +135,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Groups = new List<string> { "VIP", "Coupon User" }
             };
 
-            allTheOrders.Add(new Order
-            {
-                Id = "o123",
-                OrderNumber = 12,
-                CreateDate = new DateTime(2013, 03, 22),
-                IpAddress = "127.0.0.1",
-                Customer = bfCustomer,
-                Total = 99.05m,
-                OrderStatus = "Processing",
-                ShippingStatus = "Partial Ship",
-                PaymentStatus = "Paid",
-                AvailableOrderActions = new List<string>()
-            });
-
-            allTheOrders.Add(new Order
-            {
-                Id = "o124",
-                OrderNumber = 107363,
-                CreateDate = new DateTime(2013, 03, 18),
-                IpAddress = "173.194.46.2",
-                Customer = jsCustomer,
-                Subtotal = 220m,
-                ShippingCost = 9.48m,
-                ShippingDescription = "USPS Standard",
-                ShippingDiscount = -5m,
-                ShippingDiscountDescription = "Cheap Shipping SUPER SAVER",
-                ShippingTotal = 4.48m,
-                TaxTotal = 0m,
-                FeeTotal = 0m,
-                AdjustmentDescription = "Friends and family discount",
-                AdjustmentTotal = 10m,
-                Total = 229.48m,
-                CustomerNote = "Please take special care in packaging. Thanks!",
-                Items = new List<OrderItem>
-                {
+            var items = new List<OrderItem> {
                     new OrderItem {
                         Id = "i123",
                         ProductCode = "HOBO-LL",
@@ -205,32 +160,100 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         Subtotal = 60m,
                         Total = 60m
                     }
-                },
-                Payments = new List<OrderPayment>
-                {
+            };
+
+            var order_template = new Order
+            {
+                Id = "o124",
+                OrderNumber = 107363,
+                CreateDate = new DateTime(2013, 03, 18),
+                IpAddress = "173.194.46.2",
+                Customer = jsCustomer,
+                Subtotal = 220m,
+                ShippingCost = 9.48m,
+                ShippingDescription = "USPS Standard",
+                ShippingDiscount = -5m,
+                ShippingDiscountDescription = "Cheap Shipping SUPER SAVER",
+                ShippingTotal = 4.48m,
+                TaxTotal = 0m,
+                FeeTotal = 0m,
+                AdjustmentDescription = "Friends and family discount",
+                AdjustmentTotal = 10m,
+                Total = 229.48m,
+                CustomerNote = "Please take special care in packaging. Thanks!",
+                Items = items,
+                Payments = new List<OrderPayment>()
+            };
+
+
+            var order_authorized_only = order_template.Clone<Order>();
+            order_authorized_only.Id = "o1001";
+            order_authorized_only.Customer.FirstName = "Authorized";
+            order_authorized_only.Payments = new List<OrderPayment> {
                     new OrderPayment {
                         Id = "337", 
-                        AmountCollected = 100m, 
+                        Status = "Authorized",
+                        AmountCollected = 0m, 
+                        PaymentType = "CreditCard", 
+                        CardType = "Visa", 
+                        CardNumber="xxxx-xxxx-xxxx-1111", 
+                        TransactionId = "00158221"
+                    }
+            };
+            allTheOrders.Add(order_authorized_only);
+
+            var order_paid_in_full = order_template.Clone<Order>();
+            order_paid_in_full.Id = "o1002";
+            order_paid_in_full.Customer.FirstName = "Paid";
+            order_paid_in_full.Customer.LastName = "In Full";
+            order_paid_in_full.Payments = new List<OrderPayment> {
+                new OrderPayment {
+                    Id = "340",
+                    Status = "Paid",
+                    AmountCollected = 229.48m,
+                    PaymentType = "CreditCard",
+                    CardType = "Visa",
+                    CardNumber="xxxx-xxxx-xxxx-1111", 
+                    TransactionId = "00158555"
+                }
+            };
+            allTheOrders.Add(order_paid_in_full);
+
+            var order_partial_payment = order_template.Clone<Order>();
+            order_partial_payment.Id = "o1003";
+            order_partial_payment.Customer.FirstName = "Partial";
+            order_partial_payment.Customer.LastName = "Payment";
+            order_partial_payment.Payments = new List<OrderPayment> {
+                    new OrderPayment {
+                        Id = "337", 
+                        Status = "Authorized",
+                        AmountCollected = 0m, 
                         PaymentType = "CreditCard", 
                         CardType = "Visa", 
                         CardNumber="xxxx-xxxx-xxxx-1111", 
                         TransactionId = "00158221"
                     },
                     new OrderPayment {
-                            Id = "339", 
+                            Id = "339",
+                            Status = "Paid",
                             AmountCollected = 129.48m, 
                             PaymentType = "CreditCard", 
                             CardType = "Visa", 
                             CardNumber="xxxx-xxxx-xxxx-1111", 
                             TransactionId = "00158555"
                     }
-                }
-            });
+            };
+            allTheOrders.Add(order_partial_payment);
 
             var taskResult = new TaskCompletionSource<List<Order>>();
             taskResult.SetResult(allTheOrders);
 
             return taskResult.Task;
+        }
+
+        private Order DeepCopyOrder(Order o)
+        {
+            return o.Clone<Order>();
         }
     }
 }
