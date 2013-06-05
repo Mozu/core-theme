@@ -4,7 +4,6 @@
     background-color: $color-neutral-white;
     border: 1px solid border-for($color-neutral-95);
     margin-bottom: 20px;
-    // width: 960px;
     @include flexbox;
   }
 
@@ -70,6 +69,23 @@
       padding-right: 30px;
       width: 290px;
       @include flex(1, 0, 290px);
+    }
+  }
+
+  .#{$vprefix}order-subform {
+    background-color: $color-neutral-white;
+    border: 1px solid border-for($color-neutral-95);
+    margin-top: 20px;
+    padding: 39px;
+
+    .#{$vprefix}editcontainer-header {
+      border-bottom: 1px solid border-for($color-neutral-95);
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+    }
+    .#{$vprefix}editcontainer-title {
+      font-size: px-to-rem(24);
+      line-height: px-to-rem(30);
     }
   }
 
