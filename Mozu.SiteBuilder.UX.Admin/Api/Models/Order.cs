@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         /// Description of order-level discount, if one exists.
         /// </summary>
         [DataMember(Name = "orderDiscountDescription", EmitDefaultValue = false)]
-        public decimal OrderDiscountDescription { get; set; }
+        public string OrderDiscountDescription { get; set; }
 
         /// <summary>
         /// Value order-level discount, if one exists.
