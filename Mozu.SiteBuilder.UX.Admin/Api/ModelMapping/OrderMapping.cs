@@ -35,7 +35,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ShippingStatus, op => op.MapFrom(dc => dc.ShipmentStatus))
                 .ForMember(x => x.PaymentStatus, op => op.MapFrom(dc => dc.PaymentStatus))
                 .ForMember(x => x.Payments, op => op.MapFrom(dc => dc.Payments))
-                //.ForMember(x => x.Payments, op => op.MapFrom(dc => dc.Payments.First().
                 // .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.ShippingInfo.
                 //.ForMember(x => x.AvailableOrderActions, op => op.MapFrom(dc => dc.AvailableOrderActions))
                 //.ForMember(x => x.AvailablePaymentActions, op => op.MapFrom(dc => dc.AvailablePaymentActions))
@@ -76,6 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<PaymentsDC.Payment, OrderPayment>()
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
                 .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
+                .ForMember(x => x.TransactionDate, op => op.MapFrom(dc => dc.CreateDate))
                 .ForMember(x => x.AmountCollected, op => op.MapFrom(dc => dc.AmountCollected))
                 .ForMember(x => x.AmountCredited, op => op.MapFrom(dc => dc.AmountCredited))
                 .ForMember(x => x.PaymentType, op => op.MapFrom(dc => dc.PaymentType))

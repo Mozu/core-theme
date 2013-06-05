@@ -135,33 +135,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Groups = new List<string> { "VIP", "Coupon User" }
             };
 
-            var items = new List<OrderItem> {
-                    new OrderItem {
-                        Id = "i123",
-                        ProductCode = "HOBO-LL",
-                        ProductName = "Slouchy leather... lace hobo",
-                        UnitPrice = 90m,
-                        Quantity = 2,
-                        Subtotal = 180m,
-                        Discount = new OrderItemDiscount {
-                            Description = "$10 off all leather bags",
-                            UnitPrice = 10m,
-                            Quantity = 2,
-                            Total = 20m
-                        },
-                        Total = 160m
-                    },
-                    new OrderItem {
-                        Id = "i124",
-                        ProductCode = "789MAE",
-                        ProductName = "Mary Mae's... Summer Sandals",
-                        UnitPrice = 30m,
-                        Quantity = 2,
-                        Subtotal = 60m,
-                        Total = 60m
-                    }
-            };
-
             var order_template = new Order
             {
                 Id = "o124",
@@ -183,7 +156,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 OrderDiscountTotal = -5m,
                 Total = 229.48m,
                 CustomerNote = "Please take special care in packaging. Thanks!",
-                Items = items,
+                Items = new List<OrderItem> {
+                    new OrderItem {
+                        Id = "i123",
+                        ProductCode = "HOBO-LL",
+                        ProductName = "Slouchy leather... lace hobo",
+                        UnitPrice = 90m,
+                        Quantity = 2,
+                        Subtotal = 180m,
+                        Discount = new OrderItemDiscount {
+                            Description = "$10 off all leather bags",
+                            UnitPrice = -10m,
+                            Quantity = 2,
+                            Total = -20m
+                        },
+                        Total = 160m
+                    },
+                    new OrderItem {
+                        Id = "i124",
+                        ProductCode = "789MAE",
+                        ProductName = "Mary Mae's... Summer Sandals",
+                        UnitPrice = 30m,
+                        Quantity = 2,
+                        Subtotal = 60m,
+                        Total = 60m
+                    }
+                },
                 Payments = new List<OrderPayment>()
             };
 
@@ -191,6 +189,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var order_authorized_only = order_template.Clone<Order>();
             order_authorized_only.Id = "o1001";
             order_authorized_only.Customer.FirstName = "Authorized";
+            order_authorized_only.PaymentStatus = "Unpaid";
             order_authorized_only.Payments = new List<OrderPayment> {
                     new OrderPayment {
                         Id = "337", 
@@ -199,7 +198,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         PaymentType = "CreditCard", 
                         CardType = "Visa", 
                         CardNumber="xxxx-xxxx-xxxx-1111", 
-                        TransactionId = "00158221"
+                        TransactionId = "00158221",
+                        TransactionDate = new DateTime(2013, 03, 18, 12, 30, 00)
                     }
             };
             allTheOrders.Add(order_authorized_only);
@@ -208,6 +208,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             order_paid_in_full.Id = "o1002";
             order_paid_in_full.Customer.FirstName = "Paid";
             order_paid_in_full.Customer.LastName = "In Full";
+            order_paid_in_full.PaymentStatus = "Paid";
             order_paid_in_full.Payments = new List<OrderPayment> {
                 new OrderPayment {
                     Id = "340",
@@ -216,7 +217,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     PaymentType = "CreditCard",
                     CardType = "Visa",
                     CardNumber="xxxx-xxxx-xxxx-1111", 
-                    TransactionId = "00158555"
+                    TransactionId = "00158555",
+                    TransactionDate = new DateTime(2013, 03, 18, 13, 00, 00)
                 }
             };
             allTheOrders.Add(order_paid_in_full);
@@ -225,6 +227,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             order_partial_payment.Id = "o1003";
             order_partial_payment.Customer.FirstName = "Partial";
             order_partial_payment.Customer.LastName = "Payment";
+            order_partial_payment.PaymentStatus = "Unpaid";
             order_partial_payment.Payments = new List<OrderPayment> {
                     new OrderPayment {
                         Id = "337", 
@@ -233,7 +236,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         PaymentType = "CreditCard", 
                         CardType = "Visa", 
                         CardNumber="xxxx-xxxx-xxxx-1111", 
-                        TransactionId = "00158221"
+                        TransactionId = "00158221",
+                        TransactionDate = new DateTime(2013, 03, 18, 12, 30, 00)
                     },
                     new OrderPayment {
                             Id = "339",
@@ -242,7 +246,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             PaymentType = "CreditCard", 
                             CardType = "Visa", 
                             CardNumber="xxxx-xxxx-xxxx-1111", 
-                            TransactionId = "00158555"
+                            TransactionId = "00158555",
+                            TransactionDate = new DateTime(2013, 03, 18, 13, 00, 00)
                     }
             };
             allTheOrders.Add(order_partial_payment);
