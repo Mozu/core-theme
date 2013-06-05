@@ -30,7 +30,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name = "check", EmitDefaultValue = true)]
         public string CheckNumber { get; set; }
 
-        [DataMember(Name = "authorizationId", EmitDefaultValue = true)]
+        [DataMember(Name = "transactionId", EmitDefaultValue = true)]
         public string TransactionId { get; set; }
+
+        [DataMember(Name = "transactionDate", EmitDefaultValue = true)]
+        public DateTime TransactionDate { get; set; }
     }
 }
