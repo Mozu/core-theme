@@ -90,3 +90,264 @@
   }
 
 }
+
+
+
+
+// view specific scss for order detail. 
+// todos: move this to a view specific scss file 
+.#{$vprefix}orderform-detail {	
+
+    background-color:#fff;
+	margin-bottom: 20px;
+    
+    
+
+	
+	.emptyGridMessage{
+		padding:10px;
+		color:#990000
+	}
+
+	.#{$vprefix}orderItem-grid-row-over {
+		.#{$vprefix}grid-row-menu-trigger {
+		  visibility: visible;
+		}
+	  }
+
+
+	.#{$prefix}panel .#{$prefix}grid-body {
+		border-bottom-width:0px;
+	}
+
+	// link to the product in the order detail product column
+	.productLink{		
+		color:blue;
+		white-space: normal;		
+	}
+
+	// product in the order detail product column but link is disabled since the product was deleted and is no longer linkable
+	.productLinkDisabled{		
+		white-space: normal;		
+	}
+
+	// descriptive options for the product in the order detail product column
+	// forces the content to wrap in the cell
+	.productOptions{
+		white-space: normal;
+	}	
+
+	// border that matches background color to keep the container height from changing on mouseover 
+	.#{$prefix}grid-cell {
+		vertical-align:top;		
+
+		// border that matches background color to keep the container height from changing on mouseover 
+		.#{$prefix}grid-cell-inner {
+			border: 1px solid transparent;
+		}			
+	}	
+
+	.editableCell {
+		// highlight editable cell when mouseover
+		.#{$prefix}grid-cell-inner:hover {
+			border: 1px dashed #cccccc;
+		}
+	}	
+
+
+	// disabling default background color when cell is selected
+	// fixing the background color will require changes to other css overrides and other grids.
+	/*
+	.#{$prefix}grid-cell-selected{
+		background-color: transparent !important;
+	}
+	*/
+	
+
+	.#{$prefix}mask {
+	    background-color:#ffffff;
+	}
+
+	.x-grid-cell-selected {
+		background-color: transparent !important;
+	}
+
+	.x-grid-row{
+		.x-grid-cell {
+			border-bottom-style:dashed;		
+		}
+	}
+	
+	.taco-order-orderItem-hasDiscount{
+		.x-grid-cell{
+			border-bottom-width:0px;
+		}
+	
+	}
+	
+	.x-grid-row-adjustment{
+		.adjustment-cell {
+			font-size: 1.4rem;
+			line-height: 1.9rem;		
+				
+			border-color: #ededed;
+			border-bottom-width:1px;
+			border-bottom-style:dashed;		
+
+			// fixing font size for the adjustment row
+			.adjustment-cell-inner {
+				font-size: 1.4rem !important;
+			}
+		} 		
+	}
+
+	// rows without a discount should hide the row body row. Need to look at way to render rowbody dom selectively
+	.noDiscount {
+		display:none;		
+	}
+
+
+
+	/*order total row*/
+	.orderform-detail-totalRow{	
+        background-color:#fff;
+		border-width: 0px 1px 1px 1px;
+		border-style:solid;
+		border-color:#cccccc;	
+		text-align:right;
+		font-size: 1.4rem;
+		line-height: 1.9rem;		
+		
+
+		// groups of summary row values. used to add some padding between groups
+		.subTotalGroup{padding-bottom:10px;}
+		.shippingGroup{padding-bottom:10px;}
+		.totalGroup{}		
+
+		// labels for summary row of order deteails
+		.orderTotal-labels{
+			padding:7px 5px 5px 5px;
+			.subTotal{}
+			.orderLevelCoupon{}
+			.shipping{}
+			.shippingCoupon{}
+			.orderLevelAdjustment{}
+			.tax{}
+			.total{}
+		}        
+
+		// values for summary row of order deteails
+		.orderTotal-values{
+			padding:7px 5px 5px 5px;
+			.subTotal{}
+			.orderLevelCoupon{}
+			.shipping{}
+			.shippingCoupon{}
+			.orderLevelAdjustment{}
+			.tax{}
+			.total{}		
+		}        
+	}
+
+
+	// order customer notes row
+	.orderform-detail-customerNotesRow{
+		border-width: 0px 1px 1px 1px;
+		border-style:solid;
+		background-color:#f2f2f2;
+		border-color:#cccccc;				
+		font-size: 1.4rem;
+		line-height: 1.9rem;	
+		padding:7px;				
+		.customerNote{}
+		.label{}
+	}
+}
+
+
+// order payment 
+.#{$vprefix}orderform-payment {	
+    background-color:#fff;	
+	border-color:#bfbfbf;
+	border-style:solid;
+	border-width:1px;
+	margin-bottom: 20px;
+	padding:7px 7px 0px 7px;
+
+
+	.seperator{
+		color:#cccccc;
+		padding:0px 7px 0px 7px;		
+	}
+
+	.orderform-payment-statusRow{
+		.statusField{
+			font-size: 1.9rem;
+			line-height: 2.9rem;		
+		}
+	}
+
+	.orderform-payment-paymentDetails{
+        .authorizedCreditCard{		    
+			.creditCard{}
+            .authorization{}
+		}
+                    
+        .orderSummary{
+			.orderTotal{}
+            .Received{}
+            .balance{}
+		}
+            
+        .billingInformation{
+		    padding:7px 0px 7px 0px ;
+
+			.fullName{}
+            .address{}
+            .country{}
+            .phoneNumber{}
+		}
+	}
+
+	.orderform-payment-transactionlist{		
+		.payment{
+		display:none;
+			background-color:#f2f2f2;
+			border-color:#bfbfbf;
+			border-style:solid;
+			border-width:1px;
+			font-size: 1.4rem;
+			line-height: 1.9rem;
+			margin-bottom:5px;
+			padding:7px;
+		}		
+	}
+}
+		
+
+
+
+
+
+// menu trigger widget for order details panels	
+.editContainer-menu-trigger{						
+	.x-btn-icon{
+		width:32px !important;
+		height:32px !important;
+	}
+
+	.editContainer-menu-trigger-icon{
+		background: url('../images/icons-sfc12ea9761.png') no-repeat;
+		background-position: 0 -2303px;
+	}
+}
+
+	
+	
+
+	
+	
+	
+	
+		
+	

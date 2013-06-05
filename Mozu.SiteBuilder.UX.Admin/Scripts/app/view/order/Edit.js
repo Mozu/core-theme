@@ -28,7 +28,9 @@ Ext.define('Taco.view.order.Edit', {
             title: 'Order No. ' + this.record.get('orderNumber') + ' <span class="' + Taco.baseCSSPrefix + 'orders-header-status" style="padding-left:20px;font-size: 0.9em; font-weight: normal;color:#d2463c">' + this.record.get("orderStatus") + '</span><br/>'
         };
 
-        this.orderHeader = Ext.create('Taco.view.order.Header');
+        this.orderHeader = Ext.create('Taco.view.order.Header', {
+            record:this.record
+        });
 
 
         /*
@@ -78,11 +80,11 @@ Ext.define('Taco.view.order.Edit', {
 
         
         this.orderDetail = Ext.create('Taco.view.order.subform.Detail', {
-            
+            record: this.record
         });
         
         this.orderPayment = Ext.create('Taco.view.order.subform.Payment', {
-
+            record: this.record
         });
 
         
@@ -97,8 +99,9 @@ Ext.define('Taco.view.order.Edit', {
                 manageHeight: false,
                 items: [
                     this.orderHeader,
-                    this.orderDetail,
-                    this.orderPayment
+                    this.orderPayment,
+                    this.orderDetail
+                    
                 ],
                 dockedItems: [{
                     xtype: 'container',

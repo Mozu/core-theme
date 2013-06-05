@@ -123,6 +123,7 @@ Ext.define('Taco.model.Order', {
         {
             "name": "paymentStatus",
             "type": "string",
+            "defaultValue": "Card Authorized",
             "useNull": true
         },
         {
@@ -141,13 +142,35 @@ Ext.define('Taco.model.Order', {
         {
             "name": "lastValidationDate",
             "type": "date",
-            "useNull": true,
+            "useNull": true
         },
         {
             "name": "expirationDate",
             "type": "date",
-            "useNull": true,
+            "useNull": true
+        },
+        {
+            "name": "payments",
+            "type": "auto",
+            "defaultValue": [
+            /*
+                {
+                "transactionDate": "March 18, 2013",
+                "paymentID": "337",
+                "paidAmount": "100.00",
+                "creditCard": "Visa xxxx-xxxx-xxxx-1111",
+                "transactionID": "00158221"
+            }, {
+                "transactionDate": "March 17, 2013",
+                "paymentID": "336",
+                "paidAmount": "129.48",
+                "creditCard": "Visa xxxx-xxxx-xxxx-1111",
+                "transactionID": "00158220"
+            }
+            */
+            ]
         }
+        
     ],
 
 
