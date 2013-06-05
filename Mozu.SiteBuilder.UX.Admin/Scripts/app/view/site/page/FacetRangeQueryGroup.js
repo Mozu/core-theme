@@ -16,12 +16,14 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
         return ret;
     },
     setValue: function(rawRq) {
+        var rqList;
         if (!rawRq || !(length in rawRq)) return;
-        if (rawRq.length !== this.numRanges) this.setNumRanges(rawRq.length);
+        rqList = Ext.clone(rawRq);
+        if (rqList.length !== this.numRanges) this.setNumRanges(rqList.length);
         this.items.each(function (rq) {
-            if (!rq.isHidden()) rq.setValue(rawRq.shift());
+            if (!rq.isHidden()) rq.setValue(rqList.shift());
         });
-        this.fireEvent('change', this, rawRq, this.getValue());
+        this.fireEvent('change', this, rqList, this.getValue());
     },
 
     setNumRanges: function (numRanges) {
@@ -47,6 +49,10 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
             if (newNum != this.numRanges)
                 this.setNumRanges(newNum);
         }, this);
+        this.items.each(function (item) {
+            me.relayEvents(item, ['change']);
+        });
+        
     },
     items: [
         {startFieldEmptyText: 'Below', isEnd: true},

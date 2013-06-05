@@ -70,7 +70,8 @@
     }
   }
 
-    .#{$prefix}boundlist-undraggable {
+  
+  .#{$prefix}boundlist-undraggable {
     .#{$prefix}boundlist-item {
       border-style: dashed;
       opacity: 0.7;
