@@ -6,10 +6,14 @@
 Ext.define('Taco.core.ux.EditContainer', {
     extend: 'Ext.container.Container',
     alias: 'widget.taco.editcontainer',
-
     componentCls: Taco.baseCSSPrefix + 'editcontainer',
-
     isEditContainer: true,
+
+    config: {
+        title: "Title",
+        tools: [],
+        actions:[]
+    },
 
     initComponent: function () {
         var items = this.items || [],
@@ -39,7 +43,7 @@ Ext.define('Taco.core.ux.EditContainer', {
                 type: 'hbox',
                 align: 'middle'
             },
-            items: this.tools || []
+            items: this.getTools() || []
         });
         items.unshift(tools);
 
@@ -50,14 +54,14 @@ Ext.define('Taco.core.ux.EditContainer', {
                 type: 'hbox',
                 align: 'middle'
             },
-            items: this.actions || []
+            items: this.getActions() || []
         });
         items.unshift(actions);
 
         title = Ext.create('Ext.Component', {
             itemId: 'title',
-            cls: this.componentCls + '-title',
-            html: this.title || ' ',
+            cls: this.componentCls + '-title',            
+            html: this.getTitle() || ' ',
             flex: 1
         });
         items.unshift(title);

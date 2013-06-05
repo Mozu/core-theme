@@ -4,118 +4,406 @@
 
 // todos extend base class for the subform
 Ext.define('Taco.view.order.subform.Detail', {
-    extend: 'Ext.container.Container',
+    extend: 'Taco.view.order.subform.Subform',
     requires: [],
-    config : {
+    config: {
         
+        // order model
+        record: null,
+        
+        // title for the panel header
+        title: 'Order Details',
+        
+        // determines whether the detailGrid allows field editing
+        editMode: true,
+        
+        // width of the actionColumn. used to align the grid total container
+        actionColumnWidth: 60,
+        
+        // width of the row total Column. used to align the grid total container
+        rowTotalColumnWidth: 100,
+        
+        
+        
+        // the template used in the details grid to describe the proudct and its options. Displays in the products column.
+        productInformationTemplate: [
+            '<tpl if="isDeleted">',
+                '<span class="productLinkDisabled" productCode="{productCode}">{productName}</span>',
+            '<tpl else>',
+                '<a class="productLink" productCode="{productCode}" target="_blank" href="/product/{productCode}">{productName}</a>',
+            '</tpl>',
+            
+            '<div class="productOptions">',
+                '<tpl for="options">',
+                    '<span class="option">{.}, </span>',
+                '</tpl>',
+                '<span class="weight">{weight} lbs</span>',
+            '</div>'
+        ],
+
+
+        // components to add to the panel header. typically used to add an actions menu button
+        tools: [
+            
+            // Actions menu button
+            {
+                xtype: "button",
+                menuAlign: "tr-br",
+                cls: "editContainer-menu-trigger",
+                iconCls: "editContainer-menu-trigger-icon",
+                height: 34,
+                width: 46,
+                menu: {
+                    plain:true,
+                    items: [
+                        {text: 'Edit Details'},
+                        {text: 'Cancel Order'}
+                    ]
+
+                }
+            }
+        
+        
+        ]
     },
     
     cls: Taco.baseCSSPrefix + 'orderform-detail',
     
     // todos:remove border and style info after base class css is setup.
-    // border: 1,
-    style: {
-        // margin:"10px 0 0 0",
-        // borderColor: "#666",
-        // borderStyle: "solid",
-        backgroundColor:"#fff",
-        // padding: 0
-    },
+    
     
     initComponent: function (eOpts) {
-        var me = this;
+        var me = this,
+            orderItemStore;
         
+        console.log(this.getRecord().getData());
+        
+        // store that contains the orderItems for this order model
+        orderItemStore = this.record.itemsStore;
 
+        
+        
+        if (!orderItemStore) {
+            // no order items is an edge case but needs to be handled
+            // show a no order items 
+        }
 
-        // gridHeader class
-        /*
+        // test data for exercising the grid
+        //this.initTestData();
 
-        this.gridHeader = Ext.create('Ext.container.Container',{
-            cls: "orderform-detail-columnHeader",
+        
+        
+        // plugin to add suppourt to the grid for editing the price and quantity columns
+        var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
+            clicksToEdit: 1
+        });
+        
+        me.detailGrid = Ext.create('Ext.grid.Panel', {
+            editMode: this.getEditMode(),
+            store: orderItemStore,
+            autoHeight: true,
+            listeners: {
+                beforeedit: {
+                    fn: function(plugin, edit) {
+                        // disable editing when the grid is not editMode:true
+                        return this.editMode;
+                    }
+                },
+                click: {
+                    element: "el",
+                    fn: function (e,target,eOpts) {
+                        // handler for when user clicks on an order item product link
+                        var productId = target.getAttribute("productCode");
+                        this.viewProductDetail(productId);
+                    },
+                    scope:me, 
+                    delegate: '.productLink'
+                }
+            },
+                
+            features: [
+
+                // This is the plugin for enabling the adding of an adustment row for each orderItem
+                {
+                    ftype: 'rowbody',
+                    rowBodyTrCls : "x-grid-row-adjustment",
+                    rowBodyDivCls: "x-grid-cell-inner adustment-cell-inner",
+                    rowBodyTdCls: "x-grid-cell adjustment-cell",
+                    getAdditionalData: function (data, rowIndex, record, orig) {
+                        var colspan = 1,
+                            discount = record.get("discount"),
+                            rowBodyCls = (discount) ? "hasDiscount" : "noDiscount";
+                    
+                        return {
+                            discountData : discount,
+                            rowBodyCls: rowBodyCls,
+                            rowBodyColspan: colspan
+                        };
+                    },
+                
+                    getRowBody: function (values) {
+
+                        return [
+                            '<tr class="' + this.rowBodyTrCls + ' {rowBodyCls}">',
+                                '<td  class="' + this.rowBodyTdCls + '" colspan="{rowBodyColspan}">',
+                                    '<div class="' + this.rowBodyDivCls + '">Discount: {discountData.description}</div>',
+                                '</td>',
+                                '<td  class="' + this.rowBodyTdCls + '">',
+                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{discountData.unitPrice:usMoney}</div>',
+                                '</td>',
+                                '<td class="' + this.rowBodyTdCls + '">',
+                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{discountData.quantity}</div>',
+                                '</td>',
+                                '<td  class="' + this.rowBodyTdCls + '">',
+                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{discountData.total:usMoney}</div>',
+                                '</td>',
+                                '<td  class="' + this.rowBodyTdCls + '">',
+                                    '<div class="' + this.rowBodyDivCls + '"></div>',
+                                '</td>',
+                            '</tr>'
+                        ].join('');
+                    }
+                }
+            
+
+            ],
+            
+            
+            viewConfig: {
+                
+                // changing the hover class to get rid of taco overrides of grid
+                overItemCls: 'taco-orderItem-grid-row-over',
+                emptyText: '<div class="emptyGridMessage">No order items to display</div>',
+                deferEmptyText:false,
+                stripeRows:false,
+                disabled:false,  // disables the grid, prevents the field editors from opening. prevents default hover behavior. Makes text grey and background grey. TODOs, explore this as an option for making the grid readony.
+                disabledCls: "taco-order-orderItemGrid-disabled", // css class to add when the order grid is disabledstripeRows: false,
+                //   enableTextSelection: true
+                listeners: {
+                    itemmouseenter: {
+                        fn: function (view, record, item, index, e, eOpts) {
+                            
+                        },
+                        scope: me
+                    },
+                    highlightitem: {
+                        fn: function (view, record, item, index, e, eOpts) {
+                            
+                        },
+                        scope: me
+                    }
+                },
+                
+                // provides selective row class addition based on record.
+                getRowClass: function (record) {
+                    if (!record) return '';
+                    if (record.get("discount")) {
+                        return 'taco-order-orderItem-hasDiscount';
+                    }
+                    return '';
+                }
+            },
+            
+            
+            selModel: {
+                selType: 'cellmodel'
+            },
+            
+            plugins: [cellEditing],
+            
+            columns: [
+                {
+                    text: 'Products',
+                    draggable: false,
+                    xtype: 'templatecolumn',
+                    flex: 1,
+                    sortable: false,
+                    menuDisabled: true,
+                    tpl: this.getProductInformationTemplate(),
+                    dataIndex: 'productName'
+                },
+                {
+                    text: 'Price',
+                    draggable: false,
+                    width: 100,
+                    sortable: false,
+                    menuDisabled: true,
+                    align: "right",
+                    renderer: 'usMoney',
+                    tdCls: "editableCell",  // adds the dotted line hover to the cells in the column
+                    editor: {
+                        xtype: 'unitfield',
+                        unitString:"$",
+                        unitAtEnd:false,
+                        allowBlank: true,
+                        minValue: 0,
+                        maxValue: 100000
+                    },
+                    dataIndex: 'unitPrice'
+                },
+                {
+                    text: 'Quantity',
+                    draggable: false,
+                    width: 100,
+                    sortable: false,
+                    menuDisabled: true,
+                    align: "right",
+                    tdCls: "editableCell",  // adds the dotted line hover to the cells in the column
+                    editor: {
+                        xtype: 'textfield',
+                        allowBlank: true,
+                        minValue: 0,
+                        maxValue: 100000
+                    },
+                    dataIndex: 'quantity'
+                },
+                {
+                    text: 'Row Total',
+                    draggable: false,
+                    menuDisabled: true,
+                    width: this.getRowTotalColumnWidth(),
+                    sortable: false,
+                    align: "right",
+                    renderer: 'usMoney',
+                    dataIndex: 'subtotal'
+                },
+                {
+                    xtype: 'taco.menucolumn',
+                    draggable: false,
+                    text: '',
+                    width:this.getActionColumnWidth(),
+                    menuDisabled: true,
+                    iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger ' + Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
+                    menuItems: [],
+                    handler: function (grid, rowIndex, colIndex, header, e, record, item) {
+                        Ext.Msg.alert('Remove Item', 'TODO: Confirm the removal of item.');
+                    },
+                    renderer: function (value, metaData, record) {
+                        
+                    },
+                    onMenuShow: function (menu, eventData) {
+                        // todos: remove item from grid
+                        
+                    }
+                }
+            ]
+        });
+
+      
+        var totalData = this.record.getData();
+
+        this.totalRow = Ext.create('Ext.container.Container', {
+            cls: "orderform-detail-totalRow x-grid-row",
             layout: {
                 type: 'hbox',
                 align: 'stretch',
                 pack: 'start'
             },
             //move to scss
-            defaults: { xtype: "component", style: "border-bottom:1px solid #ccc;padding:2px 2px 2px 2px" },
+            defaults: { xtype: "component"},
             items: [
                 {
-                    html: 'Products',
-                    flex: 1
+                      
+                    tpl: [
+                        '<div class="orderTotal-labels">',
+                            '<div class="subTotalGroup">',
+                                '<div class="subTotal">Subtotal:</div>',
+                                '<div class="orderLevelCoupon">Order level coupon ($30 off $150):</div>',
+                            '</div>',
+                        
+                            '<div class="shippingGroup">',
+                                '<div class="shipping">Shipping(USPS Standard):</div>',
+                                '<div class="shippingCoupon">Shipping(free Shipping SUOER SAVER):</div>',
+                            '</div>',
+                        
+                            '<div class="totalGroup">',
+                                // todos: add tpl:if to filter out adjusments and adjusment total if there is none;
+                                '<div class="orderLevelAdjustment">Order level adjustment:</div>',
+                                '<div class="tax">Tax:</div>',
+                                '<div class="total">Total:</div>',
+                            '</div>',
+                        '</div>'
+                    ],
+                    data: totalData,
+                    style:"text-align:right;",
+                    flex:1
                 }, {
-                    html: 'Price',
-                    width: 120
+                    data: totalData,
+                    tpl: [
+                        
+                        '<div class="orderTotal-values">',
+                            '<div class="subTotalGroup">',
+                                '<div class="subTotal">{subTotal:usMoney}</div>',
+                                '<div class="orderLevelCouponValue">{orderLevelCoupon:usMoney}</div>',
+                            '</div>',
+                        
+                            '<div class="shippingGroup">',
+                                '<div class="shipping">{shippingTotal:usMoney}</div>',
+                                '<div class="shippingCoupon">-{shippingCoupon:usMoney}</div>',
+                            '</div>',
+                            
+                            '<div class="totalGroup">',
+                                '<div class="orderLevelAdjustment">??</div>',
+                                '<div class="tax">{taxTotal:usMoney}</div>',
+                                '<div class="total">{total:usMoney}</div>',
+                            '</div>',
+                        '</div>'
+                    ],
+                    width: this.getRowTotalColumnWidth()
                 }, {
-                    html: 'Quantity',
-                    width: 120
-                }, {
-                    html: 'Row Total',
-                    width: 120
+                    width: this.getActionColumnWidth()
                 }
             ]
         });
-        */
-        /*
+        
+    
+        // customer notes class
+        this.customerNoteRow = Ext.create('Ext.Component', {
+            cls: "orderform-detail-customerNotesRow",
+            tpl: [
+                '<div class="customerNote">',
+                    '<span class="label">Customer Notes:</span> {customerNote}',
+                '</div>'
+            ],
+            data:this.record.getData()
+        });
+        
 
-        var testRowCfg = {
-            xtype:"container",
-            cls: "orderform-detail-orderItem",
-            layout: {
-                type: 'hbox',
-                align: 'stretch',
-                pack: 'start'
-            },
-            //move to scss
-            defaults: { xtype: "component", style: "border-bottom:1px dashed #ccc;padding:2px 2px 2px 2px;;text-align:rights" },
+        
+        Ext.apply(this, {
             items: [
-                {
-                    html: 'Slouchy leather lace',
-                    flex: 1
-                }, {
-                    html: '$90.00',
-                    width: 120
-                }, {
-                    html: '2',
-                    width: 120
-                }, {
-                    html: '$180',
-                    width: 120
-                }
+                me.detailGrid,
+                this.totalRow,
+                this.customerNoteRow
             ]
-        }
-        */
-        
-        // orderItem class
-        // needs adjustment support
-        // gridHeader class
-        //this.orderItem = Ext.create('Ext.container.Container', testRowCfg);
-        /*
-        var testRowsCfg = [];
-        for (var i = 0; i < 500;i++)
-        {
-            testRowsCfg.push(testRowCfg);
-        }
-        */
-        
-        /*
-        this.orderItems = Ext.create('Ext.container.Container', {
-            xtype: "container",
-            cls: "orderform-detail-orderItems",
-            layout: {
-                type: 'auto'
-            },
-            
-            items: testRowsCfg
-            
         });
 
-        */
+        this.callParent(arguments);
+    },
         
-        // Need total class
-        
-        
-        
+    // handler for when user clicks on an order item product link
+    viewProductDetail: function (productId) {
+        return;
+        // disabled this method and made and used link instead;
+        // leaving this code temporarily in case I need to add some logic to inhibit the link
+
+
+        if (!productId) {
+            return;
+        }
+        //link to the store front version
+        //window.open('/_gosite/' + record.getId() + '?environment=preview&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
+        window.open("/product/" + productId);
+
+
+        //link to the editor
+        //window.open("http://dev.mozu.com:8081/admin/c-1/products/edit/" + productId);
+    },
+    
+
+
+    // test data for exercising the grid and totalRow
+    initTestData : function() {
 
         var testData = {
             "id": "o124",
@@ -137,6 +425,8 @@ Ext.define('Taco.view.order.subform.Detail', {
                 "productName": "Slouchy leather... lace hobo",
                 "unitPrice": 90.0,
                 "quantity": 2,
+                "weight": 1.1,
+                "options": ["red", "small", "itchy"],
                 "discount": {
                     "quantity": 2,
                     "description": "$10 off all leather bags",
@@ -151,6 +441,8 @@ Ext.define('Taco.view.order.subform.Detail', {
                 "productName": "Mary Mae's... Summer Sandals",
                 "unitPrice": 30.0,
                 "quantity": 2,
+                "weight": 1.1,
+                "options": ["red", "small", "itchy"],
                 "subtotal": 60.0,
                 "total": 60.0
             }
@@ -162,14 +454,16 @@ Ext.define('Taco.view.order.subform.Detail', {
             "total": 229.48,
             "customerNote": "Please take special care in packaging. Thanks!"
         };
-        
+
         for (var i = 0; i < 500; i++) {
             testData.items.push({
-                "id": "i123_"+i,
+                "id": "i123_" + i,
                 "productCode": "HOBO-LL",
-                "productName": "Slouchy leather... lace hobo",
+                "productName": "Slouchy leather... lace hobo" + i,
                 "unitPrice": 90.0,
                 "quantity": 2,
+                "weight": 1.1,
+                "options": ["red", "small", "itchy"],
                 "discount": {
                     "quantity": 2,
                     "description": "$10 off all leather bags",
@@ -180,145 +474,16 @@ Ext.define('Taco.view.order.subform.Detail', {
                 "total": 160.0
             });
         }
-        
-        
 
-        var store = Ext.create('Ext.data.Store', {
+
+
+        var testDataStore = Ext.create('Ext.data.Store', {
             model: 'Taco.model.OrderItem',
             data: testData.items
         });
-        
-        var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
-            clicksToEdit: 1
-        });
-        
-        
-        var grid = Ext.create('Ext.grid.Panel', {
-            store: store,
-            autoHeight: true,
-            managerHeight:false,
-            viewConfig: {
-                stripeRows: false,
-                //   enableTextSelection: true
-            },
-            
-            selModel: {
-                selType: 'cellmodel'
-            },
-            
-            plugins: [cellEditing],
-            
-            columns: [
-                {
-                    text: 'Products',
-                    flex: 1,
-                    sortable: false,
-                    menuDisabled: true,
-                    dataIndex: 'productName'
-                },
-                {
-                    text: 'Price',
-                    width: 100,
-                    sortable: false,
-                    menuDisabled: true,
-                    align: "right",
-                    renderer: 'usMoney',
-                    editor: {
-                        xtype: 'unitfield',
-                        unitString:"$",
-                        unitAtEnd:false,
-                        allowBlank: true,
-                        minValue: 0,
-                        maxValue: 100000
-                    },
-                    dataIndex: 'unitPrice'
-                },
-                {
-                    text: 'Quantity',
-                    width: 100,
-                    sortable: false,
-                    menuDisabled: true,
-                    align: "right",
-                    //renderer: 'usMoney',
-                    editor: {
-                        xtype: 'textfield',
-                        allowBlank: true,
-                        minValue: 0,
-                        maxValue: 100000
-                    },
-                    dataIndex: 'quantity'
-                },
-                {
-                    text: 'Row Total',
-                    menuDisabled: true,
-                    width: 100,
-                    sortable: false,
-                    align: "right",
-                    renderer: function (value, metaData, record) {
-                        return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-                    },
-                    dataIndex: 'subtotal'
-                },
-                {
-                    xtype: 'taco.menucolumn',
-                    text: '',
-                    width:60,
-                    menuDisabled: true,
-                    iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger ' + Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
-                    menuItems: [],
-                    renderer: function (value, metaData, record) {
-                        
-                    },
-                    onMenuShow: function (menu, eventData) {
-                        // todos: remove item from grid
-                        
-                    }
-                }
-            ]
-        });
 
 
 
-        
-        
-        this.totalRow = Ext.create('Ext.container.Container', {
-            cls: "orderform-detail-totalRow",
-            layout: {
-                type: 'hbox',
-                align: 'stretch',
-                pack: 'start'
-            },
-            //move to scss
-            defaults: { xtype: "component", style: "border-bottom:1px dashed #ccc;padding:2px 2px 2px 2px;text-align:rights" },
-            items: [
-                {
-                    html: '2',
-                    flex:1
-                }, {
-                    html: '$180',
-                    width: 120
-                }
-            ]
-        });
-
-
-        // need a customer notes class
-
-        
-        Ext.apply(this, {
-            items: [
-                //this.gridHeader,
-                //this.orderItem,
-                //this.orderItems,
-                grid,
-                this.totalRow
-            ]
-
-        })
-
-        
-
-        this.callParent(arguments);
 
     }
 });

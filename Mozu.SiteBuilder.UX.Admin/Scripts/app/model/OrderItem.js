@@ -66,11 +66,18 @@ Ext.define('Taco.model.OrderItem', {
             "useNull": true
         },
         
+        {
+            "name": "fleens",
+            "type": "auto",
+            defaultValue: "test"
+        },
+        
         // not currently in json
         {
             "name": "weight",
             "type": "float",
-            "defaultValue": 1,
+            "useNull": true,
+            "defaultValue": 1
         },
         
         // not currently in json
@@ -79,6 +86,15 @@ Ext.define('Taco.model.OrderItem', {
             "type": "auto",
             "defaultValue": []
         },
+        
+        // added this so the ui can modify its behavior when products are deleted
+        {
+            "name": "isDeleted", 
+            "type": "auto",
+            "defaultValue": false
+        }
+        
+        
     ],
 
     associations: [
