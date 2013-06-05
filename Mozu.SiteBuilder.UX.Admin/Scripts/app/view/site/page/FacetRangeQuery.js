@@ -20,6 +20,8 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
             this.startField.setValue(null);
             this.endField.setValue(null);
         } else {
+            rq.start = parseInt(rq.start);
+            rq.end = parseInt(rq.end);
             if (rq.start !== -1000000 && rq.start !== null) this.startField.setValue(rq.start)
             if (rq.end !== 1000000 && rq.end !== null) this.endField.setValue(rq.end)
         }
@@ -72,5 +74,7 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
             me.endField
         ];
         this.callParent(arguments);
+        this.relayEvents(this.startField, ['change']);
+        this.relayEvents(this.endField, ['change']);
     }
 });

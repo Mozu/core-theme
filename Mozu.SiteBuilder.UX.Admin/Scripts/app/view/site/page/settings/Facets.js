@@ -7,30 +7,33 @@ Ext.define('Taco.view.site.page.settings.Facets', {
     title: "Facets",
     layout: 'fit',
     cls: Taco.baseCSSPrefix + 'sidebar-modal-facets',
-    applyChanges: function () {
-        //this.setIndices();
-        this.callParent(arguments);
+
+    createRangeQueryForm: function(record, isShowing) {
+        var me = this,            rId = record.get('sourceId'),
+            rangeQueryForm = me.rangeQueryForms[rId];
+        rangeQueryForm = me.rangeQueryForms[rId] = Ext.widget('taco.rangequeryform', {
+            record: record,
+            renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]'),
+            hidden: !isShowing
+        });
+        rangeQueryForm.eventRelayer = me.form.relayEvents(rangeQueryForm, ['savablestatechange']);
+        return rangeQueryForm;
     },
 
-    preserveRangeQueryForms: function() {
-        var me = this;
-        for (var rId in me.rangeQueryForms) {
-            var wasHidden = me.rangeQueryForms[rId].isHidden();
-            me.rangeQueryForms[rId].destroy();
-            me.rangeQueryForms[rId] = Ext.widget('taco.rangequeryform', {
-                hidden: wasHidden,
-                record: this.configuredFacetsStore.find('sourceId',rId),
-                renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]')
-            });
-            me.rangeQueryForms[rId].savableState = false;
-            me.form.relayEvents(me.rangeQueryForms[rId],  ['savablestatechange']);
-        }
+    preserveRangeQueryForm: function(form) {
+        var wasHidden = form.isHidden(),
+            record = form.record;
+        form.destroy();
+        this.createRangeQueryForm(record, !wasHidden);
     },
 
     initComponent: function () {
         var me = this;
 
         this.facetSetStore = this.record.getFacetSets();
+
+
+        window.facets = this;
 
         this.rangeQueryForms = {};
 
@@ -64,9 +67,10 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                         var theRecord = selectedRecords && selectedRecords[0];
                         availableFacetsStore.remove(theRecord);
                         var newFacet = Ext.create('Taco.model.Facet', Ext.apply(theRecord.raw, {
+                            categoryId: thisCategoryId,
                             isvalid: true
                         }));
-                        box.reset();
+                        box.applyEmptyText();
                         configuredFacetsStore.add(newFacet);
                     }
                 }
@@ -86,6 +90,8 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                     availableFacetsStore.add(record.raw);
                 }
             });
+
+            var times = {};
 
             me.inheritedFacetsView = Ext.create('Taco.core.ux.form.field.MultiSelect', {
                 name: 'inheritedFacets',
@@ -133,7 +139,7 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                         '</tpl>',
                         '<span class="x-boundlist-item-action x-boundlist-item-close">Close </span>',
                     '</span>',
-                    '<div class="x-facet-ranges" data-for-sourceid="{sourceId}" ></div>',
+                    '<div class="x-facet-ranges" data-for-sourceid="{sourceId}"></div>',
                     '<tpl if="!isvalid">',
                         '<p class="x-facet-validityreason">{validityCode}</p>',
                     '</tpl>'
@@ -148,30 +154,32 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                                         delete me.rangeQueryForms[rId];
                                     }
                                     configuredFacetsStore.remove(record);
+                                    me.form.fireEvent('savablestatechange', me.form, me.facetSetStore.isDirty());
                                     break;
                                 case 'settings':
                                     rId = record.get('sourceId');
                                     var rangeQueryForm = me.rangeQueryForms[rId];
-                                    if (!rangeQueryForm) {
-                                        rangeQueryForm = me.rangeQueryForms[rId] = Ext.widget('taco.rangequeryform', {
-                                            record: record,
-                                            renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]')
-                                        });
-                                        rangeQueryForm.savableState = false;
-                                        me.form.relayEvents(rangeQueryForm, ['savablestatechange']);
-                                        //me.form.forms.push(rangeQueryForm);
-                                    }
+                                    if (!rangeQueryForm) rangeQueryForm = me.createRangeQueryForm(record);
                                     if (rangeQueryForm.isHidden()) { rangeQueryForm.show() } else { rangeQueryForm.hide(); }
                                     break;
+                            }
+                        },
+                        itemupdate: function (record) {
+                            var rangeQueryForm = me.rangeQueryForms[record.get('sourceId')];
+                            if (rangeQueryForm) {
+                                me.preserveRangeQueryForm(rangeQueryForm);
                             }
                         }
                     }
                 },
                 listeners: {
-                    drop: me.preserveRangeQueryForms,
-                    scope: me
+                    drop: function () {
+                        for (var rId in me.rangeQueryForms) {
+                            me.preserveRangeQueryForm(me.rangeQueryForms[rId]);
+                        }
+                        me.form.fireEvent('savablestatechange', me.form, me.facetSetStore.isDirty());
+                    }
                 }
-                
             });
             me.configuredFacetsView.boundList.selectedItemCls = me.inheritedFacetsView.boundList.selectedItemCls = me.inheritedFacetsView.boundList.overItemCls = 'dummy';
             me.form.add([me.availableFacetsDropdown, me.inheritedFacetsView, me.configuredFacetsView]);
@@ -186,5 +194,6 @@ Ext.define('Taco.view.site.page.settings.Facets', {
         };
 
         this.callParent(arguments);
+
     }
 });
