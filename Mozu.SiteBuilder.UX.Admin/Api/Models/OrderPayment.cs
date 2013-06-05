@@ -9,6 +9,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name = "id")]
         public string Id { get; set; }
 
+        [DataMember(Name = "status", EmitDefaultValue = true)]
+        public string Status { get; set; }
+
         [DataMember(Name = "amountCollected", EmitDefaultValue = true)]
         public decimal AmountCollected { get; set; }
 
