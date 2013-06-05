@@ -8,14 +8,11 @@ using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Customer.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using NSubstitute;
-using DCc = Mozu.Customer.Contracts;
-using DCclient = Mozu.Core.Api.Contracts.Client;
+using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
-using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
-using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -207,6 +204,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         Quantity = 2,
                         Subtotal = 60m,
                         Total = 60m
+                    }
+                },
+                Payments = new List<OrderPayment>
+                {
+                    new OrderPayment {
+                        Id = "337", 
+                        AmountCollected = 100m, 
+                        PaymentType = "CreditCard", 
+                        CardType = "Visa", 
+                        CardNumber="xxxx-xxxx-xxxx-1111", 
+                        TransactionId = "00158221"
+                    },
+                    new OrderPayment {
+                            Id = "339", 
+                            AmountCollected = 129.48m, 
+                            PaymentType = "CreditCard", 
+                            CardType = "Visa", 
+                            CardNumber="xxxx-xxxx-xxxx-1111", 
+                            TransactionId = "00158555"
                     }
                 }
             });
