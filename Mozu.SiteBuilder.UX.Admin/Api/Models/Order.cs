@@ -92,6 +92,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name = "paymentStatus")]
         public string PaymentStatus { get; set; }
 
+        [DataMember(Name = "payments")]
+        public List<OrderPayment> Payments { get; set; }
+
         [Obsolete]
         [DataMember(Name = "availableOrderActions")]
         public List<string> AvailableOrderActions { get; set; }

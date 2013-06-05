@@ -5,6 +5,7 @@ using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
 using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
 using CustomerDC = Mozu.Customer.Contracts;
+using PaymentsDC = Mozu.CommerceRuntime.Contracts.Payments;
 using System.Text;
 using System;
 
@@ -68,6 +69,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.TotalOrders, op => op.MapFrom(dc => dc.OrderSummary.OrderCount))
                 .ForMember(x => x.TotalSpent, op => op.MapFrom(dc => dc.OrderSummary.TotalOrderAmount))
                 .ForMember(x => x.Groups, op => op.MapFrom(dc => dc.Groups.Select(g => g.Name)))
+                ;
+
+            Mapper.CreateMap<PaymentsDC.Payment, OrderPayment>()
+                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
+                .ForMember(x => x.AmountCollected, op => op.MapFrom(dc => dc.AmountCollected))
+                .ForMember(x => x.AmountCredited, op => op.MapFrom(dc => dc.AmountCredited))
+                .ForMember(x => x.PaymentType, op => op.MapFrom(dc => dc.PaymentType))
+                .ForMember(x => x.CardNumber, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.CardNumberPartOrMask : null))
+                .ForMember(x => x.TransactionId, op => op.MapFrom(dc => dc.PaymentServiceTransactionId))
                 ;
         }
 

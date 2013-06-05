@@ -371,6 +371,7 @@
     <Compile Include="Api\Models\OrderCustomer.cs" />
     <Compile Include="Api\Models\OrderItem.cs" />
     <Compile Include="Api\Models\OrderItemDiscount.cs" />
+    <Compile Include="Api\Models\OrderPayment.cs" />
     <Compile Include="Api\Models\ProductModels\ProductExtra.cs" />
     <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
     <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
