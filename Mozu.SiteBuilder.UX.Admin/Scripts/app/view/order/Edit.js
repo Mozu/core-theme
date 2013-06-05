@@ -29,7 +29,7 @@ Ext.define('Taco.view.order.Edit', {
         };
 
         this.orderHeader = Ext.create('Taco.view.order.Header', {
-            record:this.record
+            renderData: this.record.getData()
         });
 
 
