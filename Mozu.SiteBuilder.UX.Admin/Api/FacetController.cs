@@ -40,6 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var ret = AutoMapper.Mapper.Map<FacetSet>(res);
 
+            ret.Configured = ret.Configured.OrderBy(f => f.Order).ToList();
 
             ret.CategoryId = id;
             return List2(ret);
@@ -50,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<FacetSet>>> UpdateFacetSet(FacetSet set )
         {
             var facets = AutoMapper.Mapper.Map<List<DC.Facet>>(set.Configured.Where(x => x.CategoryId == set.CategoryId).ToList() );
-            facets.ForEach(f => f.Order = facets.IndexOf(f));
+            facets.ForEach(f => f.Order = facets.IndexOf(f) + 1);
             var serverFacets = ((await _facetWebApiClient.GetFacetCategoryList(set.CategoryId)).ReadAsSync().Configured ?? new List<DC.Facet>()).Where(x => x.CategoryId == set.CategoryId).ToList();
 
             var newFacets = facets.Where(x => !x.FacetId.HasValue).Select(x => _facetWebApiClient.AddFacet(x)).ToList();
