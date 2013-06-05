@@ -13,7 +13,9 @@ using NSubstitute;
 using DCc = Mozu.Customer.Contracts;
 using DCclient = Mozu.Core.Api.Contracts.Client;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
+using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -97,6 +99,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(orders);
         }
 
+        public async Task<Response<List<Order>>> CapturePayment(string orderId, decimal amount)
+        {
+            // Possible actions can be "Create," "Capture," "Void," "AuthCapture," or "ReceiveCheck."
+            var action = new DCp.PaymentAction {
+                ActionName = "Capture",
+                ISOCurrencyCode = "USD",
+                Amount = amount
+                // ReferenceSourcePaymentId = ???
+            };
+
+            // _orderWebApiClient.payment
+            var order = (await _orderWebApiClient.CreatePaymentAction(orderId, action)).ReadAsSync();
+
+            return List2( order.Map<Order>() );
+        }
+
+
+
         /// <summary>
         /// Gets a mock list of Orders.
         /// </summary>
@@ -121,10 +141,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Id = "c12346",
                 FirstName = "John",
                 LastName = "Smith",
+                CompanyName = "Company ABC",
+                Address = "1308 Horseback Hollow, Austin, TX 78732, United States",
                 CustomerSince = new DateTime(2011, 03, 18),
                 TotalOrders = 4,
                 TotalSpent = 597.96m,
-                Groups = new List<string> { "VIP", "Company ABC", "Coupon User" }
+                Groups = new List<string> { "VIP", "Coupon User" }
             };
 
             allTheOrders.Add(new Order

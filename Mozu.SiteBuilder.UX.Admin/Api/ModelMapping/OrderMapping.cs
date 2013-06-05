@@ -5,6 +5,8 @@ using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
 using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
 using CustomerDC = Mozu.Customer.Contracts;
+using System.Text;
+using System;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -42,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.Product.ProductCode))
                 // TODO: options .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options))
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => dc.Product.Name))
-                .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.Product.Price))
+                .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.Product.Price.Price))
                 .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
                 .ForMember(x => x.Discount, op => op.MapFrom(dc => dc.Product.Price.Discount))
                 .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options != null ? dc.Product.Options.Select(o => o.OptionValue) : null))
@@ -60,12 +62,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
                 .ForMember(x => x.FirstName, op => op.MapFrom(dc => dc.Contacts != null && dc.Contacts.Count > 0 ? dc.Contacts.First().FirstName : null))
                 .ForMember(x => x.LastName, op => op.MapFrom(dc => dc.Contacts != null && dc.Contacts.Count > 0 ? dc.Contacts.First().LastNameOrSurname : null))
+                .ForMember(x => x.CompanyName, op => op.MapFrom(dc => dc.CompanyOrOrganization))
+                .ForMember(x => x.Address, op => op.MapFrom(dc => dc.Contacts != null ? FormatAddress(dc.Contacts.FirstOrDefault()) : null))
                 .ForMember(x => x.CustomerSince, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
                 .ForMember(x => x.TotalOrders, op => op.MapFrom(dc => dc.OrderSummary.OrderCount))
                 .ForMember(x => x.TotalSpent, op => op.MapFrom(dc => dc.OrderSummary.TotalOrderAmount))
                 .ForMember(x => x.Groups, op => op.MapFrom(dc => dc.Groups.Select(g => g.Name)))
                 ;
-            
+        }
+
+        private string FormatAddress(CustomerDC.Contact contact)
+        {
+            if (contact == null)
+                return null;
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(contact.Address);
+
+            if (!String.IsNullOrWhiteSpace(contact.CityOrTown) || !String.IsNullOrWhiteSpace(contact.CityOrTown) || !String.IsNullOrWhiteSpace(contact.CityOrTown))
+            {
+                if (sb.Length > 0)
+                    sb.Append(", ");
+
+                sb.AppendFormat("{0} {1} {2}", contact.CityOrTown, contact.StateOrProvince, contact.PostalOrZipCode);
+            }
+
+            if (!String.IsNullOrWhiteSpace(contact.CountryCode))
+                sb.Append(sb.Length > 0 ? ", " + contact.CountryCode : contact.CountryCode);
+
+
+            return sb.ToString();
         }
     }
 }
