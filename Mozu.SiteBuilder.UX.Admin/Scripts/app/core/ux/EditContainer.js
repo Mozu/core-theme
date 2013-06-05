@@ -56,6 +56,7 @@ Ext.define('Taco.core.ux.EditContainer', {
 
         title = Ext.create('Ext.Component', {
             itemId: 'title',
+            cls: this.componentCls + '-title',
             html: this.title || ' ',
             flex: 1
         });
