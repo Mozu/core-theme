@@ -281,9 +281,6 @@
                 },
                 "IsCardInfoSaved": {}
             },
-            submodels: {
-                "BillingAddress": BillingAddress
-            },
             doNotSubmit: ["CVV"]
         }, function () {
             var saveInfo = this.IsCardInfoSaved();
@@ -316,10 +313,12 @@
             mozuType: 'payment',
             observables: {
                 "PaymentType": { required: msg.PaymentMethodMissing },
+                "IsSameBillingShippingAddress": {}
             },
             submodels: {
                 "Card": CreditCard,
-                "Check": Check
+                "Check": Check,
+                "BillingContact": BillingAddress
             },
             edit: editStep,
             submit: function () {
@@ -384,7 +383,7 @@
 
             // expose some of the helper functions to templates
             this.billingAddressRequired = ko.computed(function () {
-                return self.PaymentType() === "CreditCard" && !self.Card.IsSameBillingShippingAddress();
+                return self.PaymentType() === "CreditCard" && !self.IsSameBillingShippingAddress();
             });
             this.paymentTypeIsCreditCard = ko.computed(function () {
                 return self.PaymentType() === "CreditCard";
