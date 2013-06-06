@@ -62,28 +62,53 @@ Ext.define('Taco.view.order.Edit', {
             // need to override taco-form-card-nav-body to remove a negative margin in the styling of this class
             style: "margin-top: 0px;",
             
+            
+            
             listeners: {
                 afterrender: {
                     fn: function () {
+                        me.cardNav.el.on('click', function (e, target, eOpts) {
+                            return;
+                            var wrapper,
+                                targetId,
+                                targetY;
+                            
+                            
+                            //wrapper cls should be taco-orderForm
+                            wrapper = me.query('container[cls=taco-orderform]');
 
-                        me.cardNav.el.on('click', function() {
-                            // call the onClick method on this class which will scroll the boundContainer.
+                            targetId = target.getAttribute("targetComponentId");
+
+                            var cmp = me[targetId];
+
+                            
+
+                            if (cmp) {
+                                targetY = cmp.el.dom.offsetTop;
+                                wrapper.scrollTo('top', targetY, true);
+                            }
+
+                            
                         });
                     },
-                     scope:this
+                     scope:me
                 }
             },
-            html: '<ul><li class="taco-form-card-nav-link">Order Detail</li><li class="taco-form-card-nav-link">Payment & Billing</li><li class="taco-form-card-nav-link">Shipment & Shipping</li><li class="taco-form-card-nav-link">RMA</li><li class="taco-form-card-nav-link">Notes & History</li></ul>'
+            html: '<ul><li class="taco-form-card-nav-link" targetComponentId="orderDetails">Order Detail</li><li class="taco-form-card-nav-link"  targetComponentId="orderPayment">Payment & Billing</li><li class="taco-form-card-nav-link">Shipment & Shipping</li><li class="taco-form-card-nav-link">RMA</li><li class="taco-form-card-nav-link">Notes & History</li></ul>'
         });
         //listen for events in the cardNav widget and scroll the page to the appropriate 
 
 
         
+
+        
         this.orderDetail = Ext.create('Taco.view.order.subform.Detail', {
+            itemId: "orderDetails",
             record: this.record
         });
         
         this.orderPayment = Ext.create('Taco.view.order.subform.Payment', {
+            itemId: "orderPayment",
             record: this.record
         });
 
@@ -101,6 +126,8 @@ Ext.define('Taco.view.order.Edit', {
                     this.orderHeader,
                     this.orderDetail,
                     this.orderPayment
+                    
+                    
                 ],
                 dockedItems: [{
                     xtype: 'container',
