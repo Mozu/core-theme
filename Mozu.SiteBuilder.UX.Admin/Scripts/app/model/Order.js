@@ -53,7 +53,12 @@ Ext.define('Taco.model.Order', {
             "name": "discountTotal",
             "type": "float",
             "useNull": true
-        }, 
+        },
+        {
+            "name": "discountDescription",
+            "type": "string",
+            "useNull": true
+        },
         {
             "name": "shippingCost",
             "type": "float",

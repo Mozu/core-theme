@@ -23,6 +23,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         // width of the row total Column. used to align the grid total container
         rowTotalColumnWidth: 100,
         
+        itemId:"orderDetails",
         
         
         // the template used in the details grid to describe the proudct and its options. Displays in the products column.
@@ -305,17 +306,23 @@ Ext.define('Taco.view.order.subform.Detail', {
                         '<div class="orderTotal-labels">',
                             '<div class="subTotalGroup">',
                                 '<div class="subTotal">Subtotal:</div>',
-                                '<div class="orderLevelCoupon">Order level coupon ($30 off $150):</div>',
+                                '<tpl if="discountDescription!=\'\'">',
+                                    '<div class="orderLevelCoupon">Order level coupon ($30 off $150):</div>',
+                                '</tpl>',
                             '</div>',
                         
                             '<div class="shippingGroup">',
                                 '<div class="shipping">Shipping(USPS Standard):</div>',
-                                '<div class="shippingCoupon">Shipping(free Shipping SUOER SAVER):</div>',
+                                '<tpl if="shippingDiscount">',
+                                    '<div class="shippingCoupon">{shippingDiscountDescription}:</div>',
+                                '</tpl>',
                             '</div>',
                         
                             '<div class="totalGroup">',
                                 // todos: add tpl:if to filter out adjusments and adjusment total if there is none;
-                                '<div class="orderLevelAdjustment">Order level adjustment:</div>',
+                                '<tpl if="adjustmentDescription!=\'\'">',
+                                    '<div class="adjustmentDescription">{adjustmentDescription}:</div>',
+                                '</tpl>',
                                 '<div class="tax">Tax:</div>',
                                 '<div class="total">Total:</div>',
                             '</div>',
@@ -331,16 +338,22 @@ Ext.define('Taco.view.order.subform.Detail', {
                         '<div class="orderTotal-values">',
                             '<div class="subTotalGroup">',
                                 '<div class="subTotal">{subTotal:usMoney}</div>',
-                                '<div class="orderLevelCouponValue">{orderLevelCoupon:usMoney}</div>',
+                                '<tpl if="discountTotal">',
+                                    '<div class="discountTotalValue">{discountTotal:usMoney}</div>',
+                                '</tpl>',
                             '</div>',
                         
                             '<div class="shippingGroup">',
                                 '<div class="shipping">{shippingTotal:usMoney}</div>',
-                                '<div class="shippingCoupon">-{shippingCoupon:usMoney}</div>',
+                                '<tpl if="shippingDiscount">',
+                                    '<div class="shippingCoupon">{shippingDiscount:usMoney}</div>',
+                                '</tpl>',
                             '</div>',
                             
                             '<div class="totalGroup">',
-                                '<div class="orderLevelAdjustment">??</div>',
+                                '<tpl if="adjustmentTotal!=\'\'">',
+                                    '<div class="adjustmentTotal">{adjustmentTotal:usMoney}</div>',
+                                '</tpl>',
                                 '<div class="tax">{taxTotal:usMoney}</div>',
                                 '<div class="total">{total:usMoney}</div>',
                             '</div>',

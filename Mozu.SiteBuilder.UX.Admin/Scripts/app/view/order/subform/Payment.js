@@ -7,10 +7,25 @@ Ext.define('Taco.view.order.subform.Payment', {
     config : {
         // order model
         record: null,
+        itemId:"orderPayment",
         // title for the panel header
         title: 'Payment & Billing Information',
         // components to add to the panel header. typically used to add an actions menu button
-        tools: [{
+    },
+    
+    initComponent: function(eOpts) {
+        var me = this,
+            canCapture=false,
+            alreadyCapturedAmount,
+            captureAmount,
+            captureData,
+            payments,
+            paymentDetailsData,
+            totalAmount;
+
+        this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
+
+        this.tools = [{
             xtype: 'taco.button',
             width: 50,
             height: 30,
@@ -36,6 +51,25 @@ Ext.define('Taco.view.order.subform.Payment', {
 
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
     
+        
+
+        //look at the payments array and determine if we are in a capture state.
+        // if the first item in the payments collection is status of authorized and amountCollected is 0, then show the capture ui.
+        payments = this.record.get("payments");
+        totalAmount = this.record.get("total");
+        alreadyCapturedAmount = 0;
+        for (var i = 0; i < payments.length; i++) {
+            alreadyCapturedAmount += payments[i].amountCollected;
+        }
+
+        captureAmount = totalAmount - alreadyCapturedAmount;
+        captureData = payments[0];
+        
+        if (payments[0] && payments[0].status == "Authorized" && payments[0].amountCollected === 0) {
+            canCapture = true;            
+        }
+
+        
         me.statusRow = Ext.create('Ext.container.Container', {
             cls: "orderform-payment-statusRow",
             layout: {
@@ -57,17 +91,19 @@ Ext.define('Taco.view.order.subform.Payment', {
                 }, {
                     xtype: 'unitfield',
                     width: 120,
+                    hidden: !canCapture,
                     itemId:"captureField",
                     padding:"0 10",
                     unitString: "$",
                     unitAtEnd: false,
-                    value : this.record.get("total"),
+                    value: captureAmount,
                     allowBlank: true,
                     minValue: 0,
                     maxValue: 100000
                 }, {
                     xtype: "secondarybutton",
                     text: "Capture Payment",
+                    hidden: !canCapture,
                     itemId: "captureButton",
                     handler: this.capturePayment,
                     scope:me
@@ -82,57 +118,93 @@ Ext.define('Taco.view.order.subform.Payment', {
         this.captureButton = me.statusRow.getComponent('captureButton');
 
         
+        /*
+        
+        amountCollected: 229.48
+amountCredited: 0
+authorizationId: "00158555"
+cardNumber: "xxxx-xxxx-xxxx-1111"
+cardType: "Visa"
+id: "340"
+paymentType: "CreditCard"
+status: "Paid"
+
+        */
+
+
+
+        
+
+
+
+        
+        //this.record.getData()
+        paymentDetailsData = Ext.apply({}, this.record.getData(), {
+            totalAmount: totalAmount,
+            alreadyCapturedAmount: alreadyCapturedAmount,
+            captureAmount: captureAmount,
+            captureData: captureData,
+            canCapture:canCapture
+        /*
+            amountCollected: 229.48,
+            amountCredited: 0,
+            authorizationId: "00158555",
+            cardNumber: "xxxx-xxxx-xxxx-1111",
+            cardType: "Visa",
+            id: "340",
+            paymentType: "CreditCard",
+            status: "Paid"
+            */
+        });
+        
+        
+
         me.paymentDetails = Ext.create('Ext.Component', {
             cls: "orderform-payment-paymentDetails",
             tpl: [
+                '<tpl if="captureData">',
                 '<div class="authorizedCreditCard">',
-                    '<span class="creditCard">Visa xxxx-xxxx-xxxx-4321</span>',
+                        '<span class="creditCard">{captureData.cardType} {captureData.cardNumber}</span>',
                     '<span class="seperator">|</span>',
-                    '<span class="authorization">Authorization ID: 09873746</span>',
+                        '<span class="authorization">Authorization ID: {captureData.id}</span>',
                 '</div>',
+                '</tpl>',
                 '<div class="orderSummary">',
-                    '<span class="orderTotal">Order Total: $229.48</span>',
+                    '<span class="orderTotal">Order Total: {totalAmount:usMoney}</span>',
                     '<span class="seperator">|</span>',
-                    '<span class="Received">Received: $0.00</span>',
+                    '<span class="Received">Received: {alreadyCapturedAmount:usMoney}</span>',
                     '<span class="seperator">|</span>',
-                    '<span class="balance">Balance: $229.48</span>',
+                    '<span class="balance">Balance: {captureAmount:usMoney}</span>',
                 '</div>',
                 '<div class="billingInformation">',
-                    '<span class="fullName">Bill to: Harry Balzonya</span>',
+                    '<span class="fullName">Bill to: {customer.firstName} {customer.lastName}</span>',
                     '<span class="seperator">|</span>',
-                    '<span class="address">6543 nowhere lane, austin texas 78731</span>',
+                    '<span class="address">{customer.address}</span>',
                     '<span class="seperator">|</span>',
-                    '<span class="country">United States</span>',
-                    '<span class="seperator">|</span>',
-                    '<span class="phoneNumber">512.666.6666</span>',
+                    '<span class="phoneNumber">?512.666.6666?</span>',
                 '</div>'
             ],
-            data: this.record.getData()
+            data: paymentDetailsData
         });
         
-        /*
-        PaymentID: "337"
-creditCard: "Visa xxxx-xxxx-xxxx-1111"
-paidAmount: "100.00"
-transactionData: "March 18, 2013"
-transactionID: "00158221"
-        */
 
         me.transactionList = Ext.create('Ext.Component', {
             cls: "orderform-payment-transactionlist",
             tpl: [
                 '<tpl for="payments">',
+                    '<tpl if="amountCollected!==0">',
                     '<div class="payment">',
-                        'March 18, 2013 ',
+                            '{transactionDate:date("M j, Y")} ',
                         '<span class="seperator">|</span>', 
-                        'Payment id: 337 ',
+                            'Payment id: {id} ',
                         '<span class="seperator">|</span>',
-                        'Paid: $229.48 ',
+                            'Paid: ${amountCollected} ',
                         '<span class="seperator">|</span>',
-                        'Visa xxxx-xxxx-xxxx-1111 ',
+                            '{cardType} {cardNumber} ',
                         '<span class="seperator">|</span>',
-                        'Transaction ID 00158221',
+                            'Transaction ID {transactionId}',
                     '</div>',
+                    '</tpl>',
                 '</tpl>'
             ],
             data: this.record.getData()
