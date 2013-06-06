@@ -120,7 +120,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var order = response.ReadAsAsync().Result;
 
-            var cookie = new HttpCookie("") { Expires = (order.CreateDate ?? DateTime.Now).AddMinutes(20d) };
+            var cookie = new HttpCookie("") { Expires = (order.AuditInfo.CreateDate  ?? DateTime.Now).AddMinutes(20d) };
             cookie["orderid"] = order.Id;
 
             _cookieProvider.SaveResponseCookie("order", cookie);
