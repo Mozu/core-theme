@@ -140,6 +140,14 @@ Ext.define('Taco.model.ProductInSiteInfo', {
                         return (me.get('categoryIds') || []).indexOf(record.getId()) > -1;
                     }
                 });
+            
+        
+            me.categoryStore.filter([
+            {
+                filterFn: function (record) {
+                    return (me.get('categoryIds') || []).indexOf(record.getId()) > -1;
+                }
+            }]);
 
         }
         return me.categoryStore;
