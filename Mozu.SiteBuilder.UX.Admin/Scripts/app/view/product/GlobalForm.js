@@ -36,15 +36,23 @@ Ext.define('Taco.view.product.GlobalForm', {
         };
 
         this.items = [
-            Ext.create('Taco.view.product.subform.General', subformCfg),
-            Ext.create('Taco.view.product.subform.Inventory', subformCfg),
-            Ext.create('Taco.view.product.subform.Properties', subformCfg),
-            Ext.create('Taco.view.product.subform.Extras', subformCfg),
-            Ext.create('Taco.view.product.subform.Shipping', subformCfg),
-            Ext.create('Taco.view.product.subform.SEO', subformCfg)
+            Ext.create('Taco.view.product.subform.General', subformCfg)
         ];
 
-        this.callParent( arguments );
+        if (!this.isSingleSite) {
+            Ext.Array.push(this.items, [
+                Ext.create('Taco.view.product.subform.Inventory', subformCfg),
+                Ext.create('Taco.view.product.subform.Properties', subformCfg),
+                Ext.create('Taco.view.product.subform.Extras', subformCfg)
+            ]);
+        }
+
+        Ext.Array.push(this.items, [
+            Ext.create('Taco.view.product.subform.Shipping', subformCfg),
+            Ext.create('Taco.view.product.subform.SEO', subformCfg)
+        ]);
+
+        this.callParent(arguments);
     },
 
     addSaveTasks: function (tasks) {

@@ -46,37 +46,30 @@ Ext.define('Taco.view.product.SiteForm', {
         };
 
         subFormReadOnlyCfg = Ext.apply({}, subFormCfg, {
-            readOnly: !this.isSingleSite, record: this.product
+            readOnly: !this.isSingleSite,
+            record: this.product
         });
         
         this.items = [
-            //{
-            //    xtype: 'combobox',
-            //    fieldLabel: 'Status',
-            //    name:'isActive',
-            //    labelAlign: 'top',
-            //    allowBlank: false,
-            //    editable: false,
-            //    forceSelection: true,
-            //    listConfig: { shadow: false },
-            //    shrinkWrap: 3,
-            //    store: [[false, 'Hide in website'], [true, 'Show on website']],
-            //    value: false
-            //},
-            Ext.create('Taco.view.product.subform.General', subFormCfg),
-            Ext.create('Taco.view.product.subform.Inventory', subFormReadOnlyCfg),
-            Ext.create('Taco.view.product.subform.Properties', subFormReadOnlyCfg),
-            Ext.create('Taco.view.product.subform.Extras', subFormReadOnlyCfg),
-            Ext.create('Taco.view.product.subform.Shipping', subFormReadOnlyCfg),
+            Ext.create('Taco.view.product.subform.General', subFormCfg)
+        ];
+
+        if (this.isSingleSite) {
+            Ext.Array.push(this.items, [
+                Ext.create('Taco.view.product.subform.Inventory', subFormCfg),
+                Ext.create('Taco.view.product.subform.Properties', subFormCfg),
+                Ext.create('Taco.view.product.subform.Extras', subFormCfg)
+            ]);
+        }
+
+        Ext.Array.push(this.items, [
+            Ext.create('Taco.view.product.subform.Shipping', subFormCfg),
             Ext.create('Taco.view.product.subform.Categories', subFormCfg),
             Ext.create('Taco.view.product.subform.Merchandising', subFormCfg),
             Ext.create('Taco.view.product.subform.SEO', subFormCfg)
-        ];
+        ]);
 
         this.callParent(arguments);
-        
-
-
 
         this.on({
             overrideChange: this.handleOverrideChange,

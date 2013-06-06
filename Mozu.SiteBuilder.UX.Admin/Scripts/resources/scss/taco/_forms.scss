@@ -52,8 +52,36 @@
   }
 
   .#{$vprefix}attribute-form {
-    background: rgba(0, 0, 0, 0.1);
-    margin: 1rem;
+    $color-extra: lighten($color-neutral-95, 4%);
+    $color-extra-border: border-for($color-extra);
+
+    background-color: $color-extra;
+    border-color: $color-extra-border;
+    border-style: solid;
+    border-width: px-to-rem(1);
+    margin: px-to-rem(15) px-to-rem(0);
+    padding: px-to-rem(12);
+
+    .extra-header {
+      border-color: $color-extra-border;
+      border-style: solid;
+      border-width: px-to-rem(0) px-to-rem(0) px-to-rem(1);
+      margin-bottom: px-to-rem(20);
+      padding-bottom: px-to-rem(12);
+    }
+
+    .extra-attribute {
+      text-transform: uppercase;
+    }
+
+    .extra-required {
+      border-color: $color-extra-border;
+      border-style: solid;
+      border-width: px-to-rem(1) px-to-rem(0) px-to-rem(0);
+      margin-top: px-to-rem(12);
+      padding-top: px-to-rem(12);
+      width: 100%;
+    }
   }
 
   /* PRODUCT TYPE FORM */
