@@ -43,31 +43,26 @@ Ext.define('Taco.view.order.subform.Detail', {
 
 
         // components to add to the panel header. typically used to add an actions menu button
-        tools: [
-            
-            // Actions menu button
-            {
-                xtype: "button",
-                menuAlign: "tr-br",
-                cls: "editContainer-menu-trigger",
-                iconCls: "editContainer-menu-trigger-icon",
-                height: 34,
-                width: 46,
-                menu: {
-                    plain:true,
-                    items: [
-                        {text: 'Edit Details'},
-                        {text: 'Cancel Order'}
-                    ]
-
-                }
+        tools: [{
+            xtype: 'taco.button',
+            width: 50,
+            height: 30,
+            text: ' ',
+            menuAlign: 'tr-br',
+            cls: Taco.baseCSSPrefix + 'editcontainer-menu-button',
+            autoEl: {
+                tag: 'a'
+            },
+            menu: {
+                plain: true,
+                items: [{
+                    text: 'Edit Details'
+                }, {
+                    text: 'Cancel Order'
+                }]
             }
-        
-        
-        ]
+        }]
     },
-    
-    cls: Taco.baseCSSPrefix + 'orderform-detail',
     
     // todos:remove border and style info after base class css is setup.
     
@@ -75,6 +70,8 @@ Ext.define('Taco.view.order.subform.Detail', {
     initComponent: function (eOpts) {
         var me = this,
             orderItemStore;
+
+        this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-detail'].join(' ');
         
         console.log(this.getRecord().getData());
         
