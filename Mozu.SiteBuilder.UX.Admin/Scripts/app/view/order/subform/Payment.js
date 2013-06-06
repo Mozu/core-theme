@@ -10,14 +10,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         // title for the panel header
         title: 'Payment & Billing Information',
         // components to add to the panel header. typically used to add an actions menu button
-    },
-    
-    initComponent: function(eOpts) {
-        var me = this;
-
-        this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
-
-        this.tools = [{
+        tools: [{
             xtype: 'taco.button',
             width: 50,
             height: 30,
@@ -35,7 +28,13 @@ Ext.define('Taco.view.order.subform.Payment', {
                     text: 'Add Payment'
                 }]
             }
-        }];
+        }]
+    },
+    
+    initComponent: function(eOpts) {
+        var me = this;
+
+        this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
     
         me.statusRow = Ext.create('Ext.container.Container', {
             cls: "orderform-payment-statusRow",

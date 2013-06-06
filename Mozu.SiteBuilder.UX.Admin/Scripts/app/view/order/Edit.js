@@ -99,9 +99,8 @@ Ext.define('Taco.view.order.Edit', {
                 manageHeight: false,
                 items: [
                     this.orderHeader,
-                    this.orderPayment,
-                    this.orderDetail
-                    
+                    this.orderDetail,
+                    this.orderPayment
                 ],
                 dockedItems: [{
                     xtype: 'container',
