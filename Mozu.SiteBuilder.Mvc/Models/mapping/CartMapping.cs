@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
             Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Carts.Cart, SiteBuilder.UX.Models.StoreFront.Cart.Cart>()
                 ;
             Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Carts.CartItem, CartItem>();
-            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Commerce.CommerceItemPrice , CartItemPrice>();
+           // Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Commerce.CommerceUnitPrice .CommerceItemPrice , CartItemPrice>();
             Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Carts.Fee, Fee>();
             Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Products .Product, Product>();
             Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Products.ProductOption, ProductOption>();
@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
             Mapper.CreateMap<Product, Mozu.CommerceRuntime.Contracts.Products.Product>()
                 //.ForMember(x => x.Price, op => op.MapFrom(x => new Mozu.CommerceRuntime.Contracts.CartOrder.ProductPrice { Price = x.Price }))
                 ;
-            Mapper.CreateMap<CartItemPrice, Mozu.CommerceRuntime.Contracts.Commerce.CommerceItemPrice>();
+         //   Mapper.CreateMap<CartItemPrice, Mozu.CommerceRuntime.Contracts.Commerce.CommerceItemPrice>();
             Mapper.CreateMap<Fee, Mozu.CommerceRuntime.Contracts.Carts.Fee>();
             Mapper.CreateMap<ProductOption, Mozu.CommerceRuntime.Contracts.Products.ProductOption>();
 
