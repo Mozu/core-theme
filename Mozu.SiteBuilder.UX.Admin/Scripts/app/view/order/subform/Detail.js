@@ -74,8 +74,6 @@ Ext.define('Taco.view.order.subform.Detail', {
 
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-detail'].join(' ');
         
-        console.log(this.getRecord().getData());
-        
         // store that contains the orderItems for this order model
         orderItemStore = this.record.itemsStore;
 
