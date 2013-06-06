@@ -11,21 +11,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         // title for the panel header
         title: 'Payment & Billing Information',
         // components to add to the panel header. typically used to add an actions menu button
-    },
-    
-    initComponent: function(eOpts) {
-        var me = this,
-            canCapture=false,
-            alreadyCapturedAmount,
-            captureAmount,
-            captureData,
-            payments,
-            paymentDetailsData,
-            totalAmount;
-
-        this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
-
-        this.tools = [{
+        tools: [{
             xtype: 'taco.button',
             width: 50,
             height: 30,
@@ -47,11 +33,16 @@ Ext.define('Taco.view.order.subform.Payment', {
     },
     
     initComponent: function(eOpts) {
-        var me = this;
+        var me = this,
+            canCapture = false,
+            alreadyCapturedAmount,
+            captureAmount,
+            captureData,
+            payments,
+            paymentDetailsData,
+            totalAmount;
 
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
-    
-        
 
         //look at the payments array and determine if we are in a capture state.
         // if the first item in the payments collection is status of authorized and amountCollected is 0, then show the capture ui.
