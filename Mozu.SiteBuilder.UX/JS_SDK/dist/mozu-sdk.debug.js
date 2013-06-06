@@ -1944,7 +1944,7 @@ var ApiReference = (function () {
                 noBody: true
             },
             "update-shipping-address": {
-                template: '{+OrderService}{Id}/shipping-info',
+                template: '{+OrderService}{Id}/shippinginfo',
                 verb: 'PUT',
                 returnType: 'shipment',
                 includeSelf: true
@@ -1994,7 +1994,7 @@ var ApiReference = (function () {
         },
         'shipment': {
             defaults: {
-                template: '{+OrderService}{orderId}/shipping-info',
+                template: '{+OrderService}{orderId}/shippinginfo',
                 includeSelf: true,
             },
             "get-shipping-methods": {

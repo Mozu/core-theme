@@ -38,7 +38,7 @@
                 this.stepStatus('submitting');
                 var self = this;
                 var parent = this.getParentModel();
-                parent.update({ ShippingAddress: self.toJS() }).then(function () {
+                parent.update({ ShippingContact: self.toJS() }).then(function () {
                     self.stepStatus('submitting');
                     parent.getShippingMethods().then(function (methodsJSON) {
                         self.stepStatus('complete');
@@ -159,8 +159,7 @@
         },
 
         parentBillingAddressRequired = function () {
-            var parent = this.getParentModel();
-            return parent.getParentModel().PaymentType() === "CreditCard" && !parent.IsSameBillingShippingAddress();
+            return this.getParentModel().PaymentType() === "CreditCard" && !parent.IsSameBillingShippingAddress();
         },
         grandparentBillingAddressRequired = function () {
             return parentBillingAddressRequired.call(this.getParentModel());

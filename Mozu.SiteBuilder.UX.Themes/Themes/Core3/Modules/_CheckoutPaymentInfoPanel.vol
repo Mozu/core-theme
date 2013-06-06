@@ -7,7 +7,7 @@
         <button class="mz-edit-button" data-bind="click: edit">Edit</button>
     </h3>
     <div class="mz-panel-wrap">
-        <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + Card.BillingAddress.Address.CountryCode() + Card.IsSameBillingShippingAddress() + PaymentType()">
+        <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + BillingContact.Address.CountryCode() + Card.IsSameBillingShippingAddress() + PaymentType()">
             <p class="mz-desc">How to bill?</p>
             <div class="mz-completed-summary">
                 <span data-bind="text: PaymentType"></span>
@@ -20,12 +20,12 @@
                         <div data-bind="template: { name: 'mz-tpt-address-summary', data: $root.Shipment.ShippingAddress }"></div>
                     <!-- /ko -->
                     <!-- ko if: !Card.IsSameBillingShippingAddress() -->
-                        <div data-bind="template: { name: 'mz-tpt-address-summary', data: Card.BillingAddress }"></div>
+                        <div data-bind="template: { name: 'mz-tpt-address-summary', data: BillingContact }"></div>
                     <!-- /ko -->
 
                     <h4>Billing Contact Information</h4>
-                    <span>Phone: <strong data-bind="text: Card.BillingAddress.PhoneNumbers.Home"></strong></span>
-                    <span>Email: <strong data-bind="text: Card.BillingAddress.Email"></strong></span>
+                    <span>Phone: <strong data-bind="text: BillingContact.PhoneNumbers.Home"></strong></span>
+                    <span>Email: <strong data-bind="text: BillingContact.Email"></strong></span>
                 <!-- /ko -->
             </div>
 
@@ -47,7 +47,7 @@
                 <div class="mz-single-setting"><label class="mz-inline"><input type="checkbox" data-bind="checked: Card.IsSameBillingShippingAddress"> Use my shipping address</label></div>
                 <div class="mz-completed-summary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary" data-bind="visible: Card.IsSameBillingShippingAddress, template: { name: 'mz-tpt-address-summary', data: $root.Shipment.ShippingAddress}">
                 </div>
-                <div class="mz-form-fieldgroup mz-form-fields" data-bind="visible: !Card.IsSameBillingShippingAddress(), template: { name: 'mz-tpt-address-form', data: Card.BillingAddress }"></div>
+                <div class="mz-form-fieldgroup mz-form-fields" data-bind="visible: !Card.IsSameBillingShippingAddress(), template: { name: 'mz-tpt-address-form', data: BillingContact }"></div>
 
                 <h4>Billing Contact Info</h4>
                 <div class="mz-form-fieldgroup">
@@ -56,7 +56,7 @@
                             <label for="billing-phone">Phone:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <input type="text" id="billing-phone" name="billing-phone" data-bind="value: Card.BillingAddress.PhoneNumbers.Home">
+                            <input type="text" id="billing-phone" name="billing-phone" data-bind="value: BillingContact.PhoneNumbers.Home">
                         </div>
                     </div>
                     <div class="mz-form-field-row">
@@ -64,8 +64,8 @@
                             <label for="billing-email">Email<span class="mz-required-field"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">
-                            <input type="text" id="billing-email" name="billing-email" data-bind="value: Card.BillingAddress.Email, css: {'mz-invalid': Card.BillingAddress.Email.invalid() }">
-                            <span class="mz-validation-message" data-bind="text: Card.BillingAddress.Email.validationMessage() || '&nbsp;'"></span>
+                            <input type="text" id="billing-email" name="billing-email" data-bind="value: BillingContact.Email, css: {'mz-invalid': BillingContact.Email.invalid() }">
+                            <span class="mz-validation-message" data-bind="text: BillingContact.Email.validationMessage() || '&nbsp;'"></span>
                         </div>
                     </div>
                     <div class="mz-form-field-row">
