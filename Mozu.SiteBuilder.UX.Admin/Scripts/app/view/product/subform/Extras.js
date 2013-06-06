@@ -26,7 +26,7 @@ Ext.define('Taco.view.product.subform.Extras', {
                 return [{
                     xtype: 'component',
                     html: ''
-                }]
+                }];
             }
         }
     },
@@ -48,30 +48,23 @@ Ext.define('Taco.view.product.subform.Extras', {
     },
 
     loadByProductTypeId: function (id) {
-        var type ,
-            extras,
-            items = [];
-        if (!id || !Ext.isNumeric( id )) {
-            id = this.product.get('productTypeId');
-        }
-        if (!id) {
-            return;
-        }
-        this.productType = type = this.productTypeStore.getById(id);
+        var items = [];
         
-        if (!type) {
-            return;
-        }
+        if (!id || !Ext.isNumeric(id)) id = this.product.get('productTypeId');
 
-        this.productTypeExtras = extras = type.getExtras();
+        if (!id) return;
+        
+        this.productType = this.productTypeStore.getById(id);
+        
+        if (!this.productType) return;
 
-        extras.each(function (ptAttribute) {
+        this.productTypeExtras = this.productType.getExtras();
+
+        this.productTypeExtras.each(function (ptAttribute) {
             items.push(this.buildContainer(ptAttribute));
         }, this);
 
-        if (!items.length) {
-            items.push(this.getEmptyComponent());
-        }
+        if (!items.length) items.push(this.getEmptyComponent());
 
         this.removeAll();
         this.add(items);
@@ -100,7 +93,6 @@ Ext.define('Taco.view.product.subform.Extras', {
             }
         }, this);
     },
-
 
     getEmptyComponent: function () {
         return {
@@ -139,23 +131,34 @@ Ext.define('Taco.view.product.subform.Extras', {
         checkbox = Ext.widget({
             xtype: 'checkbox',
             boxLabel: 'Required by Shopper',
-            value: pExtra ? pExtra.get('isRequired') : false
+            value: pExtra ? pExtra.get('isRequired') : false,
+            listeners: {
+                change: function (checkbox, value) {
+                    pExtra.set('isRequired', value);
+                }
+            }
         });
 
         extra.checkbox = checkbox;
 
         items = [{
             xtype: 'formflexbox',
+            cls: 'extra-header',
             items: [{
                 xtype: 'component',
+                cls: 'extra-attribute',
                 html: ptAttribute.get('attributeName')
             }, {
                 xtype: 'action',
-                text: 'Remove',
+                text: '',
                 hidden: ptAttribute.get('isRequired')
             }]
         }, 
-        editorCfg, checkbox];
+        editorCfg, {
+            xtype: 'container',
+            cls: 'extra-required',
+            items: [checkbox]
+        }];
         
         return Ext.widget({
             xtype: 'container',
@@ -165,7 +168,9 @@ Ext.define('Taco.view.product.subform.Extras', {
     },
 
     buildEditor: function (ptAttribute, extra, pExtra) {
-        var list;
+        var list,
+            value,
+            values;
 
         //debugger;
         if (ptAttribute.get('inputType') === 'List') {
@@ -179,6 +184,15 @@ Ext.define('Taco.view.product.subform.Extras', {
             extra.list = list;
 
             return list;
+        }
+
+        values = pExtra.get('values');
+        
+        if (!values.length) {
+            values.push({
+                value: ptAttribute.get('attributeName'),
+                delta: 0
+            });
         }
 
         return {

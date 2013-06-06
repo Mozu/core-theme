@@ -36,18 +36,17 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
         });
     },
 
-    loadData: function () {
-        var extra = this.product.getExtras().findRecord('attributeFQN', this.productTypeAttribute.getId());
-        
+    loadData: function () {   
         this.listItems = [];
 
-        if (!extra) {
-            return;
-        }
-
-        Ext.each(extra.get('values'), function (value) {
-            console.log('load value', value);
-        });
+        Ext.each(this.productExtra.get('values'), function (value) {
+            //console.log('load value', value);
+            this.listItems.push({
+                id: value.value,
+                value: value.value,
+                delta: value.delta
+            });
+        }, this);
     },
 
     buildList: function (values) {
@@ -110,7 +109,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
             }, {
                 xtype: 'textfield',
                 fieldLabel: 'Extra Cost',
-                value: value.delta,
+                value: value.delta || 0,
                 extraValueObj: value,
                 listeners: {
                     change: this.onListItemChange,

@@ -36,7 +36,8 @@ Ext.define('Taco.view.product.Form', {
         this.siteCollection = Taco.app.context.getCurrentSiteCollection();
 
         this.globalForm = Ext.create('Taco.view.product.GlobalForm', {
-            record: this.record
+            record: this.record,
+            isSingleSite: this.isSingleSite
         });
 
         this.buildSiteTabs();
