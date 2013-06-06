@@ -226,7 +226,7 @@ var ApiReference = (function () {
                 noBody: true
             },
             "update-shipping-address": {
-                template: '{+OrderService}{Id}/shipment',
+                template: '{+OrderService}{Id}/shipping-info',
                 verb: 'PUT',
                 returnType: 'shipment',
                 includeSelf: true
@@ -248,6 +248,12 @@ var ApiReference = (function () {
             },
             'remove-coupon': {
                 verb: 'DELETE',
+                template: '{+OrderService}{Id}/coupons/{couponCode}',
+                shortcutParam: 'couponCode',
+                includeSelf: true
+            },
+            'remove-all-coupons': {
+                verb: 'DELETE',
                 template: '{+OrderService}{Id}/coupons',
                 includeSelf: true
             },
@@ -257,11 +263,9 @@ var ApiReference = (function () {
                 returnType: 'orderactions'
             },
             'perform-order-action': {
-                verb: 'PUT',
-                template: '{+OrderService}{Id}/actions/{actionName}',
-                shortcutParam: 'actionName',
-                includeSelf: true,
-                noBody: true
+                verb: 'POST',
+                template: '{+OrderService}{Id}/actions',
+                includeSelf: true
             },
             'add-order-note': {
                 verb: 'POST',
@@ -272,11 +276,11 @@ var ApiReference = (function () {
         },
         'shipment': {
             defaults: {
-                template: '{+OrderService}{orderId}/shipment',
+                template: '{+OrderService}{orderId}/shipping-info',
                 includeSelf: true,
             },
             "get-shipping-methods": {
-                template: '{+OrderService}{orderId}/shipment/methods',
+                template: '{+OrderService}{orderId}/shipments/methods',
                 returnType: 'shippingmethods'
             }
         },

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-05-23
+ * Mozu JavaScript SDK - v0.1.0 - 2013-06-05
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1732,11 +1732,12 @@ var ApiReference = (function () {
 
         basicOps: basicOps,
         urls: {
-            "ProductService": defaultHost + 'mozu.ProductRuntime.WebApi/products/',
+            "ProductService": defaultHost + 'mozu.ProductRuntime.WebApi/commerce/catalog/storefront/products/',
             "CartService": defaultHost + 'mozu.Cart.WebApi/commerce/carts/',
-            "UserService": defaultHost + 'mozu.User.WebApi/users/',
-            "OrderService": defaultHost + 'mozu.Order.WebApi/orders/',
-            "SearchService": defaultHost + 'mozu.ProductRuntime.WebApi/productsearch/',
+            "UserService": defaultHost + 'mozu.User.WebApi/platform/user/accounts/',
+            "CustomerService": defaultHost + 'mozu.Customer.WebApi/commerce/customer/accounts',
+            "OrderService": defaultHost + 'mozu.CommerceRuntime.WebApi/commerce/orders',
+            "SearchService": defaultHost + 'mozu.ProductRuntime.WebApi/commerce/catalog/storefront/productsearch',
             "CmsService": defaultHost + 'mozu.Content.WebApi/documents/',
         },
 
@@ -1844,10 +1845,11 @@ var ApiReference = (function () {
         
 
         'search': {
-            template: '{+SearchService}' + genericQueryTpt,
+            template: '{+SearchService}searchz' + genericQueryTpt,
             shortcutParam: 'q',
             defaultParams: {
-
+                startIndex: 0,
+                pageSize: 25
             },
             collectionOf: 'product'
         },
@@ -1942,7 +1944,7 @@ var ApiReference = (function () {
                 noBody: true
             },
             "update-shipping-address": {
-                template: '{+OrderService}{Id}/shipment',
+                template: '{+OrderService}{Id}/shipping-info',
                 verb: 'PUT',
                 returnType: 'shipment',
                 includeSelf: true
@@ -1964,6 +1966,12 @@ var ApiReference = (function () {
             },
             'remove-coupon': {
                 verb: 'DELETE',
+                template: '{+OrderService}{Id}/coupons/{couponCode}',
+                shortcutParam: 'couponCode',
+                includeSelf: true
+            },
+            'remove-all-coupons': {
+                verb: 'DELETE',
                 template: '{+OrderService}{Id}/coupons',
                 includeSelf: true
             },
@@ -1973,11 +1981,9 @@ var ApiReference = (function () {
                 returnType: 'orderactions'
             },
             'perform-order-action': {
-                verb: 'PUT',
-                template: '{+OrderService}{Id}/actions/{actionName}',
-                shortcutParam: 'actionName',
-                includeSelf: true,
-                noBody: true
+                verb: 'POST',
+                template: '{+OrderService}{Id}/actions',
+                includeSelf: true
             },
             'add-order-note': {
                 verb: 'POST',
@@ -1988,11 +1994,11 @@ var ApiReference = (function () {
         },
         'shipment': {
             defaults: {
-                template: '{+OrderService}{orderId}/shipment',
+                template: '{+OrderService}{orderId}/shipping-info',
                 includeSelf: true,
             },
             "get-shipping-methods": {
-                template: '{+OrderService}{orderId}/shipment/methods',
+                template: '{+OrderService}{orderId}/shipments/methods',
                 returnType: 'shippingmethods'
             }
         },
