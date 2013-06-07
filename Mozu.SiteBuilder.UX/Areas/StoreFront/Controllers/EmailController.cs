@@ -114,8 +114,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICmsServiceWrapper cmsService,
             IOrderService orderService,
             ICmsTypeHelper cmsTypeHelper,
-            IViewEngine viewEngine)
-            : base(docRepo, docTypeRepo, context, cmsService, cmsTypeHelper, null, null)
+            IViewEngine viewEngine,
+            ILifetimeScope lifetimeScope)
+            : base(docRepo, docTypeRepo, context, cmsService, cmsTypeHelper, viewEngine, lifetimeScope)
         {
             _orderService = orderService;
             _viewEngine = viewEngine;
