@@ -76,28 +76,29 @@
         "label": "Templates",
         "address": "/pageTemplates"
     }]
-// }, {
-//     "id": "settings",
-//     "label": "Settings",
-//     "address": "generalsettings",
-//     "icon": "settings",
-//     "items": [{
-//         "id": "emailsettings",
-//         "label": "Email",
-//         "address": "email"
-//     }, {
-//         "id": "paymentcheckout",
-//         "label": "Payment/Checkout",
-//         "address": "paymentAndCheckout"
-//     }, {
-//         "id": "tax",
-//         "label": "Tax",
-//         "address": "tax"
-//     }, {
-//         "id": "shipping",
-//         "label": "Shipping",
-//         "address": "shipping"
-//     }]
+}, {
+    "id": "settings",
+    "label": "Settings",
+    "address": "generalsettings",
+    "icon": "settings",
+    "visable":false,
+    "items": [{
+        "id": "emailsettings",
+        "label": "Email",
+        "address": "email"
+    }, {
+        "id": "paymentcheckout",
+        "label": "Payment/Checkout",
+        "address": "paymentAndCheckout"
+    }, {
+        "id": "tax",
+        "label": "Tax",
+        "address": "tax"
+    }, {
+        "id": "shipping",
+        "label": "Shipping",
+        "address": "shipping"
+    }]
 }, {
     "id": "publishing",
     "label": "Publish",
