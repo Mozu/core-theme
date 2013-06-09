@@ -8,6 +8,7 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
     getValue: function() {
         var rqS = parseInt(this.startField.getValue()),
             rqE = parseInt(this.endField.getValue());
+        if (isNaN(rqS) && isNaN(rqE)) return null;
         if (isNaN(rqS)) rqS = -1000000;
         if (isNaN(rqE)) rqE = 1000000;
         return {

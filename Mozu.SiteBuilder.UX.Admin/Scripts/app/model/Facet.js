@@ -50,7 +50,7 @@ Ext.define('Taco.model.Facet', {
         useNull: true
     }, {
         name: 'validityCode',
-        type: 'int',
+        type: 'string',
         useNull: true
     }, {
         name: 'ranges',

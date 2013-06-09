@@ -18,13 +18,12 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
                 {
                     boxLabel: 'Values',
                     name: 'facetType',
-                    inputValue: 'Values'
+                    inputValue: 'Value'
                 },
                 {
                     boxLabel: 'Range',
                     name: 'facetType',
-                    inputValue: 'RangeQuery',
-                    checked: true
+                    inputValue: 'RangeQuery'
                 }
             ]
         });
@@ -32,6 +31,7 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
             forceSelection: true,
             fieldLabel: 'Number of ranges',
             labelAlign: 'left',
+            hidden: true,
             store: [
                 3,
                 4,
@@ -49,7 +49,8 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
         });
         me.rangeQueries = Ext.widget('taco.rangequerygroup', {
             xtype: 'taco.rangequerygroup',
-            name: 'ranges'
+            name: 'ranges',
+            hidden: true
         });
         this.items = [
             me.displayStyle,
@@ -57,13 +58,7 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
             me.rangeQueries
         ];
         me.displayStyle.on('change', function (rg, newValue) {
-            if (newValue.facetType == "RangeQuery") {
-                me.numRanges.show();
-                me.rangeQueries.show();
-            } else {
-                me.numRanges.hide();
-                me.rangeQueries.hide();
-            }
+            me.displayRangeQueryFields(newValue.facetType !== "Value");
         });
         me.rangeQueries.relayEvents(me.numRanges, ['select']);
         me.rangeQueries.on({
@@ -74,6 +69,29 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
         this.callParent(arguments);
         me.loadRecord(me.record);
         me.resetSavableState();
+        var displayStyleValue = me.displayStyle.getValue();
+        if (!displayStyleValue || !displayStyleValue.facetType) {
+            // the radiogroup appears to not be super amazing at keeping only one radio selected at a time
+            // TODO: find a better way of getting a default value into a radiogroup
+            me.displayStyle.setValue('RangeQuery');
+        } else {
+            me.displayRangeQueryFields(displayStyleValue.facetType !== "Value");
+        }
+    },
+    displayRangeQueryFields: function(yes) {
+        if (yes) {
+            this.numRanges.show();
+            this.rangeQueries.show();
+            if (this.cachedRangeQueries) {
+                this.rangeQueries.setValue(this.cachedRangeQueries);
+                delete this.cachedRangeQueries;
+            }
+        } else {
+            this.numRanges.hide();
+            this.rangeQueries.hide();
+            this.cachedRangeQueries = this.rangeQueries.getValue();
+            this.rangeQueries.setValue([]);
+        }
     },
     listeners: {
         destroy: function () {
