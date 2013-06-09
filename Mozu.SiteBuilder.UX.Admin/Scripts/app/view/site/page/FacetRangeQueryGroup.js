@@ -13,11 +13,11 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
         this.getVisibleFields().each(function (rq, i) {
             ret[i] = rq.getValue();
         });
-        return ret;
+        return Ext.Array.clean(ret);
     },
     setValue: function(rawRq) {
         var rqList;
-        if (!rawRq || !(length in rawRq)) return;
+        if (!rawRq || !('length' in rawRq)) return;
         rqList = Ext.clone(rawRq);
         if (rqList.length !== this.numRanges) this.setNumRanges(rqList.length);
         this.items.each(function (rq) {
