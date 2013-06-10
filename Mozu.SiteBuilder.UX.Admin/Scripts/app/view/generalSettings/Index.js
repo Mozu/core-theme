@@ -4,13 +4,13 @@
 Ext.define('Taco.view.generalsettings.Index', {
     extend: 'Taco.core.ux.content.Container',
     alias: 'widget.generalsettingseditor',
-    requires: ['Ext.form.field.Hidden','Taco.core.ux.form.SelectField', 'Taco.store.TimeZones', 'Taco.store.IpRanges'],
+    requires: [
+        'Ext.form.field.Hidden',
+        'Taco.core.ux.form.SelectField',
+        'Taco.store.TimeZones',
+        'Taco.store.IpRanges'],
     settings: null,
     sections: null,
-    //layout: {
-    //    type: 'vbox',
-    //  //  align: 'stretch'
-    //},
 
     requiresContextOfType: 's',
 
@@ -30,7 +30,7 @@ Ext.define('Taco.view.generalsettings.Index', {
                 eventName: 'save'
             }]
         };
-
+        /*
         me.ipRangeStore = Ext.create('Taco.store.IpRanges', {
             autoLoad: true,
             listeners: {
@@ -47,7 +47,8 @@ Ext.define('Taco.view.generalsettings.Index', {
                 scope: me
             }
         });
-
+        */
+        /*
         me.timeFormatSelect = {
             xtype: 'selectfield',
             name: 'timeFormat',
@@ -84,7 +85,7 @@ Ext.define('Taco.view.generalsettings.Index', {
             store: Ext.create('Taco.store.TimeZones', { autoLoad: true }),
             value: me.settings.timeZone
         };
-
+        
         me.timeSettings = Ext.widget('panel', {
             layout: 'hbox',
             width: 960,
@@ -94,7 +95,9 @@ Ext.define('Taco.view.generalsettings.Index', {
             },
             items: [me.timeZoneSelect, me.timeFormatSelect]
         });
-
+        */
+        
+        /*
         me.analytics = Ext.create('Ext.form.Panel', {
             title: 'Google Analytics',
             titleCollapse: true,
@@ -151,6 +154,10 @@ Ext.define('Taco.view.generalsettings.Index', {
             }
         });
 
+        */
+
+        /*
+
         me.robots = Ext.create('Ext.form.Panel', {
             title: 'BEEP BOOP RO BOTS',
             titleCollapse: true,
@@ -194,6 +201,11 @@ Ext.define('Taco.view.generalsettings.Index', {
                 scope: me
             }
         });
+
+        */
+        
+
+        /*
         me.about = Ext.create('Ext.form.Panel', {
             title: 'About My Website',
             titleCollapse: true,
@@ -225,7 +237,8 @@ Ext.define('Taco.view.generalsettings.Index', {
                 scope: me
             }
         });
-
+*/
+        /*
         me.addform = Ext.create('Ext.form.Panel', {
             layout: { type: 'hbox', align: 'middle' },
             defaults: {
@@ -268,7 +281,9 @@ Ext.define('Taco.view.generalsettings.Index', {
                 }]
             }]
         });
-
+        */
+        
+        /*
         me.ipAddressGrid = Ext.create('Taco.core.ux.BaseGrid', {
             store: me.ipRangeStore,
             width: 440,
@@ -309,7 +324,7 @@ Ext.define('Taco.view.generalsettings.Index', {
                 }
             }
         });
-
+        
         me.ipAddresses = Ext.create('Ext.form.Panel', {
             title: 'IP Address Security Rules',
             titleCollapse: true,
@@ -352,7 +367,9 @@ Ext.define('Taco.view.generalsettings.Index', {
                 return !hasIpBlockList;
             }
         });
-
+        */
+        
+        /*
         me.notifications = Ext.create('Ext.form.Panel', {
             title: 'Notifications',
             titleCollapse: true,
@@ -384,6 +401,8 @@ Ext.define('Taco.view.generalsettings.Index', {
             }
         });
 
+        */
+/*
         me.googleWebmasterTools = Ext.create("Ext.form.Panel", {
             noDirtyState: true,
             title: 'Google Webmaster Tools',
@@ -442,13 +461,21 @@ Ext.define('Taco.view.generalsettings.Index', {
                 margin: "0 0 0 75"
             }]
         });
+        */
+        //me.googleWebmasterTools.getForm().timeout = 10;
 
-        me.googleWebmasterTools.getForm().timeout = 10;
-
-        me.sections = [me.about, me.notifications, me.analytics, me.robots, me.googleWebmasterTools];
-
+       // me.sections = [me.about, me.notifications, me.analytics, me.robots, me.googleWebmasterTools];
+//this is where all the items are added to the body
         me.body = {
-            items: [me.about, me.ipAddresses, me.notifications, me.analytics, me.robots, me.googleWebmasterTools]
+            items: [
+                //me.about,
+                Ext.create('Taco.view.generalSettings.subform.About'),
+                Ext.create('Taco.view.generalSettings.subform.Rules'),
+                Ext.create('Taco.view.generalSettings.subform.Notifications'), //me.notifications,
+                Ext.create('Taco.view.generalSettings.subform.Analytics'),  //me.analytics,
+                Ext.create('Taco.view.generalSettings.subform.Robots'), //me.robots,
+                Ext.create('Taco.view.generalSettings.subform.Tools'),  //me.googleWebmasterTools
+            ]
         };
 
         me.callParent(arguments);
