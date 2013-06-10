@@ -1,22 +1,19 @@
 /**
  * @class Taco.view.generalSettings.subform.About
  * @author Bradley Friemel
+ * @date 6/10/2013
  *
  */
 
 Ext.define('Taco.view.generalSettings.subform.About', {
     extend: 'Taco.view.product.subform.Subform',
     requires: ['Taco.core.ux.form.SelectField', 'Taco.store.TimeZones'],
-    title: 'About',
+    title: 'Time Settings',
     initComponent: function () {
         var me = this;
         this.defaults = {
-            width: 200,
-            product: this.product,
-            productInSiteInfo: this.productInSiteInfo,
             labelAlign: 'top',
-            labelSeparator: '',
-            persistChangesToModel: true
+            labelSeparator: ''
         };
         
         me.timeFormatSelect = {
@@ -66,12 +63,8 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         });
 
 
-        this.items = [{
-            xtype: 'textfield',
-            name: 'websiteName',
-            fieldLabel: 'Website Name'/*,
-            value: me.settings.websiteName*/
-        }, me.timeSettings, {
+        this.items = [
+            me.timeSettings, {
             xtype: 'checkbox',
             name: 'daylightSaving',
             //checked: me.settings.daylightSaving,

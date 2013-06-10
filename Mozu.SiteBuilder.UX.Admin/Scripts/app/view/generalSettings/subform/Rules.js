@@ -1,13 +1,14 @@
 /**
  * @class Taco.view.generalSettings.subform.Rules
  * @author Bradley Friemel
+ * @date 6/10/2013
  *
  */
 
 Ext.define('Taco.view.generalSettings.subform.Rules', {
     extend: 'Taco.view.product.subform.Subform',
     requires: [],
-    title: 'Rules',
+    title: 'IP Address Security',
     initComponent: function () {
         var me = this;
 

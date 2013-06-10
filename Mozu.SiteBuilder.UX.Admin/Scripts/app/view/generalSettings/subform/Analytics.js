@@ -1,6 +1,7 @@
 /**
  * @class Taco.view.generalSettings.subform.Analytics
  * @author Bradley Friemel
+* @date 6/10/2013
  *
  */
 
@@ -12,12 +13,8 @@ Ext.define('Taco.view.generalSettings.subform.Analytics', {
         var me = this;
         
         this.defaults = {
-            width: 200,
-            product: this.product,
-            productInSiteInfo: this.productInSiteInfo,
             labelAlign: 'top',
-            labelSeparator: '',
-            persistChangesToModel: true
+            labelSeparator: ''
         };
 
         this.items = [
