@@ -1,6 +1,7 @@
 /**
  * @class Taco.view.generalSettings.subform.Notifications
  * @author Bradley Friemel
+ * @date 6/10/2013
  *
  */
 

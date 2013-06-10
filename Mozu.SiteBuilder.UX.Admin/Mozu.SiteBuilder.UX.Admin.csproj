@@ -669,6 +669,7 @@
     <Content Include="Scripts\app\view\fileManager\Index.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\About.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Analytics.js" />
+    <Content Include="Scripts\app\view\generalSettings\subform\Maintenance.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Notifications.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Robots.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Rules.js" />
