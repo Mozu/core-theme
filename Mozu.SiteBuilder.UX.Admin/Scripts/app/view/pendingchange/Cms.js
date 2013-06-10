@@ -78,6 +78,7 @@ Ext.define('Taco.view.pendingchange.Cms', {
         dockedItems: [{
             xtype: 'toolbar',
             dock: 'top',
+            border: false,
             items: [{
                 xtype:'taco.splitbutton',
                 text: 'Bulk Actions',
