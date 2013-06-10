@@ -134,6 +134,7 @@ Ext.define('Taco.view.product.subform.Extras', {
             value: pExtra ? pExtra.get('isRequired') : false,
             listeners: {
                 change: function (checkbox, value) {
+                    debugger;
                     pExtra.set('isRequired', value);
                 }
             }
@@ -172,7 +173,6 @@ Ext.define('Taco.view.product.subform.Extras', {
             value,
             values;
 
-        //debugger;
         if (ptAttribute.get('inputType') === 'List') {
             list = Ext.widget({
                 xtype: 'taco.product.listextraeditor',
@@ -186,13 +186,18 @@ Ext.define('Taco.view.product.subform.Extras', {
             return list;
         }
 
-        values = pExtra.get('values');
+        //values = pExtra.get('values');
         
-        if (!values.length) {
-            values.push({
+        if (!pExtra.get('values').length) {
+            // values.push({
+                
+            // });
+
+            pExtra.set('values', [{
                 value: ptAttribute.get('attributeName'),
-                delta: 0
-            });
+                delta: 0,
+                createdByThom: true
+            }]);
         }
 
         return {
