@@ -1,13 +1,12 @@
-using AutoMapper;
-using System.Linq;
-using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
-using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
-using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
-using CustomerDC = Mozu.Customer.Contracts;
-using PaymentsDC = Mozu.CommerceRuntime.Contracts.Payments;
-using System.Text;
 using System;
+using System.Linq;
+using System.Text;
+using AutoMapper;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
+using CustomerDC = Mozu.Customer.Contracts;
+using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
+using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
+using PaymentsDC = Mozu.CommerceRuntime.Contracts.Payments;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {

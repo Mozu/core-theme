@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 
-namespace Mozu.SiteBuilder.UX.Admin.Api.Models
+namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
     [DataContract]
     public class Order
@@ -95,9 +95,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name = "payments")]
         public List<OrderPayment> Payments { get; set; }
 
+        [DataMember(Name="packages")]
+        public List<OrderPackage> Packages { get; set; }
+
+        [DataMember(Name="unpackedItems")]
+        public List<OrderPackageItem> UnpackedItems { get; set; }
+
         [Obsolete]
         [DataMember(Name = "availableOrderActions")]
         public List<string> AvailableOrderActions { get; set; }
         #endregion
+
     }
 }

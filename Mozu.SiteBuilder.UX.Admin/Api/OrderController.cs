@@ -10,6 +10,7 @@ using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
@@ -90,6 +91,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
 
+            new DCo.Order {
+                Packages = null
+            };
+
             if (pagingParams.id != null)
                 return List2(orders.Where(o => o.Id == pagingParams.id).ToList());
 
@@ -110,10 +115,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // _orderWebApiClient.payment
             var order = (await _orderWebApiClient.CreatePaymentAction(orderId, action)).ReadAsSync();
 
+
+            //_orderWebApiClient.GetPackageLabel
             return List2(order.Map<Order>());
         }
 
-
+        public async Task<Response<List<Order>>> CreatePackage(string orderId)
+        {
+            return EmptyList2<Order>();
+        }
 
         /// <summary>
         /// Gets a mock list of Orders.
@@ -252,15 +262,57 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
             allTheOrders.Add(order_partial_payment);
 
+
+            var order_with_some_packages = order_template.Clone<Order>();
+            order_with_some_packages.Id = "o1004";
+            order_with_some_packages.Customer.FirstName = "Packages";
+            order_with_some_packages.Customer.FirstName = "ForYou";
+            order_with_some_packages.Packages = new List<OrderPackage> { 
+                new OrderPackage {
+                    Id = "o1004-p1",
+                    Status = "NotShipped",
+                    Items = new List<OrderPackageItem> {
+                        new OrderPackageItem {
+                            OrderItemId = "i123",
+                            ProductCode = "HOBO-LL",
+                            ProductName = "Slouchy leather... lace hobo",
+                            Quantity = 1
+                        },
+                        new OrderPackageItem {
+                            OrderItemId = "i124",
+                            ProductCode = "789MAE",
+                            ProductName = "Mary Mae's... Summer Sandals",
+                            Quantity = 1
+                        }
+                    }
+                },
+                new OrderPackage {
+                    Id = "o1004-p2",
+                    Status = "NotShipped",
+                    Items = new List<OrderPackageItem> {
+                        new OrderPackageItem {
+                            OrderItemId = "i124",
+                            ProductCode = "HOBO-LL",
+                            ProductName = "Slouchy leather... lace hobo",
+                            Quantity = 1
+                        }
+                    }
+                }
+            };
+            order_with_some_packages.UnpackedItems = new List<OrderPackageItem> {
+                new OrderPackageItem {
+                    OrderItemId = "i124",
+                    ProductCode = "789MAE",
+                    ProductName = "Mary Mae's... Summer Sandals",
+                    Quantity = 1
+                }
+            };
+            allTheOrders.Add(order_with_some_packages);
+
             var taskResult = new TaskCompletionSource<List<Order>>();
             taskResult.SetResult(allTheOrders);
 
             return taskResult.Task;
-        }
-
-        private Order DeepCopyOrder(Order o)
-        {
-            return o.Clone<Order>();
         }
     }
 }
