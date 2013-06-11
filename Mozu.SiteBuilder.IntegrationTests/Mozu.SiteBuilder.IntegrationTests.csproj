@@ -207,6 +207,13 @@
     <Reference Include="Mozu.Core.Extensible.Contracts">
       <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.0.13142.1\lib\Mozu.Core.Extensible.Contracts.dll</HintPath>
     </Reference>
+    <Reference Include="Mozu.Core.Messaging.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.0.13140.1\lib\Mozu.Core.Messaging.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Core.Mongo">
+      <HintPath>..\packages\Mozu.Core.Mongo.0.0.13154.1\lib\Mozu.Core.Mongo.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.Customer.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Customer.Contracts.0.0.13157.1\lib\Mozu.Customer.Contracts.dll</HintPath>
@@ -234,6 +241,10 @@
     <Reference Include="Mozu.ShippingAdmin.Contracts">
       <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.0.0.13134.3\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
     </Reference>
+    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.0.0.13136.1\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.SiteSettings.General.Contracts">
       <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.0.13130.2\lib\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
@@ -244,11 +255,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.SiteSettings.Shipping.Contracts.1.0.13151.1\lib\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Tenant.Contracts">
-      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.13149.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Tenant.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.13155.2\lib\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.User.Contracts">
       <HintPath>..\packages\Mozu.User.Contracts.1.0.13148.1\lib\Mozu.User.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.UspsShippingAdmin.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.UspsShippingAdmin.Contracts.0.0.13010.1\lib\Mozu.UspsShippingAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40, Version=0.9.9.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
