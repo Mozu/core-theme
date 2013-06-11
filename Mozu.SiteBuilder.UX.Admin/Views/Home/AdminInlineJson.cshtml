@@ -8,7 +8,7 @@
             var ver = System.Diagnostics.FileVersionInfo.GetVersionInfo(assFile);
            
             var user = (Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User)ViewData["user"];
-            var siteRoles = (List<Mozu.Core.Api.Contracts.Role>)ViewData["siteRoles"];
+            var siteRoles = (List<Mozu.Core.Api.Contracts.UserRole>)ViewData["siteRoles"];
             var siteRolesJson = Newtonsoft.Json.JsonConvert.SerializeObject(siteRoles);
      
             var taContext = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["taContext"]);

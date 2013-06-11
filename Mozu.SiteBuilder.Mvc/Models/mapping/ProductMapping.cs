@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
 
          
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductAttribute, ProductAttribute>();
+            //Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductAttribute, ProductAttribute>();
 
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductOption, ProductOption>();
                 //ForMember(x => x.StandardInputTypeIntention, op => op.MapFrom(x => (x.StandardInputTypeIntention == "Undefined" || x.OptionType == "Configurable")  ? "Dropdown" : x.StandardInputTypeIntention));
