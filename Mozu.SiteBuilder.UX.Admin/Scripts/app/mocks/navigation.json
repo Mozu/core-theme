@@ -1,125 +1,130 @@
 ﻿[{
-    "id": "dashboard",
-    "label": "Dashboard",
-    "address": "dashboard",
-    "icon": "nav-dashboard"
-}, {
-    "id": "customers",
-    "label": "Customers",
-    "address": "customers",
-    "icon": "nav-customers"
-}, {
-    "id": "catalog",
-    "label": "Catalog",
-    "address": "products",
-    "icon": "nav-catalog",
-    "items": [{
-        "id": "products",
-        "label": "Products",
-        "address": "products"
+        "id": "dashboard",
+        "label": "Dashboard",
+        "address": "dashboard",
+        "icon": "nav-dashboard"
     }, {
-        "id": "inventory",
-        "label": "Inventory",
-        "address": "inventory"
+        "id": "customers",
+        "label": "Customers",
+        "address": "customers",
+        "icon": "nav-customers"
     }, {
-        "id": "categories",
-        "label": "Categories",
-        "address": "categories"
-    }, {
-        "id": "attributes",
-        "label": "Attributes",
-        "address": "attributes"
-    }, {
-        "id": "productTypes",
-        "label": "Product Types",
-        "address": "producttypes"
-    }]
-}, {
-    "id": "store",
-    "label": "Orders",
-    "address": "orders",
-    "icon": "nav-orders",
-    "items": [{
-        "id": "orders",
-        "label": "Orders",
-        "address": "orders"
-    }, {
-        "id": "phoneorders",
-        "label": "Phone Orders",
-        "address": "phoneorders"
-    }]
-}, {
-    "id": "marketing",
-    "label": "Marketing",
-    "address": "discounts",
-    "icon": "nav-marketing",
-    "items": [{
-        "id": "discounts",
-        "label": "Discounts",
-        "address": "discounts"
-    }]
-}, {
-    "id": "sitebuilder",
-    "label": "Site Builder",
-    "address": "sites/pages",
-    "icon": "nav-sites",
-    "items":[{
-        "id": "website",
-        "label": "Website",
-        "address": "sites/pages"
-    }, {
-        "id": "themes",
-        "label": "Themes",
-        "address": "themes"
-    }, {
-        "id": "templates",
-        "label": "Templates",
-        "address": "/pageTemplates"
-    }]
-}, {
-    "id": "settings",
-    "label": "Settings",
-    "address": "generalsettings",
-    "icon": "settings",
-    "visable":false,
-    "items": [{
-        "id": "generalsettings",
-        "label": "General Settings",
-        "address": "generalsettings"
-    },{
-        "id": "emailsettings",
-        "label": "Email",
-        "address": "email"
-    }, {
-        "id": "paymentcheckout",
-        "label": "Payment/Checkout",
-        "address": "settings/paymentAndCheckout"
-    }, {
-        "id": "tax",
-        "label": "Tax",
-        "address": "tax"
-    }, {
-        "id": "shipping",
-        "label": "Shipping",
-        "address": "shipping"
-    }]
-}, {
-    "id": "publishing",
-    "label": "Publish",
-    "address": "pendingchanges",
-    "icon": "nav-publishing",
-    "items": [{
-        "id": "catalogpublishing",
+        "id": "catalog",
         "label": "Catalog",
-        "address": "/pendingchanges/catalog"
+        "address": "products",
+        "icon": "nav-catalog",
+        "items": [{
+                "id": "products",
+                "label": "Products",
+                "address": "products"
+            }, {
+                "id": "inventory",
+                "label": "Inventory",
+                "address": "inventory"
+            }, {
+                "id": "categories",
+                "label": "Categories",
+                "address": "categories"
+            }, {
+                "id": "attributes",
+                "label": "Attributes",
+                "address": "attributes"
+            }, {
+                "id": "productTypes",
+                "label": "Product Types",
+                "address": "producttypes"
+            }]
     }, {
-        "id": "cmspublishing",
-        "label": "Content",
-        "address": "/pendingchanges/cms"
+        "id": "store",
+        "label": "Orders",
+        "address": "orders",
+        "icon": "nav-orders",
+        "items": [{
+                "id": "orders",
+                "label": "Orders",
+                "address": "orders"
+            }, {
+                "id": "phoneorders",
+                "label": "Phone Orders",
+                "address": "phoneorders"
+            }]
+    }, {
+        "id": "marketing",
+        "label": "Marketing",
+        "address": "discounts",
+        "icon": "nav-marketing",
+        "items": [{
+            "id": "discounts",
+            "label": "Discounts",
+            "address": "discounts"
+        }]
+    }, {
+        "id": "sitebuilder",
+        "label": "Site Builder",
+        "address": "sites/pages",
+        "icon": "nav-sites",
+        "items": [{
+                "id": "website",
+                "label": "Website",
+                "address": "sites/pages"
+            }, {
+                "id": "themes",
+                "label": "Themes",
+                "address": "themes"
+            }, {
+                "id": "templates",
+                "label": "Templates",
+                "address": "/pageTemplates"
+            }]
+    }, {
+        "id": "settings",
+        "label": "Settings",
+        "address": "generalsettings",
+        "icon": "settings",
+        "visable": false,
+        "items": [{
+                "id": "generalsettings",
+                "label": "General Settings",
+                "address": "generalsettings"
+            }, {
+                "id": "emailsettings",
+                "label": "Email",
+                "address": "email"
+            }, {
+                "id": "paymentcheckout",
+                "label": "Payment & Checkout",
+                "address": "settings/paymentAndCheckout"
+            }, {
+                "id": "tax",
+                "label": "Tax",
+                "address": "tax"
+            }, {
+                "id": "shipping",
+                "label": "Shipping",
+                "address": "shipping"
+            },
+            {
+                "id": "account",
+                "label": "Users & Roles",
+                "address": "account"           
+            }]
+    }, {
+        "id": "publishing",
+        "label": "Publish",
+        "address": "pendingchanges",
+        "icon": "nav-publishing",
+        "items": [{
+                "id": "catalogpublishing",
+                "label": "Catalog",
+                "address": "/pendingchanges/catalog"
+            }, {
+                "id": "cmspublishing",
+                "label": "Content",
+                "address": "/pendingchanges/cms"
+            }]
+    }, {
+        "id": "fileManager",
+        "label": "File Manager",
+        "address": "fileManager",
+        "icon": "nav-files"
     }]
-}, {
-    "id": "fileManager",
-    "label": "File Manager",
-    "address": "fileManager",
-    "icon": "nav-files"
-}]

@@ -133,8 +133,8 @@ Ext.define('Taco.view.generalsettings.Index', {
         var me = this,
             store = this.ipRangeStore,
             isDirty = false;
-
-        if (store.getNewRecords().length || store.getRemovedRecords().length) {
+        
+        if (store &&( store.getNewRecords().length || store.getRemovedRecords().length)) {
             return true;
         }
 
