@@ -134,7 +134,6 @@ Ext.define('Taco.view.product.subform.Extras', {
             value: pExtra ? pExtra.get('isRequired') : false,
             listeners: {
                 change: function (checkbox, value) {
-                    debugger;
                     pExtra.set('isRequired', value);
                 }
             }
