@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.FirstName, op => op.MapFrom(dc => dc.Contacts != null && dc.Contacts.Count > 0 ? dc.Contacts.First().FirstName : null))
                 .ForMember(x => x.LastName, op => op.MapFrom(dc => dc.Contacts != null && dc.Contacts.Count > 0 ? dc.Contacts.First().LastNameOrSurname : null))
                 .ForMember(x => x.CompanyName, op => op.MapFrom(dc => dc.CompanyOrOrganization))
-                .ForMember(x => x.Address, op => op.MapFrom(dc => dc.Contacts != null ? FormatAddress(dc.Contacts.FirstOrDefault()) : null))
+                .ForMember(x => x.Address, op => op.MapFrom(dc => dc.Contacts != null ? FormatAddress(dc.Contacts.Select(x=>x.Address).FirstOrDefault()) : null))
                 .ForMember(x => x.CustomerSince, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
                 .ForMember(x => x.TotalOrders, op => op.MapFrom(dc => dc.OrderSummary.OrderCount))
                 .ForMember(x => x.TotalSpent, op => op.MapFrom(dc => dc.OrderSummary.TotalOrderAmount))
@@ -85,26 +85,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
         }
 
-        private string FormatAddress(CustomerDC.Contact contact)
+        private string FormatAddress(Core.Api.Contracts.Address  address)
         {
-            if (contact == null)
+            if (address == null)
                 return null;
 
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(contact.Address);
+           
+            
+           
+            
+                sb.Append(address.Address1);
 
-            if (!String.IsNullOrWhiteSpace(contact.CityOrTown) || !String.IsNullOrWhiteSpace(contact.CityOrTown) || !String.IsNullOrWhiteSpace(contact.CityOrTown))
-            {
-                if (sb.Length > 0)
-                    sb.Append(", ");
+                if (!String.IsNullOrWhiteSpace(address.CityOrTown) || !String.IsNullOrWhiteSpace(address.StateOrProvince) || !String.IsNullOrWhiteSpace(address.PostalOrZipCode))
+                {
+                    if (sb.Length > 0)
+                        sb.Append(", ");
 
-                sb.AppendFormat("{0} {1} {2}", contact.CityOrTown, contact.StateOrProvince, contact.PostalOrZipCode);
-            }
+                    sb.AppendFormat("{0} {1} {2}", address.CityOrTown, address.StateOrProvince, address.PostalOrZipCode);
+                }
 
-            if (!String.IsNullOrWhiteSpace(contact.CountryCode))
-                sb.Append(sb.Length > 0 ? ", " + contact.CountryCode : contact.CountryCode);
-
+                if (!String.IsNullOrWhiteSpace(address.CountryCode))
+                    sb.Append(sb.Length > 0 ? ", " + address.CountryCode : address.CountryCode);
+            
 
             return sb.ToString();
         }

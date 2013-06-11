@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
 
         public async Task<List<CustomerGroup>> GetAll(string filter, int? startIndex, int? pageSize)
         {
-            var groupCollection = await _customerGroupsWebApiClient.GetCustomerGroups(startIndex, pageSize, null, filter).Result.ReadAsAsync();
+            var groupCollection = await _customerGroupsWebApiClient.GetGroups( startIndex, pageSize, null, filter).Result.ReadAsAsync();
 
             return groupCollection.Items.Select(g => new CustomerGroup { Id = g.Id, Name = g.Name }).ToList();
         }
@@ -30,22 +30,22 @@ namespace Mozu.SiteBuilder.Mvc.Customers
         public async Task<CustomerGroup> Create(CustomerGroup customerGroup)
         {
             var group = Mapper.Map<Mozu.Customer.Contracts.CustomerGroup>(customerGroup);
-            var newGroup = await _customerGroupsWebApiClient.AddCustomerGroup(@group).Result.ReadAsAsync();
+            var newGroup = await _customerGroupsWebApiClient.AddGroup( @group).Result.ReadAsAsync();
 
             return Mapper.Map<CustomerGroup>(newGroup);
         }
 
         public async Task<StreamContent> Delete(CustomerGroup customerGroup)
         {
-            var result = await _customerGroupsWebApiClient.DeleteCustomerGroup(customerGroup.Id);
+            var result = await _customerGroupsWebApiClient.DeleteGroup( customerGroup.Id);
             return result.ReadAsAsync().Result;
         }
 
         public async Task<CustomerGroup> AssignGroupToCustomer(int customerId, int customerGroupId)
         {
-            var group = await _customerGroupsWebApiClient.GetCustomerGroup(customerGroupId).Result.ReadAsAsync();
+            var group = await _customerGroupsWebApiClient.GetGroup( customerGroupId).Result.ReadAsAsync();
 
-            await _customerAccountWebApiClient.AddCustomerAccountGroup(new CustomerAccountGroup { Id = customerGroupId }, customerId).Result.ReadAsAsync();
+            await _customerAccountWebApiClient.AddAccountGroup( new Customer.Contracts.CustomerGroup { Id = customerGroupId }, customerId).Result.ReadAsAsync();
 
             return Mapper.Map<CustomerGroup>(group);
         }

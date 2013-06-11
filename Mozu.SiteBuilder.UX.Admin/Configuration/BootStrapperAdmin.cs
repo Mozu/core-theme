@@ -81,15 +81,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             LogStartupMessage<MvcApplication>(APPLICATION_NAME);
         }
 
-        protected override void RegisterControllerRoutes(System.Web.Http.HttpConfiguration httpConfiguration)
-        {
-            base.RegisterControllerRoutes(httpConfiguration);
-            RegisterMvcRoutes(RouteTable.Routes);
-            
-
-
-        }
-
+       
+    
 
         private void RegisterMvcRoutes(RouteCollection routes)
         {

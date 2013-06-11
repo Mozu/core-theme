@@ -20,30 +20,30 @@ namespace Mozu.SiteBuilder.Mvc.Customers
 
         public async Task<SB.CustomerAccountContact> Get(int? customerAccountId, int? contactId)
         {
-            var result = await _customerAccountWebApiClient.GetCustomerAccountContact(customerAccountId, contactId).Result.ReadAsAsync();
+            var result = await _customerAccountWebApiClient.GetAccountContact( customerAccountId, contactId).Result.ReadAsAsync();
 
             return Mapper.Map<SB.CustomerAccountContact>(result);
         }
 
         public async Task<IEnumerable<SB.CustomerAccountContact>> GetAll(int? customerId)
         {
-            var result = await _customerAccountWebApiClient.GetCustomerAccountContacts(customerId, 0, 25, null, null).Result.ReadAsAsync();
+            var result = await _customerAccountWebApiClient.GetAccountContacts( customerId, 0, 25, null, null).Result.ReadAsAsync();
 
             return Mapper.Map<List<SB.CustomerAccountContact>>(result.Items);
         }
 
         public async Task<SB.CustomerAccountContact> Update(SB.CustomerAccountContact accountContact, int? customerAccountId)
         {
-            var newAccountContact = Mapper.Map<CustomerAccountContact>(accountContact);
-            var result = await _customerAccountWebApiClient.UpdateCustomerAccountContact(newAccountContact, customerAccountId, accountContact.Id).Result.ReadAsAsync();
+            var newAccountContact = Mapper.Map<CustomerContact>(accountContact);
+            var result = await _customerAccountWebApiClient.UpdateAccountContact(newAccountContact, customerAccountId, accountContact.Id).Result.ReadAsAsync();
 
             return Mapper.Map<SB.CustomerAccountContact>(result);
         }
 
         public async Task<SB.CustomerAccountContact> Create(SB.CustomerAccountContact accountContact, int? customerAccountId)
         {
-            var newAccountContact = Mapper.Map<CustomerAccountContact>(accountContact);
-            var result = await _customerAccountWebApiClient.AddCustomerAccountContact(newAccountContact, customerAccountId).Result.ReadAsAsync();
+            var newAccountContact = Mapper.Map<CustomerContact>(accountContact);
+            var result = await _customerAccountWebApiClient.AddAccountContact( newAccountContact, customerAccountId).Result.ReadAsAsync();
 
             return Mapper.Map<SB.CustomerAccountContact>(result);
         }
