@@ -83,13 +83,17 @@
     "icon": "settings",
     "visable":false,
     "items": [{
+        "id": "generalsettings",
+        "label": "General Settings",
+        "address": "generalsettings"
+    },{
         "id": "emailsettings",
         "label": "Email",
         "address": "email"
     }, {
         "id": "paymentcheckout",
         "label": "Payment/Checkout",
-        "address": "paymentAndCheckout"
+        "address": "settings/paymentAndCheckout"
     }, {
         "id": "tax",
         "label": "Tax",

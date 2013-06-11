@@ -12,6 +12,10 @@ Ext.define('Taco.controller.PaymentAndCheckout', {
     index: function ( params ) {
         var me = this;
 
+        if (this.requiresSiteContext()) {
+            return;
+        }
+        
         Taco.model.PaymentAndCheckout.load(123, {
             success: function ( record, o ) {
                 me.createContentView('Taco.view.paymentAndCheckout.Index', { recordId: record });

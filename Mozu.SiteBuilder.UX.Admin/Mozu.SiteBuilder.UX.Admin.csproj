@@ -545,6 +545,7 @@
     <Content Include="Scripts\app\controller\Errors.js" />
     <Content Include="Scripts\app\controller\PhoneOrders.js" />
     <Content Include="Scripts\app\controller\Roles.js" />
+    <Content Include="Scripts\app\controller\Settings.js" />
     <Content Include="Scripts\app\core\AjaxProxy.js" />
     <Content Include="Scripts\app\core\context\Site.js" />
     <Content Include="Scripts\app\core\context\SiteCollection.js" />
@@ -564,6 +565,7 @@
     <Content Include="Scripts\app\core\ux\browser\FilterList.js" />
     <Content Include="Scripts\app\core\ux\EditContainer.js" />
     <Content Include="Scripts\app\core\ux\form\field\PageTemplate.js" />
+    <Content Include="Scripts\app\core\ux\form\NavForm.js" />
     <Content Include="Scripts\app\core\ux\form\OnOffSliderButton.js" />
     <Content Include="Scripts\app\core\ux\GroupedView.js" />
     <Content Include="Scripts\app\core\ux\modal\SidebarModal.js" />
@@ -723,6 +725,8 @@
     <Content Include="Scripts\app\view\option\Edit2.js" />
     <Content Include="Scripts\app\view\option\EditModal.js" />
     <Content Include="Scripts\app\view\option\Form.js" />
+    <Content Include="Scripts\app\view\settings\paymentAndCheckout\Edit.js" />
+    <Content Include="Scripts\app\view\settings\paymentAndCheckout\Form.js" />
     <Content Include="Scripts\app\view\site\navigation\PageCreator.js" />
     <Content Include="Scripts\app\view\site\page\FacetRangeQueryGroup.js" />
     <Content Include="Scripts\app\view\site\page\Form.js" />

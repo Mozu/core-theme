@@ -54,6 +54,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
      */
     onStateChange: function (appState) {
         var controller = appState.metaData.controller,
+            appStateAddress = appState.getUri().toLowerCase(),
        parentRecord, selectedRecord;
         
         
@@ -63,6 +64,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         controller = controller.toLowerCase();
         
         this.store.each(function (topParent) {
+            
             if ((topParent.data.address || '').toLowerCase() == controller) {
                 parentRecord = topParent;
                 selectedRecord = topParent;
@@ -74,6 +76,21 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
                 }
             });
         });
+        if (!selectedRecord) {
+            
+            this.store.each(function (topParent) {
+                if (topParent.data.address && appStateAddress.indexOf(topParent.data.address.toLowerCase())&& appStateAddress.indexOf(topParent.data.address.toLowerCase()) == appStateAddress.length + topParent.data.address.length) {
+                    parentRecord = topParent;
+                    selectedRecord = topParent;
+                }
+                topParent.items().each(function (subItem) {
+                    if (subItem.data.address && appStateAddress.indexOf(subItem.data.address.toLowerCase()) && appStateAddress.indexOf(subItem.data.address.toLowerCase()) == appStateAddress.length - subItem.data.address.length) {
+                        parentRecord = topParent;
+                        selectedRecord = subItem;
+                    }
+                });
+            });
+        }
         if (selectedRecord) {
 
             this.syncBreadcrumb(parentRecord, selectedRecord);

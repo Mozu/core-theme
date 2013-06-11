@@ -30,6 +30,17 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                 }]
             }
         }, {
+            xtype: 'taco.button',
+            autoEl: 'a',
+            text: 'Settings',
+            
+            menu: {
+                plain: true,
+                shadow: false,
+                itemId: 'settingsMenu',
+                items: []
+            }
+        }, {
             xtype: 'action',
             text: 'Help',
             click: function () {
@@ -56,7 +67,29 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
         }
         */
         ];
-
+        this.navStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Navigation');
+        
         this.callParent(arguments);
+        if (!this.navStore.isLoading) {
+            this.bindSettingsStore();
+        } else {
+            this.navStore.on('load', this.bindSettingsStore, this);
+        }
+        
+    },
+    bindSettingsStore:function() {
+        var settingsMenu = this.down('#settingsMenu'),
+            settingsRecord = this.navStore.getById('settings');
+        settingsRecord.items().each( function(item) {
+            settingsMenu.add({
+                xtype: 'menuitem',
+                text: item.get('label'),
+                handler: function() {
+                    Taco.app.StateManager.attemptNavigate(item.get('address'));
+                }
+            });
+        });
+
     }
+    
 });
