@@ -159,7 +159,8 @@
         },
 
         parentBillingAddressRequired = function () {
-            return this.getParentModel().PaymentType() === "CreditCard" && !parent.IsSameBillingShippingAddress();
+            var parent = this.getParentModel();
+            return parent.PaymentType() === "CreditCard" && !parent.IsSameBillingShippingAddress();
         },
         grandparentBillingAddressRequired = function () {
             return parentBillingAddressRequired.call(this.getParentModel());
@@ -357,7 +358,7 @@
 
             this.pciProcessor = PCIaaS({
                 fields: {
-                    CardType: this.PaymentType,
+                    CardType: this.Card.PaymentOrCardType,
                     CardNumber: this.Card.CardNumberPartOrMask,
                     CVV: this.Card.CVV,
                     PersistCard: this.Card.IsCardInfoSaved,
