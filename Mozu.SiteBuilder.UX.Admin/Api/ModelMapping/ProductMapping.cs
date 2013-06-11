@@ -126,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
             Mapper.CreateMap<ProductProperty, DC.ProductProperty>()
-                  .ForMember(x => x.AttributeDetail, op => op.Ignore())
+                  //.ForMember(x => x., op => op.Ignore())
                   .ForMember(x => x.AttributeFQN, op => op.MapFrom(x => x.AttributeFQN))
                   .ForMember(x => x.Values, op => op.ResolveUsing(x =>
                    {

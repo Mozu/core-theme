@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             return View();
         }
 
-        public List<Role> GetUserSitesRoles(string userId)
+        public List<UserRole> GetUserSitesRoles(string userId)
         {
             var res = _usersRepo.GetUserRoles(userId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId).Result;
 
@@ -101,8 +101,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             {
                 return res.ReadAsSync().Items;
             }
-
-            return new List<Core.Api.Contracts.Role>();
+           
+            return new List<Core.Api.Contracts.UserRole>();
 
         }
 

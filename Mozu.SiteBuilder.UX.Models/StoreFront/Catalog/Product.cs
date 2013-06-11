@@ -229,10 +229,10 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 
         public string Url { get; set; }
     }
-    public class ProductAttribute: Mozu.ProductRuntime.Contracts.ProductAttribute
-    {
+    //public class ProductAttribute: Mozu.ProductRuntime.Contracts.a.ProductAttribute
+    //{
         
-    }
+    //}
     public class ProductOption : Mozu.ProductRuntime.Contracts.ProductOption
     {
    
