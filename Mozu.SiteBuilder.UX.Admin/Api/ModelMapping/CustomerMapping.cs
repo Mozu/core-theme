@@ -22,11 +22,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<CS.CustomerAccount, SB.CustomerAccount>();
             Mapper.CreateMap<SB.CustomerAccount, CS.CustomerAccount>();
 
-            Mapper.CreateMap<CS.CustomerAccountContact, SB.CustomerAccountContact>();
-            Mapper.CreateMap<SB.CustomerAccountContact, CS.CustomerAccountContact>();
+            Mapper.CreateMap<CS.CustomerContact, SB.CustomerAccountContact>();
+            Mapper.CreateMap<SB.CustomerAccountContact, CS.CustomerContact>();
 
-            Mapper.CreateMap<CS.CustomerAccountNote, SB.CustomerAccountNote>();
-            Mapper.CreateMap<SB.CustomerAccountNote, CS.CustomerAccountNote>();
+            Mapper.CreateMap<CS.CustomerNote, SB.CustomerAccountNote>();
+            Mapper.CreateMap<SB.CustomerAccountNote, CS.CustomerNote>();
 
             Mapper.CreateMap<AP.Contact, SB.Contact>();
             Mapper.CreateMap<SB.Contact, AP.Contact>();
@@ -82,8 +82,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<AP.UserSystemData, AC.UserSystemData>();
 
             // TODO: Consider renaming, this will probably be confusing at some point
-            Mapper.CreateMap<CS.CustomerAccountGroup, SB.CustomerGroup>();
-            Mapper.CreateMap<SB.CustomerGroup, CS.CustomerAccountGroup>();
+            Mapper.CreateMap<CS.CustomerGroup, SB.CustomerGroup>();
+            Mapper.CreateMap<SB.CustomerGroup, CS.CustomerGroup>();
         }
     }
 }

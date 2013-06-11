@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin
             DependencyResolver.SetResolver(resolver);
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(_bsa.Container);
 
-
+           
             AreaRegistration.RegisterAllAreas();
             WebApiConfig.Register(GlobalConfiguration.Configuration);
 
