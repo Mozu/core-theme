@@ -11,23 +11,23 @@ Ext.define('Taco.controller.Settings', {
     listView: null,
     models: ['Taco.model.Product'],
     paymentAndCheckout: function () {
-        
-        Taco.model.PaymentAndCheckout.load(123, {
-            success: function (record, o) {
-                this.createContentView('Taco.view.settings.paymentAndCheckout.Edit', {
-                    record: record
+        if (!this.requiresSiteContext()) {
 
-                });
-               
-            },
-            failure: function () {
-                console.error('PaymentAndCheckout', 'failure');
-            },
-            scope:this
-        });
-        
+            Taco.model.PaymentAndCheckout.load(123, {
+                success: function (record, o) {
+                    this.createContentView('Taco.view.settings.paymentAndCheckout.Edit', {
+                        record: record
+                    });
 
-        
+                },
+                failure: function () {
+                    console.error('PaymentAndCheckout', 'failure');
+                },
+                scope: this
+            });
+        }
+
+
     }
     //stores: ['Taco.store.Products'],
     //views: ['product.Index'],
