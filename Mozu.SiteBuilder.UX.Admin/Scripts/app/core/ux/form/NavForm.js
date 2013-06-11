@@ -27,6 +27,7 @@ Ext.define('Taco.core.ux.form.NavForm', {
                         floating: true,
                         title:'food',
                         constrain: true,
+                        cls:'taco-form-card-nav-body',
                         autoShow :true,
                         style: "margin-top: 0px;",
                         itemSelector: '.taco-form-card-nav-link',
