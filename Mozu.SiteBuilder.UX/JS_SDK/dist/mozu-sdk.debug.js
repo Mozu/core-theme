@@ -2036,7 +2036,7 @@ var ApiReference = (function () {
             }
         },
         'payment': {
-            template: '{+OrderService}{orderId}/payment',
+            template: '{+OrderService}{orderId}/billinginfo',
             includeSelf: true
         },
         'ordernote': {

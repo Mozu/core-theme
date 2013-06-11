@@ -7,7 +7,7 @@
         <button class="mz-edit-button" data-bind="click: edit">Edit</button>
     </h3>
     <div class="mz-panel-wrap">
-        <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + BillingContact.Address.CountryCode() + Card.IsSameBillingShippingAddress() + PaymentType()">
+        <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + BillingContact.Address.CountryCode() + IsSameBillingShippingAddress() + PaymentType()">
             <p class="mz-desc">How to bill?</p>
             <div class="mz-completed-summary">
                 <span data-bind="text: PaymentType"></span>
@@ -16,10 +16,10 @@
                     <span data-bind="text: Card.CardNumberPartOrMask"></span>
 
                     <h4>Billing Address</h4>
-                    <!-- ko if: Card.IsSameBillingShippingAddress -->
+                    <!-- ko if: IsSameBillingShippingAddress -->
                         <div data-bind="template: { name: 'mz-tpt-address-summary', data: $root.Shipment.ShippingAddress }"></div>
                     <!-- /ko -->
-                    <!-- ko if: !Card.IsSameBillingShippingAddress() -->
+                    <!-- ko if: !IsSameBillingShippingAddress() -->
                         <div data-bind="template: { name: 'mz-tpt-address-summary', data: BillingContact }"></div>
                     <!-- /ko -->
 
@@ -44,10 +44,10 @@
                 </div>
 
                 <h4>Billing Address</h4>
-                <div class="mz-single-setting"><label class="mz-inline"><input type="checkbox" data-bind="checked: Card.IsSameBillingShippingAddress"> Use my shipping address</label></div>
-                <div class="mz-completed-summary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary" data-bind="visible: Card.IsSameBillingShippingAddress, template: { name: 'mz-tpt-address-summary', data: $root.Shipment.ShippingAddress}">
+                <div class="mz-single-setting"><label class="mz-inline"><input type="checkbox" data-bind="checked: IsSameBillingShippingAddress"> Use my shipping address</label></div>
+                <div class="mz-completed-summary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary" data-bind="visible: IsSameBillingShippingAddress, template: { name: 'mz-tpt-address-summary', data: $root.Shipment.ShippingAddress}">
                 </div>
-                <div class="mz-form-fieldgroup mz-form-fields" data-bind="visible: !Card.IsSameBillingShippingAddress(), template: { name: 'mz-tpt-address-form', data: BillingContact }"></div>
+                <div class="mz-form-fieldgroup mz-form-fields" data-bind="visible: !IsSameBillingShippingAddress(), template: { name: 'mz-tpt-address-form', data: BillingContact }"></div>
 
                 <h4>Billing Contact Info</h4>
                 <div class="mz-form-fieldgroup">
