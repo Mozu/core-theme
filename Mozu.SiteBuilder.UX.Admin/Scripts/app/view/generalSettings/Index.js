@@ -17,6 +17,12 @@ Ext.define('Taco.view.generalsettings.Index', {
     requiresContextOfType: 's',
 
     initComponent: function () {
+        
+
+
+
+
+
         var me = this;
         me.sections = [];
         me.header = {

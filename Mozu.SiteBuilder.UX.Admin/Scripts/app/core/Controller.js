@@ -158,7 +158,14 @@ Ext.define('Taco.core.Controller', {
             reqctype = view.requiresContextOfType;
         return (!reqctype || reqctype === ctype || (Ext.isArray(reqctype) && Ext.Array.indexOf(reqctype, ctype) !== -1));
     },
-            
+           
+    requiresSiteContext: function() {
+        if (Taco.app.context.getCurrent().contextType != 's') {
+            Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', 's').raw);
+            return true;
+        }
+        return false;
+    },
 
     confirmContext: function(viewClass) {
         var context = Taco.app.context.getCurrentContext(),

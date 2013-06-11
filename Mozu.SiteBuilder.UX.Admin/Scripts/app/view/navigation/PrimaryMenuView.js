@@ -18,9 +18,13 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
 
         this.tpl = [
             '<tpl for=".">',
-                '<li class="taco-menu-item">',
-                    '<a href="{address}" class="taco-menu-item-link taco-icon taco-icon-{icon}">{label}</a>',
-                '</li>',
+            //    '<tpl if="visable">',
+                    '<li class="taco-menu-item"  style="{[values.visable ? "" : "display:none" ]}" >',
+                       '<a href="{address}" class="taco-menu-item-link taco-icon taco-icon-{icon}">{label}</a>',
+                    '</li>',
+              //  '<tpl else>',
+               //      '<li class="taco-menu-item" style="display:none"> </li>',
+               // '</tpl>',
             '</tpl>'
         ];
 
@@ -42,7 +46,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
         this.store.each(function (record) {
             var subItems = record.items();
 
-            if (subItems.getCount() > 0) {
+            if (subItems.getCount() > 0 && record.get('visable')) {
                 var node = this.getNode(record),
                     submenu;
 
