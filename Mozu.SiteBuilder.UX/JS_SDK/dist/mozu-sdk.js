@@ -1052,19 +1052,19 @@
                         return actions;
                     },
                     getRequestConfig: function(operation, typeName, conf, context, obj) {
+                        var returnObj, tptData;
                         var oType = objectTypes[typeName];
                         if (!oType) return typeName;
                         if (operation) operation = utils.dashCase(operation);
                         if (oType[operation]) oType = oType[operation];
-                        if (!oType) throw "No known URL for '" + typeName + "' type.";
                         if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
                         if (typeof oType === "string") oType = {
                             template: oType
                         };
                         if (!oType.template) "No URL template found for '" + typeName + "'.";
-                        var returnObj = {};
+                        returnObj = {};
+                        tptData = {};
                         if (typeof oType.template === "string") oType.template = utils.uritemplate.parse(oType.template);
-                        var tptData = {};
                         if (oType.includeSelf && obj) {
                             if (oType.includeSelf.asProperty) {
                                 tptData[oType.includeSelf.asProperty] = obj.data;
@@ -1103,7 +1103,8 @@
                     verb: true,
                     returnType: true,
                     noBody: true,
-                    includeSelf: true
+                    includeSelf: true,
+                    collectionOf: true
                 };
                 var objectTypes = {
                     products: {
@@ -1136,6 +1137,7 @@
                         shortcutParam: "q",
                         defaultParams: {
                             startIndex: 0,
+                            query: "*:*",
                             pageSize: 25
                         },
                         collectionOf: "product"

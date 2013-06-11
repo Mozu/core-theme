@@ -41,19 +41,35 @@ var ApiReference = (function () {
         },
 
         getRequestConfig: function (operation, typeName, conf, context, obj) {
+
+            var returnObj, tptData;
+
+            // get object type from our reference
             var oType = objectTypes[typeName];
+            
+            // there may not be one
             if (!oType) return typeName;
+
+            // get specific details of the requested operation
             if (operation) operation = utils.dashCase(operation);
             if (oType[operation]) oType = oType[operation];
-            if (!oType) throw "No known URL for '" + typeName + "' type.";
+
+            // the defaults at the root object type should be copied into all operation configs
             if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
+
+            // some oTypes are a simple template as a string
             if (typeof oType === "string") oType = { template: oType };
+
+            // a template is required
             if (!oType.template) "No URL template found for '" + typeName + "'.";
-            var returnObj = {};
+
+            returnObj = {};
+            tptData = {};
+
             // cache templates lazily
-            if (typeof oType.template === "string")
-                oType.template = utils.uritemplate.parse(oType.template);
-            var tptData = {};
+            if (typeof oType.template === "string") oType.template = utils.uritemplate.parse(oType.template);
+
+            // add the requesting object's data itself to the tpt context
             if (oType.includeSelf && obj) {
                 if (oType.includeSelf.asProperty) {
                     tptData[oType.includeSelf.asProperty] = obj.data
@@ -61,12 +77,17 @@ var ApiReference = (function () {
                     tptData = utils.extend(tptData, obj.data);
                 }
             }
+
+            // shortcutparam allows you to use the most commonly used conf property as a string or number argument
             if (conf !== undefined && typeof conf !== "object") {
                 if (!oType.shortcutParam) throw "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
                 tptData[oType.shortcutParam] = conf;
             } else if (conf) {
+                // add the conf argued directly into this request fn to the tpt context
                 utils.extend(tptData, conf.query || conf);
             }
+
+
             if (oType.defaultParams) tptData = utils.extend({}, oType.defaultParams, tptData);
             returnObj.url = oType.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData, ApiReference.urls));
             if (oType.verb) returnObj.verbOverride = oType.verb;
@@ -96,7 +117,8 @@ var ApiReference = (function () {
         verb: true,
         returnType: true,
         noBody: true,
-        includeSelf: true
+        includeSelf: true,
+        collectionOf: true
     };
     var objectTypes = {
         'products': {
@@ -133,6 +155,7 @@ var ApiReference = (function () {
             shortcutParam: 'q',
             defaultParams: {
                 startIndex: 0,
+                query: "*:*",
                 pageSize: 25
             },
             collectionOf: 'product'
@@ -295,7 +318,7 @@ var ApiReference = (function () {
             }
         },
         'payment': {
-            template: '{+OrderService}{orderId}/payment',
+            template: '{+OrderService}{orderId}/billinginfo',
             includeSelf: true
         },
         'ordernote': {
