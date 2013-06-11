@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Mozu.SiteBuilder.UX.Admin.Api.Models
+namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
     [DataContract]
     public class OrderPayment
@@ -35,5 +35,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
         [DataMember(Name = "transactionDate", EmitDefaultValue = true)]
         public DateTime TransactionDate { get; set; }
+
+        #region workflow shit
+        [DataMember(Name="availablePaymentActions", EmitDefaultValue=true)]
+        public string AvailablePaymentActions { get; set; }
+        #endregion
     }
 }

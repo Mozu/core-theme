@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Mozu.SiteBuilder.UX.Admin.Api.Models
+namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
     [DataContract]
     public class OrderItem
