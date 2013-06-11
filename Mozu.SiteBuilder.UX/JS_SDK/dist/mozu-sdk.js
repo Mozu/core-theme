@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-06-05
+ * Mozu JavaScript SDK - v0.1.0 - 2013-06-11
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1031,12 +1031,14 @@
                     basicOps: basicOps,
                     urls: {
                         ProductService: defaultHost + "mozu.ProductRuntime.WebApi/commerce/catalog/storefront/products/",
+                        CategoryService: defaultHost + "mozu.ProductRuntime.WebApi/commerce/catalog/storefront/categories/",
                         CartService: defaultHost + "mozu.Cart.WebApi/commerce/carts/",
                         UserService: defaultHost + "mozu.User.WebApi/platform/user/accounts/",
                         CustomerService: defaultHost + "mozu.Customer.WebApi/commerce/customer/accounts",
                         OrderService: defaultHost + "mozu.CommerceRuntime.WebApi/commerce/orders",
                         SearchService: defaultHost + "mozu.ProductRuntime.WebApi/commerce/catalog/storefront/productsearch",
-                        CmsService: defaultHost + "mozu.Content.WebApi/documents/"
+                        CmsService: defaultHost + "mozu.Content.WebApi/documentLists/",
+                        ReferenceService: defaultHost + "mozu.reference.WebApi/platform/reference/"
                     },
                     getActionsFor: function(typeName) {
                         if (!objectTypes[typeName]) return false;
@@ -1114,7 +1116,7 @@
                         collectionOf: "product"
                     },
                     categories: {
-                        template: "{+ProductService}../categories/" + genericQueryTpt,
+                        template: "{+CategoryService}" + genericQueryTpt,
                         shortcutParam: "filter",
                         defaultParams: {
                             startIndex: 0,
@@ -1123,7 +1125,7 @@
                         collectionOf: "category"
                     },
                     category: {
-                        template: "{+ProductService}../categoires/{Id}?{&allowInactive*}",
+                        template: "{+CategoryService}{Id}?{&allowInactive*}",
                         shortcutParam: "Id",
                         defaultParams: {
                             allowInactive: false
@@ -1145,6 +1147,14 @@
                             defaultParams: {
                                 allowInactive: false
                             }
+                        },
+                        configure: {
+                            verb: "POST",
+                            template: "{+ProductService}{ProductCode}/configure{?includeOptionDetails}",
+                            defaultParams: {
+                                includeOptionDetails: true
+                            },
+                            includeSelf: true
                         },
                         "add-to-cart": {
                             verb: "POST",

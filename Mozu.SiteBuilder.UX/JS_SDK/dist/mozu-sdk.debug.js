@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-06-05
+ * Mozu JavaScript SDK - v0.1.0 - 2013-06-11
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1733,12 +1733,14 @@ var ApiReference = (function () {
         basicOps: basicOps,
         urls: {
             "ProductService": defaultHost + 'mozu.ProductRuntime.WebApi/commerce/catalog/storefront/products/',
+            "CategoryService": defaultHost + 'mozu.ProductRuntime.WebApi/commerce/catalog/storefront/categories/',
             "CartService": defaultHost + 'mozu.Cart.WebApi/commerce/carts/',
             "UserService": defaultHost + 'mozu.User.WebApi/platform/user/accounts/',
             "CustomerService": defaultHost + 'mozu.Customer.WebApi/commerce/customer/accounts',
             "OrderService": defaultHost + 'mozu.CommerceRuntime.WebApi/commerce/orders',
             "SearchService": defaultHost + 'mozu.ProductRuntime.WebApi/commerce/catalog/storefront/productsearch',
-            "CmsService": defaultHost + 'mozu.Content.WebApi/documents/',
+            "CmsService": defaultHost + 'mozu.Content.WebApi/documentLists/',
+            "ReferenceService": defaultHost + 'mozu.reference.WebApi/platform/reference/'
         },
 
         getActionsFor: function(typeName) {
@@ -1826,7 +1828,7 @@ var ApiReference = (function () {
         },
 
         'categories': {
-            template: '{+ProductService}../categories/' + genericQueryTpt,
+            template: '{+CategoryService}' + genericQueryTpt,
             shortcutParam: "filter",
             defaultParams: {
                 startIndex: 0,
@@ -1836,7 +1838,7 @@ var ApiReference = (function () {
         },
 
         'category': {
-            template: '{+ProductService}../categoires/{Id}?{&allowInactive*}',
+            template: '{+CategoryService}{Id}?{&allowInactive*}',
             shortcutParam: 'Id',
             defaultParams: {
                 allowInactive: false
@@ -1860,6 +1862,14 @@ var ApiReference = (function () {
                 defaultParams: {
                     allowInactive: false
                 }
+            },
+            configure: {
+                verb: 'POST',
+                template: '{+ProductService}{ProductCode}/configure{?includeOptionDetails}',
+                defaultParams: {
+                    includeOptionDetails: true
+                },
+                includeSelf: true
             },
             'add-to-cart': {
                 verb: 'POST',
@@ -2354,6 +2364,15 @@ Mozu.ApiContext = ApiContext;
 Mozu.ApiInterface = ApiInterface;
 Mozu.ApiObject = ApiObject;
 Mozu.ApiReference = ApiReference;
+
+Mozu._expose = function (r) {
+    Mozu.lastResult = r;
+    console.log(r && r.inspect ? r.inspect() : r);
+};
+
+Mozu.ApiObject.prototype.inspect = function () {
+    return JSON.stringify(this.data, true, 2);
+};
 			return Mozu;
 		});
 		// boilerplate below makes this library compatible with AMD, CJS, and a plain browser environment

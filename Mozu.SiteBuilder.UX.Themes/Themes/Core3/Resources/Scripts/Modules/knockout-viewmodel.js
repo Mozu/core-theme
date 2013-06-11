@@ -174,8 +174,8 @@
                     invalidCount++;
             };
             $.each(this.submodels, validateSubmodel);
-            $.each(this.submodelArrays, function (kA) {
-                $.each(kA, validateSubmodel);
+            $.each(this.submodelArrays, function (ix, sm) {
+                $.each(sm, validateSubmodel);
             });
             console.log('validation error count:', invalidCount);
             return invalidCount === 0;
@@ -204,7 +204,7 @@
             }
         },
         toJS: function () {
-            var ret = {}, self = this;
+            var ret = {}, self = this,
             iterate = makeIterator(self, ret);
             $.each(
                 [this.statics, this.observables, this.observableArrays, this.submodels, this.submodelArrays],
