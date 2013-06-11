@@ -12,7 +12,6 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "ipRanges", "type": "auto", "useNull": true },
         { "name": "senderEmail", "type": "string", "useNull": true },
         { "name": "senderEmailName", "type": "string", "useNull": true },
-        
         { "name": "replyToEmail", "type": "string", "useNull": true },
         { "name": "theme", "type": "string", "useNull": true },
         { "name": "logoPath", "type": "string", "useNull": true },

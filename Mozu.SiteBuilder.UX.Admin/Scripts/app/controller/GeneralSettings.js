@@ -2,37 +2,23 @@
  * @class Taco.controller.GeneralSettings
  * The General Settings controller.
  */
+
 Ext.define('Taco.controller.GeneralSettings', {
     extend: 'Taco.core.Controller',
-    requires: ['Taco.view.generalsettings.Index'],
-    views: ['generalsettings.Index'],
-
+    requires: ['Taco.view.generalSettings.Index'],
+    views: ['generalSettings.Index'],
+    models: ['Taco.model.GeneralSettings'],
+    stores: ['Taco.store.GeneralSettings'],
+    listView: null,
+    modelName: 'GeneralSettings',
     index: function (params) {
         var me = this;
-
-
-
-      
-       
-       
-        if (Taco.app.context.getCurrent().contextType !='s') {
-            Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', 's').raw);
-            return;
-        }
-        Ext.Ajax.request({
-            url: '/admin/app/generalsetting/read',
-            method: "GET",
-            success: function (response) {
-
-                var res = Ext.JSON.decode(response.responseText);
-                
-                me.createContentView('Taco.view.generalsettings.Index', {
-                    settings: res.items[0]
-                });
-            },
-            failure: function (response) {
-                console.log("Error retrieving general settings.", response);
+        Taco.model.GeneralSettings.load('', {
+            success: function (record, o) {
+                me.createContentView('Taco.view.generalSettings.Index', { record: record });
             }
         });
     }
 });
+
+

@@ -6,11 +6,14 @@
  */
 
 Ext.define('Taco.view.generalSettings.subform.About', {
-    extend: 'Taco.view.product.subform.Subform',
+    extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.core.ux.form.SelectField', 'Taco.store.TimeZones'],
     title: 'Time Settings',
+    bodyCls: Taco.baseCSSPrefix + 'product-admin-subform',
+    cls: Taco.baseCSSPrefix + 'form-section',
     initComponent: function () {
         var me = this;
+
         this.defaults = {
             labelAlign: 'top',
             labelSeparator: ''
@@ -37,8 +40,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                     ['hh:mm:ss tt', '12 hour w/ leading zeros'],
                     ['HH:mm:ss tt', '24 hour w/ leading zeros']
                 ]
-            })/*,
-            value: me.settings.timeFormat*/
+            })
         };
 
         me.timeZoneSelect = {
@@ -49,8 +51,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             displayField: 'name',
             queryMode: 'local',
             width: 350,
-            store: Ext.create('Taco.store.TimeZones', { autoLoad: true })/*,
-            value: me.settings.timeZone*/
+            store: Ext.create('Taco.store.TimeZones', { autoLoad: true })
         };
         me.timeSettings = Ext.widget('panel', {
             layout: 'hbox',
@@ -67,7 +68,6 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             me.timeSettings, {
             xtype: 'checkbox',
             name: 'daylightSaving',
-            //checked: me.settings.daylightSaving,
             boxLabel: 'Automatically adjust clock for daylight savings',
             boxLabelAlign: 'after'
         }];
