@@ -29,7 +29,8 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
 
         this.tbar = [{
             xtype: 'action',
-            text: '&#11013;',
+            cls: Taco.baseCSSPrefix + 'pagesettings-back-action',
+            text: '',
             click: {
                 fn: function () { me.hide(); }
             }
@@ -38,26 +39,6 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
             text: this.title
         }];
 
-       /*
-        this.form.fbar = ['->', {
-            xtype: 'secondarybutton',
-            text: 'Cancel',
-            listeners: {
-                click: this.hide,
-                scope: this
-            }
-        }, {
-            xtype: 'dirtybutton',
-            text: 'Apply',
-            itemId: 'pageSettingsPanelDirtyButton',
-            listeners: {
-                click: function () {
-                    this.form.updateForm();
-                },
-                scope: this
-            }
-        }];
-        */
         this.bbar = ['->',{
             xtype: 'secondarybutton',
             text: 'Cancel',
@@ -76,17 +57,13 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
         }];
         
         this.form = Ext.widget('formform', this.form);
-       // debugger
-       // this.dirtyButton = this.form.down('#pageSettingsPanelDirtyButton');
         this.form.on({
             savablestatechange: function (form, isSavable) {
-                //debugger
                 this.dirtyButton = this.dirtyButton || this.dockedItems.items[1].items.items[2]; // TODO: wat
                 this.dirtyButton.setDirty(isSavable);
             },
             savesuccess: function() {
                 console.log('savesuccess');
-                //this.dirtybutton.setLoading(false);
                 this.dirtyButton.setDirty(false);
             },
             scope: this

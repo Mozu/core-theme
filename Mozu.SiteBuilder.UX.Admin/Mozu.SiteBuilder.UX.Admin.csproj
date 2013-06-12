@@ -1203,7 +1203,8 @@
     <Content Include="Scripts\resources\images\dashboard\dashboard-time-on-sites.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-uptime.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-vistors.png" />
-    <Content Include="Scripts\resources\images\icons-sfc12ea9761.png" />
+    <Content Include="Scripts\resources\images\icons-s757076ac82.png" />
+    <Content Include="Scripts\resources\images\icons\icon-arrow-left.png" />
     <Content Include="Scripts\resources\images\icons\icon-menu-col.png" />
     <Content Include="Scripts\resources\images\icons\icon-nav-catalog-light.png" />
     <Content Include="Scripts\resources\images\icons\icon-nav-catalog-med.png" />
