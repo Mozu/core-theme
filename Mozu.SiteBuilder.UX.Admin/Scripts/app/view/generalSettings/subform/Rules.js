@@ -7,7 +7,7 @@
 
 Ext.define('Taco.view.generalSettings.subform.Rules', {
     extend: 'Taco.view.product.subform.Subform',
-    requires: [],
+    requires: ['Taco.store.IpRanges'],
     title: 'IP Address Security',
     initComponent: function () {
         var me = this;
