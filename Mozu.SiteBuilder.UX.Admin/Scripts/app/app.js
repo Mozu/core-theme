@@ -514,14 +514,15 @@ Ext.application({
 
    
     signalCacheFlush: function (data) {
-
-        Ext.Ajax.request({
-            jsonData: data,
-            disableCaching: true,
-            method: 'POST',
-            url: '/misc/cacheflush/index',
-            timeout: 5000
-        });
+        return;
+        //depricating gheto flush of cache
+        //Ext.Ajax.request({
+        //    jsonData: data,
+        //    disableCaching: true,
+        //    method: 'POST',
+        //    url: '/misc/cacheflush/index',
+        //    timeout: 5000
+        //});
     },
     launch: function () {
 
