@@ -24,7 +24,7 @@
             line-height: 3rem;
 			color: white; 
         }
-    }
+    } 
 
     .#{$vprefix}pagesettings .#{$vprefix}pagesettings-form {
         padding: 1rem;
@@ -36,5 +36,11 @@
         .#{$prefix}form-item {
             font-weight: normal;
         }
+    }
+
+    .#{$vprefix}pagesettings-back-action {
+        @include icons-sprite(icon-arrow-left);
+        height: 21px;
+        width: 27px;
     }
 }
