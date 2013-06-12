@@ -13,12 +13,11 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
-using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [ServiceContract]
-    public class OrderController : BaseController
+    public partial class OrderController : BaseController
     {
         private IOrderWebApiClient _orderWebApiClient;
         private ICustomerAccountWebApiClient _customerWebApiClient;
@@ -104,29 +103,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(orders);
         }
 
-        public async Task<Response<List<Order>>> CapturePayment(string orderId, decimal amount)
+        [WebInvoke(Method = "POST", UriTemplate = "cancel")]
+        public async Task<Response<List<Order>>> CancelOrder(string orderId)
         {
-            // Possible actions can be "Create," "Capture," "Void," "AuthCapture," or "ReceiveCheck."
-            var action = new DCp.PaymentAction
-            {
-                ActionName = "Capture",
-                ISOCurrencyCode = "USD",
-                Amount = amount
-                // ReferenceSourcePaymentId = ???
-            };
-
-            // _orderWebApiClient.payment
-            var order = (await _orderWebApiClient.CreatePaymentAction(orderId, action)).ReadAsSync();
-
-
-            //_orderWebApiClient.GetPackageLabel
-            return List2(order.Map<Order>());
+            throw new NotImplementedException();
         }
 
-        public async Task<Response<List<Order>>> CreatePackage(string orderId)
-        {
-            return EmptyList2<Order>();
-        }
 
         /// <summary>
         /// Gets a mock list of Orders.
@@ -264,7 +246,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     }
             };
             allTheOrders.Add(order_partial_payment);
-
 
             var order_with_some_packages = order_template.Clone<Order>();
             order_with_some_packages.Id = "o1004";

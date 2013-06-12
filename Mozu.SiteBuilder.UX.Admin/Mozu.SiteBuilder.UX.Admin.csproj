@@ -390,6 +390,8 @@
     <Compile Include="Api\OrderController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Api\OrderPaymentController.cs" />
+    <Compile Include="Api\OrderShippingController.cs" />
     <Compile Include="Api\Order_OldController.cs" />
     <Compile Include="Api\ProductTypeController.cs" />
     <Compile Include="Api\RefrenceController.cs" />

@@ -7,6 +7,7 @@ using CustomerDC = Mozu.Customer.Contracts;
 using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
 using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using PaymentsDC = Mozu.CommerceRuntime.Contracts.Payments;
+using ShippingDC = Mozu.CommerceRuntime.Contracts.Shipping;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -38,6 +39,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //.ForMember(x => x.AvailableOrderActions, op => op.MapFrom(dc => dc.AvailableOrderActions))
                 //.ForMember(x => x.AvailablePaymentActions, op => op.MapFrom(dc => dc.AvailablePaymentActions))
                 //.ForMember(x => x.AvailableShipmentActions, op => op.MapFrom(dc => dc.AvailableShipmentActions))
+                .AfterMap((dc, order) => {
+                    order.Packages.SelectMany(p => p.Items).Each(packageItem => FillPackageItemDetails(packageItem, order));
+                })
                 ;
 
             Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
@@ -82,32 +86,68 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CardNumber, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.CardNumberPartOrMask : null))
                 .ForMember(x => x.TransactionId, op => op.MapFrom(dc => dc.PaymentServiceTransactionId))
                 ;
+
+            Mapper.CreateMap<ShippingDC.Package, OrderPackage>()
+                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
+                .ForMember(x => x.ShippingMethodCode, op => op.MapFrom(dc => dc.ShippingMethodCode))
+                .ForMember(x => x.ShippingMethodName, op => op.MapFrom(dc => dc.ShippingMethodName))
+                .ForMember(x => x.TrackingNumber, op => op.MapFrom(dc => dc.TrackingNumber))
+                // TODO: shipment id
+                .ForMember(x => x.PackagingType, op => op.MapFrom(dc => dc.PackagingType))
+                .ForMember(x => x.Height, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Height : null))
+                .ForMember(x => x.Length, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Length : null))
+                .ForMember(x => x.Width, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Width : null))
+                .ForMember(x => x.Weight, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Weight : null))
+                .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
+                ;
+
+            Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
+                .ForMember(x => x.OrderItemId, op => op.MapFrom(dc => dc.OrderItemId))
+                .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
+                ;
         }
 
-        private string FormatAddress(Core.Api.Contracts.Address  address)
+
+        /// <summary>
+        /// Looks up a package item by OrderItemId and fills in the other information.
+        /// </summary>
+        private void FillPackageItemDetails(OrderPackageItem packageItem, Order order)
+        {
+            if (packageItem == null || order == null || order.Items == null)
+                return;
+
+            var itemInOrder = order.Items.FirstOrDefault(i => i.Id == packageItem.OrderItemId);
+
+            if (itemInOrder == null)
+                return;
+
+            packageItem.ProductCode = itemInOrder.ProductCode;
+            packageItem.ProductName = itemInOrder.ProductName;
+        }
+    
+        /// <summary>
+        /// Flattens an address object into a string for the UI.
+        /// </summary>
+        string FormatAddress(Core.Api.Contracts.Address address)
         {
             if (address == null)
                 return null;
 
             StringBuilder sb = new StringBuilder();
 
-           
-            
-           
-            
-                sb.Append(address.Address1);
+            sb.Append(address.Address1);
 
-                if (!String.IsNullOrWhiteSpace(address.CityOrTown) || !String.IsNullOrWhiteSpace(address.StateOrProvince) || !String.IsNullOrWhiteSpace(address.PostalOrZipCode))
-                {
-                    if (sb.Length > 0)
-                        sb.Append(", ");
+            if (!String.IsNullOrWhiteSpace(address.CityOrTown) || !String.IsNullOrWhiteSpace(address.StateOrProvince) || !String.IsNullOrWhiteSpace(address.PostalOrZipCode))
+            {
+                if (sb.Length > 0)
+                    sb.Append(", ");
 
-                    sb.AppendFormat("{0} {1} {2}", address.CityOrTown, address.StateOrProvince, address.PostalOrZipCode);
-                }
+                sb.AppendFormat("{0} {1} {2}", address.CityOrTown, address.StateOrProvince, address.PostalOrZipCode);
+            }
 
-                if (!String.IsNullOrWhiteSpace(address.CountryCode))
-                    sb.Append(sb.Length > 0 ? ", " + address.CountryCode : address.CountryCode);
-            
+            if (!String.IsNullOrWhiteSpace(address.CountryCode))
+                sb.Append(sb.Length > 0 ? ", " + address.CountryCode : address.CountryCode);
+
 
             return sb.ToString();
         }
