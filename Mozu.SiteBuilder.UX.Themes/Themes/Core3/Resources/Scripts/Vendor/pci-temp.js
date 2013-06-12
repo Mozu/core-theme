@@ -62,7 +62,7 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
 
         messageOriginIsLegit = function (e) {
             var regex = /^https?:\/\/[^/]+/i;
-            return (settings.get('apiBase').match(regex)[0] === e.origin.match(regex)[0]);
+            return (settings.get('apiBase').toLowerCase().match(regex)[0] === e.origin.toLowerCase().match(regex)[0]);
         },
 
         _receiveMessage = has_postMessage ? function (callback) {
