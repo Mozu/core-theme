@@ -214,6 +214,13 @@ Ext.define('Taco.model.Product', {
             foreignProperty: 'product'
         });
     },
+    getOptions: function () {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.ProductProperty',
+            associationKey: 'options',
+            foreignProperty: 'product'
+        });
+    },
     getExtras: function () {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.ProductExtra',
@@ -242,7 +249,7 @@ Ext.define('Taco.model.Product', {
         }
 
         this.productVariationStore = Ext.create('Ext.data.Store', {
-            model: 'aco.model.ProductVariation',
+            model: 'Taco.model.ProductVariation',
             autoLoad: false
         });
         this.productVariationStore.load({

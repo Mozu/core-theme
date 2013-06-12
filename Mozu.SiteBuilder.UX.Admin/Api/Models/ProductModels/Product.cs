@@ -67,6 +67,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, IsRequired = false, Name = "extras")]
         public List<ProductExtra> Extras { get; set; }
 
+
+        [DataMember(EmitDefaultValue = false, IsRequired = false, Name = "options")]
+        public List<ProductProperty> Options { get; set; }
+
         /// <summary>
         /// The sale price.
         /// </summary>
