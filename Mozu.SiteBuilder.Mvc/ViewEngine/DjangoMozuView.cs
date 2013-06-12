@@ -154,7 +154,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             requestContext["ThemeSettings"] = requestContext["themeSettings"] = siteBuilderContext.ThemeSettings;
             requestContext["PageContext"] = requestContext["pageContext"] = siteBuilderContext.PageContext;
             requestContext["User"] = requestContext["user"] = user;
-
+            requestContext["true"] = true;
+            requestContext["false"] = false;
 
           //  this.
           //  var result = ViewEngines.Engines.FindPartialView(_html.ViewContext.Controller.ControllerContext, viewPath);
