@@ -69,7 +69,7 @@
             }
         }),
 
-        Shipment = ViewModelPrototype.extend({
+        ShippingInfo = ViewModelPrototype.extend({
             mozuType: 'shipment',
             statics: {
                 "OrderId": ""
@@ -339,7 +339,7 @@
         }, function () {
             var self = this;
             this.stepStatus = ko.observable();
-            var shipmentStatus = self.getParentModel().Shipment.stepStatus,
+            var shipmentStatus = self.getParentModel().ShippingInfo.stepStatus,
                 checkStatus = function (newValue) {
                     self.stepStatus(newValue === "complete" ? "incomplete" : "new");
                 };
@@ -420,7 +420,7 @@
                 ISOCurrencyCode: "usd"
             },
             submodels: {
-                Shipment: Shipment,
+                ShippingInfo: ShippingInfo,
                 Payment: Payment,
                 Note: Note,
                 User: UserModels.User
@@ -567,8 +567,8 @@
             this.User.EmailAddress = this.email;
             this.User.Password = this.password;
 
-            this.Shipment.availableShippingMethods(this.availableShippingMethods);
-            this.Shipment.checkStepStatus();
+            this.ShippingInfo.availableShippingMethods(this.availableShippingMethods);
+            this.ShippingInfo.checkStepStatus();
 
             var ALLCOMPLETE = "completecompletecomplete",
                 SUBMITTING = "submitting",
@@ -576,7 +576,7 @@
                 backstop = $.proxy(this.unknownError,this);
 
             this.orderStatus = ko.computed(function () {
-                var statuses = [self.Shipment.ShippingContact.stepStatus(), self.Shipment.stepStatus(), self.Payment.stepStatus()].join("");
+                var statuses = [self.ShippingInfo.ShippingContact.stepStatus(), self.ShippingInfo.stepStatus(), self.Payment.stepStatus()].join("");
 
                 clearTimeout(errorTimer);
                 if (statuses.indexOf(SUBMITTING) !== -1) {
