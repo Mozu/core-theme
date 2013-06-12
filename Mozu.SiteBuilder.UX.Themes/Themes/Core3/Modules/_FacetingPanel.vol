@@ -1,0 +1,24 @@
+<section class="mz-faceting-form">
+    <div class="mz-sidebar-item">
+        <input type="checkbox" id="mz-faceting-clearall-1" class="mz-faceting-option" data-mz-action="clearfacets" data-bind="event: { change: clearAll }"><label for="mz-faceting-clearall-1">Clear All Filters</label>
+    </div>
+    <!-- ko foreach: facets -->
+    <div class="mz-sidebar-item mz-expandable" data-mz-expandable="true">
+        <a href="#" class="mz-expand-handle" data-mz-action="expand">Expand</a>
+        <h4 data-bind="text: name"></h4>
+        <ul class="mz-faceting-group">
+            <li>
+                <input type="checkbox" class="mz-faceting-option" data-bind="checked: empty, id: emptyId"><label data-bind="for: emptyId">All</label>
+            </li>
+            <!-- ko foreach: available -->
+            <li>
+                <input type="checkbox" class="mz-faceting-option" data-bind="checked: $parent.selected, value: $data, id: $parent.idAttr($data)"><label data-bind="for: $parent.idAttr($data), text: $data"></label>
+            </li>
+            <!-- /ko -->
+        </ul>
+    </div>
+    <!-- /ko -->
+    <div class="mz-sidebar-item">
+        <input type="checkbox" id="mz-faceting-clearall-2" class="mz-faceting-option" data-mz-action="clearfacets" data-bind="change: clearAll"><label for="mz-faceting-clearall-2">Clear All Filters</label>
+    </div>
+</section>

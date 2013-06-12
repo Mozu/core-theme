@@ -3,8 +3,15 @@
 
 {% block BodyContent %}
 
-<div id="mz-layout-container" class="mz-layout-container mz-content-inner-wrap mz-blog-list-page>
-    {% html_action "ProductListing" "catalog" with categoryId=Model.Id and viewName="Modules/ProductListing" as_parameter %}
+<div id="mz-category-loading" class="mz-category-loading">
+    <p>
+        <em>Please wait...</em>
+    </p>
+    {% include "Modules/LoadingBar" %}
 </div>
 
-{% endblock BodyContent %}s
+<div id="mz-layout-container" class="mz-layout-container mz-content-inner-wrap mz-blog-list-page>
+    {% html_action "ProductListing" "catalog" with categoryId=Model.Id and includeFacets=true and viewName="Modules/ProductListingFaceted" as_parameter %}
+</div>
+
+{% endblock BodyContent %}

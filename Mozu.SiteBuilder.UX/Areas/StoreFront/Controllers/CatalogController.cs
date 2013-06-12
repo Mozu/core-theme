@@ -25,15 +25,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     public class CatalogController : BaseController
     {
         IProductWebApiClient   _productClient;
+        IProductSearchWebApiClient _searchClient;
         ISiteBuilderContext _ctx;
-        public CatalogController(ISiteBuilderContext ctx , IProductWebApiClient productClient)
+        public CatalogController(ISiteBuilderContext ctx , IProductWebApiClient productClient, IProductSearchWebApiClient searchClient)
         {
             _ctx = ctx;
+            _searchClient = searchClient;
             _productClient = productClient;
 
-            var options = ((ServiceClientBase) productClient).Options ??
-                          (((ServiceClientBase) productClient).Options = new ConfigOptions());
-            options.MaxSize = int.MaxValue;
         }
 
         public async Task<ActionResult> ProductDetail(string productCode)
@@ -76,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("product", prod);
         }
 
-        public ActionResult ProductListing(int? categoryId= null , string sortBy = null, int? page = null, int? itemsPerPage = null,  List<object> productCodes = null)
+        public ActionResult ProductListing(int? categoryId= null , string sortBy = null, int? page = null, int? itemsPerPage = null,  List<object> productCodes = null , bool? includeFacets=null)
         {
 
             
@@ -102,11 +101,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 if ( !string.IsNullOrWhiteSpace( filter))
                 {
-                    filter = "(categoryId eq " + categoryId + ") and (" + filter + ")";
+                    filter = "(categoryId req " + categoryId + ") and (" + filter + ")";
                 }
                 else
                 {
-                    filter = "categoryId eq " + categoryId;
+                    filter = "categoryId req " + categoryId;
                 }
             }
             //todo do i need to replace recurese
@@ -114,10 +113,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             try
             {
 
+                
 
-                var pcDC = _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options").Result.ReadAsSync();
-
-                var pc = Mapper.Map<ProductCollection>(pcDC);
+                if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue )
+                {
+                    var pcDC = _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate:"category:" + categoryId   ,facetHierDepth : "category:2"   ).Result.ReadAsSync();
+                    var pc = Mapper.Map<ProductSearchResult>(pcDC);
+                    return PartialView(pc);
+                }
+                else
+                {
+                    var pcDC = _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options").Result.ReadAsSync();
+                    var pc = Mapper.Map<ProductCollection>(pcDC);
+                    return PartialView(pc);
+                
+                }
 
                 //`
                 //pc.Paging.CurrentSort = sortBy;
@@ -126,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-                return PartialView(pc);
+                
             }
             catch (Exception ex)
             {
