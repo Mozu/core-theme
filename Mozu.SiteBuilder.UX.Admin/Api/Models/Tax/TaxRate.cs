@@ -20,8 +20,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Tax
 
         }
         
-        [DataMember(EmitDefaultValue = false, Name="appliesToShipping")]
-        public bool AppliesToShipping { get; set; }
+        
         [DataMember(EmitDefaultValue = false, Name = "countryCode")]
         public string CountryCode 
         { 
@@ -34,9 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Tax
 
             }
         }
-       [DataMember(EmitDefaultValue = false, Name="rate")]
-        public decimal? Rate { get; set; }
-        [DataMember(EmitDefaultValue = false, Name="stateCode")]
+       [DataMember(EmitDefaultValue = false, Name="stateCode")]
         public string StateCode { get; set; }
        
     }

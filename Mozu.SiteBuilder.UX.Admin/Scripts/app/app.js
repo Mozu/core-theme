@@ -36,7 +36,7 @@
  * @requires Taco.controller.FileManager
  * @requires Taco.controller.Discounts
  * @requires Taco.controller.Settings
- * @requires Taco.controller.Tax
+ 
  * @requires Taco.controller.Themes
  * @requires Taco.controller.Themesettings
  * @requires Taco.controller.Account
@@ -114,7 +114,7 @@ Ext.application({
             'Settings',
             'PaymentAndCheckout',
             'PageTemplates',
-            'Tax',
+            
             'Themes',
             'Themesettings',
             'Account',

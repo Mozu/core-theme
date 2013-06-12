@@ -392,6 +392,7 @@
     </Compile>
     <Compile Include="Api\Order_OldController.cs" />
     <Compile Include="Api\ProductTypeController.cs" />
+    <Compile Include="Api\RefrenceController.cs" />
     <Compile Include="Api\WidgetInstanceDataController.cs" />
     <Compile Include="Api\IVolusionLoginHelper.cs" />
     <Compile Include="Api\IUserHelper.cs" />
@@ -634,6 +635,7 @@
     <Content Include="Scripts\app\model\CartItem.js" />
     <Content Include="Scripts\app\model\CmsDocumentDraft.js" />
     <Content Include="Scripts\app\model\Facet.js" />
+    <Content Include="Scripts\app\model\JavaScript1.js" />
     <Content Include="Scripts\app\model\OrderCustomer.js" />
     <Content Include="Scripts\app\model\OrderItemDiscount.js" />
     <Content Include="Scripts\app\model\FacetSource.js" />
@@ -733,6 +735,8 @@
     <Content Include="Scripts\app\view\option\Form.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\Edit.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\Form.js" />
+    <Content Include="Scripts\app\view\settings\tax\Edit.js" />
+    <Content Include="Scripts\app\view\settings\tax\Form.js" />
     <Content Include="Scripts\app\view\site\navigation\PageCreator.js" />
     <Content Include="Scripts\app\view\site\page\FacetRangeQueryGroup.js" />
     <Content Include="Scripts\app\view\site\page\Form.js" />
@@ -2721,7 +2725,6 @@
     <Content Include="Scripts\app\view\site\widget\JasonImage.js" />
     <Content Include="Scripts\app\view\site\widget\RecentBlogPosts.js" />
     <Content Include="Scripts\app\view\site\widget\TagCollection.js" />
-    <Content Include="Scripts\app\view\tax\Index.js" />
     <Content Include="Scripts\app\view\testing\EditAddressTest.js" />
     <Content Include="Scripts\app\view\testing\Shim.js" />
     <Content Include="Scripts\app\view\testing\StandaloneOption.js" />

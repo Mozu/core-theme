@@ -10,5 +10,11 @@
         model: 'Taco.model.TaxRate',
         pageSize: 100,
         remoteSort: false ,
-        remoteFilter: false
+        remoteFilter: false,
+        storeManagerConfig: {
+            clearFilters: true,
+            contextLevel: 's',
+            clearSort: true,
+            autoLoad: true
+        }
     });

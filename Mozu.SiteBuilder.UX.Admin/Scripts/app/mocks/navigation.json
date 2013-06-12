@@ -97,7 +97,7 @@
             }, {
                 "id": "tax",
                 "label": "Tax",
-                "address": "tax"
+                "address": "settings/tax"
             }, {
                 "id": "shipping",
                 "label": "Shipping",

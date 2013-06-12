@@ -8,10 +8,27 @@
 */
 
 
-    Ext.define('Taco.store.TaxRates', {
+    Ext.define('Taco.store.States', {
         extend: 'Ext.data.Store',
-        model: 'Taco.model.TaxRate',
+        fields: ['Value', 'Code'],
         pageSize: 100,
-        remoteSort: false ,
-        remoteFilter: false
+        remoteSort: false,
+        remoteFilter: false,
+        proxy: {
+            type: 'ajax',
+            api: {
+                read: '/admin/app/Refrence/states/list'
+            },
+            reader: {
+                type: 'json',
+                root: 'items',
+                successProperty: 'success',
+                messageProperty: "message"
+            },   
+        },
+        storeManagerConfig: {
+            clearFilters: true,
+            clearSort: true,
+            autoLoad: true
+        },
     });

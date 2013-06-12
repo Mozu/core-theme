@@ -79,12 +79,12 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         if (!selectedRecord) {
             
             this.store.each(function (topParent) {
-                if (topParent.data.address && appStateAddress.indexOf(topParent.data.address.toLowerCase())&& appStateAddress.indexOf(topParent.data.address.toLowerCase()) == appStateAddress.length + topParent.data.address.length) {
+                if (topParent.data.address && appStateAddress.indexOf(topParent.data.address.toLowerCase() )> -1 && appStateAddress.indexOf(topParent.data.address.toLowerCase()) == appStateAddress.length + topParent.data.address.length) {
                     parentRecord = topParent;
                     selectedRecord = topParent;
                 }
                 topParent.items().each(function (subItem) {
-                    if (subItem.data.address && appStateAddress.indexOf(subItem.data.address.toLowerCase()) && appStateAddress.indexOf(subItem.data.address.toLowerCase()) == appStateAddress.length - subItem.data.address.length) {
+                    if (subItem.data.address && appStateAddress.indexOf(subItem.data.address.toLowerCase()) > -1 && appStateAddress.indexOf(subItem.data.address.toLowerCase()) == appStateAddress.length - subItem.data.address.length) {
                         parentRecord = topParent;
                         selectedRecord = subItem;
                     }
