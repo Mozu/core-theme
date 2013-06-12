@@ -12,11 +12,11 @@
         var checkoutViewModel = new CheckoutModels.CheckoutPage(checkoutData);
 
         // add some view-only helpers
-        checkoutViewModel.Shipment.ShippingContact.nextButtonText = ko.computed(function () {
-            return checkoutViewModel.Shipment.stepStatus() == 'new' ? 'Next' : 'Update'
+        checkoutViewModel.ShippingInfo.ShippingContact.nextButtonText = ko.computed(function () {
+            return checkoutViewModel.ShippingInfo.stepStatus() == 'new' ? 'Next' : 'Update'
         });
 
-        checkoutViewModel.Shipment.nextButtonText = ko.computed(function () {
+        checkoutViewModel.ShippingInfo.nextButtonText = ko.computed(function () {
             return checkoutViewModel.Payment.stepStatus() == 'new' ? 'Next' : 'Update'
         });
 

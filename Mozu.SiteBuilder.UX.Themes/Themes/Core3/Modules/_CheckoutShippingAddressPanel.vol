@@ -1,7 +1,7 @@
 ﻿{% comment %}
     Note that this panel requires the AddressSummaryTemplate and AddressFormTemplate modules to be present on the page, since they are bound by the #mz-completed-summary and #mz-form-fields divs.
 {% endcomment %}
-<div class="mz-panel" id="mz-shipping-address-panel" data-bind="with: Shipment.ShippingContact, cssClassFrom: Shipment.ShippingContact.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
+<div class="mz-panel" id="mz-shipping-address-panel" data-bind="with: ShippingInfo.ShippingContact, cssClassFrom: ShippingInfo.ShippingContact.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
     <h3 class="mz-panel-header">
         Shipping Information
         <button class="mz-edit-button" data-bind="click: edit">Edit</button>

@@ -93,7 +93,18 @@ var ApiReference = (function () {
             if (oType.verb) returnObj.verbOverride = oType.verb;
             if (oType.returnType) returnObj.returnType = oType.returnType;
             if (oType.noBody) returnObj.noBody = oType.noBody;
-            if (oType.overridePostData) returnObj.overridePostData = tptData;
+            if (oType.overridePostData) {
+                var overriddenData;
+                if (utils.getType(oType.overridePostData) == "Array") {
+                    overriddenData = {};
+                    for (var tOK = 0; tOK < oType.overridePostData.length; tOK++) {
+                        overriddenData[oType.overridePostData[tOK]] = tptData[oType.overridePostData[tOK]];
+                    }
+                } else {
+                    overriddenData = tptData;
+                }
+                returnObj.overridePostData = overriddenData;
+            }
             return returnObj;
         },
 
@@ -298,6 +309,8 @@ var ApiReference = (function () {
             'perform-order-action': {
                 verb: 'POST',
                 template: '{+OrderService}{Id}/actions',
+                shortcutParam: 'ActionName',
+                overridePostData: ['ActionName'],
                 includeSelf: true
             },
             'add-order-note': {

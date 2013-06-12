@@ -1,4 +1,4 @@
-﻿<div class="mz-panel" id="mz-shipping-method-panel" data-bind="with: Shipment, cssClassFrom: Shipment.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
+﻿<div class="mz-panel" id="mz-shipping-method-panel" data-bind="with: ShippingInfo, cssClassFrom: ShippingInfo.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
     <h3 class="mz-panel-header">
         Shipping Method
         <button class="mz-edit-button" data-bind="click: edit">Edit</button>

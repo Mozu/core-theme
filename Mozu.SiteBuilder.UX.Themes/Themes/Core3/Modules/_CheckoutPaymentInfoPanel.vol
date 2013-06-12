@@ -17,7 +17,7 @@
 
                     <h4>Billing Address</h4>
                     <!-- ko if: IsSameBillingShippingAddress -->
-                        <div data-bind="template: { name: 'mz-tpt-address-summary', data: $root.Shipment.ShippingContact }"></div>
+                        <div class="mz-completed-summary" data-bind="template: { name: 'mz-tpt-address-summary', data: $root.ShippingInfo.ShippingContact }"></div>
                     <!-- /ko -->
                     <!-- ko if: !IsSameBillingShippingAddress() -->
                         <div data-bind="template: { name: 'mz-tpt-address-summary', data: BillingContact }"></div>
@@ -45,7 +45,7 @@
 
                 <h4>Billing Address</h4>
                 <div class="mz-single-setting"><label class="mz-inline"><input type="checkbox" data-bind="checked: IsSameBillingShippingAddress"> Use my shipping address</label></div>
-                <div class="mz-completed-summary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary" data-bind="visible: IsSameBillingShippingAddress, template: { name: 'mz-tpt-address-summary', data: $root.Shipment.ShippingContact}">
+                <div class="mz-completed-summary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary" data-bind="visible: IsSameBillingShippingAddress, template: { name: 'mz-tpt-address-summary', data: $root.ShippingInfo.ShippingContact}">
                 </div>
                 <div class="mz-form-fieldgroup mz-form-fields" data-bind="visible: !IsSameBillingShippingAddress(), template: { name: 'mz-tpt-address-form', data: BillingContact }"></div>
 
