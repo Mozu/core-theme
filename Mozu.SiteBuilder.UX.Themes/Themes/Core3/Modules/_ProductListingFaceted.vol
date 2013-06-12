@@ -1,0 +1,12 @@
+﻿{% require_script "modules/faceting" %}
+<span data-mz-role="faceting" data-mz-category="{{Model.CategoryId}}" data-mz-products="{% json_attribute Model %}" style="visibility:hidden">
+  <div id="mz-sidebar" class="mz-layout-sidebar">
+    {% include "Modules/FacetingPanel" %}
+  </div>
+  <section id="mz-layout-container" class="mz-layout-container mz-content-inner-wrap mz-category-wrapper">
+    <div class="mz-layout-main">
+      {% include "Modules/ProductListingTemplate" %}
+      <div data-bind="template: { name: 'mz-tpt-product-listing', data: qualified }"></div>
+    </div>
+  </section>
+</span>

@@ -148,11 +148,10 @@ var ApiReference = (function () {
                 allowInactive: false
             }
         },
-        
 
         'search': {
             template: '{+SearchService}searchz' + genericQueryTpt,
-            shortcutParam: 'q',
+            shortcutParam: 'query',
             defaultParams: {
                 startIndex: 0,
                 query: "*:*",
@@ -227,7 +226,8 @@ var ApiReference = (function () {
             get: {
                 template: '{+UserService}{Id}',
                 shortcutParam: 'id'
-            },            'get-by-email': {
+            },
+            'get-by-email': {
                 template: '{+UserService}{?emailAddress*}',
                 shortcutParam: 'emailAddress'
             },

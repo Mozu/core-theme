@@ -1,4 +1,4 @@
-﻿define(["jquery", "modules/knockout-plus", "modules/knockout-viewmodel", "modules/models-price"], function ($, ko, KnockoutVM, PriceModels) {
+﻿define(["jquery", "modules/knockout-plus", "modules/knockout-viewmodel", "modules/models-price", "modules/function-throttler"], function ($, ko, KnockoutVM, PriceModels, throttle) {
 
     var ProductOption = KnockoutVM.extend({
         statics: {
@@ -32,15 +32,30 @@
         //this.values(values);
 
         //if (selected.length === 1) this.value(selected[0].id);
+        var parent = me.getParentModel();
+
         var me = this;
         if (!this.IsMultiValue) {
             $.each(this.Values(), function (ix, v) {
                 if (v.IsSelected) {
+                    parent.configuredOptions[me.AttributeFQN] = true;
                     me.Value(v.Value);
                     return false;
                 }
             });
         }
+
+        if (this.ShopperEnteredValue()) this.Value(this.ShopperEnteredValue());
+
+        this.ShopperEnteredValue.subscribe(function (newVal) {
+            me.Value(newVal);
+        });
+
+        this.Value.subscribe(throttle(function (newVal) {
+            parent.configuredOptions[me.AttributeFQN] = !!(newVal || newVal === 0);
+            parent.configure({ Options: ko.utils.arrayMap(ko.utils.arrayFilter(parent.Options(), function(opt) { return opt.AttributeFQN in parent.configuredOptions; }), function(i) { return i.toJS(); }) });
+        }, 300, false));
+        
     });
 
     //var optionSerializers = {

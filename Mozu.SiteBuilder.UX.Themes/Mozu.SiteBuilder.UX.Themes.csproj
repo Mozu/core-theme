@@ -381,6 +381,7 @@
     <Content Include="Themes\Core3\MetaData\Widgets\cms\paragraphWithHeader\_0003_text.png" />
     <Content Include="Themes\Core3\MetaData\Widgets\social\addthis\_0008_share.png" />
     <Content Include="Themes\Core3\MetaData\Widgets\social\facebookComments\_0008_share.png" />
+    <Content Include="Themes\Core3\Modules\_FacetingPanel.vol" />
     <Content Include="Themes\Core3\Modules\_GoogleAnalyticsTrackingCode.vol">
       <SubType>Designer</SubType>
     </Content>
@@ -403,6 +404,7 @@
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-price.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-user.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\jquery-plus.js" />
+    <Content Include="Themes\Core3\Resources\Scripts\Modules\faceting.js" />
     <Content Include="Themes\Core3\Resources\Strings\lang-de.csv" />
     <Content Include="Themes\Core3\Resources\Strings\lang-en.csv" />
     <Content Include="Morrissey\morrissey.js" />
@@ -648,6 +650,9 @@
     <Content Include="SampleThemes\helloWorld\Widgets\hello_world\hello_world_widget.vol" />
     <Content Include="Themes\Core3\Resources\Stylesheets\Modules\admin-injections.less" />
     <Content Include="Themes\MobileCore\Modules\PageFooter.vol" />
+    <Content Include="Themes\Core3\Modules\_ProductListingFaceted.vol">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

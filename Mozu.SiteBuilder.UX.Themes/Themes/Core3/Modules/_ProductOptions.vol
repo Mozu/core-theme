@@ -6,7 +6,7 @@
         <strong class="mz-option-name" data-bind="text: AttributeDetail.Name"></strong>: 
         <!-- ko if: AttributeDetail.InputType == 'List' -->
             <!-- ko if: IsMultiValue -->
-                <select class="mz-multiselect mz-option" multiple data-bind="disable: $root.submitting, value: Value, options: Values, optionsText: 'Value', optionsValue: 'Value'"></select>
+                <select class="mz-multiselect mz-option" multiple data-bind="disable: $root.submitting, selectedOptions: Value, options: Values, optionsText: 'Value', optionsValue: 'Value'"></select>
             <!-- /ko -->
             <!-- ko if: !IsMultiValue -->
                 <select class="mz-dropdown mz-option" data-bind="disable: $root.submitting, value: Value, options: Values, optionsCaption: '[Select]', optionsText: 'Value', optionsValue: 'Value'">

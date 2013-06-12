@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-plus", "modules/knockout-plus", "modules/models-product", "modules/function-throttler", "modules/product-images"], function ($, ko, ProductModels, throttle) {
+﻿require(["modules/jquery-plus", "modules/knockout-plus", "modules/models-product", "modules/product-images"], function ($, ko, ProductModels) {
     // initialize view
 
     $(document).ready(function () {
@@ -34,14 +34,14 @@
         //});
 
         // go to the cart when complete
-        product.on('addedtocart', throttle(function (event, cartitem) {
+        product.on('addedtocart', function (event, cartitem) {
             if (cartitem && cartitem.data && cartitem.data.CartItemId) {
                 product.submitting(true);
                 window.location.href = "/cart";
             } else {
                 product.unknownError();
             }
-        }, 250));
+        });
 
         // bind view!
         ko.applyBindings(product, $productView[0]);
@@ -50,13 +50,13 @@
         $productView.noFlickerFadeIn();
 
         // changing any of the options should result in an update
-        $optionContainer.on('change keyup blur', function (e) {
-            // get around knockout's habit of firing the change event twice for IE compatibility and causing a loop
-            if (e.isTrigger) return;
-            setTimeout(function () {
-                product.configure({ Options: product.toJS().Options });
-            }, 50);
-        });
+        //$optionContainer.on('change keyup blur', function (e) {
+        //    // get around knockout's habit of firing the change event twice for IE compatibility and causing a loop
+        //    if (e.isTrigger) return;
+        //    setTimeout(function () {
+        //        product.configure({ Options: product.toJS().Options });
+        //    }, 50);
+        //});
 
         window.productVM = product;
 
