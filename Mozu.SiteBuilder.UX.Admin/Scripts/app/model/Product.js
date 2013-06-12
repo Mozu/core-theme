@@ -185,7 +185,12 @@ Ext.define('Taco.model.Product', {
           name: "extras",
           type: "auto",
           defaultValue: []
-      }
+      },
+       {
+           name: "options",
+           type: "auto",
+           defaultValue: []
+       }
     
   ],
     getContextualValue: function (fieldName) {
