@@ -653,6 +653,7 @@
     <Content Include="Themes\Core3\Modules\_ProductListingFaceted.vol">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Themes\Core3\Modules\_ProductListingTemplate.vol" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

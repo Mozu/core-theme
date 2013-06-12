@@ -32,9 +32,8 @@
         //this.values(values);
 
         //if (selected.length === 1) this.value(selected[0].id);
-        var parent = me.getParentModel();
-
         var me = this;
+        var parent = me.getParentModel();
         if (!this.IsMultiValue) {
             $.each(this.Values(), function (ix, v) {
                 if (v.IsSelected) {
@@ -45,11 +44,12 @@
             });
         }
 
-        if (this.ShopperEnteredValue()) this.Value(this.ShopperEnteredValue());
 
-        this.ShopperEnteredValue.subscribe(function (newVal) {
-            me.Value(newVal);
-        });
+        if (this.AttributeDetail.InputType === "TextBox") {
+            this.Value = ko.computed(function() {
+                return me.ShopperEnteredValue();
+            });
+        }
 
         this.Value.subscribe(throttle(function (newVal) {
             parent.configuredOptions[me.AttributeFQN] = !!(newVal || newVal === 0);
