@@ -82,7 +82,7 @@
                 "availableShippingMethods": {}
             },
             submodels: {
-                ShippingAddress: ShippingAddress,
+                ShippingContact: ShippingAddress,
                 Price: Price
             },
             edit: editStep,
@@ -576,7 +576,7 @@
                 backstop = $.proxy(this.unknownError,this);
 
             this.orderStatus = ko.computed(function () {
-                var statuses = [self.Shipment.ShippingAddress.stepStatus(), self.Shipment.stepStatus(), self.Payment.stepStatus()].join("");
+                var statuses = [self.Shipment.ShippingContact.stepStatus(), self.Shipment.stepStatus(), self.Payment.stepStatus()].join("");
 
                 clearTimeout(errorTimer);
                 if (statuses.indexOf(SUBMITTING) !== -1) {

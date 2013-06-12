@@ -12,21 +12,7 @@ Ext.define('Taco.view.settings.tax.Form', {
     },
     initComponent: function() {
 
-        this.taxToggle = Ext.create('Ext.form.RadioGroup', {
-            //fieldLabel: 'Two Columns',
-            // Arrange radio buttons into two columns, distributed vertically
-            columns: 1,
-            vertical: true,
-            items: [
-                { boxLabel: 'My Store is Tax Exempt', name: 'taxtogglerg', inputValue: '1' },
-                { boxLabel: 'Collect Tax in these States', name: 'taxtogglerg', inputValue: '2', checked: true }
-            ],
-            listeners: {
-                change: function() {
-                    alert('tbd');
-                }
-            }
-        });
+    
 
         this.taxStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TaxRates');        
         
@@ -43,7 +29,7 @@ Ext.define('Taco.view.settings.tax.Form', {
             valueField: 'Code'
         });
 
-        this.items = [this.taxToggle, this.statesInput];
+        this.items = [ this.statesInput];
 
         this.callParent(arguments);
         if (this.taxStore.isLoading) {
