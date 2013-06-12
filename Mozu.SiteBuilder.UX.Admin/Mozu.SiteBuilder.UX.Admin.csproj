@@ -658,6 +658,7 @@
     <Content Include="Scripts\app\store\CartItems.js" />
     <Content Include="Scripts\app\store\CmsDocumentDrafts.js" />
     <Content Include="Scripts\app\shared\store\Files.js" />
+    <Content Include="Scripts\app\store\GeneralSettings.js" />
     <Content Include="Scripts\app\store\ItemFilters.js" />
     <Content Include="Scripts\app\store\LocalizedStrings.js" />
     <Content Include="Scripts\app\store\Orders.js" />
@@ -677,6 +678,7 @@
     <Content Include="Scripts\app\view\discount\Index.js" />
     <Content Include="Scripts\app\view\fileManager\Associator.js" />
     <Content Include="Scripts\app\view\fileManager\Index.js" />
+    <Content Include="Scripts\app\view\generalSettings\Form.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\About.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Analytics.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Maintenance.js" />
