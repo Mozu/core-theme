@@ -13,11 +13,13 @@ Ext.define('Taco.controller.GeneralSettings', {
     modelName: 'GeneralSettings',
     index: function (params) {
         var me = this;
-        Taco.model.GeneralSettings.load('', {
-            success: function (record, o) {
-                me.createContentView('Taco.view.generalSettings.Index', { record: record });
-            }
-        });
+        if (!this.requiresSiteContext()) {
+            Taco.model.GeneralSettings.load('', {
+                success: function(record, o) {
+                    me.createContentView('Taco.view.generalSettings.Index', { record: record });
+                }
+            });
+        }
     }
 });
 
