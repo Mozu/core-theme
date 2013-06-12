@@ -10,17 +10,17 @@
 Ext.define('Taco.model.ProductVariation', {
     extend: 'Taco.core.data.Model',
     fields:
-       [
+    [
         {
             "name": "deltaPrice",
             "type": "float",
             "useNull": true
         },
-             {
-                 "name": "deltaWeight",
-                 "type": "float",
-                 "useNull": true
-             },
+        {
+            "name": "deltaWeight",
+            "type": "float",
+            "useNull": true
+        },
         {
             "name": "isActive",
             "type": "boolean",
@@ -41,11 +41,11 @@ Ext.define('Taco.model.ProductVariation', {
             "type": "int",
             "useNull": true
         },
-            {
-                "name": "stockOnOrder",
-                "type": "int",
-                "useNull": true
-            },
+        {
+            "name": "stockOnOrder",
+            "type": "int",
+            "useNull": true
+        },
         {
             "name": "exists",
             "type": "boolean",
@@ -60,7 +60,7 @@ Ext.define('Taco.model.ProductVariation', {
             "name": "productCode",
             "type": "string",
             "useNull": true
-        },
+        }
         //{
         //    "name": "weight",
         //    "type": "float",
@@ -87,8 +87,7 @@ Ext.define('Taco.model.ProductVariation', {
         //    "type": "string",
         //    "useNull": true
         //}
-      ]
-    ,
+    ],
     belongsTo: 'Taco.model.Product',
 
     idProperty: 'key',

@@ -208,6 +208,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ProductVariation, DC.ProductVariation>();
             Mapper.CreateMap<DC.ProductVariation, ProductVariation>();
 
+
+            Mapper.CreateMap<ProductVariationOption, DC.ProductVariationOption>();
+            Mapper.CreateMap<DC.ProductVariationOption, ProductVariationOption>();
+
+
+
             //Mapper.CreateMap<ProductPropertyValue, DC.ProductPropertyValue>()
             //      .ForMember(x => x.AttributeVocabularyValueDetail, op => op.Ignore())
             //      .ForMember( x=> x.Value, op=> op.ResolveUsing( x=> x.Value ))
