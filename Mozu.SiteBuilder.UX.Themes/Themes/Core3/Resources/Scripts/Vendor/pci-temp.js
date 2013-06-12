@@ -145,7 +145,7 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
         maskPattern: "^(\\d+?)\\d{4}$",
         maskCharacter: "*",
         apiBase: window.location.protocol + "//pci." + window.location.hostname.replace('www.', ''),
-        framePath: "/Assets/pci_receiver.html"
+        framePath: "/../Assets/pci_receiver.html"
     },
 
     events = {

@@ -375,7 +375,7 @@
                     }
                 },
                 settings: {
-                    framePath: "/Assets/pci_receiver.html",
+                    framePath: "/../Assets/pci_receiver.html",
                     siteId: api.context.Site(),
                     tenantId: api.context.Tenant()
                 }
