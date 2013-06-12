@@ -307,7 +307,7 @@
             }
         }),
 
-        Payment = ViewModelPrototype.extend({
+        BillingInfo = ViewModelPrototype.extend({
             //endpoint: "/resources/scripts/fixtures/checkout-updatepaymentsection.json",
             //endpoint: "/checkout/updatepayment",
             mozuType: 'payment',
@@ -421,7 +421,7 @@
             },
             submodels: {
                 ShippingInfo: ShippingInfo,
-                Payment: Payment,
+                BillingInfo: BillingInfo,
                 Note: Note,
                 User: UserModels.User
             },
@@ -550,12 +550,12 @@
                 this.endSubmit();
             };
 
-            this.Payment.pciProcessor.events.error = function (messages) {
+            this.BillingInfo.pciProcessor.events.error = function (messages) {
                 self.messages(messages);
-                self.Payment.stepStatus("invalid");
+                self.BillingInfo.stepStatus("invalid");
             };
 
-            this.Payment.pciProcessor.settings.set({
+            this.BillingInfo.pciProcessor.settings.set({
                 apiBase: this.paymentApiBase
             });
 
@@ -576,7 +576,7 @@
                 backstop = $.proxy(this.unknownError,this);
 
             this.orderStatus = ko.computed(function () {
-                var statuses = [self.ShippingInfo.ShippingContact.stepStatus(), self.ShippingInfo.stepStatus(), self.Payment.stepStatus()].join("");
+                var statuses = [self.ShippingInfo.ShippingContact.stepStatus(), self.ShippingInfo.stepStatus(), self.BillingInfo.stepStatus()].join("");
 
                 clearTimeout(errorTimer);
                 if (statuses.indexOf(SUBMITTING) !== -1) {

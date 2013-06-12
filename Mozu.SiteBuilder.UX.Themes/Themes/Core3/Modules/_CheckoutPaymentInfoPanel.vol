@@ -1,7 +1,7 @@
 ﻿{% comment %}
     Note that this panel requires the AddressSummaryTemplate, AddressFormTemplate, CreditCardTemplate, and CheckingAccountTemplate modules to be present on the page, since they are bound by KnockoutJS databinds.
 {% endcomment %}
-<div class="mz-panel" id="mz-payment-information-panel" data-bind="with: Payment, cssClassFrom: Payment.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
+<div class="mz-panel" id="mz-payment-information-panel" data-bind="with: BillingInfo, cssClassFrom: BillingInfo.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
     <h3 class="mz-panel-header">
         Payment Information
         <button class="mz-edit-button" data-bind="click: edit">Edit</button>

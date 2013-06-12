@@ -17,7 +17,7 @@
         });
 
         checkoutViewModel.ShippingInfo.nextButtonText = ko.computed(function () {
-            return checkoutViewModel.Payment.stepStatus() == 'new' ? 'Next' : 'Update'
+            return checkoutViewModel.BillingInfo.stepStatus() == 'new' ? 'Next' : 'Update'
         });
 
         ko.applyBindings(checkoutViewModel, $checkoutView[0]);
