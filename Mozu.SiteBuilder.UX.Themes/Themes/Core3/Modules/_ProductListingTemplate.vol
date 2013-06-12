@@ -1,0 +1,46 @@
+<script type="text/html" id="mz-tpt-product-listing">
+<div class="mz-product-listing-wrap">
+	<!-- ko if: $data.length -->
+		<ul class="mz-list-control" data-items-per-row="3">
+			<!-- ko foreach: $data -->
+				<li class="mz-list-item" data-bind="with: data">
+					<div class="mz-product-item-wrap">
+						<div class="mz-product-image-wrap">
+							<a class="mz-product-image-link" data-bind="attr: { href: '/product/' + ProductCode }">
+								<img data-bind="attr: { src: (Content.ProductImages[0] && Content.ProductImages[0].ImageUrl || 'http://placehold.it/200&text=Missing+Photo') + '?size=160' } "class="mz-product-image">
+							</a>
+						</div>
+
+						<div class="mz-product-info-wrap">
+							<a class="mz-product-title-link" data-bind="attr: { href: '/product/' + ProductCode }, text: Content.ProductName "></a>
+
+							<div class="mz-price-stack-wrap">       
+								<div class="mz-price-label" data-bind="text: ProductCode"></div>
+								<div class="mz-price-sub-wrap">
+									<!-- ko if: Price.SalePrice && Price.Price !== Price.SalePrice -->
+									<div class="mz-price-amt mz-strikethrough" data-bind="currencyText: Price.Price"></div>
+									<div class="mz-price-saleprice mz-price-amt">
+										<!-- ko if: Price.Discount -->
+										<span class="mz-price-discount-name" data-bind="text: Price.Discount.Discount.Name + ' &ndash;'"></span>
+										<!-- /ko -->
+										<span data-bind="currencyText: Price.SalePrice"></span>
+									</div>
+									<!-- /ko -->
+									<!-- ko if: !Price.SalePrice || Price.Price === Price.SalePrice -->
+									<div class="mz-price-amt" data-bind="currencyText: Price.Price"></div>
+									<!-- /ko -->
+								</div>
+							</div>
+						</div> <!-- .mz-product-info-wrap -->
+
+					</div> <!-- .mz-product-item-wrap -->
+
+				</li> <!-- .mz-list-item -->
+				<!-- ko if: $index() > 0 && ($index() + 1) % 4 === 0 -->
+					<li class="mz-list-spacer"></li>
+				<!-- /ko -->
+			<!-- /ko -->
+		</ul>
+	<!-- /ko -->
+</div>
+</script>
