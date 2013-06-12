@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _productTypeWebApiClient = productTypeWebApiClient;
         }
 
-        [WebGet(UriTemplate = "read")]
+        [WebGet(UriTemplate = "list")]
         public async Task<Response<List<ProductVariation >>> ListProducts([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter,string productCode)
         {
             var res = (await _productClient.GetProductVariations(productCode, pagingParams.startIndex, pagingParams.pageSize)).ReadAsSync();

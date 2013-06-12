@@ -54,6 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
                 .ForMember(x => x.ProductInSites, op => op.MapFrom(dc => dc.ProductInSites))
                 .ForMember( x=> x.Properties , op=> op.MapFrom(dc=> dc.Properties ))
+                .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Options))
                 .ForMember(x => x.ProductImages, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductImages))
                 .AfterMap((x, y) =>
                     {
@@ -66,8 +67,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<Product, DC.Product>()
                 .ForMember(dc => dc.ProductCode, op => op.MapFrom(p => p.ProductCode))
-                .ForMember(dc => dc.Properties , op => op.MapFrom(p => p.ProductCode))
                 .ForMember(dc => dc.Properties, op => op.MapFrom(p => p.Properties))
+                .ForMember(dc => dc.Options, op => op.MapFrom(p => p.Options))
                 .ForMember(dc => dc.BaseProductCode, op => op.MapFrom(p => p.BaseProductCode))
                 .ForMember(dc => dc.ProductTypeId, op => op.MapFrom(dc => dc.ProductTypeId))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(p =>
@@ -125,6 +126,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       }));
 
 
+
+
             Mapper.CreateMap<ProductProperty, DC.ProductProperty>()
                   //.ForMember(x => x., op => op.Ignore())
                   .ForMember(x => x.AttributeFQN, op => op.MapFrom(x => x.AttributeFQN))
@@ -153,6 +156,57 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                    }));
 
 
+            Mapper.CreateMap<DC.ProductOption , ProductProperty>()
+                  .ForMember(x => x.AttributeFQN, op => op.MapFrom(x => x.AttributeFQN))
+                  .ForMember(x => x.Values, op => op.ResolveUsing(x =>
+                  {
+                      if (x.Values == null)
+                      {
+                          return null;
+                      }
+                      return x.Values.Select(v =>
+                      {
+                          //if (v.Content != null && !string.IsNullOrWhiteSpace(v.Content.StringValue))
+                          //{
+                          //    return v.Content.StringValue;
+                          //}
+                          return v.Value;
+                      }).ToList();
+                  }));
+
+
+
+
+            Mapper.CreateMap<ProductProperty, DC.ProductOption>()
+                //.ForMember(x => x., op => op.Ignore())
+                  .ForMember(x => x.AttributeFQN, op => op.MapFrom(x => x.AttributeFQN))
+                  .ForMember(x => x.Values, op => op.ResolveUsing(x =>
+                  {
+                      if (x.Values == null)
+                      {
+                          return null;
+                      }
+                      return x.Values.Select(v =>
+                      {
+                          var ppv = new DC.ProductPropertyValue()
+                          {
+                              Value = v
+
+                          };
+                          if (v != null && v is string)
+                          {
+                              ppv.Content = new DC.ProductPropertyValueLocalizedContent()
+                              {
+                                  StringValue = (string)v
+                              };
+                          }
+                          return ppv;
+                      }).ToList();
+                  }));
+
+
+            Mapper.CreateMap<ProductVariation, DC.ProductVariation>();
+            Mapper.CreateMap<DC.ProductVariation, ProductVariation>();
 
             //Mapper.CreateMap<ProductPropertyValue, DC.ProductPropertyValue>()
             //      .ForMember(x => x.AttributeVocabularyValueDetail, op => op.Ignore())
