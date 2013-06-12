@@ -10,7 +10,7 @@
     {% include "Modules/LoadingBar" %}
 </div>
 
-<div id="mz-layout-container" class="mz-layout-container mz-content-inner-wrap mz-blog-list-page>
+<div id="mz-layout-container" class="mz-layout-container mz-content-inner-wrap mz-blog-list-page">
     {% html_action "ProductListing" "catalog" with categoryId=Model.Id and includeFacets=true and viewName="Modules/ProductListingFaceted" as_parameter %}
 </div>
 

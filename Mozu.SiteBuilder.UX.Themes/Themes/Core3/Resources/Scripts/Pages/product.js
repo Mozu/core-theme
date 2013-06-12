@@ -1,5 +1,21 @@
-﻿require(["modules/jquery-plus", "modules/knockout-plus", "modules/models-product", "modules/product-images"], function ($, ko, ProductModels) {
-    // initialize view
+﻿require(["modules/jquery-plus", "modules/knockout-plus", "modules/models-product", "modules/product-images", "shim!vendor/jquery.tools.dateinput[jquery=jQuery]"], function ($, ko, ProductModels) {
+    // initialize view    function createDatePicker(eventOrIndex, option) {
+        if (option.AttributeDetail.InputType === "Date") {
+            // this is the best thing we have to wait for render :/
+            function makeDatePicker() {
+
+            var $newDateOptionInput = $('#datepicker_' + option.id);
+                if (!$newDateOptionInput.length) return setTimeout(makeDatePicker, 400);
+                $newDateOptionInput.dateinput({
+                    format: 'mm/dd/yyyy',
+                    max: option.maxDate,
+                    min: option.minDate,
+                });
+                $newDateOptionInput.css('color','#333');
+            }
+            setTimeout(makeDatePicker, 400);
+        }
+    }
 
     $(document).ready(function () {
 
@@ -45,6 +61,10 @@
 
         // bind view!
         ko.applyBindings(product, $productView[0]);
+
+        // build date pickers
+        product.on('optioncreated', createDatePicker);
+        $.each(product.Options(), createDatePicker);
 
         // reveal bound view, now that it's not an ugly template
         $productView.noFlickerFadeIn();

@@ -1,5 +1,17 @@
-define(['modules/jquery-plus', 'knockout', 'modules/api', 'modules/knockout-viewmodel'], function($, ko, api, KVM){
+define(['modules/jquery-plus', 'knockout', 'modules/api', "modules/models-faceting"], function($, ko, api, FacetingModels){
 
+    $(document).ready(function () {
+        
+        var $facetingForm = $('[data-mz-role=faceting]'),
+            facetingVM = window.facetingVM = new FacetingModels.FacetedProductCollection($facetingForm.mozuData('products'));
+
+        ko.applyBindings(facetingVM, $facetingForm[0]);
+
+        $('#mz-category-loading').remove();
+        $facetingForm.noFlickerFadeIn();
+
+    });
+    
 
     /*
     var FacetingProperties = {},

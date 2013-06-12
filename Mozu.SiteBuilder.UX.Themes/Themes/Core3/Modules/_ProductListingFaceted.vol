@@ -6,7 +6,7 @@
   <section id="mz-layout-container" class="mz-layout-container mz-content-inner-wrap mz-category-wrapper">
     <div class="mz-layout-main">
       {% include "Modules/ProductListingTemplate" %}
-      <div data-bind="template: { name: 'mz-tpt-product-listing', data: qualified }"></div>
+      <div data-bind="template: { name: 'mz-tpt-product-listing', data: Items }"></div>
     </div>
   </section>
 </span>

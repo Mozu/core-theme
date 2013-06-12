@@ -397,6 +397,7 @@
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\search\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\product\definition.json" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\cart-monitor.js" />
+    <Content Include="Themes\Core3\Resources\Scripts\Modules\models-faceting.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\function-throttler.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-myaccount.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-address.js" />
@@ -405,6 +406,8 @@
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-user.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\jquery-plus.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\faceting.js" />
+    <Content Include="Themes\Core3\Resources\Scripts\Vendor\jquery.tools.dateinput.js" />
+    <Content Include="Themes\Core3\Resources\Scripts\Vendor\jquery.tools.rangeinput.js" />
     <Content Include="Themes\Core3\Resources\Strings\lang-de.csv" />
     <Content Include="Themes\Core3\Resources\Strings\lang-en.csv" />
     <Content Include="Morrissey\morrissey.js" />
@@ -654,6 +657,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Themes\Core3\Modules\_ProductListingTemplate.vol" />
+    <Content Include="Themes\Core3\Resources\Stylesheets\Modules\datepicker.less" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
