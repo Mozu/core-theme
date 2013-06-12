@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
       
 
         [DataMember(EmitDefaultValue = false, Name = "options")]
-        public List<ProductProperty> Options { get; set; }
+        public List<ProductVariationOption> Options { get; set; }
     }
     [DataContract]
     public class ProductVariationOption

@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<ProductVariation >>> ListProducts([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter,string productCode)
         {
             var res = (await _productClient.GetProductVariations(productCode, pagingParams.startIndex, pagingParams.pageSize)).ReadAsSync();
-            var mappedRes = AutoMapper.Mapper.Map<ProductVariation>(res.Items);
+            var mappedRes = AutoMapper.Mapper.Map<List<ProductVariation>>(res.Items);
             return this.List2(mappedRes, total: (int)res.TotalCount);
 
         }
