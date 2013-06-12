@@ -1,5 +1,9 @@
 ﻿define(["jquery", "modules/knockout-plus", "modules/knockout-viewmodel", "modules/models-price", "modules/function-throttler"], function ($, ko, KnockoutVM, PriceModels, throttle) {
 
+    function sanitize(str) {
+        return str.replace(/[\s~'"]+/g, '-');
+    }
+
     var ProductOption = KnockoutVM.extend({
         statics: {
             AttributeFQN: '',
@@ -13,122 +17,50 @@
             Values: {}
         }
     }, function () {
-        //// choose serialization method at creation time   
-        //// TODO: is this strategy pattern enough, or should these be subclasses of ProductOption?
-        //this.toJS = optionSerializers[this.inputType] || optionSerializers.default;
+        var me = this,
+            parent = me.getParentModel(),
+            values, storedShopperValue;
 
-        //// process values and add an observable for selectedness, for multi-select
-        //var values = this.values(),
-        //    selected = [];
+        this.id = sanitize(this.AttributeFQN);
 
-        //if (!values || !values.length) return;
+        parent.configuredOptions = parent.configuredOptions || {};
 
-        //$.each(values, function (ix, val) {
-        //    var isSelected = val.isSelected;
-        //    val.isSelected = ko.observable(isSelected);
-        //    if (isSelected) selected.push(val);
-        //});
-
-        //this.values(values);
-
-        //if (selected.length === 1) this.value(selected[0].id);
-        var me = this;
-        var parent = me.getParentModel();
         if (!this.IsMultiValue) {
             $.each(this.Values(), function (ix, v) {
                 if (v.IsSelected) {
-                    parent.configuredOptions[me.AttributeFQN] = true;
+                    parent.configuredOptions[me.id] = true;
                     me.Value(v.Value);
                     return false;
                 }
             });
         }
 
-
-        if (this.AttributeDetail.InputType === "TextBox") {
+        if (this.AttributeDetail.InputType !== "List") {
+            values = this.Values();
+            storedShopperValue = values[0] && values[0].ShopperEnteredValue;
+            if (storedShopperValue || storedShopperValue === 0) this.ShopperEnteredValue(storedShopperValue);
             this.Value = ko.computed(function() {
                 return me.ShopperEnteredValue();
             });
         }
 
-        this.Value.subscribe(throttle(function (newVal) {
-            parent.configuredOptions[me.AttributeFQN] = !!(newVal || newVal === 0);
-            parent.configure({ Options: ko.utils.arrayMap(ko.utils.arrayFilter(parent.Options(), function(opt) { return opt.AttributeFQN in parent.configuredOptions; }), function(i) { return i.toJS(); }) });
-        }, 300, false));
-        
+        if (this.AttributeDetail.InputType === "Date" && this.AttributeDetail.Validation) {
+            this.minDate = new Date(Date.parse(this.AttributeDetail.Validation.MinDateValue) + (new Date).getTimezoneOffset() * 60000);
+            this.maxDate = new Date(Date.parse(this.AttributeDetail.Validation.MaxDateValue) + (new Date).getTimezoneOffset() * 60000);
+        }
+
+        // race condition with change events from setting up datepickers etc. this should cover it
+        setTimeout(function () {
+            me.Value.subscribe(throttle(function (newVal) {
+                parent.configuredOptions[me.id] = !!(newVal || newVal === 0);
+                parent.updateConfiguration();
+            }, 300, false));
+        }, 750);
+
+        // view needs to attach datepickers and other controls, so we need to know when these things are created
+        parent.publish('optioncreated', this);
+
     });
-
-    //var optionSerializers = {
-    //    "CheckBox": function () {
-    //        return $.map(this.values(), function (val) {
-    //            return val.isSelected() ? { id: val.id } : undefined;
-    //        }) || undefined;
-    //    },
-    //    "Textbox": function () {
-    //        var val = this.value();
-    //        return val ? { id: this.id, value: val } : undefined;
-    //    },
-    //    default: function () {
-    //        var val = this.value();
-    //        if (!isNaN(Number(val))) { val = Number(val); }
-    //        return val ? { id: val } : undefined;
-    //    }
-    //};
-
-    //var ProductConfiguration = KnockoutVM.extend({
-    //    endpoint: '/product/configure',
-    //    statics: {
-    //        productCode: ''
-    //    },
-    //    observables: {
-    //        purchasableState: {},
-    //        variationProductCode: {},
-    //    },
-    //    observableArrays: {
-    //        options: {}
-    //    },
-    //    //doNotSubmit: ["purchasableState", "variationProductCode"],
-    //    emitAllOptions: function () {
-    //        var vm = this.options();
-    //        if (vm) {
-    //            return $.map(this.options(), function(opt) {
-    //                return opt.toJS();
-    //            });
-    //        }
-    //        return null;
-    //    },
-    //    toJS: function () {
-    //        return {
-    //            productCode: this.productCode,
-    //            options: this.emitAllOptions()
-    //        }
-    //    }
-    //}, function constructConfig(conf) {
-    //    var self = this;
-    //    // the public options collection must be computed, to give it a write function that creates ProductOption observables on the way in
-    //    // extract current value
-    //    var options = this.options();
-    //    // private, underlying observablearray
-    //    var _options = ko.observableArray();
-    //    // public proxy observable
-    //    this.options = ko.computed({
-    //        write: function (newArray) {
-    //            if ($.isArray(newArray)) {
-    //                _options($.map(newArray, function (optionConf) {
-    //                    return new ProductOption(optionConf);
-    //                }));
-    //            } else {
-    //                // allow blanking the array out
-    //                _options(null);
-    //            }
-    //        },
-    //        read: _options
-    //    });
-
-    //    // now populate it
-    //    this.options(options);
-
-    //});
 
     var Product = KnockoutVM.extend({
         mozuType: 'product',
@@ -162,14 +94,23 @@
             //j.options = this.config.emitAllOptions();
             return j;
         },
+        getConfiguredOptions: function() {
+            var me = this;
+            return ko.utils.arrayMap(ko.utils.arrayFilter(me.Options(), function (opt) { return opt.id in me.configuredOptions; }), function (i) { return i.toJS(); });
+        },
         submit: function () {
             var self = this;
             if (this.validate()) {
                 this.submitting(true);
+                this.apiModel.prop('Options', this.getConfiguredOptions());
                 this.addToCart(this.Quantity()).then(function (item) {
                     self.publish('addedtocart', item);
                 });
             }
+        },
+        updateConfiguration: function () {
+            var me = this;
+            me.configure({ Options: this.getConfiguredOptions() });
         }
     }, function constructProduct() {
         var self = this;
@@ -177,6 +118,7 @@
             var pState = self.PurchasableState();
             return pState && pState.IsPurchasable;
         });
+
     });
 
 

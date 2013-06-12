@@ -117,9 +117,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue )
                 {
-                    var pcDC = _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate:"category:" + categoryId   ,facetHierDepth : "category:2"   ).Result.ReadAsSync();
+                    var pcDC = _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate:"category:" + categoryId, facetHierDepth : "categoryId:2"   ).Result.ReadAsSync();
                     var pc = Mapper.Map<ProductSearchResult>(pcDC);
-                    return PartialView(pc);
+                    return PartialView(pcDC);
                 }
                 else
                 {
