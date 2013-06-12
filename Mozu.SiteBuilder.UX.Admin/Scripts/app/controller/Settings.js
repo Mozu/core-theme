@@ -6,7 +6,7 @@
 
 Ext.define('Taco.controller.Settings', {
     extend: 'Taco.core.Controller',
-    requires: ['Taco.view.settings.paymentAndCheckout.Edit'],
+    requires: ['Taco.view.settings.paymentAndCheckout.Edit', 'Taco.view.settings.tax.Edit'],
     //editorView: 'Taco.view.product.Edit',
     listView: null,
     models: ['Taco.model.Product'],
@@ -26,6 +26,13 @@ Ext.define('Taco.controller.Settings', {
                 scope: this
             });
         }
+
+
+    },
+    tax: function () {
+        this.createContentView('Taco.view.settings.tax.Edit', {
+            record: null
+        });
 
 
     }
