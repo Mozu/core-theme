@@ -224,7 +224,7 @@
                 itemTpl: [
                     '<span class="x-boundlist-item-drag">Drag </span>',
                     '<span class="x-boundlist-item-content">{value}</span>',
-                    '<span class="x-boundlist-item-close"> Close</span>'
+                    '<span class="x-boundlist-item-close"> </span>'
                 ],
                
                 listeners: {

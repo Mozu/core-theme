@@ -33,7 +33,7 @@ Ext.define('Taco.view.product.subform.Categories', {
                 disableSelection: true,
                 itemTpl: [
                     '<span class="x-boundlist-item-content">{name}</span>',
-                    '<span class="x-boundlist-item-close"> Close</span>'
+                    '<span class="x-boundlist-item-close"> </span>'
                 ],
                 listeners: {
                     itemclick: this.onListItemClick,
