@@ -50,6 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 // TODO: options .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options))
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => dc.Product.Name))
                 .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.Product.Price.Price))
+                .ForMember(x => x.UnitWeight, op => op.MapFrom(dc => dc.Product.Measurements != null && dc.Product.Measurements != null ? dc.Product.Measurements.Weight : null))
                 .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
                 //TODO:find out where the metadata for discount went
                 .ForMember(x => x.Discount, op => op.MapFrom(dc => dc.ProductDiscount ))
@@ -78,13 +79,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<PaymentsDC.Payment, OrderPayment>()
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
+                .ForMember(x => x.PaymentServiceTransactionId, op => op.MapFrom(dc => dc.PaymentServiceTransactionId))
                 .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
-                .ForMember(x => x.TransactionDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate ))
                 .ForMember(x => x.AmountCollected, op => op.MapFrom(dc => dc.AmountCollected))
                 .ForMember(x => x.AmountCredited, op => op.MapFrom(dc => dc.AmountCredited))
+                .ForMember(x => x.Interactions, op => op.MapFrom(dc => dc.Interactions))
                 .ForMember(x => x.PaymentType, op => op.MapFrom(dc => dc.PaymentType))
+                .ForMember(x => x.CardType, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.PaymentOrCardType : null))
                 .ForMember(x => x.CardNumber, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.CardNumberPartOrMask : null))
-                .ForMember(x => x.TransactionId, op => op.MapFrom(dc => dc.PaymentServiceTransactionId))
+                .ForMember(x => x.NameOnCard, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.NameOnCard : null))
+                .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
+                ;
+
+            Mapper.CreateMap<PaymentsDC.PaymentInteraction, OrderPaymentInteraction>()
+                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
+                .ForMember(x => x.GatewayInteractionId, op => op.MapFrom(dc => dc.GatewayInteractionId))
+                .ForMember(x => x.GatewayInteractionIdReference, op => op.MapFrom(dc => dc.PaymentTransactionInteractionIdReference))
+                .ForMember(x => x.InteractionType, op => op.MapFrom(dc => dc.InteractionType))
+                .ForMember(x => x.CheckNumber, op => op.MapFrom(dc => dc.CheckNumber))
+                .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
                 ;
 
             Mapper.CreateMap<ShippingDC.Package, OrderPackage>()
@@ -105,6 +118,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.OrderItemId, op => op.MapFrom(dc => dc.OrderItemId))
                 .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
                 ;
+
+            Mapper.CreateMap<OrderItem, OrderPackageItem>()
+                .AfterMap((x,y) => {
+                    Console.WriteLine(x);
+                })
+                .AfterMap((x, y) => {
+                    Console.WriteLine(y);
+                })
+                ;
+
+            // cheese
+            Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, decimal?>()
+                .ConvertUsing(f => f == null ? null : f.Value);
         }
 
 
@@ -123,6 +149,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             packageItem.ProductCode = itemInOrder.ProductCode;
             packageItem.ProductName = itemInOrder.ProductName;
+            packageItem.Weight = itemInOrder.UnitWeight.HasValue ? packageItem.Quantity * itemInOrder.UnitWeight : null;
         }
     
         /// <summary>

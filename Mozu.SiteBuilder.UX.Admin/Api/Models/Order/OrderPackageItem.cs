@@ -17,5 +17,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name="productCode")]
         public string ProductCode { get; set; }
+
+        [DataMember(Name = "weight")]
+        public decimal? Weight { get; set; }
     }
 }

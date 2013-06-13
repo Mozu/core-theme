@@ -189,7 +189,12 @@ Ext.define('Taco.model.Order', {
         {
             type: 'hasOne',
             model: 'Taco.model.OrderCustomer',
-            name: "customer"
+            name: 'customer'
+        },
+        {
+            type: 'hasMany',
+            model: 'Taco.model.OrderPayment',
+            name: 'payments'
         }
     ],
 
