@@ -37,7 +37,7 @@
       @include border-radius(0px);
 
       &.#{$prefix}boundlist-item-over {
-        background-color: $color-selected;
+        background-color: $color-selected; 
       }
       &:not(:nth-of-type(1)) {
         padding-top: 5px;
@@ -104,6 +104,7 @@
     text-indent: -9999px;
     top: 0px;
     width: 16px;
+    float: left;
     @include flexbox(row, nowrap, center, flex-start, center);
     @include icons-sprite(icon-tree-knurling);
     padding-right: 25px;
@@ -144,6 +145,7 @@
   }
 
   .#{$prefix}boundlist-item-close::after {
+    float: right;
     content: "×";
   }
 
