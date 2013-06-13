@@ -220,7 +220,7 @@
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.0.13161.2\lib\Mozu.PaymentService.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.0.13163.2\lib\Mozu.PaymentService.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts">
       <HintPath>..\packages\Mozu.ProductAdmin.Contracts.0.0.13161.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
@@ -244,8 +244,9 @@
     <Reference Include="Mozu.SiteSettings.General.Contracts">
       <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.0.13151.2\lib\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.Order.Contracts">
-      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.0.13151.1\lib\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
+    <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.0.13163.1\lib\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.Shipping.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

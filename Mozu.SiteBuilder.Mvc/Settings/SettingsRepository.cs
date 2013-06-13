@@ -69,10 +69,6 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                     if (settings == null)
                     {
                         var response = _checkoutSettingsWebApiClient.GetCheckoutSettings().Result.ReadAsSync();
-                        settings = new UX.Models.Settings.CheckoutSettings { PaymentSettings = new UX.Models.Settings.PaymentSettings
-                            {
-                                SupportedCards = response.PaymentSettings.SupportedCards.Select(x => new KeyValuePair<string, string>(x, creditCardMappings[x])).ToList()
-                            }};
                         System.Web.HttpRuntime.Cache.Insert(key, settings, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 0, 3));
                     }
                     return settings;

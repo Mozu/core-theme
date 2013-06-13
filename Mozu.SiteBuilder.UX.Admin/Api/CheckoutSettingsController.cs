@@ -11,6 +11,7 @@ using Mozu.Provisioning.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout;
 using Mozu.SiteSettings.General.Contracts.Clients;
+using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using CheckoutSettings = Mozu.SiteSettings.Order.Contracts.CheckoutSettings;
 using GatewayCredentialFieldValue = Mozu.PaymentService.Contracts.GatewayCredentialFieldValue;
@@ -44,17 +45,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<Setting>> GetSettings()
         {
             var res = await _checkoutSettingsWebApiClient.GetCheckoutSettings();
-            //if (! res.ResponseMessage .IsSuccessStatusCode )
-            //{
-            //    var pRes=_provisioningWebApiClient.CreateSite(new Mozu.Core.Api.Contracts.SiteProvisionMessage()).Result;
-            //    if ( pRes.HasException )
-            //    {
-            //        throw pRes.ReadException();
-            //    }
-            //    res = _checkoutSettingsWebApiClient.GetCheckoutSettings().Result;
-            //}
             var setting = res.ReadAsSync();
-            var ret = ConvertSetting(setting);
+            var ret = ConvertSetting(setting.PaymentSettings );
+            ret.PaymentProcessingFlowType = setting.OrderProcessingSettings  != null ? setting.OrderProcessingSettings.PaymentProcessingFlowType : null;
+            ret.CustomerCheckoutType  = setting.CustomerCheckoutSettings   != null ? setting.CustomerCheckoutSettings.CustomerCheckoutType  : null;
+
+
             return Single2(ret);
         } 
 
@@ -66,10 +62,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "update")]
         public async Task<Response<Setting>> UpdateSettings(Setting settingReq)
         {
-            var cSetting = ConvertToContract(settingReq);
-            var ret = (await _checkoutSettingsWebApiClient.UpdateCheckoutSettings(cSetting)).ReadAsSync();
-            return Single2(ConvertSetting(ret));
+            var pSetting = ConvertToContract(settingReq);
+            var ret = (await _checkoutSettingsWebApiClient.UpdatePaymentSettings(pSetting)).ReadAsSync();
+            var ret1 = (await _checkoutSettingsWebApiClient.UpdateCustomerCheckoutSettings( new Mozu.SiteSettings.Order.Contracts.CustomerCheckoutSettings()
+                                                                                                {
+                                                                                                   CustomerCheckoutType = settingReq.CustomerCheckoutType  
+                                                                                                })).ReadAsSync();
+            var ret2 = (await _checkoutSettingsWebApiClient.UpdateOrderProcessingSettings( new Mozu.SiteSettings.Order.Contracts.OrderProcessingSettings()  
+            {
+                 PaymentProcessingFlowType = settingReq.PaymentProcessingFlowType 
+            })).ReadAsSync();
+
+            var getRes = await GetSettings();
+            return getRes;
         }
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// Returns the PCIaaS gateway definitions
@@ -86,9 +100,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         #region Private methods
 
-        private static CheckoutSettings ConvertToContract(Setting setting)
+        private static Mozu.SiteSettings.Order.Contracts.PaymentSettings ConvertToContract(Setting setting)
         {
-            var gateway = new Mozu.PaymentService.Contracts.GatewayAccount
+
+            var gatewayAccount = new Mozu.PaymentService.Contracts.GatewayAccount
             {
                 CountryCode = "US",
                 GatewayDefinitionId = setting.GatewayDefinitionId,
@@ -97,58 +112,53 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 CredentialFields = new List<GatewayCredentialFieldValue>()
             };
 
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId1) && !string.IsNullOrEmpty(setting.GatewayFieldVal1)) { gateway.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId1, Value = setting.GatewayFieldVal1 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId2) && !string.IsNullOrEmpty(setting.GatewayFieldVal2)) { gateway.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId2, Value = setting.GatewayFieldVal2 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId3) && !string.IsNullOrEmpty(setting.GatewayFieldVal3)) { gateway.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId3, Value = setting.GatewayFieldVal3 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId4) && !string.IsNullOrEmpty(setting.GatewayFieldVal4)) { gateway.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId4, Value = setting.GatewayFieldVal4 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId5) && !string.IsNullOrEmpty(setting.GatewayFieldVal5)) { gateway.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId5, Value = setting.GatewayFieldVal5 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId6) && !string.IsNullOrEmpty(setting.GatewayFieldVal6)) { gateway.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId6, Value = setting.GatewayFieldVal6 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId7) && !string.IsNullOrEmpty(setting.GatewayFieldVal7)) { gateway.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId7, Value = setting.GatewayFieldVal7 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId8) && !string.IsNullOrEmpty(setting.GatewayFieldVal8)) { gateway.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId8, Value = setting.GatewayFieldVal8 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId9) && !string.IsNullOrEmpty(setting.GatewayFieldVal9)) { gateway.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId9, Value = setting.GatewayFieldVal9 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId10) && !string.IsNullOrEmpty(setting.GatewayFieldVal10)) { gateway.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId10, Value = setting.GatewayFieldVal10 }); }
+            if (!string.IsNullOrEmpty(setting.GatewayFieldId1) && !string.IsNullOrEmpty(setting.GatewayFieldVal1)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId1, Value = setting.GatewayFieldVal1 }); }
+            if (!string.IsNullOrEmpty(setting.GatewayFieldId2) && !string.IsNullOrEmpty(setting.GatewayFieldVal2)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId2, Value = setting.GatewayFieldVal2 }); }
+            if (!string.IsNullOrEmpty(setting.GatewayFieldId3) && !string.IsNullOrEmpty(setting.GatewayFieldVal3)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId3, Value = setting.GatewayFieldVal3 }); }
+            if (!string.IsNullOrEmpty(setting.GatewayFieldId4) && !string.IsNullOrEmpty(setting.GatewayFieldVal4)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId4, Value = setting.GatewayFieldVal4 }); }
+            if (!string.IsNullOrEmpty(setting.GatewayFieldId5) && !string.IsNullOrEmpty(setting.GatewayFieldVal5)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId5, Value = setting.GatewayFieldVal5 }); }
+            if (!string.IsNullOrEmpty(setting.GatewayFieldId6) && !string.IsNullOrEmpty(setting.GatewayFieldVal6)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId6, Value = setting.GatewayFieldVal6 }); }
+            if (!string.IsNullOrEmpty(setting.GatewayFieldId7) && !string.IsNullOrEmpty(setting.GatewayFieldVal7)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId7, Value = setting.GatewayFieldVal7 }); }
+            if (!string.IsNullOrEmpty(setting.GatewayFieldId8) && !string.IsNullOrEmpty(setting.GatewayFieldVal8)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId8, Value = setting.GatewayFieldVal8 }); }
+            if (!string.IsNullOrEmpty(setting.GatewayFieldId9) && !string.IsNullOrEmpty(setting.GatewayFieldVal9)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId9, Value = setting.GatewayFieldVal9 }); }
+            if (!string.IsNullOrEmpty(setting.GatewayFieldId10) && !string.IsNullOrEmpty(setting.GatewayFieldVal10)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId10, Value = setting.GatewayFieldVal10 }); }
 
-            var cSetting = new CheckoutSettings
-            {
-                //todo:mozu rename PaymentServiceMerchantId = setting.PaymentServiceMerchantId,
-                PaymentSettings = new PaymentSettings
-                {
-                    Gateway = gateway,
-                    SupportedCards = setting.SupportedCards
-                },
+            var pSettings = new Mozu.SiteSettings.Order.Contracts.PaymentSettings
+                                {
+                                    Gateways = new List<Mozu.SiteSettings.Order.Contracts.Gateway>()
+                                                   {
 
-                CustomerCheckoutSettings = new Mozu.SiteSettings.Order.Contracts.CustomerCheckoutSettings
-                {
-                    CustomerCheckoutType =
-                        setting.CustomerCheckoutType
-                },
+                                                       new Gateway()
+                                                           {
+                                                               GatewayAccount = gatewayAccount,
+                                                               SupportedCards = setting.SupportedCards
+                                                           }
 
-                OrderProcessingSettings = new Mozu.SiteSettings.Order.Contracts.OrderProcessingSettings
-                {
-                    PaymentProcessingFlowType = setting.PaymentProcessingFlowType ?? "AuthorizeAndCaptureOnOrderPlacement"
-                }
-            };
-
-            return cSetting;
+                                                   },
+                                    PayByMail = setting.PayByMail.GetValueOrDefault(false)
+                                };
+            return pSettings;
         }
 
-        private static Setting ConvertSetting(CheckoutSettings setting)
+        private static Setting ConvertSetting(PaymentSettings  paymentSettings)
         {
-        
-            var ret = new Setting
+            var ret = new Setting();
+            if (paymentSettings == null)
             {
-                PaymentServiceMerchantId = "fart" , //todo:mozu rename setting.PaymentServiceMerchantId,
-                CustomerCheckoutType = (setting.CustomerCheckoutSettings != null) ? setting.CustomerCheckoutSettings.CustomerCheckoutType : null,
-                SupportedCards = (setting.PaymentSettings != null) ? setting.PaymentSettings.SupportedCards : null,
-                GatewayDefinitionId = (setting.PaymentSettings != null && setting.PaymentSettings.Gateway != null) ? setting.PaymentSettings.Gateway.GatewayDefinitionId : null,
-                PaymentProcessingFlowType = (setting.OrderProcessingSettings != null) ? setting.OrderProcessingSettings.PaymentProcessingFlowType : "AuthorizeAndCaptureOnOrderPlacement"
-            };
+                return ret;
+            }
 
-            if(setting.PaymentSettings != null && setting.PaymentSettings.Gateway != null)
+            ret.PayByMail = paymentSettings.PayByMail;
+            var gateWay = paymentSettings.Gateways != null && paymentSettings.Gateways.Count > 0 ? paymentSettings.Gateways.First() : null;
+
+           
+            if (gateWay != null)
             {
-                if(setting.PaymentSettings.Gateway.CredentialFields != null)
+                
+                ret.SupportedCards = gateWay.SupportedCards;
+                if ( gateWay.GatewayAccount != null && gateWay.GatewayAccount.CredentialFields != null )
                 {
-                    var fields = setting.PaymentSettings.Gateway.CredentialFields;
+                    var fields = gateWay.GatewayAccount.CredentialFields;
                     var fieldCount = fields.Count;
 
                     ret.GatewayFieldId1 = (fieldCount > 0) ? fields[0].Name : null;

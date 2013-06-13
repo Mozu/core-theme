@@ -25,25 +25,29 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Form', {
             items: [
                 {
                     xtype: 'radiogroup',
+                    fieldLabel: 'Order Processing',
+                    // Arrange radio buttons into two columns, distributed vertically
+                    columns: 1,
+                    vertical: true,
+                    items: [
+                        { boxLabel: 'Authorize And Capture On Order Placement', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeAndCaptureOnOrderPlacement' },
+                        { boxLabel: 'Authorize On Order Placement And Capture On Order Shipment', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeOnOrderPlacementAndCaptureOnOrderShipment' },
+                        { boxLabel: 'Authorize And Capture On Order Shipment', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeAndCaptureOnOrderShipment' }
+                    
+                    ]
+                },
+                
+        
+                {
+                    xtype: 'radiogroup',
                     fieldLabel: 'Customer Checkout',
                     // Arrange radio buttons into two columns, distributed vertically
                     columns: 1,
                     vertical: true,
                     items: [
                         { boxLabel: 'Guest Checkout with optional sign in', name: 'customerCheckoutType', inputValue: 'LoginOptional' },
-                        { boxLabel: 'Sign in required', name: 'customerCheckoutType', inputValue: 'LoginRequired' }
-                    ]
-                },
-                {
-                    xtype: 'radiogroup',
-                    fieldLabel: 'Request Email Address',
-                    // Arrange radio buttons into two columns, distributed vertically
-                    columns: 1,
-                    vertical: true,
-                    items: [
-                        { boxLabel: 'Default Yes', name: 'rb2', inputValue: 'LoginOptional' },
-                        { boxLabel: 'Default No', name: 'rb2', inputValue: 'LoginRequired' },
-                        { boxLabel: 'Hide', name: 'rb2', inputValue: 'LoginRequired' }
+                        { boxLabel: 'Sign in required', name: 'customerCheckoutType', inputValue: 'LoginRequired' },
+                    
                     ]
                 },
                 {
