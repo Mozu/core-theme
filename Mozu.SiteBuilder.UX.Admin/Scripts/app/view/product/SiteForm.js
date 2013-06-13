@@ -58,12 +58,13 @@ Ext.define('Taco.view.product.SiteForm', {
             Ext.Array.push(this.items, [
                 Ext.create('Taco.view.product.subform.Inventory', subFormCfg),
                 Ext.create('Taco.view.product.subform.Properties', subFormCfg),
-                Ext.create('Taco.view.product.subform.Extras', subFormCfg)
+                Ext.create('Taco.view.product.subform.Extras', subFormCfg),
+                Ext.create('Taco.view.product.subform.Shipping', subFormCfg),
             ]);
         }
 
         Ext.Array.push(this.items, [
-            Ext.create('Taco.view.product.subform.Shipping', subFormCfg),
+            
             Ext.create('Taco.view.product.subform.Categories', subFormCfg),
             Ext.create('Taco.view.product.subform.Merchandising', subFormCfg),
             Ext.create('Taco.view.product.subform.SEO', subFormCfg)
