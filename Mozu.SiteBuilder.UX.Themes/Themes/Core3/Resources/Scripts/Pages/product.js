@@ -16,11 +16,12 @@
         var product = new ProductModels.Product(productData);
 
          // initialize view        function applyUIFudges() {
+            // we do this sad thing because knockout doesn't currently support a clean way to enable/disable individual options in an 'options' binding.
             $('[data-mz-role="optionselect"], [data-mz-role="optionmultiselect"]').each(function () {
                 var option = ko.dataFor(this),
                     values = option.Values(),
                     $optionEls = $(this).find('option');
-                if ($optionEls.length === option.length) {
+                if ($optionEls.length === values.length) {
                     $optionEls.each(function(i) {
                         $(this).prop('disabled',!values[i].IsDisabled)
                     })
