@@ -86,5 +86,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
 
         [DataMember(Name = "gatewayFieldId10")]
         public string GatewayFieldId10 { get; set; }
+
+        [DataMember(Name = "payByMail")]
+        public bool? PayByMail { get; set; }
     }
 }
