@@ -168,7 +168,8 @@
     }
 
     .#{$prefix}tree-icon-parent {
-        width: $tree-elbow-width;
+        //width: $tree-elbow-width; 
+        width: 0px;
         background-image: theme-background-image($theme-name, 'tree/folder.gif');
     }
 
