@@ -45,6 +45,12 @@
     <PropertyGroup>
       <OctoPackPackageVersion Condition="'$(OctoPackPackageVersion)' == ''"><!-- Use the value from nuspec, or 1.0.0 if not in NuSpec --></OctoPackPackageVersion>
     </PropertyGroup>
+
+    <!-- If we define this property in the calling MSBuild args, then the package version will be annotated with '-Dev' to signify a prerelease version. -->
+    <PropertyGroup>
+      <OctoPackPackageVersion Condition="'$(IsPrerelease)' != ''">$(OctoPackPackageVersion)-Dev</OctoPackPackageVersion>
+    </PropertyGroup>
+    
     <Message Text="Using strOctopusPackageVersion: $(strOctopusPackageVersion)" />
 
     <Message Text="Using package version: $(OctoPackPackageVersion)" />
