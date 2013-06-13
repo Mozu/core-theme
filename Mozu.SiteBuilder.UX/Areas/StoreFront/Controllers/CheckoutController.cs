@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var model = _orderWebApiClient.GetOrder(id).Result.ReadAsAsync().Result;
             if (model == null) return RedirectToAction("Index", "Cart");
-            if (model.Status == "Open") return RedirectToAction("Confirmation", new { orderId = model.Id });
+            if (model.Status == "Submitted") return RedirectToAction("Confirmation", new { orderId = model.Id });
            
             
           

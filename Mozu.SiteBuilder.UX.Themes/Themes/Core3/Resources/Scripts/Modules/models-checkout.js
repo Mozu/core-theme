@@ -523,7 +523,7 @@
 
                 api.steps.apply(api, apiSteps).then(function (completedOrder) {
                     order.submitting(false);
-                    if (completedOrder.data.OrderStatus === "Open") {
+                    if (completedOrder.data.Status === "Submitted") {
                         successHandler(completedOrder.data);
                     } else {
                         failHandler(completedOrder);

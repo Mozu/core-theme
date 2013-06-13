@@ -740,6 +740,7 @@
     <Content Include="Scripts\app\view\option\Form.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\Edit.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\Form.js" />
+    <Content Include="Scripts\app\view\settings\paymentAndCheckout\Gateway.js" />
     <Content Include="Scripts\app\view\settings\tax\Edit.js" />
     <Content Include="Scripts\app\view\settings\tax\Form.js" />
     <Content Include="Scripts\app\view\site\navigation\PageCreator.js" />
