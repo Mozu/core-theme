@@ -51,7 +51,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             DCo.OrderCollection dcOrders = null;
             try
             {
-                dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), "" /* TODO: filter */)).ReadAsSync();
+                if (!string.IsNullOrEmpty(pagingParams.id))
+                {
+                    dcOrders = new DCo.OrderCollection() {Items = new List<DCo.Order>()};
+                    var order = (await _orderWebApiClient.GetOrder(pagingParams.id)).ReadAsSync();
+                    if (order != null)
+                    {
+                        dcOrders.Items.Add(order);
+                    }
+                }
+                else
+                {
+                    DCo.Order o;
+                    var filter = "Status ne \"Created\"";
+                    dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
+                }
+
             }
             catch { }
 

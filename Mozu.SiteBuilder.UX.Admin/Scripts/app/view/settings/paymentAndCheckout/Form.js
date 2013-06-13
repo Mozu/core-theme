@@ -17,7 +17,13 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Form', {
             queryMode: 'local',
             width:400,
             displayField: 'name',
-            valueField: 'id'
+            valueField: 'id',
+            listners: {
+                change: this.onPaymentTypesChange,
+                scope:this
+                
+            }
+            
         });
         this.paymentTypes = Ext.create('Ext.panel.Panel', {
             title: 'Payment Types',
@@ -81,5 +87,8 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Form', {
 
         this.items = [this.paymentTypes, this.checkoutPrefrences, this.legalInformation];
         this.callParent(arguments);
+    },
+    onPaymentTypesChange:function(){
+        
     }
 });
