@@ -93,13 +93,18 @@ Ext.define('Taco.view.product.subform.Categories', {
     onListItemClick: function (view, record, item, index, e) {
         var closeBtn = e.getTarget('.x-boundlist-item-close', 10),
             list = view.ownerCt,
-            value, store;
+            value=[], store;
 
         if (closeBtn) {
             store = view.getStore();
-            value = Ext.Array.remove(list.getValue(), record.getId());
-
             store.remove(record);
+            store.each(
+                function(record) {
+                     value.push(record.getId());
+                }
+            );
+            
+         
             list.setValue(value);
             console.log(value, list.getValue());
 
