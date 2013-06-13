@@ -15,6 +15,13 @@
         },
         observableArrays: {
             Values: {}
+        },
+        beginLiveUpdate: function () {
+            var me = this, parent = this.getParentModel();
+            me.Value.subscribe(throttle(function (newVal) {
+                parent.configuredOptions[me.id] = !!(newVal || newVal === 0);
+                parent.updateConfiguration();
+            }, 300, false));
         }
     }, function () {
         var me = this,
@@ -48,17 +55,6 @@
             this.minDate = new Date(Date.parse(this.AttributeDetail.Validation.MinDateValue) + (new Date).getTimezoneOffset() * 60000);
             this.maxDate = new Date(Date.parse(this.AttributeDetail.Validation.MaxDateValue) + (new Date).getTimezoneOffset() * 60000);
         }
-
-        // race condition with change events from setting up datepickers etc. this should cover it
-        setTimeout(function () {
-            me.Value.subscribe(throttle(function (newVal) {
-                parent.configuredOptions[me.id] = !!(newVal || newVal === 0);
-                parent.updateConfiguration();
-            }, 300, false));
-        }, 750);
-
-        // view needs to attach datepickers and other controls, so we need to know when these things are created
-        parent.publish('optioncreated', this);
 
     });
 
