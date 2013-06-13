@@ -8,7 +8,7 @@ Ext.define('Taco.core.ux.content.Body', {
     alias: 'widget.contentbody',
 
     bubbleEvents: ['add','remove','save','cancel'],
-    cls: 'taco-content-body',
+    componentCls: 'taco-content-body',
     layout: 'auto',
     overflowY: 'auto',
 

@@ -16,6 +16,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             xtype: 'taco.button',
             autoEl: 'a',
             text: Taco.User.name || Taco.User.email || '[user]',
+            menuAlign: 'tr-br?',
             menu: {
                 plain: true,
                 shadow: false,
@@ -33,7 +34,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             xtype: 'taco.button',
             autoEl: 'a',
             text: 'Settings',
-            
+            menuAlign: 'tr-br?',
             menu: {
                 plain: true,
                 shadow: false,
