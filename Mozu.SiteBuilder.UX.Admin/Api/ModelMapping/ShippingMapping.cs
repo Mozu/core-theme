@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using System.Linq;
+using Mozu.PaymentService.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
 using CustomAttribute = Mozu.ShippingRuntime.Contracts.CustomAttribute;
 //using FlatPerCartShippingRate = Mozu.ProductAdmin.Contracts.FlatPerCartShippingRate;
@@ -29,6 +30,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
+            Mapper.CreateMap<GatewayDefinition, Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.GatewayDefinition>();
+            Mapper.CreateMap<PreAuthorizeDefinition, Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.PreAuthorizeDefinition>();
+            Mapper.CreateMap<PreAuthorizeTransactionTypeDataContract, Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.PreAuthorizeTransactionTypeDataContract>();
+
+            
+           
+
+            Mapper.CreateMap< Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.GatewayDefinition,GatewayDefinition>();
             Mapper.CreateMap<SiteShippingOriginAddress, Models.Shipping.SiteShippingOriginAddress>();
             Mapper.CreateMap<ShippingRate, Models.Shipping.ShippingRate>();
             Mapper.CreateMap<ShippingClass, Models.Shipping.ShippingClass>();

@@ -109,6 +109,15 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'perf|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\perf\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -248,9 +257,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.0.13151.2\lib\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.0.13163.1\lib\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
+    <Reference Include="Mozu.SiteSettings.Order.Contracts">
+      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.0.13164.2\lib\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.Shipping.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -11,11 +11,20 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Form', {
     },
     initComponent: function() {
         
-
+        this.paymentTypesCombo = Ext.create('Ext.form.ComboBox', {
+            fieldLabel: 'Select a payment gateway',
+            store: Taco.core.data.StoreManager.getOrCreate('Taco.store.GatewayDefinitions'),
+            queryMode: 'local',
+            width:400,
+            displayField: 'name',
+            valueField: 'id'
+        });
         this.paymentTypes = Ext.create('Ext.panel.Panel', {
             title: 'Payment Types',
             items: [
+                this.paymentTypesCombo,
                 {
+                    
                     html: '<div style="height:400px">...</div>'
                 }
             ]
