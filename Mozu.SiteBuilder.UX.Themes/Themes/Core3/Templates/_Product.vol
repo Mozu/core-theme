@@ -10,7 +10,9 @@
 
 <div id="mz-product-detail" class="mz-product-detail-wrap" data-mz-product="{% json_attribute Model %}" style="visibility: hidden">
 
-	<h1 class="mz-page-header" {% data_attributes Model.Content.ProductName %}>{{ Model.Content.ProductName }}</h1>
+	<h1 class="mz-page-header" {% data_attributes Model.Content.ProductName %}>{{ Model.Content.ProductName }}
+        <span class="mz-product-code mz-auxiliary-text" {% data_attributes Model.ProductCode %}>Product Code: {{ Model.ProductCode }}</span>
+    </h1>
 	
 	{% include "Modules/ProductImages" %}
 
@@ -51,7 +53,6 @@
 			</span>
             <span class="mz-validation-message" data-bind="text: Quantity.validationMessage() || '&nbsp;'"></span>
 	</section>
-	<div class="mz-product-code mz-auxiliary-text" {% data_attributes Model.ProductCode %}>Product Code: {{ Model.ProductCode }}</div>
 
 			
 			

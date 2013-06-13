@@ -15,7 +15,20 @@
         // create the observable view model
         var product = new ProductModels.Product(productData);
 
-         // initialize view
+         // initialize view        function applyUIFudges() {
+            $('[data-mz-role="optionselect"], [data-mz-role="optionmultiselect"]').each(function () {
+                var option = ko.dataFor(this),
+                    values = option.Values(),
+                    $optionEls = $(this).find('option');
+                if ($optionEls.length === option.length) {
+                    $optionEls.each(function(i) {
+                        $(this).prop('disabled',!values[i].IsDisabled)
+                    })
+                }
+            });
+            // build date pickers
+            createDatePickers();
+        }
         function makeDatePicker(ix, option) {
             if (option.AttributeDetail.InputType === "Date") {
                 var $newDateOptionInput = $('#datepicker_' + option.id);
@@ -46,9 +59,9 @@
         // bind view!
         ko.applyBindings(product, $productView[0]);
 
-        // build date pickers
-        product.on('update', createDatePickers);
-        createDatePickers();
+        // a couple of non-knockout-supported UI cheats we run every time knockout regenerates its US
+        product.on('update', applyUIFudges);
+        applyUIFudges();
 
         // reveal bound view, now that it's not an ugly template
         $productView.noFlickerFadeIn();
