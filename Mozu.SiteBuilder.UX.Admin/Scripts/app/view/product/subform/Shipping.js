@@ -11,6 +11,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
     title: 'Shipping',
     
     initComponent: function () {
+        this.record = this.product;
         this.items = [{
             xtype: 'formflexbox',
             justify: false,

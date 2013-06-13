@@ -1,6 +1,10 @@
 ﻿using System.Web.Mvc;
 using System.Linq;
+using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
+using Mozu.PaymentService.Contracts;
+using Mozu.SiteSettings.Order.Contracts;
+using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -19,6 +23,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         ITenantsWebApiClient _tRepo;
         ICookieProvider _cookies;
         private readonly ISettings _settings;
+        private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
 
         private const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
 
@@ -29,12 +34,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             Auto
         }
 
-        public TestingController(ISitesWebApiClient  wsRepo, ITenantsWebApiClient tRepo, ICookieProvider cookies, ISettings settings  )
+        public TestingController(ISitesWebApiClient  wsRepo, ITenantsWebApiClient tRepo, ICookieProvider cookies, ISettings settings , Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient )
         {
             _wsRepo = wsRepo;
             _tRepo = tRepo;
             _cookies = cookies;
             _settings = settings;
+            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
             SuppressMissingContextRedirect = true;
         }
 
@@ -54,6 +60,47 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// </summary>
         public async Task<ActionResult> SiteList()
         {
+
+            //_checkoutSettingsWebApiClient.UpdateCheckoutSettings(new CheckoutSettings()
+            //                                                         {
+            //                                                             PaymentSettings = new PaymentSettings()
+            //                                                                                   {
+            //                                                                                       SupportedCards= new List<string>( ),
+            //                                                                                       Gateway = new GatewayAccount()
+            //                                                                                                     {
+            //                                                                                                         GatewayDefinitionId = "authorize.net",
+            //                                                                                                         CountryCode = "US",
+            //                                                                                                         IsActive = true,
+            //                                                                                                         CredentialFields = new List<GatewayCredentialFieldValue>()
+            //                                                                                                                                {
+            //                                                                                                                                    new GatewayCredentialFieldValue()
+            //                                                                                                                                        {
+            //                                                                                                                                            Name = "x_login",
+            //                                                                                                                                            Value = "5HdBRVtf2j46"
+            //                                                                                                                                        },
+            //                                                                                                                                    new GatewayCredentialFieldValue()
+            //                                                                                                                                        {
+            //                                                                                                                                            Name = "x_tran_key",
+            //                                                                                                                                            Value = "92F9yx5aX89tXX9s"
+            //                                                                                                                                        },
+            //                                                                                                                                }
+
+            //                                                                                                     }
+            //                                                                                   },
+            //                                                             CustomerCheckoutSettings = new CustomerCheckoutSettings()
+            //                                                                                            {
+            //                                                                                                CustomerCheckoutType = "LoginOptional"
+            //                                                                                            },
+            //                                                             OrderProcessingSettings = new OrderProcessingSettings()
+            //                                                                                           {
+            //                                                                                               PaymentProcessingFlowType = "AuthorizeOnOrderPlacementAndCaptureOnOrderShipment"
+            //                                                                                           }
+            //                                                         }).Result.ReadAsSync();
+
+
+
+
+
             var tRes = await _tRepo.GetTenants(0, 200, null, null);
 
             TenantCollection tenants = tRes.ReadAsAsync().Result;

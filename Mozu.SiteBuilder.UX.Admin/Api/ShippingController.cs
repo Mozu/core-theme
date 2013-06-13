@@ -9,6 +9,8 @@ using AutoMapper;
 using Mozu.Core;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.ShippingAdmin.Contracts;
+using Mozu.ShippingAdmin.Contracts.Clients;
+using Mozu.SiteSettings.Shipping.Contracts;
 using Mozu.SiteSettings.Shipping.Contracts.Clients;
 using Mozu.UspsShippingAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -27,29 +29,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class ShippingController : BaseController
     {
         private readonly IShippingClassWebApiClient _shippingClassClient;
-     
+
+        private readonly ICarrierConfigurationWebApiClient _carrierConfigurationWebApiClient;
         private readonly IShippingSettingsWebApiClient _siteShippingSettingsClient;
         private readonly IUspsShippingSharedWebApiClient _uspsShippingSharedClient;
         private readonly IUspsShippingInstanceWebApiClient _uspsShippingInstanceClient;
 
-        public ShippingController(IShippingClassWebApiClient shippingClassClient,  IShippingSettingsWebApiClient siteShippingSettingsClient, IUspsShippingSharedWebApiClient uspsShippingSharedClient, IUspsShippingInstanceWebApiClient uspsShippingInstanceClient, IApiContext apiCtx)
+        public ShippingController(ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, IShippingSettingsWebApiClient siteShippingSettingsClient, IUspsShippingSharedWebApiClient uspsShippingSharedClient, IUspsShippingInstanceWebApiClient uspsShippingInstanceClient, IApiContext apiCtx)
         {
-         
-
-            _shippingClassClient = shippingClassClient;
+            _carrierConfigurationWebApiClient = carrierConfigurationWebApiClient;
             _siteShippingSettingsClient = siteShippingSettingsClient;
             _uspsShippingSharedClient = uspsShippingSharedClient;
             _uspsShippingInstanceClient = uspsShippingInstanceClient;
 
-
+            
+           
            // _siteShippingSettingsClient.UpdateSiteShippingSettings(new SiteSettings.Shipping.Contracts.SiteShippingSettings())
 
             Mozu.ShippingAdmin.Contracts.Clients.ICarrierConfigurationGlobalWebApiClient global;
             Mozu.ShippingAdmin.Contracts.Clients.ICarrierConfigurationWebApiClient  reg;
            
-            //CarrierConfiguration
+           
+            
 
         }
+
+
+        //public class FlatRate
+        //{
+        //    public 
+        //}
+        
       
 
 
