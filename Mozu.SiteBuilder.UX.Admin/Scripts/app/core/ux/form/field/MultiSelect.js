@@ -25,7 +25,7 @@ Ext.define('Taco.core.ux.form.field.MultiSelect', {
             store = me.getStore();
 
         // Store not loaded yet - we cannot set the value
-        if (!store.data || !store.getCount()) {
+        if ((value && value.length) && (!store.data || !store.getCount())) {
             store.on({
                 load: Ext.Function.bind(me.setValue, me, [value]),
                 single: true
