@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Order>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
 
-            
+            new OrderItem().Map<OrderPackageItem>();
 
             int? startIndex = pagingParams.startIndex;
             int? pageSize = pagingParams.pageSize ?? 20;
@@ -208,8 +208,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         PaymentType = "CreditCard", 
                         CardType = "Visa", 
                         CardNumber="xxxx-xxxx-xxxx-1111", 
-                        TransactionId = "00158221",
-                        TransactionDate = new DateTime(2013, 03, 18, 12, 30, 00)
+                        PaymentServiceTransactionId = "00158221",
+                        CreateDate = new DateTime(2013, 03, 18, 12, 30, 00)
                     }
             };
             allTheOrders.Add(order_authorized_only);
@@ -227,8 +227,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     PaymentType = "CreditCard",
                     CardType = "Visa",
                     CardNumber="xxxx-xxxx-xxxx-1111", 
-                    TransactionId = "00158555",
-                    TransactionDate = new DateTime(2013, 03, 18, 13, 00, 00)
+                    PaymentServiceTransactionId = "00158555",
+                    CreateDate = new DateTime(2013, 03, 18, 13, 00, 00)
                 }
             };
             allTheOrders.Add(order_paid_in_full);
@@ -246,8 +246,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         PaymentType = "CreditCard", 
                         CardType = "Visa", 
                         CardNumber="xxxx-xxxx-xxxx-1111", 
-                        TransactionId = "00158221",
-                        TransactionDate = new DateTime(2013, 03, 18, 12, 30, 00)
+                        PaymentServiceTransactionId = "00158221",
+                        CreateDate = new DateTime(2013, 03, 18, 12, 30, 00)
                     },
                     new OrderPayment {
                             Id = "339",
@@ -256,8 +256,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             PaymentType = "CreditCard", 
                             CardType = "Visa", 
                             CardNumber="xxxx-xxxx-xxxx-1111", 
-                            TransactionId = "00158555",
-                            TransactionDate = new DateTime(2013, 03, 18, 13, 00, 00)
+                            PaymentServiceTransactionId = "00158555",
+                            CreateDate = new DateTime(2013, 03, 18, 13, 00, 00)
                     }
             };
             allTheOrders.Add(order_partial_payment);
@@ -265,7 +265,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var order_with_some_packages = order_template.Clone<Order>();
             order_with_some_packages.Id = "o1004";
             order_with_some_packages.Customer.FirstName = "Packages";
-            order_with_some_packages.Customer.FirstName = "ForYou";
+            order_with_some_packages.Customer.LastName = "ForYou";
             order_with_some_packages.Packages = new List<OrderPackage> { 
                 new OrderPackage {
                     Id = "o1004-p1",

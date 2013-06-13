@@ -25,6 +25,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "unitPrice")]
         public decimal UnitPrice { get; set; }
 
+        [DataMember(Name = "unitWeight")]
+        public decimal? UnitWeight { get; set; }
+
         [DataMember(Name = "quantity")]
         public int Quantity { get; set; }
 
@@ -36,5 +39,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name = "total")]
         public decimal Total { get; set; }
+
     }
 }
