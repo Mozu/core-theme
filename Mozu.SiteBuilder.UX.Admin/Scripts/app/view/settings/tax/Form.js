@@ -2,14 +2,14 @@
  * The discount editor view
  */
 Ext.define('Taco.view.settings.tax.Form', {
-    //extend: 'Taco.core.ux.form.Form',
-    extend: 'Taco.core.ux.form.Form',
+    extend: 'Taco.view.product.subform.Subform',
     requires: ['Taco.store.TaxRates', 'Taco.store.States'],
     enableStoreSyncTasks: true,
     layout: {
         type: 'vbox',
         align: 'stretch'
     },
+    title: 'Tax',
     initComponent: function() {
 
     
