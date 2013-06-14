@@ -88,7 +88,6 @@
             updateFacets: function () {
                 this.submitting(true);
                 var conf = {
-                    query: '*:*',
                     filter: 'categoryId req ' + this.categoryId,
                     facetTemplate: 'category:' + this.categoryId
                 },
