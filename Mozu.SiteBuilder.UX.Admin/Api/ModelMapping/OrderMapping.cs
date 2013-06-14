@@ -24,6 +24,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
                 .ForMember(x => x.OrderNumber, op => op.MapFrom(dc => dc.OrderNumber))
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate ))
+                .ForMember(x => x.CustomerId, op => op.MapFrom(dc => dc.CustomerAccountId))
+                .ForMember(x => x.BillingContact, op => op.MapFrom(dc => dc.BillingInfo.BillingContact))
                 .ForMember(x => x.IpAddress, op => op.MapFrom(dc => dc.IPAddress))
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
                 .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
@@ -67,18 +69,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Discount.Name))
                 .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.ImpactPerUnit))
                 .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Impact))
-                ;
-
-            Mapper.CreateMap<CustomerDC.CustomerAccount, OrderCustomer>()
-                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
-                .ForMember(x => x.FirstName, op => op.MapFrom(dc => dc.Contacts != null && dc.Contacts.Count > 0 ? dc.Contacts.First().FirstName : null))
-                .ForMember(x => x.LastName, op => op.MapFrom(dc => dc.Contacts != null && dc.Contacts.Count > 0 ? dc.Contacts.First().LastNameOrSurname : null))
-                .ForMember(x => x.CompanyName, op => op.MapFrom(dc => dc.CompanyOrOrganization))
-                .ForMember(x => x.Address, op => op.MapFrom(dc => dc.Contacts != null ? FormatAddress(dc.Contacts.Select(x=>x.Address).FirstOrDefault()) : null))
-                .ForMember(x => x.CustomerSince, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
-                .ForMember(x => x.TotalOrders, op => op.MapFrom(dc => dc.OrderSummary.OrderCount))
-                .ForMember(x => x.TotalSpent, op => op.MapFrom(dc => dc.OrderSummary.TotalOrderAmount))
-                .ForMember(x => x.Groups, op => op.MapFrom(dc => dc.Groups.Select(g => g.Name)))
                 ;
 
             Mapper.CreateMap<PaymentsDC.Payment, OrderPayment>()

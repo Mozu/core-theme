@@ -87,10 +87,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         orders = DoSort(orders, o => o.CreateDate, sort.IsAscending);
                         break;
                     case "customer.firstName":
-                        orders = DoSort(orders, o => o.Customer.FirstName, sort.IsAscending);
+                        orders = DoSort(orders, o => o.BillingContact.FirstName, sort.IsAscending);
                         break;
                     case "customer.lastName":
-                        orders = DoSort(orders, o => o.Customer.LastName, sort.IsAscending);
+                        orders = DoSort(orders, o => o.BillingContact.LastName, sort.IsAscending);
                         break;
                     case "total":
                         orders = DoSort(orders, o => o.Total, sort.IsAscending);
@@ -128,17 +128,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var allTheOrders = new List<Order>();
 
-            var jsCustomer = new OrderCustomer
+            var jsContact = new Contact
             {
-                Id = "c12346",
+                Id = 12346,
                 FirstName = "John",
                 LastName = "Smith",
-                CompanyName = "Company ABC",
-                Address = "1308 Horseback Hollow, Austin, TX 78732, United States",
-                CustomerSince = new DateTime(2011, 03, 18),
-                TotalOrders = 4,
-                TotalSpent = 597.96m,
-                Groups = new List<string> { "VIP", "Coupon User" }
+                CompanyOrOrganization = "Company ABC",
+                Address1 = "1308 Horseback Hollow",
+                CityOrTown = "Austin",
+                StateOrProvince = "TX",
+                PostalOrZipCode = "78732",
+                CountryCode = "United States",
+//                CustomerSince = new DateTime(2011, 03, 18),
+//                TotalOrders = 4,
+//                TotalSpent = 597.96m,
+//                Groups = new List<string> { "VIP", "Coupon User" }
             };
 
             var order_template = new Order
@@ -147,7 +151,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 OrderNumber = 107363,
                 CreateDate = new DateTime(2013, 03, 18),
                 IpAddress = "173.194.46.2",
-                Customer = jsCustomer,
+                CustomerId = null,
+                BillingContact = jsContact,
                 Subtotal = 225m,
                 ShippingCost = 9.48m,
                 ShippingDescription = "USPS Standard",
@@ -194,7 +199,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order_authorized_only = order_template.Clone<Order>();
             order_authorized_only.Id = "o1001";
-            order_authorized_only.Customer.FirstName = "Authorized";
+            order_authorized_only.BillingContact.FirstName = "Authorized";
             order_authorized_only.PaymentStatus = "Unpaid";
             order_authorized_only.Payments = new List<OrderPayment> {
                     new OrderPayment {
@@ -212,8 +217,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order_paid_in_full = order_template.Clone<Order>();
             order_paid_in_full.Id = "o1002";
-            order_paid_in_full.Customer.FirstName = "Paid";
-            order_paid_in_full.Customer.LastName = "In Full";
+            order_paid_in_full.BillingContact.FirstName = "Paid";
+            order_paid_in_full.BillingContact.LastName = "In Full";
             order_paid_in_full.PaymentStatus = "Paid";
             order_paid_in_full.Payments = new List<OrderPayment> {
                 new OrderPayment {
@@ -231,8 +236,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order_partial_payment = order_template.Clone<Order>();
             order_partial_payment.Id = "o1003";
-            order_partial_payment.Customer.FirstName = "Partial";
-            order_partial_payment.Customer.LastName = "Payment";
+            order_partial_payment.BillingContact.FirstName = "Partial";
+            order_partial_payment.BillingContact.LastName = "Payment";
             order_partial_payment.PaymentStatus = "Unpaid";
             order_partial_payment.Payments = new List<OrderPayment> {
                     new OrderPayment {
@@ -260,8 +265,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order_with_some_packages = order_template.Clone<Order>();
             order_with_some_packages.Id = "o1004";
-            order_with_some_packages.Customer.FirstName = "Packages";
-            order_with_some_packages.Customer.LastName = "ForYou";
+            order_with_some_packages.BillingContact.FirstName = "Packages";
+            order_with_some_packages.BillingContact.LastName = "ForYou";
             order_with_some_packages.Packages = new List<OrderPackage> { 
                 new OrderPackage {
                     Id = "o1004-p1",

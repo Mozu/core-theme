@@ -359,8 +359,10 @@
     <Compile Include="Api\FacetController.cs" />
     <Compile Include="Api\ModelMapping\AttributeMapping.cs" />
     <Compile Include="Api\ModelMapping\AttributeValidationResolver.cs" />
+    <Compile Include="Api\ModelMapping\ContactMapping.cs" />
     <Compile Include="Api\ModelMapping\FacetMapping.cs" />
     <Compile Include="Api\ModelMapping\MinMaxResolver.cs" />
+    <Compile Include="Api\ModelMapping\OldCustomerMapping.cs" />
     <Compile Include="Api\ModelMapping\WidgetInstanceDataMapping.cs" />
     <Compile Include="Api\Models\Account\LoginTicket.cs" />
     <Compile Include="Api\Models\Attributes\Attribute.cs" />
@@ -371,9 +373,10 @@
     <Compile Include="Api\Models\Attributes\ProductType.cs" />
     <Compile Include="Api\Models\Attributes\ProductTypeAttribute.cs" />
     <Compile Include="Api\Models\Attributes\ProductTypeAttributeUsageType.cs" />
+    <Compile Include="Api\Models\Contact.cs" />
+    <Compile Include="Api\Models\Customer.cs" />
     <Compile Include="Api\Models\Facets\Facet.cs" />
     <Compile Include="Api\Models\Order\Order.cs" />
-    <Compile Include="Api\Models\Order\OrderCustomer.cs" />
     <Compile Include="Api\Models\Order\OrderItem.cs" />
     <Compile Include="Api\Models\Order\OrderItemDiscount.cs" />
     <Compile Include="Api\Models\Order\OrderPackage.cs" />
@@ -638,6 +641,7 @@
     <Content Include="Scripts\app\model\Behavior.js" />
     <Content Include="Scripts\app\model\CartItem.js" />
     <Content Include="Scripts\app\model\CmsDocumentDraft.js" />
+    <Content Include="Scripts\app\model\Contact.js" />
     <Content Include="Scripts\app\model\Facet.js" />
     <Content Include="Scripts\app\model\JavaScript1.js" />
     <Content Include="Scripts\app\model\OrderCustomer.js" />

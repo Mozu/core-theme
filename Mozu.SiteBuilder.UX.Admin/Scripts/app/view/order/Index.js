@@ -87,24 +87,24 @@ Ext.define('Taco.view.order.Index', {
             //resizable: false,
             flex: 1
         }, {
-            dataIndex: 'customer',
-            text: 'Last Name',
-            width: 120,
-            getSortParam: function () {
-                return 'customer.lastName';
-            },
-            renderer: function (value, metaData, record) {
-                return value.lastName;
-            }
-        }, {
-            dataIndex: 'customer',
+            dataIndex: 'billingContact',
             text: 'First Name',
             width: 120,
             getSortParam: function () {
-                return 'customer.firstName';
+                return 'billingContact.firstName';
             },
             renderer: function (value, metaData, record) {
                 return value.firstName;
+            }
+        }, {
+            dataIndex: 'billingContact',
+            text: 'Last Name',
+            width: 120,
+            getSortParam: function () {
+                return 'billingContact.lastName';
+            },
+            renderer: function (value, metaData, record) {
+                return value.lastName;
             }
         }, {
             dataIndex: 'total',
