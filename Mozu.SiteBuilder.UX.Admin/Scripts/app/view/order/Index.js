@@ -77,8 +77,8 @@ Ext.define('Taco.view.order.Index', {
 
     gridPanelConf: {
         columns: [{
-            dataIndex: 'id',
-            text: 'Order ID',
+            dataIndex: 'orderNumber',
+            text: 'Order Number',
             width: 100
         }, {
             dataIndex: 'createDate',
