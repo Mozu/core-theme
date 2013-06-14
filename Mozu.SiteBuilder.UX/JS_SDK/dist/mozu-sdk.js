@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-06-13
+ * Mozu JavaScript SDK - v0.1.0 - 2013-06-14
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1076,7 +1076,7 @@
                             if (!oType.shortcutParam) throw "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
                             tptData[oType.shortcutParam] = conf;
                         } else if (conf) {
-                            utils.extend(tptData, conf.query || conf);
+                            utils.extend(tptData, conf);
                         }
                         if (oType.defaultParams) tptData = utils.extend({}, oType.defaultParams, tptData);
                         returnObj.url = oType.template.expand(utils.extend({

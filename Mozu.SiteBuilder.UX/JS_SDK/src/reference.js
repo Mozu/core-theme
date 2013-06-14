@@ -84,7 +84,7 @@ var ApiReference = (function () {
                 tptData[oType.shortcutParam] = conf;
             } else if (conf) {
                 // add the conf argued directly into this request fn to the tpt context
-                utils.extend(tptData, conf.query || conf);
+                utils.extend(tptData, conf);
             }
 
 

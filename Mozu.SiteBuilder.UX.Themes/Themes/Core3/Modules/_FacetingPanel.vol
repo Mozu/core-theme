@@ -8,11 +8,11 @@
       <!-- ko if: FacetType === "Value" -->
         <ul class="mz-faceting-group">
             <li>
-                <input type="checkbox" class="mz-faceting-option" data-bind="checked: empty, id: emptyId"><label data-bind="for: emptyId">All</label>
+                <input type="checkbox" class="mz-faceting-option" data-bind="checked: empty, id: emptyId, disable: $root.submitting"><label data-bind="for: emptyId">All</label>
             </li>
             <!-- ko foreach: Values -->
             <li>
-                <input type="checkbox" class="mz-faceting-option" data-bind="checked: IsApplied, attr: { id: id }"><label data-bind="attr: { for: id }, text: Label"></label>
+                <input type="checkbox" class="mz-faceting-option" data-bind="checked: IsApplied, attr: { id: id }, disable: $root.submitting"><label data-bind="attr: { for: id }, text: Label"></label>
             </li>
             <!-- /ko -->
         </ul>
@@ -23,6 +23,6 @@
     </div>
     <!-- /ko -->
     <div class="mz-sidebar-item">
-        <input type="checkbox" id="mz-faceting-clearall-2" class="mz-faceting-option" data-mz-action="clearfacets" data-bind="change: clearAllFacets"><label for="mz-faceting-clearall-2">Clear All Filters</label>
+        <input type="checkbox" id="mz-faceting-clearall-2" class="mz-faceting-option" data-mz-action="clearfacets" data-bind="change: clearAllFacets, disable: $root.submitting"><label for="mz-faceting-clearall-2">Clear All Filters</label>
     </div>
 </section>
