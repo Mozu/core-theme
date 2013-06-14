@@ -14,21 +14,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "payment/capture")]
         public async Task<Response<List<Order>>> CapturePayment(OrderPayment payment, decimal amount)
         {
-            throw new NotImplementedException();
-
-
-            // Possible actions can be "Create," "Capture," "Void," "AuthCapture," or "ReceiveCheck."
+            // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
             var action = new DCp.PaymentAction
             {
-                ActionName = "Capture",
+                ActionName = "CapturePayment",
                 ISOCurrencyCode = "USD",
-                Amount = amount
-                // ReferenceSourcePaymentId = ???
+                Amount = amount,
+                ReferenceSourcePaymentId = null
             };
 
-            // _orderWebApiClient.payment
-            var order = (await _orderWebApiClient.CreatePaymentAction(payment.OrderId, action)).ReadAsSync();
-
+            var order = (await _orderWebApiClient.PerformPaymentAction(payment.OrderId, payment.Id, action)).ReadAsSync();
 
             //_orderWebApiClient.GetPackageLabel
             return List2(order.Map<Order>());
@@ -37,14 +32,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "payment/credit")]
         public async Task<Response<List<Order>>> CreditPayment(OrderPayment payment, decimal amount)
         {
-            throw new NotImplementedException();
+            // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
+            var action = new DCp.PaymentAction
+            {
+                ActionName = "CreditPayment",
+                ISOCurrencyCode = "USD",
+                Amount = amount,
+                ReferenceSourcePaymentId = null
+            };
+
+            var order = (await _orderWebApiClient.PerformPaymentAction(payment.OrderId, payment.Id, action)).ReadAsSync();
+
+            return List2(order.Map<Order>());
         }
 
 
         [WebInvoke(Method = "POST", UriTemplate = "payment/void")]
-        public async Task<Response<List<Order>>> VoidPayment(string paymentId)
+        public async Task<Response<List<Order>>> VoidPayment(string orderId, string paymentId)
         {
-            throw new NotImplementedException();
+            // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
+            var action = new DCp.PaymentAction
+            {
+                ActionName = "VoidPayment",
+                ISOCurrencyCode = "USD",
+                Amount = null,
+                ReferenceSourcePaymentId = null
+            };
+
+            var order = (await _orderWebApiClient.PerformPaymentAction(orderId, paymentId, action)).ReadAsSync();
+
+            return List2(order.Map<Order>());
         }
     }
 }
