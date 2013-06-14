@@ -38,6 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
         private readonly IMultiScopeRoleWebApiClient _rolesRepo;
+        private readonly ITenantsWebApiClient _tenantsClient;
         private readonly IAuthenticationHelper _authHelper;
         private IInvitationWebApiClient _invitationWebApiClient;
         private readonly  IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
@@ -46,10 +47,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IUserHelper _userHelper;
         private readonly IApiContext _apiContext;
 
-        public AccountController(IMultiScopeAdminUserWebApiClient user, IMultiScopeRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient, IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings, IContextSwitcher contextSwitcher, IUserHelper userHelper, IApiContext apiContext)
+        public AccountController(IMultiScopeAdminUserWebApiClient user, IMultiScopeRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient , IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings, IContextSwitcher contextSwitcher, IUserHelper userHelper, IApiContext apiContext)
         {
             _usersRepo = user;
             _rolesRepo = role;
+            _tenantsClient = tenantsClient;
             _authHelper = authHelper;
             _adminUserWebApiClient = adminUserWebApiClient;
             _invitationWebApiClient = invitationWebApiClient;
@@ -209,9 +211,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             try
             {
+                var tenant = (await _tenantsClient.GetTenant(_apiContext.TenantId)).ReadAsSync();
+
                 var result = (await _invitationWebApiClient.CreateInvitation( new AdminUser.Contracts.Invitation(){
                     EmailAddress = invitation.EmailAddress,
                     UserScopeType =UserScopeType.Tenant.ToString(),
+                    ScopeName = tenant.Name ,
                     UserScopeId = _apiContext.TenantId ,
                     RoleId = invitation.RoleId 
                     })).ReadAsSync();
