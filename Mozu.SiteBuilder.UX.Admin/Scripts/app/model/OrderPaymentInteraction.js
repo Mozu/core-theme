@@ -39,6 +39,6 @@ Ext.define('Taco.model.OrderPaymentInteraction', {
         'name': 'amount',
         'type': 'float',
         'useNull': true
-    }
+    }]
 
 });
