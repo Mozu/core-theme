@@ -21,8 +21,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "createDate")]
         public DateTime CreateDate { get; set; }
 
-        [DataMember(Name="customer")]
-        public OrderCustomer Customer { get; set; }
+        [DataMember(Name="customerId")]
+        public int? CustomerId { get; set; }
+
+        [DataMember(Name="billingContact")]
+        public Contact BillingContact { get; set; }
 
         [DataMember(Name = "ipAddress")]
         public string IpAddress { get; set; }

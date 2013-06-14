@@ -30,7 +30,12 @@ Ext.define('Taco.model.Order', {
             "useNull": true,
         },
         {
-            "name": "customer",
+            "name": "customerId",
+            "type": "int",
+            "useNull": true
+        },
+        {
+            "name": "billingContact",
             "type": "auto",
             "useNull": true
         },
@@ -188,8 +193,8 @@ Ext.define('Taco.model.Order', {
         },
         {
             type: 'hasOne',
-            model: 'Taco.model.OrderCustomer',
-            name: 'customer'
+            model: 'Taco.model.Contact',
+            name: 'billingContact'
         },
         {
             type: 'hasMany',
