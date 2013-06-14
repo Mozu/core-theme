@@ -20,11 +20,12 @@
             $('[data-mz-role="optionselect"], [data-mz-role="optionmultiselect"]').each(function () {
                 var option = ko.dataFor(this),
                     values = option.Values(),
-                    $optionEls = $(this).find('option');
-                if ($optionEls.length === values.length) {
-                    $optionEls.each(function(i) {
-                        $(this).prop('disabled',!values[i].IsDisabled)
-                    })
+                    j = 0,
+                    $optionEls = $(this).find('option'),
+                    oeLen = $optionEls.length;
+                for (var i = values.length - 1; i >= 0; i--) {
+                    j++;
+                    if (!values[i].IsEnabled) $optionEls.eq(oeLen - j).addClass('mz-option-unavailable');
                 }
             });
             // build date pickers

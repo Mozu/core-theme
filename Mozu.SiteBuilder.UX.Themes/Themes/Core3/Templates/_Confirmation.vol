@@ -23,54 +23,54 @@
 			<tr>
 				<td class="mz-field-interstitial" colspan="2"><hr></td>
 			</tr>
-			{% if Model.Payment.PaymentType == "CreditCard" %}
+			{% if Model.BillingInfo.PaymentType == "CreditCard" %}
 			<tr>
 				<td class="mz-field-label">Billing Name:</td>
-				<td>{{ Model.Payment.Card.BillingAddress.FirstName }} {{ Model.Payment.Card.BillingAddress.LastNameOrSurname }}</td>
+				<td>{{ Model.BillingInfo.BillingAddress.FirstName }} {{ Model.BillingInfo.BillingAddress.LastNameOrSurname }}</td>
 			</tr>
 			<tr>
 				<td class="mz-field-label">Billing Address:</td>
-				<td>{{ Model.Payment.Card.BillingAddress.Address.Address1 }}</td>
+				<td>{{ Model.BillingInfo.BillingAddress.Address.Address1 }}</td>
 			</tr>
-				{% if Model.Payment.Card.BillingAddress.Address.Address2 %}
+				{% if Model.BillingInfo.BillingAddress.Address.Address2 %}
 			<tr>
 				<td></td>
-				<td>{{ Model.Payment.Card.BillingAddress.Address.Address2 }}</td>
+				<td>{{ Model.BillingInfo.BillingAddress.Address.Address2 }}</td>
 			</tr>
 				{% endif %}
 			<tr>
 				<td></td>
-				<td>{{ Model.Payment.Card.BillingAddress.Address.CityOrTown }}, {{ Model.Payment.Card.BillingAddress.Address.StateOrProvince }} {{ Model.Payment.Card.BillingAddress.Address.PostalOrZipCode }}</td>
+				<td>{{ Model.BillingInfo.BillingAddress.Address.CityOrTown }}, {{ Model.BillingInfo.BillingAddress.Address.StateOrProvince }} {{ Model.BillingInfo.BillingAddress.Address.PostalOrZipCode }}</td>
 			</tr>
 			<tr>
 				<td class="mz-field-label">Phone:</td>
-				<td>{{ Model.Payment.Card.BillingAddress.PhoneNumbers.Home }}</td>
+				<td>{{ Model.BillingInfo.BillingAddress.PhoneNumbers.Home }}</td>
 			</tr>
 			<tr>
 				<td class="mz-field-label">Email:</td>
-				<td>{{ Model.Payment.Card.BillingAddress.Email }}</td>
+				<td>{{ Model.BillingInfo.BillingAddress.Email }}</td>
 			</tr>
 			<tr>
 				<td class="mz-field-interstitial" colspan="2"><hr></td>
 			</tr>
 			<tr>
 				<td class="mz-field-label">Card Type:</td>
-				<td>{{ Model.Payment.Card.PaymentOrCardType }}</td>
+				<td>{{ Model.BillingInfo.Card.PaymentOrCardType }}</td>
 			</tr>
 			<tr>
 				<td class="mz-field-label">Credit Card #:</td>
-				<td>{{ Model.Payment.Card.CardNumberPartOrMask }}</td>
+				<td>{{ Model.BillingInfo.Card.CardNumberPartOrMask }}</td>
 			</tr>
 			{% comment %} {# this isn't returned by the services #}
 			<tr>
 				<td class="mz-field-label">Expiration:</td>
-				<td>{{ Model.Payment.Card.ExpireMonth }}.{{ Model.Payment.Card.ExpireYear }}</td>
+				<td>{{ Model.BillingInfo.Card.ExpireMonth }}.{{ Model.BillingInfo.Card.ExpireYear }}</td>
 			</tr>
 			{% endcomment %}
 			{% else %} {# "Pay by Check" #}
 			<tr>
 				<td class="mz-field-label">Payment Type:</td>
-				<td>{{ Model.Payment.PaymentType }}</td>
+				<td>{{ Model.BillingInfo.PaymentType }}</td>
 			</tr>
 			<tr>
 				<td></td>
@@ -95,21 +95,21 @@
 			</tr>
 			<tr>
 				<td class="mz-field-label">Ship to:</td>
-				<td>{{ Model.Shipment.ShippingAddress.FirstName }} {{ Model.Shipment.ShippingAddress.LastNameOrSurname }}</td>
+				<td>{{ Model.ShippingInfo.ShippingAddress.FirstName }} {{ Model.ShippingInfo.ShippingAddress.LastNameOrSurname }}</td>
 			</tr>
 			<tr>
 				<td></td>
-				<td>{{ Model.Shipment.ShippingAddress.Address.Address1 }}</td>
+				<td>{{ Model.ShippingInfo.ShippingAddress.Address.Address1 }}</td>
 			</tr>
-			{% if Model.Shipment.ShippingAddress.Address.Address2  %}
+			{% if Model.ShippingInfo.ShippingAddress.Address.Address2  %}
 			<tr>
 				<td></td>
-				<td>{{ Model.Shipment.ShippingAddress.Address.Address2 }}</td>
+				<td>{{ Model.ShippingInfo.ShippingAddress.Address.Address2 }}</td>
 			</tr>
 			{% endif %}
 			<tr>
 				<td></td>
-				<td>{{ Model.Shipment.ShippingAddress.Address.CityOrTown }}, {{ Model.Shipment.ShippingAddress.Address.StateOrProvince }} {{ Model.Shipment.ShippingAddress.Address.PostalOrZipCode }}</td>
+				<td>{{ Model.ShippingInfo.ShippingAddress.Address.CityOrTown }}, {{ Model.ShippingInfo.ShippingAddress.Address.StateOrProvince }} {{ Model.ShippingInfo.ShippingAddress.Address.PostalOrZipCode }}</td>
 			</tr>
 			<tr>
 				<td></td>
@@ -117,7 +117,7 @@
 			</tr>
 			<tr>
 				<td class="mz-field-label">Shipping Method:</td>
-				<td><strong>{{ Model.Shipment.ShippingMethodName }}</strong></td>
+				<td><strong>{{ Model.ShippingInfo.ShippingMethodName }}</strong></td>
 			</tr>
 		</tbody>
 	</table><!-- #purchase-details-->
@@ -191,8 +191,8 @@
 		'{{ Model.Total }}',							
 		'{{ Model.TaxTotal }}',					
 		'{{ Model.ShippingTotal }}',		
-		'{{ Model.Shipment.ShippingAddress.Address.CityOrTown }}',
-		'{{ Model.Shipment.ShippingAddress.Address.StateOrProvince }}',			
+		'{{ Model.ShippingInfo.ShippingAddress.Address.CityOrTown }}',
+		'{{ Model.ShippingInfo.ShippingAddress.Address.StateOrProvince }}',			
 		'USA'
 	]);
 
