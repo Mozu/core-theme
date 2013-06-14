@@ -101,7 +101,7 @@
             }, {
                 "id": "shipping",
                 "label": "Shipping",
-                "address": "shipping"
+                "address": "settings/shipping"
             },
             {
                 "id": "account",

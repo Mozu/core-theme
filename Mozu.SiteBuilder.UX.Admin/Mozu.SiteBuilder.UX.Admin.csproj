@@ -747,6 +747,8 @@
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\subform\CheckoutPreference.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\subform\LegalInformation.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\subform\PaymentType.js" />
+    <Content Include="Scripts\app\view\settings\shipping\Edit.js" />
+    <Content Include="Scripts\app\view\settings\shipping\Form.js" />
     <Content Include="Scripts\app\view\settings\tax\Edit.js" />
     <Content Include="Scripts\app\view\settings\tax\Form.js" />
     <Content Include="Scripts\app\view\site\navigation\PageCreator.js" />
@@ -2773,6 +2775,7 @@
     <Folder Include="Models\" />
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
+    <Folder Include="Scripts\app\view\settings\shipping\subform\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

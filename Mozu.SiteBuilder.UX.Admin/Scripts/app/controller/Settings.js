@@ -6,7 +6,7 @@
 
 Ext.define('Taco.controller.Settings', {
     extend: 'Taco.core.Controller',
-    requires: ['Taco.view.settings.paymentAndCheckout.Edit', 'Taco.view.settings.tax.Edit'],
+    requires: ['Taco.view.settings.paymentAndCheckout.Edit', 'Taco.view.settings.tax.Edit', 'Taco.view.settings.shipping.Edit'],
     //editorView: 'Taco.view.product.Edit',
     listView: null,
     models: ['Taco.model.Product'],
@@ -35,8 +35,15 @@ Ext.define('Taco.controller.Settings', {
         });
 
 
+    },
+    shipping: function () {
+        this.createContentView('Taco.view.settings.shipping.Edit', {
+            record: null
+        });
+
+
     }
-    //stores: ['Taco.store.Products'],
+//stores: ['Taco.store.Products'],
     //views: ['product.Index'],
     //modelName: 'Product'
 
