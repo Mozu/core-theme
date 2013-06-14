@@ -7,6 +7,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Form', {
                'Taco.view.settings.paymentAndCheckout.subform.PaymentType',
                'Taco.view.settings.paymentAndCheckout.subform.CheckoutPreference',
                'Taco.view.settings.paymentAndCheckout.subform.LegalInformation'],
+    title: 'Payment & Checkout',
     initComponent: function () {
         var me = this;
   
