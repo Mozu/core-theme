@@ -40,6 +40,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //.ForMember(x => x.AvailablePaymentActions, op => op.MapFrom(dc => dc.AvailablePaymentActions))
                 //.ForMember(x => x.AvailableShipmentActions, op => op.MapFrom(dc => dc.AvailableShipmentActions))
                 .AfterMap((dc, order) => {
+                    // add orderId to packages
+                    order.Packages.Each(p => p.OrderId = order.Id);
+
+                    // add item name, etc to packageItems
                     order.Packages.SelectMany(p => p.Items).Each(packageItem => FillPackageItemDetails(packageItem, order));
                 })
                 ;
@@ -79,6 +83,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<PaymentsDC.Payment, OrderPayment>()
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
+                .ForMember(x => x.OrderId, op => op.MapFrom(dc => dc.OrderId))
                 .ForMember(x => x.PaymentServiceTransactionId, op => op.MapFrom(dc => dc.PaymentServiceTransactionId))
                 .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
                 .ForMember(x => x.AmountCollected, op => op.MapFrom(dc => dc.AmountCollected))
@@ -117,15 +122,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
                 .ForMember(x => x.OrderItemId, op => op.MapFrom(dc => dc.OrderItemId))
                 .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
-                ;
-
-            Mapper.CreateMap<OrderItem, OrderPackageItem>()
-                .AfterMap((x,y) => {
-                    Console.WriteLine(x);
-                })
-                .AfterMap((x, y) => {
-                    Console.WriteLine(y);
-                })
                 ;
 
             // cheese

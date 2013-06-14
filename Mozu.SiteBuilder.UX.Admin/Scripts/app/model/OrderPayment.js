@@ -9,7 +9,12 @@ Ext.define('Taco.model.OrderPayment', {
         'name': 'id',
         'type': 'string',
         'useNull': true
-    }, 
+    },
+    {
+        'name': 'orderId',
+        'type': 'string',
+        'useNull': true
+    },
     {
         'name': 'paymentServiceTransactionId',
         'type': 'string',

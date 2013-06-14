@@ -14,6 +14,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string Id { get; set; }
 
         /// <summary>
+        /// Id of the order this payment belongs to.
+        /// </summary>
+        [DataMember(Name = "orderId")]
+        public string OrderId { get; set; }
+
+        /// <summary>
         /// Unique identifier of the transaction, specified by the payment service processesing this transaction. 
         /// </summary>
         [DataMember(Name="paymentServiceTransactionId")]
