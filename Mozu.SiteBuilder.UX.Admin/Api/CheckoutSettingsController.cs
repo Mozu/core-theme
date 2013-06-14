@@ -13,6 +13,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
+using Newtonsoft.Json.Linq;
 using CheckoutSettings = Mozu.SiteSettings.Order.Contracts.CheckoutSettings;
 using GatewayCredentialFieldValue = Mozu.PaymentService.Contracts.GatewayCredentialFieldValue;
 using PaymentSettings = Mozu.SiteSettings.Order.Contracts.PaymentSettings;
@@ -95,8 +96,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var def = (await _checkoutSettingsWebApiClient.GetGatewayDefinitions()).ReadAsSync();
 
             var mapped = Mapper.Map<List<GatewayDefinition>>(def).OrderBy(x => x.Name).ToList();
+            mapped.ForEach(x =>
+                {
+                    if (x.CredentialDefinitions == null || x.CredentialDefinitions.Count == 0)
+                    {
+                        x.CredentialDefinitions = new List<GatewayCredentialFieldDefinition>()
+                                                      {
+                                                          new GatewayCredentialFieldDefinition()
+                                                              {
+                                                                  Name ="x_login",
+                                                                  DisplayName ="Login"
+                                                              },
+                                                              new GatewayCredentialFieldDefinition()
+                                                              {
+                                                                  Name ="x_tran_key",
+                                                                  DisplayName ="Tran Key"
+                                                              }
+                                                      };
+                    }
+                    if (x.SupportedCards == null || x.SupportedCards.Count == 0)
+                    {
+                        x.SupportedCards = new List<KeyValuePair<string, string>>()
+                                               {
+                                                   new KeyValuePair<string, string>("VISA", "VISA"),
+                                                   new KeyValuePair<string, string>("AMEX", "American Express"),
+                                                   new KeyValuePair<string, string>("MC", "MasterCard"),
+                                                   new KeyValuePair<string, string>("DISCOVER", "Discover"),
+                                               };
+                    }
+                });
             return List2(mapped);
         }
+
+
+
+
 
         #region Private methods
 
@@ -112,17 +146,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 CredentialFields = new List<GatewayCredentialFieldValue>()
             };
 
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId1) && !string.IsNullOrEmpty(setting.GatewayFieldVal1)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId1, Value = setting.GatewayFieldVal1 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId2) && !string.IsNullOrEmpty(setting.GatewayFieldVal2)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId2, Value = setting.GatewayFieldVal2 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId3) && !string.IsNullOrEmpty(setting.GatewayFieldVal3)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId3, Value = setting.GatewayFieldVal3 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId4) && !string.IsNullOrEmpty(setting.GatewayFieldVal4)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId4, Value = setting.GatewayFieldVal4 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId5) && !string.IsNullOrEmpty(setting.GatewayFieldVal5)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId5, Value = setting.GatewayFieldVal5 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId6) && !string.IsNullOrEmpty(setting.GatewayFieldVal6)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId6, Value = setting.GatewayFieldVal6 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId7) && !string.IsNullOrEmpty(setting.GatewayFieldVal7)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId7, Value = setting.GatewayFieldVal7 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId8) && !string.IsNullOrEmpty(setting.GatewayFieldVal8)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId8, Value = setting.GatewayFieldVal8 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId9) && !string.IsNullOrEmpty(setting.GatewayFieldVal9)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId9, Value = setting.GatewayFieldVal9 }); }
-            if (!string.IsNullOrEmpty(setting.GatewayFieldId10) && !string.IsNullOrEmpty(setting.GatewayFieldVal10)) { gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue { Name = setting.GatewayFieldId10, Value = setting.GatewayFieldVal10 }); }
 
+            if (setting.Credentials != null && setting.Credentials.HasValues)
+            {
+                foreach (var credential in setting.Credentials)
+                {
+                    gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue() {Name = credential.Key, Value = (string) credential.Value});
+                }
+            }
+            
             var pSettings = new Mozu.SiteSettings.Order.Contracts.PaymentSettings
                                 {
                                     Gateways = new List<Mozu.SiteSettings.Order.Contracts.Gateway>()
@@ -147,7 +179,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 return ret;
             }
-
+            
             ret.PayByMail = paymentSettings.PayByMail;
             var gateWay = paymentSettings.Gateways != null && paymentSettings.Gateways.Count > 0 ? paymentSettings.Gateways.First() : null;
 
@@ -156,33 +188,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 
                 ret.SupportedCards = gateWay.SupportedCards;
-                if ( gateWay.GatewayAccount != null && gateWay.GatewayAccount.CredentialFields != null )
+                if (gateWay.GatewayAccount != null)
                 {
-                    var fields = gateWay.GatewayAccount.CredentialFields;
-                    var fieldCount = fields.Count;
-
-                    ret.GatewayFieldId1 = (fieldCount > 0) ? fields[0].Name : null;
-                    ret.GatewayFieldId2 = (fieldCount > 1) ? fields[1].Name : null;
-                    ret.GatewayFieldId3 = (fieldCount > 2) ? fields[2].Name : null;
-                    ret.GatewayFieldId4 = (fieldCount > 3) ? fields[3].Name : null;
-                    ret.GatewayFieldId5 = (fieldCount > 4) ? fields[4].Name : null;
-                    ret.GatewayFieldId6 = (fieldCount > 5) ? fields[5].Name : null;
-                    ret.GatewayFieldId7 = (fieldCount > 6) ? fields[6].Name : null;
-                    ret.GatewayFieldId8 = (fieldCount > 7) ? fields[7].Name : null;
-                    ret.GatewayFieldId9 = (fieldCount > 8) ? fields[8].Name : null;
-                    ret.GatewayFieldId10 = (fieldCount > 9) ? fields[9].Name : null;
-
-                    ret.GatewayFieldVal1 = (fieldCount > 0) ? fields[0].Value : null;
-                    ret.GatewayFieldVal2 = (fieldCount > 1) ? fields[1].Value : null;
-                    ret.GatewayFieldVal3 = (fieldCount > 2) ? fields[2].Value : null;
-                    ret.GatewayFieldVal4 = (fieldCount > 3) ? fields[3].Value : null;
-                    ret.GatewayFieldVal5 = (fieldCount > 4) ? fields[4].Value : null;
-                    ret.GatewayFieldVal6 = (fieldCount > 5) ? fields[5].Value : null;
-                    ret.GatewayFieldVal7 = (fieldCount > 6) ? fields[6].Value : null;
-                    ret.GatewayFieldVal8 = (fieldCount > 7) ? fields[7].Value : null;
-                    ret.GatewayFieldVal9 = (fieldCount > 8) ? fields[8].Value : null;
-                    ret.GatewayFieldVal10 = (fieldCount > 9) ? fields[9].Value : null;
+                    ret.GatewayDefinitionId = gateWay.GatewayAccount.GatewayDefinitionId;
+                    ret.AreGatewayCredentialFieldsSet = gateWay.AreGatewayCredentialFieldsSet;
                 }
+                //if ( gateWay.GatewayAccount != null && gateWay.GatewayAccount.CredentialFields != null )
+                //{
+                 
+                   
+                //    ret.Credentials = new JObject();
+                //    foreach (var field in gateWay.GatewayAccount.CredentialFields)
+                //    {
+                //        ret.Credentials.Add(field.Name, (JToken )field.Value );
+                //    }
+                    
+                //}
             }
 
             return ret;

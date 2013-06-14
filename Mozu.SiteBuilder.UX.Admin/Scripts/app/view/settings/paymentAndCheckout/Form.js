@@ -4,53 +4,57 @@
 Ext.define('Taco.view.settings.paymentAndCheckout.Form', {
     //extend: 'Taco.core.ux.form.Form',
     extend: 'Taco.core.ux.form.NavForm',
-    requires: [],
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
-    },
+    requires: ['Taco.view.settings.paymentAndCheckout.Gateway'],
+    //layout: {
+    //    type: 'vbox'
+    //},
+   
     initComponent: function() {
-        
-        this.paymentTypesCombo = Ext.create('Ext.form.ComboBox', {
+        this.gateWayDefinitionsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.GatewayDefinitions');
+        this.gateWayDefinitionsCombo = Ext.create('Ext.form.ComboBox', {
             fieldLabel: 'Select a payment gateway',
-            store: Taco.core.data.StoreManager.getOrCreate('Taco.store.GatewayDefinitions'),
+            store: this.gateWayDefinitionsStore,
             queryMode: 'local',
-            width:400,
+            width: 400,
+            name: 'gatewayDefinitionId',
+            value:this.record.get('gatewayDefinitionId'),
             displayField: 'name',
             valueField: 'id',
-            listners: {
+            listeners: {
                 change: this.onPaymentTypesChange,
-                scope:this
+                scope: this
+
                 
             }
             
         });
+        this.gateWayContainer = Ext.widget({
+            xtype: 'container',
+            padding: '10 5 10 5',
+            margin:'10,10,10,10'
+        });
         this.paymentTypes = Ext.create('Ext.panel.Panel', {
             title: 'Payment Types',
+
             items: [
-                this.paymentTypesCombo,
+                this.gateWayDefinitionsCombo,
+                this.gateWayContainer,
                 {
-                    
-                    html: '<div style="height:400px">...</div>'
+                    xtype: 'checkbox',
+                    name: 'payByMail',
+                    fieldLabel:'Allow pay by mail'
                 }
+                
             ]
         });
         this.checkoutPrefrences = Ext.create('Ext.panel.Panel', {
             title: 'Chekcout Prefrences',
+            height:200,
+            padding: '10 5 10 5',
+            
+            margin: '10,10,10,10',
             items: [
-                {
-                    xtype: 'radiogroup',
-                    fieldLabel: 'Order Processing',
-                    // Arrange radio buttons into two columns, distributed vertically
-                    columns: 1,
-                    vertical: true,
-                    items: [
-                        { boxLabel: 'Authorize And Capture On Order Placement', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeAndCaptureOnOrderPlacement' },
-                        { boxLabel: 'Authorize On Order Placement And Capture On Order Shipment', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeOnOrderPlacementAndCaptureOnOrderShipment' },
-                        { boxLabel: 'Authorize And Capture On Order Shipment', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeAndCaptureOnOrderShipment' }
-                    
-                    ]
-                },
+               
                 
         
                 {
@@ -64,9 +68,6 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Form', {
                         { boxLabel: 'Sign in required', name: 'customerCheckoutType', inputValue: 'LoginRequired' },
                     
                     ]
-                },
-                {
-                    html: '<div style="height:400px">...</div>'
                 }
             ]
         });
@@ -74,7 +75,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Form', {
             title: 'Legal Information',
             items: [
                 {
-                    html: '<div style="height:400px">...</div>'
+                    html: '<div style="height:400px">tbd...</div>'
                 }
             ]
         });
@@ -87,8 +88,24 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Form', {
 
         this.items = [this.paymentTypes, this.checkoutPrefrences, this.legalInformation];
         this.callParent(arguments);
+        this.onPaymentTypesChange();
     },
-    onPaymentTypesChange:function(){
-        
+    onPaymentTypesChange:function() {
+        if (this.gateWayDefinitionsStore.isLoading()) {
+            this.mon(this.gateWayDefinitionsStore, 'load', this.onPaymentTypesChange, this);
+            return;
+        }
+        var gateWayDef = this.gateWayDefinitionsCombo.findRecordByValue(this.gateWayDefinitionsCombo.getValue());
+        if ( !gateWayDef ){
+            return;
+        }
+        this.gateWayContainer.removeAll();
+            
+        this.gateWayContainer.add(
+            Ext.create('Taco.view.settings.paymentAndCheckout.Gateway', {
+                record: this.record,
+                gatewayDefinition:gateWayDef
+            })
+        );
     }
 });
