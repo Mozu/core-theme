@@ -12,6 +12,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name="id")]
         public string Id { get; set; }
 
+        [DataMember(Name = "orderId")]
+        public string OrderId { get; set; }
+
         /// <summary>
         /// "NotShipped" or "Shipped"
         /// </summary>
