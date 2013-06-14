@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-06-13
+ * Mozu JavaScript SDK - v0.1.0 - 2013-06-14
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1802,7 +1802,7 @@ var ApiReference = (function () {
                 tptData[oType.shortcutParam] = conf;
             } else if (conf) {
                 // add the conf argued directly into this request fn to the tpt context
-                utils.extend(tptData, conf.query || conf);
+                utils.extend(tptData, conf);
             }
 
 

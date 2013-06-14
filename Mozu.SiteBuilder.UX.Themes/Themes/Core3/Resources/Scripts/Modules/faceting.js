@@ -10,6 +10,8 @@ define(['modules/jquery-plus', 'knockout', 'modules/api', "modules/models-faceti
         $('#mz-category-loading').remove();
         $facetingForm.noFlickerFadeIn();
 
+        facetingVM.categoryId = $.getMozuData('category');
+
     });
     
 
