@@ -26,7 +26,7 @@
         margin-right: 40px;
     }
 
-    .mz-details-configurator-wrap {
+    .mz-details-configurator {
         display: table;
     }
     .mz-option-container {
@@ -62,12 +62,19 @@
 			display: inline-block;
 		}
 
-        &.mz-dropdown, &.mz-textbox {
-            width: 120px;
+        &.mz-dropdown {
+            width: 150px;
+        }
+            
+        &.mz-textbox {
+            width: 150px;
         }
 
 	}
 
+    .mz-option-unavailable {
+        color: #aaa;
+    }
     
     // price stack
 	.mz-price-stack-wrap {

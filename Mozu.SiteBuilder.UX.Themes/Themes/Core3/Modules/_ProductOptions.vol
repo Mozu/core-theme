@@ -13,7 +13,7 @@
                         <select class="mz-multiselect mz-option" multiple data-mz-role="optionmultiselect" data-bind="disable: $root.submitting, selectedOptions: Value, options: Values, optionsText: 'Value', optionsValue: 'Value'"></select>
                     <!-- /ko -->
                     <!-- ko if: !IsMultiValue -->
-                        <select class="mz-dropdown mz-option" data-mz-role="optionselect" data-bind="disable: $root.submitting, value: Value, options: Values, optionsCaption: '[Select]', optionsText: 'Value', optionsValue: 'Value'">
+                        <select class="mz-dropdown mz-option" data-mz-role="optionselect" data-bind="disable: $root.submitting, value: Value, options: Values, optionsCaption: '   ', optionsText: 'Value', optionsValue: 'Value'">
                         </select>
                     <!-- /ko -->
                 <!-- /ko -->

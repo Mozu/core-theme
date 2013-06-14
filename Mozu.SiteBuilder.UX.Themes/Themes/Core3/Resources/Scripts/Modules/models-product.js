@@ -19,6 +19,8 @@
         beginLiveUpdate: function () {
             var me = this, parent = this.getParentModel();
             me.Value.subscribe(throttle(function (newVal) {
+                newVal = $.trim(newVal);
+                if (!me.IsEnabled) parent.configuredOptions = {};
                 parent.configuredOptions[me.id] = !!(newVal || newVal === 0);
                 parent.updateConfiguration();
             }, 300, false));
@@ -92,7 +94,7 @@
         },
         getConfiguredOptions: function() {
             var me = this;
-            return ko.utils.arrayMap(ko.utils.arrayFilter(me.Options(), function (opt) { return opt.id in me.configuredOptions; }), function (i) { return i.toJS(); });
+            return ko.utils.arrayMap(ko.utils.arrayFilter(me.Options(), function (opt) { return me.configuredOptions[opt.id]; }), function (i) { return i.toJS(); });
         },
         submit: function () {
             var self = this;
