@@ -31,6 +31,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         protected override void Configure()
         {
             Mapper.CreateMap<GatewayDefinition, Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.GatewayDefinition>();
+
+
+            Mapper.CreateMap<GatewayCredentialFieldDefinition, Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.GatewayCredentialFieldDefinition>();
+
             Mapper.CreateMap<PreAuthorizeDefinition, Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.PreAuthorizeDefinition>();
             Mapper.CreateMap<PreAuthorizeTransactionTypeDataContract, Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.PreAuthorizeTransactionTypeDataContract>();
 

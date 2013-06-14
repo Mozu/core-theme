@@ -31,7 +31,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
                     fieldLabel: fieldDef.displayName,
                     name: credentials[fieldDef.name],
                     inputType: 'password',
-                    value: credentialsSet ? '        ' : ''
+                    value: credentialsSet && this.gatewayDefinition.getId() === this.record.get('gatewayDefinitionId') ? '        ' : ''
                 });
             this.credFields.push(credField);
             this.items.push(credField);

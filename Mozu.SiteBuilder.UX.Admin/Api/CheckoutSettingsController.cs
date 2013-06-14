@@ -98,22 +98,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var mapped = Mapper.Map<List<GatewayDefinition>>(def).OrderBy(x => x.Name).ToList();
             mapped.ForEach(x =>
                 {
-                    if (x.CredentialDefinitions == null || x.CredentialDefinitions.Count == 0)
-                    {
-                        x.CredentialDefinitions = new List<GatewayCredentialFieldDefinition>()
-                                                      {
-                                                          new GatewayCredentialFieldDefinition()
-                                                              {
-                                                                  Name ="x_login",
-                                                                  DisplayName ="Login"
-                                                              },
-                                                              new GatewayCredentialFieldDefinition()
-                                                              {
-                                                                  Name ="x_tran_key",
-                                                                  DisplayName ="Tran Key"
-                                                              }
-                                                      };
-                    }
+                    
                     if (x.SupportedCards == null || x.SupportedCards.Count == 0)
                     {
                         x.SupportedCards = new List<KeyValuePair<string, string>>()
