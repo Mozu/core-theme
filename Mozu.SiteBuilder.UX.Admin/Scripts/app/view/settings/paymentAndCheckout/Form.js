@@ -49,10 +49,6 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Form', {
         });
         this.checkoutPrefrences = Ext.create('Ext.panel.Panel', {
             title: 'Chekcout Prefrences',
-            height:200,
-            padding: '10 5 10 5',
-            
-            margin: '10,10,10,10',
             items: [
                
                 
@@ -68,16 +64,65 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Form', {
                         { boxLabel: 'Sign in required', name: 'customerCheckoutType', inputValue: 'LoginRequired' },
                     
                     ]
-                }
+                },
+                  {
+                      xtype: 'radiogroup',
+                      fieldLabel: 'Request customer email address for marketing purposes',
+                      margin: '0 0 50 0',
+                      // Arrange radio buttons into two columns, distributed vertically
+                      columns: 1,
+                      vertical: true,
+                      items: [
+                          { boxLabel: 'Checked (Yes) by default', name: 'kk', inputValue: 'LoginOptional' },
+                          { boxLabel: 'Unchecked (No) by default', name: 'kk', inputValue: 'LoginRequired' },
+                          { boxLabel: 'Disable and hide option', name: 'kk', inputValue: 'LoginRequired' }
+
+                      ]
+                  }
             ]
         });
         this.legalInformation = Ext.create('Ext.panel.Panel', {
             title: 'Legal Information',
             items: [
                 {
-                    html: '<div style="height:400px">tbd...</div>'
+                    xtype: 'checkboxgroup',
+                    fieldLabel: 'Display links on checkout',
+                    // Arrange checkboxes into two columns, distributed vertically
+                    columns: 1,
+                    vertical: true,
+                    items: [
+                        { boxLabel: 'Terms', name: 'rb', inputValue: '1' },
+                        { boxLabel: 'Privacy Policy', name: 'rb', inputValue: '2' },
+                        { boxLabel: 'Return Policy', name: 'rb', inputValue: '3' }
+                    ]
+                },
+                {
+                    xtype: 'checkboxgroup',
+                    fieldLabel: 'Send in email order notiﬁcation',
+                    // Arrange checkboxes into two columns, distributed vertically
+                    columns: 1,
+                    vertical: true,
+                    items: [
+                        { boxLabel: 'Terms', name: 'rb', inputValue: '1' },
+                        { boxLabel: 'Privacy Policy', name: 'rb', inputValue: '2' },
+                        { boxLabel: 'Return Policy', name: 'rb', inputValue: '3' }
+                    ]
+                },
+                {
+                    xtype: 'checkboxgroup',
+                    fieldLabel: 'Print on packing slip',
+                    margin: '0 0 50 0',
+                    // Arrange checkboxes into two columns, distributed vertically
+                    columns: 1,
+                    vertical: true,
+                    items: [
+                        { boxLabel: 'Terms', name: 'rb', inputValue: '1' },
+                        { boxLabel: 'Privacy Policy', name: 'rb', inputValue: '2' },
+                        { boxLabel: 'Return Policy', name: 'rb', inputValue: '3' }
+                    ]
                 }
             ]
+            
         });
         
         this.navStore = Ext.create('Ext.data.Store', {
