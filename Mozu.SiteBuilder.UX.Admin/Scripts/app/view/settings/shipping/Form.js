@@ -2,19 +2,27 @@
  * The discount editor view
  */
 Ext.define('Taco.view.settings.shipping.Form', {
-    //extend: 'Taco.core.ux.form.Form',
-    extend: 'Taco.core.ux.form.Form',
-    requires: [],
-    enableStoreSyncTasks: true,
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
-    },
-    initComponent: function() {
+    extend: 'Taco.core.ux.form.NavForm',
+    requires: ['Taco.view.settings.shipping.subform.ShippingFrom',
+               'Taco.view.settings.shipping.subform.MethodsAndRates',
+               'Taco.view.settings.shipping.subform.ShippingPreferences' ],
+    initComponent: function () {
+        var me = this;
 
-        this.items = [{ html: '<h2>New Shipping Settings Coming Soon!</h2>' } ];
+        me.shippingFrom = Ext.create('Taco.view.settings.shipping.subform.ShippingFrom', me);
+        me.methodsAndRates = Ext.create('Taco.view.settings.shipping.subform.MethodsAndRates', me);
+        me.shippingPreferences = Ext.create('Taco.view.settings.shipping.subform.ShippingPreferences', me);
 
+        me.navStore = Ext.create('Ext.data.Store', {
+            fields: ['title'],
+            data: [me.shippingFrom, me.methodsAndRates, me.shippingPreferences]
+        });
+
+
+
+        me.items = [me.shippingFrom,
+                      me.methodsAndRates,
+                      me.shippingPreferences];
         this.callParent(arguments);
     }
-
 });
