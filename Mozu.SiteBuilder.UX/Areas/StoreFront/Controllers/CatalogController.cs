@@ -78,8 +78,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public ActionResult ProductListing(int? categoryId= null , string sortBy = null, int? page = null, int? itemsPerPage = null,  List<object> productCodes = null , bool? includeFacets=null)
         {
 
-            
-
             categoryId = categoryId.GetValueOrDefault(-1) <1  ? null : categoryId;
             itemsPerPage = itemsPerPage.GetValueOrDefault(15);
             page = page.GetValueOrDefault(1);
@@ -117,7 +115,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue )
                 {
-                    var pcDC = _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate:"category:" + categoryId, facetHierDepth : "categoryId:2"   ).Result.ReadAsSync();
+                    string facetValueFilter = Request.QueryString["facetValueFilter"];
+                    var pcDC = _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate:"category:" + categoryId, facetHierDepth : "categoryId:2", facetValueFilter: facetValueFilter).Result.ReadAsSync();
                     var pc = Mapper.Map<ProductSearchResult>(pcDC);
                     return PartialView(pcDC);
                 }

@@ -86,6 +86,7 @@
                 }).join(',');
             },
             updateFacets: function () {
+                var me = this;
                 this.submitting(true);
                 var conf = {
                     filter: 'categoryId req ' + this.categoryId,
@@ -93,7 +94,9 @@
                 },
                 filterValue = this.getFacetValueFilter();
                 if (filterValue) conf.facetValueFilter = filterValue;
-                this.get(conf);
+                this.get(conf).then(function () {
+                    me.submitting(false);
+                });
             }
         }, function () {
             var me = this;
