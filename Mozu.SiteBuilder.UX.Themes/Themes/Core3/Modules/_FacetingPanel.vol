@@ -1,6 +1,6 @@
 <section class="mz-faceting-form">
     <div class="mz-sidebar-item">
-        <input type="checkbox" id="mz-faceting-clearall-1" class="mz-faceting-option" data-mz-action="clearfacets" data-bind="event: { change: clearAllFacets }"><label for="mz-faceting-clearall-1">Clear All Filters</label>
+        <button class="mz-faceting-clearall" data-mz-action="clearfacets" data-bind="click: clearAllFacets, disable: $root.submitting">Clear All Filters</button>
     </div>
     <!-- ko foreach: Facets -->
     <div class="mz-sidebar-item">
@@ -23,6 +23,7 @@
     </div>
     <!-- /ko -->
     <div class="mz-sidebar-item">
-        <input type="checkbox" id="mz-faceting-clearall-2" class="mz-faceting-option" data-mz-action="clearfacets" data-bind="change: clearAllFacets, disable: $root.submitting"><label for="mz-faceting-clearall-2">Clear All Filters</label>
+        <button class="mz-faceting-clearall" data-mz-action="clearfacets" data-bind="click: clearAllFacets, disable: $root.submitting">Clear All Filters</button>
+        
     </div>
 </section>

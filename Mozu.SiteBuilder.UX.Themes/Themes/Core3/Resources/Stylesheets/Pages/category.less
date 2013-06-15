@@ -1,4 +1,9 @@
-﻿.mz-product-listing-wrap {
+﻿.mz-checkout-loading {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.mz-product-listing-wrap {
 	overflow: hidden;
 }
 .mz-category-list-a-L2 {
@@ -24,17 +29,37 @@
 /* Faceting ----------------- */
 .mz-faceting-form {
     float: left;
+    margin-right: 1.2rem;
+
+    .mz-sidebar-item {
+        margin: 1.2rem 0;
+    }
+
+    h4 {
+        margin: 0;
+        background-color: #333;
+        color: #f2f2f2;
+        padding: 0.3rem 0.5rem;
+    }
+
+    .mz-faceting-clearall {
+        font-size: 0.75rem;
+        padding: 0.3rem;
+    }
+
     .mz-faceting-group {
-        padding: 0;
-        margin: 1rem;
+        padding: 0.3rem 0.5rem;
+        background-color: #eee;
+        margin: 0;
         list-style: none;
         list-style-position: inside;
         li {
-            margin: 0.3rem 0 0;
+            margin: 0.5rem 0;
+            font-size: 0.75rem;
         }
     }
     label {
         display: inline-block;
-        margin: 0 0 0 0.3rem;
+        margin: 0 0 0 0.4rem;
     }
 }
