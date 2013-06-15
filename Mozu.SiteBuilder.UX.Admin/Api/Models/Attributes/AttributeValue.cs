@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 {
@@ -14,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
             get
             {
                 if (String.IsNullOrEmpty(_id))
-                    _id = Value.ToString();
+                    _id = Regex.Replace(Value.ToString(), "[^a-zA-Z0-9]", "_");
                 return _id;
             }
             set { _id = value; }

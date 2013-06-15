@@ -123,6 +123,7 @@ Ext.define('Taco.view.product.subform.General', {
             name: 'productTypeId',
             readOnly: readOnly && this.product.get('productTypeId'),
             required: true,
+            queryMode:'local',
             // width: 200,
             shrinkWrap: 3,
             displayField: 'name',
