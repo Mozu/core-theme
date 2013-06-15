@@ -48,7 +48,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             if (selectedValues == null)
                 return new List<DC.AttributeVocabularyValueInProductType>();
 
-            return selectedValues.Select((val, idx) => new DC.AttributeVocabularyValueInProductType { Value = val.Value, Order = idx }).ToList();
+            return selectedValues.Select((val, idx) => 
+                new DC.AttributeVocabularyValueInProductType
+                    {
+                        Value = val.Id ,
+                        Order = idx
+                    }).ToList();
         }
 
         protected override void Configure()
@@ -107,18 +112,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
                 .ForMember(dc => dc.Content, opt => opt.MapFrom(x => new DC.AttributeVocabularyValueLocalizedContent { LocaleCode = "en-US", StringValue = (string)x.Value }))
-                .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Value))
+                .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Id ))
                 // TODO: do not hard code this.
                 .ForMember(dc => dc.ValueSequence, opt => opt.MapFrom(x => 0))
             ;
-            Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>();
+            Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
+                .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Content != null &&!string.IsNullOrEmpty( x.Content.StringValue)? x.Content.StringValue :  x.Value))
+                  .ForMember(x => x.Id, op => op.MapFrom(x => (x.Value.ToString())));
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValueInProductType>()
-                .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Value));
+                .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Id ));
 
             Mapper.CreateMap<DC.AttributeVocabularyValueInProductType, AttributeValue>()
-                .ForMember(x => x.Value, opt => opt.MapFrom(dc => dc.Value))
-                ;
+                .ForMember(x => x.Id , opt => opt.MapFrom(dc => dc.Value))
+                .ForMember( x=> x.Value , opt => opt.MapFrom( dc=> dc.VocabularyValueDetail != null && dc.VocabularyValueDetail.Content != null && !string.IsNullOrEmpty( dc.VocabularyValueDetail.Content.StringValue) ?
+                    dc.VocabularyValueDetail.Content.StringValue : dc.Value ));
             #endregion
 
             #region Attributes
@@ -158,7 +166,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 orderby l.Order
                 select new AttributeValue {
                      AttributeFQN = attributeFQN,
-                     Value = l.Value
+                     Id = l.Value.ToString()  ,
+                     Value = l.VocabularyValueDetail != null && l.VocabularyValueDetail.Content != null && !string.IsNullOrEmpty( l.VocabularyValueDetail.Content.StringValue  )
+                     ? l.VocabularyValueDetail.Content.StringValue : l.Value 
+                     
                 }).ToList();
 
             return r;
