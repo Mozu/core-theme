@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.UX.Models.Users
         public int Id { get; set; }
 
         [DataMember(Name = "isEditable")]
-        public bool IsEditable { get; set; }
+        public bool IsSystemRole { get; set; }
     }
 
     [DataContract]

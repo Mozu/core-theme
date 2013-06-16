@@ -33,8 +33,13 @@ Ext.define('Taco.view.role.Index', {
                 dataIndex: 'name',
                 text: 'Name',
                 flex: 1,
-                renderer: function (value) {
-                    return '<a href="#" class="taco-launch-editor">' + value + '</a>';
+                renderer: function (value, metaData, record) {
+
+                    if (record.get('isEditable')) {
+                        return '<a href="#" class="taco-launch-editor">' + value + '</a>';
+                    } else {
+                        return value;
+                    }
                 }
             }],
             actions: [{
