@@ -20,7 +20,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Core.Api.Contracts.Behavior, Behavior>().ForMember(x => x.Category, m => m.Ignore());
 
             Mapper.CreateMap<Role, Core.Api.Contracts.Role>();
-            Mapper.CreateMap<Core.Api.Contracts.Role, Role>();
+
+            Mapper.CreateMap<Core.Api.Contracts.Role, Role>()
+                  .ForMember(x => x.IsSystemRole, opt => opt.MapFrom(x => !x.IsSystemRole));
 
             Mapper.CreateMap<BehaviorCategory, Core.Api.Contracts.BehaviorCategory>();
             Mapper.CreateMap<Core.Api.Contracts.BehaviorCategory, BehaviorCategory>()
