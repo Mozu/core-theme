@@ -46,6 +46,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // add item name, etc to packageItems
                     order.Packages.SelectMany(p => p.Items).Each(packageItem => FillPackageItemDetails(packageItem, order));
                 })
+                .AfterMap((dc, order) => {
+                    // fill out AuthorizationInfo object
+                    order.AuthorizationInfo = new OrderAuthorizationInfo {
+                        TotalAmount = order.Total,
+                        AmountCollected = order.Payments.Sum(p => p.AmountCollected),
+                        AuthReady = order.Payments.Any(p => p.AvailableActions.Contains("Capture")),
+                        CaptureData = order.Payments.FirstOrDefault(p => p.AvailableActions.Contains("Capture"))
+                    };
+                    order.AuthorizationInfo.CaptureAmount = order.AuthorizationInfo.TotalAmount - order.AuthorizationInfo.AmountCollected;
+                    order.AuthorizationInfo.AuthReady = order.AuthorizationInfo.AuthReady && order.AuthorizationInfo.CaptureAmount > 0;
+                })
                 ;
 
             Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()

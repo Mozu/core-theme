@@ -94,10 +94,10 @@ Ext.define('Taco.model.CustomerAccount', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/app/customers/list',
-            create: '/admin/app/customers/create',
-            update: '/admin/app/customers/edit',
-            destroy: '/admin/app/customers/delete'
+            read: '/admin/app/customer/list',
+            create: '/admin/app/customer/create',
+            update: '/admin/app/customer/edit',
+            destroy: '/admin/app/customer/delete'
         },
         reader: {
             type: 'json',

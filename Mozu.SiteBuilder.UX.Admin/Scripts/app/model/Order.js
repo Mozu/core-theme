@@ -24,56 +24,56 @@ Ext.define('Taco.model.Order', {
         {
             "name": "authorizationInfo",
             "type": "auto",
-            "mapping": "paymentStatus",
-            "persist":false,
-            convert: function (v, record) {
-                var payments = record.get("payments"),
-                    totalAmount = record.get("total"),
-                    amountCollected = 0,
-                    captureAmount= 0,
-                    canCapture = false,
-                    authReady = false,
-                    captureData=null;
-                
-                
-
-                // check if there is an authorized credit card
-                if (payments && payments[0]) {
-                    if (payments[0]) {
-
-                        captureData = payments[0];
-
-                        var auth = payments[0];
-                        if (auth.paymentType == "CreditCard" && auth.id) {
-                            authReady = true;
-                        }
-                    }
-
-                    // calculated total amount collected
-                    for (var i = 0; i < payments.length; i++) {
-                        amountCollected += payments[i].amountCollected;
-                    }
-
-                    //determine amount to capture;
-                    
-
-                }
-                
-                captureAmount = totalAmount - amountCollected;
-
-                if (authReady && captureAmount > 0) {
-                    canCapture = true;
-                }
-                
-                return {
-                    canCapture: canCapture,
-                    amountCollected: amountCollected,
-                    captureAmount: captureAmount,
-                    captureData: captureData,
-                    paymentType: (captureData) ? captureData.paymentType : "Check"
-                };
-            }
-        },
+//            "mapping": "paymentStatus",
+//            "persist":false,
+//            convert: function (v, record) {
+//                var payments = record.get("payments"),
+//                    totalAmount = record.get("total"),
+//                    amountCollected = 0,
+//                    captureAmount= 0,
+//                    canCapture = false,
+//                    authReady = false,
+//                    captureData=null;
+//                
+//                
+//
+//                // check if there is an authorized credit card
+//                if (payments && payments[0]) {
+//                    if (payments[0]) {
+//
+//                        captureData = payments[0];
+//
+//                        var auth = payments[0];
+//                        if (auth.paymentType == "CreditCard" && auth.id) {
+//                            authReady = true;
+//                        }
+//                    }
+//
+//                    // calculated total amount collected
+//                    for (var i = 0; i < payments.length; i++) {
+//                        amountCollected += payments[i].amountCollected;
+//                    }
+//
+//                    //determine amount to capture;
+//                    
+//
+//                }
+//                
+//                captureAmount = totalAmount - amountCollected;
+//
+//                if (authReady && captureAmount > 0) {
+//                    canCapture = true;
+//                }
+//                
+//                return {
+//                    canCapture: canCapture,
+//                    amountCollected: amountCollected,
+//                    captureAmount: captureAmount,
+//                    captureData: captureData,
+//                    paymentType: (captureData) ? captureData.paymentType : "Check"
+//                };
+//            }
+//        },
 
 
 
