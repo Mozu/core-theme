@@ -356,6 +356,7 @@
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\CmsDocumentController.cs" />
     <Compile Include="Api\CmsPublishingController.cs" />
+    <Compile Include="Api\CustomerController.cs" />
     <Compile Include="Api\FacetController.cs" />
     <Compile Include="Api\ModelMapping\AttributeMapping.cs" />
     <Compile Include="Api\ModelMapping\AttributeValidationResolver.cs" />
@@ -405,7 +406,6 @@
     <Compile Include="Api\IUserHelper.cs" />
     <Compile Include="Api\ModelMapping\TenantMapping.cs" />
     <Compile Include="Api\ProductController.cs" />
-    <Compile Include="Api\CustomersController.cs" />
     <Compile Include="Api\DiscountController.cs" />
     <Compile Include="Api\FileManagementController.cs" />
     <Compile Include="Api\GeneralSettingController.cs" />

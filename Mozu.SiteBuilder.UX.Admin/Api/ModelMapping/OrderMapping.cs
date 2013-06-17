@@ -38,9 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PaymentStatus, op => op.MapFrom(dc => dc.PaymentStatus))
                 .ForMember(x => x.Payments, op => op.MapFrom(dc => dc.Payments))
                 // .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.ShippingInfo.
-                //.ForMember(x => x.AvailableOrderActions, op => op.MapFrom(dc => dc.AvailableOrderActions))
-                //.ForMember(x => x.AvailablePaymentActions, op => op.MapFrom(dc => dc.AvailablePaymentActions))
-                //.ForMember(x => x.AvailableShipmentActions, op => op.MapFrom(dc => dc.AvailableShipmentActions))
+                // .ForMember(x => x.AvailableOrderActions, op => op.MapFrom(dc => dc.))
                 .AfterMap((dc, order) => {
                     // add orderId to packages
                     order.Packages.Each(p => p.OrderId = order.Id);
@@ -84,6 +82,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CardNumber, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.CardNumberPartOrMask : null))
                 .ForMember(x => x.NameOnCard, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.NameOnCard : null))
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
+                .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
+                .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
                 ;
 
             Mapper.CreateMap<PaymentsDC.PaymentInteraction, OrderPaymentInteraction>()
@@ -107,6 +107,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Width, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Width : null))
                 .ForMember(x => x.Weight, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Weight : null))
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
+                .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
                 ;
 
             Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
