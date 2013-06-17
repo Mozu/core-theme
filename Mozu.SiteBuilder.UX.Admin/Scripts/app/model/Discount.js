@@ -3,63 +3,72 @@
  */
 Ext.define('Taco.model.Discount', {
     extend: 'Taco.core.data.Model',
-    idProperty: 'discountId',
+    idProperty: 'id',
     fields: [{
-        name: 'discountId',
-        type: 'int'
-    }, {
-        name: 'name',
-        type: 'string'
-    }, {
-        name: 'content',
-        type: 'auto'
-    }, {
-        name: 'products',
-        type: 'auto',
-        defaultValue: []
-    }, {
-        name: 'categories',
-        type: 'auto',
-        defaultValue: []
-    }, {
-        name: 'shippingMethods',
-        type: 'auto'
-    }, {
-        name: 'minimumOrderAmount',
-        type: 'int'
-    }, {
-        name: 'maxRedemptionCount',
-        type: 'int'
-    }, {
-        name: 'currentRedemptionCount',
-        type: 'int'
-    }, {
-        name: 'requiresCoupon',
-        type: 'boolean'
-    }, {
-        name: 'couponCode',
-        type: 'string'
-    }, {
-        name: 'amount',
-        type: 'number'
-    }, {
-        name: 'amountType',
-        type: 'string',
-        defaultValue: 'Amount'
-    }, {
-        name: 'targetType',
-        type: 'string',
-        defaultValue: 'AllProducts'
-    }, {
-        name: 'startDate',
-        type: 'date'
-    }, {
-        name: 'endDate',
-        type: 'date'
-    }, {
-        name: 'status',
-        type: 'string'
-    }],
+            name: 'id',
+            type: 'int'
+        }, {
+            name: 'name',
+            type: 'string'
+        }, {
+            name: 'scope',
+            type: 'string'
+        },
+        {
+            name: 'target',
+            type: 'string'
+        },
+        {
+            name: 'includeAllProducts',
+            type: 'boolean'
+        },
+        {
+            name: 'categories',
+            type: 'auto',
+            defaultValue: []
+        },
+        {
+            name: 'products',
+            type: 'auto',
+            defaultValue: []
+        },
+        {
+            name: 'shippingMethods',
+            type: 'auto',
+            defaultValue: []
+        },
+        {
+            name: 'minimumOrderAmount',
+            type: 'int'
+        },
+        {
+            name: 'maxRedemptionCount',
+            type: 'int'
+        },
+        {
+            name: 'requiresCoupon',
+            type: 'boolean'
+        },
+        {
+            name: 'couponCode',
+            type: 'string'
+        }, {
+            name: 'amount',
+            type: 'float'
+        }, {
+            name: 'amountType',
+            type: 'string',
+            defaultValue: 'Amount'
+        }, {
+            name: 'startDate',
+            type: 'date'
+        }, {
+            name: 'expirationDate',
+            type: 'date'
+        }, {
+            name: 'status',
+            type: 'string'
+        }],
 
     getProductStore: function() {
         var me = this;
@@ -81,7 +90,7 @@ Ext.define('Taco.model.Discount', {
         return me.productStore;
     },
 
-    getCategoryStore: function () {
+    getCategoryStore: function() {
         var me = this;
         if (me.categoryStore == null) {
             me.categoryStore = Taco.core.data.StoreManager.getOrCreate(
@@ -99,7 +108,7 @@ Ext.define('Taco.model.Discount', {
 
         }
         return me.categoryStore;
-    
+
     },
 
     proxy: {

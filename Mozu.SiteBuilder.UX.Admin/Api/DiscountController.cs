@@ -122,7 +122,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var discount in discountList)
             {
                 var dc = Mapper.Map<DC.Discount>(discount);
-                var res = (await _discountWebClient.UpdateDiscount(dc, discount.DiscountId)).ReadAsSync();
+                var res = (await _discountWebClient.UpdateDiscount(dc, discount.Id )).ReadAsSync();
                 retList.Add(Mapper.Map<Discount>(res));
             }
 
