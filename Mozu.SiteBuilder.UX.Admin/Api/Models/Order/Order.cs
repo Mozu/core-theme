@@ -108,5 +108,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public List<string> AvailableOrderActions { get; set; }
         #endregion
 
+        /// <summary>
+        /// Denormalization of payment summary data for UI.
+        /// </summary>
+        [DataMember(Name="authorizationInfo", EmitDefaultValue=false)]
+        public OrderAuthorizationInfo AuthorizationInfo { get; set; }
     }
 }

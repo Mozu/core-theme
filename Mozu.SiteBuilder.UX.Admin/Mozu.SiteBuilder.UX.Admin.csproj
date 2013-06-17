@@ -378,6 +378,7 @@
     <Compile Include="Api\Models\Customer.cs" />
     <Compile Include="Api\Models\Facets\Facet.cs" />
     <Compile Include="Api\Models\Order\Order.cs" />
+    <Compile Include="Api\Models\Order\OrderAuthorizationInfo.cs" />
     <Compile Include="Api\Models\Order\OrderItem.cs" />
     <Compile Include="Api\Models\Order\OrderItemDiscount.cs" />
     <Compile Include="Api\Models\Order\OrderPackage.cs" />

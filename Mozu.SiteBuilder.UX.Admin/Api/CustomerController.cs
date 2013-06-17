@@ -37,13 +37,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "list")]
-        public async Task<Response<List<CustomerAccount>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
         {
             var filter = GetCustomerSearchFilter(extFilter);
 
             if (pagingParameters.id != null)
             {
-                var dcCustomer = (await _customerWebApiClient.GetAccount(pagingParameters.id)).ReadAsSync();
+                int customerId = Convert.ToInt32(pagingParameters.id);
+                var dcCustomer = (await _customerWebApiClient.GetAccount(customerId)).ReadAsSync();
 
                 var customer = Mapper.Map<ApiCustomer>(dcCustomer);
                 return List2(customer);
@@ -60,13 +61,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(customers);
         }
 
-        [WebGet(UriTemplate = "autocomplete/?query={query}")]
-        public async Task<Response<List<AutoCompleteField<string>>>> GetSearch(string query)
-        {
-            var groups = await _customerWebApiClient.GetCustomerGroups(x => x.ToLower().Contains(query.ToLower()));
-
-            return List2(groups.Select(x => new AutoCompleteField<string> { Display = x, Value = x }).ToList());
-        }
+//        [WebGet(UriTemplate = "autocomplete/?query={query}")]
+//        public async Task<Response<List<AutoCompleteField<string>>>> GetSearch(string query)
+//        {
+//            var groups = await _customerWebApiClient.GetCustomerGroups(x => x.ToLower().Contains(query.ToLower()));
+//
+//            return List2(groups.Select(x => new AutoCompleteField<string> { Display = x, Value = x }).ToList());
+//        }
 
 //        [WebInvoke(Method = "POST", UriTemplate = "notes/create")]
 //        public async Task<Response<CustomerAccountNote>> CreateNote(CustomerAccountNote customerAccountNote, [FromUri]FilterCollection extFilter)
