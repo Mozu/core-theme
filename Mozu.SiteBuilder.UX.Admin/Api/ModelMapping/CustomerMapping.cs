@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using AutoMapper;
 using DC = Mozu.Customer.Contracts;
-using CustomerModel = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
+using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
-            Mapper.CreateMap<DC.CustomerAccount, CustomerModel>()
+            Mapper.CreateMap<DC.CustomerAccount, ApiCustomer>()
             .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
             .ForMember(x => x.SiteId, op => op.MapFrom(dc => dc.SiteId))
             .ForMember(x => x.Contacts, op => op.MapFrom(dc => dc.Contacts))
