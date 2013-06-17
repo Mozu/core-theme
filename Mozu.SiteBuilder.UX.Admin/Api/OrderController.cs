@@ -46,25 +46,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             SortingCollectionItem sort = pagingParams.sort == null ? null : pagingParams.sort.FirstOrDefault();
 
             DCo.OrderCollection dcOrders = null;
-            try
+            
+            if (!string.IsNullOrEmpty(pagingParams.id))
             {
-                if (!string.IsNullOrEmpty(pagingParams.id))
+                dcOrders = new DCo.OrderCollection() {Items = new List<DCo.Order>()};
+                var order = (await _orderWebApiClient.GetOrder(pagingParams.id)).ReadAsSync();
+                if (order != null)
                 {
-                    dcOrders = new DCo.OrderCollection() {Items = new List<DCo.Order>()};
-                    var order = (await _orderWebApiClient.GetOrder(pagingParams.id)).ReadAsSync();
-                    if (order != null)
-                    {
-                        dcOrders.Items.Add(order);
-                    }
+                    dcOrders.Items.Add(order);
                 }
-                else
-                {
-                    var filter = "Status ne \"Created\"";
-                    dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
-                }
-
             }
-            catch { }
+            else
+            {
+                var filter = "Status ne \"Created\"";
+                dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
+            }
 
             var orders1 = await GetMock();
             var orders2 = dcOrders != null ? Mapper.Map<List<Order>>(dcOrders.Items) : new List<Order>();
