@@ -12,7 +12,8 @@ Ext.define('Taco.view.catalog.Index', {
     initComponent: function () {
         var shippingAddresses,
             billingAddress,
-            upperSections;
+            upperSections,
+            editAddress;
 
         // set up data
         this.store = Ext.create('Ext.data.Store', {
@@ -59,63 +60,55 @@ Ext.define('Taco.view.catalog.Index', {
                 totalOrders: 4,
                 totalSpent: 597.96,
                 email: 'john.smith@example.com',
-                groups: ['VIP', 'Top 100'],
+                groups: 'VIP, Top 100',
                 addresses: [{
                     id: 0,
-                    isCurrentBillingAddress: true,
-                    isCurrentShippingAddress: true,
                     firstName: 'Jonathan',
                     lastName: 'Smith',
                     address1: '1308 Horseback Hollow',
                     address2: null,
                     address3: null,
                     cityOrTown: 'Austin',
-                    stateOrProvince: 'TX',
+                    state: 'TX',
                     postalOrZipCode: '78732',
                     countryCode: 'USA',
-                    phoneNumber: '214-653-1023'
+                    homePhone: '214-653-1023'
                 }, {
                     id: 1,
-                    isCurrentBillingAddress: false,
-                    isCurrentShippingAddress: false,
                     firstName: 'Catherine',
                     lastName: 'Smith',
                     address1: '1308 Horseback Hollow',
                     address2: null,
                     address3: null,
                     cityOrTown: 'Austin',
-                    stateOrProvince: 'TX',
+                    state: 'TX',
                     postalOrZipCode: '78732',
                     countryCode: 'USA',
-                    phoneNumber: '214-653-1023'
+                    homePhone: '214-653-1023'
                 }, {
                     id: 2,
-                    isCurrentBillingAddress: false,
-                    isCurrentShippingAddress: false,
                     firstName: 'Cate',
                     lastName: 'Smith',
                     address1: '1308 Horseback Hollow',
                     address2: null,
                     address3: null,
                     cityOrTown: 'Austin',
-                    stateOrProvince: 'TX',
+                    state: 'TX',
                     postalOrZipCode: '78732',
                     countryCode: 'USA',
-                    phoneNumber: '214-653-1023'
+                    homePhone: '214-653-1023'
                 }, {
                     id: 3,
-                    isCurrentBillingAddress: false,
-                    isCurrentShippingAddress: false,
                     firstName: 'Kelly',
                     lastName: 'Smith',
                     address1: '1308 Horseback Hollow',
                     address2: null,
                     address3: null,
                     cityOrTown: 'Austin',
-                    stateOrProvince: 'TX',
+                    state: 'TX',
                     postalOrZipCode: '78732',
                     countryCode: 'USA',
-                    phoneNumber: '214-653-1023'
+                    homePhone: '214-653-1023'
                 }],
                 orderHistory: [{
                     id: 235,
@@ -160,34 +153,41 @@ Ext.define('Taco.view.catalog.Index', {
             data: this.record.get('orderHistory')
         });
 
+        editAddress = function (e) {
+            if (e.getTarget('.edit', 10)) {
+                console.log('edit clicked');
+            }
+        };
+
         // make address components from data
         shippingAddresses = this.record.get('addresses').map(function (data) {
             return Ext.create('Ext.Component', {
                 cls: 'address',
-                isCurrentBillingAddress: data.isCurrentBillingAddress,
-                isCurrentShippingAddress: data.isCurrentShippingAddress,
                 renderData: data,
                 renderTpl: [
                     '<div class="name">{firstName} {lastName}</div>',
                     '<div class="address-line-1">{address1}</div>',
                     '<div class="address-line-2">{address2}</div>',
                     '<div class="address-line-3">{address3}</div>',
-                    '<div class="city-state-zip">{cityOrTown}, {stateOrProvince} {postalOrZipCode}</div>',
+                    '<div class="city-state-zip">{cityOrTown}, {state} {postalOrZipCode}</div>',
                     '<div class="country">{countryCode}</div>',
-                    '<div class="phone">{phoneNumber}</div>'
-                ]
+                    '<div class="phone">{homePhone}</div>',
+                    '<div class="edit">E</div>'
+                ],
+                listeners: {
+                    click: {
+                        fn: editAddress,
+                        scope: this,
+                        element: 'el'
+                    }
+                }
             });
         });
 
-        billingAddress = Ext.Array.filter(shippingAddresses, function (item) {
-            return item.isCurrentBillingAddress;
-        });
-
-        Ext.Array.remove(shippingAddresses, billingAddress[0]);
-
         // build sections
-        this.customerSettings = Ext.create('Taco.core.ux.EditContainer', {
-            title: 'Customer Settings',
+        this.customerProfile = Ext.create('Taco.core.ux.EditContainer', {
+            width: 960,
+            title: 'Customer Profile',
             cls: Taco.baseCSSPrefix + 'catalog-customer-settings',
             items: [{
                 xtype: 'textfield',
@@ -197,29 +197,26 @@ Ext.define('Taco.view.catalog.Index', {
             }, {
                 xtype: 'boxselect',
                 width: 320,
+                hideTrigger: true,
+                triggerOnClick: false,
+                forceSelection: false,
+                createNewOnEnter: true,
+                queryMode: 'local',
                 fieldLabel: 'Groups',
-                value: this.record.get('groups')
+                value: ['VIP', 'Top 100'],
+                store: [],
+                listeners: {
+                    afterrender: function (cmp) {
+                        cmp.setValue(cmp.getValue());
+                        cmp.resetOriginalValue();
+                    }
+                }
             }, {
                 xtype: 'checkboxfield',
                 fieldLabel: 'Marketing',
-                boxLabel: 'Yes, keep me up to date on store news and specials'
-            }]
-        });
-
-        this.billingAddress = Ext.create('Taco.core.ux.EditContainer', {
-            title: 'Billing Address',
-            cls: Taco.baseCSSPrefix + 'catalog-billing-address',
-            items: [{
-                xtype: 'container',
-                cls: 'addresses',
-                items: billingAddress
-            }]
-        });
-
-        this.customerProfile = Ext.create('Taco.core.ux.EditContainer', {
-            title: 'Customer Profile',
-            cls: Taco.baseCSSPrefix + 'catalog-customer-profile',
-            items: [{
+                boxLabel: 'Yes, keep me up to date on store news and specials',
+                checked: this.record.get('acceptsMarketing')
+            }, {
                 xtype: 'component',
                 renderData: this.record.getData(),
                 renderTpl: [
@@ -230,18 +227,29 @@ Ext.define('Taco.view.catalog.Index', {
             }]
         });
 
+        // this.billingAddress = Ext.create('Taco.core.ux.EditContainer', {
+        //     title: 'Billing Address',
+        //     cls: Taco.baseCSSPrefix + 'catalog-billing-address',
+        //     items: [{
+        //         xtype: 'container',
+        //         cls: 'addresses',
+        //         items: billingAddress
+        //     }]
+        // });
+
+        // this.customerProfile = Ext.create('Taco.core.ux.EditContainer', {
+        //     title: 'Customer Profile',
+        //     cls: Taco.baseCSSPrefix + 'catalog-customer-profile',
+        //     items: []
+        // });
+
         this.shippingAddresses = Ext.create('Taco.core.ux.EditContainer', {
-            title: 'Shipping Addresses',
+            title: 'Billing & Shipping Addresses',
             items: [{
                 xtype: 'container',
                 cls: 'addresses',
                 items: shippingAddresses
             }]
-        });
-
-        upperSections = Ext.create('Ext.Container', {
-            cls: Taco.baseCSSPrefix + 'inline-editcontainers',
-            items: [this.billingAddress, this.customerProfile, this.customerSettings]
         });
 
         this.orderHistory = Ext.create('Taco.core.ux.EditContainer', {
@@ -274,7 +282,7 @@ Ext.define('Taco.view.catalog.Index', {
         // put it all together
         Ext.apply(this.body, {
             cls: Taco.baseCSSPrefix + 'catalog',
-            items: [upperSections, this.shippingAddresses, this.orderHistory]
+            items: [this.customerProfile, this.shippingAddresses, this.orderHistory]
         });
 
         this.callParent(arguments);

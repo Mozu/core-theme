@@ -667,6 +667,7 @@
     <Content Include="Scripts\app\view\attribute\Index.js" />
     <Content Include="Scripts\app\view\category\Form.js" />
     <Content Include="Scripts\app\view\category\Modal.js" />
+    <Content Include="Scripts\app\view\customers\AddressModal.js" />
     <Content Include="Scripts\app\view\discount\Edit.js" />
     <Content Include="Scripts\app\view\discount\Form.js" />
     <Content Include="Scripts\app\view\discount\Index.js" />
