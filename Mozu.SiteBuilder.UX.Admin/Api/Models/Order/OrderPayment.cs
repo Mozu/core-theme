@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         #region workflow shit
         [DataMember(Name="availableActions", EmitDefaultValue=true)]
-        public string AvailableActions { get; set; }
+        public List<string> AvailableActions { get; set; }
         #endregion
 
         [DataMember(Name = "createDate")]

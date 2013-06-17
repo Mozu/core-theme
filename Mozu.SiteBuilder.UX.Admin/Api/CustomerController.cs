@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                 filter: filter
                             )).ReadAsSync();
 
-            var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers);
+            var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);
             return List2(customers);
         }
 
