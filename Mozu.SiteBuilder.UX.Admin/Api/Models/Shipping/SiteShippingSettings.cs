@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Mozu.SiteSettings.Shipping.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
 {
@@ -8,27 +9,63 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
     public class SiteShippingSettings
     {
         [DataMember(Name = "activeRateProvider")]
-        public Feature ActiveRateProvider { get; set; }
+        public Feature ActiveRateProviders { get; set; }
 
         [DataMember(Name = "siteShippingOriginAddress")]
-        public SiteShippingOriginAddress SiteShippingOriginAddress { get; set; }
+        public Contact SiteShippingOriginAddress { get; set; }
 
         [DataMember(Name = "siteShippingRegions")]
-        public List<SiteShippingRegion> SiteShippingRegions { get; set; }
+        public List<string> SiteShippingRegions { get; set; }
 
-        [DataMember(Name = "siteShippingMethods")]
-        public List<SiteShippingMethod> SiteShippingMethods { get; set; }
 
-        [DataMember(Name = "createBy")]
-        public string CreateBy { get; set; }
 
-        [DataMember(Name = "createDate")]
-        public DateTime? CreateDate { get; set; }
 
-        [DataMember(Name = "updateBy")]
-        public string UpdateBy { get; set; }
 
-        [DataMember(Name = "updateDate")]
-        public DateTime? UpdateDate { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public Decimal? Amount 
+        {
+            get;
+            set;
+        }
+
+
     }
+
+    [DataContract]
+    public class CarrierConfiguration
+    {
+        [DataMember(Name = "id")]
+        public string id { get; set; }
+
+        [DataMember(Name = "settings")]
+        public Newtonsoft.Json.Linq.JObject Settings { get; set; }
+        [DataMember(Name = "rates")]
+        public List<string> Rates { get; set; }
+
+        [IgnoreDataMember]
+        public Mozu.ShippingAdmin.Contracts.CarrierConfiguration PreviousValue { get; set; }
+
+    }
+
+    [DataContract]
+    public class CustomRate
+    {
+        [DataMember(Name = "id")]
+        public string Id
+        {
+            get { return Name + "_" + RateType + "_" + Amount; }
+        }
+
+        [DataMember(Name = "name")]
+        public string Name { get; set; }
+
+        [DataMember(Name = "amount")]
+        public string Amount { get; set; }
+        [DataMember(Name = "type")]
+        public string RateType { get; set; }
+        [DataMember(Name = "isInternational")]
+        public bool? IsInternational { get; set; }
+    }
+
+
 }

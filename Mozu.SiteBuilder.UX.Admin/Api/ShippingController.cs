@@ -5,18 +5,21 @@ using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using System.Web.Http;
 using AutoMapper;
 using Mozu.Core;
 using Mozu.ProductAdmin.Contracts.Clients;
-using Mozu.ShippingAdmin.Contracts;
+//using Mozu.ShippingAdmin.Contracts;
 using Mozu.ShippingAdmin.Contracts.Clients;
-using Mozu.SiteSettings.Shipping.Contracts;
-using Mozu.SiteSettings.Shipping.Contracts.Clients;
-using Mozu.UspsShippingAdmin.Contracts.Clients;
+
+//using Mozu.SiteSettings.Shipping.Contracts.Clients;
+//using Mozu.UspsShippingAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
-using ShippingClass = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.ShippingClass;
-using ShippingRate = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.ShippingRate;
+using Mozu.SiteSettings.Shipping.Contracts.Clients;
+
+//using ShippingClass = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.ShippingClass;
+//using ShippingRate = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.ShippingRate;
 
 //using Volusion.UspsShippingAdmin.WebApi.Clients;
 
@@ -32,28 +35,82 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly ICarrierConfigurationWebApiClient _carrierConfigurationWebApiClient;
         private readonly IShippingSettingsWebApiClient _siteShippingSettingsClient;
-        private readonly IUspsShippingSharedWebApiClient _uspsShippingSharedClient;
-        private readonly IUspsShippingInstanceWebApiClient _uspsShippingInstanceClient;
 
-        public ShippingController(ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, IShippingSettingsWebApiClient siteShippingSettingsClient, IUspsShippingSharedWebApiClient uspsShippingSharedClient, IUspsShippingInstanceWebApiClient uspsShippingInstanceClient, IApiContext apiCtx)
+        public ShippingController(ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, IShippingSettingsWebApiClient siteShippingSettingsClient, IApiContext apiCtx)
         {
             _carrierConfigurationWebApiClient = carrierConfigurationWebApiClient;
             _siteShippingSettingsClient = siteShippingSettingsClient;
-            _uspsShippingSharedClient = uspsShippingSharedClient;
-            _uspsShippingInstanceClient = uspsShippingInstanceClient;
-
+            
             
            
            // _siteShippingSettingsClient.UpdateSiteShippingSettings(new SiteSettings.Shipping.Contracts.SiteShippingSettings())
 
             Mozu.ShippingAdmin.Contracts.Clients.ICarrierConfigurationGlobalWebApiClient global;
             Mozu.ShippingAdmin.Contracts.Clients.ICarrierConfigurationWebApiClient  reg;
-           
-           
+
+            //Contact
             
 
         }
+        //public class CarrierConfig
+        //{
+        //    public string id { get; set; }
+        //    public bool IsConfigureed { get; set; }
+        //    public Newtonsoft.Json.Linq.JObject settings { get; set; }
+        //    public List<string> rates { get; set; }
 
+
+        //}
+
+
+        [WebGet(UriTemplate = "globalSettings/list")]
+        public async Task<Response<SiteShippingSettings>> GetGlobalSettings()
+        {
+            var res = (await _siteShippingSettingsClient.GetSiteShippingSettings()).ReadAsSync();
+            var settings = Mapper.Map<SiteShippingSettings>(res);
+            return Single2<SiteShippingSettings>(settings );
+        }
+
+
+        [WebGet(UriTemplate = "globalSettings/edit")]
+        public async Task<Response<SiteShippingSettings>> EditGlobalSettings(SiteShippingSettings settings )
+        {
+            var dc = Mapper.Map<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(settings);
+            var res = (await _siteShippingSettingsClient.UpdateSiteShippingSettings( dc)).ReadAsSync();
+            settings = Mapper.Map<SiteShippingSettings>(res);
+            return Single2<SiteShippingSettings>(settings);
+        }
+
+
+        [WebGet(UriTemplate = "carrierSettings/list")]
+        public async Task<Response<List<CarrierConfiguration>>> GetCarrierSettings()
+        {
+            var res = (await _siteShippingSettingsClient.GetSiteShippingSettings()).ReadAsSync();
+            var settings = Mapper.Map<CarrierConfiguration>(res);
+            return List2<CarrierConfiguration>(settings);
+        }
+
+
+        [WebGet(UriTemplate = "carrierSettings/edit")]
+        public async Task<Response<List<CarrierConfiguration>>> EditCarrierSettings(List<CarrierConfiguration> settings)
+        {
+
+            var ret = new List<CarrierConfiguration>();
+            foreach (var setting in settings)
+            {
+                var dcConfig = (await _carrierConfigurationWebApiClient.GetConfiguration(setting.id)).ReadAsSync();
+                setting.PreviousValue = dcConfig;
+                dcConfig = Mapper.Map<Mozu.ShippingAdmin.Contracts.CarrierConfiguration>(setting);
+                dcConfig = (await _carrierConfigurationWebApiClient.UpdateConfiguration(setting.id, dcConfig)).ReadAsSync();
+                ret.Add(Mapper.Map<CarrierConfiguration>(dcConfig));
+
+            }
+            return List2(ret);
+          
+        }
+
+
+       
 
         //public class FlatRate
         //{
