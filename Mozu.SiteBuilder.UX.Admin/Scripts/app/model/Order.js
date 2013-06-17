@@ -23,7 +23,7 @@ Ext.define('Taco.model.Order', {
         //   adding unpersisted model member to organize the authorization information into a single object for use in xtemplates;
         {
             "name": "authorizationInfo",
-            "type": "auto",
+            "type": "auto"
 //            "mapping": "paymentStatus",
 //            "persist":false,
 //            convert: function (v, record) {
@@ -73,7 +73,7 @@ Ext.define('Taco.model.Order', {
 //                    paymentType: (captureData) ? captureData.paymentType : "Check"
 //                };
 //            }
-//        },
+        },
 
 
 
