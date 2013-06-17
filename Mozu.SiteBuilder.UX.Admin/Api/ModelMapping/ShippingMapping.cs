@@ -3,6 +3,7 @@ using AutoMapper;
 using System.Linq;
 using Mozu.PaymentService.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
+using Newtonsoft.Json.Linq;
 using CustomAttribute = Mozu.ShippingRuntime.Contracts.CustomAttribute;
 //using FlatPerCartShippingRate = Mozu.ProductAdmin.Contracts.FlatPerCartShippingRate;
 //using FlatPerItemShippingRate = Mozu.ProductAdmin.Contracts.FlatPerItemShippingRate;
@@ -15,6 +16,7 @@ using ShippingRate = Mozu.ShippingRuntime.Contracts.ShippingRate;
 using SiteShippingOriginAddress = Mozu.SiteSettings.Shipping.Contracts.SiteShippingOriginAddress;
 using SiteShippingRegion = Mozu.SiteSettings.Shipping.Contracts.SiteShippingRegion;
 using SiteShippingSettings = Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings;
+using Contact = Mozu.SiteBuilder.UX.Admin.Api.Models.Contact;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -42,37 +44,123 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
            
 
             Mapper.CreateMap< Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.GatewayDefinition,GatewayDefinition>();
-            Mapper.CreateMap<SiteShippingOriginAddress, Models.Shipping.SiteShippingOriginAddress>();
-            Mapper.CreateMap<ShippingRate, Models.Shipping.ShippingRate>();
-            Mapper.CreateMap<ShippingClass, Models.Shipping.ShippingClass>();
-            Mapper.CreateMap<ShippingRateLocalizedContent, Models.Shipping.ShippingRateLocalizedContent>();
-            Mapper.CreateMap<FlatPerCartShippingRate, Models.Shipping.FlatPerCartShippingRate>();
-            Mapper.CreateMap<FlatPerItemShippingRate, Models.Shipping.FlatPerItemShippingRate>();
-            Mapper.CreateMap<ShippingRatePrice, Models.Shipping.ShippingRatePrice>();
-            Mapper.CreateMap<SiteShippingMethod, Models.Shipping.SiteShippingMethod>();
-            Mapper.CreateMap<SiteShippingMethodLocalizedContent, Models.Shipping.SiteShippingMethodLocalizedContent>();
-            Mapper.CreateMap<SiteShippingOriginAddress, Models.Shipping.SiteShippingOriginAddress>();
-            Mapper.CreateMap<SiteShippingRegion, Models.Shipping.SiteShippingRegion>();
+            Mapper.CreateMap<SiteShippingOriginAddress, Contact>()
+                  .ForMember(x => x.Address1, opt => opt.MapFrom(x => x.Address1))
+                  .ForMember(x => x.Address2, opt => opt.MapFrom(x => x.Address2))
+                  .ForMember(x => x.Address3, opt => opt.MapFrom(x => x.Address3))
+                  .ForMember(x => x.Address4, opt => opt.Ignore() )
+                  .ForMember(x => x.CityOrTown, opt => opt.MapFrom(x => x.CityOrTown))
+                  .ForMember(x => x.CompanyOrOrganization, opt => opt.MapFrom(x => x.SenderName ))
+                  .ForMember(x => x.CountryCode, opt => opt.MapFrom(x => x.Country ))
+                    .ForMember(x => x.PostalOrZipCode, opt => opt.MapFrom(x => x.PostalOrZipCode))
+                  .ForMember(x => x.StateOrProvince, opt => opt.MapFrom(x => x.StateOrProvince));
+
+            Mapper.CreateMap<Contact, SiteShippingOriginAddress>()
+                  .ForMember(x => x.Address1, opt => opt.MapFrom(x => x.Address1))
+                  .ForMember(x => x.Address2, opt => opt.MapFrom(x => x.Address2))
+                  .ForMember(x => x.Address3, opt => opt.MapFrom(x => x.Address3))
+
+                  .ForMember(x => x.CityOrTown, opt => opt.MapFrom(x => x.CityOrTown))
+                  .ForMember(x => x.SenderName, opt => opt.MapFrom(x => x.CompanyOrOrganization))
+                  .ForMember(x => x.Country, opt => opt.MapFrom(x => x.CountryCode))
+                  .ForMember(x => x.PostalOrZipCode, opt => opt.MapFrom(x => x.PostalOrZipCode))
+                  .ForMember(x => x.StateOrProvince, opt => opt.MapFrom(x => x.StateOrProvince));
+
+            Mapper.CreateMap<CarrierConfiguration, Mozu.ShippingAdmin.Contracts.CarrierConfiguration>().ConvertUsing(
+                x =>
+                    {
+                        var dest = new Mozu.ShippingAdmin.Contracts.CarrierConfiguration()
+                                       {
+                                           Id = x.id,
+                                           Settings = new List<Mozu.ShippingAdmin.Contracts.Setting>(),
+                                           ConfiguredServiceTypes = new List<Mozu.ShippingAdmin.Contracts.ServiceType>()
+
+                                       };
+                        foreach (var carSet in x.Settings)
+                        {
+                            dest.Settings.Add(new Mozu.ShippingAdmin.Contracts.Setting()
+                                                  {
+                                                      Key = carSet.Key,
+                                                      Value = (string) carSet.Value
+                                                  });
+                        }
+                        foreach (var rate in x.Rates)
+                        {
+                            dest.ConfiguredServiceTypes.Add(new Mozu.ShippingAdmin.Contracts.ServiceType()
+                                                                {
+                                                                    Code = rate,
+                                                                    IsActive = true
+                                                                });
+                        }
+                        if (x.PreviousValue != null)
+                            foreach (var rate in x.PreviousValue.ConfiguredServiceTypes.Where(_ => x.Rates.IndexOf(_.Code) == -1))
+                            {
+                                rate.IsActive = false;
+                                dest.ConfiguredServiceTypes.Add(rate);
+                            }
+                        return dest;
+                    });
+
+
+            Mapper.CreateMap< Mozu.ShippingAdmin.Contracts.CarrierConfiguration,CarrierConfiguration>().ConvertUsing(
+                x =>
+                    {
+
+                        var dest = new CarrierConfiguration()
+                                       {
+                                           id = x.Id,
+                                           Rates = new List<string>(),
+                                           Settings = new JObject()
+                                       };
+                        foreach (var setting in x.Settings)
+                        {
+                            dest.Settings[setting.Key] = setting.Value;
+                        }
+                        foreach (var rate in x.ConfiguredServiceTypes.Where( _=> _.IsActive.GetValueOrDefault( true ) ) )
+                        {
+                            dest.Rates.Add(rate.Code);
+                        }
+                        return dest;
+                    });
+            
+
+            
+                
+                
+                
+            
+
+
+            //Mapper.CreateMap<ShippingRate, Models.Shipping.ShippingRate>();
+            //Mapper.CreateMap<ShippingClass, Models.Shipping.ShippingClass>();
+            //Mapper.CreateMap<ShippingRateLocalizedContent, Models.Shipping.ShippingRateLocalizedContent>();
+            //Mapper.CreateMap<FlatPerCartShippingRate, Models.Shipping.FlatPerCartShippingRate>();
+            //Mapper.CreateMap<FlatPerItemShippingRate, Models.Shipping.FlatPerItemShippingRate>();
+            //Mapper.CreateMap<ShippingRatePrice, Models.Shipping.ShippingRatePrice>();
+            //Mapper.CreateMap<SiteShippingMethod, Models.Shipping.SiteShippingMethod>();
+            //Mapper.CreateMap<SiteShippingMethodLocalizedContent, Models.Shipping.SiteShippingMethodLocalizedContent>();
+            Mapper.CreateMap<SiteShippingOriginAddress, Contact>();
+            //Mapper.CreateMap<SiteShippingRegion, Models.Shipping.SiteShippingRegion>();
             Mapper.CreateMap<SiteShippingSettings, Models.Shipping.SiteShippingSettings>();
 
-            Mapper.CreateMap<SharedShippingMethod, Models.Shipping.SharedShippingMethod>();
-            Mapper.CreateMap<SharedShippingMethodLocalizedContent, Models.Shipping.SharedShippingMethodLocalizedContent>();
+            //Mapper.CreateMap<SharedShippingMethod, Models.Shipping.SharedShippingMethod>();
+            //Mapper.CreateMap<SharedShippingMethodLocalizedContent, Models.Shipping.SharedShippingMethodLocalizedContent>();
             
-            Mapper.CreateMap<Models.Shipping.SiteShippingOriginAddress, SiteShippingOriginAddress>();
-            Mapper.CreateMap<Models.Shipping.ShippingRate, ShippingRate>();
-            Mapper.CreateMap<Models.Shipping.ShippingClass, ShippingClass>();
-            Mapper.CreateMap<Models.Shipping.ShippingRateLocalizedContent, ShippingRateLocalizedContent>();
-            Mapper.CreateMap<Models.Shipping.FlatPerCartShippingRate, FlatPerCartShippingRate>();
-            Mapper.CreateMap<Models.Shipping.FlatPerItemShippingRate, FlatPerItemShippingRate>();
-            Mapper.CreateMap<Models.Shipping.ShippingRatePrice, ShippingRatePrice>();
+            //Mapper.CreateMap<Models.Shipping.SiteShippingOriginAddress, SiteShippingOriginAddress>();
+            //Mapper.CreateMap<Models.Shipping.ShippingRate, ShippingRate>();
+            //Mapper.CreateMap<Models.Shipping.ShippingClass, ShippingClass>();
+            //Mapper.CreateMap<Models.Shipping.ShippingRateLocalizedContent, ShippingRateLocalizedContent>();
+            //Mapper.CreateMap<Models.Shipping.FlatPerCartShippingRate, FlatPerCartShippingRate>();
+            //Mapper.CreateMap<Models.Shipping.FlatPerItemShippingRate, FlatPerItemShippingRate>();
+            //Mapper.CreateMap<Models.Shipping.ShippingRatePrice, ShippingRatePrice>();
             //Mapper.CreateMap<Models.Shipping.SiteShippingMethod, Mozu.SiteSettings.Shipping.Contracts.SiteShippingMethod>();
             //Mapper.CreateMap<Models.Shipping.SiteShippingMethodLocalizedContent, Mozu.SiteSettings.Shipping.Contracts.SiteShippingMethodLocalizedContent>();
-            Mapper.CreateMap<Models.Shipping.SiteShippingOriginAddress, Mozu.SiteSettings.Shipping.Contracts.SiteShippingOriginAddress>();
-            Mapper.CreateMap<Models.Shipping.SiteShippingRegion, Mozu.SiteSettings.Shipping.Contracts.SiteShippingRegion>();
+            //Mapper.CreateMap<Models.Shipping.SiteShippingOriginAddress, Mozu.SiteSettings.Shipping.Contracts.SiteShippingOriginAddress>();
+            //Mapper.CreateMap<Models.Shipping.SiteShippingRegion, Mozu.SiteSettings.Shipping.Contracts.SiteShippingRegion>();
             Mapper.CreateMap<Models.Shipping.SiteShippingSettings, Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>();
 
-            Mapper.CreateMap<Models.Shipping.SharedShippingMethod, SharedShippingMethod>();
-            Mapper.CreateMap<Models.Shipping.SharedShippingMethodLocalizedContent, SharedShippingMethodLocalizedContent>();
+            //Mapper.CreateMap<Models.Shipping.SharedShippingMethod, SharedShippingMethod>();
+            //Mapper.CreateMap<Models.Shipping.SharedShippingMethodLocalizedContent, SharedShippingMethodLocalizedContent>();
 
             // USPS
 
