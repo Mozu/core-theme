@@ -95,7 +95,7 @@ Ext.define('Taco.model.Order', {
         {
             "name": "billingContact",
             "type": "auto",
-            "useNull": true
+            "default": []
         },
         {
             "name": "ipAddress",
