@@ -3,22 +3,20 @@
  */
 
 Ext.define('Taco.model.SiteShippingSettings', {
+    requires: ['Taco.model.CustomShippingRate', 'Taco.model.Contact'],
     extend: 'Taco.core.data.Model',
     fields: [
-        { name: 'activeRateProvider', type: 'auto' },
+        { name: 'activeRateProviders', type: 'auto' , defaultValue:[]},
         { name: 'siteShippingOriginAddress', type: 'auto' },
-        { name: 'siteShippingRegions', type: 'auto' },
-        { name: 'siteShippingMethods', type: 'auto' },
-        { name: 'siteShippingMethods', type: 'auto' }
+        { name: 'orderHandlingFee', type: 'float' },
+        { name: 'customRate', type: 'auto' ,defaultValue: {} }
     ],
 
     proxy: {
         type: 'ajaxproxy',
         api: {
             read: '/admin/app/shipping/settings/read',
-            create: '/admin/app/shipping/settings/create',
             update: '/admin/app/shipping/settings/edit',
-            destroy: '/admin/app/shipping/settings/delete'
         },
         reader: {
             type: 'json',
@@ -27,7 +25,7 @@ Ext.define('Taco.model.SiteShippingSettings', {
             messageProperty: "message"
         },
         writer: {
-            allowSingle: false,
+            allowSingle: true,
             type: 'json'
         }
     } 

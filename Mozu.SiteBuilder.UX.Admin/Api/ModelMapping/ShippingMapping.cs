@@ -2,8 +2,10 @@
 using AutoMapper;
 using System.Linq;
 using Mozu.PaymentService.Contracts;
+using Mozu.ShippingAdmin.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
 using Newtonsoft.Json.Linq;
+using CarrierConfiguration = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.CarrierConfiguration;
 using CustomAttribute = Mozu.ShippingRuntime.Contracts.CustomAttribute;
 //using FlatPerCartShippingRate = Mozu.ProductAdmin.Contracts.FlatPerCartShippingRate;
 //using FlatPerItemShippingRate = Mozu.ProductAdmin.Contracts.FlatPerItemShippingRate;
@@ -65,6 +67,46 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.Country, opt => opt.MapFrom(x => x.CountryCode))
                   .ForMember(x => x.PostalOrZipCode, opt => opt.MapFrom(x => x.PostalOrZipCode))
                   .ForMember(x => x.StateOrProvince, opt => opt.MapFrom(x => x.StateOrProvince));
+
+
+            Mapper.CreateMap<CustomRate, Mozu.ShippingAdmin.Contracts.CarrierConfiguration>()
+                  .ForMember(x => x.Id, opt => opt.UseValue(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId))
+                  .ForMember(x => x.Settings, opt => opt.MapFrom(x => new List<Mozu.ShippingAdmin.Contracts.Setting>()
+                                                                          {
+                                                                              new Setting()
+                                                                                  {
+                                                                                      Key = Mozu.ShippingAdmin.Contracts.Constants.Custom.Settings.Amount,
+                                                                                      Value = x.Amount
+                                                                                  },
+                                                                              new Setting()
+                                                                                  {
+                                                                                      Key = Mozu.ShippingAdmin.Contracts.Constants.Custom.Settings.Type,
+                                                                                      Value = x.RateType
+                                                                                  }
+                                                                          }))
+                  .ForMember(x => x.ConfiguredServiceTypes, opt => opt.MapFrom(x => new List<Mozu.ShippingAdmin.Contracts.ServiceType>
+                                                                                        {
+                                                                                            new ServiceType()
+                                                                                                {
+                                                                                                    Code  = Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId ,
+                                                                                                    Content = new ServiceTypeLocalizedContent()
+                                                                                                                  {
+                                                                                                                      Name  = x.Name ,
+                                                                                                                      LocaleCode = "en-US"
+                                                                                                                  }
+                                                                                                }
+
+
+                                                                                        }));
+
+
+            Mapper.CreateMap<Mozu.ShippingAdmin.Contracts.CarrierConfiguration, CustomRate>()
+                  .ForMember(x => x.Amount, opt => opt.MapFrom(x => x.Settings == null ? null : x.GetSettingValue(Mozu.ShippingAdmin.Contracts.Constants.Custom.Settings.Amount)))
+                  .ForMember(x => x.RateType, opt => opt.MapFrom(x => x.Settings == null ? null : x.GetSettingValue(Mozu.ShippingAdmin.Contracts.Constants.Custom.Settings.Type)))
+                  .ForMember(x => x.Name, opt => opt.MapFrom(x => x.ConfiguredServiceTypes == null || x.ConfiguredServiceTypes.Count == 0 ? null : x.ConfiguredServiceTypes.First().Content));
+
+                
+
 
             Mapper.CreateMap<CarrierConfiguration, Mozu.ShippingAdmin.Contracts.CarrierConfiguration>().ConvertUsing(
                 x =>
@@ -141,7 +183,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             //Mapper.CreateMap<SiteShippingMethodLocalizedContent, Models.Shipping.SiteShippingMethodLocalizedContent>();
             Mapper.CreateMap<SiteShippingOriginAddress, Contact>();
             //Mapper.CreateMap<SiteShippingRegion, Models.Shipping.SiteShippingRegion>();
-            Mapper.CreateMap<SiteShippingSettings, Models.Shipping.SiteShippingSettings>();
+            Mapper.CreateMap<SiteShippingSettings, Models.Shipping.SiteShippingSettings>()
+                  .ForMember(x => x.ActiveRateProviders, opt => opt.MapFrom(x => x.ActiveRateProviders))
+                  .ForMember(x => x.OrderHandlingFee, opt => opt.MapFrom(x => x.OrderHandlingFee))
+                  .ForMember(x => x.SiteShippingOriginAddress, opt => opt.MapFrom(x => x.SiteShippingOriginAddress));
+
+            Mapper.CreateMap<Models.Shipping.SiteShippingSettings, SiteShippingSettings>()
+                  .ForMember(x => x.ActiveRateProviders, opt => opt.MapFrom(x => x.ActiveRateProviders))
+                  .ForMember(x => x.OrderHandlingFee, opt => opt.MapFrom(x => x.OrderHandlingFee))
+                  .ForMember(x => x.SiteShippingOriginAddress, opt => opt.MapFrom(x => x.SiteShippingOriginAddress));
+
+
+            
+           
+
+
+
+
+
+
+      
 
             //Mapper.CreateMap<SharedShippingMethod, Models.Shipping.SharedShippingMethod>();
             //Mapper.CreateMap<SharedShippingMethodLocalizedContent, Models.Shipping.SharedShippingMethodLocalizedContent>();

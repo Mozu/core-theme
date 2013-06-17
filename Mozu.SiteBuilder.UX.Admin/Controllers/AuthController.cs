@@ -220,12 +220,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                     return View("Roles", contexts);
                 }
 
-                throw new NotImplementedException();
-               // var site = await _contextSwitcher.ChangeSite(contexts.First().Id);
-                //if (site != null)
-                //{
-                //    return Redirect("/admin");
-                //}
+                return Redirect("/admin");
+                
+              
             }
             catch (AggregateException exception)
             {
