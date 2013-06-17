@@ -186,7 +186,7 @@ Ext.define('Taco.view.site.page.settings.Facets', {
         });
             
         this.form = {
-            layout: 'vbox',            beforeSave: function () {
+            layout: 'vbox',            autoScroll: true,            beforeSave: function () {
                 Ext.iterate(me.rangeQueryForms, function (sourceId, form) {
                     form.updateForm();
                 });
