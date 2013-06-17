@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-06-14
+ * Mozu JavaScript SDK - v0.1.0 - 2013-06-17
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1079,6 +1079,9 @@
                             utils.extend(tptData, conf);
                         }
                         if (oType.defaultParams) tptData = utils.extend({}, oType.defaultParams, tptData);
+                        for (var tvar in tptData) {
+                            if (utils.getType(tptData[tvar]) == "Array") tptData[tvar] = JSON.stringify(tptData[tvar]);
+                        }
                         returnObj.url = oType.template.expand(utils.extend({
                             _: tptData
                         }, context.asObject("context-"), tptData, ApiReference.urls));
@@ -1137,14 +1140,14 @@
                         collectionOf: "category"
                     },
                     category: {
-                        template: "{+CategoryService}{Id}?{&allowInactive*}",
+                        template: "{+CategoryService}{Id}(?allowInactive}",
                         shortcutParam: "Id",
                         defaultParams: {
                             allowInactive: false
                         }
                     },
                     search: {
-                        template: "{+SearchService}searchz" + genericQueryTpt,
+                        template: "{+SearchService}searchz{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,startIndex}",
                         shortcutParam: "query",
                         defaultParams: {
                             startIndex: 0,
