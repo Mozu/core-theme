@@ -26,21 +26,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         itemId:"orderDetails",
         
         
-        // the template used in the details grid to describe the proudct and its options. Displays in the products column.
-        productInformationTemplate: [
-            '<tpl if="isDeleted">',
-                '<span class="productLinkDisabled" productCode="{productCode}">{productName}</span>',
-            '<tpl else>',
-                '<a class="productLink" productCode="{productCode}" target="_blank" href="/product/{productCode}">{productName}</a>',
-            '</tpl>',
-            
-            '<div class="productOptions">',
-                '<tpl for="options">',
-                    '<span class="option">{.}, </span>',
-                '</tpl>',
-                '<span class="weight">{weight} lbs</span>',
-            '</div>'
-        ],
+        
 
 
         // components to add to the panel header. typically used to add an actions menu button
@@ -70,14 +56,17 @@ Ext.define('Taco.view.order.subform.Detail', {
     
     initComponent: function (eOpts) {
         var me = this,
-            orderItemStore;
+            orderItemStore,
+            siteContext;
+
+        siteContext = Taco.app.context.getCurrent().urlToken;
+        
 
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-detail'].join(' ');
         
         // store that contains the orderItems for this order model
         orderItemStore = this.record.itemsStore;
 
-        
         
         if (!orderItemStore) {
             // no order items is an edge case but needs to be handled
@@ -215,7 +204,20 @@ Ext.define('Taco.view.order.subform.Detail', {
                     flex: 1,
                     sortable: false,
                     menuDisabled: true,
-                    tpl: this.getProductInformationTemplate(),
+                    tpl: [
+                            '<tpl if="isDeleted">',
+                                '<span class="productLinkDisabled" productCode="{productCode}">{productName}</span>',
+                            '<tpl else>',
+                                '<a class="productLink" productCode="{productCode}" target="_blank" href="/admin/' + siteContext + '/products/edit/{productCode}">{productName}</a>',
+                            '</tpl>',
+            
+                            '<div class="productOptions">',
+                                '<tpl for="options">',
+                                    '<span class="option">{.}, </span>',
+                                '</tpl>',
+                                '<span class="weight">{weight} lbs</span>',
+                            '</div>'
+                        ],
                     dataIndex: 'productName'
                 },
                 {
@@ -284,7 +286,8 @@ Ext.define('Taco.view.order.subform.Detail', {
                 }
             ]
         });
-
+        
+        
       
         var totalData = this.record.getData();
 
@@ -391,6 +394,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         
     // handler for when user clicks on an order item product link
     viewProductDetail: function (productId) {
+        
         return;
         // disabled this method and made and used link instead;
         // leaving this code temporarily in case I need to add some logic to inhibit the link

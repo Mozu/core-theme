@@ -7,6 +7,7 @@ Ext.define('Taco.view.order.Edit', {
     requires: [
    //     'Taco.core.ux.BaseGrid',
        'Taco.model.Order',
+        'Taco.model.OrderPayment',
         'Taco.view.order.Header',
         'Taco.view.order.subform.Detail',
         'Taco.view.order.subform.Payment'
