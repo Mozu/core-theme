@@ -44,7 +44,7 @@
  * @requires Taco.controller.Email
  * @requires Taco.controller.Orders
  * @requires Taco.controller.PhoneOrders
- * @requires Taco.controller.Shipping
+ 
  * @requires Taco.controller.Errors
  * The Taco namespace contains all extensions written for Taco (Mozu, if you're nasty.)
  */
@@ -122,7 +122,6 @@ Ext.application({
             'Email',
             'Orders',
             'PhoneOrders',
-            'Shipping',
             'Errors',
             'Roles',
             'ProductTypes',

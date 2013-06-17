@@ -69,8 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     dcUser.EmailAddress = invite.EmailAddress;
                     dcUser.LocaleCode = string.IsNullOrEmpty(dcUser.LocaleCode) ? "en-US" : dcUser.LocaleCode;
-
-                    var ticket = _invitationWebApiClient.CompleteInvitation(user.Invitation, dcUser).Result.ReadAsSync();
+                    var ticket = _invitationWebApiClient.With( x=> x.UserClaims = null ).CompleteInvitation(user.Invitation, dcUser).Result.ReadAsSync();
                     _authHelper.SetCurrentUser(ticket);
                 }
 

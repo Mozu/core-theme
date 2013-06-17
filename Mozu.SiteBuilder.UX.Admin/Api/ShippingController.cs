@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.Core;
+using Mozu.Core.Api.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 //using Mozu.ShippingAdmin.Contracts;
 using Mozu.ShippingAdmin.Contracts.Clients;
@@ -35,15 +36,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly ICarrierConfigurationWebApiClient _carrierConfigurationWebApiClient;
         private readonly IShippingSettingsWebApiClient _siteShippingSettingsClient;
+        private readonly ICarrierConfigurationGlobalWebApiClient _carrierConfigurationGlobalWebApiClient;
 
-        public ShippingController(ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, IShippingSettingsWebApiClient siteShippingSettingsClient, IApiContext apiCtx)
+        public ShippingController(ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, IShippingSettingsWebApiClient siteShippingSettingsClient, ICarrierConfigurationGlobalWebApiClient carrierConfigurationGlobalWebApiClient,   IApiContext apiCtx)
         {
             _carrierConfigurationWebApiClient = carrierConfigurationWebApiClient;
             _siteShippingSettingsClient = siteShippingSettingsClient;
-            
-            
-           
-           // _siteShippingSettingsClient.UpdateSiteShippingSettings(new SiteSettings.Shipping.Contracts.SiteShippingSettings())
+            _carrierConfigurationGlobalWebApiClient = carrierConfigurationGlobalWebApiClient;
+
+
+            // _siteShippingSettingsClient.UpdateSiteShippingSettings(new SiteSettings.Shipping.Contracts.SiteShippingSettings())
 
             Mozu.ShippingAdmin.Contracts.Clients.ICarrierConfigurationGlobalWebApiClient global;
             Mozu.ShippingAdmin.Contracts.Clients.ICarrierConfigurationWebApiClient  reg;
@@ -63,30 +65,74 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //}
 
 
-        [WebGet(UriTemplate = "globalSettings/list")]
-        public async Task<Response<SiteShippingSettings>> GetGlobalSettings()
+        [WebGet(UriTemplate = "Settings/read")]
+        public async Task<Response<SiteShippingSettings>> GetSettings()
         {
             var res = (await _siteShippingSettingsClient.GetSiteShippingSettings()).ReadAsSync();
+            var custSettings = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
             var settings = Mapper.Map<SiteShippingSettings>(res);
+            settings.CustomRate = Mapper.Map<CustomRate>(custSettings);
+            settings.CustomRate.IsEnabled = res.ActiveRateProviders.Any(x => x.Name == Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId);
+
+          
             return Single2<SiteShippingSettings>(settings );
         }
 
 
-        [WebGet(UriTemplate = "globalSettings/edit")]
-        public async Task<Response<SiteShippingSettings>> EditGlobalSettings(SiteShippingSettings settings )
+        [WebGet(UriTemplate = "Settings/edit")]
+        public async Task<Response<SiteShippingSettings>> EditSettings(SiteShippingSettings settings )
         {
             var dc = Mapper.Map<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(settings);
+            var custSettings = Mapper.Map<Mozu.ShippingAdmin.Contracts.CarrierConfiguration>(settings.CustomRate);
+            var customFeature = dc.ActiveRateProviders.FirstOrDefault(x => x.Name == Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId);
+            if (customFeature!= null )
+            {
+                if (!settings.CustomRate.IsEnabled.GetValueOrDefault( true ))
+                {
+                    dc.ActiveRateProviders.Remove(customFeature);
+                }
+            }
+            else
+            {
+                if (settings.CustomRate.IsEnabled.GetValueOrDefault(true))
+                {
+                    dc.ActiveRateProviders.Add(new Core.Api.Contracts.Feature() 
+                                                   {
+                                                       Name = Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId
+                                                   });
+                }
+            }
+
+
             var res = (await _siteShippingSettingsClient.UpdateSiteShippingSettings( dc)).ReadAsSync();
-            settings = Mapper.Map<SiteShippingSettings>(res);
-            return Single2<SiteShippingSettings>(settings);
+            if (settings.CustomRate.IsEnabled.GetValueOrDefault(true))
+            {
+                await _carrierConfigurationWebApiClient.UpdateConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId, custSettings);
+            }
+
+
+
+            return await GetSettings();
+            //return Single2<SiteShippingSettings>(settings);
+        }
+
+        [WebGet(UriTemplate = "carrierRates")]
+        public async Task<Response<List<KeyValuePair<string, string>>>> GetGlobalSettings(string id)
+        {
+            var res = (await _carrierConfigurationGlobalWebApiClient.GetServiceTypes(id, "en-US")).ReadAsSync();
+
+            var ret = res.Select(x => new KeyValuePair<string, string>(x.Code, x.Content.Name)).ToList();
+            return List2(ret);
+
         }
 
 
-        [WebGet(UriTemplate = "carrierSettings/list")]
+
+        [WebGet(UriTemplate = "carrierSettings/read")]
         public async Task<Response<List<CarrierConfiguration>>> GetCarrierSettings()
         {
             var res = (await _siteShippingSettingsClient.GetSiteShippingSettings()).ReadAsSync();
-            var settings = Mapper.Map<CarrierConfiguration>(res);
+            var settings = Mapper.Map<List<CarrierConfiguration>>(res);
             return List2<CarrierConfiguration>(settings);
         }
 

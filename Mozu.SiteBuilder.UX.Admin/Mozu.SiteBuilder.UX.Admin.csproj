@@ -627,6 +627,8 @@
     <Content Include="Scripts\app\model\CartItem.js" />
     <Content Include="Scripts\app\model\CmsDocumentDraft.js" />
     <Content Include="Scripts\app\model\Contact.js" />
+    <Content Include="Scripts\app\model\ShippingCarrierSetting.js" />
+    <Content Include="Scripts\app\model\CustomShippingRate.js" />
     <Content Include="Scripts\app\model\Facet.js" />
     <Content Include="Scripts\app\model\OrderCustomer.js" />
     <Content Include="Scripts\app\model\OrderItemDiscount.js" />
@@ -652,6 +654,7 @@
     <Content Include="Scripts\app\store\CartItems.js" />
     <Content Include="Scripts\app\store\CmsDocumentDrafts.js" />
     <Content Include="Scripts\app\shared\store\Files.js" />
+    <Content Include="Scripts\app\store\ShippingCarrierSettings.js" />
     <Content Include="Scripts\app\store\GeneralSettings.js" />
     <Content Include="Scripts\app\store\ItemFilters.js" />
     <Content Include="Scripts\app\store\LocalizedStrings.js" />
@@ -2612,9 +2615,7 @@
     <Content Include="Scripts\app\model\SelectedShippingMethod.js" />
     <Content Include="Scripts\app\model\ShippingClass.js" />
     <Content Include="Scripts\app\model\ShippingRate.js" />
-    <Content Include="Scripts\app\model\SiteShippingOriginAddress.js" />
     <Content Include="Scripts\app\model\SiteDirectoryNode.js" />
-    <Content Include="Scripts\app\model\SiteShippingRegion.js" />
     <Content Include="Scripts\app\model\SiteShippingSettings.js" />
     <Content Include="Scripts\app\model\StateComboBox.js" />
     <Content Include="Scripts\app\model\TargetedShippingMethod.js" />
@@ -2649,9 +2650,7 @@
     <Content Include="Scripts\app\store\InternationalShippingRates.js" />
     <Content Include="Scripts\app\store\ProductComboBox.js" />
     <Content Include="Scripts\app\store\SelectedShippingMethods.js" />
-    <Content Include="Scripts\app\store\ShippingClasses.js" />
     <Content Include="Scripts\app\store\SiteDirectoryNodes.js" />
-    <Content Include="Scripts\app\store\SiteShippingRegions.js" />
     <Content Include="Scripts\app\store\StateComboBox.js" />
     <Content Include="Scripts\app\store\TargetedShippingMethods.js" />
     <Content Include="Scripts\app\store\TaxRates.js" />

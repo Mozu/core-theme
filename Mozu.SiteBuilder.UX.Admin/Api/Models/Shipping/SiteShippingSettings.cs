@@ -8,7 +8,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
     [DataContract]
     public class SiteShippingSettings
     {
-        [DataMember(Name = "activeRateProvider")]
+        [DataMember(Name = "activeRateProviders")]
         public Feature ActiveRateProviders { get; set; }
 
         [DataMember(Name = "siteShippingOriginAddress")]
@@ -21,13 +21,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
 
 
 
-        [DataMember(EmitDefaultValue = false)]
-        public Decimal? Amount 
+        [DataMember(EmitDefaultValue = false, Name = "orderHandlingFee")]
+        public Decimal? OrderHandlingFee 
         {
             get;
             set;
         }
 
+
+        [DataMember(EmitDefaultValue = false, Name = "customRate")]
+        public CustomRate CustomRate
+        {
+            get;
+            set;
+        }
 
     }
 
@@ -50,11 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
     [DataContract]
     public class CustomRate
     {
-        [DataMember(Name = "id")]
-        public string Id
-        {
-            get { return Name + "_" + RateType + "_" + Amount; }
-        }
+      
 
         [DataMember(Name = "name")]
         public string Name { get; set; }
@@ -63,8 +66,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
         public string Amount { get; set; }
         [DataMember(Name = "type")]
         public string RateType { get; set; }
-        [DataMember(Name = "isInternational")]
-        public bool? IsInternational { get; set; }
+
+        [DataMember(Name = "isEnabled")]
+        public bool? IsEnabled { get; set; }
+
+
     }
 
 
