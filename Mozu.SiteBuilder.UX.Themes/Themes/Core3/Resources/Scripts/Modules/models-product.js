@@ -19,8 +19,12 @@
         beginLiveUpdate: function () {
             var me = this, parent = this.getParentModel();
             me.Value.subscribe(throttle(function (newVal) {
+                var newValObj;
                 newVal = $.trim(newVal);
-                if (!me.IsEnabled) parent.configuredOptions = {};
+                if (newVal) newValObj = ko.utils.arrayFirst(me.Values(), function (v) {
+                    return v.Value === newVal;
+                });
+                if (newValObj && !newValObj.IsEnabled) parent.configuredOptions = {};
                 parent.configuredOptions[me.id] = !!(newVal || newVal === 0);
                 parent.updateConfiguration();
             }, 300, false));
