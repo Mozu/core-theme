@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-06-14
+ * Mozu JavaScript SDK - v0.1.0 - 2013-06-17
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1805,8 +1805,13 @@ var ApiReference = (function () {
                 utils.extend(tptData, conf);
             }
 
-
+            // default params added to template, but overridden by existing tpt data
             if (oType.defaultParams) tptData = utils.extend({}, oType.defaultParams, tptData);
+
+            // remove stuff that the UriTemplate parser can't parse
+            for (var tvar in tptData) {
+                if (utils.getType(tptData[tvar]) == "Array") tptData[tvar] = JSON.stringify(tptData[tvar]);
+            }
             returnObj.url = oType.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData, ApiReference.urls));
             if (oType.verb) returnObj.verbOverride = oType.verb;
             if (oType.returnType) returnObj.returnType = oType.returnType;
@@ -1871,7 +1876,7 @@ var ApiReference = (function () {
         },
 
         'category': {
-            template: '{+CategoryService}{Id}?{&allowInactive*}',
+            template: '{+CategoryService}{Id}(?allowInactive}',
             shortcutParam: 'Id',
             defaultParams: {
                 allowInactive: false
@@ -1879,7 +1884,7 @@ var ApiReference = (function () {
         },
 
         'search': {
-            template: '{+SearchService}searchz' + genericQueryTpt,
+            template: '{+SearchService}searchz{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,startIndex}',
             shortcutParam: 'query',
             defaultParams: {
                 startIndex: 0,

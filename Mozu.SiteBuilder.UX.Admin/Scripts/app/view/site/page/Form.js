@@ -242,6 +242,8 @@ Ext.define('Taco.view.site.page.Form', {
             this.toolBar.populate(this.adapter);
 
             this.toolBox.populate(this.adapter);
+
+            this.toolBox.enableTabs();
         }, this);
 
         this.adapter.load();
@@ -579,6 +581,8 @@ Ext.define('Taco.view.site.page.Form', {
             return false;
 
         }
+
+        this.toolBox.disableTabs();
         
     },
     viewPage: function (e) {

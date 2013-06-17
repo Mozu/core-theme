@@ -11,6 +11,14 @@ Ext.define('Taco.view.site.Toolbox', {
     shadow: false,
     layout: { type: 'fit' },
     
+    disableTabs: function() {
+        this.tabPanel.tabBar.disable();
+    },
+
+    enableTabs: function() {
+        this.tabPanel.tabBar.enable();
+    },
+
     initComponent: function () {
         var me = this;
         
@@ -22,6 +30,7 @@ Ext.define('Taco.view.site.Toolbox', {
             manageHeight: false,
             cls: Taco.baseCSSPrefix + 'toolbox-tabpanel',
             tabBar: {
+                disabled: true,
                 plain: true
             }
         });
