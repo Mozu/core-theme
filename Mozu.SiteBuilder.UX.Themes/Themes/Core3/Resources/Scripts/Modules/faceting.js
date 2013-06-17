@@ -3,19 +3,25 @@ define(['modules/jquery-plus', 'knockout', 'shim!vendor/jquery.history[jquery=jQ
     $(document).ready(function () {
         
         var $facetingForm = $('[data-mz-role=faceting]'),
-            facetingVM = window.facetingVM = new FacetingModels.FacetedProductCollection($facetingForm.mozuData('products'));
+            productListData = $facetingForm.mozuData('products'),
+            facetingVM;
+
+        productListData.categoryId = $.getMozuData('category');
+
+        facetingVM = window.facetingVM = new FacetingModels.FacetedProductCollection(productListData);
 
         ko.applyBindings(facetingVM, $facetingForm[0]);
 
         $('#mz-category-loading').remove();
         $facetingForm.noFlickerFadeIn();
 
-        facetingVM.categoryId = $.getMozuData('category');
 
         facetingVM.on('update', function () {
-            var fVF = facetingVM.getFacetValueFilter(),
-                fVFullParam = fVF ? '?facetValueFilter=' + encodeURIComponent(fVF) : window.location.href.replace(window.location.search,'');
-            History.replaceState(null, null, fVFullParam);
+            var newURL, lrClone = JSON.parse(JSON.stringify(facetingVM.lastRequest));
+            delete lrClone.filter;
+            delete lrClone.facetTemplate;
+            newURL = $.isEmptyObject(lrClone) ? window.location.href.replace(window.location.search, '') : "?" + $.param(lrClone);
+            History.replaceState(null, null, newURL);
         });
 
     });
