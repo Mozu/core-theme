@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PaymentStatus, op => op.MapFrom(dc => dc.PaymentStatus))
                 .ForMember(x => x.Payments, op => op.MapFrom(dc => dc.Payments))
                 // .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.ShippingInfo.
-                // .ForMember(x => x.AvailableOrderActions, op => op.MapFrom(dc => dc.))
+                .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
                 .AfterMap((dc, order) => {
                     // add orderId to packages
                     order.Packages.Each(p => p.OrderId = order.Id);
@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
                 //TODO:find out where the metadata for discount went
                 .ForMember(x => x.Discount, op => op.MapFrom(dc => dc.ProductDiscount ))
-                .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options != null ? dc.Product.Options.Select(o => o.OptionValue) : null))
+                .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options != null ? dc.Product.Options.Select(o => o.Value) : null))
                 // TODO: shopper entered value
                 ;
 
