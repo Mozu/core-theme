@@ -195,15 +195,7 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         },
         {
-            "name": "availableOrderActions",
-            "type": "auto"
-        },
-        {
-            "name": "availablePaymentActions",
-            "type": "auto"
-        }, 
-        {
-            "name": "availableShipmentActions",
+            "name": "availableActions",
             "type": "auto"
         },
         // payment shit, incomplete

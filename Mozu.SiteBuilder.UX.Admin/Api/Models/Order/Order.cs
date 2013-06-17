@@ -104,7 +104,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name="unpackedItems")]
         public List<OrderPackageItem> UnpackedItems { get; set; }
 
-        [Obsolete]
         [DataMember(Name = "availableOrderActions")]
         public List<string> AvailableOrderActions { get; set; }
         #endregion

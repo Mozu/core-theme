@@ -47,5 +47,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name="items")]
         public List<OrderPackageItem> Items { get; set; }
+
+        #region workflow
+        [DataMember(Name="availableActions")]
+        public object AvailableActions { get; set; }
+        #endregion
     }
 }
