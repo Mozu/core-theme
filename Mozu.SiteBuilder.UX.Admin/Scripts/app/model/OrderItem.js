@@ -23,7 +23,10 @@
 
 Ext.define('Taco.model.OrderItem', {
     extend: 'Taco.core.data.Model',
-    requires: ['Ext.data.association.HasOne'],
+    requires: [
+        'Ext.data.association.HasOne',
+        'Ext.data.association.BelongsTo'
+    ],
     fields: [
         {
             "name": "id",

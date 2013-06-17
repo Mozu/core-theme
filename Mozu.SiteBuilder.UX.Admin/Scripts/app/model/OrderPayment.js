@@ -3,7 +3,10 @@
  */
 Ext.define('Taco.model.OrderPayment', {
     extend: 'Taco.core.data.Model',
-
+    requires: [
+        'Ext.data.association.HasMany',
+        'Ext.data.association.BelongsTo'
+    ],
     fields: [
     {
         'name': 'id',
@@ -27,11 +30,6 @@ Ext.define('Taco.model.OrderPayment', {
     },
     {
         'name': 'amountCollected',
-        'type': 'float',
-        'useNull': false
-    },
-    {
-        'name': 'amountCredited',
         'type': 'float',
         'useNull': false
     },
@@ -67,10 +65,52 @@ Ext.define('Taco.model.OrderPayment', {
     }],
 
     associations: [
-    {
-        type: 'hasMany',
-        model: 'Taco.model.OrderPaymentInteraction',
-        name: "interactions"
-    }]
+        {
+            type: 'hasMany',
+            model: 'Taco.model.OrderPaymentInteraction',
+            name: "interactions"
+        },{
+            type: 'belongsTo',
+            model: 'Taco.model.Order'
+        }
+    ],
+    
+
+
+    /**
+     * service call to add a credit on the order     
+     * @param {Object} config  A configuration object     
+     * config object:
+        {
+            jsonData: {
+                orderId: "987654321",
+                amount:  "100.65",
+                payment:  {
+                    ...payment entity members...
+                }
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     */
+    issueCredit: function (config) {
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/credit',
+            method: "POST",
+        });
+        Ext.Ajax.request(config);
+    }
+
 
 });
