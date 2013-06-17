@@ -85,24 +85,33 @@
                     })
                 }).join(',');
             },
-            updateFacets: function () {
+            buildFacetRequest: function() {
                 var me = this;
-                this.submitting(true);
                 var conf = {
                     filter: 'categoryId req ' + this.categoryId,
                     facetTemplate: 'category:' + this.categoryId
                 },
                 filterValue = this.getFacetValueFilter();
                 if (filterValue) conf.facetValueFilter = filterValue;
-                this.get(conf).then(function () {
-                    me.submitting(false);
-                });
+                return conf;
+            },
+            updateFacets: function () {
+                var me = this;
+                var conf = this.buildFacetRequest();
+                if (JSON.stringify(conf) !== JSON.stringify(this.lastRequest)) {
+                    this.lastRequest = conf;
+                    this.submitting(true);
+                    this.get(conf).then(function () {
+                        me.submitting(false);
+                    });
+                }
             }
         }, function () {
             var me = this;
             this.on('facetchange', function () {
                 me.updateFacets();
             });
+            this.lastRequest = this.buildFacetRequest();
         });
 
     return {
