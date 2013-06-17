@@ -163,6 +163,18 @@ Ext.define('Taco.view.order.subform.Payment', {
         var me = this,
             data = this.record.getData();
 
+        /*
+        address1: "1135 Barton Hills Dr"
+address2: "#113"
+cityOrTown: "Austin"
+countryCode: "US"
+email: "askljdh@lkhjasd.com"
+firstName: "James"
+id: -1
+lastName: "Zetlen"
+state: "TX"
+zipCode: "78704"
+        */
         
         me.paymentDetails = Ext.create('Ext.Component', {
             cls: "orderform-payment-paymentDetails",
@@ -187,9 +199,9 @@ Ext.define('Taco.view.order.subform.Payment', {
                     '<span class="balance">Balance: {authorizationInfo.captureAmount:usMoney}</span>',
                 '</div>',
                 '<div class="billingInformation">',
-                    '<span class="fullName">Bill to: {customer.firstName} {customer.lastName}</span>',
+                    '<span class="fullName">Bill to: {billingContact.firstName} {billingContact.lastName}</span>',
                     '<span class="seperator">|</span>',
-                    '<span class="address">{customer.address}</span>',
+                    '<span class="address">{billingContact.address1} {billingContact.address2} {billingContact.cityOrTown} {billingContact.state}  {billingContact.zipCode} {billingContact.countryCode}  </span>',
                     '<span class="seperator">|</span>',
                     '<span class="phoneNumber">?512.666.6666?</span>',
                 '</div>'
@@ -203,7 +215,10 @@ Ext.define('Taco.view.order.subform.Payment', {
     initStatusRow: function () {
         var me = this,
             data = this.record.get("authorizationInfo");
+
+        console.log(data);
         
+
         me.statusRow = Ext.create('Ext.container.Container', {
             cls: "orderform-payment-statusRow",
             layout: {
@@ -244,7 +259,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                 }, {
                     xtype: "taco.button",
                     text: "Payment Recieved",
-                    hidden: !(data.paymentType=="Check"),
+                    hidden: (!(data.paymentType == "Check") || this.record.get("paymentStatus")=="Paid"),
                     itemId: "paymentReceivedButton",
                     handler: me.paymentRecieved,
                     scope: me

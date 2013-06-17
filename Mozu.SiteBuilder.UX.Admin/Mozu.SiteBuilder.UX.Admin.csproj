@@ -688,9 +688,11 @@
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\order\Header.js" />
     <Content Include="Scripts\app\view\order\modal\IssueCredit.js" />
+    <Content Include="Scripts\app\view\order\subform\Shipping.js" />
     <Content Include="Scripts\app\view\order\subform\Subform.js" />
     <Content Include="Scripts\app\view\order\subform\Payment.js" />
     <Content Include="Scripts\app\view\order\subform\Detail.js" />
+    <Content Include="Scripts\app\view\order\widget\OrderItemGrid.js" />
     <Content Include="Scripts\app\view\pageTemplate\Edit.js" />
     <Content Include="Scripts\app\view\pageTemplate\Index.js" />
     <Content Include="Scripts\app\view\pendingchange\Cms.js" />

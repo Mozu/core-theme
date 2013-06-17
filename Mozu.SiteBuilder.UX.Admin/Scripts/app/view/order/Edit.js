@@ -10,7 +10,8 @@ Ext.define('Taco.view.order.Edit', {
         'Taco.model.OrderPayment',
         'Taco.view.order.Header',
         'Taco.view.order.subform.Detail',
-        'Taco.view.order.subform.Payment'
+        'Taco.view.order.subform.Payment',
+        'Taco.view.order.subform.Shipping'
    //     'Taco.model.OrderNote',
    //     'Taco.store.OrderNotes',
    //     'Taco.view.order.modal.Address', 'Taco.view.order.modal.PaymentAction', 'Taco.view.order.modal.ShipmentAction', 'Taco.model.PaymentAndCheckout', 'Ext.grid.feature.Grouping'
@@ -22,6 +23,11 @@ Ext.define('Taco.view.order.Edit', {
         var me = this,
             dataTpl, dataCmp, internalNotes;
 
+        
+        if (!this.record) {
+            throw ("Taco.view.order.Edit:  A record is required");
+            return;
+        }
 
         // todos move taco-orders-header-status to the scss file
         // may need to convert orderStatus to readible text if it camelcase
@@ -109,6 +115,12 @@ Ext.define('Taco.view.order.Edit', {
         });
 
         
+        this.orderShipping= Ext.create('Taco.view.order.subform.Shipping', {
+            itemId: "orderShipping",
+            record: this.record
+        });
+
+        
         //show the cardNav after the container is rendered
         this.on('afterrender', function () {
             this.cardNav.show();
@@ -121,9 +133,8 @@ Ext.define('Taco.view.order.Edit', {
                 items: [
                     this.orderHeader,
                     this.orderDetail,
-                    this.orderPayment
-                    
-                    
+                    this.orderPayment,
+                    this.orderShipping
                 ],
                 dockedItems: [{
                     xtype: 'container',
