@@ -627,6 +627,7 @@
     <Content Include="Scripts\app\model\CartItem.js" />
     <Content Include="Scripts\app\model\CmsDocumentDraft.js" />
     <Content Include="Scripts\app\model\Contact.js" />
+    <Content Include="Scripts\app\model\KeyValuePair.js" />
     <Content Include="Scripts\app\model\ShippingCarrierSetting.js" />
     <Content Include="Scripts\app\model\CustomShippingRate.js" />
     <Content Include="Scripts\app\model\Facet.js" />
@@ -654,6 +655,7 @@
     <Content Include="Scripts\app\store\CartItems.js" />
     <Content Include="Scripts\app\store\CmsDocumentDrafts.js" />
     <Content Include="Scripts\app\shared\store\Files.js" />
+    <Content Include="Scripts\app\store\ConfiguredShippingRates.js" />
     <Content Include="Scripts\app\store\ShippingCarrierSettings.js" />
     <Content Include="Scripts\app\store\GeneralSettings.js" />
     <Content Include="Scripts\app\store\ItemFilters.js" />

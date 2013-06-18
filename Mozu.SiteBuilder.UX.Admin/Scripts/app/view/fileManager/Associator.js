@@ -19,10 +19,10 @@ Ext.define('Taco.view.fileManager.Associator', {
         savable: 'Taco.shared.util.Uploadable'
     },
 
-    typeName: 'File',
-    modelName: 'Taco.shared.model.File',
+    typeName: 'FileManagementFile',
+    modelName: 'Taco.shared.model.FileManagementFile',
     store: {
-        type: 'Taco.shared.store.Files',
+        type: 'Taco.shared.store.FileManagementFiles',
         autoSync: true
     },
     useTilePanel: true,
