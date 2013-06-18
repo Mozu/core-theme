@@ -254,6 +254,10 @@
         },
         getParentModel: function () {
             return this.__parentVM;
+        },
+        isItemModulus: function (itemIndex, modulus) {
+            itemIndex = ko.utils.unwrapObservable(itemIndex) + 1;
+            return itemIndex !== 1 && itemIndex % modulus === 0;
         }
     };
 

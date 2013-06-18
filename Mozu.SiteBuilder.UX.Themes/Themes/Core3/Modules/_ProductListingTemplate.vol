@@ -19,11 +19,11 @@
 								<div class="mz-price-sub-wrap" data-bind="with: Price">
 									<!-- ko if: SalePrice() && (Price() !== SalePrice()) -->
 									<div class="mz-price-amt mz-strikethrough" data-bind="currencyText: Price"></div>
-									<div class="mz-price-saleprice mz-price-amt">
-										<!-- ko if: $data.Discount -->
-										<span class="mz-price-discount-name" data-bind="text: Discount.Name + ' &ndash;'"></span>
+									<div class="mz-price-saleprice">
+										<!-- ko if: $data.Discount && $data.Discount.Discount -->
+										<span class="mz-price-discount-name" data-bind="text: Discount.Discount.Name + ' &ndash;'"></span>
 										<!-- /ko -->
-										<span data-bind="currencyText: SalePrice"></span>
+										<span class="mz-price-amt" data-bind="currencyText: SalePrice"></span>
 									</div>
 									<!-- /ko -->
 									<!-- ko if: !SalePrice() || Price() === SalePrice() -->
@@ -36,6 +36,9 @@
 					</div> <!-- .mz-product-item-wrap -->
 
 				</li> <!-- .mz-list-item -->
+                <!-- ko if: $root.isItemModulus($index, 3) -->
+                  <li class="mz-list-spacer"></li>
+                <!-- /ko -->
 			<!-- /ko -->
 		</ul>
 	<!-- /ko -->
