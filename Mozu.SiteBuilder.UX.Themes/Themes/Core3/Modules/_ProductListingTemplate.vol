@@ -18,7 +18,7 @@
 								<div class="mz-price-label" data-bind="text: ProductCode"></div>
 								<div class="mz-price-sub-wrap" data-bind="with: Price">
 									<!-- ko if: SalePrice() && (Price() !== SalePrice()) -->
-									<div class="mz-price-amt mz-strikethrough" data-bind="currencyText: Price.Price"></div>
+									<div class="mz-price-amt mz-strikethrough" data-bind="currencyText: Price"></div>
 									<div class="mz-price-saleprice mz-price-amt">
 										<!-- ko if: $data.Discount -->
 										<span class="mz-price-discount-name" data-bind="text: Discount.Name + ' &ndash;'"></span>
@@ -36,9 +36,6 @@
 					</div> <!-- .mz-product-item-wrap -->
 
 				</li> <!-- .mz-list-item -->
-				<!-- ko if: $index() > 0 && ($index() + 1) % 4 === 0 -->
-					<li class="mz-list-spacer"></li>
-				<!-- /ko -->
 			<!-- /ko -->
 		</ul>
 	<!-- /ko -->

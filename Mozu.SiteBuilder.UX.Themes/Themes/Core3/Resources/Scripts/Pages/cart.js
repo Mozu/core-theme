@@ -10,6 +10,8 @@
             ko.applyBindings(cart, $cartForm[0]);
             //display view
             $cartForm.noFlickerFadeIn();
+        }).otherwise(function (e) {
+            console.error(e);
         });
 
         cart.on('ordercreated', function (e, order) {
