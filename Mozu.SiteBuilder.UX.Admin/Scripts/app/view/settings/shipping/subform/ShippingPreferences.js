@@ -10,13 +10,25 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingPreferences', {
     initComponent: function () {
         var me = this;
 
-        this.dummyContent = Ext.create('Ext.panel.Panel', {
-            items: [
-               { html: '<h2>Not yet implemented</h2>' }
-            ]
+        //this.dummyContent = Ext.create('Ext.panel.Panel', {
+        //    items: [
+        //       { html: '<h2>Not yet implemented</h2>' }
+        //    ]
+        //});
+        me.additinalHandling = Ext.create('Taco.core.ux.form.UnitField' /*'Taco.core.ux.form.CurrencyField'*/, {
+            name: 'orderHandlingFee',
+            fieldLabel: "Additional Handling Fee",
+            labelAlign: 'top',
+            width: 600,
+            unitString: '$',
+            emptyText: '0',
+            value:this.record.get('orderHandlingFee'),
+            unitAtEnd: false
         });
-
-        this.items = [this.dummyContent];
+        this.items = [
+            me.additinalHandling
+        ];
+        
 
         this.callParent(arguments);
     }

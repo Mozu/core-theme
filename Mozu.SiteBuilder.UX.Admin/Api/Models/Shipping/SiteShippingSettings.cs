@@ -9,7 +9,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
     public class SiteShippingSettings
     {
         [DataMember(Name = "activeRateProviders")]
-        public Feature ActiveRateProviders { get; set; }
+        public List<Feature> ActiveRateProviders { get; set; }
 
         [DataMember(Name = "siteShippingOriginAddress")]
         public Contact SiteShippingOriginAddress { get; set; }

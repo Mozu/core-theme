@@ -9,9 +9,15 @@ Ext.define('Taco.view.settings.shipping.Form', {
     initComponent: function () {
         var me = this;
 
-        me.shippingFrom = Ext.create('Taco.view.settings.shipping.subform.ShippingFrom', me);
-        me.methodsAndRates = Ext.create('Taco.view.settings.shipping.subform.MethodsAndRates', me);
-        me.shippingPreferences = Ext.create('Taco.view.settings.shipping.subform.ShippingPreferences', me);
+        me.shippingFrom = Ext.create('Taco.view.settings.shipping.subform.ShippingFrom', {
+            record: me.record
+        });
+        me.methodsAndRates = Ext.create('Taco.view.settings.shipping.subform.MethodsAndRates', {
+            record: me.record
+        });
+        me.shippingPreferences = Ext.create('Taco.view.settings.shipping.subform.ShippingPreferences', {
+            record: me.record
+        });
 
         me.navStore = Ext.create('Ext.data.Store', {
             fields: ['title'],
