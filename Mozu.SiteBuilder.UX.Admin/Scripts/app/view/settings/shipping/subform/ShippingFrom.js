@@ -9,10 +9,10 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
     title: 'Shipping From',
     initComponent: function () {
         var me = this;
-
+        
         this.dummyContent = Ext.create('Ext.panel.Panel', {
             items: [
-               { html: '<h2>Not yet implemented</h2>' }
+               { html: '<h2>Not yet implemented</h2>' + Ext.JSON.encode(this.record.get('siteShippingOriginAddress')) }
             ]
         });
 

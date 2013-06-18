@@ -194,7 +194,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.SiteShippingOriginAddress, opt => opt.MapFrom(x => x.SiteShippingOriginAddress));
 
 
-            
+            Mapper.CreateMap<Mozu.Core.Api.Contracts.Feature, Mozu.SiteBuilder.UX.Admin.Api.Models.Feature>();
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.Feature,Mozu.Core.Api.Contracts.Feature>();
            
 
 
