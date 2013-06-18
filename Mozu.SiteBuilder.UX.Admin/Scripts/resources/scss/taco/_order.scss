@@ -1,5 +1,10 @@
 @mixin taco-order {
 
+
+  .#{$vprefix}address-editor-fields {
+    @include flexbox($wrap: wrap, $justify: space-between);
+  }
+
   .#{$vprefix}catalog {
     .#{$vprefix}editcontainer {
       background-color: $color-neutral-white;
