@@ -137,9 +137,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(newPackages);
         }
 
-        public Task<Response<List<Order>>> EditPackage(OrderPackage package)
+        public class MarkPackagesShippedArgs { 
+            public string OrderId { get; set; }
+            public List<string> PackageIds { get; set; }
+        }
+        [WebInvoke(Method = "POST", UriTemplate = "shipping/package/markshipped")]
+        public async Task<Response<List<Order>>> MarkPackagesShipped(MarkPackagesShippedArgs args)
         {
-            throw new NotImplementedException();
+            var dcOrder = (await _orderWebApiClient.PerformShipmentAction(args.OrderId, new DCs.ShipmentAction { ActionName = "Ship", PackageIds = args.PackageIds })).ReadAsSync();
+
+            return List2(Mapper.Map<Order>(dcOrder));
+        }
+
+        [WebInvoke(Method = "POST", UriTemplate = "shipping/package/edit")]
+        public async Task<Response<List<OrderPackage>>> EditPackages(List<OrderPackage> packages)
+        {
+            var tasks = packages.Select(p => _orderWebApiClient.UpdatePackage(p.OrderId, p.Id, Mapper.Map<DCs.Package>(p)));
+
+            await Task.WhenAll(tasks);
+
+            var ret = tasks.Select(t => t.Result.ReadAsSync());
+
+            return List2( Mapper.Map<List<OrderPackage>>( ret ));
         }
     }
 }
