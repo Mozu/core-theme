@@ -100,7 +100,7 @@ Ext.define('Taco.core.ux.modal.ContentWithActions', {
             text: this.primaryText,
             listeners: {
                 click: function() {
-                    if (!this.fireEvent('beforesave')) {
+                    if (this.fireEvent('beforesave') === false) {
                         return;
                     }
 

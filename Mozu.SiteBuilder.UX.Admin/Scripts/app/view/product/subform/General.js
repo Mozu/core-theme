@@ -139,7 +139,7 @@ Ext.define('Taco.view.product.subform.General', {
 
     onProductTypeChange: function (selectField, value) {
         var parentForm;
-
+        
         parentForm = this.up('productsiteform, productglobalform');
 
         if (!parentForm) {
@@ -160,6 +160,14 @@ Ext.define('Taco.view.product.subform.General', {
 
         if (this.extrasForm) {
             this.extrasForm.loadByProductTypeId(value);
+        }
+
+        if (!this.optionsForm) {
+            this.optionsForm = parentForm.down('optionproductform');
+        }
+
+        if (this.optionsForm) {
+            this.optionsForm.loadByProductTypeId(value);
         }
 
     }
