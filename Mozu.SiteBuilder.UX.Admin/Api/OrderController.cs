@@ -13,6 +13,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
+using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -20,7 +21,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public partial class OrderController : BaseController
     {
         private IOrderWebApiClient _orderWebApiClient;
-        private ICustomerAccountWebApiClient _customerWebApiClient;
 
         /// <summary>
         /// Public constructor.
