@@ -34,6 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember( x=> x.Content , opt=> opt.MapFrom( x=> new DC.DiscountLocalizedContent(){Name = x.Name  }))
                 .ForMember( x=> x.Target , opt=> opt.MapFrom( x=> new DC.DiscountTarget()
                                                                       {
+                                                                          Type = x.TargetType ,
                                                                           Categories = (x.Categories ?? Enumerable.Empty<int>()).Select( _ => new DC.TargetedCategory() { Id=_}).ToList() ,
                                                                           Products  = (x.Products   ?? Enumerable.Empty<string>()).Select( _ => new DC.TargetedProduct()  { Code =_}).ToList() ,
                                                                           ShippingMethods   = (x.ShippingMethods    ?? Enumerable.Empty<string>()).Select( _ => new DC.TargetedShippingMethod()   { Code =_}).ToList() ,

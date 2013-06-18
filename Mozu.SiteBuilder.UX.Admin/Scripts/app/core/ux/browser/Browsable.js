@@ -56,7 +56,8 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                 itemId: 'newbutton',
                 listeners: {
                     click: function () {
-                        this.launchEditor(Ext.create(this.modelName));
+                        Taco.app.StateManager.attemptNavigate(this.token+ '/create');
+                        //this.launchEditor(Ext.create(this.modelName));
                     },
                     scope: this
                 }

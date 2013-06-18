@@ -134,10 +134,9 @@ Ext.define('Taco.view.discount.Index', {
             title: 'Discounts',
             actions: [{
                 xtype: 'primarybutton',
-                text: 'Create Discount',
+                text: 'Create Discount steve',
                 onClick: function () {
-                    me.launchEditor(Ext.create("Taco.model.Discount"));
-                    Taco.app.StateManager.addState('discounts/create');
+                    Taco.app.StateManager.attemptNavigate('discounts/create');
                 }
             }]
         };
