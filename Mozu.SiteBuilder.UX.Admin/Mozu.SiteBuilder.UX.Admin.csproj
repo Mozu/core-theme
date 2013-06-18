@@ -750,6 +750,7 @@
     <Content Include="Scripts\app\view\settings\shipping\Edit.js" />
     <Content Include="Scripts\app\view\settings\shipping\Form.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\Custom.js" />
+    <Content Include="Scripts\app\view\settings\shipping\subform\FedEx.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\MethodsAndRates.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\ShippingPreferences.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\ShippingFrom.js" />

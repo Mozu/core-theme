@@ -10,38 +10,38 @@ namespace Mozu.SiteBuilder.Mvc.Orders
         private readonly ISpecification<ShippingMethodInformation> _shippingMethodSpecification = new HasValidShippingMethodSpecification();
         private readonly ISpecification<PaymentInformation> _paymentMethodSpecification = new HasValidPaymentSpecification();
 
-        public void SetStatus(CheckoutPage page)
-        {
-            if (page == null || page.Order == null || page.Model == null)
-                return;
+        //public void SetStatus(CheckoutPage page)
+        //{
+        //    if (page == null || page.Order == null || page.Model == null)
+        //        return;
 
-            CheckShipmentSpecifications(page.Order.Shipment, _orderSpecification);
-            StepForward(page);
-            CheckShippingMethodSpecifications(page.Model.ShippingMethod, _shippingMethodSpecification);
-            StepForward(page);
-            CheckPaymentMethodSpecifications(page.Model.PaymentSection, _paymentMethodSpecification);
-            StepForward(page);
-            CheckOrderSpecifications(page.Order);
-            StepForward(page);
-        }
+        //    CheckShipmentSpecifications(page.Order.Shipment, _orderSpecification);
+        //    StepForward(page);
+        //    CheckShippingMethodSpecifications(page.Model.ShippingMethod, _shippingMethodSpecification);
+        //    StepForward(page);
+        //    CheckPaymentMethodSpecifications(page.Model.PaymentSection, _paymentMethodSpecification);
+        //    StepForward(page);
+        //    CheckOrderSpecifications(page.Order);
+        //    StepForward(page);
+        //}
 
-        private static void StepForward(CheckoutPage page)
-        {
-            var model = page.Model;
+        //private static void StepForward(CheckoutPage page)
+        //{
+        //    var model = page.Model;
 
-            var shippingAddress = model.ShippingAddress;
-            var shippingMethod = model.ShippingMethod;
-            var paymentSection = model.PaymentSection;
+        //    var shippingAddress = model.ShippingAddress;
+        //    var shippingMethod = model.ShippingMethod;
+        //    var paymentSection = model.PaymentSection;
 
-            if (shippingAddress.StepStatus != StepStatus.Complete)
-                return;
+        //    if (shippingAddress.StepStatus != StepStatus.Complete)
+        //        return;
 
-            if (shippingMethod.StepStatus == StepStatus.New)
-                shippingMethod.SetStepStatus(StepStatus.Incomplete);
+        //    if (shippingMethod.StepStatus == StepStatus.New)
+        //        shippingMethod.SetStepStatus(StepStatus.Incomplete);
 
-            if (shippingMethod.StepStatus == StepStatus.Complete && paymentSection.StepStatus == StepStatus.New)
-                paymentSection.SetStepStatus(StepStatus.Incomplete);
-        }
+        //    if (shippingMethod.StepStatus == StepStatus.Complete && paymentSection.StepStatus == StepStatus.New)
+        //        paymentSection.SetStepStatus(StepStatus.Incomplete);
+        //}
 
         private static void CheckPaymentMethodSpecifications(PaymentInformation paymentInformation, ISpecification<PaymentInformation> specification)
         {
@@ -91,19 +91,19 @@ namespace Mozu.SiteBuilder.Mvc.Orders
             shipmentInformation.SetStepStatus(checkoutStep);
         }
 
-        private static void CheckOrderSpecifications(OrderInformation orderInformation)
-        {
-            if (orderInformation.StepStatus != StepStatus.New)
-                return;
+        //private static void CheckOrderSpecifications(OrderInformation orderInformation)
+        //{
+        //    if (orderInformation.StepStatus != StepStatus.New)
+        //        return;
 
-            // Todo: there isn't a good story yet behind discounts and coupons. For now, this
-            //       logic should work to tell the UI that we have received something.
+        //    // Todo: there isn't a good story yet behind discounts and coupons. For now, this
+        //    //       logic should work to tell the UI that we have received something.
 
-            if (!string.IsNullOrWhiteSpace(orderInformation.CouponCode))
-                orderInformation.SetStepStatus(StepStatus.Complete);
+        //    if (!string.IsNullOrWhiteSpace(orderInformation.CouponCode))
+        //        orderInformation.SetStepStatus(StepStatus.Complete);
 
-            if (orderInformation.DiscountTotal > 0m)
-                orderInformation.SetStepStatus(StepStatus.Complete);
-        }
+        //    if (orderInformation.DiscountTotal > 0m)
+        //        orderInformation.SetStepStatus(StepStatus.Complete);
+        //}
     }
 }

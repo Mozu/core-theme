@@ -9,16 +9,14 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
     title: 'Shipping From',
     initComponent: function () {
         var me = this;
-        
-        this.addressRecord  = Ext.create('Taco.model.Contact', this.record.get('siteShippingOriginAddress') || {});
 
-      
+        this.addressRecord = Ext.create('Taco.model.Contact', this.record.get('siteShippingOriginAddress') || {});      
 
 
-        this.addressView =  Ext.widget({
+        this.addressView = Ext.widget({
             xtype: 'component',
             cls: 'address',
-            data : this.addressRecord.data,
+            data: this.addressRecord.data,
             tpl: [
                 '<div class="name">{companyName}</div>',
                 '<div class="address-line-1">{address1}</div>',
@@ -28,23 +26,23 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
                 '<div class="country">{countryCode}</div>'
             ]
         });
-        
+
         this.editButton = {
             xtype: 'secondarybutton',
-            text:'Edit',
-            click: function() {
+            text: 'Edit',
+            click: function () {
                 var modal = Ext.create('Taco.view.customers.AddressModal', {
                     record: me.addressRecord,
-                    listeners:{
-                        save:function() {
+                    addressHasNames: false,
+                    listeners: {
+                        save: function () {
                             me.record.set('siteShippingOriginAddress', Ext.apply({}, me.addressRecord.data));
                             me.addressView.update(me.addressRecord.data);
                         }
                     }
                 });
             }
-        };
-        
+        };        
 
 
         this.items = [this.addressView, this.editButton];

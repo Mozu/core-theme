@@ -3,16 +3,55 @@
  *
  */
 
-Ext.define('Taco.view.settings.shipping.subform.Custom', {
+Ext.define('Taco.view.settings.shipping.subform.FedEx', {
     extend: 'Taco.core.ux.form.Form',
     requires: [],
-    title: 'Custom Rate',
-    layout: 'hbox',
-    initComponent: function() {
+    title: 'FedEx',
+    layout: 'card',
+    initComponent: function () {
         var me = this;
-        var customRate = this.record.get('customRate') || {};
+        //p.getLayout().setActiveItem(1);
+        this.customRate = this.record.get('customRate') || {};
+        
+        this.configContainer = Ext.widget({
+            xtype: 'container',
+            layout:'vbox',
+            items: [
+                 {
+                     xtype: 'textfield',
+                     name: 'apiusername',
+                     fieldLable: 'API use rname'
+                 },
+                 {
+                     xtype: 'textfield',
+                     name: 'apipassword',
+                     fieldLable: 'API password',
+                     inputType: 'password',
+                 },
+                {
+                    xtype:'textfield',
+                    name: 'meternumber',
+                    fieldLable: 'meter number'
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'accountnumber',
+                    fieldLable: 'account number'
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'pickuptype',
+                    fieldLable: 'pickup type'
+                }
+            ]
+        });
+        
+        this.rates = Ext.widget(
+            {
+                xtype:'boxselect'
+            })
 
-
+        
         this.items = [
             {
                 xtype: 'textfield',
