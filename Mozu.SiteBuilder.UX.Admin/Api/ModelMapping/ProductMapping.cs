@@ -188,18 +188,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       }
                       return x.Values.Select(v =>
                       {
-                          var ppv = new DC.ProductPropertyValue()
+                          var ppv = new DC.ProductOptionValue() 
                           {
                               Value = v
 
                           };
-                          if (v != null && v is string)
-                          {
-                              ppv.Content = new DC.ProductPropertyValueLocalizedContent()
-                              {
-                                  StringValue = (string)v
-                              };
-                          }
+                          
                           return ppv;
                       }).ToList();
                   }));
