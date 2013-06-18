@@ -24,11 +24,18 @@ Ext.define('Taco.view.settings.shipping.Form', {
             data: [me.shippingFrom, me.methodsAndRates, me.shippingPreferences]
         });
 
-
+        me.record.on('afteredit', me.savableStateCheck, me);
 
         me.items = [me.shippingFrom,
                       me.methodsAndRates,
                       me.shippingPreferences];
+
         this.callParent(arguments);
+    },
+    isDirty: function () {
+
+        var ret = this.callParent(arguments);
+        return ret || this.record.dirty;
+        
     }
 });
