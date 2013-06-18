@@ -31,12 +31,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IOrderService _orderService;
         private readonly IViewEngine _viewEngine;
         private static List<EmailTypeInfo> g_emailTypeInfos;
-        public class UserServiceMessageTopics
+        public class Topics
         {
             public const string PasswordReset = "user.passwordreset";
             public const string NewUserCreated = "user.created";
             public const string AdminUserInvited = "user.admin.invited";
             public const string AdminRoleAdded = "user.admin.roleadded";
+            public const string OrderEmailTopic = "order.changed";
+            public const string OrderShippedTopic = "order.shipped";
         }
 
         static EmailController ()
@@ -48,28 +50,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                ModelType = typeof (ResetPasswordEmailMessage),
                                                Template = "email/resetpassword",
                                                CmsDoc="resetpassword",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, UserServiceMessageTopics.PasswordReset )
+                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, Topics.PasswordReset )
                                            },
                                        new EmailTypeInfo()
                                            {
                                                ModelType =  typeof (NewUserEmailMessage),
                                                Template = "email/newuser",
                                                CmsDoc="newuser",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, UserServiceMessageTopics.NewUserCreated)
+                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, Topics.NewUserCreated)
                                            },
                                         new EmailTypeInfo()
                                            {
                                                ModelType = typeof (Invitation),
                                                Template = "email/admininvite",
                                                CmsDoc="userinvited",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, UserServiceMessageTopics.AdminUserInvited)
+                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, Topics.AdminUserInvited)
                                            },
                                            new EmailTypeInfo()
                                            {
                                                ModelType = typeof (Invitation),
                                                Template = "email/adminroleadded",
                                                CmsDoc="adminroleadded",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, UserServiceMessageTopics.AdminRoleAdded)
+                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, Topics.AdminRoleAdded)
                                            },
                                        new EmailTypeInfo()
                                            {
@@ -77,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                MappingType = typeof(OrderInformation),
                                                Template = "email/orderstatus",
                                                CmsDoc="orderstatus",
-                                               Topic = string.Format("{0}.{1}.{2}",EmailNotification.PrimaryTopic,"fuck", "me")//OrderNotificationTopics.TopicBase ,OrderNotificationTopics.Open ) //todo: fix this one...
+                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic,Topics.OrderEmailTopic )//OrderNotificationTopics.TopicBase ,OrderNotificationTopics.Open ) //todo: fix this one...
                                            },
                                             new EmailTypeInfo()
                                            {
@@ -85,24 +87,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                MappingType = typeof(OrderInformation),
                                                Template = "email/orderstatus",
                                                CmsDoc="orderstatus",
-                                               Topic = string.Format("{0}.{1}.{2}",EmailNotification.PrimaryTopic,"fuck", "me")//,OrderNotificationTopics.TopicBase ,OrderNotificationTopics.Cancelled   ) //todo: fix this one...
-                                           },
-                                            new EmailTypeInfo()
-                                           {
-                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Orders.Order ),
-                                               MappingType = typeof(OrderInformation),
-                                               Template = "email/orderstatus",
-                                               CmsDoc="orderstatus",
-                                               Topic = string.Format("{0}.{1}.{2}",EmailNotification.PrimaryTopic,"fuck", "me")// OrderNotificationTopics.TopicBase , OrderNotificationTopics.Shipped   ) //todo: fix this one...
-                                           },
-                                            new EmailTypeInfo()
-                                           {
-                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Orders.Order ),
-                                               MappingType = typeof(OrderInformation),
-                                               Template = "email/orderstatus",
-                                               CmsDoc="orderstatus",
-                                               Topic = string.Format("{0}.{1}.{2}",EmailNotification.PrimaryTopic,"fuck", "me")// OrderNotificationTopics.TopicBase , "fulfilled" ) //todo: fix this one...
-                                           },
+                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic,Topics.OrderShippedTopic ) //,OrderNotificationTopics.TopicBase ,OrderNotificationTopics.Cancelled   ) //todo: fix this one...
+                                           }
 
                                    };
             
