@@ -29,10 +29,38 @@
 .mz-cart-item-title, .mz-cart-item-code, .mz-cart-item-options {
 	display: block;
 }
+.mz-cart-item-options {
+    float: right;
+    font-size: 0.8rem;
+    margin: 0;
+    min-width: 50%;
+    .mz-option-name {
+        font-weight: bold;
+        float: left;
+        clear: left;
+    }
+    .mz-option-value {
+        margin-left: 0.5rem;
+        float: left;
+        clear: right;
+    }
+}
 .mz-cart-item-title {
-	color: #58ABF4;
-	font-weight: 700;
-	font-size: 14px;
+    &:visited, &:link {
+        color: #58ABF4;
+        text-decoration: none;
+    }
+    &:hover {
+        text-decoration: underline;
+    }
+    font-weight: 700;
+    font-size: 14px;
+    float: left;
+}
+.mz-cart-item-code {
+    font-size: 0.8rem;
+    float: left;
+    clear: both;
 }
 .mz-cart-head-products {
 	width: 80%;

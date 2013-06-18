@@ -23,7 +23,7 @@
 			<tr>
 				<td class="mz-field-interstitial" colspan="2"><hr></td>
 			</tr>
-			{% if Model.BillingInfo.PaymentType == "CreditCard" %}
+			{% if Model.BillingInfo.PaymentType == PaymentTypes.CreditCard %}
 			<tr>
 				<td class="mz-field-label">Billing Name:</td>
 				<td>{{ Model.BillingInfo.BillingAddress.FirstName }} {{ Model.BillingInfo.BillingAddress.LastNameOrSurname }}</td>

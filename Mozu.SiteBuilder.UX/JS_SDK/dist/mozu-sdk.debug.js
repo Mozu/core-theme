@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-06-17
+ * Mozu JavaScript SDK - v0.1.0 - 2013-06-18
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1706,11 +1706,7 @@ var utils = {
         MicroEvent.mixin(ctor);
         ctor.prototype.on = ctor.prototype.bind;
         ctor.prototype.off = ctor.prototype.unbind;
-        ctor.prototype.fire = function () {
-            try {
-                return ctor.prototype.trigger.apply(this, arguments);
-            } catch (e) { }
-        };
+        ctor.prototype.fire = ctor.prototype.trigger;
     }
 };
 // END UTILS
@@ -1860,7 +1856,7 @@ var ApiReference = (function () {
             shortcutParam: "filter",
             defaultParams: {
                 startIndex: 0,
-                pageSize: 25
+                pageSize: 15
             },
             collectionOf: 'product'
         },
@@ -1870,7 +1866,7 @@ var ApiReference = (function () {
             shortcutParam: "filter",
             defaultParams: {
                 startIndex: 0,
-                pageSize: 25
+                pageSize: 15
             },
             collectionOf: 'category'
         },
@@ -1884,12 +1880,12 @@ var ApiReference = (function () {
         },
 
         'search': {
-            template: '{+SearchService}searchz{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,startIndex}',
+            template: '{+SearchService}searchz{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,PageSize,startIndex,StartIndex}',
             shortcutParam: 'query',
             defaultParams: {
                 startIndex: 0,
                 query: "*:*",
-                pageSize: 25
+                pageSize: 15
             },
             collectionOf: 'product'
         },
@@ -2203,34 +2199,45 @@ var ApiCollection = (function () {
                 this.prop("Items", []);
             }
         },
-        firstPage: function() {
-            var currentIndex = this.prop("StartIndex");
+        getIndex: function (newIndex) {
+            var index = this.currentIndex;
+            if (!index && index !== 0) index = this.prop("StartIndex");
+            if (!index && index !== 0) index = 0;
+            return index;
+        },
+        setIndex: function(newIndex, req) {
+            var me = this;
+            var p = this.get(utils.extend(req, { startIndex: newIndex}));
+            p.then(function () {
+                me.currentIndex = newIndex;
+            });
+            return p;
+        },
+        firstPage: function(req) {
+            var currentIndex = this.getIndex();
             if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
-            return this.get({ startIndex: 0 });
+            return this.setIndex(0, req);
         },
-        index: function(newIndex) {
-            return this.get({ startIndex: newIndex});
-        },
-        prevPage: function () {
-            var currentIndex = this.prop("StartIndex"),
+        prevPage: function (req) {
+            var currentIndex = this.getIndex(),
                 pageSize = this.prop("PageSize"),
-                newIndex = currentIndex - pageSize + 1;
+                newIndex = Math.max(currentIndex - pageSize, 0);
             if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
-            return this.index(newIndex);
+            return this.setIndex(newIndex, req);
         },
-        nextPage: function () {
-            var currentIndex = this.prop("StartIndex"),
+        nextPage: function (req) {
+            var currentIndex = this.getIndex(),
                 pageSize = this.prop("PageSize"),
-                newIndex = currentIndex + pageSize - 1;
+                newIndex = currentIndex + pageSize;
             if (!(newIndex < this.prop("TotalCount"))) throw "This " + this.type + " collection is already at its last page and has no next page.";
-            return this.index(newIndex);
+            return this.setIndex(newIndex, req);
         },
-        lastPage: function () {
+        lastPage: function (req) {
             var totalCount = this.prop("TotalCount"),
                 pageSize = this.prop("PageSize"),
                 newIndex = totalCount - pageSize;
             if (newIndex <= 0) throw "This " + this.type + " collection has only one page.";
-            return this.index(newIndex);
+            return this.setIndex(newIndex, req);
         }
     });
 

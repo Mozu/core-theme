@@ -496,8 +496,9 @@
                     });
                 }
                 apiSteps.push(function () {
-                    return order.getAvailableActions();
-                }, function (availableActions) {
+                    return order.get();
+                }, function () {
+                    var availableActions = order.AvailableActions;
                     if (availableActions.indexOf('SubmitOrder') !== -1)
                         return order.performOrderAction('SubmitOrder');
                     if (availableActions.indexOf('CancelOrder') !== -1)

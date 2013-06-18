@@ -5,7 +5,6 @@
     <!-- ko foreach: Facets -->
     <div class="mz-sidebar-item">
         <h4 data-bind="text: Label"></h4>
-      <!-- ko if: FacetType === "Value" -->
         <ul class="mz-faceting-group">
             <li>
                 <input type="checkbox" class="mz-faceting-option" data-bind="checked: empty, id: emptyId, disable: $root.submitting"><label data-bind="for: emptyId">All</label>
@@ -16,10 +15,6 @@
             </li>
             <!-- /ko -->
         </ul>
-      <!-- /ko -->
-      <!-- ko if: FacetType === "RangeQuery" -->
-        <p>Range query goes here.</p>
-      <!-- /ko -->
     </div>
     <!-- /ko -->
     <div class="mz-sidebar-item">
