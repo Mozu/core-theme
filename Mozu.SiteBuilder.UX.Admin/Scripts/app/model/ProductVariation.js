@@ -60,33 +60,11 @@ Ext.define('Taco.model.ProductVariation', {
             "name": "productCode",
             "type": "string",
             "useNull": true
+        }, {
+            name: 'options',
+            type: 'any',
+            defaultValue: []
         }
-        //{
-        //    "name": "weight",
-        //    "type": "float",
-        //    "useNull": true
-        //},
-      
-        //{
-        //    "name": "optionValue1",
-        //    "type": "string",
-        //    "useNull": true
-        //},
-        //{
-        //    "name": "optionValue2",
-        //    "type": "string",
-        //    "useNull": true
-        //},
-        //{
-        //    "name": "optionValue3",
-        //    "type": "string",
-        //    "useNull": true
-        //},
-        //{
-        //    "name": "productVariationCode",
-        //    "type": "string",
-        //    "useNull": true
-        //}
     ],
     belongsTo: 'Taco.model.Product',
 
