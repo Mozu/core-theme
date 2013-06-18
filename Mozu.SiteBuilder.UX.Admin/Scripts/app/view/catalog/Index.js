@@ -191,36 +191,42 @@ Ext.define('Taco.view.catalog.Index', {
         this.customerProfile = Ext.create('Taco.core.ux.EditContainer', {
             width: 960,
             title: 'Customer Profile',
-            cls: Taco.baseCSSPrefix + 'catalog-customer-settings',
+            cls: Taco.baseCSSPrefix + 'catalog-customer-profile',
             items: [{
-                xtype: 'textfield',
+                xtype: 'formpanel',
                 width: 320,
-                fieldLabel: 'Email Address',
-                value: this.record.get('email')
-            }, {
-                xtype: 'boxselect',
-                width: 320,
-                hideTrigger: true,
-                triggerOnClick: false,
-                forceSelection: false,
-                createNewOnEnter: true,
-                queryMode: 'local',
-                fieldLabel: 'Groups',
-                value: ['VIP', 'Top 100'],
-                store: [],
-                listeners: {
-                    afterrender: function (cmp) {
-                        cmp.setValue(cmp.getValue());
-                        cmp.resetOriginalValue();
+                items: [{
+                    xtype: 'textfield',
+                    width: 320,
+                    fieldLabel: 'Email Address',
+                    value: this.record.get('email')
+                }, {
+                    xtype: 'boxselect',
+                    width: 320,
+                    hideTrigger: true,
+                    triggerOnClick: false,
+                    forceSelection: false,
+                    createNewOnEnter: true,
+                    queryMode: 'local',
+                    fieldLabel: 'Groups',
+                    value: ['VIP', 'Top 100'],
+                    store: [],
+                    listeners: {
+                        afterrender: function (cmp) {
+                            cmp.setValue(cmp.getValue());
+                            cmp.resetOriginalValue();
+                        }
                     }
-                }
-            }, {
-                xtype: 'checkboxfield',
-                fieldLabel: 'Marketing',
-                boxLabel: 'Yes, keep me up to date on store news and specials',
-                checked: this.record.get('acceptsMarketing')
+                }, {
+                    xtype: 'checkboxfield',
+                    fieldLabel: 'Marketing',
+                    boxLabel: 'Yes, keep me up to date on store news and specials',
+                    checked: this.record.get('acceptsMarketing')
+                }]
             }, {
                 xtype: 'component',
+                width: 320,
+                cls: 'customer-history',
                 renderData: this.record.getData(),
                 renderTpl: [
                     '<div class="total-orders"><label>Total Orders</label><h2>{totalOrders}</h2></div>',
