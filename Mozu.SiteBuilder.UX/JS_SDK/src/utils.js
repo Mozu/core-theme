@@ -154,11 +154,7 @@ var utils = {
         MicroEvent.mixin(ctor);
         ctor.prototype.on = ctor.prototype.bind;
         ctor.prototype.off = ctor.prototype.unbind;
-        ctor.prototype.fire = function () {
-            try {
-                return ctor.prototype.trigger.apply(this, arguments);
-            } catch (e) { }
-        };
+        ctor.prototype.fire = ctor.prototype.trigger;
     }
 };
 // END UTILS

@@ -29,7 +29,6 @@
             font-size: 0.7rem;
         }
         .mz-price-saleprice {
-            white-space: nowrap;
             .mz-price-amt {
                 font-weight: bold;
                 font-size: 1.1rem;
@@ -87,8 +86,38 @@ ul[data-items-per-row="3"] .mz-list-last {
 }
 	
 /* Pager --------------------------- */
-.mz-pager {
-	clear:both;
-	display: block;
-	margin-top: 10px;
+.mz-paging-info {
+    text-align: right;
+    font-size: 0.8rem;
+    .mz-paging-pagesize-wrap {
+        display: block;
+        margin-top: 1rem;
+        select {
+            width: 60px;
+            height: 20px;
+        }
+    }
+}
+.mz-paging {
+    text-align: right;
+    a:link {
+        margin: 0 0.3rem;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    .mz-paging-next {
+        display: inline-block;
+        &::after {
+            content: " \276f";
+        }
+    }
+
+    .mz-paging-prev {
+        display: inline-block;
+        &::before {
+            content: "\276e  ";
+        }
+    }
 }

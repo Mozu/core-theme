@@ -156,6 +156,11 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             requestContext["User"] = requestContext["user"] = user;
             requestContext["true"] = true;
             requestContext["false"] = false;
+            requestContext["PaymentTypes"] = new
+            {
+                CreditCard = Mozu.CommerceRuntime.Contracts.Payments.PaymentType.CreditCard,
+                Check = Mozu.CommerceRuntime.Contracts.Payments.PaymentType.Check
+            };
 
           //  this.
           //  var result = ViewEngines.Engines.FindPartialView(_html.ViewContext.Controller.ControllerContext, viewPath);

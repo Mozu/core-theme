@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-06-17
+ * Mozu JavaScript SDK - v0.1.0 - 2013-06-18
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1011,11 +1011,7 @@
                     MicroEvent.mixin(ctor);
                     ctor.prototype.on = ctor.prototype.bind;
                     ctor.prototype.off = ctor.prototype.unbind;
-                    ctor.prototype.fire = function() {
-                        try {
-                            return ctor.prototype.trigger.apply(this, arguments);
-                        } catch (e) {}
-                    };
+                    ctor.prototype.fire = ctor.prototype.trigger;
                 }
             };
             var ApiReference = function() {
@@ -1126,7 +1122,7 @@
                         shortcutParam: "filter",
                         defaultParams: {
                             startIndex: 0,
-                            pageSize: 25
+                            pageSize: 15
                         },
                         collectionOf: "product"
                     },
@@ -1135,7 +1131,7 @@
                         shortcutParam: "filter",
                         defaultParams: {
                             startIndex: 0,
-                            pageSize: 25
+                            pageSize: 15
                         },
                         collectionOf: "category"
                     },
@@ -1147,12 +1143,12 @@
                         }
                     },
                     search: {
-                        template: "{+SearchService}searchz{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,startIndex}",
+                        template: "{+SearchService}searchz{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,PageSize,startIndex,StartIndex}",
                         shortcutParam: "query",
                         defaultParams: {
                             startIndex: 0,
                             query: "*:*",
-                            pageSize: 25
+                            pageSize: 15
                         },
                         collectionOf: "product"
                     },
@@ -1446,32 +1442,41 @@
                             this.prop("Items", []);
                         }
                     },
-                    firstPage: function() {
-                        var currentIndex = this.prop("StartIndex");
-                        if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
-                        return this.get({
-                            startIndex: 0
-                        });
+                    getIndex: function(newIndex) {
+                        var index = this.currentIndex;
+                        if (!index && index !== 0) index = this.prop("StartIndex");
+                        if (!index && index !== 0) index = 0;
+                        return index;
                     },
-                    index: function(newIndex) {
-                        return this.get({
+                    setIndex: function(newIndex, req) {
+                        var me = this;
+                        var p = this.get(utils.extend(req, {
                             startIndex: newIndex
+                        }));
+                        p.then(function() {
+                            me.currentIndex = newIndex;
                         });
+                        return p;
                     },
-                    prevPage: function() {
-                        var currentIndex = this.prop("StartIndex"), pageSize = this.prop("PageSize"), newIndex = currentIndex - pageSize + 1;
+                    firstPage: function(req) {
+                        var currentIndex = this.getIndex();
                         if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
-                        return this.index(newIndex);
+                        return this.setIndex(0, req);
                     },
-                    nextPage: function() {
-                        var currentIndex = this.prop("StartIndex"), pageSize = this.prop("PageSize"), newIndex = currentIndex + pageSize - 1;
+                    prevPage: function(req) {
+                        var currentIndex = this.getIndex(), pageSize = this.prop("PageSize"), newIndex = Math.max(currentIndex - pageSize, 0);
+                        if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
+                        return this.setIndex(newIndex, req);
+                    },
+                    nextPage: function(req) {
+                        var currentIndex = this.getIndex(), pageSize = this.prop("PageSize"), newIndex = currentIndex + pageSize;
                         if (!(newIndex < this.prop("TotalCount"))) throw "This " + this.type + " collection is already at its last page and has no next page.";
-                        return this.index(newIndex);
+                        return this.setIndex(newIndex, req);
                     },
-                    lastPage: function() {
+                    lastPage: function(req) {
                         var totalCount = this.prop("TotalCount"), pageSize = this.prop("PageSize"), newIndex = totalCount - pageSize;
                         if (newIndex <= 0) throw "This " + this.type + " collection has only one page.";
-                        return this.index(newIndex);
+                        return this.setIndex(newIndex, req);
                     }
                 });
                 return ApiCollectionConstructor;

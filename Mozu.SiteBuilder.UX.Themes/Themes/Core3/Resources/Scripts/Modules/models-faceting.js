@@ -1,19 +1,19 @@
 ﻿define(["jquery", "modules/knockout-plus", "modules/knockout-viewmodel", "modules/models-product", "modules/function-throttler"], function ($, ko, KnockoutVM, ProductModels, throttle) {
 
     function sanitize(str) {
-        return str.replace(/[\s~'":]+/g, '-');
+        return str ? str.replace(/[\s~'":]+/g, '-') : '';
     }
 
     var FacetValue = KnockoutVM.extend({
-            statics: {
-                Count: '',
-                FilterValue: '',
-                Label: '',
-                Value: ''
-            },
-            observables: {
-                IsApplied: {}
-            }
+        statics: {
+            Count: '',
+            FilterValue: '',
+            Label: '',
+            Value: ''
+        },
+        observables: {
+            IsApplied: {}
+        }
     },
         function () {
             var me = this,
@@ -33,6 +33,13 @@
             submodelArrays: {
                 Values: FacetValue
             },
+            populate: function (d) {
+                // trying to accommodate the shape of the Hierarchical Facet
+                if (d.FacetType === "Hierarchy") {
+                    d.Values = d.Values[0].ChildrenFacetValues;
+                }
+                FacetValue.prototype.populate.call(this, d);
+            }
         }, function () {
             var me = this,
                 parent = this.getParentModel();
@@ -63,6 +70,9 @@
             mozuType: 'search',
             observables: {
                 PageSize: '',
+                TotalCount: '',
+                PageCount: '',
+                StartIndex: ''
             },
             submodelArrays: {
                 Facets: Facet,
@@ -89,7 +99,9 @@
                 var me = this;
                 var conf = {
                     filter: 'categoryId req ' + this.categoryId,
-                    facetTemplate: 'categoryId:' + this.categoryId
+                    facetTemplate: 'categoryId:' + this.categoryId,
+                    pageSize: this.PageSize(),
+                    startIndex: this.StartIndex()
                 },
                 filterValue = this.getFacetValueFilter();
                 if (filterValue) conf.facetValueFilter = filterValue;
@@ -105,12 +117,64 @@
                         me.submitting(false);
                     });
                 }
+            },
+            previousPage: function () {
+                try {
+                    this.apiModel.prevPage(this.lastRequest);
+                } catch (e) { }
+            },
+            nextPage: function () {
+                try {
+                    this.apiModel.nextPage(this.lastRequest);
+                } catch (e) { }
+            },
+            populate: function () {
+                this.isUpdating = true;
+                FacetedProductCollection.prototype.populate.apply(this, arguments);
+                this.isUpdating = false;
             }
         }, function () {
-            var me = this;
+            var me = this,
+                startIndex = me.StartIndex();
+
+
+            // defining this here so it keeps scope when called from a click handler
+            this.setPage = function (num) {
+                if (num <= me.PageCount()) me.get($.extend({}, me.lastRequest, {
+                    startIndex: (num - 1) * me.PageSize()
+                }));
+            };
+
+            if (isNaN(parseInt(startIndex))) me.StartIndex(0);
+
+            this.lastIndex = ko.computed(function () {
+                return me.StartIndex() + me.Items().length;
+            });
+
+            this.hasPreviousPage = ko.computed(function () {
+                return me.StartIndex() > 0;
+            });
+
+            this.hasNextPage = ko.computed(function () {
+                return me.lastIndex() < me.TotalCount();
+            });
+
+            this.pageNumbers = ko.computed(function () {
+                var nums = me.PageCount(), ret = [];
+                for (var i = 1; i <= nums; i++) {
+                    ret.push(i);
+                }
+                return ret;
+            });
+
+            this.PageSize.subscribe(function (newVal) {
+                if (!me.isUpdating) me.updateFacets();
+            });
+
             this.on('facetchange', function () {
                 me.updateFacets();
             });
+
             this.lastRequest = this.buildFacetRequest();
         });
 

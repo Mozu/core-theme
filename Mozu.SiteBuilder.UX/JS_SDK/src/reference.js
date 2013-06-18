@@ -142,7 +142,7 @@ var ApiReference = (function () {
             shortcutParam: "filter",
             defaultParams: {
                 startIndex: 0,
-                pageSize: 25
+                pageSize: 15
             },
             collectionOf: 'product'
         },
@@ -152,7 +152,7 @@ var ApiReference = (function () {
             shortcutParam: "filter",
             defaultParams: {
                 startIndex: 0,
-                pageSize: 25
+                pageSize: 15
             },
             collectionOf: 'category'
         },
@@ -166,12 +166,12 @@ var ApiReference = (function () {
         },
 
         'search': {
-            template: '{+SearchService}searchz{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,startIndex}',
+            template: '{+SearchService}searchz{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,PageSize,startIndex,StartIndex}',
             shortcutParam: 'query',
             defaultParams: {
                 startIndex: 0,
                 query: "*:*",
-                pageSize: 25
+                pageSize: 15
             },
             collectionOf: 'product'
         },
