@@ -6,8 +6,8 @@
         <div class="mz-cart-product-item-info-wrap">
             <span class="mz-cart-item-title" data-bind="text: Product.Name"></span>
             <div class="mz-cart-item-options" data-bind="visible: Product.Options.length > 0, foreach: Product.Options">
-                <strong data-bind="text: OptionName + ':'"></strong>&nbsp;
-                <span data-bind="text: OptionValue"></span>
+                <strong data-bind="text: Name + ':'"></strong>&nbsp;
+                <span data-bind="text: Value"></span>
             </div>
             <span class="mz-cart-item-code">Product Code: <span data-bind="text: Product.ProductCode"></span></span>
         </div>

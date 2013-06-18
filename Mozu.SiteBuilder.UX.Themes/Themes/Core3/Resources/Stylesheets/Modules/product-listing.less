@@ -1,7 +1,13 @@
-﻿.mz-list-control-wrap {
+﻿.mz-product-listing-wrap {
+
+    .mz-list-control {
+        overflow: auto;
+        .mz-list-item {
+            margin: 1rem;
+        }
+    }
 	.mz-product-title-link {
 		color: #5A533F;
-		font-size: 12px;
 		font-weight: 100;
 		display: block;
 		text-align: center;
@@ -16,6 +22,18 @@
 	.mz-product-image {
 		max-width: 100%;
 	}
+
+    .mz-price-stack-wrap {
+        text-align: right;
+        .mz-price-label {
+            font-size: 0.7rem;
+        }
+        .mz-price-saleprice {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+    }
+
 }
 
 ul[data-items-per-row="2"] .mz-list-item {

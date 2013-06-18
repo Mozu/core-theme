@@ -89,7 +89,7 @@
                 var me = this;
                 var conf = {
                     filter: 'categoryId req ' + this.categoryId,
-                    facetTemplate: 'category:' + this.categoryId
+                    facetTemplate: 'categoryId:' + this.categoryId
                 },
                 filterValue = this.getFacetValueFilter();
                 if (filterValue) conf.facetValueFilter = filterValue;
