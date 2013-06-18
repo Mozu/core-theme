@@ -716,10 +716,12 @@
     <Content Include="Scripts\app\view\product\GlobalForm.js" />
     <Content Include="Scripts\app\view\product\ImageField.js" />
     <Content Include="Scripts\app\view\product\Modal.js" />
+    <Content Include="Scripts\app\view\product\option\Modal.js" />
+    <Content Include="Scripts\app\view\product\option\VariationGrid.js" />
     <Content Include="Scripts\app\view\product\SiteForm.js" />
     <Content Include="Scripts\app\view\product\subform\Categories.js" />
     <Content Include="Scripts\app\view\product\subform\ListExtraEditor.js" />
-    <Content Include="Scripts\app\view\product\subform\Options.js" />
+    <Content Include="Scripts\app\view\product\option\Form.js" />
     <Content Include="Scripts\app\view\product\subform\OverrideForm.js" />
     <Content Include="Scripts\app\view\product\subform\SEO.js" />
     <Content Include="Scripts\app\view\product\subform\Merchandising.js" />
