@@ -41,7 +41,12 @@ Ext.define('Taco.view.customers.AddressModal', {
                     width: 206,
                     name: 'lastName',
                     fieldLabel: 'Last Name'
-                }, {
+                },
+                 {
+                     xtype: 'textfield',
+                     name: 'companyName',
+                     fieldLabel: 'Company'
+                 }, {
                     xtype: 'textfield',
                     width: 315,
                     name: 'address1',
@@ -118,6 +123,7 @@ Ext.define('Taco.view.customers.AddressModal', {
                 console.log(record);
 
                 me.hide();
+                me.fireEvent('save', this, record);
             }
         });
 
