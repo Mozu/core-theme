@@ -45,27 +45,35 @@
     }
 
     .#{$vprefix}catalog-customer-profile {
-      label {
-        display: block;
-        font-size: px-to-rem(14);
-        font-weight: bold;
-      }
-      h2 {
-        font-size: px-to-rem(20);
-        font-weight: normal;
-        line-height: px-to-rem(20);
-        margin: 4px 0px 30px;
-      }
-      .customer-since {
-        h2 {
-          margin-bottom: 0px;
-        }
-      }
-    }
-
-    .#{$vprefix}catalog-customer-settings {
       .#{$vprefix}editcontainer-header {
         margin-bottom: 6px;
+      }
+
+      .#{$prefix}panel {
+        display: inline-block;
+        margin-right: 230px;
+        vertical-align: top;
+      }
+
+      .customer-history {
+        display: inline-block;
+        vertical-align: top;
+
+        label {
+          display: block;
+          font-size: px-to-rem(14);
+          font-weight: bold;
+          padding-bottom: 3px;
+          padding-top: px-to-rem(24);
+        }
+
+        h2 {
+          font-size: px-to-rem(21);
+          font-weight: normal;
+          line-height: px-to-rem(30);
+          padding-bottom: 5px;
+          padding-left: 10px;
+        }
       }
     }
   }
