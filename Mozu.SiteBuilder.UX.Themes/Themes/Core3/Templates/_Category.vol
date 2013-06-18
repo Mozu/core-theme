@@ -12,7 +12,7 @@
 
 <div id="mz-layout-container" data-mz-category="{{Model.CategoryId}}" class="mz-layout-container mz-content-inner-wrap mz-blog-list-page">
 <h1 class="mz-page-header">{{ Model.Name }}</h1>
-    {% html_action "ProductListing" "catalog" with categoryId=Model.Id and includeFacets=true and viewName="Modules/ProductListingFaceted" as_parameter %}
+    {% html_action "ProductListing" "catalog" with categoryId=Model.Id and includeFacets=true and useUrlParams=true and viewName="Modules/ProductListingFaceted" as_parameter %}
 </div>
 
 {% endblock BodyContent %}
