@@ -108,10 +108,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<ShippingDC.Package, OrderPackage>()
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
+                .ForMember(x => x.ShipmentId, op => op.MapFrom(dc => dc.ShipmentId))
                 .ForMember(x => x.ShippingMethodCode, op => op.MapFrom(dc => dc.ShippingMethodCode))
                 .ForMember(x => x.ShippingMethodName, op => op.MapFrom(dc => dc.ShippingMethodName))
                 .ForMember(x => x.TrackingNumber, op => op.MapFrom(dc => dc.TrackingNumber))
-                // TODO: shipment id
+                
                 .ForMember(x => x.PackagingType, op => op.MapFrom(dc => dc.PackagingType))
                 .ForMember(x => x.Height, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Height : null))
                 .ForMember(x => x.Length, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Length : null))
@@ -124,6 +125,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
                 .ForMember(x => x.OrderItemId, op => op.MapFrom(dc => dc.OrderItemId))
                 .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
+                ;
+
+            Mapper.CreateMap<OrderPackage, ShippingDC.Package>()
+                .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
+                .ForMember(dc => dc.Items, op => op.MapFrom(x => x.Items))
+                .ForMember(dc => dc.ShipmentId, op => op.MapFrom(x => x.ShipmentId))
+                .ForMember(dc => dc.PackagingType, op => op.MapFrom(x => x.PackagingType))
+                .ForMember(dc => dc.ShippingMethodCode, op => op.MapFrom(x => x.ShippingMethodCode))
+                .ForMember(dc => dc.ShippingMethodName, op => op.MapFrom(x => x.ShippingMethodName))
+                .ForMember(dc => dc.Status, op => op.MapFrom(x => x.Status))
+                .ForMember(dc => dc.TrackingNumber, op => op.MapFrom(x => x.TrackingNumber))
+                .ForMember(dc => dc.Measurements, op => op.MapFrom(x => new Mozu.CommerceRuntime.Contracts.Commerce.PackageMeasurements { 
+                    Height = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Height },
+                    Width = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Width },
+                    Length = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Length },
+                    Weight = new Core.Api.Contracts.Measurement { Unit = "lbs", Value = x.Weight }
+                }))
+                ;
+
+            Mapper.CreateMap<OrderPackageItem, ShippingDC.PackageItem>()
+                .ForMember(dc => dc.OrderItemId, op => op.MapFrom(x => x.OrderItemId))
+                .ForMember(dc => dc.Quantity, op => op.MapFrom(x => x.Quantity))
                 ;
 
             // cheese
