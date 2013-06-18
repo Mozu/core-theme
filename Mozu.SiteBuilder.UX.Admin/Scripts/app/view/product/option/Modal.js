@@ -70,6 +70,14 @@ Ext.define('Taco.view.product.option.Modal', {
             }
 
             record.set('values', field.getValue());
+            
+
+            ////
+            
+            this.product
+
+
+
         }, this);
     }
 });

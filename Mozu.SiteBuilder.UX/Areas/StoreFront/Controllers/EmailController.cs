@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                        new EmailTypeInfo()
                                            {
                                                ModelType = typeof (Mozu.CommerceRuntime.Contracts.Orders.Order ),
-                                               MappingType = typeof(OrderInformation),
+                                              // MappingType = typeof(OrderInformation),
                                                Template = "email/orderstatus",
                                                CmsDoc="orderstatus",
                                                Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic,Topics.OrderEmailTopic )//OrderNotificationTopics.TopicBase ,OrderNotificationTopics.Open ) //todo: fix this one...
@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                             new EmailTypeInfo()
                                            {
                                                ModelType = typeof (Mozu.CommerceRuntime.Contracts.Orders.Order ),
-                                               MappingType = typeof(OrderInformation),
+                                            //   MappingType = typeof(OrderInformation),
                                                Template = "email/orderstatus",
                                                CmsDoc="orderstatus",
                                                Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic,Topics.OrderShippedTopic ) //,OrderNotificationTopics.TopicBase ,OrderNotificationTopics.Cancelled   ) //todo: fix this one...
