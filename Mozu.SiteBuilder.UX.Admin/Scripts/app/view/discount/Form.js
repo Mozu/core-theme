@@ -4,7 +4,7 @@
 Ext.define('Taco.view.discount.Form', {
     //extend: 'Taco.core.ux.form.Form',
     extend: 'Taco.view.product.subform.Subform',
-    requires: ['Ext.ux.form.field.BoxSelect','Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField', 'Taco.core.ux.action.SecondaryButton', 'Taco.view.category.Modal', 'Taco.view.product.Modal'],
+    requires: ['Taco.store.ConfiguredShippingRates', 'Ext.ux.form.field.BoxSelect', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField', 'Taco.core.ux.action.SecondaryButton', 'Taco.view.category.Modal', 'Taco.view.product.Modal'],
     // requires: ['Taco.model.CouponCode', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.BoxSelect', 'Taco.store.ProductComboBox', 'Taco.core.ux.modal.Content', 'Taco.core.ux.modal.ContentWithActions', 'Taco.core.ux.form.UnitField', 'Taco.core.ux.form.CurrencyField'],
     title: 'Discount',
     // model: 'Taco.model.Discount',
@@ -52,7 +52,7 @@ Ext.define('Taco.view.discount.Form', {
                     ["LineItem", "LineItem"],
                     ["Order", "Order"]
                 ]
-            }),            
+            }),
         });
 
         me.amountTypeInput = Ext.create('Ext.form.field.ComboBox', {
@@ -168,8 +168,7 @@ Ext.define('Taco.view.discount.Form', {
             typeAhead: true,
             displayField: 'name',
             valueField: 'id',
-            fieldLabel: 'Select Categories',
-            
+            fieldLabel: 'Select Categories',            
         });
         // reset the list's dirty state when its store first loads
         catStore.on({
@@ -184,7 +183,7 @@ Ext.define('Taco.view.discount.Form', {
                 type: 'hbox',
                 align: 'bottom'
             },
-            items: [                
+            items: [
                 me.categoryList,
                 {
                     xtype: 'secondarybutton',
@@ -195,19 +194,43 @@ Ext.define('Taco.view.discount.Form', {
             ]
         });
         var productStore = me.record.getProductStore();
-       
+
+        var shippingStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ConfiguredShippingRates');
+
+
+        me.shippingList = Ext.create('Ext.ux.form.field.BoxSelect', {
+            name: 'shippingMethods',
+            flex: 1,
+            store: shippingStore,
+            getStore: function() {
+                return shippingStore;
+            },
+            queryMode :'local',
+            width: 600,
+            hidden: this.record.get('target')=='Product',
+            triggerOnClick: true,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: true,
+            value: this.record.get('shippingMethods'),
+            displayField: 'Key',
+            fieldLabel: 'Select Shipping Methods',
+            valueField: 'Value'
+        });        
+
+
         me.productList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'products',
             flex: 1,
             store: productStore,
-            getStore: function () {
+            getStore: function() {
                 return productStore;
             },
             hideTrigger: true,
             triggerOnClick: false,
-            forceSelection:true,
+            forceSelection: true,
             disableKeyFilter: true,
-            typeAhead :true,
+            typeAhead: false,
             displayField: 'productName',
             fieldLabel: 'Select Products',
             valueField: 'productCode',
@@ -220,8 +243,8 @@ Ext.define('Taco.view.discount.Form', {
             //    }
             //}
         });
-        
-       
+
+
         // reset the list's dirty state when its store first loads
         productStore.on({
             load: function() {
@@ -242,19 +265,14 @@ Ext.define('Taco.view.discount.Form', {
                     text: 'Add',
                     click: me.launchProductModal,
                     scope: me
-                }                
+                }
             ]
         });
 
 
-
-     
-
-
-
-
         me.productCategoryContainer = Ext.create('Ext.container.Container', {
             width: 600,
+            hidden: this.record.get('target') != 'Product',
             items: [
                 me.includeAllProductsInput,
                 me.categoriesBox,
@@ -273,7 +291,7 @@ Ext.define('Taco.view.discount.Form', {
                 labelAlign: 'top',
                 labelSeparator: '',
             },
-            items: [{                    
+            items: [{
                     name: 'startDate',
                     fieldLabel: "Starts",
                     emptyText: 'Now',
@@ -325,8 +343,9 @@ Ext.define('Taco.view.discount.Form', {
                     me.amountSuffix]
             },
             me.targetTypeInput,
-            me.minimumOrderAmountInput,           
+            me.minimumOrderAmountInput,
             me.productCategoryContainer,
+            me.shippingList,
             // createHr(),
             me.datesContainer,
             //createHr(),
@@ -381,7 +400,10 @@ Ext.define('Taco.view.discount.Form', {
 
         if (value === "Product") {
             me.productCategoryContainer.show();
+            me.shippingList.hide();
+            me.shippingList.setValue([]);
         } else {
+            me.shippingList.show();
             me.productCategoryContainer.hide();
 
             me.productList.setValue([]);
@@ -423,8 +445,8 @@ Ext.define('Taco.view.discount.Form', {
             this.modal.down('grid').getSelectionModel().deselectAll();
             this.modal.show();
             return;
-        }        
-        
+        }
+
 
         this.modal = Ext.create('Taco.view.product.Modal', {
             store: gridStore
@@ -491,5 +513,5 @@ Ext.define('Taco.view.discount.Form', {
 
 
         list.setValue(store.collect('productCode'));
-    },   
+    },
 });

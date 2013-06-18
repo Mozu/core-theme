@@ -19,8 +19,8 @@ Ext.define('Taco.view.fileManager.Index', {
         uploadable: 'Taco.shared.util.Uploadable'
     },
 
-    typeName: 'File',
-    modelName: 'Taco.shared.model.File',
+    typeName: 'FileManagementFile',
+    modelName: 'Taco.shared.model.FileManagementFile',
     store: {
         type: 'Taco.shared.store.Files',
         autoSync: true

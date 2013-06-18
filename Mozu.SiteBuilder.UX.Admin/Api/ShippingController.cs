@@ -117,11 +117,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "carrierRates")]
-        public async Task<Response<List<KeyValuePair<string, string>>>> GetGlobalSettings(string id)
+        public async Task<Response<List<KeyValuePair<string, string>>>> GetAllCarrierRates(string id)
         {
             var res = (await _carrierConfigurationGlobalWebApiClient.GetServiceTypes(id, "en-US")).ReadAsSync();
 
-            var ret = res.Select(x => new KeyValuePair<string, string>(x.Code, x.Content.Name)).ToList();
+            var ret = res.Select(x => new KeyValuePair<string, string>(x.Code, x.Content != null ? x.Content.Name : x.Code)).ToList();
+            return List2(ret);
+
+        }
+
+        [WebGet(UriTemplate = "configuredRates")]
+        public async Task<Response<List<KeyValuePair<string, string>>>> GetConfiguredRates()
+        {
+            var res = (await _carrierConfigurationWebApiClient .GetConfigurations(startIndex:0,pageSize:600)).ReadAsSync();
+
+            var ret = res.Items.SelectMany( x=> x.ConfiguredServiceTypes ).Select(x => new KeyValuePair<string, string>(x.Code , x.Content != null ? x.Content.Name: x.Code)).ToList();
             return List2(ret);
 
         }
