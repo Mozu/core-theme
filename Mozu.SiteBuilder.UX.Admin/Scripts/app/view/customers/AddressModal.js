@@ -8,12 +8,14 @@ Ext.define('Taco.view.customers.AddressModal', {
     autoShow: true,
     width: 700,
 
+    addressHasNames: true,
     record: null,
 
     initComponent: function () {
         var me = this,
             record = this.record,
-            formpanel, dirtybutton;
+            addressHasNames = this.addressHasNames,
+            fields, formpanel, dirtybutton;
 
         this.cls = this.cls + ' ' + Taco.baseCSSPrefix + 'address-editor';
 
@@ -21,32 +23,17 @@ Ext.define('Taco.view.customers.AddressModal', {
             record = Ext.create('Taco.model.Contact', record);
         }
 
-        formpanel = Ext.create('Taco.core.ux.form.Form', {
-            manageHeight: false,
-            items: [{
-                xtype: 'container',
-                cls: Taco.baseCSSPrefix + 'address-editor-fields',
-                items: [{
+        fields = [{
                     xtype: 'textfield',
-                    width: 206,
-                    name: 'firstName',
-                    fieldLabel: 'First Name'
+            width: 315,
+            name: 'companyName',
+            fieldLabel: 'Company Name'
                 }, {
                     xtype: 'textfield',
-                    width: 206,
-                    name: 'middleName',
-                    fieldLabel: 'Middle Name'
+            width: 315,
+            name: 'email',
+            fieldLabel: 'Email'
                 }, {
-                    xtype: 'textfield',
-                    width: 206,
-                    name: 'lastName',
-                    fieldLabel: 'Last Name'
-                },
-                 {
-                     xtype: 'textfield',
-                     name: 'companyName',
-                     fieldLabel: 'Company'
-                 }, {
                     xtype: 'textfield',
                     width: 315,
                     name: 'address1',
@@ -85,21 +72,46 @@ Ext.define('Taco.view.customers.AddressModal', {
                     fieldLabel: 'Country'
                 }, {
                     xtype: 'textfield',
-                    name: 'email',
-                    fieldLabel: 'Email'
-                }, {
-                    xtype: 'textfield',
+            width: 206,
                     name: 'homePhone',
                     fieldLabel: 'Home Phone'
                 }, {
                     xtype: 'textfield',
+            width: 206,
                     name: 'workPhone',
                     fieldLabel: 'Work Phone'
                 }, {
                     xtype: 'textfield',
+            width: 206,
                     name: 'mobilePhone',
                     fieldLabel: 'Mobile Phone'
-                }]
+        }];
+
+        if (addressHasNames) {
+            fields.unshift({
+                xtype: 'textfield',
+                width: 206,
+                name: 'firstName',
+                fieldLabel: 'First Name'
+            }, {
+                xtype: 'textfield',
+                width: 206,
+                name: 'middleName',
+                fieldLabel: 'Middle Name'
+            }, {
+                xtype: 'textfield',
+                width: 206,
+                name: 'lastName',
+                fieldLabel: 'Last Name'
+            });
+        }
+
+        formpanel = Ext.create('Taco.core.ux.form.Form', {
+            manageHeight: false,
+            items: [{
+                xtype: 'container',
+                cls: Taco.baseCSSPrefix + 'address-editor-fields',
+                items: fields
             }]
         });
 
