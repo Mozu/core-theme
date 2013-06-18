@@ -21,12 +21,13 @@ Ext.define('Taco.view.product.option.Modal', {
             fields.push({
                 xtype: 'taco.field.multiselect',
                 fieldLabel: option.get('attributeName'),
+                option: option,
                 store: store,
                 displayField: 'value',
                 valueField: 'id',
                 minSelections: 1
             });
-        });
+        }, this);
 
         this.form = Ext.create('Taco.core.ux.form.Form', {
             items: [{
@@ -41,5 +42,34 @@ Ext.define('Taco.view.product.option.Modal', {
         this.items = [this.form];
 
         this.callParent(arguments);
+
+        this.on({
+            beforesave: this.onBeforeSave,
+            scope: this
+        });
+    },
+
+    onBeforeSave: function () {
+        var options = this.product.getOptions();
+
+        //options.removeAll();
+
+        this.form.getForm().getFields().each (function (field) {
+            var record = options.getById(field.option.getId());
+
+            //if (!field || !field.getValue().length) return;
+            //
+            
+            if (record && !field.getValue().length) options.remove(record);
+            else if (!field.getValue().length) return;
+
+            if (!record) {
+                record = options.add({
+                    attributeFQN: field.option.get('attributeFQN')
+                })[0]
+            }
+
+            record.set('values', field.getValue());
+        }, this);
     }
 });

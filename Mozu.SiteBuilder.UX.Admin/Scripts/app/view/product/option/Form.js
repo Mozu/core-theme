@@ -5,6 +5,7 @@
 
 Ext.define('Taco.view.product.option.Form', {
     extend: 'Taco.core.ux.form.Form',
+    alias: 'widget.optionproductform',
 
     requres: [
         'Taco.view.product.option.VariationGrid',
@@ -48,8 +49,10 @@ Ext.define('Taco.view.product.option.Form', {
         }
     },
 
-    loadByProductTypeId: function () {
-        var productTypeId = this.product.get('productTypeId');
+    loadByProductTypeId: function (value) {
+        var productTypeId = typeof value === 'number'
+                            ? value
+                            : this.product.get('productTypeId');
         
         this.productType = this.productTypeStore.getById(productTypeId);
 
@@ -96,6 +99,7 @@ Ext.define('Taco.view.product.option.Form', {
     launchModal: function () {
         var modal = Ext.create('Taco.view.product.option.Modal', {
             productType: this.productType,
+            product: this.product,
             listeners: {
                 save: function () {
                     modal.hide();
