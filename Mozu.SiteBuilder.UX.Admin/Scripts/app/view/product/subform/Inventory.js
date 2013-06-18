@@ -5,7 +5,7 @@
 Ext.define('Taco.view.product.subform.Inventory', {
     extend: 'Taco.view.product.subform.Subform',
 
-    requires: ['Taco.view.product.subform.Options'],
+    requires: ['Taco.view.product.option.Form'],
 
     title: 'Inventory',
     
@@ -80,7 +80,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
             }
         });
 
-        options = Ext.create('Taco.view.product.subform.Options', {
+        options = Ext.create('Taco.view.product.option.Form', {
             product: this.product
         });
 
