@@ -150,8 +150,15 @@ Ext.define('Taco.core.ux.modal.ContentWithActions', {
                 }
                 this.checkDirtyButton();
             },
+            savablestatechange: function (form, state) {
+                this.setDirty(state);
+            },
             scope: this
         });
+    },
+
+    setDirty: function (value) {
+        this.dirtyButton.setDirty(value);
     },
 
     /**

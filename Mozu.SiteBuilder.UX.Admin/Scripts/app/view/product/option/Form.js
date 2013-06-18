@@ -73,7 +73,9 @@ Ext.define('Taco.view.product.option.Form', {
 
         items.push({
             xtype: 'primarybutton',
-            text: 'Select Values'
+            text: 'Select Values',
+            click: this.launchModal,
+            scope: this
         });
 
         this.options.removeAll();
@@ -89,5 +91,22 @@ Ext.define('Taco.view.product.option.Form', {
 
         this.variations.removeAll();
         this.variations.add(this.grid);
+    },
+
+    launchModal: function () {
+        var modal = Ext.create('Taco.view.product.option.Modal', {
+            productType: this.productType,
+            listeners: {
+                save: function () {
+                    modal.hide();
+                    this.createVariations();
+                },
+                scope: this
+            }
+        });
+    },
+
+    createVariations: function () {
+        // DO THE THOM CODE HERE....
     }
 });
