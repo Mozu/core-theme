@@ -4,7 +4,7 @@
 Ext.define('Taco.view.discount.Form', {
     //extend: 'Taco.core.ux.form.Form',
     extend: 'Taco.view.product.subform.Subform',
-    requires: ['Taco.core.ux.form.CurrencyField', 'Taco.core.ux.action.SecondaryButton', 'Taco.view.category.Modal', 'Taco.view.product.Modal'],
+    requires: ['Ext.ux.form.field.BoxSelect','Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField', 'Taco.core.ux.action.SecondaryButton', 'Taco.view.category.Modal', 'Taco.view.product.Modal'],
     // requires: ['Taco.model.CouponCode', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.BoxSelect', 'Taco.store.ProductComboBox', 'Taco.core.ux.modal.Content', 'Taco.core.ux.modal.ContentWithActions', 'Taco.core.ux.form.UnitField', 'Taco.core.ux.form.CurrencyField'],
     title: 'Discount',
     // model: 'Taco.model.Discount',
@@ -14,11 +14,11 @@ Ext.define('Taco.view.discount.Form', {
         labelAlign: 'top',
         labelSeparator: ''
     },
-    initComponent: function () {
+    initComponent: function() {
         this.buildFormComponents();
         this.callParent(arguments);
     },
-    buildFormComponents: function () {
+    buildFormComponents: function() {
         var me = this,
             createHr = function() {
                 return {
@@ -35,6 +35,26 @@ Ext.define('Taco.view.discount.Form', {
             width: 600,
             emptyText: 'Enter a discount name'
         });
+
+        me.scoptTypeInput = Ext.create('Ext.form.field.ComboBox', {
+            name: 'scope',
+            fieldLabel: "Discount Scope",
+            labelAlign: 'top',
+            // hideEmptyLabel:true,
+            allowBlank: false,
+            forceSelection: true,
+            displayField: 'text',
+            valueField: 'value',
+            width: 600,
+            store: Ext.create('Ext.data.ArrayStore', {
+                fields: ['text', 'value'],
+                data: [
+                    ["LineItem", "LineItem"],
+                    ["Order", "Order"]
+                ]
+            }),            
+        });
+
         me.amountTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'amountType',
             fieldLabel: "Type",
@@ -44,14 +64,16 @@ Ext.define('Taco.view.discount.Form', {
             forceSelection: true,
             displayField: 'text',
             valueField: 'value',
-            
-            flex:1,
+
+            flex: 1,
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
                     ["Percentage", "Percentage"],
-                    ["Dollar Amount", "Amount"]
-                 //   ["Free Shipping", "FreeShipping"]
+                    ["Dollar Amount", "Amount"],
+                    ["Free", "Free"]
+
+                    //   ["Free Shipping", "FreeShipping"]
                 ]
             }),
             listeners: {
@@ -61,83 +83,97 @@ Ext.define('Taco.view.discount.Form', {
         });
         me.amountPrefix = Ext.create('Ext.Component', {
             tpl: ['<tpl>',
-                    '<tpl if="amountType == \'Amount\' ">',
-                        '$',
-                    '</tpl>',
+                '<tpl if="amountType == \'Amount\' ">',
+                '$',
+                '</tpl>',
                 '</tpl>'],
             padding: '0 5 5 5',
             data: this.record.data
         });
         me.amountSuffix = Ext.create('Ext.Component', {
             tpl: ['<tpl>',
-                    '<tpl if="amountType == \'Percentage\' ">',
-                          '% Off',
-                    '</tpl>',
-                    '<tpl if="amountType == \'Amount\' ">',
-                            'Off',
-                    '</tpl>',
+                '<tpl if="amountType == \'Percentage\' ">',
+                '% Off',
+                '</tpl>',
+                '<tpl if="amountType == \'Amount\' ">',
+                'Off',
+                '</tpl>',
                 '</tpl>'],
             padding: '0 5 5 5',
             data: this.record.data
         });
         me.amountInput = Ext.create('Ext.form.field.Number', {
             name: 'amount',
+
             hideTrigger: true
         });
         me.targetTypeInput = Ext.create('Ext.form.field.ComboBox', {
-            name: 'targetType',
+            name: 'target',
             fieldLabel: "Applies to",
             labelAlign: 'top',
             allowBlank: false,
-            flex:1,
+            width: 600,
             forceSelection: true,
             displayField: 'text',
             valueField: 'value',
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
-                    ["All orders", "AllProducts"],
-                    ["Minimum orders of", "Order"],
-                    ["Selected Products/Categories", "Product"]
+                    ["Product", "Product"],
+                    ["Shipping", "Shipping"]
                 ]
             }),
             listeners: {
                 change: me.onAppliesToChange,
                 scope: me
             },
-            value: "All orders"
+            value: "Product"
         });
+
+
         me.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.UnitField' /*'Taco.core.ux.form.CurrencyField'*/, {
             name: 'minimumOrderAmount',
+            fieldLabel: "Minimum Order Amount",
+            labelAlign: 'top',
+            width: 600,
             unitString: '$',
-            unitAtEnd:false
+            emptyText: '0',
+            unitAtEnd: false
         });
+
+
+        me.includeAllProductsInput = Ext.widget({
+            xtype: 'checkbox',
+            name: 'includeAllProducts',
+            fieldLabel: 'Applys to All Products',
+            labelAlign: 'top',
+            width: 600,
+            value: this.record.get('includeAllProducts')
+        });
+
         var catStore = me.record.getCategoryStore();
-        
+
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
-        me.categoryList = Ext.create('Taco.core.ux.form.field.MultiSelect', {
+        me.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'categories',
             flex: 1,
             store: catStore,
-            getStore: function () {
+            getStore: function() {
                 return catStore;
             },
-            
+            hideTrigger: true,
+            triggerOnClick: false,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: true,
             displayField: 'name',
             valueField: 'id',
             fieldLabel: 'Select Categories',
-            listConfig: {
-                disableSelection: true,
-                itemTpl: ['<span class="x-boundlist-item-content">{name}</span>', '<span class="x-boundlist-item-close"> Close</span>'],
-                listeners: {
-                    itemclick: me.onCategoryListItemClick,
-                    scope: this
-                }
-            }
+            
         });
         // reset the list's dirty state when its store first loads
         catStore.on({
-            load: function () {
+            load: function() {
                 me.categoryList.resetOriginalValue();
             },
             single: true,
@@ -146,10 +182,9 @@ Ext.define('Taco.view.discount.Form', {
         me.categoriesBox = Ext.create('Ext.container.Container', {
             layout: {
                 type: 'hbox',
-                align:'bottom'
+                align: 'bottom'
             },
-            items: [
-                
+            items: [                
                 me.categoryList,
                 {
                     xtype: 'secondarybutton',
@@ -160,29 +195,36 @@ Ext.define('Taco.view.discount.Form', {
             ]
         });
         var productStore = me.record.getProductStore();
-        // MultiSelect is the most optimal Field that uses BoundList without a trigger
-        me.productList = Ext.create('Taco.core.ux.form.field.MultiSelect', {
+       
+        me.productList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'products',
-            flex:1,
+            flex: 1,
             store: productStore,
             getStore: function () {
                 return productStore;
             },
+            hideTrigger: true,
+            triggerOnClick: false,
+            forceSelection:true,
+            disableKeyFilter: true,
+            typeAhead :true,
             displayField: 'productName',
-            fieldLabel:'Select Products',
+            fieldLabel: 'Select Products',
             valueField: 'productCode',
-            listConfig: {
-                disableSelection: true,
-                itemTpl: ['<span class="x-boundlist-item-content">{productName}</span>', '<span class="x-boundlist-item-close"> Close</span>'],
-                listeners: {
-                    itemclick: me.onCategoryListItemClick,
-                    scope: this
-                }
-            }
+            //listConfig: {
+            //    disableSelection: true,
+            //    itemTpl: ['<span class="x-boundlist-item-content">{productName}</span>', '<span class="x-boundlist-item-close"></span>'],
+            //    listeners: {
+            //        itemclick: me.onCategoryListItemClick,
+            //        scope: this
+            //    }
+            //}
         });
+        
+       
         // reset the list's dirty state when its store first loads
         productStore.on({
-            load: function () {
+            load: function() {
                 me.productList.resetOriginalValue();
             },
             single: true,
@@ -191,7 +233,7 @@ Ext.define('Taco.view.discount.Form', {
         me.productsBox = Ext.create('Ext.container.Container', {
             layout: {
                 type: 'hbox',
-                align:'bottom'
+                align: 'bottom'
             },
             items: [
                 me.productList,
@@ -200,44 +242,48 @@ Ext.define('Taco.view.discount.Form', {
                     text: 'Add',
                     click: me.launchProductModal,
                     scope: me
-                }
-                
+                }                
             ]
         });
 
 
+
+     
+
+
+
+
         me.productCategoryContainer = Ext.create('Ext.container.Container', {
-            width:600,
+            width: 600,
             items: [
+                me.includeAllProductsInput,
                 me.categoriesBox,
                 me.productsBox
             ]
         });
 
-        me.datesContainer = Ext.create('Ext.container.Container',{
+        me.datesContainer = Ext.create('Ext.container.Container', {
             layout: {
-                type:'hbox',
-                align:'bottom'
+                type: 'hbox',
+                align: 'bottom'
             },
             width: 600,
             defaults: {
-                xtype: 'combobox',
+                xtype: 'datetime',
                 labelAlign: 'top',
-                allowBlank: false,
-                forceSelection: true,
                 labelSeparator: '',
             },
-            items: [{
-                //name: 'startDate',
-                fieldLabel: "Starts",
-                store: ["Now", "Soon"],
-                value: "Now"
-            }, {
-                //name: 'endDate',
-                fieldLabel: "Ends",
-                store: ["Never", "Someday"],
-                value: "Never"
-            }
+            items: [{                    
+                    name: 'startDate',
+                    fieldLabel: "Starts",
+                    emptyText: 'Now',
+                    value: this.record.get('startDate')
+                }, {
+                    name: 'expirationDate',
+                    fieldLabel: "Ends",
+                    emptyText: 'Never',
+                    value: this.record.get('expirationDate')
+                }
             ]
         });
         me.requiresCouponInput = Ext.create('Ext.form.field.Checkbox', {
@@ -252,7 +298,7 @@ Ext.define('Taco.view.discount.Form', {
                         me.couponCodeInput.hide();
                     }
                 },
-                scope:me
+                scope: me
             }
         });
         me.couponCodeInput = Ext.create('Ext.form.field.Text', {
@@ -263,20 +309,7 @@ Ext.define('Taco.view.discount.Form', {
 
         me.items = [
             me.nameInput,
-            //createHr(),
-            {
-                xtype: 'container',
-                layout: {
-                    type: 'hbox',
-                    align: 'bottom'
-                },
-                width:600,
-                items: [
-                    me.amountTypeInput,
-                    me.amountPrefix,
-                    me.amountInput,
-                    me.amountSuffix]
-            },
+            me.scoptTypeInput,
             //createHr(),
             {
                 xtype: 'container',
@@ -285,10 +318,16 @@ Ext.define('Taco.view.discount.Form', {
                     align: 'bottom'
                 },
                 width: 600,
-                items: [me.targetTypeInput, me.minimumOrderAmountInput]
-            }, 
+                items: [
+                    me.amountTypeInput,
+                    me.amountPrefix,
+                    me.amountInput,
+                    me.amountSuffix]
+            },
+            me.targetTypeInput,
+            me.minimumOrderAmountInput,           
             me.productCategoryContainer,
-           // createHr(),
+            // createHr(),
             me.datesContainer,
             //createHr(),
             me.requiresCouponInput,
@@ -300,20 +339,22 @@ Ext.define('Taco.view.discount.Form', {
     /*
         Sets the "Applies To" combobox to "Free Shipping" when appropriate.
     */
-    onAmountTypeInputChange: function (input, value) {
+    onAmountTypeInputChange: function(input, value) {
         var me = this;
         if (!me.rendered) {
             //return;
         }
+
+
         me.amountPrefix.update(me.form.getValues());
-        
+
         me.amountSuffix.update(me.form.getValues());
-     
+
         // guard against this callback being called before the entire form is rendered
         if (!me.amountInput) {
             return;
         }
-        
+
         //me.amountInput.hide();
         if (value === "Percentage" || value === "Amount") {
             me.amountInput.show();
@@ -322,34 +363,22 @@ Ext.define('Taco.view.discount.Form', {
                 me.targetTypeInput.fireEvent('change', me.targetTypeInput, me.targetTypeInput.getValue());
             }
             me.targetTypeInput.enable();
-        } else if (value === "FreeShipping") {
+        } else if (value === "Free") {
             me.amountInput.hide();
             me.amountInput.setValue(0);
-          
+
         }
         // calling .select() does not fire the change event, fire it manually.
         //me.targetTypeInput.fireEvent('change', me.targetTypeInput, me.targetTypeInput.getValue());
     },
-    /*
-        Shows or hides the "minimum order amount" input box based on discount type selection.
-    */
+
     onAppliesToChange: function(input, value) {
         var me = this;
         // guard against this callback being called before the entire form is rendered
         if (!me.minimumOrderAmountInput) {
             return;
         }
-        if (value === "Order") {
-            me.minimumOrderAmountInput.show();
 
-        } else {
-            me.minimumOrderAmountInput.hide();
-            me.minimumOrderAmountInput.setValue(0);
-            me.productList.setValue([]);
-            me.categoryList.setValue([]);
-
-            
-        }
         if (value === "Product") {
             me.productCategoryContainer.show();
         } else {
@@ -360,18 +389,17 @@ Ext.define('Taco.view.discount.Form', {
 
         }
     },
-        /**
+    /**
      * Opens a modal with a TreePanel.
      * @private
      */
-    launchCategoryModal: function () {
+    launchCategoryModal: function() {
         var list = this.categoryList,
             listStore = list.getStore(),
             treeStore = Taco.core.data.StoreManager.getCategoryTreeBySite();
         Ext.destroy(this.modal);
         this.modal = Ext.create('Taco.view.category.Modal', {
-            store: treeStore,
-            preselection: listStore.getRange()
+            store: treeStore
         });
         this.modal.on({
             save: this.updateCategoryList,
@@ -382,7 +410,7 @@ Ext.define('Taco.view.discount.Form', {
      * Opens a modal with a list of products.
      * @private
      */
-    launchProductModal: function () {
+    launchProductModal: function() {
         var list = this.productList,
             listStore = list.getStore(),
             gridStore = Taco.core.data.StoreManager.getOrCreate({
@@ -391,11 +419,17 @@ Ext.define('Taco.view.discount.Form', {
                 clearSort: true,
                 autoLoad: true
             });
-        Ext.destroy(this.modal);
+        if (this.modal) {
+            this.modal.down('grid').getSelectionModel().deselectAll();
+            this.modal.show();
+            return;
+        }        
+        
+
         this.modal = Ext.create('Taco.view.product.Modal', {
-            store: gridStore,
-            preselection: listStore.getRange()
+            store: gridStore
         });
+        this.add(this.modal);
         this.modal.on({
             save: this.updateProductList,
             scope: this
@@ -405,7 +439,7 @@ Ext.define('Taco.view.discount.Form', {
      * Removes a value from the list if the close icon was clicked.
      * @private
      */
-    onCategoryListItemClick: function (view, record, item, index, e) {
+    onCategoryListItemClick: function(view, record, item, index, e) {
         var closeBtn = e.getTarget('.x-boundlist-item-close', 10),
             list = view.ownerCt,
             value, store;
@@ -424,13 +458,19 @@ Ext.define('Taco.view.discount.Form', {
      * @param  {Object} values An object with category data for the list.
      * @private
      */
-    updateCategoryList: function (modal, values) {
+    updateCategoryList: function(modal, values) {
         var me = this,
             list = me.categoryList,
             store = list.getStore();
-        store.remove(store.getRange());
-        store.add(values);
+        Ext.each(values, function(value) {
+            if (!store.data.getByKey(value.getId())) {
+                store.add(value);
+            }
+        });
+
+
         list.setValue(store.collect('id'));
+
     },
     /**
      * Populates the list with the selected values from the modal's GridPanel.
@@ -438,13 +478,18 @@ Ext.define('Taco.view.discount.Form', {
      * @param  {Object} values An object with category data for the list.
      * @private
      */
-    updateProductList: function (modal, values) {
+    updateProductList: function(modal, values) {
         var me = this,
             list = me.productList,
             store = list.getStore();
-        store.remove(store.getRange());
-        store.add(values);
+
+        Ext.each(values, function(value) {
+            if (!store.data.getByKey(value.getId())) {
+                store.add(value);
+            }
+        });
+
+
         list.setValue(store.collect('productCode'));
-    },
-   
+    },   
 });
