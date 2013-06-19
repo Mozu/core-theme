@@ -397,6 +397,7 @@
     <Content Include="Themes\Core3\MetaData\PageTypes\commerce\cart\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\search\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\product\definition.json" />
+    <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\pci-temp.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\cart-monitor.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-faceting.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\function-throttler.js" />
@@ -488,7 +489,7 @@
     <Content Include="Themes\Core3\Resources\Scripts\Modules\product-images.js" />
     <Content Include="Themes\Core3\Resources\Scripts\nls\fr\messages-checkout.js" />
     <Content Include="Themes\Core3\Resources\Scripts\nls\fr\messages.js" />
-    <Content Include="Themes\Core3\Resources\Scripts\Pages\common.js" />
+    <Content Include="Themes\Core3\Resources\Scripts\Modules\common.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Pages\myaccount.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Pages\product.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Vendor\Bootstrap\bootstrap-affix.js" />
