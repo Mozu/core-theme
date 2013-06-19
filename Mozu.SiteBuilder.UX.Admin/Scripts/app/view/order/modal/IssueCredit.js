@@ -115,7 +115,7 @@ Ext.define('Taco.view.order.modal.IssueCredit', {
         });
 
         this.record.issueCredit({
-            data: cfg,
+            jsonData: cfg,
             success: function (response) {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
