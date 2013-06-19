@@ -249,6 +249,7 @@ Ext.define('Taco.model.Product', {
     },
     
     getVariations: function () {
+        var params;
         if (this.productVariationStore) {
             return this.productVariationStore;
         }
@@ -257,10 +258,27 @@ Ext.define('Taco.model.Product', {
             model: 'Taco.model.ProductVariation',
             autoLoad: false
         });
+
+        params = {};
+        
+        if (this.phantom) {
+
+            params.options = [];
+            this.getOptions().each(function (option) {
+                params.options.push({
+                    attributeFQN: option.data.attributeFQN,
+                    values: option.data.values
+                });
+            });
+            params.productTypeId = this.get('productTypeId');
+            params.options = Ext.JSON.encode(params.options);
+        } else {
+            params.productCode = this.getId();
+        }
+        
+
         this.productVariationStore.load({
-            params: {
-                productCode: this.getId()
-            },
+            params: params
         });
 
         return this.productVariationStore;

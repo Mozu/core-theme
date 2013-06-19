@@ -6,15 +6,14 @@ Ext.define('Taco.view.product.option.VariationGrid', {
 
     requires: ['Ext.grid.plugin.CellEditing'],
 
-    plugins: [
-        Ext.create('Ext.grid.plugin.CellEditing', {
-            clicksToEdit: 1
-        })
-    ],
+    
 
     initComponent: function () {
         var optionColumns = [],
             staticColumns;
+        
+
+
 
         staticColumns = [{
             text: 'Product Code',
@@ -73,6 +72,14 @@ Ext.define('Taco.view.product.option.VariationGrid', {
 
         this.store = this.product.getVariations();
 
+
+        this.plugins = [
+            Ext.create('Ext.grid.plugin.CellEditing', {
+                clicksToEdit: 1
+                
+            })
+        ];
+        
         this.callParent(arguments);
     },
 

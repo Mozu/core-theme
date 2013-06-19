@@ -86,14 +86,16 @@ Ext.define('Taco.view.product.option.Form', {
     },
 
     buildVariations: function () {
-        
-        this.grid = Ext.create('Taco.view.product.option.VariationGrid', {
-            product: this.product,
-            productType: this.productType
+        var me = this;
+        me.grid = Ext.create('Taco.view.product.option.VariationGrid', {
+            product: me.product,
+            productType: me.productType
         });
 
-        this.variations.removeAll();
-        this.variations.add(this.grid);
+        me.variations.removeAll();
+        me.variations.add(me.grid);
+        
+
     },
 
     launchModal: function () {
@@ -111,6 +113,8 @@ Ext.define('Taco.view.product.option.Form', {
     },
 
     createVariations: function () {
-        // DO THE THOM CODE HERE....
+        this.buildVariations();
+
+
     }
 });
