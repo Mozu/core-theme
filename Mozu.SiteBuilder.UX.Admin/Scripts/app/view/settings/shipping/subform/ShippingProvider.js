@@ -151,9 +151,11 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
         }
     },
     beforeSave: function () {
-        var settings = this.configFields.getForm().getValues(false, false, false, true),
-            rates = this.ratesSelect.getValue();
-        this.record.set('settings', settings);
-        this.record.set('rates', rates);
+        if (this.configFields.isDirty() || this.ratesSelect.isDirty()) {
+            var settings = this.configFields.getForm().getValues(false, false, false, true),
+                rates = this.ratesSelect.getValue();
+            this.record.set('settings', settings);
+            this.record.set('rates', rates);
+        }
     }
 });
