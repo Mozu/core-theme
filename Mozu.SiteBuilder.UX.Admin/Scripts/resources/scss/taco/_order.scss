@@ -5,7 +5,7 @@
     @include flexbox($wrap: wrap, $justify: space-between);
   }
 
-  .#{$vprefix}catalog {
+  .#{$vprefix}customer-editor {
     .#{$vprefix}editcontainer {
       background-color: $color-neutral-white;
       border: 1px solid border-for($color-neutral-95);
@@ -58,27 +58,19 @@
       }
     }
 
-    .#{$vprefix}inline-editcontainers {
-      @include flexbox($justify: space-between);
-
-      .#{$vprefix}editcontainer {
-        width: 400px;
-      }
-    }
-
-    .#{$vprefix}catalog-customer-profile {
+    .#{$vprefix}customer-profile {
       .#{$vprefix}editcontainer-header {
         margin-bottom: 6px;
       }
 
-      .#{$prefix}panel {
+      .customer-settings {
         display: inline-block;
-        margin-right: 230px;
         vertical-align: top;
       }
 
       .customer-history {
         display: inline-block;
+        margin-left: 230px;
         vertical-align: top;
 
         label {
