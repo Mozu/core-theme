@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -37,7 +38,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICarrierConfigurationWebApiClient _carrierConfigurationWebApiClient;
         private readonly IShippingSettingsWebApiClient _siteShippingSettingsClient;
         private readonly ICarrierConfigurationGlobalWebApiClient _carrierConfigurationGlobalWebApiClient;
+        private static Dictionary<string, string> FeatureDic; 
 
+        static ShippingController()
+        {
+            FeatureDic = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase );
+            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId] = SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom;
+            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.FedEx.CarrierId] = SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.FedEx;
+            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Ups.CarrierId] = SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Ups;
+            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Usps .CarrierId] = SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Usps ;
+            
+
+
+        }
         public ShippingController(ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, IShippingSettingsWebApiClient siteShippingSettingsClient, ICarrierConfigurationGlobalWebApiClient carrierConfigurationGlobalWebApiClient,   IApiContext apiCtx)
         {
             _carrierConfigurationWebApiClient = carrierConfigurationWebApiClient;
@@ -79,7 +92,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [WebGet(UriTemplate = "Settings/edit")]
+        [WebInvoke(UriTemplate = "Settings/edit")]
         public async Task<Response<SiteShippingSettings>> EditSettings(SiteShippingSettings settings )
         {
             var dc = Mapper.Map<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(settings);
@@ -141,23 +154,71 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "carrierSettings/read")]
         public async Task<Response<List<CarrierConfiguration>>> GetCarrierSettings()
         {
-            var res = (await _siteShippingSettingsClient.GetSiteShippingSettings()).ReadAsSync();
-            var settings = Mapper.Map<List<CarrierConfiguration>>(res);
+            var res = (await _carrierConfigurationWebApiClient.GetConfigurations(startIndex: 0, pageSize: 600)).ReadAsSync();
+            var settings = Mapper.Map<List<CarrierConfiguration>>(res.Items );
+            if (!settings.Any(x => x.id == Mozu.ShippingAdmin.Contracts.Constants.FedEx.CarrierId ))
+            {
+                settings.Add(new CarrierConfiguration() { id = Mozu.ShippingAdmin.Contracts.Constants.FedEx.CarrierId, IsConfigured = false });
+            }
+            if (!settings.Any(x => x.id == Mozu.ShippingAdmin.Contracts.Constants.Ups.CarrierId  ))
+            {
+                settings.Add(new CarrierConfiguration() { id = Mozu.ShippingAdmin.Contracts.Constants.Ups.CarrierId, IsConfigured = false });
+            }
+            if (!settings.Any(x => x.id == Mozu.ShippingAdmin.Contracts.Constants.Usps .CarrierId ))
+            {
+                settings.Add(new CarrierConfiguration() { id = Mozu.ShippingAdmin.Contracts.Constants.Usps.CarrierId, IsConfigured = false });
+            }
+            if (!settings.Any(x => x.id == Mozu.ShippingAdmin.Contracts.Constants.Custom .CarrierId))
+            {
+                settings.Add(new CarrierConfiguration() { id = Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId , IsConfigured = false });
+            }
             return List2<CarrierConfiguration>(settings);
         }
 
 
-        [WebGet(UriTemplate = "carrierSettings/edit")]
+        [WebInvoke(UriTemplate = "carrierSettings/edit")]
         public async Task<Response<List<CarrierConfiguration>>> EditCarrierSettings(List<CarrierConfiguration> settings)
         {
 
             var ret = new List<CarrierConfiguration>();
+
+            var activeProviders = (await _siteShippingSettingsClient.GetActiveRateProviders()).ReadAsSync();
+
+
             foreach (var setting in settings)
             {
-                var dcConfig = (await _carrierConfigurationWebApiClient.GetConfiguration(setting.id)).ReadAsSync();
-                setting.PreviousValue = dcConfig;
-                dcConfig = Mapper.Map<Mozu.ShippingAdmin.Contracts.CarrierConfiguration>(setting);
-                dcConfig = (await _carrierConfigurationWebApiClient.UpdateConfiguration(setting.id, dcConfig)).ReadAsSync();
+               
+                var dcConfigRes = (await _carrierConfigurationWebApiClient.GetConfiguration(setting.id));
+                if (dcConfigRes.ResponseMessage.IsSuccessStatusCode )
+                {
+                    setting.PreviousValue = dcConfigRes.ReadAsSync ();
+                }
+                
+                var dcConfig = Mapper.Map<Mozu.ShippingAdmin.Contracts.CarrierConfiguration>(setting);
+                if (dcConfig.Settings == null || dcConfig.Settings.Count == 0 || dcConfig.Settings.All(x => x == null || string.IsNullOrEmpty(x.Value )))
+                {
+                    continue;
+                }
+                var featureId = FeatureDic[dcConfig.Id];
+                if (!activeProviders.Any(x => x.Name == featureId))
+                {
+                    activeProviders.Add(new Core.Api.Contracts.Feature()
+                                            {
+                                                Name = featureId
+                                            });
+
+                    activeProviders = (await _siteShippingSettingsClient.UpdateActiveRateProviders( activeProviders)).ReadAsSync();
+
+                }
+
+                if (setting.PreviousValue != null)
+                {
+                    dcConfig = (await _carrierConfigurationWebApiClient.UpdateConfiguration(setting.id, dcConfig)).ReadAsSync();
+                }
+                else
+                {
+                    dcConfig = (await _carrierConfigurationWebApiClient.CreateConfiguration( setting.id, dcConfig)).ReadAsSync();
+                }
                 ret.Add(Mapper.Map<CarrierConfiguration>(dcConfig));
 
             }

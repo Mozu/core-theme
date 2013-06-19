@@ -400,10 +400,9 @@ Ext.define('Taco.view.discount.Form', {
 
         if (value === "Product") {
             me.productCategoryContainer.show();
-            me.shippingList.hide();
-            me.shippingList.setValue([]);
+          
         } else {
-            me.shippingList.show();
+        
             me.productCategoryContainer.hide();
 
             me.productList.setValue([]);
