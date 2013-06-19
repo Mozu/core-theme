@@ -275,13 +275,11 @@ zipCode: "78704"
     
     // removes the authorized transaction (first item in the payments collection). Will call service, reload the record, and update the ui;
     voidTransaction: function () {
-        
-
         var me = this,
-            config= {
+            config = {
                 jsonData: {
-                    orderId: "",
-                    paymentId: ""
+                    orderId: me.record.get("id"),
+                    paymentId: me.record.get("authorizationInfo").captureData.id
                 },
                 success: function (response) {
                     // success handling here
@@ -297,6 +295,7 @@ zipCode: "78704"
                 scope: this
             };
         
+        // call the model method to persist the change
         this.record.voidTransaction(config);
     },
     
@@ -326,9 +325,7 @@ zipCode: "78704"
     
     // call the service via the model and save the captured amoutn
     capturePayment: function () {
-        var me = this,
-            cfg,
-            data;
+        var me = this;
 
         // add the capture Amount
         var captureAmount = this.captureField.getValue(),
@@ -339,7 +336,7 @@ zipCode: "78704"
             };
 
         // pacakage up the data for the model to persist
-        cfg = {
+        var cfg = {
             jsonData: data,
             success: function(response) {
                 var json = Ext.decode(response.responseText, true);
@@ -348,7 +345,7 @@ zipCode: "78704"
                     return;
                 }
             },
-            failure :function(response) {
+            failure: function(response) {
                 
             },
             scope: this
