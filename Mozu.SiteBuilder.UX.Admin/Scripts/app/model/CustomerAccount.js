@@ -18,18 +18,20 @@ Ext.define('Taco.model.CustomerAccount', {
             type: 'boolean'
         }, {
             name: 'groups',
-            type: 'any',
+            type: 'auto',
             defaultValue: []
         }, {
             name: 'contacts',
-            type: 'any',
+            type: 'auto',
             defaultValue: []
         }, {
             name: 'totalSpent',
-            type: 'float'
+            type: 'float',
+            defaultValue: 0
         }, {
             name: 'orderCount',
-            type: 'int'
+            type: 'int',
+            defaultValue: 0
         }, {
             name: 'lastOrderDate',
             type: 'date'
