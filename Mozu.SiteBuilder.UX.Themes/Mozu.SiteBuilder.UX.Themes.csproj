@@ -397,6 +397,11 @@
     <Content Include="Themes\Core3\MetaData\PageTypes\commerce\cart\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\search\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\product\definition.json" />
+    <Content Include="Themes\Core3\Resources\Scripts-Built\Modules\common.js" />
+    <Content Include="Themes\Core3\Resources\Scripts-Built\Modules\faceting.js" />
+    <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\jquery.history.js" />
+    <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\jquery.tools.dateinput.js" />
+    <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\jquery.tools.rangeinput.js" />
     <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\pci-temp.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\cart-monitor.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-faceting.js" />
