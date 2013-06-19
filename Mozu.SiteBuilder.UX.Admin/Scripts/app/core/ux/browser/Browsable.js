@@ -56,8 +56,14 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                 itemId: 'newbutton',
                 listeners: {
                     click: function () {
-                        Taco.app.StateManager.attemptNavigate(this.token+ '/create');
-                        //this.launchEditor(Ext.create(this.modelName));
+                        var controller = this.getControllerName();
+                        if (controller) {
+                            Taco.app.StateManager.attemptNavigate(controller + '/create');
+                        } else {
+                            this.launchEditor(Ext.create(this.modelName));
+                        }
+                        
+                        
                     },
                     scope: this
                 }
@@ -153,7 +159,15 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         return this.tilePanel;
     },
     getControllerName:function() {
-        
+        var curState = Taco.core.StateManager.getCurrentState(), modelParts;
+        if (this.controllerName) {
+            return this.controllerName;
+        }
+        if (curState && curState.metaData && curState.metaData.controller) {
+            return curState.metaData.controller;
+        }
+        return null;
+
     },
 
     createItemBrowser: function(conf) {
