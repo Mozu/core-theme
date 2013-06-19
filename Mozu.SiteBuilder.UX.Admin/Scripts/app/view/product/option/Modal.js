@@ -24,8 +24,7 @@ Ext.define('Taco.view.product.option.Modal', {
                 option: option,
                 store: store,
                 displayField: 'value',
-                valueField: 'id',
-                minSelections: 1
+                valueField: 'id'
             });
         }, this);
 
@@ -34,7 +33,19 @@ Ext.define('Taco.view.product.option.Modal', {
                 xtype: 'formflexbox',
                 justify: false,
                 items: fields
-            }]
+            }],
+            isValid: function (a,b,c,d,e,f) {
+                var ret = false;
+                
+                this.getForm().getFields().each(function (field) {
+                    if (!field.getValue().length) return;
+
+                    ret = true;
+                    return true;
+                });
+
+                return ret;
+            }
         });
 
         this.relayEvents(this.form, ['savablestatechange']);

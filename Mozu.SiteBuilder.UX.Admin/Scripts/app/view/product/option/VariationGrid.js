@@ -1,4 +1,7 @@
-﻿
+﻿/**
+ * @class  Taco.view.product.option.VariationGrid
+ * @author Travis Johnson
+ */
 
 
 Ext.define('Taco.view.product.option.VariationGrid', {
@@ -53,6 +56,12 @@ Ext.define('Taco.view.product.option.VariationGrid', {
                 keyNavEnabled: false,
                 mouseWheelEnabled: false
             }
+        }, {
+            text: 'Invalid',
+            dataIndex: 'isActive',
+            renderer: function (value) {
+                return '<div class="invalidate"></div>';
+            }
         }];
 
 
@@ -81,6 +90,23 @@ Ext.define('Taco.view.product.option.VariationGrid', {
         ];
         
         this.callParent(arguments);
+
+        this.getView().getRowClass = function (record) {
+            return record.get('isActive') ? '' : 'invalid-record';
+        }
+
+        this.on({
+            itemclick: this.onItemClick,
+            scope: this
+        });
+    },
+
+    onItemClick: function (grid, record, item, index, e) {
+        if (!Ext.fly(e.target).hasCls('invalidate')) return;
+
+        e.stopPropagation();
+
+        record.set('isActive', !record.get('isActive'));
     },
 
     findAttributeName: function (record) {

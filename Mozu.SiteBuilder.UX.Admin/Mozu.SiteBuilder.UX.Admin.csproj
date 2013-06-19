@@ -1234,7 +1234,10 @@
     <Content Include="Scripts\resources\images\dashboard\dashboard-uptime.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-vistors.png" />
     <Content Include="Scripts\resources\images\icons-s757076ac82.png" />
+    <Content Include="Scripts\resources\images\icons-sff03aa1fc5.png" />
     <Content Include="Scripts\resources\images\icons\icon-arrow-left.png" />
+    <Content Include="Scripts\resources\images\icons\icon-ellipse-hover.png" />
+    <Content Include="Scripts\resources\images\icons\icon-ellipse.png" />
     <Content Include="Scripts\resources\images\icons\icon-menu-col.png" />
     <Content Include="Scripts\resources\images\icons\icon-nav-catalog-light.png" />
     <Content Include="Scripts\resources\images\icons\icon-nav-catalog-med.png" />
