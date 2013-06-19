@@ -330,11 +330,13 @@ zipCode: "78704"
             cfg,
             data;
 
-        // get the authorized credit card information
-        data = Ext.clone(this.record.get("authorizationInfo").captureData);
-
         // add the capture Amount
-        data.captureAmount = this.captureField.getValue();
+        var captureAmount = this.captureField.getValue(),
+            paymentData   =  Ext.clone(this.record.get("authorizationInfo").captureData);
+            data          = {
+                payment: paymentData,
+                amount: captureAmount
+            };
 
         // pacakage up the data for the model to persist
         cfg = {

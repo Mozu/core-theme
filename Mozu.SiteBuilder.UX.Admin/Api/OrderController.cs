@@ -113,7 +113,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "cancel")]
         public async Task<Response<List<Order>>> CancelOrder(string orderId)
         {
-            throw new NotImplementedException();
+            var dc = (await _orderWebApiClient.PerformOrderAction(orderId, new DCo.OrderAction { ActionName = "CancelOrder" })).ReadAsSync();
+
+            return List2( Mapper.Map<Order>(dc) );
         }
 
 
