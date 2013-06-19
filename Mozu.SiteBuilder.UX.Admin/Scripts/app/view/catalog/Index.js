@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Taco.core.ux.EditContainer', 'Ext.ux.form.field.BoxSelect', 'Taco.view.customers.AddressModal'],
+    requires: ['Taco.core.ux.EditContainer', 'Ext.ux.form.field.BoxSelect', 'Taco.view.customers.AddressModal', 'Taco.model.Contact'],
 
     header: {
         title: 'Catalog Testing'
@@ -136,6 +136,11 @@ Ext.define('Taco.view.catalog.Index', {
 
         this.record = this.store.first();
 
+        this.shippingAddressStore = Ext.create('Ext.data.Store', {
+            model: 'Taco.model.Contact',
+            data: this.record.get('addresses')
+        });
+
         this.orderHistoryStore = Ext.create('Ext.data.Store', {
             fields: [{
                 name: 'id',
@@ -153,43 +158,28 @@ Ext.define('Taco.view.catalog.Index', {
             data: this.record.get('orderHistory')
         });
 
-        // make address components from data
-        shippingAddresses = this.record.get('addresses').map(function (data) {
-            var cmp = Ext.create('Ext.Component', {
-                cls: 'address',
-                renderData: data,
-                renderTpl: [
-                    '<div class="name">{firstName} {lastName}</div>',
+        shippingAddresses = Ext.create('Ext.view.View', {
+            cls: 'addresses',
+            itemSelector: '.address',
+            store: this.shippingAddressStore,
+            tpl: [
+                '<tpl for="."><div class="address">',
+                    '<div class="name">{firstName} {middleName} {lastName}</div>',
                     '<div class="address-line-1">{address1}</div>',
                     '<div class="address-line-2">{address2}</div>',
                     '<div class="address-line-3">{address3}</div>',
                     '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
                     '<div class="country">{countryCode}</div>',
                     '<div class="phone">{homePhone}</div>',
-                    '<div class="edit">E</div>'
-                ]
-            });
-
-            cmp.on({
-                click: {
-                    fn: function (e) {
-                        if (e.getTarget('.edit', 10)) {
-                            Ext.create('Taco.view.customers.AddressModal', {
-                                record: data
-                            });
-                        }
-                    },
-                    scope: cmp,
-                    element: 'el'
-                }
-            });
-
-            return cmp;
+                    '<div class="edit">E</div>',
+                '</div></tpl>'
+            ]
         });
 
         // build sections
         this.customerProfile = Ext.create('Taco.core.ux.EditContainer', {
             width: 960,
+            manageHeight: false,
             title: 'Customer Profile',
             cls: Taco.baseCSSPrefix + 'catalog-customer-profile',
             items: [{
@@ -238,11 +228,7 @@ Ext.define('Taco.view.catalog.Index', {
 
         this.shippingAddresses = Ext.create('Taco.core.ux.EditContainer', {
             title: 'Billing & Shipping Addresses',
-            items: [{
-                xtype: 'container',
-                cls: 'addresses',
-                items: shippingAddresses
-            }]
+            items: [shippingAddresses]
         });
 
         this.orderHistory = Ext.create('Taco.core.ux.EditContainer', {
@@ -275,9 +261,22 @@ Ext.define('Taco.view.catalog.Index', {
         // put it all together
         Ext.apply(this.body, {
             cls: Taco.baseCSSPrefix + 'catalog',
+            layout: { type: 'auto' },
             items: [this.customerProfile, this.shippingAddresses, this.orderHistory]
         });
 
         this.callParent(arguments);
+
+        shippingAddresses.on({
+            itemclick: function (view, record, item, index, e) {
+                var modal;
+
+                if (e.getTarget('.edit', 10)) {
+                    modal = Ext.create('Taco.view.customers.AddressModal', {
+                        record: record
+                    });
+                }
+            }
+        });
     }
 });

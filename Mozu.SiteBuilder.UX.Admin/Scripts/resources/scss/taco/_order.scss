@@ -26,13 +26,35 @@
         @include flexbox($wrap: wrap);
       }
       .address {
-        background-color: darken($color-neutral-white, 2.5%);
-        border: 1px solid border-for($color-neutral-95);
         font-size: px-to-rem(15);
         line-height: px-to-rem(25);
         margin-right: 40px;
         padding: 10px 20px;
-        width: 240px
+        position: relative;
+        width: 240px;
+
+        .edit {
+          background-color: $color-neutral-20;
+          border: 2px solid $color-neutral-20;
+          display: none;
+          height: 22px;
+          overflow: hidden;
+          padding-top: 18px;
+          position: absolute;
+          right: 0px;
+          top: 0px;
+          width: 22px;
+          @include border-radius(2px);
+          @include icons-sprite(icon-widget-edit);
+        }
+
+        &:hover {
+          background-color: darken($color-neutral-white, 2.5%);
+
+          .edit {
+            display: block;
+          }
+        }
       }
     }
 
