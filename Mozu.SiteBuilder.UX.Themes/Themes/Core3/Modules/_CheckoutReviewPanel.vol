@@ -37,7 +37,7 @@
 
         <div class="mz-next-step">
             {% include "Modules/LoadingBar" %}
-            <button class="mz-submit-button mz-button mz-btn-cta" data-bind="click: submit">Place Order</button>
+            <button type="button" class="mz-submit-button mz-button mz-btn-cta" data-bind="click: submit">Place Order</button>
         </div>
     </div><!-- .mz-inner-panel -->
     </div>

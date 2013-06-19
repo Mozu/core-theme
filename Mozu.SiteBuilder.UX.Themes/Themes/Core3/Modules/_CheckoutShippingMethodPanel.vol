@@ -21,7 +21,7 @@
 
                 <div class="mz-next-step">
                     {% include "Modules/LoadingBar" %}
-                    <button class="mz-submit-button" data-bind="click: nextStep, text: nextButtonText">Next</button>
+                    <button type="button" class="mz-submit-button" data-bind="click: nextStep, text: nextButtonText">Next</button>
                 </div>
             </div>
         </div><!-- .mz-inner-panel -->

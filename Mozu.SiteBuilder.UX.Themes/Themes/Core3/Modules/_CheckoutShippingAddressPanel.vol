@@ -13,7 +13,7 @@
             <div class="mz-form-fieldgroup mz-form-fields" data-bind="template: 'mz-tpt-address-form'"></div>
             <div class="mz-next-step">
                 {% include "Modules/LoadingBar" %}
-                <button class="mz-submit-button" data-bind="click: nextStep, text: nextButtonText"></button>
+                <button type="button" class="mz-submit-button" data-bind="click: nextStep, text: nextButtonText"></button>
             </div>
         </div><!-- .mz-inner-panel -->
     </div>
