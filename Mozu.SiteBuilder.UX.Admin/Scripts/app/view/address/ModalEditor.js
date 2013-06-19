@@ -1,7 +1,7 @@
 ﻿/**
- * @class Taco.view.order.modal.Address
+ * @class Taco.view.order.address.ModalEditor
  */
-Ext.define('Taco.view.customers.AddressModal', {
+Ext.define('Taco.view.address.ModalEditor', {
     extend: 'Taco.core.ux.modal.Modal',
     requires: ['Taco.model.Contact'],
 
