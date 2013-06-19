@@ -135,11 +135,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                 });
                         }
                         if (x.PreviousValue != null)
+                        {
                             foreach (var rate in x.PreviousValue.ConfiguredServiceTypes.Where(_ => x.Rates.IndexOf(_.Code) == -1))
                             {
                                 rate.IsActive = false;
                                 dest.ConfiguredServiceTypes.Add(rate);
                             }
+                            
+                        }
                         return dest;
                     });
 
@@ -152,7 +155,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                        {
                                            id = x.Id,
                                            Rates = new List<string>(),
-                                           Settings = new JObject()
+                                           Settings = new JObject(),
+                                           IsConfigured = true 
                                        };
                         foreach (var setting in x.Settings)
                         {
@@ -185,12 +189,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             //Mapper.CreateMap<SiteShippingRegion, Models.Shipping.SiteShippingRegion>();
             Mapper.CreateMap<SiteShippingSettings, Models.Shipping.SiteShippingSettings>()
                   .ForMember(x => x.ActiveRateProviders, opt => opt.MapFrom(x => x.ActiveRateProviders))
-                  .ForMember(x => x.OrderHandlingFee, opt => opt.MapFrom(x => x.OrderHandlingFee))
+                  .ForMember(x => x.OrderHandlingFee, opt => opt.MapFrom(x => x.OrderHandlingFee!= null ? x.OrderHandlingFee.Amount : null))
                   .ForMember(x => x.SiteShippingOriginAddress, opt => opt.MapFrom(x => x.SiteShippingOriginAddress));
 
             Mapper.CreateMap<Models.Shipping.SiteShippingSettings, SiteShippingSettings>()
                   .ForMember(x => x.ActiveRateProviders, opt => opt.MapFrom(x => x.ActiveRateProviders))
-                  .ForMember(x => x.OrderHandlingFee, opt => opt.MapFrom(x => x.OrderHandlingFee))
+                  .ForMember(x => x.OrderHandlingFee, opt => opt.MapFrom(x => x.OrderHandlingFee.HasValue  
+                      ? new  Mozu.SiteSettings.Shipping.Contracts.SiteShippingHandlingFee(){Amount = x.OrderHandlingFee }
+                      :null ))
                   .ForMember(x => x.SiteShippingOriginAddress, opt => opt.MapFrom(x => x.SiteShippingOriginAddress));
 
 

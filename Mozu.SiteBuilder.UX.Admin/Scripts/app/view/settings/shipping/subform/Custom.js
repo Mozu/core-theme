@@ -8,6 +8,7 @@ Ext.define('Taco.view.settings.shipping.subform.Custom', {
     requires: [],
     title: 'Custom Rate',
     layout: 'hbox',
+    padding: '10 10 10 10',
     initComponent: function() {
         var me = this;
         var customRate = this.record.get('customRate') || {};

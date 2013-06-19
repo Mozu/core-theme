@@ -2,9 +2,10 @@
  * @class Taco.store.Discounts
  */
 
-Ext.define('Taco.model.ShippingCarrierSettings', {
-        extend: 'Ext.data.Store',
-        model: 'Taco.model.Discount',
+Ext.define('Taco.store.ShippingCarrierSettings', {
+    extend: 'Ext.data.Store',
+    requires:['Taco.model.ShippingCarrierSetting'],
+        model: 'Taco.model.ShippingCarrierSetting',
         pageSize: 25,
         remoteSort: false,
         remoteFilter: false,

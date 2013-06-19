@@ -7,6 +7,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
     extend: 'Taco.view.product.subform.Subform',
     requires: [],
     title: 'Shipping From',
+    
     initComponent: function () {
         var me = this;
 
@@ -16,6 +17,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
         this.addressView = Ext.widget({
             xtype: 'component',
             cls: 'address',
+            style: 'line-height: 2.5rem;background-color: #f9f9f9;border: 1px solid #bfbfbf',
             data: this.addressRecord.data,
             tpl: [
                 '<div class="name">{companyName}</div>',

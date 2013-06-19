@@ -3,12 +3,12 @@
  */
 
 Ext.define('Taco.model.ShippingCarrierSetting', {
-
     extend: 'Taco.core.data.Model',
     fields: [
         { name: 'id', type: 'string' },
-        { name: 'settings', type: 'auto' , defaultValue: {} },
-        { name: 'rates', type: 'auto', defaultValue: [] }
+        { name: 'settings', type: 'auto', defaultValue: {} },
+        { name: 'rates', type: 'auto', defaultValue: [] },
+        { name: 'isConfigured', type: 'boolean' }
     ],
 
     proxy: {
@@ -27,5 +27,5 @@ Ext.define('Taco.model.ShippingCarrierSetting', {
             allowSingle: false,
             type: 'json'
         }
-    } 
+    }
 });

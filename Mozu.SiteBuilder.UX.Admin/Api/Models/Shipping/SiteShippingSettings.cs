@@ -49,6 +49,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
         [DataMember(Name = "rates")]
         public List<string> Rates { get; set; }
 
+        [DataMember(Name = "isConfigured")]
+        public bool? IsConfigured { get; set; }
+
         [IgnoreDataMember]
         public Mozu.ShippingAdmin.Contracts.CarrierConfiguration PreviousValue { get; set; }
 
