@@ -78,7 +78,7 @@ Ext.define('Taco.view.navigation.ContextSwitcher', {
     onGlobalStateChange: function (state) {
         var md = state.getMetaData && state.getMetaData();
 
-        if (md && (md.controller =='sites' || md.action === "edit")) {
+        if (md && (md.controller =='sites' || md.action === "edit") || md.action === "create") {
             this.disable();
         } else {
             this.enable();
