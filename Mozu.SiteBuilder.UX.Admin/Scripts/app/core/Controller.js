@@ -43,7 +43,7 @@ Ext.define('Taco.core.Controller', {
     },
 
     getIndexView: function () {
-        if (!this.indexView) {getIndexView
+        if (!this.indexView) {
             //console.log(this.id);
             this.indexView = 'Taco.view.' + Ext.String.uncapitalize(Ext.util.Inflector.singularize(this.id)) + '.Index';
         }
