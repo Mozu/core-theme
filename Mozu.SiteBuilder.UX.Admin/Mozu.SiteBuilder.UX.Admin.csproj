@@ -2751,14 +2751,6 @@
     <Content Include="Scripts\app\view\productOption\edit.js" />
     <Content Include="Scripts\app\view\product\Edit-DEPRECATED.js" />
     <Content Include="Scripts\app\view\product\Index.js" />
-    <Content Include="Scripts\app\view\shipping\CountrySelector.js" />
-    <Content Include="Scripts\app\view\shipping\CustomRateEditor.js" />
-    <Content Include="Scripts\app\view\shipping\CustomRateField.js" />
-    <Content Include="Scripts\app\view\shipping\Index.js" />
-    <Content Include="Scripts\app\view\shipping\OriginEditor.js" />
-    <Content Include="Scripts\app\view\shipping\OriginField.js" />
-    <Content Include="Scripts\app\view\shipping\OriginStaticField.js" />
-    <Content Include="Scripts\app\view\shipping\UspsConfigurationEditor.js" />
     <Content Include="Scripts\app\view\site\CreateModal.js" />
     <Content Include="Scripts\app\view\site\navigation\Tree.js" />
     <Content Include="Scripts\app\view\site\navigation\WidgetNav.js" />

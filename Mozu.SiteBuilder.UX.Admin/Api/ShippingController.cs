@@ -97,6 +97,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var dc = Mapper.Map<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(settings);
             var custSettings = Mapper.Map<Mozu.ShippingAdmin.Contracts.CarrierConfiguration>(settings.CustomRate);
+
+            
             var customFeature = dc.ActiveRateProviders.FirstOrDefault(x => x.Name == SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom  );
             if (customFeature!= null )
             {
