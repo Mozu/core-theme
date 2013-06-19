@@ -98,7 +98,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "payments")]
         public List<OrderPayment> Payments { get; set; }
 
-        [DataMember(Name="packages")]
+        [DataMember(Name="packages", EmitDefaultValue=true)]
         public List<OrderPackage> Packages { get; set; }
 
         [DataMember(Name="unpackedItems")]

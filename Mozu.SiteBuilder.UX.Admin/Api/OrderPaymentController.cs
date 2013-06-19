@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ServiceModel.Web;
+using System.Linq;
 using System.Threading.Tasks;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -31,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var order = (await _orderWebApiClient.PerformPaymentAction(arg.Payment.OrderId, arg.Payment.Id, action)).ReadAsSync();
 
             //_orderWebApiClient.GetPackageLabel
-            return List2(order.Map<Order>());
+            return List2( order.Map<Order>() );
         }
 
         public class CreditPaymentArg
@@ -41,22 +42,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string Reason { get; set; }
         }
         [WebInvoke(UriTemplate = "payment/credit")]
-        public async Task<Response<List<Order>>> CreditPayment(CreditPaymentArg args)
+        public async Task<Response<List<Order>>> CreditPayment(CreditPaymentArg arg)
         {
+            // TODO: is referenceInteraction necessary?
+            var referenceInteraction = arg.Payment.Interactions != null ? arg.Payment.Interactions.FirstOrDefault(i => i.InteractionType == "Capture" || i.InteractionType == "AuthorizeAndCapture") : null;
+
             // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
             var action = new DCp.PaymentAction
             {
                 ActionName = "CreditPayment",
                 ISOCurrencyCode = "USD",
-                Amount = args.Amount,
+                Amount = arg.Amount,
                 ReferenceSourcePaymentId = null
             };
 
-            var order = (await _orderWebApiClient.PerformPaymentAction(args.Payment.OrderId, args.Payment.Id, action)).ReadAsSync();
+            var order = (await _orderWebApiClient.PerformPaymentAction(arg.Payment.OrderId, arg.Payment.Id, action)).ReadAsSync();
 
             // TODO: we don't currently do anything with the "reason"
 
-            return List2(order.Map<Order>());
+            return List2( order.Map<Order>() );
         }
 
         public class VoidPaymentArg
@@ -78,7 +82,66 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order = (await _orderWebApiClient.PerformPaymentAction(arg.OrderId, arg.PaymentId, action)).ReadAsSync();
 
-            return List2(order.Map<Order>());
+            return List2( order.Map<Order>() );
+        }
+
+        public class RequestCheckArgs
+        {
+            public string OrderId { get; set; }
+        }
+        [WebInvoke(Method = "POST", UriTemplate = "payment/requestcheck")]
+        public async Task<Response<List<Order>>> RequestCheck(RequestCheckArgs arg)
+        {
+            var order = (await _orderWebApiClient.CreatePaymentAction(arg.OrderId, new DCp.PaymentAction { ActionName = "RequestCheck" })).ReadAsSync();
+
+            return List2( order.Map<Order>() );
+        }
+
+        public class ApplyCheckArgs
+        {
+            public string OrderId { get; set; }
+            public OrderPayment Payment { get; set; }
+            public string CheckNumber { get; set; }
+            public decimal Amount { get; set; }
+        }
+        [WebInvoke(Method = "POST", UriTemplate = "payment/applycheck")]
+        public async Task<Response<List<Order>>> ApplyCheck(ApplyCheckArgs arg)
+        {
+            var action = new DCp.PaymentAction
+            {
+                ActionName = "ApplyCheck",
+                ISOCurrencyCode = "USD",
+                CheckNumber = arg.CheckNumber,
+                Amount = arg.Amount,
+                ReferenceSourcePaymentId = null
+            };
+
+            var order = (await _orderWebApiClient.PerformPaymentAction(arg.OrderId, arg.Payment.Id, action)).ReadAsSync();
+            
+            return List2( order.Map<Order>() );
+        }
+
+        public class DeclineCheckArgs
+        {
+            public string OrderId { get; set; }
+            public OrderPayment Payment { get; set; }
+            public string CheckNumber { get; set; }
+        }
+        [WebInvoke(Method = "POST", UriTemplate = "payment/declinecheck")]
+        public async Task<Response<List<Order>>> DeclineCheck(ApplyCheckArgs arg)
+        {
+            var action = new DCp.PaymentAction
+            {
+                ActionName = "ApplyCheck",
+                ISOCurrencyCode = "USD",
+                CheckNumber = arg.CheckNumber,
+                Amount = arg.Amount,
+                ReferenceSourcePaymentId = null
+            };
+
+            var order = (await _orderWebApiClient.PerformPaymentAction(arg.OrderId, arg.Payment.Id, action)).ReadAsSync();
+
+            return List2( order.Map<Order>() );
         }
     }
 }

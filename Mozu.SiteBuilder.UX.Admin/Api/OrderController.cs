@@ -45,9 +45,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? pageSize = pagingParams.pageSize ?? 20;
             SortingCollectionItem sort = pagingParams.sort == null ? null : pagingParams.sort.FirstOrDefault();
 
+            var mock_orders = await GetMock();
+
             DCo.OrderCollection dcOrders = null;
             
-            if (!string.IsNullOrEmpty(pagingParams.id))
+            if (!string.IsNullOrEmpty(pagingParams.id) && !mock_orders.Any(o => o.Id == pagingParams.id))
             {
                 dcOrders = new DCo.OrderCollection() {Items = new List<DCo.Order>()};
                 var order = (await _orderWebApiClient.GetOrder(pagingParams.id)).ReadAsSync();
@@ -62,12 +64,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
             }
 
-            var orders1 = await GetMock();
-            var orders2 = dcOrders != null ? Mapper.Map<List<Order>>(dcOrders.Items) : new List<Order>();
+            var real_orders = dcOrders != null ? Mapper.Map<List<Order>>(dcOrders.Items) : new List<Order>();
 
             var orders = new List<Order>();
-            orders.AddRange(orders1);
-            orders.AddRange(orders2);
+            orders.AddRange(mock_orders);
+            orders.AddRange(real_orders);
 
             if (sort != null)
             {
@@ -202,6 +203,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             order_authorized_only.Payments = new List<OrderPayment> {
                     new OrderPayment {
                         Id = "337", 
+                        OrderId = "o1001",
                         Status = "Authorized",
                         AmountCollected = 0m, 
                         PaymentType = "CreditCard", 
@@ -221,6 +223,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             order_paid_in_full.Payments = new List<OrderPayment> {
                 new OrderPayment {
                     Id = "340",
+                    OrderId = "o1002",
                     Status = "Paid",
                     AmountCollected = 229.48m,
                     PaymentType = "CreditCard",
@@ -240,6 +243,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             order_partial_payment.Payments = new List<OrderPayment> {
                     new OrderPayment {
                         Id = "337", 
+                        OrderId = "o1003",
                         Status = "Authorized",
                         AmountCollected = 0m, 
                         PaymentType = "CreditCard", 
@@ -250,6 +254,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     },
                     new OrderPayment {
                             Id = "339",
+                            OrderId = "o1003",
                             Status = "Paid",
                             AmountCollected = 129.48m, 
                             PaymentType = "CreditCard", 
