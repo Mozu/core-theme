@@ -32,6 +32,7 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
             item[val - index < 1 ? 'hide' : 'show']();
         });
         this.numRanges = numRanges;
+        this.fireEvent('heightchange');
     },
 
     getVisibleFields: function() {
@@ -52,7 +53,7 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
         this.items.each(function (item) {
             me.relayEvents(item, ['change']);
         });
-        
+        this.enableBubble('heightchange');
     },
     items: [
         {startFieldEmptyText: 'Below', isEnd: true},
