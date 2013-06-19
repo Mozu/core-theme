@@ -16,7 +16,8 @@ Ext.define('Taco.view.site.page.settings.Facets', {
             renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]'),
             hidden: !isShowing
         });
-        rangeQueryForm.eventRelayer = me.form.relayEvents(rangeQueryForm, ['savablestatechange']);
+        me.form.updateLayout();
+        rangeQueryForm.eventRelayer = me.form.relayEvents(rangeQueryForm, ['savablestatechange','heightchange']);
         return rangeQueryForm;
     },
 
@@ -155,12 +156,18 @@ Ext.define('Taco.view.site.page.settings.Facets', {
                                     }
                                     configuredFacetsStore.remove(record);
                                     me.form.fireEvent('savablestatechange', me.form, me.facetSetStore.isDirty());
+                                    me.form.updateLayout();
                                     break;
                                 case 'settings':
                                     rId = record.get('sourceId');
                                     var rangeQueryForm = me.rangeQueryForms[rId];
                                     if (!rangeQueryForm) rangeQueryForm = me.createRangeQueryForm(record);
-                                    if (rangeQueryForm.isHidden()) { rangeQueryForm.show() } else { rangeQueryForm.hide(); }
+                                    if (rangeQueryForm.isHidden()) {
+                                        rangeQueryForm.show();
+                                    } else {
+                                        rangeQueryForm.hide();
+                                    }
+                                    me.form.updateLayout();
                                     break;
                             }
                         },
@@ -194,6 +201,8 @@ Ext.define('Taco.view.site.page.settings.Facets', {
         };
 
         this.callParent(arguments);
+
+        this.form.on('heightchange', this.form.updateLayout, this.form);
 
     }
 });

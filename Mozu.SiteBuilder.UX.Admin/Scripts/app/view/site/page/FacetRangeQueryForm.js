@@ -92,6 +92,7 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
             this.cachedRangeQueries = this.rangeQueries.getValue();
             this.rangeQueries.setValue([]);
         }
+        this.fireEvent('heightchange');
     },
     listeners: {
         destroy: function () {
