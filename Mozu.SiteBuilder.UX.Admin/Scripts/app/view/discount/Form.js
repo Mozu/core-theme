@@ -17,6 +17,7 @@ Ext.define('Taco.view.discount.Form', {
     initComponent: function() {
         this.buildFormComponents();
         this.callParent(arguments);
+        this.setFieldVisibility();
     },
     buildFormComponents: function() {
         var me = this,
@@ -124,7 +125,7 @@ Ext.define('Taco.view.discount.Form', {
                 ]
             }),
             listeners: {
-                change: me.onAppliesToChange,
+                change: me.setFieldVisibility,
                 scope: me
             },
             value: "Product"
@@ -148,7 +149,11 @@ Ext.define('Taco.view.discount.Form', {
             fieldLabel: 'Applys to All Products',
             labelAlign: 'top',
             width: 600,
-            value: this.record.get('includeAllProducts')
+            value: this.record.get('includeAllProducts'),
+            listeners: {
+                change: me.setFieldVisibility,
+                scope: me
+            },
         });
 
         var catStore = me.record.getCategoryStore();
@@ -207,7 +212,7 @@ Ext.define('Taco.view.discount.Form', {
             },
             queryMode :'local',
             width: 600,
-            hidden: this.record.get('target')=='Product',
+            hidden: this.record.get('target')!='Shipping',
             triggerOnClick: true,
             forceSelection: true,
             disableKeyFilter: true,
@@ -272,7 +277,7 @@ Ext.define('Taco.view.discount.Form', {
 
         me.productCategoryContainer = Ext.create('Ext.container.Container', {
             width: 600,
-            hidden: this.record.get('target') != 'Product',
+            
             items: [
                 me.includeAllProductsInput,
                 me.categoriesBox,
@@ -352,6 +357,9 @@ Ext.define('Taco.view.discount.Form', {
             me.requiresCouponInput,
             me.couponCodeInput
         ];
+
+
+        
     },
     
 
@@ -391,25 +399,16 @@ Ext.define('Taco.view.discount.Form', {
         //me.targetTypeInput.fireEvent('change', me.targetTypeInput, me.targetTypeInput.getValue());
     },
 
-    onAppliesToChange: function(input, value) {
+
+    setFieldVisibility:function () {
         var me = this;
-        // guard against this callback being called before the entire form is rendered
-        if (!me.minimumOrderAmountInput) {
-            return;
-        }
-
-        if (value === "Product") {
-            me.productCategoryContainer.show();
-          
-        } else {
+        me.includeAllProductsInput.setVisible(me.targetTypeInput.getValue() != 'Shipping');
+        me.shippingList.setVisible(me.targetTypeInput.getValue() == 'Shipping');
+        me.categoriesBox.setVisible(!me.includeAllProductsInput.getValue());
+        me.productsBox.setVisible(!me.includeAllProductsInput.getValue());
         
-            me.productCategoryContainer.hide();
-
-            me.productList.setValue([]);
-            me.categoryList.setValue([]);
-
-        }
     },
+    
     /**
      * Opens a modal with a TreePanel.
      * @private
