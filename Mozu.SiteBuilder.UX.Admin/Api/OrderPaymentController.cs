@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string PaymentId { get; set; }
         }
         [WebInvoke(Method = "POST", UriTemplate = "payment/void")]
-        public async Task<Response<List<Order>>> VoidPayment(string orderId, string paymentId)
+        public async Task<Response<List<Order>>> VoidPayment(VoidPaymentArg arg)
         {
             // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
             var action = new DCp.PaymentAction
@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 ReferenceSourcePaymentId = null
             };
 
-            var order = (await _orderWebApiClient.PerformPaymentAction(orderId, paymentId, action)).ReadAsSync();
+            var order = (await _orderWebApiClient.PerformPaymentAction(arg.OrderId, arg.PaymentId, action)).ReadAsSync();
 
             return List2(order.Map<Order>());
         }
