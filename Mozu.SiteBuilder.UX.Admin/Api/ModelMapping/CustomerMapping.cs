@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.Contacts, op => op.MapFrom(dc => dc.Contacts))
             .ForMember(x => x.CompanyOrOrganization, op => op.MapFrom(dc => dc.CompanyOrOrganization))
             .ForMember(x => x.AcceptsMarketing, op => op.MapFrom(dc => dc.AcceptsMarketing))
-            .ForMember(x => x.Groups, op => op.MapFrom(dc => dc.Groups.Select(g => g.Name)))
+            .ForMember(x => x.Groups, op => op.MapFrom(dc => (dc.Groups ?? Enumerable.Empty<DC.CustomerGroup>()).Select(g => g.Name)))
             .ForMember(x => x.Notes, op => op.MapFrom(dc => dc.Notes))
             .ForMember(x => x.TotalOrderAmount, op => op.MapFrom(dc => dc.OrderSummary != null && dc.OrderSummary.TotalOrderAmount != null ? (decimal?)dc.OrderSummary.TotalOrderAmount.Amount : null))
             .ForMember(x => x.OrderCount, op => op.MapFrom(dc => dc.OrderSummary != null ? dc.OrderSummary.OrderCount : 0))

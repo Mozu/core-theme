@@ -12,10 +12,10 @@
         initComponent: function () {
             var me = this;
 
-            var first = me.recordId.get("firstName"),
-                last = me.recordId.get("lastName");
+            var first = me.record.get("primaryFirstName"),
+                last = me.record.get("primaryLastName");
 
-            if (me.recordId.isModel && first != Ext.emptyString && last != Ext.emptyString) {
+            if (me.record.isModel && first != Ext.emptyString && last != Ext.emptyString) {
                 me.title = first + ' ' + last;
             }
 
@@ -28,7 +28,7 @@
                     layout: 'hbox',
                     items: [{
                         xtype: 'label',
-                        html: me.recordId.get('email')
+                        html: me.record.get('email')
                     }, {
                         xtype: 'action',
                         text: 'change email',
@@ -59,16 +59,16 @@
                     html: first + ' ' + last
                 }, {
                     xtype: 'label',
-                    html: me.recordId.get('address1') + me.recordId.get('address2') + me.recordId.get('address3')
+                    html: me.record.get('primaryAddress1') + me.record.get('primaryAddress2') + me.record.get('primaryAddress3')
                 }, {
                     xtype: 'label',
-                    html: me.recordId.get('cityOrTown') + ', ' + me.recordId.get('stateOrProvince') + ' ' + me.recordId.get('postalOrZipCode')
+                    html: me.record.get('primaryCityOrTown') + ', ' + me.record.get('primaryStateOrProvince') + ' ' + me.record.get('primaryPostalOrZipCode')
                 }, {
                     xtype: 'label',
-                    html: me.recordId.get('countryCode')
+                    html: me.record.get('primaryCountryCode')
                 }, {
                     xtype: 'label',
-                    html: me.recordId.get('phoneNumber')
+                    html: me.record.get('primaryPhoneNumber')
                 }],
                 actions: [
                 ]
@@ -79,7 +79,7 @@
                 padding: '15 0 0 0',
                 listeners: {
                     click : function () {
-                        me.editAddress(me.recordId);
+                        me.editAddress(me.record);
                     }
                 }
             });
@@ -102,7 +102,7 @@
                             html: 'Total Spent'
                         }, {
                             xtype: 'label',
-                            html: Ext.util.Format.currency(me.recordId.get('spent'), '$', 2, false)
+                            html: Ext.util.Format.currency(me.record.get('spent'), '$', 2, false)
                         }]
                     }, {
                         defaults: {
@@ -114,7 +114,7 @@
                             html: 'Total Orders'
                         }, {
                             xtype: 'label',
-                            html: me.recordId.get('totalOrders')
+                            html: me.record.get('totalOrders')
                         }]
                     }]
                 }, {
@@ -124,7 +124,7 @@
                     },
                     items: [{
                         xtype: 'label',
-                        html: 'Customer Since ' + (Ext.util.Format.date(me.recordId.get('lastOrderedOn'), 'M d Y') || "(unknown)")
+                        html: 'Customer Since ' + (Ext.util.Format.date(me.record.get('lastOrderedOn'), 'M d Y') || "(unknown)")
                     }]
                 }, {
                     xtype: 'panel',
@@ -149,7 +149,7 @@
                         listeners: {
                             click: {
                                 fn: function () {
-                                    me.openCustomerGroupsForm(me.recordId);
+                                    me.openCustomerGroupsForm(me.record);
                                 }
                             }
                         }
@@ -157,7 +157,7 @@
                 }]
             });
 
-            //console.log(me.recordId, me.recordId.get('customerSince'), me.recordId);
+            //console.log(me.record, me.record.get('customerSince'), me.record);
             me.addresslist = {
                 layout: 'hbox',
                 defaults: {
@@ -165,7 +165,7 @@
                 },
                 items: []
             };
-            Ext.each(me.recordId.get('addresses'), function (address) {
+            Ext.each(me.record.get('addresses'), function (address) {
                 me.addresslist.items.push(Ext.create('Taco.view.customers.AddressPanel', {
                     record: address
                 }));
@@ -185,7 +185,7 @@
                 autoLoad: true,
                 filters: [new Ext.util.Filter({
                     property: 'customerId',
-                    value   : me.recordId.get('id')
+                    value   : me.record.get('id')
                 })]
             });
 
