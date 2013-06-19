@@ -8,6 +8,7 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
     xtype: 'taco.rangequeryform',
     header: false,
     hidden: true,
+    trackResetOnLoad: true,
     initComponent: function () {
         var me = this;
         me.displayStyle = Ext.widget('radiogroup', {
@@ -32,6 +33,9 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
             fieldLabel: 'Number of ranges',
             labelAlign: 'left',
             hidden: true,
+            isDirty: function() {
+                return false;
+            },
             store: [
                 3,
                 4,
@@ -64,6 +68,7 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
         me.rangeQueries.on({
             change: function (rqs, nV) {
                 me.numRanges.setValue(nV && Ext.isArray(nV) && nV.length);
+                me.savableStateCheck();
             }
         });
         this.callParent(arguments);

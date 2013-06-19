@@ -15,6 +15,9 @@ define(['modules/jquery-plus', 'knockout', 'shim!vendor/jquery.history[jquery=jQ
         $('#mz-category-loading').remove();
         $facetingForm.noFlickerFadeIn();
 
+        facetingVM.PageSize.subscribe(function (newVal) {
+            if (!facetingVM.isUpdating) facetingVM.updateFacets();
+        });
 
         facetingVM.on('update', function () {
             var newURL, lrClone = JSON.parse(JSON.stringify(facetingVM.lastRequest));
