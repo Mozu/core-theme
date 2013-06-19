@@ -12,5 +12,5 @@
     });
 </script>
 <script type="text/javascript">
-    require(['pages/common'], function() { require([{{Model}}]) } );
+    require(['modules/common'], function() { require([{{Model}}]) } );
 </script>

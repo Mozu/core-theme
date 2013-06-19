@@ -1,7 +1,7 @@
 
-pages/common.js
+modules/common.js
 ----------------
-pages/common.js
+modules/common.js
 vendor/knockout-latest.js
 text.js
 ajax.js
@@ -9,6 +9,7 @@ shim.js
 modules/api.js
 modules/animatemodals.js
 modules/cart-monitor.js
+modules/function-throttler.js
 shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
 modules/jquery-plus.js
 modules/loading-bars.js
@@ -18,20 +19,20 @@ i18n!nls/messages
 modules/login-links.js
 modules/knockout-plus.js
 modules/knockout-viewmodel.js
+modules/models-price.js
+modules/models-product.js
 shim!vendor/jquery.tagcloud.0-0-1[jquery=jQuery]
 modules/tagcloud.js
 
 pages/product.js
 ----------------
-modules/models-price.js
-modules/models-product.js
 shim!vendor/jquery-colorbox[jquery=jQuery]
 modules/product-images.js
+shim!vendor/jquery.tools.dateinput[jquery=jQuery]
 pages/product.js
 
 pages/cart.js
 ----------------
-modules/function-throttler.js
 modules/models-cart.js
 pages/cart.js
 
@@ -53,3 +54,9 @@ modules/models-customer.js
 modules/models-user.js
 modules/models-myaccount.js
 pages/myaccount.js
+
+modules/faceting.js
+----------------
+shim!vendor/jquery.history[jquery=jQuery]>History
+modules/models-faceting.js
+modules/faceting.js

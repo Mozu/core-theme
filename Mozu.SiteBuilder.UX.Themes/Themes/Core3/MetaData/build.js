@@ -14,7 +14,7 @@
     skipPragmas: true,
     modules: [
         {
-            name: "pages/common",
+            name: "modules/common",
             include: [
                 'knockout',
                 'text',
@@ -23,30 +23,36 @@
                 'modules/api',
                 'modules/animatemodals',
                 'modules/cart-monitor',
+                'modules/function-throttler',
                 'modules/jquery-plus',
                 'modules/loading-bars',
                 'modules/login-links',
                 'modules/knockout-viewmodel',
                 'modules/knockout-plus',
+                'modules/models-product',
                 'modules/tagcloud'
             ],
             exclude: ['jquery', 'sdk', 'pciaas'],
         },
         {
             name: "pages/product",
-            exclude: ["pages/common"]
+            exclude: ["modules/common"]
         },
         {
             name: "pages/cart",
-            exclude: ["pages/common"]
+            exclude: ["modules/common"]
         },
         {
             name: "pages/checkout",
-            exclude: ["pages/common", 'pciaas']
+            exclude: ["modules/common", 'pciaas']
         },
         {
             name: "pages/myaccount",
-            exclude: ["pages/common"]
+            exclude: ["modules/common"]
+        },
+        {
+            name: "modules/faceting",
+            exclude: ["modules/common"]
         }
     ]
 });
