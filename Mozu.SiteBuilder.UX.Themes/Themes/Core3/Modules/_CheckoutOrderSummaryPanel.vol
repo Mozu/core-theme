@@ -1,7 +1,7 @@
 ﻿<div class="mz-panel mz-order-summary-panel" id="mz-order-summary-panel">
     <h3 class="mz-panel-header">
         Order Summary
-        <button data-bind="click: editCart">Edit</button>
+        <button type="button" data-bind="click: editCart">Edit</button>
     </h3>
 
     <div id="mz-order-summary" class="mz-order-summary">

@@ -4,7 +4,7 @@
 <div class="mz-panel" id="mz-payment-information-panel" data-bind="with: BillingInfo, cssClassFrom: BillingInfo.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
     <h3 class="mz-panel-header">
         Payment Information
-        <button class="mz-edit-button" data-bind="click: edit">Edit</button>
+        <button type="button" class="mz-edit-button" data-bind="click: edit">Edit</button>
     </h3>
     <div class="mz-panel-wrap">
         <div class="mz-inner-panel" data-bind="changeHeightOn: stepStatus() + BillingContact.Address.CountryCode() + IsSameBillingShippingAddress() + PaymentType()">
@@ -84,7 +84,7 @@
 
                 <div class="mz-next-step">
                     {% include "Modules/LoadingBar" %}
-                    <button class="mz-submit-button" data-bind="click: nextStep">Next</button>
+                    <button type="button" class="mz-submit-button" data-bind="click: nextStep">Next</button>
                 </div>
             </div>
         </div><!-- .mz-inner-panel -->
