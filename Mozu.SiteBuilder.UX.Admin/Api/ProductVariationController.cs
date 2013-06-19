@@ -26,18 +26,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly IProductWebApiClient _productClient;
         private readonly IProductTypeWebApiClient _productTypeWebApiClient;
-        public ProductVariationController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient)
+        private readonly IAttributeWebApiClient _attributeWebApiClient;
+
+        public ProductVariationController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient, IAttributeWebApiClient attributeWebApiClient)
         {
             _productClient = productClient;
             _productTypeWebApiClient = productTypeWebApiClient;
+            _attributeWebApiClient = attributeWebApiClient;
         }
 
         [WebGet(UriTemplate = "list")]
-        public async Task<Response<List<ProductVariation >>> ListProducts([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter,string productCode)
+        public async Task<Response<List<ProductVariation>>> ListProducts([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri]string productCode = null, [FromUri] string options = null, [FromUri ] int? productTypeId = null)
         {
-            var res = (await _productClient.GetProductVariations(productCode, pagingParams.startIndex, pagingParams.pageSize)).ReadAsSync();
-            var mappedRes = AutoMapper.Mapper.Map<List<ProductVariation>>(res.Items);
-            return this.List2(mappedRes, total: (int)res.TotalCount);
+            Mozu.ProductAdmin.Contracts.ProductVariationPagedCollection collection = null;
+            if (!string.IsNullOrEmpty(options))
+            {
+                var productOptions = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ProductProperty>>(options);
+
+                if (productOptions.Count == 0)
+                {
+                    collection = new DC.ProductVariationPagedCollection() {Items = new List<DC.ProductVariation>(), TotalCount = 0};
+                }
+                else
+                {
+                    var dcOPtions = Mapper.Map<List<Mozu.ProductAdmin.Contracts.ProductOption>>(productOptions);
+                    collection = (await _productTypeWebApiClient.GenerateProductVariations(productOptionsIn: dcOPtions, productTypeId: productTypeId, startIndex: pagingParams.startIndex, pageSize: pagingParams.startIndex)).ReadAsSync();
+                }
+
+            }
+            else
+            {
+                collection = (await _productClient.GetProductVariations(productCode, pagingParams.startIndex, pagingParams.pageSize)).ReadAsSync();    
+            }
+
+            var mappedRes = AutoMapper.Mapper.Map<List<ProductVariation>>(collection.Items);
+            return this.List2(mappedRes, total: (int)collection.TotalCount);
 
         }
     }
