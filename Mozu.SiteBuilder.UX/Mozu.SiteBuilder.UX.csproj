@@ -472,9 +472,10 @@
     </Content>
     <Content Include="PreDeploy.ps1" />
     <Content Include="PostDeploy.ps1" />
-    <None Include="Web.perf.config">
+    <Content Include="Web.perf.config">
       <DependentUpon>Web.config</DependentUpon>
-    </None>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

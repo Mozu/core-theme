@@ -2080,9 +2080,10 @@
     <Content Include="Scripts\resources\fonts\SourceSansPro-SemiboldIt-webfont.eot" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-SemiboldIt-webfont.ttf" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-SemiboldIt-webfont.woff" />
-    <None Include="Web.perf.config">
+    <Content Include="Web.perf.config">
       <DependentUpon>Web.config</DependentUpon>
-    </None>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
