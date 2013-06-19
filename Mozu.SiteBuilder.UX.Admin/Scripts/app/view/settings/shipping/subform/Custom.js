@@ -63,5 +63,9 @@ Ext.define('Taco.view.settings.shipping.subform.Custom', {
         ];
 
         this.callParent(arguments);
+    },
+    beforeSave: function () {
+        var settings = this.getForm().getValues(false, false, false, true);
+        this.record.set('customRate', settings);
     }
 });
