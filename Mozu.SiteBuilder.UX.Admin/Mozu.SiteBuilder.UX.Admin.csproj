@@ -667,12 +667,13 @@
     <Content Include="Scripts\app\store\Attributes.js" />
     <Content Include="Scripts\app\store\shared\ContainerStore.js" />
     <Content Include="Scripts\app\store\WidgetInstances.js" />
+    <Content Include="Scripts\app\view\address\ModalEditor.js" />
     <Content Include="Scripts\app\view\attribute\Edit.js" />
     <Content Include="Scripts\app\view\attribute\Form.js" />
     <Content Include="Scripts\app\view\attribute\Index.js" />
     <Content Include="Scripts\app\view\category\Form.js" />
     <Content Include="Scripts\app\view\category\Modal.js" />
-    <Content Include="Scripts\app\view\customers\AddressModal.js" />
+    <Content Include="Scripts\app\view\customers\Form.js" />
     <Content Include="Scripts\app\view\discount\Edit.js" />
     <Content Include="Scripts\app\view\discount\Form.js" />
     <Content Include="Scripts\app\view\discount\Index.js" />

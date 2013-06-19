@@ -33,7 +33,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
             xtype: 'secondarybutton',
             text: 'Edit',
             click: function () {
-                var modal = Ext.create('Taco.view.customers.AddressModal', {
+                var modal = Ext.create('Taco.view.address.ModalEditor', {
                     record: me.addressRecord,
                     addressHasNames: false,
                     listeners: {
