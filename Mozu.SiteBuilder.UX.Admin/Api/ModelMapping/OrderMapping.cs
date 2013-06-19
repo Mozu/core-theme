@@ -30,6 +30,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
                 .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
                 .ForMember(x => x.OrderDiscountTotal, op => op.MapFrom(dc => dc.DiscountTotal))
+                .ForMember(x => x.ShippingDiscount, op => op.MapFrom(dc => dc.ShippingDiscount != null && dc.ShippingDiscount.Discount != null ? (decimal?)dc.ShippingDiscount.Discount.Impact : null))
+                .ForMember(x => x.ShippingDiscountDescription, op => op.MapFrom(dc => dc.ShippingDiscount != null && dc.ShippingDiscount.Discount != null && dc.ShippingDiscount.Discount.Discount != null ? dc.ShippingDiscount.Discount.Discount.Name : null))
                 .ForMember(x => x.ShippingTotal, op => op.MapFrom(dc => dc.ShippingTotal))
                 .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Total))
                 .ForMember(x => x.CustomerNote, op => op.MapFrom(dc => dc.ShopperNotes != null ? dc.ShopperNotes.Comments : null))

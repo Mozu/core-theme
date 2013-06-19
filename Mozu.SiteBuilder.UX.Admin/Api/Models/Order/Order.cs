@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string ShippingDescription { get; set; }
 
         [DataMember(Name = "shippingDiscount", EmitDefaultValue = false)]
-        public decimal ShippingDiscount { get; set; }
+        public decimal? ShippingDiscount { get; set; }
 
         [DataMember(Name = "shippingDiscountDescription", EmitDefaultValue = false)]
         public string ShippingDiscountDescription { get; set; }
