@@ -14,35 +14,40 @@ Ext.define('Taco.view.customers.Index', {
 
     gridPanelConf: {
         columns: [{
-            dataIndex: 'firstName',
+            dataIndex: 'primaryFirstName',
             text: 'First Name',
             width: 150
         }, {
-            dataIndex: 'lastName',
+            dataIndex: 'primaryLastName',
             text: 'Last Name',
             width: 150
         }, {
-            dataIndex: 'email',
+            dataIndex: 'primaryEmail',
             text: 'Email',
             width: 200
         }, {
-            dataIndex: 'cityOrTown',
+            dataIndex: 'primaryCityOrTown',
             text: 'Location',
             width: 150,
             renderer: function (value, metaData, record) {
-                return [value, record.get('stateOrProvince')].join(', ');
+                return [value, record.get('primaryState')].join(', ');
             }
         }, {
-            dataIndex: 'totalOrders',
+            dataIndex: 'orderCount',
             text: 'Total Orders',
             width: 100
         }, {
-            dataIndex: 'spent',
+            dataIndex: 'totalSpent',
             text: 'Spent',
             width: 100
         }, {
             dataIndex: 'groups',
             text: 'Groups',
+            renderer: function (value, metaData, record) {
+                if (value && value.length) {
+                    return value.join(',')
+                }
+            },
             flex: 1
         }]
     }

@@ -3,94 +3,50 @@
  */
 Ext.define('Taco.model.CustomerAccount', {
     extend: 'Taco.core.data.Model',
-    requires: ['Taco.model.Address'],
+    requires: ['Taco.model.Contact'],
     fields: [{
-        "name": "id",
-        "type": "int"
-    }, {
-        "name": "createdOn",
-        "type": "date",
-        "dateFormat": "MS"
-    }, {
-        "name": "userId",
-        "type": "string"
-    }, {
-        "name": "acceptsMarketing",
-        "type": "bool"
-    }, {
-        "name": "orderSummary",
-        "type": "Taco.model.OrderSummary"
-    }, {
-        "name": "firstName",
-        "type": "string",
-        "mapping": "primaryBillingContact.firstName"
-    }, {
-        "name": "lastName",
-        "type": "string",
-        "mapping": "primaryBillingContact.lastName"
-    }, {
-        "name": "email",
-        "type": "string",
-        "mapping": "primaryBillingContact.email"
-    }, {
-        "name": "address1",
-        "type": "string",
-        "mapping": "primaryBillingContact.address.address1"
-    }, {
-        "name": "address2",
-        "type": "string",
-        "mapping": "primaryBillingContact.address.address2"
-    }, {
-        "name": "address3",
-        "type": "string",
-        "mapping": "primaryBillingContact.address.address3"
-    }, {
-        "name": "cityOrTown",
-        "type": "string",
-        "mapping": "primaryBillingContact.address.cityOrTown"
-    }, {
-        "name": "stateOrProvince",
-        "type": "string",
-        "mapping": "primaryBillingContact.address.stateOrProvince"
-    }, {
-        "name": "countryCode",
-        "type": "string",
-        "mapping": "primaryBillingContact.address.countryCode"
-    }, {
-        "name": "postalOrZipCode",
-        "type": "string",
-        "mapping": "primaryBillingContact.address.postalOrZipCode"
-    }, {
-        "name": "companyOrOrganization",
-        "type": "string",
-        "mapping": "primaryBillingContact.companyOrOrganization"
-    }, {
-        "name": "phoneNumber",
-        "type": "string",
-        "mapping": "primaryBillingContact.phoneNumbers.home"
-    }, {
-        "name": "totalOrders",
-        "type": "int",
-        "mapping": "orderSummary.orderCount"
-    }, {
-        "name": "spent",
-        "type": "number",
-        "mapping": "orderSummary.totalOrderAmount.amount"
-    }, {
-        "name": "lastOrderedOn",
-        "type": "date",
-        "mapping": "orderSummary.lastOrderedOn",
-        "dateFormat": "MS"
-    }, {
-        "name": "groups",
-        "type": "auto"
-    }, {
-        "name": "notes",
-        "type": "auto"
-    }, {
-        "name": "addresses"
-    }],
-
+            name: 'id',
+            type: 'int'
+        }, {
+            name: 'siteId',
+            type: 'int'
+        }, {
+            name: 'companyName',
+            type: 'string'
+        }, {
+            name: 'acceptsMarketing',
+            type: 'boolean'
+        }, {
+            name: 'groups',
+            type: 'any',
+            defaultValue: []
+        }, {
+            name: 'contacts',
+            type: 'any',
+            defaultValue: []
+        }, {
+            name: 'totalSpent',
+            type: 'float'
+        }, {
+            name: 'orderCount',
+            type: 'int'
+        }, {
+            name: 'lastOrderDate',
+            type: 'date'
+        }
+    ],
+    getProxy:function ( ) {
+        console.log('getProxy');
+        return this.getProxy();
+    },
+   
+    getContacts: function () {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.Contact',
+            associationKey: 'contacts',
+            foreignProperty: 'account'
+        });
+    },
     proxy: {
         type: 'ajaxproxy',
         api: {
@@ -103,7 +59,39 @@ Ext.define('Taco.model.CustomerAccount', {
             type: 'json',
             root: 'items',
             successProperty: 'success',
-            messageProperty: "message"
+            messageProperty: 'message',
+            read: function (response) {
+                var data;
+                this.initContactFields();
+                if (response) {
+                    data = response.responseText ? this.getResponseData(response) : this.readRecords(response);
+                }
+
+                return data || this.nullResultSet;
+            },
+            initContactFields:function () {
+                var contactFields = Taco.model.Contact.getFields(), newFields = [];
+                if (!Taco.model.CustomerAccount.contactFieldsAdded) {
+                    Taco.model.CustomerAccount.contactFieldsAdded = true;
+
+                    Ext.each(contactFields, function (contactField) {
+                        newFields.push({
+                            name: 'primary' + Ext.String.capitalize(contactField.name),
+                            type: contactField.type.type,
+                            convert: function location(v, record) {
+
+                                if (record.raw.contacts && record.raw.contacts.length) {
+                                    return contactField.convert(record.raw.contacts[0][contactField.name]);
+                                }
+                                return contactField.convert(null);
+                            }
+                        }
+                        );
+
+                    });
+                    Taco.model.CustomerAccount.setFields(newFields);
+                }
+            }
         },
         writer: {
             allowSingle: false,
