@@ -82,10 +82,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (useUrlParams.GetValueOrDefault(false)) {
                 var itemsPerPageParam = Request.QueryString["pageSize"];
                 var startIndexParam = Request.QueryString["startIndex"];
-                itemsPerPage = String.IsNullOrWhiteSpace(itemsPerPageParam) ? 15 : Convert.ToInt32(itemsPerPageParam);
+                itemsPerPage = String.IsNullOrWhiteSpace(itemsPerPageParam) ? Convert.ToInt32(SiteContext.ThemeSettings["defaultPageSize"]) : Convert.ToInt32(itemsPerPageParam);
                 startIdx = String.IsNullOrWhiteSpace(startIndexParam) ? 0 : Convert.ToInt32(startIndexParam);
             } else {
-                itemsPerPage = itemsPerPage.GetValueOrDefault(15);
+                itemsPerPage = itemsPerPage.GetValueOrDefault(Convert.ToInt32(SiteContext.ThemeSettings["defaultPageSize"]));
                 startIdx = startIdx.GetValueOrDefault(0);
             }
             var recurse = categoryId.HasValue ;

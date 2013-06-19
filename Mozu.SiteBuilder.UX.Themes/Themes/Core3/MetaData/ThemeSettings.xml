@@ -28,6 +28,7 @@
             <option value="15px">15px</option>
           </values>
         </setting>
+        <setting id="defaultPageSize" type="textbox" label="Default Page Size" defaultValue="15"></setting>
       </items>
     </section>
     <section id="font" label="Font" visible="true">
