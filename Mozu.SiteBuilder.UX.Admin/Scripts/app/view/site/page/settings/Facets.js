@@ -8,6 +8,14 @@ Ext.define('Taco.view.site.page.settings.Facets', {
     layout: 'fit',
     cls: Taco.baseCSSPrefix + 'sidebar-modal-facets',
 
+    cancelChanges: function() {
+        for (var f in this.rangeQueryForms) {
+            f.reset();
+        }
+        this.form.reset();
+        this.hide();
+    },
+
     createRangeQueryForm: function(record, isShowing) {
         var me = this,            rId = record.get('sourceId'),
             rangeQueryForm = me.rangeQueryForms[rId];

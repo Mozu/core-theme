@@ -5,6 +5,10 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
     extend: 'Ext.form.FieldContainer',
     xtype: 'taco.rangequery',
     layout: 'hbox',
+    resetOriginalValue: function() {
+        this.startField.resetOriginalValue();
+        this.endField.resetOriginalValue();
+    },
     getValue: function() {
         var rqS = parseInt(this.startField.getValue()),
             rqE = parseInt(this.endField.getValue());

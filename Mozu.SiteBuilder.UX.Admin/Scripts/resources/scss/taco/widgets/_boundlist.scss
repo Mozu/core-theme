@@ -56,6 +56,9 @@
   .#{$prefix}boundlist-draggable .#{$prefix}boundlist-item, .#{$prefix}boundlist-undraggable .#{$prefix}boundlist-item {
     padding: 0;
     margin: 0 0 3px;
+    &:last-child {
+        margin-bottom: 0;
+        }
     .#{$prefix}boundlist-item-contents {
         @include flexbox(row, nowrap, flex-start, center, center);
 

@@ -60,7 +60,6 @@
                     });
                 }
             });
-            this.emptyId = sanitize(this.Field);
             this.on('facetchange', function () {
                 if (!parent.eventsSuspended) parent.publish.apply(parent, ['facetchange'].concat(Array.prototype.slice.call(arguments)));
             });
@@ -127,11 +126,6 @@
                 try {
                     this.apiModel.nextPage(this.lastRequest);
                 } catch (e) { }
-            },
-            populate: function () {
-                this.isUpdating = true;
-                FacetedProductCollection.prototype.populate.apply(this, arguments);
-                this.isUpdating = false;
             }
         }, function () {
             var me = this,
@@ -165,10 +159,6 @@
                     ret.push(i);
                 }
                 return ret;
-            });
-
-            this.PageSize.subscribe(function (newVal) {
-                if (!me.isUpdating) me.updateFacets();
             });
 
             this.on('facetchange', function () {

@@ -14,6 +14,11 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
         this.form.updateForm();
     },
 
+    cancelChanges: function() {
+        this.form.reset();
+        this.hide();
+    },
+
     initComponent: function () {
         var me = this;
         if (!this.form || !this.record) return Ext.Error.raise('Instance of PageSettingsPanel requires a .form configuration. and a record.');
@@ -43,7 +48,7 @@ Ext.define('Taco.view.site.page.PageSettingsPanel', {
             xtype: 'secondarybutton',
             text: 'Cancel',
             listeners: {
-                click: this.hide,
+                click: this.cancelChanges,
                 scope: this
             }
         }, {

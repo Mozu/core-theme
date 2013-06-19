@@ -97,6 +97,9 @@
                 if (name in obj) self[name](obj[name]);
                 delete obj[name];
             };
+
+            self.isUpdating = true;
+
             obj = obj || {};
             $.each(this.observables, this.initialized ? simpleAssign : makeInitializer(self, obj, "observable"));
             $.each(this.observableArrays, this.initialized ? simpleAssign : makeInitializer(self, obj, "observableArray"));
@@ -148,6 +151,7 @@
 
             // add whatever's left, including statics
             $.extend(self, obj);
+            self.updating = false;
             return self;
         },
         validate: function (loudly) {
