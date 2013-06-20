@@ -124,11 +124,11 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
                     fieldLabel: 'license key'
                 },
                 //erroring from service
-                //{  
-                //    xtype: 'textfield',
-                //    name: 'shippernumber',
-                //    fieldLabel: 'shipper number'
-                //}
+                {  
+                    xtype: 'textfield',
+                    name: 'shippernumber',
+                    fieldLabel: 'shipper number'
+                }
             ]
         });
 

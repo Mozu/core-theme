@@ -14,8 +14,8 @@ Ext.define('Taco.view.order.Index', {
     editorName: 'Taco.view.order.Edit',
     filterProperty: 'orderNumber',
     useTilePanel: false,
-
-    requiresContextOfType: ['c', 's'],
+    //todo:  changing to s until orders support site id in resource
+    requiresContextOfType: ['s'],
 
     filterFormConf: {
         width: 600,

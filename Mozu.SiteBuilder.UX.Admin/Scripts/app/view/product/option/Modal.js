@@ -80,12 +80,10 @@ Ext.define('Taco.view.product.option.Modal', {
                 })[0];
             }
             //move into model... need to remove the store so that it gets rebuilt
-            this.product.productVariationStore = null;
+           
             record.set('values', field.getValue());
             
-
-      
-
+            
 
 
         }, this);

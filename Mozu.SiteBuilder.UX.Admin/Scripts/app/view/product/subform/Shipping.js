@@ -23,8 +23,12 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 unitString: ' lbs',
                 unitAtEnd: true,
                 decimalPrecision: 3,
+                minValue :.001,
                 hideTrigger: true,
+                value:this.record.get('packageWeight') || 1,
                 keyNavEnabled: false,
+                required: true,
+                allowBlank: false,
                 mouseWheelEnabled: false,
                 style: {
                     'margin-right': '20px'
