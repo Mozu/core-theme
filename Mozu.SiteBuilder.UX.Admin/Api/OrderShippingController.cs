@@ -13,11 +13,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     public partial class OrderController
     {
-        [WebInvoke(Method="POST", UriTemplate="shipping/package/create")]
-        public async Task<Response<List<OrderPackage>>> CreatePackage(OrderPackage package)
+        public class CreatePackageArgs
         {
-            var dc = Mapper.Map<DCs.Package>(package);
-            var ret = (await _orderWebApiClient.CreatePackage(package.OrderId, dc)).ReadAsSync();
+            public OrderPackage Package { get; set; }
+        }
+        [WebInvoke(Method="POST", UriTemplate="shipping/package/create")]
+        public async Task<Response<List<OrderPackage>>> CreatePackage(CreatePackageArgs args)
+        {
+            var dc = Mapper.Map<DCs.Package>(args.Package);
+            var ret = (await _orderWebApiClient.CreatePackage(args.Package.OrderId, dc)).ReadAsSync();
 
             return List2( Mapper.Map<OrderPackage>(ret) );
         }

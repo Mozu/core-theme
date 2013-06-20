@@ -621,7 +621,7 @@ weight: 2
         
             config = {
                 jsonData: {
-                    package : data
+                    'package': data
                 },
                 success: function (response) {
                     // success handling here
