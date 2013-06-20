@@ -3,10 +3,17 @@ define(['modules/jquery-plus', 'knockout', 'shim!vendor/jquery.history[jquery=jQ
     $(document).ready(function () {
         
         var $facetingForm = $('[data-mz-role=faceting]'),
+            categoryId = $.getMozuData('category'),
             productListData = $facetingForm.mozuData('products'),
+            defaultPageSize = parseInt($.getMozuData('defaultpagesize')),
             facetingVM;
 
-        productListData.categoryId = $.getMozuData('category');
+        productListData.baseRequestParams = {
+            filter: 'categoryId req ' + categoryId,
+            facetTemplate: 'categoryId:' + categoryId,
+            facetHierValue: 'categoryId:' + categoryId,
+            facetHierDepth: 'categoryId:2'
+        };
 
         facetingVM = window.facetingVM = new FacetingModels.FacetedProductCollection(productListData);
 
@@ -21,8 +28,8 @@ define(['modules/jquery-plus', 'knockout', 'shim!vendor/jquery.history[jquery=jQ
 
         facetingVM.on('update', function () {
             var newURL, lrClone = JSON.parse(JSON.stringify(facetingVM.lastRequest));
-            delete lrClone.filter;
-            delete lrClone.facetTemplate;
+            $.each(lrClone, function (p) { if (p in productListData.baseRequestParams) delete lrClone[p] });
+            if (lrClone.pageSize === defaultPageSize) delete lrClone.pageSize;
             newURL = $.isEmptyObject(lrClone) ? window.location.href.replace(window.location.search, '') : "?" + $.param(lrClone);
             History.replaceState(null, null, newURL);
         });
