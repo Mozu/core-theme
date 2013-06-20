@@ -43,11 +43,8 @@
                 "id": "orders",
                 "label": "Orders",
                 "address": "orders"
-            }, {
-                "id": "phoneorders",
-                "label": "Phone Orders",
-                "address": "phoneorders"
-            }]
+            }    
+        ]
     }, {
         "id": "marketing",
         "label": "Marketing",
@@ -106,7 +103,7 @@
             {
                 "id": "account",
                 "label": "Users & Roles",
-                "address": "account"           
+                "address": "account"
             }]
     }, {
         "id": "publishing",

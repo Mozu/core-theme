@@ -75,6 +75,7 @@ Ext.define('Taco.core.data.Model', {
     
     getOrCreateHasManyStore: function (config) {
         var me = this,
+            store,
             storeConfig = config.storeConfig || {},
             modelDefaults = config.modelDefaults || {},
             model = config.model,
@@ -94,39 +95,41 @@ Ext.define('Taco.core.data.Model', {
             model: model,
             remoteFilter: false,
             data: this.get(associationKey),
-            modelDefaults: modelDefaults,
-            listeners: {
-                add: function(store, records, index, eOpts) {
-                    Ext.each(store.records, function(record) {
-                        record[foreignProperty] = this;
-                        
-                    });
-                },
-                update: function (store, record, operation, eOpts) {
-                    if (operation == Ext.data.Model.COMMIT) {
-                        return;
-                    }
-                    var data = [];
-                    if (store.isDirty()) {
-                        Ext.each(store.data.items, function (record) {
-                            data.push(this.getData2(record, true));
-                        });
-                        this.set(associationKey, data);
-                    }
-                },
-                datachanged: function(store) {
-                    var data = [];
-                    if (store.isDirty()) {
-                        Ext.each(store.data.items, function(record) {
-                            data.push(this.getData2(record, true));
-                        });
-                        this.set(associationKey, data);
-                    }
-                },
-                scope: this
-            }
+            modelDefaults: modelDefaults
+            
         });
-        this.hasManyStores[storeName] = new Ext.data.Store(config);
+        
+        
+
+        this.hasManyStores[storeName] = store = new Ext.data.Store(config);
+
+        store.on('add', function (store, records, index, eOpts) {
+            Ext.each(store.records, function (record) {
+                record[foreignProperty] = this;
+
+            });
+        }, this);
+        store.on('update', function (store, record, operation, eOpts) {
+            if (operation == Ext.data.Model.COMMIT) {
+                return;
+            }
+            var data = [];
+            if (store.isDirty()) {
+                Ext.each(store.data.items, function (record) {
+                    data.push(this.getData2(record, true));
+                });
+                this.set(associationKey, data);
+            }
+        }, this);
+        store.on('datachanged', function (store) {
+            var data = [];
+            if (store.isDirty()) {
+                Ext.each(store.data.items, function (record) {
+                    data.push(this.getData2(record, true));
+                });
+                this.set(associationKey, data);
+            }
+        }, this);
         this.on('aftercommit', function (model) {
             this.hasManyStores[storeName].commitChanges();
         }, this);
@@ -134,7 +137,7 @@ Ext.define('Taco.core.data.Model', {
             this.hasManyStores[storeName].rejectChanges();
         }, this);
         
-        return this.hasManyStores[storeName];
+        return store;
 
     },
 
