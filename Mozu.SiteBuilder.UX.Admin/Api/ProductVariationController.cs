@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        [WebInvoke(UriTemplate = "eidt")]
+        [WebInvoke(UriTemplate = "edit")]
         public async Task<Response<List<ProductVariation>>> EditVariations( List<ProductVariation> variations ,[FromUri]string productCode )
         {
             var dcVariations = Mapper.Map<List<DC.ProductVariation>>(variations);
