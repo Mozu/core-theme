@@ -37,10 +37,7 @@ Ext.define('Taco.model.CustomerAccount', {
             type: 'date'
         }
     ],
-    getProxy:function ( ) {
-        console.log('getProxy');
-        return this.getProxy();
-    },
+    
    
     getContacts: function () {
         return this.getOrCreateHasManyStore({

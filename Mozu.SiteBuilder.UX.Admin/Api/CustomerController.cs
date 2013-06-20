@@ -61,6 +61,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(customers);
         }
 
+        [WebInvoke(UriTemplate = "edit")]
+        public async Task<Response<List<ApiCustomer>>> EditCustomers(List<ApiCustomer> customers)
+        {
+            var retList = new List<ApiCustomer>();
+            var dcCustomers = Mapper.Map<List<Mozu.Customer.Contracts.CustomerAccount>>(customers);
+            foreach (var dcCust in dcCustomers)
+            {
+                retList.Add(Mapper.Map<ApiCustomer>((await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id)).ReadAsSync()));
+            }
+            return List2(retList);
+        }
+
 //        [WebGet(UriTemplate = "autocomplete/?query={query}")]
 //        public async Task<Response<List<AutoCompleteField<string>>>> GetSearch(string query)
 //        {

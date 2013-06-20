@@ -11,7 +11,7 @@ Ext.define('Taco.view.customers.Index', {
     store: { type: 'Taco.store.Customers' },
     editorName: 'Taco.view.customer.Edit',
     useTilePanel: false,
-
+    requiresContextOfType: 's',
     gridPanelConf: {
         columns: [{
             dataIndex: 'primaryFirstName',
