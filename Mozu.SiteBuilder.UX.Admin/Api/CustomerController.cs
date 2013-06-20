@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebInvoke(UriTemplate = "groups/create")]
-        public async Task<Response<List<KeyValuePair<int, string>>>> EditCustomers(List<KeyValuePair<int, string>> groups)
+        public async Task<Response<List<KeyValuePair<int, string>>>> EditGroups(List<KeyValuePair<int, string>> groups)
         {
 
             var tasks = groups.Select(x => _customerGroupWebApiClient.AddGroup(new DC.CustomerGroup() {Id = x.Key, Name = x.Value})).ToList() ;
