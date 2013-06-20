@@ -25,7 +25,7 @@
         this.parentCart = this.getParentModel();
         this.priceIsModified = ko.computed(function () {
             var price = self.UnitPrice();
-            return price.BaseAmount != price.FinalAmount;
+            return price.BaseAmount != price.DiscountedAmount;
         });
         this.apiModel.on('error', function (e) {
             self.parentCart.messages(e.Items);
