@@ -99,6 +99,8 @@
                 var conf = {
                     filter: 'categoryId req ' + this.categoryId,
                     facetTemplate: 'categoryId:' + this.categoryId,
+                    facetHierValue: 'categoryId:49',
+                    facetHierDepth: 'categoryId:2',
                     pageSize: this.PageSize(),
                     startIndex: this.StartIndex()
                 },

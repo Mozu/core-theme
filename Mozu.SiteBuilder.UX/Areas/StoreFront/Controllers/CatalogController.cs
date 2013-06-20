@@ -122,7 +122,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue )
                 {
                     string facetValueFilter = Request.QueryString["facetValueFilter"];
-                    var pcDC = _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate:"categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth : "categoryId:3", facetValueFilter: facetValueFilter).Result.ReadAsSync();
+                    var pcDC = _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate:"categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth : "categoryId:2", facetValueFilter: facetValueFilter).Result.ReadAsSync();
                     var pc = Mapper.Map<ProductSearchResult>(pcDC);
                     return PartialView(pcDC);
                 }
