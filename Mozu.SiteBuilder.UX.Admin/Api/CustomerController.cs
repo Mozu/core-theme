@@ -21,12 +21,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class CustomerController : BaseController
     {
         private readonly ICustomerAccountWebApiClient _customerWebApiClient;
-        private readonly Mozu.SiteBuilder.Mvc.Customers.ICustomerGroupsRepository _customerGroupsRepository;
+        private readonly ICustomerGroupWebApiClient _customerGroupWebApiClient;
 
-        public CustomerController(ICustomerAccountWebApiClient customerWebApiClient, Mozu.SiteBuilder.Mvc.Customers.ICustomerGroupsRepository customerGroupsRepository)
+
+        public CustomerController(ICustomerAccountWebApiClient customerWebApiClient, Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient )
         {
             _customerWebApiClient = customerWebApiClient;
-            _customerGroupsRepository = customerGroupsRepository;
+            _customerGroupWebApiClient = customerGroupWebApiClient;
         }
 
         [WebGet(UriTemplate = "search")]
@@ -35,6 +36,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // todo : hook up search pieces and create filter
             throw new NotImplementedException();
         }
+
+
+        [WebGet(UriTemplate = "groups/list")]
+        public async Task<Response<List<KeyValuePair< int,string >>>> GetGroups()
+        {
+            var ret =(await _customerGroupWebApiClient.GetGroups(0, 200)).ReadAsSync().Items.OrderBy(x => x.Name).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
+            return List2(ret);
+        }
+
+        [WebInvoke(UriTemplate = "groups/create")]
+        public async Task<Response<List<KeyValuePair<int, string>>>> EditCustomers(List<KeyValuePair<int, string>> groups)
+        {
+
+            var tasks = groups.Select(x => _customerGroupWebApiClient.AddGroup(new DC.CustomerGroup() {Id = x.Key, Name = x.Value})).ToList() ;
+
+            await Task.WhenAll(tasks);
+
+            var ret = tasks.Select(x => x.Result.ReadAsSync()).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
+            return List2(ret);
+        }
+       
+
+
 
         [WebGet(UriTemplate = "list")]
         public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
