@@ -1,0 +1,51 @@
+﻿{% if Model.Options %}
+<div class="mz-details-configurator-wrap" data-bind="with: Options">
+    <h3 class="mz-configurator-head">Choose your options...</h3>
+    <div class="mz-configurator" data-bind="visible: $data.length > 0, foreach: $data">
+        <div class="mz-option-container">
+            <label class="mz-option-label">
+                <strong class="mz-required" data-bind="visible: IsRequired">*</strong>
+                <span class="mz-option-name" data-bind="text: AttributeDetail.Name"></span>: 
+            </label>
+            <div class="mz-option-control">
+                <!-- ko if: AttributeDetail.InputType == 'List' -->
+                    <!-- ko if: IsMultiValue -->
+                        <select class="mz-multiselect mz-option" multiple data-mz-role="optionmultiselect" data-bind="disable: $root.submitting, selectedOptions: Value, options: Values, optionsText: 'Value', optionsValue: 'Value'"></select>
+                    <!-- /ko -->
+                    <!-- ko if: !IsMultiValue -->
+                        <select class="mz-dropdown mz-option" data-mz-role="optionselect" data-bind="disable: $root.submitting, value: Value, options: Values, optionsCaption: '   ', optionsText: 'Value', optionsValue: 'Value'">
+                        </select>
+                    <!-- /ko -->
+                <!-- /ko -->
+                <!-- ko if: AttributeDetail.InputType == 'TextBox' -->
+                    <input
+                        class="mz-textbox mz-option"
+                        type="text"
+                        data-bind="value: ShopperEnteredValue, disable: $root.submitting"
+                    >
+                <!-- /ko -->
+                <!-- ko if: AttributeDetail.InputType == 'TextArea' -->
+                    <textarea
+                        class="mz-textarea mz-option"
+                        data-bind="value: ShopperEnteredValue, disable: $root.submitting"
+                    ></textarea>
+                <!-- /ko -->
+                <!-- ko if: AttributeDetail.InputType == 'YesNo' -->
+                    <input
+                        class="mz-checkbox mz-option"
+                        type="checkbox"
+                        data-bind="checked: ShopperEnteredValue, disable: $root.submitting"
+                    >
+                <!-- /ko -->
+                <!-- ko if: AttributeDetail.InputType == 'Date' -->
+                    <input
+                        type="date"
+                        class="mz-textbox mz-option"
+                        data-bind="value: ShopperEnteredValue, disable: $root.submitting, attr: { min: minDate, max: maxDate, id: 'datepicker_' + id }"
+                    >
+                <!-- /ko -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

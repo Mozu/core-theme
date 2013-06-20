@@ -4,6 +4,16 @@
         return str.replace(/[\s~'"]+/g, '-');
     }
 
+    function zeroPad(str, len) {
+        str = str.toString();
+        while (str.length < 2) str = '0' + str;
+        return str;
+    }
+    function formatDate(d) {
+        var date = new Date(Date.parse(d) + (new Date).getTimezoneOffset() * 60000);
+        return [zeroPad(date.getFullYear(),4),zeroPad(date.getMonth() + 1,2), zeroPad(date.getDate(),2)].join('-');
+    }
+
     var ProductOption = KnockoutVM.extend({
         statics: {
             AttributeFQN: '',
@@ -56,10 +66,9 @@
                 return me.ShopperEnteredValue();
             });
         }
-
         if (this.AttributeDetail.InputType === "Date" && this.AttributeDetail.Validation) {
-            this.minDate = new Date(Date.parse(this.AttributeDetail.Validation.MinDateValue) + (new Date).getTimezoneOffset() * 60000);
-            this.maxDate = new Date(Date.parse(this.AttributeDetail.Validation.MaxDateValue) + (new Date).getTimezoneOffset() * 60000);
+            this.minDate = formatDate(this.AttributeDetail.Validation.MinDateValue);
+            this.maxDate = formatDate(this.AttributeDetail.Validation.MaxDateValue);
         }
 
     });
@@ -112,7 +121,10 @@
         },
         updateConfiguration: function () {
             var me = this;
-            me.configure({ Options: this.getConfiguredOptions() });
+            this.submitting(true);
+            me.configure({ Options: this.getConfiguredOptions() }).then(function () {
+                me.submitting(false);
+            });
         }
     }, function constructProduct() {
         var self = this;

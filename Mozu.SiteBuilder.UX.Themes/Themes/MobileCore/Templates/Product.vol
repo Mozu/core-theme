@@ -1,0 +1,63 @@
+{% extends "default" %}
+
+{% block Init %}
+	{% setTemplateVariables BodyTagClasses="product" %}
+{% endblock Init%}
+
+{% block BodyContent %}
+
+{% require_script "pages/product" %}
+
+<div id="mz-product-detail" class="mz-product-detail-wrap" data-mz-product="{% json_attribute Model %}" style="visibility: hidden">
+
+	<h1 class="mz-page-header" {% data_attributes Model.Content.ProductName %}>{{ Model.Content.ProductName }}
+        <span class="mz-product-code mz-auxiliary-text" {% data_attributes Model.ProductCode %}>Product Code: {{ Model.ProductCode }}</span>
+    </h1>
+	
+	{% include "Modules/ProductImages" %}
+
+	<div class="mz-detail-info-wrap">
+
+        {% include "Modules/MessageBar" %}
+
+		<div class="mz-details-full-description" >
+			{{ Model.Content.ProductFullDescription }}
+		</div>
+        
+        {% include "Modules/ProductOptions" %}
+			
+	
+	<div class="mz-price-stack-wrap">		
+		<h3 class="mz-price-label">Our Price:</h3>
+		<div class="mz-price" data-bind="with: Price">
+			<!-- ko if: hasRange() -->
+				<span class="mz-price-amt">
+					<span data-bind="currencyText: LowerBoundPrice"></span> - <span data-bind="currencyText: UpperBoundPrice"></span>
+				</span>
+			<!-- /ko -->
+			<!-- ko if: !hasRange() -->
+				<span class="mz-price-amt" data-bind="currencyText: Price, css: { 'mz-strikethrough': hasSalePrice }"></span>
+				<span class="mz-price-amt mz-price-saleprice" data-bind="visible: hasSalePrice, currencyText: SalePrice"></span>
+			<!-- /ko -->
+		</div>
+	</div>
+	<section class="mz-conversion-wrap">
+			<span class="mz-qty-label">Qty</span>
+			<input class="mz-qty-input" type="tel" min="1" value="1" data-bind="value: Quantity, css: { 'mz-invalid': Quantity.invalid() }" />
+			<button class="mz-button mz-btn-cta mz-add-to-cart"
+				data-bind="click: submit, enable: isPurchasable, css: { invisible: submitting }">
+				Add To Cart
+			</button>
+			<span data-bind="visible: submitting">
+				{% include "Modules/LoadingBar" %}
+			</span>
+            <span class="mz-validation-message" data-bind="text: Quantity.validationMessage() || '&nbsp;'"></span>
+	</section>
+
+			
+			
+	</div>
+</div>
+{% endblock BodyContent %}
+
+

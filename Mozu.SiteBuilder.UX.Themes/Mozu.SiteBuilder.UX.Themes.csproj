@@ -554,13 +554,13 @@
     <Content Include="Themes\MobileCore\Resources\Scripts\Modules\login-links.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Modules\product-images.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Pages\checkout.js" />
+    <Content Include="Themes\MobileCore\Resources\Scripts\Pages\product.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Vendor\hammer.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Vendor\jquery.specialevent.hammer.js" />
     <Content Include="Themes\MobileCore\Resources\Scripts\Vendor\swipe.min.js" />
     <Content Include="Themes\MobileCore\theme.xml" />
     <Content Include="Themes\MobileCore\MetaData\lang-de.csv" />
     <Content Include="Themes\MobileCore\MetaData\lang-en.csv" />
-    <Content Include="Themes\MobileCore\Modules\TopNav.vol" />
     <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\breadcrumbs.less" />
     <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\common-elements.less" />
     <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\common-variables.less" />
@@ -666,6 +666,8 @@
     </Content>
     <Content Include="Themes\Core3\Modules\_ProductListingTemplate.vol" />
     <Content Include="Themes\Core3\Resources\Stylesheets\Modules\datepicker.less" />
+    <Content Include="Themes\MobileCore\Modules\ProductOptions.vol" />
+    <Content Include="Themes\MobileCore\Templates\Product.vol" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
