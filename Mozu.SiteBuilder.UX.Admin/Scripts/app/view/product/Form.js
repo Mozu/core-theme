@@ -11,7 +11,6 @@ Ext.define('Taco.view.product.Form', {
     ],
 
     layout: 'fit',
-
     /**
      * @protected
      */
@@ -47,7 +46,7 @@ Ext.define('Taco.view.product.Form', {
         tabItems.unshift(this.globalForm);
 
         this.tabPanel = Ext.create('Taco.core.ux.tab.Panel', {
-            navigation: true,
+            navigation: false,
             items: tabItems,
             activeItem: this.getInitialTab(tabItems),
             pickerCfg: {

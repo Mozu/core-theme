@@ -409,7 +409,12 @@ Ext.define('Taco.core.ux.tab.Panel', {
             }
         }, this);
 
-        this.navigationBar.getStore().removeAll();
-        this.navigationBar.getStore().add(links);
+
+        if (this.navigation) {
+            this.navigationBar.getStore().removeAll();
+            this.navigationBar.getStore().add(links);
+        };
+            
+        
     }
 });
