@@ -18,7 +18,6 @@
             include: [
                 'knockout',
                 'text',
-                'ajax',
                 'shim',
                 'modules/api',
                 'modules/animatemodals',
@@ -29,13 +28,20 @@
                 'modules/login-links',
                 'modules/knockout-viewmodel',
                 'modules/knockout-plus',
+                'modules/models-user',
+                'modules/models-address',
                 'modules/models-product',
+                'modules/models-faceting',
                 'modules/tagcloud'
             ],
             exclude: ['jquery', 'sdk', 'pciaas'],
         },
         {
             name: "pages/product",
+            exclude: ["modules/common"]
+        },
+        {
+            name: "pages/category",
             exclude: ["modules/common"]
         },
         {
@@ -48,10 +54,6 @@
         },
         {
             name: "pages/myaccount",
-            exclude: ["modules/common"]
-        },
-        {
-            name: "modules/faceting",
             exclude: ["modules/common"]
         }
     ]
