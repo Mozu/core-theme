@@ -398,7 +398,7 @@
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\search\definition.json" />
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\product\definition.json" />
     <Content Include="Themes\Core3\Resources\Scripts-Built\Modules\common.js" />
-    <Content Include="Themes\Core3\Resources\Scripts-Built\Modules\faceting.js" />
+    <Content Include="Themes\Core3\Resources\Scripts-Built\Pages\category.js" />
     <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\jquery.history.js" />
     <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\jquery.tools.dateinput.js" />
     <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\jquery.tools.rangeinput.js" />
@@ -412,7 +412,7 @@
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-price.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-user.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\jquery-plus.js" />
-    <Content Include="Themes\Core3\Resources\Scripts\Modules\faceting.js" />
+    <Content Include="Themes\Core3\Resources\Scripts\Pages\category.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Vendor\jquery.history.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Vendor\jquery.tools.dateinput.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Vendor\jquery.tools.rangeinput.js" />

@@ -1,7 +1,10 @@
 {% extends "default" %}
+
 {% setTemplateVariables BodyTagClasses="category" %}
 
 {% block BodyContent %}
+
+{% require_script "pages/category" %}
 
 <div id="mz-category-loading" class="mz-category-loading">
     <p>

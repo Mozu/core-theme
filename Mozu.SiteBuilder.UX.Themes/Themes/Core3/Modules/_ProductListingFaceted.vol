@@ -1,5 +1,4 @@
-﻿{% require_script "modules/faceting" %}
-<span data-mz-role="faceting" data-mz-products="{% json_attribute Model %}" data-mz-defaultpagesize="{{ themeSettings.defaultPageSize }}" style="visibility:hidden">
+﻿<span data-mz-role="faceting" data-mz-products="{% json_attribute Model %}" data-mz-defaultpagesize="{{ themeSettings.defaultPageSize }}" style="visibility:hidden">
   <div id="mz-sidebar" class="mz-layout-sidebar">
     {% include "Modules/FacetingPanel" %}
   </div>

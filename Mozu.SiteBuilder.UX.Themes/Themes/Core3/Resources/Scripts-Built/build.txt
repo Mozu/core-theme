@@ -4,7 +4,6 @@ modules/common.js
 modules/common.js
 vendor/knockout-latest.js
 text.js
-ajax.js
 shim.js
 modules/api.js
 modules/animatemodals.js
@@ -19,8 +18,11 @@ i18n!nls/messages
 modules/login-links.js
 modules/knockout-plus.js
 modules/knockout-viewmodel.js
+modules/models-user.js
+modules/models-address.js
 modules/models-price.js
 modules/models-product.js
+modules/models-faceting.js
 shim!vendor/jquery.tagcloud.0-0-1[jquery=jQuery]
 modules/tagcloud.js
 
@@ -30,6 +32,11 @@ shim!vendor/jquery-colorbox[jquery=jQuery]
 modules/product-images.js
 shim!vendor/jquery.tools.dateinput[jquery=jQuery]
 pages/product.js
+
+pages/category.js
+----------------
+shim!vendor/jquery.history[jquery=jQuery]>History
+pages/category.js
 
 pages/cart.js
 ----------------
@@ -41,22 +48,12 @@ pages/checkout.js
 shim!vendor/bootstrap/bootstrap-affix[modules/jquery-plus=jQuery]>jQuery
 nls/messages-checkout.js
 i18n!nls/messages-checkout
-modules/models-user.js
-modules/models-address.js
 modules/models-checkout.js
 pages/checkout.js
 
 pages/myaccount.js
 ----------------
 shim!vendor/jquery-colorbox[jquery=jQuery]>jQuery
-modules/models-address.js
 modules/models-customer.js
-modules/models-user.js
 modules/models-myaccount.js
 pages/myaccount.js
-
-modules/faceting.js
-----------------
-shim!vendor/jquery.history[jquery=jQuery]>History
-modules/models-faceting.js
-modules/faceting.js
