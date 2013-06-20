@@ -43,7 +43,7 @@
                         <table>
                             <tr>
                                 <td>Sub-Total:</td>
-                                <td><span data-bind="currencyText: Subtotal"></span></td>
+                                <td><span data-bind="currencyText: DiscountedTotal"></span></td>
                             </tr>
                             <tr class="mz-shipping-total-row">
                                 <td>Shipping &amp; Handling:</td>

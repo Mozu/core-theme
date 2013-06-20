@@ -12,7 +12,7 @@
 </tr>
 <tr class="mz-cart-total-row">
     <td class="mz-cart-total-label" colspan="3" align="right">Order Total:</td>
-    <td class="mz-cart-total-wrap" align="right"><strong><span id="mz-cart-total" class="mz-cart-total" data-bind="currencyText: Total"></span></strong></td>
+    <td class="mz-cart-total-wrap" align="right"><strong><span id="mz-cart-total" class="mz-cart-total" data-bind="currencyText: DiscountedTotal"></span></strong></td>
     <td>&nbsp;</td>
 </tr>
 <tr >
