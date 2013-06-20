@@ -41,6 +41,8 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
             data =[],
             unpackagedItems = me.record.get("unpackagedItems");        
         
+
+
         me.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping-package'].join(' ');
 
         // initialize the header;

@@ -215,10 +215,7 @@ zipCode: "78704"
     initStatusRow: function () {
         var me = this,
             data = this.record.get("authorizationInfo");
-
-        console.log(data);
         
-
         me.statusRow = Ext.create('Ext.container.Container', {
             cls: "orderform-payment-statusRow",
             layout: {
