@@ -328,7 +328,7 @@
                         return this.pciProcessor.process();
                     } else {
                         return self.update().then(function () {
-                            self.checkStepStatus();
+                            self.stepStatus("complete");
                         });
                     }
                 } else {
