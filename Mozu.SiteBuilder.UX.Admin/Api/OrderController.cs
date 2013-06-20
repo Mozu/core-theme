@@ -154,7 +154,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 BillingContact = jsContact,
                 Subtotal = 225m,
                 ShippingCost = 9.48m,
-                ShippingDescription = "USPS Standard",
+                ShippingMethodName = "USPS Standard",
                 ShippingDiscount = -5m,
                 ShippingDiscountDescription = "Cheap Shipping SUPER SAVER",
                 ShippingTotal = 4.48m,
@@ -302,7 +302,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     }
                 }
             };
-            order_with_some_packages.UnpackedItems = new List<OrderPackageItem> {
+            order_with_some_packages.UnpackagedItems = new List<OrderPackageItem> {
                 new OrderPackageItem {
                     OrderItemId = "i124",
                     ProductCode = "789MAE",

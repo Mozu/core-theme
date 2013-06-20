@@ -27,6 +27,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate ))
                 .ForMember(x => x.CustomerId, op => op.MapFrom(dc => dc.CustomerAccountId))
                 .ForMember(x => x.BillingContact, op => op.MapFrom(dc => dc.BillingInfo.BillingContact))
+                .ForMember(x => x.ShippingContact, op => op.MapFrom(dc => dc.ShippingInfo.ShippingContact))
+                .ForMember(x => x.ShippingMethodCode, op => op.MapFrom(dc => dc.ShippingInfo.ShippingMethodCode))
+                .ForMember(x => x.ShippingMethodName, op => op.MapFrom(dc => dc.ShippingInfo.ShippingMethodName))
                 .ForMember(x => x.IpAddress, op => op.MapFrom(dc => dc.IPAddress))
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
                 .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
@@ -66,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 })
                 .AfterMap((dc, order) => {
                     // fill out UnpackagedItems list
-                    order.UnpackedItems = 
+                    order.UnpackagedItems = 
                         (from orderItem in order.Items
                         let packagedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.OrderItemId == orderItem.Id)
                         let packagedQuantity = packagedItems.Sum(i => i.Quantity)
@@ -79,6 +82,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             Weight = orderItem.UnitWeight * remainingQuantity,
                             Quantity = remainingQuantity
                         }).ToList();
+                })
+                .AfterMap((dc, order) => {
+                    // fill out number of items ordered, shipped, unshipped
+                    order.ItemsOrdered = order.Items.Sum(i => i.Quantity);
+                    order.ItemsNotShipped = order.UnpackagedItems.Sum(i => i.Quantity);
+                    order.ItemsShipped = order.Packages == null || order.Packages.Count == 0 ? 0 : order.Packages.SelectMany(p => p.Items).Sum(i => i.Quantity);
                 })
                 ;
 
