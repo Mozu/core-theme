@@ -698,7 +698,7 @@
     <Content Include="Scripts\app\view\order\subform\Detail.js" />
     <Content Include="Scripts\app\view\order\widget\OrderItemGrid.js" />
     <Content Include="Scripts\app\view\order\widget\Package.js" />
-    <Content Include="Scripts\app\view\order\widget\UnPackagedItems.js" />
+    <Content Include="Scripts\app\view\order\widget\UnpackagedItems.js" />
     <Content Include="Scripts\app\view\pageTemplate\Edit.js" />
     <Content Include="Scripts\app\view\pageTemplate\Index.js" />
     <Content Include="Scripts\app\view\pendingchange\Cms.js" />

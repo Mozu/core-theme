@@ -288,6 +288,7 @@ zipCode: "78704"
                         // service didnt' return data properly
                         return;
                     }
+                    this.record.reload();
                 },
                 failure: function (response) {
                     // error handling here
@@ -344,6 +345,7 @@ zipCode: "78704"
                     // service didnt' return data properly
                     return;
                 }
+                this.record.reload();
             },
             failure: function(response) {
                 
@@ -360,8 +362,15 @@ zipCode: "78704"
     paymentRecieved: function () {
         
         var cfg = {
-            data: {},
+            data: {
+                orderId: this.record.get("id")
+            },
             success: function () {
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
                 this.record.reload();
             },
             failure: function () {
