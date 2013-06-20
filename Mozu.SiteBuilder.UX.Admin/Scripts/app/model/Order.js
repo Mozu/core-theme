@@ -24,58 +24,7 @@ Ext.define('Taco.model.Order', {
         {
             "name": "authorizationInfo",
             "type": "auto"
-//            "mapping": "paymentStatus",
-//            "persist":false,
-//            convert: function (v, record) {
-//                var payments = record.get("payments"),
-//                    totalAmount = record.get("total"),
-//                    amountCollected = 0,
-//                    captureAmount= 0,
-//                    canCapture = false,
-//                    authReady = false,
-//                    captureData=null;
-//                
-//                
-//
-//                // check if there is an authorized credit card
-//                if (payments && payments[0]) {
-//                    if (payments[0]) {
-//
-//                        captureData = payments[0];
-//
-//                        var auth = payments[0];
-//                        if (auth.paymentType == "CreditCard" && auth.id) {
-//                            authReady = true;
-//                        }
-//                    }
-//
-//                    // calculated total amount collected
-//                    for (var i = 0; i < payments.length; i++) {
-//                        amountCollected += payments[i].amountCollected;
-//                    }
-//
-//                    //determine amount to capture;
-//                    
-//
-//                }
-//                
-//                captureAmount = totalAmount - amountCollected;
-//
-//                if (authReady && captureAmount > 0) {
-//                    canCapture = true;
-//                }
-//                
-//                return {
-//                    canCapture: canCapture,
-//                    amountCollected: amountCollected,
-//                    captureAmount: captureAmount,
-//                    captureData: captureData,
-//                    paymentType: (captureData) ? captureData.paymentType : "Check"
-//                };
-//            }
         },
-
-
 
         {
             "name": "orderNumber",
@@ -198,7 +147,7 @@ Ext.define('Taco.model.Order', {
             "name": "availableActions",
             "type": "auto"
         },
-        // payment shit, incomplete
+        // payment , incomplete
         {
             "name": "lastValidationDate",
             "type": "date",
@@ -236,6 +185,9 @@ Ext.define('Taco.model.Order', {
         }, {
             "name": "unPackagedItems",
             "type": "array",
+            convert: function (v, record) {
+                return v
+            },
             "defaultValue": [
                 
                 {
@@ -255,58 +207,120 @@ Ext.define('Taco.model.Order', {
         }, {
             "name": "packages",
             "type": "array",
-            "defaultValue": [
-                
-                {
-                    "orderId":"32165987",
-                    "id": "o1004-p1",
-                    "status": "NotShipped",
-                    "shippingMethod": "FedEx 2nd Day Air",
-                    "trackingNumber": "",
-                    "hasShippingLabel": false,
-                    "totalWeight": "23.4",
-                    "totalQuantity": "6",
-                    "items": [{
-                        "orderItemId": "i123",
-                        "productName": "product 1",
-                        "productCode": "xyz123",
-                        "weight": "2.3",
-                        "quantity": "3"
-                    }, {
-                        "productName": "product 2",
-                        "orderItemId": "i123",
-                        "productCode": "xyz123",
-                        "weight": "2.3",
-                        "quantity": "3"
-                    }]
-                }, {
-                    "orderId": "32165987",
-                    "id": "o1004-p2",
-                    "status": "Shipped",
-                    "shippingMethod": "FedEx 2nd Day Air",
-                    "trackingNumber": "Z9876514321987654",
-                    "hasShippingLabel": true,
-                    "totalWeight": "23.4",
-                    "totalQuantity": "6",
-                    "items": [{
-                        "productName": "product 1",
-                        "orderItemId": "i123",
-                        "productCode": "xyz123",
-                        "weight": "2.3",
-                        "quantity": "3"
-                    }, {
-                        "productName": "product 2",
-                        "orderItemId": "i123",
-                        "productCode": "xyz123",
-                        "weight": "2.3",
-                        "quantity": "3"
-                    }]
+            convert: function (v, record) {
+               
+                if (!Ext.isArray(v)) {
+                   v = [];
+                }
+                    // adding test data;
+                var shippedPackageCount = 0;
+                var unShippedPackageCount = 0;
+
+
+                for (var i = 0; i < shippedPackageCount; i++) {
+
+                    v.push({
+                        "orderId": "3216598",
+                        "id": "o1004-p" + i,
+                        "status": "Shipped",
+                        "shippingMethod": "FedEx 2nd Day Air",
+                        "trackingNumber": "",
+                        "hasShippingLabel": false,
+                        "totalWeight": "23.4",
+                        "totalQuantity": "6",
+                        "items": [
+                            {
+                                "orderItemId": "i123",
+                                "productName": "product 1",
+                                "productCode": "xyz123",
+                                "weight": "2.3",
+                                "quantity": "3"
+                            }, {
+                                "productName": "product 2",
+                                "orderItemId": "i123",
+                                "productCode": "xyz123",
+                                "weight": "2.3",
+                                "quantity": "3"
+                            }
+                        ]
+                    });
                 }
 
-            ]
-        }
+                for (var i = 0; i < unShippedPackageCount; i++) {
+
+                    v.push({
+                        "orderId": "3216598",
+                        "id": "o1004-p" + i,
+                        "status": "NotShipped",
+                        "shippingMethod": "FedEx 2nd Day Air",
+                        "trackingNumber": "",
+                        "hasShippingLabel": false,
+                        "totalWeight": "23.4",
+                        "totalQuantity": "6",
+                        "items": [
+                            {
+                                "orderItemId": "i123",
+                                "productName": "product 1",
+                                "productCode": "xyz123",
+                                "weight": "2.3",
+                                "quantity": "3"
+                            }, {
+                                "productName": "product 2",
+                                "orderItemId": "i123",
+                                "productCode": "xyz123",
+                                "weight": "2.3",
+                                "quantity": "3"
+                            }
+                        ]
+                    });
+                }
+
+                
+                return v;
+                
+                
+            }
+        },
         
+        // helper field. ui iterates on unshipped packages in multiple places
+        {
+            "name": "unShippedPackages",
+            "type": "array",
+            persist: false,
+            convert: function (v, record) {
+                var packages = record.get("packages");
+                var retVal = [];
+
+                for (var i = 0; i < packages.length; i++) {
+                    if (packages[i].status == "NotShipped") {
+                        retVal.push(packages[i]);
+                    }
+                }
+                return retVal;
+            }
+        },
+
+        // helper field. ui iterates on shipped packages in multiple places
+        {
+            "name": "shippedPackages",
+            "type": "array",
+            persist: false,
+            convert: function (v, record) {
+                var packages = record.get("packages");
+                var retVal = [];
+
+                for (var i = 0; i < packages.length; i++) {
+                    if (packages[i].status == "Shipped") {
+                        retVal.push(packages[i]);
+                    }
+                }
+                return retVal;
+            }
+        }
     ],
+    
+
+
     
     /*
     getPayments: function () {
@@ -322,6 +336,11 @@ Ext.define('Taco.model.Order', {
 
     associations: [
       
+        // Note:  (simeon) I have intentially not created models for package, shipment, unpackagedItems and packagedItems
+        // the entire order ui needs to be replaced with every change of order entity and its associated entities due to the display of order status in just about every component.
+        // by treating this sub entity data as json and arrays, it avoids extjs auto creating of stores for each associated sub entity;
+        // for shipping and its related views, the data is passed to the view which sets up its own stores as needed;
+
         {
             type: 'hasMany',
             model: 'Taco.model.OrderItem',
@@ -355,7 +374,7 @@ Ext.define('Taco.model.Order', {
                 // this is a temporary hack to get the proxy to use defaultValue for members that don't exist in the response
                 var data = Ext.decode(response.responseText);
                 if (data.items[0]) {
-                    data.items[0].packages = data.items[0].packages || undefined;
+                    data.items[0].packages = data.items[0].packages || [];
                     data.items[0].unPackagedItems = data.items[0].unPackagedItems || undefined;
                 }
                 return this.readRecords(data);
@@ -528,6 +547,199 @@ Ext.define('Taco.model.Order', {
     paymentRecieved: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/payment/recieved',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+
+    /*
+     *
+     *
+     *  Begin order shipping action methods
+     *
+     *
+     *    
+     */
+
+     
+
+    /**
+     * service call to create a package
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                package: {
+                   ... package endity ...
+                }
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    createPackage: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/create',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+
+    /**
+     * service call to create a package
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId : "asdf",
+                packageIds["654"]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    deletePackage: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/delete',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+
+    /**
+     * service call to move items into a package
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId: "987654321",
+                sourcePackageId : "",
+                destinationPackageId : "",
+                items: [{
+                    ... order item entity ...
+                }]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    movePackageItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/moveitems',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+    
+    /**
+     * service call to mark a package as shipped
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId: "987654321",                
+                packageIds: ["987654"]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    markPackagesShipped: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/markshipped',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+    
+    /**
+     * service call to change the shipping method
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                ... package entity ...
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    changeShippingMethod: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/edit',
             method: "POST"
         });
 
