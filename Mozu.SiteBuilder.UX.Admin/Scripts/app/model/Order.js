@@ -156,7 +156,7 @@ Ext.define('Taco.model.Order', {
             "type": "int",
             "useNull": false
         },
-        // workflow shit
+        // workflow 
         {
             "name": "orderStatus",
             "type": "string",

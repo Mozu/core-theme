@@ -473,8 +473,18 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     // returns an array of field configs for the store of this grid
     getFields: function() {
         return [
+            
+            
+            /*
+            orderItemId: "fe629abaecb64743b82c424279f50aba"
+productCode: "uuu"
+productName: "t-shirt"
+quantity: 2
+weight: 2
+            */
+
             {
-                "name": "id",
+                "name": "orderItemId",
                 "type": "string",
                 "useNull": true
             },
@@ -489,16 +499,32 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 "type": "string",
                 "useNull": true
             },
-            {
-                "name": "unitPrice",
-                "type": "auto",
-                "defaultValue": []
-            },
+
             {
                 "name": "quantity",
                 "type": "int",
                 "useNull": true
             },
+            
+            {
+                "name": "weight",
+                "type": "float",
+                "useNull": true,
+                "defaultValue": 1
+            }
+
+            /*
+            ,
+            
+            
+            
+
+            {
+                "name": "unitPrice",
+                "type": "auto",
+                "defaultValue": []
+            },
+            
             {
                 "name": "discount",
                 "type": "auto",
@@ -515,13 +541,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 "useNull": true
             },
        
-            // not currently in json
-            {
-                "name": "weight",
-                "type": "float",
-                "useNull": true,
-                "defaultValue": 1
-            },
+            
+            
 
             // not currently in json
             {
@@ -537,6 +558,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 "defaultValue": false
             }
         
+            */
 
 
         ];
@@ -609,8 +631,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         // service didnt' return data properly
                         return;
                     }
-                    
-                    
+
+
+                    // reload the record
+                    this.record.reload();
                 },
                 failure: function (response) {
                     // error handling here

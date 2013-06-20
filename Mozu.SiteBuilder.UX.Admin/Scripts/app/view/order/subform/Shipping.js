@@ -230,6 +230,10 @@ Ext.define('Taco.view.order.subform.Shipping', {
     onRecordChange: function () {
         var me = this;
         
+        Ext.suspendLayouts();
+
+        
+
         // clear out the ui components
         me.unpackagedItems.destroy();
         me.unShippedPackages.destroy();
@@ -244,5 +248,8 @@ Ext.define('Taco.view.order.subform.Shipping', {
             me.unShippedPackages,
             me.shippedPackages
         );
+
+
+        Ext.resumeLayouts(true);
     }
 });
