@@ -63,6 +63,7 @@
         },
         observables: {
             Total: {},
+            DiscountedTotal: {},
             hasDiscount: {},
         },
         proceedToCheckout: function () {
