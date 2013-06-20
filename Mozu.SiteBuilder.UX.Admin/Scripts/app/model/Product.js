@@ -283,7 +283,7 @@ Ext.define('Taco.model.Product', {
 
         return this.productVariationStore;
     },
-
+    
 
 
     idProperty: 'productCode',

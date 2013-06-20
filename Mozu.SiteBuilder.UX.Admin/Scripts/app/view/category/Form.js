@@ -22,7 +22,9 @@ Ext.define('Taco.view.category.Form', {
         fieldLabel: 'Category Name',
         allowBlank: false,
         maxLength: 80,
-        enforceMaxLength: true
+        enforceMaxLength: true,
+        required: true,
+        minLength: 3,
     }, {
         xtype: 'categorycombobox',
         name: 'parentId',

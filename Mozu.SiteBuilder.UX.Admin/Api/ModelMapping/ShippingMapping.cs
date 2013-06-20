@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                         {
                                                                                             new ServiceType()
                                                                                                 {
-                                                                                                    Code  = x.RateType ,
+                                                                                                    Code  = Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId ,
                                                                                                     Content = new ServiceTypeLocalizedContent()
                                                                                                                   {
                                                                                                                       Name  = x.Name ,

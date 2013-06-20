@@ -7,60 +7,69 @@
 Ext.define('Taco.view.product.subform.Categories', {
     extend: 'Taco.view.product.subform.Subform',
     requires: ['Taco.view.category.Modal', 'Taco.core.ux.form.field.MultiSelect'],
-
+   // width: '100%',
     title: 'Categories',
-
+    flex: 1,
+    layout: {
+        type:'vbox',
+        align:'stretch'
+    },
     initComponent: function () {
-        var list, listStore;
+        var list, listStore, me=this;
 
         // categories are not global, we're only operating on the productInSiteInfo
         this.record = this.productInSiteInfo;
+
+
+        listStore = this.record.getUnfilteredCategoryStore();
         
-
-        listStore = this.record.getCategoryStore();
-
-
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
-        list = Ext.create('Taco.core.ux.form.field.MultiSelect', {
+        list = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'categoryIds',
-            width: 400,
+           // width: '100%',
             store: listStore,
+            flex:1,
             getStore: function () { return listStore; },
             displayField: 'name',
             valueField: 'id',
-            value:this.record.get('categoryIds'),
-            listConfig: {
-                disableSelection: true,
-                itemTpl: [
-                    '<span class="x-boundlist-item-content">{name}</span>',
-                    '<span class="x-boundlist-item-close"> </span>'
-                ],
-                listeners: {
-                    itemclick: this.onListItemClick,
-                    scope: this
-                }
+            value: this.record.get('categoryIds'),
+            queryMode: 'local',
+            onTriggerClick:function () {
+                me.launchModal();
             }
+            //listConfig: {
+            //    disableSelection: true,
+            //    itemTpl: [
+            //        '<span class="x-boundlist-item-content">{name}</span>',
+            //        '<span class="x-boundlist-item-close"> </span>'
+            //    ],
+            //    listeners: {
+            //        itemclick: this.onListItemClick,
+            //        scope: this
+            //    }
+            //}
         });
         this.listStore = listStore;
         list.parentThing = this;
 
-        this.tools = [{
-            xtype: 'secondarybutton',
-            text: 'Manage Categories',
-            click: this.launchModal,
-            scope: this
-        }];
-
+        //this.tools = [{
+        //    xtype: 'secondarybutton',
+        //    text: 'Add Categories',
+        //    click: this.launchModal,
+        //    scope: this
+        //}];
+       
         this.items = [list];
 
         this.callParent(arguments);
 
         // reset the list's dirty state when its store first loads
-        listStore.on({
-            load: function () { list.resetOriginalValue(); },
-            single: true,
-            scope: this
-        });
+        //listStore.on({
+        //    load: function () { list.resetOriginalValue(); },
+        //    single: true,
+        //    scope: this
+        //});
+        this.mon(listStore, 'load', function () { list.resetOriginalValue(); }, this);
     },
 
     /**
@@ -71,13 +80,12 @@ Ext.define('Taco.view.product.subform.Categories', {
         var list = this.getForm().findField('categoryIds'),
             listStore = list.getStore(),
             treeStore = Taco.core.data.StoreManager.getCategoryTreeBySite(this.record.getId());
-        
+
 
         Ext.destroy(this.modal);
 
         this.modal = Ext.create('Taco.view.category.Modal', {
-            store: treeStore,
-            preselection: listStore.getRange()
+            store: treeStore
         });
 
         this.modal.on({
@@ -93,18 +101,18 @@ Ext.define('Taco.view.product.subform.Categories', {
     onListItemClick: function (view, record, item, index, e) {
         var closeBtn = e.getTarget('.x-boundlist-item-close', 10),
             list = view.ownerCt,
-            value=[], store;
+            value = [], store;
 
         if (closeBtn) {
             store = view.getStore();
             store.remove(record);
             store.each(
-                function(record) {
-                     value.push(record.getId());
+                function (record) {
+                    value.push(record.getId());
                 }
             );
-            
-         
+
+
             list.setValue(value);
             console.log(value, list.getValue());
 
@@ -118,12 +126,18 @@ Ext.define('Taco.view.product.subform.Categories', {
      * @param  {Object} values An object with category data for the list.
      * @private
      */
-    updateList: function (modal, values) {
+    updateList: function (modal, newRecords) {
         var list = this.getForm().findField('categoryIds'),
-            store = list.getStore();
+            value = Ext.Array.clone(list.getValue() || []);
 
-        store.remove(store.getRange());
-        store.add(values);
-        list.setValue(store.collect('id'));
+        //store.remove(store.getRange());
+        Ext.each(newRecords, function (record) {
+            if (value.indexOf(record.getId() > -1)) {
+                value.push(record.getId());
+            }
+        });
+       
+        list.setValue(value);
+        var bing = list.getValue();
     }
 });
