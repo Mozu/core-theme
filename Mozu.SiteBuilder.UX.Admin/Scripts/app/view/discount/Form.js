@@ -146,7 +146,7 @@ Ext.define('Taco.view.discount.Form', {
         me.includeAllProductsInput = Ext.widget({
             xtype: 'checkbox',
             name: 'includeAllProducts',
-            fieldLabel: 'Applys to All Products',
+            fieldLabel: 'Applies to All Products',
             labelAlign: 'top',
             width: 600,
             value: this.record.get('includeAllProducts'),
