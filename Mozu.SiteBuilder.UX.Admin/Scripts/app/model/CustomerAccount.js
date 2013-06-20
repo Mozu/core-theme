@@ -8,6 +8,9 @@ Ext.define('Taco.model.CustomerAccount', {
             name: 'id',
             type: 'int'
         }, {
+            name: 'userId',
+            type: 'string'
+        }, {
             name: 'siteId',
             type: 'int'
         }, {

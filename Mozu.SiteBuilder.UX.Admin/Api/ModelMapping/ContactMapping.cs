@@ -36,6 +36,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.WorkPhone, op => op.MapFrom(dc => dc.PhoneNumbers != null ? dc.PhoneNumbers.Work : null))
             .ForMember(x => x.MobilePhone, op => op.MapFrom(dc => dc.PhoneNumbers != null ? dc.PhoneNumbers.Mobile : null))
             ;
+
+            Mapper.CreateMap<Contact, DC.Contact>()
+            .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
+            .ForMember(dc => dc.Email, op => op.MapFrom(x => x.Email))
+            .ForMember(dc => dc.FirstName, op => op.MapFrom(x => x.FirstName))
+            .ForMember(dc => dc.MiddleNameOrInitial, op => op.MapFrom(x => x.MiddleName))
+            .ForMember(dc => dc.LastNameOrSurname, op => op.MapFrom(x => x.LastName))
+            .ForMember(dc => dc.CompanyOrOrganization, op => op.MapFrom(x => x.CompanyOrOrganization))
+            .ForMember(dc => dc.Address, op => op.MapFrom(x => new DC.Address {
+                 Address1 = x.Address1,
+                 Address2 = x.Address2,
+                 Address3 = x.Address3,
+                 Address4 = x.Address4,
+                 CityOrTown = x.CityOrTown,
+                 CountryCode = x.CountryCode,
+                 PostalOrZipCode = x.PostalOrZipCode,
+                 StateOrProvince = x.StateOrProvince
+            }))
+            .ForMember(dc => dc.PhoneNumbers, op => op.MapFrom(x => new DC.Phone {
+                Home = x.HomePhone,
+                Work = x.WorkPhone,
+                Mobile = x.MobilePhone
+            }))
+            ;
         }
     }
 }
