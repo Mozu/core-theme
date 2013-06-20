@@ -214,12 +214,13 @@ Ext.define('Taco.model.Order', {
             ]
         }, {
             "name": "unpackagedItems",
+            
             "type": "array",
             convert: function (v, record) {
                 return v
             },
             "defaultValue": [
-                
+                /*                
                 {
                     "productName": "product 6",
                     "productCode": "xyz123",
@@ -231,8 +232,7 @@ Ext.define('Taco.model.Order', {
                     "weight": "2.3",
                     "quantity": "3"
                 }
-                
-
+                */
             ]
         }, {
             "name": "packages",
@@ -243,8 +243,8 @@ Ext.define('Taco.model.Order', {
                    v = [];
                 }
                     // adding test data;
-                var shippedPackageCount = 0;
-                var unShippedPackageCount = 0;
+                var shippedPackageCount = 2;
+                var unShippedPackageCount = 1;
 
 
                 for (var i = 0; i < shippedPackageCount; i++) {
@@ -354,7 +354,7 @@ Ext.define('Taco.model.Order', {
     
     /*
     getPayments: function () {
-        debugger;
+        
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.OrderPayment',
             associationKey: 'payments',
@@ -410,7 +410,7 @@ Ext.define('Taco.model.Order', {
                 var data = Ext.decode(response.responseText);
                 if (data.items[0]) {
                     data.items[0].packages = data.items[0].packages || [];
-                    data.items[0].unPackagedItems = data.items[0].unPackagedItems || undefined;
+                    data.items[0].unpackagedItems = data.items[0].unpackagedItems || undefined;
                 }
                 return this.readRecords(data);
             },

@@ -251,7 +251,14 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         });
         */
 
-        
+        tb.items.push({
+            text:"reload",
+            handler:function() {
+                this.record.reload();
+            },
+            scope:this
+
+        });
         
         
         
@@ -596,7 +603,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 },
                 success: function (response) {
                     // success handling here
-                    debugger;
+                    
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {
                         // service didnt' return data properly
@@ -607,12 +614,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 },
                 failure: function (response) {
                     // error handling here
-                    debugger;
+                    
                 },
                 scope: this
             };
 
-        debugger;
+        
             // call the model method to persist the change
             this.record.createPackage(config);
         
@@ -623,20 +630,20 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     changeShippingMethod: function (menu, item, e, eOpts) {
         if (item) {
             // get the shipping method type and set it if its different;
-            debugger;
+            
         }
     },
     viewShippingLabel: function () {
-        debugger;
+        
     },
     viewPackingSlip: function () {
-        debugger;
+        
     },
     removeSelectedItems: function () {
-        debugger;
+        
     },
     markAsShipped: function () {
-        debugger;
+        
     }
     
 });

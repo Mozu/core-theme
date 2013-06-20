@@ -1,10 +1,10 @@
 ﻿/**
- * @class Taco.view.order.widget.UnPackagedItems
+ * @class Taco.view.order.widget.UnpackagedItems
  * this is a container with header designed to contain an order item grid 
  */
 
 
-Ext.define('Taco.view.order.widget.UnPackagedItems', {
+Ext.define('Taco.view.order.widget.UnpackagedItems', {
     extend: 'Ext.panel.Panel',
     requires: ['Taco.view.order.widget.OrderItemGrid'],
     config: {
@@ -39,7 +39,7 @@ Ext.define('Taco.view.order.widget.UnPackagedItems', {
     initComponent: function(eOpts) {
         var me = this,
             data =[],
-            unPackagedItems = me.record.get("unPackagedItems");        
+            unpackagedItems = me.record.get("unpackagedItems");        
         
         me.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping-package'].join(' ');
 
@@ -47,8 +47,8 @@ Ext.define('Taco.view.order.widget.UnPackagedItems', {
         me.header = me.getHeaderTemplate();
 
         // data to be loaded into the store
-        if (unPackagedItems) {
-            data = unPackagedItems
+        if (unpackagedItems) {
+            data = unpackagedItems
         }
 
         
@@ -59,7 +59,30 @@ Ext.define('Taco.view.order.widget.UnPackagedItems', {
             //the unpackaged items data to be loaded by the store
             data: data,
             
-            record: this.record
+            record: this.record,
+            
+            // configs for the grid
+            editMode: true,
+
+            enableCellEditing: true,
+
+            enableCheckBoxSelection: true,
+
+            enableActionColumn: false,
+
+            enableToolbar: true,
+
+            enableMoveMenu: true,
+
+            enableShippingMethodMenu: false,
+
+            enableShippingLabelButton: false,
+
+            enabledPackingSlipButton: false,
+
+            enabledRemoveButton: false,
+
+            enabledMarkAsShippedButton: false
         });
 
         me.items = [
@@ -139,6 +162,6 @@ Ext.define('Taco.view.order.widget.UnPackagedItems', {
     },
     
     changeShipTo: function (dom) {
-        debugger;
+        
     }
 });

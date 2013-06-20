@@ -225,11 +225,11 @@ Ext.define('Taco.view.order.widget.Package', {
     },
     
     deletePackage: function() {
-        debugger
+        
     },
 
     addTrackingNumber: function () {
-        debugger
+        
     }
     
 });

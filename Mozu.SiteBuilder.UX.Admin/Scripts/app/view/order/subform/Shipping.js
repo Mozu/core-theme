@@ -8,7 +8,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
     requires: [
         'Taco.view.order.widget.OrderItemGrid',
         'Taco.view.order.widget.Package',
-        'Taco.view.order.widget.UnPackagedItems'
+        'Taco.view.order.widget.UnpackagedItems'
     ],
     config: {
         
@@ -33,12 +33,17 @@ Ext.define('Taco.view.order.subform.Shipping', {
         var me = this;
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping'].join(' ');
         
+        // after the record is reloaded we will need to refresh the ui
+        this.record.on("aftercommit", function () {
+            this.onRecordChange();
+        }, this);
+
         // load up the ui sub components; wlll be called every time the record changes
         this.initUI();
         
         Ext.apply(this, {
             items: [
-                me.unPackagedItems,
+                me.unpackagedItems,
                 me.unShippedPackages,
                 me.shippedPackages
             ]
@@ -54,8 +59,10 @@ Ext.define('Taco.view.order.subform.Shipping', {
     initUnpackagedItems: function () {
         var me = this,
             billingContact = this.record.get("billingContact");
+
         
-        me.unPackagedItems = Ext.create('Taco.view.order.widget.UnPackagedItems', {
+
+        me.unpackagedItems = Ext.create('Taco.view.order.widget.UnpackagedItems', {
 
             record: me.record,
             
@@ -65,11 +72,11 @@ Ext.define('Taco.view.order.subform.Shipping', {
 
                 // order info
                 title: "Unshipped Items",
-                shipmentStatus: "Partially Shipped",
-                orderTotal: 65,
-                shippedItemTotal: 45,
-                pendingItemTotal: 20,
-                shippingMethod: "FedEx 2nd Day Air",
+                shipmentStatus: me.record.get("shippingStatus"),
+                orderTotal: me.record.get("itemsOrdered"),
+                shippedItemTotal: me.record.get("itemsShipped"),
+                pendingItemTotal: me.record.get("itemsNotShipped"),
+                shippingMethod: me.record.get("shippingMethod"),
 
                 // billing contact info
                 firstName: billingContact.firstName,
@@ -83,8 +90,8 @@ Ext.define('Taco.view.order.subform.Shipping', {
         });
         
         // load data;
-        //var data = this.record.get("unPackagedItems");
-        //me.unPackagedItems.loadData(data);
+        //var data = this.record.get("unpackagedItems");
+        //me.unpackagedItems.loadData(data);
 
     },
     
@@ -141,83 +148,101 @@ Ext.define('Taco.view.order.subform.Shipping', {
 
     },
     initshippedPackages: function() {
-            var me = this,
-                data=[],
-                packages=[];
+        var me = this,
+            data=[],
+            packages=[];
 
-            data = this.record.get("shippedPackages");
+        data = this.record.get("shippedPackages");
         
-            for (var i = 0; i < data.length; i++) {
+        for (var i = 0; i < data.length; i++) {
             
-                var dataItem = data[i];
-                var billingContact = me.record.get("billingContact");
+            var dataItem = data[i];
+            var billingContact = me.record.get("billingContact");
 
                 
-                packages.push( Ext.create('Taco.view.order.widget.Package', {
-                    record: this.record,
-                    gridHidden: true,
+            packages.push( Ext.create('Taco.view.order.widget.Package', {
+                record: this.record,
+                gridHidden: true,
                     
-                    editMode: false,
+                editMode: false,
 
-                    enableCellEditing: false,
+                enableCellEditing: false,
 
-                    enableCheckBoxSelection: false,
+                enableCheckBoxSelection: false,
 
-                    enableActionColumn: false,
+                enableActionColumn: false,
 
-                    enableToobar: true,
+                enableToobar: true,
 
-                    isShippedPackage: true,
+                isShippedPackage: true,
                     
-                    enableMoveMenu: false,
+                enableMoveMenu: false,
 
-                    enableShippingMethodMenu: false,
+                enableShippingMethodMenu: false,
 
-                    enableShippingLabelButton: true,
+                enableShippingLabelButton: true,
 
-                    enabledPackingSlipButton: true,
+                enabledPackingSlipButton: true,
 
-                    enabledRemoveButton: false,
+                enabledRemoveButton: false,
 
-                    enabledMarkAsShippedButton: false,
+                enabledMarkAsShippedButton: false,
 
 
-                    packageData: dataItem,
-                    headerData: {
-                        // ui controls
-                        showVisibilityToggle: true,
+                packageData: dataItem,
+                headerData: {
+                    // ui controls
+                    showVisibilityToggle: true,
                         
-                        // order info
-                        title: "Package",
-                        shipmentStatus: dataItem.status,
-                        itemTotal: dataItem.totalQuantity,
-                        weight: dataItem.totalWeight,
-                        shippingMethod: dataItem.shippingMethod,
-                        trackingNumber: dataItem.trackingNumber,
-                        shipDate: dataItem.shipDate,
+                    // order info
+                    title: "Package",
+                    shipmentStatus: dataItem.status,
+                    itemTotal: dataItem.totalQuantity,
+                    weight: dataItem.totalWeight,
+                    shippingMethod: dataItem.shippingMethod,
+                    trackingNumber: dataItem.trackingNumber,
+                    shipDate: dataItem.shipDate,
                         
-                        // billing contact info
-                        firstName: billingContact.firstName,
-                        lastName: billingContact.lastName,
-                        address1: billingContact.address1,
-                        zipCode: billingContact.zipCode,
-                        state: billingContact.state,
-                        phoneNumber: billingContact.phoneNumber,
-                        email: billingContact.email
-                    }
-                })
-                );
-            }
+                    // billing contact info
+                    firstName: billingContact.firstName,
+                    lastName: billingContact.lastName,
+                    address1: billingContact.address1,
+                    zipCode: billingContact.zipCode,
+                    state: billingContact.state,
+                    phoneNumber: billingContact.phoneNumber,
+                    email: billingContact.email
+                }
+            })
+            );
+        }
 
-            //me.packagedItemsGrid.loadData(this.record.get("packages"));
+        //me.packagedItemsGrid.loadData(this.record.get("packages"));
         
-            me.shippedPackages = Ext.create('Taco.core.ux.EditContainer', {
-                header: true,
-                title: "Shipped Packages",
-                border: true,
-                margin: "80px,0px,0px,0px ",
-                items: packages
-            });
+        me.shippedPackages = Ext.create('Taco.core.ux.EditContainer', {
+            header: true,
+            title: "Shipped Packages",
+            border: true,
+            margin: "80px,0px,0px,0px ",
+            items: packages
+        });
+    },
 
-        },
+    onRecordChange: function () {
+        var me = this;
+        
+        // clear out the ui components
+        me.unpackagedItems.destroy();
+        me.unShippedPackages.destroy();
+        me.shippedPackages.destroy();
+
+        //re-build the ui components
+        me.initUI();
+
+        // add the ui components to the view
+        me.add(
+            me.unpackagedItems,
+            me.unShippedPackages,
+            me.shippedPackages
+        );
+    }
 });
