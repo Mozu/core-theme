@@ -7,11 +7,11 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
     extend: 'Taco.view.product.subform.Subform',
     requires: [],
     title: 'Shipping From',
-    
-    initComponent: function () {
-        var me = this;
 
-        this.addressRecord = Ext.create('Taco.model.Contact', this.record.get('siteShippingOriginAddress') || {});      
+    initComponent: function () {
+        var me = this, isAddressEmpty = true;
+
+        this.addressRecord = Ext.create('Taco.model.Contact', this.record.get('siteShippingOriginAddress') || {});
 
 
         this.addressView = Ext.widget({
@@ -26,31 +26,56 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
                 '<div class="address-line-3">{address3}</div>',
                 '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
                 '<div class="country">{countryCode}</div>'
-            ]
+            ],
+            
         });
 
-        this.editButton = {
+        this.editButton = Ext.widget({
             xtype: 'secondarybutton',
             text: 'Edit',
             click: function () {
-                var modal = Ext.create('Taco.view.address.ModalEditor', {
-                    record: me.addressRecord,
-                    addressHasNames: false,
-                    listeners: {
-                        save: function () {
-                            me.record.set('siteShippingOriginAddress', Ext.apply({}, me.addressRecord.data));
-                            me.addressView.update(me.addressRecord.data);
-                        }
-                    }
-                });
-            }
-        };        
+                me.editAddress();
+            } 
+           
+        });
+        ;
+
+
+        if (this.addressRecord.data != null) {
+
+            Ext.Object.each(this.addressRecord.data, function (key, value) {
+                if (value != null && value !== '') {
+                    isAddressEmpty = false;
+                }
+            });
+
+        }
 
 
         this.items = [this.addressView, this.editButton];
 
         this.callParent(arguments);
+
+        if (isAddressEmpty) {
+            this.on('boxready', function () {
+                this.editAddress();
+            }, this);
+
+        }
+
+    },
+    editAddress: function () {
+        var me = this,
+            modal = Ext.create('Taco.view.address.ModalEditor', {
+            record: me.addressRecord,
+            addressHasNames: false,
+            listeners: {
+                save: function () {
+                    me.record.set('siteShippingOriginAddress', Ext.apply({}, me.addressRecord.data));
+                    me.addressView.update(me.addressRecord.data);
+                }
+            }
+        });
     }
-   
-        
+    
 });
