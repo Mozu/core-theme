@@ -5,7 +5,8 @@
  */
 
 Ext.define('Taco.view.product.SiteForm', {
-    extend: 'Taco.core.ux.form.Form',
+    //extend: 'Taco.core.ux.form.Form',
+    extend: 'Taco.core.ux.form.NavForm',
     alias: 'widget.productsiteform',
     requires: [
         'Taco.view.product.subform.General',
@@ -72,6 +73,12 @@ Ext.define('Taco.view.product.SiteForm', {
             Ext.create('Taco.view.product.subform.Merchandising', subFormCfg),
             Ext.create('Taco.view.product.subform.SEO', subFormCfg)
         ]);
+
+        this.navStore = Ext.create('Ext.data.Store', {
+            fields: ['title'],
+            data: this.items
+        });
+
 
         this.callParent(arguments);
 
