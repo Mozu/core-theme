@@ -28,47 +28,47 @@ Ext.define('Taco.view.customers.Form', {
             title: 'Customer Profile',
             cls: Taco.baseCSSPrefix + 'customer-profile',
             items: [{
-                xtype: 'container',
-                width: 320,
-                cls: 'customer-settings',
-                items: [{
+                    xtype: 'container',
+                    width: 320,
+                    cls: 'customer-settings',
+                    items: [{
                     xtype: 'textfield',
                     width: 320,
                     readOnly: true,
                     name: 'userId',
                     fieldLabel: 'User ID'
                 }, {
-                    store: this.tagStore,
-                    xtype: 'boxselect',
-                    width: 320,
-                    hideTrigger: true,
-                    triggerOnClick: false,
-                    forceSelection: false,
-                    createNewOnEnter: true,
-                    valueField: 'Key',
-                    displayField :'Value',
-                    name: 'groups',
-                    queryMode: 'local',
-                    fieldLabel: 'Groups'
-                }, {
-                    xtype: 'checkboxfield',
-                    name: 'acceptsMarketing',
-                    fieldLabel: 'Marketing',
-                    boxLabel: 'Yes, keep me up to date on store news and specials',
+                            store: this.tagStore,
+                            xtype: 'boxselect',
+                            width: 320,
+                            hideTrigger: true,
+                            triggerOnClick: false,
+                            forceSelection: false,
+                            createNewOnEnter: true,
+                            valueField: 'Key',
+                            displayField: 'Value',
+                            name: 'groups',
+                            queryMode: 'local',
+                            fieldLabel: 'Groups'
+                        }, {
+                            xtype: 'checkboxfield',
+                            name: 'acceptsMarketing',
+                            fieldLabel: 'Marketing',
+                            boxLabel: 'Yes, keep me up to date on store news and specials',
                     
-                    // checked: this.record.get('acceptsMarketing')
+                            // checked: this.record.get('acceptsMarketing')
+                        }]
+                }, {
+                    xtype: 'component',
+                    width: 320,
+                    cls: 'customer-history',
+                    renderData: data,
+                    renderTpl: [
+                        '<div class="total-orders"><label>Total Orders</label><h2>{[values.totalOrders || 0]}</h2></div>',
+                        '<div class="total-spent"><label>Total Spent</label><h2>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</h2></div>',
+                        '<div class="customer-since"><label>Customer Since</label><h2>Never</h2></div>',
+                    ]
                 }]
-            }, {
-                xtype: 'component',
-                width: 320,
-                cls: 'customer-history',
-                renderData: data,
-                renderTpl: [
-                    '<div class="total-orders"><label>Total Orders</label><h2>{[values.totalOrders || 0]}</h2></div>',
-                    '<div class="total-spent"><label>Total Spent</label><h2>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</h2></div>',
-                    '<div class="customer-since"><label>Customer Since</label><h2>Never</h2></div>',
-                ]
-            }]
         });
 
         contacts = Ext.create('Taco.core.ux.EditContainer', {
@@ -81,14 +81,14 @@ Ext.define('Taco.view.customers.Form', {
                 store: contactsStore,
                 tpl: [
                     '<tpl for="."><div class="address">',
-                        '<div class="name">{firstName} {middleName} {lastName}</div>',
-                        '<div class="address-line-1">{address1}</div>',
-                        '<div class="address-line-2">{address2}</div>',
-                        '<div class="address-line-3">{address3}</div>',
-                        '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
+                    '<div class="name">{firstName} {middleName} {lastName}</div>',
+                    '<div class="address-line-1">{address1}</div>',
+                    '<div class="address-line-2">{address2}</div>',
+                    '<div class="address-line-3">{address3}</div>',
+                    '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
                         '<div class="country">{email}</div>',
-                        '<div class="phone">{homePhone}</div>',
-                        '<div class="edit">E</div>',
+                    '<div class="phone">{homePhone}</div>',
+                    '<div class="edit">E</div>',
                     '</div></tpl>'
                 ],
                 listeners: {
@@ -113,10 +113,29 @@ Ext.define('Taco.view.customers.Form', {
 
         this.loadRecord(this.record);
     },
-    onBeforeSave:function () {
-        var groups = this.findField('groups');
-        if (groups.isDirty()) {
+    addSaveTasks: function (tasks, updateRecord, saveRecord) {
+        var groups = this.findField('groups'), groupValue = groups.getValue(), updateTask, newTags = [];
+
+        this.callParent(arguments);
+        if (groups.isDitry()) {
+            Ext.each(groupValue, function (val) {
+                if (Ext.isString(val)) {
+                    this.tagStore.add({ Value: val });
+                }
+            });
+
+            if (tagStore.isDirty()) {
+                updateTask = tasks.getByKey('update-record');
+                updateTask.dependencies = ['tagstore'];
+            }
+
+            tasks.add({
+                store: tagStore,
+                key: 'tagstore'
+            });
     
         }
+
+        return tasks;
     }
 });

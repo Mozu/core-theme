@@ -248,11 +248,14 @@ Ext.define('Taco.model.Product', {
     },
 
     getVariations: function () {
-        var params, me = this;
+        var me = this,
+            params,
+            proxy;
+        
         if (me.productVariationStore) {
             return me.productVariationStore;
         }
-
+       
         me.productVariationStore = Ext.create('Ext.data.Store', {
             model: 'Taco.model.ProductVariation',
             autoLoad: false,
@@ -272,27 +275,19 @@ Ext.define('Taco.model.Product', {
             }
         });
 
-      
+        proxy = me.productVariationStore.getProxy();
+        if (!proxy.extraParams) {
+            proxy.extraParams = {};
+        }
+        proxy.extraParams.productCode = this.getId();
+
 
         params = {};
 
         if (me.phantom) {
-
             me.productVariationStore.loadFromOptions();
-
-            //me.on('aftercommit', function () {
-            //    this.productVariationStore.load({
-            //        params: { productCode: me.getId() }
-            //    });
-
-            //}, me, { single: true });
-            
-        } else {
-            this.productVariationStore.load({
-                params: {
-                    productCode : me.getId()
-                }
-            });
+         } else {
+            this.productVariationStore.load();
             
         }
 

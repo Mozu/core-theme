@@ -73,38 +73,41 @@ Ext.define('Taco.model.CustomerAccount', {
             },
             initContactFields:function () {
                 var contactFields = Taco.model.Contact.getFields(), newFields = [
-                {
-                    name: 'id',
-                    type: 'int'
-                }, {
-                    name: 'siteId',
-                    type: 'int'
-                }, {
-                    name: 'companyName',
-                    type: 'string'
-                }, {
-                    name: 'acceptsMarketing',
-                    type: 'boolean'
-                }, {
-                    name: 'groups',
-                    type: 'auto',
-                    defaultValue: []
-                }, {
-                    name: 'contacts',
-                    type: 'auto',
-                    defaultValue: []
-                }, {
-                    name: 'totalSpent',
-                    type: 'float',
-                    defaultValue: 0
-                }, {
-                    name: 'orderCount',
-                    type: 'int',
-                    defaultValue: 0
-                }, {
-                    name: 'lastOrderDate',
-                    type: 'date'
-                }];
+               {
+                   name: 'id',
+                   type: 'int'
+               }, {
+                   name: 'userId',
+                   type: 'string'
+               }, {
+                   name: 'siteId',
+                   type: 'int'
+               }, {
+                   name: 'companyName',
+                   type: 'string'
+               }, {
+                   name: 'acceptsMarketing',
+                   type: 'boolean'
+               }, {
+                   name: 'groups',
+                   type: 'auto',
+                   defaultValue: []
+               }, {
+                   name: 'contacts',
+                   type: 'auto',
+                   defaultValue: []
+               }, {
+                   name: 'totalSpent',
+                   type: 'float',
+                   defaultValue: 0
+               }, {
+                   name: 'orderCount',
+                   type: 'int',
+                   defaultValue: 0
+               }, {
+                   name: 'lastOrderDate',
+                   type: 'date'
+               }];
                 if (!Taco.model.CustomerAccount.contactFieldsAdded) {
                     Taco.model.CustomerAccount.contactFieldsAdded = true;
 
