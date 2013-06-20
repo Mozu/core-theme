@@ -467,10 +467,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     getFields: function() {
         return [
             {
-                "name": "quantity",
-                "type": "int",
+                "name": "id",
+                "type": "string",
                 "useNull": true
             },
+            
             {
                 "name": "productCode",
                 "type": "string",
@@ -482,18 +483,62 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 "useNull": true
             },
             {
+                "name": "unitPrice",
+                "type": "auto",
+                "defaultValue": []
+            },
+            {
+                "name": "quantity",
+                "type": "int",
+                "useNull": true
+            },
+            {
+                "name": "discount",
+                "type": "auto",
+                "useNull": true
+            },
+            {
+                "name": "subtotal",
+                "type": "float",
+                "useNull": true
+            },
+            {
+                "name": "total",
+                "type": "float",
+                "useNull": true
+            },
+       
+            // not currently in json
+            {
                 "name": "weight",
                 "type": "float",
                 "useNull": true,
                 "defaultValue": 1
+            },
+
+            // not currently in json
+            {
+                "name": "options", //<== get list of options or extras
+                "type": "auto",
+                "defaultValue": []
+            },
+
+            // added this so the ui can modify its behavior when products are deleted
+            {
+                "name": "isDeleted",
+                "type": "auto",
+                "defaultValue": false
             }
+        
+
+
         ];
     },
     
     moveSelectedItems: function (menu, item, e, eOpts) {
         var me = this,
             data = {
-                orderId: me.record.get("orderId"),
+                orderId: me.record.get("id"),
                 items : []
             },
             moveAction,

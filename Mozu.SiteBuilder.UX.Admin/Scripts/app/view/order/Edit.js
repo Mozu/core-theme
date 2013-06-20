@@ -146,6 +146,8 @@ Ext.define('Taco.view.order.Edit', {
             layout: { type: 'vbox', align: 'stretch' },
             cls: Taco.baseCSSPrefix + 'content-body ' + Taco.baseCSSPrefix + 'orderform'
         });
+        
+        console.log(this.record.getData())
 
         this.callParent(arguments);
 
