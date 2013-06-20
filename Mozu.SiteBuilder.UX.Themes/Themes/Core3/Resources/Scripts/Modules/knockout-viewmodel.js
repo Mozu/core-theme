@@ -151,7 +151,7 @@
 
             // add whatever's left, including statics
             $.extend(self, obj);
-            self.updating = false;
+            self.isUpdating = false;
             return self;
         },
         validate: function (loudly) {

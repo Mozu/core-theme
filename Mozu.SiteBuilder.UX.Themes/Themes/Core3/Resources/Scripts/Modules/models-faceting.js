@@ -68,10 +68,10 @@
         FacetedProductCollection = KnockoutVM.extend({
             mozuType: 'search',
             observables: {
-                PageSize: '',
-                TotalCount: '',
-                PageCount: '',
-                StartIndex: ''
+                PageSize: { numeric: 0},
+                TotalCount: { numeric: 0},
+                PageCount: { numeric: 0 },
+                StartIndex: { numeric: 0 }
             },
             submodelArrays: {
                 Facets: Facet,
@@ -96,15 +96,12 @@
             },
             buildFacetRequest: function() {
                 var me = this;
-                var conf = {
-                    filter: 'categoryId req ' + this.categoryId,
-                    facetTemplate: 'categoryId:' + this.categoryId,
-                    facetHierValue: 'categoryId:49',
-                    facetHierDepth: 'categoryId:2',
-                    pageSize: this.PageSize(),
-                    startIndex: this.StartIndex()
-                },
-                filterValue = this.getFacetValueFilter();
+                var conf = $.extend({}, this.baseRequestParams),
+                    pageSize = this.PageSize(),
+                    startIndex = this.StartIndex(),
+                    filterValue = this.getFacetValueFilter();
+                conf.pageSize = pageSize;
+                if (startIndex) conf.startIndex = startIndex;
                 if (filterValue) conf.facetValueFilter = filterValue;
                 return conf;
             },
@@ -132,7 +129,6 @@
         }, function () {
             var me = this,
                 startIndex = me.StartIndex();
-
 
             // defining this here so it keeps scope when called from a click handler
             this.setPage = function (num) {

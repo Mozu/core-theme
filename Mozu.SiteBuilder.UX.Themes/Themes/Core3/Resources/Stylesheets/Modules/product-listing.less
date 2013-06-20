@@ -112,12 +112,32 @@ ul[data-items-per-row="3"] .mz-list-last {
         &::after {
             content: " \276f";
         }
+        &.mz-disabled {
+            cursor: default;
+            color: #eee;
+            &::after {
+                content: "";
+            }
+            &:hover {
+                text-decoration: none;
+            }
+        }
     }
 
     .mz-paging-prev {
         display: inline-block;
         &::before {
             content: "\276e  ";
+        }
+        &.mz-disabled {
+            cursor: default;
+            color: #eee;
+            &::before {
+                content: "";
+            }
+            &:hover {
+                text-decoration: none;
+            }
         }
     }
 }
