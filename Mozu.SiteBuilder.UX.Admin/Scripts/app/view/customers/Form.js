@@ -111,7 +111,7 @@ Ext.define('Taco.view.customers.Form', {
     onBeforeSave:function () {
         var groups = this.findField('groups');
         if (groups.isDirty()) {
-            groups.getValue().
+    
         }
     }
 });
