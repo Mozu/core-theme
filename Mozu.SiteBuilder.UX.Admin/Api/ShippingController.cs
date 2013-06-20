@@ -132,12 +132,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "carrierRates")]
-        public async Task<Response<List<KeyValuePair<string, string>>>> GetAllCarrierRates(string id)
+        public async Task<Response<List<KeyValuePair<string, string>>>> GetAllCarrierRates(string id = null )
         {
-            var res = (await _carrierConfigurationGlobalWebApiClient.GetServiceTypes(id, "en-US")).ReadAsSync();
+            if (!string.IsNullOrEmpty(id))
+            {
+                var res = (await _carrierConfigurationGlobalWebApiClient.GetServiceTypes(id, "en-US")).ReadAsSync();
 
-            var ret = res.Select(x => new KeyValuePair<string, string>(x.Code, x.Content != null ? x.Content.Name : x.Code)).ToList();
-            return List2(ret);
+                var ret = res.Select(x => new KeyValuePair<string, string>(x.Code, x.Content != null ? x.Content.Name : x.Code)).ToList();
+                return List2(ret);
+            }
+            else
+            {
+                var ret = new List<KeyValuePair<string, string>>();
+                foreach (var rp in (await _siteShippingSettingsClient.GetSiteShippingSettings()).ReadAsSync().ActiveRateProviders.Select(x => x.Name))
+                {
+                    var key = FeatureDic.Where(x => string.Equals(x.Value, rp, StringComparison.OrdinalIgnoreCase)).Select(x => x.Key).First();
+                    var cConfig = (await _carrierConfigurationGlobalWebApiClient.GetServiceTypes(key, "en-US")).ReadAsSync();
+
+                    ret.AddRange(cConfig.Select(x => new KeyValuePair<string, string>(x.Code, x.Content != null ? x.Content.Name : x.Code)));
+                }
+               return List2(ret);
+            }
 
         }
 

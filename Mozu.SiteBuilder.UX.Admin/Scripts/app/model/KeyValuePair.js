@@ -11,11 +11,11 @@ Ext.define('Taco.model.KeyValuePair', {
     [
         {
             "name": "Key",
-            "type": "string"
+            "type": "auto"
         },
         {
             name: "Value",
-            type: "any",
+            type: "auto",
             useNull: true
         }
     ],

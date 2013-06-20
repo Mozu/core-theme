@@ -656,6 +656,7 @@
     <Content Include="Scripts\app\store\CmsDocumentDrafts.js" />
     <Content Include="Scripts\app\shared\store\Files.js" />
     <Content Include="Scripts\app\store\ConfiguredShippingRates.js" />
+    <Content Include="Scripts\app\store\CustomerTags.js" />
     <Content Include="Scripts\app\store\ShippingCarrierSettings.js" />
     <Content Include="Scripts\app\store\GeneralSettings.js" />
     <Content Include="Scripts\app\store\ItemFilters.js" />
