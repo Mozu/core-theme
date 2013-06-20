@@ -8,7 +8,7 @@ Ext.define('Taco.view.product.option.Form', {
     alias: 'widget.optionproductform',
     cls: 'taco-product-options',
 
-    requres: [
+    requires: [
         'Taco.view.product.option.VariationGrid',
         'Taco.view.product.option.Modal'
     ],

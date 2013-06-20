@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var dcVariations = Mapper.Map<List<DC.ProductVariation>>(variations);
             var res = (await _productClient.UpdateProductVariations( new DC.ProductVariationCollection(){ Items =dcVariations}, productCode)).ReadAsSync();
-            var ret = Mapper.Map<ProductVariation>(res.Items);
+            var ret = Mapper.Map<List<ProductVariation>>(res.Items);
             return List2(ret);
         }
     }
