@@ -54,7 +54,13 @@
                 }
                 task.saveRecord.save({
                     failure: function (record,operation ) {
-                        var msg = operation.error ? operation.error.remoteException.getMessage(): null ;
+                       
+                        var msg = operation.error;
+                        if (msg.remoteException) {
+                            msg = msg.remoteException.getMessage();
+                        }
+                        
+
                         if (msg) {
                             Taco.app.fireEvent('setmessage', msg, 'error');
                         }
