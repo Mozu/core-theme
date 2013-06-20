@@ -35,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _attributeWebApiClient = attributeWebApiClient;
         }
 
+
         [WebGet(UriTemplate = "list")]
         public async Task<Response<List<ProductVariation>>> ListProducts([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri]string productCode = null, [FromUri] string options = null, [FromUri ] int? productTypeId = null)
         {
@@ -62,6 +63,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var mappedRes = AutoMapper.Mapper.Map<List<ProductVariation>>(collection.Items);
             return this.List2(mappedRes, total: (int)collection.TotalCount);
 
+        }
+
+        [WebInvoke(UriTemplate = "eidt")]
+        public async Task<Response<List<ProductVariation>>> EditVariations( List<ProductVariation> variations ,[FromUri]string productCode )
+        {
+            var dcVariations = Mapper.Map<List<DC.ProductVariation>>(variations);
+            var res = (await _productClient.UpdateProductVariations( new DC.ProductVariationCollection(){ Items =dcVariations}, productCode)).ReadAsSync();
+            var ret = Mapper.Map<ProductVariation>(res.Items);
+            return List2(ret);
         }
     }
 
