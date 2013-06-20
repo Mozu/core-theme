@@ -16,11 +16,11 @@ Ext.define('Taco.view.customers.Index', {
         columns: [{
             dataIndex: 'primaryFirstName',
             text: 'First Name',
-            width: 150
+            width: 130
         }, {
             dataIndex: 'primaryLastName',
             text: 'Last Name',
-            width: 150
+            width: 130
         }, {
             dataIndex: 'primaryEmail',
             text: 'Email',
@@ -30,7 +30,7 @@ Ext.define('Taco.view.customers.Index', {
             text: 'Location',
             width: 150,
             renderer: function (value, metaData, record) {
-                return [value, record.get('primaryState')].join(', ');
+                return value ? [Ext.String.capitalize(value), record.get('primaryState')].join(', ') : '';
             }
         }, {
             dataIndex: 'orderCount',
@@ -48,6 +48,7 @@ Ext.define('Taco.view.customers.Index', {
                     return value.join(',')
                 }
             },
+            minWidth: 100,
             flex: 1
         }]
     }
