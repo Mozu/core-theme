@@ -13,7 +13,7 @@ Ext.define('Taco.view.product.subform.General', {
     title: 'General',
 
     initComponent: function () {
-        var readOnly;
+        var readOnly,requiredContent;
 
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
 
@@ -29,13 +29,15 @@ Ext.define('Taco.view.product.subform.General', {
         this.record = this.product;
 
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
-
+        requiredContent = this.isSingleSite || this.isGlobal;
         this.items = [{
             fieldLabel: 'Code',
             name: 'productCode',
             emptyText: '#######',
             readOnly: readOnly,
             required: true,
+            allowBlank: false,
+            minLength:3,
             width: 200,
             xtype: 'textfield'
         }, {
@@ -69,7 +71,8 @@ Ext.define('Taco.view.product.subform.General', {
             width: '100%',
             items: [{
                 fieldLabel: 'Name',
-
+                allowBlank: false,
+                minLength: 3,
                 name: 'productName',
                 emptyText: 'Some product description',
                 width: '100%',

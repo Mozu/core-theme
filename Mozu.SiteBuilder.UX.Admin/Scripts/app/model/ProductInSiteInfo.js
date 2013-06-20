@@ -154,7 +154,39 @@ Ext.define('Taco.model.ProductInSiteInfo', {
     
     },
     
-    //,
+    getUnfilteredCategoryStore: function () {
+        var me = this, siteId = this.getId();
+        if (me.categoryStoreUnfiltered == null) {
+            me.categoryStoreUnfiltered = Taco.core.data.StoreManager.getOrCreate(
+                {
+                    type: 'Taco.store.Categories',
+                    createOnly: true,
+                    id: 'Taco.store.Categories' + siteId,
+                    autoLoad: true,
+                    filters: function (record) {
+                        return me.get('siteId') == siteId;
+                    }
+                });
+            me.categoryStoreUnfiltered.filter([
+           {
+               filterFn: function (record) {
+                   return me.get('siteId') == siteId;
+               }
+           }]);
+
+
+        }
+        return me.categoryStoreUnfiltered;
+
+    },
+    
+    set: function (fieldName, newValue) {
+        if (fieldName == 'categoryIds') {
+            console.log(newValue);
+        }
+        this.callParent([fieldName, newValue]);
+    },
+        //,
     //associations: [
     //    {
     //        "type": "belongsTo",

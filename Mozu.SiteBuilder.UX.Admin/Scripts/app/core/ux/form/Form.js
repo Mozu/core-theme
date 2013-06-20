@@ -134,7 +134,7 @@ Ext.define('Taco.core.ux.form.Form', {
                     return;
                 }
 
-                this.record.set(field.name, newValue);
+                this.record.set(field.name, field.getValue());
 
             },
             validitychange: this.savableStateCheck,

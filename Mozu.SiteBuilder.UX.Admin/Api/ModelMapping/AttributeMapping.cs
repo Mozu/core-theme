@@ -111,7 +111,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
-                .ForMember(dc => dc.Content, opt => opt.MapFrom(x => new DC.AttributeVocabularyValueLocalizedContent { LocaleCode = "en-US", StringValue = (string)x.Value }))
+                .ForMember(dc => dc.Content, opt => opt.MapFrom(x => new DC.AttributeVocabularyValueLocalizedContent { LocaleCode = "en-US", StringValue = x.Value as string  }))
                 .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Id ))
                 // TODO: do not hard code this.
                 .ForMember(dc => dc.ValueSequence, opt => opt.MapFrom(x => 0))

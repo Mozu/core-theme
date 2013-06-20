@@ -1218,8 +1218,6 @@
     <Content Include="Scripts\resources\fonts\SourceSansPro-Regular-webfont.svg" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-Semibold-webfont.svg" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-SemiboldIt-webfont.svg" />
-    <Content Include="Scripts\resources\images\card-sd7c19700b9.png" />
-    <Content Include="Scripts\resources\images\dashboard-s4cc9e3fd7c.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-bounce-rate.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-conversion-rate.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-customers.png" />
@@ -1298,7 +1296,6 @@
     <Content Include="Scripts\resources\images\legacy\indicator.mp3" />
     <Content Include="Scripts\resources\images\legacy\loading.gif" />
     <Content Include="Scripts\resources\images\icons-s46f2c6a895.gif" />
-    <Content Include="Scripts\resources\images\picker-sa04364cd82.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-carousel.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-grid.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-slider.png" />
