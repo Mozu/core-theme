@@ -26,6 +26,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name="billingContact")]
         public Contact BillingContact { get; set; }
+        
+        [DataMember(Name = "shippingContact")]
+        public Contact ShippingContact { get; set; }
 
         [DataMember(Name = "ipAddress")]
         public string IpAddress { get; set; }
@@ -49,11 +52,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal OrderDiscountTotal { get; set; }
 
         #region Shipping
+        [DataMember(Name = "shippingMethodCode")]
+        public string ShippingMethodCode { get; set; }
+
+        [DataMember(Name = "shippingMethodName")]
+        public string ShippingMethodName { get; set; }
+
         [DataMember(Name = "shippingCost")]
         public decimal ShippingCost;
-
-        [DataMember(Name = "shippingDescription")]
-        public string ShippingDescription { get; set; }
 
         [DataMember(Name = "shippingDiscount", EmitDefaultValue = false)]
         public decimal? ShippingDiscount { get; set; }
@@ -101,8 +107,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name="packages", EmitDefaultValue=true)]
         public List<OrderPackage> Packages { get; set; }
 
-        [DataMember(Name="unpackedItems")]
-        public List<OrderPackageItem> UnpackedItems { get; set; }
+        [DataMember(Name="unpackagedItems")]
+        public List<OrderPackageItem> UnpackagedItems { get; set; }
 
         [DataMember(Name = "availableActions")]
         public List<string> AvailableActions { get; set; }
@@ -113,5 +119,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         [DataMember(Name="authorizationInfo", EmitDefaultValue=false)]
         public OrderAuthorizationInfo AuthorizationInfo { get; set; }
+
+        /// <summary>
+        /// Total quantity of things ordered.
+        /// </summary>
+        [DataMember(Name="itemsOrdered", EmitDefaultValue=false)]
+        public int ItemsOrdered { get; set; }
+
+        /// <summary>
+        /// Total quantity of things unshipped.
+        /// </summary>
+        [DataMember(Name = "itemsNotShipped", EmitDefaultValue = false)]
+        public int ItemsNotShipped { get; set; }
+
+        /// <summary>
+        /// Total quantity of things shipped.
+        /// </summary>
+        [DataMember(Name = "itemsShipped", EmitDefaultValue = false)]
+        public int ItemsShipped { get; set; }
     }
 }

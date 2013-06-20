@@ -47,6 +47,11 @@ Ext.define('Taco.model.Order', {
             "default": []
         },
         {
+            "name": "shippingContact",
+            "type": "auto",
+            "default": []
+        },
+        {
             "name": "ipAddress",
             "type": "string",
             "useNull": true
@@ -71,6 +76,16 @@ Ext.define('Taco.model.Order', {
             "type": "string",
             "useNull": true
         },
+        {
+            "name": "shippingMethodCode",
+            "type": "float",
+            "useNull": true
+        }, 
+        {
+            "name": "shippingMethodName",
+            "type": "float",
+            "useNull": true
+        }, 
         {
             "name": "shippingCost",
             "type": "float",
@@ -125,6 +140,21 @@ Ext.define('Taco.model.Order', {
             "name": "customerNote",
             "type": "string",
             "useNull": true
+        },
+        {
+            "name": "itemsOrdered",
+            "type": "int",
+            "useNull": false
+        },
+        {
+            "name": "itemsNotShipped",
+            "type": "int",
+            "useNull": false
+        },
+        {
+            "name": "itemsShipped",
+            "type": "int",
+            "useNull": false
         },
         // workflow shit
         {
@@ -183,7 +213,7 @@ Ext.define('Taco.model.Order', {
             
             ]
         }, {
-            "name": "unPackagedItems",
+            "name": "unpackagedItems",
             "type": "array",
             convert: function (v, record) {
                 return v
@@ -350,6 +380,11 @@ Ext.define('Taco.model.Order', {
             type: 'hasOne',
             model: 'Taco.model.Contact',
             name: 'billingContact'
+        },
+        {
+            type: 'hasOne',
+            model: 'Taco.model.Contact',
+            name: 'shippingContact'
         },
         {
             type: 'hasMany',
