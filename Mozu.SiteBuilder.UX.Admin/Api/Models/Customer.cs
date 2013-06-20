@@ -13,6 +13,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name = "id")]
         public string Id { get; set; }
 
+        [DataMember(Name="userId")]
+        public string UserId { get; set; }
+
         [DataMember(Name="siteId")]
         public int SiteId { get; set; }
 

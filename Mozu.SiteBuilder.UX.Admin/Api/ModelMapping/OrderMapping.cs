@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AutoMapper;
@@ -51,14 +52,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 })
                 .AfterMap((dc, order) => {
                     // fill out AuthorizationInfo object
+                    if (order.Payments == null)
+                        return;
+
                     order.AuthorizationInfo = new OrderAuthorizationInfo {
                         TotalAmount = order.Total,
                         AmountCollected = order.Payments.Sum(p => p.AmountCollected),
                         AuthReady = order.Payments.Any(p => p.AvailableActions.Contains("CapturePayment")),
-                        CaptureData = order.Payments.FirstOrDefault(p => p.AvailableActions.Contains("CapturePayment"))
+                        CaptureData = order.Payments.OrderByDescending(p => p.AvailableActions.Contains("CapturePayment")).FirstOrDefault()
                     };
                     order.AuthorizationInfo.CaptureAmount = order.AuthorizationInfo.TotalAmount - order.AuthorizationInfo.AmountCollected;
                     order.AuthorizationInfo.CanCapture = order.AuthorizationInfo.AuthReady && order.AuthorizationInfo.CaptureAmount > 0;
+                })
+                .AfterMap((dc, order) => {
+                    // fill out UnpackagedItems list
+                    order.UnpackedItems = 
+                        (from orderItem in order.Items
+                        let packagedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.OrderItemId == orderItem.Id)
+                        let packagedQuantity = packagedItems.Sum(i => i.Quantity)
+                        let remainingQuantity = orderItem.Quantity - packagedQuantity
+                        where remainingQuantity > 0
+                        select new OrderPackageItem { 
+                            OrderItemId = orderItem.Id, 
+                            ProductCode = orderItem.ProductCode, 
+                            ProductName = orderItem.ProductName,
+                            Weight = orderItem.UnitWeight * remainingQuantity,
+                            Quantity = remainingQuantity
+                        }).ToList();
                 })
                 ;
 
