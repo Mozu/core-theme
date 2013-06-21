@@ -61,7 +61,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             else
             {
                 var filter = "Status ne \"Created\"";
-                dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
+                try
+                {
+                    dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
+                }
+                catch (Exception e)
+                {
+                    dcOrders = new DCo.OrderCollection { Items = new List<DCo.Order>() };
+                }
             }
 
             var real_orders = dcOrders != null ? Mapper.Map<List<Order>>(dcOrders.Items) : new List<Order>();
