@@ -86,13 +86,16 @@ Ext.define('Taco.core.context.TaContext', {
             }
 
 
+            
+            if (Taco.core.AppState.contextRE.test(smState.uri)) {
+                newUrl = smState.uri.replace(Taco.core.AppState.contextRE, cfg.urlToken);
+            } else {
+                newUrl = cfg.urlToken + '/' + smState.uri;
+            }
             if (navigate !== false) {
-                if (Taco.core.AppState.contextRE.test(smState.uri)) {
-                    newUrl = smState.uri.replace(Taco.core.AppState.contextRE, cfg.urlToken);
-                } else {
-                    newUrl = cfg.urlToken + '/' + smState.uri;
-                }
                 Taco.core.StateManager.attemptNavigate(newUrl);
+            } else {
+                Taco.core.StateManager.addState(newUrl);
             }
 
             me.currentCtx = cfg;
@@ -207,7 +210,7 @@ Ext.define('Taco.core.context.TaContext', {
     setCurrentSite: function (id) {
         var me = this, newSite = me.findSite(id);
 
-        return  me.setCurrentContext(newCol);
+        return me.setCurrentContext(newSite);
     },
 
     setCurrentSiteCollection: function (id) {

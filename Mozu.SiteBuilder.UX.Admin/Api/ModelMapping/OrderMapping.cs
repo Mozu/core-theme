@@ -23,6 +23,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<OrdersDC.Order, Order>()
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
+                .ForMember(x => x.SiteId, op => op.MapFrom(dc => dc.SiteId))
+                .ForMember(x => x.SiteGroupId, op => op.MapFrom(dc => dc.SiteGroupId))
+                .ForMember(x => x.TenantId, op => op.MapFrom(dc => dc.TenantId))
+
                 .ForMember(x => x.OrderNumber, op => op.MapFrom(dc => dc.OrderNumber))
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate ))
                 .ForMember(x => x.CustomerId, op => op.MapFrom(dc => dc.CustomerAccountId))
