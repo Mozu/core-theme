@@ -78,12 +78,12 @@ Ext.define('Taco.model.Order', {
         },
         {
             "name": "shippingMethodCode",
-            "type": "float",
+            "type": "string",
             "useNull": true
         }, 
         {
             "name": "shippingMethodName",
-            "type": "float",
+            "type": "string",
             "useNull": true
         }, 
         {
@@ -243,8 +243,8 @@ Ext.define('Taco.model.Order', {
                    v = [];
                 }
                     // adding test data;
-                var shippedPackageCount = 2;
-                var unShippedPackageCount = 1;
+                var shippedPackageCount = 0;
+                var unShippedPackageCount =0;
 
 
                 for (var i = 0; i < shippedPackageCount; i++) {

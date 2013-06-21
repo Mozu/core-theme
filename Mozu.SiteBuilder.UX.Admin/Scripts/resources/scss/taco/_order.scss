@@ -474,7 +474,7 @@
 
 	
 	
-// order payment 
+// order shipping 
 .#{$vprefix}orderform-shipping {	
     background-color:#fff;	
 	border-color:#bfbfbf;
@@ -487,6 +487,11 @@
 	.seperator{
 		color:#cccccc;
 		padding:0px 7px 0px 7px;		
+	}
+
+    .emptyGridMessage{
+		padding:20px;
+		color:#990000
 	}
 
 
