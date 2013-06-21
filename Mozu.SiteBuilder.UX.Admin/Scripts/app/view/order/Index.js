@@ -62,16 +62,7 @@ Ext.define('Taco.view.order.Index', {
     }],
     
     header:{
-        actions: [{
-            xtype: 'primarybutton',
-            itemId: 'newbutton',
-            listeners: {
-                click: function () {
-                    this.launchEditor(Ext.create(this.modelName));
-                },
-                scope: this
-            }
-        }]
+        actions: []
     },
 
 
