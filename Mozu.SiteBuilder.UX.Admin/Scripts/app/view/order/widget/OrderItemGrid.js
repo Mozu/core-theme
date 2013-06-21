@@ -655,7 +655,7 @@ weight: 2
             grid = item.up("gridpanel");
             selection = grid.getSelectionModel().getSelection();
 
-            debugger;
+            
             data.sourcePackageId = (grid.packageData) ? grid.packageData.id : null;
             data.destinationPackageId = (item.moveTargetId) ?item.moveTargetId : null;
             
