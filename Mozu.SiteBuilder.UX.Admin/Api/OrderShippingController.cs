@@ -4,6 +4,7 @@ using System.Linq;
 using System.ServiceModel.Web;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
@@ -13,6 +14,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     public partial class OrderController
     {
+        // TODO: this should be more like the move arguments.
+        // TODO: like CreatePackageArgs { public string OrderId; public List<OrderPackageItem> items; }
         public class CreatePackageArgs
         {
             public string OrderId { get; set; }
@@ -176,6 +179,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var ret = tasks.Select(t => t.Result.ReadAsSync());
 
             return List2( Mapper.Map<List<OrderPackage>>( ret ));
+        }
+
+        public class PrepareShipmentArgs {
+            public string OrderId { get; set; }
+            public List<string> PackageIds { get; set; }
+        }
+        [WebInvoke(Method = "POST", UriTemplate = "shipping/package/edit")]
+        public async Task<Response<List<OrderPackage>>> PrepareShipment(PrepareShipmentArgs args)
+        {
+            var dc = (await _orderWebApiClient.CreatePackageShipments(args.OrderId, args.PackageIds)).ReadAsSync();
+            return List2( Mapper.Map<List<OrderPackage>>(dc) );
+        }
+
+        public async Task<Response<List<OrderPackage>>> GetPackageLabel([FromUri]string orderId, [FromUri]string packageId)
+        {
+            var response = await _orderWebApiClient.GetPackageLabel(orderId, packageId);
+
+            var content = await response.ReadAsAsync();
+            string contentType = response.ResponseMessage.Content.Headers.ContentType.ToString();
+            return EmptyList2<OrderPackage>();
         }
     }
 }
