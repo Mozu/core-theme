@@ -24,7 +24,7 @@ Ext.define('Taco.core.ux.form.NavForm', {
                         x: 30,
                         y: 20,
                         floating: true,
-                        title:'food',
+                        itemId:'navFormNav',
                         constrain: true,
                         cls:'taco-form-card-nav-body',
                         autoShow :true,
@@ -46,6 +46,7 @@ Ext.define('Taco.core.ux.form.NavForm', {
         
 
         this.callParent(arguments);
+        this.nav = this.down('#navFormNav');
     },
     onNavClick:function(view,record) {
         var wrapper,targetY;

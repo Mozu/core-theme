@@ -153,10 +153,15 @@ Ext.define('Taco.core.ux.tab.Panel', {
      * @return {Ext.container.Container} Returns the active item
      */
     setActiveItem: function (newCard) {
-        var layout = this.getLayout();
+        var layout = this.getLayout(), 
+            oldCard = layout.getActiveItem();
 
+
+        
         layout.setActiveItem(newCard);
-
+        
+        this.fireEvent('tabchange', this, newCard, oldCard);
+     
         return newCard;
     },
 
