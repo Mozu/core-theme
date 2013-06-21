@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
         {
             var group = await _customerGroupsWebApiClient.GetGroup( customerGroupId).Result.ReadAsAsync();
 
-            await _customerAccountWebApiClient.AddAccountGroup( new Customer.Contracts.CustomerGroup { Id = customerGroupId }, customerId).Result.ReadAsAsync();
+            await _customerAccountWebApiClient.AddAccountGroup(customerId ,  customerGroupId ).Result.ReadAsAsync();
 
             return Mapper.Map<CustomerGroup>(group);
         }
