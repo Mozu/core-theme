@@ -729,26 +729,38 @@ weight: 2
 
         }
     },
-    viewShippingLabel: function () {
-        console.log('OrderItemGrid.viewShippingLabel()');
-        // view shipping label. open in new tab. this initiates a work flow that makes the package uneditable.
-        // subsequent edits to a package with a shipping label will need to be confirmed with a ui that tells the user 
-        // to destroy the shipping label. and should probably remove the tracking number from the package as well.
-        window.open("www.google.com", "_blank")
-    },
-    viewPackingSlip: function () {
-        console.log('OrderItemGrid.viewPackingSlip()');
-        // view packing slip. open in new tab
-        window.open("www.google.com", "_blank")
-    },
+    
     removeSelectedItems: function () {
         console.log('OrderItemGrid.removeSelectedKItems()');
         // move selection to the unpackagedItems
 
     },
+    
     markAsShipped: function () {
         console.log('OrderItemGrid.markAsShipped()');
         // mark package as a shipped package
+    },
+    
+    viewShippingLabel: function (button, e) {
+        console.log('OrderItemGrid.viewShippingLabel()');
+        // view shipping label. open in new tab. this initiates a work flow that makes the package uneditable.
+        // subsequent edits to a package with a shipping label will need to be confirmed with a ui that tells the user 
+        // to destroy the shipping label. and should probably remove the tracking number from the package as well.
+
+        
+        var grid = button.up("gridpanel"),
+            data = grid.packageData;
+        
+        window.open("http://whereisMyShippingLabel.com", "_blank")
+    },
+
+    viewPackingSlip: function (button, e) {
+        console.log('OrderItemGrid.viewPackingSlip()');
+        // view packing slip. open in new tab
+        var grid = button.up("gridpanel"),
+            data = grid.packageData;
+        
+        window.open("http://whereisMyPackingSlip.com", "_blank")
     }
     
 });
