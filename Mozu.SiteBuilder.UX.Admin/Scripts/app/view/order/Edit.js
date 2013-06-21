@@ -39,7 +39,7 @@ Ext.define('Taco.view.order.Edit', {
             renderData: this.record.getData()
         });
 
-
+        
         /*
           // TODOs:
           // split this out as a seperate reusable class and create its own scss definition;
@@ -148,6 +148,26 @@ Ext.define('Taco.view.order.Edit', {
         });
         
         console.log(this.record.getData())
+        
+        
+        // load the shipping rates data for use in the shipping packages
+        Ext.namespace("Taco.properties");
+        Taco.properties.shippingRates = Taco.core.data.StoreManager.getOrCreate({
+            model: 'Taco.model.KeyValuePair',
+            autoLoad: true,
+            proxy: {
+                type: 'ajax',
+                api: {
+                    read: '/admin/app/shipping/carrierRates'
+                },
+                reader: {
+                    type: 'json',
+                    root: 'items',
+                    successProperty: 'success',
+                    messageProperty: "message"
+                }
+            }
+        });
 
         this.callParent(arguments);
 

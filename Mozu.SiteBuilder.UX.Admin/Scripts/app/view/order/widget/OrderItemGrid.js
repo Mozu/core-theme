@@ -28,7 +28,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         enableToolbar: true,
 
         // the text used in the move menu split button.  Will be overridden by subclasses
-        moveMenuText: "Add Selected To Package",
+        moveMenuText: "Add to Package",
         
         enableMoveMenu: true,
         
@@ -44,20 +44,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
         
         packageMenuPagingSize: 10,
-        
-        // array of unshipped packages. Will be used to determine the content of the add to package menu;
-        unShippedPackages: [
-            {
-                id: 1
-            }, {
-                id: 2
-            }, {
-                id: 3
-            }
-        ],
 
         autoHeight: true,
-        
         
         
         plugins:[],
@@ -192,7 +180,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         
 
         // loop on the packages adding them as addTo Targets;
-        var packageLength = me.unShippedPackages.length;
+        var packageLength = unshippedPackages.length;
         for (var i = packageLength; i > 0; i--) {
             /*
             specificPackages.push({
@@ -235,7 +223,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     getToolBarConfig : function() {
         var me = this,
             tb = {
-                plain:true,
+                plain: true,
+                enableOverflow:true,
                 items:[]
             };
 
@@ -310,19 +299,51 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             me.shippingMethodMenu = Ext.create("Taco.core.ux.action.Button", {
                 menuAlign: 'tr-br',
                 //cls: "taco-splitbutton",
-                text: "FedEx 2nd day air",
+                text: "Change Shipping Method",
+                listeners: {
+                    menushow: {
+                        fn: function (button, menu, eOpts) {
+                            var menuData = me.getShippingRatesMenu();
+                            me.shippingMethodMenu.menu.removeAll();
+                            me.shippingMethodMenu.menu.add(menuData);
+                        },
+                        scope: me
+                    }
+                },
                 menu: {
                     plain: true,
                     listeners: {
-                        click: me.changeShippingMethod,
-                        scope:me,
-                        delegate: "x-menu-item-link"
+                        click: {
+                            fn:me.changeShippingMethod,
+                            scope: me,
+                            delegate: "x-menu-item-link"   
+                        }
                     },
                     items: [{
-                        text: "FedEx 2nd day air"
+                        text: "loading..."
                     }]
                 }
             });
+
+            
+            
+                        
+            /*
+            me.shippingMethodMenu = Ext.create('Ext.form.ComboBox', {
+                store: this.allRates,
+                queryMode: 'local',
+                displayField: 'Value',
+                valueField: 'Key',
+                value: this.record.get("shippingMethodCode")
+                
+
+            });
+            */
+
+            
+            
+            
+            
 
             tb.items.push(me.shippingMethodMenu);
 
@@ -564,6 +585,21 @@ weight: 2
         ];
     },
     
+    getShippingRatesMenu : function () {
+        var allRatesMenuData = [],
+            store = Taco.properties.shippingRates;
+        
+        if (store) {
+            store.each(function (record) {
+                allRatesMenuData.push({
+                    text: record.get("Value"),
+                    key: record.get("Key")
+                });
+            });
+        }
+        return allRatesMenuData;
+    },
+    
     moveSelectedItems: function (menu, item, e, eOpts) {
         var me = this,
             data = {
@@ -652,22 +688,67 @@ weight: 2
     },
     
     changeShippingMethod: function (menu, item, e, eOpts) {
+        
         if (item) {
-            // get the shipping method type and set it if its different;
             
+            var grid = item.up("gridpanel");
+            // get package json
+            data = grid.packageData;
+            // update the shipping code
+            data.shippingMethodCode = item.key;
+            
+            config = {
+                jsonData: [data],
+                success: function (response) {
+                    // success handling here
+                    Taco.app.viewPort.unmask();
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        // service didnt' return data properly
+                        return;
+                    }
+                    // reload the record
+                    this.record.reload();
+                },
+                failure: function (response) {
+                    // error handling here
+                    Taco.app.viewPort.unmask();
+
+                },
+                scope: this
+            };
+
+            
+            Taco.app.viewPort.mask("loading");
+
+            
+            // call the model method to persist the change
+            this.record.changeShippingMethod(config);
+            
+            
+
         }
     },
     viewShippingLabel: function () {
-        
+        console.log('OrderItemGrid.viewShippingLabel()');
+        // view shipping label. open in new tab. this initiates a work flow that makes the package uneditable.
+        // subsequent edits to a package with a shipping label will need to be confirmed with a ui that tells the user 
+        // to destroy the shipping label. and should probably remove the tracking number from the package as well.
+        window.open("www.google.com", "_blank")
     },
     viewPackingSlip: function () {
-        
+        console.log('OrderItemGrid.viewPackingSlip()');
+        // view packing slip. open in new tab
+        window.open("www.google.com", "_blank")
     },
     removeSelectedItems: function () {
-        
+        console.log('OrderItemGrid.removeSelectedKItems()');
+        // move selection to the unpackagedItems
+
     },
     markAsShipped: function () {
-        
+        console.log('OrderItemGrid.markAsShipped()');
+        // mark package as a shipped package
     }
     
 });

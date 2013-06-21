@@ -32,7 +32,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
     initComponent: function (eOpts) {
         var me = this;
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping'].join(' ');
-        
+
         // after the record is reloaded we will need to refresh the ui
         this.record.on("aftercommit", function () {
             this.onRecordChange();
@@ -61,7 +61,6 @@ Ext.define('Taco.view.order.subform.Shipping', {
             billingContact = this.record.get("billingContact");
 
         
-
         me.unpackagedItems = Ext.create('Taco.view.order.widget.UnpackagedItems', {
 
             record: me.record,
@@ -76,7 +75,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                 orderTotal: me.record.get("itemsOrdered"),
                 shippedItemTotal: me.record.get("itemsShipped"),
                 pendingItemTotal: me.record.get("itemsNotShipped"),
-                shippingMethod: me.record.get("shippingMethod"),
+                shippingMethod: me.record.get("shippingMethod") || me.record.get("shippingMethodCode"),
 
                 // billing contact info
                 firstName: billingContact.firstName,
@@ -101,11 +100,13 @@ Ext.define('Taco.view.order.subform.Shipping', {
             packages=[];
 
         data = this.record.get("unShippedPackages");
+
         
-        for (var i = 0; i < data.length; i++) {
+        for (var i = data.length; i > 0; i--) {
             
-            var dataItem = data[i];
+            var dataItem = data[i-1];
             var billingContact = me.record.get("billingContact");
+            
 
             packages.push( Ext.create('Taco.view.order.widget.Package', {
                     record: this.record,
@@ -120,7 +121,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                         shipmentStatus: dataItem.status,
                         itemTotal: dataItem.totalQuantity,
                         weight: dataItem.totalWeight,
-                        shippingMethod: dataItem.shippingMethod,
+                        shippingMethod: dataItem.shippingMethodName || dataItem.ShippingMethodCode,
                         trackingNumber: dataItem.trackingNumber,
                         
                         // billing contact info

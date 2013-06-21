@@ -83,7 +83,10 @@ Ext.define('Taco.view.order.widget.Package', {
         me.grid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
             record: this.record,
             // data to be loaded into the store
-            data : me.packageData.items,
+            data: me.packageData.items,
+
+            // needed for toolbar actions
+            packageData: me.packageData,
 
             hidden: me.getGridHidden(),
 
