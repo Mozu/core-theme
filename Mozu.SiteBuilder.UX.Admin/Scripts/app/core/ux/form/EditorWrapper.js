@@ -98,7 +98,7 @@
         this.form.on({
             savablestatechange: function (form, isSavable) {
                 var forms;
-                if (isSavable && validateSavableStateChange) {
+                if (isSavable && this.validateSavableStateChange) {
                     forms = this.query('form.form');
                     Ext.each(forms, function (childForm) {
                         if (!childForm.isValid()) {
