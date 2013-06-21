@@ -7,6 +7,10 @@ Ext.define('Taco.core.ux.form.field.MultiSelect', {
     extend: 'Ext.ux.form.MultiSelect',
     alias: 'widget.taco.field.multiselect',
 
+    listConfig: {
+        selModel: { mode: 'SIMPLE' }
+    },
+
     initComponent: function () {
         this.callParent(arguments);
     },
@@ -15,34 +19,31 @@ Ext.define('Taco.core.ux.form.field.MultiSelect', {
         this.setValue(Ext.Array.remove(this.getValue(), id));
     },
 
-   
-
     setReadOnly: function () {},
 
     setValue: function(value){
-        var me = this,
-            selModel = me.boundList.getSelectionModel(),
-            store = me.getStore();
+        var selModel = this.boundList.getSelectionModel(),
+            store = this.getStore();
 
         // Store not loaded yet - we cannot set the value
         if ((value && value.length) && (!store.data || !store.getCount())) {
             store.on({
-                load: Ext.Function.bind(me.setValue, me, [value]),
+                load: Ext.Function.bind(this.setValue, this, [value]),
                 single: true
             });
             return;
         }
 
-        value = me.setupValue(value);
-        me.mixins.field.setValue.call(me, value);
+        value = this.setupValue(value);
+        this.mixins.field.setValue.call(this, value);
         
-        if (me.rendered) {
-            ++me.ignoreSelectChange;
+        if (this.rendered) {
+            ++this.ignoreSelectChange;
             selModel.deselectAll();
-            selModel.select(me.getRecordsForValue(value));
-            --me.ignoreSelectChange;
+            selModel.select(this.getRecordsForValue(value));
+            --this.ignoreSelectChange;
         } else {
-            me.selectOnRender = true;
+            this.selectOnRender = true;
         }
     }
 });
