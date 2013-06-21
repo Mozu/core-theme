@@ -7,16 +7,14 @@ Ext.define('Taco.shared.view.field.Image', {
     extend: 'Ext.form.FieldContainer',
     requires: [
         'Ext.view.DragZone',
-        'Ext.view.DropZone'
+        'Ext.view.DropZone',
+        'Taco.view.fileManager.Associator'
     ],
     mixins: {
         field: 'Ext.form.field.Field',
         uploadable: 'Taco.shared.util.Uploadable'
     },
     alias: 'widget.taco.imagefield',
-    requires: [
-        'Taco.view.fileManager.Associator'
-    ],
     labelAlign: 'top',
     labelSeparator: '',
     cls: 'taco-image-field',
