@@ -165,19 +165,24 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
         var specificPackages = [];
 
+        // always need to have new package
         menu.push(
             {
                 text: "New Package",
                 moveAction: "addSelectionToPackage",
-                moveTarget: "new"
+                moveTargetId: -1
             }
         );
-
+        
+        menu.push(
+            {
+                text: "Unshipped Items",
+                moveAction: "addSelectionToPackage",
+                moveTargetId: 0
+            }
+        );
+        
         var unshippedPackages = this.record.get("unShippedPackages");
-        
-
-        
-        
 
         // loop on the packages adding them as addTo Targets;
         var packageLength = unshippedPackages.length;
@@ -187,11 +192,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 text: "Package " + i
             });
             */
-
+            
             menu.push({
                 text: "Package " + i,
                 moveAction: "addSelectionToPackage",
-                moveTarget: i
+                moveTargetId: unshippedPackages[i-1].id
             });
 
         }
@@ -240,6 +245,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         });
         */
 
+        /*
         tb.items.push({
             text:"reload",
             handler:function() {
@@ -248,11 +254,17 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             scope:this
 
         });
-        
+        */
         
         
         
         if (me.getEnableMoveMenu()) {
+
+            var unShippedPackages = this.record.get("unShippedPackages");
+            // if there is a last package use its id, otherwise make the target a new package
+            var lastPackage = unShippedPackages[unShippedPackages.length - 1];
+            var lastPackageId = (lastPackage) ? lastPackage.id : -1;
+            
 
             // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
             //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
@@ -261,7 +273,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 cls: "taco-splitbutton",
                 text: me.getMoveMenuText(),
                 itemId: "moveMenuTrigger",
-                moveAction : "addSelection",
+                
+
+                moveAction: "addSelectionToPackage",
+                moveTargetId: lastPackageId,
+                
                 disabled: true,
                 handler: function (button,e) {
                     me.moveSelectedItems(null, button,e);
@@ -606,85 +622,102 @@ weight: 2
                 orderId: me.record.get("id"),
                 items : []
             },
+            isCreate = false,
+            isMoveToUnshipped=false,
             moveAction,
+            
+            moveTargetId,
+            moveSourceId,
+            orderId,
             config,
             grid,
             selection;
+
+        
+        
+        
+        
         
         if (item) {
             moveAction = item.moveAction;
+            moveTargetId = item.moveTargetId;
+            
+            // determine if this is a create
+            if (moveTargetId == -1) {
+                isCreate = true;
+            }
+            
+            // determine if this is a move back to unshippedItems
+            if (moveTargetId == 0) {
+                isMoveToUnshipped = true;
+            }
+            
             grid = item.up("gridpanel");
             selection = grid.getSelectionModel().getSelection();
             
+            data.sourcePackageId = (grid.packageData) ? grid.packageData.id : null;
+            data.destinationPackageId = item.moveTargetId;
+            
+            if (!isCreate) {
+                // if we have package data then we are moving items from an existing package;
+                
+            }
+
             if (selection) {
                 selection.forEach(function (element, index, array) {
                     data.items.push(element.getData());
                 });
             }
+            
+
+
+
         }
 
-
-
-        /*
         
-        {
-            "orderId": "3216598",
-            "id": "o1004-p" + i,
-            "status": "Shipped",
-            "shippingMethod": "FedEx 2nd Day Air",
-            "trackingNumber": "",
-            "hasShippingLabel": false,
-            "totalWeight": "23.4",
-            "totalQuantity": "6",
-            "items": [
-                {
-                    "orderItemId": "i123",
-                    "productName": "product 1",
-                    "productCode": "xyz123",
-                    "weight": "2.3",
-                    "quantity": "3"
-                }, {
-                    "productName": "product 2",
-                    "orderItemId": "i123",
-                    "productCode": "xyz123",
-                    "weight": "2.3",
-                    "quantity": "3"
-                }
-            ]
-        }
-        */
-
-        
-            config = {
-                jsonData: {
-                    'package': data
-                },
-                success: function (response) {
-                    // success handling here
-                    
-                    var json = Ext.decode(response.responseText, true);
-                    if (!json || !json.success) {
-                        // service didnt' return data properly
-                        return;
-                    }
-
-
-                    // reload the record
-                    this.record.reload();
-                },
-                failure: function (response) {
-                    // error handling here
-                    
-                },
-                scope: this
+        var jsonData;
+        if (isCreate) {
+            jsonData = {
+                package: data
             };
+        } else {
+            jsonData = data
+        }
+        
+
+        config = {
+            jsonData: jsonData,
+
+            success: function (response) {
+                // success handling here
+                    
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+
+
+                // reload the record
+                this.record.reload();
+            },
+            failure: function (response) {
+                // error handling here
+                    
+            },
+            scope: this
+        };
 
         
-            // call the model method to persist the change
+        // call the model method to persist the change
+
+        
+        
+        if (isCreate) {
             this.record.createPackage(config);
-        
-
-
+        } else {
+            this.record.movePackageItems(config);
+        }
     },
     
     changeShippingMethod: function (menu, item, e, eOpts) {
