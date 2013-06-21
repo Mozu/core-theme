@@ -13,10 +13,18 @@ Ext.define('Taco.view.product.option.Modal', {
         var fields = [];
 
         this.productType.getOptions().each(function (option) {
-            var store = Ext.create('Ext.data.Store', {
+            var store,
+                optionValues;
+
+            if (this.isEdit() && option.get('attributeFQN') !== this.attributeFQN) return;
+
+
+            store = Ext.create('Ext.data.Store', {
                 fields: ['id', 'value'],
                 data: option.get('selectedValues')
             });
+
+            if (this.isEdit) optionValues = this.getOptionValues();
 
             fields.push({
                 xtype: 'taco.field.multiselect',
@@ -24,7 +32,9 @@ Ext.define('Taco.view.product.option.Modal', {
                 option: option,
                 store: store,
                 displayField: 'value',
-                valueField: 'id'
+                minSelections: 1,
+                valueField: 'id',
+                value: optionValues
             });
         }, this);
 
@@ -87,5 +97,25 @@ Ext.define('Taco.view.product.option.Modal', {
 
 
         }, this);
+    },
+
+    findAttributeName: function (record) {
+        var option = this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'));
+
+        if (!option) return;
+
+        return  option.get('attributeName');
+    },
+
+    getOptionValues: function () {
+        var option = this.product.getOptions().findRecord('attributeFQN', this.attributeFQN);
+
+        if (!option) return [];
+
+        return option.get('values');
+    },
+
+    isEdit: function () {
+        return typeof this.attributeFQN === 'string';
     }
 });

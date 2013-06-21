@@ -13,10 +13,13 @@ Ext.define('Taco.view.product.option.VariationGrid', {
 
     initComponent: function () {
         var optionColumns = [],
-            staticColumns;
-        
+            staticColumns,
+            tplColumnHeader;
 
 
+        this.addEvents([
+            'editoption'
+        ]);
 
         staticColumns = [{
             text: 'Product Code',
@@ -64,16 +67,21 @@ Ext.define('Taco.view.product.option.VariationGrid', {
             }
         }];
 
+        tplColumnHeader = new Ext.Template('{name} <a href="#" class="edit-option" data-attribute-fqn="{attributeFQN}">EDIT</a>');
 
         this.product.getOptions().each(function (option, index) {
             optionColumns.push({
                 flex: 1,
-                text: this.findAttributeName(option),
+                text: tplColumnHeader.apply({name: this.findAttributeName(option), attributeFQN: option.get('attributeFQN')}),
                 dataIndex: 'options',
                 sortable: false,
                 renderer: function (value) {
                     return value[index].value;
-                } 
+                },
+                listeners: {
+                    headerclick: this.onColumnHeaderClick,
+                    scope: this
+                }
             });
         }, this);
 
@@ -93,7 +101,7 @@ Ext.define('Taco.view.product.option.VariationGrid', {
 
         this.getView().getRowClass = function (record) {
             return record.get('isActive') ? '' : 'invalid-record';
-        }
+        };
 
         this.on({
             itemclick: this.onItemClick,
@@ -101,10 +109,21 @@ Ext.define('Taco.view.product.option.VariationGrid', {
         });
     },
 
+    onColumnHeaderClick: function (ct, column, e) {
+        var el = Ext.get(e.target);
+        if (!el.hasCls('edit-option')) return;
+
+        e.stopPropagation();
+        e.preventDefault();
+
+        this.fireEvent('editoption', this, el.getAttribute('data-attribute-fqn'));
+    },
+
     onItemClick: function (grid, record, item, index, e) {
         if (!Ext.fly(e.target).hasCls('invalidate')) return;
 
         e.stopPropagation();
+        e.preventDefault();
 
         record.set('isActive', !record.get('isActive'));
     },
