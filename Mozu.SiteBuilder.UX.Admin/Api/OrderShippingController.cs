@@ -27,6 +27,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method="POST", UriTemplate="shipping/package/create")]
         public async Task<Response<List<OrderPackage>>> CreatePackage(CreatePackageArgs args)
         {
+            // if there is a source package, remove the item from it first.
+            if (!String.IsNullOrEmpty(args.SourcePackageId))
+            {
+                var source = (await _orderWebApiClient.GetPackage(args.OrderId, args.SourcePackageId)).ReadAsSync();
+                foreach (var item in args.Items)
+                {
+                    var sourceItem = source.Items.FirstOrDefault(i => i.OrderItemId == item.OrderItemId);
+                    if (sourceItem == null)
+                        continue;
+
+                    sourceItem.Quantity -= item.Quantity;
+                    if (sourceItem.Quantity <= 0)
+                        source.Items.Remove(sourceItem);
+                }
+
+                // if we removed the last or only item from the package, delete the package.
+                if (source.Items.Count == 0)
+                    await _orderWebApiClient.DeletePackage(args.OrderId, args.SourcePackageId);
+                else
+                    await _orderWebApiClient.UpdatePackage(args.OrderId, args.SourcePackageId, source);
+            }
+
             var dc = new DCs.Package {
                 Items = Mapper.Map<List<DCs.PackageItem>>(args.Items)
             };
@@ -97,10 +119,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     destPackageItem.Quantity += argItem.Quantity;
                 }
 
-                updateTasks.AddRange(new [] {
-                    _orderWebApiClient.UpdatePackage(args.OrderId, args.SourcePackageId, source),
-                    _orderWebApiClient.UpdatePackage(args.OrderId, args.DestinationPackageId, dest)
-                });
+                // if we removed the last or only item from the package, delete the package.
+                if (source.Items.Count == 0)
+                    await _orderWebApiClient.DeletePackage(args.OrderId, args.SourcePackageId);
+                else
+                    updateTasks.Add(_orderWebApiClient.UpdatePackage(args.OrderId, args.SourcePackageId, source));
+
+                // and save the destination package.
+                updateTasks.Add( _orderWebApiClient.UpdatePackage(args.OrderId, args.DestinationPackageId, dest) );
             }
             // case 2: removing item from a package
             else if (!String.IsNullOrEmpty(args.SourcePackageId) && String.IsNullOrEmpty(args.DestinationPackageId))
