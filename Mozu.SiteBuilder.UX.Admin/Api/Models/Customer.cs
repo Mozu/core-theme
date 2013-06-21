@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         /// Then they assign the groups to appropriate customer accounts. A customer account can belong to several groups or none at all.
         /// </summary>
         [DataMember(Name="groups")]
-        public List<string> Groups { get; set; }
+        public List<int> Groups { get; set; }
 
         /// <summary>
         /// List of notes for the customer account. Merchants use these internal notes, for example, to make a note of a customer's interests or complaints. 

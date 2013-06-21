@@ -4,6 +4,7 @@
 Ext.define('Taco.view.customers.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.store.CustomerTags'],
+   // enableStoreSyncTasks:true,
     initComponent: function () {
         var data = this.record.getData(),
             contactsStore = this.record.getContacts(),
@@ -15,6 +16,8 @@ Ext.define('Taco.view.customers.Form', {
             data.primaryLastName
         ].join(' ');
 
+
+        this.store = this.record.getContacts();
         this.tagStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerTags');
 
         this.tagStore.on('add', function (store, records) {
@@ -114,27 +117,36 @@ Ext.define('Taco.view.customers.Form', {
         this.loadRecord(this.record);
     },
     addSaveTasks: function (tasks, updateRecord, saveRecord) {
-        var groups = this.findField('groups'), groupValue = groups.getValue(), updateTask, newTags = [];
+        var me = this,
+            groups = this.findField('groups'),
+            groupValue = groups.getValue(),
+            updateTask,
+            newTags = [];
 
         this.callParent(arguments);
-        if (groups.isDitry()) {
+        if (groups.isDirty()) {
             Ext.each(groupValue, function (val) {
                 if (Ext.isString(val)) {
-                    this.tagStore.add({ Value: val });
+                    me.tagStore.add({ Value: val });
                 }
             });
 
-            if (tagStore.isDirty()) {
-                updateTask = tasks.getByKey('update-record');
+            if (me.tagStore.isDirty()) {
+                updateTask = tasks.tasks.getByKey('update-record');
                 updateTask.dependencies = ['tagstore'];
             }
 
             tasks.add({
-                store: tagStore,
+                store: me.tagStore,
                 key: 'tagstore'
             });
     
         }
+        //tasks.add({
+        //    store: me.record.getContacts(),
+        //    key: 'contactStore'
+        //});
+
 
         return tasks;
     }

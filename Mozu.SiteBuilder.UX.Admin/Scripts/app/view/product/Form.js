@@ -170,6 +170,19 @@ Ext.define('Taco.view.product.Form', {
         this.tabPanel.showTabAt(0);
         this.tabPanel.setActiveItemAt(this.tabPanel.items.length - 1);
     },
+    
+    savableStateCheck: function () {
+        var oldState = this.savableState,
+            newState = this.isValid() && (!this.isEdit() || this.isDirty());
+
+        if (oldState === newState) {
+            return;
+        }
+
+        this.savableState = newState;
+
+        this.fireEvent('savablestatechange', this, newState);
+    },
 
     goGoSiteSwitch: function () {
         var wasSingleSite = this.isSingleSite;

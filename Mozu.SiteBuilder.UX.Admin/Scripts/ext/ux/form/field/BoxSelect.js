@@ -405,7 +405,7 @@ Ext.define('Ext.ux.form.field.BoxSelect', {
    */
     onDestroy: function() {
         var me = this;
-
+        me.onUnbindStore();
         Ext.destroyMembers(me, 'valueStore', 'selectionModel');
 
         me.callParent(arguments);

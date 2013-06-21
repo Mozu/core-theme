@@ -32,7 +32,7 @@ Ext.define('Taco.view.settings.tax.Form', {
         this.items = [ this.statesInput];
 
         this.callParent(arguments);
-        if (this.taxStore.isLoading) {
+        if (this.taxStore.isLoading()) {
             this.mon(this.taxStore, 'load', this.bindTaxStore, this);
         } else {
             this.bindTaxStore();

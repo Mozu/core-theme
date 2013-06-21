@@ -92,6 +92,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcCustomers = Mapper.Map<List<Mozu.Customer.Contracts.CustomerAccount>>(customers);
             foreach (var dcCust in dcCustomers)
             {
+                var existingDcCustoemr = (await _customerWebApiClient.GetAccount(dcCust.Id)).ReadAsSync();
+
+                existingDcCustoemr.Groups = existingDcCustoemr.Groups ?? new List<DC.CustomerGroup>();
+                var existingGroups = existingDcCustoemr.Groups.Select(x => x.Id).ToList();
+                var newGroups = dcCust.Groups.Select(x => x.Id).ToList();
+
+                var groupsToAdd = newGroups.Where(x => !existingGroups.Contains(x));
+                var groupsToDel = existingGroups.Where(x => !newGroups.Contains(x));
+
+                var addTasks =groupsToAdd.Select(x => 
+                    _customerWebApiClient.AddAccountGroup(dcCust.Id, x)
+                    ).ToList();
+                var delTasks =groupsToDel.Select(x => _customerWebApiClient.DeleteAccountGroup(  dcCust.Id , x)).ToList();
+
+               
+                await Task.WhenAll( addTasks);
+                await Task.WhenAll( delTasks);
+                if (dcCust.Contacts != null)
+                {
+                    foreach (var dcContact in dcCust.Contacts)
+                    {
+                        _customerWebApiClient.UpdateAccountContact(dcContact, dcCust.Id, dcContact.Id);
+                    }    
+                }
+                
+
                 retList.Add(Mapper.Map<ApiCustomer>((await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id)).ReadAsSync()));
             }
             return List2(retList);
