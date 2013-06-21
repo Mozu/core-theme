@@ -610,6 +610,11 @@ Ext.define('Taco.model.Order', {
             jsonData: {
                 package: {
                    ... package endity ...
+
+                    
+                    items: [],
+                    orderId: "02baa4864fdce01ec8d8cc0000000059"
+                    
                 }
             },
             success: function (response) {
