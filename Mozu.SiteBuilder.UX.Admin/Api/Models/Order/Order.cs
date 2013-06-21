@@ -12,6 +12,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "id")]
         public string Id { get; set; }
 
+
+
+        [DataMember(EmitDefaultValue = false, Name = "tenantId")]
+        public int? TenantId { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "siteGroupId")]
+        public int? SiteGroupId { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "siteId")]
+        public int? SiteId { get; set; }
+
+
+
         /// <summary>
         /// A sequential order number, only populated for completed orders.
         /// </summary>

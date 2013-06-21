@@ -11,21 +11,30 @@ Ext.define('Taco.model.Order', {
     *
     ***************************************************************/
 
-
-
     fields: [
         {
             "name": "id",
             "type": "string",
             "useNull": true
         },
-        
+        {
+            name: 'tenantId',
+            type: 'int'
+        },
+        {
+            name: 'siteGroupId',
+            type: 'int'
+        },
+        {
+            name: 'siteId',
+            type: 'int',
+            "useNull": true
+        },
         //   adding unpersisted model member to organize the authorization information into a single object for use in xtemplates;
         {
             "name": "authorizationInfo",
             "type": "auto"
         },
-
         {
             "name": "orderNumber",
             "type": "int",
@@ -65,7 +74,7 @@ Ext.define('Taco.model.Order', {
             "name": "subTotal",
             "type": "float",
             "useNull": true
-        }, 
+        },
         {
             "name": "discountTotal",
             "type": "float",
@@ -80,62 +89,62 @@ Ext.define('Taco.model.Order', {
             "name": "shippingMethodCode",
             "type": "string",
             "useNull": true
-        }, 
+        },
         {
             "name": "shippingMethodName",
             "type": "string",
             "useNull": true
-        }, 
+        },
         {
             "name": "shippingCost",
             "type": "float",
             "useNull": true
-        }, 
+        },
         {
             "name": "shippingDescription",
             "type": "string",
             "useNull": true
-        }, 
+        },
         {
             "name": "shippingDiscount",
             "type": "float",
             "useNull": true
-        }, 
+        },
         {
             "name": "shippingDiscountDescription",
             "type": "string",
             "useNull": true
-        }, 
+        },
         {
             "name": "shippingTotal",
             "type": "float",
             "useNull": true
-        }, 
+        },
         {
             "name": "taxTotal",
             "type": "float",
             "useNull": true
-        }, 
+        },
         {
             "name": "feeTotal",
             "type": "float",
             "useNull": true
-        }, 
+        },
         {
             "name": "adjustmentDescription",
             "type": "string",
             "useNull": true
-        }, 
+        },
         {
             "name": "adjustmentTotal",
             "type": "float",
             "useNull": true
-        }, 
+        },
         {
             "name": "total",
             "type": "float",
             "useNull": true
-        }, 
+        },
         {
             "name": "customerNote",
             "type": "string",
@@ -193,10 +202,10 @@ Ext.define('Taco.model.Order', {
             "type": "auto",
             "useNull": true,
             convert: function (v, record) {
-                return v
+                return v;
             },
             "defaultValue": [
-            /*
+                /*
                 {
                 "transactionDate": "March 18, 2013",
                 "paymentID": "337",
@@ -209,15 +218,14 @@ Ext.define('Taco.model.Order', {
                 "paidAmount": "129.48",
                 "creditCard": "Visa xxxx-xxxx-xxxx-1111",
                 "transactionID": "00158220"
-            }*/
-            
+            }*/            
             ]
         }, {
             "name": "unpackagedItems",
-            
+
             "type": "array",
             convert: function (v, record) {
-                return v
+                return v;
             },
             "defaultValue": [
                 /*                
@@ -238,13 +246,13 @@ Ext.define('Taco.model.Order', {
             "name": "packages",
             "type": "array",
             convert: function (v, record) {
-               
+
                 if (!Ext.isArray(v)) {
-                   v = [];
+                    v = [];
                 }
-                    // adding test data;
+                // adding test data;
                 var shippedPackageCount = 0;
-                var unShippedPackageCount =0;
+                var unShippedPackageCount = 0;
 
 
                 for (var i = 0; i < shippedPackageCount; i++) {
@@ -305,13 +313,12 @@ Ext.define('Taco.model.Order', {
                     });
                 }
 
-                
+
                 return v;
-                
-                
+
+
             }
-        },
-        
+        },        
         // helper field. ui iterates on unshipped packages in multiple places
         {
             "name": "unShippedPackages",
@@ -329,7 +336,6 @@ Ext.define('Taco.model.Order', {
                 return retVal;
             }
         },
-
         // helper field. ui iterates on shipped packages in multiple places
         {
             "name": "shippedPackages",
@@ -363,9 +369,7 @@ Ext.define('Taco.model.Order', {
     },
     */
 
-
-    associations: [
-      
+    associations: [      
         // Note:  (simeon) I have intentially not created models for package, shipment, unpackagedItems and packagedItems
         // the entire order ui needs to be replaced with every change of order entity and its associated entities due to the display of order status in just about every component.
         // by treating this sub entity data as json and arrays, it avoids extjs auto creating of stores for each associated sub entity;
@@ -392,7 +396,6 @@ Ext.define('Taco.model.Order', {
             name: 'payments'
         }
     ],
-
 
     proxy: {
         type: 'ajaxproxy',
@@ -467,8 +470,7 @@ Ext.define('Taco.model.Order', {
                 }
             },
             failure : Ext.emptyFn
-            */
-            
+            */            
         });
 
         Ext.Ajax.request(config);
@@ -511,10 +513,9 @@ Ext.define('Taco.model.Order', {
             }
             */
             url: '/admin/app/order/payment/create',
-            method: "POST"
-            
+            method: "POST"            
         });
-        
+
         Ext.Ajax.request(config);
     },
     
