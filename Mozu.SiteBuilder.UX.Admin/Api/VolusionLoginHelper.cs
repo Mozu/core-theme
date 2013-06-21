@@ -99,7 +99,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
            // var contexts = Mapper.Map<List<TaContext>>(ulr.Tenants);
             if (ulr.AvailableTenants == null || ulr.AvailableTenants.Count == 0)
             {
-                return new List<Tenant.Contracts.Tenant>{ulr.Tenant};
+                if (ulr.Tenant != null)
+                {
+                    return new List<Tenant.Contracts.Tenant> { ulr.Tenant };    
+                }
+                return new List<Tenant.Contracts.Tenant>();
             }
             return ulr.AvailableTenants.ToList();
 
