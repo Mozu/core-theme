@@ -24,7 +24,7 @@ Ext.define('Taco.view.address.ModalEditor', {
         }
 
         fields = [{
-                    xtype: 'textfield',
+            xtype: 'textfield',
             width: 315,
             name: 'companyName',
             fieldLabel: 'Company Name'
@@ -67,7 +67,6 @@ Ext.define('Taco.view.address.ModalEditor', {
                     fieldLabel: 'ZIP'
                 }, {
                     xtype: 'textfield',
-                    readOnly: true,
                     name: 'countryCode',
                     fieldLabel: 'Country'
                 }, {
