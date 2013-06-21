@@ -12,47 +12,47 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name="id")]
         public string Id { get; set; }
 
-        [DataMember(Name = "orderId")]
+        [DataMember(Name = "orderId", EmitDefaultValue = true)]
         public string OrderId { get; set; }
 
-        [DataMember(Name="shipmentId")]
+        [DataMember(Name="shipmentId", EmitDefaultValue = true)]
         public string ShipmentId { get; set; }
 
         /// <summary>
         /// "NotShipped" or "Shipped"
         /// </summary>
-        [DataMember(Name="status")]
+        [DataMember(Name="status", EmitDefaultValue = true)]
         public string Status { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(Name="shippingMethodCode", EmitDefaultValue = true)]
         public string ShippingMethodCode { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(Name = "shippingMethodName", EmitDefaultValue = true)]
         public string ShippingMethodName { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(Name = "trackingNumber", EmitDefaultValue = true)]
         public string TrackingNumber { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(Name = "packagingType", EmitDefaultValue = true)]
         public string PackagingType { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(Name="height", EmitDefaultValue = true)]
         public decimal? Height { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(Name="width", EmitDefaultValue = true)]
         public decimal? Width { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(Name = "length",  EmitDefaultValue = true)]
         public decimal? Length { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(Name="weight", EmitDefaultValue = true)]
         public decimal? Weight { get; set; }
 
-        [DataMember(Name="items")]
+        [DataMember(Name="items", EmitDefaultValue = true)]
         public List<OrderPackageItem> Items { get; set; }
 
         #region workflow
-        [DataMember(Name="availableActions")]
+        [DataMember(Name="availableActions", EmitDefaultValue = true)]
         public object AvailableActions { get; set; }
         #endregion
     }
