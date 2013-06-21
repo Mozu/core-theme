@@ -675,19 +675,8 @@ weight: 2
 
         }
 
-        
-        var jsonData;
-        if (isCreate) {
-            jsonData = {
-                package: data
-            };
-        } else {
-            jsonData = data
-        }
-        
-
         config = {
-            jsonData: jsonData,
+            jsonData: data,
 
             success: function (response) {
                 // success handling here
