@@ -39,6 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "list")]
         public async Task<Response<List<ProductVariation>>> ListProducts([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri]string productCode = null, [FromUri] string options = null, [FromUri ] int? productTypeId = null)
         {
+            var filter = "IsOrphan ne true";
             Mozu.ProductAdmin.Contracts.ProductVariationPagedCollection collection = null;
             if (!string.IsNullOrEmpty(options))
             {
@@ -51,13 +52,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 else
                 {
                     var dcOPtions = Mapper.Map<List<Mozu.ProductAdmin.Contracts.ProductOption>>(productOptions);
-                    collection = (await _productTypeWebApiClient.GenerateProductVariations(productOptionsIn: dcOPtions, productTypeId: productTypeId, startIndex: pagingParams.startIndex, pageSize: pagingParams.startIndex)).ReadAsSync();
+                    collection = (await _productTypeWebApiClient.GenerateProductVariations(productOptionsIn: dcOPtions, productTypeId: productTypeId, productCode: productCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.startIndex, filter: filter)).ReadAsSync();
                 }
 
             }
             else
             {
-                collection = (await _productClient.GetProductVariations(productCode, pagingParams.startIndex, pagingParams.pageSize)).ReadAsSync();    
+                collection = (await _productClient.GetProductVariations(productCode, pagingParams.startIndex, pagingParams.pageSize, filter: filter)).ReadAsSync();    
             }
 
             var mappedRes = AutoMapper.Mapper.Map<List<ProductVariation>>(collection.Items);

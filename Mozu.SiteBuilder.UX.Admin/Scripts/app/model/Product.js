@@ -291,7 +291,14 @@ Ext.define('Taco.model.Product', {
             
         }
 
-        
+
+        this.on('aftercommit', function () {
+            proxy.extraParams.productCode = this.getId();
+        }, this);
+
+
+        this.getOptions().on('update', me.productVariationStore.loadFromOptions, me.productVariationStore, { buffer: 20 });
+
 
 
 
