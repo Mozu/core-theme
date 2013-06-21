@@ -47,6 +47,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 // .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.ShippingInfo.
                 .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
                 .AfterMap((dc, order) => {
+                    // sort order packages by create date (for consistent ordering in UI)
+                    order.Packages = order.Packages.OrderBy(p => p.CreateDate).ToList();
+
                     // add orderId to packages
                     order.Packages.Each(p => p.OrderId = order.Id);
 
@@ -152,6 +155,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Weight, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Weight : null))
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
                 .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
+                .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
                 ;
 
             Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()

@@ -55,5 +55,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name="availableActions", EmitDefaultValue = true)]
         public object AvailableActions { get; set; }
         #endregion
+
+        [DataMember(Name="createDate")]
+        public DateTime CreateDate { get; set; }
     }
 }
