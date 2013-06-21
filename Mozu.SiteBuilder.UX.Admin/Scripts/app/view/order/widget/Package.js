@@ -228,7 +228,38 @@ Ext.define('Taco.view.order.widget.Package', {
     },
     
     deletePackage: function() {
+        var me = this;
+        // get package json
+        var data = me.packageData;
+
+        config = {
+            jsonData: {
+                orderId : this.record.get("id"),
+                packageIds: [data.id]
+            },
+            success: function (response) {
+                // success handling here
+                Taco.app.viewPort.unmask();
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+                // reload the record
+                this.record.reload();
+            },
+            failure: function (response) {
+                // error handling here
+                Taco.app.viewPort.unmask();
+
+            },
+            scope: this
+        };
         
+        Taco.app.viewPort.mask("loading");
+
+        // call the model method to persist the change
+        this.record.deletePackage(config);
     },
 
     addTrackingNumber: function () {
