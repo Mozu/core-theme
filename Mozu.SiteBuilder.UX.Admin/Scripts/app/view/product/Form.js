@@ -21,9 +21,9 @@ Ext.define('Taco.view.product.Form', {
         
 
 
+      
 
-
-        this.stores = [this.inSitesStore];
+        this.stores = [this.inSitesStore, this.record.getOptions(), this.record.getVariations()];
 
         this.siteForms = [];
 
@@ -230,13 +230,20 @@ Ext.define('Taco.view.product.Form', {
      * @protected
      */
     addSaveTasks: function (tasks) {
-
-        //tasks.add({
-        //    key: 'sync-productInSiteInfo-store',
-        //    store: this.inSitesStore
-        //});
-
+        var recordSaveDep = this.tasksKeyPrefix + 'save-record',
+            variantStoreTask={
+                store: this.record.getVariations()
+            };
+        
+       
         this.addChildSaveTasks(tasks);
+
+        
+        if (tasks.tasks.getByKey(recordSaveDep)) {
+            variantStoreTask.dependencies = recordSaveDep;
+        }
+        
+        tasks.add(variantStoreTask);    
 
         return tasks;
     },

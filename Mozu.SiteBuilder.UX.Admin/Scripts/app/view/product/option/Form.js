@@ -134,7 +134,7 @@ Ext.define('Taco.view.product.option.Form', {
     },
 
     createVariations: function () {
-        this.productVariationStore.loadFromOptions();
+        //this.productVariationStore.loadFromOptions();
         this.buildVariations();
         this.options.hide();
         this.variations.show();
