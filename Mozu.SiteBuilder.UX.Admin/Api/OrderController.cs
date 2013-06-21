@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
-using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
-using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -65,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     dcOrders = new DCo.OrderCollection { Items = new List<DCo.Order>() };
                 }
