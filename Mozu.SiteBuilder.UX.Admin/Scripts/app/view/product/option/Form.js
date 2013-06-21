@@ -7,6 +7,7 @@ Ext.define('Taco.view.product.option.Form', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.optionproductform',
     cls: 'taco-product-options',
+    width: '100%',
 
     requires: [
         'Taco.view.product.option.VariationGrid',
@@ -125,7 +126,7 @@ Ext.define('Taco.view.product.option.Form', {
             listeners: {
                 save: function () {
                     modal.hide();
-                    this.createVariations();
+                    if (!modal.isEdit()) this.createVariations();
                 },
                 scope: this
             }

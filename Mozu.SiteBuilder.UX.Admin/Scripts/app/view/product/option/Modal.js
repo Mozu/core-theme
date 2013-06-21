@@ -24,7 +24,7 @@ Ext.define('Taco.view.product.option.Modal', {
                 data: option.get('selectedValues')
             });
 
-            if (this.isEdit) optionValues = this.getOptionValues();
+            if (this.isEdit()) optionValues = this.getOptionValues();
 
             fields.push({
                 xtype: 'taco.field.multiselect',
@@ -32,7 +32,7 @@ Ext.define('Taco.view.product.option.Modal', {
                 option: option,
                 store: store,
                 displayField: 'value',
-                minSelections: 1,
+                minSelections: this.isEdit() ? 1 : 0,
                 valueField: 'id',
                 value: optionValues
             });
@@ -71,17 +71,14 @@ Ext.define('Taco.view.product.option.Modal', {
     },
 
     onBeforeSave: function () {
+        
         var options = this.product.getOptions();
 
-        //options.removeAll();
-
         this.form.getForm().getFields().each (function (field) {
-            var record = options.getById(field.option.getId());
-
-            //if (!field || !field.getValue().length) return;
-            //
             
-            if (record && !field.getValue().length) options.remove(record);
+            var record = options.getById(field.option.getId());
+            
+            if (record && !field.getValue().length && !this.isEdit()) options.remove(record);
             else if (!field.getValue().length) return;
 
             if (!record) {
@@ -89,12 +86,7 @@ Ext.define('Taco.view.product.option.Modal', {
                     attributeFQN: field.option.get('attributeFQN')
                 })[0];
             }
-            //move into model... need to remove the store so that it gets rebuilt
-           
             record.set('values', field.getValue());
-            
-            
-
 
         }, this);
     },
