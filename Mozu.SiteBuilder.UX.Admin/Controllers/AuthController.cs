@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
+using Mozu.Core;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
@@ -147,7 +148,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             if (ticket == null || ticket.AccessToken == null || ticket.TenantId == 0)
                 throw new HttpException(400, "Invalid login ticket provided.");
 
-            _authenticationHelper.SetCurrentUser(ticket.AccessToken);
+            var claim = LightweightUserClaims.Parse(ticket.AccessToken);
+            _authenticationHelper.SetCurrentUser(new Mozu.Core.Api.Contracts.UserAuthTicket { AccessToken = ticket.AccessToken, RefreshToken = ticket.RefreshToken, AccessTokenExpiration = claim.Expiration });
 
             try
             {

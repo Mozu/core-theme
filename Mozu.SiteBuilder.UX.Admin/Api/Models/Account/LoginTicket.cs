@@ -8,7 +8,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
     {
         [DataMember(Name = "accessToken")]
         public string AccessToken { get; set; }
-        
+
+        [DataMember(Name = "refreshToken")]
+        public string RefreshToken { get; set; }
+   
         [DataMember(Name = "tenantId")]
         public int TenantId { get; set; }
 
