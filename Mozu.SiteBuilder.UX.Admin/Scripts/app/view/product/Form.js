@@ -67,6 +67,21 @@ Ext.define('Taco.view.product.Form', {
             scope: this
         });
 
+        this.tabPanel.on({
+            tabchange: function (tabPanel, newCard, oldCard, eOpt) {
+                if (oldCard.nav) {
+                    oldCard.nav.hide();
+                }
+                if (newCard.nav) {
+                    newCard.nav.show();
+                }
+
+            },
+            scope:this
+
+        });
+        
+
         this.on({
             tabclose: this.onTabClose,
             scope: this
