@@ -32,6 +32,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
     initComponent: function (eOpts) {
         var me = this;
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping'].join(' ');
+        
 
         // after the record is reloaded we will need to refresh the ui
         this.record.on("aftercommit", function () {

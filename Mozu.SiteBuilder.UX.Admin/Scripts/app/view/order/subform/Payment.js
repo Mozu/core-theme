@@ -43,24 +43,53 @@ Ext.define('Taco.view.order.subform.Payment', {
     },
     
     initActionsMenu: function () {
-        var me = this;
+        var me = this,
+            canVoidPayment = false,
+            canApplyCheck= false,
+            canCapture = false,
+            canAppPayment = false,
+            canCreditPayment = false,
+            data = this.record.getData(),
+            authPayment = data.payments[0],
+            availableActions;
+        
+        if (authPayment) {
+            availableActions = authPayment.availableActions || [];
+
+            canVoidPayment = availableActions.some(function (element) {
+                return (element == "VoidPayment");
+            });
+
+            canApplyCheck = availableActions.some(function (element) {
+                return (element == "ApplyCheck");
+            });
+
+            canCapture = availableActions.some(function (element) {
+                return (element == "CapturePayment");
+            });
+
+            canAppPayment = availableActions.some(function (element) {
+                return (element == "AddPayment");
+            });
+
+            canCreditPayment = availableActions.some(function (element) {
+                return (element == "CreditPayment");
+            });
+        }
+        
 
         // actions that go in the header actions menu
         me.voidTransactionAction = new Ext.Action({
             text: 'Void Transaction',
             handler: me.voidTransaction,
+            disabled: !canVoidPayment,
             scope: this
         });
-
-        /*
-        me.issueCreditAction = new Ext.Action({
-            text: 'Issue Credit',
-            handler: me.issueCredit,
-            scope: this
-        });
-        */
+        
         me.addPaymentAction = new Ext.Action({
             text: 'Add Payment',
+            disabled:true,
+            //disabled: !canAddPayment
             handler: me.addPayment,
             scope: this
         });
