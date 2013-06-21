@@ -10,7 +10,6 @@ Ext.define('Taco.core.ux.form.NavForm', {
 
         this.items = [{
             xtype: 'panel',
-            id: 'fonzie',
             manageHeight: false,
             items: this.items || [],
             dockedItems: [{
