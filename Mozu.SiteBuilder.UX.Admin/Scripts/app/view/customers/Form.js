@@ -4,7 +4,7 @@
 Ext.define('Taco.view.customers.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.store.CustomerTags'],
-   // enableStoreSyncTasks:true,
+    // enableStoreSyncTasks:true,
     initComponent: function () {
         var data = this.record.getData(),
             contactsStore = this.record.getContacts(),
@@ -35,12 +35,12 @@ Ext.define('Taco.view.customers.Form', {
                     width: 320,
                     cls: 'customer-settings',
                     items: [{
-                    xtype: 'textfield',
-                    width: 320,
-                    readOnly: true,
-                    name: 'userId',
-                    fieldLabel: 'User ID'
-                }, {
+                            xtype: 'textfield',
+                            width: 320,
+                            readOnly: true,
+                            name: 'userId',
+                            fieldLabel: 'User ID'
+                        }, {
                             store: this.tagStore,
                             xtype: 'boxselect',
                             width: 320,
@@ -89,7 +89,7 @@ Ext.define('Taco.view.customers.Form', {
                     '<div class="address-line-2">{address2}</div>',
                     '<div class="address-line-3">{address3}</div>',
                     '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
-                        '<div class="country">{email}</div>',
+                    '<div class="country">{email}</div>',
                     '<div class="phone">{homePhone}</div>',
                     '<div class="edit">E</div>',
                     '</div></tpl>'
@@ -124,6 +124,7 @@ Ext.define('Taco.view.customers.Form', {
             newTags = [];
 
         this.callParent(arguments);
+
         if (groups.isDirty()) {
             Ext.each(groupValue, function (val) {
                 if (Ext.isString(val)) {
@@ -132,15 +133,41 @@ Ext.define('Taco.view.customers.Form', {
             });
 
             if (me.tagStore.isDirty()) {
+                
                 updateTask = tasks.tasks.getByKey('update-record');
-                updateTask.dependencies = ['tagstore'];
+                updateTask.dependencies = ['groupFieldUpdate'];
+
+
+                tasks.add({
+                    store: me.tagStore,
+                    key: 'tagstore'
+                });
+
+                tasks.add({
+                    key: 'groupFieldUpdate',
+                    fn: function (gfutasks) {
+
+                        Ext.Array.each(groupValue, function (val, index) {
+                            var gRecord;
+                            if (Ext.isString(val)) {
+                                gRecord = me.tagStore.findRecord('Value', val);
+                                if (gRecord) {
+                                    groupValue[index] = gRecord.getId();
+                                }
+
+                            }
+                        });
+
+                        groups.setValue(groupValue);
+                        gfutasks.callback();
+
+                    },
+                    dependencies: [
+                        'tagstore'
+                    ]
+                });
             }
 
-            tasks.add({
-                store: me.tagStore,
-                key: 'tagstore'
-            });
-    
         }
         //tasks.add({
         //    store: me.record.getContacts(),
