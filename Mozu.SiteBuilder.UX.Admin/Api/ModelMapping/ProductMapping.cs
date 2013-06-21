@@ -199,7 +199,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   }));
 
 
-            Mapper.CreateMap<ProductVariation, DC.ProductVariation>();
+            Mapper.CreateMap<ProductVariation, DC.ProductVariation>()
+                  .ForMember(x => x.StockOnHandAdjustment, opt => opt.MapFrom(x => x.StockOnHand.HasValue ? new DC.StockOnHandAdjustment() {Type = "Absolute", Value = x.StockOnHand.Value} : null));
             Mapper.CreateMap<DC.ProductVariation, ProductVariation>();
 
 

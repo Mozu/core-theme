@@ -15,6 +15,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
             stockOnHand,
             outOfStockState,
             options;
+        this.record = this.product;
         
         manageStock = Ext.widget({
             xtype: 'checkboxfield',
@@ -41,7 +42,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
             fieldLabel: 'Quantity',
             value: this.product.get('stockOnHand'),
             margin: '0 0 0 20',
-            hidden: !track,
+            hidden: this.record.getOptions().count() || !track,
             listeners: {
                 change: function (field, newValue) {
                     this.product.set('stockOnHandAdjustment', 
@@ -59,7 +60,6 @@ Ext.define('Taco.view.product.subform.Inventory', {
 
         outOfStockState = Ext.widget({
             xtype: 'selectfield',
-            name: 'stockManagement',
             fieldLabel: 'If out of stock...',
             width: 250,
             margin: '0 0 0 20',
@@ -96,6 +96,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
         }, options];
 
         this.callParent(arguments);
+       
     },
 
     getOutOfStockState: function () {
