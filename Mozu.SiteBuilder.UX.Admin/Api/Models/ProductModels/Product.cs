@@ -30,6 +30,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name="productName")]
         public string ProductName { get; set; }
 
+
+        [DataMember(EmitDefaultValue = false, Name = "manageStock")]
+        public bool? ManageStock { get; set; }
+
         /// <summary>
         /// The product short description.
         /// </summary>
