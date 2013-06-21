@@ -97,12 +97,15 @@ Ext.define('Taco.view.fileManager.Index', {
     initComponent: function () {
 
         this.header = {
-            actions: [{
-                xtype: 'secondarybutton',
-                text: 'Manage Tags',
-                click: this.manageTags,
-                scope: this
-            }, {
+            actions: [
+
+                //{
+                //xtype: 'secondarybutton',
+                //text: 'Manage Tags',
+                //click: this.manageTags,
+                //scope: this
+                //},
+            {
                 xtype: 'tacofilefield',
                 text: 'Upload',
                 listeners: {
