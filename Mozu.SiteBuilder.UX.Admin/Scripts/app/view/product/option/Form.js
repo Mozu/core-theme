@@ -18,19 +18,16 @@ Ext.define('Taco.view.product.option.Form', {
     initComponent: function () {
 
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
+        this.productVariationStore = this.product.getVariations();
 
         this.options = Ext.widget({
             xtype: 'container',
-            items: [{
-                html: 'THING 1'
-            }]
+            hidden: true
         });
 
         this.variations = Ext.widget({
             xtype: 'container',
-            items: [{
-                html: 'THING 2'
-            }]
+            hidden: true
         });
 
         this.items = [{
@@ -43,10 +40,26 @@ Ext.define('Taco.view.product.option.Form', {
 
         this.callParent(arguments);
 
-        if (this.productTypeStore.loading) {
+        if (this.productTypeStore.isLoading()) {
             this.productTypeStore.on('load', this.loadByProductTypeId, this, { single: true });
         } else {
             this.loadByProductTypeId();
+        }
+
+        if (this.productVariationStore.isLoading()) {
+            this.productVariationStore.on('load', this.showHide, this);
+        } else {
+            this.showHide();
+        }
+    },
+
+    showHide: function () {
+        if (this.productVariationStore.count()) {
+            this.options.hide();
+            this.variations.show();
+        } else {
+            this.options.show();
+            this.variations.hide();
         }
     },
 
@@ -60,6 +73,8 @@ Ext.define('Taco.view.product.option.Form', {
         if (!this.productType) return;
 
         this.productTypeOptions = this.productType.getOptions();
+
+
 
         this.buildOptions();
         this.buildVariations();
@@ -87,22 +102,26 @@ Ext.define('Taco.view.product.option.Form', {
     },
 
     buildVariations: function () {
-        var me = this;
-        me.grid = Ext.create('Taco.view.product.option.VariationGrid', {
-            product: me.product,
-            productType: me.productType
+        this.grid = Ext.create('Taco.view.product.option.VariationGrid', {
+            product: this.product,
+            productType: this.productType,
+            listeners: {
+                editoption: function (grid, attributeFQN) {
+                    this.launchModal(attributeFQN);
+                },
+                scope: this
+            }
         });
 
-        me.variations.removeAll();
-        me.variations.add(me.grid);
-        
-
+        this.variations.removeAll();
+        this.variations.add(this.grid);
     },
 
-    launchModal: function () {
+    launchModal: function (attributeFQN) {
         var modal = Ext.create('Taco.view.product.option.Modal', {
             productType: this.productType,
             product: this.product,
+            attributeFQN: attributeFQN,
             listeners: {
                 save: function () {
                     modal.hide();
@@ -114,7 +133,9 @@ Ext.define('Taco.view.product.option.Form', {
     },
 
     createVariations: function () {
-        this.product.getVariations().loadFromOptions();
+        this.productVariationStore.loadFromOptions();
         this.buildVariations();
+        this.options.hide();
+        this.variations.show();
     }
 });
