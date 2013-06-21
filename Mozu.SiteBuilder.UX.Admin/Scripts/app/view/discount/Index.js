@@ -87,14 +87,14 @@ Ext.define('Taco.view.discount.Index', {
             text: 'Start Date'
         }, {
             xtype: 'datecolumn',
-            dataIndex: 'endDate',
+            dataIndex: 'expirationDate',
             width: 100,
             text: 'End Date',
             renderer: function (value, metaData, record, rowIndex, colIndex, store) {
 
                 var val = "";
 
-                if (!record.get("endDate")) {
+                if (!record.get("expirationDate")) {
                     val = "Never";
                     return val;
                 }
