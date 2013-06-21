@@ -42,7 +42,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
             fieldLabel: 'Quantity',
             value: this.product.get('stockOnHand'),
             margin: '0 0 0 20',
-            hidden: this.record.getOptions().count() || !track,
+            hidden: !track,
             listeners: {
                 change: function (field, newValue) {
                     this.product.set('stockOnHandAdjustment', 
