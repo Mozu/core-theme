@@ -73,10 +73,12 @@ Ext.define('Taco.view.category.Index', {
                 }]
                 
             }],
-            dockedItems: [{
-                xtype: 'quickadder',
-                helperText: 'Click to add a new category'
-            }, {
+            dockedItems: [
+                //{
+                //xtype: 'quickadder',
+                //helperText: 'Click to add a new category'
+                //},
+            {
                 xtype: 'container',
                 dock: 'top',
                 height: 30,
@@ -110,40 +112,40 @@ Ext.define('Taco.view.category.Index', {
 
         me.callParent(arguments);
 
-        this.down('quickadder').on({
-            commit: function (quickAdder, newCategoryName) {
-                var newNode, root = this.getRootNode();
+        //this.down('quickadder').on({
+        //    commit: function (quickAdder, newCategoryName) {
+        //        var newNode, root = this.getRootNode();
 
-                newNode = root.insertBefore({
-                    name: newCategoryName
-                }, root.firstChild);
+        //        newNode = root.insertBefore({
+        //            name: newCategoryName
+        //        }, root.firstChild);
 
-                this.setLoading(true);
+        //        this.setLoading(true);
 
-                if (this.autoSync) {
-                    this.store.sync({
-                        callback: function () {
-                            this.setLoading(false);
-                        },
-                        success: function () {
-                            this.fireEvent('setmessage', 'category created', 'status');
-                        },
-                        failure: function (batch) {
-                            newNode.remove();
-                            if (batch.exceptions && batch.exceptions.length > 0) {
-                                this.fireEvent('setmessage', batch.exceptions[0].error, 'error');
-                            }
-                            else {
-                                this.fireEvent('setmessage', 'failed to add category', 'error');
-                            }
-                        },
-                        scope: this
-                    });
-                }
-                this.view.el.scrollTo('top', 0, true);
-            },
-            scope: this.treelist
-        });
+        //        if (this.autoSync) {
+        //            this.store.sync({
+        //                callback: function () {
+        //                    this.setLoading(false);
+        //                },
+        //                success: function () {
+        //                    this.fireEvent('setmessage', 'category created', 'status');
+        //                },
+        //                failure: function (batch) {
+        //                    newNode.remove();
+        //                    if (batch.exceptions && batch.exceptions.length > 0) {
+        //                        this.fireEvent('setmessage', batch.exceptions[0].error, 'error');
+        //                    }
+        //                    else {
+        //                        this.fireEvent('setmessage', 'failed to add category', 'error');
+        //                    }
+        //                },
+        //                scope: this
+        //            });
+        //        }
+        //        this.view.el.scrollTo('top', 0, true);
+        //    },
+        //    scope: this.treelist
+        //});
 
         var treeview = me.treelist.down('treeview');
        // treeview.mon(treeview, 'itemclick', me.onItemClick, me);
