@@ -15,13 +15,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         public class CreatePackageArgs
         {
-            public OrderPackage Package { get; set; }
+            public string OrderId { get; set; }
+            public List<OrderPackageItem> Items { get; set; }
+
+            // optional. means we are moving things out of one package into a new one.
+            public string SourcePackageId { get; set; }
         }
         [WebInvoke(Method="POST", UriTemplate="shipping/package/create")]
         public async Task<Response<List<OrderPackage>>> CreatePackage(CreatePackageArgs args)
         {
-            var dc = Mapper.Map<DCs.Package>(args.Package);
-            var ret = (await _orderWebApiClient.CreatePackage(args.Package.OrderId, dc)).ReadAsSync();
+            var dc = new DCs.Package {
+                Items = Mapper.Map<List<DCs.PackageItem>>(args.Items)
+            };
+            var ret = (await _orderWebApiClient.CreatePackage(args.OrderId, dc)).ReadAsSync();
 
             return List2( Mapper.Map<OrderPackage>(ret) );
         }
@@ -94,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 });
             }
             // case 2: removing item from a package
-            if (!String.IsNullOrEmpty(args.SourcePackageId) && String.IsNullOrEmpty(args.DestinationPackageId))
+            else if (!String.IsNullOrEmpty(args.SourcePackageId) && String.IsNullOrEmpty(args.DestinationPackageId))
             {
                 var source = (await _orderWebApiClient.GetPackage(args.OrderId, args.SourcePackageId)).ReadAsSync();
 
@@ -110,10 +116,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         sourcePackageItem.Quantity -= argItem.Quantity;
                     }
                 }
-                updateTasks.Add( _orderWebApiClient.UpdatePackage(args.OrderId, args.SourcePackageId, source) );
+                // if we removed the last or only item from the package, delete the package.
+                if (source.Items.Count == 0)
+                    await _orderWebApiClient.DeletePackage(args.OrderId, args.SourcePackageId);
+                else
+                    updateTasks.Add( _orderWebApiClient.UpdatePackage(args.OrderId, args.SourcePackageId, source) );
             }
             // case 3: adding item to a package
-            if (String.IsNullOrEmpty(args.SourcePackageId) && !String.IsNullOrEmpty(args.DestinationPackageId))
+            else if (String.IsNullOrEmpty(args.SourcePackageId) && !String.IsNullOrEmpty(args.DestinationPackageId))
             {
                 var dest = (await _orderWebApiClient.GetPackage(args.OrderId, args.DestinationPackageId)).ReadAsSync();
 
@@ -134,10 +144,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw new ArgumentException("SourcePackageId and DestinationPackageId cannot both be empty.");
             }
 
-            await Task.WhenAll(updateTasks);
+            List<OrderPackage> newPackages = new List<OrderPackage>();
 
-            var newPackages = Mapper.Map<List<OrderPackage>>( updateTasks.Select(t => t.Result.ReadAsSync()) );
-
+            if (updateTasks.Count > 0)
+            {
+                await Task.WhenAll(updateTasks);
+                newPackages = Mapper.Map<List<OrderPackage>>(updateTasks.Select(t => t.Result.ReadAsSync()));
+            }
             return List2(newPackages);
         }
 
