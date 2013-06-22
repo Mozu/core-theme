@@ -212,11 +212,7 @@
 		color:#990000
 	}
 
-	.#{$vprefix}orderItem-grid-row-over {
-		.#{$vprefix}grid-row-menu-trigger {
-		  visibility: visible;
-		}
-	  }
+	
 
 
 	.#{$prefix}panel .#{$prefix}grid-body {
@@ -250,12 +246,21 @@
 		}			
 	}	
 
-	.editableCell {
-		// highlight editable cell when mouseover
-		.#{$prefix}grid-cell-inner:hover {
-			border: 1px dashed #cccccc;
+	.editmode-enabled {
+	    .#{$vprefix}orderItem-grid-row-over {
+			.#{$vprefix}grid-row-menu-trigger {
+				visibility: visible;
+			}
 		}
-	}	
+
+		.editableCell {
+			// highlight editable cell when mouseover
+			.#{$prefix}grid-cell-inner:hover {
+				border: 1px dashed #cccccc;
+			}
+		}	
+	}
+
 
 
 	// disabling default background color when cell is selected
