@@ -785,5 +785,38 @@ Ext.define('Taco.model.Order', {
         });
 
         Ext.Ajax.request(config);
+    },
+    /**
+     * service call to change the tracking number
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                ... package entity ...
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    changeTrackingNumber: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/edit',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
     }
 });

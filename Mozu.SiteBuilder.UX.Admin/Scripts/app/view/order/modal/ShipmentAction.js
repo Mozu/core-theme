@@ -3,6 +3,9 @@
  */
 Ext.define('Taco.view.order.modal.ShipmentAction', {
     extend: 'Taco.core.ux.modal.Modal',
+    requires: [
+
+    ],
     cls: Taco.baseCSSPrefix + 'order-modal',
     autoShow: true,
     width: 700,

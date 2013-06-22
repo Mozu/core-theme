@@ -253,5 +253,6 @@ Ext.define('Taco.view.order.subform.Shipping', {
 
 
         Ext.resumeLayouts(true);
+        Taco.app.viewPort.unmask();
     }
 });

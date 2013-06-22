@@ -70,15 +70,17 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     
                     //todo: fix the taco.split button to allow it to be enabled and disabled;
                     
-                    // disable menu button if nothing is selected?
-                    if (selected.length == 0) {
-                        if (!me.moveMenuAction.isDisabled()) {
-                            me.moveMenuAction.disable();
-                        }
-                    } else {
-                        // re enabled the menu button
-                        if (me.moveMenuAction.isDisabled()) {
-                            me.moveMenuAction.enable();
+                    if (!me.isShippedPackage) {
+                        // disable menu button if nothing is selected?
+                        if (selected.length == 0) {
+                            if (!me.moveMenuAction.isDisabled()) {
+                                me.moveMenuAction.disable();
+                            }
+                        } else {
+                            // re enabled the menu button
+                            if (me.moveMenuAction.isDisabled()) {
+                                me.moveMenuAction.enable();
+                            }
                         }
                     }
                 }                
@@ -95,6 +97,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         // if data is already set on the panel load it by default.
         if (me.data) {
             data = me.data;
+        }
+        
+        if (me.isShippedPackage) {
+            me.disableSelection = true;
         }
 
         me.store = Ext.create('Ext.data.JsonStore', {
@@ -652,6 +658,7 @@ weight: 2
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
+                    Taco.app.viewPort.unmask();
                     return;
                 }
                 // reload the record
@@ -659,10 +666,12 @@ weight: 2
             },
             failure: function (response) {
                 // error handling here
+                Taco.app.viewPort.unmask();
             },
             scope: this
         };
         
+        Taco.app.viewPort.mask("loading");
         // call the model method to persist the change
         if (isCreate) {
             this.record.createPackage(callConfig);
@@ -717,6 +726,7 @@ weight: 2
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {
                         // service didnt' return data properly
+                        Taco.app.viewPort.unmask();
                         return;
                     }
                     // reload the record
@@ -776,6 +786,7 @@ weight: 2
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
+                    Taco.app.viewPort.unmask();
                     return;
                 }
                 // reload the record
@@ -783,10 +794,12 @@ weight: 2
             },
             failure: function (response) {
                 // error handling here
+                Taco.app.viewPort.unmask();
             },
             scope: this
         };
 
+        Taco.app.viewPort.mask("Loading...");
         this.record.markPackagesShipped(callConfig);
 
     },
