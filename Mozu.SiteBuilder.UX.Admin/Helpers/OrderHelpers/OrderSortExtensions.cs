@@ -8,10 +8,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
     {
         private const string ORDER_ID_PROPERTY = "orderid";
         private const string ORDER_NUMBER_PROPERTY = "ordernumber";
-        private const string FIRST_NAME_PROPERTY = "stockOnHand";
-        private const string LAST_NAME_PROPERTY = "stockAvailable";
+        private const string FIRST_NAME_PROPERTY = "billingContact.firstName";
+        private const string LAST_NAME_PROPERTY = "billingcontact.lastName";
         private const string CREATE_DATE_PROPERTY = "createDate";
-        private const string TOTAL_PROPERTY = "updateDate";
+        private const string TOTAL_PROPERTY = "total";
         private const string SHIPPING_STATUS_PROPERTY = "shipmentStatus";
         private const string ORDER_STATUS_PROPERTY = "status";
 
@@ -40,9 +40,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                     return ORDER_NUMBER_PROPERTY;
                 case "ordernumber":
                     return ORDER_NUMBER_PROPERTY;
-                case "customer.firstname":
+                case "billingcontact.firstname":
                     return FIRST_NAME_PROPERTY;
-                case "customer.lastname":
+                case "billingcontact.lastname":
                     return LAST_NAME_PROPERTY;
                 case "total":
                     return TOTAL_PROPERTY;

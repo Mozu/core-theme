@@ -211,13 +211,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public List<string> PackageIds { get; set; }
         }
-        [WebInvoke(Method = "POST", UriTemplate = "shipping/package/edit")]
+        [WebInvoke(Method = "POST", UriTemplate = "shipping/package/prepareshipment")]
         public async Task<Response<List<OrderPackage>>> PrepareShipment(PrepareShipmentArgs args)
         {
             var dc = (await _orderWebApiClient.CreatePackageShipments(args.OrderId, args.PackageIds)).ReadAsSync();
             return List2( Mapper.Map<List<OrderPackage>>(dc) );
         }
 
+        [WebGet(UriTemplate = "shipping/package/label")]
         public async Task<Response<List<OrderPackage>>> GetPackageLabel([FromUri]string orderId, [FromUri]string packageId)
         {
             var response = await _orderWebApiClient.GetPackageLabel(orderId, packageId);
