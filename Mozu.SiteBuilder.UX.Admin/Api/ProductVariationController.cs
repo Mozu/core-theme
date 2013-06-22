@@ -39,6 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "list")]
         public async Task<Response<List<ProductVariation>>> ListProducts([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri]string productCode = null, [FromUri] string options = null, [FromUri ] int? productTypeId = null)
         {
+            
             var filter = "IsOrphan ne true";
             Mozu.ProductAdmin.Contracts.ProductVariationPagedCollection collection = null;
             if (!string.IsNullOrEmpty(options))
@@ -63,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var mappedRes = AutoMapper.Mapper.Map<List<ProductVariation>>(collection.Items);
             return this.List2(mappedRes, total: (int)collection.TotalCount);
-
+             
         }
 
         [WebInvoke(UriTemplate = "edit")]

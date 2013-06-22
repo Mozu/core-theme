@@ -6,8 +6,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
 {
     internal static class OrderSortExtensions
     {
-        private const string ORDER_ID_PROPERTY = "productinsites.productcategories.categoryId";
-        private const string ORDER_NUMBER_PROPERTY = "productinsites.isActive";
+        private const string ORDER_ID_PROPERTY = "orderid";
+        private const string ORDER_NUMBER_PROPERTY = "ordernumber";
         private const string FIRST_NAME_PROPERTY = "stockOnHand";
         private const string LAST_NAME_PROPERTY = "stockAvailable";
         private const string CREATE_DATE_PROPERTY = "createDate";
@@ -24,8 +24,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
         /// </param>
         public static string ToSortString(this SortingCollection sortCollection)
         {
-            if (sortCollection == null)
-                return null;
+            if (sortCollection == null || sortCollection.Count == 0)
+                return "ordernumber desc";
 
             return string.Join(" and ", sortCollection.Select(x => GetFilter(x) + (x.IsAscending ? " asc" : " desc")));
         }
@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
             switch (item.property.ToLowerInvariant())
             {
                 case "orderid":
-                    return ORDER_ID_PROPERTY;
+                    return ORDER_NUMBER_PROPERTY;
                 case "ordernumber":
                     return ORDER_NUMBER_PROPERTY;
                 case "customer.firstname":

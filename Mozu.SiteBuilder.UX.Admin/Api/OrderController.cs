@@ -41,10 +41,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             int? startIndex = pagingParams.startIndex;
             int? pageSize = pagingParams.pageSize ?? 20;
-            SortingCollectionItem sort = pagingParams.sort == null ? null : pagingParams.sort.FirstOrDefault();
+            
 
             var mock_orders = await GetMock();
-
+            var sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
             DCo.OrderCollection dcOrders = null;
             
             if (!string.IsNullOrEmpty(pagingParams.id) && !mock_orders.Any(o => o.Id == pagingParams.id))
@@ -59,6 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             else
             {
                 var filter = "Status ne \"Created\"";
+                
                 try
                 {
                     dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
@@ -75,36 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             orders.AddRange(mock_orders);
             orders.AddRange(real_orders);
 
-            if (sort != null)
-            {
-                switch (sort.property)
-                {
-                    case "orderId":
-                        orders = DoSort(orders, o => o.Id, sort.IsAscending);
-                        break;
-                    case "orderNumber":
-                        orders = DoSort(orders, o => o.OrderNumber, sort.IsAscending);
-                        break;
-                    case "createDate":
-                        orders = DoSort(orders, o => o.CreateDate, sort.IsAscending);
-                        break;
-                    case "customer.firstName":
-                        orders = DoSort(orders, o => o.BillingContact.FirstName, sort.IsAscending);
-                        break;
-                    case "customer.lastName":
-                        orders = DoSort(orders, o => o.BillingContact.LastName, sort.IsAscending);
-                        break;
-                    case "total":
-                        orders = DoSort(orders, o => o.Total, sort.IsAscending);
-                        break;
-                    case "orderStatus":
-                        orders = DoSort(orders, o => o.OrderStatus, sort.IsAscending);
-                        break;
-                    case "shippingStatus":
-                        orders = DoSort(orders, o => o.ShippingStatus, sort.IsAscending);
-                        break;
-                }
-            }
+           
 
             new DCo.Order {
                 Packages = null
@@ -113,7 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (pagingParams.id != null)
                 return List2(orders.Where(o => o.Id == pagingParams.id).ToList());
 
-            return List2(orders);
+            return List2(orders,(int) dcOrders.TotalCount );
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "cancel")]
@@ -123,6 +95,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return List2( Mapper.Map<Order>(dc) );
         }
+
+  
 
 
         /// <summary>

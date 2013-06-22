@@ -7,6 +7,7 @@ using System.Web.Routing;
 using Autofac.Integration.Mvc;
 using Mozu.Core.Api;
 using Mozu.SiteBuilder.Mvc.Debugging.RouteDebug;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Configuration;
 
 
@@ -30,6 +31,8 @@ namespace Mozu.SiteBuilder.UX
             RegisterErrorRoutes(RouteTable.Routes);
             DependencyResolver.SetResolver(new AutofacDependencyResolver(_bs.Container ));
 
+
+            NDjango.Utilities.Comparer = new DjangoComparer();
        
             if (ConfigurationManager.AppSettings["routeDebug"] == "true")
             {
