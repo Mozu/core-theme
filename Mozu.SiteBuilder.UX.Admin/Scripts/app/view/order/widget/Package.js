@@ -7,7 +7,10 @@
 
 Ext.define('Taco.view.order.widget.Package', {
     extend: 'Ext.panel.Panel',
-    requires: ['Taco.view.order.widget.OrderItemGrid'],
+    requires: [
+        'Taco.view.order.widget.OrderItemGrid',
+        'Taco.view.order.modal.EditTrackingNumber'
+    ],
     config: {
         
         record: null,
@@ -239,10 +242,10 @@ Ext.define('Taco.view.order.widget.Package', {
             },
             success: function (response) {
                 // success handling here
-                Taco.app.viewPort.unmask();
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
+                    Taco.app.viewPort.unmask();
                     return;
                 }
                 // reload the record
@@ -251,7 +254,6 @@ Ext.define('Taco.view.order.widget.Package', {
             failure: function (response) {
                 // error handling here
                 Taco.app.viewPort.unmask();
-
             },
             scope: this
         };
@@ -263,7 +265,15 @@ Ext.define('Taco.view.order.widget.Package', {
     },
 
     addTrackingNumber: function () {
-        
+        var me = this,
+            packageData = me.packageData;
+
+        var modal = Ext.create('Taco.view.order.modal.EditTrackingNumber', {
+            packageData : packageData, 
+            record: me.record
+        });
+
+        modal.show();
     }
     
 });
