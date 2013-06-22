@@ -27,8 +27,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         
         enableToolbar: true,
 
-        // the text used in the move menu split button.  Will be overridden by subclasses
-        moveMenuText: "Add to Package",
+        
         
         enableMoveMenu: true,
         
@@ -180,31 +179,37 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             }
         );
         
-        menu.push(
-            {
-                text: "Unshipped Items",
-                moveAction: "addSelectionToPackage",
-                moveTargetId: 0
-            }
-        );
+        //only show this if its not the unshipped items. 
+        if (!me.isUnShippedItems) {
+            menu.push(
+                {
+                    text: "Unshipped Items",
+                    moveAction: "addSelectionToPackage",
+                    moveTargetId: 0
+                }
+            );
+        }
+        
         
         var unshippedPackages = this.record.get("unShippedPackages");
 
         // loop on the packages adding them as addTo Targets;
         var packageLength = unshippedPackages.length;
         for (var i = packageLength; i > 0; i--) {
-            /*
-            specificPackages.push({
-                text: "Package " + i
-            });
-            */
-            
-            menu.push({
-                text: "Package " + i,
-                moveAction: "addSelectionToPackage",
-                moveTargetId: unshippedPackages[i-1].id
-            });
 
+            var packageId = null;
+            if (me.packageData) {
+                packageId = me.packageData.id
+            }
+
+            // only include the packages that we are not currently operating on.
+            if (unshippedPackages[i - 1].id != packageId) {
+                menu.push({
+                    text: "Package " + i,
+                    moveAction: "addSelectionToPackage",
+                    moveTargetId: unshippedPackages[i - 1].id
+                });
+            }
         }
         
         
@@ -270,14 +275,23 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             // if there is a last package use its id, otherwise make the target a new package
             var lastPackage = unShippedPackages[unShippedPackages.length - 1];
             var lastPackageId = (lastPackage) ? lastPackage.id : -1;
+
+            var moveMenuText = "Add to Package";
+            var menuXtype = "Ext.button.Split";
+            if (!me.isUnShippedItems) {
+                moveMenuText = "Move to";
+                menuXtype = "Ext.Button";
+                // note that the taco button doesn't support being enabled and disabled
+            }
+            
             
 
             // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
             //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
-            me.moveMenuAction = Ext.create("Ext.button.Split", {
+            me.moveMenuAction = Ext.create(menuXtype, {
                 menuAlign: 'tr-br',
                 cls: "taco-splitbutton",
-                text: me.getMoveMenuText(),
+                text: moveMenuText,
                 itemId: "moveMenuTrigger",
                 
 
@@ -285,8 +299,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 moveTargetId: lastPackageId,
                 
                 disabled: true,
-                handler: function (button,e) {
-                    me.moveSelectedItems(null, button,e);
+                handler: function (button, e) {
+                    // only do the click to move if its in the unshipped items. for regular packages its a menu button instead of split button
+                    if (me.isUnShippedItems) {
+                        me.moveSelectedItems(null, button, e);
+                    }
                 },
                 scope:me,
                 listeners: {

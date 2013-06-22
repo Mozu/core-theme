@@ -63,6 +63,8 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
             
             record: this.record,
             
+            isUnShippedItems:true,
+
             // configs for the grid
             editMode: true,
 
