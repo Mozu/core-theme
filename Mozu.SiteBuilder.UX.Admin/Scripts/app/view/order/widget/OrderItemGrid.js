@@ -491,8 +491,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger ' + Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
                     menuItems: [],
                     handler: function (grid, rowIndex, colIndex, header, e, record, item) {
-                        Ext.Msg.alert('Remove Item', 'TODO: Confirm the removal of item.');
+                        // tell the method that we we want to move this item back to the unshippedItems list;
+                        var dom = Ext.get(item);
+                        dom.moveTargetId = 0;
+                        grid.up('gridpanel').moveSelectedItems(null, dom);
                     },
+                    scope:me,
                     renderer: function (value, metaData, record) {
 
                     },
@@ -616,97 +620,82 @@ weight: 2
         return allRatesMenuData;
     },
     
-    moveSelectedItems: function (menu, item, e, eOpts) {
+
+
+    executeMoveItems: function (config) {
         var me = this,
-            data = {
-                orderId: me.record.get("id"),
-                items : []
-            },
             isCreate = false,
-            isMoveToUnshipped=false,
-            moveAction,
-            
-            moveTargetId,
-            moveSourceId,
-            orderId,
-            config,
-            grid,
-            selection;
+            callConfig;
 
-        
-        
-        
-        
-        
-        if (item) {
-            moveAction = item.moveAction;
-            moveTargetId = item.moveTargetId;
-            
-            // determine if this is a create
-            if (moveTargetId == -1) {
-                isCreate = true;
-            }
-            
-            // determine if this is a move back to unshippedItems
-            if (moveTargetId == 0) {
-                isMoveToUnshipped = true;
-            }
-            
-            grid = item.up("gridpanel");
-            selection = grid.getSelectionModel().getSelection();
-
-            
-            data.sourcePackageId = (grid.packageData) ? grid.packageData.id : null;
-            data.destinationPackageId = (item.moveTargetId) ?item.moveTargetId : null;
-            
-            if (!isCreate) {
-                // if we have package data then we are moving items from an existing package;
-                
-            }
-
-            if (selection) {
-                selection.forEach(function (element, index, array) {
-                    data.items.push(element.getData());
-                });
-            }
-            
+        var orderId = me.record.get("id");
+        var sourcePackageId = config.sourcePackageId;
+        var destinationPackageId = config.destinationPackageId;
+        var items = config.items;
 
 
-
+        // determine if this is a create
+        if (destinationPackageId == -1) {
+            isCreate = true;
         }
-
-        config = {
-            jsonData: data,
-
+        
+        callConfig = {
+            jsonData: {
+                orderId: orderId,
+                items: items,
+                sourcePackageId: sourcePackageId,
+                destinationPackageId: destinationPackageId
+            },
+            
             success: function (response) {
                 // success handling here
-                    
+
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
                     return;
                 }
-
-
                 // reload the record
                 this.record.reload();
             },
             failure: function (response) {
                 // error handling here
-                    
             },
             scope: this
         };
-
         
         // call the model method to persist the change
-
-        
-        
         if (isCreate) {
-            this.record.createPackage(config);
+            this.record.createPackage(callConfig);
         } else {
-            this.record.movePackageItems(config);
+            this.record.movePackageItems(callConfig);
+        }
+    },
+    // extract the json package data from the current grid selection and return it 
+    getSelectedDataItems: function () {
+        var items = [];
+        var selection = this.getSelectionModel().getSelection();
+        selection.forEach(function (element, index, array) {
+            items.push(element.getData());
+        });
+
+        return items;
+    },
+
+    // process the grid selections and call the exectueMove
+    moveSelectedItems: function (menu, item, e, eOpts) {
+        var me = this;
+        
+        if (item) {
+            var items = me.getSelectedDataItems();
+            var sourcePackageId = (me.packageData) ? me.packageData.id : null;
+            var destinationPackageId = (item.moveTargetId) ? item.moveTargetId : null;
+            
+            // execute the call
+            me.executeMoveItems({
+                sourcePackageId: sourcePackageId,
+                destinationPackageId: destinationPackageId,
+                items: items
+            });
         }
     },
     
@@ -753,15 +742,53 @@ weight: 2
         }
     },
     
+    // move the currently selected items and move them to the unshipped items 
     removeSelectedItems: function () {
-        console.log('OrderItemGrid.removeSelectedKItems()');
-        // move selection to the unpackagedItems
-
+        var me = this,
+            items = me.getSelectedDataItems(),
+            sourcePackageId = (me.packageData) ? me.packageData.id : null;
+        if (sourcePackageId && items.length) {
+            me.executeMoveItems({
+                sourcePackageId: sourcePackageId,
+                destinationPackageId: null,
+                items: items
+            });
+        }
     },
     
+    // mark package as a shipped package
     markAsShipped: function () {
-        console.log('OrderItemGrid.markAsShipped()');
-        // mark package as a shipped package
+        var me = this,
+            callConfig;
+
+        var orderId = me.record.get("id");
+        var sourcePackageId = me.packageData.id;
+
+        callConfig = {
+            jsonData: {
+                orderId: orderId,
+                packageIds: [sourcePackageId]
+            },
+
+            success: function (response) {
+                // success handling here
+
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+                // reload the record
+                this.record.reload();
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        };
+
+        this.record.markPackagesShipped(callConfig);
+
     },
     
     viewShippingLabel: function (button, e) {

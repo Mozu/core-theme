@@ -15,7 +15,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         title: 'Order Details',
         
         // determines whether the detailGrid allows field editing
-        editMode: true,
+        editMode: false,
         
         // width of the actionColumn. used to align the grid total container
         actionColumnWidth: 60,
@@ -43,9 +43,11 @@ Ext.define('Taco.view.order.subform.Detail', {
             menu: {
                 plain: true,
                 items: [{
-                    text: 'Edit Details'
+                    text: 'Edit Details',
+                    disabled:true
                 }, {
-                    text: 'Cancel Order'
+                    text: 'Cancel Order',
+                    disabled: true
                 }]
             }
         }]
@@ -155,7 +157,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             
             
             viewConfig: {
-                
+                cls: (this.getEditMode()) ? "editmode-enabled" : "",
                 // changing the hover class to get rid of taco overrides of grid
                 overItemCls: 'taco-orderItem-grid-row-over',
                 emptyText: '<div class="emptyGridMessage">No order items to display</div>',
@@ -215,7 +217,6 @@ Ext.define('Taco.view.order.subform.Detail', {
                                 '<tpl for="options">',
                                     '<span class="option">{.}, </span>',
                                 '</tpl>',
-                                '<span class="weight">{weight} lbs</span>',
                             '</div>'
                         ],
                     dataIndex: 'productName'
@@ -321,7 +322,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                         
                             '<div class="totalGroup">',
                                 // todos: add tpl:if to filter out adjusments and adjusment total if there is none;
-                                '<tpl if="adjustmentDescription!=\'\'">',
+                                '<tpl if="adjustmentTotal">',
                                     '<div class="adjustmentDescription">{adjustmentDescription}:</div>',
                                 '</tpl>',
                                 '<div class="tax">Tax:</div>',
@@ -352,7 +353,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                             '</div>',
                             
                             '<div class="totalGroup">',
-                                '<tpl if="adjustmentTotal!=\'\'">',
+                                '<tpl if="adjustmentTotal">',
                                     '<div class="adjustmentTotal">{adjustmentTotal:usMoney}</div>',
                                 '</tpl>',
                                 '<div class="tax">{taxTotal:usMoney}</div>',

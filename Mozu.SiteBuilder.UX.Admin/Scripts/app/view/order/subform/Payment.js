@@ -77,7 +77,6 @@ Ext.define('Taco.view.order.subform.Payment', {
             });
         }
         
-
         // actions that go in the header actions menu
         me.voidTransactionAction = new Ext.Action({
             text: 'Void Transaction',
