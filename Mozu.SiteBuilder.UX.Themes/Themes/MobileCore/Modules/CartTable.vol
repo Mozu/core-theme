@@ -1,0 +1,15 @@
+﻿<table class="mz-table mz-mobile-optimized">
+  <tbody class="mz-cart-items" data-bind="foreach: Items">
+    {% include "Modules/CartTableRow" %}
+  </tbody>
+  <tbody data-bind="visible: isEmpty">
+    <tr align="center">
+      <td>
+        You have no items in your cart.
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    {% include "Modules/CartTableFooter" %}
+  </tfoot>
+</table>

@@ -1,0 +1,32 @@
+﻿<tr class="mz-cart-product-row">
+  <td class="mz-cart-product-item">
+    <div class="mz-cart-item-info">
+      <span class="mz-cart-item-image-wrap">
+        <img class="mz-cart-item-image" data-bind="visible: Product.ImagePath, attr: { src: Product.ImagePath + '?size=50' }" />
+      </span>
+      <a class="mz-cart-item-title" data-bind="text: Product.Name, attr: { href: '/product/' + Product.ProductCode }"></a>
+      <span class="mz-cart-item-code">
+        Code: <strong data-bind="text: Product.ProductCode"></strong>
+      </span>
+      <dl class="mz-cart-item-options" data-bind="visible: Product.Options.length > 0, foreach: Product.Options">
+        <dt data-bind="text: Name + ':'"></dt>
+        <dd data-bind="text: Value"></dd>
+      </dl>
+      <span class="mz-cart-product-remove">
+        <a href="javascript:;" data-bind="click: remove" class="mz-product-delete mz-icon mz-i-close-sm">X</a>
+      </span>
+    </div>
+    <div class="mz-cart-item-config-wrap">
+      <span class="mz-cart-price-container">
+        <span class="mz-cart-price mz-strikethrough" data-bind="visible: priceIsModified, currencyText: UnitPrice().baseAmount"></span>
+        <span class="mz-cart-price mz-updated-price" data-bind="css: { 'mz-updated-price': !priceIsModified }, currencyText: UnitPrice().DiscountedAmount"></span>
+      </span>
+      <span class="mz-cart-item-times">&times;</span>
+      <span class="mz-cart-item-quantity">
+        <input type="tel" data-bind="value: Quantity">
+      </span>
+      <span class="mz-cart-item-equals">=</span>
+      <span class="mz-cart-item-total" data-bind="currencyText: Total"></span>
+    </div>
+  </td>
+</tr>
