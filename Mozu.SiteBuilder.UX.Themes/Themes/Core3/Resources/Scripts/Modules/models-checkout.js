@@ -38,7 +38,8 @@
                 this.stepStatus('submitting');
                 var self = this;
                 var parent = this.getParentModel();
-                parent.update({ ShippingContact: self.toJS() }).then(function () {
+                parent.update().then(function () {
+                //parent.update({ ShippingContact: self.toJS() }).then(function () {
                     self.stepStatus('submitting');
                     parent.getShippingMethods().then(function (methodsJSON) {
                         self.stepStatus('complete');
@@ -91,10 +92,8 @@
                 this.stepStatus('submitting');
                 var self = this;
                 var parent = this.getParentModel();
-                this.update().then(function () {
-                    if (self.checkStepStatus() === "complete") {
-                        parent.get()
-                    }
+                parent.update().then(function () {
+                    self.checkStepStatus();
                 });
             },
             checkStepStatus: function () {
@@ -322,12 +321,13 @@
             },
             edit: editStep,
             submit: function () {
-                var self = this;
+                var self = this,
+                    parent = this.getParentModel();
                 if (this.validate()) {
                     if (this.paymentTypeIsCreditCard()) {
                         return this.pciProcessor.process();
                     } else {
-                        return self.update().then(function () {
+                        return parent.update().then(function () {
                             self.stepStatus("complete");
                         });
                     }
@@ -337,9 +337,10 @@
             },
             nextStep: submitStep
         }, function () {
-            var self = this;
+            var self = this,
+                parent = this.getParentModel();
             this.stepStatus = ko.observable();
-            var shipmentStatus = self.getParentModel().ShippingInfo.stepStatus,
+            var shipmentStatus = parent.ShippingInfo.stepStatus,
                 checkStatus = function (newValue) {
                     self.stepStatus(newValue === "complete" ? "incomplete" : "new");
                 };
@@ -367,7 +368,7 @@
                 events: {
                     success: function () {
                         self.pciProcessor.applyMask();
-                        self.update().then(function () {
+                        parent.update().then(function () {
                             self.stepStatus("complete");
                         }), function () {
                             self.stepStatus("invalid");
@@ -496,8 +497,6 @@
                     });
                 }
                 apiSteps.push(function () {
-                    return order.get();
-                }, function () {
                     var availableActions = order.AvailableActions;
                     if (availableActions.indexOf('SubmitOrder') !== -1)
                         return order.performOrderAction('SubmitOrder');
