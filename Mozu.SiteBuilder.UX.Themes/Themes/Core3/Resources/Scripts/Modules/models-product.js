@@ -32,7 +32,7 @@
                 var newValObj;
                 newVal = $.trim(newVal);
                 if (newVal) newValObj = ko.utils.arrayFirst(me.Values(), function (v) {
-                    return v.Value === newVal;
+                    return v.Value.toString() === newVal.toString();
                 });
                 if (newValObj && !newValObj.IsEnabled) parent.configuredOptions = {};
                 parent.configuredOptions[me.id] = !!(newVal || newVal === 0);

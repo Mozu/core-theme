@@ -27,6 +27,10 @@
         // bind view!
         ko.applyBindings(product, $productView[0]);
 
+        $.each(product.Options(), function (i, o) {
+            return o.beginLiveUpdate();
+        });
+
         // reveal bound view, now that it's not an ugly template
         $productView.noFlickerFadeIn();
 
