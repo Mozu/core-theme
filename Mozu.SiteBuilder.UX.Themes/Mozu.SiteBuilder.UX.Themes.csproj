@@ -586,8 +586,6 @@
     <Content Include="Themes\MobileCore\Resources\Stylesheets\Pages\product-details.less" />
     <Content Include="Themes\MobileCore\Resources\Stylesheets\Pages\search-results.less" />
     <Content Include="Themes\MobileCore\Resources\Stylesheets\storefront.less" />
-    <Content Include="Themes\MobileCore\Templates\Cart.vol" />
-    <Content Include="Themes\MobileCore\Templates\Confirmation.vol" />
     <Content Include="Themes\MobileCore\Widgets\core\aboutauthor\definition.json" />
     <Content Include="Themes\MobileCore\Widgets\core\aboutauthor\template.vol" />
     <Content Include="Themes\MobileCore\Widgets\core\addthis\definition.json" />
@@ -670,6 +668,15 @@
     <Content Include="Themes\Core3\Resources\Stylesheets\Modules\datepicker.less" />
     <Content Include="Themes\MobileCore\Modules\ProductOptions.vol" />
     <Content Include="Themes\MobileCore\Templates\Product.vol" />
+    <Content Include="Themes\MobileCore\Modules\CartTable.vol">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Themes\MobileCore\Modules\CartTableRow.vol">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Themes\MobileCore\Modules\CartTableFooter.vol">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
