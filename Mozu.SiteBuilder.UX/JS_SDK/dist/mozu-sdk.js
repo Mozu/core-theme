@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-06-18
+ * Mozu JavaScript SDK - v0.1.0 - 2013-06-23
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1243,9 +1243,8 @@
                     },
                     login: "{+UserService}Login",
                     order: {
-                        get: {
-                            template: "{+OrderService}{Id}"
-                        },
+                        template: "{+OrderService}{Id}",
+                        includeSelf: true,
                         create: {
                             template: "{+OrderService}{?cartId*}",
                             shortcutParam: "cartId",

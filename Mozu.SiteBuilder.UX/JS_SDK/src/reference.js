@@ -266,9 +266,8 @@ var ApiReference = (function () {
         },
         'login': '{+UserService}Login',
         'order': {
-            get: {
-                template: '{+OrderService}{Id}',
-            },
+            template: '{+OrderService}{Id}',
+            includeSelf: true,
             create: {
                 template: '{+OrderService}{?cartId*}',
                 shortcutParam: 'cartId',
