@@ -29,8 +29,9 @@ Ext.define('Taco.view.productType.Form', {
             extras = this.record.get('extras'),
             properties = this.record.get('properties');
 
-        console.log(this.record.data);
-
+        this.stores = this.stores || [];
+        this.stores.push(this.record.getOptions(), this.record.getExtras(), this.record.getProperties());
+        
         this.defaults = {
             xtype: 'taco.producttype.attributegroup',
             productType: this.record
@@ -52,8 +53,9 @@ Ext.define('Taco.view.productType.Form', {
             type: 'properties'
         }];
             
-
+       
         this.callParent(arguments);
+        
     },
 
 
