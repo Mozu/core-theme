@@ -41,6 +41,21 @@ Ext.define('Taco.view.product.subform.General', {
             width: 200,
             xtype: 'textfield'
         }, {
+            xtype: 'selectfield',
+            fieldLabel: 'Product Type',
+            name: 'productTypeId',
+            readOnly: readOnly && this.product.get('productTypeId'),
+            required: true,
+            queryMode:'local',
+            // width: 200,
+            shrinkWrap: 3,
+            displayField: 'name',
+            valueField: 'id',
+            store: this.productTypeStore,
+            listeners: {
+                change: this.onProductTypeChange
+            }
+        }, {
             xtype:'formform',
             persistChangesToModel: true,
             record: this.productInSiteInfo,
@@ -120,21 +135,6 @@ Ext.define('Taco.view.product.subform.General', {
                 emptyText: 'Enter the sale price here',
                 cls: Taco.baseCSSPrefix + 'flex-field-spacing'
             }]
-        }, {
-            xtype: 'selectfield',
-            fieldLabel: 'Product Type',
-            name: 'productTypeId',
-            readOnly: readOnly && this.product.get('productTypeId'),
-            required: true,
-            queryMode:'local',
-            // width: 200,
-            shrinkWrap: 3,
-            displayField: 'name',
-            valueField: 'id',
-            store: this.productTypeStore,
-            listeners: {
-                change: this.onProductTypeChange
-            }
         }];
 
         this.callParent( arguments );
