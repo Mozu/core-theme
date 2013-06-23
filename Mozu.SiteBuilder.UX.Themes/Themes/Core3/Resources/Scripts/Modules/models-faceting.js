@@ -36,7 +36,7 @@
             populate: function (d) {
                 // trying to accommodate the shape of the Hierarchical Facet
                 if (d.FacetType === "Hierarchy") {
-                    d.Values = d.Values[0].ChildrenFacetValues;
+                    d.Values = d.Values[0] ? d.Values[0].ChildrenFacetValues : [];
                 }
                 FacetValue.prototype.populate.call(this, d);
             }
