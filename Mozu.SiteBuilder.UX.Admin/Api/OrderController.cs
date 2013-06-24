@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
@@ -18,13 +19,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [ServiceContract]
     public partial class OrderController : BaseController
     {
+        private readonly ISettings _settings;
         private IOrderWebApiClient _orderWebApiClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public OrderController(IOrderWebApiClient orderWebApiClient)
+        public OrderController(IOrderWebApiClient orderWebApiClient, ISettings settings)
         {
+            _settings = settings;
             _orderWebApiClient = orderWebApiClient;
         }
 
@@ -43,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? pageSize = pagingParams.pageSize ?? 20;
             
 
-            var mock_orders = await GetMock();
+            var mock_orders =  GetMock();
             var sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
             DCo.OrderCollection dcOrders = null;
             
@@ -102,9 +105,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Gets a mock list of Orders.
         /// </summary>
-        private Task<List<Order>> GetMock()
+        private List<Order> GetMock()
         {
             var allTheOrders = new List<Order>();
+
+            if (_settings.AppSettings("enableOrderMocks") != "true")
+            {
+                return allTheOrders;
+            }
 
             var jsContact = new Contact
             {
@@ -291,10 +299,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
             allTheOrders.Add(order_with_some_packages);
 
-            var taskResult = new TaskCompletionSource<List<Order>>();
-            taskResult.SetResult(allTheOrders);
 
-            return taskResult.Task;
+            return allTheOrders;
         }
     }
 }
