@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.product.Modal', {
     extend: 'Ext.window.Window',
-    requires: ['Ext.grid.Panel', 'Ext.selection.CheckboxModel'],
+    requires: ['Ext.grid.Panel', 'Ext.selection.CheckboxModel', 'Taco.core.ux.action.SecondaryButton'],
    height:500,
     autoShow: true,
    width: 700,
@@ -94,14 +94,14 @@ Ext.define('Taco.view.product.Modal', {
                 align:'right'
             },
             items: ['->', {
+                    xtype: 'secondarybutton',
+                    text: 'Cancel',
+                    click: this.cancel,
+                    scope: this
+                }, {
                     xtype: 'primarybutton',
                     text: 'Apply',
                     click: this.save,
-                    scope: this
-                }, {
-                    xtype: 'action',
-                    text: 'Cancel',
-                    click: this.cancel,
                     scope: this
                 }]
         }];
