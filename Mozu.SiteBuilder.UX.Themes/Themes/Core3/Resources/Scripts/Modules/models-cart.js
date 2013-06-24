@@ -31,21 +31,12 @@
             self.parentCart.messages(e.Items);
             self.parentCart.submitting(false);
         });
-        var origQuantity = this.Quantity(), newValue; //, xhrCanceller;
-        //function hangOnToXhr(xhr, canceller, p, conf, data) {
-        //    if (data === newValue) {
-        //        xhrCanceller = canceller;
-        //    }
-        //}
+        var origQuantity = this.Quantity(), newValue;
         this.Quantity.subscribe(throttle(function (val) {
             newValue = val;
             if (origQuantity !== newValue) {
-                //if (xhrCanceller) xhrCanceller();
-                //self.apiModel.api.on('request', hangOnToXhr);
                 self.parentCart.submitting(true);
                 self.updateQuantity(newValue).then(function () {
-                    //xhrCanceller = null;
-                    //self.apiModel.api.off('request', hangOnToXhr);
                     return self.parentCart.get();
                 }).then(function () {
                     self.parentCart.submitting(false);
