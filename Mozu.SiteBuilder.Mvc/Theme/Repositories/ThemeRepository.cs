@@ -127,5 +127,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Repositories
         {
             return GetTheme(DEFAULT_THEME);
         }
+
+
+        public string GetLocalThemePath()
+        {
+            return _themeMetaDataProvider.LocalThemePath;
+        }
     }
 }

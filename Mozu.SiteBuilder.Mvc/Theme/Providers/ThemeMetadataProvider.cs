@@ -195,14 +195,14 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                 {
                     coreThemeDir = Path.GetFullPath(new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/");
                 }
-                //else
-                //{
-                //    if (!Path.IsPathRooted(coreThemeDir))
-                //    {
-                //        coreThemeDir = Path.GetFullPath(HostingEnvironment.MapPath(coreThemeDir));
+                else
+                {
+                    if (!Path.IsPathRooted(coreThemeDir))
+                    {
+                        coreThemeDir = Path.GetFullPath(HostingEnvironment.MapPath(coreThemeDir));
 
-                //    }
-                //}
+                    }
+                }
                 return coreThemeDir;
             }
         }
