@@ -162,12 +162,29 @@ Ext.define('Taco.view.product.Form', {
      * @private
      */
     goGoSingleSite: function (leaveTabs) {
+        var me = this;
         if (!leaveTabs) {
-            this.rebuildTabs();
+            me.rebuildTabs();
         }
         this.globalForm.isSingleSite = true;
-        this.tabPanel.hideTabAt(0);
-        this.tabPanel.setActiveItemAt(1);
+
+        if (!me.globalForm.validityOverride) {
+            me.globalForm.validityOverride = true;
+
+            this.globalForm.form.getFields().each(function (field) {
+                var origIsValidate = Object.getPrototypeOf(field).validate;
+                field.validate = function () {
+                    if (me.globalForm.isSingleSite) {
+                        return true;
+                    }
+                    return origIsValidate.apply(field, arguments);;
+                };
+
+            });
+        }
+
+        me.tabPanel.hideTabAt(0);
+        me.tabPanel.setActiveItemAt(1);
     },
 
     /**
@@ -175,6 +192,7 @@ Ext.define('Taco.view.product.Form', {
      * @private
      */
     goGoMultiSite: function (leaveTabs) {
+        var me = this;
         if (!leaveTabs) {
             this.rebuildTabs();
         }
@@ -184,6 +202,7 @@ Ext.define('Taco.view.product.Form', {
         this.rebuildTabs();
         this.tabPanel.showTabAt(0);
         this.tabPanel.setActiveItemAt(this.tabPanel.items.length - 1);
+       
     },
     
     savableStateCheck: function () {
