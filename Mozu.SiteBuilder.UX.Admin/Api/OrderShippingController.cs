@@ -214,6 +214,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "shipping/package/prepareshipment")]
         public async Task<Response<List<OrderPackage>>> PrepareShipment(PrepareShipmentArgs args)
         {
+
+            // ensure the packages are in a valid state
+            foreach (var packageId in args.PackageIds)
+            {
+                var packageDc = (await _orderWebApiClient.GetPackage(args.OrderId, packageId)).ReadAsSync();
+                if (String.IsNullOrEmpty(packageDc.PackagingType))
+                    packageDc.PackagingType = "CARRIER_BOX_SMALL";
+                if (packageDc.Measurements == null || packageDc.Measurements.Weight == null)
+                    packageDc.Measurements = new CommerceRuntime.Contracts.Commerce.PackageMeasurements { Weight = new Core.Api.Contracts.Measurement { Unit = "lbs", Value = 2m } };
+
+                await _orderWebApiClient.UpdatePackage(args.OrderId, packageId, packageDc);
+            }
+
+
             var dc = (await _orderWebApiClient.CreatePackageShipments(args.OrderId, args.PackageIds)).ReadAsSync();
             return List2( Mapper.Map<List<OrderPackage>>(dc) );
         }

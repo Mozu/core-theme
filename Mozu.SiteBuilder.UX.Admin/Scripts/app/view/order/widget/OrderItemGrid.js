@@ -831,7 +831,31 @@ weight: 2
         var grid = button.up("gridpanel"),
             data = grid.packageData;
         
-        window.open("http://whereisMyShippingLabel.com", "_blank")
+//        window.open("http://whereisMyShippingLabel.com", "_blank")
+        
+        // prepare the shipment
+        var afterShipmentReady = function() {
+            window.open('/admin/app/order/shipping/package/label?orderId=' + data.orderId + '&packageId=' + data.id); 
+        };
+        var config = {
+            url: '/admin/app/order/shipping/package/prepareshipment',
+            method: 'POST',
+            jsonData: {
+                orderId: data.orderId,
+                packageIds: [ data.id ]
+            },
+            success: afterShipmentReady
+        };
+
+        if (data.shipmentId === null || data.shipmentId === undefined)
+        {
+            Ext.Ajax.request(config);
+            alert("I'm doing stuff!");
+        }
+        else
+        {
+            afterShipmentReady();
+        }
     },
 
     viewPackingSlip: function (button, e) {
