@@ -25,5 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Repositories
         /// Returns the system default theme.
         /// </summary>
         Theme GetDefaultTheme();
+
+        string GetLocalThemePath();
     }
 }

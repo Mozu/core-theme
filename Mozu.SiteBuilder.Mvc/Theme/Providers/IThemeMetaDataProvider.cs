@@ -18,6 +18,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
         ThemeMetaData GetTheme(string theme, bool forDev);
 
         IEnumerable<string> ThemePaths { get; }
+        string LocalThemePath { get; }
 
     }
     internal class ThemeMetaData

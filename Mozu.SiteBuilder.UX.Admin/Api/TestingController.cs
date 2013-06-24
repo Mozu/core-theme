@@ -247,10 +247,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "theme/list")]
         public async Task<Response<List<ThemeDTO>>> GetListThemes()
         {
-            var localThemeDir =   new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/themes/";
+            var localThemeDir =   _themeRepository.GetLocalThemePath();
             //var localThemes = Directory.GetDirectories(localThemeDir);
             var entitlements = (await _tenantClient.GetSiteEntitlements(_apiContext.TenantId, _apiContext.SiteId)).ReadAsSync();
-           
+
+             
             var localThemes = entitlements.Items.Where(x => x.ApplicationType == "Theme")
                 .Select(x => x.ApplicationVersionId.ToString() )
                 .Union(Directory.GetDirectories(localThemeDir)
