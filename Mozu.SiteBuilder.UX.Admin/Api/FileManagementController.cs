@@ -66,14 +66,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                
-             
 
-                var ret =( await _documentWebApiClient.GetDocuments(documentListName : "files", pageSize : 200)).ReadAsSync();
+                vm= new List<FileManagementFile>();
+                
+                var pageSize = 200;
+                totalCount = 1;
+                for (var startIndex = 0; startIndex < totalCount; startIndex += pageSize)
+                {
+                    var ret = (await _documentWebApiClient.GetDocuments(documentListName: "files", pageSize: pageSize, startIndex: startIndex)).ReadAsSync();
+                    vm.AddRange(ret.Items.Select(AutoMapper.Mapper.Map<FileManagementFile>));
+                    totalCount = (int) ret.TotalCount;
+                    
+                }
+                
+
+
 
                 
-                vm = ret.Items.Select(x => AutoMapper.Mapper.Map<FileManagementFile>(x)).ToList();
-                totalCount = (int) ret.TotalCount;
+
+                
             }
 
             return List2(vm, totalCount);
