@@ -420,7 +420,7 @@ Ext.define('Taco.view.discount.Form', {
         var list = this.categoryList,
             listStore = list.getStore(),
             treeStore = Taco.core.data.StoreManager.getCategoryTreeBySite();
-        Ext.destroy(this.modal);
+        //Ext.destroy(this.modal);
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore
         });
@@ -442,13 +442,7 @@ Ext.define('Taco.view.discount.Form', {
                 clearSort: true,
                 autoLoad: true
             });
-        if (this.modal) {
-            this.modal.down('grid').getSelectionModel().deselectAll();
-            this.modal.show();
-            return;
-        }
-
-
+        
         this.modal = Ext.create('Taco.view.product.Modal', {
             store: gridStore
         });
@@ -457,6 +451,15 @@ Ext.define('Taco.view.discount.Form', {
             save: this.updateProductList,
             scope: this
         });
+
+        if (this.modal) {
+            this.modal.down('grid').getSelectionModel().deselectAll();
+            this.modal.show();
+            return;
+        }
+
+
+
     },
     /**
      * Removes a value from the list if the close icon was clicked.
@@ -505,7 +508,6 @@ Ext.define('Taco.view.discount.Form', {
         var me = this,
             list = me.productList,
             store = list.getStore();
-
         Ext.each(values, function(value) {
             if (!store.data.getByKey(value.getId())) {
                 store.add(value);
