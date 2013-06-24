@@ -80,6 +80,7 @@ Ext.define('Taco.view.discount.Form', {
                 ]
             }),
             listeners: {
+                afterrender: me.setTypeFieldVisibility,
                 change: me.onAmountTypeInputChange,
                 scope: me
             }
@@ -371,6 +372,7 @@ Ext.define('Taco.view.discount.Form', {
     */
     onAmountTypeInputChange: function(input, value) {
         var me = this;
+
         if (!me.rendered) {
             //return;
         }
@@ -386,6 +388,16 @@ Ext.define('Taco.view.discount.Form', {
         }
 
         //me.amountInput.hide();
+
+        me.setTypeFieldVisibility(me.amountTypeInput);
+
+        // calling .select() does not fire the change event, fire it manually.
+        //me.targetTypeInput.fireEvent('change', me.targetTypeInput, me.targetTypeInput.getValue());
+    },
+    
+    setTypeFieldVisibility: function (input) {
+        var value = input.getValue();
+        var me = this;
         if (value === "Percentage" || value === "Amount") {
             me.amountInput.show();
             if (me.targetTypeInput.getValue() === "Product") {
@@ -398,8 +410,7 @@ Ext.define('Taco.view.discount.Form', {
             me.amountInput.setValue(0);
 
         }
-        // calling .select() does not fire the change event, fire it manually.
-        //me.targetTypeInput.fireEvent('change', me.targetTypeInput, me.targetTypeInput.getValue());
+
     },
 
 
