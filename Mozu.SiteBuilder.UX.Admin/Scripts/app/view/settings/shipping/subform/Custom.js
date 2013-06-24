@@ -22,7 +22,7 @@ Ext.define('Taco.view.settings.shipping.subform.Custom', {
                 fieldLabel: 'Name',
                 labelAlign: 'top',
                 name: 'name',
-                value: customRate.type
+                value: customRate.name
             },
             {
                 xtype: 'selectfield',
