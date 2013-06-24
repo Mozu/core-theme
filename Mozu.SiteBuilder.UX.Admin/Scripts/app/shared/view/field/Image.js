@@ -126,6 +126,7 @@ Ext.define('Taco.shared.view.field.Image', {
             afterrender: this.onAfterRender,
             filedrop: this.onUploadFile,
             beginupload: this.onBeginUpload,
+            existingfile: this.onBeginUpload,
             scope: this
         });
 
