@@ -221,7 +221,7 @@
         createSDKObject: function(obj) {
             var me = this;
 
-            this.apiPromise = api.create(this.mozuType, $.extend({}, obj, this.toJS()), false).then(function (apiModel) {
+            this.apiPromise = api.create(this.mozuType, obj, false).then(function (apiModel) {
                 me.apiModel = apiModel;
                 $.each(apiModel.getAvailableActions(), function (ix, actionName) {
                     (actionName in me ? apiModel : me)[actionName] = function (data) {
@@ -232,7 +232,7 @@
                 });
 
                 apiModel.on('sync', function (data) {
-                    me.populate($.extend({}, data));
+                    me.populate($.extend(true, {}, data));
                     me.publish('update', data);
                 });
 
@@ -268,7 +268,8 @@
     return {
         extend: function (conf, initFunc) {
             var ctor = function (obj, parent) {
-                var me = this;
+                var me = this,
+                    objCopy = $.extend(true, {}, obj);
                 this.constructor = ctor;
                 this.__parentVM = parent;
                 if (conf) $.extend(this, conf);
@@ -278,7 +279,7 @@
                 this.initialized = true;
                 this.submitting = ko.observable(false);
                 if (this.mozuType) 
-                    this.createSDKObject(obj);
+                    this.createSDKObject(objCopy);
                 if (this.hasMessages)
                     makeMessageBus(this);
                 if (initFunc)

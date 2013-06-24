@@ -29,7 +29,7 @@
         api.on('spawn', checkForCartUpdates);
         var initial = $.getMozuData('cart');
         if (initial) {
-            checkForCartUpdates(initial);
+            checkForCartUpdates({ data: initial });
         } else {
             timeout = waitAndGetCart();
         }
