@@ -22,7 +22,7 @@ var ApiObject = (function () {
                     return returnObj;
                 } else {
                     utils.extend(me.data, rawJSON);
-                    delete me.data.unsynced;
+                    delete me.unsynced;
                     me.fire('sync', rawJSON, me.data);
                     me.api.fire('sync', me, rawJSON, me.data);
                     return me;
