@@ -734,6 +734,7 @@ weight: 2
             data = grid.packageData;
             // update the shipping code
             data.shippingMethodCode = item.key;
+            data.shippingMethodName = item.text;
             
             config = {
                 jsonData: [data],
