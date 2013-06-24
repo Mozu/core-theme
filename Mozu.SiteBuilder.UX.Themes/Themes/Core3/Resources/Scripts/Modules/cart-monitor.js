@@ -1,4 +1,4 @@
-﻿define(['jquery', 'modules/api'], function ($, api) {
+﻿define(['modules/jquery-plus', 'modules/api'], function ($, api) {
     $(document).ready(function () {
         var $cartCount = $('#mz-cart-count'), timeout;
         function waitAndGetCart() {
@@ -13,7 +13,7 @@
                     updateCartDetails(apiObject);
                     break;
                 case "cartitem":
-                    timeout = waitAndGetCart();
+                    if (!apiObject.unsynced) timeout = waitAndGetCart();
                     break;
             }
         }
@@ -27,6 +27,11 @@
         }
         api.on('sync', checkForCartUpdates);
         api.on('spawn', checkForCartUpdates);
-        timeout = waitAndGetCart();
+        var initial = $.getMozuData('cart');
+        if (initial) {
+            checkForCartUpdates(initial);
+        } else {
+            timeout = waitAndGetCart();
+        }
     });
 });

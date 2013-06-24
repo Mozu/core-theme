@@ -7,10 +7,10 @@ text.js
 shim.js
 modules/api.js
 modules/animatemodals.js
-modules/cart-monitor.js
-modules/function-throttler.js
 shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
 modules/jquery-plus.js
+modules/cart-monitor.js
+modules/function-throttler.js
 modules/loading-bars.js
 i18n.js
 nls/messages.js

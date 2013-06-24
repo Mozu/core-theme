@@ -7,13 +7,13 @@ text.js
 shim.js
 modules/api.js
 modules/animatemodals.js
+shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
+modules/jquery-plus.js
 modules/cart-monitor.js
 modules/function-throttler.js
 shim!vendor/hammer>Hammer
 shim!vendor/jquery.specialevent.hammer[jquery=jQuery,shim!vendor/hammer>Hammer=Hammer]
 modules/jquery-mobileevents.js
-shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
-modules/jquery-plus.js
 modules/loading-bars.js
 modules/login-links.js
 modules/message-dismisser.js
