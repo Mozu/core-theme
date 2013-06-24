@@ -45,8 +45,8 @@ Ext.define('Taco.view.discount.Index', {
                 }
 
                 // freeShipping
-                if (value == "FreeShipping") {
-                    return "Free Shipping";
+                if (value == "Free") {
+                    return "Free";
                 }
 
                 return Ext.emptyString;
