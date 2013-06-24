@@ -93,7 +93,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                                                   {
                                                                                                                       Name  = x.Name ,
                                                                                                                       LocaleCode = "en-US"
-                                                                                                                  }
+                                                                                                                  },
+                                                                                                                  IsActive = x.IsEnabled 
                                                                                                 }
 
 
