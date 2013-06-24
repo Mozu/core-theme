@@ -116,11 +116,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         _customerWebApiClient.UpdateAccountContact(dcContact, dcCust.Id, dcContact.Id);
                     }    
                 }
-                
 
-                retList.Add(Mapper.Map<ApiCustomer>((await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id)).ReadAsSync()));
+                await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
+                retList.Add( Mapper.Map<ApiCustomer>((await _customerWebApiClient.GetAccount(dcCust.Id)).ReadAsSync()));
             }
             return List2(retList);
+            
         }
 
 //        [WebGet(UriTemplate = "autocomplete/?query={query}")]
