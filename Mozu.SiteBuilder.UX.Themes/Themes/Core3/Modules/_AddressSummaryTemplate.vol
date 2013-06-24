@@ -5,4 +5,5 @@
     <span data-bind="text: Address.Address3(), visible: Address.Address3()"></span>
     <span data-bind="text: Address.CityOrTown() + ', ' + Address.StateOrProvince() + ' ' + Address.PostalOrZipCode()"></span>
     <span data-bind="text: Address.CountryCode()"></span>
+    <span data-bind="text: PhoneNumbers.Home(), visible: PhoneNumbers.Home()"></span>
 </script>
