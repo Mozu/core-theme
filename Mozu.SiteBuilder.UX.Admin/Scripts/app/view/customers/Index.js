@@ -51,5 +51,63 @@ Ext.define('Taco.view.customers.Index', {
             minWidth: 100,
             flex: 1
         }]
+    },
+    initComponent: function () {
+        var me = this;
+        this.tagStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerTags');
+        this. gridPanelConf= {
+            columns: [{
+                dataIndex: 'primaryFirstName',
+                text: 'First Name',
+                width: 130
+            }, {
+                dataIndex: 'primaryLastName',
+                text: 'Last Name',
+                width: 130
+            }, {
+                dataIndex: 'primaryEmail',
+                text: 'Email',
+                width: 200
+            }, {
+                dataIndex: 'primaryCityOrTown',
+                text: 'Location',
+                width: 150,
+                renderer: function (value, metaData, record) {
+                    return value ? [Ext.String.capitalize(value), record.get('primaryState')].join(', ') : '';
+                }
+            }, {
+                dataIndex: 'orderCount',
+                text: 'Total Orders',
+                width: 100
+            }, {
+                dataIndex: 'totalSpent',
+                text: 'Spent',
+                width: 100
+            }, {
+                dataIndex: 'groups',
+                text: 'Groups',
+                width:300,
+                renderer: function (value, metaData, record) {
+                    if (value && value.length) {
+                        var names = [];
+                        Ext.each(value || [], function (tagId) {
+                            var tagRecord = me.tagStore.getById(tagId);
+                            if (tagRecord) {
+                                names.push(tagRecord.get('Value'));
+                            }
+                                
+                            
+                        });
+
+                        if (names.length)
+                            return names.join(', ');
+                    }
+                },
+                minWidth: 100,
+                flex: 1
+            }]
+        }
+        
+        this.callParent(arguments);
     }
 });
