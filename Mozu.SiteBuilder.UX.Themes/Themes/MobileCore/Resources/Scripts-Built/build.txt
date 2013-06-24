@@ -1,19 +1,19 @@
 
-pages/common.js
+modules/common.js
 ----------------
-pages/common.js
+modules/common.js
+vendor/knockout-latest.js
 text.js
 shim.js
-shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
-modules/jquery-plus.js
-shim!vendor/hammer>Hammer
-shim!vendor/jquery.specialevent.hammer[jquery=jQuery,shim!vendor/hammer>Hammer=Hammer]
-modules/jquery-mobileevents.js
-vendor/knockout-latest.js
-ajax.js
 modules/api.js
 modules/animatemodals.js
 modules/cart-monitor.js
+modules/function-throttler.js
+shim!vendor/hammer>Hammer
+shim!vendor/jquery.specialevent.hammer[jquery=jQuery,shim!vendor/hammer>Hammer=Hammer]
+modules/jquery-mobileevents.js
+shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
+modules/jquery-plus.js
 modules/loading-bars.js
 modules/login-links.js
 modules/message-dismisser.js
@@ -24,25 +24,31 @@ modules/knockout-plus.js
 modules/knockout-viewmodel.js
 modules/models-user.js
 modules/models-address.js
+modules/models-price.js
+modules/models-product.js
+modules/models-faceting.js
 shim!vendor/jquery.tagcloud.0-0-1[jquery=jQuery]
 modules/tagcloud.js
 
 pages/product.js
 ----------------
-modules/models-price.js
-modules/models-product.js
 shim!vendor/swipe.min>Swipe
 modules/product-images.js
 pages/product.js
 
+pages/category.js
+----------------
+shim!vendor/jquery.history[jquery=jQuery]>History
+pages/category.js
+
 pages/cart.js
 ----------------
-modules/function-throttler.js
 modules/models-cart.js
 pages/cart.js
 
 pages/checkout.js
 ----------------
+shim!vendor/bootstrap/bootstrap-affix[modules/jquery-plus=jQuery]>jQuery
 nls/messages-checkout.js
 i18n!nls/messages-checkout
 modules/models-checkout.js

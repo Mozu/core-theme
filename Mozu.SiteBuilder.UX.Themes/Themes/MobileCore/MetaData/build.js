@@ -14,46 +14,49 @@
     skipPragmas: true,
     modules: [
         {
-            name: "pages/common",
+            name: "modules/common",
             include: [
-                'modules/jquery-plus',
-                'modules/jquery-mobileevents',
                 'knockout',
                 'text',
-                'ajax',
                 'shim',
                 'modules/api',
                 'modules/animatemodals',
                 'modules/cart-monitor',
+                'modules/function-throttler',
+                'modules/jquery-mobileevents',
+                'modules/jquery-plus',
                 'modules/loading-bars',
                 'modules/login-links',
                 'modules/message-dismisser',
                 'modules/knockout-viewmodel',
+                'modules/knockout-plus',
                 'modules/models-user',
                 'modules/models-address',
-                'modules/knockout-plus',
+                'modules/models-product',
+                'modules/models-faceting',
                 'modules/tagcloud'
             ],
             exclude: ['jquery', 'sdk', 'pciaas']
         },
         {
             name: "pages/product",
-            exclude: ["pages/common"],
-            insertRequire: ["pages/product"]
+            exclude: ["modules/common"]
+        },
+        {
+            name: "pages/category",
+            exclude: ["modules/common"]
         },
         {
             name: "pages/cart",
-            exclude: ["pages/common"],
-            insertRequire: ["pages/cart"]
+            exclude: ["modules/common"]
         },
         {
             name: "pages/checkout",
-            exclude: ["pages/common", 'pciaas'],
-            insertRequire: ["pages/checkout"]
+            exclude: ["modules/common", 'pciaas']
         },
         {
             name: "pages/myaccount",
-            exclude: ["pages/common"],
-            insertRequire: ["pages/myaccount"]
-        }    ]
+            exclude: ["modules/common"]
+        }
+    ]
 });
