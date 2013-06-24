@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                         {
                                                                                             new ServiceType()
                                                                                                 {
-                                                                                                    Code  = Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId ,
+                                                                                                    Code  = "custom_"+ x.RateType  ,
                                                                                                     Content = new ServiceTypeLocalizedContent()
                                                                                                                   {
                                                                                                                       Name  = x.Name ,
@@ -103,7 +103,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Mozu.ShippingAdmin.Contracts.CarrierConfiguration, CustomRate>()
                   .ForMember(x => x.Amount, opt => opt.MapFrom(x => x.Settings == null ? null : x.GetSettingValue(Mozu.ShippingAdmin.Contracts.Constants.Custom.Settings.Amount)))
                   .ForMember(x => x.RateType, opt => opt.MapFrom(x => x.Settings == null ? null : x.GetSettingValue(Mozu.ShippingAdmin.Contracts.Constants.Custom.Settings.Type)))
-                  .ForMember(x => x.Name, opt => opt.MapFrom(x => x.ConfiguredServiceTypes == null || x.ConfiguredServiceTypes.Count == 0 ? null : x.ConfiguredServiceTypes.First().Content));
+                  .ForMember(x => x.Name, opt => opt.ResolveUsing(x =>
+                      {
+                          return x.ConfiguredServiceTypes == null || x.ConfiguredServiceTypes.Count == 0 ? null : x.ConfiguredServiceTypes.First().Content.Name;
+                      } ));
 
                 
 
