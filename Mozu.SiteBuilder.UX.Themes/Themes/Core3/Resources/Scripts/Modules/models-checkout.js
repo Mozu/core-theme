@@ -2,13 +2,6 @@
     ["modules/jquery-plus", "modules/knockout-plus", "pciaas", "modules/knockout-viewmodel", "i18n!nls/messages-checkout", "i18n!nls/messages", "modules/api", "modules/models-user", "modules/models-address"],
     function ($, ko, PCIaaS, ViewModelPrototype, msg, genericMsg, api, UserModels, AddressModels) {
 
-
-        //function modelObservableValueIs(obsName, desiredValue) {
-        //    return function () {
-        //        return this[obsName]() == desiredValue;
-        //    }
-        //}
-
         function submitStep() {
             if (this.submit()) this.stepStatus("submitting");
         }
@@ -17,6 +10,13 @@
             this.stepStatus("incomplete");
         }
 
+        var ShippingPhone = ViewModelPrototype.extend($.extend(true, {}, AddressModels.phoneConf, {
+            observables: {
+                Home: {
+                    required: genericMsg.PhoneMissing
+                }
+            }
+        }));
         
         var ShippingAddress = ViewModelPrototype.extend({
             statics: {
@@ -30,7 +30,7 @@
             },
             submodels: {
                 "Address": AddressModels.StreetAddress,
-                "PhoneNumbers": AddressModels.PhoneNumbers
+                "PhoneNumbers": ShippingPhone
             },
             edit: editStep,
             nextStep: function () {

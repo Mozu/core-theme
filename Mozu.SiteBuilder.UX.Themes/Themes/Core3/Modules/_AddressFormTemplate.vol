@@ -72,4 +72,18 @@
             <span class="mz-validation-message" data-bind="text: Address.PostalOrZipCode.validationMessage() || '&nbsp;'"></span>
         </div>
     </div>
+    <div class="mz-form-field-row">
+        <div class="mz-form-field-cell">
+            <label for="shippingphone">Phone<span class="mz-required-field" data-bind="visible: PhoneNumbers.Home.required"> *</span>:</label>
+        </div>
+        <div class="mz-form-field-cell">
+          <!-- ko if: PhoneNumbers.Home.required -->
+            <input type="text" id="mz-shipping-address-phone" name="shippingphone" data-bind="value: PhoneNumbers.Home, css: { 'mz-invalid': PhoneNumbers.Home.invalid() }">
+            <span class="mz-validation-message" data-bind="text: PhoneNumbers.Home.validationMessage() || '&nbsp;'"></span>
+          <!-- /ko -->
+          <!-- ko if: !PhoneNumbers.Home.required -->
+            <input type="text" id="mz-shipping-address-phone" name="shippingphone" data-bind="value: PhoneNumbers.Home">
+          <!-- /ko -->
+        </div>
+    </div>
 </script>

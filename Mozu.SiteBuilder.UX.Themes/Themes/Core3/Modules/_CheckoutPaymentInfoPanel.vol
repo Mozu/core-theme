@@ -53,14 +53,6 @@
                 <div class="mz-form-fieldgroup">
                     <div class="mz-form-field-row">
                         <div class="mz-form-field-cell">
-                            <label for="billing-phone">Phone:</label>
-                        </div>
-                        <div class="mz-form-field-cell">
-                            <input type="text" id="billing-phone" name="billing-phone" data-bind="value: BillingContact.PhoneNumbers.Home">
-                        </div>
-                    </div>
-                    <div class="mz-form-field-row">
-                        <div class="mz-form-field-cell">
                             <label for="billing-email">Email<span class="mz-required-field"> *</span>:</label>
                         </div>
                         <div class="mz-form-field-cell">

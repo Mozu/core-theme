@@ -1,7 +1,7 @@
 ﻿define({
     root: {
         CurrencySymbol: "$",
-        GenericRequired: "This field is required",        StreetMissing: "Street address required",
+        GenericRequired: "This field is required",        PhoneMissing: "Phone number required",        StreetMissing: "Street address required",
         CityMissing:            "City or town required",
         StateProvMissing:       "State or province required",
         PostalCodeMissing:      "Postal code required",

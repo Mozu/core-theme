@@ -34,7 +34,7 @@
         window.checkoutVM = checkoutViewModel;
 
         checkoutViewModel.messages.subscribe(function (newValue) {
-            if (newValue) {
+            if (newValue && newValue.length) {
                 window.scrollTo(0, 0);
             }
             setTimeout(function () { affixer.options.offset = $rightcol.offset() }, 250);
@@ -51,5 +51,6 @@
                 setTimeout(function () { window.scrollTo(0, $reviewPanel.offset().top); }, 750);
             }
         });
+
     });
 });

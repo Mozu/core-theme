@@ -2,14 +2,15 @@
     ["modules/knockout-plus", "modules/knockout-viewmodel", "modules/api", "i18n!nls/messages"],
     function (ko, ViewModelPrototype, api, msg) {
 
-        var PhoneNumbers = ViewModelPrototype.extend({
+        var phoneConf = {
             observables: {
                 Home: {},
                 Work: {},
                 Mobile: {},
                 Fax: {}
             }
-        });
+        };
+        var PhoneNumbers = ViewModelPrototype.extend(phoneConf);
 
         // TODO: write a real KO binding for AddressSchemas, once the data is better
         var AddressSchemesPromise = api.get('addressschemas').then(function (r) {
@@ -112,6 +113,7 @@
             PhoneNumbers: PhoneNumbers,
             StreetAddress: ViewModelPrototype.extend(addressConf, constructAddress),
             addressConf: addressConf,
+            phoneConf: phoneConf,
             constructAddress: constructAddress
         };
     });
