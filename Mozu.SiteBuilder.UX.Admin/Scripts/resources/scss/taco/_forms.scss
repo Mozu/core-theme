@@ -117,6 +117,12 @@
       }
     }
 
+    .edit-option {
+      margin-left: px-to-rem(6px);
+      color: $color-neutral-70;
+      font-size: px-to-rem(10px);
+    }
+
   }
 
 }
