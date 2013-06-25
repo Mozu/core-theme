@@ -220,7 +220,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var packageDc = (await _orderWebApiClient.GetPackage(args.OrderId, packageId)).ReadAsSync();
                 if (String.IsNullOrEmpty(packageDc.PackagingType))
                     packageDc.PackagingType = "CARRIER_BOX_SMALL";
-                if (packageDc.Measurements == null || packageDc.Measurements.Weight == null)
+                if (packageDc.Measurements == null || packageDc.Measurements.Weight == null || packageDc.Measurements.Weight.Value <= 0)
                     packageDc.Measurements = new CommerceRuntime.Contracts.Commerce.PackageMeasurements { Weight = new Core.Api.Contracts.Measurement { Unit = "lbs", Value = 2m } };
 
                 await _orderWebApiClient.UpdatePackage(args.OrderId, packageId, packageDc);

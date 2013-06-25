@@ -161,7 +161,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Height, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Height : null))
                 .ForMember(x => x.Length, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Length : null))
                 .ForMember(x => x.Width, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Width : null))
-                .ForMember(x => x.Weight, op => op.MapFrom(dc => dc.Measurements != null ? Mapper.Map<decimal?>(dc.Measurements.Weight) ?? 0 : (decimal?)0))
+                .ForMember(x => x.Weight, op => op.MapFrom(dc => dc.Measurements != null ? Mapper.Map<decimal?>(dc.Measurements.Weight) ?? 2.5m : (decimal?)2.5m))
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
                 .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
