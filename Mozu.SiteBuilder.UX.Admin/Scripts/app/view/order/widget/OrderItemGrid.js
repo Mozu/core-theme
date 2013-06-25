@@ -851,7 +851,7 @@ weight: 2
         if (data.shipmentId === null || data.shipmentId === undefined)
         {
             Ext.Ajax.request(config);
-            alert("I'm doing stuff!");
+      
         }
         else
         {
@@ -861,26 +861,36 @@ weight: 2
 
     viewPackingSlip: function (button, e) {
         var grid = button.up("gridpanel"),
-            data = grid.packageData,
+            data = {
+                shippingMethodName: grid.packageData.shippingMethodName,
+                items: grid.packageData.items,
+                billingContact: this.order.data.billingContact,
+                shippingContact: this.order.data.shippingContact,
+                payment: this.order.data.payments[0],
+                order: this.order.data,
+                siteName: Taco.app.context.getCurrentSite().name
+            },
             win = window.open(),
             tpl;
+
+
 
         tpl = new Ext.XTemplate(
             '<div style="font: 14px/1.5 sans-serif;">',
                 '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody><tr>',
                     '<td style="padding: 4px 30px 20px 4px; width: 100%;">',
-                        '<h1 style="margin: 0px;">Store Name</h1>',
+                        '<h1 style="margin: 0px;">{siteName}</h1>',
                     '</td>',
                     '<td style="padding: 4px 30px 20px 4px;">',
                         '<h2 style="margin: 0px; white-space: nowrap;">PACKING SLIP</h2>',
                         '<table style="border-collapse: collapse; border-spacing: 0px;"><tbody><tr>',
                             '<td style="padding: 4px 30px 4px 4px;">',
                                 '<div style="font-weight: bold; white-space: nowrap;">Date:</div>',
-                                '<div style="white-space: nowrap;">07/06/2011</div>',
+                                '<div style="white-space: nowrap;">{order.createDate:date("M d g:ia")}</div>',
                             '</td>',
                             '<td style="padding: 4px 30px 4px 4px;">',
                                 '<div style="font-weight: bold; white-space: nowrap;">Order #:</div>',
-                                '<div style="font-weight: bold; white-space: nowrap;">1</div>',
+                                '<div style="font-weight: bold; white-space: nowrap;">{order.orderNumber}</div>',
                             '</td>',
                         '</tr></tbody></table>',
                     '</td>',
@@ -892,21 +902,20 @@ weight: 2
                     '</tr>',
                     '<tr>',
                         '<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">',
-                            '<div>8</div>',
-                            '<div>test tester</div>',
-                            '<div>5555 test road</div>',
-                            '<div>testville, TX 78726</div>',
-                            '<div>United States</div>',
-                            '<div>8055555555</div>',
-                            '<div>scott_hanagriff@volusion.com</div>',
+                            '<div>{billingContact.firstName} {billingContact.lastName}</div>',
+                            '<div>{billingContact.address1}</div>',
+                            '<div>{billingContact.cityOrTown}, {billingContact.state} {billingContact.zipCode}</div>',
+                            '<div>{billingContact.countryCode}</div>',
+                            '<div>{billingContact.homePhone}</div>',
+                            '<div>{billingContact.email}</div>',
                         '</td>',
                         '<td style="border-top: 2px solid black; font-size: 16px; font-weight: bold; padding: 4px 30px 20px 4px;">',
-                            '<div>8</div>',
-                            '<div>test tester</div>',
-                            '<div>5555 test road</div>',
-                            '<div>testville, TX 78726</div>',
-                            '<div>United States</div>',
-                            '<div>8055555555</div>',
+                            '<div>{shippingContact.firstName} {shippingContact.lastName}</div>',
+                            '<div>{shippingContact.address1}</div>',
+                            '<div>{shippingContact.cityOrTown}, {shippingContact.state} {shippingContact.zipCode}</div>',
+                            '<div>{shippingContact.countryCode}</div>',
+                            '<div>{shippingContact.homePhone}</div>',
+                            '<div>{shippingContact.email}</div>',
                         '</td>',
                     '</tr>',
                     '<tr>',
@@ -914,8 +923,8 @@ weight: 2
                         '<td style="font-weight: bold;">Shipping Method:</td>',
                     '</tr>',
                     '<tr>',
-                        '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 20px 4px;">Check by Mail</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">In-store Pickup</td>',
+                        '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 20px 4px;">{payment.paymentType}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">{shippingMethodName}</td>',
                     '</tr>',
                 '</tbody></table>',
                 '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody>',
@@ -927,11 +936,11 @@ weight: 2
                         '<td style="font-weight: bold; white-space: nowrap;">Total</td>',
                     '</tr>',
                     '<tpl for="items"><tr>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">BB-SGS</td>',
-                        '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 15px 4px; width: 100%;">Spa Gift Set</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">1</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">N/A</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">N/A</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{productCode}</td>',
+                        '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 15px 4px; width: 100%;">{productName}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{quantity}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">${unitPrice}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">${total}</td>',
                     '</tr></tpl>',
                 '</tbody></table>',
             '</div>'

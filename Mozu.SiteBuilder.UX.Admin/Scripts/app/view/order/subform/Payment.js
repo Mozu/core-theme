@@ -282,7 +282,7 @@ zipCode: "78704"
                     '<span class="seperator">|</span>',
                     '<span class="address">{billingContact.address1} {billingContact.address2} {billingContact.cityOrTown} {billingContact.state}  {billingContact.zipCode} {billingContact.countryCode}  </span>',
                     '<span class="seperator">|</span>',
-                    '<span class="phoneNumber">?512.666.6666?</span>',
+                    '<span class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</span>',
                 '</div>'
             ],
             data: data

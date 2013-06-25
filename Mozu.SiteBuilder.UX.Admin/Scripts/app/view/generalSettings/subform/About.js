@@ -8,7 +8,7 @@
 Ext.define('Taco.view.generalSettings.subform.About', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.core.ux.form.SelectField', 'Taco.store.TimeZones'],
-    title: 'Time Settings',
+    title: 'General',
     bodyCls: Taco.baseCSSPrefix + 'product-admin-subform',
     cls: Taco.baseCSSPrefix + 'form-section',
     initComponent: function () {
@@ -65,6 +65,12 @@ Ext.define('Taco.view.generalSettings.subform.About', {
 
 
         this.items = [
+            {
+                xtype: 'textfield',
+                name: 'websiteName',
+                fieldLabel: 'Web Site Name',
+                width:960
+            },
             me.timeSettings, {
             xtype: 'checkbox',
             name: 'daylightSaving',

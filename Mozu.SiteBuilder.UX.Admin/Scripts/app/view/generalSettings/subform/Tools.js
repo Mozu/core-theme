@@ -52,6 +52,7 @@ Ext.define('Taco.view.generalSettings.subform.Tools', {
         }, {
             xtype: "filefield",
             name: "gwtFile",
+            validate:function() { return true; },
             fieldLabel: "Upload your file for Google Webmaster Tools",
             labelAlign: "top",
             allowBlank: false,
