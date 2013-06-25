@@ -39,6 +39,17 @@ Ext.define('Taco.model.OrderPaymentInteraction', {
         'name': 'amount',
         'type': 'float',
         'useNull': true
+    },
+    {
+        'name': 'paymentId',
+        'type': 'string',
+        'useNull': true
+    }
+    ,
+    {
+        'name': 'createDate',
+        'type': 'date',
+        'useNull': true
     }]
 
 });

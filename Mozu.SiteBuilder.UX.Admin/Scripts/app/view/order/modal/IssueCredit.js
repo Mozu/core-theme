@@ -129,7 +129,7 @@ Ext.define('Taco.view.order.modal.IssueCredit', {
                     errorDialog.show();
                     return;
                 }
-                this.record.reload();
+                this.fireEvent('aftersave');
                 me.hide();
             },
             failure: function (response) {

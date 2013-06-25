@@ -109,6 +109,10 @@ Ext.define('Taco.view.order.Index', {
             text: 'Order Status',
             width: 100
         }, {
+            dataIndex: 'paymentStatus',
+            text: 'Payment Status',
+            width: 120
+        }, {
             dataIndex: 'shippingStatus',
             text: 'Shipping Status',
             width: 120
