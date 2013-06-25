@@ -3,9 +3,13 @@
  */
 Ext.define('Taco.view.category.Modal', {
     extend: 'Taco.core.ux.modal.Modal',
-    requires: ['Ext.tree.Panel', 'Ext.selection.CheckboxModel'],
+    requires: [
+        'Ext.tree.Panel',
+        'Ext.selection.CheckboxModel'
+    ],
 
     autoShow: true,
+    fullHeight: true,
     width: 700,
 
     initComponent: function () {
@@ -17,7 +21,7 @@ Ext.define('Taco.view.category.Modal', {
 
         this.tree = Ext.create('Ext.tree.Panel', {
             width: 644,
-            height: 120,
+            flex: 1,
             margin: '28 0 0 0',
             rootVisible: false,
             store: this.store,
@@ -62,6 +66,7 @@ Ext.define('Taco.view.category.Modal', {
 
         this.content = {
             xtype: 'container',
+            layout: 'vbox',
             items: [{
                 xtype: 'component',
                 cls: Taco.baseCSSPrefix + 'modal-title',

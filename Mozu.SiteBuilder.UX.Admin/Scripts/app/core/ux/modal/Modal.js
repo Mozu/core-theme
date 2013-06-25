@@ -16,6 +16,7 @@ Ext.define('Taco.core.ux.modal.Modal', {
     isModal: true,
     closeButton: true,
     destroyOnHide: true,
+    fullHeight: false,
 
     
     opacity: 1,
@@ -82,8 +83,16 @@ Ext.define('Taco.core.ux.modal.Modal', {
         }
     },
 
+    setMargins: function (forceWidth, forceHeight) {
+        return {
+            marginLeft: -(forceWidth || this.getEl().getWidth()) / 2,
+            marginTop: -(forceHeight || this.getEl().getHeight()) / 2 -10
+        };
+    },
+
     show: function () {
-        var marginLeft, marginTop, zIndex = this.getNextZIndex()
+        var forceHeight,
+            padding;
 
         this.fireEvent('beforeshow');
 
@@ -95,12 +104,33 @@ Ext.define('Taco.core.ux.modal.Modal', {
             display: 'block'
         });
 
-        marginLeft = -this.getEl().getWidth() / 2;
-        marginTop = -this.getEl().getHeight() / 2;
+        if (this.fullHeight) {
+            forceHeight = Ext.getBody().getViewSize().height - 200;
+            padding = parseFloat(this.getEl().getStyle('paddingTop')) + parseFloat(this.getEl().getStyle('paddingBottom'));
+            this.setHeight(forceHeight);
+            this.content.setHeight(forceHeight - padding - this.actions.getHeight());
+        }
+        
+        this.addListener('afterlayout', function () {
+            this.finishShow(forceHeight);
+        }, this, {single: true});
+
+        this.hidden = false;
+
+        this.doLayout();
+
+        //Ext.defer(this.finishShow, 1, this, [forceHeight]);
+
+        //this.hidden = false;
+    },
+
+    finishShow: function (forceHeight) {
+        var zIndex = this.getNextZIndex(),
+            margins = this.setMargins(undefined, forceHeight);
 
         this.getEl().setStyle({
-            marginLeft: marginLeft + 'px',
-            marginTop: marginTop - 10 + 'px'
+            marginLeft: margins.marginLeft + 'px',
+            marginTop: margins.marginTop - 10 + 'px'
         });
 
         if (zIndex > 1) {
@@ -118,7 +148,7 @@ Ext.define('Taco.core.ux.modal.Modal', {
             duartion: this.duration,
             easing: this.easingShow,
             to: {
-                marginTop: marginTop,
+                marginTop: margins.marginTop,
                 opacity: 1
             },
             listeners: {
@@ -134,6 +164,8 @@ Ext.define('Taco.core.ux.modal.Modal', {
 
         this.hidden = false;
         this.fireEvent('show');
+
+        this.printHiearchy();
     },
 
     hide: function () {
@@ -195,13 +227,13 @@ Ext.define('Taco.core.ux.modal.Modal', {
 
     getNextZIndex: function () {
         var highest = 0
-        Ext.each(Ext.query('.x-window:not(.x-window-ghost)'), function () {
+        Ext.each(Ext.query('.x-window:not(.x-window-ghost), .x-layer'), function () {
             var num = window.parseInt(Ext.fly(this).getStyle('zIndex'))
 
             if (!window.isNaN(num) && window.isFinite(num) && num > highest) {
                 highest = num
             }
-        })
+        });
 
         return highest + 1
     }

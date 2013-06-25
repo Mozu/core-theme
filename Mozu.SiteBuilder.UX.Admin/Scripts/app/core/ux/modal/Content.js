@@ -97,7 +97,7 @@ Ext.define('Taco.core.ux.modal.Content', {
 
         this.isHidden = false;
 
-        this.setPosition();
+        this.doTheNeedful();
 
         if (this.autoSize) {
             this.setAutoHeight();
@@ -112,7 +112,7 @@ Ext.define('Taco.core.ux.modal.Content', {
     /**
      * @private
      */
-    setPosition: function () {
+    doTheNeedful: function () {
         var bodyHeight = Ext.getBody().getViewSize().height;
 
         if (this.isHidden) {
@@ -122,6 +122,14 @@ Ext.define('Taco.core.ux.modal.Content', {
         this.setContentHeight(bodyHeight - 200);
 
         return bodyHeight;
+    },
+
+    setMargins: function () {
+        var margins = this.callParent(arguments);
+
+        margins.marginTop = -this.contentHeight / 2;
+
+        return margins;
     },
 
     /**
@@ -141,6 +149,8 @@ Ext.define('Taco.core.ux.modal.Content', {
             itemsHeight += item.getHeight();
         });
 
+        this.contentHeight = contentHeight;
+
         //  Check to see if the content modal will be larder than the screen
         if (contentHeight <= headerHeight + itemsHeight) {
             return;
@@ -156,6 +166,8 @@ Ext.define('Taco.core.ux.modal.Content', {
         var contentContainer = this.down('contentcontainer');
 
         this.content.setHeight(height);
+
+        this.contentHeight = height;
 
         if (contentContainer && contentContainer.setHeight) {
             contentContainer.setHeight(height);

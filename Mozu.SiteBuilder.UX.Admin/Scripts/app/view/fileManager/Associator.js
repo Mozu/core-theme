@@ -28,6 +28,8 @@ Ext.define('Taco.view.fileManager.Associator', {
     },
     useTilePanel: true,
 
+    title: 'Associator',
+
     allowNavigation: false,
 
     gridPanelConf: {
@@ -120,4 +122,4 @@ Ext.define('Taco.view.fileManager.Associator', {
         // TODO: Select items based on the array passed in.
         return this.callParent(arguments);
     }
-})
+});

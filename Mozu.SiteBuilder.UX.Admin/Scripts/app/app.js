@@ -144,6 +144,17 @@ Ext.application({
                 }
                 return me;
             },
+            printHiearchy: function (index, tab) {
+                if (!tab) tab = '\t';
+                if (!index) index = 0;
+                console.log(tab + '\t' + index + '. ', this.alias, this.$className, this.layout, this.cls);
+                if (this.items) {
+                    this.items.each(function (item, index) {
+                        item.printHiearchy(index, tab + '\t');
+                        //dump(item, index, tab + '\t')
+                    });
+                }
+            }
         });
 
         Ext.override(Ext.form.field.HtmlEditor, {
