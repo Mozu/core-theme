@@ -137,7 +137,7 @@ Ext.define('Taco.core.ux.modal.Modal', {
             this.cover.getEl().setStyle({
                 zIndex: zIndex
             })
-            this.getEl().setStyle({`
+            this.getEl().setStyle({
                 zIndex: zIndex + 1
             })
         }
