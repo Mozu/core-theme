@@ -49,7 +49,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// <summary>
         /// Amount of funds to withdraw to pay for this order.
         /// </summary>        
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(EmitDefaultValue = false,Name = "amount")]
         public decimal? Amount { get; set; }
+
+        [DataMember(Name = "createDate")]
+        public DateTime? CreateDate { get; set; }
+
+
+        [DataMember(Name = "paymentId")]
+        public string PaymentId { get; set; }
     }
 }

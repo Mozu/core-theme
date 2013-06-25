@@ -73,6 +73,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     };
                     order.AuthorizationInfo.CaptureAmount = order.AuthorizationInfo.TotalAmount - order.AuthorizationInfo.AmountCollected;
                     order.AuthorizationInfo.CanCapture = order.AuthorizationInfo.AuthReady && order.AuthorizationInfo.CaptureAmount > 0;
+               
                 })
                 .AfterMap((dc, order) => {
                     // fill out UnpackagedItems list
@@ -143,6 +144,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.InteractionType, op => op.MapFrom(dc => dc.InteractionType))
                 .ForMember(x => x.CheckNumber, op => op.MapFrom(dc => dc.CheckNumber))
                 .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
+                .ForMember( x=> x.CreateDate, op => op.MapFrom( dc=> dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null ))
+                .ForMember(x => x.PaymentId, op => op.MapFrom(dc => dc.PaymentId))
                 ;
 
             Mapper.CreateMap<ShippingDC.Package, OrderPackage>()

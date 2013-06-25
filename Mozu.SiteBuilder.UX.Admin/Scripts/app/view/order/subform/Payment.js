@@ -45,7 +45,7 @@ Ext.define('Taco.view.order.subform.Payment', {
     initActionsMenu: function () {
         var me = this,
             canVoidPayment = false,
-            canApplyCheck= false,
+            canApplyCheck = false,
             canCapture = false,
             canAppPayment = false,
             canCreditPayment = false,
@@ -75,24 +75,50 @@ Ext.define('Taco.view.order.subform.Payment', {
             canCreditPayment = availableActions.some(function (element) {
                 return (element == "CreditPayment");
             });
+         
         }
         
-        // actions that go in the header actions menu
-        me.voidTransactionAction = new Ext.Action({
-            text: 'Void Transaction',
-            handler: me.voidTransaction,
-            disabled: !canVoidPayment,
-            scope: this
-        });
-        
-        me.addPaymentAction = new Ext.Action({
-            text: 'Add Payment',
-            disabled:true,
-            //disabled: !canAddPayment
-            handler: me.addPayment,
-            scope: this
-        });
 
+        // actions that go in the header actions menu
+        if (me.voidTransactionAction) {
+            me.voidTransactionAction.setDisabled(!canVoidPayment);
+        } else {
+            me.voidTransactionAction = new Ext.Action({
+                text: 'Void Transaction',
+                handler: me.voidTransaction,
+                disabled: !canVoidPayment,
+                scope: this
+            });
+
+        }
+
+        if (me.addPaymentAction) {
+            me.addPaymentAction.setDisabled(true);
+        } else {
+            me.addPaymentAction = new Ext.Action({
+                text: 'Add Payment',
+                disabled: true,
+                //disabled: !canAddPayment
+                handler: me.addPayment,
+                scope: this
+            });
+        }
+
+        if (me.issueCreditPaymentAction) {
+            me.issueCreditPaymentAction.setDisabled(!canCreditPayment);
+        } else {
+            me.issueCreditPaymentAction = new Ext.Action({
+                text: 'Issue Credit',
+                disabled: !canCreditPayment,
+                handler: function () {
+                    var record = me.record.paymentsStore.getAt(0);
+                    me.issueCredit({
+                        record: record
+                    });
+                },
+                scope: this
+            });
+        }
 
 
         // add the tools the header using the pre defined actions above;
@@ -111,7 +137,8 @@ Ext.define('Taco.view.order.subform.Payment', {
                 items: [
                     me.addPaymentAction,
                     //me.issueCreditAction,
-                    me.voidTransactionAction
+                    me.voidTransactionAction,
+                    me.issueCreditPaymentAction
                 ]
             }
         });
@@ -134,45 +161,45 @@ Ext.define('Taco.view.order.subform.Payment', {
         this.paymentsStore = this.record.paymentsStore;
         //todo:rework below to work off of interactions.
         //todo: remove issue credit from here.
-        //this.interactionsStore = this.paymentsStore.getAt(0).interactionsStore;
+        this.interactionsStore = this.paymentsStore.count() ? this.paymentsStore.getAt(0).interactionsStore : this.paymentsStore;
         me.transactionList = Ext.create('Ext.view.View', {
             cls: "orderform-payment-transactionlist",
-            listeners: {
-                itemclick: {
-                    fn: function(view, record, item, index, e, eOpts) {
-                        if (e.target.className == "paymentAction") {
-                            var action = e.target.getAttribute("paymentAction");
-                            //if user clicks on an action link in the item, execute the action and pass the record
-                            if (this[action]) {
-                                this[action]({
-                                    record: record
-                                });
-                            }
-                        }
-                    },
-                    scope:me
-                }
-            },
+            //listeners: {
+            //    itemclick: {
+            //        fn: function(view, record, item, index, e, eOpts) {
+            //            if (e.target.className == "paymentAction") {
+            //                var action = e.target.getAttribute("paymentAction");
+            //                //if user clicks on an action link in the item, execute the action and pass the record
+            //                if (this[action]) {
+            //                    this[action]({
+            //                        record: record
+            //                    });
+            //                }
+            //            }
+            //        },
+            //        scope:me
+            //    }
+            //},
             itemSelector: "div.payment-transaction",
             tpl: [
                 '<tpl for=".">',
                     //'<tpl if="amountCollected!==0">',
                     '<div paymentId="{id}"  class="payment-transaction">',
                         
-                        '<tpl if="values.amountCollected &gt; 0">',
-                            '<a class="paymentAction" paymentAction="issueCredit">Issue Credit</a>',
-,                        '</tpl>',
+//                        '<tpl if="values.amountCollected &gt; 0">',
+//                            '<a class="paymentAction" paymentAction="issueCredit">Issue Credit</a>',
+//,                        '</tpl>',
 
                         '<div class="details">',
-                            ' {createDate:date("M j, Y")} ',
+                            ' {createDate:date("M d g:ia")} ',
                         '<span class="seperator">|</span>',
-                            ' Payment id: {id} ',
+                            ' Payment id: {paymentId} ',
                         '<span class="seperator">|</span>',
-                            ' Paid: ${amountCollected} ',
+                            ' Amount: ${amount} ',
                         '<span class="seperator">|</span>',
-                            ' <span class="creditCard">{cardType} {cardNumber}</span> ',
+                            'Type:  {interactionType} ',
                         '<span class="seperator">|</span>',
-                            ' Transaction ID: {paymentServiceTransactionId}',
+                            ' Transaction ID: {gatewayInteractionId}',
                         '</div>',
 
 
@@ -180,7 +207,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                     //'</tpl>',
                 '</tpl>'
             ],
-            store: this.paymentsStore
+            store: this.interactionsStore
         });
 
         
@@ -341,7 +368,15 @@ zipCode: "78704"
         }
         
         var issueCreditModal = Ext.create('Taco.view.order.modal.IssueCredit', {
-            record : config.record
+            record: config.record,
+            listeners: {
+                //aftersave: me.onRecordChange,
+                aftersave:function () {
+                    me.record.reload();
+                    
+                },
+                scope:me
+            }
         });
 
         issueCreditModal.show();
@@ -416,6 +451,21 @@ zipCode: "78704"
         me.statusRow.destroy();
         me.paymentDetails.destroy();
         me.transactionList.destroy();
+
+        //not sure why i need to do this but oh well....debug later
+        //doesnt work
+        //me.record.paymentsStore.loadRawData(me.record.data.payments);
+
+        me.record.payments().removeAll();
+        Ext.each(me.record.data.payments, function (paymentRaw) {
+            var paymentRecord = Ext.create('Taco.model.OrderPayment', paymentRaw);
+            paymentRecord.interactions().removeAll();
+            Ext.each(paymentRecord.data.interactions, function (interactionRaw) {
+                var paymentInteractionRecord = Ext.create('Taco.model.OrderPaymentInteraction', interactionRaw);
+                paymentRecord.interactions().add(paymentInteractionRecord);
+            });
+            me.record.payments().add(paymentRecord);
+        });
         
         //re-build the ui components
         me.initUI();
