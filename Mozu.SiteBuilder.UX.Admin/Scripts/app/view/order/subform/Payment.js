@@ -132,7 +132,9 @@ Ext.define('Taco.view.order.subform.Payment', {
         var me = this;
 
         this.paymentsStore = this.record.paymentsStore;
-        
+        //todo:rework below to work off of interactions.
+        //todo: remove issue credit from here.
+        //this.interactionsStore = this.paymentsStore.getAt(0).interactionsStore;
         me.transactionList = Ext.create('Ext.view.View', {
             cls: "orderform-payment-transactionlist",
             listeners: {
