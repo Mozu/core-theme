@@ -82,6 +82,7 @@ Ext.define('Taco.view.order.widget.Package', {
         // initialize the header;
         me.header = me.getHeaderTemplate();
 
+        this.getHeaderData();
         
         me.grid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
             record: this.record,

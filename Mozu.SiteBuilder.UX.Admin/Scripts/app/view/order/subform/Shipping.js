@@ -61,7 +61,6 @@ Ext.define('Taco.view.order.subform.Shipping', {
         var me = this,
             billingContact = this.record.get("billingContact");
 
-        
         me.unpackagedItems = Ext.create('Taco.view.order.widget.UnpackagedItems', {
 
             record: me.record,
@@ -76,7 +75,8 @@ Ext.define('Taco.view.order.subform.Shipping', {
                 orderTotal: me.record.get("itemsOrdered"),
                 shippedItemTotal: me.record.get("itemsShipped"),
                 pendingItemTotal: me.record.get("itemsNotShipped"),
-                shippingMethod: me.record.get("shippingMethod") || me.record.get("shippingMethodCode"),
+                shippingMethod: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode"),
+                weight: me.record.get("weight"),
 
                 // billing contact info
                 firstName: billingContact.firstName,
