@@ -75,8 +75,10 @@ Ext.define('Taco.view.order.Index', {
             dataIndex: 'createDate',
             text: 'Order Date',
             minWidth: 180,
+            xtype: 'datecolumn',
+            format: 'M d g:ia',
             //resizable: false,
-            flex: 1
+           
         }, {
             dataIndex: 'billingContact',
             text: 'First Name',
@@ -113,6 +115,7 @@ Ext.define('Taco.view.order.Index', {
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',
+            flex:1,
             menuItems: [
             {
                 text: 'Edit',

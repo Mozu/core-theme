@@ -7,5 +7,9 @@
         model: 'Taco.model.Order',
         pageSize: 50,
         remoteSort: true,
-        remoteFilter: true
+        remoteFilter: true,
+        storeManagerConfig: {
+            createOnly:true,
+            autoLoad: true
+        },
     });

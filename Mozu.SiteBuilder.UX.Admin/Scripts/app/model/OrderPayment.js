@@ -5,7 +5,8 @@ Ext.define('Taco.model.OrderPayment', {
     extend: 'Taco.core.data.Model',
     requires: [
         'Ext.data.association.HasMany',
-        'Ext.data.association.BelongsTo'
+        'Ext.data.association.BelongsTo',
+        'Taco.model.OrderPaymentInteraction'
     ],
     fields: [
     {
