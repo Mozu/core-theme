@@ -169,29 +169,29 @@ Ext.define('Taco.view.product.Form', {
         this.globalForm.buildForm();
 
 
-        // if (!me.globalForm.validityOverride) {
-        //     me.globalForm.validityOverride = true;
+         if (!me.globalForm.validityOverride) {
+             me.globalForm.validityOverride = true;
 
-        //     this.globalForm.form.getFields().each(function (field) {
-        //         var origIsValidate = Object.getPrototypeOf(field).validate,
-        //             fields = me.form.getFields().filterBy(function (_field) {
-        //                 return _field.name == field.name && _field != field;
-        //             });
-        //         field.validate = function () {
-        //             var ret = origIsValidate.apply(field, arguments);
-        //             if (!ret) {
-        //                 fields.each(function (_field) {
-        //                     if (_field.validate()) {
-        //                         ret = true;
-        //                     }
+             this.globalForm.form.getFields().each(function (field) {
+                 var origIsValidate = Object.getPrototypeOf(field).validate,
+                     fields = me.form.getFields().filterBy(function (_field) {
+                         return _field.name == field.name && _field != field;
+                     });
+                 field.validate = function () {
+                     var ret = origIsValidate.apply(field, arguments);
+                     if (!ret) {
+                         fields.each(function (_field) {
+                             if (_field.validate()) {
+                                 ret = true;
+                             }
 
-        //                 });
-        //             }
-        //             return ret;
-        //         };
+                         });
+                     }
+                     return ret;
+                 };
 
-        //     });
-        // }
+             });
+         }
 
         me.tabPanel.hideTabAt(0);
         me.tabPanel.setActiveItemAt(1);
