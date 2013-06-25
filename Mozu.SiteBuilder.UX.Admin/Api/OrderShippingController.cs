@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.ServiceModel.Web;
 using System.Text;
 using System.Threading.Tasks;
@@ -218,10 +221,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var packageId in args.PackageIds)
             {
                 var packageDc = (await _orderWebApiClient.GetPackage(args.OrderId, packageId)).ReadAsSync();
-                if (String.IsNullOrEmpty(packageDc.PackagingType))
+                //if (String.IsNullOrEmpty(packageDc.PackagingType))
                     packageDc.PackagingType = "CARRIER_BOX_SMALL";
-                if (packageDc.Measurements == null || packageDc.Measurements.Weight == null || packageDc.Measurements.Weight.Value <= 0)
-                    packageDc.Measurements = new CommerceRuntime.Contracts.Commerce.PackageMeasurements { Weight = new Core.Api.Contracts.Measurement { Unit = "lbs", Value = 2m } };
+                //if (packageDc.Measurements == null || packageDc.Measurements.Weight == null || packageDc.Measurements.Weight.Value <= 0)
+                    packageDc.Measurements = new CommerceRuntime.Contracts.Commerce.PackageMeasurements { 
+                        Weight = new Core.Api.Contracts.Measurement { Unit = "lbs", Value = 2m },
+                        Height = null,
+                        Length = null,
+                        Width = null
+                    };
 
                 await _orderWebApiClient.UpdatePackage(args.OrderId, packageId, packageDc);
             }
@@ -232,13 +240,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [WebGet(UriTemplate = "shipping/package/label")]
-        public async Task<Response<List<OrderPackage>>> GetPackageLabel([FromUri]string orderId, [FromUri]string packageId)
+        public async Task<HttpResponseMessage> GetPackageLabel([FromUri]string orderId, [FromUri]string packageId)
         {
-            var response = await _orderWebApiClient.GetPackageLabel(orderId, packageId);
+            var serviceResponse = await _orderWebApiClient.GetPackageLabel(orderId, packageId);
 
-            var content = await response.ReadAsAsync();
-            string contentType = response.ResponseMessage.Content.Headers.ContentType.ToString();
-            return EmptyList2<OrderPackage>();
+            // var contentStream = await response; // .ReadAsAsync();
+            var httpContent = serviceResponse.ResponseMessage.Content;
+     
+            var contentStream = await httpContent.ReadAsStreamAsync();
+            if (contentStream.Position == 0)
+            {
+                var myResponse = new HttpResponseMessage(HttpStatusCode.OK);
+                myResponse.Content = new StreamContent(contentStream);
+                myResponse.Content.Headers.ContentLength = serviceResponse.ResponseMessage.Content.Headers.ContentLength;
+                myResponse.Content.Headers.ContentType = serviceResponse.ResponseMessage.Content.Headers.ContentType;
+                myResponse.Content.Headers.LastModified = serviceResponse.ResponseMessage.Content.Headers.LastModified;
+                return myResponse;
+            }
+            else
+                throw new InvalidOperationException("fuck");
+
+//             var contentType = contentStream.Headers.ContentType;
+//             var lastModified = contentStream.Headers.LastModified;
+//             byte[] contents = await contentStream.ReadAsAsync<byte[]>();
+// 
+//             var resp = new HttpResponseMessage(HttpStatusCode.OK);
+//             // IMPORTANT: dont dispose stream!
+//             resp.Content = new StreamContent(new MemoryStream(contents));
+// 
+//             resp.Content.Headers.ContentLength = contents.Length;
+//             resp.Content.Headers.ContentType = contentType;
+//             resp.Content.Headers.LastModified = lastModified;
         }
     }
 }
