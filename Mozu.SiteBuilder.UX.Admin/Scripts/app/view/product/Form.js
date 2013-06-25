@@ -9,7 +9,7 @@ Ext.define('Taco.view.product.Form', {
         'Taco.view.product.GlobalForm',
         'Taco.view.product.SiteForm'
     ],
-
+    
     layout: 'fit',
     /**
      * @protected
@@ -19,8 +19,7 @@ Ext.define('Taco.view.product.Form', {
 
         this.inSitesStore = this.record.productInSitesStore();
         
-
-
+        this.title = this.record.data.productName;
       
 
         this.stores = [this.inSitesStore, this.record.getOptions(), this.record.getVariations()];
