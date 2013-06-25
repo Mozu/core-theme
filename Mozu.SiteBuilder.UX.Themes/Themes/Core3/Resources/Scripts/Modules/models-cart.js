@@ -34,6 +34,10 @@
         var origQuantity = this.Quantity(), newValue;
         this.Quantity.subscribe(throttle(function (val) {
             newValue = val;
+            if (parseInt(val) === 0) {
+                self.Quantity(origQuantity);
+                return;
+            }
             if (origQuantity !== newValue) {
                 self.parentCart.submitting(true);
                 self.updateQuantity(newValue).then(function () {
