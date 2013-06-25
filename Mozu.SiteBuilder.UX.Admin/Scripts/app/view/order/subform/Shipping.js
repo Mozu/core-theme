@@ -108,7 +108,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
             var dataItem = data[i-1];
             var billingContact = me.record.get("billingContact");
             
-            packages.push( Ext.create('Taco.view.order.widget.Package', {
+            packages.push(Ext.create('Taco.view.order.widget.Package', {
                     record: this.record,
                     gridHidden:false,
                     packageData: dataItem,
@@ -120,7 +120,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                         title: "Package " + i,
                         shipmentStatus: dataItem.status,
                         itemTotal: dataItem.totalQuantity,
-                        weight: dataItem.totalWeight,
+                        weight: dataItem.weight,
                         shippingMethod: dataItem.shippingMethodName || dataItem.ShippingMethodCode,
                         trackingNumber: dataItem.trackingNumber,
                         
