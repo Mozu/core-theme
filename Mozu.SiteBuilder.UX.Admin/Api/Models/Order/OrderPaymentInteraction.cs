@@ -9,14 +9,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// <summary>
         /// Unique identifier of this payment transaction interaction.
         /// </summary>
-        [DataMember(Name="id", EmitDefaultValue = false)]
+        [DataMember(Name = "id", EmitDefaultValue = false)]
         public string Id { get; set; }
 
         /// <summary>
         /// Unique identifier of the gateway interaction. Used for credit card transactions, where the  
         /// payment service creates a GatewayInteractionId for each transaction interaction. 
         /// </summary>
-        [DataMember(Name="gatewayInteractionId", EmitDefaultValue = false)]
+        [DataMember(Name = "gatewayInteractionId", EmitDefaultValue = false)]
         public int? GatewayInteractionId { get; set; }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// Types of transaction interactions
         /// "Authorization," "Capture," "AuthorizeAndCapture,"  "Void," "Credit," "CheckRequested," or "CheckReceived."
         /// </summary>
-        [DataMember(Name="interactionType", EmitDefaultValue = false)]
+        [DataMember(Name = "interactionType", EmitDefaultValue = false)]
         public string InteractionType { get; set; }
 
         /// <summary>
@@ -43,13 +43,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// Status of the payment transaction interaction
         /// "Success" or "Failure."
         /// </summary>        
-        [DataMember(Name="status", EmitDefaultValue = false)]
+        [DataMember(Name = "status", EmitDefaultValue = false)]
         public string Status { get; set; }
 
         /// <summary>
         /// Amount of funds to withdraw to pay for this order.
         /// </summary>        
-        [DataMember(EmitDefaultValue = false,Name = "amount")]
+        [DataMember(EmitDefaultValue = false, Name = "amount")]
         public decimal? Amount { get; set; }
 
         [DataMember(Name = "createDate")]
@@ -58,5 +58,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name = "paymentId")]
         public string PaymentId { get; set; }
+
+        [DataMember(Name = "gatewayTransactionId")]
+        public string GatewayTransactionId { get; set; }
     }
+
+
 }

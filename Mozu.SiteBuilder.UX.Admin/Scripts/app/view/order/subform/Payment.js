@@ -119,6 +119,27 @@ Ext.define('Taco.view.order.subform.Payment', {
                 scope: this
             });
         }
+        
+        if (me.applyCheckAction) {
+            me.applyCheckAction.setDisabled(!canApplyCheck);
+        } else {
+            me.applyCheckAction = new Ext.Action({
+                text: 'Apply Check',
+                disabled: !canApplyCheck,
+                handler: function () {
+                    var record = me.record.paymentsStore.getAt(0);
+                    me.applyCheck({
+                        record: record
+                    });
+                },
+                scope: this
+            });
+        }
+
+
+        
+
+
 
 
         // add the tools the header using the pre defined actions above;
@@ -138,7 +159,8 @@ Ext.define('Taco.view.order.subform.Payment', {
                     me.addPaymentAction,
                     //me.issueCreditAction,
                     me.voidTransactionAction,
-                    me.issueCreditPaymentAction
+                    me.issueCreditPaymentAction,
+                    me.applyCheckAction
                 ]
             }
         });
@@ -193,13 +215,13 @@ Ext.define('Taco.view.order.subform.Payment', {
                         '<div class="details">',
                             ' {createDate:date("M d g:ia")} ',
                         '<span class="seperator">|</span>',
-                            ' Payment id: {paymentId} ',
+                            ' id: {id} ',
                         '<span class="seperator">|</span>',
                             ' Amount: ${amount} ',
                         '<span class="seperator">|</span>',
                             'Type:  {interactionType} ',
                         '<span class="seperator">|</span>',
-                            ' Transaction ID: {gatewayInteractionId}',
+                            ' Transaction ID: {gatewayTransactionId}',
                         '</div>',
 
 
@@ -290,7 +312,7 @@ zipCode: "78704"
                     itemId: "statusField",
                     cls: "statusField",
                     tpl: '{.}',
-                    data: this.record.get("paymentStatus")
+                    data: data.captureData.status
                 }, {
                     xtype: 'unitfield',
                     width: 120,
@@ -353,7 +375,53 @@ zipCode: "78704"
         // call the model method to persist the change
         this.record.voidTransaction(config);
     },
-    
+    applyCheck: function (config) {
+        var me = this;
+        //public class ApplyCheckArgs
+        //{
+        //    public string OrderId { get; set; }
+        //    public OrderPayment Payment { get; set; }
+        //    public string CheckNumber { get; set; }
+        //    public decimal Amount { get; set; }
+        //}
+        
+
+        var paymentRecord = config.record;
+        paymentRecord.applyCheck({
+            jsonData: {
+                orderId: me.record.getId(),
+                payment: paymentRecord.data,
+                checkNumber: 123,
+                amount : me.record.get('total')
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    Ext.message("error applying check");
+
+                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                        text: "error applying check"
+                    });
+                    errorDialog.show();
+                    return;
+                }
+                me.record.reload();
+            },
+            failure: function (response) {
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "error applying check";
+
+                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                    text: msg
+                });
+                errorDialog.show();
+            },
+            scope: this
+        });
+    },
     issueCredit: function (config) {
         var me = this;
 

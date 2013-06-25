@@ -146,6 +146,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
                 .ForMember( x=> x.CreateDate, op => op.MapFrom( dc=> dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null ))
                 .ForMember(x => x.PaymentId, op => op.MapFrom(dc => dc.PaymentId))
+                .ForMember(x => x.GatewayTransactionId, op => op.MapFrom(dc => dc.GatewayTransactionId))
+
                 ;
 
             Mapper.CreateMap<ShippingDC.Package, OrderPackage>()
