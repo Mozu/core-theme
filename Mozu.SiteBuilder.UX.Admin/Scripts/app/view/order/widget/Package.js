@@ -88,7 +88,7 @@ Ext.define('Taco.view.order.widget.Package', {
             record: this.record,
             // data to be loaded into the store
             data: me.packageData.items,
-
+            order: me.record,
             // needed for toolbar actions
             packageData: me.packageData,
 

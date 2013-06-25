@@ -215,6 +215,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             packageItem.ProductCode = itemInOrder.ProductCode;
             packageItem.ProductName = itemInOrder.ProductName;
+            packageItem.Total = itemInOrder.Total;
+            packageItem.UnitPrice = itemInOrder.UnitPrice;
             packageItem.Weight = itemInOrder.UnitWeight.HasValue ? packageItem.Quantity * itemInOrder.UnitWeight : null;
         }
     

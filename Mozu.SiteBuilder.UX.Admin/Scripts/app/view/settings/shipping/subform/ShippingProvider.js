@@ -48,10 +48,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
             
             xtype: 'formform',
             autoScroll: true,
-            isValid: function () {
-                console.log('fuu bar');
-                return true;
-            },
+         
             width: 400,
             layout: {
                 type: 'vbox',

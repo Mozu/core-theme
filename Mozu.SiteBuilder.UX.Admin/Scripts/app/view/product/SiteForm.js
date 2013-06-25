@@ -6,7 +6,7 @@
 
 Ext.define('Taco.view.product.SiteForm', {
     //extend: 'Taco.core.ux.form.Form',
-    extend: 'Taco.core.ux.form.NavForm',
+    extend: 'Taco.core.ux.form.NavForm2',
     alias: 'widget.productsiteform',
     requires: [
         'Taco.view.product.subform.General',

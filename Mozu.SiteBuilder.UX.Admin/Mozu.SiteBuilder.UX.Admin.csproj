@@ -563,6 +563,7 @@
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\browser\FilterList.js" />
     <Content Include="Scripts\app\core\ux\EditContainer.js" />
+    <Content Include="Scripts\app\core\ux\form\NavForm2.js" />
     <Content Include="Scripts\app\core\ux\form\field\PageTemplate.js" />
     <Content Include="Scripts\app\core\ux\form\NavForm.js" />
     <Content Include="Scripts\app\core\ux\form\OnOffSliderButton.js" />
