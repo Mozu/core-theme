@@ -208,6 +208,33 @@
   }
 
   // form navigation
+  
+  .#{$vprefix}form-nav-container {
+    margin-left: 200px;
+  }
+
+  .#{$vprefix}form-nav {
+    background-color: $color-neutral-95;
+    border: 1px solid border-for($color-neutral-95);
+    //margin-top: -40px;
+    padding: 19px 39px;
+    position: fixed;
+    width: 180px;
+    //z-index: 2;
+
+    li {
+      cursor: pointer;
+      font-size: px-to-rem(16);
+      line-height: px-to-rem(20);
+      margin-top: 20px;
+
+      &:nth-of-type(1) {
+        margin-top: 0px;
+      }
+    }
+  }  
+
+
   .#{$vprefix}form-card-nav-body {
     background-color: $color-neutral-95;
     border: 1px solid border-for($color-neutral-95);

@@ -136,13 +136,11 @@ Ext.define('Taco.core.ux.modal.Modal', {
         if (zIndex > 1) {
             this.cover.getEl().setStyle({
                 zIndex: zIndex
-            })
+            });
             this.getEl().setStyle({
                 zIndex: zIndex + 1
-            })
+            });
         }
-
-        //this.doLayout();
 
         this.getEl().animate({
             duartion: this.duration,

@@ -36,29 +36,50 @@ Ext.define('Taco.view.product.GlobalForm', {
             persistChangesToModel: true
         };
 
-        this.items = [
-            Ext.create('Taco.view.product.subform.General', subformCfg)
-        ];
-
-        if (!this.isSingleSite) {
-            Ext.Array.push(this.items, [
-                Ext.create('Taco.view.product.subform.Inventory', subformCfg),
-                Ext.create('Taco.view.product.subform.Properties', subformCfg),
-                Ext.create('Taco.view.product.subform.Extras', subformCfg)
-            ]);
-        }
-
-        Ext.Array.push(this.items, [
-            Ext.create('Taco.view.product.subform.Shipping', subformCfg),
-            Ext.create('Taco.view.product.subform.SEO', subformCfg)
-        ]);
-
         this.navStore = Ext.create('Ext.data.Store', {
-            fields: ['title'],
-            data: this.items
+            fields: ['title']
         });
 
         this.callParent(arguments);
+
+        this.buildForm();
+    },
+
+    buildForm: function () {
+        var items = [],
+            subFormCfg = {
+                isGlobal: true,
+                product: this.record,
+                persistChangesToModel: true
+            };
+
+        items = [
+            Ext.create('Taco.view.product.subform.General', subFormCfg)
+        ];
+
+        if (!this.isSingleSite) {
+            Ext.Array.push(items, [
+                Ext.create('Taco.view.product.subform.Inventory', subFormCfg),
+                Ext.create('Taco.view.product.subform.Properties', subFormCfg),
+                Ext.create('Taco.view.product.subform.Extras', subFormCfg)
+            ]);
+        }
+
+        Ext.Array.push(items, [
+            Ext.create('Taco.view.product.subform.Shipping', subFormCfg),
+            Ext.create('Taco.view.product.subform.SEO', subFormCfg)
+        ]);
+
+        this.navStore.loadRawData(items);
+
+        // if (this.rendered) {
+        //     this.removeAll();
+        //     this.add(items);   
+        // } else {
+        //     this.items = items;
+        // }
+        this.formContainer.removeAll();
+        this.formContainer.add(items);
     },
 
     addSaveTasks: function (tasks) {

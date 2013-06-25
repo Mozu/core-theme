@@ -30,33 +30,48 @@ Ext.define('Taco.view.product.SiteForm', {
     persistChangesToModel: true,
 
     initComponent: function () {
-        var subFormCfg, subFormReadOnlyCfg;
+        var subFormCfg,
+            items = [];
 
-        this.defaults = this.defaults || {};  // TODO: Are these two lines necessary?
+        this.defaults = this.defaults || {};
         this.defaults.isSingleSite = this.isSingleSite;
 
         this.siteId = this.record.get('siteId');
 
-        subFormCfg = {
-            record: this.record,
-            product: this.product,
-            productInSiteInfo: this.productInSiteInfo,
-            isSingleSite: this.isSingleSite,
-            isGlobal: false,
-            persistChangesToModel: true
-        };
-
-        subFormReadOnlyCfg = Ext.apply({}, subFormCfg, {
-            readOnly: !this.isSingleSite,
-            record: this.product
+        this.navStore = Ext.create('Ext.data.Store', {
+            fields: ['title']
         });
-        
-        this.items = [
+
+        this.callParent(arguments);
+
+        this.buildForm();
+
+        this.on({
+            overrideChange: this.handleOverrideChange,
+            scrollspy: this.updateScrollPosition,
+            render:this.handleOverrideChange,
+                
+            scope: this
+        });
+    },
+
+    buildForm: function () {
+        var items = [],
+            subFormCfg = {
+                record: this.record,
+                product: this.product,
+                productInSiteInfo: this.productInSiteInfo,
+                isSingleSite: this.isSingleSite,
+                isGlobal: false,
+                persistChangesToModel: true
+            };
+
+        Ext.Array.push(items, [
             Ext.create('Taco.view.product.subform.General', subFormCfg)
-        ];
+        ]);
 
         if (this.isSingleSite) {
-            Ext.Array.push(this.items, [
+            Ext.Array.push(items, [
                 Ext.create('Taco.view.product.subform.Inventory', subFormCfg),
                 Ext.create('Taco.view.product.subform.Properties', subFormCfg),
                 Ext.create('Taco.view.product.subform.Extras', subFormCfg),
@@ -66,31 +81,23 @@ Ext.define('Taco.view.product.SiteForm', {
             
         }
 
-        Ext.Array.push(this.items, [
+        Ext.Array.push(items, [
             
             Ext.create('Taco.view.product.subform.Categories', subFormCfg),
             Ext.create('Taco.view.product.subform.Merchandising', subFormCfg),
             Ext.create('Taco.view.product.subform.SEO', subFormCfg)
         ]);
 
-        this.navStore = Ext.create('Ext.data.Store', {
-            fields: ['title'],
-            data: this.items
-        });
+        this.navStore.loadRawData(items);
 
-
-        this.callParent(arguments);
-
-        this.on({
-            overrideChange: this.handleOverrideChange,
-            scrollspy: this.updateScrollPosition,
-            render:this.handleOverrideChange,
-                
-            scope: this
-        });
-       // this.handleOverrideChange();
-       
-
+        // if (this.rendered) {
+        //     this.removeAll();
+        //     this.add(items);   
+        // } else {
+        //     this.items = items;
+        // }
+        this.formContainer.removeAll();
+        this.formContainer.add(items);
     },
 
     constructor: function () {
