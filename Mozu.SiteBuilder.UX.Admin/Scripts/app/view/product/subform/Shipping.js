@@ -67,12 +67,15 @@ Ext.define('Taco.view.product.subform.Shipping', {
         this.on('afterrender', function () {
             var weight = this.findField('packageWeight');
             if (!weight.getValue()) {
-                this.suspendEvents(false);
+               
                 weight.setValue(1);
-                weight.resetOriginalValue();
-                this.resumeEvents();
+                this.record.set('packageWeight', 1);
+               
+             
             }
-        });
+        },this, {
+            delay :100
+        } );
     }
 
 });
