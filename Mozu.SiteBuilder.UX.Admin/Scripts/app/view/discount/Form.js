@@ -34,6 +34,8 @@ Ext.define('Taco.view.discount.Form', {
             labelAlign: 'top',
             allowBlank: false,
             width: 600,
+            enforceMaxLength: true,
+            maxLength: 80,
             emptyText: 'Enter a discount name'
         });
 
