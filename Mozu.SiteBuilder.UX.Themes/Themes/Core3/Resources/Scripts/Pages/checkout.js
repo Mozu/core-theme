@@ -31,6 +31,15 @@
         var rcOffset = $rightcol.offset();
         var affixer = $rightcol.css('left', rcOffset.left).affix({ offset: rcOffset }).data('affix');
 
+
+        $(window).on('resize', function () {
+            if ($rightcol.hasClass('affix')) {
+                $rightcol.css('position', 'static').css('left', $rightcol.offset().left).css('position', '');
+            } else {
+                $rightcol.css('left', $rightcol.offset().left);
+            }
+        });
+
         window.checkoutVM = checkoutViewModel;
 
         checkoutViewModel.messages.subscribe(function (newValue) {
