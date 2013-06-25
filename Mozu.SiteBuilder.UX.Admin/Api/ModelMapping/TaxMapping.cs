@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using AutoMapper;
+using Mozu.SiteSettings.General.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -20,8 +21,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
-            AutoMapper.Mapper.CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.Tax.TaxRate, Mozu.ProductAdmin.Contracts.TaxRate>();
-            AutoMapper.Mapper.CreateMap<Mozu.ProductAdmin.Contracts.TaxRate, Mozu.SiteBuilder.UX.Admin.Api.Models.Tax.TaxRate>();
+            AutoMapper.Mapper.CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.Tax.TaxRate, TaxableTerritory>()
+                      .ForMember(x => x.StateOrProvinceCode, opt => opt.MapFrom(x => x.StateCode));
+            AutoMapper.Mapper.CreateMap<TaxableTerritory, Mozu.SiteBuilder.UX.Admin.Api.Models.Tax.TaxRate>()
+                .ForMember(x => x.StateCode, opt => opt.MapFrom(x => x.StateOrProvinceCode));
         }
     }
 }

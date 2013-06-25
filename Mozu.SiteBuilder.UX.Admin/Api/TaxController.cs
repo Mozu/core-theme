@@ -10,7 +10,8 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using System.Net.Http;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Tax;
 using AutoMapper;
-using DC = Mozu.ProductAdmin.Contracts;
+using Mozu.SiteSettings.General.Contracts.Clients;
+using DC = Mozu.SiteSettings.General.Contracts;
 using System.ServiceModel;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 
@@ -19,18 +20,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [ServiceContract]
     public class TaxController : BaseController
     {
-        ITaxRateWebApiClient _taxClient;
-        private readonly CollectionTaskUnMapper<TaxRate, DC.TaxRate> _taxMapper = new CollectionTaskUnMapper<TaxRate, DC.TaxRate>();
+        
+        private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
+        private readonly CollectionTaskUnMapper<TaxRate, DC.TaxableTerritory> _taxMapper = new CollectionTaskUnMapper<TaxRate, DC.TaxableTerritory>();
 
-        public TaxController(ITaxRateWebApiClient taxClient)
+        public TaxController(ITaxRateWebApiClient taxClient , Mozu.SiteSettings.General.Contracts.Clients.IGeneralSettingsWebApiClient  generalSettingsWebApiClient)
         {
-            _taxClient = taxClient;
+            
+            _generalSettingsWebApiClient = generalSettingsWebApiClient;
         }
 
         [WebInvoke(UriTemplate = "create")]
         public async Task<Response<List<TaxRate>>> Create(List<TaxRate> taxRates)
         {
-            IEnumerable<TaxRate> results = await _taxMapper.PerformAction(taxRates, t => _taxClient.AddRate(t));
+
+            IEnumerable<TaxRate> results = await _taxMapper.PerformAction(taxRates, t => _generalSettingsWebApiClient.AddTaxableTerritory( t));
 
             return List2(results.ToList());
         }
@@ -38,15 +42,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(UriTemplate = "edit")]
         public async Task<Response<List<TaxRate>>> Edit(List<TaxRate> taxRates)
         {
-            IEnumerable<TaxRate> results = await _taxMapper.PerformAction(taxRates, t => _taxClient.UpdateRate(t, t.CountryCode, t.StateCode));
+            var dcTaxes = Mapper.Map<List<DC.TaxableTerritory>>(taxRates);
+            var retDcTaxes = (await _generalSettingsWebApiClient.UpdateTaxableTerritories(dcTaxes)).ReadAsSync();
+            var retTaxes = Mapper.Map<List<TaxRate>>(retDcTaxes);
 
-            return List2(results.ToList());
+
+            return List2(retTaxes);
         }
 
         [WebInvoke(Method = "POST", UriTemplate = "delete")]
         public async Task<Response<TaxRate>> Delete(List<TaxRate> vms)
         {
-            IEnumerable<TaxRate> results = await _taxMapper.PerformAction(vms, t => _taxClient.DeleteRate(t.CountryCode, t.StateCode));
+            IEnumerable<TaxRate> results = await _taxMapper.PerformAction(vms, t => _generalSettingsWebApiClient.RemoveTaxableTerritory(t.CountryCode, t.StateOrProvinceCode));
 
             return SuccessWithTotal2<TaxRate>(results.Count());
         }
@@ -54,11 +61,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "list")]
         public async Task<Response<List<TaxRate>>> GetTaxRates([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            var res = await _taxClient.GetRates(pagingParams.startIndex, pagingParams.pageSize);
-            var ret = res.ReadAsSync();
-            var taxRates = Mapper.Map<List<TaxRate>>(ret.Items);
+            var res = (await _generalSettingsWebApiClient.GetTaxableTerritories());
+            if (res.ResponseMessage.IsSuccessStatusCode)
+            {
+                var taxRates = Mapper.Map<List<TaxRate>>(res.ReadAsSync ());
 
-            return List2(taxRates, (int) ret.TotalCount);
+                return List2(taxRates);
+            }
+            return EmptyList2 < TaxRate>();
+
         }
     }
 }

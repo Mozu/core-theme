@@ -50,18 +50,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.Address1, opt => opt.MapFrom(x => x.Address1))
                   .ForMember(x => x.Address2, opt => opt.MapFrom(x => x.Address2))
                   .ForMember(x => x.Address3, opt => opt.MapFrom(x => x.Address3))
-                  .ForMember(x => x.Address4, opt => opt.Ignore() )
+                  .ForMember(x => x.Address4, opt => opt.Ignore())
                   .ForMember(x => x.CityOrTown, opt => opt.MapFrom(x => x.CityOrTown))
-                  .ForMember(x => x.CompanyOrOrganization, opt => opt.MapFrom(x => x.SenderName ))
-                  .ForMember(x => x.CountryCode, opt => opt.MapFrom(x => x.Country ))
-                    .ForMember(x => x.PostalOrZipCode, opt => opt.MapFrom(x => x.PostalOrZipCode))
-                  .ForMember(x => x.StateOrProvince, opt => opt.MapFrom(x => x.StateOrProvince));
+                  .ForMember(x => x.CompanyOrOrganization, opt => opt.MapFrom(x => x.SenderName))
+                  .ForMember(x => x.CountryCode, opt => opt.MapFrom(x => x.Country))
+                  .ForMember(x => x.PostalOrZipCode, opt => opt.MapFrom(x => x.PostalOrZipCode))
+                  .ForMember(x => x.StateOrProvince, opt => opt.MapFrom(x => x.StateOrProvince))
+                  .ForMember(x => x.WorkPhone, opt => opt.MapFrom(x => x.Phone ));
 
             Mapper.CreateMap<Contact, SiteShippingOriginAddress>()
                   .ForMember(x => x.Address1, opt => opt.MapFrom(x => x.Address1))
                   .ForMember(x => x.Address2, opt => opt.MapFrom(x => x.Address2))
                   .ForMember(x => x.Address3, opt => opt.MapFrom(x => x.Address3))
-
+                  .ForMember(x => x.Phone , opt=> opt.MapFrom( x=> string.IsNullOrEmpty( x.WorkPhone ) ? x.HomePhone : x.WorkPhone  ))
                   .ForMember(x => x.CityOrTown, opt => opt.MapFrom(x => x.CityOrTown))
                   .ForMember(x => x.SenderName, opt => opt.MapFrom(x => x.CompanyOrOrganization))
                   .ForMember(x => x.Country, opt => opt.MapFrom(x => x.CountryCode))
