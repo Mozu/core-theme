@@ -427,7 +427,7 @@
                 User: UserModels.User
             },
             observables: {
-                CouponCode: {},
+                couponCode: {},
                 Subtotal: { numeric: 2 },
                 ShippingTotal: { numeric: 2 },
                 TaxTotal: { numeric: 2 },
@@ -465,10 +465,11 @@
             addCoupon: function() {
                 var self = this;
                 this.submittingCoupon(true);
-                this.applyCoupon(this.CouponCode()).then(function() {
+                this.applyCoupon(this.couponCode()).then(function() {
                     return self.get();
                 }).then(function() {
                     self.submittingCoupon(false);
+                    self.couponCode('');
                 });
             },
             submit: function() {
