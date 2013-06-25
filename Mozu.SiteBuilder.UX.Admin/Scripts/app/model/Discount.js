@@ -43,7 +43,8 @@ Ext.define('Taco.model.Discount', {
         },
         {
             name: 'maxRedemptionCount',
-            type: 'int'
+            type: 'int',
+            useNull: true
         },
         {
             name: 'requiresCoupon',
