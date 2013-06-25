@@ -214,7 +214,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "shipping/package/prepareshipment")]
         public async Task<Response<List<OrderPackage>>> PrepareShipment(PrepareShipmentArgs args)
         {
-
             // ensure the packages are in a valid state
             foreach (var packageId in args.PackageIds)
             {
