@@ -8,6 +8,7 @@ Ext.define('Taco.view.order.Header', {
     initComponent: function () {
         this.cls = [this.cls, Taco.baseCSSPrefix + 'order-detail-header'].join(' ');
 
+        console.log(this.renderData);
         this.renderTpl = [
             '<div class="taco-order-detail-header-section order-data">',
                 '<label>Order Total</label>',

@@ -860,12 +860,30 @@ weight: 2
     },
 
     viewPackingSlip: function (button, e) {
-        console.log('OrderItemGrid.viewPackingSlip()');
-        // view packing slip. open in new tab
         var grid = button.up("gridpanel"),
-            data = grid.packageData;
-        
-        window.open("http://whereisMyPackingSlip.com", "_blank")
+            data = grid.packageData,
+            win = window.open(),
+            tpl;
+
+        tpl = new Ext.XTemplate(
+            '<h2>Order {orderId}</h2>',
+            '<table style="table-layout: fixed; border-collapse: collapse; border-spacing: 0px; width: 100%; border: 1px solid black; font: 16px/2.0 sans-serif;">',
+                '<thead><tr>',
+                    '<th style="width: 10%; text-align: left; border: 1px solid black; padding: 2px 8px;">Quantity</th>',
+                    '<th style="width: 20%; text-align: left; border: 1px solid black; padding: 2px 8px;">Code</th>',
+                    '<th style="width: 70%; text-align: left; border: 1px solid black; padding: 2px 8px;">Product</th>',
+                '</tr></thead>',
+                '<tbody>',
+                    '<tpl for="items"><tr>',
+                        '<td style="text-align: left; border: 1px solid black; padding: 2px 8px;">{quantity}</td>',
+                        '<td style="text-align: left; border: 1px solid black; padding: 2px 8px;">{productCode}</td>',
+                        '<td style="text-align: left; border: 1px solid black; padding: 2px 8px;">{productName}</td>',
+                    '</tr></tpl>',
+                '</tbody>',
+            '</table>'
+        );
+
+        Ext.fly(win.document.body).setHTML(tpl.apply(data));
     }
     
 });
