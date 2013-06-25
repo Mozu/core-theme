@@ -8,6 +8,7 @@ Ext.define('Taco.core.ux.modal.BrowserModal', {
     extend: 'Taco.core.ux.modal.Content',
 
     autoShow: true,
+    fullHeight: true,
     width: 800,
 
     mixins: {
@@ -38,6 +39,13 @@ Ext.define('Taco.core.ux.modal.BrowserModal', {
         this.callParent(arguments);
 
         this.initBrowserListeners();
+    },
+
+    setMargins: function (forceWidth, forceHeight) {
+        return {
+            marginLeft: -(forceWidth || this.getEl().getWidth()) / 2,
+            marginTop: -(forceHeight || this.getEl().getHeight()) / 2 -10
+        };
     },
 
     onSave: function () {

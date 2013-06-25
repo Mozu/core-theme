@@ -102,3 +102,13 @@
   border-style: $border-style;
   border-color: border-for($background-color);
 }
+
+@mixin clear-fix () {
+  &::after {
+    clear: both;
+    content: '';
+    display: block;
+    height: 0px;
+    visibility: hidden;
+  }
+}

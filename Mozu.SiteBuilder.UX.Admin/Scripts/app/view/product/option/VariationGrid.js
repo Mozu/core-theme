@@ -9,6 +9,7 @@ Ext.define('Taco.view.product.option.VariationGrid', {
 
     requires: ['Ext.grid.plugin.CellEditing'],
 
+    disableSelection: true,
     
 
     initComponent: function () {
@@ -92,7 +93,10 @@ Ext.define('Taco.view.product.option.VariationGrid', {
 
         this.plugins = [
             Ext.create('Ext.grid.plugin.CellEditing', {
-                clicksToEdit: 1
+                clicksToEdit: 1,
+                isCellEditable: function (record, columnHeader) {
+                    debugger;
+                }
                 
             })
         ];
@@ -104,7 +108,7 @@ Ext.define('Taco.view.product.option.VariationGrid', {
         };
 
         this.on({
-            itemclick: this.onItemClick,
+            cellclick: this.onCellClick,
             scope: this
         });
     },
@@ -119,13 +123,14 @@ Ext.define('Taco.view.product.option.VariationGrid', {
         this.fireEvent('editoption', this, el.getAttribute('data-attribute-fqn'));
     },
 
-    onItemClick: function (grid, record, item, index, e) {
-        if (!Ext.fly(e.target).hasCls('invalidate')) return;
-
-        e.stopPropagation();
-        e.preventDefault();
-
-        record.set('isActive', !record.get('isActive'));
+    onCellClick: function (grid, td, cellIndex, record, tr, rowIndex, e, eOtps) {
+        var el = Ext.fly(e.target);
+        if (el.hasCls('invalidate')) {
+            e.stopPropagation();
+            e.preventDefault();
+            record.set('isActive', !record.get('isActive'));
+            return;
+        }
     },
 
     findAttributeName: function (record) {

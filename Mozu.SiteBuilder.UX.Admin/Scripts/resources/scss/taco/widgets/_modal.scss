@@ -4,12 +4,16 @@
     font-size: 1em;
     position: absolute;
     z-index: 300;
-    top: 18%;
+    top: 50%;
     left: 50%;
     margin-left: -5000px;
     margin-top: -5000px;
-    background: white;
     opacity: 0;
+    // margin-left: -200px;
+    // margin-right: -200px;
+    // opacity: 1;
+    background: white;
+    
     width: 25em;
     max-width: 50em;
     padding: 28px;
@@ -30,6 +34,8 @@
     }
     
     .#{$vprefix}actions {
+      @include clear-fix;
+
       .#{$vprefix}action {
         float: right;
         margin: 0.7em 0 0 0.7em;
