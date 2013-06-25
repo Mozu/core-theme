@@ -216,20 +216,31 @@
   .#{$vprefix}form-nav {
     background-color: $color-neutral-95;
     border: 1px solid border-for($color-neutral-95);
-    //margin-top: -40px;
     padding: 19px 39px;
     position: fixed;
     width: 180px;
-    //z-index: 2;
 
     li {
+      border-left: 3px solid transparent;
       cursor: pointer;
       font-size: px-to-rem(16);
       line-height: px-to-rem(20);
+      margin-left: -40px;
       margin-top: 20px;
+      padding-left: 38px;
+      @include transition(color 0.2s, border-color 0.2s);
 
       &:nth-of-type(1) {
         margin-top: 0px;
+      }
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &.active {
+        color: $color-theme-base;
+        border-left-color: $color-theme-base;
       }
     }
   }  
