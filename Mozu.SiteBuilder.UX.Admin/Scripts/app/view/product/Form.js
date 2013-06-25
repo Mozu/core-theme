@@ -166,30 +166,32 @@ Ext.define('Taco.view.product.Form', {
             me.rebuildTabs();
         }
         this.globalForm.isSingleSite = true;
+        this.globalForm.buildForm();
 
-        if (!me.globalForm.validityOverride) {
-            me.globalForm.validityOverride = true;
 
-            this.globalForm.form.getFields().each(function (field) {
-                var origIsValidate = Object.getPrototypeOf(field).validate,
-                    fields = me.form.getFields().filterBy(function (_field) {
-                        return _field.name == field.name && _field != field;
-                    });
-                field.validate = function () {
-                    var ret = origIsValidate.apply(field, arguments);
-                    if (!ret) {
-                        fields.each(function (_field) {
-                            if (_field.validate()) {
-                                ret = true;
-                            }
+        // if (!me.globalForm.validityOverride) {
+        //     me.globalForm.validityOverride = true;
 
-                        });
-                    }
-                    return ret;
-                };
+        //     this.globalForm.form.getFields().each(function (field) {
+        //         var origIsValidate = Object.getPrototypeOf(field).validate,
+        //             fields = me.form.getFields().filterBy(function (_field) {
+        //                 return _field.name == field.name && _field != field;
+        //             });
+        //         field.validate = function () {
+        //             var ret = origIsValidate.apply(field, arguments);
+        //             if (!ret) {
+        //                 fields.each(function (_field) {
+        //                     if (_field.validate()) {
+        //                         ret = true;
+        //                     }
 
-            });
-        }
+        //                 });
+        //             }
+        //             return ret;
+        //         };
+
+        //     });
+        // }
 
         me.tabPanel.hideTabAt(0);
         me.tabPanel.setActiveItemAt(1);
@@ -206,7 +208,8 @@ Ext.define('Taco.view.product.Form', {
         }
         
         this.globalForm.isSingleSite = false;
-        this.globalForm.loadForm(undefined, true);
+        this.globalForm.buildForm();
+        //this.globalForm.loadForm(undefined, true);
         this.rebuildTabs();
         this.tabPanel.showTabAt(0);
         this.tabPanel.setActiveItemAt(this.tabPanel.items.length - 1);
@@ -262,7 +265,7 @@ Ext.define('Taco.view.product.Form', {
      * @return {Boolean} True if the product is only on one site, false if it's shared
      */
     singleSiteCheck: function () {
-        return this.inSitesStore.data.length === 1;
+        return this.inSitesStore.count() === 1;
     },
 
     /**
