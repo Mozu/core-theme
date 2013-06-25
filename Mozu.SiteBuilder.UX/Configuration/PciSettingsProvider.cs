@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using Mozu.SiteBuilder.Mvc.Orders;
+using Mozu.Core.Settings;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -7,7 +8,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
     {
         public string GetPaymentApiBase()
         {
-            return ConfigurationManager.AppSettings["pciPaymentApi"];
+            return MozuConfigurationManager.AppSettings("service-url-StorefrontCardsWebApi");
         }
     }
 }
