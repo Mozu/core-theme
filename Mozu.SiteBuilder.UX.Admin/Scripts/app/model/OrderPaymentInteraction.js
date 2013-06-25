@@ -44,8 +44,12 @@ Ext.define('Taco.model.OrderPaymentInteraction', {
         'name': 'paymentId',
         'type': 'string',
         'useNull': true
-    }
-    ,
+    },
+    {
+        'name': 'gatewayTransactionId',
+        'type': 'string',
+        'useNull': true
+    },
     {
         'name': 'createDate',
         'type': 'date',
