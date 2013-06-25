@@ -137,7 +137,7 @@ Ext.define('Taco.core.ux.modal.Modal', {
             this.cover.getEl().setStyle({
                 zIndex: zIndex
             })
-            this.getEl().setStyle({
+            this.getEl().setStyle({`
                 zIndex: zIndex + 1
             })
         }
@@ -164,8 +164,6 @@ Ext.define('Taco.core.ux.modal.Modal', {
 
         this.hidden = false;
         this.fireEvent('show');
-
-        this.printHiearchy();
     },
 
     hide: function () {
