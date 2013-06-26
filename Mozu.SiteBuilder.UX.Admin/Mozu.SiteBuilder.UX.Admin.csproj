@@ -362,7 +362,6 @@
     <Compile Include="Api\ModelMapping\AttributeValidationResolver.cs" />
     <Compile Include="Api\ModelMapping\ContactMapping.cs" />
     <Compile Include="Api\ModelMapping\FacetMapping.cs" />
-    <Compile Include="Api\ModelMapping\MinMaxResolver.cs" />
     <Compile Include="Api\ModelMapping\OldCustomerMapping.cs" />
     <Compile Include="Api\ModelMapping\WidgetInstanceDataMapping.cs" />
     <Compile Include="Api\Models\Account\LoginTicket.cs" />

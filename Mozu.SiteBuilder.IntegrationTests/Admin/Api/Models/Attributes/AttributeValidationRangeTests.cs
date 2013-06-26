@@ -13,7 +13,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
         [TestCase("", "4", 0, 4)]
         [TestCase("2", "", 2, 0)]
         [TestCase("", "", 0, 0)]
-        public void String_DataType_should_give_Min_and_Max_expected_values(object min, object max, int? expectedMin, int? expectedMax)
+        public void String_DataType_should_give_Min_and_Max_expected_values(decimal? min, decimal? max, int? expectedMin, int? expectedMax)
         {
             var actual = GetMappedAttribute(min, max, AttributeDataType.String);
             actual.Validation.MinStringLength.ShouldEqual(expectedMin);
@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
         }
 
         [TestCase("1/2/2013", "02/03/2013", "1/2/2013 12:00:00 AM", "2/3/2013 12:00:00 AM")]
-        public void Date_DataType_should_give_Min_and_Max_expected_values(object min, object max, string expectedMin, string expectedMax)
+        public void Date_DataType_should_give_Min_and_Max_expected_values(decimal? min, decimal? max, string expectedMin, string expectedMax)
         {
             var actual = GetMappedAttribute(min, max, AttributeDataType.DateTime);
             actual.Validation.MinDateValue.ShouldEqual(DateTime.Parse(expectedMin));
@@ -30,14 +30,14 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
 
         [TestCase("0.1", "0.2", 0.1, 0.2)]
         [TestCase("", "18", 0, 18)]
-        public void Number_DataType_should_give_Min_and_Max_expected_values(object min, object max, decimal expectedMin, decimal expectedMax)
+        public void Number_DataType_should_give_Min_and_Max_expected_values(decimal? min, decimal? max, decimal expectedMin, decimal expectedMax)
         {
             var actual = GetMappedAttribute(min, max, AttributeDataType.Number);
             actual.Validation.MinNumericValue.ShouldEqual(expectedMin);
             actual.Validation.MaxNumericValue.ShouldEqual(expectedMax);
         }
 
-        private ProductAdmin.Contracts.Attribute GetMappedAttribute(object min, object max, AttributeDataType attributeDataType)
+        private ProductAdmin.Contracts.Attribute GetMappedAttribute(decimal? min, decimal? max, AttributeDataType attributeDataType)
         {
             var attribute = new Attribute { Min = min, Max = max, DataType = attributeDataType };
 
