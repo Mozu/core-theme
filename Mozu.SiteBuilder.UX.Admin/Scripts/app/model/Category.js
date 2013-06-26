@@ -117,7 +117,7 @@ Ext.define('Taco.model.Category', {
 
     validations: [
         { type: 'length', name: 'name', min: 3 },
-        { type: 'presence', name: 'productName' },
+        { type: 'presence', name: 'name' }
 
     ],
 
