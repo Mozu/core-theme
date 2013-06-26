@@ -135,7 +135,7 @@ Ext.define('Taco.view.attribute.Form', {
                         xtype: 'numberfield',
                         fieldLabel: 'Max char.',
                         hideTrigger: true,
-                        name: 'maxChar'
+                        name: 'max'
                     }],
                     listeners: {
                         boxready: function () {
