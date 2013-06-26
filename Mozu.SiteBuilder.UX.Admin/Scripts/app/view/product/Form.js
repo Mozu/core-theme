@@ -275,7 +275,7 @@ Ext.define('Taco.view.product.Form', {
      * @protected
      */
     addSaveTasks: function (tasks) {
-        var recordSaveDep = this.tasksKeyPrefix + 'save-record',
+        var recordSaveDep = 'save-product-record',
             variantStoreTask={
                 store: this.record.getVariations()
             };
