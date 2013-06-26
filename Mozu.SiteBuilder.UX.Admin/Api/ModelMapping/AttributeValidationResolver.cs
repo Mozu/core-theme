@@ -12,31 +12,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class AttributeToContractConverter : ITypeConverter<Attribute, DC.Attribute>
     {
-        private static readonly IDictionary<AttributeDataType, Action<AttributeValidation, Attribute>> Strategies = new Dictionary<AttributeDataType, Action<AttributeValidation, Attribute>>
-        {
-            { AttributeDataType.DateTime, MapDateValues         },
-            { AttributeDataType.Number,   MapNumericValues      },
-            { AttributeDataType.String,   MapStringLengthValues },
-        };
-
-        private static void MapStringLengthValues(AttributeValidation validation, Attribute attribute)
-        {
-            validation.MinStringLength = ToIntValue(attribute.Min);
-            validation.MaxStringLength = ToIntValue(attribute.Max);
-        }
-
-        private static void MapDateValues(AttributeValidation validation, Attribute attribute)
-        {
-            validation.MaxDateValue = ToValue<DateTime?>(attribute.Max);
-            validation.MinDateValue = ToValue<DateTime?>(attribute.Min);
-        }
-
-        private static void MapNumericValues(AttributeValidation validation, Attribute attribute)
-        {
-            validation.MaxNumericValue = ToDecimalValue(attribute.Max);
-            validation.MinNumericValue = ToDecimalValue(attribute.Min);
-        }
-
         protected static T ToValue<T>(object value)
         {
             var converter = TypeDescriptor.GetConverter(typeof(T));
@@ -44,22 +19,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 return (T)converter.ConvertFrom(value);
 
             return default(T);
-        }
-
-        protected static int? ToIntValue(object value)
-        {
-            if (!string.IsNullOrWhiteSpace(value as string))
-                return System.Convert.ToInt32(value);
-            else
-                return null;
-        }
-
-        protected static decimal? ToDecimalValue(object value)
-        {
-            if (!string.IsNullOrWhiteSpace(value as string))
-                return System.Convert.ToDecimal(value);
-            else
-                return null;
         }
 
         public DC.Attribute Convert(ResolutionContext context)
@@ -75,7 +34,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             };
 
             // apply the correct attribute validation
-            Strategies.GetOrDefault(source.DataType, NoOp)(attributeValidation, source);
+            if (source.DataType == AttributeDataType.DateTime)
+            {
+                attributeValidation.MinDateValue = source.MinDate;
+                attributeValidation.MaxDateValue = source.MaxDate;
+            }
+            else if (source.DataType == AttributeDataType.Number)
+            {
+                attributeValidation.MinNumericValue = source.Min;
+                attributeValidation.MaxNumericValue = source.Max;
+            }
+            else if (source.DataType == AttributeDataType.String)
+            {
+                attributeValidation.MinStringLength = System.Convert.ToInt32(source.Min);
+                attributeValidation.MaxStringLength = System.Convert.ToInt32(source.Max);
+            }
+
+
             if (source.DataType == AttributeDataType.None)
             {
                 if (source.InputType == AttributeInputType.TextArea)
@@ -106,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ValueType = GetOrInferValueType(source),
                 IsProperty = source.IsProperty,
                 IsExtra = source.IsExtra,
-                IsOption = source.IsOption,
+                IsOption = source.IsOption,                
             };
 
             return destination;
@@ -138,10 +113,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 else
                     throw new ArgumentException(String.Format("A {0} input type must be a property or an extra.", Enum.GetName(typeof(AttributeInputType), source.InputType)));
             }
-        }
-
-        private static void NoOp(AttributeValidation v, Attribute a)
-        {
         }
     }
 }

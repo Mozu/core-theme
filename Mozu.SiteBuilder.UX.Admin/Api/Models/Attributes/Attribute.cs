@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -46,10 +47,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
  
 
         [DataMember(Name = "min")]
-        public object Min { get; set; }
+        public decimal? Min { get; set; }
+
+        [DataMember(Name = "minDate")]
+        public DateTime? MinDate { get; set; }
 
         [DataMember(Name = "max")]
-        public object Max { get; set; }
+        public decimal? Max { get; set; }
+
+        [DataMember(Name = "maxDate")]
+        public DateTime? MaxDate { get; set; }
 
         [DataMember(Name = "regex")]
         public string Regex { get; set; }

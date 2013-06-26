@@ -139,8 +139,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Content.Name))
                 .ForMember( x=> x.AttributeMetadata , opt=> opt.MapFrom(x=> x.AttributeMetadata))
                 .ForMember(x => x.Regex, opt => opt.MapFrom(x => x.Validation.RegularExpression))
-                .ForMember(x => x.Min, opt => opt.ResolveUsing(new AttributeValidationMinResolver()))
-                .ForMember(x => x.Max, opt => opt.ResolveUsing(new AttributeValidationMaxResolver()))
+                .ForMember(x => x.Min, opt => opt.MapFrom(dc => dc.Validation.MinNumericValue ?? dc.Validation.MinStringLength))
+                .ForMember(x => x.Max, opt => opt.MapFrom(dc => dc.Validation.MaxNumericValue ?? dc.Validation.MaxStringLength))
+                .ForMember(x => x.MinDate, opt => opt.MapFrom(dc => dc.Validation.MinDateValue))
+                .ForMember(x => x.MaxDate, opt => opt.MapFrom(dc => dc.Validation.MaxDateValue))
                 ;
 
             Mapper.CreateMap<DC.AttributeMetadataItem, AttributeMetadataItem>();
