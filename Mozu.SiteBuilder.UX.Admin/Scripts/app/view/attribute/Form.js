@@ -253,7 +253,7 @@ Ext.define('Taco.view.attribute.Form', {
                 scope:this
             }
         }, {
-            fieldLabel: 'Administation Name',
+            fieldLabel: 'Administration Name',
             name: 'adminName',
             allowBlank: false,
             emptyText: 'Enter an attribute name',
