@@ -185,13 +185,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public ActionResult NewAccountInvitation(LoginUser user)
         {
-            if (user.SiteId.GetValueOrDefault() != _sbc.SiteId)
-            {
-                _sbc.SiteId = user.SiteId.GetValueOrDefault();
-                _sbc.TenantId = user.TenantId.GetValueOrDefault();
-                _sbc.Save();
-                return this.Redirect(ControllerContext.HttpContext.Request.Url.PathAndQuery);
-            }
+            //if (user.SiteId.GetValueOrDefault() != _sbc.SiteId)
+            //{
+            //    _sbc.SiteId = user.SiteId.GetValueOrDefault();
+            //    _sbc.TenantId = user.TenantId.GetValueOrDefault();
+            //    _sbc.Save();
+            //    return this.Redirect(ControllerContext.HttpContext.Request.Url.PathAndQuery);
+            //}
             
             if (_userHelper.UserExists(user))
             {
