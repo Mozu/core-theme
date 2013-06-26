@@ -89,22 +89,18 @@ Ext.define('Taco.view.order.modal.EditTrackingNumber', {
     
     save: function () {
         var me = this,
-            fm = this.formpanel.getForm(),
-            cfg = fm.getValues();
+            fm = this.formpanel.getForm();
 
-
-        cfg = this.packageData;
-        
         var fm = this.formpanel.getForm();
         var trackingNumber = fm.findField("trackingNumber").getValue();
 
 
-        cfg.trackingNumber = trackingNumber;
+        this.packageData.trackingNumber = trackingNumber;
         
 
         
         this.record.changeTrackingNumber({
-            jsonData: cfg,
+            jsonData: [this.packageData],
             success: function (response) {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
@@ -113,7 +109,7 @@ Ext.define('Taco.view.order.modal.EditTrackingNumber', {
                     Taco.app.viewPort.unmask();
                     
                     var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
-                        text: "Error saving credit"
+                        text: "Error saving tracking number."
                     });
                     errorDialog.show();
                     
@@ -126,7 +122,7 @@ Ext.define('Taco.view.order.modal.EditTrackingNumber', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error saving credit";
+                    msg = (json && json.Message) ? json.Message : "Error saving tracking number.";
                 
                 Taco.app.viewPort.unmask();
                 var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
