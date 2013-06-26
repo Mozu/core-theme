@@ -62,6 +62,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
         
         public ThemeMetaData GetTheme(string id, bool forDev)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return null;
+            }
             var tmd = new ThemeMetaData();
             tmd.Id = id;
             int intId;
