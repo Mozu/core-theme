@@ -27,6 +27,8 @@ Ext.define('Taco.core.ux.TreeList', {
                 ptype: 'classhandleddragdrop'
             }]
         });
+        
+
 
         if (this.columns[0].xtype !== 'draghandlecolumn' && this.enableRowReorder) { 
 
