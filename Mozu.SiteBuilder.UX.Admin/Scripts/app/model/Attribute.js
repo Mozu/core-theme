@@ -46,10 +46,6 @@ Ext.define('Taco.model.Attribute', {
             name: 'rows',
             type: 'auto'
         },
-        {
-            name: 'maxChar',
-            type: 'auto'
-        },
         { name: 'attributeMetadata', type: 'auto', defaultValue: [] },
         { name: 'regex', type: 'string' },
         {
