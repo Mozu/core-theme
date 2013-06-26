@@ -388,25 +388,25 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
         }
         
-        if (me.enableShippingLabelButton) {
+        if (me.enableShippingLabelButton &&  me.packageData.shippingMethodCode) {
             
             me.shippingLabelButton = Ext.create("Taco.core.ux.action.Button", {
                 text: "View Shipping Label",
                 handler: me.viewShippingLabel,
                 scope:me
             });
-
+            me.shippingLabelButton.setDisabled( !me.packageData.shippingMethodCode);
             tb.items.push(me.shippingLabelButton);
 
         }
         
-        if (me.enabledPackingSlipButton) {
+        if (me.enabledPackingSlipButton  &&  me.packageData.shippingMethodCode) {
             me.packingSlipButton = Ext.create("Taco.core.ux.action.Button", {
                 text: "View Packing Slip",
                 handler: me.viewPackingSlip,
                 scope: me
             });
-
+            me.packingSlipButton.setDisabled( !me.packageData.shippingMethodCode);
             tb.items.push(me.packingSlipButton);
         }
         
@@ -823,39 +823,48 @@ weight: 2
     },
     
     viewShippingLabel: function (button, e) {
-        console.log('OrderItemGrid.viewShippingLabel()');
+        
+        
         // view shipping label. open in new tab. this initiates a work flow that makes the package uneditable.
         // subsequent edits to a package with a shipping label will need to be confirmed with a ui that tells the user 
         // to destroy the shipping label. and should probably remove the tracking number from the package as well.
 
         
-        var grid = button.up("gridpanel"),
+        var newWindow,
+            me = this,
+            grid = button.up("gridpanel"),
             data = grid.packageData;
+            
+            labelUrl = '/admin/app/order/shipping/package/label?orderId=' + data.orderId + '&packageId=' + data.id;
         
-//        window.open("http://whereisMyShippingLabel.com", "_blank")
-        
-        // prepare the shipment
-        var afterShipmentReady = function() {
-            window.open('/admin/app/order/shipping/package/label?orderId=' + data.orderId + '&packageId=' + data.id); 
-        };
-        var config = {
-            url: '/admin/app/order/shipping/package/prepareshipment',
-            method: 'POST',
-            jsonData: {
-                orderId: data.orderId,
-                packageIds: [ data.id ]
-            },
-            success: afterShipmentReady
-        };
+       
 
         if (data.shipmentId === null || data.shipmentId === undefined)
         {
-            Ext.Ajax.request(config);
+            me.setLoading(true);
+            newWindow = window.open('/admin/Scripts/ext/resources/themes/images/default/grid/loading.gif');
+            Ext.Ajax.request( {
+                url: '/admin/app/order/shipping/package/prepareshipment',
+                method: 'POST',
+                jsonData: {
+                    orderId: data.orderId,
+                    packageIds: [ data.id ]
+                },
+                success: function(data) {
+                    me.setLoading(false);
+                    me.record.reload();
+                    newWindow.location = labelUrl;
+                    
+                },
+                failure:function(){
+                    me.setLoading(false);
+                }
+            });
       
         }
         else
         {
-            afterShipmentReady();
+            window.open(labelUrl);
         }
     },
 

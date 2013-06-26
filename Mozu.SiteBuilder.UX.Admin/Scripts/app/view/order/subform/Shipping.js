@@ -55,7 +55,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
     initUI: function () {
         this.initUnpackagedItems();
         this.initUnshippedPackages();
-        this.initshippedPackages();
+        this.initShippedPackages();
     },
     initUnpackagedItems: function () {
         var me = this,
@@ -148,7 +148,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
         });
 
     },
-    initshippedPackages: function() {
+    initShippedPackages: function() {
         var me = this,
             data=[],
             packages=[];
