@@ -39,10 +39,16 @@ Ext.define('Taco.view.category.Index', {
 
         
         me.store = Taco.core.data.StoreManager.getCategoryTreeBySite();
-      //  me.store = { type: 'Taco.store.CategoriesTree' };
-        me.store.on("load", function(s, node, records, successful, eOpts) {
-            me.setHidden(records);
-        });
+        //  me.store = { type: 'Taco.store.CategoriesTree' };
+     
+        
+    
+
+        
+        
+        //me.store.on("load", function(s, node, records, successful, eOpts) {
+        //    me.setHidden(records);
+        //});
 
         me.treelist = Ext.create('Taco.core.ux.TreeList', {
             store: me.store,
@@ -173,16 +179,10 @@ Ext.define('Taco.view.category.Index', {
         var me = this,
             store = me.store;
 
-        // display the loading mask only if .sync() succeeds
-        store.addListener(
-            "beforesync", 
-            function() { 
-                me.setLoading(true) 
-            },
-            null,
-            { single: true }
-        );
-
+        if (store.isDirty()) {
+            me.setLoading(true);
+        }
+        
         store.sync({
             success: function (m) {
                 me.setLoading(false);
@@ -193,6 +193,7 @@ Ext.define('Taco.view.category.Index', {
                 me.fireEvent('setmessage', 'Item move failed', 'error', m);
             }
         });
+       
     },
     destroyMenuColumnHandler: function (item, eventData) {
         var grid = eventData.grid,
