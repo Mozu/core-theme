@@ -71,17 +71,17 @@ Ext.define('Taco.view.address.ModalEditor', {
                     fieldLabel: 'Country'
                 }, {
                     xtype: 'textfield',
-            width: 206,
+                    width: 206,
                     name: 'homePhone',
                     fieldLabel: 'Home Phone'
                 }, {
                     xtype: 'textfield',
-            width: 206,
+                    width: 206,
                     name: 'workPhone',
                     fieldLabel: 'Work Phone'
                 }, {
                     xtype: 'textfield',
-            width: 206,
+                    width: 206,
                     name: 'mobilePhone',
                     fieldLabel: 'Mobile Phone'
         }];
