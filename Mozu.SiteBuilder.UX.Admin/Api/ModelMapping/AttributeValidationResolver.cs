@@ -44,10 +44,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 attributeValidation.MinNumericValue = source.Min;
                 attributeValidation.MaxNumericValue = source.Max;
             }
-            else if (source.DataType == AttributeDataType.String)
+            else if (source.DataType == AttributeDataType.String || source.InputType == AttributeInputType.TextArea)
             {
-                attributeValidation.MinStringLength = System.Convert.ToInt32(source.Min);
-                attributeValidation.MaxStringLength = System.Convert.ToInt32(source.Max);
+                attributeValidation.MinStringLength = source.Min.HasValue ? (int?)Decimal.ToInt32(source.Min.Value) : null;
+                attributeValidation.MaxStringLength = source.Max.HasValue ? (int?)Decimal.ToInt32(source.Max.Value) : null;
             }
 
 
