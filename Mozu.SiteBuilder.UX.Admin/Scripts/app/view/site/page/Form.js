@@ -33,7 +33,7 @@ Ext.define('Taco.view.site.page.Form', {
         this.toolBox.on({
             themechange: function () {
                 this.editSurface.iframe.getDoc().location.reload();
-            },
+            }, 
             navigationchange: function (store, record) {
                 //  pants
                 // this.editSurface.iframe.getDoc().location.reload();
