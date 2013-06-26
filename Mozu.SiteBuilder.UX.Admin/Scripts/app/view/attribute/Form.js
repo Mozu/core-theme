@@ -128,11 +128,6 @@ Ext.define('Taco.view.attribute.Form', {
                     defaults: this.defaults,
                     items: [{
                         xtype: 'numberfield',
-                        fieldLabel: 'Rows',
-                        hideTrigger: true,
-                        name: 'rows'
-                    }, {
-                        xtype: 'numberfield',
                         fieldLabel: 'Max char.',
                         hideTrigger: true,
                         name: 'max'
