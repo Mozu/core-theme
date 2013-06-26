@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 // if we removed the last or only item from the package, delete the package.
                 if (source.Items.Count == 0)
-                    await _orderWebApiClient.DeletePackage(args.OrderId, args.SourcePackageId);
+                    await DeletePackageInternal(args.OrderId, source);
                 else
                     await _orderWebApiClient.UpdatePackage(args.OrderId, args.SourcePackageId, source);
             }
@@ -124,7 +124,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 // if we removed the last or only item from the package, delete the package.
                 if (source.Items.Count == 0)
-                    await _orderWebApiClient.DeletePackage(args.OrderId, args.SourcePackageId);
+                    await DeletePackageInternal(args.OrderId, source);
                 else
                     updateTasks.Add(_orderWebApiClient.UpdatePackage(args.OrderId, args.SourcePackageId, source));
 
@@ -150,7 +150,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 // if we removed the last or only item from the package, delete the package.
                 if (source.Items.Count == 0)
-                    await _orderWebApiClient.DeletePackage(args.OrderId, args.SourcePackageId);
+                    await DeletePackageInternal(args.OrderId, source);
                 else
                     updateTasks.Add( _orderWebApiClient.UpdatePackage(args.OrderId, args.SourcePackageId, source) );
             }
@@ -217,26 +217,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "shipping/package/prepareshipment")]
         public async Task<Response<List<OrderPackage>>> PrepareShipment(PrepareShipmentArgs args)
         {
-            // ensure the packages are in a valid state
-            foreach (var packageId in args.PackageIds)
-            {
-                var packageDc = (await _orderWebApiClient.GetPackage(args.OrderId, packageId)).ReadAsSync();
-                //if (String.IsNullOrEmpty(packageDc.PackagingType))
-                    packageDc.PackagingType = "CARRIER_BOX_SMALL";
-                //if (packageDc.Measurements == null || packageDc.Measurements.Weight == null || packageDc.Measurements.Weight.Value <= 0)
-                    packageDc.Measurements = new CommerceRuntime.Contracts.Commerce.PackageMeasurements { 
-                        Weight = new Core.Api.Contracts.Measurement { Unit = "lbs", Value = 2m },
-                        Height = null,
-                        Length = null,
-                        Width = null
-                    };
+            var dcPackageTasks = args.PackageIds.Select(pid => _orderWebApiClient.GetPackage(args.OrderId, pid));
+            await Task.WhenAll(dcPackageTasks);
+            var dcPackages = dcPackageTasks.Select(t => t.Result.ReadAsSync()).ToList();
 
-                await _orderWebApiClient.UpdatePackage(args.OrderId, packageId, packageDc);
+            // ensure the packages are in a valid state
+            foreach (var packageDc in dcPackages)
+            {
+                // do not operate on already-shipped packages
+                if (!String.IsNullOrEmpty(packageDc.ShipmentId))
+                    continue;
+
+                // hard-code a packaging type
+                packageDc.PackagingType = "CARRIER_BOX_SMALL";
+                
+                // hard-code package dimensions
+                packageDc.Measurements = new CommerceRuntime.Contracts.Commerce.PackageMeasurements { 
+                    Weight = new Core.Api.Contracts.Measurement { Unit = "lbs", Value = 2m },
+                    Height = null,
+                    Length = null,
+                    Width = null
+                };
+
+                await _orderWebApiClient.UpdatePackage(args.OrderId, packageDc.Id, packageDc);
             }
 
+            var unshippedPackageIds = dcPackages.Where(p => String.IsNullOrEmpty(p.ShipmentId)).Select(p => p.Id).ToList();
+            if (unshippedPackageIds.Count == 0)
+                return SuccessWithTotal2<List<OrderPackage>>(0);
 
-            var dc = (await _orderWebApiClient.CreatePackageShipments(args.OrderId, args.PackageIds)).ReadAsSync();
-            return List2( Mapper.Map<List<OrderPackage>>(dc) );
+            var returnedPackages = (await _orderWebApiClient.CreatePackageShipments(args.OrderId, unshippedPackageIds)).ReadAsSync();
+            return List2( Mapper.Map<List<OrderPackage>>(returnedPackages) );
         }
 
         [WebGet(UriTemplate = "shipping/package/label")]
@@ -248,29 +259,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var httpContent = serviceResponse.ResponseMessage.Content;
      
             var contentStream = await httpContent.ReadAsStreamAsync();
-            if (contentStream.Position == 0)
+            var myResponse = new HttpResponseMessage(HttpStatusCode.OK);
+            myResponse.Content = new StreamContent(contentStream);
+            myResponse.Content.Headers.ContentLength = serviceResponse.ResponseMessage.Content.Headers.ContentLength;
+            myResponse.Content.Headers.ContentType = serviceResponse.ResponseMessage.Content.Headers.ContentType;
+            myResponse.Content.Headers.LastModified = serviceResponse.ResponseMessage.Content.Headers.LastModified;
+            return myResponse;
+        }
+
+        private Task DeletePackageInternal(string orderId, DCs.Package package)
+        {
+            if (package.ShipmentId != null)
             {
-                var myResponse = new HttpResponseMessage(HttpStatusCode.OK);
-                myResponse.Content = new StreamContent(contentStream);
-                myResponse.Content.Headers.ContentLength = serviceResponse.ResponseMessage.Content.Headers.ContentLength;
-                myResponse.Content.Headers.ContentType = serviceResponse.ResponseMessage.Content.Headers.ContentType;
-                myResponse.Content.Headers.LastModified = serviceResponse.ResponseMessage.Content.Headers.LastModified;
-                return myResponse;
+                return
+                    _orderWebApiClient.DeleteShipment(orderId, package.ShipmentId)
+                    .ContinueWith(t => _orderWebApiClient.DeletePackage(orderId, package.Id))
+                    .Unwrap();
             }
             else
-                throw new InvalidOperationException("fuck");
-
-//             var contentType = contentStream.Headers.ContentType;
-//             var lastModified = contentStream.Headers.LastModified;
-//             byte[] contents = await contentStream.ReadAsAsync<byte[]>();
-// 
-//             var resp = new HttpResponseMessage(HttpStatusCode.OK);
-//             // IMPORTANT: dont dispose stream!
-//             resp.Content = new StreamContent(new MemoryStream(contents));
-// 
-//             resp.Content.Headers.ContentLength = contents.Length;
-//             resp.Content.Headers.ContentType = contentType;
-//             resp.Content.Headers.LastModified = lastModified;
+            {
+                return _orderWebApiClient.DeletePackage(orderId, package.Id);
+            }
         }
     }
 }
