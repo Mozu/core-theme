@@ -83,7 +83,7 @@ Ext.define('Taco.view.attribute.Form', {
                     dataType = statics.fieldCfg.dataType;
 
                 attributeType.readOnly = dataType.readOnly = this.isEdit();
-
+                
                 return [
                     attributeType,
                     dataType,
@@ -127,10 +127,14 @@ Ext.define('Taco.view.attribute.Form', {
                     width: 308,
                     defaults: this.defaults,
                     items: [{
+                        xtype: 'numberfield',
                         fieldLabel: 'Rows',
+                        hideTrigger: true,
                         name: 'rows'
                     }, {
+                        xtype: 'numberfield',
                         fieldLabel: 'Max char.',
+                        hideTrigger: true,
                         name: 'maxChar'
                     }],
                     listeners: {
@@ -170,13 +174,13 @@ Ext.define('Taco.view.attribute.Form', {
                     cls: 'taco-date-value-input',
                     items: [{
                         xtype: 'datefield',
-                        name: 'min'
+                        name: 'minDate'
                     }, {
                         xtype: 'label',
                         text: 'to'
                     }, {
                         xtype: 'datefield',
-                        name: 'max'
+                        name: 'maxDate'
                     }],
                     listeners: {
                         boxready: function () {
@@ -280,13 +284,8 @@ Ext.define('Taco.view.attribute.Form', {
         
 
 
-
         
     },
-
-
-
-
     onInputTypeChange: function (input, value) {
         this.setAttributeInputType(value);
     },

@@ -28,6 +28,28 @@ Ext.define('Taco.model.Attribute', {
                 return r.convert(v, r);
             }
         },
+        {
+            name: 'minDate',
+            type: 'auto',
+            convert: function (v, r) {
+                return r.convert(v, r);
+            }
+        },
+        {
+            name: 'maxDate',
+            type: 'auto',
+            convert: function (v, r) {
+                return r.convert(v, r);
+            }
+        },
+        {
+            name: 'rows',
+            type: 'auto'
+        },
+        {
+            name: 'maxChar',
+            type: 'auto'
+        },
         { name: 'attributeMetadata', type: 'auto', defaultValue: [] },
         { name: 'regex', type: 'string' },
         {
@@ -39,7 +61,6 @@ Ext.define('Taco.model.Attribute', {
 
     ],
     convert: function (v, r) {
-
          if (r.data.dataType == 'DateTime') {
              return r.convertDate(v);
          }
