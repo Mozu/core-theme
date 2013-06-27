@@ -71,10 +71,11 @@ Ext.define('Taco.view.inventory.Index', {
             }],
             listeners: {
                 cellclick: function (view, td, cellIndex, record, tr, rowIndex, e) {
+
                     var column = view.getHeaderAtIndex(cellIndex),
                         menu = column.editorMenu;
 
-                    if (Ext.isNumeric(record.get('stockOnHand'))) {
+                    if (Ext.isNumeric(record.get('stockOnHand')) && e.target.className.indexOf('checker')  < 0) {
                         if (menu) {
                             menu.reconfigure(record).showBy(td);
                         } else {
