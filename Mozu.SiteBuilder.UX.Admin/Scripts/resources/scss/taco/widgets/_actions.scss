@@ -23,15 +23,19 @@
     }
   }
 
+  button {
+    font-family: $font-family;
+  }
+
   button.#{$vprefix}action {
     background-color: $color-action-background;
     border: 1px solid $color-action-outline;
     color: $color-action-foreground;
-    font-size: px-to-rem(14);
-    line-height: px-to-rem(14);
+    font-size: px-to-rem(16);
+    line-height: px-to-rem(16);
     margin: 0px;
     min-width: 86px;
-    padding: 8px $button-padding 6px;
+    padding: 7px $button-padding 5px;
     text-align: center;
     vertical-align: middle;
     white-space: nowrap;
@@ -135,12 +139,12 @@
       background-color: $color-action-primary-background;
       border: 1px solid $color-action-primary-outline;
       color: $color-action-primary-foreground;
-      font-size: px-to-rem(14);
-      line-height: px-to-rem(14);
+      font-size: px-to-rem(16);
+      line-height: px-to-rem(16);
       margin: 0px;
       min-height: 30px;
       min-width: 86px;
-      padding: 8px $button-padding 6px;
+      padding: 7px $button-padding 5px;
       text-align: center;
       vertical-align: middle;
       white-space: nowrap;
@@ -178,8 +182,8 @@
 
     .#{$prefix}btn-inner {
       color: $color-action-primary-foreground;
-      font-size: px-to-rem(14);
-      line-height: px-to-rem(14);
+      font-size: px-to-rem(16);
+      line-height: px-to-rem(16);
     }
   }
 }
