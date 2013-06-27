@@ -5,7 +5,8 @@ Ext.define('Taco.view.category.Modal', {
     extend: 'Taco.core.ux.modal.Modal',
     requires: [
         'Ext.tree.Panel',
-        'Ext.selection.CheckboxModel'
+        'Ext.selection.CheckboxModel',
+        'Taco.core.ux.action.SecondaryButton'
     ],
 
     autoShow: true,
@@ -82,7 +83,7 @@ Ext.define('Taco.view.category.Modal', {
                 click: this.save,
                 scope: this
             }, {
-                xtype: 'action',
+                xtype: 'secondarybutton',
                 text: 'Cancel',
                 click: this.cancel,
                 scope: this
