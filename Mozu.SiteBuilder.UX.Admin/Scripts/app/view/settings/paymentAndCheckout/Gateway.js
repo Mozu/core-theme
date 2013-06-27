@@ -29,7 +29,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
                 {
                     xtype: 'textfield',
                     fieldLabel: fieldDef.displayName,
-                    name: credentials[fieldDef.name],
+                    name: fieldDef.name,
                     inputType: 'password',
                     value: credentialsSet && this.gatewayDefinition.getId() === this.record.get('gatewayDefinitionId') ? '        ' : ''
                 });
@@ -82,7 +82,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
             val[field.name] = field.getValue();
         });
         if (isDirty) {
-            this.record.set('credentialDefinitions', val);
+            this.record.set('credentials', val);
         }
         this.record.set('supportedCards', this.supportedCardsCbg.getValue().cards);
 
