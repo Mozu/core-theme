@@ -146,7 +146,7 @@ Ext.define('Taco.core.ux.modal.Modal', {
             duartion: this.duration,
             easing: this.easingShow,
             to: {
-                marginTop: margins.marginTop,
+                marginTop: '100px',//margins.marginTop,
                 opacity: 1
             },
             listeners: {

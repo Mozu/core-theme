@@ -4,10 +4,10 @@
     font-size: 1em;
     position: absolute;
     z-index: 300;
-    top: 50%;
+    //top: 50%;
     left: 50%;
     margin-left: -5000px;
-    margin-top: -5000px;
+    //margin-top: -5000px;
     opacity: 0;
     // margin-left: -200px;
     // margin-right: -200px;
@@ -23,7 +23,7 @@
     .#{$vprefix}modal-title {
       border-bottom: 1px dashed $color-grid-border;
       font-size: 1.25em;
-      font-weight: normal;
+      font-weight: normal; 
       margin-left: -28px;
       padding: 0px 28px 1em;
       width: 700px;
