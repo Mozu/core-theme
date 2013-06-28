@@ -27,6 +27,8 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
         //     this.data = null;
         //     return this.callParent(arguments);
         // }
+        
+        
 
         if (!data || operation.bypassCache) {
 
@@ -60,14 +62,20 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
             request = this.buildRequest(operation),
             fn = function () {
                 var response = {
-                    responseText: data
-                }, jsonData,siteId;
+                        responseText: data
+                    },
+                    hasSiteIdFilter = false,
+                    jsonData,
+                    siteId;
                 
                 Ext.each(operation.filters, function(filter) {
                     if (filter.property == 'siteId') {
                         siteId = filter.value;
                     }
                 });
+                if (!siteId) {
+                    siteId = Taco.app.context.getSiteId();
+                }
                 if (siteId) {
                     jsonData = Ext.JSON.decode(data);
                     jsonData.items = Ext.Array.filter(jsonData.items, function (item) { return item.siteId == siteId });
