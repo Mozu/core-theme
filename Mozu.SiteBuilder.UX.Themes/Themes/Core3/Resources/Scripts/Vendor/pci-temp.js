@@ -42,7 +42,7 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
                 method: "POST"
             },
             update: {
-                uri: function (cardId) { return apiCall.base.uri() + cardId.toString(); },
+                uri: function (cardId) { return apiCall.base.uri() + '/' + cardId.toString(); },
                 method: "PUT"
             }
         },
