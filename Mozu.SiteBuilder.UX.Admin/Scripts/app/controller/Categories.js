@@ -12,48 +12,40 @@ Ext.define('Taco.controller.Categories', {
     views: ['category.Index', 'category.Index'],
     stores: ['Categories'],
     modelName: 'Category',
-    //modelName: 'Category',
-    //contextPlaceholders: {
-    //    tc: function () {
-    //        return Ext.create('Taco.core.ux.content.Container', {
-    //            header: {
-    //                title: "choose a site"
-    //            },
 
-    //            body: {
-    //                layout: 'auto',
-    //                items: [{
-    //                    html: 'placeholder for choose site  interstitial '
-    //                }]
-    //            }
-    //        });
-    //    }
-    //}
+    edit: function (id, additionalParams, appState) {
+        var record = appState ? appState.record : null, 
+            options= appState ? appState.options : null,
+            store,
+            fnLoadEditor,
+            me = this;
 
-    //init: function () {
+        if (record) {
+            this.createContentView(this.getEditorView(), {
+                record: record,
+                options:options
+            });
+        } else {
+            
+            store = Taco.core.data.StoreManager.getOrCreate('Taco.store.Categories');
 
-    //    var me = this;
-    //    this.control({
-    //        'contentheader': {
-    //            newcategory: function () {
-    //                me.loadEditor();
-    //            }
-    //        }
-    //    });
-    //},
+            fnLoadEditor = function () {
+                record = store.getById(parseInt(id, 10));
 
-    //index: function () {
-    //    this.createContentView('Taco.view.category.Index');
-    //},
+                me.createContentView(me.getEditorView(), {
+                    record: record,
+                    options: options
+                });
+            };
 
-    //edit: function (params) {
-    //    var id = isNaN(params) ? ("id" in params ? params.id : params.args[0]) : params;
-    //    this.createContentView('Taco.view.category.Index', {editRecordId: id});
-    //},
-
-    //createEditor: function (id) {
-    //    return Ext.create('Taco.view.category.Edit', id ? {
-    //        recordId: id
-    //    } : {});
-    //}
+            if (store.isLoading()) {
+                store.on({
+                    load: fnLoadEditor,
+                    single: true
+                });
+            } else {
+                fnLoadEditor();
+            }
+        }
+    }
 });
