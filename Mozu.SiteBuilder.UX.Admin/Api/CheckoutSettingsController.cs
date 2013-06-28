@@ -64,11 +64,39 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<Setting>> UpdateSettings(Setting settingReq)
         {
             var pSetting = ConvertToContract(settingReq);
+            var  tasks = new List<Task>();
+            Gateway gateWay = null;
+            var currentGatewayRes = (await _checkoutSettingsWebApiClient.GetActiveGatewayForCountry("us"));
+            if (currentGatewayRes.ResponseMessage.IsSuccessStatusCode)
+            {
+                gateWay = currentGatewayRes.ReadAsSync();
+            }
+            if (gateWay != null)
+            {
+                var posted = pSetting.Gateways.First();
+                if (gateWay.GatewayAccount.GatewayDefinitionId == posted.GatewayAccount.GatewayDefinitionId)
+                {
+                    var res0 = (await _checkoutSettingsWebApiClient.UpdateGateway(gateWay.GatewayAccount.Id, posted));
+                }
+                else
+                {
+                    var res0 = (await _checkoutSettingsWebApiClient.CreateGateway(  posted));
+                }
+            }
+            else
+            {
+                var posted = pSetting.Gateways.First();
+                var res0 = (await _checkoutSettingsWebApiClient.CreateGateway(posted));
+            }
+
             var ret = (await _checkoutSettingsWebApiClient.UpdatePaymentSettings(pSetting)).ReadAsSync();
             var ret1 = (await _checkoutSettingsWebApiClient.UpdateCustomerCheckoutSettings( new Mozu.SiteSettings.Order.Contracts.CustomerCheckoutSettings()
                                                                                                 {
                                                                                                    CustomerCheckoutType = settingReq.CustomerCheckoutType  
                                                                                                 })).ReadAsSync();
+
+
+
             var ret2 = (await _checkoutSettingsWebApiClient.UpdateOrderProcessingSettings( new Mozu.SiteSettings.Order.Contracts.OrderProcessingSettings()  
             {
                  PaymentProcessingFlowType = settingReq.PaymentProcessingFlowType 
@@ -148,7 +176,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                                        new Gateway()
                                                            {
                                                                GatewayAccount = gatewayAccount,
-                                                               SupportedCards = setting.SupportedCards
+                                                               SupportedCards = setting.SupportedCards,
+                                                               
                                                            }
 
                                                    },
@@ -166,7 +195,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             
             ret.PayByMail = paymentSettings.PayByMail;
-            var gateWay = paymentSettings.Gateways != null && paymentSettings.Gateways.Count > 0 ? paymentSettings.Gateways.First() : null;
+            var gateWay = paymentSettings.Gateways != null && paymentSettings.Gateways.Count > 0 ? paymentSettings.Gateways.FirstOrDefault(x=> x.GatewayAccount != null && x.GatewayAccount.IsActive ) : null;
 
            
             if (gateWay != null)

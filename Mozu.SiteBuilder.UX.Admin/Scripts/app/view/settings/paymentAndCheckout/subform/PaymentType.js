@@ -21,9 +21,11 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
             store: this.gateWayDefinitionsStore,
             queryMode: 'local',
             width: 400,
+            forceSelection:true,
             name: 'gatewayDefinitionId',
             value: this.record.get('gatewayDefinitionId'),
             displayField: 'name',
+            triggerOnClick:true,
             valueField: 'id',
             listeners: {
                 change: this.onPaymentTypesChange,
