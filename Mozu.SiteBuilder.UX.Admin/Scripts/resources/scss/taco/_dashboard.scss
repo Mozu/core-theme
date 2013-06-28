@@ -166,7 +166,7 @@
       float: left;
       height: 100%;
       width: 362px;//28%;//width: 37.8%;
-      overflow-y:hidden;
+      overflow-y: auto;
       background: white; 
       border: px-to-rem(1);
       border-style: solid;
@@ -231,22 +231,20 @@
     }
 
     .#{$vprefix}home-page-item-header-main{
-    	border: 0px;
-			border-bottom: px-to-rem(1);
-			border-style: solid;
-			border-color: lightgray;
-			margin-bottom: px-to-rem(7);
-			padding-top:px-to-rem(9);
-			padding-bottom: px-to-rem(10);
-			padding-left: px-to-rem(14);
+      border: 0px;
+      border-bottom: px-to-rem(1);
+      border-style: solid;
+      border-color: lightgray;
+      margin-bottom: px-to-rem(7);
+      padding-top:px-to-rem(9);
+      padding-bottom: px-to-rem(10);
+      padding-left: px-to-rem(14);
       color: #333;
       font-size: 14px;
     }
 
     .#{$vprefix}home-page-item-body{
-      overflow-y: scroll;
-      height: 100%;
-      padding: .9rem;      
+      padding: px-to-rem(9);
     }
 
 
