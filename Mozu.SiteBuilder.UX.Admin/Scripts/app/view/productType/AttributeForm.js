@@ -181,6 +181,7 @@
         //debugger;
         valuesField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'values',
+            height: 325,
             fieldLabel: 'Values',
             removeOnAttributeChange: true,
             store: valuesStore,
@@ -210,6 +211,7 @@
 
         selectionsField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'selections',
+            height: 325,
             removeOnAttributeChange: true,
             fieldLabel: 'Selections',
             store: this.selectionStore,
