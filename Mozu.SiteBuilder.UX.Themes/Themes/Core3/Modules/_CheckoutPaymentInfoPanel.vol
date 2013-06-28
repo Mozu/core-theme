@@ -12,21 +12,19 @@
             <div class="mz-completed-summary">
                 <span data-bind="text: PaymentType"></span>
                 <span data-bind="visible: paymentTypeIsCheck, text: Check.CheckNumber"></span>
-                <!-- ko if: paymentTypeIsCreditCard -->
-                    <span data-bind="text: Card.CardNumberPartOrMask"></span>
+                <span data-bind="visible: paymentTypeIsCreditCard, text: Card.CardNumberPartOrMask"></span>
 
-                    <h4>Billing Address</h4>
-                    <!-- ko if: IsSameBillingShippingAddress -->
-                        <div class="mz-completed-summary" data-bind="template: { name: 'mz-tpt-address-summary', data: $root.ShippingInfo.ShippingContact }"></div>
-                    <!-- /ko -->
-                    <!-- ko if: !IsSameBillingShippingAddress() -->
-                        <div data-bind="template: { name: 'mz-tpt-address-summary', data: BillingContact }"></div>
-                    <!-- /ko -->
-
-                    <h4>Billing Contact Information</h4>
-                    <span>Phone: <strong data-bind="text: BillingContact.PhoneNumbers.Home"></strong></span>
-                    <span>Email: <strong data-bind="text: BillingContact.Email"></strong></span>
+                <h4>Billing Address</h4>
+                <!-- ko if: IsSameBillingShippingAddress -->
+                    <div class="mz-completed-summary" data-bind="template: { name: 'mz-tpt-address-summary', data: $root.ShippingInfo.ShippingContact }"></div>
                 <!-- /ko -->
+                <!-- ko if: !IsSameBillingShippingAddress() -->
+                    <div data-bind="template: { name: 'mz-tpt-address-summary', data: BillingContact }"></div>
+                <!-- /ko -->
+
+                <h4>Billing Contact Information</h4>
+                <span>Phone: <strong data-bind="text: BillingContact.PhoneNumbers.Home"></strong></span>
+                <span>Email: <strong data-bind="text: BillingContact.Email"></strong></span>
             </div>
 
             <div class="mz-form-fields">
@@ -39,9 +37,13 @@
                     <span class="mz-validation-message" data-bind="text: PaymentType.validationMessage() || '&nbsp;'"></span>
                 </p>
 
-                <!-- ko if: paymentTypeIsCreditCard -->
-                <div class="mz-form-fieldgroup" data-bind="template: { name: 'mz-tpt-credit-card', data: Card }">
+                <div class="mz-form-fieldgroup" data-bind="visible: paymentTypeIsCreditCard, template: { name: 'mz-tpt-credit-card', data: Card }">
                 </div>
+
+                <div class="mz-form-fieldgroup" data-bind="visible: paymentTypeIsCheck">
+                    <div data-bind="template: { name: 'mz-tpt-checking-account', data: Check }"></div>
+                    <p><a href="#">Read more</a> about paying by check</p>
+                </div><!-- pay by check fields -->
 
                 <h4>Billing Address</h4>
                 <div class="mz-single-setting"><label class="mz-inline"><input type="checkbox" data-bind="checked: IsSameBillingShippingAddress"> Use my shipping address</label></div>
@@ -67,12 +69,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- /ko -->
-
-                <div class="mz-form-fieldgroup" data-bind="visible: paymentTypeIsCheck">
-                    <div data-bind="template: { name: 'mz-tpt-checking-account', data: Check }"></div>
-                    <p><a href="#">Read more</a> about paying by check</p>
-                </div><!-- pay by check fields -->
 
                 <div class="mz-next-step">
                     {% include "Modules/LoadingBar" %}
