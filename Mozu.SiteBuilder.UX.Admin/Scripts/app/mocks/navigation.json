@@ -77,8 +77,8 @@
         "id": "settings",
         "label": "Settings",
         "address": "generalsettings",
-        "icon": "settings",
-        "visable": false,
+        "icon": "nav-settings",
+        "visible": false,
         "items": [{
                 "id": "generalsettings",
                 "label": "General Settings",

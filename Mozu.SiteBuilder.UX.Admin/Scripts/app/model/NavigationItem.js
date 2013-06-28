@@ -6,7 +6,7 @@ Ext.define('Taco.model.NavigationItem', {
     extend: 'Taco.core.data.Model',
     idProperty: 'id',
     fields: ['id', 'label', 'icon', 'address', {
-        name: 'visable',
+        name: 'visible',
         type: "boolean",
         defaultValue:true,
     }],

@@ -67,6 +67,9 @@
         &.#{$vprefix}icon-nav-files::before {
           @include icons-sprite(icon-nav-files);
         }
+        &.#{$vprefix}icon-nav-settings::before {
+          @include icons-sprite(icon-nav-settings);
+        }
       }
 
       ul {
