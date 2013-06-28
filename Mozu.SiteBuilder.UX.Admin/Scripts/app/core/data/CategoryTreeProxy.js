@@ -22,6 +22,12 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
             data = me.getData(),
             filters = operation.filters;
 
+        // if (operation.id) {
+        //     operation.bypassCache = true;
+        //     this.data = null;
+        //     return this.callParent(arguments);
+        // }
+
         if (!data || operation.bypassCache) {
 
             cbw = function (op, success, response) {

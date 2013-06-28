@@ -3,7 +3,11 @@
  */
 Ext.define('Taco.view.category.Index', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Taco.core.ux.TreeList', 'Taco.core.FormPanel', 'Taco.store.CategoriesTree'],
+    requires: [
+        'Taco.core.ux.TreeList',
+        'Taco.core.FormPanel',
+        'Taco.store.CategoriesTree'
+    ],
 
     requiresContextOfType: 's',
     setHidden: function (records) {

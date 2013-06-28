@@ -9,12 +9,18 @@ Ext.define('Taco.core.ux.CategoryComboBox', {
     displayField: 'name',
     valueField: 'id',
     minChars: 1,
-    store: { type: 'Taco.store.Categories', clearFilters: true, clearSort: true, autoLoad: true }
-    //,
-    //initComponent: function () {
-    //    var me = this;
-    //    //me.store = Taco.core.data.StoreManager.getOrCreate( { type:'Taco.store.Categories',  clearFilters: true, clearSort: true, autoLoad: true });
-    //    me.callParent(arguments);
-    //}
-    
+    queryMode: 'local',
+    store: {
+        type: 'Taco.store.Categories',
+        clearFilters: true,
+        clearSort: true,
+        autoLoad: true
+    },
+
+    setValue: function (value) {
+        if (value === -1) {
+            value = null;
+        }
+        this.callParent(arguments);
+    }
 });
