@@ -72,14 +72,18 @@ Ext.define('Taco.core.Controller', {
                 record: record,
                 options:options
             });
-        }else{
+        } else {
+            Taco.app.setLoading();
             Taco.model[this.modelName].load(id, {
                     success: function(record) {
-
+                        Taco.app.setLoading(false);
                         this.createContentView(this.getEditorView(), {
                             record: record,
                             options:options
                         });
+                    },
+                    failure: function () {
+                        Taco.app.setLoading(false);
                     },
                     scope: this
                 });

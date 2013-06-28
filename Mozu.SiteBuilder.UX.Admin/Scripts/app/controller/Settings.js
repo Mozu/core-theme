@@ -11,16 +11,19 @@ Ext.define('Taco.controller.Settings', {
     listView: null,
     models: ['Taco.model.Product'],
     paymentAndCheckout: function () {
+        Taco.app.setLoading();
         if (!this.requiresSiteContext()) {
 
             Taco.model.PaymentAndCheckout.load(123, {
                 success: function (record, o) {
+                    Taco.app.setLoading(false);
                     this.createContentView('Taco.view.settings.paymentAndCheckout.Edit', {
                         record: record
                     });
 
                 },
                 failure: function () {
+                    Taco.app.setLoading(false);
                     console.error('PaymentAndCheckout', 'failure');
                 },
                 scope: this
@@ -37,17 +40,19 @@ Ext.define('Taco.controller.Settings', {
 
     },
     shipping: function () {
-        
+        Taco.app.setLoading();
         if (!this.requiresSiteContext()) {
 
             Taco.model.SiteShippingSettings.load(123, {
                 success: function (record, o) {
+                    Taco.app.setLoading(false);
                     this.createContentView('Taco.view.settings.shipping.Edit', {
                         record: record
                     });
 
                 },
                 failure: function () {
+                    Taco.app.setLoading(false);
                     console.error('shipping', 'failure');
                 },
                 scope: this
