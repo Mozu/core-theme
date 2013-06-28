@@ -69,6 +69,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         /// </summary>
         [DataMember(Name="lastOrderDate")]
         public DateTime? LastOrderDate { get; set; }
+
+        /// <summary>
+        /// Create date
+        /// </summary>
+        [DataMember(Name = "createDate")]
+        public DateTime? CreateDate { get; set; }
+
         #endregion
     }
 }

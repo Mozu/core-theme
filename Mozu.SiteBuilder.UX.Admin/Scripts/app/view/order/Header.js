@@ -33,7 +33,7 @@ Ext.define('Taco.view.order.Header', {
             '</div>',
             // {createDate:date("M j, Y")}
             '<div class="taco-order-detail-header-section origin-data">',
-                '{createDate:date("F j, Y | g:i a")} | IP address: {ipAddress}',
+                '{createDate:date("F j, Y | g:i a")}<!-- | IP address: {ipAddress} -->',
             '</div>'
         ];
 

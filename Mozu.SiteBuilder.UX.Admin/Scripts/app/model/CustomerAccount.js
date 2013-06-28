@@ -38,6 +38,9 @@ Ext.define('Taco.model.CustomerAccount', {
         }, {
             name: 'lastOrderDate',
             type: 'date'
+        }, {
+            name: 'createDate',
+            type: 'date'
         }
     ],
     

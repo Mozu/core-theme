@@ -631,7 +631,6 @@
     <Content Include="Scripts\app\model\ShippingCarrierSetting.js" />
     <Content Include="Scripts\app\model\CustomShippingRate.js" />
     <Content Include="Scripts\app\model\Facet.js" />
-    <Content Include="Scripts\app\model\OrderCustomer.js" />
     <Content Include="Scripts\app\model\OrderItemDiscount.js" />
     <Content Include="Scripts\app\model\FacetSource.js" />
     <Content Include="Scripts\app\model\FacetSet.js" />
