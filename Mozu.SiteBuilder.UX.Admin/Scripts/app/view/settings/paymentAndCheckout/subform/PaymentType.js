@@ -54,6 +54,10 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
         this.items = [this.paymentTypes];
 
         this.callParent(arguments);
+        
+        if (this.record.get('gatewayDefinitionId')) {
+            this.on('boxready', this.onPaymentTypesChange, this);
+        }
     },
     onPaymentTypesChange: function () {
         if (this.gateWayDefinitionsStore.isLoading()) {
