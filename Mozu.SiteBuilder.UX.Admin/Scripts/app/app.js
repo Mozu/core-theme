@@ -521,7 +521,20 @@ Ext.application({
             });
         }
     },
+    setLoading: function (config) {
+        if (config === false) {
+            this.viewPort.setLoading(false);
+            this.shouldShowLoadmask = false;
+            return;
+        }
+        this.shouldShowLoadmask = true;
+        Ext.defer(function () {
+            if (this.shouldShowLoadmask) {
+                this.viewPort.setLoading(config);
+            }
+        }, 500, this);
 
+    },
    
     signalCacheFlush: function (data) {
         return;
