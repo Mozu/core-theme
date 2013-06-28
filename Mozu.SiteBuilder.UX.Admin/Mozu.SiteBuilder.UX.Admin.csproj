@@ -1236,7 +1236,7 @@
     <Content Include="Scripts\resources\images\dashboard\dashboard-time-on-sites.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-uptime.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-vistors.png" />
-    <Content Include="Scripts\resources\images\icons-sff03aa1fc5.png" />
+    <Content Include="Scripts\resources\images\icons-s848bd73da5.png" />
     <Content Include="Scripts\resources\images\icons\icon-arrow-left.png" />
     <Content Include="Scripts\resources\images\icons\icon-ellipse-hover.png" />
     <Content Include="Scripts\resources\images\icons\icon-ellipse.png" />
@@ -1289,7 +1289,7 @@
     <Content Include="Scripts\resources\images\icons\icon-primarymenu-selected.png" />
     <Content Include="Scripts\resources\images\icons\icon-primarymenu.png" />
     <Content Include="Scripts\resources\images\icons\icon-rowactions.png" />
-    <Content Include="Scripts\resources\images\icons\icon-settings-large.png" />
+    <Content Include="Scripts\resources\images\icons\icon-nav-settings-light.png" />
     <Content Include="Scripts\resources\images\icons\icon-store-large.png" />
     <Content Include="Scripts\resources\images\icons\icon-store-selected.png" />
     <Content Include="Scripts\resources\images\icons\icon-store.png" />
@@ -2562,8 +2562,8 @@
     <Content Include="Scripts\resources\images\icons\icon-sales.png" />
     <Content Include="Scripts\resources\images\icons\icon-search.png" />
     <Content Include="Scripts\resources\images\icons\icon-selectedoverlay.png" />
-    <Content Include="Scripts\resources\images\icons\icon-settings-selected.png" />
-    <Content Include="Scripts\resources\images\icons\icon-settings.png" />
+    <Content Include="Scripts\resources\images\icons\icon-nav-settings-med.png" />
+    <Content Include="Scripts\resources\images\icons\icon-nav-settings.png" />
     <Content Include="Scripts\resources\images\icons\icon-sites-selected.png" />
     <Content Include="Scripts\resources\images\icons\icon-sites.png" />
     <Content Include="Scripts\resources\images\icons\icon-sliderbig.png" />
