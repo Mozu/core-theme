@@ -224,9 +224,9 @@ Ext.define('Taco.view.discount.Form', {
             disableKeyFilter: true,
             typeAhead: true,
             value: this.record.get('shippingMethods'),
-            displayField: 'Key',
+            displayField: 'Value',
             fieldLabel: 'Select Shipping Methods',
-            valueField: 'Value'
+            valueField: 'Key'
         });        
 
 
