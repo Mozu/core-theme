@@ -241,34 +241,23 @@ Ext.define('Taco.view.order.subform.Payment', {
     initPaymentDetails : function() {
         var me = this,
             data = this.record.getData();
-
-        /*
-        address1: "1135 Barton Hills Dr"
-address2: "#113"
-cityOrTown: "Austin"
-countryCode: "US"
-email: "askljdh@lkhjasd.com"
-firstName: "James"
-id: -1
-lastName: "Zetlen"
-state: "TX"
-zipCode: "78704"
-        */
         
         me.paymentDetails = Ext.create('Ext.Component', {
             cls: "orderform-payment-paymentDetails",
             tpl: [
                 '<tpl if="authorizationInfo.captureData">',
-                    '<div class="authorizedCreditCard">',
-                            '<span class="creditCard">{authorizationInfo.captureData.cardType} {authorizationInfo.captureData.cardNumber}</span>',
-                        // if the auth data has an id than its been authorized
-                        '<tpl if="authorizationInfo.captureData.id">',
-                            '<span class="seperator">|</span>',
-                                '<span class="authorization">Authorization ID: {authorizationInfo.captureData.id}</span>',
-                        '</tpl>',
-                    '</div>',
-                '<tpl else>',
-                    '<div class="paymentTypeCheck">Check</div>',
+                    '<tpl if="authorizationInfo.captureData.paymentType == \'Check\'">',
+                        '<div class="paymentTypeCheck">Check</div>',
+                    '<tpl else>',
+                        '<div class="authorizedCreditCard">',
+                                '<span class="creditCard">{authorizationInfo.captureData.cardType} {authorizationInfo.captureData.cardNumber}</span>',
+                            // if the auth data has an id than its been authorized
+                            '<tpl if="authorizationInfo.captureData.id">',
+                                '<span class="seperator">|</span>',
+                                    '<span class="authorization">Authorization ID: {authorizationInfo.captureData.id}</span>',
+                            '</tpl>',
+                        '</div>',
+                    '</tpl>',
                 '</tpl>',
                 '<div class="orderSummary">',
                     '<span class="orderTotal">Order Total: {total:usMoney}</span>',
