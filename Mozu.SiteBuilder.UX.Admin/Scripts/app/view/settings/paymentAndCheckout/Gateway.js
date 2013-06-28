@@ -40,7 +40,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
 
         Ext.Array.each(supportedCardsDef, function (card) {
             supportedCardsCbs.push(
-                { boxLabel: card.Value, name: 'cards', inputValue: card.Key, checked: supportedCards.indexOf(card.value)>-1 }
+                { boxLabel: card.Value, name: 'cards', inputValue: card.Key, checked: supportedCards.indexOf(card.Key) > -1 }
             );
         });       
         
@@ -52,6 +52,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
             columns: 2,
             vertical: true,
             items: supportedCardsCbs
+       
         });
 
         this.paymentProcessingFlowTypeRg = Ext.widget(
@@ -91,7 +92,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
                     }
                     me.record.set('supportedCards', me.supportedCardsCbg.getValue().cards);
                     
-                    tasks.callback();
+                    task.callback();
                 },
             dependencies: 'update-record'
         });
