@@ -8,6 +8,7 @@ using Mozu.Core;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
@@ -26,9 +27,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ICurrentUserHelper _currentUserHelper;
         private readonly IApiContext _apiContext;
         private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
+        private readonly ISettings _settings;
         private ILogger _log;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext, ISettings settings)
         {
             _usersRepo = usersRepo;
             _authenticationHelper = authHelper;
@@ -36,6 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _apiContext = apiContext;
             _tenantsWebApi = tenantsWebApi;
             _currentUserHelper = currentUserHelper;
+            _settings = settings;
 
             _log = LoggingService.LoggerFor<HomeController>();
         }
@@ -73,6 +76,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             this.ViewData["taContext"] = taContext;
             this.ViewData["user"] = user;
             this.ViewData["siteRoles"] = roles;
+
+            this.ViewData["authCookieDomain"] = _settings.AppSettings("authCookieDomain");
             
             this.ViewData["extlocalefile"] = GetExtLocaleFile(Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName);
             this.ViewData["useGoogleAnalytics"] = System.Configuration.ConfigurationManager.AppSettings["useGoogleAnalytics"];

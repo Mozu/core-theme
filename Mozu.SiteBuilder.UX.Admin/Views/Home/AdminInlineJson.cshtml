@@ -10,7 +10,7 @@
             var user = (Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User)ViewData["user"];
             var siteRoles = (List<Mozu.Core.Api.Contracts.UserRole>)ViewData["siteRoles"];
             var siteRolesJson = Newtonsoft.Json.JsonConvert.SerializeObject(siteRoles);
-     
+            
             var taContext = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["taContext"]);
             var siteUsers = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["siteUsers"]);
             var extPath = WebConfigurationManager.AppSettings["extPath"];
@@ -41,6 +41,7 @@
         apiVersion: '@ver.FileVersion',
         dashBoardInstructions :  @Html.Raw(string.IsNullOrEmpty(dashboardInstructions) ? "'tbd'": dashboardInstructions) ,
         siteUsers:@Html.Raw(siteUsers),
+        authDomain: "@ViewData["authCookieDomain"]",
         buildDate : new Date ('@verDate')
 
         @if (Convert.ToBoolean(ViewData["useGoogleAnalytics"])) {
