@@ -110,7 +110,7 @@ Ext.define('Taco.view.discount.Form', {
         });
         me.amountInput = Ext.create('Ext.form.field.Number', {
             name: 'amount',
-
+            minValue: 0,
             hideTrigger: true
         });
         me.targetTypeInput = Ext.create('Ext.form.field.ComboBox', {
@@ -379,7 +379,6 @@ Ext.define('Taco.view.discount.Form', {
             //return;
         }
 
-
         me.amountPrefix.update(me.form.getValues());
 
         me.amountSuffix.update(me.form.getValues());
@@ -398,21 +397,25 @@ Ext.define('Taco.view.discount.Form', {
     },
     
     setTypeFieldVisibility: function (input) {
-        var value = input.getValue();
-        var me = this;
-        if (value === "Percentage" || value === "Amount") {
+        var me = this,
+            value = input.getValue();
+
+        if (value === 'Free') {
+            me.amountInput.hide();
+
+            me.amountInput.setValue(0);
+        } else {
             me.amountInput.show();
+
             if (me.targetTypeInput.getValue() === "Product") {
                 me.targetTypeInput.select("AllProducts");
                 me.targetTypeInput.fireEvent('change', me.targetTypeInput, me.targetTypeInput.getValue());
             }
+
             me.targetTypeInput.enable();
-        } else if (value === "Free") {
-            me.amountInput.hide();
-            me.amountInput.setValue(0);
 
+            me.amountInput.setMaxValue(value === 'Percentage' ? 100 : Number.MAX_VALUE);
         }
-
     },
 
 
