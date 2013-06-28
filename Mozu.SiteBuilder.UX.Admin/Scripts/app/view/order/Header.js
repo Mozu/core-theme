@@ -9,7 +9,7 @@ Ext.define('Taco.view.order.Header', {
         this.cls = [this.cls, Taco.baseCSSPrefix + 'order-detail-header'].join(' ');
 
         console.log(this.renderData);
-        this.renderTpl = [
+        this.renderTpl = new Ext.XTemplate(
             '<div class="taco-order-detail-header-section order-data">',
                 '<label>Order Total</label>',
                 '<h2>{total:usMoney}</h2>',
@@ -26,16 +26,57 @@ Ext.define('Taco.view.order.Header', {
             '</div>',
             '<div class="taco-order-detail-header-section history-data">',
                 '<label>Customer Profile</label>',
-//                '<div>Customer since: <strong>{[Ext.util.Format.date(values.customer.customerSince, "F j, Y")]}</strong></div>',
-//                '<div>Total orders: <strong>{[values.customer.totalOrders]}</strong></div>',
-//                '<div>Total spent: <strong>{[Ext.util.Format.usMoney(values.customer.totalSpent)]}</strong></div>',
-//                '<div>Groups: <strong>{[values.customer.groups]}</strong></div>',
+                '<div>Customer since: <strong>{[this.convertDate(values.createDate)]}</strong></div>',
+                '<div>Total orders: <strong>{orderCount}</strong></div>',
+                '<div>Total spent: <strong>{totalSpent}</strong></div>',
+//                '<div>Groups: <strong>{groups}</strong></div>',
             '</div>',
             // {createDate:date("M j, Y")}
             '<div class="taco-order-detail-header-section origin-data">',
                 '{createDate:date("F j, Y | g:i a")}<!-- | IP address: {ipAddress} -->',
-            '</div>'
-        ];
+            '</div>', {
+                convertDate: function(date) {
+                    return Ext.Date.format(date, 'F j, Y, g:i a');
+                }
+            }
+        );
+
+        var store= Ext.bind(Taco.core.data.StoreManager.getOrCreate({
+            model: 'Taco.model.CustomerAccount',
+            autoLoad: true,
+            proxy: {
+                type: 'ajax',
+                api: {
+                    read: '/admin/app/customer/list?id='+this.renderData.customerId
+                },
+                reader: {
+                    type: 'json',
+                    root: 'items',
+                    successProperty: 'success',
+                    messageProperty: "message"
+                }
+            },
+            listeners: {
+                load: Ext.bind(function(it, rec, successful) {
+
+                    function merge_options(obj1, obj2) {
+                        var obj3 = {};
+                        for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+                        for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+                        return (obj3);
+                    }
+                    var renderDataObject = merge_options(rec[0].data, this.renderData);
+ 
+console.log(renderDataObject);
+                    
+                    this.renderTpl.overwrite(this.el, renderDataObject);
+                    
+                    
+                },this)
+            }
+        }),this);
+        
+        
 
         this.callParent(arguments);
     }
