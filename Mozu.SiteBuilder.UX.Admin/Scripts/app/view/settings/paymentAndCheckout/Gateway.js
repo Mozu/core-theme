@@ -73,18 +73,30 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
         this.callParent(arguments);
     },
     initTitle: Ext.emptyFn,
-    beforeSave: function() {
-        var isDirty = false, val = {};
-        Ext.each(this.credFields, function(field) {
-            if (field.isDirty()) {
-                isDirty = true;
-            }
-            val[field.name] = field.getValue();
+    addChildSaveTasks: function (tasks) {
+        var me = this;
+        tasks.add({
+            key:'credentials-update-record',
+            fn:
+                function (task) {
+                    var isDirty = false, val = {};
+                    Ext.each(me.credFields, function (field) {
+                        if (field.isDirty()) {
+                            isDirty = true;
+                        }
+                        val[field.name] = field.getValue();
+                    });
+                    if (isDirty) {
+                        me.record.set('credentials', val);
+                    }
+                    me.record.set('supportedCards', me.supportedCardsCbg.getValue().cards);
+                    
+                    tasks.callback();
+                },
+            dependencies: 'update-record'
         });
-        if (isDirty) {
-            this.record.set('credentials', val);
-        }
-        this.record.set('supportedCards', this.supportedCardsCbg.getValue().cards);
-
+        return tasks;
     }
+    
+
 });
