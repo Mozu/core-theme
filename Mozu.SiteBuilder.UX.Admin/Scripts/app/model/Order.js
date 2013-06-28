@@ -71,17 +71,17 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         },
         {
-            "name": "subTotal",
+            "name": "subtotal",
             "type": "float",
             "useNull": true
         },
         {
-            "name": "discountTotal",
+            "name": "orderDiscountTotal",
             "type": "float",
             "useNull": true
         },
         {
-            "name": "discountDescription",
+            "name": "orderDiscountDescription",
             "type": "string",
             "useNull": true
         },
