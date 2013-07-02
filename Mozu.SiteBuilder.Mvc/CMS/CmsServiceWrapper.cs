@@ -317,7 +317,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.Document>> RawCreate2(DC.Document doc)
         {
-            return _docRepo.CreateDocument(doc.DocumentListName, doc,publishState:"draft");
+            return _docRepo.CreateDocument(doc.DocumentListName, doc,publishState:"latest");
         }
 
         public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(DC.Document doc)
