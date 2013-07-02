@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterType<SbApiContextBuilder>().As<IApiContextBuilder>();
 
             builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().As<ISiteBuilderApiContext>().InstancePerLifetimeScope()
-                .WithProperty("CmsDraftState", "draft");
+                .WithProperty("CmsDraftState", "latest");
             builder.RegisterType<Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper>().InstancePerLifetimeScope();
             builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>().InstancePerDependency();
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductAdmin.Contracts.Category  ).Assembly);
