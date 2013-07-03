@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     {
                         foreach (var prop in p.Properties)
                         {
-                            var def = pt.Properties.FirstOrDefault(x => prop.AttributeFQN == x.AttributeFQN && x.AttributeDetail.ValueType == "AdminEntered" && x.AttributeDetail.DataType == "String");
+                            var def = pt.Properties.FirstOrDefault(x => prop.AttributeFQN == x.AttributeFQN && x.AttributeDetail.InputType == "List" && x.AttributeDetail.ValueType == "AdminEntered" && x.AttributeDetail.DataType == "String");
                             if (def != null)
                             {
                                 if (prop.Values != null && prop.Values.Count == 1)
