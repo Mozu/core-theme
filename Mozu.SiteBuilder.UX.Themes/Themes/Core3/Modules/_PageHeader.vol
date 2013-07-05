@@ -1,23 +1,17 @@
 ﻿<header class="mz-site-head">
-    
     {% include "Modules/UtilityNav" %}
-
     {% include "Modules/SearchBox" %} 
-
     {% block StoreBranding %}
         <h1 class="mz-store-branding-wrap" id="mz-store-branding">
             <a href="/" title="Store Brand">{{ siteContext.settings.general.websiteName }}</a>
         </h1>
     {% endblock StoreBranding %}
-
     {% block TopNav %}
         {% include "Modules/TopNav" %}
     {% endblock TopNav %}
-    
     {% comment %}
         This empty block provides the flexibility of adding code from some other source, in a sub-page.
     {% endcomment %}
     {% block HeaderElements %}
-
     {% endblock HeaderElements %}
 </header>

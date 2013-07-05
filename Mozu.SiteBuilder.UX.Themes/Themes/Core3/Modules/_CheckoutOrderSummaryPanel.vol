@@ -15,27 +15,27 @@
                 </tr>
             </thead>
             <!-- ko foreach: Items -->
-            <tbody>
-                <tr class="mz-line-item" data-bind="css: { 'mz-discounted': $data.DiscountTotal }">
-                    <td data-bind="text: Product.Name "></td>
-                    <td data-bind="text: Quantity"></td>
-                    <td><span class="mz-item-price" data-bind="currencyText: Product.Price.Price"></span></td>
-                    <td><span class="mz-item-price" data-bind="currencyText: Subtotal"></span></td>
-                </tr>
-                <!-- ko if: DiscountTotal && DiscountTotal != Subtotal -->
-                <tr class="mz-line-item mz-discount">
-                    <td colspan="2">
-                      <!-- ko if: $data.Discount -->
-                        <span class="mz-discount-name" data-bind="text: Discount.Name"></span> 
-                        <span class="mz-discount-amt" data-bind="visible: Discount.FreeShipping">Free Shipping</span>
+                <tbody>
+                    <tr class="mz-line-item" data-bind="css: { 'mz-discounted': $data.DiscountTotal }">
+                        <td data-bind="text: Product.Name "></td>
+                        <td data-bind="text: Quantity"></td>
+                        <td><span class="mz-item-price" data-bind="currencyText: Product.Price.Price"></span></td>
+                        <td><span class="mz-item-price" data-bind="currencyText: Subtotal"></span></td>
+                    </tr>
+                    <!-- ko if: DiscountTotal && DiscountTotal != Subtotal -->
+                        <tr class="mz-line-item mz-discount">
+                            <td colspan="2">
+                                <!-- ko if: $data.Discount -->
+                                    <span class="mz-discount-name" data-bind="text: Discount.Name"></span> 
+                                    <span class="mz-discount-amt" data-bind="visible: Discount.FreeShipping">Free Shipping</span>
+                                <!-- /ko -->
+                                <span class="mz-discount-amt" ><span data-bind="currencyText: DiscountTotal"></span> OFF</span>
+                            </td>
+                            <td><span data-bind="currencyText: Product.Price.SalePrice"></span></td>
+                            <td><span data-bind="currencyText: Total"></span></td>
+                        </tr>
                     <!-- /ko -->
-                        <span class="mz-discount-amt" ><span data-bind="currencyText: DiscountTotal"></span> OFF</span>
-                    </td>
-                    <td><span data-bind="currencyText: Product.Price.SalePrice"></span></td>
-                    <td><span data-bind="currencyText: Total"></span></td>
-                </tr>
-                <!-- /ko -->
-            </tbody>
+                </tbody>
             <!-- /ko -->
             <tbody>
                 <tr class="mz-cost-summary">

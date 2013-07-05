@@ -1,4 +1,10 @@
 ﻿{% extends "default" %}
+
+{% block Init %}
+    {% setTemplateVariables BodyTagClasses="mz-error-page" %}
+    {{ block.super }}
+{% endblock Init %}
+
 {% block BodyContent %}
 <div id="mz-error-page" class="mz-error-page" >
 

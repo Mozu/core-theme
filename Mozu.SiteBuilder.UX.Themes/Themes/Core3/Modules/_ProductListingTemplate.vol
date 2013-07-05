@@ -7,7 +7,7 @@
 					<div class="mz-product-item-wrap">
 						<div class="mz-product-image-wrap">
 							<a class="mz-product-image-link" data-bind="attr: { href: '/product/' + ProductCode }">
-								<img data-bind="attr: { src: (Content.ProductImages[0] && Content.ProductImages[0].ImageUrl || 'http://placehold.it/200&text=Missing+Photo') + '?size=160' } " class="mz-product-image">
+								<img data-bind="attr: { src: (Content.ProductImages[0] && Content.ProductImages[0].ImageUrl || 'http://placehold.it/160&text=Missing+Photo') + '?size=160' } " class="mz-product-image">
 							</a>
 						</div>
 

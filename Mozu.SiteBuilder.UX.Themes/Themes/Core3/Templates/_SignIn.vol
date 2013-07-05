@@ -1,7 +1,8 @@
 ﻿{% extends "default" %}
 
 {% block Init %}
-	{% setTemplateVariables BodyTagClasses="login" %}
+	{% setTemplateVariables BodyTagClasses="mz-login-page" %}
+    {{ block.super }}
 {% endblock Init%}
 
 {% block BodyContent %}

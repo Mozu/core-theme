@@ -3,23 +3,22 @@
         <button class="mz-faceting-clearall" data-mz-action="clearfacets" data-bind="click: clearAllFacets, disable: $root.submitting">Clear All Filters</button>
     </div>
     <!-- ko foreach: Facets -->
-  <div class="mz-sidebar-item" data-bind="visible: Values().length > 0">
-    <h4 data-bind="text: Label"></h4>
-    <ul class="mz-faceting-group">
-        <li>
-          <a href="#" class="mz-faceting-clear" data-bind="click: empty, visible: !empty()">Clear</a>
-        </li>
-      <!-- ko foreach: Values -->
-      <li>
-        <input type="checkbox" class="mz-faceting-option" data-bind="checked: IsApplied, attr: { id: id }, disable: $root.submitting">
-          <label data-bind="attr: { for: id }, text: Label"></label>
-        </li>
-      <!-- /ko -->
-    </ul>
-  </div>
+        <div class="mz-sidebar-item" data-bind="visible: Values().length > 0">
+            <h4 data-bind="text: Label"></h4>
+            <ul class="mz-faceting-group">
+                <li>
+                  <a href="#" class="mz-faceting-clear" data-bind="click: empty, visible: !empty()">Clear</a>
+                </li>
+                <!-- ko foreach: Values -->
+                    <li>
+                        <input type="checkbox" class="mz-faceting-option" data-bind="checked: IsApplied, attr: { id: id }, disable: $root.submitting">
+                        <label data-bind="attr: { for: id }, text: Label"></label>
+                    </li>
+                <!-- /ko -->
+            </ul>
+        </div>
     <!-- /ko -->
     <div class="mz-sidebar-item">
         <button class="mz-faceting-clearall" data-mz-action="clearfacets" data-bind="click: clearAllFacets, disable: $root.submitting">Clear All Filters</button>
-        
     </div>
 </section>

@@ -1,5 +1,5 @@
 ﻿<span data-mz-role="faceting" data-mz-products="{% json_attribute Model %}" data-mz-defaultpagesize="{{ themeSettings.defaultPageSize }}" style="visibility:hidden">
-  <div id="mz-sidebar" class="mz-layout-sidebar">
+  <div id="mz-sidebar" class="mz-layout-sidebar" data-bind="visible: Facets().length > 0">
     {% include "Modules/FacetingPanel" %}
   </div>
   <section id="mz-layout-container" class="mz-layout-container mz-content-inner-wrap mz-category-wrapper">
@@ -7,24 +7,27 @@
       <div class="mz-paging-info">
         Showing <span data-bind="text: StartIndex() + 1"></span> - <span data-bind="text: lastIndex()"></span> of <span data-bind="text: TotalCount"></span> results
         <span class="mz-paging-pagesize-wrap">
-            <label for="mz-paging-pagesize">Show 
-                <select data-bind="value: PageSize">
-                    <option value="15">15</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-             results per page
-             </label>
+          <label for="mz-paging-pagesize">
+            Show
+            <select data-bind="value: PageSize">
+              <option value="15">15</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            results per page
+          </label>
+        </span>
       </div>
       {% include "Modules/ProductListingTemplate" %}
       <div data-bind="template: { name: 'mz-tpt-product-listing', data: Items }"></div>
       <div class="mz-paging">
         <a class="mz-paging-prev" href="#" data-bind="click: previousPage, css: { 'mz-disabled': !hasPreviousPage() }">Previous Page</a>
         <!-- ko foreach: pageNumbers -->
-            <a class="mz-paging-number" href="#" data-bind="click: $root.setPage, text: $data"></a>
+        <a class="mz-paging-number" href="#" data-bind="click: $root.setPage, text: $data"></a>
         <!-- /ko -->
         <a class="mz-paging-next" href="#" data-bind="click: nextPage, css: { 'mz-disabled': !hasNextPage() }">Next Page</a>
+      </div>
     </div>
   </section>
 </span>

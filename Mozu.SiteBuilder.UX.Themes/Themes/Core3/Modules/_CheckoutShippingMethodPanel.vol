@@ -1,4 +1,4 @@
-﻿<div class="mz-panel" id="mz-shipping-method-panel" data-bind="with: ShippingInfo, cssClassFrom: ShippingInfo.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
+<div class="mz-panel" id="mz-shipping-method-panel" data-bind="with: ShippingInfo, cssClassFrom: ShippingInfo.stepStatus(), cssClassFromPrefix: 'mz-stepstatus-'">
     <h3 class="mz-panel-header">
         Shipping Method
         <button class="mz-edit-button" data-bind="click: edit">Edit</button>
@@ -10,14 +10,14 @@
                 <strong data-bind="text: ShippingMethodName"></strong> (<span data-bind="currencyText: Price.Price"></span>)
             </div>
             <div class="mz-form-fields">
-            <!-- ko if: availableShippingMethods().length > 0 -->
-                <div data-bind="foreach: availableShippingMethods">
-                    <label class="mz-inline">
-                        <input type="radio" name="shippingMethod" data-bind="value: ShippingMethodCode, checked: $parent.ShippingMethodCode">
-                        <span data-bind="text: ShippingMethodName"></span> <span class="mz-shipping-price"><span data-bind="currencyText: Price"></span></span>
-                    </label>
-                </div>
-            <!-- /ko -->
+                <!-- ko if: availableShippingMethods().length > 0 -->
+                    <div data-bind="foreach: availableShippingMethods">
+                        <label class="mz-inline">
+                            <input type="radio" name="shippingMethod" data-bind="value: ShippingMethodCode, checked: $parent.ShippingMethodCode">
+                            <span data-bind="text: ShippingMethodName"></span> <span class="mz-shipping-price"><span data-bind="currencyText: Price"></span></span>
+                        </label>
+                    </div>
+                <!-- /ko -->
 
                 <div class="mz-next-step">
                     {% include "Modules/LoadingBar" %}

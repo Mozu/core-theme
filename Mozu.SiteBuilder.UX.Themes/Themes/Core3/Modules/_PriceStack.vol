@@ -1,22 +1,20 @@
 ﻿<div class="mz-price-stack-wrap">		
-		<div class="mz-price-label">{{Model.ProductCode}}</div>
+	<div class="mz-price-label">{{Model.ProductCode}}</div>
     <div class="mz-price-sub-wrap">
-      
         {% if Model.Price.Price != Model.Price.OfferPrice %}
-        <div class="mz-price-amt mz-strikethrough">
-            {{Model.Price.Price|currency}}
-        </div>
-        <div class="mz-price-saleprice mz-price-amt">
-            {% if Model.Price.HasDiscount %}
-            <span class="mz-price-discount-name">{{Model.Price.DiscountName}} &ndash;</span>
-            {% endif %}
-            {{Model.Price.OfferPrice|currency}}
-        </div>
+            <div class="mz-price-amt mz-strikethrough">
+                {{Model.Price.Price|currency}}
+            </div>
+            <div class="mz-price-saleprice mz-price-amt">
+                {% if Model.Price.HasDiscount %}
+                    <span class="mz-price-discount-name">{{Model.Price.DiscountName}} &ndash;</span>
+                {% endif %}
+                {{Model.Price.OfferPrice|currency}}
+            </div>
         {% else %}
-        <div class="mz-price-amt">
-            {{Model.Price.Price|currency}}
-        </div>
+            <div class="mz-price-amt">
+                {{Model.Price.Price|currency}}
+            </div>
         {% endif %}
-        <div class="mz-dotted-spanner">.</div>
     </div>
 </div>

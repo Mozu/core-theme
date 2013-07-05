@@ -1,30 +1,22 @@
 ﻿<tr>
-    <td>
-        <!-- This is unimplemented for alpha. -->
-        {% if not Model.HasDiscount %}
-        <div id="mz-cart-coupon-form" class="mz-coupon-wrap" style="display:none">
-            Coupon code: <input {% if Model.Items.Count == 0 %} disabled="disabled" {% endif %} style="width: 100px;" id="mz-cart-coupon-code" type="text" />&nbsp;
-            <input id="mz-cart-apply-coupon-button" {% if Model.Items.Count == 0 %} disabled="disabled" {% endif %} type="button" value="Apply" />
-        </div>
-        {% else %}{% endif %}
+    <td colspan="5" align="right">
+        <em class="mz-auxiliary-text">Tax &amp; Shipping Calculated at Checkout</em>
     </td>
-    <td colspan="4" align="right"><em class="mz-auxiliary-text">Tax &amp; Shipping Calculated at Checkout</em></td>
 </tr>
 <tr class="mz-cart-total-row">
-    <td class="mz-cart-total-label" colspan="3" align="right">Order Total:</td>
-    <td class="mz-cart-total-wrap" align="right"><strong><span id="mz-cart-total" class="mz-cart-total" data-bind="currencyText: DiscountedTotal"></span></strong></td>
-    <td>&nbsp;</td>
+    <td class="mz-cart-total-label" colspan="3" align="right">
+        Order Total:
+    </td>
+    <td class="mz-cart-total-wrap" colspan="2" align="right">
+        <strong><span id="mz-cart-total" class="mz-cart-total" data-bind="currencyText: DiscountedTotal"></span></strong>
+    </td>
 </tr>
-<tr >
+<tr> 
     <td colspan="5" align ="right">
         <input type="hidden" name="Id" value="{{ Model.Id }}" />
-        {% comment %}
-        <!-- Below button should no longer be necessary, as edits to quantity instantly "take" -->
-        <input type="button" value="Update" id="update" data-bind="click: updateItems" />
-        {% endcomment %}
-        <!-- ko if: submitting -->
-        {% include "Modules/LoadingBar" %}
-        <!-- /ko -->
+            <!-- ko if: submitting -->
+                {% include "Modules/LoadingBar" %}
+            <!-- /ko -->
         <button id="checkout" class="mz-button mz-btn-checkout mz-btn-cta"  {% if Model.Items.Count == 0 %} disabled="disabled" {% endif %} data-bind="click: proceedToCheckout, enable: canCheckout, visible: !submitting()">Proceed to Checkout</button>
     </td>
 </tr>

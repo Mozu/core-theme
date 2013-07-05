@@ -1,8 +1,9 @@
 ﻿{% extends "default" %}
-{% setTemplateVariables BodyTagClasses="checkout" %}
 
 {% block Init %}
-{% require_script "pages/checkout" %}
+    {% setTemplateVariables BodyTagClasses="mz-checkout" %}
+    {% require_script "pages/checkout" %}
+    {{ block.super }}
 {% endblock Init %}
 
 {% block BodyContent %}

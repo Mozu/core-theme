@@ -1,6 +1,11 @@
 ﻿{% extends "default" %}
 
 
+{% block Init %}
+    {% setTemplateVariables BodyTagClasses="mz-search-results" %}
+    {{ block.super }}
+{% endblock Init %}
+
 {% block BodyContent %}
 <div class="mz-search-results">
     <h2 class="mz-search-restults-title mz-page-title">Search Results</h2>

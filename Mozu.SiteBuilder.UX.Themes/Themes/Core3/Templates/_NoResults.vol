@@ -1,5 +1,9 @@
 ﻿{% extends "default" %}
-{% setTemplateVariables BodyTagClasses="search-results no-results" %}
+
+{% block Init %}
+    {% setTemplateVariables BodyTagClasses="mz-search-results mz-no-results" %}
+    {{ block.super }}
+{% endblock Init %}
 
 {% block BodyContent %}
 

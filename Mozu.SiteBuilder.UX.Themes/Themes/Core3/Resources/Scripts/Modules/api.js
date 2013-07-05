@@ -4,8 +4,9 @@
  */
 
 define(['sdk'], function (Mozu) {
-    Mozu.setServiceUrls(window.zapiConfig.urls);
-    var headers = window.zapiConfig.header,
+    var apiConfig = JSON.parse(document.getElementsByTagName('head')[0].getAttribute('data-api-config'));
+    Mozu.setServiceUrls(apiConfig.urls);
+    var headers = apiConfig.header,
         api = Mozu.Tenant(headers['x-vol-tenant'])
            .SiteGroup(headers['x-vol-site-group'])
            .Site(headers['x-vol-site'])
@@ -14,7 +15,9 @@ define(['sdk'], function (Mozu) {
         //   .BypassCache(headers['x-vol-bypass-cache'])
            .api();
     api.on('error', function (badPromise, xhr, requestConf) {
-        window.console && console.error("Error communicating with Mozu API at " + requestConf.url, badPromise, xhr);
+        var e = "Error communicating with Mozu API";
+        if (requestConf && requestConf.url) e += (" at " + requestConf.url);
+        window.console && console.error(e, badPromise, xhr);
     });
 
     return api;

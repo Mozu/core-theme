@@ -1,10 +1,7 @@
 ﻿{% block Breadcrumb %}
-{% comment %}
-	Obviously, the below template is a placeholder. Breadcrumb functionality is not yet complete.
-{% endcomment %}
-<div class="mz-breadcrumb-wrap">
-	{% for crumb in SiteContext.Navigation.Breadcrumbs %}
-        <a href="{{crumb.url}}" class="mz-breadcrumb{% if forloop.first %} mz-breadcrumb-first{% endif %}{% if forloop.last %} mz-breadcrumb-active{% endif %}">{{crumb.name}}</a> {% if not forloop.last %}&gt;{% endif %}
-    {% endfor %}
-</div>
+    <div class="mz-breadcrumb-wrap">
+    	{% for crumb in SiteContext.Navigation.Breadcrumbs %}
+            <a href="{{crumb.url}}" class="mz-breadcrumb{% if forloop.first %} mz-breadcrumb-first{% endif %}{% if forloop.last %} mz-breadcrumb-active{% endif %}">{{crumb.name}}</a> {% if not forloop.last %}&gt;{% endif %}
+        {% endfor %}
+    </div>
 {% endblock Breadcrumb %}

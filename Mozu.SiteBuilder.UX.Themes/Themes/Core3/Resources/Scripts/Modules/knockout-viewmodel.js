@@ -84,7 +84,28 @@
         };
     },
 
-    ptype = {
+    deepExtendProps = ['statics','observables','observableArrays','submodels','submodelArrays'],
+
+    KnockoutVM = function(obj, parent) {
+        var me = this,
+            objCopy = $.extend(true, {}, obj),
+            processedObj;
+        this.__parentVM = parent;
+        this.exclusionList = makeExclusionList(this);
+        this.eventBus = makeEventBus(this);
+        if (this.beforePopulate) processedObj = this.beforePopulate(obj);
+        this.populate(processedObj || obj);
+        this.submitting = ko.observable(false);
+        if (this.mozuType) 
+            this.createSDKObject(objCopy);
+        if (this.hasMessages)
+            makeMessageBus(this);
+        this.initialize.apply(this, arguments);
+        this.initialized = true;
+    };
+
+    $.extend(KnockoutVM.prototype, {
+        constructor: KnockoutVM,
         endpoint: "",
         observables: {},
         observableArrays: {},
@@ -168,20 +189,20 @@
                             invalid = !self[k].validate(undefined, silently); // if validation did not run OR observable is not invalidating on change, run it now
                         if (invalid) {
                             invalidCount++;
-                            console.log('invalid item:', k);
                         }
                     }
                 });
             });
-            var validateSubmodel = function (k) {
-                if (self[k].validate && !self[k].validate(loudly))
+            var validateSubmodel = function (sm) {
+                if (sm.validate && !sm.validate(loudly))
                     invalidCount++;
             };
-            $.each(this.submodels, validateSubmodel);
-            $.each(this.submodelArrays, function (ix, sm) {
-                $.each(sm, validateSubmodel);
+            $.each(this.submodels, function(name) {
+                validateSubmodel(self[name]);
             });
-            console.log('validation error count:', invalidCount);
+            $.each(this.submodelArrays, function (i) {
+                $.each(self[i](), validateSubmodel);
+            });
             return invalidCount === 0;
         },
 
@@ -227,6 +248,8 @@
                     (actionName in me ? apiModel : me)[actionName] = function (data) {
                         // include self by default in update action
                         if (actionName in { 'create': true, 'update': true }) data = data || me.toJS();
+                        // handle bad argument by nulling it--we don't want to stringify unstringifiable things
+                        if (typeof data === 'object' && !$.isArray(data) && !$.isPlainObject(data)) data = null;
                         return apiModel.action(actionName, data);
                     };
                 });
@@ -262,32 +285,57 @@
         isItemModulus: function (itemIndex, modulus) {
             itemIndex = ko.utils.unwrapObservable(itemIndex) + 1;
             return itemIndex !== 1 && itemIndex % modulus === 0;
-        }
-    };
+        },
+        initialize: function() {}
+    });
 
-    return {
-        extend: function (conf, initFunc) {
-            var ctor = function (obj, parent) {
-                var me = this,
-                    objCopy = $.extend(true, {}, obj);
-                this.constructor = ctor;
-                this.__parentVM = parent;
-                if (conf) $.extend(this, conf);
-                this.exclusionList = makeExclusionList(this);
-                this.eventBus = makeEventBus(this);
-                this.populate(obj);
-                this.initialized = true;
-                this.submitting = ko.observable(false);
-                if (this.mozuType) 
-                    this.createSDKObject(objCopy);
-                if (this.hasMessages)
-                    makeMessageBus(this);
-                if (initFunc)
-                    initFunc.apply(this, arguments);
-            };
-            ctor.prototype = ptype;
+    KnockoutVM.extend = function(props, staticProps, ctor) {
+        var parent = this,
+            child;
 
-            return ctor;
+        if (typeof staticProps === "function") {
+            ctor = staticProps;
+            staticProps = null;
         }
-    };
+
+        child = function() {
+            this.superInit = $.proxy(parent.prototype.initialize,this);
+            parent.apply(this, arguments);
+        };
+
+        // Add static properties to the constructor function, if supplied.
+        if (staticProps) $.extend(child, parent, staticProps);
+
+        // Set the prototype chain to inherit from `parent`, without calling
+        // `parent`'s constructor function.
+        var Surrogate = function(){ 
+            this.constructor = child;
+        };
+        Surrogate.prototype = parent.prototype;
+        child.prototype = new Surrogate();
+
+        if (props) {
+            $.each(deepExtendProps, function(ix, name) {
+                if (props[name]) {
+                    child.prototype[name] = $.extend(true, {}, child.prototype[name] || {}, props[name]);
+                    delete props[name];
+                }
+            });
+
+            // Add prototype properties (instance properties) to the subclass,
+            // if supplied.
+            $.extend(child.prototype, props);
+        }
+
+        if (ctor) child.prototype.initialize = ctor;
+
+        // Set a convenience property in case the parent's prototype is needed
+        // later.
+        child.__super__ = parent.prototype;
+
+        return child;
+    }
+
+    return KnockoutVM;
+
 });

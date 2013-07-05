@@ -1,7 +1,8 @@
 ﻿{% extends "default" %}
 
 {% block Init %}
-{%setTemplateVariables BodyTagClasses="blog-single-post" %}
+	{% setTemplateVariables BodyTagClasses="mz-blog-single-post" %}
+	{{ block.super }}
 {%endblock Init %}
 
 {% block BodyContent %}

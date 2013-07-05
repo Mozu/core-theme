@@ -1,6 +1,9 @@
 {% extends "default" %}
 
-{% setTemplateVariables BodyTagClasses="category" %}
+{% block Init %}
+    {% setTemplateVariables BodyTagClasses="mz-category" %}
+    {{ block.super }}
+{% endblock Init %}
 
 {% block BodyContent %}
 
