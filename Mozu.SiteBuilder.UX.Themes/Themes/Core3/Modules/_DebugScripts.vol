@@ -1,7 +1,5 @@
 ﻿<script>
-    if (!window.console) window.console = { log: function() {} };
     var require = {
-        //urlArgs: "bust=" +  (new Date()).getTime(),
         baseUrl: "/resources/scripts",
         paths: {
             sdk: "../../sdk/debug",

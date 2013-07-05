@@ -1,8 +1,9 @@
 ﻿{% extends "default" %}
 
 {% block Init %}
-	{% setTemplateVariables BodyTagClasses="checkout-confirmation" %}
+	{% setTemplateVariables BodyTagClasses="mz-checkout-confirmation" %}
 	{% setTemplateVariables IsConfirmationPage="true" %}
+	{{ block.super }}
 {% endblock Init%}
 
 {% block BodyContent %}

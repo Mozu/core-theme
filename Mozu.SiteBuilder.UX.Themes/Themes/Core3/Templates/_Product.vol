@@ -1,7 +1,8 @@
 {% extends "default" %}
 
 {% block Init %}
-	{% setTemplateVariables BodyTagClasses="product" %}
+	{% setTemplateVariables BodyTagClasses="mz-product" %}
+	{{ block.super }}
 {% endblock Init%}
 
 {% block BodyContent %}

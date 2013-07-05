@@ -1,8 +1,9 @@
 ﻿{% extends "default" %}
-{% setTemplateVariables BodyTagClasses="cart" %}
 
 {% block Init %}
-{% require_script "pages/cart" %}
+    {% setTemplateVariables BodyTagClasses="mz-cart" %}
+    {% require_script "pages/cart" %}
+    {{ block.super }}
 {% endblock Init%}
 
 {% block BodyContent %}

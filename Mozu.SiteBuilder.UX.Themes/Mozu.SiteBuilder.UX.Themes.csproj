@@ -367,6 +367,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
     </Compile>
+    <Content Include="buildcore.bat" />
     <None Include="Docs\Mozu_Themeing_Concepts.md" />
     <Content Include="Morrissey\src\tasks\buildtemptheme.js" />
     <Content Include="Morrissey\src\tasks\removeuntouchedfiles.js" />

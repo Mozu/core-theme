@@ -1,35 +1,28 @@
 ﻿
 <div class="mz-product-listing-wrap">
-	{% html_partial "modules/PagingOptions" %}
-	<h2 class="mz-page-header mz-category-head" {% data_attributes Model.name %}>{{ViewData.categoryTitle}}</h2>
-	
-	{% if Model.Items %}
-	<nav class="mz-list-control-wrap">
-		<ul class="mz-list-control" data-items-per-row="3">
-      {% for prod in Model.Items %}
-   
-  
-      <li class="mz-list-item {% if forloop.counter|divisibleby:3 %}mz-list-last{% endif %}">
-		   
-		        <div class="mz-product-item-wrap">
-		            <a class="mz-product-image-link" href="{{prod.Url}}">
-		                <img src="{{prod.Images.Main.Resize.100.Src}}" class="mz-product-image" />
-		            </a>
-		            <div class="mz-product-info-wrap">
-		                <a class="mz-product-title-link" href="{{prod.Url}}">{{prod.Content.ProductName}}</a>
-		                {% html_partial "modules/PriceStack" prod %}
-		            </div>
-		        </div>
-		    </li>
-			{% if forloop.counter|divisibleby:3 %}
-				<li class="mz-list-spacer"></li>
-			{% else %}
-			{% endif %}
-			{% endfor %}
-		</ul>
-	</nav>
+    {% html_partial "modules/PagingOptions" %}
+    {% if Model.Items %}
+        <ul class="mz-list-control" data-items-per-row="3">
+            {% for prod in Model.Items %}
+                <li class="mz-list-item {% if forloop.counter|divisibleby:3 %}mz-list-last{% endif %}">
+                    <div class="mz-product-item-wrap">
+                        <div class="mz-product-image-wrap">
+                            <a class="mz-product-image-link" href="{{prod.Url}}">
+                                <img src="{{prod.Images.Main.Resize.160.Src}}" class="mz-product-image" />
+                            </a>
+                        <div class="mz-product-info-wrap">
+                            <a class="mz-product-title-link" href="{{prod.Url}}">{{prod.Content.ProductName}}</a>
+                            {% html_partial "modules/PriceStack" prod %}
+                        </div>
+                    </div>
+                </li>
+                {% if forloop.counter|divisibleby:3 %}
+                    <li class="mz-list-spacer"></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
     {% endif %}
-	{% html_partial "modules/paging" %}
+    {% html_partial "modules/paging" %}
 </div>
 
 
