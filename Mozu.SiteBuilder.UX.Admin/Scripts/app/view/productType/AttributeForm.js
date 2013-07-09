@@ -262,7 +262,7 @@
             }]
         });
 
-        if (attribute.get('inputType') === 'list' && !attribute.get('isOption')) {
+        if (attribute.get('inputType') === 'List' && this.type !== 'options') {
             fieldGroup.add({
                 name: 'allowMulti',
                 checked: this.record.get('allowMulti'),

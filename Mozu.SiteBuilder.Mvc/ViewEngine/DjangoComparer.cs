@@ -52,6 +52,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             }
             catch (Exception ex)
             {
+            
                 //todo: handle valid use cases
                 throw new Exception("tell phipps", ex);
             }
