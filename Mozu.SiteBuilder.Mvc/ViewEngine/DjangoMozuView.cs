@@ -156,6 +156,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             requestContext["User"] = requestContext["user"] = user;
             requestContext["true"] = true;
             requestContext["false"] = false;
+            requestContext["viewPath"] = viewPath;
             requestContext["PaymentTypes"] = new
             {
                 CreditCard = Mozu.CommerceRuntime.Contracts.Payments.PaymentType.CreditCard,
@@ -165,14 +166,22 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
           //  this.
           //  var result = ViewEngines.Engines.FindPartialView(_html.ViewContext.Controller.ControllerContext, viewPath);
 
-            var templateManager = GetManager(viewContext.HttpContext);
-            var reader = templateManager.RenderTemplate(_mappedPath, requestContext);
-            var buffer = new char[4096];
-            int count = 0;
-
-            while ((count = reader.Read(buffer, 0, buffer.Length)) > 0)
+           
+            try
             {
-                writer.Write(buffer, 0, count);
+                var templateManager = GetManager(viewContext.HttpContext);
+                var reader = templateManager.RenderTemplate(_mappedPath, requestContext);
+                var buffer = new char[4096];
+                int count = 0;
+
+                while ((count = reader.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    writer.Write(buffer, 0, count);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("error in template " + this.viewPath, ex);
             }
         }
 
