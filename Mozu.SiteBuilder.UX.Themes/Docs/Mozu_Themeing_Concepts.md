@@ -147,7 +147,7 @@ Example page template:
 {% endblock BodyContent %}
 ```
 
-The first line indicates that the template is a variation of "default", the default layout. The rest of the template file is just a list of `{% block %}` statements, specifying how to override the different areas of the default layout. All page templates in the Templates folder should follow this basic template.
+The first line indicates that the template is a variation of "default", the default layout. The rest of the template file is mostly just a list of `{% block %}` statements, specifying how to override the different areas of the default layout. All page templates in the Templates folder should follow this basic template.
 
 The default page types in your store include:
 
@@ -225,11 +225,27 @@ They work like you'd expect. Many have gone before me and explained this with mo
 
 ##### The `data_attribute` tag
 
+Add this to elements that should be editable in the WYSIWYG. It adds metadata to them in edit mode.
 
+##### The `json_attribute` tag
 
-    0.  The Django template language and control structures
-        0.  Variable evaluation
-        0.  Tag usage
+This tag turns an objet into a serialized JSON object escaped for insertion into an HTML data attribute, which is the convention we use for safely embedding model data on a page without changing the DOM structure or modifying global JavaScript scope.
+
+#### Filters
+
+Filters are a Django concept that allows you to do something to values before you either use them or argue them to a tag. We added a couple I guess. TODO: not be stupid about this
+
+#### Includes
+
+The templates in the core theme are separated into modules, which are then hooked together using the include tag. Including another template will add it to the current rendering context; it receives the same Model and arguments as the template that called it.
+
+#### Blocks
+
+Blocks are a concept in Django inheriance that the core theme uses in the base layout template to allow inheriting templates to change some aspects of the default.
+
+x    0.  The Django template language and control structures
+x        0.  Variable evaluation
+x        0.  Tag usage
         0.  Filter usage
         0.  Includes
         0.  Blocks (used only in layout)
