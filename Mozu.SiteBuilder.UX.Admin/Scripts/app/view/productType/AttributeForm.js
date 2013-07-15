@@ -127,7 +127,7 @@
                     mode: 'SINGLE',
                     listeners: {
                         selectionchange: function (selectionModel, records) {
-                            if (!Array.isArray(records)
+                            if (!Ext.isArray(records)
                                 || records.length !== 1) {
                                 return;
                             }

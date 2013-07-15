@@ -66,7 +66,7 @@ Ext.define('Taco.core.ux.form.Form', {
             'beforeload',
 
             /**
-             * @event afterload
+             * @event afterloadg
              * Fired after the record has been successfully loaded for this form
              * @param {Taco.core.ux.Form.Form} form Form where the record was loaded
              * @param {Ext.data.Model} record The record that was loaded into the form
@@ -589,10 +589,13 @@ Ext.define('Taco.core.ux.form.Form', {
         validations = Ext.ModelManager.getModel(model).prototype.validations;
 
         Ext.each(validations, function (validation) {
-            if (typeof rules[validation.name] === 'undefined') {
-                rules[validation.name] = [];
+            // adding check for validation.name. barfing in IE8;
+            if (validation && validation.name) {
+                if (typeof rules[validation.name] === 'undefined') {
+                    rules[validation.name] = [];
+                }
+                rules[validation.name].push(validation);
             }
-            rules[validation.name].push(validation);
         });
 
         fields = this.query('[isFormField]');

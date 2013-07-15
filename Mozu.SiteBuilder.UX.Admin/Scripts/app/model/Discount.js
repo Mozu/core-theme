@@ -83,8 +83,8 @@ Ext.define('Taco.model.Discount', {
                     autoLoad: true,
                     clearFilters: false,
                     remoteFilter: false,
-                    filters: function(record) {
-                        return (me.get('products') || []).indexOf(record.getId()) > -1;
+                    filters: function (record) {
+                        return Ext.Array.indexOf((me.get('products') || []), record.getId()) > -1;
                     }
                 });
         }
@@ -102,8 +102,8 @@ Ext.define('Taco.model.Discount', {
                     autoLoad: true,
                     clearFilters: false,
                     remoteFilter: false,
-                    filters: function(record) {
-                        return (me.get('categories') || []).indexOf(record.getId()) > -1;
+                    filters: function (record) {
+                        return Ext.Array.indexOf((me.get('categories') || []), record.getId()) > -1;
                     }
                 });
 

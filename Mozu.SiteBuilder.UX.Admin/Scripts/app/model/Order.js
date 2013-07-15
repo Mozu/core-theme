@@ -43,7 +43,7 @@ Ext.define('Taco.model.Order', {
         {
             "name": "createDate",
             "type": "date",
-            "useNull": true,
+            "useNull": true
         },
         {
             "name": "customerId",

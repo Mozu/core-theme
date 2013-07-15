@@ -56,23 +56,26 @@ Ext.define('Taco.view.order.subform.Payment', {
         if (authPayment) {
             availableActions = authPayment.availableActions || [];
 
-            canVoidPayment = availableActions.some(function (element) {
+
+            
+            canVoidPayment = Ext.Array.some(availableActions, function (element) {
                 return (element == "VoidPayment");
             });
+            
 
-            canApplyCheck = availableActions.some(function (element) {
+            canApplyCheck = Ext.Array.some(availableActions, function (element) {
                 return (element == "ApplyCheck");
             });
 
-            canCapture = availableActions.some(function (element) {
+            canCapture = Ext.Array.some(availableActions, function (element) {
                 return (element == "CapturePayment");
             });
 
-            canAppPayment = availableActions.some(function (element) {
+            canAppPayment = Ext.Array.some(availableActions, function (element) {
                 return (element == "AddPayment");
             });
 
-            canCreditPayment = availableActions.some(function (element) {
+            canCreditPayment = Ext.Array.some(availableActions, function (element) {
                 return (element == "CreditPayment");
             });
          
