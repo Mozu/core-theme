@@ -22,7 +22,11 @@
             console.log(contextStore.data);
 
             //builds store and catalog objects
-            contextStore.data.items.forEach(buildStoreData);
+            //contextStore.data.items.forEach(buildStoreData);
+            Ext.Array.forEach(contextStore.data.items, buildStoreData);
+
+
+
             function buildStoreData(el, index, arr){
                 
                 if(el.data.urlToken.indexOf('t-')){

@@ -700,7 +700,7 @@ weight: 2
     getSelectedDataItems: function () {
         var items = [];
         var selection = this.getSelectionModel().getSelection();
-        selection.forEach(function (element, index, array) {
+        Ext.Array.forEach(selection,function (element, index, array) {
             items.push(element.getData());
         });
 
