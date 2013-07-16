@@ -229,7 +229,6 @@ Ext.define('Taco.view.discount.Form', {
             valueField: 'Key'
         });        
 
-
         me.productList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'products',
             flex: 1,
@@ -244,7 +243,7 @@ Ext.define('Taco.view.discount.Form', {
             typeAhead: false,
             displayField: 'productName',
             fieldLabel: 'Select Products',
-            valueField: 'productCode',
+            valueField: 'productCode'
             //listConfig: {
             //    disableSelection: true,
             //    itemTpl: ['<span class="x-boundlist-item-content">{productName}</span>', '<span class="x-boundlist-item-close"></span>'],
@@ -255,10 +254,9 @@ Ext.define('Taco.view.discount.Form', {
             //}
         });
 
-
         // reset the list's dirty state when its store first loads
         productStore.on({
-            load: function() {
+            load: function () {
                 me.productList.resetOriginalValue();
             },
             single: true,
@@ -462,7 +460,10 @@ Ext.define('Taco.view.discount.Form', {
         this.modal = Ext.create('Taco.view.product.Modal', {
             store: gridStore
         });
-        this.add(this.modal);
+
+        // Simeon: removing this, as its not needed for a Ext.window.
+        //this.add(this.modal);
+
         this.modal.on({
             save: this.updateProductList,
             scope: this
@@ -524,6 +525,7 @@ Ext.define('Taco.view.discount.Form', {
         var me = this,
             list = me.productList,
             store = list.getStore();
+        
         Ext.each(values, function(value) {
             if (!store.data.getByKey(value.getId())) {
                 store.add(value);
