@@ -178,7 +178,7 @@
     },
 
     workableItemsFilter: function (task) {
-        return task.status === 0 && !task.dependencies.some(function (key) {
+        return task.status === 0 && !Ext.Array.some(task.dependencies, function (key) {
             var dependency = this.tasks.getByKey(key);
             return dependency && dependency.status !== 3;
         }, this);

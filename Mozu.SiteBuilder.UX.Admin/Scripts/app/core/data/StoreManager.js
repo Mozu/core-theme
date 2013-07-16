@@ -112,7 +112,8 @@ Ext.define('Taco.core.data.StoreManager', {
             if (model.$className != store.model.$className) {
                 return true;
             }
-            if (request.records && request.records[0].stores && request.records[0].stores.indexOf(store) > -1) {
+            
+            if (request.records && request.records[0].stores && Ext.Array.indexOf(request.records[0].stores,store) > -1 ) {
                 return true;
             }
             store.hasUpdates = true;
