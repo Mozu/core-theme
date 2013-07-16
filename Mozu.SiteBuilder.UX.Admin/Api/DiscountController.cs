@@ -60,11 +60,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             try
             {
-                var discountList = (await _discountWebClient.GetDiscounts(null, null, null, filter, null)).ReadAsSync();
+                var discountList = (await _discountWebClient.GetDiscounts(pagingParams.startIndex, pagingParams.pageSize , null, filter, null)).ReadAsSync();
 
                 var discounts = Mapper.Map<List<Discount>>(discountList.Items);
 
-                return List2(discounts);
+                return List2(discounts, (int?)discountList.TotalCount );
             }
             catch (ApiWebClientConnectionException e)
             {
