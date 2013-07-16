@@ -1,3 +1,11 @@
+
+
+/*
+	fix for IE8. Where the framework tries to calculate the zIndex for the window and it comes back "auto" by default and results in a NAN for new zIndex.
+*/ 
+.x-window{ z-index: 0;}
+
+
 /**
  * Creates the base structure of an Ext.Window
  * @member Ext.window.Window
