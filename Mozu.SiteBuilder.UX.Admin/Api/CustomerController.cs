@@ -12,6 +12,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Customers;
 using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
 using Mozu.Customer.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers;
 using AutoMapper;
 //using Mozu.SiteBuilder.Mvc.Customers;
 
@@ -63,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "list")]
         public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
         {
-            var filter = GetCustomerSearchFilter(extFilter);
+            var filter = extFilter.ToFilterString();
 
             if (pagingParameters.id != null)
             {
@@ -200,18 +201,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 //            return List2(groups);
 //        }
 
-        private static string GetCustomerSearchFilter(FilterCollection extFilter)
-        {
-            if (string.IsNullOrEmpty(extFilter.query))
-                return null;
-
-            extFilter.Add(new FilterCollectionItem { comparison = "cont", field = "PrimaryBillingContact.FirstName", value = extFilter.query });
-            extFilter.Add(new FilterCollectionItem { comparison = "cont", field = "PrimaryBillingContact.LastNameOrSurname", value = extFilter.query });
-
-            var filter = string.Join(" or ", extFilter.Select(item => String.Join(" ", item.field, item.comparison, string.Format("\"{0}\"", item.value))).ToArray());
-
-            return filter;
-        }
+     
 
 //        private static string GetGroupsSearchFilter(FilterCollection extFilter)
 //        {

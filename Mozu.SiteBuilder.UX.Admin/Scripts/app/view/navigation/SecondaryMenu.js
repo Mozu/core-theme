@@ -4,14 +4,14 @@
 Ext.define('Taco.view.navigation.SecondaryMenu', {
     extend: 'Ext.container.Container',
     alias: 'widget.secondarymenu',
-    requires: ['Taco.core.ux.action.Button'],
+    requires: ['Taco.core.ux.action.Button', 'Taco.view.navigation.GlobalSearchBox'],
 
     cls: Taco.baseCSSPrefix + 'secondary-nav',
     layout: { type: 'auto' },
 
     initComponent: function () {
         var me = this;
-
+        this.searchBox = Ext.create('Taco.view.navigation.GlobalSearchBox');
         this.items = [{
             xtype: 'taco.button',
             autoEl: 'a',
@@ -47,11 +47,10 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             click: function () {
                 Taco.app.refreshStyle();
             }
-        }, {
-            xtype: 'action',
-            text: 'Search'
+        }, 
+            this.searchBox 
            
-        }
+        
         /*, {
             xtype: 'action',
             text: 'View Storefront',

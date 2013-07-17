@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 
+
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [ServiceContract]
@@ -46,11 +47,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? pageSize = pagingParams.pageSize ?? 20;
             
 
-            var mock_orders =  GetMock();
+            //var mock_orders =  GetMock();
             var sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
             DCo.OrderCollection dcOrders = null;
             
-            if (!string.IsNullOrEmpty(pagingParams.id) && !mock_orders.Any(o => o.Id == pagingParams.id))
+            if (!string.IsNullOrEmpty(pagingParams.id))// && !mock_orders.Any(o => o.Id == pagingParams.id))
             {
                 dcOrders = new DCo.OrderCollection() {Items = new List<DCo.Order>()};
                 var order = (await _orderWebApiClient.GetOrder(pagingParams.id)).ReadAsSync();
@@ -61,8 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                var filter = "Status ne \"Created\"";
-                
+                var filter = extFilter.ToFilterString();
                 try
                 {
                     dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
@@ -73,20 +73,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
 
-            var real_orders = dcOrders != null ? Mapper.Map<List<Order>>(dcOrders.Items) : new List<Order>();
-
-            var orders = new List<Order>();
-            orders.AddRange(mock_orders);
-            orders.AddRange(real_orders);
+            var orders = dcOrders != null ? Mapper.Map<List<Order>>(dcOrders.Items) : new List<Order>();
 
            
 
-            new DCo.Order {
-                Packages = null
-            };
+           
 
-            if (pagingParams.id != null)
-                return List2(orders.Where(o => o.Id == pagingParams.id).ToList());
+         
+
+            //if (pagingParams.id != null)
+            //    return List2(orders.Where(o => o.Id == pagingParams.id).ToList());
 
             return List2(orders,(int) dcOrders.TotalCount );
         }

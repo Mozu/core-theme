@@ -35,6 +35,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2( order.Map<Order>() );
         }
 
+
+
+        [WebInvoke(Method = "POST", UriTemplate = "payment/create")]
+        public async Task<Response<List<Order>>> CreatePayment(CapturePaymentArg arg)
+        {
+  
+            // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
+            var action = new DCp.PaymentAction
+            {
+                ActionName = "CapturePayment",
+                ISOCurrencyCode = "USD",
+                Amount = arg.Amount,
+                ReferenceSourcePaymentId = null
+            };
+
+            var order = (await _orderWebApiClient.PerformPaymentAction(arg.Payment.OrderId, arg.Payment.Id, action)).ReadAsSync();
+
+            //_orderWebApiClient.GetPackageLabel
+            return List2(order.Map<Order>());
+        }
+
         public class CreditPaymentArg
         {
             public OrderPayment Payment { get; set; }
