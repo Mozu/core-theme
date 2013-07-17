@@ -23,8 +23,9 @@ $supports-gradients: true;
 $color: $color-neutral-20;
 $font-size: px-to-rem(16);
 
-//$font-family: "SourceSansProRegular", "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
-$font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+$font-family: "SourceSansProRegular", "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
+
+//$font-family: "MyriadWebProRegular", helvetica, arial, verdana, sans-serif;
 
 $font-page-title: bold 30px $font-family;
 $font-section-title: bold 24px $font-family;
