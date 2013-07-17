@@ -144,6 +144,7 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
             siteGroup,
             siteGroupName;
         if (operation && operation.headers && operation.headers['x-vol-site-group']) {
+
             siteGroup = operation.headers['x-vol-site-group'];
             siteGroupName = Taco.app.context.findSiteCollection(siteGroup).name;
         }
@@ -160,7 +161,8 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                     itemId: '',
                     name: '',
                     isHeader: false,
-                    count:operation.resultSet.total
+                    count: operation.resultSet.total,
+                    ctx: siteGroup ? 'c-' + siteGroup : Taco.app.context.getCurrent().urlToken
                 };
                 if (header) {
                     Ext.apply(header, { isHeader: true, sourceRecord: null }, data);
@@ -215,9 +217,10 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
         var sourceRecord = record.data.sourceRecord;
         console.log(arguments);
         if (sourceRecord) {
-            Taco.core.StateManager.attemptNavigate(record.data.controller + '/edit/' + sourceRecord.getId(), { complexMetaData: { record: sourceRecord } });
+            Taco.core.StateManager.attemptNavigate(record.data.ctx +'/' + record.data.controller + '/edit/' + sourceRecord.getId(), { complexMetaData: { record: sourceRecord } });
+            
         } else {
-            Taco.core.StateManager.attemptNavigate(record.data.controller, { options: { query: combo.getValue() }});
+            Taco.core.StateManager.attemptNavigate(record.data.ctx +'/' + record.data.controller, { options: { query: combo.getValue() }});
         }
     }
 });

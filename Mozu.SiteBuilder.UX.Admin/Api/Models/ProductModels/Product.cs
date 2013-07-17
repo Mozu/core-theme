@@ -191,5 +191,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// </summary>
         [DataMember(EmitDefaultValue = false, Name = "productInSites")]
         public List<ProductInSiteInfo> ProductInSites { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "siteGroupId")]
+        public int? SiteGroupId { get; set; }
     }
 }
