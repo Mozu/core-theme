@@ -7,6 +7,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
     internal static class OrderFilterExtensions
     {
         private const string ORDERNUMBER = "OrderNumber";
+        private const string BILLINGCONTACTFIRSTNAME = "billinginfo.billingcontact.firstname";
+        private const string BILLINGCONTACTLASTNAMEORSURNAME = "billinginfo.billingcontact.lastnameorsurname";
+        private const string BILLINGCONTACTADDRESS = "billinginfo.billingcontact.address";
+
+
+
         private const string ID = "Id";
 
         /// <summary>
@@ -39,11 +45,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
             {
                 case "all": //commenting out full desc till supported by service
                     int i;
-                    if (int.TryParse(filter.value as string , out i))
+                    if (int.TryParse(filter.value as string, out i))
                     {
-                        return string.Format("({1} eq {0})", filter.value, ORDERNUMBER);    
+                        return string.Format("({1} eq {0})", filter.value, ORDERNUMBER);
                     }
-                    return string.Format("( {1} eq \"{0}\")", filter.value, ID);     
+                    else
+                    {
+                        return string.Format("( {1} cont \"{0}\" or {2} cont \"{0}\" or {3} cont \"{0}\" or {4} cont \"{0}\" )", filter.value, BILLINGCONTACTADDRESS, BILLINGCONTACTFIRSTNAME, BILLINGCONTACTFIRSTNAME, BILLINGCONTACTLASTNAMEORSURNAME);   
+                    }
+                      
                     
 
                 default:
