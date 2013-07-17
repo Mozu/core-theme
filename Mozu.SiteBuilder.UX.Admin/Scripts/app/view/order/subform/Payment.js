@@ -407,7 +407,8 @@ Ext.define('Taco.view.order.subform.Payment', {
             data: [
                 { "val": "credit", "lbl": "Issue Credit" },
                 { "val": "void", "lbl": "Void Transaction" },
-                { "val": "add", "lbl": "Add Manula Interaction" }
+                { "val": "add", "lbl": "Add Manula Interaction" },
+                { "val": "check", "lbl": "Collect Check" }
             ]
         });
 
@@ -514,14 +515,9 @@ Ext.define('Taco.view.order.subform.Payment', {
         //    public string CheckNumber { get; set; }
         //    public decimal Amount { get; set; }
         //}
+
+        alert('create check');
         
-        var me = this;
-
-        var modal = Ext.create('Taco.view.order.modal.CheckPayment', {
-            record: me.record
-        });
-
-        modal.show();
         //this.record.addPayment(config);
         /*
         var paymentRecord = config.record;
@@ -617,6 +613,13 @@ Ext.define('Taco.view.order.subform.Payment', {
             case 'add':
                 var modal = Ext.create('Taco.view.order.modal.AddPaymentTransaction', {
                     paymentId: config.transId,
+                    record: me.record
+                });
+
+                modal.show();
+                break;
+            case 'check':
+                var modal = Ext.create('Taco.view.order.modal.CheckPayment', {
                     record: me.record
                 });
 

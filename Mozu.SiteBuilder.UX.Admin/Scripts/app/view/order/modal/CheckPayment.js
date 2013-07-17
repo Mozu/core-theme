@@ -32,10 +32,10 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
                     xtype: 'hidden',
                     name: 'orderId',
                     value: me.record.data.orderNumber
-                }, {
+                }, /*{
                     name: 'name',
                     fieldLabel: 'Name'
-                }, {
+                },*/ {
                     name: 'checkNumber',
                     fieldLabel: 'Check Number'
                 }, {
@@ -44,11 +44,11 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
                     fieldLabel: 'Amount Collected',
                     unitString: '$',
                     emptyText: '0'
-                }, {
+                }/*, {
                     xtype: 'datetime',
                     name: 'createDate',
                     fieldLabel: 'Create Date'
-                }]
+                }*/]
             }],
             listeners: {
                 afterrender: function (panel) {
@@ -64,7 +64,7 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
                 autoEl: {
                     tag: 'h2',
                     cls: 'order-modal-title',
-                    html: 'Add Check'
+                    html: 'Collect Check'
                 }
             }, 
             this.formpanel
