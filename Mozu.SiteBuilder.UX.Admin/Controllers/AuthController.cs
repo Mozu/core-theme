@@ -238,10 +238,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             return View();
         }
 
-        public ActionResult ResetPassword(string validationToken, string userId )
+        public ActionResult ResetPassword(string validateToken, string userId)
         {
+
             var user = new LoginUser();
-            user.ConfirmationCode = validationToken;
+            user.ConfirmationCode = validateToken;
             var userObj = _userHelper.GetUser(userId);
 
             if ( userObj == null )
