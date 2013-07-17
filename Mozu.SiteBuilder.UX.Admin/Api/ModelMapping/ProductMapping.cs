@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.StockOnHand, op => op.MapFrom(dc => dc.StockOnHand))
                 .ForMember(x => x.IsHiddenWhenOutOfStock, op => op.MapFrom(dc => dc.IsHiddenWhenOutOfStock))
                 .ForMember(x => x.ProductTypeId, op => op.MapFrom(dc => dc.ProductTypeId))
-
+                .ForMember(x => x.SiteGroupId, op => op.MapFrom(x => x.SiteGroupId))
                 .ForMember(x => x.IsBackOrderAllowed, op => op.MapFrom(dc => dc.IsBackOrderAllowed))
                 .ForMember(x => x.PackageWeight, op => op.MapFrom(dc => dc.PackageWeight == null ? null : dc.PackageWeight.Value))
                 .ForMember(x => x.PackageHeight, op => op.MapFrom(dc => dc.PackageHeight == null ? null : dc.PackageHeight.Value))
