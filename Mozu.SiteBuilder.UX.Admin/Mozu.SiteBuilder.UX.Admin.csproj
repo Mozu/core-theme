@@ -190,9 +190,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts">
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.0.0.13171.4\lib\Mozu.CommerceRuntime.Contracts.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.0.0.13196.1\lib\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -383,6 +383,7 @@
     <Compile Include="Api\Models\Order\OrderPackage.cs" />
     <Compile Include="Api\Models\Order\OrderPackageItem.cs" />
     <Compile Include="Api\Models\Order\OrderPayment.cs" />
+    <Compile Include="Api\Models\Order\CardPaymentInformation.cs" />
     <Compile Include="Api\Models\Order\OrderPaymentInteraction.cs" />
     <Compile Include="Api\Models\ProductModels\ProductExtra.cs" />
     <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
@@ -393,12 +394,12 @@
     <Compile Include="Api\NavigationController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Api\OrderCardPaymentController.cs" />
+    <Compile Include="Api\OrderCheckPaymentController.cs" />
     <Compile Include="Api\OrderController.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Api\OrderPaymentController.cs" />
     <Compile Include="Api\OrderShippingController.cs" />
-    <Compile Include="Api\Order_OldController.cs" />
     <Compile Include="Api\ProductTypeController.cs" />
     <Compile Include="Api\RefrenceController.cs" />
     <Compile Include="Api\WidgetInstanceDataController.cs" />
