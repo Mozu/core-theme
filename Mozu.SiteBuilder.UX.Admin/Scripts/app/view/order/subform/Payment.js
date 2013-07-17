@@ -29,16 +29,17 @@ Ext.define('Taco.view.order.subform.Payment', {
         
         // initialize the ui
         // this will be called every time the record is updated
+        me.bodyCont = Ext.create('Ext.container.Container', {
+            items: []
+        });
         me.initUI();
         
+
         Ext.apply(me, {
             items: [
-                me.statusRow,
-                me.paymentDetails,
-                me.transactionList
+                me.bodyCont
             ]
         });
-
         this.callParent(arguments);
     },
     
@@ -83,6 +84,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         
 
         // actions that go in the header actions menu
+        /*
         if (me.voidTransactionAction) {
             me.voidTransactionAction.setDisabled(!canVoidPayment);
         } else {
@@ -94,7 +96,8 @@ Ext.define('Taco.view.order.subform.Payment', {
             });
 
         }
-
+        */
+        /*
         if (me.addPaymentAction) {
             me.addPaymentAction.setDisabled(true);
         } else {
@@ -106,6 +109,9 @@ Ext.define('Taco.view.order.subform.Payment', {
                 scope: this
             });
         }
+        */
+        
+        /*
 
         if (me.issueCreditPaymentAction) {
             me.issueCreditPaymentAction.setDisabled(!canCreditPayment);
@@ -138,12 +144,33 @@ Ext.define('Taco.view.order.subform.Payment', {
                 scope: this
             });
         }
+        */
+        me.addPaymentAction = new Ext.Action({
+            text: 'Add Payment',
+            handler: me.addPayment,
+            scope: this
+        });
 
-
-        
-
-
-
+        me.applyCheckAction = new Ext.Action({
+            text: 'Add Check',
+            handler: function () {
+                var record = me.record.paymentsStore.getAt(0);
+                me.applyCheck({
+                    record: record
+                });
+            },
+            scope: this
+        });
+        me.applyManualPayment = new Ext.Action({
+            text: 'Add Manual Payment',
+            handler: function () {
+                var record = me.record.paymentsStore.getAt(0);
+                me.applyCheck({
+                    record: record
+                });
+            },
+            scope: this
+        });
 
         // add the tools the header using the pre defined actions above;
         me.setTools({
@@ -161,9 +188,10 @@ Ext.define('Taco.view.order.subform.Payment', {
                 items: [
                     me.addPaymentAction,
                     //me.issueCreditAction,
-                    me.voidTransactionAction,
-                    me.issueCreditPaymentAction,
-                    me.applyCheckAction
+                    //me.voidTransactionAction,
+                    //me.issueCreditPaymentAction,
+                    me.applyCheckAction,
+                    me.applyManualPayment
                 ]
             }
         });
@@ -171,14 +199,78 @@ Ext.define('Taco.view.order.subform.Payment', {
     
     // initialize the views and actions menu
     initUI : function() {
-        var me = this;
-        
+        var me = this;     
         me.initActionsMenu();
-        me.initStatusRow();
-        me.initPaymentDetails();
-        me.initTransactionList();
+        me.initHeader();
+        me.bodyCont.add(me.headerDetails);
+        //loop on number of payments 
+        //pass the payment rec to the dif functions
+        //me.record.data.payments
+        for (var x = 0; x < 4; x++) {
+            
+            me.initStatusRow();
+            me.initPaymentDetails();
+            me.initTransactionList();
+            
+            me.bodyCont.add(Ext.create('Ext.panel.Panel', {
+                //collapsible: true,
+                style: 'border: 1px; border-style: solid; margin-bottom: 5px; padding: 3px;',
+                items: [
+                    me.statusRow,
+                    me.paymentDetails,
+                    me.transactionList
+                ]
+            }));
+            /*
+            me.bodyCont.add(me.statusRow);
+            me.bodyCont.add(me.paymentDetails);
+            me.bodyCont.add(me.transactionList);
+            me.bodyCont.add(Ext.create('Ext.container.Container', {
+                html: '<hr>'
+            }));
+            
+            me.bodyCont.add(me.statusRow);
+            me.bodyCont.add(me.paymentDetails);
+            me.bodyCont.add(me.transactionList);
+            me.bodyCont.add(Ext.create('Ext.container.Container', {
+                html: '<hr>'
+            }));*/
+            //
+        }
+        
+        
+
     },
-    
+    initHeader: function (){
+        var me = this,
+           data = this.record.getData();
+
+        me.headerDetails = Ext.create('Ext.Component', {
+           // cls: "orderform-payment-paymentDetails",
+            tpl: [
+                '<div class="statusField">',
+                    //'<span class="orderTotal">Partially Collected</span>',
+                    '<tpl if="authorizationInfo.amountCollected &gt; 0 && authorizationInfo.amountCollected != total">',
+                        '<span class="orderTotal">Partially Collected</span>',
+                    '</tpl>',
+                    '<tpl if="authorizationInfo.amountCollected == 0">',
+                        '<span class="orderTotal">None Collected</span>',
+                    '</tpl>',
+                    '<tpl if="authorizationInfo.amountCollected == total">',
+                        '<span class="orderTotal">Fully Collected</span>',
+                    '</tpl>',
+                '</div>',
+                '<div class="orderSummary">',
+                    '<span class="orderTotal">Order Total: {total:usMoney}</span>',
+                    '<span class="seperator">|</span>',
+                    '<span class="Received">Received: {authorizationInfo.amountCollected:usMoney}</span>',
+                    '<span class="seperator">|</span>',
+                    '<span class="balance">Balance: {authorizationInfo.captureAmount:usMoney}</span>',
+                '</div>'
+            ],
+            data: data
+        });
+    },
     // list of payment transactions. first item is the authorization object depending on its status
     initTransactionList: function () {
         var me = this;
@@ -189,27 +281,47 @@ Ext.define('Taco.view.order.subform.Payment', {
         this.interactionsStore = this.paymentsStore.count() ? this.paymentsStore.getAt(0).interactionsStore : this.paymentsStore;
         me.transactionList = Ext.create('Ext.view.View', {
             cls: "orderform-payment-transactionlist",
-            //listeners: {
-            //    itemclick: {
-            //        fn: function(view, record, item, index, e, eOpts) {
-            //            if (e.target.className == "paymentAction") {
-            //                var action = e.target.getAttribute("paymentAction");
-            //                //if user clicks on an action link in the item, execute the action and pass the record
-            //                if (this[action]) {
-            //                    this[action]({
-            //                        record: record
-            //                    });
-            //                }
-            //            }
-            //        },
-            //        scope:me
-            //    }
-            //},
+            listeners: {
+                itemclick: {
+                    fn: function (view, record, item, index, e, eOpts) {
+                       /* if (e.target.className == "paymentAction") {
+                            var action = e.target.getAttribute("paymentAction");
+                            //if user clicks on an action link in the item, execute the action and pass the record
+                            if (this[action]) {
+                                this[action]({
+                                    record: record
+                                });
+                            }
+                        }*/
+                        if (e.target.localName == 'button') {
+                            
+                            console.log(e.target.parentElement.parentElement.attributes.paymentId.value); //payment Id
+                            console.log(e.target.parentElement.childNodes[0].data); //date
+                            console.log(e.target.parentElement.childNodes[2].data); //id
+                            console.log(e.target.parentElement.childNodes[4].data); //amount
+                            console.log(e.target.parentElement.childNodes[6].data); //status
+                            var date = new Date(e.target.parentElement.childNodes[0].data.trim());
+                            
+
+                            var modal = Ext.create('Taco.view.order.modal.AddPaymentTransaction', {
+                                paymentId: e.target.parentElement.parentElement.attributes.paymentId.value,
+                                transDate: e.target.parentElement.parentElement.attributes.createDate.value,
+                                transId: e.target.parentElement.childNodes[2].data.trim().split(' ')[1],
+                                transGatewayId: e.target.parentElement.childNodes[8].data.trim().split(' ')[2],
+                                transAmount: e.target.parentElement.childNodes[4].data.trim().split(' ')[1].substring(1),
+                                transStatus: e.target.parentElement.childNodes[6].data.trim().split(' ')[1],
+                                record: me.record
+                            });
+                        }
+                    },
+                    scope:me
+                }
+            },
             itemSelector: "div.payment-transaction",
             tpl: [
                 '<tpl for=".">',
                     //'<tpl if="amountCollected!==0">',
-                    '<div paymentId="{id}"  class="payment-transaction">',
+                    '<div paymentId="{id}"  createDate= "{createDate}" class="payment-transaction">',
                         
 //                        '<tpl if="values.amountCollected &gt; 0">',
 //                            '<a class="paymentAction" paymentAction="issueCredit">Issue Credit</a>',
@@ -222,11 +334,13 @@ Ext.define('Taco.view.order.subform.Payment', {
                         '<span class="seperator">|</span>',
                             ' Amount: ${amount} ',
                         '<span class="seperator">|</span>',
-                            'Type:  {interactionType} ',
+                            'Type: {interactionType} ',
                         '<span class="seperator">|</span>',
                             ' Transaction ID: {gatewayTransactionId}',
+           
+                        '<button class= "taco-action taco-action-secondary taco-action-default" style="float: right; padding: 0px;">Edit</button>',
                         '</div>',
-
+                        
 
                     '</div>',
                     //'</tpl>',
@@ -262,13 +376,13 @@ Ext.define('Taco.view.order.subform.Payment', {
                         '</div>',
                     '</tpl>',
                 '</tpl>',
-                '<div class="orderSummary">',
+              /*  '<div class="orderSummary">',
                     '<span class="orderTotal">Order Total: {total:usMoney}</span>',
                     '<span class="seperator">|</span>',
                     '<span class="Received">Received: {authorizationInfo.amountCollected:usMoney}</span>',
                     '<span class="seperator">|</span>',
                     '<span class="balance">Balance: {authorizationInfo.captureAmount:usMoney}</span>',
-                '</div>',
+                '</div>',*/
                 '<div class="billingInformation">',
                     '<span class="fullName">Bill to: {billingContact.firstName} {billingContact.lastName}</span>',
                     '<span class="seperator">|</span>',
@@ -287,6 +401,16 @@ Ext.define('Taco.view.order.subform.Payment', {
         var me = this,
             data = this.record.get("authorizationInfo");
         
+
+        var options = Ext.create('Ext.data.Store', {
+            fields: ['val', 'lbl'],
+            data: [
+                { "val": "credit", "lbl": "Issue Credit" },
+                { "val": "void", "lbl": "Void Transaction" },
+                { "val": "add", "lbl": "Add Manula Interaction" }
+            ]
+        });
+
         me.statusRow = Ext.create('Ext.container.Container', {
             cls: "orderform-payment-statusRow",
             layout: {
@@ -331,6 +455,20 @@ Ext.define('Taco.view.order.subform.Payment', {
                     itemId: "paymentReceivedButton",
                     handler: me.paymentRecieved,
                     scope: me
+                }, {
+                    xtype: 'combo',
+                    store: options,
+                    displayField: 'lbl',
+                    valueField: 'val',
+                    emptyText: 'Actions',
+                    //handler: me.addTransaction,
+                    transId: 1,
+                    record: me.record,
+                    parent: this,
+                    listeners: {
+                      select: me.transactionAction  
+                    },
+                    scope: me
                 }
             ]
         });
@@ -368,7 +506,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         this.record.voidTransaction(config);
     },
     applyCheck: function (config) {
-        var me = this;
+       // var me = this;
         //public class ApplyCheckArgs
         //{
         //    public string OrderId { get; set; }
@@ -377,7 +515,15 @@ Ext.define('Taco.view.order.subform.Payment', {
         //    public decimal Amount { get; set; }
         //}
         
+        var me = this;
 
+        var modal = Ext.create('Taco.view.order.modal.CheckPayment', {
+            record: me.record
+        });
+
+        modal.show();
+        //this.record.addPayment(config);
+        /*
         var paymentRecord = config.record;
         paymentRecord.applyCheck({
             jsonData: {
@@ -412,7 +558,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                 errorDialog.show();
             },
             scope: this
-        });
+        });*/
     },
     issueCredit: function (config) {
         var me = this;
@@ -442,10 +588,44 @@ Ext.define('Taco.view.order.subform.Payment', {
         issueCreditModal.show();
     },
 
-    addPayment :function(config) {
-        this.record.addPayment(config);
+    addPayment: function (config) {
+        var me = this;
+
+        var modal = Ext.create('Taco.view.order.modal.Payment', {
+            record: me.record
+        });
+
+        modal.show();
+        //this.record.addPayment(config);
     },
     
+    transactionAction: function (config) {
+        var me = this;
+        var record = me.record.paymentsStore.getAt(0);
+
+        switch(me.getValue()) {
+            case 'void':
+                me.parent.voidTransaction({
+                    record: record
+                });
+                break;
+            case 'credit':
+                me.parent.issueCredit({
+                    record: record
+                });
+                break;
+            case 'add':
+                var modal = Ext.create('Taco.view.order.modal.AddPaymentTransaction', {
+                    paymentId: config.transId,
+                    record: me.record
+                });
+
+                modal.show();
+                break;
+        }
+        
+        //this.record.addPayment(config);
+    },
     // call the service via the model and save the captured amoutn
     capturePayment: function () {
         var me = this;
