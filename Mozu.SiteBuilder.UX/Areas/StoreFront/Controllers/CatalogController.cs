@@ -163,6 +163,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             _ctx.PageContext.PageType = "category";
             _ctx.PageContext.CategoryId = categoryId;
+
+            var helper = new UrlHelper(ControllerContext.RequestContext);
+            var feedUrl = ControllerContext.RequestContext.HttpContext.Request.Url;
+
+            _ctx.PageContext.FeedUrl = new Uri(feedUrl, helper.RouteUrl("StoreFront_feeds_categories", new { categoryId = categoryId })).ToString();
             var catList = _ctx.CatalogContext.AllCategories;
 
 
@@ -176,6 +181,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                return new HttpNotFoundResult();
                  
             }
+
+            _ctx.PageContext.Title = cat.Name;
 
             SiteContext.PageContext.CmsContext = new CmsPageContext()
             {
@@ -210,7 +217,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var itemsPerPage = 10;
             var startIdx = 0;
             // TODO: Sort by Date Last Modified DESC
-            string sortBy = null;
+            string sortBy = null;// "CreateDate DESC";
             var cat = _ctx.CatalogContext.AllCategories.Where(x => x.CategoryId == categoryId.GetValueOrDefault (-1)).FirstOrDefault();
             if (cat == null)
             {
@@ -223,7 +230,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // Get Results and populate feed
 
             var resp = ProductListing(categoryId, sortBy, startIdx, itemsPerPage, null, false, false);
-            var result = (ProductCollection)((PartialViewResult)resp).Model;
+            if (!(resp is PartialViewResult))
+                return resp;
+
+            var result = ((PartialViewResult)resp).Model as ProductCollection;
+
             var feed = new SyndicationFeed(cat.Name, cat.Name, new Uri(feedUrl, helper.RouteUrl("StoreFront_home")));
 
             feed.Items = result.Items.Select(item =>
@@ -232,7 +243,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         item.ProductName,
                         item.Content.ProductShortDescription + (item.Content.ProductImages.Main != null ? string.Format("<br /><img src=\"{0}\" />", new Uri(feedUrl, item.Content.ProductImages.Main.ImageUrl)) : ""),
                         new Uri(feedUrl, helper.RouteUrl("StoreFront_productDetails", new { ProductCode = item.ProductCode }) ),
-                        item.ProductCode, item.CreateDate
+                        string.Format("{0}-{1}", item.ProductCode, item.CreateDate.Ticks  /* TODO: replace with ModifiedDate */),
+                        item.CreateDate /* TODO: replace with ModifiedDate */
                         );
                     item.Categories.ForEach(itemCat => si.Categories.Add(new SyndicationCategory(itemCat.Name)));
                     return si;

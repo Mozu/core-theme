@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
@@ -46,6 +47,9 @@ namespace Mozu.SiteBuilder.Mvc.Cms
 
 
        public string PageId { get; set; }
+
+       [DataMember(Name = "feedUrl")]
+       public string FeedUrl { get; set; }
 
        //List<string> _widgetCreationTags;
        //List<string> _widgetQuery;
@@ -95,6 +99,8 @@ namespace Mozu.SiteBuilder.Mvc.Cms
                    if (ctx != null)
                    {
                        _canonicalUrl = "http://yourhostnamehere" + ctx.Request.Path;
+                       //var uri = new Uri(ctx.Request.Url, ctx.Request.Path);
+                       //_canonicalUrl = uri.ToString();
                    }
                }
                return _canonicalUrl;
