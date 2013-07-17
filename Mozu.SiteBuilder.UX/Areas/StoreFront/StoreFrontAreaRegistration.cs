@@ -52,6 +52,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
             "blogs/{post}",
             new { controller = "Blogs", action = "Post" });
 
+            context.MapRoute(
+            "StoreFront_feeds_categories",
+            "feeds/category/{categoryId}",
+            new { controller = "Catalog", action = "CategoryFeed" });
 
             context.MapRoute(
             "StoreFront_categories",
