@@ -23,23 +23,11 @@ Ext.define('Taco.core.Controller', {
      * of the default index view.
      * @return {undefined}
      */
-    index: function () {
-        // Placeholders disabled for demo; instead, contentviews will cause context to switch to the first available context that they can use.
-        //var contextType = Taco.app.context.getCurrent().contextType,
-        //    placeholder;
-
-        //Ext.iterate(this.contextPlaceholders, function (key, fn) {
-        //    if (key.indexOf(contextType) > -1 && typeof fn === 'function') {
-        //        placeholder = fn.apply(this);
-        //    }
-        //}, this);
-
-        //if (placeholder) {
-        //    this.createContentView(placeholder);
-        //    return;
-        //}
-
-        this.buildIndex();        
+    index: function (params, appState) {
+        var record = appState ? appState.record : null,
+            options = appState ? appState.options : null;
+        console.log(params, appState);
+        this.buildIndex(record, options);
     },
 
     getIndexView: function () {
@@ -49,7 +37,7 @@ Ext.define('Taco.core.Controller', {
         }
         return this.indexView;
     },
-    
+
     getEditorView: function () {
         if (!this.editorView) {
             //console.log(this.id);
@@ -58,41 +46,43 @@ Ext.define('Taco.core.Controller', {
         return this.editorView;
     },
 
-    buildIndex: function (record) {
+    buildIndex: function (record, options) {
         this.createContentView(this.getIndexView(), {
-            record: record
+            record: record,
+            options: options
         });
     },
 
     edit: function (id, additionalParams, appState) {
-        var record = appState ? appState.record : null, 
-            options= appState ? appState.options : null;
+        var record = appState ? appState.record : null,
+            options = appState ? appState.options : null;
         if (record) {
             this.createContentView(this.getEditorView(), {
                 record: record,
-                options:options
+                options: options
             });
         } else {
             Taco.app.setLoading();
             Taco.model[this.modelName].load(id, {
-                    success: function(record) {
-                        Taco.app.setLoading(false);
-                        this.createContentView(this.getEditorView(), {
-                            record: record,
-                            options:options
-                        });
-                    },
-                    failure: function () {
-                        Taco.app.setLoading(false);
-                    },
-                    scope: this
-                });
+                success: function (record) {
+                    Taco.app.setLoading(false);
+                    this.createContentView(this.getEditorView(), {
+                        record: record,
+                        options: options
+                    });
+                },
+                failure: function () {
+                    Taco.app.setLoading(false);
+                },
+                scope: this
+            });
         }
     },
 
     create: function (id, additionalParams, appState) {
-        var record = appState ? appState.record : Ext.create('Taco.model.' + this.modelName);;
-      
+        var record = appState ? appState.record : Ext.create('Taco.model.' + this.modelName);
+        ;
+
         this.createContentView(this.getEditorView(), {
             record: record
         });
@@ -151,7 +141,7 @@ Ext.define('Taco.core.Controller', {
                     return works;
                 }, this);
             }
-            
+
             Taco.app.contentView.add(view);
             return view;
         }
@@ -162,8 +152,8 @@ Ext.define('Taco.core.Controller', {
             reqctype = view.requiresContextOfType;
         return (!reqctype || reqctype === ctype || (Ext.isArray(reqctype) && Ext.Array.indexOf(reqctype, ctype) !== -1));
     },
-           
-    requiresSiteContext: function() {
+
+    requiresSiteContext: function () {
         if (Taco.app.context.getCurrent().contextType != 's') {
             Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', 's').raw);
             return true;
@@ -171,7 +161,7 @@ Ext.define('Taco.core.Controller', {
         return false;
     },
 
-    confirmContext: function(viewClass) {
+    confirmContext: function (viewClass) {
         var context = Taco.app.context.getCurrentContext(),
             requiredContextType = viewClass.prototype.requiresContextOfType;
 
@@ -186,5 +176,4 @@ Ext.define('Taco.core.Controller', {
         Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', requiredContextType).raw);
         return false;
     },
-    
 });

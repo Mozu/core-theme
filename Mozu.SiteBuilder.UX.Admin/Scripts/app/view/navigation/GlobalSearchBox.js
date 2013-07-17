@@ -1,0 +1,223 @@
+﻿/**
+ * @class Taco.view.navigation.PrimaryMenu
+ * @author Jimmy Sanford
+ * 
+ */
+Ext.define('Taco.view.navigation.GlobalSearchBox', {
+    extend: 'Ext.form.ComboBox',
+    requires: [],
+
+    displayField: 'name',
+    typeAhead: true,
+    hideLabel: true,
+    hideTrigger: true,
+    matchFieldWidth: false,
+    minChars:3,
+    //anchor: '100%',
+
+    listConfig: {
+        loadingText: 'Searching...',
+        emptyText: 'No matching posts found.',
+        width:400,
+        // Custom rendering template for each item
+        getInnerTpl: function () {
+            return '<tpl if="isHeader">' +
+                '<h3>{name}&nbsp;&nbsp;&nbsp;<i><a>see all ({count})</a></i></h3>' +
+                '<tpl else>' +
+                '<div>&nbsp;&nbsp;&nbsp;{itemId}- {name}</div>' +
+                '</tpl>';
+        }
+    },
+    //pageSize: 10,
+
+    initComponent: function () {
+        var me = this;
+
+      
+
+        //me.mon(me.productStore, 'load', me.innerStoreLoad, me);
+        //me.mon(me.ordersStore, 'load', me.innerStoreLoad, me);
+        //me.mon(me.customerStore, 'load', me.innerStoreLoad, me);
+        me.on('select', me.onSelect, me);
+        me.on('beforeselect', me.onBeforeselect, me);
+
+
+        me.store = Ext.create('Ext.data.Store', {
+            pageSize: 10,
+            fields: [
+                { name: 'itemId' },
+                { name: 'name' },
+                { name: 'type' },
+                { name: 'ctx' },
+                { name: 'count', type: 'int' },
+                { name: 'controller' },
+                {
+                    name: 'sourceRecord',
+                    type: 'any'
+                },
+                {
+                    name: 'isHeader',
+                    type: 'boolean',
+                    defaultValue: false
+                }
+            ],
+            load: function (config) {
+                if (!config.params.query) {
+                    return;
+                }
+                me.store.loading = true;
+
+                var ctx = Taco.app.context.getCurrent(),
+                    options = {
+                        filters: [
+                            new Ext.util.Filter({
+                                property: 'all',
+                                value: config.params.query
+                            })],
+                        callback: me.innerStoreLoad,
+                        scope: me
+                    },
+                    ordersStore = Taco.core.data.StoreManager.getOrCreate({
+                        type: 'Taco.store.Orders',
+                        createOnly: 'true',
+                        pageSize: 5,
+                        autoLoad: false,
+                    }),
+                    customerStore = Taco.core.data.StoreManager.getOrCreate({
+                        type: 'Taco.store.Customers',
+                        createOnly: 'true',
+                        pageSize: 5,
+                        autoLoad: false,
+                    }),
+                    tmpStore;
+
+
+                ordersStore.load(options);
+                customerStore.load(options);
+
+                if (ctx.contextType == 's' || ctx.contextType == 'c') {
+
+
+                    tmpStore = Taco.core.data.StoreManager.getOrCreate({
+                        type: 'Taco.store.Products',
+                        createOnly: 'true',
+                        pageSize: 5,
+                        autoLoad: false,
+                    }),
+                    tmpStore.load(options);
+                } else {
+                   
+                    Ext.each(ctx.siteCollections, function (sc) {
+                        var optCopy = Ext.apply({
+                            headers: {
+                                'x-vol-site-group': sc.id
+                            }
+                        }, options);
+                        tmpStore = Taco.core.data.StoreManager.getOrCreate({
+                            type: 'Taco.store.Products',
+                            createOnly: 'true',
+                            pageSize: 5,
+                            autoLoad: false,
+                        }),
+                        tmpStore.load(optCopy);
+
+                    });
+                   
+
+
+                }
+            }
+        });
+
+
+            this.callParent(arguments);
+
+        //me.picker.alignTo(me.inputEl, me.pickerAlign, me.pickerOffset);
+    },
+    innerStoreLoad: function ( records, operation, successful) {
+
+        var me = this,
+            recsToRem = [],
+            header = {},
+            raw = [],
+            append = !me.store.loading,
+            siteGroup,
+            siteGroupName;
+        if (operation && operation.headers && operation.headers['x-vol-site-group']) {
+            siteGroup = operation.headers['x-vol-site-group'];
+            siteGroupName = Taco.app.context.findSiteCollection(siteGroup).name;
+        }
+        
+        me.store.loading = false;
+        
+
+        if (records) {
+
+            Ext.each(records, function (record) {
+                var data = {
+                    sourceRecord: record,
+                    type: record.modelName,
+                    itemId: '',
+                    name: '',
+                    isHeader: false,
+                    count:operation.resultSet.total
+                };
+                if (header) {
+                    Ext.apply(header, { isHeader: true, sourceRecord: null }, data);
+                }
+                switch (record.modelName) {
+                case 'Taco.model.Product':
+                    data.controller = 'products';
+                    data.name = record.data.productName;
+                    data.itemId = record.data.productCode;
+                    if (header) {
+                        header.name = 'PRODUCTS ' + siteGroupName;
+                        header.controller = data.controller;
+                    }
+                    break;
+                case 'Taco.model.Order':
+                    data.controller = 'orders';
+                    data.name = Taco.app.context.findSite(record.data.siteId).name;
+                    data.itemId = record.data.orderNumber;
+                    if (header) {
+                        header.name = 'ORDERS ' ;
+                        header.controller = data.controller;
+                    }
+                    break;
+                case 'Taco.model.CustomerAccount':
+                    data.controller = 'customers';
+                    data.name = record.data.primaryFirstName + ' ' + record.data.primaryLastName;
+                    data.itemId = record.data.primaryEmail;
+                    if (header) {
+                        header.name = 'CUSTOMERS';
+                        header.controller = data.controller;
+                    }
+                    break;
+                }
+                if (header) {
+                    raw.push(header);
+                    header = null;
+                }
+                raw.push(data);
+            });
+            me.store.loadRawData(raw, append);
+        } else if (!append) {
+            me.store.removeAll();
+        }
+
+
+    },
+    onSelect: function (combo, records, eOpts) {
+
+
+    },
+    onBeforeselect: function (combo, record, index, eOpts) {
+        var sourceRecord = record.data.sourceRecord;
+        console.log(arguments);
+        if (sourceRecord) {
+            Taco.core.StateManager.attemptNavigate(record.data.controller + '/edit/' + sourceRecord.getId(), { complexMetaData: { record: sourceRecord } });
+        } else {
+            Taco.core.StateManager.attemptNavigate(record.data.controller, { options: { query: combo.getValue() }});
+        }
+    }
+});

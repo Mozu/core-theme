@@ -6,6 +6,6 @@
         extend: 'Ext.data.Store',
         model: 'Taco.model.CustomerAccount',
         pageSize: 50,
-        remoteSort: false,
+        remoteSort: true,
         remoteFilter: true
     });

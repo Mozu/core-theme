@@ -173,6 +173,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
     createItemBrowser: function(conf) {
         this.itemBrowser = Ext.create('Taco.core.ux.browser.ItemBrowser', {
             itemStore: this.store,
+            options: this.options,
             itemType: this.token,
             typeName: this.typeName,
             filterFormConf: this.filterFormConf,

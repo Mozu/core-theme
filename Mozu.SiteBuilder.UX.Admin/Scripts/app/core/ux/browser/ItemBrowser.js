@@ -82,14 +82,21 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         };
         
         if (me.filterProperties) {
-            conf.items.unshift({
+            me.searchBox = Ext.widget({
                 xtype: 'taco.combofilter',
                 width: 675,
+               // value: ['steve'],
                 // margin: '20 0',
                 itemStore: me.createItemStore(),
                 filterForm: me.filterFormConf,
                 filterProperties: me.filterProperties
             });
+            if (this.options && this.options.query) {
+                me.on('afterrender', function () {
+                    me.searchBox.setValue([this.options.query]);
+                });
+            }
+            conf.items.unshift(me.searchBox);
         } 
         if (me.useGridPanel && me.useTilePanel) conf.items.push(me.createToggleGroup());
         me.topToolbar = Ext.widget('toolbar', conf);

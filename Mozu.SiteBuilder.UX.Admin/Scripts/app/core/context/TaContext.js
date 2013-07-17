@@ -63,6 +63,9 @@ Ext.define('Taco.core.context.TaContext', {
             headers['x-vol-site'] = site.id;
             headers['x-vol-site-group'] = sc.getSiteGroupId();
         }
+        if (options && options.operation && options.operation.headers) {
+            Ext.apply(headers, options.operation.headers);
+        }
     },
     onNavigate: function (state) {
         var ulrToken = state.metaData.ctx, recordId = this.getStore().find('urlToken', ulrToken),

@@ -507,6 +507,8 @@
     <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
     <Compile Include="Helpers\ContextSwitcher.cs" />
+    <Compile Include="Helpers\CustomerHelpers\CustomerFilterExtensions.cs" />
+    <Compile Include="Helpers\CustomerHelpers\CustomerSortExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderFilterExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderSortExtensions.cs" />
     <Compile Include="Helpers\CurrentUserHelper.cs" />
@@ -688,6 +690,7 @@
     <Content Include="Scripts\app\view\generalSettings\subform\Rules.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Tools.js" />
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
+    <Content Include="Scripts\app\view\navigation\GlobalSearchBox.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\order\Header.js" />
     <Content Include="Scripts\app\view\order\modal\EditTrackingNumber.js" />
