@@ -111,7 +111,11 @@ namespace Mozu.SiteBuilder.Mvc
                         return;
                     }    
                 }
-                InitFromCookie(cookieProvider);
+                if (!SiteId.HasValue)
+                {
+                    InitFromCookie(cookieProvider);    
+                }
+                
                     
                 
 
