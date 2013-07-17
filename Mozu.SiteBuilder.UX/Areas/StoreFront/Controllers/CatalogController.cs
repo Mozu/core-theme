@@ -1,24 +1,17 @@
-﻿using System;
+﻿using AutoMapper;
+using Mozu.ProductRuntime.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Mvc;
-using AutoMapper;
-using Mozu.Core.Api.Contracts;
-using Mozu.SiteBuilder.UX.Controllers;
-using System.Runtime.Serialization;
-
-using System.Web.Routing;
+using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
-using Mozu.SiteBuilder.UX.Models;
-using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-using IProductWebApiClient = Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient ;
-using Mozu.SiteBuilder.Mvc;
-using Mozu.ProductRuntime.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
-using Newtonsoft.Json.Linq;
-using Mozu.Core.Api.Contracts.Client;
-using Mozu.SiteBuilder.Mvc.Extensions;
+using System.Web.Mvc;
+using IProductWebApiClient = Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -211,9 +204,58 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-       
 
-        
+        public ActionResult CategoryFeed(int? categoryId = null)
+        {
+            var itemsPerPage = 10;
+            var startIdx = 0;
+            // TODO: Sort by Date Last Modified DESC
+            string sortBy = null;
+            var cat = _ctx.CatalogContext.AllCategories.Where(x => x.CategoryId == categoryId.GetValueOrDefault (-1)).FirstOrDefault();
+            if (cat == null)
+            {
+                return new HttpNotFoundResult();
+            }
+            var helper = new UrlHelper(ControllerContext.RequestContext);
+            var feedUrl = ControllerContext.RequestContext.HttpContext.Request.Url;
+            Int32.TryParse(Request.QueryString["startIndex"], out startIdx);
+
+            // Get Results and populate feed
+
+            var resp = ProductListing(categoryId, sortBy, startIdx, itemsPerPage, null, false, false);
+            var result = (ProductCollection)((PartialViewResult)resp).Model;
+            var feed = new SyndicationFeed(cat.Name, cat.Name, new Uri(feedUrl, helper.RouteUrl("StoreFront_home")));
+
+            feed.Items = result.Items.Select(item =>
+                {
+                    var si = new SyndicationItem(
+                        item.ProductName,
+                        item.Content.ProductShortDescription + (item.Content.ProductImages.Main != null ? string.Format("<br /><img src=\"{0}\" />", new Uri(feedUrl, item.Content.ProductImages.Main.ImageUrl)) : ""),
+                        new Uri(feedUrl, helper.RouteUrl("StoreFront_productDetails", new { ProductCode = item.ProductCode }) ),
+                        item.ProductCode, item.CreateDate
+                        );
+                    item.Categories.ForEach(itemCat => si.Categories.Add(new SyndicationCategory(itemCat.Name)));
+                    return si;
+                });
+
+            // Pagination
+
+            if (result.CurrentPage>1)
+            {
+                var idx = Math.Min(0, result.StartIndex - result.PageSize);
+                var uri = new Uri(feedUrl, "?startIndex=" + idx);
+                feed.Links.Add(new SyndicationLink(uri) { RelationshipType = "prev" });
+            }
+            if (result.CurrentPage < result.PageCount)
+            {
+                var idx = result.StartIndex + result.PageSize;
+                var uri = new Uri(feedUrl, "?startIndex=" + idx);
+                feed.Links.Add(new SyndicationLink(uri) { RelationshipType = "next" });
+            }
+
+            return new RssActionResult() { Feed = feed };
+        }
+
         /// <summary>
         /// Updates the SiteContext.CatalogContext with the current product.
         /// </summary>

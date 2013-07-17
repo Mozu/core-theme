@@ -428,6 +428,7 @@
     <Compile Include="Orders\IPciSettingsProvider.cs" />
     <Compile Include="Orders\OrderService.cs" />
     <Compile Include="Orders\OrderStatusProvider.cs" />
+    <Compile Include="RssActionResult.cs" />
     <Compile Include="SearchContext.cs" />
     <Compile Include="Security\AuthenticationExtensions.cs" />
     <Compile Include="Security\IAuthenticationHelper.cs" />
