@@ -30,7 +30,7 @@ Ext.define('Taco.view.order.modal.Payment', {
                     xtype: 'hidden',
                     name: 'orderId',
                     value: me.record.data.orderNumber
-                }, {
+                }, /*{
                     name: 'paymentServiceTransactionId',
                     fieldLabel: 'First Name'
                 }, {
@@ -39,6 +39,9 @@ Ext.define('Taco.view.order.modal.Payment', {
                 }, {
                     name: 'status',
                     fieldLabel: 'Last Name'
+                }, */{
+                    name: 'naemOnCard',
+                    fieldLabel: 'Name on Card'
                 }, {
                     xtype: 'unitfield',
                     name: 'amountCollected',
@@ -49,6 +52,16 @@ Ext.define('Taco.view.order.modal.Payment', {
                     xtype: 'datetime',
                     name: 'createDate',
                     fieldLabel: 'Create Date'
+                }, {
+                    xtype: 'numberfield',
+                    name: 'expMonth',
+                    fieldLabel: 'Exp Month',
+                    maxValue: 12,
+                    minValue: 1
+                }, {
+                    xtype: 'numberfield',
+                    name: 'expYear',
+                    fieldLabel: 'Exp Year'
                 }]
             }, {
                 xtype: 'container',
