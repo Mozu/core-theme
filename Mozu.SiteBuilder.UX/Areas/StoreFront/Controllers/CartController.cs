@@ -59,31 +59,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("cart", cart); //Mapper.Map<VMCart>(cart));
         }
 
-        public JsonDCResult ApplyCoupon(string couponCode)
-        {
-            if (!string.IsNullOrEmpty(couponCode))
-                _cartClient.ApplyCoupon(couponCode).Result.ReadAsAsync().Wait();
+        //public JsonDCResult ApplyCoupon(string couponCode)
+        //{
+        //    if (!string.IsNullOrEmpty(couponCode))
+        //        _cartClient.ApplyCoupon(couponCode).Result.ReadAsAsync().Wait();
+        //
+        //    var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
+        //
+        //    return new JsonDCResult()
+        //    {
+        //        Data = Mapper.Map<VMCart>(cart)
+        //    };
+        //}
 
-            var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
-
-            return new JsonDCResult()
-            {
-                Data = Mapper.Map<VMCart>(cart)
-            };
-        }
-
-        public JsonDCResult RemoveCoupon(string couponCode)
-        {
-            //if (!string.IsNullOrEmpty(couponCode))
-            //    _cartClient.RemoveCoupon(couponCode).Result.ReadAsAsync().Wait();
-
-            var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
-
-            return new JsonDCResult()
-            {
-                Data = Mapper.Map<VMCart>(cart)
-            };
-        }
+        //public JsonDCResult RemoveCoupon(string couponCode)
+        //{
+        //    //if (!string.IsNullOrEmpty(couponCode))
+        //    //    _cartClient.RemoveCoupon(couponCode).Result.ReadAsAsync().Wait();
+        //
+        //    var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
+        //
+        //    return new JsonDCResult()
+        //    {
+        //        Data = Mapper.Map<VMCart>(cart)
+        //    };
+        //}
 
         public JsonDCResult GetCart()
         {
