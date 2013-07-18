@@ -165,7 +165,7 @@ Ext.define('Taco.view.order.subform.Payment', {
             text: 'Add Manual Payment',
             handler: function () {
                 var record = me.record.paymentsStore.getAt(0);
-                me.applyCheck({
+                me.addManualPayment({
                     record: record
                 });
             },
@@ -589,6 +589,17 @@ Ext.define('Taco.view.order.subform.Payment', {
         var me = this;
 
         var modal = Ext.create('Taco.view.order.modal.Payment', {
+            record: me.record
+        });
+
+        modal.show();
+        //this.record.addPayment(config);
+    },
+    
+    addManualPayment: function (config) {
+        var me = this;
+
+        var modal = Ext.create('Taco.view.order.modal.ManualPayment', {
             record: me.record
         });
 
