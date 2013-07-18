@@ -14,7 +14,12 @@ Ext.define('Taco.core.context.TaContext', {
     currentCtx: null,
     constructor: function (config) {
         var me = this;
-        me.siteCollections = Ext.Array.clone(me.siteCollections || []);
+        var siteCollections = [];
+        if (me.siteCollections) {
+            siteCollections = Ext.Array.clone(me.siteCollections)
+        }
+        
+        me.siteCollections = siteCollections;
         config = Ext.apply({}, config);
         Ext.apply(me, config);
 
