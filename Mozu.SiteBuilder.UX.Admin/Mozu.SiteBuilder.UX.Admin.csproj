@@ -400,7 +400,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Api\OrderShippingController.cs" />
-
     <Compile Include="Api\ProductRuntimeController.cs" />
     <Compile Include="Api\ProductTypeController.cs" />
     <Compile Include="Api\RefrenceController.cs" />
@@ -700,6 +699,7 @@
     <Content Include="Scripts\app\view\order\modal\CheckPayment.js" />
     <Content Include="Scripts\app\view\order\modal\EditTrackingNumber.js" />
     <Content Include="Scripts\app\view\order\modal\IssueCredit.js" />
+    <Content Include="Scripts\app\view\order\modal\ManualPayment.js" />
     <Content Include="Scripts\app\view\order\modal\Payment.js" />
     <Content Include="Scripts\app\view\order\subform\Shipping.js" />
     <Content Include="Scripts\app\view\order\subform\Subform.js" />
