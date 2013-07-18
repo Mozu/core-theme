@@ -121,7 +121,6 @@ Ext.application({
             'GeneralSettings',
             'Email',
             'Orders',
-            'PhoneOrders',
             'Errors',
             'Roles',
             'ProductTypes',
