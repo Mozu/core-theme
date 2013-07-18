@@ -210,19 +210,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(invitation);
         }
 
+        
+
         [WebInvoke(Method = "POST", UriTemplate = "invitations/create")]
-        public async Task<Response<Invitation>> CreateInvitation(Invitation invitation)
+        public async Task<Response<Invitation>> CreateInvitation(Newtonsoft.Json.Linq.JObject request)
         {
             try
             {
                 var tenant = (await _tenantsClient.GetTenant(_apiContext.TenantId)).ReadAsSync();
 
                 var result = (await _invitationWebApiClient.CreateInvitation( new AdminUser.Contracts.Invitation(){
-                    EmailAddress = invitation.EmailAddress,
+                    EmailAddress = request.Value<string>("email"),
                     UserScopeType =UserScopeType.Tenant.ToString(),
                     ScopeName = tenant.Name ,
                     UserScopeId = _apiContext.TenantId ,
-                    RoleId = invitation.RoleId 
+                    RoleId = request.Value<int>("roleId") 
                     })).ReadAsSync();
                 var newInvitation = Mapper.Map<AdminUser.Contracts.Invitation, Invitation>(result);
 

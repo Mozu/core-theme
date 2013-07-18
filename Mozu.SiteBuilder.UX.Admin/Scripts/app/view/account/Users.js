@@ -228,14 +228,14 @@
 	            return false;
 	        }
 
-			var invite = Ext.create('Taco.model.AccountUser', {
-	            email: values.email,
-	            roleId: values.accessLevel
-	        });
+			
 
 	        Ext.Ajax.request({
                 url: '/admin/app/account/invitations/create',
-                jsonData: invite.data,
+                jsonData: {
+                    email: values.email,
+                    roleId: values.accessLevel
+                },
                 success: function (response) {
 
                 	var res = Ext.JSON.decode(response.responseText);
