@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Creates a new payment and performs the "AuthAndCapture" action.
         /// </summary>
         [WebInvoke(Method = "POST", UriTemplate = "payment/create")]
-        public async Task<Response<List<Order>>> CreatePayment(CreateManualPaymentArgs args)
+        public async Task<Response<List<Order>>> CreatePayment(CreatePaymentArgs args)
         {
             var action = new DCp.PaymentAction
             {

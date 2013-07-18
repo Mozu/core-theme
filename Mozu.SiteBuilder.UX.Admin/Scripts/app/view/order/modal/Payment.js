@@ -26,42 +26,31 @@ Ext.define('Taco.view.order.modal.Payment', {
                     labelAlign: 'top',
                     width: 300
                 },
-                items: [{
-                    xtype: 'hidden',
-                    name: 'orderId',
-                    value: me.record.data.orderNumber
-                }, /*{
-                    name: 'paymentServiceTransactionId',
-                    fieldLabel: 'First Name'
+                items: [
+                {
+                    name: 'nameOnCard',
+                    fieldLabel: 'Name on Card',
+                    value: 'Bob Boberson'
                 }, {
-                    name: 'status',
-                    fieldLabel: 'Middle Name'
-                }, {
-                    name: 'status',
-                    fieldLabel: 'Last Name'
-                }, */{
-                    name: 'naemOnCard',
-                    fieldLabel: 'Name on Card'
-                }, {
-                    xtype: 'unitfield',
-                    name: 'amountCollected',
-                    fieldLabel: 'Amount Collected',
-                    unitString: '$',
-                    emptyText: '0'
-                }, {
-                    xtype: 'datetime',
-                    name: 'createDate',
-                    fieldLabel: 'Create Date'
+                    xtype: 'currencyfield',
+                    name: 'amount',
+                    fieldLabel: 'Amount',
+                    emptyText: '0',
+                    value: '223'
                 }, {
                     xtype: 'numberfield',
-                    name: 'expMonth',
+                    name: 'expireMonth',
                     fieldLabel: 'Exp Month',
-                    maxValue: 12,
-                    minValue: 1
+                    minValue: 1,
+                    maxValue: 12, 
+                    value: 10
                 }, {
                     xtype: 'numberfield',
-                    name: 'expYear',
-                    fieldLabel: 'Exp Year'
+                    name: 'expireYear',
+                    fieldLabel: 'Exp Year',
+                    minValue: 2013,
+                    maxValue: 2020,
+                    value: 2013
                 }]
             }, {
                 xtype: 'container',
@@ -71,18 +60,22 @@ Ext.define('Taco.view.order.modal.Payment', {
                     labelAlign: 'top',
                     width: 300
                 },
-                items: [{
-                    name: 'paymentType',
-                    fieldLabel: 'Payment Type'
-                }, {
+                items: [
+                {
+                    xtype: 'combobox',
                     name: 'cardType',
-                    fieldLabel: 'Card Type'
+                    fieldLabel: 'Card Type',
+                    allowBlank: false,
+//                    editable: false,
+                    forceSelection: true,
+//                    listConfig: { shadow: false },
+//                    shrinkWrap: 3,
+                    store: [['Visa', 'Visa'], ['NotVisa', 'Something that is not Visa']],
+                    value: 'Visa'
                 }, {
                     name: 'cardNumber',
-                    fieldLabel: 'Card Number'
-                }, {
-                    name: 'nameOnCard',
-                    fieldLabel: 'Name On Card'
+                    fieldLabel: 'Card Number',
+                    value: '4111111111111111'
                 }]
             }],
             listeners: {
@@ -108,16 +101,26 @@ Ext.define('Taco.view.order.modal.Payment', {
 
         this.primaryButton = Ext.widget('primarybutton', {
             text: 'Save',
-            onClick: function () {
-                console.log('TODO: payment action logic');
-                console.log(me.formpanel.getValues());
-                //debugger
-                //Taco.model.OrderPayment
+            click: function () {
+                var me = this,
+                    order = me.record,
+                    billingInfo = me.formpanel.getValues(),
+                    amount = billingInfo.amount;
 
-                //on success hide if no pop error
+                delete billingInfo.amount;
 
-                me.hide();
-            }
+                order.addPayment({
+                    jsonData: {
+                        orderId: order.getId(),
+                        amount: amount,
+                        billingInfo: billingInfo
+                    },
+                    success: function() {
+                        this.hide();
+                    }
+                });
+            },
+            scope: this
         });
 
         this.actions = {

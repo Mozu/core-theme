@@ -505,13 +505,6 @@ Ext.define('Taco.model.Order', {
      */
     addPayment: function (config) {
         Ext.apply(config, {
-            /*
-            url: '/admin/app/order/list',
-            method: "GET",
-            params: {
-                id: "o1001"
-            }
-            */
             url: '/admin/app/order/payment/create',
             method: "POST"            
         });
