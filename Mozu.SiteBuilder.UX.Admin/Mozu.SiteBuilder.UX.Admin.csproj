@@ -711,13 +711,6 @@
     <Content Include="Scripts\app\view\pageTemplate\Edit.js" />
     <Content Include="Scripts\app\view\pageTemplate\Index.js" />
     <Content Include="Scripts\app\view\pendingchange\Cms.js" />
-    <Content Include="Scripts\app\view\phoneOrder\BillingSection.js" />
-    <Content Include="Scripts\app\view\phoneOrder\ProductPicker.js" />
-    <Content Include="Scripts\app\view\phoneOrder\CustomerSection.js" />
-    <Content Include="Scripts\app\view\phoneOrder\Form.js" />
-    <Content Include="Scripts\app\view\phoneOrder\ShippingSection.js" />
-    <Content Include="Scripts\app\view\phoneOrder\ItemsSection.js" />
-    <Content Include="Scripts\app\view\phoneOrder\Index.js" />
     <Content Include="Scripts\app\view\productType\AttributeForm.js" />
     <Content Include="Scripts\app\view\productType\AttributeGroup.js" />
     <Content Include="Scripts\app\view\productType\Edit.js" />
