@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                 case "all": //commenting out full desc till supported by service
 
 
-                    return string.Format("({1} cont \"{0}\" or {2} cont \"{0}\" or {3} cont \"{0}\")", filter.value, FIRSTNAME, LASTNAMEORSURNAME, EMAIL );
+                    return string.Format("({1} sw \"{0}\" or {2} sw \"{0}\" or {3} sw \"{0}\")", filter.value, FIRSTNAME, LASTNAMEORSURNAME, EMAIL);
                  
                 default:
                     {
