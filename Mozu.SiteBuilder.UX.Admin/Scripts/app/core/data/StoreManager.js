@@ -31,7 +31,9 @@ Ext.define('Taco.core.data.StoreManager', {
             if (contextSuffix) {
                 id += contextSuffix;
             }
-            store = me.stores.getByKey(id);
+            if (!config.createOnly) {
+                store = me.stores.getByKey(id);
+            }
 
         }
         if (!store) {

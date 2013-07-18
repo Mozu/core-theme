@@ -7,8 +7,8 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
     extend: 'Ext.form.ComboBox',
     requires: [],
 
-    displayField: 'name',
-    typeAhead: true,
+    displayField: 'asdf',
+    typeAhead: false,
     hideLabel: true,
     hideTrigger: true,
     matchFieldWidth: false,
@@ -141,8 +141,8 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
             header = {},
             raw = [],
             append = !me.store.loading,
-            siteGroup,
-            siteGroupName;
+            siteGroupName='',
+            siteGroup;
         if (operation && operation.headers && operation.headers['x-vol-site-group']) {
 
             siteGroup = operation.headers['x-vol-site-group'];
