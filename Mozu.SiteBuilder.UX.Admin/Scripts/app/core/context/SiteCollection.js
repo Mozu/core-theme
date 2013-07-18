@@ -8,7 +8,12 @@
     
     constructor: function (config) {
         var me = this;
-        me.sites = Ext.Array.clone(me.sites | []);
+        var sites = [];
+        if (me.sites) {
+            sites = Ext.Array.clone(me.sites);
+        }
+
+        me.sites = sites;
         config = Ext.apply({}, config);
         Ext.apply(me, config);
         
