@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using MR = Mozu.SiteBuilder.UX.Models.Users;
@@ -59,15 +60,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<AC.Invitation, US.Invitation>();
             Mapper.CreateMap<US.Invitation, AC.Invitation>();
-
+            Mapper.CreateMap<AP.UserRole, AC.AccountUserRole>();
             Mapper.CreateMap<AC.Invitation, AC.AccountUser>()
                 .ForMember(x => x.Activity, m => m.ResolveUsing(x => x.State))
                 .ForMember(x => x.Email, m => m.ResolveUsing(x => x.EmailAddress))
+                .ForMember( x=> x.Roles , m => m.ResolveUsing( x=> new List<AC.AccountUserRole >(){ new AC.AccountUserRole()
+                                                                                                        {
+                                                                                                            RoleId =x.RoleId ,
+                                                                                                            RoleName = x.Role 
+                                                                                                        }}))
                 .ForMember(x => x.Type, m => m.ResolveUsing(x => x.GetType().Name.ToLowerInvariant()))
                 ;
             Mapper.CreateMap<AP.User, AC.AccountUser>()
-                .ForMember(x => x.RoleId, m => m.ResolveUsing(x => x.Roles == null || x.Roles.Count()==0 ? -1: x.Roles.Select( _=> _.RoleId ).FirstOrDefault( )))
-                .ForMember(x => x.Role, m => m.ResolveUsing(x => x.Roles == null || x.Roles.Count()==0 ? "n/a" :x.Roles.Select( _=> _.RoleName  ).FirstOrDefault( )))
+                .ForMember( x=> x.Roles , m=> m.ResolveUsing(x=> x.Roles ))
+               
                 .ForMember(x => x.Type, m => m.ResolveUsing(x => x.GetType().Name.ToLowerInvariant()))
                 .ForMember(x => x.Activity, m => m.ResolveUsing(x =>
                 {

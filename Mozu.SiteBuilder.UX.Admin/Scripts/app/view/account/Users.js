@@ -43,7 +43,7 @@
 	                	name: 'email'
 	                }]
 	            }, {
-	            	width: 200,
+	                width: 300,
 	                layout: {
 	                	type: 'vbox'
 	            	},
@@ -104,7 +104,7 @@
 				}
 			});
 
-			me.rolesEditor = Ext.widget('selectfield', {
+			me.rolesEditor = Ext.widget('boxselect', {
                 name: 'accessLevel',
                 mode: 'local',
                 valueField: 'id',
@@ -113,15 +113,22 @@
                 store: me.roles
             });
             
-			var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', { clicksToEdit: 1 });
-            cellEditing.on('edit', function (editor, e) {
+			var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
+			    clicksToEdit: 1,
+			    listeners: {
+			        beforeedit:function (editor, e) {
+			            return e.record.data.type != 'invitation';
+			        },
+			        edit: function (editor, e) {
 
-            	me.updateUserAccountRole({
-            		newRole: e.record.get('roleId'),
-            		oldRole: e.record.raw.roleId,
-            		userId: e.record.get('id')
-            	});
-            });
+			            me.updateUserAccountRole({
+			                roles: e.value,
+			                userId: e.record.getId()
+			            });
+			        }
+			    }
+			});
+           
 
 			me.basegrid = Ext.create('Taco.core.ux.BaseGrid', {
 				store: me.store,
@@ -134,11 +141,13 @@
                     text: 'Email',
                     width: 400
                 }, {
-                    xtype: 'templatecolumn',
-                    dataIndex: 'roleId',
-                    text: 'Access Level',
+                    xtype: 'gridcolumn',
+                    dataIndex: 'roleIds',
+                    text: 'Roles',
                     width: 200,
-                    tpl: '{role}',
+                    renderer: function (value, metaData, record) {
+                        return Ext.Array.pluck(record.data.roles || [], 'name').join(', ');
+                    },
                     editor: me.rolesEditor
                 }, {
                     xtype: 'gridcolumn',
