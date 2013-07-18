@@ -42,15 +42,12 @@ Ext.define('Taco.view.order.modal.Payment', {
                     name: 'expireMonth',
                     fieldLabel: 'Exp Month',
                     minValue: 1,
-                    maxValue: 12, 
-                    value: 10
+                    maxValue: 12,
+                    minValue: 1
                 }, {
                     xtype: 'numberfield',
-                    name: 'expireYear',
-                    fieldLabel: 'Exp Year',
-                    minValue: 2013,
-                    maxValue: 2020,
-                    value: 2013
+                    name: 'expYear',
+                    fieldLabel: 'Exp Year'
                 }]
             }, {
                 xtype: 'container',
@@ -74,8 +71,10 @@ Ext.define('Taco.view.order.modal.Payment', {
                     value: 'Visa'
                 }, {
                     name: 'cardNumber',
-                    fieldLabel: 'Card Number',
-                    value: '4111111111111111'
+                    fieldLabel: 'Card Number'
+                }, {
+                    name: 'nameOnCard',
+                    fieldLabel: 'Name On Card'
                 }]
             }],
             listeners: {
@@ -117,8 +116,8 @@ Ext.define('Taco.view.order.modal.Payment', {
                     },
                     success: function() {
                         this.hide();
-                    }
-                });
+            }
+        });
             },
             scope: this
         });

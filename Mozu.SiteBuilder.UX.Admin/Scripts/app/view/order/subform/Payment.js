@@ -198,7 +198,8 @@ Ext.define('Taco.view.order.subform.Payment', {
     },
     
     // initialize the views and actions menu
-    initUI : function() {
+    initUI: function () {
+
         var me = this;     
         me.initActionsMenu();
         me.initHeader();
