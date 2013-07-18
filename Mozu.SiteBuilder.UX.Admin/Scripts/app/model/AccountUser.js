@@ -5,8 +5,15 @@ Ext.define('Taco.model.AccountUser', {
     extend: 'Taco.core.data.Model',
     fields: [
         { name: 'id',       type: 'string' },
-        { name: 'roleId',   type: 'int'    },
-        { name: 'role',     type: 'string' },
+        //{ name: 'roleId',   type: 'int'    },
+        { name: 'roles', type: 'auto' },
+        {
+            name: 'roleIds',
+            type: 'auto',
+            convert:function (value, record) {
+                return Ext.Array.pluck(record.raw.roles || [], 'id');
+            }
+        },
         { name: 'activity', type: 'string' },
         { name: 'type',     type: 'string' },
         { name: 'email',    type: 'string' }

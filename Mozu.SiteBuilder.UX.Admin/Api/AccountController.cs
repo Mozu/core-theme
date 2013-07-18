@@ -193,7 +193,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebInvoke(Method = "POST", UriTemplate = "users/delete")]
         public async Task<Response<AccountUser>> DeleteUser(AccountUser accountUser)
         {
-            await _adminUserWebApiClient.RemoveUserRole(accountUser.Id, accountUser.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId);
+            var dcUser = (await _adminUserWebApiClient.GetUserRoles(accountUser.Id, scopeType: "Tenant", scopeId: _apiContext.TenantId)).ReadAsSync();
+
+            await Task.WhenAll(dcUser.Items.Select(role => _adminUserWebApiClient.RemoveUserRole(accountUser.Id, role.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)));
+
+            //await _adminUserWebApiClient.RemoveUserRole(accountUser.Id, accountUser.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId);
 
             return EmptySingle2<AccountUser>();
         }
@@ -239,7 +243,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var invitation in invitations)
             {
                 var role = (await GetRolesInternal()).FirstOrDefault(r => r.Id == invitation.RoleId);
-                invitation.Role = role == null ? "(unknown)" : role.Name;
+                invitation.Role  = role == null ? "(unknown)" : role.Name;
             }
 
             var users = admins.Select(Mapper.Map<AccountUser>).Concat(
@@ -261,9 +265,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             try
             {
-                var remove = _adminUserWebApiClient.RemoveUserRole(info.UserId, info.OldRole, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId);
-                var add = _adminUserWebApiClient.AddUserRole(info.UserId, info.NewRole, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId);
-                await Task.WhenAll(remove, add);
+                var dcRoles = (await _adminUserWebApiClient.GetUserRoles(info.UserId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ReadAsSync();
+
+                await Task.WhenAll(dcRoles.Items.Where(x => !info.Roles.Contains(x.RoleId)).Select(
+                    x => 
+                        _adminUserWebApiClient.RemoveUserRole(info.UserId, x.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)
+                    ).ToList());
+
+                await Task.WhenAll(info.Roles.Where(x => !dcRoles.Items.Any(_ => _.RoleId == x)).Select(x => 
+                    _adminUserWebApiClient.AddUserRole( info.UserId, x, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ToList());
+
+
+                
             }
             catch (Exception e)
             {

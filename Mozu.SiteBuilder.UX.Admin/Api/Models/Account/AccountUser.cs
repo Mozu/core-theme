@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
@@ -8,11 +9,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
         [DataMember(Name = "userId")]
         public string UserId { get; set; }
 
-        [DataMember(Name = "oldRole")]
-        public int OldRole { get; set; }
+        [DataMember(Name = "roles")]
+        public int[] Roles { get; set; }
 
-        [DataMember(Name = "newRole")]
-        public int NewRole { get; set; }
+     
     }
 
     [DataContract]
@@ -21,11 +21,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
         [DataMember(Name = "id")]
         public string Id { get; set; }
 
-        [DataMember(Name = "roleId")]
-        public int RoleId { get; set; }
 
-        [DataMember(Name = "role")]
-        public string Role { get; set; }
+        [DataMember(Name = "roles")]
+        public List<AccountUserRole> Roles { get; set; }
+
 
         [DataMember(Name = "email")]
         public string Email { get; set; }
@@ -35,5 +34,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
 
         [DataMember(Name = "type")]
         public string Type { get; set; }
+    }
+
+    [DataContract]
+    public class AccountUserRole
+    {
+        [DataMember(Name = "id")]
+        public int RoleId { get; set; }
+
+        [DataMember(Name = "name")]
+        public string RoleName { get; set; }
     }
 }
