@@ -8,6 +8,7 @@
             var ver = System.Diagnostics.FileVersionInfo.GetVersionInfo(assFile);
            
             var user = (Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User)ViewData["user"];
+            var behaviors = Newtonsoft.Json.JsonConvert.SerializeObject(user.BehaviorIds);
             var siteRoles = (List<Mozu.Core.Api.Contracts.UserRole>)ViewData["siteRoles"];
             var siteRolesJson = Newtonsoft.Json.JsonConvert.SerializeObject(siteRoles);
             
@@ -37,7 +38,7 @@
         testHarnessMode:@((Context.Request["testHarnessMode"]=="true").ToString().ToLowerInvariant() ),
         adminAppPath: window.location.protocol + "//" + window.location.host + '@Url.Content("~")',
         adminRelPath:'@Url.Content("~")',
-        User : { id: '@user.Id'  , taContext: @Html.Raw(taContext) , email: '@user.EmailAddress', sites: @Html.Raw(siteRolesJson), name: '@user.FirstName @user.LastName'.trim() },
+        User : { id: '@user.Id'  , behaviors: @behaviors,  taContext: @Html.Raw(taContext) , email: '@user.EmailAddress', sites: @Html.Raw(siteRolesJson), name: '@user.FirstName @user.LastName'.trim() },
         apiVersion: '@ver.FileVersion',
         dashBoardInstructions :  @Html.Raw(string.IsNullOrEmpty(dashboardInstructions) ? "'tbd'": dashboardInstructions) ,
         siteUsers:@Html.Raw(siteUsers),
