@@ -73,8 +73,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         #endregion
 
         #region workflow shit
+
         [DataMember(Name="availableActions", EmitDefaultValue=true)]
         public List<string> AvailableActions { get; set; }
+
+        #endregion
+
+        #region calculated fields
+
+        /// <summary>
+        ///  auth ready is when you have an authorized card with id
+        /// </summary>
+        [DataMember(Name = "authReady")]
+        public bool AuthReady { get; set; }
+
         #endregion
 
         [DataMember(Name = "createDate")]

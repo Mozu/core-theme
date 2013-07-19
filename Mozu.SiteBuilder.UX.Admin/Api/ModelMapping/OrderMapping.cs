@@ -71,7 +71,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         TotalAmount = order.Total,
                         AmountCollected = order.Payments.Sum(p => p.AmountCollected),
                         AuthReady = order.Payments.Any(p => p.AvailableActions.Contains("CapturePayment")),
-                        CaptureData = order.Payments.OrderByDescending(p => p.AvailableActions.Contains("CapturePayment")).FirstOrDefault()
                     };
                     order.AuthorizationInfo.CaptureAmount = order.AuthorizationInfo.TotalAmount - order.AuthorizationInfo.AmountCollected;
                     order.AuthorizationInfo.CanCapture = order.AuthorizationInfo.AuthReady && order.AuthorizationInfo.CaptureAmount > 0;

@@ -40,6 +40,11 @@ Ext.define('Taco.model.OrderPayment', {
             'default': []
         },
         {
+            "name": "availableActions",
+            "type": "auto",
+            "default": []
+        },
+        {
             'name': 'paymentType',
             'type': 'string',
             'useNull': true
@@ -75,8 +80,17 @@ Ext.define('Taco.model.OrderPayment', {
             model: 'Taco.model.Order'
         }
     ],
-    
-
+    setProxy:function(){
+        console.log('wtf');
+    },
+    proxy: {
+        type: 'ajax',
+        reader: {
+            type: 'json'
+         
+        },
+        fonzie:'fonzie'
+    },
 
     /**
      * service call to add a credit on the order     

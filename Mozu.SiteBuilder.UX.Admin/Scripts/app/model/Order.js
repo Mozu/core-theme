@@ -184,7 +184,8 @@ Ext.define('Taco.model.Order', {
         },
         {
             "name": "availableActions",
-            "type": "auto"
+            "type": "auto",
+            "default": []
         },
         // payment , incomplete
         {
@@ -201,25 +202,10 @@ Ext.define('Taco.model.Order', {
             "name": "payments",
             "type": "auto",
             "useNull": true,
-            convert: function (v, record) {
-                return v;
-            },
-            "defaultValue": [
-                /*
-                {
-                "transactionDate": "March 18, 2013",
-                "paymentID": "337",
-                "paidAmount": "100.00",
-                "creditCard": "Visa xxxx-xxxx-xxxx-1111",
-                "transactionID": "00158221"
-            }, {
-                "transactionDate": "March 17, 2013",
-                "paymentID": "336",
-                "paidAmount": "129.48",
-                "creditCard": "Visa xxxx-xxxx-xxxx-1111",
-                "transactionID": "00158220"
-            }*/            
-            ]
+            //convert: function (v, record) {
+            //    return v;
+            //},
+            "defaultValue": []
         }, {
             "name": "unpackagedItems",
 
@@ -378,22 +364,26 @@ Ext.define('Taco.model.Order', {
         {
             type: 'hasMany',
             model: 'Taco.model.OrderItem',
-            name: "items"
+            name: "items",
+            reader: 'json'
         },
         {
             type: 'hasOne',
             model: 'Taco.model.Contact',
-            name: 'billingContact'
+            name: 'billingContact',
+            reader: 'json'
         },
         {
             type: 'hasOne',
             model: 'Taco.model.Contact',
-            name: 'shippingContact'
+            name: 'shippingContact',
+            reader: 'json'
         },
         {
             type: 'hasMany',
             model: 'Taco.model.OrderPayment',
-            name: 'payments'
+            name: 'payments',
+            reader:'json'
         }
     ],
 
@@ -573,9 +563,9 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    paymentRecieved: function (config) {
+    requestCheck: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/payment/recieved',
+            url: '/admin/app/order/payment/requestcheck',
             method: "POST"
         });
 

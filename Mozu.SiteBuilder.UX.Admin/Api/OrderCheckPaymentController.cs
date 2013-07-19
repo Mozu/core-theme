@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
+using DCcore = Mozu.Core.Api.Contracts;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -14,11 +15,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public class RequestCheckArgs
         {
             public string OrderId { get; set; }
+            public decimal Amount { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
         }
         [WebInvoke(Method = "POST", UriTemplate = "payment/requestcheck")]
         public async Task<Response<List<Order>>> RequestCheck(RequestCheckArgs args)
         {
-            var order = (await _orderWebApiClient.CreatePaymentAction(args.OrderId, new DCp.PaymentAction { ActionName = "RequestCheck" })).ReadAsSync();
+            var action = new DCp.PaymentAction { 
+                ActionName = "RequestCheck",
+                NewBillingInfo = new DCp.BillingInfo {
+                    PaymentType = DCp.PaymentType.Check,
+                    BillingContact = new DCcore.Contact {
+                        FirstName = args.FirstName,
+                        LastNameOrSurname = args.LastName
+                    }
+                },
+                Amount = args.Amount
+            };
+            var order = (await _orderWebApiClient.CreatePaymentAction(args.OrderId, action)).ReadAsSync();
 
             return List2(order.Map<Order>());
         }
