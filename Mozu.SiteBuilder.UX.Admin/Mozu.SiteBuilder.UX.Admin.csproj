@@ -1212,6 +1212,7 @@
     <Content Include="Scripts\jsduck-4.3.2.exe" />
     <Content Include="Scripts\makedocsasjson.bat" />
     <Content Include="Scripts\resources\css\taco.css" />
+    <Content Include="Scripts\resources\fonts\mozicons.svg" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.svg" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-Black-webfont.svg" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-BlackIt-webfont.svg" />
@@ -2093,6 +2094,9 @@
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\resources\fonts\mozicons.eot" />
+    <Content Include="Scripts\resources\fonts\mozicons.ttf" />
+    <Content Include="Scripts\resources\fonts\mozicons.woff" />
     <None Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

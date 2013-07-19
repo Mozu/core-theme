@@ -5,7 +5,7 @@
 /* FIELDS */
 
 $form-field-height: 30px;
-$form-field-padding: 4px 10px;
+$form-field-padding: 5px 10px 3px;
 
 $form-field-color: $color;
 $form-field-empty-color: lighten($color, 60%);
@@ -28,3 +28,6 @@ $form-label-font-weight: bold;
 $form-label-font-size: px-to-rem(14);
 $form-label-font-family: $font-family;
 $form-label-font: $form-label-font-weight $form-label-font-size $form-label-font-family;
+
+// trigger
+$form-trigger-width: 16px;

@@ -28,21 +28,41 @@
     }
   }
 
+  .#{$prefix}form-trigger-wrap {
+    position: relative;
+  }
+
   .#{$prefix}trigger-cell {
-    margin-left: -27px;
+    display: block;
+    height: 16px;
+    left: auto;
     position: absolute;
+    right: 7px;
+    top: 7px;
+    width: 16px;
   }
 
   .#{$prefix}form-arrow-trigger {
     background: none transparent;
     border-color: $color-neutral-20 $color-neutral-transparent;
-    border-style: solid;
-    border-width: 6px 5px 0px;
+    border-style: none;
+    border-width: 0px;
     font-size: px-to-rem(12);
     height: 0px !important;
-    margin: 12px 0px 0px 6px;
+    margin: 0px;
+    overflow: visible;
     position: absolute;
     width: 0px;
+
+    &::after {
+      content: "\E036";
+      display: block;
+      font: 16px/1.0 mozicons;
+      left: 0px;
+      position: absolute;
+      top: 0px;
+      vertical-align: top;
+    }
   }
 
   // textarea styles
