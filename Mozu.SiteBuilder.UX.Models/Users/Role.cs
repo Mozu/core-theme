@@ -78,6 +78,7 @@ namespace Mozu.SiteBuilder.UX.Models.Users
 
         public BehaviorTree(IEnumerable<BehaviorCategory> categories, IEnumerable<Behavior> behaviors)
         {
+
             Nodes = (from c in categories
                      let node = BuildNode(c, categories, behaviors)
                      select node).ToList();

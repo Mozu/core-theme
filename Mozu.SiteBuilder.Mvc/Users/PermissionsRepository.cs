@@ -7,6 +7,7 @@ using System.Web.Http;
 using AutoMapper;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
+using Mozu.Core.Settings;
 using Mozu.Reference.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models.Users;
 
@@ -17,12 +18,16 @@ namespace Mozu.SiteBuilder.Mvc.Users
         private readonly IMultiScopeRoleWebApiClient _rolesWebApiClient;
         private readonly IReferenceDataWebApiClient _referenceWebApiClient;
         private readonly IApiContext _apiContext;
+        private readonly ISettings _settings;
+        static int[] DefaultCategories = new int[] { 1,2,3,4,5,6 ,8,9,10,11,12,13,14,15};
 
-        public PermissionsRepository(IMultiScopeRoleWebApiClient rolesWebApiClient, IReferenceDataWebApiClient referenceWebApiClient, IApiContext apiContext)
+
+        public PermissionsRepository(IMultiScopeRoleWebApiClient rolesWebApiClient, IReferenceDataWebApiClient referenceWebApiClient, IApiContext apiContext, ISettings settings )
         {
             _rolesWebApiClient = rolesWebApiClient;
             _referenceWebApiClient = referenceWebApiClient;
             _apiContext = apiContext;
+            _settings = settings;
         }
 
         public Task<List<Role>> GetRoles()
@@ -160,8 +165,13 @@ namespace Mozu.SiteBuilder.Mvc.Users
         {
             var categories = GetCategories();
             var behaviors = GetBehaviors();
-
-             return InTask(new BehaviorTree(categories.Result, behaviors.Result));
+            int[] validCats = DefaultCategories;
+            var filterStr = _settings.AppSettings("role_categories");
+            if (!string.IsNullOrWhiteSpace(filterStr))
+            {
+                validCats = filterStr.Split(',').Select(x => int.Parse(x)).ToArray();
+            }
+            return InTask(new BehaviorTree(categories.Result.Where( x => validCats.Contains(x.Id )).ToList(), behaviors.Result));
         }
 
         private static Task<T> InTask<T>(T thing)
