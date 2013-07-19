@@ -35,11 +35,50 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         }
     },
 
+
+    allowCreate:function () {
+        return this.allowMethod('create');
+    },
+
+    allowDestroy: function () {
+        return this.allowMethod('destroy');
+    },
+
+    allowUpdate: function () {
+        return this.allowMethod('update');
+    },
+
+    allowRead: function () {
+        return this.allowMethod('read');
+    },
+    allowMethod:function (method) {
+        var me = this,
+            res = true,
+            model;
+            
+        if (me.behaviors && me.behaviors[method]) {
+            Ext.each(me.behaviors[method], function (behavior) {
+                if (Taco.User.behaviors.indexOf(behavior) == -1) {
+                    res = false;
+                    return false;
+                }
+                return true;
+            });
+        } else if (me.modelName) {
+            model = Ext.ModelManager.getModel(this.modelName);
+            res = model.allowMethod(method);
+            
+       }
+        
+        return res;
+    },
     initBrowserConfig: function () {
 
         if (!this.header) {
             this.header = {};
         }
+        
+        
 
         Ext.applyIf(this.header, {
             actions: [{
@@ -54,6 +93,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             },{
                 xtype: 'primarybutton',
                 itemId: 'newbutton',
+                hidden: ! this.allowCreate(),
                 listeners: {
                     click: function () {
                         var controller = this.getControllerName();
@@ -69,6 +109,9 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                 }
             }]
         });
+        
+       
+
 
         this.updateRecordTypeName();
 

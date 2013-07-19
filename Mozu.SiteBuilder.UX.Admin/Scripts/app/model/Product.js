@@ -7,6 +7,13 @@
 Ext.define('Taco.model.Product', {
     extend: 'Taco.core.data.Model',
     requires: ['Taco.model.ProductOption', 'Taco.model.ProductProperty', 'Taco.model.ProductExtra', 'Taco.model.ProductVariation', 'Ext.data.association.HasMany', 'Taco.model.ProductInSiteInfo', 'Taco.model.ProductVariation'],
+    behaviors: {
+        read: 4,
+        create: 1,
+        update: 2,
+        destroy: 3
+
+    },
     "fields":
     [
         {
