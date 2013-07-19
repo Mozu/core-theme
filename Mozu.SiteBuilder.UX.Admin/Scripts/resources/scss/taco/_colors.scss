@@ -4,13 +4,32 @@ $color-neutral-transparent:     transparentize(rgb(255, 255, 255), 1);
 $color-neutral-white:           rgb(255, 255, 255);
 $color-neutral-black:           rgb(0, 0, 0);
 
-$color-neutral-95:              rgb(242, 242, 242); // #F2F2F2 gray 95%
-$color-neutral-90:              rgb(230, 230, 230); // #E6E6E6 gray 90%
-$color-neutral-75:              rgb(191, 191, 191); // #BFBFBF gray 75%
-$color-neutral-70:              rgb(179, 179, 179); // #B3B3B3 gray 70%
-$color-neutral-45:              rgb(114, 114, 114); // #727272 gray 45%
-$color-neutral-30:              rgb(75, 75, 75);    // #4B4B4B gray 30%
-$color-neutral-20:              rgb(50, 50, 50);    // #323232 gray 20%
+// $color-neutral-95:              rgb(242, 242, 242); #F2F2F2 gray 95%
+// $color-neutral-90:              rgb(230, 230, 230); #E6E6E6 gray 90%
+// $color-neutral-75:              rgb(191, 191, 191); #BFBFBF gray 75%
+// $color-neutral-70:              rgb(179, 179, 179); #B3B3B3 gray 70%
+// $color-neutral-45:              rgb(114, 114, 114); #727272 gray 45%
+// $color-neutral-30:              rgb(75, 75, 75);    #4B4B4B gray 30%
+// $color-neutral-20:              rgb(50, 50, 50);    #323232 gray 20%
+$color-neutral-95:              darken($color-neutral-white, 5%);  /* #f2f2f2  242,242,242 */
+$color-neutral-90:              darken($color-neutral-white, 10%); /* #e6e6e6  230,230,230 */
+$color-neutral-85:              darken($color-neutral-white, 15%); /* #d9d9d9  217,217,217 */
+$color-neutral-80:              darken($color-neutral-white, 20%); /* #cccccc  204,204,204 */
+$color-neutral-75:              darken($color-neutral-white, 25%); /* #bfbfbf  191,191,191 */
+$color-neutral-70:              darken($color-neutral-white, 30%); /* #b3b3b3  179,179,179 */
+$color-neutral-65:              darken($color-neutral-white, 35%); /* #a6a6a6  166,166,166 */
+$color-neutral-60:              darken($color-neutral-white, 40%); /* #999999  153,153,153 */
+$color-neutral-55:              darken($color-neutral-white, 45%); /* #8c8c8c  140,140,140 */
+$color-neutral-50:              darken($color-neutral-white, 50%); /* #808080  128,128,128 */
+$color-neutral-45:              darken($color-neutral-white, 55%); /* #737373  115,115,115 */
+$color-neutral-40:              darken($color-neutral-white, 60%); /* #666666  102,102,102 */
+$color-neutral-35:              darken($color-neutral-white, 65%); /* #595959     89,89,89 */
+$color-neutral-30:              darken($color-neutral-white, 70%); /* #4d4d4d     77,77,77 */
+$color-neutral-25:              darken($color-neutral-white, 75%); /* #404040     64,64,64 */
+$color-neutral-20:              darken($color-neutral-white, 80%); /* #333333     51,51,51 */
+$color-neutral-15:              darken($color-neutral-white, 85%); /* #262626     38,38,38 */
+$color-neutral-10:              darken($color-neutral-white, 90%); /* #1a1a1a     26,26,26 */
+$color-neutral-05:              darken($color-neutral-white, 95%); /* #0d0d0d     13,13,13 */
 
 /* THEME COLORS */
 
