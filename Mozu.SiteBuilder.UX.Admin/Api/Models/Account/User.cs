@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
     public class User
     {
         [DataMember(Name = "behaviorIds")]
-        public short[] BehaviorIds { get; set; }
+        public int[] BehaviorIds { get; set; }
 
         [DataMember(Name = "email")]
         public string EmailAddress { get; set; }

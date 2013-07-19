@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.Tenant.Contracts.Clients;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -48,6 +49,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             _log.Debug("hello!");
             var user = _currentUserHelper.GetCurrentUser();
+            if (user.BehaviorIds == null || user.BehaviorIds.Length == 0)
+            {
+                user.BehaviorIds = _apiContext.UserClaims.BehaviorIds;
+            }
             var roles = GetUserSitesRoles(_authenticationHelper.GetCurrentUser().UserId);
             var tenantRes = await _tenantsWebApi.GetTenant( _apiContext.TenantId);
            // var siteCol = _tenantsWebApi.AsBreadthFirstEnumerable();
