@@ -30,10 +30,5 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         [DataMember(Name = "captureAmount")]
         public decimal CaptureAmount { get; set; }
-
-        [DataMember(Name = "authReady")]
-        public bool AuthReady { get; set; }
-        [DataMember(Name = "canCapture")]
-        public bool CanCapture { get; set; }
     }
 }
