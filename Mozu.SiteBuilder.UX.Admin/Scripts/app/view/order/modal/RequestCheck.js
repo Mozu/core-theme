@@ -1,9 +1,9 @@
 /**
  * @class Taco.view.order.modal.PaymentAction
  */
-Ext.define('Taco.view.order.modal.CheckPayment', {
+Ext.define('Taco.view.order.modal.RequestCheck', {
     extend: 'Taco.core.ux.modal.Modal',
-    requires: ['Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField'],
+    requires: ['Taco.core.ux.form.CurrencyField'],
     cls: Taco.baseCSSPrefix + 'order-modal',
     autoShow: true,
     width: 400,
@@ -28,27 +28,21 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
                     labelAlign: 'top',
                     width: 300
                 },
-                items: [{
-                    xtype: 'hidden',
-                    name: 'orderId',
-                    value: me.record.data.orderNumber
-                }, /*{
-                    name: 'name',
-                    fieldLabel: 'Name'
-                },*/ {
-                    name: 'checkNumber',
-                    fieldLabel: 'Check Number'
+                items: [
+                {
+                    name: 'firstName',
+                    fieldLabel: 'First Name',
+                    value: 'Bob'
                 }, {
-                    xtype: 'unitfield',
-                    name: 'amountCollected',
-                    fieldLabel: 'Amount Collected',
-                    unitString: '$',
-                    emptyText: '0'
-                }/*, {
-                    xtype: 'datetime',
-                    name: 'createDate',
-                    fieldLabel: 'Create Date'
-                }*/]
+                    name: 'lastName',
+                    fieldLabel: 'Last Name',
+                    value: 'Checkwriter'
+                }, {
+                    xtype: 'currencyfield',
+                    name: 'amount',
+                    fieldLabel: 'Amount Requested',
+                    value: me.record.get('total')
+                }]
             }],
             listeners: {
                 afterrender: function (panel) {
@@ -74,18 +68,22 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
         this.primaryButton = Ext.widget('primarybutton', {
             text: 'Save',
             click: function () {
-                var me = this;
-                debugger;
-                console.log('TODO: payment action logic');
-                console.log(me.formpanel.getValues());
-                //debugger
-                //Taco.model.OrderPayment
+                var data = Ext.apply(
+                    {
+                        orderId: me.record.getId()
+                    },
+                    me.formpanel.getValues()
+                );
+                me.record.requestCheck({
+                    jsonData: data,
+                    success: function() {
+                        debugger;
+                        me.record.reload();
+                        me.hide();
+                    }
+                });
                 
-                //on success hide if no pop error
-                
-                me.hide();
-            },
-            scope: this
+            }
         });
 
         this.actions = {

@@ -66,8 +66,9 @@ Ext.define('Taco.view.order.Header', {
                         return (obj3);
                     }
                     var renderDataObject = merge_options(rec[0].data, this.renderData)
-                    
-                    this.renderTpl.overwrite(this.el, renderDataObject);
+
+                    if (this.el)
+                        this.renderTpl.overwrite(this.el, renderDataObject);
                     
                     
                 },this)

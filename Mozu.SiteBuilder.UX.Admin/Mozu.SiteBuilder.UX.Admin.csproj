@@ -701,6 +701,8 @@
     <Content Include="Scripts\app\view\order\modal\IssueCredit.js" />
     <Content Include="Scripts\app\view\order\modal\ManualPayment.js" />
     <Content Include="Scripts\app\view\order\modal\Payment.js" />
+    <Content Include="Scripts\app\view\order\modal\RequestCheck.js" />
+    <Content Include="Scripts\app\view\order\subform\PaymentPanel.js" />
     <Content Include="Scripts\app\view\order\subform\Shipping.js" />
     <Content Include="Scripts\app\view\order\subform\Subform.js" />
     <Content Include="Scripts\app\view\order\subform\Payment.js" />
