@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.OrderStatus, op => op.MapFrom(dc => dc.Status))
                 .ForMember(x => x.ShippingStatus, op => op.MapFrom(dc => dc.ShipmentStatus))
                 .ForMember(x => x.PaymentStatus, op => op.MapFrom(dc => dc.PaymentStatus))
-                .ForMember(x => x.Payments, op => op.MapFrom(dc => dc.Payments))
+                .ForMember(x => x.Payments, op => op.MapFrom(dc => dc.Payments.OrderByDescending(p => p.AuditInfo.CreateDate)))
                 .ForMember(x => x.Packages, op => op.MapFrom(dc => dc.Packages))
                 // .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.ShippingInfo.
                 .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
@@ -70,10 +70,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     order.AuthorizationInfo = new OrderAuthorizationInfo {
                         TotalAmount = order.Total,
                         AmountCollected = order.Payments.Sum(p => p.AmountCollected),
-                        AuthReady = order.Payments.Any(p => p.AvailableActions.Contains("CapturePayment")),
                     };
                     order.AuthorizationInfo.CaptureAmount = order.AuthorizationInfo.TotalAmount - order.AuthorizationInfo.AmountCollected;
-                    order.AuthorizationInfo.CanCapture = order.AuthorizationInfo.AuthReady && order.AuthorizationInfo.CaptureAmount > 0;
                
                 })
                 .AfterMap((dc, order) => {

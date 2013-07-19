@@ -702,13 +702,13 @@
     <Content Include="Scripts\app\view\order\modal\ManualPayment.js" />
     <Content Include="Scripts\app\view\order\modal\Payment.js" />
     <Content Include="Scripts\app\view\order\modal\RequestCheck.js" />
-    <Content Include="Scripts\app\view\order\subform\PaymentPanel.js" />
     <Content Include="Scripts\app\view\order\subform\Shipping.js" />
     <Content Include="Scripts\app\view\order\subform\Subform.js" />
     <Content Include="Scripts\app\view\order\subform\Payment.js" />
     <Content Include="Scripts\app\view\order\subform\Detail.js" />
     <Content Include="Scripts\app\view\order\widget\OrderItemGrid.js" />
     <Content Include="Scripts\app\view\order\widget\Package.js" />
+    <Content Include="Scripts\app\view\order\widget\PaymentPanel.js" />
     <Content Include="Scripts\app\view\order\widget\UnpackagedItems.js" />
     <Content Include="Scripts\app\view\pageTemplate\Edit.js" />
     <Content Include="Scripts\app\view\pageTemplate\Index.js" />

@@ -1,7 +1,7 @@
 ﻿/**
- * @class Taco.view.order.subform.Payment
+ * @class Taco.view.order.widget.PaymentPanel
  */
-Ext.define('Taco.view.order.subform.PaymentPanel', {
+Ext.define('Taco.view.order.widget.PaymentPanel', {
     extend: 'Ext.panel.Panel',
     requires: [
         'Taco.view.order.modal.IssueCredit',

@@ -7,7 +7,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         'Taco.view.order.modal.IssueCredit',
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.CheckPayment',
-        'Taco.view.order.subform.PaymentPanel'
+        'Taco.view.order.widget.PaymentPanel'
     ],
     config : {
         // order model
@@ -142,23 +142,40 @@ Ext.define('Taco.view.order.subform.Payment', {
     
     // initialize the views and actions menu
     initUI: function () {
+        var me = this;
 
-        var me = this;     
         me.initActionsMenu();
         me.initHeader();
-        me.bodyCont.add(me.headerDetails);
+        me.initPaymentsUI();
+    },
+
+    initPaymentsUI: function() {
+        var me = this;
+
+        me.paymentPanels = [];
 
         this.record.payments().each( function (payment) {
-            me.bodyCont.add(Ext.create('Taco.view.order.subform.PaymentPanel',
+            var panel = Ext.create('Taco.view.order.widget.PaymentPanel',
                 {
                     order: me.record,
                     record: payment
-                }));
+                });
+            me.paymentPanels.push(panel);
+            me.bodyCont.add(panel);
         });
-      
-        
-
     },
+
+    // clear out the payment panels
+    destroyPaymentsUI: function() {
+        var me = this;
+
+        if (me.paymentPanels)
+        {
+            Ext.Array.each(me.paymentPanels, function(panel) { panel.destroy(); } );
+        }
+        delete me.paymentPanels;
+    },
+
     initHeader: function (){
         var me = this,
            data = this.record.getData();
@@ -188,6 +205,8 @@ Ext.define('Taco.view.order.subform.Payment', {
             ],
             data: data
         });
+
+        me.bodyCont.add(me.headerDetails);
     },
     
     applyCheck: function (config) {
@@ -307,28 +326,24 @@ Ext.define('Taco.view.order.subform.Payment', {
     onRecordChange : function() {
         var me = this;
         
-        // clear out the ui components
-        me.statusRow.destroy();
-        me.paymentDetails.destroy();
-        me.transactionList.destroy();
-
         //not sure why i need to do this but oh well....debug later
         //doesnt work
         //me.record.paymentsStore.loadRawData(me.record.data.payments);
 
-        me.record.payments().removeAll();
-        Ext.each(me.record.data.payments, function (paymentRaw) {
-            var paymentRecord = Ext.create('Taco.model.OrderPayment', paymentRaw);
-            paymentRecord.interactions().removeAll();
-            Ext.each(paymentRecord.data.interactions, function (interactionRaw) {
-                var paymentInteractionRecord = Ext.create('Taco.model.OrderPaymentInteraction', interactionRaw);
-                paymentRecord.interactions().add(paymentInteractionRecord);
-            });
-            me.record.payments().add(paymentRecord);
-        });
+        // me.record.payments().removeAll();
+        // Ext.each(me.record.data.payments, function (paymentRaw) {
+        //     var paymentRecord = Ext.create('Taco.model.OrderPayment', paymentRaw);
+        //     paymentRecord.interactions().removeAll();
+        //     Ext.each(paymentRecord.data.interactions, function (interactionRaw) {
+        //         var paymentInteractionRecord = Ext.create('Taco.model.OrderPaymentInteraction', interactionRaw);
+        //         paymentRecord.interactions().add(paymentInteractionRecord);
+        //     });
+        //     me.record.payments().add(paymentRecord);
+        // });
         
         //re-build the ui components
-        me.initUI();
+        me.destroyPaymentsUI();
+        me.initPaymentsUI();
 
         // add the ui components to the view
         me.add(
