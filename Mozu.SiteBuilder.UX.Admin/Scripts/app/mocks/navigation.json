@@ -15,7 +15,6 @@
         "address": "products",
         "behaviorIds": [4],
         "icon": "nav-catalog",
-        "behaviorIds":[41],
         "items": [{
                 "id": "products",
                 "label": "Products",

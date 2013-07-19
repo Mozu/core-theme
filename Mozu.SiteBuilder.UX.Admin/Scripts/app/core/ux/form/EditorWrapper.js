@@ -67,11 +67,13 @@
                 xtype: 'secondarybutton',
                 text: this.cancelText,
                 click: this.cancel,
+                hidden: !this.allowCreate(),
                 scope: this
             }, {
                 xtype: 'dirtybutton',
                 text: this.saveText,
                 click: this.save,
+                hidden: !this.allowCreate(),
                 scope: this
             }];
         }
@@ -87,7 +89,43 @@
 
         this.relayEvents(this.form, ['beforeload', 'afterload', 'change']);
     },
+    allowCreate: function () {
+        return this.allowMethod('create');
+    },
 
+    allowDestroy: function () {
+        return this.allowMethod('destroy');
+    },
+
+    allowUpdate: function () {
+        return this.allowMethod('update');
+    },
+
+    allowRead: function () {
+        return this.allowMethod('read');
+    },
+    allowMethod: function (method) {
+        var me = this,
+            res = true,
+            model;
+
+        if (me.behaviors && me.behaviors[method]) {
+            Ext.each(me.behaviors[method], function (behavior) {
+                if (Taco.User.behaviors.indexOf(behavior) == -1) {
+                    res = false;
+                    return false;
+                }
+                return true;
+            });
+        } else if (me.record && me.record.modelName) {
+            model = Ext.ModelManager.getModel(me.record.modelName);
+            res = model.allowMethod(method);
+
+        }
+
+        return res;
+    },
+    
     onBeforeRender: function () {
         this.dirtybutton = this.down('dirtybutton');
 

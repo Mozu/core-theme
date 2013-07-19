@@ -17,7 +17,30 @@ Ext.define('Taco.core.data.Model', {
 
         return me.callParent(arguments);
     },
+    
+    inheritableStatics: {
+        allowMethod:function (method) {
+            if (this.prototype.behaviors && this.prototype.behaviors[method]) {
+                return Taco.User.behaviors.indexOf(this.prototype.behaviors[method]) != -1;
+            }
+            return true;
+        },
+        allowCreate: function () {
+            return this.allowMethod('create');
+        },
 
+        allowDelete: function () {
+            return this.allowMethod('delete');
+        },
+
+        allowUpdate: function () {
+            return this.allowMethod('update');
+        },
+
+        allowRead: function () {
+            return this.allowMethod('read');
+        }
+    },
 
     isEqual: function (a, b) {
         

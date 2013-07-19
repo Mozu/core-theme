@@ -14,7 +14,7 @@ Ext.define('Taco.view.product.Index', {
     useTilePanel: false,
 
     requiresContextOfType: ['c', 's'],
-
+    
     filterFormConf: {
         width: 600,
         cls: Taco.baseCSSPrefix + 'combofilter-form products',
@@ -132,6 +132,7 @@ Ext.define('Taco.view.product.Index', {
                 }
             }, {
                 text: 'Delete',
+            
                 menuColumnHandler: 'destroyMenuColumnHandler'
             }, {
                 text: 'Edit',

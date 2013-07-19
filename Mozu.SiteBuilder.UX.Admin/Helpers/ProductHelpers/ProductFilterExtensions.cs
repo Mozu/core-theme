@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
             switch (filter.property.ToLowerInvariant())
             {
                 case "all": //commenting out full desc till supported by service
-                    return string.Format(/*({1} cont \"{0}\" or */"({2} cont \"{0}\" or {3} cont \"{0}\")", filter.value, PRODUCT_FULL_DESCRIPTION, PRODUCT_CODE_PROPERTY, PRODUCT_NAME_PROPERTY);
+                    return string.Format(/*({1} cont \"{0}\" or */"({2} sw \"{0}\" or {3} cont \"{0}\")", filter.value, PRODUCT_FULL_DESCRIPTION, PRODUCT_CODE_PROPERTY, PRODUCT_NAME_PROPERTY);
                 case "categoryids":
                     return string.Format("productinsites.productcategories.categoryid eq {0}", filter.value);
                 case "isactive":

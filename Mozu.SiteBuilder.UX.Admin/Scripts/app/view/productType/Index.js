@@ -68,6 +68,7 @@ Ext.define('Taco.view.productType.Index', {
                 menuColumnHandler: 'editMenuColumnHandler'
             }, {
                 text: 'Delete',
+                
                 menuColumnHandler: 'destroyMenuColumnHandler'
             }]
         }]
