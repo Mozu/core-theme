@@ -133,6 +133,38 @@ Ext.application({
 
         this.context = Ext.create('Taco.core.context.TaContext', Taco.User.taContext);
 
+        Ext.override(Ext.Component, {
+            beforeRender: function () {
+                var me = this,
+                    visable;
+                if (me.requiredBehaviors) {
+                    if (!Ext.isArray(me.requiredBehaviors)) {
+                        me.requiredBehaviors= [me.requiredBehaviors];
+                    }
+                    Ext.each(me.requiredBehaviors, function (reqBeh) {
+                        var model;
+                        if (Ext.isNumber(reqBeh)) {
+                            if (!Ext.Array.contains( Taco.User.behaviors, reqBeh)) {
+                                me.hidden = true;
+                            }
+                        }
+                        if (Ext.isObject(reqBeh)) {
+                            model = Ext.ModelManager.getModel(reqBeh.model);
+                            if (!model.allowMethod(reqBeh.behavior)) {
+                                if (reqBeh.disable) {
+                                    me.disabled = true;
+                                } else {
+                                    me.hidden = true;
+                                }
+                            }
+                        }
+                    });
+                }
+                me.callParent(arguments);
+            }
+        });
+
+
         Ext.override(Ext.AbstractComponent, {
             removeCls: function (cls) {
                 var me = this,

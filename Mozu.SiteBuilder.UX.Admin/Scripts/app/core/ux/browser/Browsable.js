@@ -83,6 +83,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         Ext.applyIf(this.header, {
             actions: [{
                 xtype: 'secondarybutton',
+                hidden:!this.allowUpdate(),
                 text: 'Edit Records',
                 listeners: {
                     click: function () {

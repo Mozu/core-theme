@@ -3,6 +3,12 @@
  */
 Ext.define('Taco.model.Discount', {
     extend: 'Taco.core.data.Model',
+    behaviors: {
+        read: 24,
+        create: 25,
+        update: 26,
+        destroy: 27
+    },
     idProperty: 'id',
     fields: [{
             name: 'id',

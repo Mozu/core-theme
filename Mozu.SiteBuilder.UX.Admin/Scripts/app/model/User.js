@@ -5,6 +5,12 @@
 
 Ext.define('Taco.model.User', {
     extend: 'Taco.core.data.Model',
+    behaviors: {
+        read: 28,
+        create: 29,
+        update: 30,
+        destroy: 31
+    },
     fields: [
         { name: 'id', type: 'string', isHidden: true },
         { name: 'email', type: 'string' },

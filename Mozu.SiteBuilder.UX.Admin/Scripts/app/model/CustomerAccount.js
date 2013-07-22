@@ -3,6 +3,12 @@
  */
 Ext.define('Taco.model.CustomerAccount', {
     extend: 'Taco.core.data.Model',
+    behaviors: {
+        read: 41,
+        create: 44,
+        update: 42,
+        destroy: 43
+    },
     requires: ['Taco.model.Contact'],
     fields: [{
             name: 'id',

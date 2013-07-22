@@ -132,10 +132,17 @@ Ext.define('Taco.view.product.Index', {
                 }
             }, {
                 text: 'Delete',
-            
+                requiredBehaviors: {
+                    model: 'Taco.model.Product',
+                    behavior:'destroy'
+                },
                 menuColumnHandler: 'destroyMenuColumnHandler'
             }, {
                 text: 'Edit',
+                requiredBehaviors: {
+                    model: 'Taco.model.Product',
+                    behavior: 'update'
+                },
                 menuColumnHandler: function (item, eventData) {
                     var page = eventData.grid.getParentPage(),
                         record = eventData.record,

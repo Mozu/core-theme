@@ -15,6 +15,7 @@
     },
     
     initComponent: function () {
+        var model = this.record ? Ext.ModelManager.getModel(this.record.modelName) : null;
         this.initWrapper();
 
         this.body = {
@@ -28,6 +29,17 @@
         };
 
         this.callParent(arguments);
+        
+        if (model && !model.allowUpdate()) {
+
+
+            this.form.getForm().getFields().each( function (field) {
+                if (field.setReadOnly) {
+                    field.setReadOnly(true);
+                }
+            });
+            //setReadOnly(
+        }
 
         this.on('idchange', function(editor, record) {
             Taco.app.contentView.remove(editor);

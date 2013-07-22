@@ -26,7 +26,7 @@ Ext.define('Taco.core.Controller', {
     index: function (params, appState) {
         var record = appState ? appState.record : null,
             options = appState ? appState.options : null;
-        console.log(params, appState);
+        
         this.buildIndex(record, options);
     },
 

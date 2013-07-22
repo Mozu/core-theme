@@ -8,7 +8,12 @@ Ext.define('Taco.model.Category', {
     extend: 'Taco.core.data.Model',
     requires: ['Taco.model.Product','Taco.core.data.CategoryTreeProxy', 'Taco.model.FacetSet' ],//, 'Taco.model.Facetable'],
     //fields: ['id', 'name', 'description', 'sequence', 'isDisplayed'],
-
+    behaviors: {
+        read: 16,
+        create: 17,
+        update: 19,
+        destroy: 18
+    },
     fields: [
         { name: 'leaf', type: 'boolean' },
         {
