@@ -10,7 +10,12 @@ Ext.define('Taco.model.Order', {
     *
     *
     ***************************************************************/
-
+    behaviors: {
+        read: 73,
+        create: 74,
+        update: 75,
+        destroy: 76
+    },
     fields: [
         {
             "name": "id",

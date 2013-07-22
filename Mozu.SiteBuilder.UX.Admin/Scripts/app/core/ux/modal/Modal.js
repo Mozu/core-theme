@@ -23,7 +23,7 @@ Ext.define('Taco.core.ux.modal.Modal', {
     easingShow: 'easeOut',
     easingHide: 'easeIn',
     duration: 300,
-
+    floting:true,
     initComponent: function () {
         this.renderTo = Ext.getBody();
         Ext.apply(this.content, {

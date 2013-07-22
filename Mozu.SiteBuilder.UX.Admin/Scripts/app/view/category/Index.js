@@ -70,9 +70,18 @@ Ext.define('Taco.view.category.Index', {
                 text: 'Actions',
                 menuItems: [{
                     text: 'Delete',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Category',
+                        behavior: 'destroy'
+                    },
                     menuColumnHandler: 'destroyMenuColumnHandler'
                 }, {
                     text: 'Edit',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Category',
+                        behavior: 'update'
+                    },
+                    
                     menuColumnHandler: function (item, eventData) {
                         var record = eventData.record;
                         Ext.defer(function () {

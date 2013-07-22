@@ -123,6 +123,10 @@ Ext.define('Taco.view.order.Index', {
             menuItems: [
             {
                 text: 'Edit',
+                requiredBehaviors: {
+                    model: 'Taco.model.Category',
+                    behavior: 'update'
+                },
                 menuColumnHandler: function (item, eventData) {
                     var page = eventData.grid.getParentPage(),
                         record = eventData.record,
