@@ -6,9 +6,11 @@
  */
 
 Ext.define('Taco.view.generalSettings.subform.Notifications', {
-    extend: 'Taco.view.product.subform.Subform',
+    extend: 'Taco.core.ux.form.Form',
     requires: [],
     title: 'Notifications',
+    bodyCls: Taco.baseCSSPrefix + 'product-admin-subform',
+    cls: Taco.baseCSSPrefix + 'form-section',
     initComponent: function () {
         var me = this;
         this.defaults = {
