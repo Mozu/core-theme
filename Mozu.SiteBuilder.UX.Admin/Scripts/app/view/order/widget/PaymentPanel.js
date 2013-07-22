@@ -159,16 +159,27 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             console.log(e.target.parentElement.childNodes[6].data); //status
                             var date = new Date(e.target.parentElement.childNodes[0].data.trim());
 
-
-                            var modal = Ext.create('Taco.view.order.modal.AddPaymentTransaction', {
-                                paymentId: e.target.parentElement.parentElement.attributes.paymentId.value,
-                                transDate: e.target.parentElement.parentElement.attributes.createDate.value,
-                                transId: e.target.parentElement.childNodes[2].data.trim().split(' ')[1],
-                                transGatewayId: e.target.parentElement.childNodes[8].data.trim().split(' ')[2],
-                                transAmount: e.target.parentElement.childNodes[4].data.trim().split(' ')[1].substring(1),
-                                transStatus: e.target.parentElement.childNodes[6].data.trim().split(' ')[1],
-                                record: me.record
-                            });
+                            if (e.target.parentElement.childNodes[8]) {
+                                var modal = Ext.create('Taco.view.order.modal.AddPaymentTransaction', {
+                                    paymentId: e.target.parentElement.parentElement.attributes.paymentId.value,
+                                    transDate: e.target.parentElement.parentElement.attributes.createDate.value,
+                                    transId: e.target.parentElement.childNodes[2].data.trim().split(' ')[1],
+                                    transGatewayId: e.target.parentElement.childNodes[8].data.trim().split(' ')[2],
+                                    transAmount: e.target.parentElement.childNodes[4].data.trim().split(' ')[1].substring(1),
+                                    transStatus: e.target.parentElement.childNodes[6].data.trim().split(' ')[1],
+                                    record: me.record
+                                });
+                            } else {
+                                var modal = Ext.create('Taco.view.order.modal.AddPaymentTransaction', {
+                                    paymentId: e.target.parentElement.parentElement.attributes.paymentId.value,
+                                    transDate: e.target.parentElement.parentElement.attributes.createDate.value,
+                                    transId: e.target.parentElement.childNodes[2].data.trim().split(' ')[1],
+                                    transAmount: e.target.parentElement.childNodes[4].data.trim().split(' ')[1].substring(1),
+                                    transStatus: e.target.parentElement.childNodes[6].data.trim().split(' ')[1],
+                                    record: me.record
+                                });
+                            }
+                            
                         }
                     },
                     scope: me
