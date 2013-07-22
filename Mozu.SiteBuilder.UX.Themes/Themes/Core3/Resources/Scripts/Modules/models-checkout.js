@@ -10,13 +10,13 @@
             this.stepStatus("incomplete");
         }
 
-        var ShippingPhone = ViewModelPrototype.extend($.extend(true, {}, AddressModels.phoneConf, {
+        var ShippingPhone = AddressModels.PhoneNumbers.extend({
             observables: {
                 Home: {
                     required: genericMsg.PhoneMissing
                 }
             }
-        }));
+        });
         
         var ShippingAddress = ViewModelPrototype.extend({
             statics: {
@@ -166,7 +166,7 @@
         },
 
 
-        BillingStreetAddress = ViewModelPrototype.extend($.extend(true, {}, AddressModels.addressConf, {
+        BillingStreetAddress = AddressModels.StreetAddress.extend({
             observables: {
                 "Address1": {
                     required: {
@@ -201,7 +201,7 @@
                     }
                 }
             }
-        }), AddressModels.constructAddress),
+        }),
 
         BillingAddress = ViewModelPrototype.extend({
             statics: {

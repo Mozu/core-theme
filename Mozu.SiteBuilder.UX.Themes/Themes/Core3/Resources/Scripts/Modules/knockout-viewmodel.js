@@ -289,7 +289,7 @@
         initialize: function() {}
     });
 
-    KnockoutVM.extend = function(props, staticProps, ctor) {
+    var extend = KnockoutVM.extend = function(props, staticProps, ctor) {
         var parent = this,
             child;
 
@@ -332,6 +332,9 @@
         // Set a convenience property in case the parent's prototype is needed
         // later.
         child.__super__ = parent.prototype;
+
+        // make extendable!
+        child.extend = extend;
 
         return child;
     }
