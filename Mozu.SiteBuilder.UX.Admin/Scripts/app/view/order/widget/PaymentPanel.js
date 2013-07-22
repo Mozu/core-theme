@@ -58,7 +58,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             authReady = Ext.Array.contains(me.record.data.availableActions, 'CapturePayment'),
             // can capture is when you are auth ready and your order has a positive capture amount
             canCapture = authReady && captureAmount && captureAmount > 0;
-
+        debugger
         me.statusRow = Ext.create('Ext.container.Container', {
             cls: "orderform-payment-statusRow",
             layout: {
@@ -106,7 +106,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 }, */{
                     xtype: 'combo',
                     store: me.getAvailableActionsStore(),
-                    disabled: me.record.data.availableActions && me.record.data.availableActions.length < 1,
+                    disabled: me.record.data.availableActions && me.record.data.availableActions.length < 0,
                     displayField: 'lbl',
                     valueField: 'val',
                     emptyText: 'Actions',
