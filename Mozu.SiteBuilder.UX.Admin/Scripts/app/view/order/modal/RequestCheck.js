@@ -77,7 +77,7 @@ Ext.define('Taco.view.order.modal.RequestCheck', {
                 me.record.requestCheck({
                     jsonData: data,
                     success: function() {
-                        debugger;
+                        
                         me.record.reload();
                         me.hide();
                     }

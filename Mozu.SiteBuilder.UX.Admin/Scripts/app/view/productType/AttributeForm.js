@@ -178,7 +178,6 @@
             data: this.record.get('selectedValues')
         });
 
-        //debugger;
         valuesField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'values',
             height: 325,

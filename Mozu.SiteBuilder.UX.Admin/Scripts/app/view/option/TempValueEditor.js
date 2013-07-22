@@ -74,7 +74,7 @@
                 console.log('no dataview yet!');
                 return;
             }
-            //debugger;
+       
             console.log('bind custom events', this.store.count());
 
             rows = dataViewEl.query('.taco-option-value-row');
