@@ -106,11 +106,11 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 }, */{
                     xtype: 'combo',
                     store: me.getAvailableActionsStore(),
-                    disabled: me.record.data.availableActions && me.record.data.availableActions.count > 0,
+                    disabled: me.record.data.availableActions && me.record.data.availableActions.length < 1,
                     displayField: 'lbl',
                     valueField: 'val',
                     emptyText: 'Actions',
-                    //handler: me.addTransaction,
+                    handler: me.addTransaction,
                     transId: 1,
                     record: me.record,
                     parent: this,
