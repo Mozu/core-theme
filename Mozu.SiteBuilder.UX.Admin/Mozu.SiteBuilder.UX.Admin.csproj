@@ -545,7 +545,6 @@
     <Content Include="Scripts\app\controller\ProductTypes.js" />
     <Content Include="Scripts\app\controller\PendingChanges.js" />
     <Content Include="Scripts\app\controller\Errors.js" />
-    <Content Include="Scripts\app\controller\PhoneOrders.js" />
     <Content Include="Scripts\app\controller\Roles.js" />
     <Content Include="Scripts\app\controller\Settings.js" />
     <Content Include="Scripts\app\core\AjaxProxy.js" />
@@ -702,7 +701,6 @@
     <Content Include="Scripts\app\view\order\modal\ManualPayment.js" />
     <Content Include="Scripts\app\view\order\modal\Payment.js" />
     <Content Include="Scripts\app\view\order\modal\RequestCheck.js" />
-    <Content Include="Scripts\app\view\order\subform\PaymentPanel.js" />
     <Content Include="Scripts\app\view\order\subform\Shipping.js" />
     <Content Include="Scripts\app\view\order\subform\Subform.js" />
     <Content Include="Scripts\app\view\order\subform\Payment.js" />
