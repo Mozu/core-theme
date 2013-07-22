@@ -14,6 +14,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
     initComponent: function (eOpts) {
         var me = this;
+
         me.initStatusRow();
         me.initPaymentDetails();
         me.initTransactionList();
@@ -27,12 +28,113 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         this.callParent(arguments);
     },
 
-  
+    getAvailableActionsStore: function() {
+        var me = this,
+            retval = [];
+
+        var labels = {
+            'ApplyCheck': 'Receive Check',
+            'DeclineCheck': 'Decline Check',
+            'CapturePayment': 'Capture Payment',
+            'VoidPayment': 'Void Payment',
+            'IssueCredit': 'Issue Credit'
+        };
+
+        var actionsWithLabels = Ext.Array.map(me.record.data.availableActions, function(action) {
+            if (!labels[action])
+                throw "unmapped action: " + action;
+            return { "val": action, "lbl": labels[action] };
+        });
+
+        return Ext.create('Ext.data.Store', {
+            fields: ['val', 'lbl'],
+            data: actionsWithLabels
+        });
+    },
+
+    // shows status and action buttons and field depending on the state of the entity
+    initStatusRow: function () {
+        var me = this,
+            // capture amount is the outstanding balance on the order
+            captureAmount = me.order.data.authorizationInfo.captureAmount,
+            // auth ready is when you have an authorized card with id
+            authReady = Ext.Array.contains(me.record.data.availableActions, 'CapturePayment'),
+            // can capture is when you are auth ready and your order has a positive capture amount
+            canCapture = authReady && captureAmount && captureAmount > 0;
+
+        me.statusRow = Ext.create('Ext.container.Container', {
+            cls: "orderform-payment-statusRow",
+            layout: {
+                type: 'hbox',
+                align: 'stretch',
+                pack: 'start'
+            },
+            childEls: [
+                'captureField'
+            ],
+            items: [
+                {
+                    xtype: 'component',
+                    flex: 1,
+                    itemId: "statusField",
+                    cls: "statusField",
+                    tpl: '{.}',
+                    data: me.record.data.status
+                }, {
+                    xtype: 'unitfield',
+                    width: 120,
+                    hidden: !canCapture,
+                    itemId: "captureField",
+                    padding: "0 10",
+                    unitString: "$",
+                    unitAtEnd: false,
+                    value: captureAmount,
+                    allowBlank: true,
+                    minValue: 0,
+                    maxValue: 100000
+                }, {
+                    xtype: "taco.button",
+                    text: "Capture Payment",
+                    hidden: !canCapture,
+                    itemId: "captureButton",
+                    handler: me.capturePayment,
+                    scope: me
+                },/* {
+                    xtype: "taco.button",
+                    text: "Payment Recieved",
+                    hidden: (!(me.record.data.paymentType == "Check") || me.order.get("paymentStatus") == "Paid"),
+                    itemId: "paymentReceivedButton",
+                    handler: me.paymentRecieved,
+                    scope: me
+                }, */{
+                    xtype: 'combo',
+                    store: me.getAvailableActionsStore(),
+                    disabled: me.record.data.availableActions && me.record.data.availableActions.count > 0,
+                    displayField: 'lbl',
+                    valueField: 'val',
+                    emptyText: 'Actions',
+                    //handler: me.addTransaction,
+                    transId: 1,
+                    record: me.record,
+                    parent: this,
+                    listeners: {
+                        select: me.handleAction
+                    },
+                    scope: me
+                }
+            ]
+        });
+
+        // assign scoped references
+        this.statusField = me.statusRow.getComponent('statusField');
+        this.captureField = me.statusRow.getComponent('captureField');
+        this.captureButton = me.statusRow.getComponent('captureButton');
+    },
+
     // initialize the views and actions menu
 
     initTransactionList: function () {
         var me = this;
-
         
         //todo:rework below to work off of interactions.
         //todo: remove issue credit from here.
@@ -93,9 +195,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             ' Amount: ${amount} ',
                         '<span class="seperator">|</span>',
                             'Type: {interactionType} ',
-                        '<span class="seperator">|</span>',
-                            ' Transaction ID: {gatewayTransactionId}',
-
+                        '<tpl if="gatewayTransactionId">',
+                            '<span class="seperator">|</span>',
+                                ' Transaction ID: {gatewayTransactionId}',
+                        '</tpl>',
                         '<button class= "taco-action taco-action-secondary taco-action-default" style="float: right; padding: 0px;">Edit</button>',
                         '</div>',
 
@@ -148,95 +251,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
     },
 
-    // shows status and action buttons and field depending on the state of the entity
-    initStatusRow: function () {
-        var me = this,
-            // capture amount is the outstanding balance on the order
-            captureAmount = me.order.data.authorizationInfo.captureAmount,
-            // auth ready is when you have an authorized card with id
-            authReady = Ext.Array.contains(me.record.data.availableActions, 'CapturePayment'),
-            // can capture is when you are auth ready and your order has a positive capture amount
-            canCapture = authReady && captureAmount && captureAmount > 0;
-
-
-        var options = Ext.create('Ext.data.Store', {
-            fields: ['val', 'lbl'],
-            data: [
-                { "val": "credit", "lbl": "Issue Credit" },
-                { "val": "void", "lbl": "Void Transaction" },
-                { "val": "add", "lbl": "Add Manual Interaction" },
-                { "val": "check", "lbl": "Collect Check" }
-            ]
-        });
-
-        me.statusRow = Ext.create('Ext.container.Container', {
-            cls: "orderform-payment-statusRow",
-            layout: {
-                type: 'hbox',
-                align: 'stretch',
-                pack: 'start'
-            },
-            childEls: [
-                'captureField'
-            ],
-            items: [
-                {
-                    xtype: 'component',
-                    flex: 1,
-                    itemId: "statusField",
-                    cls: "statusField",
-                    tpl: '{.}',
-                    data: me.record.data.status
-                }, {
-                    xtype: 'unitfield',
-                    width: 120,
-                    hidden: !canCapture,
-                    itemId: "captureField",
-                    padding: "0 10",
-                    unitString: "$",
-                    unitAtEnd: false,
-                    value: captureAmount,
-                    allowBlank: true,
-                    minValue: 0,
-                    maxValue: 100000
-                }, {
-                    xtype: "taco.button",
-                    text: "Capture Payment",
-                    hidden: !canCapture,
-                    itemId: "captureButton",
-                    handler: me.capturePayment,
-                    scope: me
-                },/* {
-                    xtype: "taco.button",
-                    text: "Payment Recieved",
-                    hidden: (!(me.record.data.paymentType == "Check") || me.order.get("paymentStatus") == "Paid"),
-                    itemId: "paymentReceivedButton",
-                    handler: me.paymentRecieved,
-                    scope: me
-                }, */{
-                    xtype: 'combo',
-                    store: options,
-                    displayField: 'lbl',
-                    valueField: 'val',
-                    emptyText: 'Actions',
-                    //handler: me.addTransaction,
-                    transId: 1,
-                    record: me.record,
-                    parent: this,
-                    listeners: {
-                        select: me.transactionAction
-                    },
-                    scope: me
-                }
-            ]
-        });
-
-        // assign scoped references
-        this.statusField = me.statusRow.getComponent('statusField');
-        this.captureField = me.statusRow.getComponent('captureField');
-        this.captureButton = me.statusRow.getComponent('captureButton');
-    },
-
     // removes the authorized transaction (first item in the payments collection). Will call service, reload the record, and update the ui;
     voidTransaction: function () {
         var me = this,
@@ -247,21 +261,25 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 },
                 success: function (response) {
                     // success handling here
+                    me.setLoading(false);
+
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {
-                        // service didnt' return data properly
+                        // service didn't return data properly
                         return;
                     }
-                    this.record.reload();
+                    me.order.reload();
                 },
                 failure: function (response) {
+                    me.setLoading(false);
                     // error handling here
                 },
                 scope: this
             };
 
+        me.setLoading(true);
         // call the model method to persist the change
-        this.record.voidTransaction(config);
+        me.order.voidTransaction(config);
     },
     applyCheck: function (config) {
         // var me = this;
@@ -342,42 +360,48 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     },
 
    
-    transactionAction: function (config) {
+    handleAction: function (config) {
         var me = this;
         var record = me.record;
 
-        switch (me.getValue()) {
-            case 'void':
-                me.parent.voidTransaction({
-                    record: record
-                });
-                break;
-            case 'credit':
-                me.parent.issueCredit({
-                    record: record
-                });
-                break;
-            case 'add':
-                var modal = Ext.create('Taco.view.order.modal.AddPaymentTransaction', {
-                    paymentId: config.transId,
-                    record: me.order
-                });
+        /*
+         * 'ApplyCheck'
+         * 'DeclineCheck'
+         *  'VoidPayment'
+         *  'IssueCredit'
+         */
 
-                modal.show();
-                break;
-            case 'check':
-                debugger;
+        switch (me.getValue()) {
+            case 'ApplyCheck':
                 var modal = Ext.create('Taco.view.order.modal.CheckPayment', {
                     record: me.order
                 });
 
                 modal.show();
                 break;
-        }
+            case 'DeclineCheck':
+                alert('todo: decline check.');
+                break;
+            case 'VoidPayment':
+                me.parent.voidTransaction();
+                break;
+            case 'IssueCredit':
+                me.parent.issueCredit();
+                break;
+            case 'add':
+                alert('todo: add manual interaction');
 
-        //this.record.addPayment(config);
+                //var modal = Ext.create('Taco.view.order.modal.AddPaymentTransaction', {
+                //    paymentId: config.transId,
+                //    record: me.order
+                //});
+
+                //modal.show();
+                break;
+        }
     },
-    // call the service via the model and save the captured amoutn
+
+    // call the service via the model and save the captured amount
     capturePayment: function () {
         var me = this;
 
