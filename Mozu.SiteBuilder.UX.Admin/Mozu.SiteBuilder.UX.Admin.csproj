@@ -2096,9 +2096,14 @@
     <Content Include="Scripts\resources\fonts\mozicons.eot" />
     <Content Include="Scripts\resources\fonts\mozicons.ttf" />
     <Content Include="Scripts\resources\fonts\mozicons.woff" />
-    <None Include="Web.Prod.config">
+    <Content Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
-    </None>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Web.QA.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
