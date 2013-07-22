@@ -476,7 +476,7 @@ Ext.define('Taco.view.site.page.Form', {
             doc, key;
 
         dropEvent.callback();
-        //debugger;
+      
         Ext.
         key = props.collection + '_' + props.documentId;
         if (props.isShadow) {

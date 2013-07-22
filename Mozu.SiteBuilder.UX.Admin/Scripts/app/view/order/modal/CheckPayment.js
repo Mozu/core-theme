@@ -75,7 +75,7 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
             text: 'Save',
             click: function () {
                 var me = this;
-                debugger;
+                
                 console.log('TODO: payment action logic');
                 console.log(me.formpanel.getValues());
                 //debugger
