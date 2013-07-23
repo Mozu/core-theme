@@ -125,4 +125,25 @@
 
   }
 
+  /* PRODUCT CONFIGURATOR */
+
+  .#{$vprefix}product-configurator {
+    @include flexbox;
+
+    .images {
+      margin: 10px 10px 0 0;
+
+      li {
+        background-position: center center;
+        background-repeat: no-repeat;
+        height: 150px;
+        width: 150px;
+      }
+    }
+
+    .options {
+
+    }
+  }
+
 }

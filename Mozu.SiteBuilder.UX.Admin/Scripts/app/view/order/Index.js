@@ -6,7 +6,12 @@
 Ext.define('Taco.view.order.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.orderindex',
-    requires: ['Taco.model.Order', 'Taco.store.Orders', 'Ext.ux.RowExpander'],
+    requires: [
+        'Taco.model.Order',
+        'Taco.store.Orders',
+        'Taco.view.order.modal.ProductConfigurator',
+        'Ext.ux.RowExpander'
+    ],
 
     typeName: 'Order',
     modelName: 'Taco.model.Order',
