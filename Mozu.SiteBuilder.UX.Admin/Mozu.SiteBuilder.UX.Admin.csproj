@@ -1457,6 +1457,7 @@
     <Content Include="Scripts\resources\images\icons\icon-widgethandle.png" />
     <Content Include="Scripts\resources\images\picker\date.png" />
     <Content Include="Scripts\resources\lib\html9responsiveboilerstrap.js" />
+    <Content Include="Scripts\resources\lib\pci-temp.js" />
     <Content Include="Scripts\resources\lib\tinymce\LICENSE.TXT" />
     <Content Include="Scripts\resources\lib\tinymce\plugins\advlist\plugin.min.js" />
     <Content Include="Scripts\resources\lib\tinymce\plugins\anchor\plugin.min.js" />

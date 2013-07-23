@@ -110,13 +110,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 ActionName = "AuthAndCapture",
                 ISOCurrencyCode = "USD",
-                NewBillingInfo = new DCp.BillingInfo {
-                    Card = new DCp.PaymentCard {
+                NewBillingInfo = new DCp.BillingInfo
+                {
+                    Card = new DCp.PaymentCard
+                    {
+                        PaymentServiceCardId = args.BillingInfo.PaymentServiceCardId,
                         NameOnCard = args.BillingInfo.NameOnCard,
                         PaymentOrCardType = args.BillingInfo.CardType,
                         CardNumberPartOrMask = args.BillingInfo.CardNumber,
                         ExpireMonth = args.BillingInfo.ExpireMonth,
-                        ExpireYear = args.BillingInfo.ExpireYear
+                        ExpireYear = args.BillingInfo.ExpireYear,
+                        IsCardInfoSaved = false,
+                        IsUsedRecurring = false
+                    },
+                    BillingContact = new Core.Api.Contracts.Contact
+                    {
+                        FirstName = "Bob",
+                        LastNameOrSurname = "Bobingston",
+                        Address = new Core.Api.Contracts.Address
+                        {
+                            Address1 = "123 Fake St",
+                            CityOrTown = "Austin",
+                            CountryCode = "US",
+                            PostalOrZipCode = "78727",
+                            StateOrProvince = "TX"
+                        }
                     }
                 },
                 Amount = args.Amount

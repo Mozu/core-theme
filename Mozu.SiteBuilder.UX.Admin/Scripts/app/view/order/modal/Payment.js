@@ -10,10 +10,86 @@ Ext.define('Taco.view.order.modal.Payment', {
     data: {},
     field: '',
 
+    getPCIaaS: function() {
+        return this.self.PCIaaS;
+    },
+
+    createPciProcessor: function() {
+        var me = this,
+            PCI = me.getPCIaaS();
+
+        if (!PCI)
+        {
+            return me.mon(Taco.app, 'pciloaded', me.createPciProcessor, me);
+        }
+
+        me.pciProcessor = PCI({
+            fields: me.getPciFieldsAdapter(),
+            events: {
+                success: function () {
+                    me.pciProcessor.applyMask();
+                    var order = me.record,
+                    billingInfo = me.formpanel.getValues(),
+                    amount = billingInfo.amount;
+
+                delete billingInfo.amount;
+                billingInfo.paymentServiceCardId = me._hiddenCardId;
+
+                order.addPayment({
+                    jsonData: {
+                        orderId: order.getId(),
+                        amount: amount,
+                        billingInfo: billingInfo
+                    },
+                    success: function() {
+                        this.hide();
+                    }
+                });
+                    // TODO: impl mask for our own form and also finish working.
+                }
+            },
+            settings: {
+                // TODO: hardcoded to SI
+                apiBase: "http://aus02niserv001.dev.volusion.com/mozu.paymentservice.webapi/Mozu/cards/",
+                framePath: "/../../Assets/pci_receiver.html",
+                siteId: me.record.get('siteId'),
+                tenantId: me.record.get('tenantId')
+            }
+        });
+    },
+
+    /*
+     * returns a nice adapter that the PCI-as-a-service lib can use to read all our form fields 
+     */
+    getPciFieldsAdapter: function() {
+        var me = this;
+        return {
+            CardType: this.createPciFormField(this.down('#cardType')),
+            CardNumber: this.createPciFormField(this.down('#cardNumber')),
+            CVV: this.createPciFormField(this.down('#cvv')),
+            PersistCard: function() { return false; },
+            HiddenCardID: function(id) {
+                if (id) me._hiddenCardId = id;
+                return me._hiddenCardId;
+            }
+        }
+    },
+
+    createPciFormField: function(field) {
+        return function(val) {
+            if (val)
+            {
+                return field.setValue(val);
+            }
+            return field.getValue();
+        }
+    },
+
     initComponent: function (eOpts) {
         var me = this;
 
-        this.formpanel = Ext.create('Ext.form.Panel', {
+
+        me.formpanel = Ext.create('Ext.form.Panel', {
             xtype: 'formpanel',
             bodyCls: Taco.baseCSSPrefix + 'flexform',
             layout: { type: 'hbox' },
@@ -43,11 +119,12 @@ Ext.define('Taco.view.order.modal.Payment', {
                     fieldLabel: 'Exp Month',
                     minValue: 1,
                     maxValue: 12,
-                    minValue: 1
+                    value: 3
                 }, {
                     xtype: 'numberfield',
                     name: 'expYear',
-                    fieldLabel: 'Exp Year'
+                    fieldLabel: 'Exp Year',
+                    value: 2015
                 }]
             }, {
                 xtype: 'container',
@@ -61,6 +138,7 @@ Ext.define('Taco.view.order.modal.Payment', {
                 {
                     xtype: 'combobox',
                     name: 'cardType',
+                    itemId: 'cardType',
                     fieldLabel: 'Card Type',
                     allowBlank: false,
 //                    editable: false,
@@ -71,10 +149,15 @@ Ext.define('Taco.view.order.modal.Payment', {
                     value: 'Visa'
                 }, {
                     name: 'cardNumber',
-                    fieldLabel: 'Card Number'
+                    itemId: 'cardNumber',
+                    fieldLabel: 'Card Number',
+                    value: '4111111111111111'
                 }, {
-                    name: 'nameOnCard',
-                    fieldLabel: 'Name On Card'
+                    name: 'cvv',
+                    itemId: 'cvv',
+                    fieldLabel: 'CVV',
+                    value: '255',
+                    width: 100
                 }]
             }],
             listeners: {
@@ -101,23 +184,7 @@ Ext.define('Taco.view.order.modal.Payment', {
         this.primaryButton = Ext.widget('primarybutton', {
             text: 'Save',
             click: function () {
-                var me = this,
-                    order = me.record,
-                    billingInfo = me.formpanel.getValues(),
-                    amount = billingInfo.amount;
-
-                delete billingInfo.amount;
-
-                order.addPayment({
-                    jsonData: {
-                        orderId: order.getId(),
-                        amount: amount,
-                        billingInfo: billingInfo
-                    },
-                    success: function() {
-                        this.hide();
-            }
-        });
+                this.pciProcessor.process();
             },
             scope: this
         });
@@ -134,5 +201,19 @@ Ext.define('Taco.view.order.modal.Payment', {
         };
 
         this.callParent(arguments);
+
+        me.createPciProcessor();
+
     }
+},
+/* class definition-time function */
+function() {
+    var me = this;
+    Ext.Loader.loadScript({
+        url: '/admin/scripts/resources/lib/pci-temp.js',
+        onLoad: function() {
+            me.PCIaaS = window.PCIaaS;
+            Taco.app && Taco.app.fireEvent('pciloaded', me.PCIaaS);
+        }
+    });
 });

@@ -21,6 +21,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "cardNumber")]
         public string CardNumber { get; set; }
 
+        [DataMember(Name = "paymentServiceCardId")]
+        public string PaymentServiceCardId { get; set; }
+
         [DataMember(Name = "expireMonth")]
         public short ExpireMonth { get; set; }
 
