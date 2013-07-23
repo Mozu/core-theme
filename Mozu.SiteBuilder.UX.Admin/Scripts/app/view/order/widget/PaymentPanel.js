@@ -341,24 +341,19 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         });*/
     },
     issueCredit: function (config) {
-        var me = this;
-
-        // config and record are required
-        if (!config || !config.record) {
-            return;
-        }
+        var me = this,
+            amountCollected = me.record.get('amountCollected');
 
         // check to make sure the record is appropriate. needs to have an amountCollected greater than zero
-        if (!config.record.get("amountCollected") > 0) {
+        if (!amountCollected || amountCollected <= 0) {
             return;
         }
 
         var issueCreditModal = Ext.create('Taco.view.order.modal.IssueCredit', {
-            record: config.record,
+            record: me.record,
             listeners: {
-                //aftersave: me.onRecordChange,
                 aftersave: function () {
-                    me.record.reload();
+                    me.order.reload();
 
                 },
                 scope: me
@@ -370,8 +365,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
 
     handleAction: function (config) {
-        var me = this;
-        var record = me.record;
+        var me = this,
+            record = me.record;
 
         /*
          * 'ApplyCheck'
@@ -394,7 +389,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             case 'VoidPayment':
                 me.parent.voidTransaction();
                 break;
-            case 'IssueCredit':
+            case 'CapturePayment':
+                me.parent.capturePayment();
+                break;
+            case 'CreditPayment':
                 me.parent.issueCredit();
                 break;
             case 'add':
