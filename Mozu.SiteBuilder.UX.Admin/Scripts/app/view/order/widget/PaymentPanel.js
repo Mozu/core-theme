@@ -78,7 +78,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     cls: "statusField",
                     tpl: '{.}',
                     data: me.record.data.status
-                }, {
+                },/*  {
                     xtype: 'unitfield',
                     width: 120,
                     hidden: !canCapture,
@@ -90,7 +90,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     allowBlank: true,
                     minValue: 0,
                     maxValue: 100000
-                },/*  {
+                }, {
                     xtype: "taco.button",
                     text: "Capture Payment",
                     hidden: !canCapture,
@@ -411,7 +411,21 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     // call the service via the model and save the captured amount
     capturePayment: function () {
         var me = this;
+        
+        var capturePayment = Ext.create('Taco.view.order.modal.CapturePayment', {
+            orderId: me.order.getId(),
+            paymentId: me.record.getId(),
+            order: me.order,
+            listeners: {
+                aftersave: function () {
+                    me.order.reload();
+                },
+                scope: me
+            }
+        });
 
+        capturePayment.show();
+        /*
         // add the capture Amount
         var captureAmount = this.captureField.getValue(),
         data = {
@@ -439,6 +453,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         // call the model method to persist the change
         this.order.capturePayment(cfg);
+        */
     },
 
     // called when the record has been updated
