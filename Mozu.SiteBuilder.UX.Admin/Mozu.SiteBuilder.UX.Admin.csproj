@@ -2047,6 +2047,7 @@
     <Content Include="Scripts\resources\scss\taco\variables\_tabs.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_imagefield.scss" />
     <Content Include="Scripts\resources\scss\taco\widgets\_pagesettings.scss" />
+    <Content Include="Scripts\resources\scss\taco\widgets\_window.scss" />
     <Content Include="Scripts\resources\lib\tinymce\langs\readme.md" />
     <Content Include="Scripts\resources\lib\tinymce\skins\lightgray\fonts\icomoon-small.eot" />
     <Content Include="Scripts\resources\lib\tinymce\skins\lightgray\fonts\icomoon-small.ttf" />
@@ -2106,8 +2107,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.QA.config">
-    <Content Include="Scripts\resources\scss\taco\widgets\_window.scss" />
-    <None Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
