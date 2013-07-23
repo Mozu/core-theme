@@ -33,6 +33,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             'ApplyCheck': 'Receive Check',
             'DeclineCheck': 'Decline Check',
             'CapturePayment': 'Capture Payment',
+            'CreditPayment': 'Credit Payment',
             'VoidPayment': 'Void Payment',
             'IssueCredit': 'Issue Credit'
         };
@@ -415,9 +416,9 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         // add the capture Amount
         var captureAmount = this.captureField.getValue(),
-            paymentData = Ext.clone(me.record);
         data = {
-            payment: paymentData,
+            orderId: me.order.getId(),
+            paymentId: me.record.getId(),
             amount: captureAmount
         };
 
