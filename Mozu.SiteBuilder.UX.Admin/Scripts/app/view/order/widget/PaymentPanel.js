@@ -90,14 +90,14 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     allowBlank: true,
                     minValue: 0,
                     maxValue: 100000
-                }, {
+                },/*  {
                     xtype: "taco.button",
                     text: "Capture Payment",
                     hidden: !canCapture,
                     itemId: "captureButton",
                     handler: me.capturePayment,
                     scope: me
-                },/* {
+                },{
                     xtype: "taco.button",
                     text: "Payment Recieved",
                     hidden: (!(me.record.data.paymentType == "Check") || me.order.get("paymentStatus") == "Paid"),
