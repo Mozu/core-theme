@@ -3,15 +3,11 @@
   .#{$vprefix}modal {
     font-size: 1em;
     position: absolute;
-    z-index: 300;
-    //top: 50%;
+    //z-index: 300;
+    top: 50%;
     left: 50%;
     margin-left: -5000px;
-    //margin-top: -5000px;
     opacity: 0;
-    // margin-left: -200px;
-    // margin-right: -200px;
-    // opacity: 1;
     background: white;
     
     width: 25em;
@@ -59,9 +55,13 @@
         
         .#{$vprefix}content-body {
           border: 0;
-          @include box-shadow(none);
           @include border-radius(0);
+          @include box-shadow(none);
         }
+      }
+
+      .#{$vprefix}content-main {
+        background: $color-neutral-white;
       }
     }
   
@@ -83,20 +83,17 @@
     .#{$vprefix}content-container {
       
       .#{$vprefix}content-header {
-        padding: 0 0 28px 0;
-        //background-color: rgba(255,0,0,0.3);
+        padding: 0 0 14px 0;
 
         h1 {
           font-size: 21px;
           line-height: 21px;
           font-weight: normal;
-          //margin-bottom: 7px;
         }
       }
 
       .#{$vprefix}content-body {
         padding: 0;
-        //margin-top: 28px;
       }
 
 
@@ -208,7 +205,7 @@
     left: 0;
     height: 100%;
     width: 100%;
-    z-index: 101;
+    //z-index: 101;
     background: #000000;
     opacity: 0;
     @include background(radial-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)));

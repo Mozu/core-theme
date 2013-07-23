@@ -1,15 +1,8 @@
-/**
- * @class Taco.core.ux.modal.ContentWithActions
- */
-Ext.define('Taco.core.ux.modal.ContentWithActions', {
-    extend: 'Taco.core.ux.modal.Content',
-    alias: 'widget.selectormodal',
+﻿
 
-    /**
-     * @cfg {String} title
-     * Title that appears on the top of the Modal
-     */
-    title: null,
+Ext.define('Taco.core.ux.window.WindowWithActions', {
+    extend: 'Taco.core.ux.window.Window',
+    alias: 'widget.taco.windowwithactions',
 
     /**
      * @cfg {String} primaryText
@@ -35,7 +28,7 @@ Ext.define('Taco.core.ux.modal.ContentWithActions', {
      */
     isValid: false,
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.addEvents(
         /**
@@ -79,23 +72,6 @@ Ext.define('Taco.core.ux.modal.ContentWithActions', {
          */
         'validitychange');
 
-        if (!this.content) this.content = {};
-
-        this.content.items = [{
-            xtype: 'contentcontainer',
-            header: {
-                title: this.title,
-                instructionText: this.instructionText,
-                actions: this.actions
-            },
-            body: {
-                items: this.content.items && this.content.items.length > 0 ? this.content.items : this.items
-            }
-        }];
-
-        //  This is a load bearing code, do not remove!
-        this.items = [];
-
         this.dirtyButton = Ext.create('Taco.core.ux.action.DirtyButton', {
             text: this.primaryText,
             listeners: {
@@ -110,9 +86,11 @@ Ext.define('Taco.core.ux.modal.ContentWithActions', {
             }
         });
 
-        this.actions = {
-            items: [this.dirtyButton,
-            {
+        this.dockedItems = [{
+            xtype: 'container',
+            cls: 'action-bar',
+            dock: 'bottom',
+            items: [{
                 xtype: 'secondaryaction',
                 text: this.secondaryText,
                 listeners: {
@@ -125,46 +103,11 @@ Ext.define('Taco.core.ux.modal.ContentWithActions', {
                     },
                     scope: this
                 }
-            }]
-        };
+            },
+            this.dirtyButton]
+        }];
 
         this.callParent(arguments);
 
-        this.on({
-            dirtychange: function (obj, isDirty) {
-                console.log('dirtychange');
-                this.isDirty = isDirty;
-                this.checkDirtyButton();
-            },
-            validitychange: function (obj, isValid) {
-                console.log('valchange');
-                this.isValid = isValid;
-                this.checkDirtyButton();
-            },
-            afterrender: function() {
-                var form = this.down('form');
-
-                if (form) {
-                    this.isValid = this.isDirty ||  form.getForm().isValid();
-                    this.isDirty = this.isDirty ||  form.getForm().isDirty();
-                }
-                this.checkDirtyButton();
-            },
-            savablestatechange: function (form, state) {
-                this.setDirty(state);
-            },
-            scope: this
-        });
-    },
-
-    setDirty: function (value) {
-        this.dirtyButton.setDirty(value);
-    },
-
-    /**
-     * @private
-     */
-    checkDirtyButton: function() {
-        this.dirtyButton.setDirty(this.isDirty && this.isValid);
     }
-});
+})

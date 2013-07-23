@@ -11,7 +11,6 @@ Ext.define('Taco.core.ux.modal.Cover', {
     easing: 'linear',
     duration: 300,
     destroyOnHide: true,
-    floating:true,
 
     initComponent: function () {
         this.renderTo = Ext.getBody();

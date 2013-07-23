@@ -1,0 +1,33 @@
+﻿@mixin taco-window {
+
+    .#{$vprefix}window {
+
+        background: white;
+        @include border-radius(0.6rem);
+        @include outer-shadow(0.3, 3.5rem, 0, 0.7rem);
+
+        .action-bar {
+            padding: px-to-rem(14);
+            padding-top: 0;
+            @include flexbox($justify: flex-end);
+        }
+    }
+
+    .#{$prefix}window-header {
+        border-bottom: 5px solid border-for($color-neutral-95);
+        font-size: px-to-rem(24);
+        line-height: px-to-rem(30);
+        padding: px-to-rem(14);
+        padding-bottom: 0;
+    }
+
+    .#{$prefix}window-body {
+        border: 0;
+        padding: px-to-rem(14);
+    }
+
+    .#{$prefix}mask {
+        background: $color-neutral-black;
+        @include background(radial-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)));
+    }
+}

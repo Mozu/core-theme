@@ -39,8 +39,6 @@
             @include flexbox($wrap: wrap);
         }
         .#{$vprefix}image-tiles > li {
-            //list-style: none;
-            
             padding: 0 1.5rem 1rem 0;
             
             display: block;

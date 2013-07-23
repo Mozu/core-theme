@@ -23,7 +23,7 @@ Ext.define('Taco.core.ux.modal.Modal', {
     easingShow: 'easeOut',
     easingHide: 'easeIn',
     duration: 300,
-    floting:true,
+
     initComponent: function () {
         this.renderTo = Ext.getBody();
         Ext.apply(this.content, {
@@ -54,6 +54,8 @@ Ext.define('Taco.core.ux.modal.Modal', {
         this.cover = Ext.create('Taco.core.ux.modal.Cover', Ext.apply({
             destroyOnHide: this.destroyOnHide
         }, this.coverCfg))
+
+        if (this.modalCls) this.baseCls += ' ' + this.modalCls;
 
         this.callParent(arguments);
 
@@ -119,7 +121,7 @@ Ext.define('Taco.core.ux.modal.Modal', {
 
         this.doLayout();
 
-        //Ext.defer(this.finishShow, 1, this, [forceHeight]);
+        //Ext.defer(this.finishShow, 100, this, [forceHeight]);
 
         //this.hidden = false;
     },
@@ -140,13 +142,13 @@ Ext.define('Taco.core.ux.modal.Modal', {
             this.getEl().setStyle({
                 zIndex: zIndex + 1
             });
-        }
+        }     
 
         this.getEl().animate({
             duartion: this.duration,
             easing: this.easingShow,
             to: {
-                marginTop: '100px',//margins.marginTop,
+                marginTop: margins.marginTop,
                 opacity: 1
             },
             listeners: {

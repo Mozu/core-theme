@@ -201,22 +201,14 @@ Ext.define('Taco.model.Product', {
     ],
     loadRuntimeProduct:function (cfg) {
         
-        var me=this,
-            options = Ext.apply(
-                {
+        var me = this,
+            options = Ext.apply({
                     url: '/admin/app/productruntime/read?productCode=' + this.getId(),
                     success: function (response) {
                         var res = Ext.JSON.decode(response.responseText) || {};
-                        if (cfg.callback) {
-                            cfg.callback.apply(cfg.scope || me, [res.items, response]);
-                        }
-                        if (cfg.success && res.success) {
-                            cfg.success.apply(cfg.scope || me, [res.items, response]);
-                        }
-                        if (!res.success && cfg.failure) {
-                            cfg.failure.apply(cfg.scope || me, [res.items, response]);
-                        }
-
+                        if (cfg.callback) cfg.callback.apply(cfg.scope || me, [res.items, response]);
+                        if (cfg.success && res.success) cfg.success.apply(cfg.scope || me, [res.items, response]); 
+                        if (!res.success && cfg.failure) cfg.failure.apply(cfg.scope || me, [res.items, response]);
                     }
                 }, cfg);
         Ext.Ajax.request(options);

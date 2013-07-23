@@ -611,6 +611,8 @@
     <Content Include="Scripts\app\core\ux\tab\Tab.js" />
     <Content Include="Scripts\app\core\ux\tab\Panel.js" />
     <Content Include="Scripts\app\core\ux\tinymce\WindowManager.js" />
+    <Content Include="Scripts\app\core\ux\window\Window.js" />
+    <Content Include="Scripts\app\core\ux\window\WindowWithActions.js" />
     <Content Include="Scripts\app\locale\Strings.js" />
     <Content Include="Configs\AppSettings.SI.config">
       <SubType>Designer</SubType>
@@ -700,6 +702,7 @@
     <Content Include="Scripts\app\view\order\modal\IssueCredit.js" />
     <Content Include="Scripts\app\view\order\modal\ManualPayment.js" />
     <Content Include="Scripts\app\view\order\modal\Payment.js" />
+    <Content Include="Scripts\app\view\order\modal\ProductConfigurator.js" />
     <Content Include="Scripts\app\view\order\modal\RequestCheck.js" />
     <Content Include="Scripts\app\view\order\subform\Shipping.js" />
     <Content Include="Scripts\app\view\order\subform\Subform.js" />
@@ -708,6 +711,7 @@
     <Content Include="Scripts\app\view\order\widget\OrderItemGrid.js" />
     <Content Include="Scripts\app\view\order\widget\Package.js" />
     <Content Include="Scripts\app\view\order\widget\PaymentPanel.js" />
+    <Content Include="Scripts\app\view\order\widget\ProductConfigurator.js" />
     <Content Include="Scripts\app\view\order\widget\UnpackagedItems.js" />
     <Content Include="Scripts\app\view\pageTemplate\Edit.js" />
     <Content Include="Scripts\app\view\pageTemplate\Index.js" />
@@ -2102,6 +2106,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.QA.config">
+    <Content Include="Scripts\resources\scss\taco\widgets\_window.scss" />
+    <None Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

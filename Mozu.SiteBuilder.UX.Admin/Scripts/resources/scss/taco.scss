@@ -45,6 +45,7 @@ $include-default: false;
 @include taco-navmenu;
 @include taco-content;
 @include taco-modal;
+@include taco-window;
 @include taco-actions;
 @include taco-boundlist;
 @include taco-boxselect;
