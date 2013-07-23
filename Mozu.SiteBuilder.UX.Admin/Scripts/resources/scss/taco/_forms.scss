@@ -97,11 +97,9 @@
     }
 
     .invalidate {
-      height: 16px;
-      opacity: 0;
       cursor: pointer;
-      width: 16px;
-      @include icons-sprite(icon-ellipse-hover);
+      opacity: 0;
+      @include icon-font("\E023");
       @include transition(opacity 0.5s);
 
       &:hover {

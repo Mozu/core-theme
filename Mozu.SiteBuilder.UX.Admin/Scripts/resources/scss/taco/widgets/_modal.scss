@@ -102,16 +102,25 @@
     }
 
     .#{$vprefix}close {
-      position: absolute;
       right: 0;
       top: 0;
-      width: 25px;
-      height: 25px;
       margin: -10px -10px 0 0;
+      border: 2px solid $color-neutral-white;
+      background-color: $color-neutral-25;
       overflow: hidden;
-      text-indent: -5000px;
+      padding-top: 20px;
       cursor: pointer;
-      @include icons-sprite(icon-modal-x);
+      @include border-radius(24px);
+      @include box-shadow(0px 0px 10px $color-neutral-black);
+      @include icon-font("\E011", 16px, $color-neutral-white);
+      width: 24px;
+      height: 24px;
+      position: absolute;
+
+      &::after {
+        top: 2px;
+        left: 2px;
+      }
     }
 
     &.#{$vprefix}mini-modal {

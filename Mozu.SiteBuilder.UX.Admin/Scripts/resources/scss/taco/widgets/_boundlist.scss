@@ -97,26 +97,40 @@
   }
 
   .#{$prefix}boundlist-item-drag {
-    cursor: move;
-    display: block;
-    font-size: 0px;
-    height: 20px;
-    left: 0px;
-    line-height: 0px;
+    display: inline-block;
     overflow: hidden;
-    text-indent: -9999px;
-    top: 0px;
-    width: 16px;
-    float: left;
-    @include flexbox(row, nowrap, center, flex-start, center);
-    @include icons-sprite(icon-tree-knurling);
-    padding-right: 25px;
-    margin-left: -8px;
+    padding-top: 16px;
+    vertical-align: top;
+    @include icon-font("\E022");
+
     &::after {
-        width: 8px;
-        @include flexbox(row, nowrap, center, flex-start, center);
+      left: -2px;
+    }
+    &+ .#{$prefix}boundlist-item-content {
+      display: inline-block;
+      vertical-align: top;
     }
   }
+  //   cursor: move;
+  //   display: block;
+  //   font-size: 0px;
+  //   height: 20px;
+  //   left: 0px;
+  //   line-height: 0px;
+  //   overflow: hidden;
+  //   text-indent: -9999px;
+  //   top: 0px;
+  //   width: 16px;
+  //   float: left;
+  //   @include flexbox(row, nowrap, center, flex-start, center);
+  //   @include icons-sprite(icon-tree-knurling);
+  //   padding-right: 25px;
+  //   margin-left: -8px;
+  //   &::after {
+  //       width: 8px;
+  //       @include flexbox(row, nowrap, center, flex-start, center);
+  //   }
+  // }
 
   .#{$prefix}boundlist-item-action {
     cursor: pointer;
@@ -143,13 +157,17 @@
       top: 0px;
       width: 16px;
       @include border-radius(14px);
-    @include flexbox(row, nowrap, center, flex-end, stretch);
-   }
+      @include flexbox(row, nowrap, center, flex-end, stretch);
+    }
   }
 
-  .#{$prefix}boundlist-item-close::after {
-    float: right;
-    content: "×";
+  .#{$prefix}boundlist-item-close {
+    display: inline-block;
+    left: auto;
+    right: 8px;
+    top: 6px;
+    @include icon-font("\E011");
+    position: absolute;
   }
 
   .#{$prefix}boundlist-item-settings::after {

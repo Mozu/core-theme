@@ -34,18 +34,18 @@
         width: 240px;
 
         .edit {
-          background-color: $color-neutral-20; 
+          background-color: $color-neutral-20;
           border: 2px solid $color-neutral-20;
           display: none;
-          height: 22px;
           overflow: hidden;
-          padding-top: 18px;
-          position: absolute;
+          padding-top: 16px;
           right: 0px;
           top: 0px;
-          width: 22px;
-          @include border-radius(2px); 
-          @include icons-sprite(icon-widget-edit);
+          @include border-radius(2px);
+          @include icon-font($glyph: "\E025", $size: 16px, $color: $color-neutral-white);
+          height: 20px;
+          position: absolute;
+          width: 20px;
         }
 
         &:hover {
@@ -188,7 +188,9 @@
       line-height: px-to-rem(30);
     }
     .#{$vprefix}editcontainer-menu-button {
-      @include icons-sprite('icon-rowactions');
+      @include icon-font("\E02E");
+      height: 30px;
+      width: 50px;
     }
   }
 
@@ -389,7 +391,7 @@
 	}
 	.orderform-transaction-edit-btn{
 		float: right; padding: 0px;
-		
+
 	}
 	.orderform-payment-statusRow{
 		.statusField{

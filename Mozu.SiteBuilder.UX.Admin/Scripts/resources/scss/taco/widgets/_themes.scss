@@ -45,9 +45,8 @@
           @include flex($grow: 1);
         }
         a {
-          height: 18px;
-          width: 22px;
-          @include icons-sprite(icon-widget-remove);
+          margin-right: 4px;
+          @include icon-font("\E02A", 16px, $color-neutral-white);
         }
       }
 
@@ -87,13 +86,13 @@
     .icon-mobile {
       width: 12px;
       height: 18px;
-      @include icons-sprite(icon-theme-mobile);
+      @include icons-sprite(icon-theme-mobile); // icon does not exist in font
     }
 
     .icon-desktop {
       width: 36px;
       height: 29px;
-      @include icons-sprite(icon-theme-desktop);
+      @include icons-sprite(icon-theme-desktop); // icon does not exist in font
     }
 
 

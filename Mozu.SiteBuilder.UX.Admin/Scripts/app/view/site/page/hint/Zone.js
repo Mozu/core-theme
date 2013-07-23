@@ -33,10 +33,7 @@ Ext.define('Taco.view.site.page.hint.Zone', {
             ddGroup: me.ddGroup,
 
             onBeforeDrag: function (data, e) {
-                // The drag handle is a disabled action (a.taco-action) with no handler.
-                // Disabled actions receive a mask (div.x-mask) that causes the event to skip the underlying action.
-                // Here we check if the mousedown occurred on the mask, if its parent is a handle, and coerce the result to a boolean.
-                return !!(e.target.className === 'x-mask' && Ext.fly(e.getTarget('.x-mask')).findParent('.taco-widgethandle', 2, true).hasCls('taco-widgethandle'));
+                return !!(Ext.fly(e.getTarget('.taco-widget-drag')));
             },
 
             getDragData: function (e) {
