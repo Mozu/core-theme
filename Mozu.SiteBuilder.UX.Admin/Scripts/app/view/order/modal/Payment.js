@@ -7,6 +7,8 @@ Ext.define('Taco.view.order.modal.Payment', {
     cls: Taco.baseCSSPrefix + 'order-modal',
     autoShow: true,
     width: 700,
+    height: 500,
+    style: 'overflow-y: scroll;overflow-x: hidden;',
     data: {},
     field: '',
 
@@ -88,10 +90,106 @@ Ext.define('Taco.view.order.modal.Payment', {
     initComponent: function (eOpts) {
         var me = this;
 
+         me.extraInfoCont = Ext.create('Ext.form.Panel', {
+            xtype: 'formpanel',
+            bodyCls: Taco.baseCSSPrefix + 'flexform',
+            layout: { type: 'hbox' },
+            hidden: true,
+            items: [{
+                xtype: 'container',
+                style: 'padding-right: 10px;',
+                defaults: {
+                    xtype: 'textfield',
+                    labelSeparator: '',
+                    labelAlign: 'top',
+                    width: 300
+                },
+                items: [
+                {
+                    xtype: 'textfield',
+                    name: 'firstname',
+                    fieldLabel: 'First Name'
+                }, {
+                    xtype: 'textfield',
+                    name: 'middlename',
+                    fieldLabel: 'Middle Name'
+                }, {
+                    xtype: 'textfield',
+                    name: 'lastname',
+                    fieldLabel: 'Last Name'
+                }, {
+                    xtype: 'textfield',
+                    name: 'email',
+                    fieldLabel: 'Email'
+                }, {
+                    xtype: 'textfield',
+                    name: 'address1',
+                    fieldLabel: 'Address 1'
+                }, {
+                    xtype: 'textfield',
+                    name: 'address2',
+                    fieldLabel: 'Address 2'
+                }, {
+                    xtype: 'textfield',
+                    name: 'address3',
+                    fieldLabel: 'Address 3'
+                }, {
+                    xtype: 'textfield',
+                    name: 'address4',
+                    fieldLabel: 'Address 4'
+                }]
+            }, {
+                xtype: 'container',
+                defaults: {
+                    xtype: 'textfield',
+                    labelSeparator: '',
+                    labelAlign: 'top',
+                    width: 300
+                },
+                items: [
+                {
+                    xtype: 'textfield',
+                    name: 'state',
+                    fieldLabel: 'State'
+                }, {
+                    xtype: 'textfield',
+                    name: 'zipCode',
+                    fieldLabel: 'ZIP'
+                }, {
+                    xtype: 'textfield',
+                    name: 'countryCode',
+                    fieldLabel: 'Country'
+                }, {
+                    xtype: 'textfield',
+                    name: 'homePhone',
+                    fieldLabel: 'Home Phone'
+                }, {
+                    xtype: 'textfield',
+                    name: 'workPhone',
+                    fieldLabel: 'Work Phone'
+                }, {
+                    xtype: 'textfield',
+                    name: 'mobilePhone',
+                    fieldLabel: 'Mobile Phone'
+                }, {
+                    xtype: 'textfield',
+                    name: 'cityOrTown',
+                    fieldLabel: 'City'
+                }]
+            }],
+            listeners: {
+                afterrender: function (panel) {
+                    Ext.destroy(panel.getLayout().clearEl);
+                }
+            }
+        });
 
         me.formpanel = Ext.create('Ext.form.Panel', {
             xtype: 'formpanel',
             bodyCls: Taco.baseCSSPrefix + 'flexform',
+            layout: { type: 'vbox' },
+            items: [{
+                xtype: 'panel',
             layout: { type: 'hbox' },
             items: [{
                 xtype: 'container',
@@ -158,6 +256,22 @@ Ext.define('Taco.view.order.modal.Payment', {
                     fieldLabel: 'CVV',
                     value: '255',
                     width: 100
+                    }, {
+                        xtype: 'checkboxfield',
+                        boxLabel: 'Address Same as billing',
+                        name: 'sameAsBilling',
+                        checked: true,
+                        style: 'margin-top:50px;',
+                        handler: function (it, status) {
+                            console.log(status);
+                           // me.extraInfoCont.show(!status);
+                            if (!status) {
+                                me.extraInfoCont.show();
+                            } else {
+                                me.extraInfoCont.hide();
+                            }
+                        }
+                    }]
                 }]
             }],
             listeners: {
@@ -166,6 +280,8 @@ Ext.define('Taco.view.order.modal.Payment', {
                 }
             }
         });
+
+        me.formpanel.add(me.extraInfoCont);
 
         this.content = {
             xtype: 'container',
