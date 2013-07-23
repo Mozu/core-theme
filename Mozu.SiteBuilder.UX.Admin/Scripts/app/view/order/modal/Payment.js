@@ -42,7 +42,8 @@ Ext.define('Taco.view.order.modal.Payment', {
                         billingInfo: billingInfo
                     },
                     success: function() {
-                        this.hide();
+                        me.hide();
+                        order.reload();
                     }
                 });
                     // TODO: impl mask for our own form and also finish working.
@@ -121,7 +122,7 @@ Ext.define('Taco.view.order.modal.Payment', {
                     value: 3
                 }, {
                     xtype: 'numberfield',
-                    name: 'expYear',
+                    name: 'expireYear',
                     fieldLabel: 'Exp Year',
                     value: 2015
                 }]

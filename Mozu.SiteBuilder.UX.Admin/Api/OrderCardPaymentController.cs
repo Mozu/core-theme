@@ -109,7 +109,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var action = new DCp.PaymentAction
             {
-                ActionName = "AuthAndCapture",
+                ActionName = /*"AuthAndCapture"*/ "AuthorizePayment",
                 ISOCurrencyCode = "USD",
                 NewBillingInfo = new DCp.BillingInfo
                 {

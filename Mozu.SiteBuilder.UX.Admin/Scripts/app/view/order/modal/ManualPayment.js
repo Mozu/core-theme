@@ -46,7 +46,7 @@ Ext.define('Taco.view.order.modal.ManualPayment', {
                     minValue: 1
                 }, {
                     xtype: 'numberfield',
-                    name: 'expYear',
+                    name: 'expireYear',
                     fieldLabel: 'Exp Year'
                 }]
             }, {
