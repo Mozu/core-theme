@@ -49,8 +49,7 @@ Ext.define('Taco.view.order.modal.Payment', {
                 }
             },
             settings: {
-                // TODO: hardcoded to SI
-                apiBase: "http://aus02niserv001.dev.volusion.com/mozu.paymentservice.webapi/Mozu/cards/",
+                apiBase: Taco.paymentApiBaseUrl,
                 framePath: "/../../Assets/pci_receiver.html",
                 siteId: me.record.get('siteId'),
                 tenantId: me.record.get('tenantId')

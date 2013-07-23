@@ -1,4 +1,5 @@
 ﻿@using System.Web.Configuration;
+@using Mozu.Core.Settings;
 <script>
     @{
             
@@ -16,6 +17,9 @@
             var siteUsers = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["siteUsers"]);
             var extPath = WebConfigurationManager.AppSettings["extPath"];
             var dashboardInstructionsLoc = WebConfigurationManager.AppSettings["admin.dashboardInstructions.loc"];
+
+            var paymentApiBaseUrl = MozuConfigurationManager.AppSettings("service-url-StorefrontCardsWebApi");
+            
             var dashboardInstructions = "";
             if ( !string.IsNullOrEmpty (dashboardInstructionsLoc ))
             {
@@ -43,6 +47,7 @@
         dashBoardInstructions :  @Html.Raw(string.IsNullOrEmpty(dashboardInstructions) ? "'tbd'": dashboardInstructions) ,
         siteUsers:@Html.Raw(siteUsers),
         authDomain: "@ViewData["authCookieDomain"]",
+        paymentApiBaseUrl: '@Html.Raw(paymentApiBaseUrl)',
         buildDate : new Date ('@verDate')
 
         @if (Convert.ToBoolean(ViewData["useGoogleAnalytics"])) {
