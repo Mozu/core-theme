@@ -103,6 +103,26 @@
   border-color: border-for($background-color);
 }
 
+@mixin icon-font ($glyph, $size: 16px, $color: rgb(51, 51, 51)) {
+  height: $size;
+  position: relative;
+  width: $size;
+
+  &::after {
+    color: $color;
+    content: $glyph;
+    display: block;
+    font-family: mozicons;
+    font-size: $size;
+    left: 0px;
+    line-height: 1.0;
+    position: absolute;
+    top: 0px;
+    vertical-align: baseline;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
 @mixin clear-fix () {
   &::after {
     clear: both;

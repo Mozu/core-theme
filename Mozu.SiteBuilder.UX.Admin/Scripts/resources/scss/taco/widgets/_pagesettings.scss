@@ -39,8 +39,6 @@
     }
 
     .#{$vprefix}pagesettings-back-action {
-        @include icons-sprite(icon-arrow-left);
-        height: 21px;
-        width: 27px;
+        @include icon-font("\E035");
     }
 }

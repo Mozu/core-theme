@@ -83,7 +83,7 @@
 
             .toolbar {
                 opacity: 0;
-                padding: 3px 8px;
+                padding: 3px 4px;
                 background: transparentize(#000,0.4);
                 color: transparent;
                 @include transition(opacity 0.2s ease-out);
@@ -95,7 +95,7 @@
                 width: 3px;
                 height: 15px;
                 margin: 1px 100px 0 0;
-                @include icons-sprite(icon-widget-drag);
+                @include icon-font("\E022", 16px, $color-neutral-white);
                 @include flex($grow: 1);
             }
 
@@ -103,6 +103,7 @@
                 cursor: pointer;
                 width: 18px;
                 height: 18px;
+                @include icon-font("\E011", 16px, $color-neutral-white);
                 
                 &:before {
                     margin: 5px 0 0 8px;
@@ -110,7 +111,6 @@
                     height: 8px;
                     width: 8px;
                     display: block;
-                    @include icons-sprite(icon-x);
                 }
             }
 

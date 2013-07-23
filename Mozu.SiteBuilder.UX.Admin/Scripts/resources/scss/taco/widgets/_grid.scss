@@ -96,8 +96,12 @@
         text-overflow: ellipsis;
       }
       .#{$prefix}column-header-trigger {
+        background: none transparent;
         display: block !important;
-        @include icons-sprite(icon-columns);
+        right: 12px;
+        top: 12px;
+        @include icon-font("\E02E", 16px, $color-neutral-white);
+        position: absolute;
       }
     }
   }
@@ -199,7 +203,7 @@
     height: 20px;
     width: 20px;
     text-indent: -9999px;
-    @include icons-sprite(icon-tree-knurling);
+    @include icon-font("\E022");
   }
 
   .#{$prefix}grid-cell-draghandlecolumn {
@@ -234,12 +238,12 @@
     height: 30px;
     visibility: hidden;
     width: 50px;
-    @include icons-sprite(icon-rowactions);
+    @include icons-sprite(icon-rowactions); // icon is an <img>
   }
 
   // over ride of default menu trigger icon to make it a remove icon instead of a gear menu icon
   .#{$vprefix}grid-row-menu-trigger-remove {    
-    @include icons-sprite(icon-remove);
+    @include icons-sprite(icon-remove); // icon is an <img>
   }
 
 

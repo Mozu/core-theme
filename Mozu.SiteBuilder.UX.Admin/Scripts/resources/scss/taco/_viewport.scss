@@ -43,10 +43,14 @@
 
     .#{$vprefix}mozulogo {
       display: block;
-      height: 50px;
       overflow: hidden;
+      @include icon-font("\E037", 32px, $color-theme-base);
       width: 125px;
-      @include icons-sprite(icon-mozulogo-full);
+
+      &::after {
+        text-align: center;
+        width: 100%;
+      }
     }
   }
 

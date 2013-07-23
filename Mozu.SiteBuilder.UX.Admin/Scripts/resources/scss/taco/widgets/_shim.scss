@@ -171,23 +171,6 @@
       padding: 2px 0;
     }
 
-    .#{$vprefix}widgethandle {
-      @include icons-sprite(icon-widgethandle);
-      display: block;
-      font-size: 0px;
-      height: 11px;
-      line-height: 0px;
-      opacity: $active-opacity;
-      text-indent: -9999px;
-      width: 26px;
-      
-      .#{$prefix}mask {
-        background: none transparent;
-        cursor: move;
-        opacity: $inactive-opacity;
-      }
-    }
-
     &.#{$vprefix}hint-active {
       z-index: 101;
       opacity: $active-opacity;
@@ -199,27 +182,17 @@
   }
 
   .#{$vprefix}widget-drag {
-    width: 3px;
-    height: 15px;
-    opacity: 0.9;
     cursor: move;
-    @include flex($grow: 1);
-    margin-right: 100px;
-    @include icons-sprite(icon-tree-knurling);
+    margin-right: auto;
+    @include icon-font("\E022", 16px, $color-neutral-white);
   }
 
   .#{$vprefix}widget-edit {
-    width: 18px;
-    height: 18px;
     margin-right: 15px;
-    opacity: 0.9;
-   @include icons-sprite(icon-widget-edit); 
+   @include icon-font("\E025", 16px, $color-neutral-white);
   }
 
   .#{$vprefix}widget-remove {
-    width: 15px;
-    height: 18px;
-    opacity: 0.9;
-    @include icons-sprite(icon-widget-remove);
+    @include icon-font("\E02A", 16px, $color-neutral-white);
   }
 }

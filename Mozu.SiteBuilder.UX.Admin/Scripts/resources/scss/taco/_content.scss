@@ -136,48 +136,43 @@
     }
     
    .#{$vprefix}sidebar-submenu {
-        border: 0px;
-        border-top-width: 1px;
-        border-bottom-width: 1px;
-        border-color: lightgray;
-        border-style: solid; 
-        margin-top: 20px;
+      border: 0px;
+      border-top-width: 1px;
+      border-bottom-width: 1px;
+      border-color: lightgray;
+      border-style: solid; 
+      margin-top: 20px;
         
-       .#{$prefix}panel-header-text{
-          font-size: 16px;
-       }
-
-     .#{$prefix}panel-header-body { 
-       .#{$prefix}box-inner {
-         margin-top: px-to-rem(0);
-       }
-       .#{$prefix}component {
-         left: 20px !important;
-       }
-       .#{$prefix}tool {
-         left: 0px !important;
-         top: 2px !important;
-       }
-     }
-     .#{$prefix}panel-body {
-       background: lightgray;
-       padding-left: px-to-rem(5);
-       padding-right: px-to-rem(5);
-       overflow-y: hidden;
-
-       hr{
-        border: 0 none;
-        border-bottom-width: px-to-rem(1);
-        border-style: dashed;
-        border-color: gray;
+      .#{$prefix}panel-header-text{
+        font-size: 16px;
       }
-     }
-     .#{$prefix}tool-collapse-top {
-        @include icons-sprite(icon-sortcolumn-desc);
-     }
-     .#{$prefix}tool-expand-bottom {
-        @include icons-sprite(icon-menu-col);
-     }
+
+      .#{$prefix}panel-header-body {
+        .#{$prefix}box-inner {
+          margin-top: px-to-rem(0);
+        }
+        .#{$prefix}component {
+          left: 20px !important;
+        }
+        .#{$prefix}tool {
+          left: 0px !important;
+          top: 2px !important;
+        }
+      }
+
+      .#{$prefix}panel-body {
+        background: lightgray;
+        padding-left: px-to-rem(5);
+        padding-right: px-to-rem(5);
+        overflow-y: hidden;
+
+        hr {
+          border: 0 none;
+          border-bottom-width: px-to-rem(1);
+          border-style: dashed;
+          border-color: gray;
+        }
+      }
    }
 
    .#{$vprefix}sublabel-text{
