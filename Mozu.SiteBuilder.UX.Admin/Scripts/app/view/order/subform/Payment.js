@@ -7,7 +7,8 @@ Ext.define('Taco.view.order.subform.Payment', {
         'Taco.view.order.modal.IssueCredit',
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.CheckPayment',
-        'Taco.view.order.widget.PaymentPanel'
+        'Taco.view.order.widget.PaymentPanel',
+        'Taco.view.order.modal.Payment'
     ],
     config : {
         // order model
