@@ -45,11 +45,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 DC.Product prod = result.ReadAsAsync().Result;
                 return List2(Mapper.Map<Product>(prod));
             }
+            string responseGroups = extFilter.SearchType == "global" ? "min":"all";
 
             string filter = extFilter.ToFilterString();
             string sort = pagingParams.sort.ToSortString();
 
-            ProductCollection res = (await _productClient.GetProducts(pagingParams.startIndex, pagingParams.pageSize, sort, null, filter)).ReadAsSync();
+            ProductCollection res = (await _productClient.GetProducts( startIndex : pagingParams.startIndex ,pageSize: pagingParams.pageSize, sortBy: sort,responseGroups:responseGroups, filter:filter)).ReadAsSync();
 
             var mapped = res.Items.Map<List<Product>>();
             return List2(mapped, (int)res.TotalCount);

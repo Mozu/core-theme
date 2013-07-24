@@ -17,7 +17,7 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
 
     listConfig: {
         loadingText: 'Searching...',
-        emptyText: 'No matching posts found.',
+        emptyText: 'No matching items found.',
         width:400,
         // Custom rendering template for each item
         getInnerTpl: function () {
@@ -74,6 +74,9 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                                 property: 'all',
                                 value: config.params.query
                             })],
+                        params : {
+                            searchType:'global'
+                        },
                         callback: me.innerStoreLoad,
                         scope: me
                     },
@@ -217,7 +220,8 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
         var sourceRecord = record.data.sourceRecord;
         console.log(arguments);
         if (sourceRecord) {
-            Taco.core.StateManager.attemptNavigate(record.data.ctx +'/' + record.data.controller + '/edit/' + sourceRecord.getId(), { complexMetaData: { record: sourceRecord } });
+            // Taco.core.StateManager.attemptNavigate(record.data.ctx +'/' + record.data.controller + '/edit/' + sourceRecord.getId(), { complexMetaData: { record: sourceRecord } });
+            Taco.core.StateManager.attemptNavigate(record.data.ctx + '/' + record.data.controller + '/edit/' + sourceRecord.getId() );
             
         } else {
             Taco.core.StateManager.attemptNavigate(record.data.ctx +'/' + record.data.controller, { options: { query: combo.getValue() }});

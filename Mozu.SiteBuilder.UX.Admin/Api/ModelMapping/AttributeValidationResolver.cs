@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using AutoMapper;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
+using dotless.Core.Parser.Tree;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 using AttributeValidation = Mozu.ProductAdmin.Contracts.AttributeValidation;
 using DC = Mozu.ProductAdmin.Contracts;
@@ -28,6 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             if (source == null)
                 return null;
 
+
             var attributeValidation = new AttributeValidation
             {
                 RegularExpression = source.Regex,
@@ -38,17 +41,71 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             {
                 attributeValidation.MinDateValue = source.MinDate;
                 attributeValidation.MaxDateValue = source.MaxDate;
+                if (source.Values != null)
+                {
+                    source.Values.ForEach(x =>
+                        {
+                            DateTime dt;
+                            if (x.Id == null)
+                            {
+                                if (x.Value is string && DateTime.TryParse((string)x.Value, out dt))
+                                {
+                                    x.Id = dt;
+                                }
+                                else
+                                {
+                                    x.Id = x.Value;
+                                }
+                            }
+
+                        });
+                }
             }
             else if (source.DataType == AttributeDataType.Number)
             {
                 attributeValidation.MinNumericValue = source.Min;
                 attributeValidation.MaxNumericValue = source.Max;
+                if (source.Values != null)
+                {
+                    source.Values.ForEach(x =>
+                    {
+                        double  dval;
+                        if (x.Id == null)
+                        {
+                            if (x.Value is string && double.TryParse((string)x.Value, out dval))
+                            {
+                                x.Id = dval;
+                            }
+                            else
+                            {
+                                x.Id = x.Value;
+                            }
+                        }
+                        
+
+                    });
+                }
             }
             else if (source.DataType == AttributeDataType.String || source.InputType == AttributeInputType.TextArea)
             {
                 attributeValidation.MinStringLength = source.Min.HasValue ? (int?)Decimal.ToInt32(source.Min.Value) : null;
                 attributeValidation.MaxStringLength = source.Max.HasValue ? (int?)Decimal.ToInt32(source.Max.Value) : null;
+                if (source.Values != null)
+                {
+                    source.Values.ForEach(x =>
+                    {
+                        double dval;
+                         if (x.Id == null)
+                         {
+                             x.Id = Regex.Replace(x.Value as string  ??  "" , "[^a-zA-Z0-9]", "_"); ;
+                         }
+                        
+
+                    });
+                }
             }
+           
+            
 
 
             if (source.DataType == AttributeDataType.None)
@@ -62,12 +119,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     source.DataType = AttributeDataType.Bool ;
                 }
             }
+            
             var destination = new DC.Attribute
             {
                 AdminName = source.AdminName ,
                 AttributeCode =  (source.Name ?? "").Trim(),
                 Validation = attributeValidation,
-                VocabularyValues = Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values),
+                VocabularyValues =   Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values),
                 AttributeFQN = source.Id,
                 AttributeMetadata = Mapper.Map<List<DC.AttributeMetadataItem>>(source.AttributeMetadata ),
                 Content = new DC.AttributeLocalizedContent

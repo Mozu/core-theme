@@ -56,6 +56,16 @@ Ext.define('Taco.model.Attribute', {
         }
 
     ],
+    //set: function (fieldName, newValue) {
+    //    var me = this;
+    //    if ( fieldName==='values' && Ext.isArray(newValue)) {
+    //        Ext.Array.each(newValue, function (valueObj, index) {
+    //            if (valueObj.value) {
+    //                valueObj.value = me.convert(valueObj.value, me);
+    //            }
+    //        });
+    //    }
+    //},
     convert: function (v, r) {
          if (r.data.dataType == 'DateTime') {
              return r.convertDate(v);

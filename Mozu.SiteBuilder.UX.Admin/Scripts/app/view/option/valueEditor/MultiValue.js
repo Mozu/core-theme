@@ -14,6 +14,9 @@
         },
         editMode: false,
         
+        config: {
+            dataType:'string'
+        },
         initComponent: function() {
             var me = this,
                 tpl;
@@ -96,7 +99,13 @@
             this.dataView.getEl().down('input[type=text]').focus(1);
             this.fireEvent('focus', this);
         },
-
+        convertValue:function (value) {
+            if (this.getDataType() == 'number') {
+                return value !== undefined && value !== null && value !== '' ?
+                    parseFloat(String(value).replace(Ext.data.Types.stripRe, ''), 10) : null;
+            }
+            return value;
+        },
         bindStore: function(store) {
             var storeBinding;
             this.store = store;
@@ -164,7 +173,7 @@
                 return;
             }
             this.preventUpdate = false;
-            record.set('value', el.getValue());
+            record.set('value', this.convertValue(el.getValue()));
         },
         
         inputKeyup: function (el, record, index, e) {
@@ -178,7 +187,7 @@
             }
             
             this.preventUpdate = true;
-            record.set('value', el.getValue());
+            record.set('value', this.convertValue(el.getValue()));
             if (e.keyCode !== 13) {
                 return;
             }
