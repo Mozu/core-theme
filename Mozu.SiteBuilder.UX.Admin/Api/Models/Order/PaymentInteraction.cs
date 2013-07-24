@@ -4,13 +4,22 @@ using System.Runtime.Serialization;
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
     [DataContract]
-    public class OrderPaymentInteraction
+    public class PaymentInteraction
     {
         /// <summary>
-        /// Unique identifier of this payment transaction interaction.
+        /// Unique identifier of this payment transaction.
         /// </summary>
         [DataMember(Name = "id", EmitDefaultValue = false)]
         public string Id { get; set; }
+
+        /// <summary>
+        /// Id of this interaction's parent.
+        /// </summary>
+        [DataMember(Name = "paymentId")]
+        public string PaymentId { get; set; }
+
+        [DataMember(Name = "gatewayTransactionId")]
+        public string GatewayTransactionId { get; set; }
 
         /// <summary>
         /// Unique identifier of the gateway interaction. Used for credit card transactions, where the  
@@ -52,15 +61,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(EmitDefaultValue = false, Name = "amount")]
         public decimal? Amount { get; set; }
 
+        /// <summary>
+        /// If the payment is a manual payment, this is set to true
+        /// </summary>
+        [DataMember(EmitDefaultValue=true, Name="isManual")]
+        public bool IsManual { get; set; }
+
+        /// <summary>
+        /// Create date of this interaction.
+        /// </summary>
         [DataMember(Name = "createDate")]
         public DateTime? CreateDate { get; set; }
 
+        /// <summary>
+        /// True if the user can edit this interaction.
+        /// </summary>
+        [DataMember(Name = "canEdit")]
+        public bool CanEdit { get { return IsManual; } set { } }
 
-        [DataMember(Name = "paymentId")]
-        public string PaymentId { get; set; }
-
-        [DataMember(Name = "gatewayTransactionId")]
-        public string GatewayTransactionId { get; set; }
+        /// <summary>
+        /// True if the user can delete this interaction.
+        /// </summary>
+        [DataMember(Name = "canDelete")]
+        public bool CanDelete { get { return IsManual; } set { } }
     }
 
 

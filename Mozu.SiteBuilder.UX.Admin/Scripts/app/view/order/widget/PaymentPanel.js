@@ -7,7 +7,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.IssueCredit',
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.CheckPayment',
-        'Taco.view.order.modal.CapturePayment'
+        'Taco.view.order.modal.CapturePayment',
+        'Taco.view.order.modal.EditTransaction'
     ],
     cls: 'orderform-payment-transaction',
     initComponent: function (eOpts) {
@@ -143,45 +144,25 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             listeners: {
                 itemclick: {
                     fn: function (view, record, item, index, e, eOpts) {
-                        /* if (e.target.className == "paymentAction") {
-                             var action = e.target.getAttribute("paymentAction");
-                             //if user clicks on an action link in the item, execute the action and pass the record
-                             if (this[action]) {
-                                 this[action]({
-                                     record: record
-                                 });
-                             }
-                         }*/
-                        if (e.target.localName == 'button') {
+                        var isButtonClick = (e.target.localName == 'button'),
+                            btnEl = isButtonClick ? Ext.get(e.target) : null;
 
-                            console.log(e.target.parentElement.parentElement.attributes.paymentId.value); //payment Id
-                            console.log(e.target.parentElement.childNodes[0].data); //date
-                            console.log(e.target.parentElement.childNodes[2].data); //id
-                            console.log(e.target.parentElement.childNodes[4].data); //amount
-                            console.log(e.target.parentElement.childNodes[6].data); //status
-                            var date = new Date(e.target.parentElement.childNodes[0].data.trim());
+                        // handle Delete click.
+                        if (isButtonClick && btnEl.hasCls('orderform-transaction-delete-btn'))
+                        {
 
-                            if (e.target.parentElement.childNodes[8]) {
-                                var modal = Ext.create('Taco.view.order.modal.AddPaymentTransaction', {
-                                    paymentId: e.target.parentElement.parentElement.attributes.paymentId.value,
-                                    transDate: e.target.parentElement.parentElement.attributes.createDate.value,
-                                    transId: e.target.parentElement.childNodes[2].data.trim().split(' ')[1],
-                                    transGatewayId: e.target.parentElement.childNodes[8].data.trim().split(' ')[2],
-                                    transAmount: e.target.parentElement.childNodes[4].data.trim().split(' ')[1].substring(1),
-                                    transStatus: e.target.parentElement.childNodes[6].data.trim().split(' ')[1],
-                                    record: me.record
-                                });
-                            } else {
-                                var modal = Ext.create('Taco.view.order.modal.AddPaymentTransaction', {
-                                    paymentId: e.target.parentElement.parentElement.attributes.paymentId.value,
-                                    transDate: e.target.parentElement.parentElement.attributes.createDate.value,
-                                    transId: e.target.parentElement.childNodes[2].data.trim().split(' ')[1],
-                                    transAmount: e.target.parentElement.childNodes[4].data.trim().split(' ')[1].substring(1),
-                                    transStatus: e.target.parentElement.childNodes[6].data.trim().split(' ')[1],
-                                    record: me.record
-                                });
-                            }
-                            
+                        }
+                        // handle Edit click
+                        else if (isButtonClick && btnEl.hasCls('orderform-transaction-delete-btn'))
+                        {
+                            var modal = Ext.create('Taco.view.order.modal.EditTransaction', {
+                                // record is the PaymentInteraction
+                                record: record,
+                                // payment is the payment that owns this transaction
+                                payment: me.record,
+                                // order is the order that owns this payment
+                                order: me.order
+                            });
                         }
                     },
                     scope: me
@@ -191,12 +172,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             tpl: [
                 '<tpl for=".">',
                     //'<tpl if="amountCollected!==0">',
-                    '<div paymentId="{id}"  createDate= "{createDate}" class="payment-transaction">',
-
-//                        '<tpl if="values.amountCollected &gt; 0">',
-//                            '<a class="paymentAction" paymentAction="issueCredit">Issue Credit</a>',
-//,                        '</tpl>',
-
+                    '<div class="payment-transaction">',
                         '<div class="details">',
                             ' {createDate:date("M d g:ia")} ',
                         '<span class="seperator">|</span>',
@@ -209,12 +185,14 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             '<span class="seperator">|</span>',
                                 ' Transaction ID: {gatewayTransactionId}',
                         '</tpl>',
-                        '<button class= "taco-action taco-action-secondary taco-action-default orderform-transaction-edit-btn">Edit</button>',
+                        '<tpl if="canEdit">',
+                            '<button class= "taco-action taco-action-secondary taco-action-default orderform-transaction-delete-btn">Delete</button>',
+                        '</tpl>',
+                        '<tpl if="canDelete">',
+                            '<button class= "taco-action taco-action-secondary taco-action-default orderform-transaction-edit-btn">Edit</button>',
+                        '</tpl>',
                         '</div>',
-
-
                     '</div>',
-                    //'</tpl>',
                 '</tpl>'
             ],
             store: this.interactionsStore
@@ -292,54 +270,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         me.order.voidTransaction(config);
     },
     applyCheck: function (config) {
-        // var me = this;
-        //public class ApplyCheckArgs
-        //{
-        //    public string OrderId { get; set; }
-        //    public OrderPayment Payment { get; set; }
-        //    public string CheckNumber { get; set; }
-        //    public decimal Amount { get; set; }
-        //}
-
         alert('create check');
-
-        //this.record.addPayment(config);
-        /*
-        var paymentRecord = config.record;
-        paymentRecord.applyCheck({
-            jsonData: {
-                orderId: me.record.getId(),
-                payment: paymentRecord.data,
-                checkNumber: 123,
-                amount : me.record.get('total')
-            },
-            success: function (response) {
-                // success handling here
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    // service didnt' return data properly
-                    Ext.message("error applying check");
-
-                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
-                        text: "error applying check"
-                    });
-                    errorDialog.show();
-                    return;
-                }
-                me.record.reload();
-            },
-            failure: function (response) {
-                // error handling here
-                var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "error applying check";
-
-                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
-                    text: msg
-                });
-                errorDialog.show();
-            },
-            scope: this
-        });*/
     },
     issueCredit: function (config) {
         var me = this,
@@ -396,16 +327,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             case 'CreditPayment':
                 me.parent.issueCredit();
                 break;
-            case 'add':
-                alert('todo: add manual interaction');
-
-                //var modal = Ext.create('Taco.view.order.modal.AddPaymentTransaction', {
-                //    paymentId: config.transId,
-                //    record: me.order
-                //});
-
-                //modal.show();
-                break;
         }
     },
 
@@ -419,69 +340,19 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         });
 
         capturePayment.show();
-        /*
-        // add the capture Amount
-        var captureAmount = this.captureField.getValue(),
-        data = {
-            orderId: me.order.getId(),
-            paymentId: me.record.getId(),
-            amount: captureAmount
-        };
-
-        // pacakage up the data for the model to persist
-        var cfg = {
-            jsonData: data,
-            success: function (response) {
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    // service didnt' return data properly
-                    return;
-                }
-                this.record.reload();
-            },
-            failure: function (response) {
-
-            },
-            scope: this
-        };
-
-        // call the model method to persist the change
-        this.order.capturePayment(cfg);
-        */
-    },
+    }
 
     // called when the record has been updated
-    onRecordChange: function () {
-        var me = this;
-
-        // clear out the ui components
-        me.statusRow.destroy();
-        me.paymentDetails.destroy();
-        me.transactionList.destroy();
-
-        //not sure why i need to do this but oh well....debug later
-        //doesnt work
-        //me.record.paymentsStore.loadRawData(me.record.data.payments);
-
-        me.record.payments().removeAll();
-        Ext.each(me.record.data.payments, function (paymentRaw) {
-            var paymentRecord = Ext.create('Taco.model.OrderPayment', paymentRaw);
-            paymentRecord.interactions().removeAll();
-            Ext.each(paymentRecord.data.interactions, function (interactionRaw) {
-                var paymentInteractionRecord = Ext.create('Taco.model.OrderPaymentInteraction', interactionRaw);
-                paymentRecord.interactions().add(paymentInteractionRecord);
-            });
-            me.record.payments().add(paymentRecord);
-        });
-
-        //re-build the ui components
-        me.initUI();
-
-        // add the ui components to the view
-        me.add(
-            me.statusRow,
-            me.paymentDetails,
-            me.transactionList
-        );
-    }
+//    onRecordChange: function () {
+//        var me = this;
+//
+//        // clear out the ui components
+//        me.statusRow.destroy();
+//        me.paymentDetails.destroy();
+//        me.transactionList.destroy();
+//
+//        //not sure why i need to do this but oh well....debug later
+//        //doesnt work
+//        //me.record.paymentsStore.loadRawData(me.record.data.payments);
+//    }
 });

@@ -8,7 +8,8 @@ Ext.define('Taco.view.order.subform.Payment', {
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.CheckPayment',
         'Taco.view.order.widget.PaymentPanel',
-        'Taco.view.order.modal.AddPayment'
+        'Taco.view.order.modal.AddPayment',
+        'Taco.view.order.modal.AddManualPayment'
     ],
     config : {
         // order model
@@ -90,7 +91,7 @@ Ext.define('Taco.view.order.subform.Payment', {
             handler: function () {
                 var me = this;
         
-                var modal = Ext.create('Taco.view.order.modal.ManualPayment', {
+                var modal = Ext.create('Taco.view.order.modal.AddManualPayment', {
                     record: me.record
                 });
         
@@ -197,8 +198,31 @@ Ext.define('Taco.view.order.subform.Payment', {
     onRecordChange : function() {
         var me = this;
         
+        // re-build the record.payments() store.
+        me.rebuildPayments();
+
         //re-build the ui components
         me.destroyPaymentsUI();
         me.initPaymentsUI();
+    },
+
+    /*
+     * ExtJS doesn't handle reload of data with sub-stores well.
+     * So we manually re-populate the order.payments() and the payment.interactions() stores.
+     */
+    rebuildPayments: function() {
+        var me = this;
+
+        me.record.payments().removeAll();
+        Ext.each(me.record.data.payments, function (paymentRaw) {
+            var paymentRecord = Ext.create('Taco.model.OrderPayment', paymentRaw);
+            paymentRecord.interactions().removeAll();
+            Ext.each(paymentRecord.data.interactions, function (interactionRaw) {
+                var paymentInteractionRecord = Ext.create('Taco.model.PaymentInteraction', interactionRaw);
+                paymentRecord.interactions().add(paymentInteractionRecord);
+            });
+            me.record.payments().add(paymentRecord);
+        });
     }
+
 });
