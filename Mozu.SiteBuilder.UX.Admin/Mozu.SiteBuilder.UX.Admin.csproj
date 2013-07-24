@@ -384,7 +384,7 @@
     <Compile Include="Api\Models\Order\OrderPackageItem.cs" />
     <Compile Include="Api\Models\Order\OrderPayment.cs" />
     <Compile Include="Api\Models\Order\CardPaymentInformation.cs" />
-    <Compile Include="Api\Models\Order\OrderPaymentInteraction.cs" />
+    <Compile Include="Api\Models\Order\PaymentInteraction.cs" />
     <Compile Include="Api\Models\ProductModels\ProductExtra.cs" />
     <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
     <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
@@ -694,12 +694,12 @@
     <Content Include="Scripts\app\view\navigation\GlobalSearchBox.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\order\Header.js" />
-    <Content Include="Scripts\app\view\order\modal\AddPaymentTransaction.js" />
+    <Content Include="Scripts\app\view\order\modal\EditTransaction.js" />
     <Content Include="Scripts\app\view\order\modal\CapturePayment.js" />
     <Content Include="Scripts\app\view\order\modal\CheckPayment.js" />
     <Content Include="Scripts\app\view\order\modal\EditTrackingNumber.js" />
     <Content Include="Scripts\app\view\order\modal\IssueCredit.js" />
-    <Content Include="Scripts\app\view\order\modal\ManualPayment.js" />
+    <Content Include="Scripts\app\view\order\modal\AddManualPayment.js" />
     <Content Include="Scripts\app\view\order\modal\AddPayment.js" />
     <Content Include="Scripts\app\view\order\modal\RequestCheck.js" />
     <Content Include="Scripts\app\view\order\subform\Shipping.js" />
@@ -1342,7 +1342,7 @@
     <Content Include="Scripts\app\model\CustomerGroupComboBox.js" />
     <Content Include="Scripts\app\model\GeneralSettings.js" />
     <Content Include="Scripts\app\model\PaymentReference.js" />
-    <Content Include="Scripts\app\model\PaymentTransaction.js" />
+    <Content Include="Scripts\app\model\PaymentInteraction.js" />
     <Content Include="Scripts\app\model\Role.js" />
     <Content Include="Scripts\app\model\GatewayDefinitions.js" />
     <Content Include="Scripts\app\model\PaymentAndCheckout.js" />

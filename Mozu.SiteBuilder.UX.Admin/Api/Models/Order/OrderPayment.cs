@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal AmountCredited { get; set; }
 
         [DataMember(Name = "interactions", EmitDefaultValue = true)]
-        public List<OrderPaymentInteraction> Interactions { get; set; }
+        public List<PaymentInteraction> Interactions { get; set; }
 
 
         #region BillingInfo

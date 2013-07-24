@@ -144,8 +144,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
                 ;
 
-            Mapper.CreateMap<PaymentsDC.PaymentInteraction, OrderPaymentInteraction>()
+            Mapper.CreateMap<PaymentsDC.PaymentInteraction, PaymentInteraction>()
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
+                .ForMember(x => x.GatewayTransactionId, op => op.MapFrom(dc => dc.GatewayTransactionId))
                 .ForMember(x => x.GatewayInteractionId, op => op.MapFrom(dc => dc.GatewayInteractionId))
                 .ForMember(x => x.GatewayInteractionIdReference, op => op.MapFrom(dc => dc.PaymentTransactionInteractionIdReference))
                 .ForMember(x => x.InteractionType, op => op.MapFrom(dc => dc.InteractionType))
@@ -153,8 +154,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
                 .ForMember( x=> x.CreateDate, op => op.MapFrom( dc=> dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null ))
                 .ForMember(x => x.PaymentId, op => op.MapFrom(dc => dc.PaymentId))
-                .ForMember(x => x.GatewayTransactionId, op => op.MapFrom(dc => dc.GatewayTransactionId))
-
+                .ForMember(x => x.IsManual, op => op.MapFrom(dc => dc.IsManual))
                 ;
 
             Mapper.CreateMap<ShippingDC.Package, OrderPackage>()

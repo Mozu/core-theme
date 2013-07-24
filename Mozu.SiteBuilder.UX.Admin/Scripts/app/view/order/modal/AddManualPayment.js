@@ -1,7 +1,7 @@
 /**
  * @class Taco.view.order.modal.PaymentAction
  */
-Ext.define('Taco.view.order.modal.ManualPayment', {
+Ext.define('Taco.view.order.modal.AddManualPayment', {
     extend: 'Taco.core.ux.modal.Modal',
     requires: ['Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField'],
     cls: Taco.baseCSSPrefix + 'order-modal',
@@ -28,26 +28,34 @@ Ext.define('Taco.view.order.modal.ManualPayment', {
                 },
                 items: [
                 {
-                    name: 'nameOnCard',
-                    fieldLabel: 'Name on Card',
-                    value: 'Bob Boberson'
-                }, {
+                    /* one of two required field */
+                    name: 'gatewayTransactionId',
+                    fieldLabel: 'Gateway Transaction Id'
+                },
+                {
+                    /* two of two required field */
+                    xtype: 'combobox',
+                    name: 'actionName',
+                    fieldLabel: 'Interaction Type',
+                    allowBlank: false,
+                    forceSelection: true,
+                    store: [['AuthorizePayment', 'Authorize Only'], ['AuthAndCapture', 'Authorize and Capture']],
+                    value: 'AuthorizePayment'
+                },
+                {
+                    xtype: 'combobox',
+                    name: 'cardType',
+                    fieldLabel: 'Card Type',
+                    allowBlank: false,
+                    forceSelection: true,
+                    store: [['Visa', 'Visa'], ['NotVisa', 'Something that is not Visa']],
+                    value: 'Visa'
+                },
+                {
                     xtype: 'currencyfield',
                     name: 'amount',
                     fieldLabel: 'Amount',
-                    emptyText: '0',
-                    value: '223'
-                }, {
-                    xtype: 'numberfield',
-                    name: 'expireMonth',
-                    fieldLabel: 'Exp Month',
-                    minValue: 1,
-                    maxValue: 12,
-                    minValue: 1
-                }, {
-                    xtype: 'numberfield',
-                    name: 'expireYear',
-                    fieldLabel: 'Exp Year'
+                    emptyText: '0'
                 }]
             }, {
                 xtype: 'container',
@@ -59,25 +67,27 @@ Ext.define('Taco.view.order.modal.ManualPayment', {
                 },
                 items: [
                 {
-                    xtype: 'combobox',
-                    name: 'cardType',
-                    fieldLabel: 'Card Type',
-                    allowBlank: false,
-                    //                    editable: false,
-                    forceSelection: true,
-                    //                    listConfig: { shadow: false },
-                    //                    shrinkWrap: 3,
-                    store: [['Visa', 'Visa'], ['NotVisa', 'Something that is not Visa']],
-                    value: 'Visa'
-                }, {
-                    name: 'cardNumber',
-                    fieldLabel: 'Card Number'
-                }, {
                     name: 'nameOnCard',
-                    fieldLabel: 'Name On Card'
+                    fieldLabel: 'Name on Card',
+                    value: 'Bob Boberson'
+                },
+                {
+                    name: 'cardLastFour',
+                    fieldLabel: 'Last 4 Digits of Card',
+                    emptyText: '1111'
+                },
+                {
+                    xtype: 'numberfield',
+                    name: 'expireMonth',
+                    fieldLabel: 'Exp Month',
+                    minValue: 1,
+                    maxValue: 12
                 }, {
-                    name: 'transactionId',
-                    fieldLabel: 'Transaction Id'
+                    xtype: 'numberfield',
+                    name: 'expireYear',
+                    fieldLabel: 'Exp Year',
+                    minValue: 2013,
+                    maxValue: 2022
                 }]
             }],
             listeners: {
