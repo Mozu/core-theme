@@ -86,13 +86,13 @@
     .icon-mobile {
       width: 12px;
       height: 18px;
-      @include icons-sprite(icon-theme-mobile); // icon does not exist in font
+      @include icons-sprite(icon-theme-mobile); // icon is not monochrome
     }
 
     .icon-desktop {
       width: 36px;
       height: 29px;
-      @include icons-sprite(icon-theme-desktop); // icon does not exist in font
+      @include icons-sprite(icon-theme-desktop); // icon is not monochrome
     }
 
 
