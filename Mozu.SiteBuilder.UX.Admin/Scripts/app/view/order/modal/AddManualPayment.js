@@ -28,12 +28,18 @@ Ext.define('Taco.view.order.modal.AddManualPayment', {
                 },
                 items: [
                 {
-                    /* one of two required field */
+                    /* one of three required field */
                     name: 'gatewayTransactionId',
                     fieldLabel: 'Gateway Transaction Id'
                 },
                 {
-                    /* two of two required field */
+                    xtype: 'numberfield',
+                    /* two of three required field */
+                    name: 'gatewayInteractionId',
+                    fieldLabel: 'Gateway Interaction Id'
+                },
+                {
+                    /* three of three required field */
                     xtype: 'combobox',
                     name: 'actionName',
                     fieldLabel: 'Interaction Type',
@@ -69,7 +75,6 @@ Ext.define('Taco.view.order.modal.AddManualPayment', {
                 {
                     name: 'nameOnCard',
                     fieldLabel: 'Name on Card',
-                    value: 'Bob Boberson'
                 },
                 {
                     name: 'cardLastFour',
@@ -114,21 +119,31 @@ Ext.define('Taco.view.order.modal.AddManualPayment', {
         this.primaryButton = Ext.widget('primarybutton', {
             text: 'Save',
             click: function () {
-                var me = this,
-                    order = me.record,
-                    billingInfo = me.formpanel.getValues(),
-                    amount = billingInfo.amount;
+                var formValues = me.formpanel.getValues(),
+                    cardInfo = {
+                        nameOnCard: formValues.nameOnCard,
+                        cardType: formValues.cardType,
+                        cardNumber: '************' + formValues.cardLastFour,
+                        expireMonth: formValues.expireMonth,
+                        expireYear: formValues.expireYear
+                    },
+                    transactionId = formValues.gatewayTransactionId,
+                    interactionId = formValues.gatewayInteractionId,
+                    actionName = formValues.actionName,
+                    amount = formValues.amount;
 
-                delete billingInfo.amount;
-
-                order.addPayment({
+                me.record.addManualPayment({
                     jsonData: {
-                        orderId: order.getId(),
+                        orderId: me.record.getId(),
+                        billingInfo: cardInfo,
                         amount: amount,
-                        billingInfo: billingInfo
+                        gatewayTransactionId: transactionId,
+                        gatewayInteractionId: interactionId,
+                        actionName: actionName
                     },
                     success: function () {
-                        this.hide();
+                        me.hide();
+                        me.record.reload();
                     }
                 });
             },
