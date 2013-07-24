@@ -1,7 +1,7 @@
 /**
- * @class Taco.view.order.modal.PaymentAction
+ * @class Taco.view.order.modal.AddPayment
  */
-Ext.define('Taco.view.order.modal.Payment', {
+Ext.define('Taco.view.order.modal.AddPayment', {
     extend: 'Taco.core.ux.modal.Modal',
     requires: ['Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField'],
     cls: Taco.baseCSSPrefix + 'order-modal',
@@ -31,17 +31,43 @@ Ext.define('Taco.view.order.modal.Payment', {
                 success: function () {
                     me.pciProcessor.applyMask();
                     var order = me.record,
-                    billingInfo = me.formpanel.getValues(),
-                    amount = billingInfo.amount;
+                    formValues = me.formpanel.getValues(),
+                    billingInfo = {
+                        isSameBillingShippingAddress: !!formValues.sameAsBilling,
+                        paymentServiceCardId: formValues.paymentServiceCardId,
+                        nameOnCard: formValues.nameOnCard,
+                        cardType: formValues.cardType,
+                        cardNumber: formValues.cardNumber,
+                        expireMonth: formValues.expireMonth,
+                        expireYear: formValues.expireYear
+                    },
+                    contactInfo = {
+                        email: formValues.email,
+                        firstName: formValues.firstName,
+                        middleName: formValues.middleName,
+                        lastName: formValues.lastName,
+                        address1: formValues.address1, 
+                        address2: formValues.address2,
+                        address3: formValues.address3,
+                        address4: formValues.address4,
+                        cityOrTown: formValues.cityOrTown,
+                        countryCode: formValues.countryCode,
+                        zipCode: formValues.zipCode,
+                        state: formValues.state,
+                        homePhone: formValues.homePhone,
+                        mobilePhone: formValues.mobilePhone,
+                        workPhone: formValues.workPhone
+                    },
+                    amount = formValues.amount;
 
-                delete billingInfo.amount;
                 billingInfo.paymentServiceCardId = me._hiddenCardId;
 
                 order.addPayment({
                     jsonData: {
                         orderId: order.getId(),
                         amount: amount,
-                        billingInfo: billingInfo
+                        billingInfo: billingInfo,
+                        billingContact: contactInfo
                     },
                     success: function() {
                         me.hide();
@@ -107,15 +133,15 @@ Ext.define('Taco.view.order.modal.Payment', {
                 items: [
                 {
                     xtype: 'textfield',
-                    name: 'firstname',
+                    name: 'firstName',
                     fieldLabel: 'First Name'
                 }, {
                     xtype: 'textfield',
-                    name: 'middlename',
+                    name: 'middleName',
                     fieldLabel: 'Middle Name'
                 }, {
                     xtype: 'textfield',
-                    name: 'lastname',
+                    name: 'lastName',
                     fieldLabel: 'Last Name'
                 }, {
                     xtype: 'textfield',
@@ -147,6 +173,11 @@ Ext.define('Taco.view.order.modal.Payment', {
                     width: 300
                 },
                 items: [
+                 {
+                    xtype: 'textfield',
+                    name: 'cityOrTown',
+                    fieldLabel: 'City'
+                },
                 {
                     xtype: 'textfield',
                     name: 'state',
@@ -171,10 +202,6 @@ Ext.define('Taco.view.order.modal.Payment', {
                     xtype: 'textfield',
                     name: 'mobilePhone',
                     fieldLabel: 'Mobile Phone'
-                }, {
-                    xtype: 'textfield',
-                    name: 'cityOrTown',
-                    fieldLabel: 'City'
                 }]
             }],
             listeners: {

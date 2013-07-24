@@ -35,6 +35,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "amountCollected", EmitDefaultValue = true)]
         public decimal AmountCollected { get; set; }
 
+        [DataMember(Name="amountAuthorized", EmitDefaultValue = true)]
+        public decimal AmountAuthorized { get; set; }
+
         [DataMember(Name = "amountCredited", EmitDefaultValue = true)]
         public decimal AmountCredited { get; set; }
 

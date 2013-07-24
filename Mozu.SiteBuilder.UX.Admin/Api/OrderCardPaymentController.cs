@@ -100,6 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public decimal Amount { get; set; }
             public CardPaymentInformation BillingInfo { get; set; }
+            public Contact BillingContact { get; set; }
         }
         /// <summary>
         /// Creates a new payment and performs the "AuthAndCapture" action.
@@ -124,19 +125,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         IsCardInfoSaved = false,
                         IsUsedRecurring = false
                     },
-                    BillingContact = new Core.Api.Contracts.Contact
-                    {
-                        FirstName = "Bob",
-                        LastNameOrSurname = "Bobingston",
-                        Address = new Core.Api.Contracts.Address
-                        {
-                            Address1 = "123 Fake St",
-                            CityOrTown = "Austin",
-                            CountryCode = "US",
-                            PostalOrZipCode = "78727",
-                            StateOrProvince = "TX"
-                        }
-                    }
+                    IsSameBillingShippingAddress = args.BillingInfo.IsSameBillingShippingAddress,
+                    BillingContact = args.BillingContact.Map<Core.Api.Contracts.Contact>()
                 },
                 Amount = args.Amount
             };
