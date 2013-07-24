@@ -29,5 +29,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name = "expireYear")]
         public short ExpireYear { get; set; }
+
+        [DataMember(Name = "isSameBillingShippingAddress")]
+        public bool IsSameBillingShippingAddress { get; set; }
     }
 }

@@ -26,20 +26,12 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
                     labelAlign: 'top',
                     width: 300
                 },
-                items: [{
-                    xtype: 'hidden',
-                    name: 'orderId',
-                    value: me.orderId
-                },{
-                    xtype: 'hidden',
-                    name: 'paymentId',
-                    value: me.paymentId
-                }, {
-                    xtype: 'unitfield',
-                    name: 'amountCollected',
-                    fieldLabel: 'Amount Collected',
-                    unitString: '$',
-                    emptyText: '0'
+                items: [
+                {
+                    xtype: 'currencyfield',
+                    name: 'amount',
+                    fieldLabel: 'Amount to Capture',
+                    value: me.record.data.amountAuthorized
                 }]
             }],
             listeners: {
@@ -66,13 +58,14 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
         this.primaryButton = Ext.widget('primarybutton', {
             text: 'Save',
             click: function () {
-                var me = this;
+                var me = this,
+                    amount = me.formpanel.getValues()
                 
                 // add the capture Amount
                 data = {
-                    orderId: me.formpanel.getValues()['orderId'],
-                    paymentId: me.formpanel.getValues()['paymentId'],
-                    amount: me.formpanel.getValues()['amountCollected']
+                    orderId: me.order.getId(),
+                    paymentId: me.record.getId(),
+                    amount: me.formpanel.getValues()['amount']
                 };
 
                 // pacakage up the data for the model to persist
@@ -84,7 +77,7 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
                             // service didnt' return data properly
                             return;
                         }
-                        this.record.reload();
+                        me.order.reload();
                     },
                     failure: function (response) {
 

@@ -6,7 +6,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     requires: [
         'Taco.view.order.modal.IssueCredit',
         'Taco.view.order.modal.RequestCheck',
-        'Taco.view.order.modal.CheckPayment'
+        'Taco.view.order.modal.CheckPayment',
+        'Taco.view.order.modal.CapturePayment'
     ],
     cls: 'orderform-payment-transaction',
     initComponent: function (eOpts) {
@@ -413,15 +414,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         var me = this;
         
         var capturePayment = Ext.create('Taco.view.order.modal.CapturePayment', {
-            orderId: me.order.getId(),
-            paymentId: me.record.getId(),
             order: me.order,
-            listeners: {
-                aftersave: function () {
-                    me.order.reload();
-                },
-                scope: me
-            }
+            record: me.record
         });
 
         capturePayment.show();
