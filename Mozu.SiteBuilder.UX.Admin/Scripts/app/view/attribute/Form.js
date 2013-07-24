@@ -56,7 +56,8 @@ Ext.define('Taco.view.attribute.Form', {
         },
         subformCfg: {
             'List': function (statics) {
-                var dataType = statics.fieldCfg.dataType;
+                var me = this ;
+                dataType = statics.fieldCfg.dataType;
 
                 dataType.readOnly = this.isEdit();
 
@@ -74,6 +75,9 @@ Ext.define('Taco.view.attribute.Form', {
                 dataType, 
                 {
                     xtype: 'optionvalueeditor',
+                    getDataType:function () {
+                        return me.form.findField('dataType').getValue() == 'String' ?'string' :'number';
+                    },
                     store: this.valuesStore
                 }];
             },

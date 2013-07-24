@@ -67,6 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers
             {
                 col = new FilterCollection();
             }
+            col.SearchType = qs["searchType"];
             col.query = qs["query"];
 
             bindingContext.Model = col;

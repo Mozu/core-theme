@@ -185,9 +185,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.AdminUser.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13164.1\lib\Mozu.AdminUser.Contracts.dll</HintPath>
+    <Reference Include="Mozu.AdminUser.Contracts">
+      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13203.1007\lib\Mozu.AdminUser.Contracts.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.BuildSupport.GetAssemblyFileVersionTask, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

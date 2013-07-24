@@ -38,6 +38,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         { }
         public string query { get; set; }
 
+        public string SearchType { get; set; }
+
         public bool TryGetValue<T>(string id, out T outValue)
         {
             object val = this.Where(x => string.Equals(x.property, id, StringComparison.OrdinalIgnoreCase)).Select(x => x.value).FirstOrDefault();

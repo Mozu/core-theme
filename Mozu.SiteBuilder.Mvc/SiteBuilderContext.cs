@@ -253,8 +253,8 @@ namespace Mozu.SiteBuilder.Mvc
 	        {
 	            if (g_appId == null)
 	            {
-	                ;
-	                var claims = new LightweightAppClaims {AppId = ConfigurationManager.AppSettings["AppId"]};
+	                //must have userclaim set to true of else creates a gawd appclaim 
+                    var claims =  LightweightAppClaims.CreateForSystemApp(  ConfigurationManager.AppSettings["ZuulAppId"] , true ) ;
 	                g_appId = claims.ToAccessToken();
 	            }
 	            return g_appId;

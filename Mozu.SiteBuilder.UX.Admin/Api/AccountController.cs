@@ -240,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<AccountUser>>> GetAccountUsers()
         {
             var admins = (await _adminUserWebApiClient.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, startIndex: 0, pageSize: 600, responseGroups: "UserRoles")).ReadAsSync().Items;
-            var invites = (await _invitationWebApiClient.GetInvitations(null)).ReadAsSync().Items;
+            var invites = (await _invitationWebApiClient.GetInvitations(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ReadAsSync().Items;
             var invitations = Mapper.Map<List<Invitation>>(invites);
             foreach (var invitation in invitations)
             {

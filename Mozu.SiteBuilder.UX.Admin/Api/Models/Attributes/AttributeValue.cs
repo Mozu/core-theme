@@ -7,19 +7,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
     [DataContract]
     public class AttributeValue
     {
-        private string _id;
+     
 
         [DataMember(Name = "id")]
-        public string Id
-        {
-            get
-            {
-                if (String.IsNullOrEmpty(_id))
-                    _id = Regex.Replace(Value.ToString(), "[^a-zA-Z0-9]", "_");
-                return _id;
-            }
-            set { _id = value; }
-        }
+        public object  Id{ get; set; }
+       
 
         [DataMember(Name = "attributeFQN")]
         public string AttributeFQN { get; set; }
