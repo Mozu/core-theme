@@ -235,10 +235,14 @@
           height: auto;
           width: auto;
 
-          &:hover::after {
-            color: $color-neutral-white;
+          &::after {
             left: -51px;
             top: -9px;
+          }
+          &:hover::after {
+            &::after {
+              color: $color-neutral-white;
+            }
           }
         }
         &.#{$vprefix}icon-nav-customers::after {
@@ -266,6 +270,14 @@
 
       &.#{$vprefix}menu-item-hover {
         background-color: $color-neutral-30;
+
+        .#{$vprefix}icon {
+          color: $color-neutral-white;
+
+          &::after {
+            color: $color-neutral-white;
+          }
+        }
 
         // a {
         //   &.#{$vprefix}icon-nav-dashboard::before {
