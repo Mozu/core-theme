@@ -7,16 +7,18 @@ Ext.define('Taco.view.order.modal.AddManualPayment', {
     cls: Taco.baseCSSPrefix + 'order-modal',
     autoShow: true,
     width: 700,
+    height: 500,
+    style: 'overflow-y: scroll;overflow-x: hidden;',
     data: {},
     field: '',
 
     initComponent: function (eOpts) {
         var me = this;
-
-        this.formpanel = Ext.create('Ext.form.Panel', {
+        me.extraInfoCont = Ext.create('Ext.form.Panel', {
             xtype: 'formpanel',
             bodyCls: Taco.baseCSSPrefix + 'flexform',
             layout: { type: 'hbox' },
+            hidden: true,
             items: [{
                 xtype: 'container',
                 style: 'padding-right: 10px;',
@@ -28,40 +30,37 @@ Ext.define('Taco.view.order.modal.AddManualPayment', {
                 },
                 items: [
                 {
-                    /* one of three required field */
-                    name: 'gatewayTransactionId',
-                    fieldLabel: 'Gateway Transaction Id'
-                },
-                {
-                    xtype: 'numberfield',
-                    /* two of three required field */
-                    name: 'gatewayInteractionId',
-                    fieldLabel: 'Gateway Interaction Id'
-                },
-                {
-                    /* three of three required field */
-                    xtype: 'combobox',
-                    name: 'actionName',
-                    fieldLabel: 'Interaction Type',
-                    allowBlank: false,
-                    forceSelection: true,
-                    store: [['AuthorizePayment', 'Authorize Only'], ['AuthAndCapture', 'Authorize and Capture']],
-                    value: 'AuthorizePayment'
-                },
-                {
-                    xtype: 'combobox',
-                    name: 'cardType',
-                    fieldLabel: 'Card Type',
-                    allowBlank: false,
-                    forceSelection: true,
-                    store: [['Visa', 'Visa'], ['NotVisa', 'Something that is not Visa']],
-                    value: 'Visa'
-                },
-                {
-                    xtype: 'currencyfield',
-                    name: 'amount',
-                    fieldLabel: 'Amount',
-                    emptyText: '0'
+                    xtype: 'textfield',
+                    name: 'firstName',
+                    fieldLabel: 'First Name'
+                }, {
+                    xtype: 'textfield',
+                    name: 'middleName',
+                    fieldLabel: 'Middle Name'
+                }, {
+                    xtype: 'textfield',
+                    name: 'lastName',
+                    fieldLabel: 'Last Name'
+                }, {
+                    xtype: 'textfield',
+                    name: 'email',
+                    fieldLabel: 'Email'
+                }, {
+                    xtype: 'textfield',
+                    name: 'address1',
+                    fieldLabel: 'Address 1'
+                }, {
+                    xtype: 'textfield',
+                    name: 'address2',
+                    fieldLabel: 'Address 2'
+                }, {
+                    xtype: 'textfield',
+                    name: 'address3',
+                    fieldLabel: 'Address 3'
+                }, {
+                    xtype: 'textfield',
+                    name: 'address4',
+                    fieldLabel: 'Address 4'
                 }]
             }, {
                 xtype: 'container',
@@ -72,27 +71,35 @@ Ext.define('Taco.view.order.modal.AddManualPayment', {
                     width: 300
                 },
                 items: [
+                 {
+                     xtype: 'textfield',
+                     name: 'cityOrTown',
+                     fieldLabel: 'City'
+                 },
                 {
-                    name: 'nameOnCard',
-                    fieldLabel: 'Name on Card',
-                },
-                {
-                    name: 'cardLastFour',
-                    fieldLabel: 'Last 4 Digits of Card',
-                    emptyText: '1111'
-                },
-                {
-                    xtype: 'numberfield',
-                    name: 'expireMonth',
-                    fieldLabel: 'Exp Month',
-                    minValue: 1,
-                    maxValue: 12
+                    xtype: 'textfield',
+                    name: 'state',
+                    fieldLabel: 'State'
                 }, {
-                    xtype: 'numberfield',
-                    name: 'expireYear',
-                    fieldLabel: 'Exp Year',
-                    minValue: 2013,
-                    maxValue: 2022
+                    xtype: 'textfield',
+                    name: 'zipCode',
+                    fieldLabel: 'ZIP'
+                }, {
+                    xtype: 'textfield',
+                    name: 'countryCode',
+                    fieldLabel: 'Country'
+                }, {
+                    xtype: 'textfield',
+                    name: 'homePhone',
+                    fieldLabel: 'Home Phone'
+                }, {
+                    xtype: 'textfield',
+                    name: 'workPhone',
+                    fieldLabel: 'Work Phone'
+                }, {
+                    xtype: 'textfield',
+                    name: 'mobilePhone',
+                    fieldLabel: 'Mobile Phone'
                 }]
             }],
             listeners: {
@@ -101,6 +108,100 @@ Ext.define('Taco.view.order.modal.AddManualPayment', {
                 }
             }
         });
+        
+        this.formpanel = Ext.create('Ext.form.Panel', {
+            xtype: 'formpanel',
+            bodyCls: Taco.baseCSSPrefix + 'flexform',
+            layout: { type: 'vbox' },
+            items: [
+                {
+                    xtype: 'panel',
+                    layout: { type: 'hbox' },
+                    items: [{
+                        xtype: 'container',
+                        style: 'padding-right: 10px;',
+                        defaults: {
+                            xtype: 'textfield',
+                            labelSeparator: '',
+                            labelAlign: 'top',
+                            width: 300
+                        },
+                        items: [
+                        {
+                            /* one of three required field */
+                            name: 'gatewayTransactionId',
+                            fieldLabel: 'Gateway Transaction Id'
+                        },
+                        {
+                            xtype: 'numberfield',
+                            /* two of three required field */
+                            name: 'gatewayInteractionId',
+                            fieldLabel: 'Gateway Interaction Id'
+                        },
+                        {
+                            /* three of three required field */
+                            xtype: 'combobox',
+                            name: 'actionName',
+                            fieldLabel: 'Interaction Type',
+                            allowBlank: false,
+                            forceSelection: true,
+                            store: [['AuthorizePayment', 'Authorize Only'], ['AuthAndCapture', 'Authorize and Capture']],
+                            value: 'AuthorizePayment'
+                        }]
+                    }, {
+                        xtype: 'container',
+                        defaults: {
+                            xtype: 'textfield',
+                            labelSeparator: '',
+                            labelAlign: 'top',
+                            width: 300
+                        },
+                        items: [
+                        {
+                            name: 'cardLastFour',
+                            fieldLabel: 'Last 4 Digits of Card',
+                            emptyText: '1111'
+                        },
+                        {
+                            xtype: 'combobox',
+                            name: 'cardType',
+                            fieldLabel: 'Card Type',
+                            allowBlank: false,
+                            forceSelection: true,
+                            store: [['Visa', 'Visa'], ['NotVisa', 'Something that is not Visa']],
+                            value: 'Visa'
+                        },
+                        {
+                            xtype: 'currencyfield',
+                            name: 'amount',
+                            fieldLabel: 'Amount',
+                            emptyText: '0'
+                        }, {
+                            xtype: 'checkboxfield',
+                            boxLabel: 'Address Same as billing',
+                            name: 'sameAsBilling',
+                            checked: true,
+                            style: 'margin-top:50px;',
+                            handler: function (it, status) {
+                                console.log(status);
+                                // me.extraInfoCont.show(!status);
+                                if (!status) {
+                                    me.extraInfoCont.show();
+                                } else {
+                                    me.extraInfoCont.hide();
+                                }
+                            }
+                        }]
+                    }]
+                }],
+            listeners: {
+                afterrender: function (panel) {
+                    Ext.destroy(panel.getLayout().clearEl);
+                }
+            }
+        });
+
+        me.formpanel.add(me.extraInfoCont);
 
         this.content = {
             xtype: 'container',
