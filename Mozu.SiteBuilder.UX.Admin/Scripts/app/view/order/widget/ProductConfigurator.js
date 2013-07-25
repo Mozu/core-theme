@@ -1,11 +1,11 @@
 ﻿Ext.define('Taco.model.ProductOptionValue', {
-    extend: 'Ext.data.Model',
-
-
+    extend: 'Ext.data.Model'
 })
 
 Ext.define('Taco.view.order.widget.ProductConfigurator', {
     extend: 'Taco.core.ux.form.Form',
+    layout: 'hbox',
+    width: 800,
     //extend: 'Ext.panel.Panel',
 
     cls: 'taco-product-configurator',
@@ -117,22 +117,12 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
             autoEl: {
                 tag: 'ul',
                 cls: 'images'
-            },
-            items: [{
-                xtype: 'textfield',
-                labelPosition: 'top',
-                fieldLabel: 'Engravement...'
-            }]
+            }
         });
 
         this.optionsContainer = Ext.widget({
             xtype: 'container',
-            cls: 'options',
-            items: [{
-                xtype: 'textfield',
-                labelPosition: 'top',
-                fieldLabel: 'Engravement...'
-            }]
+            cls: 'options'
         });
 
         this.description = Ext.widget({
@@ -141,13 +131,16 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
 
         this.price = Ext.widget({
             xtype: 'component',
-            tpl: 'Price {salePrice:currency}'
+            tpl: 'Price {SalePrice:currency}'
         });
 
         this.quantity = Ext.widget({
             xtype: 'numberfield',
             labelPosition: 'top',
             fieldLabel: 'Quantity',
+            allowBlank: false,
+            minValue: 1,
+            allowDecimals: false,
             value: 1
         });
 
@@ -176,17 +169,9 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
         return this.runtimeData && this.runtimeData.PurchasableState.IsPurchasable;
     },
 
-    isSavable: function () {
-        return false;
-    },
-
     getData: function () {
-        if (this.runtimeData) this.runtimeData.Quantity = this.getQuantity();
+        if (this.runtimeData) this.runtimeData.Quantity = this.quantity.getValue() || 1;
         return this.runtimeData;
-    },
-
-    getQuantity: function () {
-        return 1;
     },
 
     loadProduct: function (record) {
@@ -204,7 +189,6 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
 
         this.record.loadRuntimeProduct({
             success: function (data) {
-                //console.log(arguments);
                 this.loadRuntimeProduct(JSON.parse(data.responseText));
             },
             scope: this
@@ -218,10 +202,6 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
     loadRuntimeProduct: function (data) {
         if (data) this.runtimeData = data.items;
         console.log('RUNTIME DATA', this.runtimeData);
-
-        window.p = this.record;
-        window.d = this.runtimeData;
-
         this.buildOptions(this.runtimeData.Options);
     },
 
@@ -251,6 +231,10 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
 
         this.optionsContainer.removeAll();
         this.optionsContainer.add(items);
+
+        this.savableStateCheck();
+        debugger;
+        this.price.update(this.runtimeData.Price);
     },
 
     buildOption: function (option) {
