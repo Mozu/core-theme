@@ -40,11 +40,12 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
 
                 return {
                     xtype: 'selectfield',
+                    fieldLabel: option.AttributeDetail.Name,
                     name: option.AttributeFQN,
                     optionInputType: 'List',
                     store: store,
                     value: option.Value,
-                    allowBlank: true,
+                    allowBlank: !option.isRequired,
                     valueField: 'Value',
                     displayField: 'StringValue',
                     listConfig: {
@@ -64,8 +65,32 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
             'Date': function (option) {
                 return {
                     xtype: 'datefield',
+                    fieldLabel: option.AttributeDetail.Name,
                     name: option.AttributeFQN,
                     optionInputType: 'Date',
+                    allowBlank: !option.isRequired,
+                    value: option.Value
+                };
+            },
+
+            'YesNo': function (option) {
+                return {
+                    xtype: 'checkbox',
+                    fieldLabel: option.AttributeDetail.Name,
+                    name: option.AttributeFQN,
+                    optionInputType: 'YesNo',
+                    allowBlank: !option.isRequired,
+                    checked: !!option.Value
+                };
+            },
+
+            'TextBox': function (option) {
+                return {
+                    xtype: 'textfield',
+                    fieldLabel: option.AttributeDetail.Name,
+                    name: option.AttributeFQN,
+                    optionInputType: 'TextBox',
+                    allowBlank: !option.isRequired,
                     value: option.Value
                 };
             }
@@ -156,7 +181,12 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
     },
 
     getData: function () {
+        if (this.runtimeData) this.runtimeData.Quantity = this.getQuantity();
         return this.runtimeData;
+    },
+
+    getQuantity: function () {
+        return 1;
     },
 
     loadProduct: function (record) {

@@ -37,7 +37,6 @@
     },
 
     onSavableStateChange: function (form, state) {
-        console.log('STATE CHANGE', state);
         this.setSavable(state);
     },
 
@@ -45,6 +44,4 @@
         this.fireEvent('configureproduct', this.configurator.getData());
         this.hide();
     }
-
-
 });
