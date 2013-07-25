@@ -1,5 +1,11 @@
-﻿Ext.define('Taco.view.order.widget.ProductConfigurator', {
-    extend: 'Ext.container.Container',
+﻿Ext.define('Taco.model.ProductOptionValue', {
+    extend: 'Ext.data.Model',
+
+
+})
+
+Ext.define('Taco.view.order.widget.ProductConfigurator', {
+    extend: 'Taco.core.ux.form.Form',
 
     cls: 'taco-product-configurator',
 
@@ -8,16 +14,68 @@
     ],
 
     statics: {
+        updates: {
+            'List': function (option, field) {
+                store = Ext.create('Ext.data.Store', {
+                    fields: ['Value', 'StringValue', 'IsSelected', 'IsEnabled'],
+                    data: option.Values
+                });
+
+                field.bindStore(store);
+            }
+        },
+
+
         builds: {
             'List': function (option) {
+                var store,
+                    selectedValue,
+                    model;
+
+                store = Ext.create('Ext.data.Store', {
+                    fields: ['Value', 'StringValue', 'IsSelected', 'IsEnabled'],
+                    data: option.Values
+                });
+
                 return {
                     xtype: 'selectfield',
-                    data: [
-                        [1, 'One'],
-                        [2, 'Two'],
-                        [3, 'Three']
-                    ]
+                    name: option.AttributeFQN,
+                    optionInputType: 'List',
+                    store: store,
+                    value: option.Value,
+                    valueField: 'Value',
+                    displayField: 'StringValue',
+                    listConfig: {
+                        tpl: [
+                            '<ul class="taco-product-option-value-list">',
+                                '<tpl for=".">',
+                                    '<li role="option" class="x-boundlist-item<tpl if="!IsEnabled"> disabled</tpl>">',
+                                        '~{StringValue}~',
+                                    '</li>',
+                                '</tpl>',
+                            '</ul>'
+                        ]
+                    }
                 };
+            },
+
+            'Date': function (option) {
+                return {
+                    xtype: 'datefield',
+                    name: option.AttributeFQN,
+                    optionInputType: 'Date',
+                    value: option.Value
+                };
+            }
+        },
+
+        saves: {
+            'Date': function (value) {
+                if (!value) {
+                    return value;
+                }
+
+                return Ext.Date.format(value, 'c');
             }
         }
     },
@@ -149,8 +207,73 @@
 
     buildOption: function (option) {
         var builds = this.statics().builds,
-            inputType = option.AttributeDetail.InputType;
+            inputType = option.AttributeDetail.InputType,
+            saves = this.statics().saves;
 
-        if (builds[inputType]) return builds[inputType](option);
+
+        if (!builds[inputType]) return;
+
+        Ext.each(option.Values, function (value) {
+            if (!value.StringValue) value.StringValue = value.Value;
+            if (value.IsSelected) option.Value = value.Value;
+        });
+
+        return Ext.apply(builds[inputType](option), {
+            listeners: {
+                change: function (field, value) {
+                    Ext.each(this.runtimeData.Options, function (option) {
+                        if (option.AttributeFQN !== field.name) return;
+                        option.Value = saves[inputType] ? saves[inputType](value) : value;
+                        console.log('Change', inputType, option.Value, value);
+                    });
+                    this.postOptions();
+                },
+                scope: this
+            }
+        });
+    },
+
+    updateOption: function (option) {
+        var field = this.findField(option.AttributeFQN),
+            updates = this.statics().updates;
+
+        if (!field) return;
+
+        field.suspendCheckChange++;
+
+        Ext.each(option.Values, function (value) {
+            if (!value.StringValue) value.StringValue = value.Value;
+            if (value.IsSelected) option.Value = value.Value;
+        });
+
+        if (updates[field.optionInputType]) updates[field.optionInputType](option, field);
+
+        field.setValue(option.Value);
+
+        field.suspendCheckChange--;
+    },
+
+    postOptions: function () {
+        var request = { Options: [] };
+
+        Ext.each(this.runtimeData.Options, function (option) {
+            if (option.Value === undefined) return;
+
+            delete option.Values;
+            
+            request.Options.push(option);
+        });
+
+        this.record.configureRuntimeProduct({
+            jsonData: request,
+            success: function (response) {
+                this.runtimeData = JSON.parse(response.responseText).items;
+
+                Ext.each(this.runtimeData.Options, function (option) {
+                    this.updateOption(option);
+                }, this);
+            },
+            scope: this
+        });
     }
 });

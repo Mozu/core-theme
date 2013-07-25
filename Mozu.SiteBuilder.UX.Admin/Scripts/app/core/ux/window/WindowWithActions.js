@@ -109,5 +109,39 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
 
         this.callParent(arguments);
 
+        this.on({
+            dirtychange: function (obj, isDirty) {
+                this.isDirty = isDirty;
+                this.checkDirtyButton();
+            },
+            validitychange: function (obj, isValid) {
+                this.isValid = isValid;
+                this.checkDirtyButton();
+            },
+            afterrender: function() {
+                var form = this.down('form');
+
+                if (form) {
+                    this.isValid = this.isDirty ||  form.getForm().isValid();
+                    this.isDirty = this.isDirty ||  form.getForm().isDirty();
+                }
+                this.checkDirtyButton();
+            },
+            savablestatechange: function (form, state) {
+                this.setDirty(state);
+            },
+            scope: this
+        });
+    },
+
+    setDirty: function (value) {
+        this.dirtyButton.setDirty(value);
+    },
+
+    /**
+     * @private
+     */
+    checkDirtyButton: function() {
+        this.dirtyButton.setDirty(this.isDirty && this.isValid);
     }
 })
