@@ -61,7 +61,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             authReady = Ext.Array.contains(me.record.data.availableActions, 'CapturePayment'),
             // can capture is when you are auth ready and your order has a positive capture amount
             canCapture = authReady && captureAmount && captureAmount > 0;
+
+
         
+
         me.statusRow = Ext.create('Ext.container.Container', {
             cls: "orderform-payment-statusRow",
             layout: {
@@ -80,36 +83,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     cls: "statusField",
                     tpl: '{.}',
                     data: me.record.data.status
-                },/*  {
-                    xtype: 'unitfield',
-                    width: 120,
-                    hidden: !canCapture,
-                    itemId: "captureField",
-                    padding: "0 10",
-                    unitString: "$",
-                    unitAtEnd: false,
-                    value: captureAmount,
-                    allowBlank: true,
-                    minValue: 0,
-                    maxValue: 100000
-                }, {
-                    xtype: "taco.button",
-                    text: "Capture Payment",
-                    hidden: !canCapture,
-                    itemId: "captureButton",
-                    handler: me.capturePayment,
-                    scope: me
                 },{
-                    xtype: "taco.button",
-                    text: "Payment Recieved",
-                    hidden: (!(me.record.data.paymentType == "Check") || me.order.get("paymentStatus") == "Paid"),
-                    itemId: "paymentReceivedButton",
-                    handler: me.paymentRecieved,
-                    scope: me
-                }, */{
                     xtype: 'combo',
                     store: me.getAvailableActionsStore(),
-                    disabled: me.record.data.availableActions && me.record.data.availableActions.length < 0,
+                    disabled: !(me.record.data.availableActions.length > 0),
                     displayField: 'lbl',
                     valueField: 'val',
                     emptyText: 'Actions',
