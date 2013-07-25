@@ -58,7 +58,7 @@ Ext.define('Taco.view.order.modal.RequestCheck', {
                 autoEl: {
                     tag: 'h2',
                     cls: 'order-modal-title',
-                    html: 'Collect Check'
+                    html: 'Request Check'
                 }
             }, 
             this.formpanel
