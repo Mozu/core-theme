@@ -153,7 +153,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
                         }
                         // handle Edit click
-                        else if (isButtonClick && btnEl.hasCls('orderform-transaction-delete-btn'))
+                        else if (isButtonClick && btnEl.hasCls('orderform-transaction-edit-btn'))
                         {
                             var modal = Ext.create('Taco.view.order.modal.EditTransaction', {
                                 // record is the PaymentInteraction
