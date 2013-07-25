@@ -6,6 +6,7 @@
 
 Ext.define('Taco.view.order.widget.ProductConfigurator', {
     extend: 'Taco.core.ux.form.Form',
+    //extend: 'Ext.panel.Panel',
 
     cls: 'taco-product-configurator',
 
@@ -16,7 +17,7 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
     statics: {
         updates: {
             'List': function (option, field) {
-                store = Ext.create('Ext.data.Store', {
+                var store = Ext.create('Ext.data.Store', {
                     fields: ['Value', 'StringValue', 'IsSelected', 'IsEnabled'],
                     data: option.Values
                 });
@@ -43,6 +44,7 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
                     optionInputType: 'List',
                     store: store,
                     value: option.Value,
+                    allowBlank: true,
                     valueField: 'Value',
                     displayField: 'StringValue',
                     listConfig: {
@@ -81,6 +83,10 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
     },
 
     initComponent: function () {
+        this.addEvents([
+            'savablestatechange'
+        ]);
+
         this.imageContainer = Ext.widget({
             xtype: 'container',
             autoEl: {
@@ -137,8 +143,20 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
         this.callParent(arguments);
     },
 
+    isDirty: function () {
+        return true;
+    },
+
+    isValid: function () {
+        return this.runtimeData && this.runtimeData.PurchasableState.IsPurchasable;
+    },
+
     isSavable: function () {
         return false;
+    },
+
+    getData: function () {
+        return this.runtimeData;
     },
 
     loadProduct: function (record) {
@@ -272,6 +290,8 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
                 Ext.each(this.runtimeData.Options, function (option) {
                     this.updateOption(option);
                 }, this);
+
+                this.savableStateCheck();
             },
             scope: this
         });

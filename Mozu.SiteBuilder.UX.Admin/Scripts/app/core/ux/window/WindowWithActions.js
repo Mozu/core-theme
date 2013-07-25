@@ -112,11 +112,11 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
         this.on({
             dirtychange: function (obj, isDirty) {
                 this.isDirty = isDirty;
-                this.checkDirtyButton();
+                this.checkSavableButton();
             },
             validitychange: function (obj, isValid) {
                 this.isValid = isValid;
-                this.checkDirtyButton();
+                this.checkSavableButton();
             },
             afterrender: function() {
                 var form = this.down('form');
@@ -125,23 +125,23 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
                     this.isValid = this.isDirty ||  form.getForm().isValid();
                     this.isDirty = this.isDirty ||  form.getForm().isDirty();
                 }
-                this.checkDirtyButton();
+                this.checkSavableButton();
             },
             savablestatechange: function (form, state) {
-                this.setDirty(state);
+                this.setSavable(state);
             },
             scope: this
         });
     },
 
-    setDirty: function (value) {
+    setSavable: function (value) {
         this.dirtyButton.setDirty(value);
     },
 
     /**
      * @private
      */
-    checkDirtyButton: function() {
+    checkSavableButton: function() {
         this.dirtyButton.setDirty(this.isDirty && this.isValid);
     }
 })
