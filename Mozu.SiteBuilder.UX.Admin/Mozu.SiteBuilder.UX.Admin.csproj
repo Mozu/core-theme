@@ -639,7 +639,6 @@
     <Content Include="Scripts\app\model\FacetSource.js" />
     <Content Include="Scripts\app\model\FacetSet.js" />
     <Content Include="Scripts\app\model\OrderPayment.js" />
-    <Content Include="Scripts\app\model\OrderPaymentInteraction.js" />
     <Content Include="Scripts\app\model\ProductExtra.js" />
     <Content Include="Scripts\app\model\ProductTypeAttribute.js" />
     <Content Include="Scripts\app\model\ItemFilter.js" />
