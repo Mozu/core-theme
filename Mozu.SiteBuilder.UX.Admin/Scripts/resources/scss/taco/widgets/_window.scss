@@ -7,9 +7,16 @@
         @include outer-shadow(0.3, 3.5rem, 0, 0.7rem);
 
         .action-bar {
-            padding: px-to-rem(14);
+            //padding: px-to-rem(14);
             padding-top: 0;
-            @include flexbox($justify: flex-end);
+            @include flexbox(
+                $alignItems: center,
+                $justify: flex-end
+            );
+        }
+
+        .#{$vprefix}action {
+            margin: px-to-rem(14);
         }
     }
 

@@ -144,4 +144,8 @@
     }
   }
 
+  .#{$vprefix}product-option-value-list .disabled {
+    color: red;
+  }
+
 }

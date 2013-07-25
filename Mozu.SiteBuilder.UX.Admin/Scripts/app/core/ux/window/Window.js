@@ -1,11 +1,13 @@
 ﻿
 
+
 Ext.define('Taco.core.ux.window.Window', {
     extend: 'Ext.window.Window',
     alias: 'widget.taco.window',
     
     modal: true,
     resize: false,
+    ghost: false,
 
     initComponent: function () {
 
