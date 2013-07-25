@@ -31,7 +31,7 @@
         margin-right: 40px;
         padding: 10px 20px;
         position: relative;
-        width: 240px;
+        width: 240px; 
 
         .edit {
           background-color: $color-neutral-20;
@@ -389,7 +389,7 @@
 		color:#cccccc;
 		padding:0px 7px 0px 7px;		
 	}
-	.orderform-transaction-edit-btn{
+	.orderform-transaction-edit-btn, .orderform-transaction-delete-btn{
 		float: right; padding: 0px;
 
 	}
