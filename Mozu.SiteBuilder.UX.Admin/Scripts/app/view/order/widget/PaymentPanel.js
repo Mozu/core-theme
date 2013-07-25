@@ -150,7 +150,17 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         // handle Delete click.
                         if (isButtonClick && btnEl.hasCls('orderform-transaction-delete-btn'))
                         {
-
+                            Ext.Msg.show({
+                                title: 'Delete',
+                                cls: 'taco-orderform-delete-confirm',
+                                msg: 'Are you sure you want to delete this transaction?',
+                                buttons: Ext.Msg.OKCANCEL,
+                                fn: function (rec) {
+                                    if (rec === 'ok') {
+                                        //delete the rec
+                                    }
+                                }
+                            });
                         }
                         // handle Edit click
                         else if (isButtonClick && btnEl.hasCls('orderform-transaction-edit-btn'))

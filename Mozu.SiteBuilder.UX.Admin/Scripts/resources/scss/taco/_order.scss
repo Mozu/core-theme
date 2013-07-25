@@ -34,7 +34,7 @@
         width: 240px; 
 
         .edit {
-          background-color: $color-neutral-20;
+          background-color: $color-neutral-20; 
           border: 2px solid $color-neutral-20;
           display: none;
           overflow: hidden;
@@ -374,6 +374,12 @@
 	}
 }
 
+.#{$vprefix}orderform-delete-confirm {	
+	background-color: #eaeaea;
+	.x-window-body{
+		padding: 0px;
+	}
+}
 
 // order payment 
 .#{$vprefix}orderform-payment {	
