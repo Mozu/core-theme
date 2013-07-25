@@ -320,7 +320,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         switch (me.getValue()) {
             case 'ApplyCheck':
                 var modal = Ext.create('Taco.view.order.modal.CheckPayment', {
-                    record: me.order
+                    record: record
                 });
 
                 modal.show();

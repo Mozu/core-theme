@@ -14,7 +14,6 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
         var me = this;
 
        // transaction type, transaction id, amount, and other information that was used to process the transaction through the gateway on a selected order. 
-        
         this.formpanel = Ext.create('Ext.form.Panel', {
             xtype: 'formpanel',
             bodyCls: Taco.baseCSSPrefix + 'flexform',
@@ -31,7 +30,7 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
                 items: [{
                     xtype: 'hidden',
                     name: 'orderId',
-                    value: me.record.data.orderNumber
+                    value: me.record.data.orderId
                 }, /*{
                     name: 'name',
                     fieldLabel: 'Name'
