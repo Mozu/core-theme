@@ -4,6 +4,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Web.Mvc;
+using Mozu.Core;
+using Mozu.Core.Api.Contracts;
+using Mozu.Core.Settings;
+
 namespace Mozu.SiteBuilder.Mvc.Security
 {
     using System;
@@ -29,14 +34,26 @@ namespace Mozu.SiteBuilder.Mvc.Security
         void OnAuthenticate(object sender, EventArgs e)
         {
             var context = new HttpContextWrapper(HttpContext.Current);
-            var helper = new AuthenticationHelper(context, new CookieProvider(context, Core.Settings.MozuConfigurationManager.Settings));
-            var ticket = helper.GetTicketFromRequest();
-            if (ticket == null)
+            var apiContext = DependencyResolver.Current.GetService<ISiteBuilderApiContext>();
+            var authHelper = DependencyResolver.Current.GetService<IAuthenticationHelper >();
+          //  var settings = DependencyResolver.Current.GetService<ISettings>();
+
+           // var helper = DependencyResolver.Current.GetService<AuthenticationHelper>();
+          //  var helper = new AuthenticationHelper(context, provider: new CookieProvider(context, Core.Settings.MozuConfigurationManager.Settings), apiContext);
+         //   var ticket = helper.GetTicketFromRequest();
+
+            if (apiContext.UserClaims == null)
             {
-                ticket = helper.CreateAnonymousTicket();
-                helper.SetCookie(ticket);
+                var user = LightweightUserClaims.CreateForAnonymousShopper(apiContext.TenantId, apiContext.SiteId ?? -1);
+                apiContext.SetUser(user);
+                authHelper.SaveAuthTicket(new UserAuthTicket()
+                                             {
+                                                 AccessToken = user.ToAccessToken(),
+                                                 AccessTokenExpiration = user.Expiration 
+                                             });
             }
-            helper.SetCurrentUser(ticket);
+
+          
         }
     }
 }

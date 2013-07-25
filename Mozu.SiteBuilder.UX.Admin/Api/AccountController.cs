@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             //var ticket = _authHelper.GetCurrentTicket();
             //_authTicketRepo.DeleteUserAuthTicket(ticket.RefreshToken).Result.ReadAsSync();
-            _authHelper.LogOut();
+            _authHelper.LogOut(_apiContext);
             return EmptyList2<AdminUser2>();
         }
         
@@ -127,7 +127,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public async Task<Response<List<AdminUser2>>> GetAccount()
         {
-            LightweightUserClaims lwU = _authHelper.GetCurrentUser();
+            LightweightUserClaims lwU = _apiContext.UserClaims;
             var ctx = Mvc.SiteBuilderContext.Current;
             var u = (await _usersRepo.GetUser(lwU.UserId, null)).ReadAsSync();
 
@@ -294,7 +294,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             try
             {
                 var newPasswordInfo = Mapper.Map<AdminUser.Contracts.PasswordInfo>(passwordInfo);
-                var user = _authHelper.GetCurrentUser();
+                var user = _apiContext.UserClaims;
 
                 await _usersRepo.ChangePassword(newPasswordInfo, user.UserId);
 
@@ -312,7 +312,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [WebGet(UriTemplate = "information/read")]
         public Response<AccountInformation> GetAccountInformation()
         {
-            var currentUser = _authHelper.GetCurrentUser();
+            var currentUser = _apiContext.UserClaims;
 
             return Single2(Mapper.Map<AccountInformation>(currentUser));
         }
@@ -322,7 +322,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             try
             {
-                var currentUser = _authHelper.GetCurrentUser();
+                var currentUser = _apiContext.UserClaims;
                 var userId = currentUser.UserId;
 
                 if (!string.IsNullOrWhiteSpace(accountInformation.NewPassword) && accountInformation.NewPassword == accountInformation.ConfirmPassword)

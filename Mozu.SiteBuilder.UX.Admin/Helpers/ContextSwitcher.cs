@@ -21,10 +21,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
         private readonly ISiteBuilderContext _siteBuilderContext;
         
         private readonly ISettings _settings;
-        private readonly IApiContext _context;
+        private readonly ISiteBuilderApiContext  _context;
         private readonly Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminAuthTicketWebApiClient  _authTicketWeb;
 
-        public ContextSwitcher(ITenantsWebApiClient tenantsWebApiClient, ISitesWebApiClient sitesWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderContext siteBuilderContext, ISettings settings, IApiContext context, IMultiScopeAdminAuthTicketWebApiClient authTicketWeb)
+        public ContextSwitcher(ITenantsWebApiClient tenantsWebApiClient, ISitesWebApiClient sitesWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderContext siteBuilderContext, ISettings settings, ISiteBuilderApiContext context, IMultiScopeAdminAuthTicketWebApiClient authTicketWeb)
         {
             _tenantsWebApiClient = tenantsWebApiClient;
             _sitesWebApiClient = sitesWebApiClient;
@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
             //Mozu.Core.Api.Client.ServiceClientExtensions 
             var tenant = (await _tenantsWebApiClient.GetTenant(tenantId))   .ReadAsSync();
 
-            var ticket = _authenticationHelper.GetCurrentTicket();
+            var ticket = _authenticationHelper.GetAuthTicket();
             var claim = LightweightUserClaims.Parse(ticket.AccessToken);
 
 
@@ -58,12 +58,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
                 scopeId: tenantId
                 );
 
-            var userAuthTicketForTenant = (await authTicketForTenant).ReadAsSync(); 
+            var userAuthTicketForTenant = (await authTicketForTenant).ReadAsSync();
 
-         
 
-            _authenticationHelper.SetCurrentUser(userAuthTicketForTenant);
+            _authenticationHelper.SaveAuthTicket(userAuthTicketForTenant);
+            claim = LightweightUserClaims.Parse(userAuthTicketForTenant.AccessToken);
+            
 
+            _authenticationHelper.SaveAuthTicket( userAuthTicketForTenant);
+            _context.SetUser(claim);
             _siteBuilderContext.SiteId = null;
             _siteBuilderContext.SiteGroupId = null;
             _siteBuilderContext.TenantId = tenantId;

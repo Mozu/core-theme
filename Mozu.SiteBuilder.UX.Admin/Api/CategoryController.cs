@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (nodeQuery.HasValue && filterCollection.TryGetValue("SiteId", out siteId))
                 {
                     ctxLevel = TargetContextLevelType.Site;
-                    catClient = _categoriesClient.With(x => x.SiteId = siteId);
+                    catClient = _categoriesClient.CloneWith(x => x.SiteId = siteId);
 
                 }
                 List<Category> categories = new List<Category>();

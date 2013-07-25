@@ -121,19 +121,15 @@
   <ItemGroup>
     <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Autofac.3.0.0\lib\net40\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Autofac.3.0.0\lib\net40\Autofac.Configuration.dll</HintPath>
+      <HintPath>..\packages\Autofac.3.1.0\lib\net40\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Autofac.Integration.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Autofac.Mvc4.3.0.0\lib\net40\Autofac.Integration.Mvc.dll</HintPath>
+      <HintPath>..\packages\Autofac.Mvc4.3.1.0\lib\net40\Autofac.Integration.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Autofac.Integration.WebApi, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Autofac.WebApi.3.0.0\lib\net40\Autofac.Integration.WebApi.dll</HintPath>
+      <HintPath>..\packages\Autofac.WebApi.3.1.0\lib\net40\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="AutoMapper, Version=2.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -187,39 +183,44 @@
     </Reference>
     <Reference Include="Mozu.AdminUser.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13164.1\lib\Mozu.AdminUser.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13203.1007\lib\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.0.0.13196.1\lib\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.0.0.13204.1005\lib\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts">
       <HintPath>..\packages\Mozu.Content.Contracts.1.0.13155.1\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.0.0.13157.1\lib\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.0.0.13202.1001\lib\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.0.0.13162.1\lib\Mozu.Core.Api.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.0.0.13204.1003\lib\Mozu.Core.Api.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Client, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.Client.0.0.13155.1\lib\Mozu.Core.Api.Client.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.Client.0.0.13203.1001\lib\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.Contracts.0.0.13155.1\lib\Mozu.Core.Api.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.Contracts.0.0.13199.1002\lib\Mozu.Core.Api.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Core.Caching">
+      <HintPath>..\packages\Mozu.Core.Caching.0.0.13200.1001\lib\Mozu.Core.Caching.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Extensible.Contracts">
       <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.0.13142.1\lib\Mozu.Core.Extensible.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Messaging.Contracts">
-      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.0.13154.1\lib\Mozu.Core.Messaging.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Core.Messaging.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.0.13200.1004\lib\Mozu.Core.Messaging.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Mongo">
-      <HintPath>..\packages\Mozu.Core.Mongo.0.0.13154.1\lib\Mozu.Core.Mongo.dll</HintPath>
+    <Reference Include="Mozu.Core.Mongo, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Mongo.0.0.13183.1\lib\Mozu.Core.Mongo.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Customer.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -230,18 +231,19 @@
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.0.13163.2\lib\Mozu.PaymentService.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.0.13196.1\lib\Mozu.PaymentService.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.0.0.13172.2\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.0.0.13191.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.0.0.13163.1\lib\Mozu.ProductRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.0.0.13168.1\lib\Mozu.ProductRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Provisioning.Contracts">
-      <HintPath>..\packages\Mozu.Provisioning.Contracts.1.0.13156.1\lib\Mozu.Provisioning.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Provisioning.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Provisioning.Contracts.1.0.13196.1\lib\Mozu.Provisioning.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Reference.Contracts">
       <HintPath>..\packages\Mozu.Reference.Contracts.1.0.13139.1\lib\Mozu.Reference.Contracts.dll</HintPath>
@@ -249,22 +251,24 @@
     <Reference Include="Mozu.ShippingAdmin.Contracts">
       <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.0.0.13155.1\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts">
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.0.0.13161.1\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
+    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.0.0.13162.7\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.General.Contracts">
       <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.0.13151.2\lib\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.Order.Contracts">
-      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.0.13164.2\lib\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
+    <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.0.13165.1\lib\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.Shipping.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.Shipping.Contracts.1.0.13151.2\lib\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.SiteSettings.Shipping.Contracts.1.0.13175.1\lib\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Tenant.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.13155.2\lib\Mozu.Tenant.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.13204.1002\lib\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.User.Contracts">
       <HintPath>..\packages\Mozu.User.Contracts.1.0.13148.1\lib\Mozu.User.Contracts.dll</HintPath>
@@ -292,6 +296,9 @@
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.640\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="Should">
       <HintPath>..\packages\Should.1.1.12.0\lib\Should.dll</HintPath>

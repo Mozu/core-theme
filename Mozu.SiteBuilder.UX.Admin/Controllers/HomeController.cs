@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ISettings _settings;
         private ILogger _log;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, AuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext, ISettings settings)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext, ISettings settings)
         {
             _usersRepo = usersRepo;
             _authenticationHelper = authHelper;
@@ -47,13 +47,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         // GET: /Home/
         public async Task<ActionResult> Index()
         {
-            _log.Debug("hello!");
+        
             var user = _currentUserHelper.GetCurrentUser();
-            if (user.BehaviorIds == null || user.BehaviorIds.Length == 0)
+          
+            if (user == null || _apiContext.TenantId <0 )
             {
-                user.BehaviorIds = _apiContext.UserClaims.BehaviorIds;
+                _authenticationHelper.LogOut(_apiContext );
+             
             }
-            var roles = GetUserSitesRoles(_authenticationHelper.GetCurrentUser().UserId);
+           
+            var roles = GetUserSitesRoles(_apiContext.UserClaims.UserId );
             var tenantRes = await _tenantsWebApi.GetTenant( _apiContext.TenantId);
            // var siteCol = _tenantsWebApi.AsBreadthFirstEnumerable();
 
@@ -62,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             if (tenantRes.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
-                _authenticationHelper.LogOut();
+                _authenticationHelper.LogOut(_apiContext );
             }
 
             var tenant = tenantRes.ReadAsSync();

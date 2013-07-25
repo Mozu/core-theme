@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<CmsProperty>();
             builder.RegisterType<Blog >();
             builder.RegisterType<Post >();
-            builder.RegisterType<AuthenticationHelper>().InstancePerLifetimeScope();
+           // builder.RegisterType<AuthenticationHelper>().InstancePerLifetimeScope();
             builder.RegisterType<CatalogContext>().As<ICatalogContext>().InstancePerLifetimeScope();
 
             builder.RegisterType<ThemeMetadataProvider>().As<IThemeMetaDataProvider>().InstancePerLifetimeScope();

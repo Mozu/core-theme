@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Cms;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
+using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
@@ -49,6 +50,7 @@ namespace Mozu.SiteBuilder.Mvc
 	    private readonly IGeneralSettingsWebApiClient _generalSettings;
 	    private readonly ISettings _configSettings;
 	    private readonly ILifetimeScope _lifetimeScope;
+	    private readonly IAuthenticationHelper _authenticationHelper;
 
 	    Lazy<ISettingsRepository> _settings;
 	    private readonly Lazy<ICatalogContext> _catContext;
@@ -71,7 +73,7 @@ namespace Mozu.SiteBuilder.Mvc
         private Lazy<NavigationGandalf> _gandalf;
         private ICategoryTreeProvider _categoryTreeProvider;
 
-        public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, ICategoryTreeProvider categoryTreeProvider, Lazy<NavigationGandalf> gandalf, ISettings configSettings = null, HttpContextBase httpContext = null, ILifetimeScope lifetimeScope= null)
+        public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, ICategoryTreeProvider categoryTreeProvider, Lazy<NavigationGandalf> gandalf, ISettings configSettings = null, HttpContextBase httpContext = null, ILifetimeScope lifetimeScope= null , IAuthenticationHelper authenticationHelper=  null )
 		{
 			PageContext = new PageContext();
            
@@ -86,6 +88,7 @@ namespace Mozu.SiteBuilder.Mvc
 	        _generalSettings = generalSettings;
 	        _configSettings = configSettings;
             _lifetimeScope = lifetimeScope;
+            _authenticationHelper = authenticationHelper;
             _categoryTreeProvider = categoryTreeProvider;
             _gandalf = gandalf;
 
@@ -453,5 +456,35 @@ namespace Mozu.SiteBuilder.Mvc
         }
 
         public bool IsDisposed { get; set; }
+
+
+        public IApiContext ApiContext
+        {
+            get { return _apiContext; }
+        }
+
+	    private object _userProfile;
+        public UserProfile UserProfile
+        {
+            get
+            {
+                if (_userProfile == null)
+                {
+                    var ticket = _authenticationHelper.GetAuthTicket();
+                    if (ticket != null)
+                    {
+                        _userProfile = ticket.User;
+                    }
+                }
+                if (_userProfile == null)
+                {
+                    _userProfile = new UserProfile()
+                                       {
+                                           UserId = _apiContext.UserClaims != null ? _apiContext.UserClaims.UserId : null
+                                       } ;
+                }
+                return _userProfile as UserProfile;
+            }
+        }
     }
 }

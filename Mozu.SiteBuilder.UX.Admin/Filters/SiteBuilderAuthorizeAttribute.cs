@@ -19,17 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
         private IAuthTicketWebApiClient _authTicketWebApiClient;
         private IPublicAdminAuthTicketWebApiClient _adminUserWebApiClient;
 
-        //public IAuthTicketWebApiClient  TicketApi
-        //{
-        //    get
-        //    {
-        //        return _authTicketWebApiClient ?? (_authTicketWebApiClient = DependencyResolver.Current.GetService<IAuthTicketWebApiClient>());
-        //    }
-        //    set
-        //    {
-        //        _authTicketWebApiClient = value;
-        //    }
-        //}
+ 
 
         public IPublicAdminAuthTicketWebApiClient AdminUserWebApiClient
         {
@@ -42,7 +32,48 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
                 _adminUserWebApiClient = value;
             }
         }
-        
+
+
+        private IAuthTicketWebApiClient _ticketAPi;
+        public short[] RequiredBehaviors { get; set; }
+
+        public Mozu.User.Contracts.Clients.IAuthTicketWebApiClient TicketAPI
+        {
+            get
+            {
+                if (_ticketAPi == null)
+                {
+                    return (IAuthTicketWebApiClient)System.Web.Mvc.DependencyResolver.Current.GetService(typeof(IAuthTicketWebApiClient));
+                }
+                return _ticketAPi;
+            }
+            set { _ticketAPi = value; }
+
+        }
+
+        public ISiteBuilderApiContext ApiContext
+        {
+            get
+            {
+                return (ISiteBuilderApiContext)System.Web.Mvc.DependencyResolver.Current.GetService(typeof(ISiteBuilderApiContext));
+
+            }
+
+
+        }
+
+        public IAuthenticationHelper AuthenticationHelper
+        {
+            get
+            {
+                return (IAuthenticationHelper)System.Web.Mvc.DependencyResolver.Current.GetService(typeof(IAuthenticationHelper));
+
+            }
+
+
+        }
+
+
 
         public bool IsAuthorized(HttpContextBase httpContext)
         {
@@ -53,33 +84,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
 
                 throw new NotImplementedException();
 
-                //var testAccountRaw = System.Configuration.ConfigurationManager.AppSettings["testAccountInfo"];
-                //var testAccount = (dynamic)Newtonsoft.Json.JsonConvert.DeserializeObject(testAccountRaw);
-                //var adminTicket = AdminUserWebApiClient .CreateUserAuthTicket( userAuthInfo : new UserAuthInfo()
-                //                                             {
-                //                                                 EmailAddress = testAccount.emailAddress,
-                //                                                 Password = testAccount.password
-                //                                             }).Result.ReadAsSync();
-
-                //var  settings =DependencyResolver.Current.GetService<ISettings>();
-       
-                //var authHelper = DependencyResolver.Current.GetService<IAuthenticationHelper>();
-
-
-                
-
-
-                //var ticket = _authTicketWebApiClient.With( TargetContextLevelType.Tenant ).With(x =>  x.TenantId=(int)testAccount.tenantId).CreateAuthTicketForTenant(new UserTokenInfo()
-                //                                               {
-                //                                                   AccessToken = adminTicket.AuthTicket.AccessToken
-                //                                               }).Result.ReadAsSync();
-                //authHelper.SetCurrentUser(ticket);
-                //isAuthorized = true;
+      
             }
             return isAuthorized;
         }
 
-        public  bool InternalIsAuthorized ( HttpContextBase httpContext)
+        public bool InternalIsAuthorized(HttpContextBase httpContext)
         {
             if (bool.Parse(System.Configuration.ConfigurationManager.AppSettings["authorize"]))
             {
@@ -89,63 +99,69 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
                     throw new ArgumentNullException("httpContext");
                 }
 
-                var authHelper = new AuthenticationHelper(httpContext, new CookieProvider(httpContext, Core.Settings.MozuConfigurationManager.Settings));
+                var context = ApiContext;
+                var authHelper = AuthenticationHelper;
 
-                var lwUser = httpContext.User as Mozu.Core.LightweightUserClaims;
+                // var authHelper = new AuthenticationHelper(httpContext, provider: new CookieProvider(httpContext, Core.Settings.MozuConfigurationManager.Settings), cookieName:null);
 
-                if (lwUser == null )
+                // var lwUser = httpContext.User as Mozu.Core.LightweightUserClaims;
+
+                if (context.UserClaims == null)
+                {
+                    return false;
+                }
+         
+
+
+             
+                if (context.UserClaims.ScopeType != UserScopeType.Tenant.ToString())
                 {
                     return false;
                 }
 
+            
 
-
-                int tenantId = -33;
-                string tenantStr;
-                lwUser.Bag.TryGetValue("TenantId", out tenantStr);
-                int.TryParse(tenantStr, out tenantId);
-
-                if (tenantId != SiteBuilderContext.Current.TenantId)
-                {
-                    return false;
-                }
-
-
-                //todo: get a list of behavior constants
-                //relaxing behaviors as the test data doesnt have anything.... 
-                //if (lwUser.BehaviorIds == null || lwUser.BehaviorIds.All(x => x != 3))
+                //if (lwUser != SiteBuilderContext.Current.SiteId)
                 //{
                 //    return false;
                 //}
 
-                if (lwUser.Expiration < DateTime.UtcNow)
+                //if (RequiredBehaviors != null && RequiredBehaviors.Length > 0 &&
+                //    (context.UserClaims.BehaviorIds == null || !(RequiredBehaviors.All(x => lwUser.BehaviorIds.Contains(x)))))
+                //{
+                //    return false;
+                //}
+
+
+                if (context.UserClaims.Expiration < DateTime.UtcNow.AddMinutes(-1))
                 {
-                    var ticket = authHelper.GetCurrentTicket();
-                    if ( ticket != null && ticket.RefreshTokenExpiration > DateTime.UtcNow )
+                    var ticket = authHelper.GetAuthTicket();
+                    if (ticket != null && ticket.RefreshTokenExpiration > DateTime.UtcNow)
                     {
                         var res = AdminUserWebApiClient.RefreshAuthTicket(
-                            existingAuthTicket: new TenantAdminUserAuthTicket()
-                                                    {
-                                                        RefreshToken = ticket.RefreshToken
-                                                    },
-                            tenantId: tenantId).Result;
+                             existingAuthTicket: new TenantAdminUserAuthTicket()
+                             {
+                                 RefreshToken = ticket.RefreshToken
+                             },
+                             tenantId: context.TenantId ).Result;
+                       
                         if (res.ResponseMessage.IsSuccessStatusCode)
                         {
-                            var tat = res.ReadAsSync();
-                            ticket = new UserAuthTicket()
+                            var ticket2 = res.ReadAsSync();
+                              ticket = new UserAuthTicket()
                                          {
 
-                                             AccessToken = tat.AccessToken,
-                                             AccessTokenExpiration = tat.AccessTokenExpiration,
-                                             User = tat.User,
-                                             GrantedBehaviors = tat.GrantedBehaviors ,
-                                             RefreshTokenExpiration = tat.RefreshTokenExpiration,
-                                             RefreshToken = tat.RefreshToken
+                                             AccessToken = ticket2.AccessToken,
+                                             AccessTokenExpiration = ticket2.AccessTokenExpiration,
+                                             User = ticket2.User,
+                                             GrantedBehaviors = ticket2.GrantedBehaviors ,
+                                             RefreshTokenExpiration = ticket2.RefreshTokenExpiration,
+                                             RefreshToken = ticket2.RefreshToken
                                          };
-                                              
-                         
-                            authHelper.SetCurrentUser(ticket);
-                            lwUser = authHelper.GetCurrentUser();
+                            authHelper.SaveAuthTicket(ticket);
+                            
+                            context.SetUser( LightweightUserClaims.Parse( ticket.AccessToken ));
+
                         }
                         else
                         {
@@ -157,7 +173,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
                         return false;
                     }
                 }
-                
+
 
             }
 
@@ -166,8 +182,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             return IsAuthorized(httpContext);
-            
-            
+
+
         }
     }
 }

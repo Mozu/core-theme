@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Mozu.Core;
 using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
@@ -19,22 +20,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private Mozu.User.Contracts.Clients.IUserWebApiClient _userWebApiClient;
         private Mozu.User.Contracts.Clients.IAuthTicketWebApiClient _authTicketWebApiClient;
         private readonly ICookieProvider _cookieProvider;
+        private readonly ISiteBuilderApiContext _apiContext;
         private IAuthenticationHelper _authenticationHelper;
 
-        public AuthController(IAuthenticationHelper authenticationHelper, Mozu.User.Contracts.Clients.IUserWebApiClient userWebApiClient, Mozu.User.Contracts.Clients.IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider)
+        public AuthController(IAuthenticationHelper authenticationHelper, Mozu.User.Contracts.Clients.IUserWebApiClient userWebApiClient, Mozu.User.Contracts.Clients.IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext)
         {
             _authenticationHelper = authenticationHelper;
             _userWebApiClient = userWebApiClient;
             _authTicketWebApiClient = authTicketWebApiClient;
             _cookieProvider = cookieProvider;
+            _apiContext = apiContext;
         }
         //
         // GET: /StoreFront/Auth/
 
         public JsonDCResult LogOut()
         {
-            _authenticationHelper.LogOut();
-            _cookieProvider.SaveResponseCookie("order", new HttpCookie("")); // uggh, but it works
+            _authenticationHelper.LogOut(_apiContext);
+            //_cookieProvider.SaveResponseCookie("order", new HttpCookie("")); // uggh, but it works
             return new JsonDCResult()
             {
                 Data = new Response<string>()
@@ -70,7 +73,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //{
                 //    return Redirect("/admin");
                 //}
-                _authenticationHelper.SetCurrentUser(res.ReadAsSync().AuthTicket);
+                var ticket = res.ReadAsSync().AuthTicket;
+
+                _authenticationHelper.SaveAuthTicket(ticket);
+
+                _apiContext.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
 
                 if ( string.IsNullOrEmpty(returnUrl))
                 {
@@ -108,7 +115,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //}
                 //else
                 {
-                    _authenticationHelper.SetCurrentUser(res.ReadAsSync().AuthTicket);
+                    var ticket = res.ReadAsSync().AuthTicket;
+
+                    _authenticationHelper.SaveAuthTicket(ticket); 
+                    _apiContext.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
+                    
                     answer.Data = new
                     {
                         Message = String.Format("Logged in as {0}.", email)
@@ -174,8 +185,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
 
                 var user = res.ReadAsSync();
-                _authenticationHelper.SetCurrentUser(user);
-                var prof = _authenticationHelper.GetCurrentProfileToken();
+
+
+
+                _authenticationHelper.SaveAuthTicket(user);
+                _apiContext.SetUser(LightweightUserClaims.Parse(user.AccessToken));
+
+              
 
                 return new JsonDCResult
                 {
@@ -183,10 +199,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     {
                         Data = new VMUser
                         {
-                            FirstName = prof.FirstName,
-                            LastName = prof.LastName,
-                            Email = prof.EmailAddress,
-                            UserId = prof.UserId,
+                            FirstName = user.User.FirstName ,
+                            LastName = user.User.LastName,
+                            Email = user.User.EmailAddress,
+                            UserId = user.User.UserId,
                             IsAuthenticated = true
                         },
                         Success = true

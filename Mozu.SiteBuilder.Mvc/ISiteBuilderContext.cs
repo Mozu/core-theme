@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Mozu.Core;
 using Mozu.SiteBuilder.Mvc.Cms;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Models;
@@ -20,7 +20,11 @@ namespace Mozu.SiteBuilder.Mvc
         int TenantId { get; set; }
         int? SiteId { get; set; }
         int? SiteGroupId { get; set; }
-       
+
+
+        Mozu.Core.UserProfile UserProfile { get; }
+
+        IApiContext ApiContext { get; }
         PageContext PageContext { get; set; }
         ICatalogContext CatalogContext { get; set; }
         ISearchContext SearchContext { get; set; }

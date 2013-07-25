@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Mozu.Core;
 using Mozu.User.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Security;
 
@@ -25,6 +26,30 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             set { _ticketAPi = value; }
 
         }
+
+        public IApiContext ApiContext
+        {
+            get
+            {
+                return (IApiContext)System.Web.Mvc.DependencyResolver.Current.GetService(typeof(IApiContext));
+                
+            }
+            
+
+        }
+
+        public IAuthenticationHelper AuthenticationHelper
+        {
+            get
+            {
+                return (IAuthenticationHelper)System.Web.Mvc.DependencyResolver.Current.GetService(typeof(IAuthenticationHelper));
+
+            }
+
+
+        }
+
+
         public  bool IsAuthorized ( HttpContextBase httpContext)
         {
             if (bool.Parse(System.Configuration.ConfigurationManager.AppSettings["authorize"]))
@@ -35,21 +60,28 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                     throw new ArgumentNullException("httpContext");
                 }
 
-                var authHelper = new AuthenticationHelper(httpContext, new CookieProvider(httpContext, Core.Settings.MozuConfigurationManager.Settings));
+                var context = ApiContext;
+                var authHelper= AuthenticationHelper;
 
-                var lwUser = httpContext.User as Mozu.Core.LightweightUserClaims;
+               // var authHelper = new AuthenticationHelper(httpContext, provider: new CookieProvider(httpContext, Core.Settings.MozuConfigurationManager.Settings), cookieName:null);
 
-                if (lwUser == null)
+               // var lwUser = httpContext.User as Mozu.Core.LightweightUserClaims;
+
+                if (context.UserClaims  == null)
                 {
                     return false;
                 }
                 int siteId;
                 string siteStr;
-                lwUser.Bag.TryGetValue("SiteId", out siteStr);
+                context.UserClaims.Bag.TryGetValue("SiteId", out siteStr);
                 int.TryParse(siteStr, out siteId);
-               
-                
-                if ( siteId != SiteBuilderContext.Current.SiteId )
+
+
+                if (siteId != context.SiteId)
+                {
+                    return false;
+                }
+                if (context.UserClaims.ScopeType != UserScopeType.Tenant.ToString())
                 {
                     return false;
                 }
@@ -58,24 +90,24 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                 //    return false;
                 //}
 
-                if (RequiredBehaviors != null && RequiredBehaviors.Length > 0 &&
-                    (lwUser.BehaviorIds == null || !(RequiredBehaviors.All(x => lwUser.BehaviorIds.Contains(x)))))
-                {
-                    return false;
-                }
+                //if (RequiredBehaviors != null && RequiredBehaviors.Length > 0 &&
+                //    (context.UserClaims.BehaviorIds == null || !(RequiredBehaviors.All(x => lwUser.BehaviorIds.Contains(x)))))
+                //{
+                //    return false;
+                //}
 
 
-                if (lwUser.Expiration < DateTime.UtcNow.AddMinutes(-1) )
+                if (context.UserClaims.Expiration < DateTime.UtcNow.AddMinutes(-1))
                 {
-                    var ticket = authHelper.GetCurrentTicket();
+                    var ticket = authHelper.GetAuthTicket();
                     if ( ticket != null && ticket.RefreshTokenExpiration > DateTime.UtcNow )
                     {
                         var res = TicketAPI.RefreshUserAuthTicket(ticket.RefreshToken).Result;
                         if (res.ResponseMessage.IsSuccessStatusCode)
                         {
                             ticket = res.ReadAsSync();
-                            authHelper.SetCurrentUser(ticket);
-                            lwUser = authHelper.GetCurrentUser();
+                            authHelper.SaveAuthTicket(ticket);
+                          
                         }
                         else
                         {

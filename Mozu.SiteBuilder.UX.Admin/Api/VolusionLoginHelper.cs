@@ -10,6 +10,7 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.User.Contracts;
@@ -25,15 +26,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IPublicAdminAuthTicketWebApiClient _usersRepo;
         private readonly IAuthenticationHelper _authHelper;
         private readonly ISettings _settings;
+        private readonly ISiteBuilderApiContext _apiContext;
 
-        public VolusionLoginHelper(IMultiScopeInvitationWebApiClient invitationWebApiClient, IUserHelper userHelper, IPublicAdminAuthTicketWebApiClient usersRepo, IAuthenticationHelper authHelper, ISettings settings)
+        public VolusionLoginHelper(IMultiScopeInvitationWebApiClient invitationWebApiClient, IUserHelper userHelper, IPublicAdminAuthTicketWebApiClient usersRepo, IAuthenticationHelper authHelper, ISettings settings, ISiteBuilderApiContext apiContext )
         {
             _invitationWebApiClient = invitationWebApiClient;
             _userHelper = userHelper;
             _usersRepo = usersRepo;
             _authHelper = authHelper;
             _settings = settings;
-
+            _apiContext = apiContext;
         }
 
         public  List< Mozu.Tenant.Contracts.Tenant> VolusionLogIn(LoginUser user)
@@ -53,8 +55,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     ulr= _usersRepo.CreateUserAuthTicket(new Core.Api.Contracts.UserAuthInfo {EmailAddress = user.EmailAddress, Password = user.Password}).Result.ReadAsSync();
 
-                    _authHelper.SetCurrentUser(ulr.AccessToken);
-                    var user1 = _authHelper.GetCurrentUser();
+                    var ticket = new UserAuthTicket()
+                                                {
+                                                    AccessToken = ulr.AccessToken,
+                                                    AccessTokenExpiration = ulr.AccessTokenExpiration ,
+                                                    GrantedBehaviors = ulr.GrantedBehaviors ,
+                                                    RefreshToken = ulr.RefreshToken,
+                                                    RefreshTokenExpiration = ulr.RefreshTokenExpiration ,
+                                                    Scope = new Mozu.Core.Api.Contracts.UserScope()
+                                                                {
+                                                                    Id = ulr.Tenant != null ? ulr.Tenant.Id : -1,
+                                                                    Type = Mozu.Core.UserScopeType.Tenant.ToString()
+                                                                },
+                                                    User = ulr.User 
+                                                };
+                    _authHelper.SaveAuthTicket(ticket);
+                    var userTocken = LightweightUserClaims.Parse(ticket.AccessToken);
+                    _apiContext.SetUser(userTocken); 
 
                    // _invitationWebApiClient = new InvitationWebApiClient(new ServiceClientMessageHandler(new ApiContext() { SiteId = user.SiteId.GetValueOrDefault(0), TenantId = user.TenantId.GetValueOrDefault(0), UserClaims = user1 }, _settings));
                  
@@ -69,8 +86,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     dcUser.EmailAddress = invite.EmailAddress;
                     dcUser.LocaleCode = string.IsNullOrEmpty(dcUser.LocaleCode) ? "en-US" : dcUser.LocaleCode;
-                    var ticket = _invitationWebApiClient.With( x=> x.UserClaims = null ).CompleteInvitation(user.Invitation, dcUser).Result.ReadAsSync();
-                    _authHelper.SetCurrentUser(ticket);
+                    var ticket = _invitationWebApiClient.CloneWithApiContext( x=> x.UserClaims = null ).CompleteInvitation(user.Invitation, dcUser).Result.ReadAsSync();
+
+                    var userTocken = LightweightUserClaims.Parse(ticket.AccessToken);
+                    _apiContext.SetUser(userTocken); 
+
+
+                    _authHelper.SaveAuthTicket(ticket);
                 }
 
 
@@ -80,17 +102,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 ulr = _usersRepo.CreateUserAuthTicket(new Core.Api.Contracts.UserAuthInfo { EmailAddress = user.EmailAddress, Password = user.Password }).Result.ReadAsSync();
 
+                var userTocken = LightweightUserClaims.Parse(ulr.AccessToken);
+               
+                var ticket = new UserAuthTicket()
+                {
+                    AccessToken = ulr.AccessToken,
+                    AccessTokenExpiration = ulr.AccessTokenExpiration,
+                    GrantedBehaviors = ulr.GrantedBehaviors,
+                    RefreshToken = ulr.RefreshToken,
+                    RefreshTokenExpiration = ulr.RefreshTokenExpiration,
+                    Scope = new Mozu.Core.Api.Contracts.UserScope()
+                    {
+                        Id = ulr.Tenant != null ? ulr.Tenant.Id : -1 ,
+                        Type = Mozu.Core.UserScopeType.Tenant.ToString()
+                    },
+                    User = ulr.User
+                };
+                _apiContext.SetUser(userTocken);
+                _authHelper.SaveAuthTicket(ticket);
                 // var ulr2 = _usersRepo.LoginByScope(new Core.Api.Contracts.UserAuthInfo { EmailAddress = user.EmailAddress, Password = user.Password }, UserScopeType.SystemAdmin.ToString()).Result.ReadAsSync();
             }
-            _authHelper.SetCurrentUser( new UserAuthTicket()
-                                            {
-                                                AccessToken = ulr.AccessToken ,
-                                                AccessTokenExpiration = ulr.AccessTokenExpiration ,
-                                                GrantedBehaviors = ulr.GrantedBehaviors ,
-                                                RefreshToken = ulr.RefreshToken,
-                                                User = ulr.User ,
-                                                RefreshTokenExpiration = ulr.RefreshTokenExpiration 
-                                            });
+            
            
 
 

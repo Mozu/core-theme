@@ -5,6 +5,7 @@ using System.Reflection;
 using System.ServiceModel.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using System.Web.Http.Filters;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Mozu.Core.Api;
@@ -32,11 +33,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             //  GlobalFilters.Filters.Add(new SiteBuilderAuthorizeAttribute());
        
-            //configuration.Filters.Add(new ApiExceptionFilter(new ExceptionResponseBuilderCollection { IncludeExceptionDetails = true }, new ApiExceptionFilterLogger { IsErrorLoggingEnabled = false }));
+            //configuration.FiltdFilterdsers.Add(new ApiExceptionFilter(new ExceptionResponseBuilderCollection { IncludeExceptionDetails = true }, new ApiExceptionFilterLogger { IsErrorLoggingEnabled = false }));
           
             httpConfiguration.BindParameter(typeof(FilterCollection), new FilterCollectionRequestHandler());
             httpConfiguration.BindParameter(typeof(PagingParamaters), new PagingParamatersRequestHandlers());
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new HackApiHttpActionSelector());
+
+            
 
         }
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)

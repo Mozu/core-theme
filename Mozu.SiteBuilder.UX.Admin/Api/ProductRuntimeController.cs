@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          [WebInvoke(UriTemplate = "configure")]
          public async Task<Response<Newtonsoft.Json.Linq.JObject>> Configure([FromBody]Mozu.ProductRuntime.Contracts.ProductOptionSelections selections , [FromUri] string productCode)
          {
-             var res = (await _productRuntimeWebApiClient.ConfiguredProduct(selections, productCode)).ReadAsSync();
+             var res = (await _productRuntimeWebApiClient.ConfiguredProduct(selections, productCode, true )).ReadAsSync();
              Newtonsoft.Json.Linq.JObject jobj = Newtonsoft.Json.Linq.JObject.FromObject(res);
              return this.Single2(jobj);
          }

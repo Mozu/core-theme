@@ -41,8 +41,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
             _authenticationHelper = Substitute.For<IAuthenticationHelper>();
             _customerAccountWebApiClient = Substitute.For<ICustomerAccountWebApiClient>();
 
-            _lightweightUser = LightweightUserClaims.CreateAnonymous(scopeType:UserScopeType.Tenant );
-            _authenticationHelper.GetCurrentUser().Returns(_lightweightUser);
+            _lightweightUser = LightweightUserClaims.CreateForAnonymousShopper(1, 2);
+            
 
             _user = new Mozu.Core.Api.Contracts.User();
             _userWebApiClient.With(x => x.GetUser(_lightweightUser.UserId), _user);
@@ -170,7 +170,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Areas.StoreFront.Controllers
 
         public MyAccountController GetController()
         {
-            return new MyAccountController(_customerRepository, _customerAccountWebApiClient, _accountContactRepository, _userWebApiClient, _orderWebApiClient, _authenticationHelper);
+            return new MyAccountController(_customerRepository, _customerAccountWebApiClient, _accountContactRepository, _userWebApiClient, _orderWebApiClient, _authenticationHelper, null );
         }
     }
 }

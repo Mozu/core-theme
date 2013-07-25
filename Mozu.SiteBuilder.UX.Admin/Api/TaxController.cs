@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
         private readonly CollectionTaskUnMapper<TaxRate, DC.TaxableTerritory> _taxMapper = new CollectionTaskUnMapper<TaxRate, DC.TaxableTerritory>();
 
-        public TaxController(ITaxRateWebApiClient taxClient , Mozu.SiteSettings.General.Contracts.Clients.IGeneralSettingsWebApiClient  generalSettingsWebApiClient)
+        public TaxController(Mozu.SiteSettings.General.Contracts.Clients.IGeneralSettingsWebApiClient  generalSettingsWebApiClient)
         {
             
             _generalSettingsWebApiClient = generalSettingsWebApiClient;

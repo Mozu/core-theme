@@ -207,28 +207,28 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 
 
 
-    public class CategoryFacet: Mozu.ProductRuntime.Contracts.CategoryFacet
-    {
+    //public class CategoryFacet: Mozu.ProductRuntime.Contracts.CategoryFacet
+    //{
         
-    }
+    //}
     public class ProductSearchResult : ProductCollection 
     {
         [DataMember(EmitDefaultValue = false)]
         public object Respell { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public CategoryFacet CategoryFacet { get; set; }
+        //[DataMember(EmitDefaultValue = false)]
+        //public CategoryFacet CategoryFacet { get; set; }
 
         public string Query { get; set; }
     }
    
-    public class CategoryFacetItem:  Mozu.ProductRuntime.Contracts.CategoryFacetItem
-    {
+    //public class CategoryFacetItem:  Mozu.ProductRuntime.Contracts.CategoryFacetItem
+    //{
 
-        public string Name { get; set; }
+    //    public string Name { get; set; }
 
-        public string Url { get; set; }
-    }
+    //    public string Url { get; set; }
+    //}
     //public class ProductAttribute: Mozu.ProductRuntime.Contracts.a.ProductAttribute
     //{
         

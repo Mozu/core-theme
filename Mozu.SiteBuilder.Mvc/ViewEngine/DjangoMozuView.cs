@@ -131,18 +131,18 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             ViewData = viewContext.ViewData;
             var siteBuilderContext = SiteBuilderContext.GetFromContext(viewContext.HttpContext ) ?? SiteBuilderContext.Current;
             var requestContext = new Dictionary<string, object>(viewContext.ViewData);
-            var authenticationHelper = new AuthenticationHelper(viewContext.HttpContext, new CookieProvider(viewContext.HttpContext,Core.Settings.MozuConfigurationManager.Settings));
-            var gcu = authenticationHelper.GetCurrentUser();
-            var profile = authenticationHelper.GetCurrentProfileToken();
+          //  var authenticationHelper = new AuthenticationHelper(viewContext.HttpContext, provider: new CookieProvider(viewContext.HttpContext,Core.Settings.MozuConfigurationManager.Settings),  cookieName:null);
+           // var gcu = authenticationHelper.GetCurrentUser();
+           // var profile = authenticationHelper.GetCurrentProfileToken();
             HtmlHelper html;
             var user = new Mozu.SiteBuilder.UX.Models.Customers.User()
             {
-                Email = profile != null ? profile.EmailAddress : null,
-                FirstName = profile != null ? profile.FirstName : null,
-                LastName = profile != null ? profile.LastName : null,
-                UserId = gcu.UserId,
-                IsAuthenticated = !gcu.IsAnonymous && gcu.IsAuthenticated,
-                IsAnonymous = gcu.IsAnonymous
+                Email = siteBuilderContext.UserProfile.EmailAddress  ,//profile != null ? profile.EmailAddress : null,
+                FirstName = siteBuilderContext.UserProfile.FirstName ,// profile != null ? profile.FirstName : null,
+                LastName = siteBuilderContext.UserProfile.LastName,// profile != null ? profile.LastName : null,
+                UserId =siteBuilderContext.ApiContext.UserClaims.UserId ,// gcu.UserId,
+                IsAuthenticated = siteBuilderContext.ApiContext.UserClaims.IsAuthenticated,//!gcu.IsAnonymous && gcu.IsAuthenticated,
+                IsAnonymous = siteBuilderContext.ApiContext.UserClaims.IsAnonymous 
             };
             requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"] = (System.Collections.Hashtable)viewContext.HttpContext.Items["templateVariables"] ?? new System.Collections.Hashtable(StringComparer.OrdinalIgnoreCase);
             requestContext["Html"] = requestContext["html"] = html = new HtmlHelper(viewContext, this);
