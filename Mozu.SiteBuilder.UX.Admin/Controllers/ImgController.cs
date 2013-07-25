@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         IApiContext _appCtx;
         public ImgController(IDocumentListWebApiClient docRepo, IApiContext appCtx)
         {
-            _docRepo = docRepo.With(x => { x.SiteId = null; });
+            _docRepo = docRepo.CloneWith(x => { x.SiteId = null; });
            
             _appCtx =appCtx;
             ((ServiceClientBase)_docRepo).Options.MaxSize = int.MaxValue;

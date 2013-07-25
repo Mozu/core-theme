@@ -78,35 +78,35 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
 
 
-            while (true)
-            {
-                if ( res.CategoryFacet == null || res.CategoryFacet.Items.Count  == 0 )
-                {
-                    return ;
-                }
-                if (res.CategoryFacet.Items.Count > 1)
-                {
-                    break;
-                }
-                res.CategoryFacet.Items = res.CategoryFacet.Items[0].Children;
-            }
+            //while (true)
+            //{
+            //    if ( res.CategoryFacet == null || res.CategoryFacet.Items.Count  == 0 )
+            //    {
+            //        return ;
+            //    }
+            //    if (res.CategoryFacet.Items.Count > 1)
+            //    {
+            //        break;
+            //    }
+            //    res.CategoryFacet.Items = res.CategoryFacet.Items[0].Children;
+            //}
 
 
-            var stack = new Stack<CategoryFacetItem>();
+            //var stack = new Stack<CategoryFacetItem>();
 
-            res.CategoryFacet.Items.ForEach(cf => stack.Push(AutoMapper.Mapper.Map <CategoryFacetItem >(cf)));
+            //res.CategoryFacet.Items.ForEach(cf => stack.Push(AutoMapper.Mapper.Map <CategoryFacetItem >(cf)));
 
 
 
-            while (stack.Count > 0)
-            {
-                var curr = stack.Pop();
+            //while (stack.Count > 0)
+            //{
+            //    var curr = stack.Pop();
               
-                curr.Name = this.SiteContext.CatalogContext.AllCategories .Where(_cat => _cat.CategoryId == curr.CategoryId).Select(_cat => _cat.Name).FirstOrDefault();
-                curr.Url = string.Format("/search?query={0}&categoryId={1}", res.Query, curr.CategoryId);
+            //    curr.Name = this.SiteContext.CatalogContext.AllCategories .Where(_cat => _cat.CategoryId == curr.CategoryId).Select(_cat => _cat.Name).FirstOrDefault();
+            //    curr.Url = string.Format("/search?query={0}&categoryId={1}", res.Query, curr.CategoryId);
 
-                if (curr.Children != null) curr.Children.ForEach(c => stack.Push(AutoMapper.Mapper.Map <CategoryFacetItem >(c)));
-            }
+            //    if (curr.Children != null) curr.Children.ForEach(c => stack.Push(AutoMapper.Mapper.Map <CategoryFacetItem >(c)));
+            //}
 
             
             

@@ -22,24 +22,29 @@ namespace Mozu.SiteBuilder.Mvc
 {
     public class SiteBuilderApiContext : MozuServiceApiContext, ISiteBuilderApiContext
     {
+        private readonly ICookieProvider _cookieProvider;
         private readonly ISettings _settings;
-        private readonly AuthenticationHelper _authenticationHelper;
+        private readonly IAuthenticationHelper _authenticationHelper;
+
         internal const string CONTEXT_KEY = "V:STORECTX";
         internal const string COOKIENAME = "SBCONTEXT";
 
 
 
 
-        public SiteBuilderApiContext(System.Web.HttpContextBase context, Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper authHelper, ICookieProvider cookieProvider , ISettings settings , AuthenticationHelper authenticationHelper )
+        public SiteBuilderApiContext(System.Web.HttpContextBase context, ICookieProvider cookieProvider, ISettings settings, IAuthenticationHelper authenticationHelper)
             : base()
         {
             TenantId = -1;
+            _cookieProvider = cookieProvider;
             _settings = settings;
             _authenticationHelper = authenticationHelper;
+
             //if using the rp then default to active.  rp will send the datamode header.
             CmsDraftState = _settings.AppSettings("ReverseProxy") == "true" ? Mozu.Content.Contracts.PublishStates.Active  : Mozu.Content.Contracts.PublishStates.Latest;// "active";
 
             Load(context, cookieProvider);
+            LoadUser(context, cookieProvider);
         }
 
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Site> g_domainSiteLookup = new ConcurrentDictionary<string, Site>(StringComparer.OrdinalIgnoreCase);
@@ -49,11 +54,27 @@ namespace Mozu.SiteBuilder.Mvc
         /// </summary>
         public string CmsDraftState { get; set; }
 
+        public void LoadUser(HttpContextBase ctx, ICookieProvider cookieProvider)
+        {
+            var ticket = _authenticationHelper.GetAuthTicket();
+            LightweightUserClaims claims;
+            if (ticket != null && LightweightUserClaims.TryParse(ticket.AccessToken, out claims))
+            {
+                //todo validate tenant and site 
+                this.UserClaims = claims;
+            }
+                
+        }
+
+       
+
+        
+
         public void Load(HttpContextBase ctx, ICookieProvider cookieProvider)
         {
             this.LocaleCode = "en-US";
             this.CurrencyCode = "usd";
-            this.UserClaims = _authenticationHelper.GetCurrentUser();
+            
             HttpRequestBase req = null;
             try
             {
@@ -158,6 +179,16 @@ namespace Mozu.SiteBuilder.Mvc
             var sites = client.GetSites(0, 1, null, "domainname eq " + host).Result.ReadAsSync();
             return sites.Items.FirstOrDefault();
 
+        }
+
+
+    
+        
+
+
+        public void SetUser(LightweightUserClaims user)
+        {
+            this.UserClaims = user;
         }
     }
 }

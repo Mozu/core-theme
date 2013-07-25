@@ -19,11 +19,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private Mozu.User.Contracts.Clients.IUserWebApiClient _userWebApiClient;
         private Mozu.User.Contracts.Clients.IAuthTicketWebApiClient _authTicketWebApiClient;
         private readonly ICookieProvider _cookieProvider;
-        private AuthenticationHelper _authenticationHelper;
+        
 
-        public AddressSchemesController(AuthenticationHelper authenticationHelper, Mozu.User.Contracts.Clients.IUserWebApiClient userWebApiClient, Mozu.User.Contracts.Clients.IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider)
+        public AddressSchemesController( Mozu.User.Contracts.Clients.IUserWebApiClient userWebApiClient, Mozu.User.Contracts.Clients.IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider)
         {
-            _authenticationHelper = authenticationHelper;
+            
             _userWebApiClient = userWebApiClient;
             _authTicketWebApiClient = authTicketWebApiClient;
             _cookieProvider = cookieProvider;

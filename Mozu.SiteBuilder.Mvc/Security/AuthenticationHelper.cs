@@ -9,6 +9,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Web.Security;
 using Mozu.Core.Api.Contracts;
+using Mozu.Core.Settings;
 using Mozu.User.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.Mvc.Security
@@ -27,13 +28,14 @@ namespace Mozu.SiteBuilder.Mvc.Security
     /// </summary>
     public class AuthenticationHelper : IAuthenticationHelper
     {
-        //public static String COOKIENAME = "sbAuth";
-        private HttpContextBase _httpContext;
+        private readonly ISettings _settings;
+        ////public static String COOKIENAME = "sbAuth";
+        //private HttpContextBase _httpContext;
 
-        public AuthenticationHelper(HttpContextBase httpContext, ICookieProvider provider = null, string cookieName = null)
+        public AuthenticationHelper(ICookieProvider provider, ISettings settings)
         {
-            _httpContext = httpContext;
-            CookieName = cookieName ?? System.Configuration.ConfigurationManager.AppSettings["authCookieName"];
+            _settings = settings;
+            CookieName = _settings.AppSettings("authCookieName");
             CookieProvider = provider;
         }
 
@@ -42,131 +44,154 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
         public ICookieProvider CookieProvider { get; set; }
 
-        public void SetCurrentUser(UserAuthTicket ticket)
-        {
-            LightweightUserClaims id;
-            UserProfile pt = null;
-            if (ticket == null || String.IsNullOrEmpty(ticket.AccessToken))
-            {
-                id = LightweightUserClaims.CreateAnonymous(scopeType : UserScopeType.Tenant);
-                ticket = ticket ?? new UserAuthTicket();
-                ticket.AccessToken  = id.ToAccessToken();
-            }
-            else
-            {
-                id = LightweightUserClaims.Parse(ticket.AccessToken);
+        //public void SetCurrentUser(UserAuthTicket ticket)
+        //{
+        //    LightweightUserClaims id;
+        //    UserProfile pt = null;
+        //    if (ticket == null || String.IsNullOrEmpty(ticket.AccessToken))
+        //    {
+        //        id = LightweightUserClaims.CreateAnonymous(scopeType : UserScopeType.Tenant);
+        //        ticket = ticket ?? new UserAuthTicket();
+        //        ticket.AccessToken  = id.ToAccessToken();
+        //    }
+        //    else
+        //    {
+        //        id = LightweightUserClaims.Parse(ticket.AccessToken);
                
-                //if ( !string.IsNullOrEmpty( ticket.User ) )
-                //{
-                //    pt = ticket.User;
-                //}
-            }
+        //        //if ( !string.IsNullOrEmpty( ticket.User ) )
+        //        //{
+        //        //    pt = ticket.User;
+        //        //}
+        //    }
            
-            Thread.CurrentPrincipal = id;
-            if (_httpContext != null)
-            {
-                _httpContext.Items["ticket"] = ticket;
-                _httpContext.User = id;
-                _httpContext.Items["UserProfile"] = ticket.User ;
-            }
+        //    Thread.CurrentPrincipal = id;
+        //    if (_httpContext != null)
+        //    {
+        //        _httpContext.Items["ticket"] = ticket;
+        //        _httpContext.User = id;
+        //        _httpContext.Items["UserProfile"] = ticket.User ;
+        //    }
 
 
             
-            SetCookie(ticket);
-        }
+        //    SetCookie(ticket);
+        //}
 
-        /// <summary>
-        /// Allows current user to be set with just an accesstoken.
-        /// </summary>
-        /// <param name="accessToken"></param>
-        public void SetCurrentUser(string accessToken)
-        {
-            if (!String.IsNullOrEmpty(accessToken))
-            {
-                var claim = LightweightUserClaims.Parse(accessToken);
-                SetCurrentUser(new UserAuthTicket { AccessToken = accessToken, AccessTokenExpiration = claim.Expiration });
-            }
-            else
-            {
-                SetCurrentUser((UserAuthTicket)null);
-            }
-        }
+        ///// <summary>
+        ///// Allows current user to be set with just an accesstoken.
+        ///// </summary>
+        ///// <param name="accessToken"></param>
+        //public void SetCurrentUser(string accessToken)
+        //{
+        //    if (!String.IsNullOrEmpty(accessToken))
+        //    {
+        //        var claim = LightweightUserClaims.Parse(accessToken);
+        //        SetCurrentUser(new UserAuthTicket { AccessToken = accessToken, AccessTokenExpiration = claim.Expiration });
+        //    }
+        //    else
+        //    {
+        //        SetCurrentUser((UserAuthTicket)null);
+        //    }
+        //}
      
 
 
-        public UserAuthTicket GetCurrentTicket ()
+        //public UserAuthTicket GetCurrentTicket ()
+        //{
+        //    UserAuthTicket ticket = null;
+        //    if (_httpContext != null)
+        //    {
+        //        ticket = (UserAuthTicket) _httpContext.Items["ticket"];
+        //    }
+        //    return ticket ?? GetTicketFromRequest();
+
+        //}
+
+        //public Mozu.Core.Api.Contracts.UserProfile GetCurrentProfileToken()
+        //{
+
+        //    return _httpContext.Items["UserProfile"] as Mozu.Core.Api.Contracts.UserProfile;
+        //}
+
+        //public LightweightUserClaims GetCurrentUser()
+        //{
+        //    IPrincipal principal = null;
+
+        //    var context = _httpContext;
+        //    if (context != null)
+        //        principal = context.User;
+
+        //    return principal as LightweightUserClaims
+        //           ?? Thread.CurrentPrincipal as LightweightUserClaims
+        //           ?? LightweightUserClaims.CreateAnonymous(scopeType: UserScopeType.Tenant);
+        //}
+
+        //public void SetCookie(UserAuthTicket ticket)
+        //{
+        //    var cookie = ticket.ToCookie(CookieName );
+        //    CookieProvider.SaveResponseCookie(CookieName, cookie);
+        //}
+
+        //public UserAuthTicket GetTicketFromRequest()
+        //{
+        //    var cookie = CookieProvider.GetRequestCookie(CookieName);
+
+        //    if (cookie != null && cookie["AccessToken"] !=null)
+        //    {
+        //        return cookie.ToTicket();
+        //    }
+
+        //    return null;
+        //}
+        //public UserAuthTicket CreateAnonymousTicket()
+        //{
+        //    var user = LightweightUserClaims.CreateAnonymous(scopeType: UserScopeType.Tenant);
+
+           
+        //    return new UserAuthTicket()
+        //    {
+        //        AccessToken = user.ToAccessToken(),
+        //        User = new Core.Api.Contracts.UserProfile()
+        //                   {
+        //                       UserId = user.UserId 
+        //                   },
+        //        AccessTokenExpiration = user.Expiration
+        //    };
+        //}
+        //public void LogOut()
+        //{
+        //    SetCurrentUser((UserAuthTicket)null);
+        //    var cookie = new HttpCookie("")
+        //    {
+        //        Expires = DateTime.MinValue,
+        //    };
+        //    CookieProvider.SaveResponseCookie(CookieName, cookie);
+        //}
+
+
+
+        public void LogOut(IApiContext context)
         {
-            UserAuthTicket ticket = null;
-            if (_httpContext != null)
-            {
-                ticket = (UserAuthTicket) _httpContext.Items["ticket"];
-            }
-            return ticket ?? GetTicketFromRequest();
+            ((ISiteBuilderApiContext) context).SetUser(null);
+            SaveAuthTicket(null);
 
         }
 
-        public Mozu.Core.Api.Contracts.UserProfile GetCurrentProfileToken()
+        public void SaveAuthTicket(UserAuthTicket ticket)
         {
-
-            return _httpContext.Items["UserProfile"] as Mozu.Core.Api.Contracts.UserProfile;
+            var cookie = ticket.ToCookie(CookieName);
+            CookieProvider.SaveResponseCookie(CookieName , cookie );
+            
         }
 
-        public LightweightUserClaims GetCurrentUser()
-        {
-            IPrincipal principal = null;
-
-            var context = _httpContext;
-            if (context != null)
-                principal = context.User;
-
-            return principal as LightweightUserClaims
-                   ?? Thread.CurrentPrincipal as LightweightUserClaims
-                   ?? LightweightUserClaims.CreateAnonymous(scopeType: UserScopeType.Tenant);
-        }
-
-        public void SetCookie(UserAuthTicket ticket)
-        {
-            var cookie = ticket.ToCookie(CookieName );
-            CookieProvider.SaveResponseCookie(CookieName, cookie);
-        }
-
-        public UserAuthTicket GetTicketFromRequest()
+        public UserAuthTicket GetAuthTicket()
         {
             var cookie = CookieProvider.GetRequestCookie(CookieName);
-
-            if (cookie != null && cookie["AccessToken"] !=null)
+            if (cookie != null)
             {
                 return cookie.ToTicket();
             }
-
             return null;
         }
-        public UserAuthTicket CreateAnonymousTicket()
-        {
-            var user = LightweightUserClaims.CreateAnonymous(scopeType: UserScopeType.Tenant);
-
-           
-            return new UserAuthTicket()
-            {
-                AccessToken = user.ToAccessToken(),
-                User = new Core.Api.Contracts.UserProfile()
-                           {
-                               UserId = user.UserId 
-                           },
-                AccessTokenExpiration = user.Expiration
-            };
-        }
-        public void LogOut()
-        {
-            SetCurrentUser((UserAuthTicket)null);
-            var cookie = new HttpCookie("")
-            {
-                Expires = DateTime.MinValue,
-            };
-            CookieProvider.SaveResponseCookie(CookieName, cookie);
-        }
-
-
-       
     }
 }

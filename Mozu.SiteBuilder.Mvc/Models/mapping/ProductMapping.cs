@@ -19,8 +19,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
         {
 
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductSearchResult, ProductSearchResult>();
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.CategoryFacet, CategoryFacet>();
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.CategoryFacetItem, CategoryFacetItem>();
+          //  Mapper.CreateMap<Mozu.ProductRuntime.Contracts.CategoryFacet, CategoryFacet>();
+          //  Mapper.CreateMap<Mozu.ProductRuntime.Contracts.CategoryFacetItem, CategoryFacetItem>();
            // Mapper.CreateMap<ProductRuntime.Contracts.CategoryFacet, CategoryFacet>();
 
 

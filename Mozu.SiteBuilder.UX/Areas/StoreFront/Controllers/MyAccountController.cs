@@ -29,9 +29,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IUserWebApiClient _userWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly IAuthenticationHelper _authenticationHelper;
+        private readonly ISiteBuilderApiContext _apiContext;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
 
-        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository, IUserWebApiClient userWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthenticationHelper authenticationHelper)
+        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository, IUserWebApiClient userWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext)
         {
             if(customerRepository == null)
             {
@@ -69,6 +70,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _userWebApiClient = userWebApiClient;
             _orderWebApiClient = orderWebApiClient;
             _authenticationHelper = authenticationHelper;
+            _apiContext = apiContext;
         }
 
         [SiteBuilderAuthorize()]
@@ -162,10 +164,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         protected LightweightUserClaims CurrentUser
         {
-            get
-            {
-                return _authenticationHelper.GetCurrentUser();
-            }
+            get { return _apiContext.UserClaims; }
         }
     }
 }

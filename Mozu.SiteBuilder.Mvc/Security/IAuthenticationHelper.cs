@@ -6,16 +6,8 @@ namespace Mozu.SiteBuilder.Mvc.Security
 {
     public interface IAuthenticationHelper
     {
-        void LogOut();
-
-        LightweightUserClaims GetCurrentUser();
-
-        Mozu.Core.Api.Contracts.UserProfile GetCurrentProfileToken();
-
-        UserAuthTicket GetCurrentTicket();
-
-        void SetCurrentUser(UserAuthTicket authTicket);
-
-        void SetCurrentUser(string authToken);
+        void LogOut(IApiContext context);
+        void SaveAuthTicket(UserAuthTicket ticket );
+        UserAuthTicket GetAuthTicket();
     }
 }

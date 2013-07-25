@@ -31,9 +31,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         
         private readonly IRolesHelper _rolesHelper;
         private readonly ISettings _settings;
+        private readonly ISiteBuilderApiContext _apiContext;
         private ILogger _log;
 
-        public AuthController(IVolusionLoginHelper loginHelper, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper, IPasswordHelper passwordHelper, IRolesHelper rolesHelper , ISettings settings )
+        public AuthController(IVolusionLoginHelper loginHelper, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ICurrentUserHelper currentUserHelper, IContextSwitcher contextSwitcher, IUserHelper userHelper, IPasswordHelper passwordHelper, IRolesHelper rolesHelper , ISettings settings , ISiteBuilderApiContext  apiContext)
         {
             _authenticationHelper = authHelper;
             _loginHelper = loginHelper;
@@ -45,6 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             
             _rolesHelper = rolesHelper;
             _settings = settings;
+            _apiContext = apiContext;
 
             _log = LoggingService.LoggerFor<AuthController>();
         }
@@ -147,9 +149,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             if (ticket == null || ticket.AccessToken == null || ticket.TenantId == 0)
                 throw new HttpException(400, "Invalid login ticket provided.");
-
             var claim = LightweightUserClaims.Parse(ticket.AccessToken);
-            _authenticationHelper.SetCurrentUser(new Mozu.Core.Api.Contracts.UserAuthTicket { AccessToken = ticket.AccessToken, RefreshToken = ticket.RefreshToken, AccessTokenExpiration = claim.Expiration });
+            var authTicket = new Mozu.Core.Api.Contracts.UserAuthTicket {AccessToken = ticket.AccessToken, RefreshToken = ticket.RefreshToken, AccessTokenExpiration = claim.Expiration};
+
+
+            
+            _authenticationHelper.SaveAuthTicket(authTicket);
+            _apiContext.SetUser(claim );
+          
 
             try
             {
@@ -256,7 +263,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public ActionResult Launchpad()
         {
-            var userId = _authenticationHelper.GetCurrentUser().UserId;
+            var userId = _apiContext.UserClaims.UserId;
             var res = _rolesHelper.SiteRolesList(userId);
             return View("Roles", res);
         }
@@ -301,7 +308,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public ActionResult Logout()
         {
-            _authenticationHelper.LogOut();
+            _authenticationHelper.LogOut(_apiContext );
             return Redirect("/admin/auth");
         }
     }
