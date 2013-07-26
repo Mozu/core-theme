@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
           
             httpConfiguration.BindParameter(typeof(FilterCollection), new FilterCollectionRequestHandler());
             httpConfiguration.BindParameter(typeof(PagingParamaters), new PagingParamatersRequestHandlers());
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new HackApiHttpActionSelector());
+          //  GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new HackApiHttpActionSelector());
 
             
 

@@ -10,6 +10,7 @@ using System.Web.Http;
 using AutoMapper;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts;
+using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
 //using Mozu.ShippingAdmin.Contracts;
 using Mozu.ShippingAdmin.Contracts.Clients;
@@ -30,7 +31,7 @@ using Mozu.SiteSettings.Shipping.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/shipping", SuppressDescriptorGeneration = true)]
     public class ShippingController : BaseController
     {
         private readonly IShippingClassWebApiClient _shippingClassClient;
@@ -78,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //}
 
 
-        [WebGet(UriTemplate = "Settings/read")]
+		[HttpGetRoute(UriTemplate = "Settings/read")]
         public async Task<Response<SiteShippingSettings>> GetSettings()
         {
             var res = (await _siteShippingSettingsClient.GetSiteShippingSettings()).ReadAsSync();
@@ -92,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [WebInvoke(UriTemplate = "Settings/edit")]
+        [HttpPostRoute(UriTemplate = "Settings/edit")]
         public async Task<Response<SiteShippingSettings>> EditSettings(SiteShippingSettings settings )
         {
             var dc = Mapper.Map<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(settings);
@@ -131,7 +132,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //return Single2<SiteShippingSettings>(settings);
         }
 
-        [WebGet(UriTemplate = "carrierRates")]
+		[HttpGetRoute(UriTemplate = "carrierRates")]
         public async Task<Response<List<KeyValuePair<string, string>>>> GetAllCarrierRates(string id = null )
         {
             if (!string.IsNullOrEmpty(id))
@@ -156,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        [WebGet(UriTemplate = "configuredRates")]
+		[HttpGetRoute(UriTemplate = "configuredRates")]
         public async Task<Response<List<KeyValuePair<string, string>>>> GetConfiguredRates()
         {
             var res = (await _carrierConfigurationWebApiClient .GetConfigurations(startIndex:0,pageSize:600)).ReadAsSync();
@@ -168,7 +169,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-        [WebGet(UriTemplate = "carrierSettings/read")]
+        [HttpGetRoute(UriTemplate = "carrierSettings/read")]
         public async Task<Response<List<CarrierConfiguration>>> GetCarrierSettings()
         {
             var res = (await _carrierConfigurationWebApiClient.GetConfigurations(startIndex: 0, pageSize: 600)).ReadAsSync();
@@ -193,7 +194,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [WebInvoke(UriTemplate = "carrierSettings/edit")]
+        [HttpPostRoute(UriTemplate = "carrierSettings/edit")]
         public async Task<Response<List<CarrierConfiguration>>> EditCarrierSettings(List<CarrierConfiguration> settings)
         {
 
@@ -254,7 +255,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
       
 
 
-        //[WebGet(UriTemplate = "activerateprovider/read")]
+        //[HttpGetRoute(UriTemplate = "activerateprovider/read")]
         //public Task<Response<Feature>> GetActiveRateProvider()
         //{
         //    var activeRateProvider = _siteShippingSettingsClient.GetActiveRateProvider().Result.ReadAsAsync().Result;
@@ -274,7 +275,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return Single(feature);
         //}
 
-        //[WebGet(UriTemplate = "activerateprovider/set/?id={id}")]
+        //[HttpGetRoute(UriTemplate = "activerateprovider/set/?id={id}")]
         //public Task<Response<Feature>> SetActiveRateProvider(int id)
         //{
         //    var activeRateProvider = _siteShippingSettingsClient.UpdateActiveRateProvider(new Mozu.Core.Api.Contracts.Feature { Id = id, Name = (id == 1) ? "customrates" : "uspsrates" }).Result.ReadAsAsync().Result;
@@ -294,7 +295,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return Single(feature);
         //}
 
-        //[WebGet(UriTemplate = "class/read")]
+        //[HttpGetRoute(UriTemplate = "class/read")]
         //public Task<Response<List<ShippingClass>>> GetShippingClasses()
         //{
         //    var classes = _shippingClassClient.GetShippingClasses(0, 1000, null, null).Result.ReadAsAsync();
@@ -304,7 +305,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return List(shippingClasses, 1);
         //}
 
-        //[WebInvoke(Method = "POST", UriTemplate = "rate/create")]
+        //[HttpPostRoute(UriTemplate = "rate/create")]
         //public Task<Response<List<ShippingRate>>> CreateShippingRate(List<ShippingRate> rates)
         //{
         //    var ret = new List<ShippingRate>();
@@ -320,7 +321,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return List(ret, 1);
         //}
 
-        //[WebInvoke(Method = "POST", UriTemplate = "rate/delete")]
+        //[HttpPostRoute(UriTemplate = "rate/delete")]
         //public Task<Response<List<ShippingRate>>> DeleteShippingRate(List<ShippingRate> rates)
         //{
         //    var ret = (from shippingRate in rates let res = _shippingRateClient.DeleteShippingRate(shippingRate.ShippingRateId).Result.ReadAsAsync().Result select Mapper.Map<ShippingRate>(shippingRate)).ToList();
@@ -328,7 +329,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return List(ret);
         //}
 
-        //[WebInvoke(Method = "POST", UriTemplate = "rate/edit")]
+        //[HttpPostRoute(UriTemplate = "rate/edit")]
         //public Task<Response<List<ShippingRate>>> UpdateShippingRate(List<ShippingRate> rates)
         //{
         //    var ret = (from shippingRate in rates
@@ -341,7 +342,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return List(ret, 1);
         //}
 
-        //[WebGet(UriTemplate = "domesticrates/read")]
+        //[HttpGetRoute(UriTemplate = "domesticrates/read")]
         //public Task<Response<List<ShippingRate>>> GetDomesticRates()
         //{
         //    List<ShippingRate> domesticRates = null;
@@ -357,7 +358,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return List(domesticRates, 1);
         //}
 
-        //[WebGet(UriTemplate = "internationalrates/read")]
+        //[HttpGetRoute(UriTemplate = "internationalrates/read")]
         //public Task<Response<List<ShippingRate>>> GetInternationalRates()
         //{
         //    List<ShippingRate> intlRates = null;
@@ -373,7 +374,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return List(intlRates, 1);
         //}
 
-        //[WebGet(UriTemplate = "uspsglobalshared/read")]
+        //[HttpGetRoute(UriTemplate = "uspsglobalshared/read")]
         //public Task<Response<List<SharedShippingMethod>>> GetUspsSharedShippingMethods(PagingParamaters pagingParams, FilterCollection extFilter)
         //{
         //    if (pagingParams.id == null)
@@ -400,7 +401,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return EmptyList<SharedShippingMethod>();
         //}
 
-        //[WebInvoke(Method = "POST", UriTemplate = "uspsconfig/create")]
+        //[HttpPostRoute(UriTemplate = "uspsconfig/create")]
         //public Task<Response<UspsConfiguration>> CreateUspsConfiguration(UspsConfiguration model)
         //{
         //    var cfg = Mapper.Map<UspsConfiguration>(_uspsShippingInstanceClient.CreateUspsConfiguration(Mapper.Map<Mozu.UspsShippingAdmin.Contracts.UspsConfiguration>(model)).Result.ReadAsAsync().Result);
@@ -408,7 +409,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return Single(cfg);
         //}
 
-        //[WebGet(UriTemplate = "uspsconfig/read")]
+        //[HttpGetRoute(UriTemplate = "uspsconfig/read")]
         //public Task<Response<UspsConfiguration>> GetUspsConfiguration(PagingParamaters pagingParams, FilterCollection extFilter)
         //{
         //    UspsConfiguration res = null;
@@ -425,7 +426,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return Single(res);
         //}
 
-        //[WebInvoke(Method = "POST", UriTemplate = "uspsconfig/edit")]
+        //[HttpPostRoute(UriTemplate = "uspsconfig/edit")]
         //public Task<Response<UspsConfiguration>> UpdateUspsConfiguration(UspsConfiguration model)
         //{
         //    var cfg = Mapper.Map<UspsConfiguration>(_uspsShippingInstanceClient.UpdateUspsConfiguration(Mapper.Map<Mozu.UspsShippingAdmin.Contracts.UspsConfiguration>(model)).Result.ReadAsAsync().Result);
@@ -433,7 +434,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return Single(cfg);
         //}
 
-        //[WebGet(UriTemplate = "regions/read")]
+        //[HttpGetRoute(UriTemplate = "regions/read")]
         //public Task<Response<List<SiteShippingRegion>>> GetShippingRegions()
         //{
         //    var regions = Mapper.Map<List<SiteShippingRegion>>(_siteShippingSettingsClient.GetShippingRegions().Result.ReadAsSync());
@@ -441,7 +442,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return List(regions, 1);
         //}
 
-        //[WebInvoke(Method = "POST", UriTemplate = "regions/edit")]
+        //[HttpPostRoute(UriTemplate = "regions/edit")]
         //public Task<Response<List<SiteShippingRegion>>> UpdateShippingRegions(List<SiteShippingRegion> r)
         //{
         //    var dc = Mapper.Map<List<Mozu.SiteSettings.Shipping.Contracts.SiteShippingRegion>>(r);
@@ -451,7 +452,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return List(siteShippingRegions, 1);
         //}
 
-        //[WebGet(UriTemplate = "originaddress/read")]
+        //[HttpGetRoute(UriTemplate = "originaddress/read")]
         //public Task<Response<SiteShippingOriginAddress>> GetOriginAddress()
         //{
         //    SiteShippingOriginAddress origin = null;
@@ -468,7 +469,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return Single(origin);
         //}
 
-        //[WebInvoke(Method = "POST", UriTemplate = "originaddress/edit")]
+        //[HttpPostRoute(UriTemplate = "originaddress/edit")]
         //public Task<Response<SiteShippingOriginAddress>> UpdateOriginAddress(SiteShippingOriginAddress address)
         //{
         //    address.Country = "US"; // TODO: Make this not be US only
@@ -480,7 +481,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return Single(siteShippingOriginAddress);
         //}
 
-        //[WebInvoke(Method = "POST", UriTemplate = "originaddress/create")]
+        //[HttpPostRoute(UriTemplate = "originaddress/create")]
         //public Task<Response<SiteShippingOriginAddress>> CreateOriginAddress(SiteShippingOriginAddress a)
         //{
         //    a.SenderName = "Auto generated";
@@ -494,7 +495,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return Single(siteShippingOriginAddress);
         //}
 
-        //[WebGet(UriTemplate = "settings/read")]
+        //[HttpGetRoute(UriTemplate = "settings/read")]
         //public Task<Response<SiteShippingSettings>> GetSetting()
         //{
         //    var setting = _siteShippingSettingsClient.GetSiteSettings().Result.ReadAsSync();
@@ -504,7 +505,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return Single(siteShippingSettings);
         //}
 
-        //[WebInvoke(Method = "POST", UriTemplate = "settings/edit")]
+        //[HttpPostRoute(UriTemplate = "settings/edit")]
         //public Task<Response<SiteShippingSettings>> UpdateSetting(SiteShippingSettings request)
         //{
         //    var setting = _siteShippingSettingsClient.UpsertActiveRateProviderShippingOriginAddressAndShippingRegions(Mapper.Map<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(request)).Result.ReadAsSync();
@@ -516,7 +517,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         //// TODO: This is a dupe so maybe we get rid of it.
 
-        //[WebInvoke(Method = "POST", UriTemplate = "settings/create")]
+        //[HttpPostRoute(UriTemplate = "settings/create")]
         //public Task<Response<SiteShippingSettings>> CreateSetting(SiteShippingSettings request)
         //{
         //    var setting = _siteShippingSettingsClient.UpsertActiveRateProviderShippingOriginAddressAndShippingRegions(Mapper.Map<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(request)).Result.ReadAsSync();

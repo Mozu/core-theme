@@ -4,13 +4,14 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Users;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/permissions", SuppressDescriptorGeneration = true)]
     public class PermissionsController : BaseController
     {
         private readonly IPermissionsRepository _permissionsRepository;
@@ -20,48 +21,48 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _permissionsRepository = permissionsRepository;
         }
 
-        [WebGet(UriTemplate = "role/{id}")]
+		[HttpGetRoute(UriTemplate = "role/{id}")]
         public async Task<Response<Role>> Role(int? id)
         {
             var role = await _permissionsRepository.GetRole(id);
             return Single2(role);
         }
 
-        [WebGet(UriTemplate = "roles")]
+		[HttpGetRoute(UriTemplate = "roles")]
         public async Task<Response<List<Role>>> Roles([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var roles = await _permissionsRepository.GetRoles();
             return List2(roles);
         }
 
-        /*[WebInvoke(UriTemplate = "role/create", Method = "POST")]
-        public Response<Role> CreateRole(Role role)
-        {
-            return Single(_permissionsRepository.AddRole(role));
-        }
+		/*[HttpPostRoute(UriTemplate = "role/create")]
+		public Response<Role> CreateRole(Role role)
+		{
+			return Single(_permissionsRepository.AddRole(role));
+		}
 
-        [WebInvoke(UriTemplate = "role/update", Method = "POST")]
-        public Response<Role> UpdateRole(Role role)
-        {
-            return Single(_permissionsRepository.UpdateRole(role));
-        }
+		[HttpPostRoute(UriTemplate = "role/update")]
+		public Response<Role> UpdateRole(Role role)
+		{
+			return Single(_permissionsRepository.UpdateRole(role));
+		}
 
-        [WebInvoke(UriTemplate = "role/delete", Method = "POST")]
-        public Response<Role> DeleteRole(Role role)
-        {
-            _permissionsRepository.DeleteRole(role);
+		[HttpPostRoute(UriTemplate = "role/delete")]
+		public Response<Role> DeleteRole(Role role)
+		{
+			_permissionsRepository.DeleteRole(role);
 
-            return EmptySingle<Role>();
-        }*/
+			return EmptySingle<Role>();
+		}*/
 
-        [WebGet(UriTemplate = "behavior/{id}")]
+		[HttpGetRoute(UriTemplate = "behavior/{id}")]
         public async Task<Response<Behavior>> Behaviors(int? id)
         {
             var res = await _permissionsRepository.GetBehavior(id);
             return Single2(res);
         }
 
-        [WebGet(UriTemplate = "behaviors")]
+		[HttpGetRoute(UriTemplate = "behaviors")]
         public async Task<Response<List<Behavior>>> GetBehaviors([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var res = await _permissionsRepository.GetBehaviors();

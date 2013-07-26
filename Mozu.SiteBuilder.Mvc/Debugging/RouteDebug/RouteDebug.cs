@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -18,9 +19,12 @@ namespace Mozu.SiteBuilder.Mvc.Debugging.RouteDebug
             return "(null)";
         }
         string str = string.Empty;
+      
+        return string.Join( "<br>", values.Keys.Select(str2 => string.Format("{0} = {1}", str2, ObjectFormat(values[str2]))).ToArray());
         foreach (string str2 in values.Keys)
         {
-            str = str + string.Format("{0} = {1}, ", str2, values[str2]);
+
+            str = str + string.Format("{0} = {1}<br/> ", str2, ObjectFormat(values[str2]));
         }
         if (str.EndsWith(", "))
         {
@@ -28,6 +32,31 @@ namespace Mozu.SiteBuilder.Mvc.Debugging.RouteDebug
         }
         return str;
     }
+    static string ObjectFormat(object obj)
+    {
+        if (obj == null)
+        {
+            return null;
+        }
+        var ver = obj as Mozu.Core.Api.Routing.MozuVersionConstraint;
+        if (ver != null)
+        {
+            var ret = string.Format("MozuVersionConstraint:{0}", string.Join(",",
+                                 typeof(Mozu.Core.Api.Routing.MozuVersionConstraint)
+                                     .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Select(x => string.Format("[{0}:{1}]", x.Name, x.GetValue(ver))).ToArray()
+                                  )
+                );
+            return ret;
+        }
+        var meth = obj as System.Web.Http.Routing.HttpMethodConstraint;
+        if (meth != null)
+        {
+            var ret= string.Format("HttpMethod:{0}", string.Join(",", meth.AllowedMethods.Select(x => x.Method.ToString()).ToArray()));
+            return ret;
+        }
+        return obj.ToString();
+    }
+
 
     public void ProcessRequest(HttpContext context)
     {

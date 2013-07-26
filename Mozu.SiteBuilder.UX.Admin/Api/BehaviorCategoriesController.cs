@@ -2,6 +2,7 @@
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using Mozu.Core.Api.Routing;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -9,7 +10,7 @@ using Mozu.SiteBuilder.UX.Models.Users;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/behaviorcategories", SuppressDescriptorGeneration = true)]
     public class BehaviorCategoriesController : BaseController
     {
         private readonly IPermissionsRepository _permissionsRepository;
@@ -19,7 +20,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _permissionsRepository = permissionsRepository;
         }
 
-        [WebGet(UriTemplate = "")]
+		[HttpGetRoute(UriTemplate = "")]
         public async Task<Response<List<BehaviorCategory>>> GetAll()
         {
             var behaviorCategories = await _permissionsRepository.GetCategories();
@@ -27,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return behaviorCategories.IsNullOrEmpty() ? EmptyList2<BehaviorCategory>() : List2(behaviorCategories);
         }
 
-        [WebGet(UriTemplate = "behaviorcategory/{id}")]
+		[HttpGetRoute(UriTemplate = "behaviorcategory/{id}")]
         public async Task<Response<BehaviorCategory>> Get(int? id)
         {
             var behaviorCategory = await _permissionsRepository.GetCategory(id);

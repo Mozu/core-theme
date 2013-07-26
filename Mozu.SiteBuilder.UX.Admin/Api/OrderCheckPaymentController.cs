@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
@@ -19,7 +20,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string FirstName { get; set; }
             public string LastName { get; set; }
         }
-        [WebInvoke(Method = "POST", UriTemplate = "payment/requestcheck")]
+        [HttpPostRoute(UriTemplate = "payment/requestcheck")]
         public async Task<Response<List<Order>>> RequestCheck(RequestCheckArgs args)
         {
             var action = new DCp.PaymentAction { 
@@ -45,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string CheckNumber { get; set; }
             public decimal Amount { get; set; }
         }
-        [WebInvoke(Method = "POST", UriTemplate = "payment/applycheck")]
+        [HttpPostRoute(UriTemplate = "payment/applycheck")]
         public async Task<Response<List<Order>>> ApplyCheck(ApplyCheckArgs args)
         {
             var action = new DCp.PaymentAction
@@ -69,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public OrderPayment Payment { get; set; }
             public string CheckNumber { get; set; }
         }
-        [WebInvoke(Method = "POST", UriTemplate = "payment/declinecheck")]
+        [HttpPostRoute(UriTemplate = "payment/declinecheck")]
         public async Task<Response<List<Order>>> DeclineCheck(ApplyCheckArgs args)
         {
             var action = new DCp.PaymentAction

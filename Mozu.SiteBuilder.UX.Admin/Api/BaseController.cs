@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.Core.Api;
+using Mozu.Core.Api.Authorization;
+using Mozu.Core.Api.Controllers;
 using Mozu.Core.ErrorHandling;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -11,7 +13,8 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [Resource(PrimaryResourceType =typeof( Product))]
-    public abstract class BaseController : ApiController, IApiController
+	[BehaviorAuthorization("No security here")]
+    public abstract class BaseController : WebApiController
     {
         [Obsolete]
         public Task<Response<T>> EmptySingle<T>(bool success = true)

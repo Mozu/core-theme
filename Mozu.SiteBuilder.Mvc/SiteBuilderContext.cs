@@ -147,7 +147,7 @@ namespace Mozu.SiteBuilder.Mvc
         {
             try
             {
-                var task = _generalSettings.GetGeneralSettings(null);
+                var task = _generalSettings.GetGeneralSettings();
                 var generalSettingsResult = task.Result.ReadAsAsync().Result;
 
                 return expression(generalSettingsResult);

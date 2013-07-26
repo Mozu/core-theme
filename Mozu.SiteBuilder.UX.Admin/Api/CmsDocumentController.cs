@@ -3,6 +3,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Web.Http;
+using Mozu.Core.Api.Routing;
 using DC=Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ using AutoMapper;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/cmsdocument", SuppressDescriptorGeneration = true)]
     public class CmsDocumentController : BaseController
     {
         //static HashSet<int> g_provisioned = new HashSet<int>();
@@ -45,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "delete")]
+        [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<AVM.Document>>> Delete(List<AVM.Document> docs)
         {
             var tasks = docs.Select(doc => _cmsService.Delete2(Mapper.Map<DC.Document>(doc))).ToList();
@@ -56,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
        
         
-        [WebInvoke(Method = "POST", UriTemplate = "create")]
+        [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<AVM.Document>>> Create(List<AVM.Document> docs)
         {
             var tasks = docs.Select(doc => _cmsService.Create2(doc)).ToList();
@@ -66,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(response);
         }
        
-        [WebInvoke(Method = "POST", UriTemplate = "update")]
+        [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<AVM.Document>>> Update(List<AVM.Document> docs )
         {
             var tasks = docs.Select(doc => _cmsService.Update2(doc)).ToList();
@@ -76,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(response);
         }
 
-        [WebGet(UriTemplate = "read")]
+		[HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<List<AVM.Document>>> ReadDocument([FromUri]PagingParamaters pagingParams)
         {
             DC.DocumentCollection  results = null;

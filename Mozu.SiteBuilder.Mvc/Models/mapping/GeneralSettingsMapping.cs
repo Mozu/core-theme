@@ -22,8 +22,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
             Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>()
                   .ForMember(x => x.IPBlocks, o => o.Ignore());
-            Mapper.CreateMap<UX.Models.Settings.GeneralSettings, Mozu.SiteSettings.General.Contracts.GeneralSettings>()
-                  .ForMember(x => x.IPBlocks, o => o.Ignore());
+            //Mapper.CreateMap<UX.Models.Settings.GeneralSettings, Mozu.SiteSettings.General.Contracts.GeneralSettings>()
+            //      .ForMember(x => x.IPBlocks, o => o.Ignore());
         }
     }
 }

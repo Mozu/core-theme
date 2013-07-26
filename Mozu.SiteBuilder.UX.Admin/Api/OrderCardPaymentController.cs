@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ServiceModel.Web;
 using System.Linq;
 using System.Threading.Tasks;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
@@ -21,7 +22,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Performs the "CapturePayment" action on an authorized payment.
         /// </summary>
-        [WebInvoke(Method = "POST", UriTemplate = "payment/capture")]
+        [HttpPostRoute(UriTemplate = "payment/capture")]
         public async Task<Response<List<Order>>> CapturePayment(CapturePaymentArgs args)
         {
             // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
@@ -48,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Performs the "CreditPayment" action on a payment where money has been captured.
         /// </summary>
-        [WebInvoke(UriTemplate = "payment/credit")]
+        [HttpPostRoute(UriTemplate = "payment/credit")]
         public async Task<Response<List<Order>>> CreditPayment(CreditPaymentArgs args)
         {
             // TODO: is referenceInteraction necessary?
@@ -78,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Voids an authorized payment.
         /// </summary>
-        [WebInvoke(Method = "POST", UriTemplate = "payment/void")]
+        [HttpPostRoute(UriTemplate = "payment/void")]
         public async Task<Response<List<Order>>> VoidPayment(VoidPaymentArgs args)
         {
             // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
@@ -105,7 +106,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Creates a new payment and performs the "AuthAndCapture" action.
         /// </summary>
-        [WebInvoke(Method = "POST", UriTemplate = "payment/create")]
+        [HttpPostRoute(UriTemplate = "payment/create")]
         public async Task<Response<List<Order>>> CreatePayment(CreatePaymentArgs args)
         {
             var action = new DCp.PaymentAction

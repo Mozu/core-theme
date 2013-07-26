@@ -7,6 +7,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;using DC = Mozu.Content.Contracts;
 using System;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
@@ -14,7 +15,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/image", SuppressDescriptorGeneration = true)]
     public class ImageController : BaseController
     {
       //  private readonly IContentCollectionWebApiClient   _contentCollecitonRepo;
@@ -37,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //Provision();
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "document/create")]
+		[HttpPostRoute(UriTemplate = "document/create")]
         public async Task<Response<ProductImageDocument>> CreateDocument(ProductImageDocument doc)
         {
             //var properties = new List<DC.PropertyValue>
@@ -109,7 +110,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(doc);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "{docid}/create")]
+		[HttpPostRoute(UriTemplate = "{docid}/create")]
         public Task<Response<string>> CreateImage(HttpRequestMessage request, string docid)
         {
             if (!request.Content.IsMimeMultipartContent())

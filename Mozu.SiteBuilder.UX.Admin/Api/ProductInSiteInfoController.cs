@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.Core;
+using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.MockServices;
@@ -22,8 +23,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     /// Important: When dealing with the Mozu services, we deal with the top-level Product object.
     /// ProductInSiteInfo is a sub-resource of that, so this controller looks up the parent Product,
     /// updates the whole object tree appropriately, and then sends the updated Product to the service.
-    /// </summary>
-    [ServiceContract]
+	/// </summary>
+    [WebApi("app/productinsiteinfo", SuppressDescriptorGeneration = true)]
     public class ProductInSiteInfoController : BaseController
     {
         private readonly IProductWebApiClient _productClient;
@@ -36,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _productClient = productClient;
         }
 
-        [WebInvoke(UriTemplate = "create")]
+		[HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<ProductInSiteInfo>>> CreateProductInSiteInfo(List<ProductInSiteInfo> pisis)
         {
             List<ProductInSiteInfo> returned = new List<ProductInSiteInfo>();
@@ -72,7 +73,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [WebInvoke(UriTemplate = "edit")]
+		[HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<ProductInSiteInfo>>> EditProductInSiteInfo(List<ProductInSiteInfo> pisis)
         {
             List<ProductInSiteInfo> returned = new List<ProductInSiteInfo>();
@@ -100,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2<ProductInSiteInfo>(returned);
         }
 
-        [WebInvoke(UriTemplate = "delete")]
+		[HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<ProductInSiteInfo>>> DeleteProductInSiteInfo(List<ProductInSiteInfo> pisis)
         {
             List<ProductInSiteInfo> deleted = new List<ProductInSiteInfo>(pisis.Count);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using DC = Mozu.ProductAdmin.Contracts;
@@ -19,7 +20,7 @@ using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/productvariation", SuppressDescriptorGeneration = true)]
     public class ProductVariationController : BaseController
     {
         private readonly CollectionTaskUnMapper<Product, DC.Product> _productMapper = new CollectionTaskUnMapper<Product, DC.Product>();
@@ -36,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [WebGet(UriTemplate = "list")]
+		[HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<ProductVariation>>> ListProducts([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri]string productCode = null, [FromUri] string options = null, [FromUri ] int? productTypeId = null)
         {
             
@@ -67,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
              
         }
 
-        [WebInvoke(UriTemplate = "edit")]
+		[HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<ProductVariation>>> EditVariations( List<ProductVariation> variations ,[FromUri]string productCode )
         {
             var dcVariations = Mapper.Map<List<DC.ProductVariation>>(variations);

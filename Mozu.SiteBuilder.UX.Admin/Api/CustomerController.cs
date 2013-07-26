@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.Core.Api.Routing;
 using DC = Mozu.Customer.Contracts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -18,7 +19,7 @@ using AutoMapper;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/customer", SuppressDescriptorGeneration = true)]
     public class CustomerController : BaseController
     {
         private readonly ICustomerAccountWebApiClient _customerWebApiClient;
@@ -31,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _customerGroupWebApiClient = customerGroupWebApiClient;
         }
 
-        [WebGet(UriTemplate = "search")]
+        [HttpGetRoute(UriTemplate = "search")]
         public async Task<Response<List<ApiCustomer>>> GetAdvancedSearch([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
         {
             // todo : hook up search pieces and create filter
@@ -39,14 +40,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [WebGet(UriTemplate = "groups/list")]
+        [HttpGetRoute(UriTemplate = "groups/list")]
         public async Task<Response<List<KeyValuePair< int,string >>>> GetGroups()
         {
             var ret =(await _customerGroupWebApiClient.GetGroups(0, 200)).ReadAsSync().Items.OrderBy(x => x.Name).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
             return List2(ret);
         }
 
-        [WebInvoke(UriTemplate = "groups/create")]
+        [HttpPostRoute(UriTemplate = "groups/create")]
         public async Task<Response<List<KeyValuePair<int, string>>>> EditGroups(List<KeyValuePair<int, string>> groups)
         {
 
@@ -61,7 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-        [WebGet(UriTemplate = "list")]
+        [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
         {
             var filter = extFilter.ToFilterString();
@@ -86,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(customers);
         }
 
-        [WebInvoke(UriTemplate = "edit")]
+        [HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<ApiCustomer>>> EditCustomers(List<ApiCustomer> customers)
         {
             var retList = new List<ApiCustomer>();
@@ -125,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
         }
 
-//        [WebGet(UriTemplate = "autocomplete/?query={query}")]
+//        [HttpGetRoute(UriTemplate = "autocomplete/?query={query}")]
 //        public async Task<Response<List<AutoCompleteField<string>>>> GetSearch(string query)
 //        {
 //            var groups = await _customerWebApiClient.GetCustomerGroups(x => x.ToLower().Contains(query.ToLower()));
@@ -133,7 +134,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 //            return List2(groups.Select(x => new AutoCompleteField<string> { Display = x, Value = x }).ToList());
 //        }
 
-//        [WebInvoke(Method = "POST", UriTemplate = "notes/create")]
+//        [HttpPostRoute(UriTemplate = "notes/create")]
 //        public async Task<Response<CustomerAccountNote>> CreateNote(CustomerAccountNote customerAccountNote, [FromUri]FilterCollection extFilter)
 //        {
 //            var customerAccountId = extFilter.Get<CustomerAccount, int>(x => x.Id);
@@ -142,7 +143,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 //            return Single2(customerNote);
 //        }
 
-//        [WebInvoke(Method = "POST", UriTemplate = "groups/update")]
+//        [HttpPostRoute(UriTemplate = "groups/update")]
 //        public Response<CustomerGroup> UpdateGroup(CustomerGroup group)
 //        {
 //            // TODO: This is required for models that are stored in a TreeList. Right now, to leverage
@@ -152,7 +153,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 //            return response;
 //        }
 
-//        [WebInvoke(Method = "POST", UriTemplate = "groups/create")]
+//        [HttpPostRoute(UriTemplate = "groups/create")]
 //        public async Task<Response<CustomerGroup>> CreateGroup(CustomerGroup newGroup)
 //        {
 //            var group = await _customerGroupsRepository.Create(newGroup);
@@ -160,7 +161,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 //            return Single2(group);
 //        }
 //
-//        [WebInvoke(Method = "POST", UriTemplate = "groups/delete")]
+//        [HttpPostRoute(UriTemplate = "groups/delete")]
 //        public async Task<Response<CustomerGroup>> DeleteGroup(CustomerGroup group)
 //        {
 //            Task<Response<CustomerGroup>> result = null;
@@ -182,7 +183,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 //            return await result;
 //        }
 
-//        [WebInvoke(Method = "POST", UriTemplate = "groups/{customerId}/update")]
+//        [HttpPostRoute(UriTemplate = "groups/{customerId}/update")]
 //        public async Task<Response<List<CustomerGroup>>> UpdateCustomerGroups(List<CustomerGroup> customerGroups, int? customerId)
 //        {
 //            if (!customerId.HasValue)

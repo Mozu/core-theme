@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
@@ -24,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Creates a new payment and performs the "AuthAndCapture" action.
         /// </summary>
-        [WebInvoke(Method = "POST", UriTemplate = "payment/createmanual")]
+		[HttpGetRoute(UriTemplate = "payment/createmanual")]
         public async Task<Response<List<Order>>> CreateManualPayment(CreateManualPaymentArgs args)
         {
             var action = new DCp.PaymentAction

@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using AutoMapper;
+using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
@@ -17,8 +18,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     /// <summary>
     /// Controller for discounts.
-    /// </summary>
-    [ServiceContract]
+	/// </summary>
+    [WebApi("app/discount", SuppressDescriptorGeneration = true)]
     public class DiscountController : BaseController
     {
         private readonly IDiscountWebApiClient _discountWebClient;
@@ -34,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Get a list of discounts.
         /// </summary>
-        [WebGet(UriTemplate = "read")]
+		[HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<List<Discount>>> ReadDiscount(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             if (pagingParams.id != null)
@@ -75,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Create a new discount.
         /// </summary>
-        [WebInvoke(UriTemplate = "create")]
+		[HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<Discount>>> CreateDiscount(List<Discount> discounts)
         {
             var responseList = new List<Discount>();
@@ -114,7 +115,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Update an existing discount.
         /// </summary>
-        [WebInvoke(UriTemplate = "edit")]
+		[HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<Discount>>> EditDiscount(List<Discount> discountList, int? id = null)
         {
             var retList = new List<Discount>();

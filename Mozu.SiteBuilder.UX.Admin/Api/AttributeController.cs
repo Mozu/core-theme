@@ -6,6 +6,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core.Api.Routing;
 using Mozu.Core.ErrorHandling;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -14,8 +15,8 @@ using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
-    [AllowAnonymous]
+	[AllowAnonymous]
+    [WebApi("app/attribute", SuppressDescriptorGeneration = true)]
     public class AttributeController : BaseController
     {
         private readonly IAttributeHelper _attributeHelper;
@@ -25,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _attributeHelper = attributeHelper;
         }
 
-        [WebGet(UriTemplate = "read")]
+        [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<List<Attribute>>> ListAttributes([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
         {
             if (!String.IsNullOrEmpty(pagingParams.id))
@@ -41,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        [WebInvoke(UriTemplate = "create", Method = "POST")]
+        [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<Attribute>>> CreateAttribute([FromBody] List<Attribute> attributes)
         {
             if (attributes == null || !attributes.Any())
@@ -73,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        [WebInvoke(UriTemplate = "update", Method = "POST")]
+        [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<Attribute>>> EditAttribute(List<Attribute> attributes)
         {
             if (attributes == null || !attributes.Any())
@@ -83,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(editedAttributes.ToList());
         }
 
-        [WebInvoke(UriTemplate = "destroy", Method = "POST")]
+        [HttpPostRoute(UriTemplate = "destroy")]
         public async Task<Response<List<Attribute>>> DeleteAttribute(List<Attribute> attributes)
         {
             if (attributes == null || !attributes.Any())

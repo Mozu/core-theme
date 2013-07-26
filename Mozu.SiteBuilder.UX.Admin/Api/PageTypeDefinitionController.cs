@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using System.ServiceModel.Web;
@@ -18,7 +19,7 @@ using Mozu.SiteBuilder.Mvc;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/pagetypedefinition", SuppressDescriptorGeneration = true)]
     public class PageTypeDefinitionController : BaseController
     {
          //static HashSet<int> g_provisioned = new HashSet<int>();
@@ -47,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-        [WebGet(UriTemplate = "list")]
+        [HttpGetRoute(UriTemplate = "list")]
         public Response<List<PageTemplateDefinition>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
 

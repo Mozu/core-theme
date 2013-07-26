@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                 var settings = System.Web.HttpRuntime.Cache.Get(key) as UX.Models.Settings.GeneralSettings;
                     if (settings == null)
                     {
-                        var res = _generalSettingsWebApiClient.GetGeneralSettings(null).Result;
+                        var res = _generalSettingsWebApiClient.GetGeneralSettings().Result;
                         try
                         {
                             settings = Mapper.Map<UX.Models.Settings.GeneralSettings>(res.ReadAsSync());

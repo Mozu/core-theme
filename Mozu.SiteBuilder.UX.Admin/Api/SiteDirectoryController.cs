@@ -5,6 +5,7 @@ using System.Web;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.Content.Contracts.Clients;
@@ -16,7 +17,7 @@ using Mozu.ProductAdmin.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/sitedirectory", SuppressDescriptorGeneration = true)]
     public class SiteDirectoryController : BaseController
     {
            // ICmsTypeHelper _cmsTypeHelper;
@@ -40,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
         const  string STRINGSPLITDELIM = "^^";
 
-        [WebGet(UriTemplate = "read/?id={id}")]
+		[HttpGetRoute(UriTemplate = "read/?id={id}")]
         public async Task<Response<List<SiteDirectoryNode>>> Read(string id)
         {
             var resItems = new List<SiteDirectoryNode>();

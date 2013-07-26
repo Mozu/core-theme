@@ -5,6 +5,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -18,8 +19,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     /// <summary>
     /// Controller for products.
-    /// </summary>
-    [ServiceContract]
+	/// </summary>
+    [WebApi("app/product", SuppressDescriptorGeneration = true)]
     public class ProductController : BaseController
     {
         private readonly CollectionTaskUnMapper<Product, DC.Product> _productMapper = new CollectionTaskUnMapper<Product, DC.Product>();
@@ -36,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _productTypeWebApiClient = productTypeWebApiClient;
         }
 
-        [WebGet(UriTemplate = "list")]
+		[HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<Product>>> ListProducts([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
@@ -56,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(mapped, (int)res.TotalCount);
         }
 
-        [WebInvoke(UriTemplate = "create")]
+		[HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<Product>>> CreateProduct(List<Product> products)
         {
             if (products == null || !products.Any())
@@ -67,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(createdProducts.ToList());
         }
 
-        [WebInvoke(UriTemplate = "edit")]
+		[HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<Product>>> EditProduct(List<Product> products)
         {
             if (products == null || !products.Any())
@@ -116,7 +117,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(editedProducts.ToList());
         }
 
-        [WebInvoke(UriTemplate = "delete")]
+		[HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<Product>>> DeleteProduct(List<Product> products)
         {
             if (products == null || !products.Any())

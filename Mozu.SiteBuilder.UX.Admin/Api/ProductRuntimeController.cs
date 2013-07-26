@@ -7,12 +7,13 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Mozu.Core.Api.Routing;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-     [ServiceContract]
+    [WebApi("app/productruntime", SuppressDescriptorGeneration = true)]
     public class ProductRuntimeController : BaseController
     {
          private readonly IProductRuntimeWebApiClient _productRuntimeWebApiClient;
@@ -22,7 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
              _productRuntimeWebApiClient = productRuntimeWebApiClient;
          }
 
-         [WebGet(UriTemplate = "read")]
+		 [HttpGetRoute(UriTemplate = "read")]
          public async Task<Response <Newtonsoft.Json.Linq.JObject>> ListProducts(string productCode )
          {
              var prod = (await _productRuntimeWebApiClient.GetProduct(productCode)).ReadAsSync();
@@ -31,9 +32,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
              return this.Single2( jobj);
          }
 
-       
 
-         [WebInvoke(UriTemplate = "configure")]
+
+		 [HttpPostRoute(UriTemplate = "configure")]
          public async Task<Response<Newtonsoft.Json.Linq.JObject>> Configure([FromBody]Mozu.ProductRuntime.Contracts.ProductOptionSelections selections , [FromUri] string productCode)
          {
              var res = (await _productRuntimeWebApiClient.ConfiguredProduct(selections, productCode, true )).ReadAsSync();

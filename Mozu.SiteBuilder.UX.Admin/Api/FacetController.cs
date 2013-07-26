@@ -9,7 +9,7 @@ using Mozu.Core.Api.Client;
 //using Volusion.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
-
+using Mozu.Core.Api.Routing;
 using CLIENT=Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Category;
@@ -19,7 +19,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Facets;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/facet", SuppressDescriptorGeneration = true)]
     public class FacetController : BaseController
     {
         private readonly CLIENT.IFacetWebApiClient _facetWebApiClient;
@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        [WebGet(UriTemplate = "set/read?id={id}")]
+		[HttpGetRoute(UriTemplate = "set/read?id={id}")]
         public async Task<Response<List<FacetSet>>> GetFacetSet(int id)
         {
             var res = (await _facetWebApiClient.GetFacetCategoryList(id)).ReadAsSync();
@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        [WebInvoke(UriTemplate = "set/edit")]
+		[HttpPostRoute(UriTemplate = "set/edit")]
         public async Task<Response<List<FacetSet>>> UpdateFacetSet(FacetSet set )
         {
             var facets = AutoMapper.Mapper.Map<List<DC.Facet>>(set.Configured.Where(x => x.CategoryId == set.CategoryId).ToList() );

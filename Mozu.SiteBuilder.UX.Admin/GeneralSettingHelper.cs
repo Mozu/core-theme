@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin
         public GeneralSettings ReadSettings()
         {
             Mozu.SiteSettings.General.Contracts.GeneralSettings generalSettings = null;
-            var res = _generalSettingsWebApiClient.GetGeneralSettings(null).Result;
+            var res = _generalSettingsWebApiClient.GetGeneralSettings().Result;
             if (res.HasException && res.ResponseMessage != null && res.ResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 generalSettings = new Mozu.SiteSettings.General.Contracts.GeneralSettings();
@@ -81,22 +81,22 @@ namespace Mozu.SiteBuilder.UX.Admin
 
         public void UpdateIPBlockCollection(GeneralSettings settingsToSave, IEnumerable<int?> existingBlockIds)
         {
-            var settings = Mapper.Map<DC.GeneralSettings>(settingsToSave);
-            var ipBlocks = settings.IPBlocks.Items;
-            foreach (var block in ipBlocks)
-            {
-                if (block.Id > 0)
-                    _generalSettingsWebApiClient.UpdateIPBlock(block, block.Id).Result.ReadAsAsync();
-                else
-                    _generalSettingsWebApiClient.CreateIPBlock(block).Result.ReadAsAsync();
-            }
+            //var settings = Mapper.Map<DC.GeneralSettings>(settingsToSave);
+            //var ipBlocks = settings.IPBlocks.Items;
+            //foreach (var block in ipBlocks)
+            //{
+            //    if (block.Id > 0)
+            //        _generalSettingsWebApiClient.UpdateIPBlock(block, block.Id).Result.ReadAsAsync();
+            //    else
+            //        _generalSettingsWebApiClient.CreateIPBlock(block).Result.ReadAsAsync();
+            //}
 
-            var deletableBlocks = settingsToSave.IPBlocks.Select(x => x.Id).Where(x => x != 0).ToArray();
-            foreach (var ipBlockId in existingBlockIds)
-            {
-                if (!deletableBlocks.Contains(ipBlockId))
-                    _generalSettingsWebApiClient.DeleteIPBlock(ipBlockId).Result.ReadAsAsync();
-            }
+            //var deletableBlocks = settingsToSave.IPBlocks.Select(x => x.Id).Where(x => x != 0).ToArray();
+            //foreach (var ipBlockId in existingBlockIds)
+            //{
+            //    if (!deletableBlocks.Contains(ipBlockId))
+            //        _generalSettingsWebApiClient.DeleteIPBlock(ipBlockId).Result.ReadAsAsync();
+            //}
         }
 
         public void DeleteAllIPBlocks(IEnumerable<int?> existingBlockIds)

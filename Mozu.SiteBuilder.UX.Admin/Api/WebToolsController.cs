@@ -7,13 +7,14 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Settings;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/webtools", SuppressDescriptorGeneration = true)]
     public class WebToolsController : BaseController
     {
         private readonly IWebToolsRepository _webToolsRepository;
@@ -23,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _webToolsRepository = webToolsRepository;
         }
 
-        [WebInvoke(UriTemplate = "webmasterTools", Method = "POST")]
+		[HttpPostRoute(UriTemplate = "webmasterTools")]
         public async Task<Response<string>> UpdateWebmasterTools()
         {
             if (!Request.Content.IsMimeMultipartContent())
@@ -48,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return await result;
         }
 
-        [WebInvoke(UriTemplate = "robotsTxt", Method = "POST")]
+		[HttpPostRoute(UriTemplate = "robotsTxt")]
         public async Task<Response<RobotsTxtSettings>> UpdateRobotsTxt(RobotsTxtSettings settings)
         {
             await _webToolsRepository.SaveRobotsContent(settings);

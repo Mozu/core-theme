@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using System.Linq;
 using System.ServiceModel;
@@ -25,7 +26,7 @@ using Mozu.Core.Api;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/widgetinstance", SuppressDescriptorGeneration = true)]
     public class WidgetInstanceController : BaseController
     {
         //private const string WIDGETPROPNAME = "slug";
@@ -90,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [WebInvoke(Method = "POST", UriTemplate = "delete")]
+        [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<AVM.WidgetInstanceData>>> Process(List<AVM.WidgetInstanceData> widgets, bool remove )
         {
             Task<ServiceClientResponse<DC.Document>> task;
@@ -148,27 +149,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [WebInvoke(Method = "POST", UriTemplate = "create")]
+		[HttpPostRoute(UriTemplate = "create")]
         public Task<Response<List<AVM.WidgetInstanceData>>> Create(List<AVM.WidgetInstanceData> docs)
         {
             return Process(docs, false);
           
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "update")]
+		[HttpPostRoute(UriTemplate = "update")]
         public Task<Response<List<AVM.WidgetInstanceData>>> Update(List<AVM.WidgetInstanceData> docs)
         {
             return Process(docs, false);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "destroy")]
+		[HttpPostRoute(UriTemplate = "destroy")]
         public Task<Response<List<AVM.WidgetInstanceData>>> Delete(List<AVM.WidgetInstanceData> docs)
         {
             return Process(docs, true);
 
         }
 
-        //[WebGet(UriTemplate = "read")]
+        //[HttpGetRoute(UriTemplate = "read")]
         //public Task<Response<List<AVM.WidgetInstanceData>>> ReadDocument(PagingParamaters pagingParams)
         //{
         //    throw new NotImplementedException();

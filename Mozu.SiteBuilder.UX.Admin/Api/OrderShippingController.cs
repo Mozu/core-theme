@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using DCs = Mozu.CommerceRuntime.Contracts.Shipping;
@@ -27,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // optional. means we are moving things out of one package into a new one.
             public string SourcePackageId { get; set; }
         }
-        [WebInvoke(Method="POST", UriTemplate="shipping/package/create")]
+        [HttpPostRoute(UriTemplate="shipping/package/create")]
         public async Task<Response<List<OrderPackage>>> CreatePackage(CreatePackageArgs args)
         {
             // if there is a source package, remove the item from it first.
@@ -65,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public List<string> PackageIds { get; set; }
         }
-        [WebInvoke(Method = "POST", UriTemplate = "shipping/package/delete")]
+        [HttpPostRoute(UriTemplate = "shipping/package/delete")]
         public async Task<Response<List<OrderPackage>>> DeletePackage(DeletePackageArgs args)
         {
             var tasks = args.PackageIds.Select(pid => _orderWebApiClient.DeletePackage(args.OrderId, pid));
@@ -81,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string DestinationPackageId { get; set; }
             public List<OrderPackageItem> Items { get; set; }
         }
-        [WebInvoke(Method = "POST", UriTemplate = "shipping/package/moveitems")]
+        [HttpPostRoute(UriTemplate = "shipping/package/moveitems")]
         public async Task<Response<List<OrderPackage>>> MovePackageItems(MovePackageItemArgs args)
         {
             var updateTasks = new List<Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<DCs.Package>>>();
@@ -190,7 +191,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public List<string> PackageIds { get; set; }
         }
-        [WebInvoke(Method = "POST", UriTemplate = "shipping/package/markshipped")]
+        [HttpPostRoute(UriTemplate = "shipping/package/markshipped")]
         public async Task<Response<List<Order>>> MarkPackagesShipped(MarkPackagesShippedArgs args)
         {
             var dcOrder = (await _orderWebApiClient.PerformShipmentAction(args.OrderId, new DCs.ShipmentAction { ActionName = "Ship", PackageIds = args.PackageIds })).ReadAsSync();
@@ -198,7 +199,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(Mapper.Map<Order>(dcOrder));
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "shipping/package/edit")]
+        [HttpPostRoute(UriTemplate = "shipping/package/edit")]
         public async Task<Response<List<OrderPackage>>> EditPackages(List<OrderPackage> packages)
         {
             var tasks = packages.Select(p => _orderWebApiClient.UpdatePackage(p.OrderId, p.Id, Mapper.Map<DCs.Package>(p)));
@@ -214,7 +215,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public List<string> PackageIds { get; set; }
         }
-        [WebInvoke(Method = "POST", UriTemplate = "shipping/package/prepareshipment")]
+        [HttpPostRoute(UriTemplate = "shipping/package/prepareshipment")]
         public async Task<Response<List<OrderPackage>>> PrepareShipment(PrepareShipmentArgs args)
         {
             var dcPackageTasks = args.PackageIds.Select(pid => _orderWebApiClient.GetPackage(args.OrderId, pid));
@@ -250,7 +251,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2( Mapper.Map<List<OrderPackage>>(returnedPackages) );
         }
 
-        [WebGet(UriTemplate = "shipping/package/label")]
+		[HttpGetRoute(UriTemplate = "shipping/package/label")]
         public async Task<HttpResponseMessage> GetPackageLabel([FromUri]string orderId, [FromUri]string packageId)
         {
             var serviceResponse = await _orderWebApiClient.GetPackageLabel(orderId, packageId);

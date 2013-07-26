@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Mozu.Core;
+using Mozu.Core.Api.Routing;
 using Mozu.PaymentService.Contracts;
 using Mozu.ShippingAdmin.Contracts;
 using Mozu.ShippingAdmin.Contracts.Clients;
@@ -29,7 +30,7 @@ using Site = Mozu.SiteBuilder.UX.Admin.Api.Models.Testing.Site;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/testing", SuppressDescriptorGeneration = true)]
     public class TestingController : BaseController
     {
         private readonly IThemeRepository _themeRepository;
@@ -78,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
         }
 
-        [WebGet(UriTemplate = "list")]
+		[HttpGetRoute(UriTemplate = "list")]
         public Response<List<DGD>> GetTestList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var items = g_testData.Skip(pagingParams.pageIndex.GetValueOrDefault(0)).Take(pagingParams.pageSize.GetValueOrDefault(1000)).ToList();
@@ -86,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(items, g_testData.Count);
         }
 
-        [WebGet (UriTemplate = "orderProvision")]
+		[HttpGetRoute(UriTemplate = "orderProvision")]
         public bool  OrderProvision()
         {
        
@@ -100,23 +101,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return true;
         }
-        [WebInvoke(UriTemplate = "testDestroy")]
+		[HttpGetRoute(UriTemplate = "testDestroy")]
         public JContainer TestDestroy(JContainer ret)
         {
             return ret;
         }
-        [WebInvoke(UriTemplate = "testUpdate")]
+		[HttpGetRoute(UriTemplate = "testUpdate")]
         public JContainer TestUpdate(JContainer ret)
         {
             return ret;
         }
 
 
-   
 
 
 
-        [WebGet(UriTemplate = "Files?id={id}")]
+
+		[HttpGetRoute(UriTemplate = "Files?id={id}")]
         public Response<List<Node>> GetAllNode(string id)
         {
             if (id == null)
@@ -244,7 +245,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        [WebGet(UriTemplate = "theme/list")]
+		[HttpGetRoute(UriTemplate = "theme/list")]
         public async Task<Response<List<ThemeDTO>>> GetListThemes()
         {
             var localThemeDir =   _themeRepository.GetLocalThemePath();
@@ -280,7 +281,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
            
         }
 
-        [WebInvoke(UriTemplate = "theme/update" , Method="POST")]
+		[HttpPostRoute(UriTemplate = "theme/update")]
         public async Task<Response<List<ThemeDTO>>> UpdateTheme( HttpRequestMessage msg )
         {
             List<ThemeDTO> themes = await msg.Content.ReadAsAsync<List<ThemeDTO>>();
@@ -331,7 +332,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(returnedThemesList.ToList());
         }
 
-        [WebGet(UriTemplate = "tenant/list")]
+        [HttpGetRoute(UriTemplate = "tenant/list")]
         public async Task<Response<List<Tenant.Contracts.Tenant>>> GetTenantList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             string filter = null;
@@ -370,7 +371,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         ITenantsWebApiClient _tenantClient;
-        [WebInvoke(UriTemplate = "changeSiteList")]
+		[HttpPostRoute(UriTemplate = "changeSiteList")]
         public async Task<Response<List<Site>>> GetChangeSiteList(Site site)
         {
             int? tenantId = site.tenantId;
@@ -381,7 +382,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-        [WebInvoke(UriTemplate = "setSiteContextFromTenant")]
+		[HttpPostRoute(UriTemplate = "setSiteContextFromTenant")]
         public async Task<Response<List<Site>>> SetSiteContextFromTenant(Mozu.Tenant.Contracts.Tenant tenant)
         {
             var sites = (await _tenantClient.GetSites(tenant.Id)).ReadAsSync();
@@ -397,7 +398,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //ctx.SiteName = site.name;
         }
 
-        [WebInvoke(UriTemplate = "setSiteContext")]
+        [HttpPostRoute(UriTemplate = "setSiteContext")]
         public Response<List<Site>> SetSiteContext(Site site)
         {
             var ctx = _siteBuilderContext;
