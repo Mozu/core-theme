@@ -35,7 +35,6 @@ Ext.define('Taco.model.Order', {
             type: 'int',
             "useNull": true
         },
-        //   adding unpersisted model member to organize the authorization information into a single object for use in xtemplates;
         {
             "name": "authorizationInfo",
             "type": "auto"
@@ -192,7 +191,6 @@ Ext.define('Taco.model.Order', {
             "type": "auto",
             "default": []
         },
-        // payment , incomplete
         {
             "name": "lastValidationDate",
             "type": "date",

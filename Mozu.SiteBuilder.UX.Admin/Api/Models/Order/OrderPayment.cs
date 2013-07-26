@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
@@ -83,12 +84,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         #endregion
 
         #region calculated fields
-
         /// <summary>
-        ///  auth ready is when you have an authorized card with id
+        /// True if all interactions on this payment are manual interactions.
+        /// Manual payments can't have any gateway interactions performed on them.
+        /// Only new manual interactions can be added.
         /// </summary>
-        [DataMember(Name = "authReady")]
-        public bool AuthReady { get; set; }
+        [DataMember(Name="isManual")]
+        public bool IsManual { get { return Interactions == null || Interactions.Count == 0 || Interactions.All(i => i.IsManual); } set { } }
 
         #endregion
 
