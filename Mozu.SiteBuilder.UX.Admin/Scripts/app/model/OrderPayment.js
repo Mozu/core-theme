@@ -78,6 +78,11 @@ Ext.define('Taco.model.OrderPayment', {
             'name': 'createDate',
             'type': 'date',
             'useNull': true
+        },
+        {
+            'name': 'isManual',
+            'type': 'boolean',
+            'default': false
         }],
 
     associations: [

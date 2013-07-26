@@ -142,6 +142,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
                 .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
+                .AfterMap((dc, payment) => {
+                    if (payment.PaymentType == "Check")
+                        return;
+
+                    // if the payment is manual, all available actions should actually be ManualXXX
+                    if (payment.IsManual)
+                    {
+                        payment.AvailableActions = payment.AvailableActions.Select(action => "Manual" + action).ToList();
+                    }
+                    // otherwise we should duplicate each available actions with a ManualXXX.
+                    else
+                    {
+                        int i, originalCount = payment.AvailableActions.Count;
+                        for (i = 0; i < originalCount; i++)
+                            payment.AvailableActions.Add("Manual" + payment.AvailableActions[i]);
+                    }
+                })
                 ;
 
             Mapper.CreateMap<PaymentsDC.PaymentInteraction, PaymentInteraction>()
