@@ -53,7 +53,7 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
                             '<ul class="taco-product-option-value-list">',
                                 '<tpl for=".">',
                                     '<li role="option" class="x-boundlist-item<tpl if="!IsEnabled"> disabled</tpl>">',
-                                        '~{StringValue}~',
+                                        '{StringValue}',
                                     '</li>',
                                 '</tpl>',
                             '</ul>'
@@ -233,7 +233,6 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
         this.optionsContainer.add(items);
 
         this.savableStateCheck();
-        debugger;
         this.price.update(this.runtimeData.Price);
     },
 
@@ -279,7 +278,7 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
         });
 
         if (updates[field.optionInputType]) updates[field.optionInputType](option, field);
-
+        
         field.setValue(option.Value);
 
         field.suspendCheckChange--;
@@ -300,7 +299,7 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
             jsonData: request,
             success: function (response) {
                 this.runtimeData = JSON.parse(response.responseText).items;
-
+                console.log('RUNTIME DATA UPDATE', this.runtimeData);
                 Ext.each(this.runtimeData.Options, function (option) {
                     this.updateOption(option);
                 }, this);
