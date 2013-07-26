@@ -4,18 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.ServiceModel.Web;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Metadata;
 using System.ServiceModel;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/metadata", SuppressDescriptorGeneration = true)]
     public class MetaDataController : BaseController
     {
         static Lazy<List<ModelDescription>> g_desc = new Lazy<List<ModelDescription>>(CreateModelDescriptions, true);
 
-        [WebGet(UriTemplate = "list?id={id}&page={pageIndex}&start={startIndex}&limit={pageSize}")]
+        [HttpGetRoute(UriTemplate = "list?id={id}&page={pageIndex}&start={startIndex}&limit={pageSize}")]
         public Response<List<ModelDescription>> GetOptionList(string id = null, int pageIndex = 1, int startIndex = 0, int pageSize = 25)
         {
             List<ModelDescription> mds = null;

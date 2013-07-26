@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 
@@ -27,8 +28,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
     /// <summary>
     /// Controller for CMS smiegels.
-    /// </summary>
-    [ServiceContract]
+	/// </summary>
+    [WebApi("app/cmspublishing", SuppressDescriptorGeneration = true)]
     public class CmsPublishingController : BaseController
     {
        
@@ -48,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Get paged list of all pending drafts.
         /// </summary>
-        [WebGet(UriTemplate = "listdrafts")]
+        [HttpGetRoute(UriTemplate = "listdrafts")]
         public async Task<Response<List<DocumentDraft>>> ListDirtyDocuments([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
@@ -74,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Publish a set of documents.
         /// </summary>
-        [WebInvoke(UriTemplate = "publish")]
+        [HttpPostRoute(UriTemplate = "publish")]
         public async Task<Response<List<string>>> Publish(List<DocumentDraft> docs)
         {
             List<string> returnedIds = new List<string>();
@@ -109,7 +110,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Discard pending changes to a set of documents.
         /// </summary>
-        [WebInvoke(UriTemplate = "discard")]
+        [HttpPostRoute(UriTemplate = "discard")]
         public async Task<Response<List<string>>> Discard(List<DocumentDraft> docs)
         {
             List<string> discardedDocIds = docs.Select(x => x.Id).ToList();
@@ -130,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Publishes all the pending changes.
         /// <param name="type">Document type ("Page" or "Template"). Passing null or empty means to publish all documents.</param>
         /// </summary>
-        [WebInvoke(UriTemplate = "publishall")]
+        [HttpPostRoute(UriTemplate = "publishall")]
         public async Task<Response<List<string>>> PublishAll(PublishArgs args)
         {
             args = args ?? new PublishArgs();
@@ -164,7 +165,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Publishes all the pending changes.
         /// </summary>
         /// <param name="type">Document type ("Page" or "Template"). Passing null or empty means to discard all documents.</param>
-        [WebInvoke(UriTemplate = "discardall")]
+        [HttpPostRoute(UriTemplate = "discardall")]
         public async Task<Response<List<string>>> DiscardAll(PublishArgs args)
         {
             args = args ?? new PublishArgs();

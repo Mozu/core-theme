@@ -5,12 +5,13 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Settings;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/generalsetting", SuppressDescriptorGeneration = true)]
     public class GeneralSettingController : BaseController
     {
         private readonly IGeneralSettingWrapper _wrapper;
@@ -20,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _wrapper = wrapper;
         }
 
-        [WebGet(UriTemplate = "read")]
+		[HttpGetRoute(UriTemplate = "read")]
         public Task<Response<List<GeneralSettings>>> GetSettings()
         {
             var settings = _wrapper.ReadSettings();
@@ -28,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List(settings);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "save")]
+		[HttpPostRoute(UriTemplate = "save")]
         public Response<GeneralSettings> Save(GeneralSettings settingsToSave)
         {
             var existingBlockIds = _wrapper.GetIPBlocks().Select(x => x.Id).ToList();
@@ -42,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(Mapper.Map<GeneralSettings>(savedSettings));
         }
 
-        [WebGet(UriTemplate = "timezones/read")]
+		[HttpGetRoute(UriTemplate = "timezones/read")]
         public Response<List<TimeZone>> GetTimeZones([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var results = _wrapper.GetTimeZones().ToList();
@@ -50,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(results);
         }
 
-        [WebGet(UriTemplate = "ipranges/read")]
+		[HttpGetRoute(UriTemplate = "ipranges/read")]
         public Response<List<IPBlock>> GetIpRanges([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var results = _wrapper.GetIPBlocks().ToList();

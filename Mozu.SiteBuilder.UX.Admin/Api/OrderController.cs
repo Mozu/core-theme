@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.Core.Api.Routing;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
@@ -15,7 +16,7 @@ using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/order", SuppressDescriptorGeneration = true)]
     public partial class OrderController : BaseController
     {
         private readonly ISettings _settings;
@@ -38,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return orders.OrderByDescending(keySelector).ToList();
         }
 
-        [WebGet(UriTemplate = "list")]
+		[HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<Order>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             int? startIndex = pagingParams.startIndex;
@@ -76,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(orders,(int) dcOrders.TotalCount );
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "cancel")]
+		[HttpPostRoute(UriTemplate = "cancel")]
         public async Task<Response<List<Order>>> CancelOrder(string orderId)
         {
             var dc = (await _orderWebApiClient.PerformOrderAction(orderId, new DCo.OrderAction { ActionName = "CancelOrder" })).ReadAsSync();

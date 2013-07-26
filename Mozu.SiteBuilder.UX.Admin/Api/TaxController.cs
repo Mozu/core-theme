@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
 using System.ServiceModel.Web;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -17,7 +18,7 @@ using Mozu.SiteBuilder.UX.Admin.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/tax", SuppressDescriptorGeneration = true)]
     public class TaxController : BaseController
     {
         
@@ -30,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _generalSettingsWebApiClient = generalSettingsWebApiClient;
         }
 
-        [WebInvoke(UriTemplate = "create")]
+		[HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<TaxRate>>> Create(List<TaxRate> taxRates)
         {
 
@@ -39,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(results.ToList());
         }
 
-        [WebInvoke(UriTemplate = "edit")]
+		[HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<TaxRate>>> Edit(List<TaxRate> taxRates)
         {
             var dcTaxes = Mapper.Map<List<DC.TaxableTerritory>>(taxRates);
@@ -50,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(retTaxes);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "delete")]
+		[HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<TaxRate>> Delete(List<TaxRate> vms)
         {
             IEnumerable<TaxRate> results = await _taxMapper.PerformAction(vms, t => _generalSettingsWebApiClient.RemoveTaxableTerritory(t.CountryCode, t.StateOrProvinceCode));
@@ -58,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return SuccessWithTotal2<TaxRate>(results.Count());
         }
 
-        [WebGet(UriTemplate = "list")]
+		[HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<TaxRate>>> GetTaxRates([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var res = (await _generalSettingsWebApiClient.GetTaxableTerritories());

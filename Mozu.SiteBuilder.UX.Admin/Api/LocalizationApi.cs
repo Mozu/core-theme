@@ -6,15 +6,16 @@ using System.ServiceModel.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/localization", SuppressDescriptorGeneration = true)]
     public class LocalizationController : BaseController
     {
         [ApiAuthorize]
-        [WebGet(UriTemplate = "read")]
+        [HttpGetRoute(UriTemplate = "read")]
         public Response<List<KeyValuePair<string, string>>> GetStrings()
         {
             var lang = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;

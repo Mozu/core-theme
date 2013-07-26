@@ -5,6 +5,7 @@ using System.ServiceModel;
 //using Volusion.ProductAdmin.Contracts.Clients;
 using System.Web.Http;
 using Mozu.Core;
+using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
 using System.ServiceModel.Web;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
@@ -23,7 +24,7 @@ using System.IO;
 using Mozu.Core.Api.Client;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/filemanagement", SuppressDescriptorGeneration = true)]
     public class FileManagementController : BaseController
     {
         private readonly IDocumentListWebApiClient _documentWebApiClient;
@@ -36,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // _cmsService = tenantCmsServiceWrapper;
         }
 
-        [WebGet(UriTemplate = "file/list")]
+        [HttpGetRoute(UriTemplate = "file/list")]
         public async Task<Response<List<FileManagementFile>>> FileList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             List<FileManagementFile> vm = null;
@@ -90,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(vm, totalCount);
         }
 
-        [WebInvoke(UriTemplate = "file/create")]
+        [HttpPostRoute(UriTemplate = "file/create")]
         public async Task<Response<List<FileManagementFile>>> CreateFile(List<FileManagementFile> files)
         {
             List<FileManagementFile> vmList = new List<FileManagementFile>();
@@ -135,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(vmList);
         }
 
-        [WebInvoke(UriTemplate = "file/delete")]
+        [HttpPostRoute(UriTemplate = "file/delete")]
         public async Task<Response<FileManagementFile>> DeleteFile(List<FileManagementFile> files)
         {
             bool b = true;
@@ -150,7 +151,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return EmptySingle2<FileManagementFile>(b);
         }
 
-        [WebInvoke(Method = "POST", UriTemplate = "file/upload/{docid}")]
+        [HttpPostRoute(UriTemplate = "file/upload/{docid}")]
         public async Task<Response<string>> UploadContent(HttpRequestMessage request,string docid)
         {
             //todo add session id 
@@ -179,7 +180,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-        // [WebGet(UriTemplate = "folder/list")]
+        // [HttpGetRoute(UriTemplate = "folder/list")]
         //public async Task<Response<List<FileManagementFolder>>> FolderList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         //{
         //    var folderId = extFilter.GetValue<string>("folderid");
@@ -196,7 +197,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //     return List2(vm);
         //}
 
-        //[WebInvoke(UriTemplate = "folder/create")]
+        //[HttpPostRoute(UriTemplate = "folder/create")]
         //public async Task<Response<List<FileManagementFolder>>> CreateFolder(List<FileManagementFolder> folders)
         //{
         //    List<FileManagementFolder> vms = new List<FileManagementFolder>();
@@ -223,7 +224,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //    return List2(vms);
         //}
 
-        [WebInvoke(UriTemplate = "file/edit")]
+        [HttpPostRoute(UriTemplate = "file/edit")]
         public async Task<Response<List<FileManagementFile>>> EditFile(FileManagementFile[] files)
         {
             var vms = new List<FileManagementFile>();
@@ -245,7 +246,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-        // [WebInvoke(UriTemplate = "folder/edit")]
+        // [HttpPostRoute(UriTemplate = "folder/edit")]
         //public async Task<Response<List<FileManagementFolder>>> EditFolder(List<FileManagementFolder> fldrs)
         //{
         //    var vms = new List<FileManagementFolder>();
@@ -268,7 +269,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //     return List2(vms);
         //}
 
-        //[WebInvoke(UriTemplate = "folder/delete")]
+        //[HttpPostRoute(UriTemplate = "folder/delete")]
         //public async Task<Response<FileManagementFolder>> DeleteFolder(List<FileManagementFolder> fldrs)
         //{
         //    bool success = true;

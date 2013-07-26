@@ -7,6 +7,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.Reference.Contracts;
 using Mozu.Reference.Contracts.Clients;
@@ -15,7 +16,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Tax;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-     [ServiceContract]
+    [WebApi("app/reference", SuppressDescriptorGeneration = true)]
     public class RefrenceController : BaseController
     {
          private readonly IReferenceDataWebApiClient _referenceDataWebApi;
@@ -27,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          }
 
 
-         [WebGet(UriTemplate = "states/list?country={country}")]
+		 [HttpGetRoute(UriTemplate = "states/list?country={country}")]
          public async Task<Response<List<FieldData>>> GetTaxRates([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, string country = "us")
          {
              country = string.IsNullOrEmpty(country) ? "us" : country;

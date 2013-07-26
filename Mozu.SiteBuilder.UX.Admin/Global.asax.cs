@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -19,6 +20,7 @@ using Mozu.Core.Api.Testing;
 using Mozu.Core.Configuration;
 using Mozu.Provisioning.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
+using Mozu.SiteBuilder.Mvc.Debugging.RouteDebug;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -61,6 +63,11 @@ namespace Mozu.SiteBuilder.UX.Admin
             WebApiConfig.Register(GlobalConfiguration.Configuration);
 
             RegisterMvcRoutes(RouteTable.Routes);
+            if (ConfigurationManager.AppSettings["routeDebug"] == "true")
+            {
+                RouteDebugger.RewriteRoutesForTesting(RouteTable.Routes);
+            }
+
         }
 
         private void RegisterMvcRoutes(RouteCollection routes)

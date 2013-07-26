@@ -6,6 +6,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -18,8 +19,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     /// <summary>
     /// Controller for products.
-    /// </summary>
-    [ServiceContract]
+	/// </summary>
+	[WebApi("app/inventoryproduct", SuppressDescriptorGeneration = true)]
     public class InventoryProductController : BaseController
     {
         private readonly CollectionTaskUnMapper<Product, DC.Product> _productMapper = new CollectionTaskUnMapper<Product, DC.Product>();
@@ -34,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _productClient = productClient;
         }
 
-        [WebGet(UriTemplate = "list")]
+		[HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<Product>>> ListProducts([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri] bool? withVariations = false)
         {
             if (pagingParams.id != null)
@@ -52,9 +53,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(Mapper.Map<List<Product>>(res.Items), (int)res.TotalCount);
         }
 
-       
 
-        [WebInvoke(UriTemplate = "edit")]
+
+		[HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<Product>>> EditProduct(List<Product> products)
         {
             if (products == null || !products.Any())

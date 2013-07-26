@@ -7,6 +7,7 @@ using System.ServiceModel.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.Routing;
 using Mozu.Core.Logging;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -19,7 +20,7 @@ using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/navigation", SuppressDescriptorGeneration = true)]
     public class NavigationController : BaseController
     {
         // the top level name in EXT's tree thing (a root pseudo-node).
@@ -53,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Returns the combined navigation tree.
         /// </summary>
         
-        [WebGet(UriTemplate = "list")]
+        [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<NavigationTreeNode>>> List()
         {
             _log.Debug("Generating list.");
@@ -65,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Create a new NavigationTreeNode, for instance, an external link.
         /// </summary>
-        [WebInvoke(UriTemplate = "create")]
+        [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<NavigationTreeNode>>> Create(List<NavigationTreeNode> items)
         {
             var navSet = await _navRepo.GetSetAsync();
@@ -101,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Delete a NavigationTreeNode (a document or a link).
         /// </summary>
-        [WebInvoke(UriTemplate = "delete")]
+        [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<NavigationTreeNode>>> Delete(List<NavigationTreeNode> items)
         {
             var navSet = await _navRepo.GetSetAsync();
@@ -143,7 +144,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Reorganize some part of the navigation tree.
         /// </summary>
-        [WebInvoke(UriTemplate = "update")]
+        [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<NavigationTreeNode>>> Edit(List<NavigationTreeNode> items)
         {
             if (items.Count > 1)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core.Api.Contracts.Client;
-
+using Mozu.Core.Api.Routing;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -22,8 +22,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     /// <summary>
     /// This controller pertains to everything you ever wanted to know about phone orders, but were afraid to ask.
-    /// </summary>
-    [ServiceContract]
+	/// </summary>
+    [WebApi("app/phoneorder", SuppressDescriptorGeneration = true)]
     public class PhoneOrderController : BaseController
     {
         IProductRuntimeWebApiClient _productClient;
@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _orderClient = orderClient;
         }
 
-        [WebGet(UriTemplate = "product/{productCode}")]
+		[HttpGetRoute(UriTemplate = "product/{productCode}")]
         public async Task<Response<RuntimeProductContract>> GetProductRaw(string productCode)
         {
             RuntimeProductContract prod = (await _productClient.GetProduct(productCode, null, null, null)).ReadAsSync();
@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2<RuntimeProductContract>(prod);
         }
 
-        [WebGet(UriTemplate = "product/{productCode}")]
+        [HttpGetRoute(UriTemplate = "product/{productCode}")]
         public async Task<Response<RuntimeProductDTO>> GetProduct(string productCode)
         {
             RuntimeProductContract prod = (await _productClient.GetProduct(productCode, null, null, null)).ReadAsSync();
@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2<RuntimeProductDTO>(product);
         }
 
-        [WebGet(UriTemplate = "productsuggest?q={query}")]
+        [HttpGetRoute(UriTemplate = "productsuggest?q={query}")]
         public async Task<Response<List<string>>> GetSuggestProduct(string query)
         {
             SearchSuggestionContract ss = (await _searchClient.Suggest(query, null)).ReadAsSync();
@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2<string>(ss.Suggestions);
         }
 
-        [WebGet(UriTemplate = "productsearch?q={q}")]
+        [HttpGetRoute(UriTemplate = "productsearch?q={q}")]
         public async Task<Response<List<RuntimeProductContract>>> GetProductSearch(string q)
         {
             RuntimeProductSearchResultContract r = (await _searchClient.Search(q, null, null, null, null, null, null, null, null, null)).ReadAsSync();
@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2<RuntimeProductContract>(r.Items);
         }
 
-        //[WebInvoke(Method="POST",UriTemplate = "order/stuffit")]
+		//[HttpPostRoute(UriTemplate = "order/stuffit")]
         //public async Task<Response<OrderDTO>> StuffAnOrderIntoABox(OrderDTO order)
         //{
         //    var o = new OrderContract();

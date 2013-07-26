@@ -6,6 +6,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
@@ -19,8 +20,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     /// <summary>
     /// Controller for product types.
-    /// </summary>
-    [ServiceContract]
+	/// </summary>
+    [WebApi("app/producttype", SuppressDescriptorGeneration = true)]
     public class ProductTypeController : BaseController
     {
         private readonly IProductTypeWebApiClient _productTypeClient;
@@ -38,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Get a list of Product Types.
         /// </summary>
-        [WebGet(UriTemplate = "read")]
+		[HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<List<ProductType>>> ListProductTypes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             if (pagingParams.id != null)
@@ -77,7 +78,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Create new product types.
         /// </summary>
-        [WebInvoke(UriTemplate = "create")]
+		[HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<ProductType>>> CreateProductType(List<ProductType> productTypes)
         {
             if (productTypes == null || !productTypes.Any())
@@ -90,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Edit existing product types.
         /// </summary>
-        [WebInvoke(UriTemplate = "update")]
+		[HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<ProductType>>> EditProductType(List<ProductType> productTypes)
         {
             if (productTypes == null || !productTypes.Any())
@@ -103,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Delete existing product types.
         /// </summary>
-        [WebInvoke(UriTemplate = "destroy")]
+		[HttpPostRoute(UriTemplate = "destroy")]
         public async Task<Response<List<ProductType>>> DeleteProductType(List<ProductType> productTypes)
         {
             if (productTypes == null || !productTypes.Any())

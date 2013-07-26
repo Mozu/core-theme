@@ -6,6 +6,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using AutoMapper;
 using System.Linq;
+using Mozu.Core.Api.Routing;
 using Mozu.PaymentService.Contracts.Clients.Public;
 using Mozu.Provisioning.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -20,7 +21,7 @@ using PaymentSettings = Mozu.SiteSettings.Order.Contracts.PaymentSettings;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [ServiceContract]
+    [WebApi("app/checkoutsettings", SuppressDescriptorGeneration = true)]
     public class CheckoutSettingsController : BaseController
     {
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
@@ -42,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Returns the active checkout settings
         /// </summary>
         /// <returns></returns>
-        [WebGet(UriTemplate = "read")]
+        [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<Setting>> GetSettings()
         {
             var res = await _checkoutSettingsWebApiClient.GetCheckoutSettings();
@@ -60,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <param name="setting">The checkout settings</param>
         /// <returns>The active checkout settings</returns>
-        [WebInvoke(UriTemplate = "update")]
+        [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<Setting>> UpdateSettings(Setting settingReq)
         {
             var pSetting = ConvertToContract(settingReq);
@@ -118,7 +119,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Returns the PCIaaS gateway definitions
         /// </summary>
         /// <returns>Array of gateway definitions</returns>
-        [WebGet(UriTemplate = "definition/read")]
+        [HttpGetRoute(UriTemplate = "definition/read")]
         public async Task<Response<List<GatewayDefinition>>> GetDefinitions()
         {
             var def = (await _checkoutSettingsWebApiClient.GetGatewayDefinitions()).ReadAsSync();
