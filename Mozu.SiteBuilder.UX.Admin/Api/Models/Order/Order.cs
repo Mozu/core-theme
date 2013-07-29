@@ -53,10 +53,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal Subtotal { get; set; }
 
         /// <summary>
+        /// List of all active and non-active order-level discounts.
+        /// </summary>
+        [DataMember(Name = "orderDiscounts", EmitDefaultValue = false)]
+        public List<object> OrderDiscounts { get; set; }
+
+        /// <summary>
         /// Description of order-level discount, if one exists.
         /// </summary>
-        [DataMember(Name = "orderDiscountDescription", EmitDefaultValue = false)]
-        public List<object> OrderDiscounts { get; set; }
+        [DataMember(Name="activeDiscountDescription", EmitDefaultValue = false)]
+        public string ActiveDiscountDescription { get; set; }
 
         /// <summary>
         /// Value order-level discount, if one exists.
@@ -73,6 +79,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name = "shippingCost")]
         public decimal ShippingCost;
+
+         [DataMember(Name = "activeShippingDiscountAmount", EmitDefaultValue = false)]
+         public decimal? ActiveShippingDiscountAmount { get; set; }
+ 
+         [DataMember(Name = "activeShippingDiscountDescription", EmitDefaultValue = false)]
+         public string ActiveShippingDiscountDescription { get; set; }
 
         [DataMember(Name = "shippingDiscount", EmitDefaultValue = false)]
         public List<object> ShippingDiscounts { get; set; }

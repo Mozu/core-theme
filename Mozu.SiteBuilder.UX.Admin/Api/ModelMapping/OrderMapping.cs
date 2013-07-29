@@ -37,9 +37,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IpAddress, op => op.MapFrom(dc => dc.IPAddress))
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
                 .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
+                .ForMember(x => x.ActiveDiscountDescription, op => op.MapFrom(dc =>
+                    dc.OrderDiscounts != null && dc.OrderDiscounts.Any(d => d.Excluded.HasValue && !d.Excluded.Value) ?
+                        dc.OrderDiscounts.First().Discount.Name : null
+                ))
                 .ForMember(x => x.OrderDiscountTotal, op => op.MapFrom(dc => dc.DiscountTotal))
                 .ForMember(x => x.OrderDiscounts, op => op.MapFrom(dc => dc.OrderDiscounts))
 
+                .ForMember(x => x.ActiveShippingDiscountDescription, op => op.MapFrom(dc =>
+                    dc.ShippingDiscounts != null && dc.ShippingDiscounts.Any(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) ?
+                        dc.ShippingDiscounts.First().Discount.Discount.Name : null
+                ))
+                .ForMember(x => x.ActiveShippingDiscountAmount, op => op.MapFrom(dc =>
+                    dc.ShippingDiscounts != null && dc.ShippingDiscounts.Any(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) ?
+                        dc.ShippingDiscounts.First().Discount.Impact : null
+                ))
                 .ForMember(x => x.ShippingDiscounts, op => op.MapFrom(dc => dc.ShippingDiscounts))
                 .ForMember(x => x.ShippingTotal, op => op.MapFrom(dc => dc.ShippingTotal))
                 .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Total))
@@ -100,12 +112,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
                   .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
                   .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.Product.ProductCode))
-                // TODO: options .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options))
                   .ForMember(x => x.ProductName, op => op.MapFrom(dc => dc.Product.Name))
                   .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.Product.Price.Price))
                   .ForMember(x => x.UnitWeight, op => op.MapFrom(dc => dc.Product.Measurements != null && dc.Product.Measurements != null ? dc.Product.Measurements.Weight : null))
                   .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
-                    //TODO:find out where the metadata for discount went
+                  .ForMember(x => x.ActiveDiscount, op => op.MapFrom(dc => dc.ProductDiscounts != null ? dc.ProductDiscounts.FirstOrDefault(d => d.Excluded.HasValue && !d.Excluded.Value) : null))
                   .ForMember(x => x.Discounts, op => op.MapFrom(dc => dc.ProductDiscounts))
                   .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options != null ? dc.Product.Options.Select(o => o.Value) : null))
                   .AfterMap((dc, orderItem) =>
