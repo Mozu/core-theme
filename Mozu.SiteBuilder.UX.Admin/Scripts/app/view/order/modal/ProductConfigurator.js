@@ -9,8 +9,15 @@
 
     autoShow: true,
 
+    width: 600,
+    height: 450,
+
     productCode: null,
     record: null,
+
+    layout: {
+        type: 'fit'
+    },
 
     initComponent: function () {
         this.addEvents(

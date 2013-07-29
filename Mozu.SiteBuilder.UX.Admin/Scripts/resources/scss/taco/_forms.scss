@@ -126,7 +126,6 @@
   /* PRODUCT CONFIGURATOR */
 
   .#{$vprefix}product-configurator {
-    //@include flexbox;
 
     .images {
       margin: 10px 10px 0 0;
@@ -139,13 +138,17 @@
       }
     }
 
-    .options {
+    .price {
+      margin: px-to-rem(20) 0;
+    }
 
+    .description {
+      padding-top: px-to-rem(10);
     }
   }
 
   .#{$vprefix}product-option-value-list .disabled {
-    color: red;
+    color: $color-neutral-70;
   }
 
 }
