@@ -38,10 +38,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
                 .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
                 .ForMember(x => x.OrderDiscountTotal, op => op.MapFrom(dc => dc.DiscountTotal))
-                .ForMember(x => x.OrderDiscountDescription , op => op.MapFrom(dc => dc.OrderDiscount != null &&  dc.OrderDiscount.Discount!= null ? dc.OrderDiscount.Discount.Name : null ))
+                .ForMember(x => x.OrderDiscounts, op => op.MapFrom(dc => dc.OrderDiscounts))
 
-                .ForMember(x => x.ShippingDiscount, op => op.MapFrom(dc => dc.ShippingDiscount != null && dc.ShippingDiscount.Discount != null ? (decimal?)dc.ShippingDiscount.Discount.Impact : null))
-                .ForMember(x => x.ShippingDiscountDescription, op => op.MapFrom(dc => dc.ShippingDiscount != null && dc.ShippingDiscount.Discount != null && dc.ShippingDiscount.Discount.Discount != null ? dc.ShippingDiscount.Discount.Discount.Name : null))
+                .ForMember(x => x.ShippingDiscounts, op => op.MapFrom(dc => dc.ShippingDiscounts))
                 .ForMember(x => x.ShippingTotal, op => op.MapFrom(dc => dc.ShippingTotal))
                 .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Total))
                 .ForMember(x => x.CustomerNote, op => op.MapFrom(dc => dc.ShopperNotes != null ? dc.ShopperNotes.Comments : null))
@@ -106,14 +105,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.Product.Price.Price))
                   .ForMember(x => x.UnitWeight, op => op.MapFrom(dc => dc.Product.Measurements != null && dc.Product.Measurements != null ? dc.Product.Measurements.Weight : null))
                   .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
-                //TODO:find out where the metadata for discount went
-                  .ForMember(x => x.Discount, op => op.MapFrom(dc => dc.ProductDiscount))
+                    //TODO:find out where the metadata for discount went
+                  .ForMember(x => x.Discounts, op => op.MapFrom(dc => dc.ProductDiscounts))
                   .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options != null ? dc.Product.Options.Select(o => o.Value) : null))
                   .AfterMap((dc, orderItem) =>
                       {
-                          if (orderItem.Discount != null)
+                          if (orderItem.Discounts != null)
                           {
-                              orderItem.Discount.Quantity = orderItem.Discount.Quantity == 0 ? orderItem.Quantity : orderItem.Discount.Quantity;
+                              orderItem.Discounts.Each(d => d.Quantity = d.Quantity == 0 ? orderItem.Quantity : d.Quantity);
                           }
                       });
                 // TODO: shopper entered value

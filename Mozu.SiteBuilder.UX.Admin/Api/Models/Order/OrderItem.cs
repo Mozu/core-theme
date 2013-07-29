@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public int Quantity { get; set; }
 
         [DataMember(Name = "discount", EmitDefaultValue=true)]
-        public OrderItemDiscount Discount { get; set; }
+        public List<OrderItemDiscount> Discounts { get; set; }
 
         [DataMember(Name = "subtotal")]
         public decimal Subtotal { get; set; }

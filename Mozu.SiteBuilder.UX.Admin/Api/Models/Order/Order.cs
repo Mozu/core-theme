@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// Description of order-level discount, if one exists.
         /// </summary>
         [DataMember(Name = "orderDiscountDescription", EmitDefaultValue = false)]
-        public string OrderDiscountDescription { get; set; }
+        public List<object> OrderDiscounts { get; set; }
 
         /// <summary>
         /// Value order-level discount, if one exists.
@@ -75,10 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal ShippingCost;
 
         [DataMember(Name = "shippingDiscount", EmitDefaultValue = false)]
-        public decimal? ShippingDiscount { get; set; }
-
-        [DataMember(Name = "shippingDiscountDescription", EmitDefaultValue = false)]
-        public string ShippingDiscountDescription { get; set; }
+        public List<object> ShippingDiscounts { get; set; }
 
         [DataMember(Name = "shippingTotal")]
         public decimal ShippingTotal { get; set; }
