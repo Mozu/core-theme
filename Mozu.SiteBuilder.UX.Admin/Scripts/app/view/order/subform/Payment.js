@@ -9,7 +9,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         'Taco.view.order.modal.CheckPayment',
         'Taco.view.order.widget.PaymentPanel',
         'Taco.view.order.modal.AddPayment',
-        'Taco.view.order.modal.AddManualPayment'
+        'Taco.view.order.modal.AddPaymentManual'
     ],
     config : {
         // order model
@@ -91,7 +91,7 @@ Ext.define('Taco.view.order.subform.Payment', {
             handler: function () {
                 var me = this;
         
-                var modal = Ext.create('Taco.view.order.modal.AddManualPayment', {
+                var modal = Ext.create('Taco.view.order.modal.AddPaymentManual', {
                     record: me.record
                 });
         

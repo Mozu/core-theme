@@ -8,6 +8,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.CheckPayment',
         'Taco.view.order.modal.CapturePayment',
+        'Taco.view.order.modal.CapturePaymentManual',
+        'Taco.view.order.modal.VoidPaymentManual',
         'Taco.view.order.modal.EditTransaction'
     ],
     cls: 'orderform-payment-transaction',
@@ -317,6 +319,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             case 'CreditPayment':
                 me.parent.issueCredit();
                 break;
+            case 'ManualCapturePayment':
+                me.parent.capturePaymentManual();
+            case 'ManualVoidPayment':
+                me.parent.voidPaymentManual();
         }
     },
 
@@ -330,6 +336,28 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         });
 
         capturePayment.show();
+    },
+
+    capturePaymentManual: function () {
+        var me = this;
+        
+        var capturePaymentManual = Ext.create('Taco.view.order.modal.CapturePaymentManual', {
+            order: me.order,
+            record: me.record
+        });
+
+        capturePaymentManual.show();
+    },
+
+    voidPaymentManual: function () {
+        var me = this;
+        
+        var capturePaymentManual = Ext.create('Taco.view.order.modal.VoidPaymentManual', {
+            order: me.order,
+            record: me.record
+        });
+
+        capturePaymentManual.show();
     }
 
     // called when the record has been updated

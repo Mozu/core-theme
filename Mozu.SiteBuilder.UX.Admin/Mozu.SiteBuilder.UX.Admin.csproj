@@ -696,12 +696,13 @@
     <Content Include="Scripts\app\view\navigation\GlobalSearchBox.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\order\Header.js" />
+    <Content Include="Scripts\app\view\order\modal\CapturePaymentManual.js" />
     <Content Include="Scripts\app\view\order\modal\EditTransaction.js" />
     <Content Include="Scripts\app\view\order\modal\CapturePayment.js" />
     <Content Include="Scripts\app\view\order\modal\CheckPayment.js" />
     <Content Include="Scripts\app\view\order\modal\EditTrackingNumber.js" />
     <Content Include="Scripts\app\view\order\modal\IssueCredit.js" />
-    <Content Include="Scripts\app\view\order\modal\AddManualPayment.js" />
+    <Content Include="Scripts\app\view\order\modal\AddPaymentManual.js" />
     <Content Include="Scripts\app\view\order\modal\AddPayment.js" />
     <Content Include="Scripts\app\view\order\modal\RequestCheck.js" />
     <Content Include="Scripts\app\view\order\subform\Shipping.js" />
