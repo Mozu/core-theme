@@ -18,12 +18,16 @@ namespace Mozu.SiteBuilder.Mvc.Security
         public static HttpCookie ToCookie(this UserAuthTicket ticket, string cookieName)
         {
             var cookie = new HttpCookie(cookieName);
+           
+            if (ticket != null)
+            {
+                cookie[AccessToken] = ticket.AccessToken;
+                cookie[RefreshToken] = ticket.RefreshToken;
+                cookie[UserProfile] = ToString(ticket.User);
+                cookie[AccessTokenExpiration] = ticket.AccessTokenExpiration.Ticks.ToString("X2");
+                cookie[RefreshTokenExpiration] = ticket.RefreshTokenExpiration.Ticks.ToString("X2");
+            }
             
-            cookie[AccessToken] = ticket.AccessToken;
-            cookie[RefreshToken] = ticket.RefreshToken;
-            cookie[UserProfile] = ToString(ticket.User);
-            cookie[AccessTokenExpiration] = ticket.AccessTokenExpiration.Ticks.ToString("X2");
-            cookie[RefreshTokenExpiration] = ticket.RefreshTokenExpiration.Ticks.ToString("X2");
             cookie.Expires = DateTime.Now.AddYears(20);
             return cookie;
         }
@@ -62,6 +66,10 @@ namespace Mozu.SiteBuilder.Mvc.Security
         }
         public static UserAuthTicket ToTicket(this HttpCookie cookie)
         {
+            if (cookie[AccessToken] == null)
+            {
+                return null;
+            }
             return new UserAuthTicket
             {
                 AccessToken = cookie[AccessToken],

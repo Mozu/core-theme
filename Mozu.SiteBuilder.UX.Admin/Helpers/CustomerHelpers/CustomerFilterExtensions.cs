@@ -25,19 +25,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
             // TODO: commenting out this next part. I can't find any way from EXT to make "query" happen.
             // if (!string.IsNullOrEmpty(extFilter.query))
             //     extFilter.Add(new FilterCollectionItem { comparison = "cont", field = PropertyGuy.Convert(x => x.Content.ProductName), value = extFilter.query });
-            var stateMents = extFilter.Select(GetFilter);
+            var stateMents = extFilter.Where( x=> x.value != null ).Where( x=>!String.IsNullOrEmpty( x.value.ToString()) ).SelectMany(x=>  x.value.ToString().Split( ' ' ).Select( _=> GetFilter( _, x)) );
            
             return string.Join(" and ", stateMents);
         }
 
-        private static string GetFilter(FilterCollectionItem filter)
+        private static string GetFilter(string value, FilterCollectionItem filter)
         {
+            
             switch (filter.property.ToLowerInvariant())
             {
                 case "all": //commenting out full desc till supported by service
 
 
-                    return string.Format("({1} sw \"{0}\" or {2} sw \"{0}\" or {3} sw \"{0}\")", filter.value, FIRSTNAME, LASTNAMEORSURNAME, EMAIL);
+                    return string.Format("({1} sw \"{0}\" or {2} sw \"{0}\" or {3} sw \"{0}\")", value, FIRSTNAME, LASTNAMEORSURNAME, EMAIL);
                  
                 default:
                     {
