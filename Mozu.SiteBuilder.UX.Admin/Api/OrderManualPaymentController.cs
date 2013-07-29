@@ -12,7 +12,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     public partial class OrderController
     {
-        public class CreateManualPaymentArgs
+        public class CreatePaymentManualArgs
         {
             public string OrderId { get; set; }
             public string GatewayTransactionId { get; set; }
@@ -20,13 +20,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string ActionName { get; set; }
             public decimal? Amount { get; set; }
             public CardPaymentInformation BillingInfo { get; set; }
-            
         }
         /// <summary>
         /// Creates a new payment and performs the "AuthAndCapture" action.
         /// </summary>
-		[HttpGetRoute(UriTemplate = "payment/createmanual")]
-        public async Task<Response<List<Order>>> CreateManualPayment(CreateManualPaymentArgs args)
+		[HttpGetRoute(UriTemplate = "payment/manual/create")]
+        public async Task<Response<List<Order>>> CreatePaymentManual(CreatePaymentManualArgs args)
         {
             var action = new DCp.PaymentAction
             {
@@ -52,5 +51,62 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return List2(order.Map<Order>());
         }
+
+        public class EditTransactionManualArgs
+        {
+            public string OrderId { get; set; }
+            public string PaymentId { get; set; }
+            public string TransactionId { get; set; }
+            public string GatewayInteractionId { get; set; }
+            public CardPaymentInformation BillingInfo { get; set; }
+            public decimal Amount { get; set; }
+        }
+        [HttpGetRoute(UriTemplate = "payment/manual/edittransaction")]
+        public async Task<Response<List<Order>>> EditTransactionManual(EditTransactionManualArgs args)
+        {
+            // TODO: mozu service does not currently support edit transaction.
+            throw new NotImplementedException();
+        }
+
+
+        public class CapturePaymentManualArgs
+        {
+            public string OrderId { get; set; }
+            public string PaymentId { get; set; }
+            public string GatewayInteractionId { get; set; }
+            public CardPaymentInformation BillingInfo { get; set; }
+            public decimal Amount { get; set; }
+        }
+        [HttpGetRoute(UriTemplate = "payment/manual/capture")]
+        public async Task<Response<List<Order>>> CapturePaymentManual(CapturePaymentManualArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public class CreditPaymentManualArgs
+        {
+            public string OrderId { get; set; }
+            public string PaymentId { get; set; }
+            public string GatewayInteractionId { get; set; }
+            public decimal Amount { get; set; }
+        }
+        [HttpGetRoute(UriTemplate = "payment/creditmanual")]
+        public async Task<Response<List<Order>>> CreditPaymentManual(CreditPaymentManualArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public class VoidPaymentManualArgs
+        {
+            public string OrderId { get; set; }
+            public string PaymentId { get; set; }
+            public string GatewayInteractionId { get; set; }
+        }
+        [HttpGetRoute(UriTemplate = "payment/voidmanual")]
+        public async Task<Response<List<Order>>> VoidPaymentManual(CapturePaymentManualArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

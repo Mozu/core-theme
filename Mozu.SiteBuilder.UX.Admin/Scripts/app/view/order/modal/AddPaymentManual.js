@@ -1,7 +1,7 @@
 /**
- * @class Taco.view.order.modal.PaymentAction
+ * @class Taco.view.order.modal.AddPaymentManual
  */
-Ext.define('Taco.view.order.modal.AddManualPayment', {
+Ext.define('Taco.view.order.modal.AddPaymentManual', {
     extend: 'Taco.core.ux.modal.Modal',
     requires: ['Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField'],
     cls: Taco.baseCSSPrefix + 'order-modal',

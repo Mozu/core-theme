@@ -811,13 +811,30 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    addManualPayment: function (config) {
+    createManualPayment: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/payment/createmanual',
+            url: '/admin/app/order/payment/manual/create',
             method: "POST"            
         });
 
         Ext.Ajax.request(config);
     },
 
+    editTransaction: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/manual/edittransaction',
+            method: "POST"            
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    addManualPayment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/manual/create',
+            method: "POST"            
+        });
+
+        Ext.Ajax.request(config);
+    },
 });
