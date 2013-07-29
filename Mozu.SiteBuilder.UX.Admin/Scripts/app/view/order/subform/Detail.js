@@ -118,7 +118,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                     rowBodyTdCls: "x-grid-cell adjustment-cell",
                     getAdditionalData: function (data, rowIndex, record, orig) {
                         var colspan = 1,
-                            discount = record.get("discount"),
+                            discount = record.get("activeDiscount"),
                             rowBodyCls = (discount) ? "hasDiscount" : "noDiscount";
                     
                         return {
@@ -308,15 +308,15 @@ Ext.define('Taco.view.order.subform.Detail', {
                         '<div class="orderTotal-labels">',
                             '<div class="subTotalGroup">',
                                 '<div class="subTotal">Subtotal:</div>',
-                                '<tpl if="orderDiscountDescription!=\'\'">',
-                                    '<div class="orderLevelCoupon">Discount ({orderDiscountDescription})</div>',
+                                '<tpl if="activeDiscountDescription!=\'\'">',
+                                    '<div class="orderLevelCoupon">Discount ({activeDiscountDescription})</div>',
                                 '</tpl>',
                             '</div>',
                         
                             '<div class="shippingGroup">',
                                 '<div class="shipping">Shipping ({shippingMethodName}):</div>',
-                                '<tpl if="shippingDiscount">',
-                                    '<div class="shippingCoupon">{shippingDiscountDescription}:</div>',
+                                '<tpl if="activeShippingDiscountDescription">',
+                                    '<div class="shippingCoupon">{activeShippingDiscountDescription}:</div>',
                                 '</tpl>',
                             '</div>',
                         
@@ -347,8 +347,8 @@ Ext.define('Taco.view.order.subform.Detail', {
                         
                             '<div class="shippingGroup">',
                                 '<div class="shipping">{shippingTotal:usMoney}</div>',
-                                '<tpl if="shippingDiscount">',
-                                    '<div class="shippingCoupon">{shippingDiscount:usMoney}</div>',
+                                '<tpl if="activeShippingDiscountAmount">',
+                                    '<div class="shippingCoupon">{activeShippingDiscountAmount:usMoney}</div>',
                                 '</tpl>',
                             '</div>',
                             

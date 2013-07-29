@@ -31,7 +31,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "quantity")]
         public int Quantity { get; set; }
 
-        [DataMember(Name = "discount", EmitDefaultValue=true)]
+        [DataMember(Name = "activeDiscount", EmitDefaultValue = true)]
+        public OrderItemDiscount ActiveDiscount { get; set; }
+
+        [DataMember(Name = "discounts", EmitDefaultValue=true)]
         public List<OrderItemDiscount> Discounts { get; set; }
 
         [DataMember(Name = "subtotal")]
@@ -39,6 +42,5 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name = "total")]
         public decimal Total { get; set; }
-
     }
 }

@@ -54,7 +54,12 @@ Ext.define('Taco.model.OrderItem', {
             "useNull": true
         },
         {
-            "name": "discount",
+            "name": "discounts",
+            "type": "auto",
+            "default": []
+        },
+        {
+            "name": "activeDiscount",
             "type": "auto",
             "useNull": true
         },
@@ -100,7 +105,12 @@ Ext.define('Taco.model.OrderItem', {
         {
             type: 'hasOne',
             model: 'Taco.model.OrderItemDiscount',
-            name: 'discount'
+            name: 'activeDiscount'
+        },
+        {
+            type: 'hasMany',
+            model: 'Taco.model.OrderItemDiscount',
+            name: 'discounts'
         },
         {
             type: 'belongsTo',
