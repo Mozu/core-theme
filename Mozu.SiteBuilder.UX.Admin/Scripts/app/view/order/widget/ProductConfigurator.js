@@ -1,12 +1,9 @@
-﻿Ext.define('Taco.model.ProductOptionValue', {
-    extend: 'Ext.data.Model'
-})
-
-Ext.define('Taco.view.order.widget.ProductConfigurator', {
+﻿Ext.define('Taco.view.order.widget.ProductConfigurator', {
     extend: 'Taco.core.ux.form.Form',
-    layout: 'hbox',
-    width: 800,
-    //extend: 'Ext.panel.Panel',
+    layout: {
+        type: 'hbox',
+        align: 'stretch'
+    },
 
     cls: 'taco-product-configurator',
 
@@ -15,6 +12,7 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
     ],
 
     statics: {
+
         updates: {
             'List': function (option, field) {
                 var store = Ext.create('Ext.data.Store', {
@@ -26,8 +24,18 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
             }
         },
 
-
         builds: {
+            'Default': function (option) {
+                return {
+                    fieldLabel: option.AttributeDetail.Name,
+                    labelAlign: 'left',
+                    name: option.AttributeFQN,
+                    value: option.Value,
+                    allowBlank: !option.isRequired,
+                    optionInputType: option.AttributeDetail.InputType
+                }
+            },
+
             'List': function (option) {
                 var store,
                     selectedValue,
@@ -40,12 +48,7 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
 
                 return {
                     xtype: 'selectfield',
-                    fieldLabel: option.AttributeDetail.Name,
-                    name: option.AttributeFQN,
-                    optionInputType: 'List',
                     store: store,
-                    value: option.Value,
-                    allowBlank: !option.isRequired,
                     valueField: 'Value',
                     displayField: 'StringValue',
                     listConfig: {
@@ -64,34 +67,20 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
 
             'Date': function (option) {
                 return {
-                    xtype: 'datefield',
-                    fieldLabel: option.AttributeDetail.Name,
-                    name: option.AttributeFQN,
-                    optionInputType: 'Date',
-                    allowBlank: !option.isRequired,
-                    value: option.Value
+                    xtype: 'datefield'
                 };
             },
 
             'YesNo': function (option) {
                 return {
                     xtype: 'checkbox',
-                    fieldLabel: option.AttributeDetail.Name,
-                    name: option.AttributeFQN,
-                    optionInputType: 'YesNo',
-                    allowBlank: !option.isRequired,
                     checked: !!option.Value
                 };
             },
 
             'TextBox': function (option) {
                 return {
-                    xtype: 'textfield',
-                    fieldLabel: option.AttributeDetail.Name,
-                    name: option.AttributeFQN,
-                    optionInputType: 'TextBox',
-                    allowBlank: !option.isRequired,
-                    value: option.Value
+                    xtype: 'textfield'
                 };
             }
         },
@@ -117,26 +106,33 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
             autoEl: {
                 tag: 'ul',
                 cls: 'images'
-            }
+            },
+            width: 150
         });
 
         this.optionsContainer = Ext.widget({
             xtype: 'container',
-            cls: 'options'
+            cls: 'options',
+            items: [{
+                xtype: 'component',
+                html: 'Loading runtime options...'
+            }]
         });
 
         this.description = Ext.widget({
-            xtype: 'component'
+            xtype: 'component',
+            cls: 'description'
         });
 
         this.price = Ext.widget({
             xtype: 'component',
+            cls: 'price',
             tpl: 'Price {SalePrice:currency}'
         });
 
         this.quantity = Ext.widget({
             xtype: 'numberfield',
-            labelPosition: 'top',
+            labelAlign: 'left',
             fieldLabel: 'Quantity',
             allowBlank: false,
             minValue: 1,
@@ -147,6 +143,8 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
         this.items = [
             this.imageContainer, {
                 xtype: 'container',
+                flex: 1,
+                autoScroll: true,
                 items: [
                     this.description,
                     this.price,
@@ -249,14 +247,24 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
             if (value.IsSelected) option.Value = value.Value;
         });
 
-        return Ext.apply(builds[inputType](option), {
+        return Ext.apply(builds['Default'](option), builds[inputType](option), {
             listeners: {
                 change: function (field, value) {
                     Ext.each(this.runtimeData.Options, function (option) {
                         if (option.AttributeFQN !== field.name) return;
+                        
                         option.Value = saves[inputType] ? saves[inputType](value) : value;
+                        
+                        if (option.AttributeDetail.UsageType === 'Option') {
+                            this.lastUpdatedOption = option;
+                        }
+
                         console.log('Change', inputType, option.Value, value);
-                    });
+                        return false;
+                    }, this);
+
+                    //if ( === 'List') this.lastUpdatedOption
+
                     this.postOptions();
                 },
                 scope: this
@@ -266,22 +274,38 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
 
     updateOption: function (option) {
         var field = this.findField(option.AttributeFQN),
-            updates = this.statics().updates;
+            updates = this.statics().updates,
+            currentValue,
+            repostOptions;
 
         if (!field) return;
+
+        currentValue = field.getValue();
 
         field.suspendCheckChange++;
 
         Ext.each(option.Values, function (value) {
             if (!value.StringValue) value.StringValue = value.Value;
-            if (value.IsSelected) option.Value = value.Value;
-        });
+            if (value.IsSelected) option.Value = value.ShopperEnteredValue || value.Value;
+            
+
+            if (currentValue === value.Value && !value.IsEnabled) {
+                if (this.lastUpdatedOption.AttributeFQN === option.AttributeFQN) {
+                    repostOptions = true;
+                } else {
+                    delete option.Value;
+                    delete option.ShopperEnteredValue; 
+                }
+            }
+        }, this);
 
         if (updates[field.optionInputType]) updates[field.optionInputType](option, field);
         
         field.setValue(option.Value);
 
         field.suspendCheckChange--;
+
+        if (repostOptions) this.postOptions();
     },
 
     postOptions: function () {
@@ -291,6 +315,8 @@ Ext.define('Taco.view.order.widget.ProductConfigurator', {
             if (option.Value === undefined) return;
 
             delete option.Values;
+
+            if (option.AttributeDetail.InputType !== 'List') option.ShopperEnteredValue = option.Value;
             
             request.Options.push(option);
         });
