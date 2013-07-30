@@ -27,27 +27,17 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
                     labelAlign: 'top',
                     width: 300
                 },
-                items: [{
-                    xtype: 'hidden',
-                    name: 'orderId',
-                    value: me.record.data.orderId
-                }, /*{
-                    name: 'name',
-                    fieldLabel: 'Name'
-                },*/ {
+                items: [
+                {
                     name: 'checkNumber',
                     fieldLabel: 'Check Number'
-                }, {
-                    xtype: 'unitfield',
-                    name: 'amountCollected',
+                }, 
+                {
+                    xtype: 'currencyfield',
+                    name: 'amount',
                     fieldLabel: 'Amount Collected',
-                    unitString: '$',
-                    emptyText: '0'
-                }/*, {
-                    xtype: 'datetime',
-                    name: 'createDate',
-                    fieldLabel: 'Create Date'
-                }*/]
+                    value: me.record.data.amountAuthorized
+                }]
             }],
             listeners: {
                 afterrender: function (panel) {
@@ -73,19 +63,20 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
         this.primaryButton = Ext.widget('primarybutton', {
             text: 'Save',
             click: function () {
-                var me = this;
- 
-                var data = Ext.apply(
-                    {
-                        orderId: me.record.getId()
-                    },
-                    me.formpanel.getValues()
-                );
-                me.record.applyCheck({
+                var me = this,
+                    formValues = me.formpanel.getValues(),
+                    data = {
+                        orderId: me.order.getId(),
+                        paymentId: me.record.getId(),
+                        checkNumber: formValues.checkNumber,
+                        amount: formValues.amount
+                    };
+
+                me.order.applyCheck({
                     jsonData: data,
                     success: function () {
 
-                        me.record.reload();
+                        me.order.reload();
                         me.hide();
                     }
                 });

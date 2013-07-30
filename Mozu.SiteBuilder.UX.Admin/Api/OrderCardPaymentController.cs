@@ -42,7 +42,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public class CreditPaymentArgs
         {
-            public OrderPayment Payment { get; set; }
+            public string OrderId { get; set; }
+            public string PaymentId { get; set; }
             public decimal Amount { get; set; }
             public string Reason { get; set; }
         }
@@ -60,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Amount = args.Amount
             };
 
-            var order = (await _orderWebApiClient.PerformPaymentAction(args.Payment.OrderId, args.Payment.Id, action)).ReadAsSync();
+            var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
 
             // TODO: we don't currently do anything with the "reason"
 
