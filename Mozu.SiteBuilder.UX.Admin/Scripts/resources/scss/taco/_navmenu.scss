@@ -68,52 +68,6 @@
       .#{$vprefix}icon-nav-files::after {
         content: "\E01E";
       }
-      // .#{$vprefix}icon {
-      //   border-right: 1px solid border-for($color-neutral-95);
-      //   color: $color;
-      //   display: inline-block;
-      //   height: 51px;
-      //   padding: 18px 15px 0px 50px;
-      //   position: relative;
-      //   vertical-align: top;
-
-      //   &::before {
-      //     content: "";
-      //     display: block;
-      //     height: 40px;
-      //     left: 5px;
-      //     position: absolute;
-      //     top: 5px;
-      //     width: 40px;
-      //   }
-      //   &.#{$vprefix}icon-nav-dashboard::before {
-      //     @include icons-sprite(icon-nav-dashboard);
-      //   }
-      //   &.#{$vprefix}icon-nav-customers::before {
-      //     @include icons-sprite(icon-nav-customers);
-      //   }
-      //   &.#{$vprefix}icon-nav-catalog::before {
-      //     @include icons-sprite(icon-nav-catalog);
-      //   }
-      //   &.#{$vprefix}icon-nav-orders::before {
-      //     @include icons-sprite(icon-nav-orders);
-      //   }
-      //   &.#{$vprefix}icon-nav-marketing::before {
-      //     @include icons-sprite(icon-nav-marketing);
-      //   }
-      //   &.#{$vprefix}icon-nav-sites::before {
-      //     @include icons-sprite(icon-nav-sites);
-      //   }
-      //   &.#{$vprefix}icon-nav-publishing::before {
-      //     @include icons-sprite(icon-nav-publishing);
-      //   }
-      //   &.#{$vprefix}icon-nav-files::before {
-      //     @include icons-sprite(icon-nav-files);
-      //   }
-      //   &.#{$vprefix}icon-nav-settings::before {
-      //     @include icons-sprite(icon-nav-settings);
-      //   }
-      // }
 
       ul {
         display: inline-block;
@@ -278,33 +232,6 @@
             color: $color-neutral-white;
           }
         }
-
-        // a {
-        //   &.#{$vprefix}icon-nav-dashboard::before {
-        //     @include icons-sprite(icon-nav-dashboard-light);
-        //   }
-        //   &.#{$vprefix}icon-nav-customers::before {
-        //     @include icons-sprite(icon-nav-customers-light);
-        //   }
-        //   &.#{$vprefix}icon-nav-catalog::before {
-        //     @include icons-sprite(icon-nav-catalog-light);
-        //   }
-        //   &.#{$vprefix}icon-nav-orders::before {
-        //     @include icons-sprite(icon-nav-orders-light);
-        //   }
-        //   &.#{$vprefix}icon-nav-marketing::before {
-        //     @include icons-sprite(icon-nav-marketing-light);
-        //   }
-        //   &.#{$vprefix}icon-nav-sites::before {
-        //     @include icons-sprite(icon-nav-sites-light);
-        //   }
-        //   &.#{$vprefix}icon-nav-publishing::before {
-        //     @include icons-sprite(icon-nav-publishing-light);
-        //   }
-        //   &.#{$vprefix}icon-nav-files::before {
-        //     @include icons-sprite(icon-nav-files-light);
-        //   }
-        // }
       }
 
       &.#{$vprefix}menu-item-active {
