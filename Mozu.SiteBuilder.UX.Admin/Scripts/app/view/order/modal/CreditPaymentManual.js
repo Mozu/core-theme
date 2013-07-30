@@ -1,7 +1,7 @@
 /**
- * @class Taco.view.order.modal.CapturePaymentManual
+ * @class Taco.view.order.modal.CreditPaymentManual
  */
-Ext.define('Taco.view.order.modal.CapturePaymentManual', {
+Ext.define('Taco.view.order.modal.CreditPaymentManual', {
     extend: 'Taco.core.ux.modal.Modal',
     requires: ['Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField'],
     cls: Taco.baseCSSPrefix + 'order-modal',
@@ -44,8 +44,8 @@ Ext.define('Taco.view.order.modal.CapturePaymentManual', {
                 items: [{
                     xtype: 'currencyfield',
                     name: 'amount',
-                    fieldLabel: 'Amount Captured',
-                    value: me.record.data.amountAuthorized
+                    fieldLabel: 'Amount Credited',
+                    value: me.record.data.amountCollected
                 }]
             }],
             listeners: {
@@ -62,7 +62,7 @@ Ext.define('Taco.view.order.modal.CapturePaymentManual', {
                 autoEl: {
                     tag: 'h2',
                     cls: 'order-modal-title',
-                    html: 'Manual Transaction: Capture Payment'
+                    html: 'Manual Transaction: Credit Payment'
                 }
             }, 
             this.formpanel
@@ -99,7 +99,7 @@ Ext.define('Taco.view.order.modal.CapturePaymentManual', {
                 };
 
                 // call the model method to persist the change
-                this.order.capturePaymentManual(cfg);
+                this.order.creditPaymentManual(cfg);
                 
                 me.hide();
             },

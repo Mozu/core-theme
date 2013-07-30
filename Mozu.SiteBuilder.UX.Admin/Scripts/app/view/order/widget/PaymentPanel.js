@@ -10,6 +10,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.CapturePayment',
         'Taco.view.order.modal.CapturePaymentManual',
         'Taco.view.order.modal.VoidPaymentManual',
+        'Taco.view.order.modal.CreditPaymentManual',
         'Taco.view.order.modal.EditTransaction'
     ],
     cls: 'orderform-payment-transaction',
@@ -321,8 +322,13 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 break;
             case 'ManualCapturePayment':
                 me.parent.capturePaymentManual();
+                break;
             case 'ManualVoidPayment':
                 me.parent.voidPaymentManual();
+                break;
+            case 'ManualCreditPayment':
+                me.parent.creditPaymentManual();
+                break;
         }
     },
 
@@ -352,25 +358,22 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     voidPaymentManual: function () {
         var me = this;
         
-        var capturePaymentManual = Ext.create('Taco.view.order.modal.VoidPaymentManual', {
+        var voidPaymentManual = Ext.create('Taco.view.order.modal.VoidPaymentManual', {
             order: me.order,
             record: me.record
         });
 
-        capturePaymentManual.show();
-    }
+        voidPaymentManual.show();
+    },
 
-    // called when the record has been updated
-//    onRecordChange: function () {
-//        var me = this;
-//
-//        // clear out the ui components
-//        me.statusRow.destroy();
-//        me.paymentDetails.destroy();
-//        me.transactionList.destroy();
-//
-//        //not sure why i need to do this but oh well....debug later
-//        //doesnt work
-//        //me.record.paymentsStore.loadRawData(me.record.data.payments);
-//    }
+    creditPaymentManual: function () {
+        var me = this;
+        
+        var creditPaymentManual = Ext.create('Taco.view.order.modal.CreditPaymentManual', {
+            order: me.order,
+            record: me.record
+        });
+
+        creditPaymentManual.show();
+    }
 });

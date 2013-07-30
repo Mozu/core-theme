@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.order.modal.VoidPaymentManual', {
     extend: 'Taco.core.ux.modal.Modal',
-    requires: ['Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField'],
+    requires: ['Taco.core.ux.form.DateTime'],
     cls: Taco.baseCSSPrefix + 'order-modal',
     autoShow: true,
     width: 400,
@@ -24,14 +24,13 @@ Ext.define('Taco.view.order.modal.VoidPaymentManual', {
                     xtype: 'textfield',
                     labelSeparator: '',
                     labelAlign: 'top',
-                    width: 300
+                    width: 150
                 },
                 items: [
                 {
-                    xtype: 'currencyfield',
-                    name: 'amount',
-                    fieldLabel: 'Amount to Capture',
-                    value: me.record.data.amountAuthorized
+                    xtype: 'textfield',
+                    name: 'gatewayInteractionId',
+                    fieldLabel: 'Gateway Interaction Id'
                 }]
             }],
             listeners: {
@@ -48,7 +47,7 @@ Ext.define('Taco.view.order.modal.VoidPaymentManual', {
                 autoEl: {
                     tag: 'h2',
                     cls: 'order-modal-title',
-                    html: 'Collect Payment'
+                    html: 'Manual Transaction: Void Payment'
                 }
             }, 
             this.formpanel
@@ -59,17 +58,15 @@ Ext.define('Taco.view.order.modal.VoidPaymentManual', {
             text: 'Save',
             click: function () {
                 var me = this,
-                    amount = me.formpanel.getValues()
                 
-                // add the capture Amount
-                data = {
-                    orderId: me.order.getId(),
-                    paymentId: me.record.getId(),
-                    amount: me.formpanel.getValues()['amount']
-                };
+                    data = {
+                        orderId: me.order.getId(),
+                        paymentId: me.record.getId(),
+                        gatewayInteractionId: me.formpanel.getValues()['gatewayInteractionId']
+                    },
 
-                // pacakage up the data for the model to persist
-                var cfg = {
+                    // pacakage up the data for the model to persist
+                    cfg = {
                     jsonData: data,
                     success: function (response) {
                         var json = Ext.decode(response.responseText, true);
@@ -85,9 +82,8 @@ Ext.define('Taco.view.order.modal.VoidPaymentManual', {
                     scope: this
                 };
 
-        // call the model method to persist the change
-        this.order.capturePayment(cfg);
-                
+                // call the model method to persist the change
+                this.order.voidPaymentManual(cfg);
                 me.hide();
             },
             scope: this

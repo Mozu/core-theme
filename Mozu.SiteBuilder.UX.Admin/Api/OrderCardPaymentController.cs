@@ -52,16 +52,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "payment/credit")]
         public async Task<Response<List<Order>>> CreditPayment(CreditPaymentArgs args)
         {
-            // TODO: is referenceInteraction necessary?
-            var referenceInteraction = args.Payment.Interactions != null ? args.Payment.Interactions.FirstOrDefault(i => i.InteractionType == "Capture" || i.InteractionType == "AuthorizeAndCapture") : null;
-
             // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
             var action = new DCp.PaymentAction
             {
                 ActionName = "CreditPayment",
                 ISOCurrencyCode = "USD",
-                Amount = args.Amount,
-                ReferenceSourcePaymentId = null
+                Amount = args.Amount
             };
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.Payment.OrderId, args.Payment.Id, action)).ReadAsSync();
