@@ -158,6 +158,12 @@
     },
 
     onSave: function (form, record) {
+        //ToDo: revisit after 4.2 upgrade for the .update() funciton on the record
+        //have to do this since EXTs form record is stale and doesn't refelct the correct data
+        for (x in form.getValues()) {
+            form.record.set(x, form.getValues()[x]);
+        }
+
         if (!this.store.containsById(record)) {
             this.store.add(record);
             this.listContainer.add(this.buildAttribute(record));
