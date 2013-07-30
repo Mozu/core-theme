@@ -68,7 +68,7 @@
             'Date': function (option) {
                 return {
                     xtype: 'datefield',
-                    format: 'm/d/Y',
+                    format: 'm/d/YesNo',
                     altFormats: 'c'
                 };
             },
