@@ -6,8 +6,10 @@ Ext.define('Taco.core.ux.window.Window', {
     alias: 'widget.taco.window',
     
     modal: true,
-    resize: false,
     ghost: false,
+    shadow: false,
+
+    animationDuration: 450,
 
     initComponent: function () {
 
@@ -16,6 +18,21 @@ Ext.define('Taco.core.ux.window.Window', {
         this.cls += ' taco-window';
 
         this.callParent(arguments);
+    },
 
+    show: function () {
+        this.callParent(arguments);
+
+        this.getEl().addCls('active');
+    },
+
+    onHide: function(animateTarget, cb, scope) {
+
+        this.getEl().removeCls('active');
+
+        Ext.defer(function () {
+            this.getEl().hide();
+            this.afterHide(cb, scope);
+        }, this.animationDuration, this);
     }
 });
