@@ -68,7 +68,7 @@
             'Date': function (option) {
                 return {
                     xtype: 'datefield',
-                    format: 'm/d/YesNo',
+                    format: 'm/d/Y',
                     altFormats: 'c'
                 };
             },
@@ -269,6 +269,7 @@
 
                     this.postOptions();
                 },
+                buffer: 400,
                 scope: this
             }
         });
