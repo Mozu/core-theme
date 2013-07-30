@@ -315,8 +315,8 @@ Ext.define('Taco.view.order.subform.Detail', {
                         
                             '<div class="shippingGroup">',
                                 '<div class="shipping">Shipping ({shippingMethodName}):</div>',
-                                '<tpl if="activeShippingDiscountDescription">',
-                                    '<div class="shippingCoupon">{activeShippingDiscountDescription}:</div>',
+                                '<tpl if="activeShippingDiscount">',
+                                    '<div class="shippingCoupon">{activeShippingDiscount.Description}:</div>',
                                 '</tpl>',
                             '</div>',
                         
@@ -347,8 +347,8 @@ Ext.define('Taco.view.order.subform.Detail', {
                         
                             '<div class="shippingGroup">',
                                 '<div class="shipping">{shippingTotal:usMoney}</div>',
-                                '<tpl if="activeShippingDiscountAmount">',
-                                    '<div class="shippingCoupon">{activeShippingDiscountAmount:usMoney}</div>',
+                                '<tpl if="activeShippingDiscount">',
+                                    '<div class="shippingCoupon">{activeShippingDiscount.Total:usMoney}</div>',
                                 '</tpl>',
                             '</div>',
                             

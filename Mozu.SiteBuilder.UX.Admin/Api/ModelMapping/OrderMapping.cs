@@ -44,14 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.OrderDiscountTotal, op => op.MapFrom(dc => dc.DiscountTotal))
                 .ForMember(x => x.OrderDiscounts, op => op.MapFrom(dc => dc.OrderDiscounts))
 
-                .ForMember(x => x.ActiveShippingDiscountDescription, op => op.MapFrom(dc =>
-                    dc.ShippingDiscounts != null && dc.ShippingDiscounts.Any(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) ?
-                        dc.ShippingDiscounts.First().Discount.Discount.Name : null
-                ))
-                .ForMember(x => x.ActiveShippingDiscountAmount, op => op.MapFrom(dc =>
-                    dc.ShippingDiscounts != null && dc.ShippingDiscounts.Any(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) ?
-                        dc.ShippingDiscounts.First().Discount.Impact : null
-                ))
+                .ForMember(x => x.ActiveShippingDiscount, op => op.MapFrom(dc => dc.ShippingDiscounts != null ? dc.ShippingDiscounts.First(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) : null))
                 .ForMember(x => x.ShippingDiscounts, op => op.MapFrom(dc => dc.ShippingDiscounts))
                 .ForMember(x => x.ShippingTotal, op => op.MapFrom(dc => dc.ShippingTotal))
                 .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Total))
@@ -118,6 +111,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
                   .ForMember(x => x.ActiveDiscount, op => op.MapFrom(dc => dc.ProductDiscounts != null ? dc.ProductDiscounts.FirstOrDefault(d => d.Excluded.HasValue && !d.Excluded.Value) : null))
                   .ForMember(x => x.Discounts, op => op.MapFrom(dc => dc.ProductDiscounts))
+                  .ForMember(x => x.ActiveShippingDiscount, op => op.MapFrom(dc => dc.ShippingDiscounts != null ? dc.ShippingDiscounts.FirstOrDefault(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) : null))
+                  .ForMember(x => x.ShippingDiscounts, op => op.MapFrom(dc => dc.ShippingDiscounts))
                   .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options != null ? dc.Product.Options.Select(o => o.Value) : null))
                   .AfterMap((dc, orderItem) =>
                       {
@@ -134,6 +129,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Discount.Name))
                 .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.ImpactPerUnit))
                 .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Impact))
+                .ForMember(x => x.CouponCode, op => op.MapFrom(dc => dc.CouponCode))
+                .ForMember(x => x.IsActive, op => op.MapFrom(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
+                ;
+
+            Mapper.CreateMap<DiscountDC.AppliedProductDiscount, ShippingDiscount>()
+                .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Discount.Name))
+                .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Impact))
+                .ForMember(x => x.CouponCode, op => op.MapFrom(dc => dc.CouponCode))
+                .ForMember(x => x.IsActive, op => op.MapFrom(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
                 ;
 
             Mapper.CreateMap<PaymentsDC.Payment, OrderPayment>()

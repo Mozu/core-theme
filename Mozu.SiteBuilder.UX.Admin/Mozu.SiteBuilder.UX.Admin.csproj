@@ -387,6 +387,7 @@
     <Compile Include="Api\Models\Order\OrderPayment.cs" />
     <Compile Include="Api\Models\Order\CardPaymentInformation.cs" />
     <Compile Include="Api\Models\Order\PaymentInteraction.cs" />
+    <Compile Include="Api\Models\Order\ShippingDiscount.cs" />
     <Compile Include="Api\Models\ProductModels\ProductExtra.cs" />
     <Compile Include="Api\Models\ProductModels\OldProductListItem.cs" />
     <Compile Include="Api\Models\ProductModels\ProductImageDocument.cs" />
@@ -633,6 +634,7 @@
     <Content Include="Scripts\app\model\CartItem.js" />
     <Content Include="Scripts\app\model\CmsDocumentDraft.js" />
     <Content Include="Scripts\app\model\Contact.js" />
+    <Content Include="Scripts\app\model\OrderShippingDiscount.js" />
     <Content Include="Scripts\app\model\KeyValuePair.js" />
     <Content Include="Scripts\app\model\ShippingCarrierSetting.js" />
     <Content Include="Scripts\app\model\CustomShippingRate.js" />
@@ -697,6 +699,7 @@
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\order\Header.js" />
     <Content Include="Scripts\app\view\order\modal\CapturePaymentManual.js" />
+    <Content Include="Scripts\app\view\order\modal\VoidPaymentManual.js" />
     <Content Include="Scripts\app\view\order\modal\EditTransaction.js" />
     <Content Include="Scripts\app\view\order\modal\CapturePayment.js" />
     <Content Include="Scripts\app\view\order\modal\CheckPayment.js" />

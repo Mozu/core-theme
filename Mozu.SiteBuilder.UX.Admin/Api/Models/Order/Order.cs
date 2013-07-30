@@ -12,8 +12,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "id")]
         public string Id { get; set; }
 
-
-
         [DataMember(EmitDefaultValue = false, Name = "tenantId")]
         public int? TenantId { get; set; }
 
@@ -22,8 +20,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(EmitDefaultValue = false, Name = "siteId")]
         public int? SiteId { get; set; }
-
-
 
         /// <summary>
         /// A sequential order number, only populated for completed orders.
@@ -80,14 +76,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "shippingCost")]
         public decimal ShippingCost;
 
-         [DataMember(Name = "activeShippingDiscountAmount", EmitDefaultValue = false)]
-         public decimal? ActiveShippingDiscountAmount { get; set; }
- 
-         [DataMember(Name = "activeShippingDiscountDescription", EmitDefaultValue = false)]
-         public string ActiveShippingDiscountDescription { get; set; }
+        [DataMember(Name = "activeShippingDiscount", EmitDefaultValue = false)]
+        public ShippingDiscount ActiveShippingDiscount { get; set; }
 
         [DataMember(Name = "shippingDiscount", EmitDefaultValue = false)]
-        public List<object> ShippingDiscounts { get; set; }
+        public List<ShippingDiscount> ShippingDiscounts { get; set; }
 
         [DataMember(Name = "shippingTotal")]
         public decimal ShippingTotal { get; set; }
