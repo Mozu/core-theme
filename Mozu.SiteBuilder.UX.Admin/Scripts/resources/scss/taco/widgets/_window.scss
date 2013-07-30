@@ -3,7 +3,6 @@
     .#{$vprefix}window {
 
         background: white;
-        opacity: 0;
         @include border-radius(0.6rem);
         @include outer-shadow(0.3, 3.5rem, 0, 0.7rem);
         @include transition(0.4s opacity ease-out);
@@ -18,10 +17,6 @@
 
         .#{$vprefix}action {
             margin: px-to-rem(14);
-        }
-
-        &.active {
-            opacity: 1;
         }
     }
 
