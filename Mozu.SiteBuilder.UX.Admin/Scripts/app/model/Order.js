@@ -110,18 +110,13 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         },
         {
-            "name": "activeShippingDiscountAmount",
+            "name": "activeShippingDiscount",
             "type": "float",
             "useNull": true
         },
         {
-            "name": "activeShippingDiscountDescription",
-            "type": "string",
-            "useNull": true
-        },
-        {
             "name": "shippingDiscounts",
-            "type": "string",
+            "type": "auto",
             "default": []
         },
         {
@@ -392,6 +387,16 @@ Ext.define('Taco.model.Order', {
             model: 'Taco.model.OrderPayment',
             name: 'payments',
             reader:'json'
+        },
+        {
+            type: 'hasOne',
+            model: 'Taco.model.OrderShippingDiscount',
+            name: 'activeShippingDiscount'
+        },
+        {
+            type: 'hasMany',
+            model: 'Taco.model.OrderShippingDiscount',
+            name: 'shippingDiscounts'
         }
     ],
 

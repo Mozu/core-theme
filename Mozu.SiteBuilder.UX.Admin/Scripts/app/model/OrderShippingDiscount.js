@@ -1,7 +1,7 @@
 ﻿/**
- * @class Taco.model.OrderItemDiscount
+ * @class Taco.model.OrderShippingDiscount
  */
-Ext.define('Taco.model.OrderItemDiscount', {
+Ext.define('Taco.model.OrderShippingDiscount', {
     extend: 'Taco.core.data.Model',
     requires: ['Ext.data.association.BelongsTo'],
     fields: [
@@ -11,18 +11,8 @@ Ext.define('Taco.model.OrderItemDiscount', {
             "useNull": true
         },
         {
-            "name": "quantity",
-            "type": "int",
-            "useNull": true
-        },
-        {
             "name": "description",
             "type": "string",
-            "useNull": true
-        },
-        {
-            "name": "unitPrice",
-            "type": "float",
             "useNull": true
         },
         {
@@ -33,13 +23,6 @@ Ext.define('Taco.model.OrderItemDiscount', {
         {
             "name": "isActive",
             "type": "boolean"
-        }
-    ],
-
-    associations: [
-        {
-            type: 'belongsTo',
-            model: 'Taco.model.Order'
         }
     ]
 
