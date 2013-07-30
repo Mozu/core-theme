@@ -74,15 +74,22 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
             text: 'Save',
             click: function () {
                 var me = this;
-                
-                console.log('TODO: payment action logic');
-                console.log(me.formpanel.getValues());
-                //debugger
-                //Taco.model.OrderPayment
-                
-                //on success hide if no pop error
-                
-                me.hide();
+ 
+                var data = Ext.apply(
+                    {
+                        orderId: me.record.getId()
+                    },
+                    me.formpanel.getValues()
+                );
+                me.record.applyCheck({
+                    jsonData: data,
+                    success: function () {
+
+                        me.record.reload();
+                        me.hide();
+                    }
+                });
+
             },
             scope: this
         });
