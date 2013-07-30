@@ -276,6 +276,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         var issueCreditModal = Ext.create('Taco.view.order.modal.IssueCredit', {
             record: me.record,
+            order: me.order,
             listeners: {
                 aftersave: function () {
                     me.order.reload();
@@ -290,8 +291,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
 
     handleAction: function (config) {
-        var me = this,
-            record = me.record;
+        var me = this;
 
         /*
          * 'ApplyCheck'
@@ -302,11 +302,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         switch (me.getValue()) {
             case 'ApplyCheck':
-                var modal = Ext.create('Taco.view.order.modal.CheckPayment', {
-                    record: record
-                });
-
-                modal.show();
+                me.parent.applyCheck();
                 break;
             case 'DeclineCheck':
                 alert('todo: decline check.');
@@ -330,6 +326,17 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 me.parent.creditPaymentManual();
                 break;
         }
+    },
+
+    applyCheck: function() {
+        var me = this;
+
+        var checkPaymentModal = Ext.create('Taco.view.order.modal.CheckPayment', {
+            order: me.order,
+            record: me.record
+        });
+
+        checkPaymentModal.show();
     },
 
     // call the service via the model and save the captured amount

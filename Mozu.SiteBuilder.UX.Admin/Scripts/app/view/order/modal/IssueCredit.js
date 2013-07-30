@@ -106,16 +106,16 @@ Ext.define('Taco.view.order.modal.IssueCredit', {
     
     save: function () {
         var me = this,
-            fm = this.formpanel.getForm(),
-            cfg = fm.getValues();
+            fmValues = this.formpanel.getValues(),
+            data = {
+                orderId: me.order.getId(),
+                paymentId: me.record.getId(),
+                amount: fmValues.amount,
+                reason: fmValues.reason
+            };
         
-
-        Ext.apply(cfg, {
-            payment: this.record.getData()
-        });
-
-        this.record.issueCredit({
-            jsonData: cfg,
+        this.order.issueCredit({
+            jsonData: data,
             success: function (response) {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);

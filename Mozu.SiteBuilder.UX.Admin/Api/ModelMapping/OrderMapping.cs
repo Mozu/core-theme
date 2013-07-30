@@ -147,7 +147,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
                 .ForMember(x => x.AmountCollected, op => op.MapFrom(dc => dc.AmountCollected))
                 .ForMember(x => x.AmountCredited, op => op.MapFrom(dc => dc.AmountCredited))
-                .ForMember(x => x.AmountAuthorized, op => op.MapFrom(dc => dc.Status == "Authorized" && dc.Interactions.Any(i => i.Status == "Authorized") ? dc.Interactions.First(i => i.Status == "Authorized").Amount : 0))
+                .ForMember(x => x.AmountAuthorized, op => op.ResolveUsing(dc => {
+                    if (dc.PaymentType == PaymentsDC.PaymentType.Check && dc.Status == "Pending" && dc.Interactions.Any(i => i.Status == "CheckRequested"))
+                        return dc.Interactions.First(i => i.Status == "CheckRequested").Amount.GetValueOrDefault(0);
+                    else if (dc.Status == "Authorized" && dc.Interactions.Any(i => i.Status == "Authorized"))
+                        return dc.Interactions.First(i => i.Status == "Authorized").Amount.GetValueOrDefault(0);
+                    else
+                        return 0;
+                }))
                 .ForMember(x => x.Interactions, op => op.MapFrom(dc => dc.Interactions.OrderByDescending(t => t.AuditInfo.CreateDate)))
                 .ForMember(x => x.PaymentType, op => op.MapFrom(dc => dc.PaymentType))
                 .ForMember(x => x.CardType, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.PaymentOrCardType : null))

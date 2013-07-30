@@ -860,4 +860,47 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
+    /**
+     * service call to add a credit on the order     
+     * @param {Object} config  A configuration object     
+     * config object:
+        {
+            jsonData: {
+                orderId: "987654321",
+                amount:  "100.65",
+                payment:  {
+                    ...payment entity members...
+                }
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     */
+    issueCredit: function (config) {
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/credit',
+            method: "POST",
+        });
+        Ext.Ajax.request(config);
+    },
+
+    applyCheck: function (config) {
+
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/applycheck',
+            method: "POST",        
+        });
+        Ext.Ajax.request(config);
+    }
 });
