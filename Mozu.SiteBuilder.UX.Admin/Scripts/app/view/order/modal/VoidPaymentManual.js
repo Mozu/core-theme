@@ -31,6 +31,10 @@ Ext.define('Taco.view.order.modal.VoidPaymentManual', {
                     xtype: 'textfield',
                     name: 'gatewayInteractionId',
                     fieldLabel: 'Gateway Interaction Id'
+                },
+                {
+                    xtype: 'datetime',
+                    fieldLabel: 'Transaction Date'
                 }]
             }],
             listeners: {

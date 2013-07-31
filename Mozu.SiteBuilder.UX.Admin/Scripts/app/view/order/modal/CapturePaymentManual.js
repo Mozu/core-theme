@@ -16,23 +16,26 @@ Ext.define('Taco.view.order.modal.CapturePaymentManual', {
         this.formpanel = Ext.create('Ext.form.Panel', {
             xtype: 'formpanel',
             bodyCls: Taco.baseCSSPrefix + 'flexform',
-            layout: { type: 'hbox' },
+            layout: { type: 'vbox' },
             items: [{
                 xtype: 'container',
-                style: 'padding-right: 10px;',
-                defaults: {
-                    xtype: 'textfield',
-                    labelSeparator: '',
-                    labelAlign: 'top',
-                    width: 150
+                layout: {type: 'hbox'},
+                items: [{
+                    xtype: 'container',
+                    style: 'padding-right: 10px;',
+                    defaults: {
+                        xtype: 'textfield',
+                        labelSeparator: '',
+                        labelAlign: 'top',
+                        width: 150
+                    },
+                    items: [
+                    {
+                        xtype: 'textfield',
+                        name: 'gatewayInteractionId',
+                        fieldLabel: 'Gateway Interaction Id'
+                    }]
                 },
-                items: [
-                {
-                    xtype: 'textfield',
-                    name: 'gatewayInteractionId',
-                    fieldLabel: 'Gateway Interaction Id'
-                }]
-            },
             {
                 xtype: 'container',
                 defaults: {
@@ -47,6 +50,12 @@ Ext.define('Taco.view.order.modal.CapturePaymentManual', {
                     fieldLabel: 'Amount Captured',
                     value: me.record.data.amountAuthorized
                 }]
+            }]
+
+            },
+            {
+                xtype: 'datetime',
+                fieldLabel: 'Transaction Date'
             }],
             listeners: {
                 afterrender: function (panel) {
