@@ -660,6 +660,7 @@
     <Content Include="Scripts\app\model\WidgetInstance.js" />
     <Content Include="Scripts\app\shared\model\File.js" />
     <Content Include="Scripts\app\shared\util\Uploadable.js" />
+    <Content Include="Scripts\app\shared\view\field\Customer.js" />
     <Content Include="Scripts\app\shared\view\field\Image.js" />
     <Content Include="Scripts\app\store\Behaviors.js" />
     <Content Include="Scripts\app\store\CartItems.js" />
@@ -715,7 +716,9 @@
     <Content Include="Scripts\app\view\order\modal\AddPayment.js" />
     <Content Include="Scripts\app\view\order\modal\ProductConfigurator.js" />
     <Content Include="Scripts\app\view\order\modal\RequestCheck.js" />
+    <Content Include="Scripts\app\view\order\subform\Customer.js" />
     <Content Include="Scripts\app\view\order\subform\Shipping.js" />
+    <Content Include="Scripts\app\view\order\subform\ShippingSimple.js" />
     <Content Include="Scripts\app\view\order\subform\Subform.js" />
     <Content Include="Scripts\app\view\order\subform\Payment.js" />
     <Content Include="Scripts\app\view\order\subform\Detail.js" />
