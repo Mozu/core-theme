@@ -29,8 +29,9 @@ Ext.define('Taco.view.order.Edit', {
             return;
         }
 
-        // todos move taco-orders-header-status to the scss file
-        // may need to convert orderStatus to readible text if it camelcase
+        /* TODO: move taco-orders-header-status to the scss file
+         * may need to convert orderStatus to readible text if it camelcase
+         */
         this.header = {
             title: 'Order No. ' + this.record.get('orderNumber') + ' <span class="' + Taco.baseCSSPrefix + 'orders-header-status" style="padding-left:20px;font-size: 0.9em; font-weight: normal;color:#d2463c">' + this.record.get("orderStatus") + '</span><br/>'
         };
@@ -41,11 +42,11 @@ Ext.define('Taco.view.order.Edit', {
 
         
         /*
-          // TODOs:
-          // split this out as a seperate reusable class and create its own scss definition;
-          // add support to Taco.core.ux.content.Container to utilize this by configuration;
-          // add suppourt for bolding the appropriate link when the user has passed focus to the container
-          // clicking on items in this container should scroll the bound container to the appropriate sub component of the bound container.
+          //
+          // TODO: split this out as a seperate reusable class and create its own scss definition;
+          // TODO: add support to Taco.core.ux.content.Container to utilize this by configuration;
+          // TODO: add suppourt for bolding the appropriate link when the user has passed focus to the container
+          // TODO: clicking on items in this container should scroll the bound container to the appropriate sub component of the bound container.
           // 
         */
         this.cardNav = Ext.create('Ext.container.Container', {
