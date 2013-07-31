@@ -147,6 +147,10 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                             forceSelection: true,
                             store: [['AuthorizePayment', 'Authorize Only'], ['AuthAndCapture', 'Authorize and Capture']],
                             value: 'AuthorizePayment'
+                        },
+                        {
+                            xtype: 'datetime',
+                            fieldLabel: 'Transaction Date'
                         }]
                     }, {
                         xtype: 'container',
