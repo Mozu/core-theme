@@ -44,11 +44,7 @@ Ext.define('Taco.view.order.modal.EditTransaction', {
                     xtype: 'hidden',
                     name: 'orderId',
                     value: me.record.data.orderNumber
-                },/*{
-                    xtype: 'hidden',
-                    name: 'transId',
-                    value: me.transId
-                },*/ {
+                },{
                     xtype: 'combo',
                     fieldLabel: 'Type',
                     name: 'type',
@@ -56,11 +52,7 @@ Ext.define('Taco.view.order.modal.EditTransaction', {
                     displayField: 'lbl',
                     valueField: 'val',
                     emptyText: 'type',
-                    //record: me.record,
-                    //parent: this,
-                    listeners: {
-                        //select: me.transactionAction  
-                    },
+                    editable: false,
                     scope: me
                 }, {
                     name: 'paymentServiceTransactionId',
@@ -103,16 +95,28 @@ Ext.define('Taco.view.order.modal.EditTransaction', {
 
         this.primaryButton = Ext.widget('primarybutton', {
             text: 'Save',
-            onClick: function () {
-                console.log('TODO: payment action logic');
-                console.log(me.formpanel.getValues());
-                //debugger
-                //Taco.model.OrderPayment
-                
-                //on success hide if no pop error
-                
-                me.hide();
-            }
+            click: function () {
+                var me = this,
+                    formValues = me.formpanel.getValues(),
+                    data = {
+                        orderId: me.order.getId(),
+                        transactionId: me.record.getId(),
+                        gatewayId: formValues.paymentServiceTransactionId,
+                        amountCollected: formValues.amountCollected,
+                        date: formValues.createDate,
+                        transactionType: formValues.type
+                    };
+
+                me.order.editTransaction({
+                    jsonData: data,
+                    success: function () {
+
+                        me.order.reload();
+                        me.hide();
+                    }
+                });
+            },
+            scope: this
         });
 
         this.actions = {
