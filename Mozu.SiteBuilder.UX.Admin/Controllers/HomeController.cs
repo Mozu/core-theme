@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
@@ -33,11 +34,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext, ISettings settings)
         {
-            _usersRepo = usersRepo;
+            _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authenticationHelper = authHelper;
             _sbc = sbc;
             _apiContext = apiContext;
-            _tenantsWebApi = tenantsWebApi;
+            _tenantsWebApi = tenantsWebApi.CloneWithoutUserClaims();//  .CloneWithApiContext(x => x.UserClaims = LightweightUserClaims.CreateForSystemUser(UserScopeType.SystemAdmin));
             _currentUserHelper = currentUserHelper;
             _settings = settings;
 

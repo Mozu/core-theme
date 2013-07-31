@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
@@ -33,8 +34,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             _apiContext = apiContext;
      
             _themeEntityDefinitionProvider = themeEntityDefinitionProvider;
-        
             _docRepo = docRepo;
+            if (_apiContext.UserClaims != null && _apiContext.UserClaims.ScopeType != Mozu.Core.ContextLevelType.Tenant.ToString())
+            {
+                _docRepo = _docRepo.CloneWithoutUserClaims();
+            }
+            
             _cmsTypeHelper = cmsTypeHelper;
         }
 
