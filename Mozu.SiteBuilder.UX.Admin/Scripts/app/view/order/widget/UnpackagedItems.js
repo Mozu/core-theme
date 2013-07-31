@@ -6,7 +6,7 @@
 
 Ext.define('Taco.view.order.widget.UnpackagedItems', {
     extend: 'Ext.panel.Panel',
-    requires: ['Taco.view.order.widget.OrderItemGrid'],
+    requires: ['Taco.view.order.widget.ShippingItemGrid'],
     config: {
         
         record: null,
@@ -54,7 +54,7 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
         }
 
         
-        me.grid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
+        me.grid = Ext.create('Taco.view.order.widget.ShippingItemGrid', {
             
             isPackage: false,
             

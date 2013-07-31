@@ -197,7 +197,14 @@ Ext.define('Taco.model.Product', {
             name: "options",
             type: "auto",
             defaultValue: []
-        }    
+        },
+        {
+            name: "isConfigurable",
+            type: 'boolean',
+            convert: function (v, record) {
+                return (record.get("options").length || record.get("extras").length);
+            }
+        }
     ],
     loadRuntimeProduct:function (cfg) {
         

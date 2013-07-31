@@ -6,7 +6,7 @@
 Ext.define('Taco.view.order.subform.Shipping', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
-        'Taco.view.order.widget.OrderItemGrid',
+        'Taco.view.order.widget.ShippingItemGrid',
         'Taco.view.order.widget.Package',
         'Taco.view.order.widget.UnpackagedItems'
     ],
@@ -233,8 +233,6 @@ Ext.define('Taco.view.order.subform.Shipping', {
         
         Ext.suspendLayouts();
 
-        
-
         // clear out the ui components
         me.unpackagedItems.destroy();
         me.unShippedPackages.destroy();
@@ -249,9 +247,8 @@ Ext.define('Taco.view.order.subform.Shipping', {
             me.unShippedPackages,
             me.shippedPackages
         );
-
-
+        
         Ext.resumeLayouts(true);
-        Taco.app.viewPort.unmask();
+        Taco.app.viewPort.setLoading(false);
     }
 });

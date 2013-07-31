@@ -134,16 +134,52 @@ Ext.define('Taco.model.Order', {
             "type": "float",
             "useNull": true
         },
+        
+
+        /*
+            // sample value for orderAdjustment;
+            {
+                amount:0.00,
+                description:"",
+                internalComment:""
+            }        
+        */
+
+        {
+            name: "orderAdjustment",
+            type:"auto"
+        },
+        
+
+        /*
+            // sample value for shippingAdjustment;
+            {
+                amount:0.00,
+                description:"",
+                internalComment:""
+            }        
+        */
+        {
+            name: "shippingAdjustment",
+            type: "auto"
+        },
+
+
+
+        // deprecated?
         {
             "name": "adjustmentDescription",
             "type": "string",
             "useNull": true
         },
+        
+        // deprecated?
         {
             "name": "adjustmentTotal",
             "type": "float",
             "useNull": true
         },
+        
         {
             "name": "total",
             "type": "float",
@@ -429,6 +465,16 @@ Ext.define('Taco.model.Order', {
             type: 'json'
         }
     },
+    
+
+
+    /*
+     ****************************************************
+     *   Begin order payment service interaction methods
+     ****************************************************
+     */
+
+
 
     /**
      * service call to capture payment for an order     
@@ -585,14 +631,101 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
+    
+    capturePaymentManual: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/manual/capture',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    voidPaymentManual: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/manual/void',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    creditPaymentManual: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/manual/credit',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    editTransaction: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/manual/edittransaction',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    addManualPayment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/manual/create',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+    /**
+     * service call to add a credit on the order     
+     * @param {Object} config  A configuration object     
+     * config object:
+        {
+            jsonData: {
+                orderId: "987654321",
+                amount:  "100.65",
+                payment:  {
+                    ...payment entity members...
+                }
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+        */
+    issueCredit: function (config) {
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/credit',
+            method: "POST",
+        });
+        Ext.Ajax.request(config);
+    },
+
+    applyCheck: function (config) {
+
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/applycheck',
+            method: "POST",
+        });
+        Ext.Ajax.request(config);
+    },
+
+    
 
     /*
-     *
-     *
-     *  Begin order shipping action methods
-     *
-     *
-     *    
+     ****************************************************
+     *   Begin order shipping service interaction methods
+     ****************************************************
      */
 
      
@@ -605,8 +738,7 @@ Ext.define('Taco.model.Order', {
         {
             jsonData: {
                 package: {
-                   ... package endity ...
-
+                   ... package entity ...
                     
                     items: [],
                     orderId: "02baa4864fdce01ec8d8cc0000000059"
@@ -782,6 +914,8 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
+    
+
     /**
      * service call to change the tracking number
      * @param {Object} config  A configuration object     
@@ -815,62 +949,28 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
+    
 
-    capturePaymentManual: function(config) {
-        Ext.apply(config, {
-            url: '/admin/app/order/payment/manual/capture',
-            method: "POST"            
-        });
 
-        Ext.Ajax.request(config);
-    },
 
-    voidPaymentManual: function(config) {
-        Ext.apply(config, {
-            url: '/admin/app/order/payment/manual/void',
-            method: "POST"            
-        });
+    /*
+     ****************************************************
+     *   Begin order detail service interaction methods
+     ****************************************************
+     */
+    
 
-        Ext.Ajax.request(config);
-    },
 
-    creditPaymentManual: function(config) {
-        Ext.apply(config, {
-            url: '/admin/app/order/payment/manual/credit',
-            method: "POST"            
-        });
 
-        Ext.Ajax.request(config);
-    },
-
-    editTransaction: function (config) {
-        Ext.apply(config, {
-            url: '/admin/app/order/payment/manual/edittransaction',
-            method: "POST"            
-        });
-
-        Ext.Ajax.request(config);
-    },
-
-    addManualPayment: function (config) {
-        Ext.apply(config, {
-            url: '/admin/app/order/payment/manual/create',
-            method: "POST"            
-        });
-
-        Ext.Ajax.request(config);
-    },
     /**
-     * service call to add a credit on the order     
+     * service call to remove an order item
      * @param {Object} config  A configuration object     
      * config object:
+     * 
         {
             jsonData: {
-                orderId: "987654321",
-                amount:  "100.65",
-                payment:  {
-                    ...payment entity members...
-                }
+                orderId: "987654321",                
+                orderItemIds: ["987654"]
             },
             success: function (response) {
                 // success handling here
@@ -886,21 +986,217 @@ Ext.define('Taco.model.Order', {
             scope: this
         }
 
+     *
      */
-    issueCredit: function (config) {
-        Ext.applyIf(config, {
-            url: '/admin/app/order/payment/credit',
-            method: "POST",
+    removeOrderItem: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/orderitem/remove',
+            method: "POST"
         });
+
         Ext.Ajax.request(config);
     },
+    
+    /**
+     * service call to edit an order item. specificallly edit of quantity and price
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId: "987654321",                
+                orderItems: [
+                    {
+                        ... order item entity you want to edit  ...
+                        This will typically contain modified quantity or price
+                    }
+                ]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },s
+            scope: this
+        }
 
-    applyCheck: function (config) {
-
-        Ext.applyIf(config, {
-            url: '/admin/app/order/payment/applycheck',
-            method: "POST",        
+     *
+     */
+    editOrderItem: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/orderitem/update',
+            method: "POST"
         });
+
+        Ext.Ajax.request(config);
+    },
+    
+    
+
+    /**
+     * service call to add order items
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId: "987654321",
+                orderItems: [
+                    // When the product requires configuration
+                    {   ...configurationData...  },
+                    
+                    // When product doesn't require configuration the package contains productCode and quantity
+                    {
+                        productCode: "asdf",
+                        quantity: 1
+                    }
+                ]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    addOrderItem: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/addorderitem',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+    
+    /**
+     * service call to add coupon to the order
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {   
+                orderId: "987654321",                
+                coupons: ["987654"]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    addOrderCoupon: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/addordercoupon',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+    
+    /**
+     * service call to suppress an order coupon. This will cause the service to look for other coupons to fall back to. If another coupon exists, it will come back as active and the suppress coupon will be inactive;
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId: "987654321",                
+                coupons: ["987654"]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    suppressOrderCoupon: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/suppressordercoupon',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+    
+    /**
+     * service call to update an order adjustment. A $ amount to reduce the total of the order
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {   
+                // include one or both adjustment types.
+                orderId: "987654321",
+                orderAdjustment: {
+                    amount: 0.00,
+                    description: "",
+                    internalComment: ""
+                },
+
+                // include one or both adjustment types.
+                shippingAdjustment: {
+                    amount: 0.00,
+                    description: "",
+                    internalComment: ""
+                }
+            },
+            success: function (response) {
+                // success handling here
+              so   var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    updateOrderAdjustment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/updateorderadjustment',
+            method: "POST"
+        });
+
         Ext.Ajax.request(config);
     }
 });

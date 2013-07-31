@@ -91,6 +91,8 @@ Ext.define('Taco.view.order.Edit', {
                                 targetY = cmp.el.dom.offsetTop;
                                 wrapper.scrollTo('top', targetY, true);
                             }
+                        }, {
+                            delay:100
                         });
                     },
                      scope:me
@@ -124,7 +126,9 @@ Ext.define('Taco.view.order.Edit', {
         //show the cardNav after the container is rendered
         this.on('afterrender', function () {
             this.cardNav.show();
-        }, this);
+        }, this, {
+            defer:100
+        });
 
         Ext.apply(me.body, {
             items: [{
@@ -171,5 +175,7 @@ Ext.define('Taco.view.order.Edit', {
 
         this.callParent(arguments);
 
+        // convenience method call. if your seeing this its because I checked this in by accident. woops. sorry :(
+   //     this.orderDetail.editOrder();
     }
 });

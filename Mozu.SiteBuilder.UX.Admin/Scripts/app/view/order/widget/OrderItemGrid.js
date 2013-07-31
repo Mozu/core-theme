@@ -1,144 +1,231 @@
 ﻿/**
  * @class Taco.view.order.widget.OrderItemGrid
  */
-
-// todos extend base class for the subform
 Ext.define('Taco.view.order.widget.OrderItemGrid', {
     extend: 'Ext.grid.Panel',
-    requires: [],
+    requires: [
+        'Taco.view.order.modal.ProductConfigurator',
+        'Taco.view.order.widget.ProductPickerField',
+        'Taco.core.ux.grid.Pager'
+    ],
     
     config: {
         header: false,
-        // controls whether the editable fields are editable. Can be toggled on and off. 
-
-        // false if its unpackaged items grid
-        isPackage: true,
         
-        // way to quickly determine which package type we are looking at
-        isShippedPackage: false,
-
-        editMode: true,
+        editMode: false,
         
         enableCellEditing: true,
         
-        enableCheckBoxSelection: true,
-        
         enableActionColumn: true,
         
-        enableToolbar: true,
-
-        
-        
-        enableMoveMenu: true,
-        
-        enableShippingMethodMenu: true,
-        
-        enableShippingLabelButton: true,
-        
-        enabledPackingSlipButton: true,
-        
-        enabledRemoveButton: true,
-        
-        enabledMarkAsShippedButton: true,
-
-        
-        packageMenuPagingSize: 10,
+        enableToolbar: false,
 
         autoHeight: true,
+
+        // automatically scroll the grid when it overflows
+        autoScroll: true,
         
-        
-        plugins:[],
-        
+        // number of products per page to display in the add product search field
+        productsPerPage : 30,
+
+        // the toolbar that is currently being displayed atop the order item grid panel
+        activeAddToolbar : null,
+
+        // width of the row total Column. used to align the grid total container
+        rowTotalColumnWidth: 100,
+
         // width of the actionColumn. used to align the grid total container
         actionColumnWidth: 60,
         
         // components to add to the panel header. typically used to add an actions menu button
-        tools: [],
-       
-       
-        listeners: {
-            beforeedit: {
-                fn: function (plugin, edit) {
-                    // disable editing when the grid is not editMode:true
-                    return this.editMode;
-                }
-            },
-            selectionchange : {
-                fn: function (view, selected, eOpts) {
-                    var me = this;
-                    
-                    //todo: fix the taco.split button to allow it to be enabled and disabled;
-                    
-                    if (!me.isShippedPackage) {
-                        // disable menu button if nothing is selected?
-                        if (selected.length == 0) {
-                            if (!me.moveMenuAction.isDisabled()) {
-                                me.moveMenuAction.disable();
-                            }
-                        } else {
-                            // re enabled the menu button
-                            if (me.moveMenuAction.isDisabled()) {
-                                me.moveMenuAction.enable();
-                            }
-                        }
-                    }
-                }                
-            }
-        }
+        tools: []
     },
     
     initComponent: function(eOpts) {
         var me = this,
-            data = [];
-
-        me.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping-orderItemGrid'].join(' ');
-
-        // if data is already set on the panel load it by default.
-        if (me.data) {
-            data = me.data;
-        }
+            siteContext;
         
-        if (me.isShippedPackage) {
-            me.disableSelection = true;
-        }
+        this.addEvents('save','saveFailure','saveSuccess');
 
-        me.store = Ext.create('Ext.data.JsonStore', {
-            fields: me.getFields(),
-            data: data
+
+        me.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping-orderitemgrid'].join(' ');
+        
+        siteContext = Taco.app.context.getCurrent().urlToken;
+
+        var actions = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'middle'
+            },
+            items: [
+
+            ]
         });
-        
-        if (me.enableCellEditing) {
-            // plugin to add suppourt to the grid for editing the price and quantity columns
-            var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
-                clicksToEdit: 1
-            });
 
-            me.getPlugins().push(
-                cellEditing
-            );
-        }
+
+
+        // todo: need to create a custome bound list to have the ability to replace the paging toolbar. Will also need to figure out why the paging toolbar has issues. 
+        /*
+        var pager = Ext.create('Taco.core.ux.grid.Pager', {
+            store: me.productStore
+        });
+        */
+
+        /*
+        var productFilterProperties = [{
+                property: 'all',
+                text: 'All',
+                isDefault: true
+            }, {
+                property: 'productName',
+                text: 'Name'
+            }, {
+                property: 'productCode',
+                text: 'Code'
+            }, {
+                property: 'producttypeid',
+                text: 'Product Type'
+            }, {
+                property: 'productFullDescription',
+                text: 'Description'
+            }
+        ];
+        */
         
-        if (me.getEnableToolbar()) {
-            this.tbar = Ext.create('Ext.toolbar.Toolbar', this.getToolBarConfig()); 
-        }
+        
+
+        // if the grid is editable show the edit toolbar;
+        if (this.getEditMode()) {
+            
+            this.dockedItems = [
+                {
+                    xtype: "toolbar",
+                    doc: "top",
+                    componentCls: "title-toolbar",
+                    enableOverflow: true,
+                    weight: 1,
+                    style: "margin:5px 0px 5px 0px; border:0px;background-color:#fff;",
+                    items: [
+                        {
+                            xtype: "component",
+                            html: "Edit Order Details",
+                            style: "padding:5px 0px 5px 0px; font-size: 1.25em",
+                            cls: "title",
+                        },
+                        "->",
+                        {
+                            //xtype: 'taco.button',
+                            //   autoEl: 'a',
+                            cls: "taco-toolbar-link",
+                            style: "font-size: 1.0em;color:blue",
+                            text: "Order Level Adjustment",
+                            handler: function() {
+                                this.toggleAddToolbar("orderLevelAdjustment");
+                            },
+                            scope: this
+                        },
+                        {
+                            //xtype: 'taco.button',
+                            // autoEl: 'a',
+                            //style: "padding:5px; margin-left:10px;font-size: 1.0em;cursor:pointer;color:blue",
+                            cls: "taco-toolbar-link",
+                            text: "Add Coupon",
+                            handler: function() {
+                                this.toggleAddToolbar("coupon");
+                            },
+                            scope: this
+                        },
+                        {
+                            //xtype: 'taco.button',
+                            //autoEl: 'a',
+                            //style: "padding:5px;margin-left:10px; font-size: 1.0em;cursor:pointer;color:blue",
+                            cls: "taco-toolbar-link",
+                            text: "Add Product",
+                            handler: function() {
+
+                                this.toggleAddToolbar("product");
+                            },
+                            scope: this
+                        }
+                    ]
+                }
+            ];
+        };
+        
+
+        this.on('beforeedit', function(plugin, edit) {
+            // disable editing when the grid is not editMode:true
+            return this.editMode;
+        },this);
+
+        this.on('selectionchange', function(view, selected, eOpts) {
+            var me = this;
+            // process the modification;
+        }, this);
+
 
         Ext.apply(this, {
+            features: [
+                // This is the plugin for enabling the adding of an adustment row for each orderItem
+                {
+                    ftype: 'rowbody',
+                    rowBodyTrCls: "x-grid-row-adjustment",
+                    rowBodyDivCls: "x-grid-cell-inner adustment-cell-inner",
+                    rowBodyTdCls: "x-grid-cell adjustment-cell",
+                    getAdditionalData: function(data, rowIndex, record, orig) {
+                        var colspan = 1,
+                            discount = record.get("discount"),
+                            rowBodyCls = (discount) ? "hasDiscount" : "noDiscount";
+
+                        return {
+                            discountData: discount,
+                            rowBodyCls: rowBodyCls,
+                            rowBodyColspan: colspan
+                        };
+                    },
+
+                    getRowBody: function(values) {
+
+                        return [
+                            '<tr class="' + this.rowBodyTrCls + ' {rowBodyCls}">',
+                            '<td  class="' + this.rowBodyTdCls + '" colspan="{rowBodyColspan}">',
+                            '<div class="' + this.rowBodyDivCls + '">Discount: {discountData.description}</div>',
+                            '</td>',
+                            '<td  class="' + this.rowBodyTdCls + '">',
+                            '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{discountData.unitPrice:usMoney}</div>',
+                            '</td>',
+                            '<td class="' + this.rowBodyTdCls + '">',
+                            '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{discountData.quantity}</div>',
+                            '</td>',
+                            '<td  class="' + this.rowBodyTdCls + '">',
+                            '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{discountData.total:usMoney}</div>',
+                            '</td>',
+                            '<td  class="' + this.rowBodyTdCls + '">',
+                            '<div class="' + this.rowBodyDivCls + '"></div>',
+                            '</td>',
+                            '</tr>'
+                        ].join('');
+                    }
+                }
+            ],
+
             viewConfig: {
+                cls: (this.getEditMode()) ? "editmode-enabled" : "",
                 // changing the hover class to get rid of taco overrides of grid
-                overItemCls: 'taco-order-shippingItem-grid-row-over',
-                emptyText: '<div class="emptyGridMessage">No items to display</div>',
+                overItemCls: 'taco-orderItem-grid-row-over',
+                emptyText: '<div class="emptyGridMessage">No order items to display</div>',
                 deferEmptyText: false,
                 stripeRows: false,
                 disabled: false,  // disables the grid, prevents the field editors from opening. prevents default hover behavior. Makes text grey and background grey. TODOs, explore this as an option for making the grid readony.
-                disabledCls: "taco-order-orderItemGrid-disabled", // css class to add when the order grid is disabledstripeRows: false,
+                disabledCls: "taco-order-shippingitemgrid-disabled", // css class to add when the order grid is disabledstripeRows: false,
                 //   enableTextSelection: true
                 listeners: {
-                        itemmouseenter: {
-                            fn: function(view, record, item, index, e, eOpts) {
+                    itemmouseenter: {
+                        fn: function(view, record, item, index, e, eOpts) {
 
-                            },
-                            scope: me
                         },
+                        scope: me
+                    },
                     highlightitem: {
                         fn: function(view, record, item, index, e, eOpts) {
 
@@ -150,300 +237,113 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 // provides selective row class addition based on record.
                 getRowClass: function(record) {
                     if (!record) return '';
+                    if (record.get("discount")) {
+                        return 'taco-order-orderItem-hasDiscount';
+                    }
                     return '';
                 }
             },
-            columns:me.getColumnConfig()
+
+            selModel: {
+                selType: 'cellmodel'
+            },
+
+            plugins: [Ext.create('Ext.grid.plugin.CellEditing', {
+                clicksToEdit: 1
+            })],
+
+            columns: [
+                {
+                    text: 'Products',
+                    draggable: false,
+                    xtype: 'templatecolumn',
+                    flex: 1,
+                    sortable: false,
+                    menuDisabled: true,
+                    tpl: [
+                        '<tpl if="isDeleted">',
+                        '<span class="productLinkDisabled" productCode="{productCode}">{productName}</span>',
+                        '<tpl else>',
+                        '<a class="productLink" productCode="{productCode}" target="_blank" href="/admin/' + siteContext + '/products/edit/{productCode}">{productName}</a>',
+                        '</tpl>',
+                        '<div class="productOptions">',
+                        '<tpl for="options">',
+                        '<span class="option">{.}, </span>',
+                        '</tpl>',
+                        '</div>'
+                    ],
+                    dataIndex: 'productName'
+                },
+                {
+                    text: 'Price',
+                    draggable: false,
+                    width: 100,
+                    sortable: false,
+                    menuDisabled: true,
+                    align: "right",
+                    renderer: 'usMoney',
+                    tdCls: "editableCell",  // adds the dotted line hover to the cells in the column
+                    editor: {
+                        xtype: 'unitfield',
+                        unitString: "$",
+                        unitAtEnd: false,
+                        allowBlank: true,
+                        minValue: 0,
+                        maxValue: 100000
+                    },
+                    dataIndex: 'unitPrice'
+                },
+                {
+                    text: 'Quantity',
+                    draggable: false,
+                    width: 100,
+                    sortable: false,
+                    menuDisabled: true,
+                    align: "right",
+                    tdCls: "editableCell",  // adds the dotted line hover to the cells in the column
+                    editor: {
+                        xtype: 'textfield',
+                        allowBlank: true,
+                        minValue: 0,
+                        maxValue: 100000
+                    },
+                    dataIndex: 'quantity'
+                },
+                {
+                    text: 'Row Total',
+                    draggable: false,
+                    menuDisabled: true,
+                    width: this.getRowTotalColumnWidth(),
+                    sortable: false,
+                    align: "right",
+                    renderer: 'usMoney',
+                    dataIndex: 'subtotal'
+                },
+                {
+                    xtype: 'taco.menucolumn',
+                    draggable: false,
+                    text: '',
+                    width: this.getActionColumnWidth(),
+                    menuDisabled: true,
+                    iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger ' + Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
+                    menuItems: [],
+                    handler: function(grid, rowIndex, colIndex, header, e, record, item) {
+                        Ext.Msg.alert('Remove Item', 'TODO: Confirm the removal of item.');
+                    },
+                    renderer: function(value, metaData, record) {
+
+                    },
+                    onMenuShow: function(menu, eventData) {
+                        // todos: remove item from grid
+
+                    }
+                }
+            ]
         });
 
-        // initialized the selection model
-        me.initSelectionModel();
-
+      
         me.callParent(arguments);
 
-    },
-    
-    // dynamically build the menu options based on the current state of the order shipment data entities
-    getMenuActions: function (config) {
-        var me = this,
-            menu = [];
-
-        var specificPackages = [];
-
-        // always need to have new package
-        menu.push(
-            {
-                text: "New Package",
-                moveAction: "addSelectionToPackage",
-                moveTargetId: -1
-            }
-        );
-        
-        //only show this if its not the unshipped items. 
-        if (!me.isUnShippedItems) {
-            menu.push(
-                {
-                    text: "Unshipped Items",
-                    moveAction: "addSelectionToPackage",
-                    moveTargetId: 0
-                }
-            );
-        }
-        
-        
-        var unshippedPackages = this.record.get("unShippedPackages");
-
-        // loop on the packages adding them as addTo Targets;
-        var packageLength = unshippedPackages.length;
-        for (var i = packageLength; i > 0; i--) {
-
-            var packageId = null;
-            if (me.packageData) {
-                packageId = me.packageData.id
-            }
-
-            // only include the packages that we are not currently operating on.
-            if (unshippedPackages[i - 1].id != packageId) {
-                menu.push({
-                    text: "Package " + i,
-                    moveAction: "addSelectionToPackage",
-                    moveTargetId: unshippedPackages[i - 1].id
-                });
-            }
-        }
-        
-        
-        
-        
-        
-        //todo: need some paging solution for adding support to have many packages
-        /*
-        if (packageLength > packageMenuPagingSize) {
-            menu.push(
-             {
-                 text: "Add to Package",
-                 menu: {
-                     plain: true,
-                     items: specificPackages
-                 }
-             }
-         );
-        }
-        */
-
-
-
-        return menu;
-    },
-
-    getToolBarConfig : function() {
-        var me = this,
-            tb = {
-                plain: true,
-                enableOverflow:true,
-                items:[]
-            };
-
-        /*
-        var testButton = Ext.create("Taco.core.ux.action.SplitButton", {
-            text: "<-I need theming not reinvention",
-            menu : {
-                plain: true,
-                items:[{
-                    text: "asdf"
-                }]
-            }
-        });
-        */
-
-        /*
-        tb.items.push({
-            text:"reload",
-            handler:function() {
-                this.record.reload();
-            },
-            scope:this
-
-        });
-        */
-        
-        
-        
-        if (me.getEnableMoveMenu()) {
-
-            var unShippedPackages = this.record.get("unShippedPackages");
-            // if there is a last package use its id, otherwise make the target a new package
-            var lastPackage = unShippedPackages[unShippedPackages.length - 1];
-            var lastPackageId = (lastPackage) ? lastPackage.id : -1;
-
-            var moveMenuText = "Add to Package";
-            var menuXtype = "Ext.button.Split";
-            if (!me.isUnShippedItems) {
-                moveMenuText = "Move to";
-                menuXtype = "Ext.Button";
-                // note that the taco button doesn't support being enabled and disabled
-            }
-            
-            
-
-            // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
-            //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
-            me.moveMenuAction = Ext.create(menuXtype, {
-                menuAlign: 'tr-br',
-                cls: "taco-splitbutton",
-                text: moveMenuText,
-                itemId: "moveMenuTrigger",
-                
-
-                moveAction: "addSelectionToPackage",
-                moveTargetId: lastPackageId,
-                
-                disabled: true,
-                handler: function (button, e) {
-                    // only do the click to move if its in the unshipped items. for regular packages its a menu button instead of split button
-                    if (me.isUnShippedItems) {
-                        me.moveSelectedItems(null, button, e);
-                    }
-                },
-                scope:me,
-                listeners: {
-                    menushow: {
-                        fn: function (button, menu, eOpts) {
-                            menu.removeAll();
-                            menu.add(me.getMenuActions());
-                        },
-                        scope: me
-                    }
-                },
-                menu: {
-                    plain: true,
-                    listeners: {
-                        click: me.moveSelectedItems,
-                        scope: me,
-                        delegate: "x-menu-item-link"
-                    },
-                    items: [{
-                        text: "asdf"
-                    }]
-                }
-            });
-            
-            tb.items.push(me.moveMenuAction);
-
-        }
-        
-        if (me.enableShippingMethodMenu) {
-            // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
-            //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
-            me.shippingMethodMenu = Ext.create("Taco.core.ux.action.Button", {
-                menuAlign: 'tr-br',
-                //cls: "taco-splitbutton",
-                text: "Change Shipping Method",
-                listeners: {
-                    menushow: {
-                        fn: function (button, menu, eOpts) {
-                            var menuData = me.getShippingRatesMenu();
-                            me.shippingMethodMenu.menu.removeAll();
-                            me.shippingMethodMenu.menu.add(menuData);
-                        },
-                        scope: me
-                    }
-                },
-                menu: {
-                    plain: true,
-                    listeners: {
-                        click: {
-                            fn:me.changeShippingMethod,
-                            scope: me,
-                            delegate: "x-menu-item-link"   
-                        }
-                    },
-                    items: [{
-                        text: "loading..."
-                    }]
-                }
-            });
-
-            
-            
-                        
-            /*
-            me.shippingMethodMenu = Ext.create('Ext.form.ComboBox', {
-                store: this.allRates,
-                queryMode: 'local',
-                displayField: 'Value',
-                valueField: 'Key',
-                value: this.record.get("shippingMethodCode")
-                
-
-            });
-            */
-
-            
-            
-            
-            
-
-            tb.items.push(me.shippingMethodMenu);
-
-        }
-        
-        if (me.enableShippingLabelButton &&  me.packageData.shippingMethodCode) {
-            
-            me.shippingLabelButton = Ext.create("Taco.core.ux.action.Button", {
-                text: "View Shipping Label",
-                handler: me.viewShippingLabel,
-                scope:me
-            });
-            me.shippingLabelButton.setDisabled( !me.packageData.shippingMethodCode);
-            tb.items.push(me.shippingLabelButton);
-
-        }
-        
-        if (me.enabledPackingSlipButton  &&  me.packageData.shippingMethodCode) {
-            me.packingSlipButton = Ext.create("Taco.core.ux.action.Button", {
-                text: "View Packing Slip",
-                handler: me.viewPackingSlip,
-                scope: me
-            });
-            me.packingSlipButton.setDisabled( !me.packageData.shippingMethodCode);
-            tb.items.push(me.packingSlipButton);
-        }
-        
-        if (me.enabledRemoveButton) {
-            me.removeButton = Ext.create("Taco.core.ux.action.Button", {
-                text: "Remove",
-                handler: me.removeSelectedItems,
-                scope: me
-            });
-
-            tb.items.push(me.removeButton);
-        }
-        
-        if (me.enabledMarkAsShippedButton) {
-            me.markAsShippedButton = Ext.create("Taco.core.ux.action.Button", {
-                text: "Mark As Shipped",
-                handler: me.markAsShipped,
-                scope: me
-            });
-
-            tb.items.push(me.markAsShippedButton);
-        }
-        
-
-        return tb;
-    },
-   
-    // initializes the selection model. Enables the checkbox by config
-    initSelectionModel: function () {
-        var me = this;
-        if (me.enableCheckBoxSelection) {
-            me.selModel = Ext.create('Ext.selection.CheckboxModel', {
-                selType: 'checkboxmodel',
-                checkOnly: true,
-                showHeaderCheckbox: true
-            });
-        } 
     },
 
     // returns the column configuration for this grid
@@ -534,18 +434,168 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         return columns;
     },
     
+    
+    toggleAddToolbar: function (toolbarType) {
+        var me=this,
+            tb;
+        
+        // if we have an existing toolbar we need to destroy it.
+        if (me.activeAddToolbar && !me.activeAddToolbar.isDestroyed) {
+            
+            me.activeAddToolbar.hide();
+            me.removeDocked(me.activeAddToolbar,true);
+            // if the type is the same as the currently active toolbar then just destroy it and end. this is the user toggling the toolbar close by clicking on the add product link again;
+            if (me.activeAddToolbar.toolbarType == toolbarType) {
+                return;
+            }
+        }
+
+        // create the new toolbar and add it to the container;
+        switch (toolbarType) {
+            case "product":
+                tb = me.getAddProductToolbar();
+                break;
+            case "coupon":
+                break;
+            case "orderLevelAdjustment":
+                break;
+        }
+
+        me.activeAddToolbar = tb;
+        me.addDocked(tb);
+    },
+    
+    // pass focus to the active search field so the user can keep adding / searching after exiting a previous selection
+    focusActiveSearchField: function () {
+        if (this.activeSearchField && !this.activeSearchField.isDestroyed) {
+            this.activeSearchField.focus(true, 100);
+        }
+    },
+    
+    // creates and returns a toolbar for adding products;
+    getAddProductToolbar: function (config) {
+        var me = this,
+            tbConfig;
+
+        this.activeSearchField = Ext.create('Taco.view.order.widget.ProductPickerField', {
+            store: Taco.core.data.StoreManager.getOrCreate({
+                type: 'Taco.store.Products',
+                pageSize: me.productsPerPage,
+                autoLoad: true
+            }),
+            pageSize: me.productsPerPage,
+            listeners: {
+                beforeselect: {
+                    fn: function (combo, record, index, e) {
+                        var productCode = record.get("productCode"),
+                            isConfigurable = record.get("isConfigurable");
+                        
+                        //var picker = combo.getPicker();
+                        combo.collapse();
+                        
+
+                        // determine if we need to show the configurator
+                        if (isConfigurable) {
+                            var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
+                                productCode: productCode,
+                                listeners: {
+                                    'configureproduct': {
+                                        fn: function (configurationData) {
+                                            this.
+                                                addConfiguredProduct([configurationData]);
+                                        },
+                                        scope: this
+                                    },
+                                    'beforeclose': {
+                                        fn: this.focusActiveSearchField,
+                                        scope: this
+                                    }
+                                }
+                            });
+                        } else {
+                            // the product doesn't require configuration so just add it and skip opening the dialog;
+                            this.addConfiguredProduct([
+                                {
+                                    // always going to be 1 because they don't want to open the configurator for products without options or extras
+                                    quantity: 1,
+                                
+                                    productCode: productCode
+                                }
+                            ]);
+                            this.focusActiveSearchField();
+                        }
+                        
+                        // cancel the selection so that the same product can be reselected again;
+                        return false;
+                    },
+                    scope: this
+                }
+            }
+        });
+                
+        tbConfig = Ext.apply({
+            toolbarType:"product",
+            items: [
+                {
+                    xtype: 'component',
+                    html: "Add Product",
+                    style: "padding:0px 10px 0px 10px;"
+                },
+                this.activeSearchField
+            ]
+        }, config);
+
+        return me.getAddItemToolbar(tbConfig);
+    },
+    
+    getAddItemToolbar: function (config) {
+        var tbConfig = Ext.apply({
+            dock: "top",
+            weight:2,
+            cls: "additem-toolbar",
+            style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
+            items: [],
+            listeners: {
+                afterlayout: {
+                    fn: function () {
+                        this.focusActiveSearchField();
+                    },
+                    scope: this
+                } 
+            },
+            onDestroy: function() {
+            
+            }
+        }, config);
+
+        // add the closer;
+        tbConfig.items.push(
+            {
+                text: "X",
+                xtype: "taco.button",
+                height: 24,
+                style: "padding:5px;min-width:30px;",
+                handler: function(button, evt) {
+                    var tb = button.up('toolbar');
+                    // destroy all the child components
+                    tb.removeAll(true);
+                    // need to hide the toolbar before deleting it to avoid a bug in hbox layout 
+                    
+                    tb.hide();
+                    
+                    // remove the toolbar from its owner container and destroy it.
+                    tb.ownerCt.removeDocked(tb,true);
+                },
+                scope: this
+            }
+        );
+    
+        return Ext.create('Ext.toolbar.Toolbar', tbConfig);
+    },
+    
     // returns an array of field configs for the store of this grid
     getFields: function() {
         return [
-            
-            
-            /*
-            orderItemId: "fe629abaecb64743b82c424279f50aba"
-productCode: "uuu"
-productName: "t-shirt"
-quantity: 2
-weight: 2
-            */
 
             {
                 "name": "orderItemId",
@@ -576,74 +626,8 @@ weight: 2
                 "useNull": true,
                 "defaultValue": 1
             }
-
-            /*
-            ,
-            
-            
-            
-
-            {
-                "name": "unitPrice",
-                "type": "auto",
-                "defaultValue": []
-            },
-            
-            {
-                "name": "discount",
-                "type": "auto",
-                "useNull": true
-            },
-            {
-                "name": "subtotal",
-                "type": "float",
-                "useNull": true
-            },
-            {
-                "name": "total",
-                "type": "float",
-                "useNull": true
-            },
-       
-            
-            
-
-            // not currently in json
-            {
-                "name": "options", //<== get list of options or extras
-                "type": "auto",
-                "defaultValue": []
-            },
-
-            // added this so the ui can modify its behavior when products are deleted
-            {
-                "name": "isDeleted",
-                "type": "auto",
-                "defaultValue": false
-            }
-        
-            */
-
-
         ];
     },
-    
-    getShippingRatesMenu : function () {
-        var allRatesMenuData = [],
-            store = Taco.properties.shippingRates;
-        
-        if (store) {
-            store.each(function (record) {
-                allRatesMenuData.push({
-                    text: record.get("Value"),
-                    key: record.get("Key")
-                });
-            });
-        }
-        return allRatesMenuData;
-    },
-    
-
 
     executeMoveItems: function (config) {
         var me = this,
@@ -675,7 +659,7 @@ weight: 2
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    Taco.app.viewPort.unmask();
+                    this.setLoading(false);
                     return;
                 }
                 // reload the record
@@ -683,12 +667,14 @@ weight: 2
             },
             failure: function (response) {
                 // error handling here
-                Taco.app.viewPort.unmask();
+                this.setLoading(false);
             },
             scope: this
         };
+
+
         
-        Taco.app.viewPort.mask("loading");
+        this.setLoading(true);
         // call the model method to persist the change
         if (isCreate) {
             this.record.createPackage(callConfig);
@@ -725,51 +711,6 @@ weight: 2
         }
     },
     
-    changeShippingMethod: function (menu, item, e, eOpts) {
-        
-        if (item) {
-            
-            var grid = item.up("gridpanel");
-            // get package json
-            data = grid.packageData;
-            // update the shipping code
-            data.shippingMethodCode = item.key;
-            data.shippingMethodName = item.text;
-            
-            config = {
-                jsonData: [data],
-                success: function (response) {
-                    // success handling here
-                    Taco.app.viewPort.unmask();
-                    var json = Ext.decode(response.responseText, true);
-                    if (!json || !json.success) {
-                        // service didnt' return data properly
-                        Taco.app.viewPort.unmask();
-                        return;
-                    }
-                    // reload the record
-                    this.record.reload();
-                },
-                failure: function (response) {
-                    // error handling here
-                    Taco.app.viewPort.unmask();
-
-                },
-                scope: this
-            };
-
-            
-            Taco.app.viewPort.mask("loading");
-
-            
-            // call the model method to persist the change
-            this.record.changeShippingMethod(config);
-            
-            
-
-        }
-    },
-    
     // move the currently selected items and move them to the unshipped items 
     removeSelectedItems: function () {
         var me = this,
@@ -784,179 +725,49 @@ weight: 2
         }
     },
     
-    // mark package as a shipped package
-    markAsShipped: function () {
-        var me = this,
-            callConfig;
 
-        var orderId = me.record.get("id");
-        var sourcePackageId = me.packageData.id;
-
-        callConfig = {
+    // accepts an array of orderItem configuration data objects and calls the service to persist it.
+    addConfiguredProduct: function (orderItems) {
+        var me = this;
+        this.fireEvent('save');
+        
+        this.record.addOrderItem({
             jsonData: {
-                orderId: orderId,
-                packageIds: [sourcePackageId]
+                orderId: this.record.get('id'),
+                orderItems: orderItems
             },
-
             success: function (response) {
                 // success handling here
-
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    Taco.app.viewPort.unmask();
+                    this.fireEvent('saveFailure');
+                    
+                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                        text: "Error adding order item."
+                    });
+                    errorDialog.show();
+
                     return;
                 }
-                // reload the record
-                this.record.reload();
+                this.fireEvent('saveSuccess');
+
+                //this.record.reload();
             },
             failure: function (response) {
                 // error handling here
-                Taco.app.viewPort.unmask();
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error adding order item.";
+                
+                this.fireEvent('saveFailure');
+                
+                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                    text: msg
+                });
+                errorDialog.show();
             },
             scope: this
-        };
+        });
 
-        Taco.app.viewPort.mask("Loading...");
-        this.record.markPackagesShipped(callConfig);
-
-    },
-    
-    viewShippingLabel: function (button, e) {
-        
-        
-        // view shipping label. open in new tab. this initiates a work flow that makes the package uneditable.
-        // subsequent edits to a package with a shipping label will need to be confirmed with a ui that tells the user 
-        // to destroy the shipping label. and should probably remove the tracking number from the package as well.
-
-        
-        var newWindow,
-            me = this,
-            grid = button.up("gridpanel"),
-            data = grid.packageData;
-            
-            labelUrl = '/admin/app/order/shipping/package/label?orderId=' + data.orderId + '&packageId=' + data.id;
-        
-       
-
-        if (data.shipmentId === null || data.shipmentId === undefined)
-        {
-            me.setLoading(true);
-            newWindow = window.open('/admin/Scripts/ext/resources/themes/images/default/grid/loading.gif');
-            Ext.Ajax.request( {
-                url: '/admin/app/order/shipping/package/prepareshipment',
-                method: 'POST',
-                jsonData: {
-                    orderId: data.orderId,
-                    packageIds: [ data.id ]
-                },
-                success: function(data) {
-                    me.setLoading(false);
-                    me.record.reload();
-                    newWindow.location = labelUrl;
-                    
-                },
-                failure:function(){
-                    me.setLoading(false);
-                }
-            });
-      
-        }
-        else
-        {
-            window.open(labelUrl);
-        }
-    },
-
-    viewPackingSlip: function (button, e) {
-        var grid = button.up("gridpanel"),
-            data = {
-                shippingMethodName: grid.packageData.shippingMethodName,
-                items: grid.packageData.items,
-                billingContact: this.order.data.billingContact,
-                shippingContact: this.order.data.shippingContact,
-                payment: this.order.data.payments[0],
-                order: this.order.data,
-                siteName: Taco.app.context.getCurrentSite().name
-            },
-            win = window.open(),
-            tpl;
-
-
-
-        tpl = new Ext.XTemplate(
-            '<div style="font: 14px/1.5 sans-serif;">',
-                '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody><tr>',
-                    '<td style="padding: 4px 30px 20px 4px; width: 100%;">',
-                        '<h1 style="margin: 0px;">{siteName}</h1>',
-                    '</td>',
-                    '<td style="padding: 4px 30px 20px 4px;">',
-                        '<h2 style="margin: 0px; white-space: nowrap;">PACKING SLIP</h2>',
-                        '<table style="border-collapse: collapse; border-spacing: 0px;"><tbody><tr>',
-                            '<td style="padding: 4px 30px 4px 4px;">',
-                                '<div style="font-weight: bold; white-space: nowrap;">Date:</div>',
-                                '<div style="white-space: nowrap;">{order.createDate:date("M d g:ia")}</div>',
-                            '</td>',
-                            '<td style="padding: 4px 30px 4px 4px;">',
-                                '<div style="font-weight: bold; white-space: nowrap;">Order #:</div>',
-                                '<div style="font-weight: bold; white-space: nowrap;">{order.orderNumber}</div>',
-                            '</td>',
-                        '</tr></tbody></table>',
-                    '</td>',
-                '</tr></tbody></table>',
-                '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody>',
-                    '<tr>',
-                        '<td style="font-weight: bold;">Bill To: (Customer ID #1)</td>',
-                        '<td style="font-weight: bold;">Ship To:</td>',
-                    '</tr>',
-                    '<tr>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">',
-                            '<div>{billingContact.firstName} {billingContact.lastName}</div>',
-                            '<div>{billingContact.address1}</div>',
-                            '<div>{billingContact.cityOrTown}, {billingContact.state} {billingContact.zipCode}</div>',
-                            '<div>{billingContact.countryCode}</div>',
-                            '<div>{billingContact.homePhone}</div>',
-                            '<div>{billingContact.email}</div>',
-                        '</td>',
-                        '<td style="border-top: 2px solid black; font-size: 16px; font-weight: bold; padding: 4px 30px 20px 4px;">',
-                            '<div>{shippingContact.firstName} {shippingContact.lastName}</div>',
-                            '<div>{shippingContact.address1}</div>',
-                            '<div>{shippingContact.cityOrTown}, {shippingContact.state} {shippingContact.zipCode}</div>',
-                            '<div>{shippingContact.countryCode}</div>',
-                            '<div>{shippingContact.homePhone}</div>',
-                            '<div>{shippingContact.email}</div>',
-                        '</td>',
-                    '</tr>',
-                    '<tr>',
-                        '<td style="font-weight: bold;">Payment Method:</td>',
-                        '<td style="font-weight: bold;">Shipping Method:</td>',
-                    '</tr>',
-                    '<tr>',
-                        '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 20px 4px;">{payment.paymentType}</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">{shippingMethodName}</td>',
-                    '</tr>',
-                '</tbody></table>',
-                '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody>',
-                    '<tr>',
-                        '<td style="font-weight: bold; white-space: nowrap;">Code</td>',
-                        '<td style="font-weight: bold; white-space: nowrap;">Name</td>',
-                        '<td style="font-weight: bold; white-space: nowrap;">Qty</td>',
-                        '<td style="font-weight: bold; white-space: nowrap;">Price</td>',
-                        '<td style="font-weight: bold; white-space: nowrap;">Total</td>',
-                    '</tr>',
-                    '<tpl for="items"><tr>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{productCode}</td>',
-                        '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 15px 4px; width: 100%;">{productName}</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{quantity}</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">${unitPrice}</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">${total}</td>',
-                    '</tr></tpl>',
-                '</tbody></table>',
-            '</div>'
-        );
-
-        console.log(data, this.data);
-        Ext.fly(win.document.body).setHTML(tpl.apply(data));
     }
-    
 });
