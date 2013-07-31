@@ -137,7 +137,8 @@ Ext.define('Taco.core.ux.ComboFilter', {
      */
     getFilters: function (records) {
         var filters = [],
-            defaultFilter = Ext.Array.filter(this.filterProperties, function (prop) { return prop.isDefault }).pop();
+            defaultFilter = Ext.Array.filter(this.filterProperties, function (prop) { return prop.isDefault }).pop(),
+            valueStoreChanged = false;
 
         Ext.Array.each(records, function (record) {
             var value = record.get('value'),
@@ -154,11 +155,16 @@ Ext.define('Taco.core.ux.ComboFilter', {
                 });
 
                 filters.push(filter);
+                valueStoreChanged = true;
             } else {
                 filter = this.itemStore.filters.get(['filter', value].join('-'));
                 filters.push(filter);
             }
         }, this);
+
+        if (valueStoreChanged) {
+            this.valueStore.fireEvent('datachanged', this.valueStore);
+        }
 
         return filters;
     },
