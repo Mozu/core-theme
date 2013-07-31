@@ -503,6 +503,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImgController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Filters\SiteBuilderAuthorizeAttribute.cs" />
     <Compile Include="GeneralSettingHelper.cs" />
     <Compile Include="Global.asax.cs">
@@ -2114,6 +2115,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\resources\scss\taco\widgets\_window.scss" />
+    <Content Include="Views\Test\DecryptTicket.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />

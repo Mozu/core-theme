@@ -30,9 +30,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public VolusionLoginHelper(IMultiScopeInvitationWebApiClient invitationWebApiClient, IUserHelper userHelper, IPublicAdminAuthTicketWebApiClient usersRepo, IAuthenticationHelper authHelper, ISettings settings, ISiteBuilderApiContext apiContext )
         {
-            _invitationWebApiClient = invitationWebApiClient;
+            _invitationWebApiClient = invitationWebApiClient.CloneWithoutUserClaims();
             _userHelper = userHelper;
-            _usersRepo = usersRepo;
+            _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authHelper = authHelper;
             _settings = settings;
             _apiContext = apiContext;

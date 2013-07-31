@@ -26,13 +26,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 
         public ContextSwitcher(ITenantsWebApiClient tenantsWebApiClient, ISitesWebApiClient sitesWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderContext siteBuilderContext, ISettings settings, ISiteBuilderApiContext context, IMultiScopeAdminAuthTicketWebApiClient authTicketWeb)
         {
-            _tenantsWebApiClient = tenantsWebApiClient;
-            _sitesWebApiClient = sitesWebApiClient;
+            _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
+;            _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _authenticationHelper = authenticationHelper;
             _siteBuilderContext = siteBuilderContext;
             _settings = settings;
             _context = context;
-            _authTicketWeb = authTicketWeb;
+            _authTicketWeb = authTicketWeb.CloneWithoutUserClaims();
         }
 
         public async Task<Tenant.Contracts.Tenant> ChangeTenant(int tenantId)

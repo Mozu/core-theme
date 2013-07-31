@@ -41,9 +41,28 @@ namespace Mozu.SiteBuilder.Mvc.Security
            // var helper = DependencyResolver.Current.GetService<AuthenticationHelper>();
           //  var helper = new AuthenticationHelper(context, provider: new CookieProvider(context, Core.Settings.MozuConfigurationManager.Settings), apiContext);
          //   var ticket = helper.GetTicketFromRequest();
-
+            if (apiContext.UserClaims != null)
+            {
+                 
+                string tmp;
+                int tenantId;
+                int siteId;
+                if (apiContext.UserClaims.Bag.TryGetValue("TenantId", out tmp) && int.TryParse(  tmp, out tenantId  ))
+                {
+                    tmp = null;
+                    if (tenantId != apiContext.TenantId)
+                    {
+                        apiContext.SetUser(null);
+                    }
+                    else if (apiContext.SiteId.HasValue && apiContext.UserClaims.Bag.TryGetValue("SiteId", out tmp) && int.TryParse( tmp, out siteId ) && apiContext.SiteId.Value != siteId  )
+                    {
+                        apiContext.SetUser(null);
+                    }
+                }
+            }
             if (apiContext.UserClaims == null)
             {
+                
                 var user = LightweightUserClaims.CreateForAnonymousShopper(apiContext.TenantId, apiContext.SiteId ?? -1);
                 apiContext.SetUser(user);
                 authHelper.SaveAuthTicket(new UserAuthTicket()

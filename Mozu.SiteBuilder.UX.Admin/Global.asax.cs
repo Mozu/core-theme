@@ -76,6 +76,10 @@ namespace Mozu.SiteBuilder.UX.Admin
 
             RouteTable.Routes.MapRoute("img", "img/{collection}/{documentId}",
                    new { action = "Index", controller = "img" });
+
+            RouteTable.Routes.MapRoute("adminTest", "test/{action}",
+                  new { action = "Index", controller = "test" });
+
             RouteTable.Routes.MapRoute("download", "download/{collection}/{documentId}",
                      new { action = "Download", controller = "img" });
 
