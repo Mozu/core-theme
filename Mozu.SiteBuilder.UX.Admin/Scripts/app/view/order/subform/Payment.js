@@ -146,8 +146,11 @@ Ext.define('Taco.view.order.subform.Payment', {
                     record: payment
                 });
             me.paymentPanels.push(panel);
-            me.bodyCont.add(panel);
         });
+        
+        // add the panels all at once to speed up layout.
+        me.bodyCont.add(me.paymentPanels);
+
     },
 
     // clear out the payment panels
@@ -193,17 +196,21 @@ Ext.define('Taco.view.order.subform.Payment', {
 
         me.bodyCont.add(me.headerDetails);
     },
-    
     // called when the record has been updated
     onRecordChange : function() {
         var me = this;
+        Ext.suspendLayouts();
         
         // re-build the record.payments() store.
         me.rebuildPayments();
 
+        // we need to make this more selective.
+
+        
         //re-build the ui components
         me.destroyPaymentsUI();
         me.initPaymentsUI();
+        Ext.resumeLayouts(true);
     },
 
     /*
