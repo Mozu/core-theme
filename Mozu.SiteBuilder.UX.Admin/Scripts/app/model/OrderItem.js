@@ -138,6 +138,12 @@ Ext.define('Taco.model.OrderItem', {
         }
     ]
 
+    /*
+        all proxy interations take place throught the order model
+    */ 
+    
+    
+
 /*
     proxy: {
         type: 'ajaxproxy',

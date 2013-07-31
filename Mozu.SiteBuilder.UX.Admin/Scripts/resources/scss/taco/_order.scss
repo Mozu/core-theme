@@ -559,13 +559,44 @@
 		}
 
 	}
+}	
 
-	
-}		
 
-	
-	
-	
-	
-		
-	
+// Order Detail Editor	
+
+
+
+// title toolbar in the order detail editor
+.title-toolbar{
+	.taco-toolbar-link{
+		.x-btn-inner{
+		    font-size: px-to-rem(15);
+			color:blue;
+			font-weight:bold;
+
+		}
+	}
+
+	.taco-toolbar-link.x-btn-default-toolbar-small-over{
+		background:#fff !important;
+		border-color:#fff !important;
+		text-decoration:underline;
+	}
+}
+
+// add product/coupon/adjustment toolbar in the order detail editor
+.additem-toolbar{
+
+}
+
+
+
+// reverting the padding for the boundlist paging toolbar page number text field
+
+.#{$prefix}tbar-page-number{
+  .#{$prefix}form-trigger-input-cell {
+    .#{$prefix}form-text {
+      padding-right: 2px!important;
+    }
+  }
+}

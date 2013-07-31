@@ -8,7 +8,7 @@
 Ext.define('Taco.view.order.widget.Package', {
     extend: 'Ext.panel.Panel',
     requires: [
-        'Taco.view.order.widget.OrderItemGrid',
+        'Taco.view.order.widget.ShippingItemGrid',
         'Taco.view.order.modal.EditTrackingNumber'
     ],
     config: {
@@ -84,7 +84,7 @@ Ext.define('Taco.view.order.widget.Package', {
 
         this.getHeaderData();
         
-        me.grid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
+        me.grid = Ext.create('Taco.view.order.widget.ShippingItemGrid', {
             record: this.record,
             // data to be loaded into the store
             data: me.packageData.items,
@@ -246,7 +246,7 @@ Ext.define('Taco.view.order.widget.Package', {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    Taco.app.viewPort.unmask();
+                    Taco.app.viewPort.setLoading(false);
                     return;
                 }
                 // reload the record
@@ -254,12 +254,12 @@ Ext.define('Taco.view.order.widget.Package', {
             },
             failure: function (response) {
                 // error handling here
-                Taco.app.viewPort.unmask();
+                Taco.app.viewPort.setLoading(false);
             },
             scope: this
         };
         
-        Taco.app.viewPort.mask("loading");
+        Taco.app.viewPort.setLoading(true);
 
         // call the model method to persist the change
         this.record.deletePackage(config);

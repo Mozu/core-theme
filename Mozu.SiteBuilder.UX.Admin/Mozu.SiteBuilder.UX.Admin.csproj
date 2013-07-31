@@ -617,6 +617,8 @@
     <Content Include="Scripts\app\core\ux\tab\Tab.js" />
     <Content Include="Scripts\app\core\ux\tab\Panel.js" />
     <Content Include="Scripts\app\core\ux\tinymce\WindowManager.js" />
+    <Content Include="Scripts\app\core\ux\window\Window.js" />
+    <Content Include="Scripts\app\core\ux\window\WindowWithActions.js" />
     <Content Include="Scripts\app\locale\Strings.js" />
     <Content Include="Configs\AppSettings.SI.config">
       <SubType>Designer</SubType>
@@ -706,16 +708,22 @@
     <Content Include="Scripts\app\view\order\modal\EditTransaction.js" />
     <Content Include="Scripts\app\view\order\modal\CapturePayment.js" />
     <Content Include="Scripts\app\view\order\modal\CheckPayment.js" />
+    <Content Include="Scripts\app\view\order\modal\EditOrderDetail.js" />
     <Content Include="Scripts\app\view\order\modal\EditTrackingNumber.js" />
     <Content Include="Scripts\app\view\order\modal\IssueCredit.js" />
     <Content Include="Scripts\app\view\order\modal\AddPaymentManual.js" />
     <Content Include="Scripts\app\view\order\modal\AddPayment.js" />
+    <Content Include="Scripts\app\view\order\modal\ProductConfigurator.js" />
     <Content Include="Scripts\app\view\order\modal\RequestCheck.js" />
     <Content Include="Scripts\app\view\order\subform\Shipping.js" />
     <Content Include="Scripts\app\view\order\subform\Subform.js" />
     <Content Include="Scripts\app\view\order\subform\Payment.js" />
     <Content Include="Scripts\app\view\order\subform\Detail.js" />
     <Content Include="Scripts\app\view\order\widget\OrderItemGrid.js" />
+    <Content Include="Scripts\app\view\order\widget\ProductConfigurator.js" />
+    <Content Include="Scripts\app\view\order\widget\ProductPickerField.js" />
+    <Content Include="Scripts\app\view\order\widget\ShippingItemGrid.js" />
+    <Content Include="Scripts\app\view\order\widget\OrderTotalPanel.js" />
     <Content Include="Scripts\app\view\order\widget\Package.js" />
     <Content Include="Scripts\app\view\order\widget\PaymentPanel.js" />
     <Content Include="Scripts\app\view\order\widget\UnpackagedItems.js" />

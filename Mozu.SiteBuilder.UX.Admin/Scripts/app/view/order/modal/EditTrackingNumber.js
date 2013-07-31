@@ -98,7 +98,7 @@ Ext.define('Taco.view.order.modal.EditTrackingNumber', {
         this.packageData.trackingNumber = trackingNumber;
         
 
-        
+        Taco.app.viewPort.setLoading(true);
         this.record.changeTrackingNumber({
             jsonData: [this.packageData],
             success: function (response) {
@@ -106,7 +106,7 @@ Ext.define('Taco.view.order.modal.EditTrackingNumber', {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    Taco.app.viewPort.unmask();
+                    Taco.app.viewPort.setLoading(false);
                     
                     var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
                         text: "Error saving tracking number."
@@ -124,7 +124,7 @@ Ext.define('Taco.view.order.modal.EditTrackingNumber', {
                 var json = Ext.decode(response.responseText, true),
                     msg = (json && json.Message) ? json.Message : "Error saving tracking number.";
                 
-                Taco.app.viewPort.unmask();
+                Taco.app.viewPort.setLoading(false);
                 var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
                     text: msg
                 });
