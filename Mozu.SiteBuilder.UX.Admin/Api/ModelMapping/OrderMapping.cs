@@ -54,6 +54,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PaymentStatus, op => op.MapFrom(dc => dc.PaymentStatus))
                 .ForMember(x => x.Payments, op => op.MapFrom(dc => dc.Payments.OrderByDescending(p => p.AuditInfo.CreateDate)))
                 .ForMember(x => x.Packages, op => op.MapFrom(dc => dc.Packages))
+
+                .ForMember(x => x.OrderAdjustment, op => op.MapFrom(dc => dc.ShippingAdjustment))
+                .ForMember(x => x.ShippingAdjustment, op => op.MapFrom(dc => dc.ShippingAdjustment))
+
                 // .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.ShippingInfo.
                 .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
                 .AfterMap((dc, order) => {

@@ -92,12 +92,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name = "feeTotal", EmitDefaultValue = false)]
         public decimal FeeTotal { get; set; }
-
-        [DataMember(Name = "adjustmentDescription", EmitDefaultValue = false)]
-        public string AdjustmentDescription { get; set; }
-
-        [DataMember(Name = "adjustmentTotal", EmitDefaultValue = false)]
-        public decimal AdjustmentTotal { get; set; }
         #endregion
 
         [DataMember(Name = "total")]
@@ -152,5 +146,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         [DataMember(Name = "itemsShipped", EmitDefaultValue = false)]
         public int ItemsShipped { get; set; }
+
+        /// <summary>
+        /// An optional order-level adjustment.
+        /// </summary>
+        [DataMember(Name = "orderAdjustment", EmitDefaultValue = false)]
+        public Adjustment OrderAdjustment { get; set; }
+
+        /// <summary>
+        /// An optional order-level shipping adjustment.
+        /// </summary>
+        [DataMember(Name = "shippingAdjustment", EmitDefaultValue = false)]
+        public Adjustment ShippingAdjustment { get; set; }
     }
 }
