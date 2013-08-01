@@ -5,7 +5,7 @@
 Ext.define('Taco.view.category.Form', {
     extend: 'Taco.view.product.subform.Subform',
     editTitle: 'Edit category',
-    createTitle: 'Create a category',
+    createTitle: 'Create New category',
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -66,6 +66,8 @@ Ext.define('Taco.view.category.Form', {
     }
     ],
     initComponent: function () {
+        debugger
+        this.title = this.record.data.name;
         this.callParent(arguments);
     },
 });
