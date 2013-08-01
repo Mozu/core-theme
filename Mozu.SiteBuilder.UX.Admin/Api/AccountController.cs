@@ -10,6 +10,7 @@ using System.Web.Http.Controllers;
 using AutoMapper;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Settings;

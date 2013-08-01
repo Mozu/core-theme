@@ -1,5 +1,6 @@
 using Mozu.AdminUser.Contracts;
 using Mozu.AdminUser.Contracts.Clients;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
@@ -9,7 +10,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 
         public PasswordHelper(IMultiScopeAdminUserWebApiClient adminUserWebApiClient)
         {
-            _adminUserWebApiClient = adminUserWebApiClient;
+            _adminUserWebApiClient = adminUserWebApiClient.CloneWithoutUserClaims();
         }
 
         public void UpdateForgottenPassword(Api.Models.Account.LoginUser user)
