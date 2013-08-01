@@ -199,7 +199,7 @@
     </Reference>
     <Reference Include="Mozu.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.0.0.13209.1001\lib\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.0.0.13213.1002\lib\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -273,7 +273,7 @@
     </Reference>
     <Reference Include="Mozu.SiteSettings.Shipping.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.Shipping.Contracts.1.0.13205.1001\lib\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.SiteSettings.Shipping.Contracts.1.0.13213.1001\lib\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Tenant.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
