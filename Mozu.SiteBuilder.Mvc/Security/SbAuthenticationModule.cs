@@ -31,16 +31,38 @@ namespace Mozu.SiteBuilder.Mvc.Security
             context.AuthenticateRequest += new EventHandler(this.OnAuthenticate);
         }
 
+        private static object _isAdmin = null;
+        public static bool IsAdmin
+        {
+            get
+            {
+                if (_isAdmin == null)
+                {
+                    _isAdmin = string.Equals(HttpRuntime.AppDomainAppVirtualPath, "/admin", StringComparison.OrdinalIgnoreCase);
+                }
+                return (bool) _isAdmin;
+            }
+            set { _isAdmin = value; }
+        }
+
+        
+
+
         void OnAuthenticate(object sender, EventArgs e)
         {
-            var context = new HttpContextWrapper(HttpContext.Current);
+           
+
+             
+
+
+            
+           
             var apiContext = DependencyResolver.Current.GetService<ISiteBuilderApiContext>();
             var authHelper = DependencyResolver.Current.GetService<IAuthenticationHelper >();
-          //  var settings = DependencyResolver.Current.GetService<ISettings>();
+            var settnigs = DependencyResolver.Current.GetService<ISettings>();
 
-           // var helper = DependencyResolver.Current.GetService<AuthenticationHelper>();
-          //  var helper = new AuthenticationHelper(context, provider: new CookieProvider(context, Core.Settings.MozuConfigurationManager.Settings), apiContext);
-         //   var ticket = helper.GetTicketFromRequest();
+          
+
             if (apiContext.UserClaims != null)
             {
                  
@@ -60,6 +82,8 @@ namespace Mozu.SiteBuilder.Mvc.Security
                     }
                 }
             }
+
+
             if (apiContext.UserClaims == null)
             {
                 

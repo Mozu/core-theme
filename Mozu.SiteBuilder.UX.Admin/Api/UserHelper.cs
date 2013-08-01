@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Mozu.AdminUser.Contracts.Clients;
+using Mozu.Core.Api.Client;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -10,7 +11,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public UserHelper(IMultiScopeAdminUserWebApiClient adminUserWebApiClient)
         {
-            _adminUserWebApiClient = adminUserWebApiClient;
+            _adminUserWebApiClient = adminUserWebApiClient.CloneWithoutUserClaims();
         }
 
         public Models.Account.User GetUser(string id)

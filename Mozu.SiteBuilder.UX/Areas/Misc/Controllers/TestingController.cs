@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using System.Linq;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
 using Mozu.PaymentService.Contracts;
@@ -36,8 +37,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         public TestingController(ISitesWebApiClient  wsRepo, ITenantsWebApiClient tRepo, ICookieProvider cookies, ISettings settings , Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient )
         {
-            _wsRepo = wsRepo;
-            _tRepo = tRepo;
+            _wsRepo = wsRepo.CloneWithoutUserClaims();
+            _tRepo = tRepo.CloneWithoutUserClaims();
             _cookies = cookies;
             _settings = settings;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
