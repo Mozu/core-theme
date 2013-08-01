@@ -16,6 +16,21 @@ Ext.define('Taco.view.discount.Index', {
     typeName: 'Discount',
 
     requiresContextOfType: 's',
+    
+    initComponent: function () {
+        var me = this;
+        me.header = {
+            actions: [{
+                xtype: 'primarybutton',
+                text: 'Create New Discount',
+                click: function () {
+                    me.launchEditor(Ext.create('Taco.model.Discount'));
+                }
+            }]
+        };
+        this.callParent(arguments);
+    },
+    
     gridPanelConf: {
         columns: [{
             xtype: 'gridcolumn',
@@ -125,7 +140,7 @@ Ext.define('Taco.view.discount.Index', {
             eventName: 'deletediscount'
         }],
     },
-
+    //ToDo: WTF is this used for
     initComponent2: function (eOpts) {
         var me = this,
                 basegridview;
@@ -289,6 +304,13 @@ Ext.define('Taco.view.discount.Index', {
             this.launchEditor(record);
             Taco.app.StateManager.addState('discounts/edit/' + record.getId(), { id: record.getId() });
         }
+    },
+
+    launchEditor: function (record) {
+        Ext.defer(function () {
+            Taco.core.StateManager.attemptNavigate('discounts/edit/' + record.getId(), { complexMetaData: { record: record } });
+        }, 1, this);
+        return;
     }
 });
 
