@@ -12,6 +12,48 @@ Ext.define('Taco.view.customers.Index', {
     editorName: 'Taco.view.customer.Edit',
     useTilePanel: false,
     requiresContextOfType: 's',
+    //ToDo: make sure the filtering works after Thom checks his stuff in
+    
+    filterProperty: 'primaryFirstName',
+    
+    filterFormConf: {
+        width: 600,
+        cls: Taco.baseCSSPrefix + 'combofilter-form costomers',
+        items: [{
+            xtype: 'formflexbox',
+            justify: false,
+            defaults: {
+                xtype: 'textfield',
+                width: 160
+            },
+            items: [{
+                name: 'primaryFirstName',
+                fieldLabel: 'First Name'
+            }, {
+                name: 'primaryLastName',
+                fieldLabel: 'Last Name'
+            }]
+        }]
+    },
+
+    filterProperties: [{
+        property: 'all',
+        text: 'All',
+        isDefault: true
+    }, {
+        property: 'primaryFirstName',
+        text: 'First Name'
+    }, {
+        property: 'primaryLastName',
+        text: 'Last Name'
+    }, {
+        property: 'primaryEmail',
+        text: 'Email'
+    }, {
+        property: 'primaryCityOrTown',
+        text: 'Location'
+    }],
+
     gridPanelConf: {
         columns: [{
             dataIndex: 'primaryFirstName',
@@ -45,7 +87,7 @@ Ext.define('Taco.view.customers.Index', {
             text: 'Groups',
             renderer: function (value, metaData, record) {
                 if (value && value.length) {
-                    return value.join(',')
+                    return value.join(',');
                 }
             },
             minWidth: 100,
