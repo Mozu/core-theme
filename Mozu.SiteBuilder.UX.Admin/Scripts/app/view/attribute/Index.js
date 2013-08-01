@@ -19,7 +19,6 @@ Ext.define('Taco.view.attribute.Index', {
     initComponent: function () {
         var me = this;
         me.header = {
-            title: 'Products',
             actions: [{
                 xtype: 'primarybutton',
                 text: 'Create New Attribute',
