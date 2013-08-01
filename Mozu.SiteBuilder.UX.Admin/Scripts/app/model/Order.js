@@ -1076,7 +1076,7 @@ Ext.define('Taco.model.Order', {
      */
     addOrderItem: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/addorderitem',
+            url: '/admin/app/order/items/add',
             method: "POST"
         });
 

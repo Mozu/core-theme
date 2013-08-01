@@ -6,6 +6,11 @@ Ext.define('Taco.model.OrderShippingDiscount', {
     requires: ['Ext.data.association.BelongsTo'],
     fields: [
         {
+            "name": "discountId",
+            "type": "string",
+            "useNull": true
+        },
+        {
             "name": "couponCode",
             "type": "string",
             "useNull": true
@@ -25,26 +30,4 @@ Ext.define('Taco.model.OrderShippingDiscount', {
             "type": "boolean"
         }
     ]
-
-/*
-    proxy: {
-        type: 'ajaxproxy',
-        api: {
-            read: '/admin/app/order/orderitem/list',
-            create: '/admin/app/order/orderitem/create',
-            update: '/admin/app/order/orderitem/edit',
-            destroy: '/admin/app/order/orderitem/delete'
-        },
-        reader: {
-            type: 'json',
-            root: 'items',
-            successProperty: 'success',
-            messageProperty: "message"
-        },
-        writer: {
-            allowSingle: false,
-            type: 'json'
-        }
-    }
-*/
 });

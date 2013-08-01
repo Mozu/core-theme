@@ -6,6 +6,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
     [DataContract]
     public class OrderItemDiscount
     {
+        [DataMember(Name = "discountId")]
+        public int DiscountId { get; set; }
+
         [DataMember(Name="quantity")]
         public int Quantity { get; set; }
 
@@ -21,6 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "couponCode")]
         public string CouponCode { get; set; }
 
+        [DataMember(Name="isActive")]
         public bool IsActive { get; set; }
     }
 }
