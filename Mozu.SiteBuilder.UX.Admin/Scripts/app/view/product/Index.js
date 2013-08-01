@@ -54,6 +54,20 @@ Ext.define('Taco.view.product.Index', {
         text: 'Description'
     }],
     
+    initComponent: function () {
+        var me = this;
+        me.header = {
+            title: 'Products',
+            actions: [{
+                xtype: 'primarybutton',
+                text: 'Create New Product',
+                click: function () {
+                    me.launchEditor(Ext.create('Taco.model.Product'));
+                }
+            }]
+        };
+        this.callParent(arguments);
+    },
     
     gridPanelConf: {
         columns: [{
@@ -274,6 +288,26 @@ Ext.define('Taco.view.product.Index', {
             infoRecord;
 
         this.callParent(arguments);
+    },
+    /*
+    initComponent: function() {
+        var me = this;
+        me.header = {
+            title: 'Products',
+            actions: [{
+                xtype: 'primarybutton',
+                text: 'Create New Product',
+                click: function() {
+                    //me.launchEditor(Ext.create('Taco.model.Product'));
+                }
+            }]
+        };
+    },
+    */
+    launchEditor: function (record) {
+        Ext.defer(function () {
+            Taco.core.StateManager.attemptNavigate('product/edit/' + record.getId(), { complexMetaData: { record: record } });
+        }, 1, this);
+        return;
     }
-    
 });
