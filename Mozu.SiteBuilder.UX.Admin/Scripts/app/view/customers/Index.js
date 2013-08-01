@@ -149,5 +149,5 @@ Ext.define('Taco.view.customers.Index', {
             Taco.core.StateManager.attemptNavigate('customers/edit/' + record.getId(), { complexMetaData: { record: record } });
         }, 1, this);
         return;
-    },
+    }
 });
