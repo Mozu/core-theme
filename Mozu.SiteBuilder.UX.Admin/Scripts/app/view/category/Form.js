@@ -66,7 +66,6 @@ Ext.define('Taco.view.category.Form', {
     }
     ],
     initComponent: function () {
-        debugger
         this.title = this.record.data.name;
         this.callParent(arguments);
     },
