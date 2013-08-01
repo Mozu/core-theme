@@ -31,14 +31,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _orderWebApiClient = orderWebApiClient;
         }
 
-        public static List<Order> DoSort<TKey>(List<Order> orders, Func<Order, TKey> keySelector, bool isAscending)
-        {
-            if (isAscending)
-                return orders.OrderBy(keySelector).ToList();
-            else
-                return orders.OrderByDescending(keySelector).ToList();
-        }
-
 		[HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<Order>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {

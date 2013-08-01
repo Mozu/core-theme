@@ -6,6 +6,11 @@ Ext.define('Taco.model.OrderItemDiscount', {
     requires: ['Ext.data.association.BelongsTo'],
     fields: [
         {
+            "name": "discountId",
+            "type": "string",
+            "useNull": true
+        },
+        {
             "name": "couponCode",
             "type": "string",
             "useNull": true

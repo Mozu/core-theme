@@ -8,6 +8,7 @@ using CustomerDC = Mozu.Customer.Contracts;
 using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
 using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using PaymentsDC = Mozu.CommerceRuntime.Contracts.Payments;
+using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
 using ShippingDC = Mozu.CommerceRuntime.Contracts.Shipping;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
@@ -21,6 +22,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
+            Map_DcOrder_to_Order();
+            Map_DcOrderItem_to_OrderItem();
+            Map_DcAppliedProductDiscount_to_OrderItemDiscount();
+            Map_DcShippingDiscount_to_ShippingDiscount();
+            Map_DcPayment_to_OrderPayment();
+            Map_DcPaymentInteraction_to_PaymentInteraction();
+            Map_DcPackage_to_OrderPackage();
+            Map_DcPackageItem_to_OrderPackageItem();
+
+            Map_OrderPackage_to_DcPackage();
+            Map_OrderPackageItem_to_DcPackageItem();
+            Map_OrderItem_to_DcOrderItem();
+            Map_OrderItemDiscount_to_DcAppliedProductDiscount();
+            Map_ShippingDiscount_to_DcShippingDiscount();
+
+            // cheese
+            Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, decimal?>()
+                .ConvertUsing(f => f == null ? null : f.Value);
+        }
+
+        private void Map_DcOrder_to_Order()
+        {
             Mapper.CreateMap<OrdersDC.Order, Order>()
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
                 .ForMember(x => x.SiteId, op => op.MapFrom(dc => dc.SiteId))
@@ -28,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.TenantId, op => op.MapFrom(dc => dc.TenantId))
 
                 .ForMember(x => x.OrderNumber, op => op.MapFrom(dc => dc.OrderNumber))
-                .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate ))
+                .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
                 .ForMember(x => x.CustomerId, op => op.MapFrom(dc => dc.CustomerAccountId))
                 .ForMember(x => x.BillingContact, op => op.MapFrom(dc => dc.BillingInfo.BillingContact))
                 .ForMember(x => x.ShippingContact, op => op.MapFrom(dc => dc.ShippingInfo.ShippingContact))
@@ -60,7 +83,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 // .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.ShippingInfo.
                 .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
-                .AfterMap((dc, order) => {
+                .AfterMap((dc, order) =>
+                {
                     // sort order packages by create date (for consistent ordering in UI)
                     order.Packages = order.Packages.OrderBy(p => p.CreateDate).ToList();
 
@@ -70,42 +94,50 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // add item name, etc to packageItems
                     order.Packages.SelectMany(p => p.Items).Each(packageItem => FillPackageItemDetails(packageItem, order));
                 })
-                .AfterMap((dc, order) => {
+                .AfterMap((dc, order) =>
+                {
                     // fill out AuthorizationInfo object
                     if (order.Payments == null)
                         return;
 
-                    order.AuthorizationInfo = new OrderAuthorizationInfo {
+                    order.AuthorizationInfo = new OrderAuthorizationInfo
+                    {
                         TotalAmount = order.Total,
                         AmountCollected = order.Payments.Sum(p => p.AmountCollected),
                     };
                     order.AuthorizationInfo.CaptureAmount = order.AuthorizationInfo.TotalAmount - order.AuthorizationInfo.AmountCollected;
-               
+
                 })
-                .AfterMap((dc, order) => {
+                .AfterMap((dc, order) =>
+                {
                     // fill out UnpackagedItems list
-                    order.UnpackagedItems = 
+                    order.UnpackagedItems =
                         (from orderItem in order.Items
-                        let packagedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.OrderItemId == orderItem.Id)
-                        let packagedQuantity = packagedItems.Sum(i => i.Quantity)
-                        let remainingQuantity = orderItem.Quantity - packagedQuantity
-                        where remainingQuantity > 0
-                        select new OrderPackageItem { 
-                            OrderItemId = orderItem.Id, 
-                            ProductCode = orderItem.ProductCode, 
-                            ProductName = orderItem.ProductName,
-                            Weight = orderItem.UnitWeight * remainingQuantity,
-                            Quantity = remainingQuantity
-                        }).ToList();
+                         let packagedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.OrderItemId == orderItem.Id)
+                         let packagedQuantity = packagedItems.Sum(i => i.Quantity)
+                         let remainingQuantity = orderItem.Quantity - packagedQuantity
+                         where remainingQuantity > 0
+                         select new OrderPackageItem
+                         {
+                             OrderItemId = orderItem.Id,
+                             ProductCode = orderItem.ProductCode,
+                             ProductName = orderItem.ProductName,
+                             Weight = orderItem.UnitWeight * remainingQuantity,
+                             Quantity = remainingQuantity
+                         }).ToList();
                 })
-                .AfterMap((dc, order) => {
+                .AfterMap((dc, order) =>
+                {
                     // fill out number of items ordered, shipped, unshipped
                     order.ItemsOrdered = order.Items.Sum(i => i.Quantity);
                     order.ItemsNotShipped = order.UnpackagedItems.Sum(i => i.Quantity);
                     order.ItemsShipped = order.Packages == null || order.Packages.Count == 0 ? 0 : order.Packages.SelectMany(p => p.Items).Sum(i => i.Quantity);
                 })
                 ;
+        }
 
+        private void Map_DcOrderItem_to_OrderItem()
+        {
             Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
                   .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
                   .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.Product.ProductCode))
@@ -119,31 +151,43 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.ShippingDiscounts, op => op.MapFrom(dc => dc.ShippingDiscounts))
                   .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options != null ? dc.Product.Options.Select(o => o.Value) : null))
                   .AfterMap((dc, orderItem) =>
+                  {
+                      if (orderItem.Discounts != null)
                       {
-                          if (orderItem.Discounts != null)
-                          {
-                              orderItem.Discounts.Each(d => d.Quantity = d.Quantity == 0 ? orderItem.Quantity : d.Quantity);
-                          }
-                      });
-                // TODO: shopper entered value
-                ;
+                          orderItem.Discounts.Each(d => d.Quantity = d.Quantity == 0 ? orderItem.Quantity : d.Quantity);
+                      }
+                  });
+            // TODO: shopper entered value
+            ;
+        }
 
+        private void Map_DcAppliedProductDiscount_to_OrderItemDiscount()
+        {
             Mapper.CreateMap<DiscountDC.AppliedProductDiscount, OrderItemDiscount>()
-                .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.ProductQuantity ))
+                .ForMember(x => x.DiscountId, op => op.MapFrom(dc => dc.Discount.Id))
+                .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.ProductQuantity))
                 .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Discount.Name))
                 .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.ImpactPerUnit))
                 .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Impact))
                 .ForMember(x => x.CouponCode, op => op.MapFrom(dc => dc.CouponCode))
                 .ForMember(x => x.IsActive, op => op.MapFrom(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
                 ;
+        }
 
-            Mapper.CreateMap<DiscountDC.AppliedProductDiscount, ShippingDiscount>()
-                .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Discount.Name))
-                .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Impact))
-                .ForMember(x => x.CouponCode, op => op.MapFrom(dc => dc.CouponCode))
-                .ForMember(x => x.IsActive, op => op.MapFrom(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
+        private void Map_DcShippingDiscount_to_ShippingDiscount()
+        {
+            Mapper.CreateMap<DiscountDC.ShippingDiscount, ShippingDiscount>()
+                .ForMember(x => x.DiscountId, op => op.MapFrom(dc => dc.Discount.Discount.Id))
+                .ForMember(x => x.MethodCode, op => op.MapFrom(dc => dc.MethodCode))
+                .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Discount.Discount.Name))
+                .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Discount.Impact))
+                .ForMember(x => x.CouponCode, op => op.MapFrom(dc => dc.Discount.CouponCode))
+                .ForMember(x => x.IsActive, op => op.MapFrom(dc => dc.Discount.Excluded.HasValue && !dc.Discount.Excluded.Value))
                 ;
+        }
 
+        private void Map_DcPayment_to_OrderPayment()
+        {
             Mapper.CreateMap<PaymentsDC.Payment, OrderPayment>()
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
                 .ForMember(x => x.OrderId, op => op.MapFrom(dc => dc.OrderId))
@@ -151,7 +195,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
                 .ForMember(x => x.AmountCollected, op => op.MapFrom(dc => dc.AmountCollected))
                 .ForMember(x => x.AmountCredited, op => op.MapFrom(dc => dc.AmountCredited))
-                .ForMember(x => x.AmountAuthorized, op => op.ResolveUsing(dc => {
+                .ForMember(x => x.AmountAuthorized, op => op.ResolveUsing(dc =>
+                {
                     if (dc.PaymentType == PaymentsDC.PaymentType.Check && dc.Status == "Pending" && dc.Interactions.Any(i => i.Status == "CheckRequested"))
                         return dc.Interactions.First(i => i.Status == "CheckRequested").Amount.GetValueOrDefault(0);
                     else if (dc.Status == "Authorized" && dc.Interactions.Any(i => i.Status == "Authorized"))
@@ -167,7 +212,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
                 .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
-                .AfterMap((dc, payment) => {
+                .AfterMap((dc, payment) =>
+                {
                     if (payment.PaymentType == "Check")
                         return;
 
@@ -185,7 +231,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     }
                 })
                 ;
+        }
 
+        private void Map_DcPaymentInteraction_to_PaymentInteraction()
+        {
             Mapper.CreateMap<PaymentsDC.PaymentInteraction, PaymentInteraction>()
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
                 .ForMember(x => x.GatewayTransactionId, op => op.MapFrom(dc => dc.GatewayTransactionId))
@@ -194,18 +243,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.InteractionType, op => op.MapFrom(dc => dc.InteractionType))
                 .ForMember(x => x.CheckNumber, op => op.MapFrom(dc => dc.CheckNumber))
                 .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
-                .ForMember( x=> x.CreateDate, op => op.MapFrom( dc=> dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null ))
+                .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.PaymentId, op => op.MapFrom(dc => dc.PaymentId))
                 .ForMember(x => x.IsManual, op => op.MapFrom(dc => dc.IsManual))
                 ;
+        }
 
+        private void Map_DcPackage_to_OrderPackage()
+        {
             Mapper.CreateMap<ShippingDC.Package, OrderPackage>()
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
                 .ForMember(x => x.ShipmentId, op => op.MapFrom(dc => dc.ShipmentId))
                 .ForMember(x => x.ShippingMethodCode, op => op.MapFrom(dc => dc.ShippingMethodCode))
                 .ForMember(x => x.ShippingMethodName, op => op.MapFrom(dc => dc.ShippingMethodName))
                 .ForMember(x => x.TrackingNumber, op => op.MapFrom(dc => dc.TrackingNumber))
-                
+
                 .ForMember(x => x.PackagingType, op => op.MapFrom(dc => dc.PackagingType))
                 .ForMember(x => x.Height, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Height : null))
                 .ForMember(x => x.Length, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Length : null))
@@ -215,12 +267,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
                 ;
+        }
 
+        private void Map_DcPackageItem_to_OrderPackageItem()
+        {
             Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
                 .ForMember(x => x.OrderItemId, op => op.MapFrom(dc => dc.OrderItemId))
                 .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
                 ;
+        }
 
+        private void Map_OrderPackage_to_DcPackage()
+        {
             Mapper.CreateMap<OrderPackage, ShippingDC.Package>()
                 .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
                 .ForMember(dc => dc.Items, op => op.MapFrom(x => x.Items))
@@ -230,24 +288,77 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ShippingMethodName, op => op.MapFrom(x => x.ShippingMethodName))
                 .ForMember(dc => dc.Status, op => op.MapFrom(x => x.Status))
                 .ForMember(dc => dc.TrackingNumber, op => op.MapFrom(x => x.TrackingNumber))
-                .ForMember(dc => dc.Measurements, op => op.MapFrom(x => new Mozu.CommerceRuntime.Contracts.Commerce.PackageMeasurements { 
+                .ForMember(dc => dc.Measurements, op => op.MapFrom(x => new Mozu.CommerceRuntime.Contracts.Commerce.PackageMeasurements
+                {
                     Height = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Height },
                     Width = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Width },
                     Length = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Length },
                     Weight = new Core.Api.Contracts.Measurement { Unit = "lbs", Value = x.Weight }
                 }))
                 ;
+        }
 
+        private void Map_OrderPackageItem_to_DcPackageItem()
+        {
             Mapper.CreateMap<OrderPackageItem, ShippingDC.PackageItem>()
                 .ForMember(dc => dc.OrderItemId, op => op.MapFrom(x => x.OrderItemId))
                 .ForMember(dc => dc.Quantity, op => op.MapFrom(x => x.Quantity))
                 ;
-
-            // cheese
-            Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, decimal?>()
-                .ConvertUsing(f => f == null ? null : f.Value);
         }
 
+        private void Map_OrderItem_to_DcOrderItem()
+        {
+            Mapper.CreateMap<OrderItem, OrdersDC.OrderItem>()
+                  .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
+                  .ForMember(dc => dc.UnitPrice, op => op.Ignore())
+                  .ForMember(dc => dc.Product, op => op.ResolveUsing(x => {
+                      return new ProductsDC.Product
+                      {
+                          ProductCode = x.ProductCode,
+                          Name = x.ProductName
+                          // other stuff (price/measurements/options) are not important to make service calls.
+                      };
+                  }))
+                  .ForMember(dc => dc.Quantity, op => op.MapFrom(x => x.Quantity))
+                  .ForMember(dc => dc.ProductDiscounts, op => op.MapFrom(x => x.Discounts))
+                  .ForMember(dc => dc.ShippingDiscounts, op => op.MapFrom(x => x.ShippingDiscounts))
+                  ;
+        }
+
+        private void Map_OrderItemDiscount_to_DcAppliedProductDiscount()
+        { 
+            Mapper.CreateMap<OrderItemDiscount, DiscountDC.AppliedProductDiscount>()
+                .ForMember(dc => dc.ProductQuantity, op => op.MapFrom(x => x.Quantity))
+                .ForMember(dc => dc.Discount, op => op.ResolveUsing(x => {
+                    return new DiscountDC.Discount {
+                        Id = x.DiscountId,
+                        Name = x.Description
+                    };
+                }))
+                .ForMember(dc => dc.ImpactPerUnit, op => op.MapFrom(x => x.UnitPrice))
+                .ForMember(dc => dc.Impact, op => op.MapFrom(x => x.Total))
+                .ForMember(dc => dc.CouponCode, op => op.MapFrom(x => x.CouponCode))
+                .ForMember(dc => dc.Excluded, op => op.MapFrom(x => !x.IsActive))
+                ;
+        }
+
+        private void Map_ShippingDiscount_to_DcShippingDiscount()
+        {
+            Mapper.CreateMap<ShippingDiscount, DiscountDC.ShippingDiscount>()
+                .ForMember(dc => dc.MethodCode, op => op.MapFrom(x => x.MethodCode))
+                .ForMember(dc => dc.Discount, op => op.ResolveUsing(x => {
+                    return new DiscountDC.AppliedDiscount {
+                        CouponCode = x.CouponCode,
+                        Impact = x.Total,
+                        Excluded = !x.IsActive,
+                        Discount = new DiscountDC.Discount {
+                            Id = x.DiscountId,
+                            Name = x.Description
+                        }
+                    };
+                }))
+                ;
+        }
 
         /// <summary>
         /// Looks up a package item by OrderItemId and fills in the other information.
@@ -267,33 +378,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             packageItem.Total = itemInOrder.Total;
             packageItem.UnitPrice = itemInOrder.UnitPrice;
             packageItem.Weight = itemInOrder.UnitWeight.HasValue ? packageItem.Quantity * itemInOrder.UnitWeight : null;
-        }
-    
-        /// <summary>
-        /// Flattens an address object into a string for the UI.
-        /// </summary>
-        string FormatAddress(Core.Api.Contracts.Address address)
-        {
-            if (address == null)
-                return null;
-
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append(address.Address1);
-
-            if (!String.IsNullOrWhiteSpace(address.CityOrTown) || !String.IsNullOrWhiteSpace(address.StateOrProvince) || !String.IsNullOrWhiteSpace(address.PostalOrZipCode))
-            {
-                if (sb.Length > 0)
-                    sb.Append(", ");
-
-                sb.AppendFormat("{0} {1} {2}", address.CityOrTown, address.StateOrProvince, address.PostalOrZipCode);
-            }
-
-            if (!String.IsNullOrWhiteSpace(address.CountryCode))
-                sb.Append(sb.Length > 0 ? ", " + address.CountryCode : address.CountryCode);
-
-
-            return sb.ToString();
         }
     }
 }

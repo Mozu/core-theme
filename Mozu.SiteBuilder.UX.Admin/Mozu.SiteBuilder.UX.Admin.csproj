@@ -403,6 +403,7 @@
     <Compile Include="Api\OrderController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Api\OrderItemController.cs" />
     <Compile Include="Api\OrderManualPaymentController.cs" />
     <Compile Include="Api\OrderShippingController.cs" />
     <Compile Include="Api\ProductRuntimeController.cs" />
