@@ -16,6 +16,20 @@ Ext.define('Taco.view.attribute.Index', {
     editorName: 'Taco.view.attribute.Edit',
     filterProperty: 'name',
     typeName: 'Attribute',
+    initComponent: function () {
+        var me = this;
+        me.header = {
+            title: 'Products',
+            actions: [{
+                xtype: 'primarybutton',
+                text: 'Create New Attribute',
+                click: function () {
+                    me.launchEditor(Ext.create('Taco.model.Attribute'));
+                }
+            }]
+        };
+        this.callParent(arguments);
+    },
 
     gridPanelConf: {
         columns: [{
@@ -43,5 +57,12 @@ Ext.define('Taco.view.attribute.Index', {
                 menuColumnHandler: 'destroyMenuColumnHandler'
             }]
         }]
+    },
+    
+    launchEditor: function (record) {
+        Ext.defer(function () {
+            Taco.core.StateManager.attemptNavigate('attribute/edit/' + record.getId(), { complexMetaData: { record: record } });
+        }, 1, this);
+        return;
     }
 })
