@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 		[HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<Order>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<Order>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]bool draft=false)
         {
             int? startIndex = pagingParams.startIndex;
             int? pageSize = pagingParams.pageSize ?? 20;
@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (!string.IsNullOrEmpty(pagingParams.id))
             {
                 dcOrders = new DCo.OrderCollection() { Items = new List<DCo.Order>() };
-                var order = (await _orderWebApiClient.GetOrder(pagingParams.id)).ReadAsSync();
+                var order = (await _orderWebApiClient.GetOrder(pagingParams.id, draft)).ReadAsSync();
                 if (order != null)
                 {
                     dcOrders.Items.Add(order);
