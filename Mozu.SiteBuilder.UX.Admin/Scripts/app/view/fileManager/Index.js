@@ -20,7 +20,8 @@ Ext.define('Taco.view.fileManager.Index', {
     },
 
     requiresContextOfType: ['c','s'],
-    typeName: 'FileManagementFile',
+    typeName: 'File Manager',
+    plural: false,
     modelName: 'Taco.shared.model.File',
     store: {
         type: 'Taco.shared.store.Files',
