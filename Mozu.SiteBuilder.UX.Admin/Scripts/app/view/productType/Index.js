@@ -15,6 +15,21 @@ Ext.define('Taco.view.productType.Index', {
     filterProperty: 'name',
 
     requiresContextOfType: ['c', 's'],
+    
+    initComponent: function () {
+        var me = this;
+        me.header = {
+            actions: [{
+                xtype: 'primarybutton',
+                text: 'Create New Product type',
+                click: function () {
+                    me.launchEditor(Ext.create('Taco.model.ProductType'));
+                }
+            }]
+        };
+        this.callParent(arguments);
+    },
+    
     gridPanelConf: {
         columns: [{
             dataIndex: 'id',
@@ -72,5 +87,12 @@ Ext.define('Taco.view.productType.Index', {
                 menuColumnHandler: 'destroyMenuColumnHandler'
             }]
         }]
+    },
+
+    launchEditor: function (record) {
+        Ext.defer(function () {
+            Taco.core.StateManager.attemptNavigate('producttype/edit/' + record.getId(), { complexMetaData: { record: record } });
+        }, 1, this);
+        return;
     }
 });
