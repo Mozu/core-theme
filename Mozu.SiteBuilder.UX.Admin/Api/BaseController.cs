@@ -7,13 +7,16 @@ using Mozu.Core.Api.Authorization;
 using Mozu.Core.Api.Controllers;
 using Mozu.Core.ErrorHandling;
 using Mozu.ProductAdmin.Contracts;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Filters;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [Resource(PrimaryResourceType =typeof( Product))]
 	[BehaviorAuthorization("No security here")]
+    [SiteBuilderWebApiAuthorize]
     public abstract class BaseController : WebApiController
     {
         [Obsolete]
