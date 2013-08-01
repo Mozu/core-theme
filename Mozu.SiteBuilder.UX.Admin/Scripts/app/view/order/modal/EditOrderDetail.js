@@ -80,27 +80,28 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             "Order No. {orderNumber}"
         );
         
-        this.title = titleTemplate.apply({
+        me.title = titleTemplate.apply({
             orderNumber: this.record.get('orderNumber')
         });
 
 
-        this.header = {
+        me.header = {
             xtype:"header",
             style: "padding:28px;border-bottom: 1px dashed #999691 !important;font-size: 1.25em;font-weight: normal;"
         };
         
-        this.dirtyButton = Ext.create('Taco.core.ux.action.DirtyButton', {
+        me.dirtyButton = Ext.create('Taco.core.ux.action.DirtyButton', {
             xtype: 'primarybutton',
             text: 'Save & Close',
             onClick: function() {
                 me.saveDraftOrder();
-            }
+            },
+            scope:me
         });
 
-        this.dirtyButton.setDirty(true);
+        me.dirtyButton.setDirty(true);
 
-        this.dockedItems = [
+        me.dockedItems = [
             //this.totalRow,
             {
                 xtype: 'toolbar',
@@ -118,9 +119,9 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                         text: 'Discard Changes',
                         margin:"0px 0px 0px 0px", 
                         onClick: function () {
-                            this.removeDraftOrder();
+                            me.removeDraftOrder();
                         },
-                        scope:this
+                        scope:me
                     },
                     { xtype: 'component', flex: 1 },
                     {
@@ -175,6 +176,22 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             store: this.record.itemsStore,
             autoHeight: true,
             listeners: {
+                'draftOrderSaved':  {
+                    fn: function (data) {
+                        this.setLoading(false, this.body);
+                        this.fireEvent('draftOrderSaved', data);
+                        this.hide();
+                    },
+                    scope: this
+                },
+                'draftOrderRemoved': {
+                    fn: function (data) {
+                        this.setLoading(false, this.body);
+                        this.fireEvent('draftOrderRemoved', data);
+                        this.hide();
+                    },
+                    scope: this
+                },
                 'save': {
                     fn: function () {
                         this.setLoading(true, this.body);

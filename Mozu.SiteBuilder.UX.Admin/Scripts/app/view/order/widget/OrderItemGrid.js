@@ -173,7 +173,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             xtype: "taco.button",
                             text:"Discard Changes",
                             handler: function () {
-                                
+                                me.removeDraftOrder();
                             },
                             scope: this
                         },{
@@ -758,6 +758,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         ];
     },
 
+
+
     executeMoveItems: function (config) {
         var me = this,
             isCreate = false,
@@ -811,6 +813,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             this.record.movePackageItems(callConfig);
         }
     },
+    
+
     // extract the json package data from the current grid selection and return it 
     getSelectedDataItems: function () {
         var items = [];
@@ -858,8 +862,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     // accepts an array of orderItem configuration data objects and calls the service to persist it.
     addConfiguredProduct: function (orderItems) {
         var me = this;
-        this.fireEvent('save');
         
+        this.fireEvent('save');
         this.record.addOrderItem({
             jsonData: {
                 orderId: this.record.get('id'),
@@ -871,7 +875,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 if (!json || !json.success) {
                     // service didnt' return data properly
                     this.fireEvent('saveFailure');
-                    
                     var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
                         text: "Error adding order item."
                     });
@@ -922,6 +925,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             Ext.apply(jsonData.shippingAdjustment, config.data.shippingAdjustment);
         }
         
+        this.fireEvent('save');
+        
         this.record.updateOrderAdjustment({
             jsonData: jsonData,
             success: function (response) {
@@ -957,15 +962,19 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     },
     
     removeDraftOrder: function () {
+        this.fireEvent('save');
+        
         this.record.removeDraftOrder({
-            jsonData: {},
-            success: function (response) {
+            jsonData: {
+                orderId: this.record.get("id")
+            },
+            success: function(response) {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    Taco.app.viewPort.setLoading(false);
-                    
+                    this.fireEvent('saveFailure');
+
                     var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
                         text: "Error cancelling changes"
                     });
@@ -974,18 +983,55 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 }
                 me.fireEvent("draftOrderRemoved");
             },
-            failure: function (response) {
+            failure: function(response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
                     msg = (json && json.Message) ? json.Message : "Error cancelling changes";
-                
-                Taco.app.viewPort.setLoading(false);
+
+                this.fireEvent('saveFailure');
                 var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
                     text: msg
                 });
                 errorDialog.show();
             },
             scope: this
-        })
+        });
+    },
+    
+    saveDraftOrder: function () {
+        
+        this.fireEvent('save');
+        
+        this.record.saveDraftOrder({
+            jsonData: {
+                orderId: this.record.get("id")
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    this.fireEvent('saveFailure');
+                    
+                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                        text: "Error saving changes"
+                    });
+                    errorDialog.show();
+                    return;
+                }
+                me.fireEvent("draftOrderSaved",json);
+            },
+            failure: function(response) {
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error saving changes";
+
+                this.fireEvent('saveFailure');
+                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                    text: msg
+                });
+                errorDialog.show();
+            },
+            scope: this
+        });
     }
 });

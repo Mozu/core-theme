@@ -87,7 +87,33 @@ Ext.define('Taco.view.order.subform.Detail', {
             editMode: this.getEditMode(),
             record : this.record,
             store: orderItemStore,
-            autoHeight: true
+            autoHeight: true,
+            listeners: {
+                'draftOrderRemoved': {
+                    fn: function (data) {
+                        me.setLoading(false, this.body);
+                    },
+                    scope: me
+                },
+                'save': {
+                    fn: function () {
+                        me.setLoading(true, this.body);
+                    },
+                    scope: me
+                },
+                'saveSuccess': {
+                    fn: function (data) {
+                        me.setLoading(false, this.body);
+                    },
+                    scope: me
+                },
+                'saveFailure': {
+                    fn: function () {
+                        me.setLoading(false, this.body);
+                    },
+                    scope: me
+                }
+            }
         });
         
         // subtotals, orderlevel discounts, tax shipping, and totals
