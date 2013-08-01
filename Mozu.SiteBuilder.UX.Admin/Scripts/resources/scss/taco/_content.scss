@@ -29,7 +29,7 @@
         line-height: px-to-rem(30);
       }
 
-      p {
+      p { 
         font: $font-message; 
       }
       
@@ -104,7 +104,7 @@
     }
   }
 
-  .#{$vprefix}sidebar-modal-seo, .#{$vprefix}sidebar-modal-general, .#{$vprefix}sidebar-modal-facets {
+  .#{$vprefix}sidebar-modal-seo, .#{$vprefix}sidebar-modal-general, .#{$vprefix}sidebar-modal-facets, .#{$vprefix}sidebar-modal-templates {
     .#{$prefix}toolbar-docked-top{
       border-bottom-width: px-to-rem(1);
       border-bottom-style: solid;
