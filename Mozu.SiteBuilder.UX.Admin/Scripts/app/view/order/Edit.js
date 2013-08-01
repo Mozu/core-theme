@@ -177,6 +177,6 @@ Ext.define('Taco.view.order.Edit', {
         this.callParent(arguments);
 
         // convenience method call. if your seeing this its because I checked this in by accident. woops. sorry :(
-   //     this.orderDetail.editOrder();
+        //this.orderDetail.editOrder();
     }
 });

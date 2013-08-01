@@ -96,7 +96,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
         // if the grid is editable show the edit toolbar;
         if (this.getEditMode()) {
-            
+
             this.dockedItems = [
                 {
                     xtype: "toolbar",
@@ -109,7 +109,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         {
                             xtype: "component",
                             html: "Edit Order Details",
-                            style: "padding:5px 0px 5px 0px; font-size: 1.25em",
+                            style: "padding:0px 0px 5px 0px; font-size: 1.25em",
                             cls: "title",
                         },
                         "->",
@@ -120,7 +120,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             style: "font-size: 1.0em;color:blue",
                             text: "Order Level Adjustment",
                             handler: function() {
-                                this.toggleAddToolbar("orderLevelAdjustment");
+                                this.toggleAddToolbar("orderAdjustment");
                             },
                             scope: this
                         },
@@ -150,6 +150,47 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     ]
                 }
             ];
+        } else {
+            // editMode:false
+            
+            // if there is a draft version of this order we need to show a warning toolbar
+            this.dockedItems = [
+                {
+                    xtype: "toolbar",
+                    doc: "top",
+                    componentCls: "title-toolbar",
+                    enableOverflow: false,
+                    weight: 1,
+                    style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
+                    items: [
+                        {
+                            xtype: "component",
+                            html: "Warning: You have unsaved changes to this order detail",
+                            style: "padding:0px 5px 0px 5px; font-size: 0.9 em;color:#990000",
+                            cls: "title",
+                            flex:1
+                        },{
+                            xtype: "taco.button",
+                            text:"Discard Changes",
+                            handler: function () {
+                                
+                            },
+                            scope: this
+                        },{
+                            xtype: "taco.button",
+                            text: "Edit Details",
+                            style:"margin-left:5px;",
+                            handler: function (button,e) {
+                                var animationTarget = button.el;
+                                this.editOrder(animationTarget);
+                            },
+                            scope: this
+                        }
+                    ]
+                }
+            ];
+
+
         };
         
 
@@ -434,7 +475,15 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         return columns;
     },
     
-    
+    editOrder: function (animationTarget) {
+        var me = this;
+        var win = Ext.create('Taco.view.order.modal.EditOrderDetail', {
+            record: this.record
+        });
+        win.show(animationTarget);
+    },
+
+
     toggleAddToolbar: function (toolbarType) {
         var me=this,
             tb;
@@ -457,7 +506,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 break;
             case "coupon":
                 break;
-            case "orderLevelAdjustment":
+            case "orderAdjustment":
+                tb = me.getAddAdjustmentToolbar();
                 break;
         }
 
@@ -478,6 +528,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             tbConfig;
 
         this.activeSearchField = Ext.create('Taco.view.order.widget.ProductPickerField', {
+            fieldCls: "toolbar-field",
             store: Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Products',
                 pageSize: me.productsPerPage,
@@ -548,9 +599,88 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         return me.getAddItemToolbar(tbConfig);
     },
     
+    // creates and returns a toolbar for adding adjustments;
+    getAddAdjustmentToolbar: function (config) {
+        var me = this,
+            tbConfig,
+            orderAdjustmentValue,
+            shippingAdjustmentValue;
+
+        orderAdjustmentValue = me.record.get("orderAdjustment").amount;
+        shippingAdjustmentValue = me.record.get("shippingAdjustment").amount;
+
+        this.activeSearchField = Ext.create('Taco.core.ux.form.CurrencyField', {
+            label: "Order Adjustment",
+            itemId: "orderAdjustmentField",
+            width: 80,
+            fieldCls: "toolbar-field",
+            value: orderAdjustmentValue
+        });
+
+        tbConfig = Ext.apply({
+            toolbarType: "orderAdjustment",
+            items: [
+                {
+                    xtype: 'component',
+                    html: "Order Adjustment",
+                    style: "padding:0px 10px 0px 10px;"
+                },
+                this.activeSearchField,
+                {
+                    xtype: 'component',
+                    html: "Shipping Adjustment",
+                    style: "padding:0px 10px 0px 30px;"
+                },
+                {
+                    xtype: "currencyfield",
+                    itemId: "shippingAdjustmentField",
+                    width: 80,
+                    style: "margin:0px 10px 0px 10px;top:0px;",
+                    fieldCls: "toolbar-field",
+                    value: shippingAdjustmentValue
+                },
+                {
+                    xtype: "taco.button",
+                    text:"Apply",
+                    itemId: "applyadjustmentField",
+                    style: "margin:0px 20px 0px 10px;",
+                    handler:function(button,e) {
+                        
+                        var orderAdjustmentField = button.up('toolbar').getComponent('orderAdjustmentField');
+                        var shippingAdjustmentField = button.up('toolbar').getComponent('shippingAdjustmentField');
+                        
+                        // get the values from the fields and persist the adjustments;
+                        me.updateOrderAdjustment({
+                            data: {
+                                orderAdjustment: {
+                                    amount: orderAdjustmentField.getValue()
+                                },
+                                shippingAdjustment: {
+                                    amount: shippingAdjustmentField.getValue()
+                                }
+                            }
+                        })
+
+                    },
+                    scope:me
+                },
+                "->"
+            
+            ]
+        }, config);
+
+        return me.getAddItemToolbar(tbConfig);
+    },
+    
     getAddItemToolbar: function (config) {
         var tbConfig = Ext.apply({
             dock: "top",
+            
+            layout: {
+                type: "hbox",
+                align: "middle"
+            },
+            
             weight:2,
             cls: "additem-toolbar",
             style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
@@ -573,8 +703,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             {
                 text: "X",
                 xtype: "taco.button",
-                height: 24,
-                style: "padding:5px;min-width:30px;",
+                style: "min-width:30px;margin-left:10px",
                 handler: function(button, evt) {
                     var tb = button.up('toolbar');
                     // destroy all the child components
@@ -769,5 +898,94 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             scope: this
         });
 
+    },
+    
+    // accepts an array of orderItem configuration data objects and calls the service to persist it.
+    updateOrderAdjustment: function (config) {
+        var me = this,
+            jsonData = {
+                orderId: this.record.get('id'),
+                orderAdjustment: this.record.get("orderAdjustment"),
+                shippingAdjustment: this.record.get("shippingAdjustment")
+            };
+        
+        if (!config.data) {
+            return;
+        }
+        
+        // override the json data with passed in data
+        if (config.data.orderAdjustment) {
+            Ext.apply(jsonData.orderAdjustment, config.data.orderAdjustment);
+        }
+    
+        if (config.data.shippingAdjustment) {
+            Ext.apply(jsonData.shippingAdjustment, config.data.shippingAdjustment);
+        }
+        
+        this.record.updateOrderAdjustment({
+            jsonData: jsonData,
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    this.fireEvent('saveFailure');
+                    
+                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                        text: "Error adding adjustments."
+                    });
+                    errorDialog.show();
+                    return;
+                }
+                this.fireEvent('saveSuccess',json);
+            },
+            failure: function (response) {
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error adding adjustments.";
+                
+                this.fireEvent('saveFailure');
+                
+                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                    text: msg
+                });
+                errorDialog.show();
+            },
+            scope: this
+        });
+
+    },
+    
+    removeDraftOrder: function () {
+        this.record.removeDraftOrder({
+            jsonData: {},
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    Taco.app.viewPort.setLoading(false);
+                    
+                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                        text: "Error cancelling changes"
+                    });
+                    errorDialog.show();
+                    return;
+                }
+                me.fireEvent("draftOrderRemoved");
+            },
+            failure: function (response) {
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error cancelling changes";
+                
+                Taco.app.viewPort.setLoading(false);
+                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                    text: msg
+                });
+                errorDialog.show();
+            },
+            scope: this
+        })
     }
 });
