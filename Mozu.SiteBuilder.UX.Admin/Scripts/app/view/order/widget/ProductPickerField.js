@@ -17,7 +17,7 @@ Ext.define('Taco.view.order.widget.ProductPickerField', {
     emptyText: "Search",
     selectOnFocus: true,
     flex: 1,
-    height: 24,
+    //height: 24,
     listConfig: {
         loadingText: 'Searching...',
         emptyText: 'No matching products found.',
@@ -52,7 +52,10 @@ Ext.define('Taco.view.order.widget.ProductPickerField', {
     // modify the format of the query data to fit the service filtering pattern.
     formatQuery: function (queryEvent, e) {
         // need to format the search text from the combobox into a filter structure the service wants;
-        var queryText = queryEvent.query;
+        
+        // always force the query to match what's in the field.
+        // after a selection the queryEvent.query is initially set to "" which is incorrect in this situation;
+        var queryText = queryEvent.combo.getValue() || "";
         if (queryText == "") {
             // need to force the load of the full list. just returning a value of "" causes the control to reload the last query;
             queryEvent.forceAll = true;
@@ -60,6 +63,10 @@ Ext.define('Taco.view.order.widget.ProductPickerField', {
             queryEvent.forceAll = false;
             queryEvent.query = '[{ "property": "all", "value": "' + queryText + '" }]'
         }
+        
+
+//        queryEvent.combo.getStore().load();
+
         return true;
     },
     

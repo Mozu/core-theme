@@ -85,6 +85,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         // readonly list of products and discounts;
         me.detailGrid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
             editMode: this.getEditMode(),
+            record : this.record,
             store: orderItemStore,
             autoHeight: true
         });

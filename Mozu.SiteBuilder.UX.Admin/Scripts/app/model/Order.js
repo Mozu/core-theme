@@ -22,6 +22,13 @@ Ext.define('Taco.model.Order', {
             "type": "string",
             "useNull": true
         },
+        
+        {
+            "name": "isDraft",
+            "type": "boolean",
+            "defaultValue": false
+        },
+
         {
             name: 'tenantId',
             type: 'int'
@@ -134,34 +141,25 @@ Ext.define('Taco.model.Order', {
             "type": "float",
             "useNull": true
         },
-        
-
-        /*
-            // sample value for orderAdjustment;
-            {
-                amount:0.00,
-                description:"",
-                internalComment:""
-            }        
-        */
 
         {
-            name: "orderAdjustment",
-            type:"auto"
+            "name": "orderAdjustment",
+            "type": "object",
+            "defaultValue": {
+                "amount":10,
+                "description":"",
+                "internalComment":""
+            }        
         },
         
-
-        /*
-            // sample value for shippingAdjustment;
-            {
-                amount:0.00,
-                description:"",
-                internalComment:""
-            }        
-        */
         {
-            name: "shippingAdjustment",
-            type: "auto"
+            "name": "shippingAdjustment",
+            "type": "object",
+            "defaultValue": {
+                "amount": 8,
+                "description": "",
+                "internalComment": ""
+            }
         },
 
 
@@ -1194,6 +1192,75 @@ Ext.define('Taco.model.Order', {
     updateOrderAdjustment: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/updateorderadjustment',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+    
+
+    /**
+     * service call to apply the draft order on top of the actual order.
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId: "987654321"
+            },
+            success: function (response) {
+                // success handling here
+              so   var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    saveDraftOrder: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/savedraftorder',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+    
+    /**
+    * service call to remove(delete) the draft order.
+    * @param {Object} config  A configuration object
+    * config object:
+    * 
+       {
+           jsonData: {
+               orderId: "987654321"
+           },
+           success: function (response) {
+               // success handling here
+             so   var json = Ext.decode(response.responseText, true);
+               if (!json || !json.success) {
+                   // service didnt' return data properly
+                   return;
+               }
+           },
+           failure: function (response) {
+               // error handling here
+           },
+           scope: this
+       }
+
+    *
+    */
+    removeDraftOrder: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/removedraftorder',
             method: "POST"
         });
 
