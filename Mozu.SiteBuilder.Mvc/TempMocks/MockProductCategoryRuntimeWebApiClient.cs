@@ -89,17 +89,16 @@ namespace Mozu.SiteBuilder.Mvc.TempMocks
 
     public class TestResponse<T> : ServiceClientResponse<T>
     {
-        private readonly TaskScheduler _testTaskScheduler = new CurrentThreadTaskScheduler();
-
+      
         public TestResponse(T entity)
         {
             Result = entity;
 
             ReadAsAsync = () =>
             {
-                var task = new Task<T>(() => Result);
-                task.Start(_testTaskScheduler);
-                return task;
+                    var tcs = new TaskCompletionSource<T>();
+                    tcs.SetResult(Result );
+                    return tcs.Task;
             };
 
             ReadAsSync = () =>
@@ -115,29 +114,18 @@ namespace Mozu.SiteBuilder.Mvc.TempMocks
         {
             get
             {
-                var task = new Task<ServiceClientResponse<T>>(() => this);
-                task.Start(_testTaskScheduler);
-                return task;
+                var tcs = new TaskCompletionSource<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<T>>();
+                tcs.SetResult(this);
+                return tcs.Task;
+
+
+                //var task = new Task<ServiceClientResponse<T>>(() => this);
+                //task.Start(_testTaskScheduler);
+                //return task;
             }
         }
 
-        private class CurrentThreadTaskScheduler : TaskScheduler
-        {
-            protected override void QueueTask(Task task)
-            {
-                TryExecuteTask(task);
-            }
-
-            protected override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
-            {
-                return true;
-            }
-
-            protected override IEnumerable<Task> GetScheduledTasks()
-            {
-                return Enumerable.Empty<Task>();
-            }
-        }
+       
     }
 
 }
