@@ -17,8 +17,9 @@ Ext.define('Taco.view.order.Edit', {
     model: 'Taco.model.Order',
 
     initComponent: function (eOpts) {
-        var me = this,
-            dataTpl, dataCmp, internalNotes;
+        var dataTpl,
+            dataCmp,
+            internalNotes;
 
         
         if (!this.record) {
@@ -26,9 +27,6 @@ Ext.define('Taco.view.order.Edit', {
             return;
         }
 
-        /* TODO: move taco-orders-header-status to the scss file
-         * may need to convert orderStatus to readible text if it camelcase
-         */
         this.header = {
             title: {
                 tpl: [
@@ -47,14 +45,7 @@ Ext.define('Taco.view.order.Edit', {
         });
 
         
-        /*
-          //
-          // TODO: split this out as a seperate reusable class and create its own scss definition;
-          // TODO: add support to Taco.core.ux.content.Container to utilize this by configuration;
-          // TODO: add suppourt for bolding the appropriate link when the user has passed focus to the container
-          // TODO: clicking on items in this container should scroll the bound container to the appropriate sub component of the bound container.
-          // 
-        */
+        //  TODO: Replace with ProductEdit Nav
         this.cardNav = Ext.create('Ext.container.Container', {
 
             // scrollable container which this component will be bound to;
@@ -127,14 +118,14 @@ Ext.define('Taco.view.order.Edit', {
         });
 
         
-        //show the cardNav after the container is rendered
-        this.on('afterrender', function () {
-            this.cardNav.show();
-        }, this, {
-            defer:100
-        });
+        
 
-        Ext.apply(me.body, {
+        Ext.apply(this.body, {
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+            cls: Taco.baseCSSPrefix + 'content-body ' + Taco.baseCSSPrefix + 'orderform',
             items: [{
                 xtype: 'panel',
                 manageHeight: false,
@@ -150,12 +141,8 @@ Ext.define('Taco.view.order.Edit', {
                     width: 200,
                     items: this.cardNav
                 }]
-            }],
-            layout: { type: 'vbox', align: 'stretch' },
-            cls: Taco.baseCSSPrefix + 'content-body ' + Taco.baseCSSPrefix + 'orderform'
+            }]
         });
-
-        console.log(this.record.getData());
         
         
         // load the shipping rates data for use in the shipping packages
@@ -180,6 +167,21 @@ Ext.define('Taco.view.order.Edit', {
         this.callParent(arguments);
 
         // convenience method call. if your seeing this its because I checked this in by accident. woops. sorry :(
-        //this.orderDetail.editOrder();
+        // this.orderDetail.editOrder();
+        
+
+
+        //show the cardNav after the container is rendered
+        this.on({
+            afterrender: function () {
+                this.cardNav.show();
+            },
+            scope: this,
+            defer: 10
+        });
+    },
+
+    isEdit: function () {
+        return this.record.get('orderStatus') !== 'Created';
     }
 });
