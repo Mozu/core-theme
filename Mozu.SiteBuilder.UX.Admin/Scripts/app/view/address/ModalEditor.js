@@ -66,10 +66,23 @@ Ext.define('Taco.view.address.ModalEditor', {
                     name: 'zipCode',
                     fieldLabel: 'ZIP'
                 }, {
+                    xtype: 'combo',
+                    name: 'countryCode',
+                    fieldLabel: 'Country',
+                    queryMode: 'local',
+                    displayField: 'label',
+                    valueField: 'val',
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['val', 'label'],
+                        data: [
+                            { "val": "US", "label": "US" }
+                        ]
+                    })
+                }, /*{
                     xtype: 'textfield',
                     name: 'countryCode',
                     fieldLabel: 'Country'
-                }, {
+                },*/ {
                     xtype: 'textfield',
                     width: 206,
                     name: 'homePhone',
