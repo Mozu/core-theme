@@ -6,9 +6,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
 {
     internal static class CustomerFilterExtensions
     {
-        private const string FIRSTNAME = "Contact.FirstName";
-        private const string LASTNAMEORSURNAME = "Contact.LastNameOrSurname";
-        private const string EMAIL = "Contact.Email";
+        private const string FIRSTNAME = "Contacts.FirstName";
+        private const string LASTNAMEORSURNAME = "Contacts.LastNameOrSurname";
+        private const string EMAIL = "Contacts.Email";
         
 
         /// <summary>

@@ -10,6 +10,7 @@ using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.TempMocks;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using DC = Mozu.Content.Contracts;
 
@@ -21,15 +22,16 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         private const string NavigationFileName = "navigation";
 
         private ICmsServiceWrapper _cmsService;
+        private readonly ISiteBuilderApiContext _siteBuilderApiContext;
         private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof (NavigationSet), new[] {typeof (object), typeof (List<NavigationNode>), typeof (NavigationNode), typeof (string), typeof (int)});
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService)
+        public NavigationRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, ISiteBuilderApiContext siteBuilderApiContext)
         {
-
             _cmsService = cmsService;
+            _siteBuilderApiContext = siteBuilderApiContext;
 
             // TaskExtensions;
         }
@@ -50,8 +52,20 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                                       if (serviceClientResponse != null && serviceClientResponse.ResponseMessage != null && serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                                       {
                                           var doc = CreateNavigationDocument(new NavigationSet());
+                                          if (_siteBuilderApiContext.CmsDraftState == Mozu.Content.Contracts.PublishStates.Active)
+                                          {
 
-                                          return _cmsService.RawCreate2(doc);
+                                              var res = new TestResponse<DC.Document>(doc);
+                                              return res.Task;
+                                             
+
+                                          }
+                                          else
+                                          {
+                                              return _cmsService.RawCreate2(doc);
+                                          }
+                                          
+                                         
                                       }
 
                                       // otherwise, pass through the result.
