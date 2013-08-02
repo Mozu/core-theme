@@ -96,6 +96,9 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
         // if the grid is editable show the edit toolbar;
         if (this.getEditMode()) {
+            
+            // listen for changes to the amount and quantity fields and persist them
+            me.on('edit', me.onFieldEdit, me);
 
             this.dockedItems = [
                 {
@@ -192,19 +195,15 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
 
         };
-        
+   
+
 
         this.on('beforeedit', function(plugin, edit) {
             // disable editing when the grid is not editMode:true
             return this.editMode;
         },this);
 
-        this.on('selectionchange', function(view, selected, eOpts) {
-            var me = this;
-            // process the modification;
-        }, this);
-
-
+        
         Ext.apply(this, {
             features: [
                 // This is the plugin for enabling the adding of an adustment row for each orderItem
@@ -226,25 +225,26 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     },
 
                     getRowBody: function(values) {
-
                         return [
-                            '<tr class="' + this.rowBodyTrCls + ' {rowBodyCls}">',
-                            '<td  class="' + this.rowBodyTdCls + '" colspan="{rowBodyColspan}">',
-                            '<div class="' + this.rowBodyDivCls + '">Discount: {discountData.description}</div>',
-                            '</td>',
-                            '<td  class="' + this.rowBodyTdCls + '">',
-                            '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{discountData.unitPrice:usMoney}</div>',
-                            '</td>',
-                            '<td class="' + this.rowBodyTdCls + '">',
-                            '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{discountData.quantity}</div>',
-                            '</td>',
-                            '<td  class="' + this.rowBodyTdCls + '">',
-                            '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{discountData.total:usMoney}</div>',
-                            '</td>',
-                            '<td  class="' + this.rowBodyTdCls + '">',
-                            '<div class="' + this.rowBodyDivCls + '"></div>',
-                            '</td>',
-                            '</tr>'
+                            '<tpl if="discountData">',
+                                '<tr class="' + this.rowBodyTrCls + ' {rowBodyCls}">',
+                                '<td  class="' + this.rowBodyTdCls + '" colspan="{rowBodyColspan}">',
+                                '<div class="' + this.rowBodyDivCls + '">Discount: {discountData.description}</div>',
+                                '</td>',
+                                '<td  class="' + this.rowBodyTdCls + '">',
+                                '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{discountData.unitPrice:usMoney}</div>',
+                                '</td>',
+                                '<td class="' + this.rowBodyTdCls + '">',
+                                '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{discountData.quantity}</div>',
+                                '</td>',
+                                '<td  class="' + this.rowBodyTdCls + '">',
+                                '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{discountData.total:usMoney}</div>',
+                                '</td>',
+                                '<td  class="' + this.rowBodyTdCls + '">',
+                                '<div class="' + this.rowBodyDivCls + '"></div>',
+                                '</td>',
+                                '</tr>',
+                            '</tpl>'
                         ].join('');
                     }
                 }
@@ -381,10 +381,20 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 }
             ]
         });
-
-      
+        
         me.callParent(arguments);
-
+    },
+    
+    onFieldEdit : function(editor, e) {
+        var me = this
+        
+        if (e.record && e.record.dirty) {
+            me.editOrderItem({
+                data: [
+                    e.record.getData()
+                ]
+            });
+        }
     },
 
     // returns the column configuration for this grid
@@ -903,6 +913,57 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
     },
     
+    // accepts an array of orderItem data objects and calls the service to persist it.
+    editOrderItem: function (config) {
+        var me = this,
+            jsonData = {
+                orderId: this.record.get('id'),
+                orderItems: []
+            };
+
+        if (!config.data) {
+            return;
+        }
+
+        jsonData.orderItems = config.data;
+
+        this.fireEvent('save');
+
+        this.record.editOrderItem({
+            jsonData: jsonData,
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    this.fireEvent('saveFailure');
+
+                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                        text: "Error editing order item."
+                    });
+                    errorDialog.show();
+                    return;
+                }
+                this.fireEvent('saveSuccess', json);
+            },
+            failure: function (response) {
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error editing order item.";
+
+                this.fireEvent('saveFailure');
+
+                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                    text: msg
+                });
+                errorDialog.show();
+            },
+            scope: this
+        });
+
+    },
+
+
     // accepts an array of orderItem configuration data objects and calls the service to persist it.
     updateOrderAdjustment: function (config) {
         var me = this,
