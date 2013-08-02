@@ -537,12 +537,10 @@ Ext.application({
             };
         this.callParent([config]);
         
-
-
         // Added by simeon; let me know if you encounter any issues with this enhancement;
         // Adds support to the Ext.Window Class so that it can size itself relative to the users browser size.
-        Ext.define('Taco.Enhanced.Window', {
-            override: "Ext.window.Window",
+        Ext.override(Ext.window.Window, {
+       
             // Number of pixels to remove from the relative height.
             // defaults to 60 pixels. If relativeHeight is 1 then the calculated height would be 100% of browser height - 60 pixels
             relativeOffSetHeight: 60,
