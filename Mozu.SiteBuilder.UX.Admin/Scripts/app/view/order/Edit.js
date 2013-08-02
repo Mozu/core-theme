@@ -5,16 +5,13 @@
 Ext.define('Taco.view.order.Edit', {
     extend: 'Taco.core.ux.content.Container',
     requires: [
-   //     'Taco.core.ux.BaseGrid',
        'Taco.model.Order',
         'Taco.model.OrderPayment',
         'Taco.view.order.Header',
+        'Taco.view.order.subform.Customer',
         'Taco.view.order.subform.Detail',
         'Taco.view.order.subform.Payment',
         'Taco.view.order.subform.Shipping'
-   //     'Taco.model.OrderNote',
-   //     'Taco.store.OrderNotes',
-   //     'Taco.view.order.modal.Address', 'Taco.view.order.modal.PaymentAction', 'Taco.view.order.modal.ShipmentAction', 'Taco.model.PaymentAndCheckout', 'Ext.grid.feature.Grouping'
     ],
 
     model: 'Taco.model.Order',
@@ -33,7 +30,16 @@ Ext.define('Taco.view.order.Edit', {
          * may need to convert orderStatus to readible text if it camelcase
          */
         this.header = {
-            title: 'Order No. ' + this.record.get('orderNumber') + ' <span class="' + Taco.baseCSSPrefix + 'orders-header-status" style="padding-left:20px;font-size: 0.9em; font-weight: normal;color:#d2463c">' + this.record.get("orderStatus") + '</span><br/>'
+            title: {
+                tpl: [
+                    'Order No. {number} ',
+                    '<span class="taco-order-status">{status}</span>'
+                ],
+                data: {
+                    number: this.record.get('orderNumber'),
+                    status: this.record.get('orderStatus')
+                }
+            }
         };
 
         this.orderHeader = Ext.create('Taco.view.order.Header', {
@@ -52,7 +58,7 @@ Ext.define('Taco.view.order.Edit', {
         this.cardNav = Ext.create('Ext.container.Container', {
 
             // scrollable container which this component will be bound to;
-            boundContainer: me,
+            boundContainer: this,
 
             // target items which should be linked to and be reflected in this component as active when they are scrolled into the target area of focus.
             boundItems: [],
@@ -60,9 +66,9 @@ Ext.define('Taco.view.order.Edit', {
             // number of pixels 
 
             width: 180,
-            shadow:false,
+            shadow: false,
             x: 30,
-            y:20,
+            y: 20,
             floating: true,
             constrain: true,
 
@@ -70,38 +76,35 @@ Ext.define('Taco.view.order.Edit', {
             // need to override taco-form-card-nav-body to remove a negative margin in the styling of this class
             style: "margin-top: 0px;",
             
+            html: '<ul><li class="taco-form-card-nav-link" targetComponentId="orderHeader">Customer Detail</li><li class="taco-form-card-nav-link" targetComponentId="orderDetail">Order Detail</li><li class="taco-form-card-nav-link"  targetComponentId="orderPayment">Payment & Billing</li><li targetComponentId="orderShipping" class="taco-form-card-nav-link">Shipment & Shipping</li><li class="taco-form-card-nav-link">RMA</li><li class="taco-form-card-nav-link">Notes & History</li></ul>',
             
-            
+            //listen for events in the cardNav widget and scroll the page to the appropriate 
             listeners: {
-                afterrender: {
-                    fn: function () {
-                        me.cardNav.el.on('click', function (e, target, eOpts) {
-                            var wrapper,
-                                targetId,
-                                targetY;
+                afterrender: function () {
+                    this.cardNav.el.on('click', function (e, target, eOpts) {
+                        var wrapper,
+                            targetId,
+                            targetY;
 
-                            
-                            
-                            wrapper = Taco.app.viewPort.down('contentbody').getEl();
-                            targetId = target.getAttribute("targetComponentId");
-                            if (!targetId) {
-                                return;
-                            }
-                            var cmp = me[targetId];
-                            if (cmp) {
-                                targetY = cmp.el.dom.offsetTop;
-                                wrapper.scrollTo('top', targetY, true);
-                            }
-                        }, {
-                            delay:100
-                        });
-                    },
-                     scope:me
-                }
-            },
-            html: '<ul><li class="taco-form-card-nav-link" targetComponentId="orderHeader">Customer Detail</li><li class="taco-form-card-nav-link" targetComponentId="orderDetail">Order Detail</li><li class="taco-form-card-nav-link"  targetComponentId="orderPayment">Payment & Billing</li><li targetComponentId="orderShipping" class="taco-form-card-nav-link">Shipment & Shipping</li><li class="taco-form-card-nav-link">RMA</li><li class="taco-form-card-nav-link">Notes & History</li></ul>'
+                        
+                        
+                        wrapper = Taco.app.viewPort.down('contentbody').getEl();
+                        targetId = target.getAttribute("targetComponentId");
+                        if (!targetId) {
+                            return;
+                        }
+                        var cmp = this[targetId];
+                        if (cmp) {
+                            targetY = cmp.el.dom.offsetTop;
+                            wrapper.scrollTo('top', targetY, true);
+                        }
+                    }, {
+                        delay:100
+                    });
+                },
+                scope: this
+            }
         });
-        //listen for events in the cardNav widget and scroll the page to the appropriate 
 
 
         

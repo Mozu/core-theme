@@ -10,24 +10,31 @@ Ext.define('Taco.core.ux.content.Header', {
     cls: 'taco-content-header',
 
     title: 'Header Title',
-    // height: 65,
+    titleData: null,
 
     instructionText: null,
     hideActions: false,
 
     initComponent: function () {
 
+        if (typeof this.title !== 'object') {
+            this.title = {
+                html: this.title || 'Title'
+            };
+        }
+
+        Ext.apply(this.title, {
+            xtype: 'component',
+            autoEl: 'h1',
+            itemId: 'title'
+        });
+
         this.items = [{
             xtype: 'container',
             flex: 1,
             itemId:'titleContainer',
             layout: 'auto',
-            items: [{
-                xtype: 'component',
-                autoEl: 'h1',
-                html: this.title,
-                itemId:'title'
-            }, {
+            items: [this.title, {
                 xtype: 'component',
                 autoEl: 'p',
                 html: this.instructionText,
@@ -78,5 +85,9 @@ Ext.define('Taco.core.ux.content.Header', {
 
     setTitle: function (title) {
         this.title.update(title);
+    },
+
+    updateTitle: function (data) {
+        this.title.update(data);
     }
 });

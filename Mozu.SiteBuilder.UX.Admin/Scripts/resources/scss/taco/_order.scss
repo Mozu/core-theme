@@ -92,6 +92,13 @@
     }
   }
 
+  .#{$vprefix}order-status {
+    color: $color-theme-base;
+    font-size: px-to-rem(18);
+    font-weight: normal;
+    padding-left: px-to-rem(20);
+  }  
+
   .#{$vprefix}order-detail-header {
     background-color: $color-neutral-white;
     border: 1px solid border-for($color-neutral-95);
@@ -553,9 +560,7 @@
 					border-color:#cccccc;				
 
 				}
-			}
-
-			
+			}			
 		}
 
 	}
