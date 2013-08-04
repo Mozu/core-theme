@@ -117,6 +117,10 @@ Ext.define('Taco.view.order.Edit', {
             record: this.record
         });
 
+        this.orderReturn = Ext.create('Taco.view.order.subform.Return', {
+            itemId: "orderReturn",
+            record: this.record
+        });
         
         
 
@@ -133,7 +137,8 @@ Ext.define('Taco.view.order.Edit', {
                     this.orderHeader,
                     this.orderDetail,
                     this.orderPayment,
-                    this.orderShipping
+                    this.orderShipping,
+                    this.orderReturn
                 ],
                 dockedItems: [{
                     xtype: 'container',
