@@ -1274,7 +1274,7 @@ Ext.define('Taco.model.Order', {
     */
     removeDraftOrder: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/removedraftorder',
+            url: '/admin/app/order/deletedraft',
             method: "POST"
         });
 
