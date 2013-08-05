@@ -35,7 +35,6 @@
     left: 0px;
     line-height: px-to-rem(21);
     position: absolute;
-    @include flexbox($justify: space-between, $alignItems: center);
 
     .#{$vprefix}action {
       color: $color-neutral-lightest;
@@ -55,8 +54,6 @@
   }
 
   .#{$vprefix}secondary-nav {
-    @include flexbox($justify: flex-end, $alignItems: center);
-
     .#{$vprefix}action {
       margin-right: 21px;
     }

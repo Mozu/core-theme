@@ -21,7 +21,6 @@
     .#{$vprefix}content-header {
       border-bottom: 1px solid border-for($color-neutral-95);
       padding: 17px 30px;
-      @include flexbox($justify: space-between); 
       
       h1 {
         font-size: px-to-rem(24);

@@ -7,7 +7,11 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
     requires: ['Taco.core.ux.action.Button', 'Taco.view.navigation.GlobalSearchBox'],
 
     cls: Taco.baseCSSPrefix + 'secondary-nav',
-    layout: { type: 'auto' },
+    layout: {
+        type: 'hbox',
+        align: 'middle',
+        pack: 'end'
+    },
 
     initComponent: function () {
         var me = this;
