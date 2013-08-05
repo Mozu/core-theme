@@ -12,8 +12,10 @@ using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Returns;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
+using ReturnsDC = Mozu.CommerceRuntime.Contracts.Returns;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -36,10 +38,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 		[HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<Order>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]bool draft=false)
+        public async Task<Response<List<Return>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]bool draft=false)
 		{
+		    string originalOrderId;
+            if (extFilter.TryGetValue("originalOrderId", out originalOrderId))
+            {
+                try
+                {
+                    var returns = (await _returnWebApiClient.GetReturns(filter: string.Format("OriginalOrderId eq \"{0}\"", originalOrderId))).ReadAsSync();
+                    return List2(Mapper.Map<List<Return>>(returns.Items));
+                }
+                catch
+                {
+                    //todo: waiting on chet to fix this.
+                }
+                var returns3 = (await _returnWebApiClient.GetReturns(startIndex: 0, pageSize: 1000)).ReadAsSync();
+
+                return List2(Mapper.Map<List<Return>>(returns3.Items.Where(x => x.OriginalOrderId == originalOrderId).ToList() ));
+            }
+            
+
+
             throw new NotImplementedException();
-            //var originalOrderId = extFilter.GetValue("originalOrderId");
+            //
             //if (originalOrderId != null)
             //{
                 
@@ -80,12 +101,55 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //return List2(orders,(int) dcOrders.TotalCount );
         }
 
-		[HttpPostRoute(UriTemplate = "cancel")]
-        public async Task<Response<List<Order>>> CancelOrder(string orderId)
-        {
-            var dc = (await _orderWebApiClient.PerformOrderAction(orderId, new DCo.OrderAction { ActionName = "CancelOrder" })).ReadAsSync();
+		[HttpPostRoute(UriTemplate = "create")]
+        public async Task<Response<List<Return>>> Create(List<Return > returns )
+		{
+		    var retList = new List<Return>();
+            foreach (var rma in returns)
+            {
+                var dcRma = Mapper.Map<ReturnsDC.Return>(rma);
+                dcRma = (await _returnWebApiClient.CreateReturn(dcRma)).ReadAsSync();
+                if (dcRma.AvailableActions.Contains("Authorize"))
+                {
+                    dcRma = (await _returnWebApiClient.PerformReturnActions(new ReturnsDC.ReturnAction()
+                                                                                {
+                                                                                    ActionName = "Authorize",
+                                                                                    ReturnIds = new List<string> {dcRma.Id}
+                                                                                })).ReadAsSync().Items.First();
+                    
+                    
+                }
+                retList.Add(Mapper.Map<Return>(dcRma));
+            }
 
-            return List2( Mapper.Map<Order>(dc) );
+            return List2(retList);
+        }
+
+       
+
+        [HttpPostRoute(UriTemplate = "action")]
+        public async Task<Response<List<Return>>> PerformReturnActions(ReturnAction action)
+        {
+            var dcRetAction = Mapper.Map<ReturnsDC.ReturnAction>(action);
+            var dcRma = (await _returnWebApiClient.PerformReturnActions(dcRetAction)).ReadAsSync().Items;
+
+            
+            return List2(Mapper.Map<List<Return>>(dcRma));
+        }
+
+        [HttpPostRoute(UriTemplate = "edit")]
+        public async Task<Response<List<Return>>> Edit(List<Return> returns)
+        {
+            var retList = new List<Return>();
+            foreach (var rma in returns)
+            {
+                var dcRma = Mapper.Map<ReturnsDC.Return>(rma);
+                dcRma = (await _returnWebApiClient.UpdateReturn( dcRma.Id ,dcRma)).ReadAsSync();
+                
+                retList.Add(Mapper.Map<Return>(dcRma));
+            }
+
+            return List2(retList);
         }
     }
 }

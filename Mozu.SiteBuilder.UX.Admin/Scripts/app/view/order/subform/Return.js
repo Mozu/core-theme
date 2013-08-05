@@ -4,12 +4,14 @@
 Ext.define('Taco.view.order.subform.Return', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
-      
+        'Taco.view.order.widget.CreateReturnPanel',
+        'Taco.view.order.widget.ProcessReturnPanel'
     ],
     config: {
         // order model
         originalRecord: null,
         record: null,
+        returnsStore:null,
         itemId: "orderPayment",
         // title for the panel header
         title: 'RMA',
@@ -26,13 +28,35 @@ Ext.define('Taco.view.order.subform.Return', {
         this.record.on("aftercommit", function () {
             this.onRecordChange();
         }, this);
+        
+        me.returnsStore = this.record.getReturnsStore();
 
+        me.createButton = Ext.create('Taco.core.ux.action.SecondaryButton', {
+            text: 'Create a return ',
+            listeners: {
+                click: me.onCreateButtonClicked,
+                scope: this
+            }
+        });
+        me.setTools([me.createButton]);
         // initialize the ui
         // this will be called every time the record is updated
-        me.bodyCont = Ext.create('Ext.container.Container', {
-            items: []
+        me.bodyCont = Ext.create('Ext.container.Container', {            
+            items: [
+                
+            ]
         });
-        me.initUI();
+        
+        if (me.returnsStore.isLoading()) {
+            me.returnsStore.on({
+                load: me.initProcessReturnPanels,
+                single: true,
+                scope: me
+            });
+        } else {
+            me.initProcessReturnPanels();
+        }
+        
 
 
         Ext.apply(me, {
@@ -42,7 +66,63 @@ Ext.define('Taco.view.order.subform.Return', {
         });
         this.callParent(arguments);
     },
+    initProcessReturnPanels:function () {
 
+        var me = this;
+        me.returnsStore.each(function (record) {
+            me.addProcessReturnPanel(record);
+
+        });
+        
+    },
+    addProcessReturnPanel:function (record) {
+        var me = this,
+            panel = Ext.create('Taco.view.order.widget.ProcessReturnPanel', {
+            order: me.record,
+            record: record
+        });
+        if (Ext.isArray(me.bodyCont.items)) {
+            me.bodyCont.items.push(panel);
+        } else {
+            me.bodyCont.add(panel);
+        }
+    },
+    onCreateButtonClicked: function () {
+        var me = this,
+            creator;
+
+        me.createButton.setDisabled(true);
+        creator = Ext.create('Taco.view.order.widget.CreateReturnPanel', { record: me.record });
+
+        me.bodyCont.add(creator);
+        creator.on('cancel', function () {
+            me.bodyCont.remove(creator);
+            me.createButton.setDisabled(false);
+        });
+        creator.on('create', function (creator, returnData) {
+            var record = me.returnsStore.add([returnData])[0];
+            me.setLoading(true);
+            
+            
+            me.returnsStore.sync({
+                callback: function () {
+                    me.bodyCont.remove(creator);
+                    me.setLoading(false);
+                    me.createButton.setDisabled(false);
+                },
+                success:function (batch) {
+                    me.addProcessReturnPanel(record);
+                },
+                failure: function (batch) {
+                    var msg = batch.exceptions && batch.exceptions.length && batch.exceptions[0].error && batch.exceptions[0].error.remoteException ? batch.exceptions[0].error.remoteException.getMessage() : 'Error Creating the Return';
+                    Taco.app.fireEvent('setmessage',  msg ,'error');
+                 }
+            });
+            
+            
+        });
+
+    },
     initActionsMenu: function () {
         var me = this,
             canVoidPayment = false,
@@ -160,29 +240,29 @@ Ext.define('Taco.view.order.subform.Return', {
 
     initHeader: function () {
         var me = this,
-           data = this.record.getData();
+            data = this.record.getData();
 
         me.headerDetails = Ext.create('Ext.Component', {
             // cls: "orderform-payment-paymentDetails",
             tpl: [
                 '<div class="statusField">',
-                    //'<span class="orderTotal">Partially Collected</span>',
-                    '<tpl if="authorizationInfo.amountCollected &gt; 0 && authorizationInfo.amountCollected != total">',
-                        '<span class="orderTotal">Partially Collected</span>',
-                    '</tpl>',
-                    '<tpl if="authorizationInfo.amountCollected == 0">',
-                        '<span class="orderTotal">None Collected</span>',
-                    '</tpl>',
-                    '<tpl if="authorizationInfo.amountCollected == total">',
-                        '<span class="orderTotal">Fully Collected</span>',
-                    '</tpl>',
+                //'<span class="orderTotal">Partially Collected</span>',
+                '<tpl if="authorizationInfo.amountCollected &gt; 0 && authorizationInfo.amountCollected != total">',
+                '<span class="orderTotal">Partially Collected</span>',
+                '</tpl>',
+                '<tpl if="authorizationInfo.amountCollected == 0">',
+                '<span class="orderTotal">None Collected</span>',
+                '</tpl>',
+                '<tpl if="authorizationInfo.amountCollected == total">',
+                '<span class="orderTotal">Fully Collected</span>',
+                '</tpl>',
                 '</div>',
                 '<div class="orderSummary">',
-                    '<span class="orderTotal">Order Total: {total:usMoney}</span>',
-                    '<span class="seperator">|</span>',
-                    '<span class="Received">Received: {authorizationInfo.amountCollected:usMoney}</span>',
-                    '<span class="seperator">|</span>',
-                    '<span class="balance">Balance: {authorizationInfo.captureAmount:usMoney}</span>',
+                '<span class="orderTotal">Order Total: {total:usMoney}</span>',
+                '<span class="seperator">|</span>',
+                '<span class="Received">Received: {authorizationInfo.amountCollected:usMoney}</span>',
+                '<span class="seperator">|</span>',
+                '<span class="balance">Balance: {authorizationInfo.captureAmount:usMoney}</span>',
                 '</div>'
             ],
             data: data
@@ -203,7 +283,6 @@ Ext.define('Taco.view.order.subform.Return', {
      * So we manually re-populate the order.payments() and the payment.interactions() stores.
      */
     rebuildPayments: function () {
-     
-    }
 
+    }
 });

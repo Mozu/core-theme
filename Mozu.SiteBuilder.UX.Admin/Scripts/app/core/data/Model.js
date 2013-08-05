@@ -105,6 +105,7 @@ Ext.define('Taco.core.data.Model', {
             storeName = config.storeName || config.associationKey + 'Store',
             associationKey = config.associationKey,
             foreignKey = config.foreignKey || null,
+            data=  this.get(associationKey),
             foreignProperty = config.foreignProperty || this.model;
 
         this.hasManyStores = this.hasManyStores || {};
@@ -117,7 +118,6 @@ Ext.define('Taco.core.data.Model', {
         config = Ext.apply({}, storeConfig, {
             model: model,
             remoteFilter: false,
-            data: this.get(associationKey),
             modelDefaults: modelDefaults
             
         });
@@ -125,6 +125,7 @@ Ext.define('Taco.core.data.Model', {
         
 
         this.hasManyStores[storeName] = store = new Ext.data.Store(config);
+        
 
         store.on('add', function (store, records, index, eOpts) {
             Ext.each(store.records, function (record) {
@@ -160,6 +161,7 @@ Ext.define('Taco.core.data.Model', {
             this.hasManyStores[storeName].rejectChanges();
         }, this);
         
+        store.add(data);
         return store;
 
     },
