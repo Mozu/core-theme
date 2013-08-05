@@ -1,10 +1,4 @@
 @mixin taco-dashboard {
-  $color-theme-red: rgb(210, 70, 60);
-  $color-theme-red-light: rgb(221, 93, 84);
-  $color-theme-green: rgb(37, 174, 144);
-  $color-theme-green-darker: rgb(26, 122, 101);
-  $color-theme-blue: rgb(46, 100, 158);
-  $color-theme-blue-bright: rgb(60, 134, 210);
   
   .dashboard-panel {
     background-color: $color-neutral-white;

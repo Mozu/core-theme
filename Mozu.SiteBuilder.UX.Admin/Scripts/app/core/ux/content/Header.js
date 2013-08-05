@@ -7,7 +7,12 @@ Ext.define('Taco.core.ux.content.Header', {
     extend: 'Ext.container.Container',
     requires: ['Taco.core.ux.action.SecondaryButton', 'Taco.core.ux.action.PrimaryButton'],
     alias: 'widget.contentheader',
+    
     cls: 'taco-content-header',
+    layout: {
+        type: 'hbox',
+        align: 'middle'
+    },
 
     title: 'Header Title',
     titleData: null,

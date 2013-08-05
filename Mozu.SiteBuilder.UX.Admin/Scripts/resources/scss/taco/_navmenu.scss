@@ -6,7 +6,6 @@
     left: 0px;
     padding-right: 30px;
     position: absolute;
-    @include flexbox($alignItems: center);
 
     .#{$vprefix}primary-menu-trigger {
       border-right: 1px solid border-for($color-neutral-95);
@@ -30,8 +29,6 @@
     }
 
     .#{$vprefix}breadcrumb {
-      @include flex($grow: 1);
-
       .#{$vprefix}icon {
         border-right: 1px solid border-for($color-neutral-95);
         color: $color;

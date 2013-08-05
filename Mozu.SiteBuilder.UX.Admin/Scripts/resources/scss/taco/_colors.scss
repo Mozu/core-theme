@@ -4,13 +4,6 @@ $color-neutral-transparent:     transparentize(rgb(255, 255, 255), 1);
 $color-neutral-white:           rgb(255, 255, 255);
 $color-neutral-black:           rgb(0, 0, 0);
 
-// $color-neutral-95:              rgb(242, 242, 242); #F2F2F2 gray 95%
-// $color-neutral-90:              rgb(230, 230, 230); #E6E6E6 gray 90%
-// $color-neutral-75:              rgb(191, 191, 191); #BFBFBF gray 75%
-// $color-neutral-70:              rgb(179, 179, 179); #B3B3B3 gray 70%
-// $color-neutral-45:              rgb(114, 114, 114); #727272 gray 45%
-// $color-neutral-30:              rgb(75, 75, 75);    #4B4B4B gray 30%
-// $color-neutral-20:              rgb(50, 50, 50);    #323232 gray 20%
 $color-neutral-95:              darken($color-neutral-white, 5%);  /* #f2f2f2  242,242,242 */
 $color-neutral-90:              darken($color-neutral-white, 10%); /* #e6e6e6  230,230,230 */
 $color-neutral-85:              darken($color-neutral-white, 15%); /* #d9d9d9  217,217,217 */
@@ -32,6 +25,13 @@ $color-neutral-10:              darken($color-neutral-white, 90%); /* #1a1a1a   
 $color-neutral-05:              darken($color-neutral-white, 95%); /* #0d0d0d     13,13,13 */
 
 /* THEME COLORS */
+
+$color-theme-red:               rgb(210, 70, 60);
+$color-theme-red-light:         rgb(221, 93, 84);
+$color-theme-green:             rgb(37, 174, 144);
+$color-theme-green-darker:      rgb(26, 122, 101);
+$color-theme-blue:              rgb(46, 100, 158);
+$color-theme-blue-bright:       rgb(60, 134, 210);
 
 $base-color: $color-neutral-90;
 

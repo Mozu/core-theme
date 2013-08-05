@@ -36,6 +36,7 @@ Ext.define('Taco.view.Header', {
         });
 
         breadcrumb = Ext.create('Ext.Component', {
+            flex: 1,
             cls: Taco.baseCSSPrefix + 'breadcrumb',
             tpl: [
                 '<a href="{address}" class="taco-icon taco-icon-{icon}">{label}</a>',
@@ -57,7 +58,10 @@ Ext.define('Taco.view.Header', {
             anchor: '100%',
             height: 55,
             cls: Taco.baseCSSPrefix + 'masthead',
-            layout: { type: 'auto' },
+            layout: {
+                type: 'hbox',
+                align: 'middle'
+            },
             items: [{
                 xtype: 'component',
                 cls: Taco.baseCSSPrefix + 'mozulogo',
@@ -67,7 +71,8 @@ Ext.define('Taco.view.Header', {
                     title: ' version:[' + Taco.apiVersion + '] date:[' + Ext.Date.format(Taco.buildDate, 'Y-m-d H:i:s') + ']',
                 }
             }, {
-                xtype: 'secondarymenu'
+                xtype: 'secondarymenu',
+                flex: 1
             }]
         }, {
             xtype: 'container',
@@ -75,7 +80,10 @@ Ext.define('Taco.view.Header', {
             height: 51,
             cls: Taco.baseCSSPrefix + 'viewport-nav',
             autoEl: { tag: 'nav' },
-            layout: { type: 'auto' },
+            layout: {
+                type: 'hbox',
+                align: 'middle'
+            },
             items: [primaryMenuTrigger, breadcrumb, contextSwitcherTrigger]
         }];
 
