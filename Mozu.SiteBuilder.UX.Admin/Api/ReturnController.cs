@@ -136,6 +136,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
             return List2(Mapper.Map<List<Return>>(dcRma));
         }
+        public class PaymentAction
+        {
+            public string orderId { get; set; }
+            public string returnId { get; set; }
+            public string paymentId { get; set; }
+            public decimal  amount { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "paymentAction")]
+        public async Task<Response<List<Return>>> CreatePaymentActionForReturn(PaymentAction action)
+        {
+            var dcPaymentAction = new CommerceRuntime.Contracts.Payments.PaymentAction()
+                                  {
+                                      ActionName = "CreditPayment",
+                                      ReferenceSourcePaymentId = action.paymentId,
+                                      Amount = action.amount
+
+                                  };
+            var dcRma = (await _returnWebApiClient.CreatePaymentActionForReturn(action.returnId, dcPaymentAction )).ReadAsSync().Items;
+
+
+            return List2(Mapper.Map<List<Return>>(dcRma));
+        }
 
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<Return>>> Edit(List<Return> returns)

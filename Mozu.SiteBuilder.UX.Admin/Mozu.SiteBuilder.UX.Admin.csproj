@@ -710,6 +710,7 @@
     <Content Include="Scripts\app\view\navigation\GlobalSearchBox.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
     <Content Include="Scripts\app\view\order\Header.js" />
+    <Content Include="Scripts\app\view\order\modal\AddRefund.js" />
     <Content Include="Scripts\app\view\order\modal\CapturePaymentManual.js" />
     <Content Include="Scripts\app\view\order\modal\CreditPaymentManual.js" />
     <Content Include="Scripts\app\view\order\modal\VoidPaymentManual.js" />
