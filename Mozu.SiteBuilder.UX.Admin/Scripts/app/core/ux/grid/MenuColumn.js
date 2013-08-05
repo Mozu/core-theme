@@ -57,7 +57,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
 
         recurseItemFn = function(item) {
             item.eventData = eventData;
-            
+
             item.menuColumnHandler = getHandler(item.menuColumnHandler);
             
             if (item.menuColumnHandler && !item.menuColumnHandlerEvent) {
@@ -72,14 +72,33 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
                 item.items.each(recurseItemFn);
             }
         };
+        
 
         if (!this.menu) {
+
             this.menu = new Ext.menu.Menu({
                 plain: true,
                 shadow: false,
                 cls: Taco.baseCSSPrefix + 'grid-row-menu',
                 items: this.getMenuItems(Ext.Array.clone(this.menuItems))
             });
+        }
+
+        //Fix for bug 14271
+        if (eventData.record.id.indexOf('ProductType') > 0) {
+            if (eventData.record.data.isBase) {
+                for (var x = 0; x < this.menu.items.items.length; x++) {
+                    if (this.menu.items.items[x].text == 'Delete') {
+                        this.menu.items.items[x].hide();
+                    }
+                }
+            } else {
+                for (var x = 0; x < this.menu.items.items.length; x++) {
+                    if (this.menu.items.items[x].text == 'Delete') {
+                        this.menu.items.items[x].show();
+                    }
+                }
+            }
         }
 
         if (this.onMenuShow) {
