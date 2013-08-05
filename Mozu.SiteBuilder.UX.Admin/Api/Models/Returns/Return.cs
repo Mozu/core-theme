@@ -86,6 +86,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 
         [DataMember(EmitDefaultValue = false, Name = "notes")]
         public List<OrderNote> Notes { get; set; }
+        [DataMember(EmitDefaultValue = false, Name = "quantity")]
+        public int Quantity { get; set; }
+    }
+     [DataContract(Namespace = "Mozu.services.contracts")]
+    public class ReturnAction
+    {
+         [DataMember(EmitDefaultValue = false, Name = "actionName")]
+        public string ActionName { get; set; }
+         [DataMember(EmitDefaultValue = false, Name = "returnIds")]
+        public List<string> ReturnIds { get; set; }
     }
 
     [DataContract(Namespace = "Mozu.services.contracts")]

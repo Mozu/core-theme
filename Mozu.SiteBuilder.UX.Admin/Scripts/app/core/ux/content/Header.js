@@ -84,10 +84,18 @@ Ext.define('Taco.core.ux.content.Header', {
     },
 
     setTitle: function (title) {
+        if (!this.title) {
+            console.log('todo:travis bug');
+            return;
+        }
         this.title.update(title);
     },
 
     updateTitle: function (data) {
+        if (!this.title) {
+            console.log('todo:travis bug');
+            return;
+        }
         this.title.update(data);
     }
 });

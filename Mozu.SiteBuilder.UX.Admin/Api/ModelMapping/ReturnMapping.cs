@@ -27,14 +27,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ReturnsDC.Return, Return>();
             Mapper.CreateMap<ReturnsDC.ReturnItem, ReturnItem>()
                   .ForMember(x => x.Reason, opt => opt.MapFrom(x => x.Reasons == null ? null : x.Reasons.Select(_ => _.Reason).FirstOrDefault()));
+            Mapper.CreateMap<ReturnsDC.ReturnItem, ReturnItem>()
+                 .ForMember(x => x.Quantity, opt => opt.MapFrom(x => x.Reasons == null ? 0 : x.Reasons.Select(_ => _.Quantity).FirstOrDefault()));
             Mapper.CreateMap<ReturnsDC.ReturnUnitPrice, ReturnUnitPrice>();
             Mapper.CreateMap<OrdersDC.OrderNote, OrderNote>();
 
 
+            Mapper.CreateMap<ReturnAction, ReturnsDC.ReturnAction>();
+
             Mapper.CreateMap<Return, ReturnsDC.Return>();
             Mapper.CreateMap<ReturnItem, ReturnsDC.ReturnItem>()
                   .ForMember(x => x.Reasons, opt => opt.MapFrom(x => x.Reason == null ? null :
-                                                                         new List<ReturnsDC.ReturnReason>() {new ReturnsDC.ReturnReason() {Reason = x.Reason, Quantity = x.QuantityReceived}}));
+                                                                         new List<ReturnsDC.ReturnReason>() { new ReturnsDC.ReturnReason() { Reason = x.Reason, Quantity = x.Quantity } }));
 
             Mapper.CreateMap<ReturnUnitPrice, ReturnsDC.ReturnUnitPrice>();
             Mapper.CreateMap<OrderNote, OrdersDC.OrderNote>();

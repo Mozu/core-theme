@@ -643,6 +643,8 @@
     <Content Include="Scripts\app\model\CartItem.js" />
     <Content Include="Scripts\app\model\CmsDocumentDraft.js" />
     <Content Include="Scripts\app\model\Contact.js" />
+    <Content Include="Scripts\app\model\ReturnItem.js" />
+    <Content Include="Scripts\app\model\Return.js" />
     <Content Include="Scripts\app\model\OrderShippingDiscount.js" />
     <Content Include="Scripts\app\model\KeyValuePair.js" />
     <Content Include="Scripts\app\model\ShippingCarrierSetting.js" />
@@ -728,6 +730,8 @@
     <Content Include="Scripts\app\view\order\subform\Subform.js" />
     <Content Include="Scripts\app\view\order\subform\Payment.js" />
     <Content Include="Scripts\app\view\order\subform\Detail.js" />
+    <Content Include="Scripts\app\view\order\widget\ProcessReturnPanel.js" />
+    <Content Include="Scripts\app\view\order\widget\CreateReturnPanel.js" />
     <Content Include="Scripts\app\view\order\widget\OrderItemGrid.js" />
     <Content Include="Scripts\app\view\order\widget\ProductConfigurator.js" />
     <Content Include="Scripts\app\view\order\widget\ProductPickerField.js" />

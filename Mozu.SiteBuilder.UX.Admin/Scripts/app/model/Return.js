@@ -1,387 +1,89 @@
 ﻿/**
  * @class Taco.model.Order
  */
-Ext.define('Taco.model.Order', {
-    requires: ['Taco.model.Return'],
-    
+Ext.define('Taco.model.Return', {
     extend: 'Taco.core.data.Model',
-    /**********************************************************
-    *   missing shipping discount object
-    *   missing shipping method...
-    *   
-    *
-    *
-    ***************************************************************/
-    behaviors: {
-        read: 73,
-        create: 74,
-        update: 75,
-        destroy: 76
-    },
+    requires:['Taco.model.ReturnItem'],
+   
     fields: [
         {
             "name": "id",
             "type": "string",
             "useNull": true
         },
-        
-        {
-            "name": "isDraft",
-            "type": "boolean",
-            "defaultValue": false
-        },
-
-        {
-            name: 'tenantId',
-            type: 'int'
-        },
-        {
-            name: 'siteGroupId',
-            type: 'int'
-        },
-        {
-            name: 'siteId',
-            type: 'int',
-            "useNull": true
-        },
-        {
-            "name": "authorizationInfo",
-            "type": "auto"
-        },
-        {
-            "name": "orderNumber",
-            "type": "int",
-            "useNull": true
-        },
-        {
-            "name": "createDate",
-            "type": "date",
-            "useNull": true
-        },
-        {
-            "name": "customerId",
-            "type": "int",
-            "useNull": true
-        },
-        {
-            "name": "billingContact",
-            "type": "auto",
-            "default": []
-        },
-        {
-            "name": "shippingContact",
-            "type": "auto",
-            "default": []
-        },
-        {
-            "name": "ipAddress",
-            "type": "string",
-            "useNull": true
-        },
-        {
-            "name": "items",
-            "type": "auto",
-            "useNull": true
-        },
-        {
-            "name": "subtotal",
-            "type": "float",
-            "useNull": true
-        },
-        {
-            "name": "orderDiscountTotal",
-            "type": "float",
-            "useNull": true
-        },
-        {
-            "name": "activeDiscountDescription",
-            "type": "string",
-            "useNull": true
-        },
-        {
-            "name": "shippingMethodCode",
-            "type": "string",
-            "useNull": true
-        },
-        {
-            "name": "shippingMethodName",
-            "type": "string",
-            "useNull": true
-        },
-        {
-            "name": "shippingCost",
-            "type": "float",
-            "useNull": true
-        },
-        {
-            "name": "shippingDescription",
-            "type": "string",
-            "useNull": true
-        },
-        {
-            "name": "activeShippingDiscount",
-            "type": "float",
-            "useNull": true
-        },
-        {
-            "name": "shippingDiscounts",
-            "type": "auto",
-            "default": []
-        },
-        {
-            "name": "shippingTotal",
-            "type": "float",
-            "useNull": true
-        },
-        {
-            "name": "taxTotal",
-            "type": "float",
-            "useNull": true
-        },
-        {
-            "name": "feeTotal",
-            "type": "float",
-            "useNull": true
-        },
-
-        {
-            "name": "orderAdjustment",
-            "type": "object",
-            "defaultValue": {
-                "amount":10,
-                "description":"",
-                "internalComment":""
-            }        
-        },
-        
-        {
-            "name": "shippingAdjustment",
-            "type": "object",
-            "defaultValue": {
-                "amount": 8,
-                "description": "",
-                "internalComment": ""
-            }
-        },
-
-
-
-        // deprecated?
-        {
-            "name": "adjustmentDescription",
-            "type": "string",
-            "useNull": true
-        },
-        
-        // deprecated?
-        {
-            "name": "adjustmentTotal",
-            "type": "float",
-            "useNull": true
-        },
-        
-        {
-            "name": "total",
-            "type": "float",
-            "useNull": true
-        },
-        {
-            "name": "customerNote",
-            "type": "string",
-            "useNull": true
-        },
-        {
-            "name": "itemsOrdered",
-            "type": "int",
-            "useNull": false
-        },
-        {
-            "name": "itemsNotShipped",
-            "type": "int",
-            "useNull": false
-        },
-        {
-            "name": "itemsShipped",
-            "type": "int",
-            "useNull": false
-        },
-        // workflow 
-        {
-            "name": "orderStatus",
-            "type": "string",
-            "useNull": true
-        },
-        {
-            "name": "shippingStatus",
-            "type": "string",
-            "useNull": true
-        },
-        {
-            "name": "paymentStatus",
-            "type": "string",
-            "defaultValue": "Card Authorized",
-            "useNull": true
-        },
         {
             "name": "availableActions",
             "type": "auto",
-            "default": []
+            "useNull": true,
+            defaultValue: []
+
         },
         {
-            "name": "lastValidationDate",
-            "type": "date",
-            "useNull": true
-        },
-        {
-            "name": "expirationDate",
-            "type": "date",
-            "useNull": true
-        },
-        {
-            "name": "payments",
+            "name": "returnNumber",
+            "type": "int",
+            "useNull": true,
+            defaultValue: null
+        }, {
+            "name": "originalOrderId",
+            "type": "string",
+            "useNull": true,
+            defaultValue: null
+        }, {
+            "name": "returnOrderId",
+            "type": "string",
+            "useNull": true,
+            defaultValue: null
+        }, {
+            "name": "status",
+            "type": "string",
+            "useNull": true,
+            defaultValue: null
+        }, {
+            "name": "items",
             "type": "auto",
             "useNull": true,
-            //convert: function (v, record) {
-            //    return v;
-            //},
-            "defaultValue": []
+            defaultValue: null
         }, {
-            "name": "unpackagedItems",
-
-            "type": "array",
-            convert: function (v, record) {
-                return v;
-            },
-            "defaultValue": [
-                /*                
-                {
-                    "productName": "product 6",
-                    "productCode": "xyz123",
-                    "weight": "2.3",
-                    "quantity": "3"
-                }, {
-                    "productName": "product 7",
-                    "productCode": "xyz123",
-                    "weight": "2.3",
-                    "quantity": "3"
-                }
-                */
-            ]
-        }, {
-            "name": "packages",
-            "type": "array",
-            convert: function (v, record) {
-
-                if (!Ext.isArray(v)) {
-                    v = [];
-                }
-                // adding test data;
-                var shippedPackageCount = 0;
-                var unShippedPackageCount = 0;
-
-
-                for (var i = 0; i < shippedPackageCount; i++) {
-
-                    v.push({
-                        "orderId": "3216598",
-                        "id": "o1004-p" + i,
-                        "status": "Shipped",
-                        "shippingMethod": "FedEx 2nd Day Air",
-                        "trackingNumber": "",
-                        "hasShippingLabel": false,
-                        "totalWeight": "23.4",
-                        "totalQuantity": "6",
-                        "items": [
-                            {
-                                "orderItemId": "i123",
-                                "productName": "product 1",
-                                "productCode": "xyz123",
-                                "weight": "2.3",
-                                "quantity": "3"
-                            }, {
-                                "productName": "product 2",
-                                "orderItemId": "i123",
-                                "productCode": "xyz123",
-                                "weight": "2.3",
-                                "quantity": "3"
-                            }
-                        ]
-                    });
-                }
-
-                for (var i = 0; i < unShippedPackageCount; i++) {
-
-                    v.push({
-                        "orderId": "3216598",
-                        "id": "o1004-p" + i,
-                        "status": "NotShipped",
-                        "shippingMethod": "FedEx 2nd Day Air",
-                        "trackingNumber": "",
-                        "hasShippingLabel": false,
-                        "totalWeight": "23.4",
-                        "totalQuantity": "6",
-                        "items": [
-                            {
-                                "orderItemId": "i123",
-                                "productName": "product 1",
-                                "productCode": "xyz123",
-                                "weight": "2.3",
-                                "quantity": "3"
-                            }, {
-                                "productName": "product 2",
-                                "orderItemId": "i123",
-                                "productCode": "xyz123",
-                                "weight": "2.3",
-                                "quantity": "3"
-                            }
-                        ]
-                    });
-                }
-
-
-                return v;
-
-
-            }
-        },        
-        // helper field. ui iterates on unshipped packages in multiple places
-        {
-            "name": "unShippedPackages",
-            "type": "array",
-            persist: false,
-            convert: function (v, record) {
-                var packages = record.get("packages");
-                var retVal = [];
-
-                for (var i = 0; i < packages.length; i++) {
-                    if (packages[i].status == "NotShipped") {
-                        retVal.push(packages[i]);
-                    }
-                }
-                return retVal;
-            }
+            "name": "notes",
+            "type": "auto",
+            "useNull": true,
+            defaultValue: null
         },
-        // helper field. ui iterates on shipped packages in multiple places
-        {
-            "name": "shippedPackages",
-            "type": "array",
-            persist: false,
-            convert: function (v, record) {
-                var packages = record.get("packages");
-                var retVal = [];
-
-                for (var i = 0; i < packages.length; i++) {
-                    if (packages[i].status == "Shipped") {
-                        retVal.push(packages[i]);
-                    }
-                }
-                return retVal;
-            }
-        }
+         {
+             "name": "rmaDeadline",
+             "type": "datetime",
+             "useNull": true,
+             defaultValue: null
+         },
+         {
+             "name": "type",
+             "type": "string",
+             "useNull": true,
+             defaultValue: null
+         },
+         {
+             "name": "payments",
+             "type": "auto",
+             "useNull": true,
+             defaultValue: null
+         },
+         {
+             "name": "totalLossAmount",
+             "type": "number",
+             "useNull": true,
+             defaultValue: null
+         }
     ],
     
-
-
+    getItems: function () {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.ReturnItem',
+            associationKey: 'items',
+            foreignProperty: 'return'
+        });
+    },
+   
+    
     
     /*
     getPayments: function () {
@@ -394,80 +96,67 @@ Ext.define('Taco.model.Order', {
     },
     */
 
-    associations: [      
-        // Note:  (simeon) I have intentially not created models for package, shipment, unpackagedItems and packagedItems
-        // the entire order ui needs to be replaced with every change of order entity and its associated entities due to the display of order status in just about every component.
-        // by treating this sub entity data as json and arrays, it avoids extjs auto creating of stores for each associated sub entity;
-        // for shipping and its related views, the data is passed to the view which sets up its own stores as needed;
+    //associations: [
+    //    // Note:  (simeon) I have intentially not created models for package, shipment, unpackagedItems and packagedItems
+    //    // the entire order ui needs to be replaced with every change of order entity and its associated entities due to the display of order status in just about every component.
+    //    // by treating this sub entity data as json and arrays, it avoids extjs auto creating of stores for each associated sub entity;
+    //    // for shipping and its related views, the data is passed to the view which sets up its own stores as needed;
 
-        {
-            type: 'hasMany',
-            model: 'Taco.model.OrderItem',
-            name: "items",
-            reader: 'json'
-        },
-        {
-            type: 'hasOne',
-            model: 'Taco.model.Contact',
-            name: 'billingContact',
-            reader: 'json'
-        },
-        {
-            type: 'hasOne',
-            model: 'Taco.model.Contact',
-            name: 'shippingContact',
-            reader: 'json'
-        },
-        {
-            type: 'hasMany',
-            model: 'Taco.model.OrderPayment',
-            name: 'payments',
-            reader:'json'
-        },
-        {
-            type: 'hasMany',
-            model: 'Taco.model.Return',
-            primaryKey: 'id',
-            foreignKey: 'originalOrderId',
-            autoLoad: true,
-            storeConfig: {
-                remoteFilter:true
-            },
-            name: 'getReturnsStore'
-        },
-        
-        {
-            type: 'hasOne',
-            model: 'Taco.model.OrderShippingDiscount',
-            name: 'activeShippingDiscount'
-        },
-        {
-            type: 'hasMany',
-            model: 'Taco.model.OrderShippingDiscount',
-            name: 'shippingDiscounts'
-        }
-    ],
+    //    {
+    //        type: 'hasMany',
+    //        model: 'Taco.model.OrderItem',
+    //        name: "items",
+    //        reader: 'json'
+    //    },
+    //    {
+    //        type: 'hasOne',
+    //        model: 'Taco.model.Contact',
+    //        name: 'billingContact',
+    //        reader: 'json'
+    //    },
+    //    {
+    //        type: 'hasOne',
+    //        model: 'Taco.model.Contact',
+    //        name: 'shippingContact',
+    //        reader: 'json'
+    //    },
+    //    {
+    //        type: 'hasMany',
+    //        model: 'Taco.model.OrderPayment',
+    //        name: 'payments',
+    //        reader: 'json'
+    //    },
+    //    {
+    //        type: 'hasOne',
+    //        model: 'Taco.model.OrderShippingDiscount',
+    //        name: 'activeShippingDiscount'
+    //    },
+    //    {
+    //        type: 'hasMany',
+    //        model: 'Taco.model.OrderShippingDiscount',
+    //        name: 'shippingDiscounts'
+    //    }
+    //],
 
     proxy: {
         type: 'ajaxproxy',
         api: {
             // read: '/admin/Scripts/app/mocks/orders.json',
-            read: '/admin/app/order/list',
-            create: '/admin/app/order/create',
-            update: '/admin/app/order/edit',
-            destroy: '/admin/app/order/delete'
+            read: '/admin/app/return/list',
+            create: '/admin/app/return/create',
+            update: '/admin/app/return/edit'
         },
         reader: {
             type: 'json',
-            getResponseData: function (response) {
-                // this is a temporary hack to get the proxy to use defaultValue for members that don't exist in the response
-                var data = Ext.decode(response.responseText);
-                if (data.items[0]) {
-                    data.items[0].packages = data.items[0].packages || [];
-                    data.items[0].unpackagedItems = data.items[0].unpackagedItems || undefined;
-                }
-                return this.readRecords(data);
-            },
+            //getResponseData: function (response) {
+            //    // this is a temporary hack to get the proxy to use defaultValue for members that don't exist in the response
+            //    var data = Ext.decode(response.responseText);
+            //    if (data.items[0]) {
+            //        data.items[0].packages = data.items[0].packages || [];
+            //        data.items[0].unpackagedItems = data.items[0].unpackagedItems || undefined;
+            //    }
+            //    return this.readRecords(data);
+            //},
             root: 'items',
             successProperty: 'success',
             messageProperty: "message"
@@ -518,6 +207,54 @@ Ext.define('Taco.model.Order', {
 
      *
      */
+    
+
+    performAction: function (action, config) {
+        var me = this;
+        if (config.success) {
+            config.success2 = config.success;
+            config.scope2 = config.scope;
+        }
+        if (config.failure) {
+            config.failure2 = config.failure;
+            config.scope2 = config.scope;
+        }
+        Ext.applyIf(config, {
+            jsonData : {
+                actionName: action,
+                returnIds:[this.getId()]
+            },
+            success: function(response){
+                var json = Ext.decode(response.responseText, true);
+                if (json.items && json.items.length) {
+                    me.set(json.items[0]);
+                    me.commit();
+                }
+                if (config.success2) {
+                    config.success2.apply(config.scope2 || me, arguments);
+                }
+                
+            },
+            failure:function (response, options) {
+                var json = Ext.decode(response.responseText, true),
+                    msg;
+                if (config.failure2) {
+                    config.failure2.apply(config.scope2 || me, [response, options, json]);
+                } else {
+                    msg = json && json.Message ? json.Message : 'Error performing action:  ' + action;
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                }
+            },
+            url: '/admin/app/return/action',
+            method: "POST"
+            
+        });
+
+        Ext.Ajax.request(config);
+    },
+    
+
+
     capturePayment: function (config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/capture',
@@ -531,7 +268,7 @@ Ext.define('Taco.model.Order', {
                 }
             },
             failure : Ext.emptyFn
-            */            
+            */
         });
 
         Ext.Ajax.request(config);
@@ -567,7 +304,7 @@ Ext.define('Taco.model.Order', {
     addPayment: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/payment/create',
-            method: "POST"            
+            method: "POST"
         });
 
         Ext.Ajax.request(config);
@@ -642,7 +379,6 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
-
     
     capturePaymentManual: function (config) {
         Ext.apply(config, {

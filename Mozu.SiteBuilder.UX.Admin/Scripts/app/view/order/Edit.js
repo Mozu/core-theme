@@ -11,7 +11,8 @@ Ext.define('Taco.view.order.Edit', {
         'Taco.view.order.subform.Customer',
         'Taco.view.order.subform.Detail',
         'Taco.view.order.subform.Payment',
-        'Taco.view.order.subform.Shipping'
+        'Taco.view.order.subform.Shipping',
+        'Taco.view.order.subform.Return'
     ],
 
     model: 'Taco.model.Order',
