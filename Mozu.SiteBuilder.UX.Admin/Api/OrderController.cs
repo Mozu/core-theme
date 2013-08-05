@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -69,6 +70,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var orders = dcOrders != null ? Mapper.Map<List<Order>>(dcOrders.Items) : new List<Order>();
 
             return List2(orders,(int) dcOrders.TotalCount );
+        }
+
+        [HttpPostRoute(UriTemplate = "create")]
+        public async Task<Response<List<Order>>> CreateOrder()
+        {
+            // TODO: this doesn't currently work. needs service updates.
+            var emptyOrder = new DCo.Order 
+            {
+                Items = new List<DCo.OrderItem>()
+            };
+            var order = (await _orderWebApiClient.CreateOrder(emptyOrder)).ReadAsSync();
+
+            return List2(order.Map<Order>());
         }
 
 		[HttpPostRoute(UriTemplate = "cancel")]
