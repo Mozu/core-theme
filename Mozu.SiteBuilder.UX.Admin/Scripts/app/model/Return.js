@@ -253,6 +253,49 @@ Ext.define('Taco.model.Return', {
         Ext.Ajax.request(config);
     },
     
+    performPaymentAction: function ( payment, config) {
+        var me = this;
+        if (config.success) {
+            config.success2 = config.success;
+            config.scope2 = config.scope;
+        }
+        if (config.failure) {
+            config.failure2 = config.failure;
+            config.scope2 = config.scope;
+        }
+        Ext.applyIf(config, {
+            jsonData:payment,
+            success: function(response){
+                var json = Ext.decode(response.responseText, true);
+                if (json.items && json.items.length) {
+                    me.set(json.items[0]);
+                    me.commit();
+                }
+                if (config.success2) {
+                    config.success2.apply(config.scope2 || me, arguments);
+                }
+                
+            },
+            failure:function (response, options) {
+                var json = Ext.decode(response.responseText, true),
+                    msg;
+                if (config.failure2) {
+                    config.failure2.apply(config.scope2 || me, [response, options, json]);
+                } else {
+                    msg = json && json.Message ? json.Message : 'Error Adding Payment '
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                }
+            },
+            url: '/admin/app/return/paymentAction',
+            method: "POST"
+            
+        });
+
+        Ext.Ajax.request(config);
+    },
+    
+    
+    
 
 
     capturePayment: function (config) {

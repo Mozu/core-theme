@@ -4,6 +4,7 @@
 Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     extend: 'Ext.form.Panel',
     requires: [
+        'Taco.view.order.modal.AddRefund'
     ],
     margin: '10 0 10 0',
     initComponent: function (eOpts) {
@@ -46,8 +47,15 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         me.record.on('aftercommit', function () {
             me.status.update(me.record.data);
         });
-        
-       
+
+        me.addPaymentButton = Ext.create('Taco.core.ux.action.SecondaryButton', {
+            text: 'Add Refund Amount',
+            listeners:{
+                click: me.onAddPaymentButtonClick,
+                scope:me
+                   
+        }
+        });
 
         me.grid = Ext.create('Taco.core.ux.grid.Panel', {
             store: me.itemsStore,
@@ -127,7 +135,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 dock: 'top',
                 weight: 1,
                 items: [
-                    me.status
+                    me.status, '->', me.addPaymentButton
                 ]
             },
             {
@@ -156,6 +164,29 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         var me = this;
         me.returnActionButtons.each(function (button) {
             button.setVisible(Ext.Array.contains(me.record.data.availableActions, button.actionName));
+        });
+    },
+    onAddPaymentButtonClick: function () {
+
+        var me = this,
+            modal = Ext.create('Taco.view.order.modal.AddRefund',
+                {
+                    order: me.order,
+                    record: me.record
+                });
+        modal.show();
+        modal.on('cancel', function () {
+            modal.hide();
+        });
+        modal.on('save', function (_modal, payments) {
+            modal.hide();
+            me.setLoading(true);
+            me.record.performPaymentAction(payments[0], {
+                callback: function () {
+                    me.setLoading(false);
+                }
+            });
+
         });
     },
     onActionClick: function (button) {
