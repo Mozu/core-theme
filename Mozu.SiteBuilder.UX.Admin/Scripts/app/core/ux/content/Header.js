@@ -17,17 +17,7 @@ Ext.define('Taco.core.ux.content.Header', {
 
     initComponent: function () {
 
-        if (typeof this.title !== 'object') {
-            this.title = {
-                html: this.title || 'Title'
-            };
-        }
-
-        Ext.apply(this.title, {
-            xtype: 'component',
-            autoEl: 'h1',
-            itemId: 'title'
-        });
+        this.initTitle();
 
         this.items = [{
             xtype: 'container',
@@ -79,23 +69,39 @@ Ext.define('Taco.core.ux.content.Header', {
     //     }
     // },
 
+    /**
+     * Initializes the title config
+     * @private
+     */
+    initTitle: function () {
+        if (typeof this.title !== 'object') {
+            this.title = {
+                html: this.title || 'Title'
+            };
+        }
+
+        Ext.apply(this.title, {
+            xtype: 'component',
+            autoEl: 'h1',
+            itemId: 'title'
+        });
+    },
+
     getActions: function () {
         return this.actionsContainer;
     },
 
     setTitle: function (title) {
-        if (!this.title) {
-            console.log('todo:travis bug');
+        if (this.title && this.title.isComponent) {
+            this.title.update(title);
             return;
         }
-        this.title.update(title);
+
+        if (this.title !== 'object') this.title = { html: title };
+        else this.title.html = title;        
     },
 
     updateTitle: function (data) {
-        if (!this.title) {
-            console.log('todo:travis bug');
-            return;
-        }
         this.title.update(data);
     }
 });
