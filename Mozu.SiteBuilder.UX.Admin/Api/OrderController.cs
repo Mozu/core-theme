@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Settings;
-using Mozu.SiteBuilder.Mvc.ActionFilters;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
-using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -85,12 +81,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(order.Map<Order>());
         }
 
-		[HttpPostRoute(UriTemplate = "cancel")]
-        public async Task<Response<List<Order>>> CancelOrder(string orderId)
+        public class OrderIdArgs
         {
-            var dc = (await _orderWebApiClient.PerformOrderAction(orderId, new DCo.OrderAction { ActionName = "CancelOrder" })).ReadAsSync();
+            public string OrderId { get; set; }
+        }
+
+		[HttpPostRoute(UriTemplate = "cancel")]
+        public async Task<Response<List<Order>>> CancelOrder(OrderIdArgs args)
+        {
+            var dc = (await _orderWebApiClient.PerformOrderAction(args.OrderId, new DCo.OrderAction { ActionName = "CancelOrder" })).ReadAsSync();
 
             return List2( Mapper.Map<Order>(dc) );
+        }
+
+        [HttpPostRoute(UriTemplate = "deletedraft")]
+        public async Task<Response<List<Order>>> DeleteDraft(OrderIdArgs args)
+        {
+            await _orderWebApiClient.DeleteOrderDraft(args.OrderId);
+
+            return SuccessWithTotal2<List<Order>>(1);
         }
     }
 }
