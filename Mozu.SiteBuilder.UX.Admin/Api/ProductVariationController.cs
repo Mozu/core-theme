@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 else
                 {
                     var dcOPtions = Mapper.Map<List<Mozu.ProductAdmin.Contracts.ProductOption>>(productOptions);
-                    collection = (await _productTypeWebApiClient.GenerateProductVariations(productOptionsIn: dcOPtions, productTypeId: productTypeId, productCode: productCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.startIndex, filter: filter)).ReadAsSync();
+                    collection = (await _productTypeWebApiClient.GenerateProductVariations(productOptionsIn: dcOPtions, productTypeId: productTypeId, productCode: productCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filter)).ReadAsSync();
                 }
 
             }
