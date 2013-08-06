@@ -88,16 +88,7 @@ Ext.define('Taco.view.product.SiteForm', {
             Ext.create('Taco.view.product.subform.SEO', subFormCfg)
         ]);
 
-        this.navStore.loadRawData(items);
-
-        // if (this.rendered) {
-        //     this.removeAll();
-        //     this.add(items);   
-        // } else {
-        //     this.items = items;
-        // }
-        this.formContainer.removeAll();
-        this.formContainer.add(items);
+        this.loadNavItems(items);
     },
 
     constructor: function () {

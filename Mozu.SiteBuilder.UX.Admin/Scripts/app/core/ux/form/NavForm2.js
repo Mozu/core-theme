@@ -15,6 +15,11 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             cls: 'taco-form-nav-container'
         });
 
+
+        this.navStore = Ext.create('Ext.data.Store', {
+            fields: ['title']
+        });
+
         this.items = [{
             xtype: 'dataview',
             store: this.navStore,
@@ -71,6 +76,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     },
 
     rebuildMap: function () {
+        console.log('rebuilding map');
         this.locationMap = [];
         this.recordMap = [];
 
@@ -130,5 +136,11 @@ Ext.define('Taco.core.ux.form.NavForm2', {
                         : 0;
             wrapper.scrollTo('top', targetY, true);
         }
+    },
+
+    loadNavItems: function (items) {
+        this.navStore.loadRawData(items);
+        this.formContainer.removeAll();
+        this.formContainer.add(items);
     }
 });

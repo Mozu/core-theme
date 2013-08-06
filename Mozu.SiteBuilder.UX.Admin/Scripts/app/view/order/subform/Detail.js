@@ -11,13 +11,13 @@ Ext.define('Taco.view.order.subform.Detail', {
         'Taco.view.order.widget.OrderItemGrid',
         'Taco.view.order.modal.EditOrderDetail'
     ],
+    
+    title: 'Order Details',
+    
     config: {
         
         // order model
         record: null,
-        
-        // title for the panel header
-        title: 'Order Details',
         
         // determines whether the detailGrid allows field editing
         editMode: false,
@@ -40,10 +40,9 @@ Ext.define('Taco.view.order.subform.Detail', {
         // var siteContext = Taco.app.context.getCurrent().urlToken;
         
 
-        this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-detail'].join(' ');
+        this.cls += ' ' + Taco.baseCSSPrefix + 'orderform-detail';
 
         this.actionTrigger = Ext.create('Taco.core.ux.action.Button', {
-            //xtype: 'taco.button',
             width: 50,
             height: 30,
             text: ' ',

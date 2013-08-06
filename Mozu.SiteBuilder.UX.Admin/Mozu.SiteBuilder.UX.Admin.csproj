@@ -709,6 +709,8 @@
     <Content Include="Scripts\app\view\navigation\ContextSwitcherView.js" />
     <Content Include="Scripts\app\view\navigation\GlobalSearchBox.js" />
     <Content Include="Scripts\app\view\navigation\PrimaryMenuView.js" />
+    <Content Include="Scripts\app\view\order\Edit.js" />
+    <Content Include="Scripts\app\view\order\Form.js" />
     <Content Include="Scripts\app\view\order\Header.js" />
     <Content Include="Scripts\app\view\order\modal\AddRefund.js" />
     <Content Include="Scripts\app\view\order\modal\CapturePaymentManual.js" />
@@ -1406,7 +1408,7 @@
     <Content Include="Scripts\app\view\inventory\QuantityEdit.js" />
     <Content Include="Scripts\app\view\order\Grid.js" />
     <Content Include="Scripts\app\view\order\modal\Address.js" />
-    <Content Include="Scripts\app\view\order\Edit.js" />
+    <Content Include="Scripts\app\view\order\Edit-old.js" />
     <Content Include="Scripts\app\view\order\Index.js" />
     <Content Include="Scripts\app\view\order\modal\ShipmentAction.js" />
     <Content Include="Scripts\app\view\order\modal\PaymentAction.js" />

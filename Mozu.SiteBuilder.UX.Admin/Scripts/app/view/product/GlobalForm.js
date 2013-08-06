@@ -16,15 +16,9 @@ Ext.define('Taco.view.product.GlobalForm', {
         'Taco.view.product.subform.Shipping',
         'Taco.view.product.subform.SEO'
     ],
+    
     persistChangesToModel: true,
-    mixins: {
-        scrollspy: 'Taco.core.ux.ScrollSpy' // TODO: resolve JS error with this and getEl()
-    },
-    constructor: function () {
-        this.callParent(arguments);
-        this.mixins.scrollspy.constructor.call(this);
-    },
-    scrollSpyOffset: 150,
+
     title: 'Global',
     header: false,
     bodyCls: [Taco.baseCSSPrefix + 'product-admin-form', Taco.baseCSSPrefix + 'global-admin-form'],
@@ -36,22 +30,18 @@ Ext.define('Taco.view.product.GlobalForm', {
             persistChangesToModel: true
         };
 
-        this.navStore = Ext.create('Ext.data.Store', {
-            fields: ['title']
-        });
-
         this.callParent(arguments);
 
         this.buildForm();
     },
 
     buildForm: function () {
-        var items = [],
-            subFormCfg = {
+        var subFormCfg = {
                 isGlobal: true,
                 product: this.record,
                 persistChangesToModel: true
-            };
+            },
+            items;
 
         items = [
             Ext.create('Taco.view.product.subform.General', subFormCfg)
@@ -70,16 +60,7 @@ Ext.define('Taco.view.product.GlobalForm', {
             Ext.create('Taco.view.product.subform.SEO', subFormCfg)
         ]);
 
-        this.navStore.loadRawData(items);
-
-        // if (this.rendered) {
-        //     this.removeAll();
-        //     this.add(items);   
-        // } else {
-        //     this.items = items;
-        // }
-        this.formContainer.removeAll();
-        this.formContainer.add(items);
+        this.loadNavItems(items);
     },
 
     addSaveTasks: function (tasks) {
