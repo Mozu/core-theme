@@ -50,7 +50,7 @@
         }
         
         product.on('addedtocart', function (event, cartitem) {
-            if (cartitem && cartitem.data && cartitem.data.CartItemId) {
+            if (cartitem && cartitem.prop('Id')) {
                 product.submitting(true);
                 window.location.href = "/cart";
             } else {
