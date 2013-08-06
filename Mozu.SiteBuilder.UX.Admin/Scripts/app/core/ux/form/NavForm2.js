@@ -6,6 +6,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     alias: 'widget.taco.navform2',
     requires: [],
     sectionOffset: 39,
+    topOffset: 0,
     enableScrollSpy: true,
 
     initComponent: function () {
@@ -94,7 +95,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
                 return;
             }
 
-            this.locationMap.push(el.dom.offsetTop + this.sectionOffset);
+            this.locationMap.push(el.dom.offsetTop + this.sectionOffset - this.topOffset);
         }, this);
 
         this.checkTop();
@@ -134,7 +135,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             targetY = view.store.indexOf(record)
                         ? record.raw.getEl().dom.offsetTop + this.sectionOffset
                         : 0;
-            wrapper.scrollTo('top', targetY, true);
+            wrapper.scrollTo('top', targetY - this.topOffset, true);
         }
     },
 

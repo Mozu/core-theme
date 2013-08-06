@@ -7,6 +7,8 @@
 Ext.define('Taco.view.order.Form', {
     extend: 'Taco.core.ux.form.NavForm2',
 
+    topOffset: 38,
+
     requires: [
         'Taco.model.Order',
         'Taco.model.OrderPayment',
@@ -19,9 +21,9 @@ Ext.define('Taco.view.order.Form', {
 
     model: 'Taco.model.Order',
 
-    initComponent: function () {
+    initComponent: function () {        
 
-        
+        this.title = 'Order No. ' + this.record.get('orderNumber');
 
         this.callParent(arguments);
 
