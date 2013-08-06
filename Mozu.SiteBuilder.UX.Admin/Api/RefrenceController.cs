@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
          private readonly IReferenceDataWebApiClient _referenceDataWebApi;
 
-         public RefrenceController(Mozu.Reference.Contracts.Clients.IReferenceDataWebApiClient  referenceDataWebApi)
+         public ReferenceController(Mozu.Reference.Contracts.Clients.IReferenceDataWebApiClient referenceDataWebApi)
          {
              _referenceDataWebApi = referenceDataWebApi;
             
