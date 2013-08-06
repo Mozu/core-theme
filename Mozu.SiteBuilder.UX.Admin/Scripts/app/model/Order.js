@@ -1008,7 +1008,7 @@ Ext.define('Taco.model.Order', {
      */
     removeOrderItem: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/orderitem/remove',
+            url: '/admin/app/order/items/remove',
             method: "POST"
         });
 
@@ -1016,7 +1016,7 @@ Ext.define('Taco.model.Order', {
     },
     
     /**
-     * service call to edit an order item. specificallly edit of quantity and price
+     * service call to edit an order item. specificallly edit of quantity
      * @param {Object} config  A configuration object     
      * config object:
      * 
@@ -1046,9 +1046,49 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    editOrderItem: function (config) {
+    editOrderItemQuantity: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/orderitem/update',
+            url: '/admin/app/order/items/editquantity',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    /**
+     * service call to edit an order item. specificallly edit of quantity
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId: "987654321",                
+                orderItems: [
+                    {
+                        ... order item entity you want to edit  ...
+                        This will typically contain modified quantity or price
+                    }
+                ]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },s
+            scope: this
+        }
+
+     *
+     */
+    editOrderItemPrice: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/items/editprice',
             method: "POST"
         });
 

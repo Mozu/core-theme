@@ -16,8 +16,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         // [DataMember(Name = "originalCartItemId")]
         // public string OriginalCartItemId { get; set; }
 
-        [DataMember(Name="options")]
-        public List<string> Options { get; set; }
+        [DataMember(Name="options", EmitDefaultValue=true)]
+        public List<Mozu.CommerceRuntime.Contracts.Products.ProductOption> Options { get; set; }
 
         [DataMember(Name = "productName")]
         public string ProductName { get; set; }

@@ -149,7 +149,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.Discounts, op => op.MapFrom(dc => dc.ProductDiscounts))
                   .ForMember(x => x.ActiveShippingDiscount, op => op.MapFrom(dc => dc.ShippingDiscounts != null ? dc.ShippingDiscounts.FirstOrDefault(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) : null))
                   .ForMember(x => x.ShippingDiscounts, op => op.MapFrom(dc => dc.ShippingDiscounts))
-                  .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options != null ? dc.Product.Options.Select(o => o.Value) : null))
+                  .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options))
                   .AfterMap((dc, orderItem) =>
                   {
                       if (orderItem.Discounts != null)
@@ -315,8 +315,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       return new ProductsDC.Product
                       {
                           ProductCode = x.ProductCode,
-                          Name = x.ProductName
-                          // other stuff (price/measurements/options) are not important to make service calls.
+                          Name = x.ProductName,
+                          Options = Mapper.Map<List<ProductsDC.ProductOption>>(x.Options)
+                          // other stuff (price/measurements) are not important to make service calls.
                       };
                   }))
                   .ForMember(dc => dc.Quantity, op => op.MapFrom(x => x.Quantity))
