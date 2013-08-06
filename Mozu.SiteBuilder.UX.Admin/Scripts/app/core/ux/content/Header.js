@@ -82,7 +82,7 @@ Ext.define('Taco.core.ux.content.Header', {
      * @private
      */
     initTitle: function () {
-        if (typeof this.title !== 'object') {
+        if (typeof this.title !== 'object' || this.title === null) {
             this.title = {
                 html: this.title || 'Title'
             };
@@ -105,7 +105,7 @@ Ext.define('Taco.core.ux.content.Header', {
             return;
         }
 
-        if (this.title !== 'object') this.title = { html: title };
+        if (typeof this.title !== 'object' || this.title === null) this.title = { html: title };
         else this.title.html = title;        
     },
 

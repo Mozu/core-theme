@@ -36,6 +36,8 @@
      */
     cancelText: 'Cancel',
 
+    actionsCfg: null,
+
     formCfg: null,
     formCls: null,
     record: null,
@@ -178,8 +180,9 @@
         if (!this.form.title) {
             return;
         }
-        this.title = this.form.title;
-        this.getHeader().setTitle(title);
+        // this.title = this.form.title;
+        // this.getHeader().setTitle(title);
+        this.setTitle(title);
     },
 
     /**
