@@ -25,19 +25,23 @@ Ext.define('Taco.view.order.subform.Return', {
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
 
         // after the record is reloaded we will need to refresh the ui
-        this.record.on("aftercommit", function () {
-            this.onRecordChange();
+        me.record.on("aftercommit", function () {
+            me.onOrderChange();
         }, this);
         
         me.returnsStore = this.record.getReturnsStore();
-
+        if (me.record.get('returnStatus')) {
+            me.returnsStore.load();
+        }
         me.createButton = Ext.create('Taco.core.ux.action.SecondaryButton', {
             text: 'Create a return ',
+            
             listeners: {
                 click: me.onCreateButtonClicked,
                 scope: this
             }
         });
+        me.initCreateButton();
         me.setTools([me.createButton]);
         // initialize the ui
         // this will be called every time the record is updated
@@ -65,6 +69,18 @@ Ext.define('Taco.view.order.subform.Return', {
             ]
         });
         this.callParent(arguments);
+    },
+    onOrderChange:function () {
+        this.initCreateButton();
+    },
+    initCreateButton:function () {
+        var me = this,
+            orderStatus = me.record.get('orderStatus'),
+            shippingStatus = me.record.get('shippingStatus'),
+            enabled = orderStatus == 'Completed' || ( orderStatus == 'Processing' && ( shippingStatus == 'Shipped' || shippingStatus == 'PartiallyShipped') );
+        me.createButton.setDisabled(!enabled);
+        
+
     },
     initProcessReturnPanels:function () {
 
@@ -200,89 +216,5 @@ Ext.define('Taco.view.order.subform.Return', {
         });
     },
 
-    // initialize the views and actions menu
-    initUI: function () {
-        var me = this;
 
-        me.initActionsMenu();
-        me.initHeader();
-        me.initPaymentsUI();
-    },
-
-    initPaymentsUI: function () {
-        var me = this;
-
-        me.paymentPanels = [];
-
-        this.record.payments().each(function (payment) {
-            var panel = Ext.create('Taco.view.order.widget.PaymentPanel',
-                {
-                    order: me.record,
-                    record: payment
-                });
-            me.paymentPanels.push(panel);
-        });
-
-        // add the panels all at once to speed up layout.
-        me.bodyCont.add(me.paymentPanels);
-
-    },
-
-    // clear out the payment panels
-    destroyPaymentsUI: function () {
-        var me = this;
-
-        if (me.paymentPanels) {
-            Ext.Array.each(me.paymentPanels, function (panel) { panel.destroy(); });
-            delete me.paymentPanels;
-        }
-    },
-
-    initHeader: function () {
-        var me = this,
-            data = this.record.getData();
-
-        me.headerDetails = Ext.create('Ext.Component', {
-            // cls: "orderform-payment-paymentDetails",
-            tpl: [
-                '<div class="statusField">',
-                //'<span class="orderTotal">Partially Collected</span>',
-                '<tpl if="authorizationInfo.amountCollected &gt; 0 && authorizationInfo.amountCollected != total">',
-                '<span class="orderTotal">Partially Collected</span>',
-                '</tpl>',
-                '<tpl if="authorizationInfo.amountCollected == 0">',
-                '<span class="orderTotal">None Collected</span>',
-                '</tpl>',
-                '<tpl if="authorizationInfo.amountCollected == total">',
-                '<span class="orderTotal">Fully Collected</span>',
-                '</tpl>',
-                '</div>',
-                '<div class="orderSummary">',
-                '<span class="orderTotal">Order Total: {total:usMoney}</span>',
-                '<span class="seperator">|</span>',
-                '<span class="Received">Received: {authorizationInfo.amountCollected:usMoney}</span>',
-                '<span class="seperator">|</span>',
-                '<span class="balance">Balance: {authorizationInfo.captureAmount:usMoney}</span>',
-                '</div>'
-            ],
-            data: data
-        });
-
-        me.bodyCont.add(me.headerDetails);
-    },
-    // called when the record has been updated
-    onRecordChange: function () {
-        var me = this;
-        Ext.suspendLayouts();
-
-        Ext.resumeLayouts(true);
-    },
-
-    /*
-     * ExtJS doesn't handle reload of data with sub-stores well.
-     * So we manually re-populate the order.payments() and the payment.interactions() stores.
-     */
-    rebuildPayments: function () {
-
-    }
 });

@@ -186,6 +186,12 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         },
         {
+            "name": "returnStatus",
+            "type": "string",
+            "useNull": true,
+            defaultValue:null
+        },
+        {
             "name": "customerNote",
             "type": "string",
             "useNull": true
@@ -429,7 +435,7 @@ Ext.define('Taco.model.Order', {
             model: 'Taco.model.Return',
             primaryKey: 'id',
             foreignKey: 'originalOrderId',
-            autoLoad: true,
+            autoLoad: false,
             storeConfig: {
                 remoteFilter:true
             },

@@ -27,6 +27,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "orderNumber")]
         public int? OrderNumber { get; set; }
 
+        [DataMember(Name = "returnStatus")]
+        public string ReturnStatus { get; set; }
+
         [DataMember(Name = "createDate")]
         public DateTime CreateDate { get; set; }
 

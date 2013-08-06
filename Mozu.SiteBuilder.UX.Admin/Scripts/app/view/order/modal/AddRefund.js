@@ -14,7 +14,11 @@ Ext.define('Taco.view.order.modal.AddRefund', {
     //    data: {},
     //    field: '',
     initComponent: function (eOpts) {
-        var me = this;
+        var me = this,
+            validPaymetns = [];
+        //Ext.each(me.order.data.payments, function (payment) {
+        //    if ( payment.status == 'Collected')
+        //})
 
         me.store = Ext.create('Ext.data.Store', {
             fields: [
@@ -24,7 +28,12 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                     defaultValue:0
                 }
             ],
-            data: me.order.data.payments
+            data: me.order.data.payments,
+            filters: [
+                function (item) {
+                    return item.raw.status == 'Collected';
+                }
+            ]
         });
         me.grid = Ext.create('Taco.core.ux.grid.Panel', {
             store: me.store,

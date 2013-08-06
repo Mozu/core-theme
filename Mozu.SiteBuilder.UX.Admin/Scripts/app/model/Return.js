@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.model.Return', {
     extend: 'Taco.core.data.Model',
-    requires:['Taco.model.ReturnItem'],
+    requires: ['Taco.model.ReturnItem', 'Taco.model.OrderPayment'],
    
     fields: [
         {
@@ -51,10 +51,23 @@ Ext.define('Taco.model.Return', {
         },
          {
              "name": "rmaDeadline",
-             "type": "datetime",
+             "type": "date",
              "useNull": true,
              defaultValue: null
          },
+        {
+            "name": "updateDate",
+            "type": "date",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
+            "name": "createDate",
+            "type": "date",
+            "useNull": true,
+            defaultValue: null
+        },
+        
          {
              "name": "type",
              "type": "string",
@@ -65,7 +78,7 @@ Ext.define('Taco.model.Return', {
              "name": "payments",
              "type": "auto",
              "useNull": true,
-             defaultValue: null
+             defaultValue: []
          },
          {
              "name": "totalLossAmount",
@@ -82,61 +95,15 @@ Ext.define('Taco.model.Return', {
             foreignProperty: 'return'
         });
     },
-   
-    
-    
-    /*
     getPayments: function () {
-        
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.OrderPayment',
             associationKey: 'payments',
-            foreignProperty: 'order'
+            foreignProperty: 'return'
         });
     },
-    */
-
-    //associations: [
-    //    // Note:  (simeon) I have intentially not created models for package, shipment, unpackagedItems and packagedItems
-    //    // the entire order ui needs to be replaced with every change of order entity and its associated entities due to the display of order status in just about every component.
-    //    // by treating this sub entity data as json and arrays, it avoids extjs auto creating of stores for each associated sub entity;
-    //    // for shipping and its related views, the data is passed to the view which sets up its own stores as needed;
-
-    //    {
-    //        type: 'hasMany',
-    //        model: 'Taco.model.OrderItem',
-    //        name: "items",
-    //        reader: 'json'
-    //    },
-    //    {
-    //        type: 'hasOne',
-    //        model: 'Taco.model.Contact',
-    //        name: 'billingContact',
-    //        reader: 'json'
-    //    },
-    //    {
-    //        type: 'hasOne',
-    //        model: 'Taco.model.Contact',
-    //        name: 'shippingContact',
-    //        reader: 'json'
-    //    },
-    //    {
-    //        type: 'hasMany',
-    //        model: 'Taco.model.OrderPayment',
-    //        name: 'payments',
-    //        reader: 'json'
-    //    },
-    //    {
-    //        type: 'hasOne',
-    //        model: 'Taco.model.OrderShippingDiscount',
-    //        name: 'activeShippingDiscount'
-    //    },
-    //    {
-    //        type: 'hasMany',
-    //        model: 'Taco.model.OrderShippingDiscount',
-    //        name: 'shippingDiscounts'
-    //    }
-    //],
+    
+    
 
     proxy: {
         type: 'ajaxproxy',
@@ -169,45 +136,7 @@ Ext.define('Taco.model.Return', {
     
 
 
-    /*
-     ****************************************************
-     *   Begin order payment service interaction methods
-     ****************************************************
-     */
 
-
-
-    /**
-     * service call to capture payment for an order     
-     * @param {Object} config  A configuration object     
-     * config object:
-     * 
-        {
-            jsonData: {
-                orderId: "987654321",
-                amount:  "100.65",
-                
-                ...payment entity members...
-
-
-            },
-            success: function (response) {
-                // success handling here
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    // service didnt' return data properly
-                    return;
-                }
-            },
-            failure: function (response) {
-                // error handling here
-            },
-            scope: this
-        }
-
-     *
-     */
-    
 
     performAction: function (action, config) {
         var me = this;

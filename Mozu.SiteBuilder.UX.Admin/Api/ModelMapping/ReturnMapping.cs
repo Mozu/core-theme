@@ -24,7 +24,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
-            Mapper.CreateMap<ReturnsDC.Return, Return>();
+            Mapper.CreateMap<ReturnsDC.Return, Return>()
+                  .ForMember(x => x.CreateDate, opt => opt.MapFrom(x => x.AuditInfo.CreateDate))
+                  .ForMember(x => x.UpdateDate, opt => opt.MapFrom(x => x.AuditInfo.UpdateDate));
+         
             Mapper.CreateMap<ReturnsDC.ReturnItem, ReturnItem>()
                   .ForMember(x => x.Reason, opt => opt.MapFrom(x => x.Reasons == null ? null : x.Reasons.Select(_ => _.Reason).FirstOrDefault()));
             Mapper.CreateMap<ReturnsDC.ReturnItem, ReturnItem>()
@@ -35,7 +38,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<ReturnAction, ReturnsDC.ReturnAction>();
 
-            Mapper.CreateMap<Return, ReturnsDC.Return>();
+            Mapper.CreateMap<Return, ReturnsDC.Return>()
+                  .ForMember(x => x.Payments, opt => opt.Ignore());
+                  
             Mapper.CreateMap<ReturnItem, ReturnsDC.ReturnItem>()
                   .ForMember(x => x.Reasons, opt => opt.MapFrom(x => x.Reason == null ? null :
                                                                          new List<ReturnsDC.ReturnReason>() { new ReturnsDC.ReturnReason() { Reason = x.Reason, Quantity = x.Quantity } }));
