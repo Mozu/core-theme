@@ -43,6 +43,17 @@ Ext.define('Taco.view.pageTemplate.Index', {
                  
              }]
     },
+    initComponent: function () {
+        var me = this;
+        me.header = {
+            title: 'Customers',
+            actions: [
+                //no buttons
+                //add the create btn when that UI is created
+            ]
+        };
+        this.callParent(arguments);
+    },
     launchLoadedEditor: function (record, options) {
 
         Ext.defer(function () {
