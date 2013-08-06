@@ -148,7 +148,7 @@ Ext.define('Taco.view.product.subform.Properties', {
 
     buildContainer: function (ptAttribute) {
         var items = this.buildEditor(ptAttribute);
-        console.log('isRequired:' + ptAttribute.get('isRequired'));
+
         items.unshift({
             xtype: 'container',
             layout: {
