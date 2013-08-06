@@ -38,6 +38,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       .ForMember(x => x.Id, op => op.MapFrom(x => x.Id))
                       .ForMember(x => x.Name, op => op.MapFrom(x => x.Name))
                       .ForMember(x => x.StagingHost, op => op.MapFrom(x => x.Domains == null ? null : x.Domains.Where(d => d.IsSystemAssigned).Select(d => d.DomainName).FirstOrDefault()));
+
+            AutoMapper.Mapper.CreateMap<Mozu.Tenant.Contracts.Tenant, Mozu.SiteBuilder.UX.Models.Admin.TaContext>()
+              .ForMember(x => x.Id, op => op.MapFrom(x => x.Id))
+              .ForMember(x => x.Name, op => op.MapFrom(x => x.Name))
+;
         }
     }
 }

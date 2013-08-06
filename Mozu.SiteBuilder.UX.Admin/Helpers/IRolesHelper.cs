@@ -6,7 +6,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
 {
     public interface IRolesHelper
     {
-        List<Tuple<Site, int>> SiteRolesList(string userId);
+        List<Tenant.Contracts.Tenant> SiteRolesList(string userId);
 
         bool RemoveRoleFromSite(int siteId, int roleId);
     }

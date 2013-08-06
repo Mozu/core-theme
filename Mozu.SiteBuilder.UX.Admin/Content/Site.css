@@ -85,17 +85,12 @@ input[type=text], input[type=password], input[type=email] {
 }
 
 .rolesContainer {
-    margin: 50px auto 0;
+    margin: 0 auto 0;
     padding: 20px;
     width: 450px;
     height:80%;
     overflow: hidden;
     color:#333;
-    border-radius: 10px; 
-    -moz-border-radius: 10px; 
-    -webkit-border-radius: 10px; 
-    border: 2px solid #17083B;
-    background-color: #E8E8E8;
 }
 
 .rolesContainer h2 {
@@ -120,6 +115,7 @@ input[type=text], input[type=password], input[type=email] {
     border: 2px solid #aaa;
     margin-bottom: 12px;
     margin-right: 12px;
+    border-right: 1px solid #bfbfbf;
 }
 
 .rolesContainer .role div {
@@ -164,23 +160,21 @@ input[type=text], input[type=password], input[type=email] {
 }
  
 .prtyButton {
-	background-color:#ededed;
-	-moz-border-radius:6px;
-	-webkit-border-radius:6px;
-	border-radius:6px;
-	border:1px solid #dcdcdc;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+    border: 1px solid rgb(145, 49, 42);
 	display:inline-block;
-	color:#777777;
-	/*font-family:arial;
-	font-size:15px;*/
+    background-color: #d2463c;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
 	font-weight:bold;
 	padding:6px 24px;
 	text-decoration:none;
 }.prtyButton:hover {
-	background-color:#dfdfdf;
+    color: #fff;
+    background-color: rgb(196, 66, 57);
 }.prtyButton:active {
-	position:relative;
-	top:1px;
 }
 
 .instruction {
@@ -201,7 +195,7 @@ section {
 fieldset 
 {
     border:1px solid #ddd;
-    padding:0 1.4em 1.4em 1.4em;
+    padding:.7em 1.4em 1.4em 1.4em;
     margin:0 0 1.5em 0;
 }
 

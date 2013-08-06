@@ -35,6 +35,9 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                 }]
             }
         }, {
+            text: 'Launchpad',
+            href: '/admin/auth/launchpad'
+        }, {
             xtype: 'taco.button',
             autoEl: 'a',
             text: 'Settings',
