@@ -23,6 +23,13 @@
 		<div class="mz-details-full-description" >
 			{{ Model.Content.ProductFullDescription }}
 		</div>
+
+        <dl class="mz-details-properties">
+            {% for property in Model.Properties %}
+            <dt>{{property.AttributeDetail.Name}}</dt>
+            <dd>{{property.AttributeDetail.Values.0.StringValue}}</dd>
+            {% endfor %}
+        </dl>
         
         {% include "Modules/ProductOptions" %}
 			
