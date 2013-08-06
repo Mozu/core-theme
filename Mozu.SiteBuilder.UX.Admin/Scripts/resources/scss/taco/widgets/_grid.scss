@@ -228,8 +228,8 @@
   // menucolumn styles
   .#{$vprefix}menu-col-cell {
     .#{$prefix}grid-cell-inner {
+      line-height: 0px;
       padding-bottom: 1px;
-      @include flexbox;
     }
   }
 
