@@ -17,7 +17,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Tax;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [WebApi("app/reference", SuppressDescriptorGeneration = true)]
-    public class RefrenceController : BaseController
+    public class ReferenceController : BaseController
     {
          private readonly IReferenceDataWebApiClient _referenceDataWebApi;
 
@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          }
 
 
-		 [HttpGetRoute(UriTemplate = "states/list?country={country}")]
+		 [HttpGetRoute(UriTemplate = "states/list")]
          public async Task<Response<List<FieldData>>> GetTaxRates([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, string country = "us")
          {
              country = string.IsNullOrEmpty(country) ? "us" : country;

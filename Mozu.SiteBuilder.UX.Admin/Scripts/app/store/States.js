@@ -17,7 +17,7 @@
         proxy: {
             type: 'ajax',
             api: {
-                read: '/admin/app/Refrence/states/list'
+                read: '/admin/app/Reference/states/list'
             },
             reader: {
                 type: 'json',
