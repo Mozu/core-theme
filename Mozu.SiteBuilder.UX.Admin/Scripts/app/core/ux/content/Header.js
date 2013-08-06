@@ -37,11 +37,14 @@ Ext.define('Taco.core.ux.content.Header', {
             }]
         }, {
             xtype: 'container',
-            cls: Taco.baseCSSPrefix + "actions",
+            cls: Taco.baseCSSPrefix + 'actions',
             itemId: 'actionsContainer',
             items: this.actions,
             hidden: this.hideActions,
-            layout: 'auto'
+            layout: {
+                type: 'hbox',
+                align: 'middle'
+            }
         }];
 
         this.callParent(arguments);

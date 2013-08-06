@@ -6,7 +6,10 @@ Ext.define('Taco.view.site.Toolbar', {
     requires: ['Taco.core.ux.action.Button', 'Taco.core.ux.action.SplitButton'],
 
     cls: Taco.baseCSSPrefix + 'inline-editor-tools',
-    layout: 'auto',
+    layout: {
+        type: 'hbox',
+        align: 'middle'
+    },
     defaults: {
         xtype: 'taco.button'
     },

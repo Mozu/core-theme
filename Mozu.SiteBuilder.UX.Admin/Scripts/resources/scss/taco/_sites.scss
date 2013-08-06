@@ -1,9 +1,5 @@
 @mixin taco-sites {
 
-  .#{$vprefix}inline-editor-tools {
-      @include flexbox;
-  }
-
   .#{$vprefix}toolbox {
     .#{$prefix}toolbar-default {
       // background-color: $color-neutral-white;
@@ -71,9 +67,9 @@
         .#{$vprefix}treelist-inline-header {
           .#{$prefix}grid-cell-inner {
             padding-right: 20px;
-            @include flexbox($justify: space-between);
 
             a {
+              float: right;
               font-size: px-to-rem(12);
             }
 
