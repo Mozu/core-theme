@@ -185,6 +185,10 @@
     margin-top: 20px;
     padding: 39px;
 
+    &:first-child {
+        margin-top: 0;
+    }
+
     .#{$vprefix}editcontainer-header {
       border-bottom: 1px solid border-for($color-neutral-95);
       margin-bottom: 30px;

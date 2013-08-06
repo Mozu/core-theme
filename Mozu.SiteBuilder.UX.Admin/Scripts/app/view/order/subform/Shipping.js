@@ -10,15 +10,15 @@ Ext.define('Taco.view.order.subform.Shipping', {
         'Taco.view.order.widget.Package',
         'Taco.view.order.widget.UnpackagedItems'
     ],
+    
+    title: 'Shipment & Shipping Information',
+
     config: {
         
         // order model
         record: null,
         
         editMode:false,
-
-        // title for the panel header
-        title: 'Shipment & Shipping Information',
                 
         // width of the actionColumn. used to align the grid total container
         actionColumnWidth: 60,

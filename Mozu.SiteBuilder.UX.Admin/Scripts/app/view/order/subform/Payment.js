@@ -11,13 +11,14 @@ Ext.define('Taco.view.order.subform.Payment', {
         'Taco.view.order.modal.AddPayment',
         'Taco.view.order.modal.AddPaymentManual'
     ],
+
+    title: 'Payment & Billing Information',
+
     config : {
         // order model
         originalRecord : null,
         record: null,
         itemId:"orderPayment",
-        // title for the panel header
-        title: 'Payment & Billing Information',
         // components to add to the panel header. typically used to add an actions menu button
         tools: []
     },
