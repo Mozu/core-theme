@@ -6,6 +6,14 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     requires: [
         'Taco.view.order.modal.AddRefund'
     ],
+    //super ugly border stuff.. somebody remove please
+    border: 1,
+    style: {
+        borderColor: '#cccccc',
+        borderStyle: 'solid',
+        borderWidth: '1px'
+    },
+    padding: '5 5 5 5',
     margin: '10 0 10 0',
     initComponent: function (eOpts) {
         var me = this,
@@ -239,7 +247,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
 
         me.initReturnActions();
         me.setEditablity();
-        this.callParent(arguments);
+        this.callParent(arguments); 
     },
     setEditablity:function () {
         var isEndState = this.isAtEndState();
