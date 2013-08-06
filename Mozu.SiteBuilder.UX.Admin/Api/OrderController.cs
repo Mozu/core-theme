@@ -72,10 +72,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Order>>> CreateOrder()
         {
             // TODO: this doesn't currently work. needs service updates.
-            var emptyOrder = new DCo.Order 
-            {
-                Items = new List<DCo.OrderItem>()
-            };
+            var emptyOrder = new DCo.Order();
+            
             var order = (await _orderWebApiClient.CreateOrder(emptyOrder)).ReadAsSync();
 
             return List2(order.Map<Order>());
