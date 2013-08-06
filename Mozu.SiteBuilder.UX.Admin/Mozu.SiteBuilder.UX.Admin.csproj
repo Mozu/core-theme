@@ -360,6 +360,9 @@
     <Compile Include="Api\CmsDocumentController.cs" />
     <Compile Include="Api\CmsPublishingController.cs" />
     <Compile Include="Api\ModelMapping\ReturnMapping.cs" />
+    <Compile Include="Api\ModelMapping\RuntimeProductMapping.cs" />
+    <Compile Include="Api\Models\Order\OrderItemProductOption.cs" />
+    <Compile Include="Api\Models\RuntimeProductOption.cs" />
     <Compile Include="Api\Models\Returns\Return.cs" />
     <Compile Include="Api\ReturnController.cs" />
     <Compile Include="Api\CustomerController.cs" />

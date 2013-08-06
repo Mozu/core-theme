@@ -369,7 +369,45 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger ' + Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
                     menuItems: [],
                     handler: function(grid, rowIndex, colIndex, header, e, record, item) {
+                        var order = me.record;
+
                         Ext.Msg.alert('Remove Item', 'TODO: Confirm the removal of item.');
+
+                        this.fireEvent('save');
+        
+                        order.removeOrderItem({
+                            jsonData: {
+                                orderId: order.getId(),
+                                orderItemIds: [ record.getId() ]
+                            },
+                            success: function(response) {
+                                // success handling here
+                                var json = Ext.decode(response.responseText, true);
+                                if (!json || !json.success) {
+                                    // service didnt' return data properly
+                                    this.fireEvent('saveFailure');
+                
+                                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                                        text: "Error removing order item."
+                                    });
+                                    errorDialog.show();
+                                    return;
+                                }
+                                me.fireEvent("orderItemRemoved");
+                            },
+                            failure: function(response) {
+                                // error handling here
+                                var json = Ext.decode(response.responseText, true),
+                                    msg = (json && json.Message) ? json.Message : "Error removing order item";
+                                
+                                this.fireEvent('saveFailure');
+                                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                                    text: msg
+                                });
+                                errorDialog.show();
+                            },
+                            scope: this
+                        });
                     },
                     renderer: function(value, metaData, record) {
 
@@ -389,7 +427,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         var me = this
         
         if (e.record && e.record.dirty) {
-            me.editOrderItem({
+            me.editOrderItem(e.field, {
                 data: [
                     e.record.getData()
                 ]
@@ -914,8 +952,13 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     },
     
     // accepts an array of orderItem data objects and calls the service to persist it.
-    editOrderItem: function (config) {
+    editOrderItem: function (field, config) {
         var me = this,
+            fieldsToMethod = {
+                'quantity': 'editOrderItemQuantity',
+                'price': 'editOrderItemPrice'
+            },
+            updateMethodName = fieldsToMethod[field],
             jsonData = {
                 orderId: this.record.get('id'),
                 orderItems: []
@@ -925,11 +968,15 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             return;
         }
 
+        if (!updateMethodName) {
+            return;
+        }
+
         jsonData.orderItems = config.data;
 
         this.fireEvent('save');
 
-        this.record.editOrderItem({
+        this.record[updateMethodName]({
             jsonData: jsonData,
             success: function (response) {
                 // success handling here
@@ -1023,6 +1070,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     },
     
     removeDraftOrder: function () {
+        var me = this;
+        
         this.fireEvent('save');
         
         this.record.removeDraftOrder({
