@@ -4,17 +4,31 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/generic.cshtml";
 }
+@Html.Partial("mozuheader")
 
+    <style type="text/css">
+        #mozu-header {
+            padding: 0.4pc;
+        }
+        #mozu-header img {
+            height: 20px;
+        }
+    </style>
+
+
+<div class="containerWrapper">
 <div class="rolesContainer">
-    <h2>Vnext Launchpad</h2>
+    <a style="float:right" href="logout">Logout</a>
+    <h2>Launchpad</h2>
+
+
     <div class="rolesWrapper">
         @foreach (var tenant in Model)
         {
-            
             <fieldset>
                 <legend>@tenant.Name</legend>
                 <code>Id: @tenant.Id</code>
-                <a class="nextgen" href="ChangeTenant?id=@tenant.Id">@tenant.Name</a>
+                <a class="prtyButton" style="float:right" href="ChangeTenant?id=@tenant.Id">Launch</a>
             </fieldset>
             @*<div class="role">
                 <div class="deleteRole">
@@ -34,6 +48,7 @@
         }
     </div>
 </div><!-- #rolesContainer -->
+</div>
 
 <script>
     

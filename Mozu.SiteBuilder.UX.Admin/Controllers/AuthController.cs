@@ -265,7 +265,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             var userId = _apiContext.UserClaims.UserId;
             var res = _rolesHelper.SiteRolesList(userId);
-            return View("Roles", res);
+            var contexts = Mapper.Map<List<TaContext>>(res);
+            return View("Roles", contexts);
         }
 
         [HttpPost]
