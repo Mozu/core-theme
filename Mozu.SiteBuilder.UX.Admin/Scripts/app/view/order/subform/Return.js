@@ -30,7 +30,7 @@ Ext.define('Taco.view.order.subform.Return', {
         }, this);
         
         me.returnsStore = this.record.getReturnsStore();
-        if (me.record.get('returnStatus')) {
+        if (me.record.get('returnStatus') && me.record.get('returnStatus') != 'None') {
             me.returnsStore.load();
         }
         me.createButton = Ext.create('Taco.core.ux.action.SecondaryButton', {

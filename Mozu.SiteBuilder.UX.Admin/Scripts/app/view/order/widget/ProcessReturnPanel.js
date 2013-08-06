@@ -9,8 +9,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     margin: '10 0 10 0',
     initComponent: function (eOpts) {
         var me = this,
+            recieveBut,
             returnActionButtons = new Ext.util.MixedCollection(),
             addButton = function (name, text) {
+                
                 returnActionButtons.add(
                     name,
                     Ext.create('Taco.core.ux.action.SecondaryButton', {
@@ -40,13 +42,14 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         addButton('Cancel');
 
 
+     
+
         me.record.on('aftercommit', function () {
             me.initReturnActions();
-        });
-        me.record.on('aftercommit', function () {
             me.status.update(me.record.data);
+            me.setEditablity();
         });
-
+        
         me.addPaymentButton = Ext.create('Taco.core.ux.action.SecondaryButton', {
             text: 'Add Refund Amount',
             listeners: {
@@ -103,6 +106,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             selType: 'cellmodel',
             listeners: {
                 edit: me.onItemEdit,
+                beforeedit: function () {
+                    return !me.isAtEndState();
+                },
                 scope: me
             },
             plugins: [
@@ -144,15 +150,31 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         });
 
 
-        me.initReturnActions();
+        
         me.status = Ext.create('Ext.Component', {
             // cls: "orderform-payment-paymentDetails",
             tpl: [
                 '<div class="statusField">',
                 '<span class="status">Status: {status}, </span>',
                 '<span class="status"> Created: {createDate:date("M d g:ia")}</span>',
+                '<tpl if="returnOrderId">',
+                    ' <a class="returnOrder" >View Return Order</a>',
+                '</tpl>',
                 '</div>'
             ],
+            listeners: {
+                click: {
+                    fn: function (e) {
+                        e.stopEvent();
+                        if (e.target.className == "returnOrder") {
+                            Taco.app.StateManager.attemptNavigate('orders/edit/' + me.record.data.returnOrderId);
+                        }
+                    },
+                    element: 'el',
+                    scope: this 
+                }
+            },
+            
             data: me.record.data
         });
         me.totalLossAmount = Ext.create('Taco.core.ux.form.UnitField', {
@@ -215,14 +237,44 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             me.paymentGrid
         ];
 
-
+        me.initReturnActions();
+        me.setEditablity();
         this.callParent(arguments);
+    },
+    setEditablity:function () {
+        var isEndState = this.isAtEndState();
+        this.rmaDeadline.setDisabled(isEndState);
+        this.totalLossAmount.setDisabled(isEndState);
+        this.addPaymentButton.setDisabled(isEndState);
+
     },
     initReturnActions: function () {
         var me = this;
         me.returnActionButtons.each(function (button) {
+            var enabled = false;
             button.setVisible(Ext.Array.contains(me.record.data.availableActions, button.actionName));
+            if (button.actionName == 'Refund') {
+                enabled = false;
+                me.itemsStore.each(function (record) {
+                    if (record.get('quantityReceived') > 0) {
+                        enabled = true;
+                    }
+                });
+                button.setDisabled(!enabled);
+            }
+            if (button.actionName == 'Refund') {
+                enabled = false;
+                me.paymentsStore.each(function (record) {
+                    if (record.get('amountCredited') > 0) {
+                        enabled = true;
+                    }
+                });
+                button.setDisabled(!enabled);
+            }
         });
+    },
+    isAtEndState:function () {
+        return this.record.data.availableActions == null || this.record.data.availableActions.length == 0;
     },
     onAddPaymentButtonClick: function () {
 
