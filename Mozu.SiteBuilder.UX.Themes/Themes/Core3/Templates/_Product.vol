@@ -25,6 +25,15 @@
 			{{ Model.Content.ProductFullDescription }}
 		</div>
         
+        <dl class="mz-details-properties">
+            {% for property in Model.Properties %}
+                <dt>{{property.AttributeDetail.Name}}</dt>
+                {% for v in property.Values %}
+                    <dd>{% if v.StringValue %}{{v.StringValue}}{% else %}{{v.Value}}{% endif %}</dd>
+                {% endfor %}
+            {% endfor %}
+        </dl>
+
         {% include "Modules/ProductOptions" %}
 			
 	
