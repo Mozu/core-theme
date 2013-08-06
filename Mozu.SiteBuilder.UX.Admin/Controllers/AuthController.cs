@@ -99,12 +99,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                     // Auto login to tenant
                     var taContext = tenants.First();
 
-                    var tenant = await _contextSwitcher.ChangeTenant(taContext.Id);
-                    if (tenant != null)
+                    //var tenant = await _contextSwitcher.ChangeTenant(taContext.Id);
+                    if (taContext != null)
                     {
+
+                        _sbc.SiteId = null;
+                        _sbc.SiteGroupId = null;
+                        _sbc.TenantId = taContext.Id;
+                        _sbc.Save();
+
+
                         if (_settings.AppSettings("useTenantDomainNames") == "true")
                         {
-                            return Redirect(string.Format("http://{0}/admin", tenant.Domain.DomainName));
+                            return Redirect(string.Format("http://{0}/admin", taContext.Domain.DomainName ));
                         }
                         else
                         {
