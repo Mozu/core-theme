@@ -8,6 +8,8 @@ Ext.define('Taco.view.order.Header', {
     initComponent: function () {
         this.cls = [this.cls, Taco.baseCSSPrefix + 'order-detail-header'].join(' ');
 
+        if (this.record) this.renderData = this.record.getData();
+
         console.log(this.renderData);
         this.renderTpl = new Ext.XTemplate(
             '<div class="taco-order-detail-header-section order-data">',
