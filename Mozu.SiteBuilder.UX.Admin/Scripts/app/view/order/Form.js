@@ -36,7 +36,7 @@ Ext.define('Taco.view.order.Form', {
             items;
 
         items = [
-            Ext.create('Taco.view.order.subform.Header', subformCfg),
+            Ext.create('Taco.view.order.Header', subformCfg),
             Ext.create('Taco.view.order.subform.Detail', subformCfg),
             Ext.create('Taco.view.order.subform.Customer', subformCfg),
             Ext.create('Taco.view.order.subform.Payment', subformCfg),

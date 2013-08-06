@@ -3,7 +3,8 @@
  */
 Ext.define('Taco.view.order.Header', {
     extend: 'Ext.Component',
-    requires: [],
+
+    title: 'Overview',
     
     initComponent: function () {
         this.cls = [this.cls, Taco.baseCSSPrefix + 'order-detail-header'].join(' ');
