@@ -142,7 +142,9 @@ Ext.define('Taco.core.data.Model', {
                 Ext.each(store.data.items, function (record) {
                     data.push(this.getData2(record, true));
                 });
+                this.setThruStore = associationKey;
                 this.set(associationKey, data);
+                this.setThruStore = null;
             }
         }, this);
         store.on('datachanged', function (store) {
@@ -151,9 +153,16 @@ Ext.define('Taco.core.data.Model', {
                 Ext.each(store.data.items, function (record) {
                     data.push(this.getData2(record, true));
                 });
+                this.setThruStore = associationKey;
                 this.set(associationKey, data);
+                this.setThruStore = null;
             }
         }, this);
+        this.on('afteredit', function (record,modifiedFieldNames) {
+            if (!this.setThruStore && modifiedFieldNames && Ext.Array.contains(modifiedFieldNames, associationKey)) {
+                store.loadData(me.get(associationKey));
+            }
+        });
         this.on('aftercommit', function (model) {
             this.hasManyStores[storeName].commitChanges();
         }, this);

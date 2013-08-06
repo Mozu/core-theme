@@ -10,27 +10,27 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     initComponent: function (eOpts) {
         var me = this,
             returnActionButtons = new Ext.util.MixedCollection(),
-                addButton = function (name, text) {
-                    returnActionButtons.add(
-                        name,
-                        Ext.create('Taco.core.ux.action.SecondaryButton', {
-                            actionName: name,
-                            text: text || name,
-                            hidden:true,
-                            listeners: {
-                                click: me.onActionClick,
-                                scope: me
-                            }
-                        }));
-                };
+            addButton = function (name, text) {
+                returnActionButtons.add(
+                    name,
+                    Ext.create('Taco.core.ux.action.SecondaryButton', {
+                        actionName: name,
+                        text: text || name,
+                        hidden: true,
+                        listeners: {
+                            click: me.onActionClick,
+                            scope: me
+                        }
+                    }));
+            };
         me.returnActionButtons = returnActionButtons;
         me.itemsStore = me.record.getItems();
+        me.paymentsStore = me.record.getPayments();
         me.orderItemsStore = me.order.items();
-        
-        
+
         addButton('Authorize');
         addButton('Await');
-        
+
         addButton('Close');
         addButton('Create');
         addButton('Receive');
@@ -38,9 +38,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         addButton('Ship');
         addButton('Restock');
         addButton('Cancel');
-        
-        
-        
+
+
         me.record.on('aftercommit', function () {
             me.initReturnActions();
         });
@@ -50,11 +49,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
 
         me.addPaymentButton = Ext.create('Taco.core.ux.action.SecondaryButton', {
             text: 'Add Refund Amount',
-            listeners:{
+            listeners: {
                 click: me.onAddPaymentButtonClick,
-                scope:me
-                   
-        }
+                scope: me
+            }
         });
 
         me.grid = Ext.create('Taco.core.ux.grid.Panel', {
@@ -62,6 +60,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             viewConfig: {
                 cls: 'editmode-enabled',
             },
+            title: 'Items',
             columns: [
                 {
                     text: 'Name',
@@ -73,13 +72,12 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         return 'na';
                     },
                     flex: 1
-                },               
+                },
                 {
                     text: 'Quantity',
                     tdCls: "editableCell",
                     width: 200,
                     dataIndex: 'quantity',
-                   
                 },
                 {
                     text: 'Recieved',
@@ -94,7 +92,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 {
                     text: 'Restockable',
                     tdCls: "editableCell",
-                    width:200,
+                    width: 200,
                     dataIndex: 'quantityRestockable',
                     editor: {
                         xtype: 'numberfield',
@@ -114,19 +112,75 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             ],
         });
 
+        me.paymentGrid = Ext.create('Taco.core.ux.grid.Panel', {
+            store: me.paymentsStore,
+            title: 'Credits',
+            dockedItems: [{
+                xtype: 'toolbar',
+                dock: 'top',
+                items: ['->', me.addPaymentButton]
+            }],
+            columns: [
+                {
+                    text: 'Payment Type',
+                    dataIndex: 'paymentType',
+                },
+                {
+                    text: 'Card Type',
+                    dataIndex: 'cardType',
+                },
+                {
+                    text: 'Card Number',
+                    dataIndex: 'cardNumber',
+                    flex: 1
+                },
+                {
+                    text: 'Amount Credited',
+                    renderer: Ext.util.Format.usMoney,
+                    width: 300,
+                    dataIndex: 'amountCredited',
+                }
+            ],
+        });
+
+
         me.initReturnActions();
-        me.status = Ext.create( 'Ext.Component', {
+        me.status = Ext.create('Ext.Component', {
             // cls: "orderform-payment-paymentDetails",
             tpl: [
                 '<div class="statusField">',
-                '<span class="status">Status: {status}</span>',
-                '<span class="status"> Deadline:{rmaDeadline}</span>',
-
+                '<span class="status">Status: {status}, </span>',
+                '<span class="status"> Created: {createDate:date("M d g:ia")}</span>',
                 '</div>'
             ],
             data: me.record.data
-        })
-        ;
+        });
+        me.totalLossAmount = Ext.create('Taco.core.ux.form.UnitField', {
+            name: 'totalLossAmount',
+            unitString: '$',
+            unitAtEnd:false,
+            fieldLabel: 'Total Loss',
+            labelAlign: 'left',
+            value: me.record.get('totalLossAmount'),
+            listeners: {
+                change: me.onItemEdit,
+                scope:me
+            }
+            
+        });
+
+
+        me.rmaDeadline = Ext.create('Ext.form.field.Date', {
+            name: 'rmaDeadline',
+            fieldLabel: 'Deadline',
+            labelAlign: 'left',
+            value: me.record.get('rmaDeadline'),
+            listeners: {
+                change: me.onItemEdit,
+                scope: me
+            }
+        });
+        
         me.dockedItems = [
             {
                 xtype: 'toolbar',
@@ -135,7 +189,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 dock: 'top',
                 weight: 1,
                 items: [
-                    me.status, '->', me.addPaymentButton
+                    me.status,
+                    '->',
+                    me.rmaDeadline,
+                    me.totalLossAmount
                 ]
             },
             {
@@ -143,7 +200,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 dock: 'bottom',
                 weight: 1,
                 ui: 'footer',
-                
+
                 defaults: {
                     minWidth: 100,
                     margin: "0px 10px 0px 0px"
@@ -151,10 +208,11 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 items: me.returnActionButtons.items
             }
         ];
-        
-        
+
+
         me.items = [
-            me.grid
+            me.grid,
+            me.paymentGrid
         ];
 
 
@@ -197,7 +255,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 me.setLoading(false);
             }
         });
-        
+
     },
     onItemEdit: function () {
         //todo:validate
@@ -205,6 +263,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         me.returnActionButtons.each(function (button) {
             button.setDisabled(true);
         });
+        me.record.set('rmaDeadline', me.rmaDeadline.getValue());
+        me.record.set('totalLossAmount', me.totalLossAmount.getValue());
+
         me.record.save({
             callback: function () {
                 me.returnActionButtons.each(function (button) {

@@ -60,6 +60,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 
         [DataMember(EmitDefaultValue = false, Name = "userId")]
         public string UserId { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "createDate")]
+        public DateTime? CreateDate { get; set; }
+          [DataMember(EmitDefaultValue = false, Name = "updateDate")]
+        public DateTime? UpdateDate { get; set; }
+        
     }
 
     [DataContract(Namespace = "Mozu.services.contracts")]

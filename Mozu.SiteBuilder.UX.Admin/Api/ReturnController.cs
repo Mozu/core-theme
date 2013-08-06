@@ -15,7 +15,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Returns;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
-using ReturnsDC = Mozu.CommerceRuntime.Contracts.Returns;
+using DCr = Mozu.CommerceRuntime.Contracts.Returns;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -107,11 +107,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 		    var retList = new List<Return>();
             foreach (var rma in returns)
             {
-                var dcRma = Mapper.Map<ReturnsDC.Return>(rma);
+                var dcRma = Mapper.Map<DCr.Return>(rma);
                 dcRma = (await _returnWebApiClient.CreateReturn(dcRma)).ReadAsSync();
                 if (dcRma.AvailableActions.Contains("Authorize"))
                 {
-                    dcRma = (await _returnWebApiClient.PerformReturnActions(new ReturnsDC.ReturnAction()
+                    dcRma = (await _returnWebApiClient.PerformReturnActions(new DCr.ReturnAction()
                                                                                 {
                                                                                     ActionName = "Authorize",
                                                                                     ReturnIds = new List<string> {dcRma.Id}
@@ -130,7 +130,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "action")]
         public async Task<Response<List<Return>>> PerformReturnActions(ReturnAction action)
         {
-            var dcRetAction = Mapper.Map<ReturnsDC.ReturnAction>(action);
+            var dcRetAction = Mapper.Map<DCr.ReturnAction>(action);
             var dcRma = (await _returnWebApiClient.PerformReturnActions(dcRetAction)).ReadAsSync().Items;
 
             
@@ -153,10 +153,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                       Amount = action.amount
 
                                   };
-            var dcRma = (await _returnWebApiClient.CreatePaymentActionForReturn(action.returnId, dcPaymentAction )).ReadAsSync().Items;
+            var dcRma = (await _returnWebApiClient.CreatePaymentActionForReturn(action.returnId, dcPaymentAction)).ReadAsSync();
 
 
-            return List2(Mapper.Map<List<Return>>(dcRma));
+            dcRma.RefundAmount = dcRma.Payments.Sum(x => x.AmountCredited);
+            dcRma = (await _returnWebApiClient.UpdateReturn(dcRma.Id, dcRma)).ReadAsSync();
+            return List2(Mapper.Map<List<Return>>(new List<DCr.Return>() {dcRma}));
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
@@ -165,7 +167,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var retList = new List<Return>();
             foreach (var rma in returns)
             {
-                var dcRma = Mapper.Map<ReturnsDC.Return>(rma);
+                var dcRma = Mapper.Map<DCr.Return>(rma);
                 dcRma = (await _returnWebApiClient.UpdateReturn( dcRma.Id ,dcRma)).ReadAsSync();
                 
                 retList.Add(Mapper.Map<Return>(dcRma));
