@@ -8,5 +8,8 @@ Ext.define('Taco.view.order.Edit', {
     requires: [
         'Taco.view.order.Form'
     ],
-    formCls: 'Taco.view.order.Form'
-})
+    formCls: 'Taco.view.order.Form',
+
+    saveHidden: true,
+    cancelHidden: true
+});
