@@ -10,6 +10,7 @@ using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using PaymentsDC = Mozu.CommerceRuntime.Contracts.Payments;
 using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
 using ShippingDC = Mozu.CommerceRuntime.Contracts.Shipping;
+using CommerceDC = Mozu.CommerceRuntime.Contracts.Commerce;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -30,12 +31,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcPaymentInteraction_to_PaymentInteraction();
             Map_DcPackage_to_OrderPackage();
             Map_DcPackageItem_to_OrderPackageItem();
+            Map_DcAdjustment_to_OrderAdjustment();
 
             Map_OrderPackage_to_DcPackage();
             Map_OrderPackageItem_to_DcPackageItem();
             Map_OrderItem_to_DcOrderItem();
             Map_OrderItemDiscount_to_DcAppliedProductDiscount();
             Map_ShippingDiscount_to_DcShippingDiscount();
+            Map_Adjustment_to_DcAdjustment();
 
             // cheese
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, decimal?>()
@@ -78,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Payments, op => op.MapFrom(dc => dc.Payments.OrderByDescending(p => p.AuditInfo.CreateDate)))
                 .ForMember(x => x.Packages, op => op.MapFrom(dc => dc.Packages))
 
-                .ForMember(x => x.OrderAdjustment, op => op.MapFrom(dc => dc.ShippingAdjustment))
+                .ForMember(x => x.OrderAdjustment, op => op.MapFrom(dc => dc.Adjustment))
                 .ForMember(x => x.ShippingAdjustment, op => op.MapFrom(dc => dc.ShippingAdjustment))
 
                 // .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.ShippingInfo.
@@ -277,6 +280,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
         }
 
+        private void Map_Adjustment_to_DcAdjustment()
+        {
+            Mapper.CreateMap<CommerceDC.Adjustment, Adjustment>()
+                .ForMember(x => x.Amount, op => op.MapFrom(dc => dc.Amount))
+                .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Description))
+                .ForMember(x => x.InternalComment, op => op.MapFrom(dc => dc.InternalComment))
+                ;
+        }
+
         private void Map_OrderPackage_to_DcPackage()
         {
             Mapper.CreateMap<OrderPackage, ShippingDC.Package>()
@@ -288,7 +300,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ShippingMethodName, op => op.MapFrom(x => x.ShippingMethodName))
                 .ForMember(dc => dc.Status, op => op.MapFrom(x => x.Status))
                 .ForMember(dc => dc.TrackingNumber, op => op.MapFrom(x => x.TrackingNumber))
-                .ForMember(dc => dc.Measurements, op => op.MapFrom(x => new Mozu.CommerceRuntime.Contracts.Commerce.PackageMeasurements
+                .ForMember(dc => dc.Measurements, op => op.MapFrom(x => new CommerceDC.PackageMeasurements
                 {
                     Height = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Height },
                     Width = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Width },
@@ -358,6 +370,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         }
                     };
                 }))
+                ;
+        }
+
+        private void Map_DcAdjustment_to_OrderAdjustment()
+        {
+            Mapper.CreateMap<Adjustment, CommerceDC.Adjustment>()
+                .ForMember(dc => dc.Amount, op => op.MapFrom(x => x.Amount))
+                .ForMember(dc => dc.Description, op => op.MapFrom(x => x.Description))
+                .ForMember(dc => dc.InternalComment, op => op.MapFrom(x => x.InternalComment))
                 ;
         }
 

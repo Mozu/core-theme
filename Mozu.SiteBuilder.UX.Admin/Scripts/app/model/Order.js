@@ -1251,14 +1251,13 @@ Ext.define('Taco.model.Order', {
      */
     updateOrderAdjustment: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/updateorderadjustment',
+            url: '/admin/app/order/adjustment',
             method: "POST"
         });
 
         Ext.Ajax.request(config);
     },
     
-
     /**
      * service call to apply the draft order on top of the actual order.
      * @param {Object} config  A configuration object     
@@ -1286,7 +1285,7 @@ Ext.define('Taco.model.Order', {
      */
     saveDraftOrder: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/savedraftorder',
+            url: '/admin/app/order/commitdraft',
             method: "POST"
         });
 
