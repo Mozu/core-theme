@@ -6,6 +6,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     requires: [
         'Taco.view.order.modal.ProductConfigurator',
         'Taco.view.order.widget.ProductPickerField',
+        'Taco.view.order.widget.DiscountPickerField',
         'Taco.core.ux.grid.Pager'
     ],
     
@@ -26,7 +27,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         autoScroll: true,
         
         // number of products per page to display in the add product search field
-        productsPerPage : 30,
+        productsPerPage: 30,
+        
+        // number of discounts per page to display in the add coupon search field
+        discountsPerPage: 30,
 
         // the toolbar that is currently being displayed atop the order item grid panel
         activeAddToolbar : null,
@@ -553,6 +557,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 tb = me.getAddProductToolbar();
                 break;
             case "coupon":
+                tb = me.getAddCouponToolbar();
                 break;
             case "orderAdjustment":
                 tb = me.getAddAdjustmentToolbar();
@@ -584,6 +589,18 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             }),
             pageSize: me.productsPerPage,
             listeners: {
+                'specialkey':{
+                    fn: function(field, e) {
+                        // e.HOME, e.END, e.PAGE_UP, e.PAGE_DOWN,
+                        // e.TAB, e.ESC, arrow keys: e.LEFT, e.RIGHT, e.UP, e.DOWN
+                        if (e.getKey() == e.ESC) {
+                            
+                            
+                            //return false;
+                        }
+                    },
+                    scope: me
+                },     
                 beforeselect: {
                     fn: function (combo, record, index, e) {
                         var productCode = record.get("productCode"),
@@ -600,13 +617,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                                 listeners: {
                                     'configureproduct': {
                                         fn: function (configurationData) {
-                                            this.
-                                                addConfiguredProduct([configurationData]);
+                                            this.addConfiguredProduct([configurationData]);
                                         },
-                                        scope: this
-                                    },
-                                    'beforeclose': {
-                                        fn: this.focusActiveSearchField,
                                         scope: this
                                     }
                                 }
@@ -621,7 +633,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                                     productCode: productCode
                                 }
                             ]);
-                            this.focusActiveSearchField();
                         }
                         
                         // cancel the selection so that the same product can be reselected again;
@@ -638,6 +649,58 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 {
                     xtype: 'component',
                     html: "Add Product",
+                    style: "padding:0px 10px 0px 10px;"
+                },
+                this.activeSearchField
+            ]
+        }, config);
+
+        return me.getAddItemToolbar(tbConfig);
+    },
+    
+    // creates and returns a toolbar for adding coupons;
+    getAddCouponToolbar: function (config) {
+        var me = this,
+            tbConfig;
+
+
+        this.activeSearchField = Ext.create('Taco.view.order.widget.DiscountPickerField', {
+            fieldCls: "toolbar-field",
+            
+            validOnDate : this.record.get("createDate"),
+            
+            store: Taco.core.data.StoreManager.getOrCreate({
+                type: 'Taco.store.Discounts',
+                pageSize: me.discountsPerPage,
+                autoLoad: true
+            }),
+            pageSize: me.discountsPerPage,
+            listeners: {
+                beforeselect: {
+                    fn: function (combo, record, index, e) {                        
+
+                        //var picker = combo.getPicker();
+                        combo.collapse();
+                        
+                        // the product doesn't require configuration so just add it and skip opening the dialog;
+                        this.addOrderCoupon([
+                           record.get("id")
+                        ]);
+
+                        // cancel the selection so that the same product can be reselected again;
+                        return false;
+                    },
+                    scope: this
+                }
+            }
+        });
+
+        tbConfig = Ext.apply({
+            toolbarType: "coupon",
+            items: [
+                {
+                    xtype: 'component',
+                    html: "Add Coupon",
                     style: "padding:0px 10px 0px 10px;"
                 },
                 this.activeSearchField
@@ -807,6 +870,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     },
 
 
+    /*
 
     executeMoveItems: function (config) {
         var me = this,
@@ -905,17 +969,21 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             });
         }
     },
+    */
     
-
-    // accepts an array of orderItem configuration data objects and calls the service to persist it.
-    addConfiguredProduct: function (orderItems) {
-        var me = this;
+    handleError : function() {
         
+    },
+
+    // accepts an array of order coupons configuration data objects and calls the service to persist it.
+    addOrderCoupon: function (coupons) {
+        var me = this;
+
         this.fireEvent('save');
-        this.record.addOrderItem({
+        this.record.addOrderCoupon({
             jsonData: {
                 orderId: this.record.get('id'),
-                orderItems: orderItems
+                coupons: coupons
             },
             success: function (response) {
                 // success handling here
@@ -924,29 +992,114 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     // service didnt' return data properly
                     this.fireEvent('saveFailure');
                     var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
-                        text: "Error adding order item."
+                        text: "Error adding coupon.",
+                        listeners: {
+                            hide: {
+                                fn: function () {
+                                    // after a successful add, pass focus back to the searchfield;
+                                    me.focusActiveSearchField();
+                                },
+                                scope: me
+                            }
+                        }
                     });
                     errorDialog.show();
-
                     return;
                 }
-                this.fireEvent('saveSuccess');
+                this.fireEvent('saveSuccess',json.items[0]);
 
                 //this.record.reload();
             },
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error adding order item.";
-                
+                    msg = (json && json.Message) ? json.Message : "Error adding coupon.";
+
                 this.fireEvent('saveFailure');
-                
+
                 var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
-                    text: msg
+                    text: msg,
+                    listeners: {
+                        hide: {
+                            fn: function () {
+                                // after a successful add, pass focus back to the searchfield;
+                                me.focusActiveSearchField();
+                            },
+                            scope: me
+                        }
+                    }
                 });
                 errorDialog.show();
             },
             scope: this
+        });
+
+    },
+    
+    // accepts an array of orderItem configuration data objects and calls the service to persist it.
+    addConfiguredProduct: function (orderItems) {
+        var me = this;
+        
+        me.fireEvent('save');
+        me.record.addOrderItem({
+            jsonData: {
+                orderId: me.record.get('id'),
+                orderItems: orderItems
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    me.fireEvent('saveFailure');
+                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                        text: "Error adding order item.",
+                        listeners: {
+                            hide: {
+                                fn: function() {
+                                    // after a successful add, pass focus back to the searchfield;
+                                    me.focusActiveSearchField();
+                                },
+                                scope: me
+                            }
+                        }
+                    });
+                            
+                    errorDialog.show();
+                    // after a successful add, pass focus back to the searchfield;
+                    me.focusActiveSearchField();
+
+                    return;
+                }
+                me.fireEvent('saveSuccess', json.items[0]);
+                // after a successful add, pass focus back to the searchfield;
+                me.focusActiveSearchField();
+                //this.record.reload();
+            },
+            failure: function (response) {
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error adding order item.";
+
+                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                    text: msg,
+                    listeners: {
+                        hide: {
+                            fn: function() {
+                                // after a successful add, pass focus back to the searchfield;
+                                me.focusActiveSearchField(); 
+                            },
+                            scope: me
+                        }
+                    }
+                });
+                errorDialog.show();
+                me.fireEvent('saveFailure');
+                
+
+
+            },
+            scope: me
         });
 
     },
@@ -991,7 +1144,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     errorDialog.show();
                     return;
                 }
-                this.fireEvent('saveSuccess', json);
+                this.fireEvent('saveSuccess', json.items[0]);
             },
             failure: function (response) {
                 // error handling here
@@ -1050,7 +1203,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     errorDialog.show();
                     return;
                 }
-                this.fireEvent('saveSuccess',json);
+                this.fireEvent('saveSuccess', json.items[0]);
             },
             failure: function (response) {
                 // error handling here

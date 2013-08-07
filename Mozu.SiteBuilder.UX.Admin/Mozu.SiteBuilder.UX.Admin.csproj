@@ -738,6 +738,7 @@
     <Content Include="Scripts\app\view\order\subform\Detail.js" />
     <Content Include="Scripts\app\view\order\widget\ProcessReturnPanel.js" />
     <Content Include="Scripts\app\view\order\widget\CreateReturnPanel.js" />
+    <Content Include="Scripts\app\view\order\widget\DiscountPickerField.js" />
     <Content Include="Scripts\app\view\order\widget\OrderItemGrid.js" />
     <Content Include="Scripts\app\view\order\widget\ProductConfigurator.js" />
     <Content Include="Scripts\app\view\order\widget\ProductPickerField.js" />
