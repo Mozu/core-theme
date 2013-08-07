@@ -17,5 +17,4 @@ Ext.define('Taco.view.order.subform.Customer', {
 
         this.callParent(arguments);
     }
-
 });

@@ -21,9 +21,26 @@ Ext.define('Taco.view.order.Form', {
 
     model: 'Taco.model.Order',
 
+    editTitle: [
+        'Order No. {number}',
+        '<span class="taco-order-status {status}">',
+            '{status}',
+        '</span>'
+    ],
+
+    createTitle: [
+        'Create Order No. {number}',
+        '<span class="taco-order-status">',
+            '{status}',
+        '</span>'
+    ],
+
     initComponent: function () {        
 
-        this.title = 'Order No. ' + this.record.get('orderNumber');
+        this.titleData = {
+            number: this.record.get('orderNumber'),
+            status: this.record.get('orderStatus')
+        };
 
         this.callParent(arguments);
 
@@ -38,13 +55,32 @@ Ext.define('Taco.view.order.Form', {
             items;
 
         items = [
-            Ext.create('Taco.view.order.Header', subformCfg),
-            Ext.create('Taco.view.order.subform.Detail', subformCfg),
-            Ext.create('Taco.view.order.subform.Customer', subformCfg),
-            Ext.create('Taco.view.order.subform.Payment', subformCfg),
-            Ext.create('Taco.view.order.subform.Shipping', subformCfg)
+            Ext.create('Taco.view.order.Header', subformCfg)
         ];
 
+        if (!this.isEdit()) {
+            items.push(Ext.create('Taco.view.order.subform.Customer', subformCfg));
+        }
+
+        items.push(Ext.create('Taco.view.order.subform.Detail', subformCfg));
+
+        if (!this.isEdit()) {
+            items.push(Ext.create('Taco.view.order.subform.ShippingSimple', subformCfg));
+        }
+
+        items.push(Ext.create('Taco.view.order.subform.Payment', subformCfg));
+
+        if (this.isEdit()) {
+            items.push(Ext.create('Taco.view.order.subform.Shipping', subformCfg));
+        }
+
         this.loadNavItems(items);
+    },
+
+    isEdit: function () {
+        if (this._isEdit === undefined) {
+            this._isEdit = this.record.get('orderStatus') !== 'Created';
+        }
+        return this._isEdit;
     }
 })

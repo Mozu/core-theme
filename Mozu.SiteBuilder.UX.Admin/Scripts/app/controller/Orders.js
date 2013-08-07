@@ -23,6 +23,24 @@ Ext.define('Taco.controller.Orders', {
         
         
         
+    },
+
+    create: function () {
+        var record;
+
+        Taco.app.setLoading();
+
+        record = Ext.create('Taco.model.Order');
+
+        record.save({
+            callback: function (records, operation, success) {
+                this.createContentView(this.getEditorView(), {
+                    record: record
+                });
+                Taco.app.setLoading(false);
+            },
+            scope: this
+        });
     }
 });
 

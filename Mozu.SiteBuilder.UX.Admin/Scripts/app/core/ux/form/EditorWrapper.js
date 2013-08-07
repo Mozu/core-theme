@@ -36,6 +36,9 @@
      */
     cancelText: 'Cancel',
 
+    saveHidden: false,
+    cancelHidden: false,
+
     actionsCfg: null,
 
     formCfg: null,
@@ -69,13 +72,13 @@
                 xtype: 'secondarybutton',
                 text: this.cancelText,
                 click: this.cancel,
-                hidden: !this.allowCreate(),
+                hidden: this.cancelHidden || !this.allowCreate(),
                 scope: this
             }, {
                 xtype: 'dirtybutton',
                 text: this.saveText,
                 click: this.save,
-                hidden: !this.allowCreate(),
+                hidden: this.saveHidden || !this.allowCreate(),
                 scope: this
             }];
         }

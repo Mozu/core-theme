@@ -65,10 +65,6 @@ Ext.define('Taco.view.order.Index', {
         property: 'productFullDescription',
         text: 'Shipped'
     }],
-    
-    header:{
-        actions: []
-    },
 
 
     gridPanelConf: {
