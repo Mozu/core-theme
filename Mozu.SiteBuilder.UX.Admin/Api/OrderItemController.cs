@@ -9,6 +9,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
+using DCp = Mozu.CommerceRuntime.Contracts.Products;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -42,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var product in args.OrderItems)
             {
                 // scrub the product.
-                product.Options = product.Options.Where(o => o.Value != null).ToList();
+                product.Options = (product.Options ?? Enumerable.Empty<DCp.ProductOption>()).Where(o => o.Value != null).ToList();
                 product.Price = null;
 
                 var dcOrderItem = new DC.OrderItem {
