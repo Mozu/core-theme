@@ -19,7 +19,7 @@
                     <tr class="mz-line-item" data-bind="css: { 'mz-discounted': $data.DiscountTotal }">
                         <td data-bind="text: Product.Name "></td>
                         <td data-bind="text: Quantity"></td>
-                        <td><span class="mz-item-price" data-bind="currencyText: Product.Price.Price"></span></td>
+                        <td><span class="mz-item-price" data-bind="currencyText: UnitPrice.BaseAmount"></span></td>
                         <td><span class="mz-item-price" data-bind="currencyText: Subtotal"></span></td>
                     </tr>
                     <!-- ko if: DiscountTotal && DiscountTotal != Subtotal -->
@@ -31,28 +31,39 @@
                                 <!-- /ko -->
                                 <span class="mz-discount-amt" ><span data-bind="currencyText: DiscountTotal"></span> OFF</span>
                             </td>
-                            <td><span data-bind="currencyText: Product.Price.SalePrice"></span></td>
+                            <td><span data-bind="currencyText: UnitPrice.DiscountedAmount"></span></td>
                             <td><span data-bind="currencyText: Total"></span></td>
                         </tr>
                     <!-- /ko -->
                 </tbody>
             <!-- /ko -->
+          
             <tbody>
                 <tr class="mz-cost-summary">
                     <td class="mz-line-item-summary" colspan="4">
                         <table>
-                            <tr>
-                                <td>Sub-Total:</td>
-                                <td><span data-bind="currencyText: DiscountedTotal"></span></td>
-                            </tr>
-                            <tr class="mz-shipping-total-row">
-                                <td>Shipping &amp; Handling:</td>
-                                <td><span data-bind="currencyText: ShippingTotal"></span></td>
-                            </tr>
-                            <tr>
-                                <td>Tax:</td>
-                                <td><span data-bind="currencyText: TaxTotal"></span></td>
-                            </tr>
+                            <tbody>
+                            <!-- ko foreach: OrderDiscounts -->
+                            <!-- ko if: !Excluded -->
+                                <tr>
+                                    <td><!-- ko text: Discount.Name --><!-- /ko -->:</td>
+                                    <td><span data-bind="currencyText: -Impact"></span></td>
+                                </tr>
+                            <!-- /ko -->
+                            <!-- /ko -->
+                                <tr>
+                                    <td>Sub-Total:</td>
+                                    <td><span data-bind="currencyText: DiscountedTotal"></span></td>
+                                </tr>
+                                <tr class="mz-shipping-total-row">
+                                    <td>Shipping &amp; Handling:</td>
+                                    <td><span data-bind="currencyText: ShippingTotal"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Tax:</td>
+                                    <td><span data-bind="currencyText: TaxTotal"></span></td>
+                                </tr>
+                            </tbody>
                         </table>
                     </td>
                 </tr>
