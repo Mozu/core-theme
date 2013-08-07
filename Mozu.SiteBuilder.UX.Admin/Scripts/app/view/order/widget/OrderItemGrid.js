@@ -1262,6 +1262,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     },
     
     saveDraftOrder: function () {
+        var me = this;
         
         this.fireEvent('save');
         

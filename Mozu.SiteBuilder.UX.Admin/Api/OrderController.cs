@@ -14,12 +14,19 @@ using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-
     [WebApi("app/order", SuppressDescriptorGeneration = true)]
     public partial class OrderController : BaseController
     {
         private readonly ISettings _settings;
         private IOrderWebApiClient _orderWebApiClient;
+
+        /*
+         * All order item operations have an updateMode attribute.
+         * Valid options are: ApplyToOriginal, ApplyToDraft, and ApplyAndCommit
+         */
+        private const string APPLY_TO_ORIGINAL = "ApplyToOriginal";
+        private const string APPLY_TO_DRAFT = "ApplyToDraft";
+        private const string APPLY_AND_COMMIT = "ApplyAndCommit";
 
         /// <summary>
         /// Public constructor.
@@ -92,12 +99,53 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2( Mapper.Map<Order>(dc) );
         }
 
+        [HttpPostRoute(UriTemplate = "commitdraft")]
+        public async Task<Response<List<Order>>> CommitDraft(OrderIdArgs args)
+        {
+            var dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId, true)).ReadAsSync();
+            dcOrder = (await _orderWebApiClient.UpdateOrder(args.OrderId, dcOrder, APPLY_AND_COMMIT)).ReadAsSync();
+
+            return SuccessWithTotal2<List<Order>>(1);
+        }
+
         [HttpPostRoute(UriTemplate = "deletedraft")]
         public async Task<Response<List<Order>>> DeleteDraft(OrderIdArgs args)
         {
             await _orderWebApiClient.DeleteOrderDraft(args.OrderId);
 
             return SuccessWithTotal2<List<Order>>(1);
+        }
+
+        public class UpdateAdjustmentArgs
+        {
+            public string OrderId { get; set; }
+            public Adjustment OrderAdjustment { get; set; }
+            public Adjustment ShippingAdjustment { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "adjustment")]
+        public async Task<Response<List<Order>>> AddOrUpdateAdjustment(UpdateAdjustmentArgs args)
+        {   
+            DCo.Order dcOrder = null;
+ 
+            if (args.OrderAdjustment != null && args.OrderAdjustment.Amount.HasValue)
+            {
+                if (args.OrderAdjustment.Amount <= 0)
+                    dcOrder = (await _orderWebApiClient.RemoveAdjustment( args.OrderId, APPLY_TO_DRAFT )).ReadAsSync();
+                else
+                    dcOrder = (await _orderWebApiClient.ApplyAdjustment( args.OrderId, args.OrderAdjustment.Map<Mozu.CommerceRuntime.Contracts.Commerce.Adjustment>(), APPLY_TO_DRAFT )).ReadAsSync();
+            }
+            if (args.ShippingAdjustment != null && args.ShippingAdjustment.Amount.HasValue)
+            {
+                if (args.ShippingAdjustment.Amount <= 0)
+                    dcOrder = (await _orderWebApiClient.RemoveAdjustment( args.OrderId, APPLY_TO_DRAFT )).ReadAsSync();
+                else
+                    dcOrder = (await _orderWebApiClient.ApplyShippingAdjustment(args.OrderId, args.ShippingAdjustment.Map<Mozu.CommerceRuntime.Contracts.Commerce.Adjustment>(), APPLY_TO_DRAFT)).ReadAsSync();
+            }
+
+            if (dcOrder != null)
+                return List2( dcOrder.Map<Order>() );
+            else
+                return FailureList2<Order>("You must provide an order adjustment or a shipping adjustment.");
         }
     }
 }

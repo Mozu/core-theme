@@ -15,14 +15,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     public partial class OrderController
     {
-        /*
-         * All order item operations have an updateMode attribute.
-         * Valid options are: ApplyToOriginal, ApplyToDraft, and ApplyAndCommit
-         */
-        private const string APPLY_TO_ORIGINAL = "ApplyToOriginal";
-        private const string APPLY_TO_DRAFT = "ApplyToDraft";
-        private const string APPLY_AND_COMMIT = "ApplyAndCommit";
-
         public class ProductWithQuantityStuffedIntoIt : Mozu.CommerceRuntime.Contracts.Products.Product
         {
             public int Quantity { get; set; }
