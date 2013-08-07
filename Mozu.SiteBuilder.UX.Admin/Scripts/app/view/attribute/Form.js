@@ -6,8 +6,8 @@
 Ext.define('Taco.view.attribute.Form', {
     extend: 'Taco.view.product.subform.Subform',
     requires: ['Taco.view.option.valueEditor.MultiValue', 'Taco.core.ux.form.FlexBox'],
+    createTitle: 'Create New Attribute',
 
-    
     title: 'Attribute',
 
     defaults: {
@@ -202,6 +202,7 @@ Ext.define('Taco.view.attribute.Form', {
 
         this.stores = [this.valuesStore];
 
+        this.title = this.record.data.name;
         this.callParent(arguments);
         
 
