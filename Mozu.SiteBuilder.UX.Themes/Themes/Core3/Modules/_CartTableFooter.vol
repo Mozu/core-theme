@@ -3,6 +3,21 @@
         <em class="mz-auxiliary-text">Tax &amp; Shipping Calculated at Checkout</em>
     </td>
 </tr>
+
+<!-- ko foreach: OrderDiscounts -->
+<!-- ko if: !Excluded -->
+<tr class="mz-cart-total-row">
+  <td class="mz-cart-total-label" colspan="3" align="right">
+    <!-- ko text: Discount.Name --><!-- /ko -->:
+  </td>
+  <td class="mz-cart-total-wrap" colspan="2" align="right">
+    <span class="mz-cart-rowtotal" data-bind="currencyText: -Impact"></span>
+  </td>
+</tr>
+<!-- /ko -->
+<!-- /ko -->
+
+
 <tr class="mz-cart-total-row">
     <td class="mz-cart-total-label" colspan="3" align="right">
         Order Total:
