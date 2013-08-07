@@ -30,13 +30,13 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                         Taco.app.StateManager.attemptNavigate('account');
                     }
                 }, {
+                    text: 'Launchpad',
+                    href: '/admin/auth/launchpad'
+                }, {
                     text: 'Log Out',
                     href: '/admin/auth/logout'
                 }]
             }
-        }, {
-            text: 'Launchpad',
-            href: '/admin/auth/launchpad'
         }, {
             xtype: 'taco.button',
             autoEl: 'a',
