@@ -52,76 +52,50 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         // Todo: Need to listen for a navigation (via backbutton) and cancel the navigation if editor is dirty or prompt user to cancel and navigate.
         // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
-        var orderId = (me.record) ? me.record.get('id') : me.orderId;
-
-        var draftRecord = Ext.ModelManager.getModel('Taco.model.Order');
-        
-        var extraParams = draftRecord.getProxy().extraParams;
-        Ext.apply(extraParams, {
-            draft: true
-        });
-
-        draftRecord.load(orderId, {
-            scope: this,
-            failure: function(record, operation) {
-                //do something if the load failed
-                this.setLoading(false, this.body);
-            },
-            success: function(record, operation) {
-                //do something if the load succeeded
-                me.onRecordLoad(record);
-            },
-            callback: function(record, operation) {
-                //do something whether the load succeeded or failed
-            }
-        });
-
-        var titleTemplate = new Ext.XTemplate(
+        me.titleTemplate = new Ext.XTemplate(
             "Order No. {orderNumber}"
         );
-        
-        me.title = titleTemplate.apply({
+
+        me.title = me.titleTemplate.apply({
             orderNumber: this.record.get('orderNumber')
         });
 
-
         me.header = {
-            xtype:"header",
+            xtype: "header",
             style: "padding:28px;border-bottom: 1px dashed #999691 !important;font-size: 1.25em;font-weight: normal;"
         };
-        
+
         me.dirtyButton = Ext.create('Taco.core.ux.action.DirtyButton', {
             xtype: 'primarybutton',
             text: 'Save & Close',
-            onClick: function() {
+            onClick: function () {
                 me.saveDraftOrder();
             },
-            scope:me
+            scope: me
         });
 
         me.dirtyButton.setDirty(true);
 
         me.dockedItems = [
-            //this.totalRow,
             {
                 xtype: 'toolbar',
                 dock: 'bottom',
-                weight:1,
+                weight: 1,
                 ui: 'footer',
                 style: "padding:28px 28px 28px 28px;",
                 defaults: {
                     minWidth: 100,
-                    margin:"0px 0px 0px 10px" 
+                    margin: "0px 0px 0px 10px"
                 },
                 items: [
                     {
                         xtype: "taco.button",
                         text: 'Discard Changes',
-                        margin:"0px 0px 0px 0px", 
+                        margin: "0px 0px 0px 0px",
                         onClick: function () {
                             me.removeDraftOrder();
                         },
-                        scope:me
+                        scope: me
                     },
                     { xtype: 'component', flex: 1 },
                     {
@@ -130,22 +104,21 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                         onClick: function (button) {
                             me.hide();
                         },
-                        scope:me
-                    }, 
+                        scope: me
+                    },
                     this.dirtyButton
                 ]
             }
         ];
-
-        //this.setLoading(true);
         
-        // call the service and get a draft order entity
-        
-        // set the data for the grid;
+        me.orderModel = Ext.ModelManager.getModel('Taco.model.Order');
+        var extraParams = me.orderModel.getProxy().extraParams;
+        Ext.apply(extraParams, {
+            draft: true
+        });
 
-
+        me.loadRecord();
         this.callParent(arguments);
-        
     },
     
     // onShow show the loading mask while we wait for the service to respond with the draft record;
@@ -154,63 +127,117 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         me.callParent(arguments);
         this.setLoading(true, this.body);
     },
-
-    // when the draft record has loaded create and add the total and grid and hide the loading mask;
-    onRecordLoad : function(record) {
+    
+    reloadData: function (data) {
         var me = this;
-        me.record = record;
+        // reload with the data passed in.
+        if (data.items) {
+            me.draftRecord.set(data);
+            me.draftRecord.commit();
+            me.onLoadRecord();
+        } else {
+            //call the service to reload the data;
+            me.loadRecord();
+        }
+    },
 
-        this.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanel', {
-            //dock: "bottom",
-            //weight: 2,
+    // call the service and get an updated record;
+    loadRecord: function () {
+        var me = this,
+            orderId = (me.record) ? me.record.get('id') : me.orderId;
+        
+        me.orderModel.load(orderId, {
+            scope: me,
+            failure: function (record, operation) {
+                //do something if the load failed
+                this.setLoading(false, this.body);
+            },
+            success: function (record, operation) {
+                //do something if the load succeeded
+                me.draftRecord = record;
+                me.onLoadRecord();
+            },
+            callback: function (record, operation) {
+                //do something whether the load succeeded or failed
+            }
+        });
+    },
+    
+    // when the draft record has loaded create and add the total and grid and hide the loading mask;
+    onLoadRecord : function() {
+        var me = this;
+
+        // initialize the ui when the record loads the first time.
+        if (!this.totalRow) {
+            me.initUi();
+        } else {
+            // update the ui after the record has been reloaded
+            me.updateUi();
+        }
+        this.setLoading(false, this.body);
+    },
+    
+    // reloads the ui using new data
+    updateUi: function () {
+        var me = this;
+        me.totalRow.setData(me.draftRecord.getData());
+        me.detailGrid.getStore().loadRecords(me.draftRecord.itemsStore.getRange());
+    },
+    
+    // initialize the header and grid when the data load the first time
+    initUi: function () {
+        var me = this;
+
+        me.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanel', {
             style: "margin: 0px 0px 0px 0px;border: 1px solid #cccccc !important; border-top-width:1px !important;padding-top:10px",
-            data: me.record.getData(),
+            data: me.draftRecord.getData(),
             totalColumnWidth: me.getRowTotalColumnWidth(),
             actionColumnWidth: me.getActionColumnWidth()
         });
-        
+
         me.detailGrid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
             editMode: true,
             flex: 1,
-            record: this.record,
-            store: this.record.itemsStore,
+            record: me.draftRecord,
+            store: me.draftRecord.itemsStore,
             autoHeight: true,
             listeners: {
-                'draftOrderSaved':  {
+                'draftOrderSaved': {
                     fn: function (data) {
-                        this.setLoading(false, this.body);
-                        this.fireEvent('draftOrderSaved', data);
-                        this.hide();
+                        me.setLoading(false, me.body);
+                        me.fireEvent('draftOrderSaved', data);
+                        me.hide();
                     },
-                    scope: this
+                    scope: me
                 },
                 'draftOrderRemoved': {
                     fn: function (data) {
-                        this.setLoading(false, this.body);
-                        this.fireEvent('draftOrderRemoved', data);
-                        this.hide();
+                        me.setLoading(false, me.body);
+                        me.fireEvent('draftOrderRemoved', data);
+                        me.hide();
                     },
-                    scope: this
+                    scope: me
                 },
                 'save': {
                     fn: function () {
-                        this.setLoading(true, this.body);
+                        me.setLoading(true, me.body);
                     },
-                    scope: this
+                    scope: me
                 },
                 'saveSuccess': {
                     fn: function (data) {
-                        this.setLoading(false, this.body);
-                        this.fireEvent('saveSuccess', data);
-                        this.hide();
+                        me.setLoading(false, me.body);
+                        me.fireEvent('saveSuccess', data);
+                        me.reloadData(data);
                     },
-                    scope: this
+                    scope: me
                 },
                 'saveFailure': {
-                    fn: function () {
-                        this.setLoading(false, this.body);
+                    fn: function (error) {
+                        me.setLoading(false, me.body);
+                        me.fireEvent('saveFailure', error);
                     },
-                    scope: this
+                    scope: me
                 }
             }
         });
@@ -220,9 +247,10 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             me.totalRow
         ]);
 
-        this.setLoading(false, this.body);
     },
-    
+
+
+
     hide: function () {
         // fire an event with the draft record so anyone that spawned this editor will be able to react to any changes that have occurred.
         // they will likely need to pull a new version of the order record;
