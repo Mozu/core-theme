@@ -32,6 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcPackage_to_OrderPackage();
             Map_DcPackageItem_to_OrderPackageItem();
             Map_DcAdjustment_to_OrderAdjustment();
+            Map_DcAppliedDiscount_to_OrderDiscount();
 
             Map_OrderPackage_to_DcPackage();
             Map_OrderPackageItem_to_DcPackageItem();
@@ -39,6 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_OrderItemDiscount_to_DcAppliedProductDiscount();
             Map_ShippingDiscount_to_DcShippingDiscount();
             Map_Adjustment_to_DcAdjustment();
+            Map_OrderDiscount_to_DcAppliedDiscount();
 
             // cheese
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, decimal?>()
@@ -63,11 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IpAddress, op => op.MapFrom(dc => dc.IPAddress))
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
                 .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
-                .ForMember(x => x.ActiveDiscountDescription, op => op.MapFrom(dc =>
-                    dc.OrderDiscounts != null && dc.OrderDiscounts.Any(d => d.Excluded.HasValue && !d.Excluded.Value) ?
-                        dc.OrderDiscounts.First(d => d.Excluded.HasValue && !d.Excluded.Value).Discount.Name : null
-                ))
-                .ForMember(x => x.OrderDiscountTotal, op => op.MapFrom(dc => dc.DiscountTotal))
+                .ForMember(x => x.ActiveOrderDiscount, op => op.MapFrom(dc => dc.OrderDiscounts != null ? dc.OrderDiscounts.FirstOrDefault(d => d.Excluded.HasValue && !d.Excluded.Value) : null))
                 .ForMember(x => x.OrderDiscounts, op => op.MapFrom(dc => dc.OrderDiscounts))
 
                 .ForMember(x => x.ActiveShippingDiscount, op => op.MapFrom(dc => dc.ShippingDiscounts != null ? dc.ShippingDiscounts.FirstOrDefault(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) : null))
@@ -176,6 +174,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.ImpactPerUnit))
                 .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Impact))
                 .ForMember(x => x.CouponCode, op => op.MapFrom(dc => dc.CouponCode))
+                .ForMember(x => x.IsActive, op => op.MapFrom(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
+                ;
+        }
+
+        private void Map_DcAppliedDiscount_to_OrderDiscount()
+        {
+            Mapper.CreateMap<DiscountDC.AppliedDiscount, OrderDiscount>()
+                .ForMember(x => x.DiscountId, op => op.MapFrom(dc => dc.Discount.Id))
+                .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Discount.Name))
+                .ForMember(x => x.ExpirationDate, op => op.MapFrom(dc => dc.Discount.ExpirationDate))
+                .ForMember(x => x.CouponCode, op => op.MapFrom(dc => dc.CouponCode))
+                .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Impact))
                 .ForMember(x => x.IsActive, op => op.MapFrom(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
                 ;
         }
@@ -355,6 +365,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Impact, op => op.MapFrom(x => x.Total))
                 .ForMember(dc => dc.CouponCode, op => op.MapFrom(x => x.CouponCode))
                 .ForMember(dc => dc.Excluded, op => op.MapFrom(x => !x.IsActive))
+                ;
+        }
+
+        private void Map_OrderDiscount_to_DcAppliedDiscount()
+        {
+            Mapper.CreateMap<OrderDiscount, DiscountDC.AppliedDiscount>()
+                .ForMember(dc => dc.CouponCode, op => op.MapFrom(x => x.CouponCode))
+                .ForMember(dc => dc.Impact, op => op.MapFrom(x => x.Total))
+                .ForMember(dc => dc.Excluded, op => op.MapFrom(x => !x.IsActive))
+                .ForMember(dc => dc.Discount, op => op.ResolveUsing(x =>
+                {
+                    return new DiscountDC.Discount
+                    {
+                        Id = x.DiscountId,
+                        Name = x.Description,
+                        ExpirationDate = x.ExpirationDate
+                    };
+                }))
                 ;
         }
 
