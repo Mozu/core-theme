@@ -32,6 +32,12 @@ Ext.define('Taco.model.Order', {
         },
 
         {
+            "name": "hasDraft",
+            "type": "boolean",
+            "defaultValue": false
+        },
+
+        {
             name: 'tenantId',
             type: 'int'
         },
