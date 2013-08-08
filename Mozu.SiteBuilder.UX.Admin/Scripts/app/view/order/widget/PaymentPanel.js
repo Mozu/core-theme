@@ -41,9 +41,17 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             'CreditPayment': 'Credit Payment',
             'VoidPayment': 'Void Payment',
 
+            'RollbackCapture': 'Rollback Credit',
+            'RollbackCredit': 'Rollback Credit',
+            'RollbackVoid': 'Rollback Void',
+
             'ManualCapturePayment': 'Capture Payment (Manual)',
             'ManualCreditPayment': 'Credit Payment (Manual)',
             'ManualVoidPayment': 'Void Payment (Manual)',
+
+            'ManualRollbackCapture': 'Rollback Capture (Manual)',
+            'ManualRollbackCredit': 'Rollback Credit (Manual)',
+            'ManualRollbackVoid': 'Rollback Void (Manual)'
         };
 
         var actionsWithLabels = Ext.Array.map(me.record.data.availableActions, function (action) {

@@ -140,8 +140,10 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     },
 
     loadNavItems: function (items) {
-        this.navStore.loadRawData(items);
+        var components;
+
         this.formContainer.removeAll();
-        this.formContainer.add(items);
+        components = this.formContainer.add(items);
+        this.navStore.loadRawData(components);
     }
 });
