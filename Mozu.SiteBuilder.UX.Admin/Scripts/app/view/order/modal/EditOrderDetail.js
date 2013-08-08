@@ -131,6 +131,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     reloadData: function (data) {
         var me = this;
         // reload with the data passed in.
+        
         if (data.items) {
             me.draftRecord.set(data);
             me.draftRecord.commit();
@@ -154,6 +155,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             },
             success: function (record, operation) {
                 //do something if the load succeeded
+                
                 me.draftRecord = record;
                 me.onLoadRecord();
             },

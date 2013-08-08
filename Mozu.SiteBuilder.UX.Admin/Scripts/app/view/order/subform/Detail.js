@@ -115,6 +115,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             }
         });
         
+        
         // subtotals, orderlevel discounts, tax shipping, and totals
         this.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanel', {
             data: me.record.getData(),
