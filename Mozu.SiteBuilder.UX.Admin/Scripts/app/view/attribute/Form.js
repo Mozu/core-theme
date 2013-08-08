@@ -22,7 +22,7 @@ Ext.define('Taco.view.attribute.Form', {
                 xtype: 'selectfield',
                 fieldLabel: 'Attribute Type',
                 name: 'attributeType',
-                isDirty:function() { return false; },
+                isDirty: function () { return false; },
                 listeners: {
                     select: function (field, records) {
                         var record = this.up('form').record, isProperty = false, isExtra = false;
@@ -242,7 +242,8 @@ Ext.define('Taco.view.attribute.Form', {
             name: 'name',
             allowBlank: false,
             emptyText: 'Enter an attribute name',
-            enableKeyEvents :true,
+            width: 300,
+            enableKeyEvents: true,
             listeners:{
                 keyup: function(field, e, eOpts) {
                     var adminName = this.findField('adminName');
@@ -257,6 +258,7 @@ Ext.define('Taco.view.attribute.Form', {
             name: 'adminName',
             allowBlank: false,
             emptyText: 'Enter an attribute name',
+            width: 300,
             enableKeyEvents: true,
             listeners: {
                 keyup: function (field, e, eOpts) {
