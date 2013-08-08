@@ -16,7 +16,7 @@ Ext.define('Taco.model.SiteShippingSettings', {
         type: 'ajaxproxy',
         api: {
             read: '/admin/app/shipping/settings/read',
-            update: '/admin/app/shipping/settings/edit',
+            update: '/admin/app/shipping/settings/edit'
         },
         reader: {
             type: 'json',

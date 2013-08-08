@@ -85,7 +85,7 @@
                     xtype: 'checkbox',
                     name: 'openInNewWindow',
                     fieldLabel: 'Open in a new window',
-                    labelAlign: 'top',
+                    labelAlign: 'top'
                 }
                 ]
             },
@@ -113,7 +113,7 @@
                 }
                 ]
             }
-            ],
+            ]
             
         });
         this.items = [this.form];
@@ -177,7 +177,7 @@
                 iconCls: 'link',
                 parentId: me.parentId,
                 expanded: false,
-                expandable: false,
+                expandable: false
             });
             me.fireEvent('save', me, record);
         }

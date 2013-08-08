@@ -85,9 +85,9 @@ Ext.define('Taco.view.product.subform.Inventory', {
         });
 
         this.items = [{
-            xtype: 'formflexbox',
+            xtype: 'container',
             width: '100%',
-            justify: false,
+            layout: 'hbox',
             items: [
                 manageStock,
                 stockOnHand,

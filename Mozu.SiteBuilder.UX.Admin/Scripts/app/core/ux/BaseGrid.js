@@ -7,7 +7,7 @@
 
 Ext.define('Taco.core.ux.BaseGrid', {
     extend: 'Ext.grid.Panel',
-    requires: ['Ext.grid.column.Action', 'Taco.core.ux.action.GridAction', 'Taco.core.ux.CheckColumn'],
+    requires: ['Ext.grid.column.Action', 'Taco.core.ux.action.GridAction'],
     alias: 'widget.basegrid',
     cls: 'taco-basegrid',
     enableColumnHide: false,

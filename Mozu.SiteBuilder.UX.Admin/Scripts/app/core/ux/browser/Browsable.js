@@ -15,6 +15,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         tilePanelClass: 'Taco.core.ux.TilePanel', 
         filterProperty: 'name',
         hasSidebar: true,
+        useEditRecordsButton: false,
         launchEditorOnClick: true,
         header: null,
 
@@ -83,7 +84,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         Ext.applyIf(this.header, {
             actions: [{
                 xtype: 'secondarybutton',
-                hidden:!this.allowUpdate(),
+                hidden:!this.allowUpdate() || !this.useEditRecordsButton,
                 text: 'Edit Records',
                 listeners: {
                     click: function () {

@@ -29,7 +29,7 @@ Ext.define('Taco.core.ux.content.Container', {
 
         me.subscribeEvents();
 
-        Taco.app.eventbus.fireEvent("createpageview");
+        Taco.app.fireEvent("createpageview");
 
     },
 
@@ -43,7 +43,7 @@ Ext.define('Taco.core.ux.content.Container', {
         }
     },
 
-    arrangePanels: function() {
+    arrangePanels: function () {
         var me = this;
 
         me.header = Ext.create(me.headerCls, Ext.apply(me.header || {}, { region: 'north' }));
@@ -69,7 +69,7 @@ Ext.define('Taco.core.ux.content.Container', {
         }
     },
 
-    subscribeEvents: function() {
+    subscribeEvents: function () {
         var me = this;
         me.mon(Taco.core.StateManager, {
             beforenavigate: me.onBeforeNavigate,
@@ -85,7 +85,7 @@ Ext.define('Taco.core.ux.content.Container', {
             afterRender: me.onAfterRender
         });
     },
-        
+
     onBodyScroll: function (e, t) {
         var me = this,
             isScrolled = this.isScrolled;

@@ -18,7 +18,7 @@ Ext.define('Taco.view.site.ToolboxPanel', {
         if (!this.parentPanel) Ext.Error.raise(this.$className + " requires a parentPanel config.");
         this.on({
             hide: this.toggleCardFlexActive,
-            show: this.toggleCardFlexActive,
+            show: this.toggleCardFlexActive
         });
     
         this.callParent(arguments);

@@ -78,7 +78,7 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
                 }
                 if (siteId) {
                     jsonData = Ext.JSON.decode(data);
-                    jsonData.items = Ext.Array.filter(jsonData.items, function (item) { return item.siteId == siteId });
+                    jsonData.items = Ext.Array.filter(jsonData.items, function (item) { return item.siteId == siteId; });
                     jsonData.items.sort(function(a, b) { return (a.sequence || 99) - (b.sequence || 99); });
                     response.responseText = Ext.JSON.encode(jsonData);
 
@@ -89,7 +89,6 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
         Ext.Function.defer(function() {
             fn();
         }, 10, this);
-        ;
     },
     getTreeData: function () {
         var me = this,
@@ -151,7 +150,7 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
         }
 
         return root;
-    },
+    }
 
 }
 );

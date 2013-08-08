@@ -27,57 +27,77 @@ Ext.define('Taco.view.address.ModalEditor', {
             xtype: 'textfield',
             width: 315,
             name: 'companyName',
-            fieldLabel: 'Company Name'
-                }, {
-                    xtype: 'textfield',
+            fieldLabel: 'Company Name',
+            margin: '0 14 5 0',
+            style: { 'display': 'inline-table' }
+        }, {
+            xtype: 'textfield',
             width: 315,
             name: 'email',
-            fieldLabel: 'Email'
-                }, {
-                    xtype: 'textfield',
-                    width: 315,
-                    name: 'address1',
-                    fieldLabel: 'Address 1'
-                }, {
-                    xtype: 'textfield',
-                    width: 315,
-                    name: 'address2',
-                    fieldLabel: 'Address 2'
-                }, {
-                    xtype: 'textfield',
-                    width: 315,
-                    name: 'address3',
-                    fieldLabel: 'Address 3'
-                }, {
-                    xtype: 'textfield',
-                    width: 315,
-                    name: 'address4',
-                    fieldLabel: 'Address 4'
-                }, {
-                    xtype: 'textfield',
-                    name: 'cityOrTown',
-                    fieldLabel: 'City'
-                }, {
-                    xtype: 'textfield',
-                    name: 'state',
-                    fieldLabel: 'State'
-                }, {
-                    xtype: 'textfield',
-                    name: 'zipCode',
-                    fieldLabel: 'ZIP'
-                }, {
-                    xtype: 'combo',
-                    name: 'countryCode',
-                    fieldLabel: 'Country',
-                    queryMode: 'local',
-                    displayField: 'label',
-                    valueField: 'val',
-                    store: Ext.create('Ext.data.Store', {
-                        fields: ['val', 'label'],
-                        data: [
-                            { "val": "US", "label": "US" }
-                        ]
-                    })
+            fieldLabel: 'Email',
+            margin: '0 0 5 0',
+            style: { 'display': 'inline-table' }
+        }, {
+            xtype: 'textfield',
+            width: 315,
+            name: 'address1',
+            fieldLabel: 'Address 1',
+            margin: '0 14 5 0',
+            style: { 'display': 'inline-table' }
+        }, {
+            xtype: 'textfield',
+            width: 315,
+            name: 'address2',
+            fieldLabel: 'Address 2',
+            margin: '0 0 5 0',
+            style: { 'display': 'inline-table' }
+        }, {
+            xtype: 'textfield',
+            width: 315,
+            name: 'address3',
+            fieldLabel: 'Address 3',
+            margin: '0 14 5 0',
+            style: { 'display': 'inline-table' }
+        }, {
+            xtype: 'textfield',
+            width: 315,
+            name: 'address4',
+            fieldLabel: 'Address 4',
+            margin: '0 0 5 0',
+            style: { 'display': 'inline-table' }
+        }, {
+            xtype: 'textfield',
+            name: 'cityOrTown',
+            fieldLabel: 'City',
+            margin: '0 15 5 0',
+            style: { 'display': 'inline-table' }
+        }, {
+            xtype: 'textfield',
+            name: 'state',
+            fieldLabel: 'State',
+            margin: '0 14 5 0',
+            style: { 'display': 'inline-table' }
+        }, {
+            xtype: 'textfield',
+            name: 'zipCode',
+            fieldLabel: 'ZIP',
+            margin: '0 15 5 0',
+            style: { 'display': 'inline-table' }
+        }, {
+            xtype: 'combo',
+            name: 'countryCode',
+            margin: '0 0 5 0',
+            style: { 'display': 'inline-table' },
+            fieldLabel: 'Country',
+            queryMode: 'local',
+            displayField: 'label',
+            valueField: 'val',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['val', 'label'],
+                data: [
+                    { "val": "US", "label": "US" }
+                ]
+            })
                 }, /*{
                     xtype: 'textfield',
                     name: 'countryCode',
@@ -86,17 +106,23 @@ Ext.define('Taco.view.address.ModalEditor', {
                     xtype: 'textfield',
                     width: 206,
                     name: 'homePhone',
-                    fieldLabel: 'Home Phone'
+                    fieldLabel: 'Home Phone',
+                    margin: '0 13 5 0',
+                    style: { 'display': 'inline-table' }
                 }, {
                     xtype: 'textfield',
                     width: 206,
                     name: 'workPhone',
-                    fieldLabel: 'Work Phone'
+                    fieldLabel: 'Work Phone',
+                    margin: '0 13 5 0',
+                    style: { 'display': 'inline-table' }
                 }, {
                     xtype: 'textfield',
                     width: 206,
                     name: 'mobilePhone',
-                    fieldLabel: 'Mobile Phone'
+                    fieldLabel: 'Mobile Phone',
+                    margin: '0 0 5 0',
+                    style: { 'display': 'inline-table' }
         }];
 
         if (addressHasNames) {
@@ -104,17 +130,23 @@ Ext.define('Taco.view.address.ModalEditor', {
                 xtype: 'textfield',
                 width: 206,
                 name: 'firstName',
-                fieldLabel: 'First Name'
+                fieldLabel: 'First Name',
+                margin: '0 13 5 0',
+                style: { 'display': 'inline-table' }
             }, {
                 xtype: 'textfield',
                 width: 206,
                 name: 'middleName',
-                fieldLabel: 'Middle Name'
+                fieldLabel: 'Middle Name',
+                margin: '0 13 5 0',
+                style: { 'display': 'inline-table' }
             }, {
                 xtype: 'textfield',
                 width: 206,
                 name: 'lastName',
-                fieldLabel: 'Last Name'
+                fieldLabel: 'Last Name',
+                margin: '0 0 5 0',
+                style: { 'display': 'inline-table' }
             });
         }
 

@@ -30,11 +30,12 @@ Ext.define('Taco.core.ux.grid.Header', {
                 minWidth: 150,
                 shadow: false,
                 showSeparator: false,
-                items: me.getMenuItems(),
-                listeners: {
-                    deactivate: me.onMenuDeactivate,
-                    scope: me
-                }
+                items: me.getMenuItems()
+                // TODO: TODO42 Removed for 4.2
+                //listeners: {
+                //    deactivate: me.onMenuDeactivate,
+                //    scope: me
+                //}
             });
             me.updateMenuDisabledState();
             me.fireEvent('menucreate', me, me.menu);

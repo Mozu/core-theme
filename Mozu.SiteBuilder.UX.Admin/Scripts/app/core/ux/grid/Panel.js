@@ -6,9 +6,12 @@
  */
 Ext.define('Taco.core.ux.grid.Panel', {
     extend: 'Ext.grid.Panel',
-    requires: ['Taco.core.ux.grid.Header', 'Taco.core.ux.grid.RowExpander', 'Taco.core.ux.form.SelectField', 'Ext.ux.RowExpander', 'Taco.core.ux.grid.MenuColumn'],
+    requires: ['Taco.core.ux.grid.Header', 'Taco.core.ux.grid.RowExpander', 'Taco.core.ux.form.SelectField', 'Taco.core.ux.grid.MenuColumn'],
     alias: 'widget.taco.gridpanel',
-
+    rowLines: true,
+    viewConfig: {
+        stripeRows: false
+    },
     mixins: ['Taco.core.util.GetsParentPage'],
 
     /**

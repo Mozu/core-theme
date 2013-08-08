@@ -6,78 +6,67 @@
  */
 
 Ext.define('Taco.core.ux.grid.RowExpander', {
-    override: 'Ext.ux.RowExpander',
+    override: 'Ext.grid.plugin.RowExpander',
     requires: ['Taco.core.ux.grid.RowBody'],
 
     // overrides: changed feature ftype from rowbody to taco.rowbody
-    constructor: function () {
-        var me = this,
-            grid,
-            rowBodyTpl,
-            features;
+    //setCmp: function (grid) {
+    //    var me = this,
+    //        rowBodyTpl,
+    //        features;
 
-        me.callSuper(arguments);
-        grid = me.getCmp();
+    //    me.callParent(arguments);
 
-        me.recordsExpanded = {};
-        // <debug>
-        if (!me.rowBodyTpl) {
-            Ext.Error.raise("The 'rowBodyTpl' config is required and is not defined.");
-        }
-        // </debug>
+    //    me.recordsExpanded = {};
+    //    // <debug>
+    //    if (!me.rowBodyTpl) {
+    //        Ext.Error.raise("The 'rowBodyTpl' config is required and is not defined.");
+    //    }
+    //    // </debug>
 
-        me.rowBodyTpl = Ext.XTemplate.getTpl(me, 'rowBodyTpl');
-        rowBodyTpl = this.rowBodyTpl;
-        features = [{
-            ftype: 'taco.rowbody',
-            lockableScope: 'normal',
-            columnId: me.getHeaderId(),
-            recordsExpanded: me.recordsExpanded,
-            rowBodyHiddenCls: me.rowBodyHiddenCls,
-            rowCollapsedCls: me.rowCollapsedCls,
-            getAdditionalData: me.getRowBodyFeatureData,
-            getRowBodyContents: function(data) {
-                return rowBodyTpl.applyTemplate(data);
-            }
-        },{
-            ftype: 'rowwrap',
-            lockableScope: 'normal'
-        },
-        // In case the client grid is lockable (At tkhis stage we cannot know; plugins are constructed early)
-        // push a Feature into the locked side which sets up the initially collapsed row state correctly
-        {
-            ftype: 'feature',
-            lockableScope: 'locked',
-            getAdditionalData: function(data, idx, record, result) {
-                if (!me.recordsExpanded[record.internalId]) {
-                    result.rowCls = (result.rowCls || '') + ' ' + me.rowCollapsedCls;
-                }
-            }
-        }];
+    //    me.rowBodyTpl = Ext.XTemplate.getTpl(me, 'rowBodyTpl');
+    //    rowBodyTpl = this.rowBodyTpl;
+    //    features = [{
+    //        ftype: 'taco.rowbody',
+    //        lockableScope: 'normal',
+    //        recordsExpanded: me.recordsExpanded,
+    //        rowBodyHiddenCls: me.rowBodyHiddenCls,
+    //        rowCollapsedCls: me.rowCollapsedCls,
+    //        setupRowData: me.getRowBodyFeatureData,
+    //        setup: me.setup,
+    //        getRowBodyContents: function (record) {
+    //            return rowBodyTpl.applyTemplate(record.getData());
+    //        }
+    //    }, {
+    //        ftype: 'rowwrap',
+    //        lockableScope: 'normal'
+    //    }];
 
-        if (grid.features) {
-            grid.features = Ext.Array.push(features, grid.features);
-        } else {
-            grid.features = features;
-        }
-        grid.expandAllRows = Ext.bind(me.expandAllRows, me);
-    },
+    //    if (grid.features) {
+    //        grid.features = Ext.Array.push(features, grid.features);
+    //    } else {
+    //        grid.features = features;
+    //    }
+    //    // NOTE: features have to be added before init (before Table.initComponent)
+    //},
 
     // overrides: removed valign, rowspan attributes; removed colspan decrement
-    getRowBodyFeatureData: function(data, idx, record, orig) {
-        var me = this,
-            o = me.self.prototype.getAdditionalData.apply(this, arguments),
-            id = me.columnId;
+    //getRowBodyFeatureData: function(record, idx, o) {
+    //    var me = this,
+    //        //o = me.self.prototype.getAdditionalData.apply(this, arguments),
+    //        id = me.columnId;
 
-        o.rowBody = me.getRowBodyContents(data);
-        o.rowCls = me.recordsExpanded[record.internalId] ? '' : me.rowCollapsedCls;
-        o.rowBodyCls = me.recordsExpanded[record.internalId] ? '' : me.rowBodyHiddenCls;
-        o[id + '-tdAttr'] = ' ';
-        if (orig[id+'-tdAttr']) {
-            o[id+'-tdAttr'] += orig[id+'-tdAttr'];
-        }
-        return o;
-    },
+    //    me.self.prototype.setupRowData.apply(me, arguments);
+
+    //    o.rowBody = me.getRowBodyContents(record);
+    //    o.rowCls = me.recordsExpanded[record.internalId] ? '' : me.rowCollapsedCls;
+    //    o.rowBodyCls = me.recordsExpanded[record.internalId] ? '' : me.rowBodyHiddenCls;
+    //    o[id + '-tdAttr'] = ' ';
+    //    //if (orig[id+'-tdAttr']) {
+    //    //    o[id+'-tdAttr'] += orig[id+'-tdAttr'];
+    //    //}
+    //    return o;
+    //},
 
     // overrides: does not toggle row if dblclick occurred on a checkbox
     onDblClick: function(view, record, row, rowIdx, e) {
@@ -99,30 +88,34 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
     // overrides: removed toggling of hidden class on rowbody; parent's collapsed class is sufficient
     toggleRow: function(rowIdx, record) {
         var me = this,
-            view = me.view,
-            rowNode = view.getNode(rowIdx),
-            row = Ext.fly(rowNode, '_rowExpander'),
-            nextBd = row.down(me.rowBodyTrSelector, true),
-            isCollapsed = row.hasCls(me.rowCollapsedCls),
-            addOrRemoveCls = isCollapsed ? 'removeCls' : 'addCls',
-            rowHeight;
+           view = me.view,
+           rowNode = view.getNode(rowIdx),
+           row = Ext.fly(rowNode, '_rowExpander'),
+           nextBd = row.down(me.rowBodyTrSelector, true),
+           isCollapsed = row.hasCls(me.rowCollapsedCls),
+           addOrRemoveCls = isCollapsed ? 'removeCls' : 'addCls',
+           ownerLock, rowHeight, fireView;
 
         // Suspend layouts because of possible TWO views having their height change
         Ext.suspendLayouts();
         row[addOrRemoveCls](me.rowCollapsedCls);
         me.recordsExpanded[record.internalId] = isCollapsed;
         view.refreshSize();
-        view.fireEvent(isCollapsed ? 'expandbody' : 'collapsebody', row.dom, record, nextBd);
 
         // Sync the height and class of the row on the locked side
         if (me.grid.ownerLockable) {
-            view = me.grid.ownerLockable.lockedGrid.view;
+            ownerLock = me.grid.ownerLockable;
+            fireView = ownerLock.getView();
+            view = ownerLock.lockedGrid.view;
             rowHeight = row.getHeight();
             row = Ext.fly(view.getNode(rowIdx), '_rowExpander');
             row.setHeight(rowHeight);
             row[addOrRemoveCls](me.rowCollapsedCls);
             view.refreshSize();
+        } else {
+            fireView = view;
         }
+        fireView.fireEvent(isCollapsed ? 'expandbody' : 'collapsebody', row.dom, record, nextBd);
         // Coalesce laying out due to view size changes
         Ext.resumeLayouts(true);
     },
@@ -132,7 +125,7 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
         var me = this;
 
         return {
-            id: me.getHeaderId(),
+            //id: me.getHeaderId(),
             width: 24,
             lockable: false,
             sortable: false,
@@ -152,7 +145,7 @@ Ext.define('Taco.core.ux.grid.RowExpander', {
                 return '<div class="' + cls + '">&#160;</div>';
             },
             processEvent: function(type, view, cell, rowIndex, cellIndex, e, record) {
-                if (type == "mousedown" && e.getTarget('.x-grid-row-expander')) {
+                if (type === "mousedown" && e.getTarget('.x-grid-row-expander')) {
                     me.toggleRow(rowIndex, record);
                     return me.selectRowOnExpand;
                 }

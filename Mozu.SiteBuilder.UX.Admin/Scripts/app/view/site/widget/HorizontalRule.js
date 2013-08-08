@@ -20,7 +20,7 @@ Ext.define('Taco.view.site.widget.HorizontalRule', {
 
     initComponent: function () {
         var me = this;
-            me.flex = Ext.create('Taco.core.ux.form.FlexBox', {
+            me.flex = Ext.create('Ext.Container', {
             cls: Taco.baseCSSPrefix + 'hr-widget-container',
             defaults: {
                 xtype: 'combobox',

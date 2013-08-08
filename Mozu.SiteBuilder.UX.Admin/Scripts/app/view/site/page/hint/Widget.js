@@ -156,7 +156,10 @@ Ext.define('Taco.view.site.page.hint.Widget', {
     buildActions: function() {
         this.actions = Ext.create('Ext.container.Container', {
             cls: 'taco-hint-actions',
-            layout: 'auto',
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
             items: [{
                     xtype: 'component',
                     cls: 'taco-widget-drag'

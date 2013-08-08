@@ -30,7 +30,6 @@ Ext.define('Taco.core.ux.form.Form', {
     tasksKeyPrefix: '',
     cascadeChildTasks: true,
     cascadeRecordLoad: true,
-    flexLayout: false,
     manageHeight: false,
 
     initComponent: function () {
@@ -73,11 +72,6 @@ Ext.define('Taco.core.ux.form.Form', {
              */
             'afterload'
         ]);
-
-        if (this.flexLayout) {
-            this.layout = 'auto';
-            this.bodyCls += ' ' + Taco.baseCSSPrefix + 'flexform';
-        }
 
         if (!this.items) {
             this.items = [];
@@ -346,7 +340,7 @@ Ext.define('Taco.core.ux.form.Form', {
         if (saveRecord !== false) {
             saveTask = {
                 key: this.tasksKeyPrefix + 'save-record',
-                saveRecord: this.record,
+                saveRecord: this.record
             };
             if (updateRecord !== false) {
                 saveTask.dependencies = this.tasksKeyPrefix + 'update-record';
@@ -364,7 +358,7 @@ Ext.define('Taco.core.ux.form.Form', {
             Ext.each(this.stores, function(store) {
                 var saveTask = {
                     key: store.$className,
-                    store: store,
+                    store: store
                 };
                 if (tasks.tasks.getByKey(recordKey)) {
                     saveTask.dependencies = [recordKey];

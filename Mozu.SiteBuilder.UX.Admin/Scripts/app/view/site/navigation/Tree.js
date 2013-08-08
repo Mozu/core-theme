@@ -154,7 +154,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
                         }
                     ]
                 }
-            ],
+            ]
         });
 
         this.productGrid = Ext.create('Taco.core.ux.grid.Panel', {
@@ -198,7 +198,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
                     createOnly: true
                 },
                 autoLoad: false
-            },
+            }
         });
 
         this.tabPanel = Ext.widget('panel', {
@@ -231,7 +231,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
         this.mon(Taco.app, 'page-destroy', this.pageDestroyed, this);
         this.mon(Taco.app, 'page-navigate', this.pageNavigate, this);
         this.mon(Taco.app, 'pageentity-update', this.onPageEntiryUpdate, this);
-        this.mon(Taco.app.eventbus, 'Taco.model.CmsDocument.savesuccess', this.refreshTree, this);
+        this.mon(Taco.app, 'Taco.model.CmsDocument.savesuccess', this.refreshTree, this);
 
         // this panel's store
         this.mon(this.store,
@@ -420,7 +420,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
             this.refreshTree();
             return;
         }
-        if (val.length == 0) {
+        if (val.length === 0) {
             store.filters.removeAtKey(this.id);
             store.removeAll();
             this.resultPanel.getLayout().setActiveItem(this.tree);

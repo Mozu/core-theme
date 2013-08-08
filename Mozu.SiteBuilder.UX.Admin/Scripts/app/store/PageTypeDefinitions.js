@@ -13,5 +13,5 @@ Ext.define('Taco.store.PageTypeDefinitions', {
         contextLevel: 's',
         clearSort: true,
         autoLoad: true
-    },
+    }
 });

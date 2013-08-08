@@ -32,11 +32,11 @@ Ext.define('Taco.core.ux.form.NavForm', {
                     itemSelector: '.taco-form-card-nav-link',
                     listeners: {
                         itemclick: this.onNavClick,
-                        scope: this,
+                        scope: this
                     },
                     tpl: ['<ul ><tpl for=".">',
                         '<li class="taco-form-card-nav-link"  >{title}</li>',
-                                            '</tpl></ul>'],
+                                            '</tpl></ul>']
 
                 }
 

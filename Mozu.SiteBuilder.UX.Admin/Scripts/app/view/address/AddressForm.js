@@ -35,7 +35,7 @@ Ext.define('Taco.view.address.AddressForm', {
 	        name: 'type',
 	        hidden: hide('type')
 	    }, {
-	    	xtype: 'formflexbox',
+	    	xtype: 'container',
 	    	defaults: {
 	    		xtype: 'textfield',
 		        labelAlign: 'top',
@@ -57,7 +57,7 @@ Ext.define('Taco.view.address.AddressForm', {
 	        fieldLabel: 'Address Line 2',
 	        name: 'address2'
 	    }, {
-	    	xtype: 'formflexbox',
+	    	xtype: 'container',
 	    	defaults: {
 	    		xtype: 'textfield',
 		        labelAlign: 'top',

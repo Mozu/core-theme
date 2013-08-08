@@ -29,7 +29,7 @@ Ext.define('Taco.view.site.navigation.WidgetNav', {
                 hasIcon: function (values) {
                     return !Ext.isEmpty(values.data.icon);
                 }
-            }],
+            }]
         });
 
         this.items= [this.view];

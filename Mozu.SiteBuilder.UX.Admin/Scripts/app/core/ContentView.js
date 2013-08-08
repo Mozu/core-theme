@@ -21,12 +21,12 @@ Ext.define('Taco.core.ContentView' , {
      * @return {Boolean}     
      */
     isContentView: function (obj) {
-        return obj instanceof Taco.core.ux.content.Container
+        return obj instanceof Taco.core.ux.content.Container;
     },
     add:function() {
         this.removeAll();
         this.callParent(arguments);
-    },
+    }
    
    
 

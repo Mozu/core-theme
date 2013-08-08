@@ -4,7 +4,7 @@
 Ext.define('Taco.view.product.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.prodindex',
-    requires: ['Taco.model.Product', 'Taco.store.Products', 'Ext.ux.RowExpander'],
+    requires: ['Taco.model.Product', 'Taco.store.Products'],
 
     typeName: 'Product',
     modelName: 'Taco.model.Product',
@@ -19,7 +19,7 @@ Ext.define('Taco.view.product.Index', {
         width: 600,
         cls: Taco.baseCSSPrefix + 'combofilter-form products',
         items: [{
-            xtype: 'formflexbox',
+            xtype: 'container',
             justify: false,
             defaults: {
                 xtype: 'textfield',
@@ -193,13 +193,13 @@ Ext.define('Taco.view.product.Index', {
                     pluginId: 'expander',
                     rowBodyTpl: new Ext.XTemplate(
                         '<tpl for="productInSites"><tr class="x-grid-row-body">',
-                            '<td colspan="3" class="x-grid-cell"><div class="x-grid-cell-inner"></div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-site-id="{siteId}">{productName}</a></div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{siteId:this.toSiteName}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner"></div></td>',
+                            '<td colspan="3" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
+                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-site-id="{siteId}">{productName}</a></div></td>',
+                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
+                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
+                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{siteId:this.toSiteName}</div></td>',
+                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
+                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
                         '</tr></tpl>',
                     {
                         formatOverridden: function (value) {

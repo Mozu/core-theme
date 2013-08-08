@@ -17,12 +17,12 @@ Ext.define('Taco.controller.Orders', {
     createContentView: function (view, cfg) {
         var ctx = Taco.app.context.getCurrentContext();
         if (cfg.record && (ctx.contextType != 's' || (cfg.record.data.siteId && ctx.id != cfg.record.data.siteId))) {
-            Taco.app.context.setCurrentContext( Taco.app.context.findSite(cfg.record.data.siteId), false );
+            Taco.app.context.setCurrentContext(Taco.app.context.findSite(cfg.record.data.siteId), false);
         }
         return this.callParent(arguments);
-        
-        
-        
+
+
+
     },
 
     create: function () {

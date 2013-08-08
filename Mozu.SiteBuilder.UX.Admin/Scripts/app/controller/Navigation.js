@@ -16,7 +16,10 @@ Ext.define('Taco.controller.Navigation', {
     }],
 
     init: function () {
-        this.getNavigationStore().on('load', this.bindPrimaryMenu, this);
+        var store = this.getNavigationStore();
+        if (!store.getCount()) return store.on('load', this.init, this);
+
+        this.bindPrimaryMenu();
 
         this.callParent(arguments);
 

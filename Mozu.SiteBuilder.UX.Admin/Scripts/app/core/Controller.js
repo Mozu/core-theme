@@ -81,7 +81,6 @@ Ext.define('Taco.core.Controller', {
 
     create: function (id, additionalParams, appState) {
         var record = appState ? appState.record : Ext.create('Taco.model.' + this.modelName);
-        ;
 
         this.createContentView(this.getEditorView(), {
             record: record
@@ -154,7 +153,7 @@ Ext.define('Taco.core.Controller', {
     },
 
     requiresSiteContext: function () {
-        if (Taco.app.context.getCurrent().contextType != 's') {
+        if (Taco.app.context.getCurrent().contextType !== 's') {
             Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', 's').raw);
             return true;
         }
@@ -175,5 +174,5 @@ Ext.define('Taco.core.Controller', {
         // at this point we know the current context is inappropriate:
         Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', requiredContextType).raw);
         return false;
-    },
+    }
 });

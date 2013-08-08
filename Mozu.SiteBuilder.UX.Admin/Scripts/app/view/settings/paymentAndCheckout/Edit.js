@@ -8,5 +8,5 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Edit', {
         'Taco.view.settings.paymentAndCheckout.Form'
     ],
     formCls: 'Taco.view.settings.paymentAndCheckout.Form',
-    requiresContextOfType: ['s'],
+    requiresContextOfType: ['s']
 });

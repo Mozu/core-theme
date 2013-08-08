@@ -19,5 +19,5 @@
             contextLevel: 's',
             clearSort: true,
             autoLoad: true
-        },
+        }
     });

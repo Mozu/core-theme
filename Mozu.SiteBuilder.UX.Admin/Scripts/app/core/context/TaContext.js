@@ -5,7 +5,7 @@
 
 Ext.define('Taco.core.context.TaContext', {
     extend: 'Ext.util.Observable',
-    requires: ['Taco.core.context.SiteCollection', 'Taco.core.context.Site'],
+    requires: ['Taco.core.context.SiteCollection', 'Taco.core.context.Site', 'Taco.core.context.StoreItem'],
     urlToken: null,
     contextType: 't',
     name: 'All',
@@ -173,21 +173,9 @@ Ext.define('Taco.core.context.TaContext', {
                 data.push(site);
             });
         });
-        
-
-        Ext.define('TaContext-StoreItem', {
-            extend: 'Taco.core.data.Model',
-            fields: [
-                'name',
-                'contextType',
-                'urlToken'
-            ],
-            idProperty: 'urlToken'
-        });
-        
 
         store = Ext.create('Ext.data.Store', {
-            model: 'TaContext-StoreItem',
+            model: 'Taco.core.context.StoreItem',
             data:data
         });
         

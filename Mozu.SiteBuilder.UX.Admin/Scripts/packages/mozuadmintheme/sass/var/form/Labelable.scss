@@ -1,0 +1,6 @@
+$form-label-font-weight: bold;
+$form-label-font-size: px-to-rem(14);
+$form-label-line-height: 14px;
+$form-toolbar-label-line-height: $form-label-line-height !default;
+$form-label-font-family: $font-family;
+$form-label-font: $form-label-font-weight $form-label-font-size $form-label-font-family;

@@ -26,7 +26,7 @@ Ext.define('Taco.view.site.Toolbar', {
             text: 'Preview',
             itemId: 'preview',
             onClick: function () {
-                self.editor.viewPage()
+                self.editor.viewPage();
             }
         }, {
             text: 'More',
@@ -99,7 +99,7 @@ Ext.define('Taco.view.site.Toolbar', {
             more: false,
            // preview: false,
             destroy: false,
-            publishPage: false,
+            publishPage: false
         });
     },
 

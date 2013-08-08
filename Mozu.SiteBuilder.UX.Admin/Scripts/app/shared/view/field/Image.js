@@ -48,7 +48,7 @@ Ext.define('Taco.shared.view.field.Image', {
         });
 
         this.imageDropZone = Ext.widget({
-            xtype: 'component',
+            xtype: 'component'
         });
 
         this.imageView = Ext.widget({
@@ -191,7 +191,7 @@ Ext.define('Taco.shared.view.field.Image', {
                             indicatorX += 165;
                         }
                         //me.getIndicator().setWidth(Ext.fly(view.el).getWidth()).showAt(0, indicatorY);
-                        me.getIndicator().showAt(indicatorX, indicatorY)
+                        me.getIndicator().showAt(indicatorX, indicatorY);
                         // Cache the overRecord and the 'before' or 'after' indicator.
                         me.overRecord = overRecord;
                         me.currentPosition = pos;
@@ -305,7 +305,7 @@ Ext.define('Taco.shared.view.field.Image', {
         this.emptyDropZoneEl = this.emptyDropZone.getEl();
 
         this.emptyDropZoneEl.on({
-            dragenter: function (e) {;
+            dragenter: function (e) {
                 this.onValidDragEnter(e, this.emptyDropZoneEl);
             },
             dragleave: function (e) {
@@ -326,10 +326,10 @@ Ext.define('Taco.shared.view.field.Image', {
     },
 
     isEqual: function (value1, value2) {
-        if (value1 == null && value2 == null) {
+        if (!value1 && !value2) {
             return true;
         }
-        if (value1 == null || value2 == null) {
+        if (!value1 || !value2) {
             return false;
         }
         if (value1.length !== value2.length) {

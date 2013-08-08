@@ -68,7 +68,7 @@ Ext.define('Taco.view.Header', {
                 autoEl: {
                     tag: 'a',
                     href: '/admin',
-                    title: ' version:[' + Taco.apiVersion + '] date:[' + Ext.Date.format(Taco.buildDate, 'Y-m-d H:i:s') + ']',
+                    title: ' version:[' + Taco.apiVersion + '] date:[' + Ext.Date.format(Taco.buildDate, 'Y-m-d H:i:s') + ']'
                 }
             }, {
                 xtype: 'secondarymenu',
@@ -106,7 +106,7 @@ Ext.define('Taco.view.Header', {
             }
         });
 
-        Taco.app.eventbus.on('user.change', function (user) {
+        Taco.app.on('user.change', function (user) {
             var cmp = me.items.getAt(0);
             if (cmp.update) {
                 cmp.update(user.data);

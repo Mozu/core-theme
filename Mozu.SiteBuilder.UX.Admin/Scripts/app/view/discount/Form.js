@@ -56,7 +56,7 @@ Ext.define('Taco.view.discount.Form', {
                     ["LineItem", "LineItem"],
                     ["Order", "Order"]
                 ]
-            }),
+            })
         });
 
         me.amountTypeInput = Ext.create('Ext.form.field.ComboBox', {
@@ -159,7 +159,7 @@ Ext.define('Taco.view.discount.Form', {
             listeners: {
                 change: me.setFieldVisibility,
                 scope: me
-            },
+            }
         });
 
         var catStore = me.record.getCategoryStore();
@@ -179,7 +179,7 @@ Ext.define('Taco.view.discount.Form', {
             typeAhead: true,
             displayField: 'name',
             valueField: 'id',
-            fieldLabel: 'Select Categories',            
+            fieldLabel: 'Select Categories'            
         });
         // reset the list's dirty state when its store first loads
         catStore.on({
@@ -298,7 +298,7 @@ Ext.define('Taco.view.discount.Form', {
             defaults: {
                 xtype: 'datetime',
                 labelAlign: 'top',
-                labelSeparator: '',
+                labelSeparator: ''
             },
             items: [{
                     name: 'startDate',
@@ -534,5 +534,5 @@ Ext.define('Taco.view.discount.Form', {
 
 
         list.setValue(store.collect('productCode'));
-    },
+    }
 });

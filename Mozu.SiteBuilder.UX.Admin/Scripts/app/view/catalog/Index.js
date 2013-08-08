@@ -150,7 +150,7 @@ Ext.define('Taco.view.catalog.Index', {
                 type: 'date'
             }, {
                 name: 'amount',
-                type: 'float',
+                type: 'float'
             }, {
                 name: 'status',
                 type: 'string'
@@ -221,7 +221,7 @@ Ext.define('Taco.view.catalog.Index', {
                 renderTpl: [
                     '<div class="total-orders"><label>Total Orders</label><h2>{totalOrders}</h2></div>',
                     '<div class="total-spent"><label>Total Spent</label><h2>{totalSpent:usMoney}</h2></div>',
-                    '<div class="customer-since"><label>Customer Since</label><h2>{customerSince:date("m/d/y")}</h2></div>',
+                    '<div class="customer-since"><label>Customer Since</label><h2>{customerSince:date("m/d/y")}</h2></div>'
                 ]
             }]
         });

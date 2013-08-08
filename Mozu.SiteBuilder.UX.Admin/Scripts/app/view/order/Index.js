@@ -9,8 +9,7 @@ Ext.define('Taco.view.order.Index', {
     requires: [
         'Taco.model.Order',
         'Taco.store.Orders',
-        'Taco.view.order.modal.ProductConfigurator',
-        'Ext.ux.RowExpander'
+        'Taco.view.order.modal.ProductConfigurator'
     ],
 
     typeName: 'Order',
@@ -26,7 +25,7 @@ Ext.define('Taco.view.order.Index', {
         width: 600,
         cls: Taco.baseCSSPrefix + 'combofilter-form orders',
         items: [{
-            xtype: 'formflexbox',
+            xtype: 'container',
             justify: false,
             defaults: {
                 xtype: 'textfield',
@@ -77,7 +76,7 @@ Ext.define('Taco.view.order.Index', {
             text: 'Order Date',
             minWidth: 180,
             xtype: 'datecolumn',
-            format: 'M d g:ia',
+            format: 'M d g:ia'
             //resizable: false,
            
         }, {

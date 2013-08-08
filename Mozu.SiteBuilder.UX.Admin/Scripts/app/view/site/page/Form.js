@@ -714,7 +714,7 @@ Ext.define('Taco.view.site.page.Form', {
                 this.adapter = Ext.create(config.adapter, {
                     metaData: md,
                     editor: this,
-                    editors: config.editors,
+                    editors: config.editors
                    
                 });
                 this.adapter.load();
