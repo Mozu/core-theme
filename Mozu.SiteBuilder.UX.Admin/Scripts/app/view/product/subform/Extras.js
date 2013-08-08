@@ -143,7 +143,7 @@ Ext.define('Taco.view.product.subform.Extras', {
         extra.checkbox = checkbox;
 
         items = [{
-            xtype: 'formflexbox',
+            xtype: 'container',
             cls: 'extra-header',
             items: [{
                 xtype: 'component',
@@ -201,7 +201,7 @@ Ext.define('Taco.view.product.subform.Extras', {
         }
 
         return {
-            xtype: 'formflexbox',
+            xtype: 'container',
             justify: false,
             items: [{
                 xtype: 'component',

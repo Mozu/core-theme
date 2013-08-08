@@ -57,7 +57,7 @@ Ext.define('Taco.view.customers.Form', {
                             xtype: 'checkboxfield',
                             name: 'acceptsMarketing',
                             fieldLabel: 'Marketing',
-                            boxLabel: 'Yes, keep me up to date on store news and specials',
+                            boxLabel: 'Yes, keep me up to date on store news and specials'
                     
                             // checked: this.record.get('acceptsMarketing')
                         }]
@@ -69,7 +69,7 @@ Ext.define('Taco.view.customers.Form', {
                     renderTpl: [
                         '<div class="total-orders"><label>Total Orders</label><h2>{[values.totalOrders || 0]}</h2></div>',
                         '<div class="total-spent"><label>Total Spent</label><h2>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</h2></div>',
-                        '<div class="customer-since"><label>Customer Since</label><h2>Never</h2></div>',
+                        '<div class="customer-since"><label>Customer Since</label><h2>Never</h2></div>'
                     ]
                 }]
         });

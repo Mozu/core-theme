@@ -22,7 +22,7 @@ Ext.define('Taco.controller.GeneralSettings', {
                 },
                 failure: function () {
                     Taco.app.setLoading(false);
-                },
+                }
             });
         }
     }

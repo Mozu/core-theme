@@ -100,8 +100,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
         newValues.push(value);
 
         return {
-            xtype: 'formflexbox',
-            justify: false,
+            xtype: 'container',
             items: [{
                 xtype: 'component',
                 html: listItem.value,

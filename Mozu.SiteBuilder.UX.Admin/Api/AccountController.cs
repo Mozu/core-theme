@@ -78,7 +78,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var tasks= new List<Task<ServiceClientResponse<Core.Api.Contracts.User>>>();
             if (pagingParams.id != null)
             {
-                tasks.Add(_usersRepo.GetUser((string)pagingParams.id, null));
+                tasks.Add(_usersRepo.GetUser((string)pagingParams.id, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId));
                  
             }
             StringBuilder sb = new StringBuilder();

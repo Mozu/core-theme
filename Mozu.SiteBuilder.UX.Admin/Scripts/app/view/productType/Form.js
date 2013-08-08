@@ -8,11 +8,9 @@ Ext.define('Taco.view.productType.Form', {
     requires: [
         'Taco.core.ux.form.field.MultiSelect', 
         'Taco.core.ux.BoxReorderer',
-        'Taco.core.ux.form.FlexBox',
         'Taco.model.ProductTypeAttribute',
         'Taco.model.ProductType',
-        'Taco.view.productType.AttributeGroup',
-        'Taco.core.ux.form.FlexBox'
+        'Taco.view.productType.AttributeGroup'
     ],
 
     title: 'Product Type',
@@ -269,8 +267,7 @@ Ext.define('Taco.view.productType.Form', {
 
         panel = Ext.create('Taco.core.ux.form.Form', {
             items: [{
-                xtype: 'formflexbox',
-                justify: false,
+                xtype: 'container',
                 defaults: {
                     labelAlign: 'top',
                     labelSeparator: ''

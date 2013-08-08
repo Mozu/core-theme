@@ -28,7 +28,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
                 '<div class="country">{countryCode}</div>',
                 '<div class="country">{[ values.workPhone ? values.workPhone : values.homePhone ]}</div>'
             
-            ],
+            ]
             
         });
 
@@ -40,13 +40,12 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
             } 
            
         });
-        ;
 
 
-        if (this.addressRecord.data != null) {
+        if (this.addressRecord.data) {
 
             Ext.Object.each(this.addressRecord.data, function (key, value) {
-                if (value != null && value !== '') {
+                if (value && value !== '') {
                     isAddressEmpty = false;
                 }
             });

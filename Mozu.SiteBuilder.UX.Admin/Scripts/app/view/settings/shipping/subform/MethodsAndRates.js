@@ -19,7 +19,7 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
 
 
         this.custom = Ext.create('Taco.view.settings.shipping.subform.Custom', {
-            record: this.record,
+            record: this.record
         });
 
 
@@ -65,7 +65,7 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
                     xtype: 'textfield',
                     name: 'apipassword',
                     fieldLable: 'API password',
-                    fieldLabel: 'password',
+                    fieldLabel: 'password'
                 },
                 {
                     xtype: 'textfield',
@@ -116,7 +116,7 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
                     xtype: 'textfield',
                     name: 'apipassword',
                     fieldLable: 'API password',
-                    fieldLabel: 'password',
+                    fieldLabel: 'password'
                 },
                 {
                     xtype: 'textfield',
@@ -149,7 +149,7 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
                     xtype: 'textfield',
                     name: 'apipassword',
                     fieldLable: 'API password',
-                    fieldLabel: 'password',
+                    fieldLabel: 'password'
                 },
                 {
                     xtype: 'textfield',

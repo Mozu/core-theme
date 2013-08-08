@@ -39,7 +39,7 @@ Ext.define('Taco.view.settings.shipping.subform.Custom', {
                         ['Flat rate per item', 'FLAT_RATE_PER_ITEM_EXACT_AMOUNT'],
                         ['Flat rate per order', 'FLAT_RATE_PER_ORDER_EXACT_AMOUNT']
                     ]
-                }),
+                })
             },
             Ext.create('Taco.core.ux.form.UnitField' /*'Taco.core.ux.form.CurrencyField'*/, {
                 name: 'amount',

@@ -11,5 +11,5 @@
         storeManagerConfig: {
             createOnly:true,
             autoLoad: true
-        },
+        }
     });

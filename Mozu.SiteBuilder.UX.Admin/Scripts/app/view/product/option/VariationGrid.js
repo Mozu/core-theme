@@ -93,7 +93,7 @@ Ext.define('Taco.view.product.option.VariationGrid', {
 
         this.plugins = [
             Ext.create('Ext.grid.plugin.CellEditing', {
-                clicksToEdit: 1,
+                clicksToEdit: 1
                 //isCellEditable: function (record, columnHeader) {
         
                 //}

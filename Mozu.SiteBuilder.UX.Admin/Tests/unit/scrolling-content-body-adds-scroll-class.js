@@ -1,7 +1,7 @@
 ﻿StartTest(function (test) {
     var async = test.beginAsync();
     test.diag('Visiting general settings page, a good long page');
-    Taco.app.eventbus.on('createpageview', function() {
+    Taco.app.on('createpageview', function() {
         if (window.location.href.indexOf('generalsettings') === -1) {
             test.fail('Did not get to settings page');
         }        var contentbody = test.cq1('contentbody');

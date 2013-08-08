@@ -12,48 +12,6 @@ Ext.define('Taco.view.customers.Index', {
     editorName: 'Taco.view.customer.Edit',
     useTilePanel: false,
     requiresContextOfType: 's',
-    //ToDo: make sure the filtering works after Thom checks his stuff in
-    
-    filterProperty: 'primaryFirstName',
-    
-    filterFormConf: {
-        width: 600,
-        cls: Taco.baseCSSPrefix + 'combofilter-form costomers',
-        items: [{
-            xtype: 'formflexbox',
-            justify: false,
-            defaults: {
-                xtype: 'textfield',
-                width: 160
-            },
-            items: [{
-                name: 'primaryFirstName',
-                fieldLabel: 'First Name'
-            }, {
-                name: 'primaryLastName',
-                fieldLabel: 'Last Name'
-            }]
-        }]
-    },
-
-    filterProperties: [{
-        property: 'all',
-        text: 'All',
-        isDefault: true
-    }, {
-        property: 'primaryFirstName',
-        text: 'First Name'
-    }, {
-        property: 'primaryLastName',
-        text: 'Last Name'
-    }, {
-        property: 'primaryEmail',
-        text: 'Email'
-    }, {
-        property: 'primaryCityOrTown',
-        text: 'Location'
-    }],
-
     gridPanelConf: {
         columns: [{
             dataIndex: 'primaryFirstName',
@@ -109,54 +67,54 @@ Ext.define('Taco.view.customers.Index', {
         this.tagStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerTags');
         this.gridPanelConf = {
             columns: [{
-                    dataIndex: 'primaryFirstName',
-                    text: 'First Name',
-                    width: 130
-                }, {
-                    dataIndex: 'primaryLastName',
-                    text: 'Last Name',
-                    width: 130
-                }, {
-                    dataIndex: 'primaryEmail',
-                    text: 'Email',
-                    width: 200
-                }, {
-                    dataIndex: 'primaryCityOrTown',
-                    text: 'Location',
-                    width: 150,
+                dataIndex: 'primaryFirstName',
+                text: 'First Name',
+                width: 130
+            }, {
+                dataIndex: 'primaryLastName',
+                text: 'Last Name',
+                width: 130
+            }, {
+                dataIndex: 'primaryEmail',
+                text: 'Email',
+                width: 200
+            }, {
+                dataIndex: 'primaryCityOrTown',
+                text: 'Location',
+                width: 150,
                     renderer: function(value, metaData, record) {
-                        return value ? [Ext.String.capitalize(value), record.get('primaryState')].join(', ') : '';
-                    }
-                }, {
-                    dataIndex: 'orderCount',
-                    text: 'Total Orders',
-                    width: 100
-                }, {
-                    dataIndex: 'totalSpent',
-                    text: 'Spent',
-                    width: 100
-                }, {
-                    dataIndex: 'groups',
-                    text: 'Groups',
+                    return value ? [Ext.String.capitalize(value), record.get('primaryState')].join(', ') : '';
+                }
+            }, {
+                dataIndex: 'orderCount',
+                text: 'Total Orders',
+                width: 100
+            }, {
+                dataIndex: 'totalSpent',
+                text: 'Spent',
+                width: 100
+            }, {
+                dataIndex: 'groups',
+                text: 'Groups',
                     width: 300,
                     renderer: function(value, metaData, record) {
-                        if (value && value.length) {
-                            var names = [];
+                    if (value && value.length) {
+                        var names = [];
                             Ext.each(value || [], function(tagId) {
-                                var tagRecord = me.tagStore.getById(tagId);
-                                if (tagRecord) {
-                                    names.push(tagRecord.get('Value'));
-                                }
+                            var tagRecord = me.tagStore.getById(tagId);
+                            if (tagRecord) {
+                                names.push(tagRecord.get('Value'));
+                            }
+                                
+                            
+                        });
 
-
-                            });
-
-                            if (names.length)
-                                return names.join(', ');
-                        }
-                    },
-                    minWidth: 100,
-                    flex: 1
+                        if (names.length)
+                            return names.join(', ');
+                    }
+                },
+                minWidth: 100,
+                flex: 1
                 },{
             xtype: 'taco.menucolumn',
         text: 'Actions',
@@ -180,7 +138,7 @@ Ext.define('Taco.view.customers.Index', {
         // do any processing needed to show menu
         onMenuShow: function (menu, eventData) {
         }
-    }]
+            }]
         };
         
         this.callParent(arguments);

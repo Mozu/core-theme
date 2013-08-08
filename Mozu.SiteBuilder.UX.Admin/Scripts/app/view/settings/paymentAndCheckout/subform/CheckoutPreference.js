@@ -25,7 +25,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.CheckoutPreference', {
                     vertical: true,
                     items: [
                         { boxLabel: 'Guest Checkout with optional sign in', name: 'customerCheckoutType', inputValue: 'LoginOptional' },
-                        { boxLabel: 'Sign in required', name: 'customerCheckoutType', inputValue: 'LoginRequired' },
+                        { boxLabel: 'Sign in required', name: 'customerCheckoutType', inputValue: 'LoginRequired' }
 
                     ]
                 },

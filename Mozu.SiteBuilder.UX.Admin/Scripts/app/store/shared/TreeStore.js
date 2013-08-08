@@ -25,7 +25,7 @@ Ext.define('Taco.store.shared.TreeStore', {
         if (model) {
              idProperty = model.prototype.idProperty;
             
-            if (model.proxy.type == 'readahead') {
+             if (model.prototype.proxy.type == 'readahead') {
                 if (statics.root == null) {
                     root = Ext.apply({}, me.root);
                     // create a default rootNode and create internal data struct.

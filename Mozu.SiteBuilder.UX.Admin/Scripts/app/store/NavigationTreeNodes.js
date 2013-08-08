@@ -16,6 +16,6 @@ Ext.define('Taco.store.NavigationTreeNodes', {
         storeManagerConfig: {
             createOnly: true,
             autoLoad: true
-        },
+        }
     });
 

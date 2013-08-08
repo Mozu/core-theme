@@ -4,9 +4,13 @@
     requires: ['Taco.store.Attributes'],
 
     height: 400,
-
+    layout: {
+        type: 'hbox',
+        align: 'top'
+    },
+    autoScroll: true,
+    bodyPadding: 20,
     containerWidth: 150,
-    flexLayout: true,
     ignoreParentFormTracking: true,
 
     initComponent: function () {

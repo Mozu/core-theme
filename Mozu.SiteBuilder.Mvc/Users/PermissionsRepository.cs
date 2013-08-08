@@ -115,7 +115,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
         public Task<List<Behavior>> GetBehaviors()
         {
-            var response = _referenceWebApiClient.GetBehaviors().Result;
+            var response = _referenceWebApiClient.GetBehaviors(UserScopeType.Tenant.ToString()).Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
                 return InTask(new List<Behavior>(0));
@@ -166,11 +166,11 @@ namespace Mozu.SiteBuilder.Mvc.Users
             var categories = GetCategories();
             var behaviors = GetBehaviors();
             int[] validCats = DefaultCategories;
-            var filterStr = _settings.AppSettings("role_categories");
-            if (!string.IsNullOrWhiteSpace(filterStr))
-            {
-                validCats = filterStr.Split(',').Select(x => int.Parse(x)).ToArray();
-            }
+            //var filterStr = _settings.AppSettings("role_categories");
+            //if (!string.IsNullOrWhiteSpace(filterStr))
+            //{
+            //    validCats = filterStr.Split(',').Select(x => int.Parse(x)).ToArray();
+            //}
             return InTask(new BehaviorTree(categories.Result.Where( x => validCats.Contains(x.Id )).ToList(), behaviors.Result));
         }
 

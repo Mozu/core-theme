@@ -548,12 +548,158 @@
     <Compile Include="MockServices\TestResponse.cs" />
     <Compile Include="Navigation\CategoryNavigationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\build\all-classes.js" />
+    <Content Include="Scripts\build\fonts\journal-webfont.eot" />
+    <Content Include="Scripts\build\fonts\journal-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\journal-webfont.woff" />
+    <Content Include="Scripts\build\fonts\mozicons.eot" />
+    <Content Include="Scripts\build\fonts\mozicons.ttf" />
+    <Content Include="Scripts\build\fonts\mozicons.woff" />
+    <Content Include="Scripts\build\fonts\myriadpro-semibold-webfont.eot" />
+    <Content Include="Scripts\build\fonts\myriadpro-semibold-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\myriadpro-semibold-webfont.woff" />
+    <Content Include="Scripts\build\fonts\myriadwebpro-bold-webfont.eot" />
+    <Content Include="Scripts\build\fonts\myriadwebpro-bold-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\myriadwebpro-bold-webfont.woff" />
+    <Content Include="Scripts\build\fonts\myriadwebpro-italic-webfont.eot" />
+    <Content Include="Scripts\build\fonts\myriadwebpro-italic-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\myriadwebpro-italic-webfont.woff" />
+    <Content Include="Scripts\build\fonts\myriadwebpro-webfont.eot" />
+    <Content Include="Scripts\build\fonts\myriadwebpro-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\myriadwebpro-webfont.woff" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Black-webfont.eot" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Black-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Black-webfont.woff" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-BlackIt-webfont.eot" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-BlackIt-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-BlackIt-webfont.woff" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Bold-webfont.eot" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Bold-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Bold-webfont.woff" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-BoldIt-webfont.eot" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-BoldIt-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-BoldIt-webfont.woff" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-ExtraLight-webfont.eot" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-ExtraLight-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-ExtraLight-webfont.woff" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-ExtraLightIt-webfont.eot" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-ExtraLightIt-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-ExtraLightIt-webfont.woff" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-It-webfont.eot" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-It-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-It-webfont.woff" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Light-webfont.eot" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Light-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Light-webfont.woff" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-LightIt-webfont.eot" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-LightIt-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-LightIt-webfont.woff" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Regular-webfont.eot" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Regular-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Regular-webfont.woff" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Semibold-webfont.eot" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Semibold-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Semibold-webfont.woff" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-SemiboldIt-webfont.eot" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-SemiboldIt-webfont.ttf" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-SemiboldIt-webfont.woff" />
+    <Content Include="Scripts\build\index.html" />
+    <Content Include="Scripts\build\resources\fonts\journal-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\mozicons.svg" />
+    <Content Include="Scripts\build\resources\fonts\myriadpro-semibold-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\myriadwebpro-bold-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\myriadwebpro-italic-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\myriadwebpro-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Black-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-BlackIt-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Bold-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-BoldIt-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-ExtraLight-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-ExtraLightIt-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-It-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Light-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-LightIt-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Regular-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Semibold-webfont.svg" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-SemiboldIt-webfont.svg" />
+    <Content Include="Scripts\build\resources\images\icons\Thumbs.db" />
+    <Content Include="Scripts\build\resources\fonts\journal-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\journal-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\journal-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\mozicons.eot" />
+    <Content Include="Scripts\build\resources\fonts\mozicons.ttf" />
+    <Content Include="Scripts\build\resources\fonts\mozicons.woff" />
+    <Content Include="Scripts\build\resources\fonts\myriadpro-semibold-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\myriadpro-semibold-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\myriadpro-semibold-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\myriadwebpro-bold-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\myriadwebpro-bold-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\myriadwebpro-bold-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\myriadwebpro-italic-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\myriadwebpro-italic-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\myriadwebpro-italic-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\myriadwebpro-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\myriadwebpro-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\myriadwebpro-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Black-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Black-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Black-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-BlackIt-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-BlackIt-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-BlackIt-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Bold-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Bold-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Bold-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-BoldIt-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-BoldIt-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-BoldIt-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-ExtraLight-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-ExtraLight-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-ExtraLight-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-ExtraLightIt-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-ExtraLightIt-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-ExtraLightIt-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-It-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-It-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-It-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Light-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Light-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Light-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-LightIt-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-LightIt-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-LightIt-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Regular-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Regular-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Regular-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Semibold-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Semibold-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-Semibold-webfont.woff" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-SemiboldIt-webfont.eot" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-SemiboldIt-webfont.ttf" />
+    <Content Include="Scripts\build\resources\fonts\SourceSansPro-SemiboldIt-webfont.woff" />
+    <Content Include="Scripts\build\resources\lib\tinymce\langs\readme.md" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\fonts\icomoon-small.eot" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\fonts\icomoon-small.ttf" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\fonts\icomoon-small.woff" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\fonts\icomoon.eot" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\fonts\icomoon.ttf" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\fonts\icomoon.woff" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\fonts\readme.md" />
+    <Content Include="Scripts\build\resources\lib\utils.rb" />
+    <Content Include="Scripts\build\resources\Readme.md" />
+    <Content Include="Scripts\build\config.rb" />
+    <Content Include="Scripts\build\Taco-all.scss" />
+    <Content Include="Scripts\build\Taco-example.scss" />
+    <Content Include="Scripts\sass\src\view\dashboard\Index.scss" />
+    <Content Include="Scripts\sass\src\Application.scss" />
+    <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
-    <Content Include="Scripts\.sencha\workspace\plugin.xml" />
+    <Content Include="Scripts\app.js" />
     <Content Include="Scripts\app\controller\Attributes.js" />
     <Content Include="Scripts\app\controller\FileManager.js" />
     <Content Include="Scripts\app\controller\PageTemplates.js" />
@@ -562,7 +708,9 @@
     <Content Include="Scripts\app\controller\Errors.js" />
     <Content Include="Scripts\app\controller\Roles.js" />
     <Content Include="Scripts\app\controller\Settings.js" />
+    <Content Include="Scripts\app\application.js" />
     <Content Include="Scripts\app\core\AjaxProxy.js" />
+    <Content Include="Scripts\app\core\context\StoreItem.js" />
     <Content Include="Scripts\app\core\context\Site.js" />
     <Content Include="Scripts\app\core\context\SiteCollection.js" />
     <Content Include="Scripts\app\core\data\CategoryTreeProxy.js" />
@@ -640,6 +788,12 @@
     <Content Include="Configs\Log4Net.Release.config" />
     <Content Include="PreDeploy.ps1" />
     <Content Include="PostDeploy.ps1" />
+    <Content Include="Scripts\.sencha\app\build.properties" />
+    <Content Include="Scripts\.sencha\app\codegen.json" />
+    <Content Include="Scripts\.sencha\app\production.properties" />
+    <Content Include="Scripts\.sencha\app\sencha.cfg" />
+    <Content Include="Scripts\.sencha\app\testing.properties" />
+    <Content Include="Scripts\app.json" />
     <None Include="Scripts\app\mocks\behaviors.json" />
     <Content Include="Scripts\app\model\Attribute.js" />
     <Content Include="Scripts\app\model\AttributeValue.js" />
@@ -821,434 +975,702 @@
     <Content Include="Scripts\app\view\theme\ThemeView.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\build.xml" />
-    <Content Include="Scripts\build\all-classes.js" />
-    <Content Include="Scripts\build\index.html" />
-    <Content Include="Scripts\ext\ext-all-debug.js" />
-    <Content Include="Scripts\ext\ext-all-dev.js" />
-    <Content Include="Scripts\ext\ext-all.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-af.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-bg.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-ca.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-cs.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-da.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-de.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-el_GR.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-en.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-en_GB.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-es.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-et.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-fa.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-fi.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-fr.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-fr_CA.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-gr.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-he.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-hr.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-hu.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-id.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-it.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-ja.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-ko.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-lt.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-lv.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-mk.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-nl.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-no_NB.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-no_NN.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-pl.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-pt.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-pt_BR.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-pt_PT.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-ro.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-ru.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-sk.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-sl.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-sr.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-sr_RS.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-sv_SE.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-th.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-tr.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-ukr.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-vn.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-zh_CN.js" />
-    <Content Include="Scripts\ext\locale\ext-lang-zh_TW.js" />
-    <Content Include="Scripts\ext\resources\themes\images\default\boundlist\trigger-arrow.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\box\corners-blue.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\box\corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\box\l-blue.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\box\l.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\box\r-blue.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\box\r.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\box\tb-blue.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\box\tb.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn-group\btn-group-default-framed-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn-group\btn-group-default-framed-notitle-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn-group\btn-group-default-framed-notitle-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn-group\btn-group-default-framed-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-disabled-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-disabled-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-disabled-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-focus-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-focus-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-focus-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-over-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-over-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-over-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-pressed-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-pressed-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-pressed-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-large-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-disabled-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-disabled-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-disabled-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-focus-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-focus-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-focus-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-over-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-over-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-over-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-pressed-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-pressed-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-pressed-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-medium-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-disabled-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-disabled-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-disabled-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-focus-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-focus-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-focus-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-over-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-over-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-over-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-pressed-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-pressed-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-pressed-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-small-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-disabled-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-disabled-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-focus-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-focus-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-focus-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-over-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-over-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-over-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-pressed-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-pressed-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-pressed-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-large-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-disabled-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-disabled-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-focus-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-focus-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-focus-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-over-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-over-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-over-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-pressed-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-pressed-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-pressed-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-medium-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-disabled-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-disabled-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-focus-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-focus-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-focus-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-over-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-over-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-over-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-pressed-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-pressed-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-pressed-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\btn\btn-default-toolbar-small-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\button\arrow.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\button\btn.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\button\group-cs.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\button\group-lr.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\button\group-tb.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow-b-noline.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow-b.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow-bo.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow-light.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow-noline.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow-o.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\button\s-arrow.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\datepicker\datepicker-footer-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\datepicker\datepicker-footer-bg.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\datepicker\datepicker-header-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\datepicker\datepicker-header-bg.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\dd\drop-add.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\dd\drop-no.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\dd\drop-yes.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\editor\tb-sprite.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form-invalid-tip\form-invalid-tip-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form-invalid-tip\form-invalid-tip-default-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form-invalid-tip\form-invalid-tip-default-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form-invalid-tip\form-invalid-tip-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\checkbox.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\clear-trigger.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\date-trigger.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\error-tip-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\exclamation.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\radio.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\search-trigger.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\spinner-small.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\spinner.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\text-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\trigger-square.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\trigger-tpl.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\form\trigger.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\arrow-left-white.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\arrow-right-white.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\cell-special-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\cell-special-bg.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\cell-special-selected-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\cell-special-selected-bg.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\checked.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\col-move-bottom.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\col-move-top.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\column-header-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\column-header-bg.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\column-header-over-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\column-header-over-bg.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\columns.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\dd-insert-arrow-left.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\dd-insert-arrow-left.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\dd-insert-arrow-right.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\dd-insert-arrow-right.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\dirty.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\done.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\drop-no.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\drop-yes.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\footer-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid-blue-hd.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid-blue-split.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid-hrow.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid-loading.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid-split.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid-vista-hd.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid3-hd-btn.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid3-hrow-over.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid3-hrow.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\grid3-rowheader.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\group-by.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\group-collapse.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\group-expand-sprite.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\group-expand.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\hd-pop.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\hmenu-asc.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\hmenu-desc.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\hmenu-lock.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\hmenu-lock.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\hmenu-unlock.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\hmenu-unlock.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\invalid_line.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\loading.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\mso-hd.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\nowait.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-first-disabled.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-first.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-last-disabled.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-last.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-next-disabled.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-next.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-prev-disabled.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\page-prev.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\pick-button.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\property-cell-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\property-cell-selected-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\refresh-disabled.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\refresh.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\row-check-sprite.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\row-expand-sprite.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\row-over.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\row-sel.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\sort-hd.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\sort_asc.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\sort_desc.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\unchecked.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\grid\wait.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\layout\mini-bottom.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\layout\mini-left.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\layout\mini-right.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\layout\mini-top.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\menu\checked.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\menu\group-checked.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\menu\item-over.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\menu\menu-item-active-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\menu\menu-item-active-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\menu\menu-item-active-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\menu\menu-parent.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\menu\menu.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\menu\unchecked.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-bottom-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-bottom-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-bottom-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-bottom-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-bottom-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-bottom-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-left-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-left-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-left-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-right-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-right-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-right-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-top-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-top-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-collapsed-top-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-left-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-left-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-left-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-right-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-right-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-right-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-top-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-top-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-framed-top-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-left-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-right-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel-header\panel-header-default-top-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel\panel-default-framed-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\panel\panel-default-framed-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\progress\progress-default-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\blue-loading.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\calendar.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\glass-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\hd-sprite.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\icon-error.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\icon-info.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\icon-question.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\icon-warning.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\large-loading.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\left-btn.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\loading-balls.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\right-btn.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\shadow-c.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\shadow-lr.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\shadow.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\shared\warning.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\e-handle-dark.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\e-handle.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\ne-handle-dark.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\ne-handle.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\nw-handle-dark.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\nw-handle.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\s-handle-dark.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\s-handle.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\se-handle-dark.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\se-handle.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\square.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\sw-handle-dark.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\sizer\sw-handle.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-bg.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-thumb.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-thumb.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-v-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-v-bg.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-v-thumb.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\slider\slider-v-thumb.png" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab-bar\scroll-left.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab-bar\scroll-right.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab-bar\tab-bar-default-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-active-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-active-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-active-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-disabled-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-disabled-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-disabled-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-over-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-over-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-over-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-bottom-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-close.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-active-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-active-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-active-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-disabled-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-disabled-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-disabled-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-over-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-over-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-over-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tab\tab-default-top-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tip\tip-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tip\tip-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\toolbar\more.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\toolbar\scroll-left.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\toolbar\scroll-right.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\toolbar\toolbar-default-bg.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tools\tool-sprite-tpl.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tools\tool-sprites.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tools\tools-sprites-trans.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\arrows.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-above.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-add.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-append.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-below.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-between.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-no.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-over.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-under.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\drop-yes.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-end-minus-nl.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-end-minus.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-end-plus-nl.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-end-plus.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-end.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-line.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-minus-nl.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-minus.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-plus-nl.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow-plus.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\elbow.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\folder-open.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\folder.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\leaf.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\loading.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\tree\s.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\util\splitter\mini-bottom.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\util\splitter\mini-left.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\util\splitter\mini-right.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\util\splitter\mini-top.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-bottom-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-bottom-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-bottom-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-bottom-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-left-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-left-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-right-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-right-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-top-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-collapsed-top-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-left-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-left-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-right-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-right-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-top-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window-header\window-header-default-top-sides.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window\window-default-corners.gif" />
-    <Content Include="Scripts\ext\resources\themes\images\default\window\window-default-sides.gif" />
-    <Content Include="Scripts\ext\ux\form\field\BoxSelect.js" />
-    <Content Include="Scripts\ext\ux\form\ItemSelector.js" />
-    <Content Include="Scripts\ext\ux\form\MultiSelect.js" />
-    <Content Include="Scripts\ext\ux\IFrame.js" />
-    <Content Include="Scripts\ext\ux\layout\component\field\BoxSelectField.js" />
+    <Content Include="Scripts\build\fonts\journal-webfont.svg" />
+    <Content Include="Scripts\build\fonts\mozicons.svg" />
+    <Content Include="Scripts\build\fonts\myriadpro-semibold-webfont.svg" />
+    <Content Include="Scripts\build\fonts\myriadwebpro-bold-webfont.svg" />
+    <Content Include="Scripts\build\fonts\myriadwebpro-italic-webfont.svg" />
+    <Content Include="Scripts\build\fonts\myriadwebpro-webfont.svg" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Black-webfont.svg" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-BlackIt-webfont.svg" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Bold-webfont.svg" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-BoldIt-webfont.svg" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-ExtraLight-webfont.svg" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-ExtraLightIt-webfont.svg" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-It-webfont.svg" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Light-webfont.svg" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-LightIt-webfont.svg" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Regular-webfont.svg" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-Semibold-webfont.svg" />
+    <Content Include="Scripts\build\fonts\SourceSansPro-SemiboldIt-webfont.svg" />
+    <Content Include="Scripts\build\images\icons-sbbd7e52d6f.png" />
+    <Content Include="Scripts\build\resources\images\align\align-center-selected.png" />
+    <Content Include="Scripts\build\resources\images\align\align-center.png" />
+    <Content Include="Scripts\build\resources\images\align\align-justified-selected.png" />
+    <Content Include="Scripts\build\resources\images\align\align-justified.png" />
+    <Content Include="Scripts\build\resources\images\align\align-left-selected.png" />
+    <Content Include="Scripts\build\resources\images\align\align-left.png" />
+    <Content Include="Scripts\build\resources\images\align\align-right-selected.png" />
+    <Content Include="Scripts\build\resources\images\align\align-right.png" />
+    <Content Include="Scripts\build\resources\images\boundlist\trigger-arrow.png" />
+    <Content Include="Scripts\build\resources\images\box\corners-blue.gif" />
+    <Content Include="Scripts\build\resources\images\box\corners.gif" />
+    <Content Include="Scripts\build\resources\images\box\l-blue.gif" />
+    <Content Include="Scripts\build\resources\images\box\l.gif" />
+    <Content Include="Scripts\build\resources\images\box\r-blue.gif" />
+    <Content Include="Scripts\build\resources\images\box\r.gif" />
+    <Content Include="Scripts\build\resources\images\box\tb-blue.gif" />
+    <Content Include="Scripts\build\resources\images\box\tb.gif" />
+    <Content Include="Scripts\build\resources\images\button\arrow.gif" />
+    <Content Include="Scripts\build\resources\images\button\btn-arrow.gif" />
+    <Content Include="Scripts\build\resources\images\button\btn-sprite.gif" />
+    <Content Include="Scripts\build\resources\images\button\btn.gif" />
+    <Content Include="Scripts\build\resources\images\button\group-cs.gif" />
+    <Content Include="Scripts\build\resources\images\button\group-lr.gif" />
+    <Content Include="Scripts\build\resources\images\button\group-tb.gif" />
+    <Content Include="Scripts\build\resources\images\button\s-arrow-b-noline.gif" />
+    <Content Include="Scripts\build\resources\images\button\s-arrow-b.gif" />
+    <Content Include="Scripts\build\resources\images\button\s-arrow-bo.gif" />
+    <Content Include="Scripts\build\resources\images\button\s-arrow-light-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\button\s-arrow-light.gif" />
+    <Content Include="Scripts\build\resources\images\button\s-arrow-noline-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\button\s-arrow-noline.gif" />
+    <Content Include="Scripts\build\resources\images\button\s-arrow-o-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\button\s-arrow-o.gif" />
+    <Content Include="Scripts\build\resources\images\button\s-arrow-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\button\s-arrow.gif" />
+    <Content Include="Scripts\build\resources\images\card-sd7c19700b9.png" />
+    <Content Include="Scripts\build\resources\images\card\card-gridview-selected.png" />
+    <Content Include="Scripts\build\resources\images\card\card-gridview.png" />
+    <Content Include="Scripts\build\resources\images\card\card-tileview-selected.png" />
+    <Content Include="Scripts\build\resources\images\card\card-tileview.png" />
+    <Content Include="Scripts\build\resources\images\dashboard-s4cc9e3fd7c.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-bounce-rate.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-conversion-rate.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-customers.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-device.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-live-visitors.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-load-time.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-new-returning-visitors.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-opened-unopened-mail.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-sales.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-salesforce.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-time-on-sites.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-uptime.png" />
+    <Content Include="Scripts\build\resources\images\dashboard\dashboard-vistors.png" />
+    <Content Include="Scripts\build\resources\images\dd\drop-add.gif" />
+    <Content Include="Scripts\build\resources\images\dd\drop-no.gif" />
+    <Content Include="Scripts\build\resources\images\dd\drop-yes.gif" />
+    <Content Include="Scripts\build\resources\images\editor\tb-sprite.gif" />
+    <Content Include="Scripts\build\resources\images\form\checkbox.gif" />
+    <Content Include="Scripts\build\resources\images\form\clear-trigger-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\form\clear-trigger.gif" />
+    <Content Include="Scripts\build\resources\images\form\date-trigger-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\form\date-trigger.gif" />
+    <Content Include="Scripts\build\resources\images\form\error-tip-corners.gif" />
+    <Content Include="Scripts\build\resources\images\form\exclamation.gif" />
+    <Content Include="Scripts\build\resources\images\form\radio.gif" />
+    <Content Include="Scripts\build\resources\images\form\search-trigger-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\form\search-trigger.gif" />
+    <Content Include="Scripts\build\resources\images\form\spinner-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\form\spinner-small-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\form\spinner-small.gif" />
+    <Content Include="Scripts\build\resources\images\form\spinner.gif" />
+    <Content Include="Scripts\build\resources\images\form\text-bg.gif" />
+    <Content Include="Scripts\build\resources\images\form\trigger-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\form\trigger-square-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\form\trigger-square.gif" />
+    <Content Include="Scripts\build\resources\images\form\trigger-tpl-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\form\trigger-tpl.gif" />
+    <Content Include="Scripts\build\resources\images\form\trigger.gif" />
+    <Content Include="Scripts\build\resources\images\grid\arrow-left-white.gif" />
+    <Content Include="Scripts\build\resources\images\grid\arrow-right-white.gif" />
+    <Content Include="Scripts\build\resources\images\grid\cell-special-bg.gif" />
+    <Content Include="Scripts\build\resources\images\grid\cell-special-bg.png" />
+    <Content Include="Scripts\build\resources\images\grid\cell-special-selected-bg.gif" />
+    <Content Include="Scripts\build\resources\images\grid\cell-special-selected-bg.png" />
+    <Content Include="Scripts\build\resources\images\grid\col-move-bottom.gif" />
+    <Content Include="Scripts\build\resources\images\grid\col-move-top.gif" />
+    <Content Include="Scripts\build\resources\images\grid\columns.gif" />
+    <Content Include="Scripts\build\resources\images\grid\dd-insert-arrow-left.gif" />
+    <Content Include="Scripts\build\resources\images\grid\dd-insert-arrow-left.png" />
+    <Content Include="Scripts\build\resources\images\grid\dd-insert-arrow-right.gif" />
+    <Content Include="Scripts\build\resources\images\grid\dd-insert-arrow-right.png" />
+    <Content Include="Scripts\build\resources\images\grid\dirty-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\grid\dirty.gif" />
+    <Content Include="Scripts\build\resources\images\grid\done.gif" />
+    <Content Include="Scripts\build\resources\images\grid\drop-no.gif" />
+    <Content Include="Scripts\build\resources\images\grid\drop-yes.gif" />
+    <Content Include="Scripts\build\resources\images\grid\footer-bg.gif" />
+    <Content Include="Scripts\build\resources\images\grid\grid-blue-hd.gif" />
+    <Content Include="Scripts\build\resources\images\grid\grid-blue-split.gif" />
+    <Content Include="Scripts\build\resources\images\grid\grid-hrow.gif" />
+    <Content Include="Scripts\build\resources\images\grid\grid-loading.gif" />
+    <Content Include="Scripts\build\resources\images\grid\grid-split.gif" />
+    <Content Include="Scripts\build\resources\images\grid\grid-vista-hd.gif" />
+    <Content Include="Scripts\build\resources\images\grid\grid3-hd-btn-left.gif" />
+    <Content Include="Scripts\build\resources\images\grid\grid3-hd-btn.gif" />
+    <Content Include="Scripts\build\resources\images\grid\grid3-hrow-over.gif" />
+    <Content Include="Scripts\build\resources\images\grid\grid3-hrow.gif" />
+    <Content Include="Scripts\build\resources\images\grid\grid3-rowheader.gif" />
+    <Content Include="Scripts\build\resources\images\grid\group-by.gif" />
+    <Content Include="Scripts\build\resources\images\grid\group-collapse.gif" />
+    <Content Include="Scripts\build\resources\images\grid\group-expand-sprite.gif" />
+    <Content Include="Scripts\build\resources\images\grid\group-expand.gif" />
+    <Content Include="Scripts\build\resources\images\grid\hd-pop.gif" />
+    <Content Include="Scripts\build\resources\images\grid\hmenu-asc.gif" />
+    <Content Include="Scripts\build\resources\images\grid\hmenu-desc.gif" />
+    <Content Include="Scripts\build\resources\images\grid\hmenu-lock.gif" />
+    <Content Include="Scripts\build\resources\images\grid\hmenu-lock.png" />
+    <Content Include="Scripts\build\resources\images\grid\hmenu-unlock.gif" />
+    <Content Include="Scripts\build\resources\images\grid\hmenu-unlock.png" />
+    <Content Include="Scripts\build\resources\images\grid\invalid_line.gif" />
+    <Content Include="Scripts\build\resources\images\grid\loading.gif" />
+    <Content Include="Scripts\build\resources\images\grid\mso-hd.gif" />
+    <Content Include="Scripts\build\resources\images\grid\nowait.gif" />
+    <Content Include="Scripts\build\resources\images\grid\page-first-disabled.gif" />
+    <Content Include="Scripts\build\resources\images\grid\page-first.gif" />
+    <Content Include="Scripts\build\resources\images\grid\page-last-disabled.gif" />
+    <Content Include="Scripts\build\resources\images\grid\page-last.gif" />
+    <Content Include="Scripts\build\resources\images\grid\page-next-disabled.gif" />
+    <Content Include="Scripts\build\resources\images\grid\page-next.gif" />
+    <Content Include="Scripts\build\resources\images\grid\page-prev-disabled.gif" />
+    <Content Include="Scripts\build\resources\images\grid\page-prev.gif" />
+    <Content Include="Scripts\build\resources\images\grid\pick-button.gif" />
+    <Content Include="Scripts\build\resources\images\grid\property-cell-bg.gif" />
+    <Content Include="Scripts\build\resources\images\grid\property-cell-selected-bg.gif" />
+    <Content Include="Scripts\build\resources\images\grid\refresh-disabled.gif" />
+    <Content Include="Scripts\build\resources\images\grid\refresh.gif" />
+    <Content Include="Scripts\build\resources\images\grid\row-check-sprite.gif" />
+    <Content Include="Scripts\build\resources\images\grid\row-expand-sprite.gif" />
+    <Content Include="Scripts\build\resources\images\grid\row-over.gif" />
+    <Content Include="Scripts\build\resources\images\grid\row-sel.gif" />
+    <Content Include="Scripts\build\resources\images\grid\sort-hd.gif" />
+    <Content Include="Scripts\build\resources\images\grid\sort_asc.gif" />
+    <Content Include="Scripts\build\resources\images\grid\sort_desc.gif" />
+    <Content Include="Scripts\build\resources\images\grid\wait.gif" />
+    <Content Include="Scripts\build\resources\images\icons-s46f2c6a895.gif" />
+    <Content Include="Scripts\build\resources\images\icons-s848bd73da5.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-checkbox-selected.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-checkbox.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-folder.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-mozulogo-wallis.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-radio-selected.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-radio.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-remove.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-rowactions.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-theme-desktop.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-theme-mobile.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-toolbox-nav-product.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-vee.png" />
+    <Content Include="Scripts\build\resources\images\icons\icon-x.png" />
+    <Content Include="Scripts\build\resources\images\image-drop.png" />
+    <Content Include="Scripts\build\resources\images\layout\mini-bottom.gif" />
+    <Content Include="Scripts\build\resources\images\layout\mini-left.gif" />
+    <Content Include="Scripts\build\resources\images\layout\mini-right.gif" />
+    <Content Include="Scripts\build\resources\images\layout\mini-top.gif" />
+    <Content Include="Scripts\build\resources\images\legacy\AddPhotos.png" />
+    <Content Include="Scripts\build\resources\images\legacy\background-alpha.png" />
+    <Content Include="Scripts\build\resources\images\legacy\fabric-2.png" />
+    <Content Include="Scripts\build\resources\images\legacy\indicator.mp3" />
+    <Content Include="Scripts\build\resources\images\legacy\loading.gif" />
+    <Content Include="Scripts\build\resources\images\menu\checked.gif" />
+    <Content Include="Scripts\build\resources\images\menu\group-checked.gif" />
+    <Content Include="Scripts\build\resources\images\menu\item-over-disabled.gif" />
+    <Content Include="Scripts\build\resources\images\menu\item-over.gif" />
+    <Content Include="Scripts\build\resources\images\menu\menu-parent-left.gif" />
+    <Content Include="Scripts\build\resources\images\menu\menu-parent.gif" />
+    <Content Include="Scripts\build\resources\images\menu\menu.gif" />
+    <Content Include="Scripts\build\resources\images\menu\scroll-bottom.gif" />
+    <Content Include="Scripts\build\resources\images\menu\scroll-top.gif" />
+    <Content Include="Scripts\build\resources\images\menu\unchecked.gif" />
+    <Content Include="Scripts\build\resources\images\picker-sa04364cd82.png" />
+    <Content Include="Scripts\build\resources\images\picker\date.png" />
+    <Content Include="Scripts\build\resources\images\shared\blue-loading.gif" />
+    <Content Include="Scripts\build\resources\images\shared\calendar.gif" />
+    <Content Include="Scripts\build\resources\images\shared\glass-bg.gif" />
+    <Content Include="Scripts\build\resources\images\shared\hd-sprite.gif" />
+    <Content Include="Scripts\build\resources\images\shared\icon-error.gif" />
+    <Content Include="Scripts\build\resources\images\shared\icon-info.gif" />
+    <Content Include="Scripts\build\resources\images\shared\icon-question.gif" />
+    <Content Include="Scripts\build\resources\images\shared\icon-warning.gif" />
+    <Content Include="Scripts\build\resources\images\shared\large-loading.gif" />
+    <Content Include="Scripts\build\resources\images\shared\left-btn.gif" />
+    <Content Include="Scripts\build\resources\images\shared\loading-balls.gif" />
+    <Content Include="Scripts\build\resources\images\shared\right-btn.gif" />
+    <Content Include="Scripts\build\resources\images\shared\shadow-c.png" />
+    <Content Include="Scripts\build\resources\images\shared\shadow-lr.png" />
+    <Content Include="Scripts\build\resources\images\shared\shadow.png" />
+    <Content Include="Scripts\build\resources\images\shared\warning.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\e-handle-dark.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\e-handle.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\ne-handle-dark.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\ne-handle.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\nw-handle-dark.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\nw-handle.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\s-handle-dark.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\s-handle.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\se-handle-dark.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\se-handle.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\square.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\sw-handle-dark.gif" />
+    <Content Include="Scripts\build\resources\images\sizer\sw-handle.gif" />
+    <Content Include="Scripts\build\resources\images\slider\slider-bg.gif" />
+    <Content Include="Scripts\build\resources\images\slider\slider-bg.png" />
+    <Content Include="Scripts\build\resources\images\slider\slider-thumb.gif" />
+    <Content Include="Scripts\build\resources\images\slider\slider-thumb.png" />
+    <Content Include="Scripts\build\resources\images\slider\slider-v-bg.gif" />
+    <Content Include="Scripts\build\resources\images\slider\slider-v-bg.png" />
+    <Content Include="Scripts\build\resources\images\slider\slider-v-thumb.gif" />
+    <Content Include="Scripts\build\resources\images\slider\slider-v-thumb.png" />
+    <Content Include="Scripts\build\resources\images\tab-bar\default-scroll-bottom-left.gif" />
+    <Content Include="Scripts\build\resources\images\tab-bar\default-scroll-bottom-right.gif" />
+    <Content Include="Scripts\build\resources\images\tab-bar\default-scroll-left-bottom.gif" />
+    <Content Include="Scripts\build\resources\images\tab-bar\default-scroll-left-top.gif" />
+    <Content Include="Scripts\build\resources\images\tab-bar\default-scroll-right-bottom.gif" />
+    <Content Include="Scripts\build\resources\images\tab-bar\default-scroll-right-top.gif" />
+    <Content Include="Scripts\build\resources\images\tab-bar\default-scroll-top-left.gif" />
+    <Content Include="Scripts\build\resources\images\tab-bar\default-scroll-top-right.gif" />
+    <Content Include="Scripts\build\resources\images\tab\tab-default-close.gif" />
+    <Content Include="Scripts\build\resources\images\temp\image-gallery-carousel.png" />
+    <Content Include="Scripts\build\resources\images\temp\image-gallery-grid.png" />
+    <Content Include="Scripts\build\resources\images\temp\image-gallery-slider.png" />
+    <Content Include="Scripts\build\resources\images\toolbar\more-left.gif" />
+    <Content Include="Scripts\build\resources\images\toolbar\more.gif" />
+    <Content Include="Scripts\build\resources\images\toolbar\scroll-left.gif" />
+    <Content Include="Scripts\build\resources\images\toolbar\scroll-right.gif" />
+    <Content Include="Scripts\build\resources\images\tools\tool-sprite-tpl.gif" />
+    <Content Include="Scripts\build\resources\images\tools\tool-sprites.gif" />
+    <Content Include="Scripts\build\resources\images\tools\tools-sprites-trans.gif" />
+    <Content Include="Scripts\build\resources\images\tree\arrows-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\arrows.gif" />
+    <Content Include="Scripts\build\resources\images\tree\drop-above.gif" />
+    <Content Include="Scripts\build\resources\images\tree\drop-add.gif" />
+    <Content Include="Scripts\build\resources\images\tree\drop-append.gif" />
+    <Content Include="Scripts\build\resources\images\tree\drop-below.gif" />
+    <Content Include="Scripts\build\resources\images\tree\drop-between.gif" />
+    <Content Include="Scripts\build\resources\images\tree\drop-no.gif" />
+    <Content Include="Scripts\build\resources\images\tree\drop-over.gif" />
+    <Content Include="Scripts\build\resources\images\tree\drop-under.gif" />
+    <Content Include="Scripts\build\resources\images\tree\drop-yes.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-end-minus-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-end-minus.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-end-plus-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-end-plus.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-end-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-end.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-line-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-line.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-minus-nl-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-minus-nl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-minus-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-minus.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-plus-nl-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-plus-nl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-plus-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-plus.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\elbow.gif" />
+    <Content Include="Scripts\build\resources\images\tree\folder-open-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\folder-open.gif" />
+    <Content Include="Scripts\build\resources\images\tree\folder-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\folder.gif" />
+    <Content Include="Scripts\build\resources\images\tree\leaf-rtl.gif" />
+    <Content Include="Scripts\build\resources\images\tree\leaf.gif" />
+    <Content Include="Scripts\build\resources\images\tree\loading.gif" />
+    <Content Include="Scripts\build\resources\images\tree\s.gif" />
+    <Content Include="Scripts\build\resources\images\util\splitter\mini-bottom.gif" />
+    <Content Include="Scripts\build\resources\images\util\splitter\mini-left.gif" />
+    <Content Include="Scripts\build\resources\images\util\splitter\mini-right.gif" />
+    <Content Include="Scripts\build\resources\images\util\splitter\mini-top.gif" />
+    <Content Include="Scripts\build\resources\images\window\icon-error.gif" />
+    <Content Include="Scripts\build\resources\images\window\icon-info.gif" />
+    <Content Include="Scripts\build\resources\images\window\icon-question.gif" />
+    <Content Include="Scripts\build\resources\images\window\icon-warning.gif" />
+    <Content Include="Scripts\build\resources\lib\history-bundled.js" />
+    <Content Include="Scripts\build\resources\lib\history.adapter.native.js" />
+    <Content Include="Scripts\build\resources\lib\history.html4.js" />
+    <Content Include="Scripts\build\resources\lib\history.js" />
+    <Content Include="Scripts\build\resources\lib\html9responsiveboilerstrap.js" />
+    <Content Include="Scripts\build\resources\lib\json2.js" />
+    <Content Include="Scripts\build\resources\lib\pci-temp.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\license.txt" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\advlist\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\anchor\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\autolink\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\autoresize\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\autosave\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\bbcode\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\charmap\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\code\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\compat3x\editable_selects.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\compat3x\form_utils.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\compat3x\mctabs.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\compat3x\tiny_mce_popup.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\compat3x\validate.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\contextmenu\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\directionality\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-cool.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-cry.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-embarassed.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-foot-in-mouth.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-frown.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-innocent.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-kiss.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-laughing.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-money-mouth.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-sealed.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-smile.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-surprised.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-tongue-out.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-undecided.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-wink.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\img\smiley-yell.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\emoticons\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\example\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\example_dependency\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\fullpage\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\fullscreen\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\hr\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\image\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\insertdatetime\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\layer\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\legacyoutput\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\link\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\lists\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\media\moxieplayer.swf" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\media\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\nonbreaking\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\noneditable\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\pagebreak\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\paste\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\preview\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\print\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\save\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\searchreplace\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\spellchecker\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\tabfocus\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\table\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\template\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\textcolor\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\visualblocks\css\visualblocks.css" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\visualblocks\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\visualchars\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\plugins\wordcount\plugin.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\content.min.css" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\fonts\icomoon-small.svg" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\fonts\icomoon.svg" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\img\anchor.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\img\loader.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\img\object.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\img\trans.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\img\wline.gif" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\skin.classic.min.css" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\skin.ie7.min.css" />
+    <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\skin.min.css" />
+    <Content Include="Scripts\build\resources\lib\tinymce\themes\modern\theme.min.js" />
+    <Content Include="Scripts\build\resources\lib\tinymce\tinymce.min.js" />
+    <Content Include="Scripts\build\resources\Taco-all.css" />
+    <Content Include="Scripts\build\resources\Taco-example.css" />
+    <Content Include="Scripts\build\resources\Taco\Taco-all.css" />
+    <Content Include="Scripts\build\resources\Taco\Taco-example.css" />
     <Content Include="Scripts\index.html" />
     <Content Include="Scripts\jsduck-4.3.2.exe" />
     <Content Include="Scripts\makedocsasjson.bat" />
+    <Content Include="Scripts\packages\mozuadmintheme\.sencha\package\build-impl.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Scripts\packages\mozuadmintheme\.sencha\package\plugin.xml" />
+    <Content Include="Scripts\packages\mozuadmintheme\.sencha\package\sub-builds.xml" />
+    <Content Include="Scripts\packages\mozuadmintheme\build.xml" />
+    <Content Include="Scripts\packages\mozuadmintheme\docs\package.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\docs\screenshots\screenshot-1.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\CheckHeader.css" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\GroupTabPanel.css" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\border.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\bottom2.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\checked.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\down2.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\left2.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\right2.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\tab-collapsed.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\tab-first.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\tab-last.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\tab-scroller-menu.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\top2.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\unchecked.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\images\up2.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\ItemSelector.css" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\LiveSearchGridPanel.css" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\TabScrollerMenu.css" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\taco.css" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\css\taco\widgets\tfs2609084916238200047.css" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\journal-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\myriadpro-semibold-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\myriadwebpro-bold-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\myriadwebpro-italic-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\myriadwebpro-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\SourceSansPro-Black-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\SourceSansPro-BlackIt-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\SourceSansPro-Bold-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\SourceSansPro-BoldIt-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\SourceSansPro-ExtraLight-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\SourceSansPro-ExtraLightIt-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\SourceSansPro-It-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\SourceSansPro-Light-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\SourceSansPro-LightIt-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\SourceSansPro-Regular-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\SourceSansPro-Semibold-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\SourceSansPro-SemiboldIt-webfont.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\align\align-center-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\align\align-center.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\align\align-justified-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\align\align-justified.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\align\align-left-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\align\align-left.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\align\align-right-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\align\align-right.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\card-sd7c19700b9.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\card\card-gridview-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\card\card-gridview.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\card\card-tileview-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\card\card-tileview.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard-s4cc9e3fd7c.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-bounce-rate.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-conversion-rate.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-customers.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-device.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-live-visitors.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-load-time.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-new-returning-visitors.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-opened-unopened-mail.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-sales.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-salesforce.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-time-on-sites.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-uptime.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\dashboard\dashboard-vistors.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons-s46f2c6a895.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons-s848bd73da5.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-accounts-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-accounts.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-addfolder.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-addfolder_hover.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-apps.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-arrow-left.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-calendar.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-catalog-large.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-catalog-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-catalog.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-checkbox-disabled.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-checkbox-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-checkbox.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-collapse.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-columns-hover.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-columns.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-customers-large.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-dashboard-large.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-dashboard-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-dashboard.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-deselectedoverlay.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-draghandle.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-ellipse-hover.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-ellipse.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-expand.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-eye.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-eye_hover.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-folder.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-folder_hover.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-gridsettings-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-gridsettings.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-gridsettings_active.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-gridsettings_hover.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-gridview.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-infinitybig.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-infinitysmall.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-jumpout.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-jumpout_active.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-jumpout_hover.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-listview.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-marketing-large.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-marketing-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-marketing.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-menu-col.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-modal-x.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-mozulogo-full.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-mozulogo-mini.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-mozulogo-wallis.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-catalog-light.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-catalog-med.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-catalog.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-customers-light.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-customers-med.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-customers.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-dashboard-light.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-dashboard-med.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-dashboard.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-files-light.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-files-med.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-files.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-marketing-light.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-marketing-med.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-marketing.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-orders-light.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-orders-med.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-orders.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-publishing-light.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-publishing-med.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-publishing.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-settings-light.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-settings-med.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-settings.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-sites-light.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-sites-med.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-nav-sites.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-newfile.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-newfile_active.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-newfile_hover.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-panelcollapse.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-panelexpand.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-paper.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-paper_hover.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-primarymenu-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-primarymenu.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-radio-disabled.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-radio-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-radio.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-remove.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-removecolumn.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-remove_active.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-remove_hover.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-rowactions.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-sales-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-sales.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-search.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-search_active.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-search_hover.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-selectedoverlay.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-sites-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-sites.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-sliderbig.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-slidersmall.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-sort-asc.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-sort-desc.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-sortcolumn-asc.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-sortcolumn-desc.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-store-large.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-store-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-store.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-support.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-theme-desktop.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-theme-mobile.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-toolbox-nav-category.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-toolbox-nav-home.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-toolbox-nav-page.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-toolbox-nav-post.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-toolbox-nav-product.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-toolbox-nav-shortcut.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-trash.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-trash_active.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-trash_hover.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-tree-knurling.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-vee.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-website-large.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-website-selected.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-website.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-widget-drag.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-widget-edit.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-widget-remove.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-widgethandle.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\icon-x.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\image-drop.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\legacy\AddPhotos.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\legacy\background-alpha.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\legacy\fabric-2.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\legacy\indicator.mp3" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\legacy\loading.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\picker-sa04364cd82.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\picker\date.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\temp\image-gallery-carousel.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\temp\image-gallery-grid.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\temp\image-gallery-slider.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\history-bundled.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\history.adapter.native.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\history.html4.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\history.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\html9responsiveboilerstrap.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\json2.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\pci-temp.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\license.txt" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\advlist\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\anchor\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\autolink\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\autoresize\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\autosave\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\bbcode\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\charmap\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\code\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\compat3x\editable_selects.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\compat3x\form_utils.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\compat3x\mctabs.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\compat3x\tiny_mce_popup.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\compat3x\validate.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\contextmenu\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\directionality\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-cool.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-cry.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-embarassed.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-foot-in-mouth.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-frown.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-innocent.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-kiss.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-laughing.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-money-mouth.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-sealed.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-smile.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-surprised.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-tongue-out.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-undecided.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-wink.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\img\smiley-yell.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\emoticons\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\example\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\example_dependency\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\fullpage\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\fullscreen\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\hr\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\image\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\insertdatetime\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\layer\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\legacyoutput\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\link\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\lists\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\media\moxieplayer.swf" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\media\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\nonbreaking\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\noneditable\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\pagebreak\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\paste\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\preview\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\print\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\save\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\searchreplace\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\spellchecker\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\tabfocus\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\table\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\template\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\textcolor\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\visualblocks\css\visualblocks.css" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\visualblocks\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\visualchars\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\plugins\wordcount\plugin.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\skins\lightgray\content.min.css" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\skins\lightgray\fonts\icomoon-small.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\skins\lightgray\fonts\icomoon.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\skins\lightgray\img\anchor.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\skins\lightgray\img\loader.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\skins\lightgray\img\object.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\skins\lightgray\img\trans.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\skins\lightgray\img\wline.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\skins\lightgray\skin.classic.min.css" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\skins\lightgray\skin.ie7.min.css" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\skins\lightgray\skin.min.css" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\themes\modern\theme.min.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\lib\tinymce\tinymce.min.js" />
+    <None Include="Scripts\packages\mozuadmintheme\sass\etc\_reset.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\example\custom.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\example\render.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\example\theme.html" />
     <Content Include="Scripts\resources\css\taco.css" />
     <Content Include="Scripts\resources\fonts\mozicons.svg" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.svg" />
@@ -1278,71 +1700,19 @@
     <Content Include="Scripts\resources\images\dashboard\dashboard-time-on-sites.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-uptime.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-vistors.png" />
-    <Content Include="Scripts\resources\images\icons-s848bd73da5.png" />
-    <Content Include="Scripts\resources\images\icons\icon-arrow-left.png" />
-    <Content Include="Scripts\resources\images\icons\icon-ellipse-hover.png" />
-    <Content Include="Scripts\resources\images\icons\icon-ellipse.png" />
-    <Content Include="Scripts\resources\images\icons\icon-menu-col.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-catalog-light.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-catalog-med.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-catalog.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-customers-light.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-customers-med.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-customers.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-dashboard-light.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-dashboard-med.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-dashboard.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-files-light.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-files-med.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-files.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-marketing-light.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-marketing-med.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-marketing.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-orders-light.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-orders-med.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-orders.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-publishing-light.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-publishing-med.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-publishing.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-sites-light.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-sites-med.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-sites.png" />
     <Content Include="Scripts\resources\images\icons\icon-theme-desktop.png" />
     <Content Include="Scripts\resources\images\icons\icon-theme-mobile.png" />
-    <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-post.png" />
-    <Content Include="Scripts\resources\images\icons\icon-tree-knurling.png" />
-    <Content Include="Scripts\resources\images\icons\icon-widget-drag.png" />
-    <Content Include="Scripts\resources\images\icons\icon-widget-edit.png" />
-    <Content Include="Scripts\resources\images\icons\icon-widget-remove.png" />
     <Content Include="Scripts\resources\images\icons\icon-x.png" />
     <Content Include="Scripts\resources\images\image-drop.png" />
     <Content Include="Scripts\resources\images\legacy\AddPhotos.png" />
     <Content Include="Scripts\resources\images\legacy\background-alpha.png" />
     <Content Include="favicon.ico" />
-    <Content Include="Scripts\resources\images\icons\icon-catalog-large.png" />
-    <Content Include="Scripts\resources\images\icons\icon-customers-large.png" />
-    <Content Include="Scripts\resources\images\icons\icon-dashboard-large.png" />
-    <Content Include="Scripts\resources\images\icons\icon-marketing-large.png" />
-    <Content Include="Scripts\resources\images\icons\icon-mozulogo-full.png" />
-    <Content Include="Scripts\resources\images\icons\icon-mozulogo-mini.png" />
     <Content Include="Scripts\resources\images\icons\icon-mozulogo-wallis.png" />
-    <Content Include="Scripts\resources\images\icons\icon-panelcollapse.png" />
-    <Content Include="Scripts\resources\images\icons\icon-panelexpand.png" />
-    <Content Include="Scripts\resources\images\icons\icon-primarymenu-selected.png" />
-    <Content Include="Scripts\resources\images\icons\icon-primarymenu.png" />
     <Content Include="Scripts\resources\images\icons\icon-rowactions.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-settings-light.png" />
-    <Content Include="Scripts\resources\images\icons\icon-store-large.png" />
-    <Content Include="Scripts\resources\images\icons\icon-store-selected.png" />
-    <Content Include="Scripts\resources\images\icons\icon-store.png" />
-    <Content Include="Scripts\resources\images\icons\icon-website-large.png" />
-    <Content Include="Scripts\resources\images\icons\icon-website-selected.png" />
-    <Content Include="Scripts\resources\images\icons\icon-website.png" />
     <Content Include="Scripts\resources\images\legacy\fabric-2.png" />
     <Content Include="Scripts\resources\images\legacy\indicator.mp3" />
     <Content Include="Scripts\resources\images\legacy\loading.gif" />
     <Content Include="Scripts\resources\images\icons-s46f2c6a895.gif" />
-    <Content Include="Scripts\resources\images\picker-sa04364cd82.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-carousel.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-grid.png" />
     <Content Include="Scripts\resources\images\temp\image-gallery-slider.png" />
@@ -1363,8 +1733,6 @@
     <Content Include="Scripts\app\core\ux\form\Form.js" />
     <Content Include="Scripts\app\core\ux\form\Interface.js" />
     <Content Include="Scripts\make.bat" />
-    <Content Include="Scripts\.sencha\app\sencha.cfg" />
-    <Content Include="Scripts\.sencha\workspace\sencha.cfg" />
     <Content Include="Scripts\app\mocks\orders.json" />
     <Content Include="Scripts\app\model\AccountInformation.js" />
     <Content Include="Scripts\app\model\AccountUser.js" />
@@ -1451,48 +1819,14 @@
     <Content Include="Scripts\resources\images\card\card-gridview.png" />
     <Content Include="Scripts\resources\images\card\card-tileview-selected.png" />
     <Content Include="Scripts\resources\images\card\card-tileview.png" />
-    <Content Include="Scripts\resources\images\icons\icon-addfolder.png" />
-    <Content Include="Scripts\resources\images\icons\icon-addfolder_hover.png" />
-    <Content Include="Scripts\resources\images\icons\icon-calendar.png" />
-    <Content Include="Scripts\resources\images\icons\icon-checkbox-disabled.png" />
     <Content Include="Scripts\resources\images\icons\icon-checkbox-selected.png" />
     <Content Include="Scripts\resources\images\icons\icon-checkbox.png" />
-    <Content Include="Scripts\resources\images\icons\icon-collapse.png" />
-    <Content Include="Scripts\resources\images\icons\icon-expand.png" />
     <Content Include="Scripts\resources\images\icons\icon-folder.png" />
-    <Content Include="Scripts\resources\images\icons\icon-folder_hover.png" />
-    <Content Include="Scripts\resources\images\icons\icon-gridsettings-selected.png" />
-    <Content Include="Scripts\resources\images\icons\icon-gridsettings.png" />
-    <Content Include="Scripts\resources\images\icons\icon-gridsettings_active.png" />
-    <Content Include="Scripts\resources\images\icons\icon-gridsettings_hover.png" />
-    <Content Include="Scripts\resources\images\icons\icon-jumpout.png" />
-    <Content Include="Scripts\resources\images\icons\icon-jumpout_active.png" />
-    <Content Include="Scripts\resources\images\icons\icon-jumpout_hover.png" />
-    <Content Include="Scripts\resources\images\icons\icon-modal-x.png" />
-    <Content Include="Scripts\resources\images\icons\icon-newfile.png" />
-    <Content Include="Scripts\resources\images\icons\icon-newfile_active.png" />
-    <Content Include="Scripts\resources\images\icons\icon-newfile_hover.png" />
-    <Content Include="Scripts\resources\images\icons\icon-radio-disabled.png" />
     <Content Include="Scripts\resources\images\icons\icon-radio-selected.png" />
     <Content Include="Scripts\resources\images\icons\icon-radio.png" />
     <Content Include="Scripts\resources\images\icons\icon-remove.png" />
-    <Content Include="Scripts\resources\images\icons\icon-removecolumn.png" />
-    <Content Include="Scripts\resources\images\icons\icon-remove_active.png" />
-    <Content Include="Scripts\resources\images\icons\icon-remove_hover.png" />
-    <Content Include="Scripts\resources\images\icons\icon-search_active.png" />
-    <Content Include="Scripts\resources\images\icons\icon-search_hover.png" />
-    <Content Include="Scripts\resources\images\icons\icon-sort-asc.png" />
-    <Content Include="Scripts\resources\images\icons\icon-sort-desc.png" />
-    <Content Include="Scripts\resources\images\icons\icon-sortcolumn-asc.png" />
-    <Content Include="Scripts\resources\images\icons\icon-sortcolumn-desc.png" />
-    <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-category.png" />
-    <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-home.png" />
-    <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-page.png" />
     <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-product.png" />
-    <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-shortcut.png" />
-    <Content Include="Scripts\resources\images\icons\icon-trash_active.png" />
     <Content Include="Scripts\resources\images\icons\icon-vee.png" />
-    <Content Include="Scripts\resources\images\icons\icon-widgethandle.png" />
     <Content Include="Scripts\resources\images\picker\date.png" />
     <Content Include="Scripts\resources\lib\html9responsiveboilerstrap.js" />
     <Content Include="Scripts\resources\lib\pci-temp.js" />
@@ -1572,8 +1906,6 @@
     <Content Include="Scripts\resources\lib\tinymce\skins\lightgray\skin.min.css" />
     <Content Include="Scripts\resources\lib\tinymce\themes\modern\theme.min.js" />
     <Content Include="Scripts\resources\lib\tinymce\tinymce.min.js" />
-    <Content Include="Scripts\resources\scss\compass_init.rb" />
-    <Content Include="Scripts\resources\scss\config.rb" />
     <Content Include="Scripts\app\controller\Discounts.js" />
     <Content Include="Scripts\app\controller\Shipping.js" />
     <Content Include="Scripts\app\controller\Tax.js" />
@@ -1582,7 +1914,6 @@
     <Content Include="Scripts\app\core\ux\modal\Mini.js" />
     <Content Include="Scripts\app\core\ux\TilePanel.js" />
     <Content Include="Scripts\app\core\ux\TileView.js" />
-    <Content Include="Scripts\app\core\ux\form\FlexBox.js" />
     <Content Include="Scripts\app\core\ux\form\ToggleGroup.js" />
     <Content Include="Scripts\app\core\ux\grid\Pager.js" />
     <Content Include="Scripts\app\core\ux\FileDragDroppable.js" />
@@ -1601,8 +1932,387 @@
     <Content Include="Scripts\app\core\ux\Panel.js" />
     <Content Include="Scripts\app\core\ux\PanelDD.js" />
     <Content Include="Scripts\app\core\ux\MultiImageField.js" />
-    <Content Include="Scripts\ext\ux\RowExpander.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\layout\container\Border.scss" />
+    <None Include="Scripts\sass\src\core\ux\content\Sidebar.scss" />
+    <None Include="Scripts\sass\src\view\navigation\ContextSwitcher.scss" />
+    <None Include="Scripts\sass\src\core\ux\browser\ItemBrowser.scss" />
     <Content Include="Scripts\usagereport.js" />
+    <Content Include="Scripts\ux\form\field\BoxSelect.js" />
+    <Content Include="Scripts\ux\form\ItemSelector.js" />
+    <Content Include="Scripts\ux\form\MultiSelect.js" />
+    <Content Include="Scripts\ux\IFrame.js" />
+    <Content Include="Scripts\ux\images\default\boundlist\trigger-arrow.png" />
+    <Content Include="Scripts\ux\images\default\box\corners-blue.gif" />
+    <Content Include="Scripts\ux\images\default\box\corners.gif" />
+    <Content Include="Scripts\ux\images\default\box\l-blue.gif" />
+    <Content Include="Scripts\ux\images\default\box\l.gif" />
+    <Content Include="Scripts\ux\images\default\box\r-blue.gif" />
+    <Content Include="Scripts\ux\images\default\box\r.gif" />
+    <Content Include="Scripts\ux\images\default\box\tb-blue.gif" />
+    <Content Include="Scripts\ux\images\default\box\tb.gif" />
+    <Content Include="Scripts\ux\images\default\btn-group\btn-group-default-framed-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn-group\btn-group-default-framed-notitle-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn-group\btn-group-default-framed-notitle-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn-group\btn-group-default-framed-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-disabled-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-disabled-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-disabled-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-focus-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-focus-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-focus-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-over-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-over-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-over-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-pressed-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-pressed-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-pressed-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-large-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-disabled-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-disabled-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-disabled-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-focus-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-focus-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-focus-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-over-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-over-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-over-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-pressed-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-pressed-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-pressed-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-medium-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-disabled-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-disabled-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-disabled-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-focus-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-focus-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-focus-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-over-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-over-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-over-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-pressed-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-pressed-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-pressed-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-small-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-disabled-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-disabled-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-focus-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-focus-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-focus-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-over-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-over-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-over-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-pressed-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-pressed-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-pressed-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-large-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-disabled-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-disabled-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-focus-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-focus-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-focus-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-over-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-over-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-over-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-pressed-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-pressed-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-pressed-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-medium-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-disabled-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-disabled-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-focus-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-focus-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-focus-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-over-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-over-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-over-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-pressed-bg.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-pressed-corners.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-pressed-sides.gif" />
+    <Content Include="Scripts\ux\images\default\btn\btn-default-toolbar-small-sides.gif" />
+    <Content Include="Scripts\ux\images\default\button\arrow.gif" />
+    <Content Include="Scripts\ux\images\default\button\btn.gif" />
+    <Content Include="Scripts\ux\images\default\button\group-cs.gif" />
+    <Content Include="Scripts\ux\images\default\button\group-lr.gif" />
+    <Content Include="Scripts\ux\images\default\button\group-tb.gif" />
+    <Content Include="Scripts\ux\images\default\button\s-arrow-b-noline.gif" />
+    <Content Include="Scripts\ux\images\default\button\s-arrow-b.gif" />
+    <Content Include="Scripts\ux\images\default\button\s-arrow-bo.gif" />
+    <Content Include="Scripts\ux\images\default\button\s-arrow-light.gif" />
+    <Content Include="Scripts\ux\images\default\button\s-arrow-noline.gif" />
+    <Content Include="Scripts\ux\images\default\button\s-arrow-o.gif" />
+    <Content Include="Scripts\ux\images\default\button\s-arrow.gif" />
+    <Content Include="Scripts\ux\images\default\datepicker\datepicker-footer-bg.gif" />
+    <Content Include="Scripts\ux\images\default\datepicker\datepicker-footer-bg.png" />
+    <Content Include="Scripts\ux\images\default\datepicker\datepicker-header-bg.gif" />
+    <Content Include="Scripts\ux\images\default\datepicker\datepicker-header-bg.png" />
+    <Content Include="Scripts\ux\images\default\dd\drop-add.gif" />
+    <Content Include="Scripts\ux\images\default\dd\drop-no.gif" />
+    <Content Include="Scripts\ux\images\default\dd\drop-yes.gif" />
+    <Content Include="Scripts\ux\images\default\editor\tb-sprite.gif" />
+    <Content Include="Scripts\ux\images\default\form-invalid-tip\form-invalid-tip-corners.gif" />
+    <Content Include="Scripts\ux\images\default\form-invalid-tip\form-invalid-tip-default-corners.gif" />
+    <Content Include="Scripts\ux\images\default\form-invalid-tip\form-invalid-tip-default-sides.gif" />
+    <Content Include="Scripts\ux\images\default\form-invalid-tip\form-invalid-tip-sides.gif" />
+    <Content Include="Scripts\ux\images\default\form\checkbox.gif" />
+    <Content Include="Scripts\ux\images\default\form\clear-trigger.gif" />
+    <Content Include="Scripts\ux\images\default\form\date-trigger.gif" />
+    <Content Include="Scripts\ux\images\default\form\error-tip-corners.gif" />
+    <Content Include="Scripts\ux\images\default\form\exclamation.gif" />
+    <Content Include="Scripts\ux\images\default\form\radio.gif" />
+    <Content Include="Scripts\ux\images\default\form\search-trigger.gif" />
+    <Content Include="Scripts\ux\images\default\form\spinner-small.gif" />
+    <Content Include="Scripts\ux\images\default\form\spinner.gif" />
+    <Content Include="Scripts\ux\images\default\form\text-bg.gif" />
+    <Content Include="Scripts\ux\images\default\form\trigger-square.gif" />
+    <Content Include="Scripts\ux\images\default\form\trigger-tpl.gif" />
+    <Content Include="Scripts\ux\images\default\form\trigger.gif" />
+    <Content Include="Scripts\ux\images\default\grid\arrow-left-white.gif" />
+    <Content Include="Scripts\ux\images\default\grid\arrow-right-white.gif" />
+    <Content Include="Scripts\ux\images\default\grid\cell-special-bg.gif" />
+    <Content Include="Scripts\ux\images\default\grid\cell-special-bg.png" />
+    <Content Include="Scripts\ux\images\default\grid\cell-special-selected-bg.gif" />
+    <Content Include="Scripts\ux\images\default\grid\cell-special-selected-bg.png" />
+    <Content Include="Scripts\ux\images\default\grid\checked.gif" />
+    <Content Include="Scripts\ux\images\default\grid\col-move-bottom.gif" />
+    <Content Include="Scripts\ux\images\default\grid\col-move-top.gif" />
+    <Content Include="Scripts\ux\images\default\grid\column-header-bg.gif" />
+    <Content Include="Scripts\ux\images\default\grid\column-header-bg.png" />
+    <Content Include="Scripts\ux\images\default\grid\column-header-over-bg.gif" />
+    <Content Include="Scripts\ux\images\default\grid\column-header-over-bg.png" />
+    <Content Include="Scripts\ux\images\default\grid\columns.gif" />
+    <Content Include="Scripts\ux\images\default\grid\dd-insert-arrow-left.gif" />
+    <Content Include="Scripts\ux\images\default\grid\dd-insert-arrow-left.png" />
+    <Content Include="Scripts\ux\images\default\grid\dd-insert-arrow-right.gif" />
+    <Content Include="Scripts\ux\images\default\grid\dd-insert-arrow-right.png" />
+    <Content Include="Scripts\ux\images\default\grid\dirty.gif" />
+    <Content Include="Scripts\ux\images\default\grid\done.gif" />
+    <Content Include="Scripts\ux\images\default\grid\drop-no.gif" />
+    <Content Include="Scripts\ux\images\default\grid\drop-yes.gif" />
+    <Content Include="Scripts\ux\images\default\grid\footer-bg.gif" />
+    <Content Include="Scripts\ux\images\default\grid\grid-blue-hd.gif" />
+    <Content Include="Scripts\ux\images\default\grid\grid-blue-split.gif" />
+    <Content Include="Scripts\ux\images\default\grid\grid-hrow.gif" />
+    <Content Include="Scripts\ux\images\default\grid\grid-loading.gif" />
+    <Content Include="Scripts\ux\images\default\grid\grid-split.gif" />
+    <Content Include="Scripts\ux\images\default\grid\grid-vista-hd.gif" />
+    <Content Include="Scripts\ux\images\default\grid\grid3-hd-btn.gif" />
+    <Content Include="Scripts\ux\images\default\grid\grid3-hrow-over.gif" />
+    <Content Include="Scripts\ux\images\default\grid\grid3-hrow.gif" />
+    <Content Include="Scripts\ux\images\default\grid\grid3-rowheader.gif" />
+    <Content Include="Scripts\ux\images\default\grid\group-by.gif" />
+    <Content Include="Scripts\ux\images\default\grid\group-collapse.gif" />
+    <Content Include="Scripts\ux\images\default\grid\group-expand-sprite.gif" />
+    <Content Include="Scripts\ux\images\default\grid\group-expand.gif" />
+    <Content Include="Scripts\ux\images\default\grid\hd-pop.gif" />
+    <Content Include="Scripts\ux\images\default\grid\hmenu-asc.gif" />
+    <Content Include="Scripts\ux\images\default\grid\hmenu-desc.gif" />
+    <Content Include="Scripts\ux\images\default\grid\hmenu-lock.gif" />
+    <Content Include="Scripts\ux\images\default\grid\hmenu-lock.png" />
+    <Content Include="Scripts\ux\images\default\grid\hmenu-unlock.gif" />
+    <Content Include="Scripts\ux\images\default\grid\hmenu-unlock.png" />
+    <Content Include="Scripts\ux\images\default\grid\invalid_line.gif" />
+    <Content Include="Scripts\ux\images\default\grid\loading.gif" />
+    <Content Include="Scripts\ux\images\default\grid\mso-hd.gif" />
+    <Content Include="Scripts\ux\images\default\grid\nowait.gif" />
+    <Content Include="Scripts\ux\images\default\grid\page-first-disabled.gif" />
+    <Content Include="Scripts\ux\images\default\grid\page-first.gif" />
+    <Content Include="Scripts\ux\images\default\grid\page-last-disabled.gif" />
+    <Content Include="Scripts\ux\images\default\grid\page-last.gif" />
+    <Content Include="Scripts\ux\images\default\grid\page-next-disabled.gif" />
+    <Content Include="Scripts\ux\images\default\grid\page-next.gif" />
+    <Content Include="Scripts\ux\images\default\grid\page-prev-disabled.gif" />
+    <Content Include="Scripts\ux\images\default\grid\page-prev.gif" />
+    <Content Include="Scripts\ux\images\default\grid\pick-button.gif" />
+    <Content Include="Scripts\ux\images\default\grid\property-cell-bg.gif" />
+    <Content Include="Scripts\ux\images\default\grid\property-cell-selected-bg.gif" />
+    <Content Include="Scripts\ux\images\default\grid\refresh-disabled.gif" />
+    <Content Include="Scripts\ux\images\default\grid\refresh.gif" />
+    <Content Include="Scripts\ux\images\default\grid\row-check-sprite.gif" />
+    <Content Include="Scripts\ux\images\default\grid\row-expand-sprite.gif" />
+    <Content Include="Scripts\ux\images\default\grid\row-over.gif" />
+    <Content Include="Scripts\ux\images\default\grid\row-sel.gif" />
+    <Content Include="Scripts\ux\images\default\grid\sort-hd.gif" />
+    <Content Include="Scripts\ux\images\default\grid\sort_asc.gif" />
+    <Content Include="Scripts\ux\images\default\grid\sort_desc.gif" />
+    <Content Include="Scripts\ux\images\default\grid\unchecked.gif" />
+    <Content Include="Scripts\ux\images\default\grid\wait.gif" />
+    <Content Include="Scripts\ux\images\default\layout\mini-bottom.gif" />
+    <Content Include="Scripts\ux\images\default\layout\mini-left.gif" />
+    <Content Include="Scripts\ux\images\default\layout\mini-right.gif" />
+    <Content Include="Scripts\ux\images\default\layout\mini-top.gif" />
+    <Content Include="Scripts\ux\images\default\menu\checked.gif" />
+    <Content Include="Scripts\ux\images\default\menu\group-checked.gif" />
+    <Content Include="Scripts\ux\images\default\menu\item-over.gif" />
+    <Content Include="Scripts\ux\images\default\menu\menu-item-active-bg.gif" />
+    <Content Include="Scripts\ux\images\default\menu\menu-item-active-corners.gif" />
+    <Content Include="Scripts\ux\images\default\menu\menu-item-active-sides.gif" />
+    <Content Include="Scripts\ux\images\default\menu\menu-parent.gif" />
+    <Content Include="Scripts\ux\images\default\menu\menu.gif" />
+    <Content Include="Scripts\ux\images\default\menu\unchecked.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-bottom-bg.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-bottom-bg.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-bottom-corners.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-bottom-sides.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-collapsed-bottom-bg.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-collapsed-bottom-corners.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-collapsed-bottom-sides.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-collapsed-left-bg.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-collapsed-left-corners.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-collapsed-left-sides.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-collapsed-right-bg.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-collapsed-right-corners.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-collapsed-right-sides.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-collapsed-top-bg.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-collapsed-top-corners.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-collapsed-top-sides.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-left-bg.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-left-corners.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-left-sides.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-right-bg.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-right-corners.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-right-sides.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-top-bg.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-top-corners.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-framed-top-sides.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-left-bg.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-right-bg.gif" />
+    <Content Include="Scripts\ux\images\default\panel-header\panel-header-default-top-bg.gif" />
+    <Content Include="Scripts\ux\images\default\panel\panel-default-framed-corners.gif" />
+    <Content Include="Scripts\ux\images\default\panel\panel-default-framed-sides.gif" />
+    <Content Include="Scripts\ux\images\default\progress\progress-default-bg.gif" />
+    <Content Include="Scripts\ux\images\default\shared\blue-loading.gif" />
+    <Content Include="Scripts\ux\images\default\shared\calendar.gif" />
+    <Content Include="Scripts\ux\images\default\shared\glass-bg.gif" />
+    <Content Include="Scripts\ux\images\default\shared\hd-sprite.gif" />
+    <Content Include="Scripts\ux\images\default\shared\icon-error.gif" />
+    <Content Include="Scripts\ux\images\default\shared\icon-info.gif" />
+    <Content Include="Scripts\ux\images\default\shared\icon-question.gif" />
+    <Content Include="Scripts\ux\images\default\shared\icon-warning.gif" />
+    <Content Include="Scripts\ux\images\default\shared\large-loading.gif" />
+    <Content Include="Scripts\ux\images\default\shared\left-btn.gif" />
+    <Content Include="Scripts\ux\images\default\shared\loading-balls.gif" />
+    <Content Include="Scripts\ux\images\default\shared\right-btn.gif" />
+    <Content Include="Scripts\ux\images\default\shared\shadow-c.png" />
+    <Content Include="Scripts\ux\images\default\shared\shadow-lr.png" />
+    <Content Include="Scripts\ux\images\default\shared\shadow.png" />
+    <Content Include="Scripts\ux\images\default\shared\warning.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\e-handle-dark.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\e-handle.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\ne-handle-dark.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\ne-handle.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\nw-handle-dark.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\nw-handle.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\s-handle-dark.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\s-handle.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\se-handle-dark.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\se-handle.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\square.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\sw-handle-dark.gif" />
+    <Content Include="Scripts\ux\images\default\sizer\sw-handle.gif" />
+    <Content Include="Scripts\ux\images\default\slider\slider-bg.gif" />
+    <Content Include="Scripts\ux\images\default\slider\slider-bg.png" />
+    <Content Include="Scripts\ux\images\default\slider\slider-thumb.gif" />
+    <Content Include="Scripts\ux\images\default\slider\slider-thumb.png" />
+    <Content Include="Scripts\ux\images\default\slider\slider-v-bg.gif" />
+    <Content Include="Scripts\ux\images\default\slider\slider-v-bg.png" />
+    <Content Include="Scripts\ux\images\default\slider\slider-v-thumb.gif" />
+    <Content Include="Scripts\ux\images\default\slider\slider-v-thumb.png" />
+    <Content Include="Scripts\ux\images\default\tab-bar\scroll-left.gif" />
+    <Content Include="Scripts\ux\images\default\tab-bar\scroll-right.gif" />
+    <Content Include="Scripts\ux\images\default\tab-bar\tab-bar-default-bg.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-bottom-active-bg.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-bottom-active-corners.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-bottom-active-sides.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-bottom-bg.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-bottom-corners.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-bottom-disabled-bg.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-bottom-disabled-corners.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-bottom-disabled-sides.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-bottom-over-bg.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-bottom-over-corners.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-bottom-over-sides.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-bottom-sides.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-close.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-top-active-bg.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-top-active-corners.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-top-active-sides.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-top-bg.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-top-corners.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-top-disabled-bg.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-top-disabled-corners.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-top-disabled-sides.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-top-over-bg.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-top-over-corners.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-top-over-sides.gif" />
+    <Content Include="Scripts\ux\images\default\tab\tab-default-top-sides.gif" />
+    <Content Include="Scripts\ux\images\default\tip\tip-corners.gif" />
+    <Content Include="Scripts\ux\images\default\tip\tip-sides.gif" />
+    <Content Include="Scripts\ux\images\default\toolbar\more.gif" />
+    <Content Include="Scripts\ux\images\default\toolbar\scroll-left.gif" />
+    <Content Include="Scripts\ux\images\default\toolbar\scroll-right.gif" />
+    <Content Include="Scripts\ux\images\default\toolbar\toolbar-default-bg.gif" />
+    <Content Include="Scripts\ux\images\default\tools\tool-sprite-tpl.gif" />
+    <Content Include="Scripts\ux\images\default\tools\tool-sprites.gif" />
+    <Content Include="Scripts\ux\images\default\tools\tools-sprites-trans.gif" />
+    <Content Include="Scripts\ux\images\default\tree\arrows.gif" />
+    <Content Include="Scripts\ux\images\default\tree\drop-above.gif" />
+    <Content Include="Scripts\ux\images\default\tree\drop-add.gif" />
+    <Content Include="Scripts\ux\images\default\tree\drop-append.gif" />
+    <Content Include="Scripts\ux\images\default\tree\drop-below.gif" />
+    <Content Include="Scripts\ux\images\default\tree\drop-between.gif" />
+    <Content Include="Scripts\ux\images\default\tree\drop-no.gif" />
+    <Content Include="Scripts\ux\images\default\tree\drop-over.gif" />
+    <Content Include="Scripts\ux\images\default\tree\drop-under.gif" />
+    <Content Include="Scripts\ux\images\default\tree\drop-yes.gif" />
+    <Content Include="Scripts\ux\images\default\tree\elbow-end-minus-nl.gif" />
+    <Content Include="Scripts\ux\images\default\tree\elbow-end-minus.gif" />
+    <Content Include="Scripts\ux\images\default\tree\elbow-end-plus-nl.gif" />
+    <Content Include="Scripts\ux\images\default\tree\elbow-end-plus.gif" />
+    <Content Include="Scripts\ux\images\default\tree\elbow-end.gif" />
+    <Content Include="Scripts\ux\images\default\tree\elbow-line.gif" />
+    <Content Include="Scripts\ux\images\default\tree\elbow-minus-nl.gif" />
+    <Content Include="Scripts\ux\images\default\tree\elbow-minus.gif" />
+    <Content Include="Scripts\ux\images\default\tree\elbow-plus-nl.gif" />
+    <Content Include="Scripts\ux\images\default\tree\elbow-plus.gif" />
+    <Content Include="Scripts\ux\images\default\tree\elbow.gif" />
+    <Content Include="Scripts\ux\images\default\tree\folder-open.gif" />
+    <Content Include="Scripts\ux\images\default\tree\folder.gif" />
+    <Content Include="Scripts\ux\images\default\tree\leaf.gif" />
+    <Content Include="Scripts\ux\images\default\tree\loading.gif" />
+    <Content Include="Scripts\ux\images\default\tree\s.gif" />
+    <Content Include="Scripts\ux\images\default\util\splitter\mini-bottom.gif" />
+    <Content Include="Scripts\ux\images\default\util\splitter\mini-left.gif" />
+    <Content Include="Scripts\ux\images\default\util\splitter\mini-right.gif" />
+    <Content Include="Scripts\ux\images\default\util\splitter\mini-top.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-bottom-corners.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-bottom-sides.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-collapsed-bottom-corners.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-collapsed-bottom-sides.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-collapsed-left-corners.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-collapsed-left-sides.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-collapsed-right-corners.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-collapsed-right-sides.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-collapsed-top-corners.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-collapsed-top-sides.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-left-corners.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-left-sides.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-right-corners.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-right-sides.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-top-corners.gif" />
+    <Content Include="Scripts\ux\images\default\window-header\window-header-default-top-sides.gif" />
+    <Content Include="Scripts\ux\images\default\window\window-default-corners.gif" />
+    <Content Include="Scripts\ux\images\default\window\window-default-sides.gif" />
+    <Content Include="Scripts\ux\layout\component\field\BoxSelectField.js" />
+    <Content Include="Scripts\ux\RowExpander.js" />
     <Content Include="SetParameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -2077,10 +2787,6 @@
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\resources\scss\taco\_forms.scss" />
-    <Content Include="Scripts\resources\scss\taco\variables\_tabs.scss" />
-    <Content Include="Scripts\resources\scss\taco\widgets\_imagefield.scss" />
-    <Content Include="Scripts\resources\scss\taco\widgets\_pagesettings.scss" />
     <Content Include="Scripts\resources\lib\tinymce\langs\readme.md" />
     <Content Include="Scripts\resources\lib\tinymce\skins\lightgray\fonts\icomoon-small.eot" />
     <Content Include="Scripts\resources\lib\tinymce\skins\lightgray\fonts\icomoon-small.ttf" />
@@ -2091,7 +2797,6 @@
     <Content Include="Scripts\resources\lib\tinymce\skins\lightgray\fonts\readme.md" />
     <Content Include="Scripts\app\mocks\facets.json" />
     <Content Include="Scripts\app\mocks\facetables.json" />
-    <Content Include="Scripts\resources\scss\taco\_order.scss" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-Black-webfont.eot" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-Black-webfont.ttf" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-Black-webfont.woff" />
@@ -2221,416 +2926,13 @@
     <Content Include="Scripts\resources\fonts\myriadwebpro-bold-webfont.svg" />
     <Content Include="Scripts\resources\fonts\myriadwebpro-italic-webfont.svg" />
     <Content Include="Scripts\resources\fonts\myriadwebpro-webfont.svg" />
-    <Content Include="Scripts\resources\scss\core\_core.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\core\_reset.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\layout\_layout.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\mixins\_background-gradient.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\mixins\_color-by-background.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\mixins\_frame.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\mixins\_inner-border.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\mixins\_reset-extras.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\mixins\_theme-background-image.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\_tinymce_fixes.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\widgets\_fieldgroup.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\widgets\_form.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\widgets\_shim.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\_messages.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\mixins\_css3.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\widgets\_actions.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\widgets\_grid.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\widgets\_modal.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\widgets\_tree.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\_colors.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\_content.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\_dashboard.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\_header.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\_navmenu.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\_sprites.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\util\_dragdrop.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\util\_focus.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\util\_messagebox.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\util\_resizable.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\util\_scroller.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\util\_splitter.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\util\_tool.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_boundlist.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_btn-group.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_button.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_compass.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_core.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_focus.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_form.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_grid.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_htmleditor.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_layout.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_loadmask.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_menu.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_panel.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_pickers.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_progress-bar.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_qtip.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_tabs.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_toolbar.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_tree.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\variables\_window.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\form\_all.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\form\_checkbox.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\form\_checkboxgroup.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\form\_field.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\form\_fieldset.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\form\_file.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\form\_htmleditor.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\form\_triggerfield.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_boundlist.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_btn-group.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_button.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_colorpicker.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_datepicker.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_drawcomponent.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_form.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_grid.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_html.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_loadmask.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_menu.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_messages.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_panel.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_progress-bar.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_qtip.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\widgets\_quickadder.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_slider.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_tab.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_tabbar.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_toolbar.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_tree.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_viewport.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\widgets\_window.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\_all.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\_core.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\_functions.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\_mixins.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\_taco-all.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\_variables.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\_webfonts.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\_widgets.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
     <Content Include="Scripts\app\core\ux\picker\DateTime.js" />
-    <Content Include="Scripts\resources\images\icons\icon-accounts-selected.png" />
-    <Content Include="Scripts\resources\images\icons\icon-accounts.png" />
-    <Content Include="Scripts\resources\images\icons\icon-apps.png" />
-    <Content Include="Scripts\resources\images\icons\icon-catalog-selected.png" />
-    <Content Include="Scripts\resources\images\icons\icon-catalog.png" />
-    <Content Include="Scripts\resources\images\icons\icon-columns-hover.png" />
-    <Content Include="Scripts\resources\images\icons\icon-columns.png" />
-    <Content Include="Scripts\resources\images\icons\icon-dashboard-selected.png" />
-    <Content Include="Scripts\resources\images\icons\icon-dashboard.png" />
-    <Content Include="Scripts\resources\images\icons\icon-deselectedoverlay.png" />
-    <Content Include="Scripts\resources\images\icons\icon-draghandle.png" />
-    <Content Include="Scripts\resources\images\icons\icon-eye.png" />
-    <Content Include="Scripts\resources\images\icons\icon-eye_hover.png" />
-    <Content Include="Scripts\resources\images\icons\icon-gridview.png" />
-    <Content Include="Scripts\resources\images\icons\icon-infinitybig.png" />
-    <Content Include="Scripts\resources\images\icons\icon-infinitysmall.png" />
-    <Content Include="Scripts\resources\images\icons\icon-listview.png" />
-    <Content Include="Scripts\resources\images\icons\icon-marketing-selected.png" />
-    <Content Include="Scripts\resources\images\icons\icon-marketing.png" />
-    <Content Include="Scripts\resources\images\icons\icon-paper.png" />
-    <Content Include="Scripts\resources\images\icons\icon-paper_hover.png" />
-    <Content Include="Scripts\resources\images\icons\icon-sales-selected.png" />
-    <Content Include="Scripts\resources\images\icons\icon-sales.png" />
-    <Content Include="Scripts\resources\images\icons\icon-search.png" />
-    <Content Include="Scripts\resources\images\icons\icon-selectedoverlay.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-settings-med.png" />
-    <Content Include="Scripts\resources\images\icons\icon-nav-settings.png" />
-    <Content Include="Scripts\resources\images\icons\icon-sites-selected.png" />
-    <Content Include="Scripts\resources\images\icons\icon-sites.png" />
-    <Content Include="Scripts\resources\images\icons\icon-sliderbig.png" />
-    <Content Include="Scripts\resources\images\icons\icon-slidersmall.png" />
-    <Content Include="Scripts\resources\images\icons\icon-support.png" />
-    <Content Include="Scripts\resources\images\icons\icon-trash.png" />
-    <Content Include="Scripts\resources\images\icons\icon-trash_hover.png" />
     <Content Include="Scripts\resources\lib\history-bundled.js" />
     <Content Include="Scripts\resources\lib\history.adapter.native.js" />
     <Content Include="Scripts\resources\lib\history.html4.js" />
     <Content Include="Scripts\resources\lib\history.js" />
     <Content Include="Scripts\resources\lib\json2.js" />
     <Content Include="Scripts\resources\lib\utils.rb" />
-    <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\Catalog.js" />
     <Content Include="Scripts\app\controller\Categories.js" />
     <Content Include="Scripts\app\controller\WidgetDefinitions.js" />
@@ -2663,7 +2965,6 @@
     <Content Include="Scripts\app\core\ux\CategoryComboBox.js" />
     <Content Include="Scripts\app\core\ux\CellEditing.js" />
     <Content Include="Scripts\app\core\ux\CellEditor.js" />
-    <Content Include="Scripts\app\core\ux\CheckColumn.js" />
     <Content Include="Scripts\app\core\ux\ComponentColumn.js" />
     <Content Include="Scripts\app\core\ux\ComplexDataView.js" />
     <Content Include="Scripts\app\core\ux\form\BoxSelect.js" />
@@ -2876,6 +3177,9 @@
     <Folder Include="Models\" />
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
+    <Folder Include="Scripts\overrides\" />
+    <Folder Include="Scripts\sass\var\" />
+    <Folder Include="Scripts\stylesheets\etc\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -2896,35 +3200,82 @@
     <Content Include="Configs\AppSettings.Demo.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Scripts\resources\scss\taco\_sites.scss">
-      <Compile>False&gt;</Compile>
-      <Minify>True</Minify>
-    </Content>
-    <Content Include="Scripts\resources\scss\taco\_errors.scss" />
-    <Content Include="Scripts\resources\scss\taco\_viewport.scss" />
     <Content Include="Scripts\makedocs.bat" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <Content Include="Scripts\app\locale\lang-de.csv" />
     <Content Include="Scripts\app\locale\lang-en.csv" />
-    <Content Include="Scripts\resources\scss\_taco-overrides.scss" />
-    <Content Include="Scripts\resources\scss\_taco-variables.scss" />
-    <Content Include="Scripts\resources\scss\taco\variables\_panel.scss" />
     <Content Include="Scripts\app\mocks\itemfilters.json" />
     <Content Include="Scripts\app\mocks\productTypes.json" />
     <Content Include="Scripts\app\mocks\attributes.json" />
-    <Content Include="Scripts\resources\scss\taco\variables\_boundlist.scss" />
-    <Content Include="Scripts\resources\scss\taco\widgets\_boundlist.scss" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.eot" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.ttf" />
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.woff" />
-    <Content Include="Scripts\resources\scss\taco\variables\_form.scss" />
-    <Content Include="Scripts\resources\scss\taco\widgets\_boxselect.scss" />
-    <None Include="Scripts\resources\scss\taco\widgets\_checkout.scss" />
-    <Content Include="Scripts\resources\scss\taco\widgets\_panel.scss" />
-    <Content Include="Scripts\resources\scss\taco\widgets\_phoneOrders.scss" />
-    <Content Include="Scripts\resources\scss\taco\widgets\_contextSwitcher.scss" />
-    <None Include="Scripts\resources\scss\taco\widgets\_standaloneAccordion.scss" />
-    <None Include="Scripts\resources\scss\taco\widgets\_themes.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\licenses\Readme.md" />
+    <Content Include="Scripts\packages\mozuadmintheme\overrides\Readme.md" />
+    <Content Include="Scripts\packages\mozuadmintheme\package.json" />
+    <Content Include="Scripts\packages\mozuadmintheme\Readme.md" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\config.rb" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\etc\all.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\etc\Readme.md" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\etc\_colors.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\etc\_webfonts.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\Readme.md" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\Readme.md" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\form\field\Base.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\form\field\Trigger.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\form\Labelable.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\grid\column\Column.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\grid\feature\RowWrap.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\grid\header\Container.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\layout\Container.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\menu\Menu.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\panel\Panel.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\panel\Table.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\Readme.md" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\tab\Bar.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\tab\Tab.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\toolbar\Toolbar.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\view\BoundList.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\src\Readme.md" />
+    <Content Include="Scripts\sass\etc\taco\_colors.scss" />
+    <Content Include="Scripts\sass\etc\taco\_compass.scss" />
+    <Content Include="Scripts\sass\etc\taco\_content.scss" />
+    <Content Include="Scripts\sass\etc\taco\_dashboard.scss" />
+    <Content Include="Scripts\sass\etc\taco\_errors.scss" />
+    <Content Include="Scripts\sass\etc\taco\_forms.scss" />
+    <Content Include="Scripts\sass\etc\taco\_header.scss" />
+    <Content Include="Scripts\sass\etc\taco\_messages.scss" />
+    <Content Include="Scripts\sass\etc\taco\_navmenu.scss" />
+    <Content Include="Scripts\sass\etc\taco\_order.scss" />
+    <Content Include="Scripts\sass\etc\taco\_sites.scss" />
+    <Content Include="Scripts\sass\etc\taco\_tinymce_fixes.scss" />
+    <Content Include="Scripts\sass\etc\taco\_viewport.scss" />
+    <Content Include="Scripts\sass\etc\taco\mixins\_css3.scss" />
+    <Content Include="Scripts\sass\etc\taco\variables\_boundlist.scss" />
+    <Content Include="Scripts\sass\etc\taco\variables\_form.scss" />
+    <Content Include="Scripts\sass\etc\taco\variables\_panel.scss" />
+    <Content Include="Scripts\sass\etc\taco\variables\_tabs.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_actions.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_boundlist.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_boxselect.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_checkout.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_contextSwitcher.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_fieldgroup.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_form.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_grid.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_imagefield.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_modal.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_pagesettings.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_panel.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_phoneOrders.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_quickadder.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_shim.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_standaloneAccordion.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_themes.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_tree.scss" />
+    <Content Include="Scripts\sass\etc\taco\widgets\_window.scss" />
+    <Content Include="Scripts\sass\etc\_taco-all.scss" />
+    <Content Include="Scripts\sass\etc\all.scss" />
     <None Include="Scripts\app\mocks\discounts.json" />
     <Content Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>

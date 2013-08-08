@@ -19,7 +19,7 @@ Ext.define('Taco.model.CustomShippingRate', {
     }, {
         'name': 'isEnabled',
         'type': 'bool'
-    }],
+    }]
 
   
 });

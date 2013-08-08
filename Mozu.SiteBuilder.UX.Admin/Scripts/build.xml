@@ -1,7 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="@@@" default=".help">
+<project name="Taco" default=".help">
+    <!--
+    The build-impl.xml file imported here contains the guts of the build process. It is
+    a great idea to read that file to understand how the process works, but it is best to
+    limit your changes to this file.
+    -->
     <import file="${basedir}/.sencha/app/build-impl.xml"/>
 
+      <!-- this seems to freeze :( -->
+      <!--<target name="-before-clean">
+        <attrib readonly="false">
+          <fileset dir="${build.dir}" includes="**/*" />
+        </attrib>
+      </target>-->
+
+
+      <target name="-before-sass">
+
+        <local name="resourcepath" />
+        <property name="resourcepath" location="${basedir}/resources/" /> 
+
+        <local name="build.fontpath" />
+        <property name="build.fontpath" location="${build.dir}/fonts" />
+        <echo>Copying fonts into the font path, again per SDKTOOLS-509.</echo>
+        <mkdir dir="${build.fontpath}" />
+        <copy todir="${build.fontpath}" overwrite="true">
+          <fileset dir="${resourcepath}/fonts" includes="**/*" />
+        </copy>
+
+        <!-- Due to Sencha bug SDKTOOLS-509 and Compass's way of importing config, the config.rb values get ignored, so we're injecting them directly into the config in the build directory.-->
+        <echo file="${app.out.ruby}" append="true">
+            output_style = :expanded
+            images_path = %q{${resourcepath}\images}.gsub!(/\\/, '/')
+            http_generated_images_path = "/admin/Scripts/build/images"
+            fonts_path = %q{${resourcepath}\fonts}.gsub!(/\\/, '/')
+        </echo>
+        
+        <echo>Running compass sprite as a separate task, to break it off in anticipation of replacing it with another, more scalable sprite generation system.</echo>
+        <exec executable="cmd" searchpath="true" dir="${build.dir}">
+          <arg value="/c" />
+          <arg value="compass" />
+          <arg value="sprite" />
+          <arg value="--images-dir" />
+          <arg value="${resourcepath}\images" />
+          <arg value="icons/*.png" />
+        </exec>
+      </target>
+  
     <!--
     The following targets can be provided to inject logic before and/or after key steps
     of the build process:
@@ -22,6 +67,11 @@
 
             <target name="-before-init"/>
             <target name="-after-init"/>
+        
+        The "page" target performs the call to Sencha Cmd to build the 'all-classes.js' file.
+
+            <target name="-before-page"/>
+            <target name="-after-page"/>
 
         The "build" target performs the call to Sencha Cmd to build the application.
 

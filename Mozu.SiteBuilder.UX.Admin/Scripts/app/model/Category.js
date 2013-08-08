@@ -140,7 +140,7 @@ Ext.define('Taco.model.Category', {
         this.facetSetStore.load({
             params: {
                id: this.getId()
-            },
+            }
         });
 
         return this.facetSetStore;

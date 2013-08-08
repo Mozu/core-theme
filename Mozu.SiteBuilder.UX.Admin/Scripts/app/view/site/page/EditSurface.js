@@ -239,41 +239,15 @@
                     fn: this.onRecalcShim,
                     scope: this
                 },
-                render:{
+                afterrender: {
                     fn:function(){
-                        if ( !this.firstIframeLoad ){
+                        if (!this.firstIframeLoad) {
                             this.setLoading({ useMsg: false });
                         }
                     },
                     scope:this
-                },
-                afterrender: {
-                    fn: function () {
-                        return;
-                        var scrollHeight = 0,
-                            docEl,
-                            me = this,
-                            interval;
-                        
-                        
-                        interval = window.setInterval(function () {
-                            var docEl = me.iframe.getDoc().documentElement;
-                            console.log('scrollHeight', scrollHeight, docEl.scrollHeight);
-                            
-                            // GTFO
-                            if (!docEl || docEl.scrollHeight === scrollHeight) {
-                                return;
-                            }
-                            
-                            console.log('scrollHeight', scrollHeight, docEl.scrollHeight);
-                            scrollHeight = docEl.scrollHeight;
-                            
-                            
-                            this.onRecalcShim();
-                        }, 5000);
-                    },
-                    scope: this
                 }
+               
             });
         },
 
@@ -457,7 +431,7 @@
             Ext.EventManager.on(Ext.getDoc(), 'click', this.onClickAway, this);
             Ext.EventManager.on(this.iframe.getDoc(), 'click', function (e, target, eOpts){
                 if ( target.hostname == this.iframe.getWin().location.hostname) {
-                    me.fireEvent ( 'beforeIframeClickNavigate', {url:target.pathname + target.search })
+                    me.fireEvent('beforeIframeClickNavigate', { url: target.pathname + target.search });
                     e.stopEvent();
                 } 
                 
@@ -610,7 +584,7 @@
                             stopEl = Ext.getDom(limit);
                             limit = Number.MAX_VALUE;
                         }
-                        while (target && target.nodeType == 1 && depth < limit && target != topmost && target != stopEl) {
+                        while (target && target.nodeType == 1 && depth < limit && target != topmost && target !== stopEl) {
                             if (Ext.DomQuery.is(target, '[data-editing-widget]') || Ext.DomQuery.is(target, '[data-editing-zone]')) {
                                 return returnEl ? Ext.get(target) : target;
                             }

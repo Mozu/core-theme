@@ -1,0 +1,18 @@
+﻿.#{$vprefix}context-switcher {
+  .#{$prefix}trigger-cell, .#{$prefix}form-text {
+    background-color: $color-action-background;
+    @include facade-transitions;
+  }
+  &:hover {
+    .#{$prefix}form-text:not(:disabled) {
+      background-color: $color-action-background-hover;
+      @include box-shadow(inset 0px -1px $color-action-outline-hover);
+    }
+    .#{$prefix}trigger-cell {
+      background-color: $color-action-background-hover;
+    }
+  }
+  &.#{$prefix}item-disabled .#{$prefix}trigger-cell {
+     @include opacity(0.3);
+  }
+}

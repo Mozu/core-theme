@@ -14,5 +14,5 @@ Ext.define('Taco.store.ShippingCarrierSettings', {
             contextLevel: 's',
             clearSort: true,
             autoLoad: true
-        },
+        }
     });

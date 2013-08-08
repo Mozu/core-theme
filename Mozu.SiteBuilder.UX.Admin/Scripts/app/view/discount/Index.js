@@ -138,7 +138,7 @@ Ext.define('Taco.view.discount.Index', {
             tooltip: 'Delete',
             iconCls: 'taco-action-delete',
             eventName: 'deletediscount'
-        }],
+        }]
     },
     //ToDo: WTF is this used for
     initComponent2: function (eOpts) {
@@ -178,7 +178,7 @@ Ext.define('Taco.view.discount.Index', {
                     {
                         text: 'clear filters',
                         xtype: 'secondarybutton',
-                        hidden: me.filters == null || me.filters.length == 0,
+                        hidden: !me.filters || me.filters.length === 0,
                         listeners: {
                             click: function () {
                                 me.store.filters.clear();
@@ -251,7 +251,6 @@ Ext.define('Taco.view.discount.Index', {
     launchEditorz: function (record) {
         var me = this,
                 token = 'discounts/edit/',
-                editorView,
                 id = record.getId ? record.getId() : record,
 
             editorView = Ext.create('Taco.view.discount.Edit',

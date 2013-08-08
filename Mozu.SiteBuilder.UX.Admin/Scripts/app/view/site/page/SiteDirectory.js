@@ -51,7 +51,7 @@
             me.callParent(arguments);
             me.add(me.tree);
 
-            Taco.app.eventbus.on(
+            Taco.app.on(
                 'Taco.model.CmsDocument.savesuccess',
                 function () {
                     me.store.load();

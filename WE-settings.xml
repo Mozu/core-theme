@@ -30,7 +30,7 @@
     <JavaScriptOutlining>true</JavaScriptOutlining>
     <JsHint_asi>false</JsHint_asi>
     <JsHint_bitwise>true</JsHint_bitwise>
-    <JsHint_boss>false</JsHint_boss>
+    <JsHint_boss>true</JsHint_boss>
     <JsHint_browser>true</JsHint_browser>
     <JsHint_camelcase>false</JsHint_camelcase>
     <JsHint_couch>false</JsHint_couch>
@@ -38,9 +38,9 @@
     <JsHint_debug>true</JsHint_debug>
     <JsHint_devel>true</JsHint_devel>
     <JsHint_dojo>false</JsHint_dojo>
-    <JsHint_eqeqeq>true</JsHint_eqeqeq>
+    <JsHint_eqeqeq>false</JsHint_eqeqeq>
     <JsHint_eqnull>false</JsHint_eqnull>
-    <JsHint_es5>true</JsHint_es5>
+    <JsHint_es5>false</JsHint_es5>
     <JsHint_esnext>false</JsHint_esnext>
     <JsHint_evil>false</JsHint_evil>
     <JsHint_expr>true</JsHint_expr>

@@ -1,0 +1,15 @@
+
+$grid-row-cell-selected-background-color: $color-selected;
+$grid-row-cell-font-size: px-to-rem(14);
+$grid-row-cell-line-height: 19px;
+$grid-row-cell-font: normal #{$grid-row-cell-font-size}/#{$grid-row-cell-line-height} $font-family;
+
+$grid-row-cell-background: $color-neutral-white;
+$grid-row-cell-alt-background: darken($grid-row-cell-background, 4%);
+$grid-row-cell-border-style: solid;
+$grid-row-cell-border-width: 1px;
+
+$grid-row-cell-over-background-color: $color-neutral-95;
+$grid-row-cell-over-border-color: border-for($grid-row-cell-over-background-color);
+
+$grid-cell-inner-padding: 7px 5px;

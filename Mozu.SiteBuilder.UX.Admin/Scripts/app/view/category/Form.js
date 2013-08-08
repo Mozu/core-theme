@@ -24,7 +24,7 @@ Ext.define('Taco.view.category.Form', {
         maxLength: 80,
         enforceMaxLength: true,
         required: true,
-        minLength: 3,
+        minLength: 3
     }, {
         xtype: 'categorycombobox',
         name: 'parentId',
@@ -68,5 +68,5 @@ Ext.define('Taco.view.category.Form', {
     initComponent: function () {
         this.title = this.record.data.name;
         this.callParent(arguments);
-    },
+    }
 });

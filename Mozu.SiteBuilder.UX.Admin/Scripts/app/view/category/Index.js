@@ -102,6 +102,11 @@ Ext.define('Taco.view.category.Index', {
                 dock: 'top',
                 height: 30,
                 cls: 'taco-secondary-actions',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle',
+                    pack: 'end'
+                },
                 items: [this.notifier, {
                     xtype: 'action',
                     text: 'Expand All',

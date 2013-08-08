@@ -22,7 +22,7 @@ Ext.define('Taco.view.generalSettings.subform.Analytics', {
                     xtype: 'textfield',
                     itemId: 'googleAnalyticsId',
                     name: 'googleAnalyticsId',
-                    fieldLabel: "User Account (UA#)",
+                    fieldLabel: "User Account (UA#)"
                     //value: me.settings.googleAnalyticsId,
                     //disabled: !me.settings.googleAnalyticsEnabled
                 },
@@ -47,8 +47,9 @@ Ext.define('Taco.view.generalSettings.subform.Analytics', {
                     name: 'googleAnalyticsEcomEnabled',
                     itemId: 'googleAnalyticsEcomEnabled',
                     boxLabel: 'Enable <a target="_blank" href="https://developers.google.com/analytics/devguides/collection/gajs/gaTrackingEcommerce">Google Analytics eCommerce transaction tracking</a>',
-                    boxLabelAlign: 'after',                    inputValue: true,
-                    uncheckedValue: false,
+                    boxLabelAlign: 'after',
+                    inputValue: true,
+                    uncheckedValue: false
                     //checked: me.settings.googleAnalyticsEcomEnabled,
                     //disabled: !me.settings.googleAnalyticsEnabled
                 }];

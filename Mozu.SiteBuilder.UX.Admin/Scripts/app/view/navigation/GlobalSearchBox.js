@@ -84,13 +84,13 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                         type: 'Taco.store.Orders',
                         createOnly: 'true',
                         pageSize: 5,
-                        autoLoad: false,
+                        autoLoad: false
                     }),
                     customerStore = Taco.core.data.StoreManager.getOrCreate({
                         type: 'Taco.store.Customers',
                         createOnly: 'true',
                         pageSize: 5,
-                        autoLoad: false,
+                        autoLoad: false
                     }),
                     tmpStore;
 
@@ -105,7 +105,7 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                         type: 'Taco.store.Products',
                         createOnly: 'true',
                         pageSize: 5,
-                        autoLoad: false,
+                        autoLoad: false
                     }),
                     tmpStore.load(options);
                 } else {
@@ -120,7 +120,7 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                             type: 'Taco.store.Products',
                             createOnly: 'true',
                             pageSize: 5,
-                            autoLoad: false,
+                            autoLoad: false
                         }),
                         tmpStore.load(optCopy);
 

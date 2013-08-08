@@ -6,15 +6,14 @@
 
 Ext.define('Taco.view.product.subform.Shipping', {
     extend: 'Taco.view.product.subform.Subform',
-    requires: ['Taco.core.ux.form.FlexBox'],
 
     title: 'Shipping',
     
     initComponent: function () {
         this.record = this.product;
         this.items = [{
-            xtype: 'formflexbox',
-            justify: false,
+            xtype: 'container',
+            layout: 'hbox',
             items: [{
                 xtype: 'unitfield',
                 name: 'packageWeight',
@@ -37,28 +36,30 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 xtype: 'fieldcontainer',
                 fieldLabel: 'Package Dimensions',
                 width: 320,
+                layout: {
+                    type: 'hbox',
+                    align: 'bottom'
+                },
+                defaults: {
+                    width: 100,
+                    margin: '0 0 0 10',
+                    xtype: 'unitfield',
+                    unitString: 'in',
+                    decimalPrecision: 3,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false
+                },
                 items: [{
-                    xtype: 'formflexbox',
-                    justify: true,
-                    defaults: {
-                        width: 100,
-                        xtype: 'unitfield',
-                        unitString: 'in',
-                        decimalPrecision: 3,
-                        hideTrigger: true,
-                        keyNavEnabled: false,
-                        mouseWheelEnabled: false
-                    },
-                    items: [{
-                        name:'packageLength',
-                        emptyText: 'l'
-                    }, {
-                        name:'packageWidth',
-                        emptyText: 'w'
-                    }, {
-                        name:'packageHeight',
-                        emptyText: 'h'
-                    }]
+                    margin: 0,
+                    name:'packageLength',
+                    emptyText: 'l'
+                }, {
+                    name:'packageWidth',
+                    emptyText: 'w'
+                }, {
+                    name:'packageHeight',
+                    emptyText: 'h'
                 }]
             }]
         }];

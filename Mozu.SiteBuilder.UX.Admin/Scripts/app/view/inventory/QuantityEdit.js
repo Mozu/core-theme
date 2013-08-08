@@ -23,34 +23,35 @@ Ext.define('Taco.view.inventory.QuantityEdit', {
         this.items = [{
             xtype: 'formform',
             itemId: 'form',
+            layout: {
+                type: 'hbox',
+                align: 'middle'
+            },
             items: [{
-                xtype: 'formflexbox',
-                items: [{
-                    xtype: 'radiofield',
-                    name: 'addOrSet',
-                    inputValue: 'add',
-                    boxLabel: 'Add'
-                }, {
-                    xtype: 'radiofield',
-                    name: 'addOrSet',
-                    inputValue: 'set',
-                    boxLabel: 'Set'
-                }, {
-                    xtype: 'numberfield',
-                    name: 'quantity',
-                    emptyText: 'Quantity',
-                    width: 75,
-                    hideTrigger: true
-                }, {
-                    xtype: 'component',
-                    itemId: 'preview',
-                    data: record.getData(),
-                    tpl: [
-                        '<label>New Quantity: </label><span class="quantity">',
-                            '{[Ext.Array.sum([values.stockOnHand, Ext.Number.from(values.stockOnHandAdjustment, 0)])]}',
-                        '</span>'
-                    ]
-                }]
+                xtype: 'radiofield',
+                name: 'addOrSet',
+                inputValue: 'add',
+                boxLabel: 'Add'
+            }, {
+                xtype: 'radiofield',
+                name: 'addOrSet',
+                inputValue: 'set',
+                boxLabel: 'Set'
+            }, {
+                xtype: 'numberfield',
+                name: 'quantity',
+                emptyText: 'Quantity',
+                width: 75,
+                hideTrigger: true
+            }, {
+                xtype: 'component',
+                itemId: 'preview',
+                data: record.getData(),
+                tpl: [
+                    '<label>New Quantity: </label><span class="quantity">',
+                        '{[Ext.Array.sum([values.stockOnHand, Ext.Number.from(values.stockOnHandAdjustment, 0)])]}',
+                    '</span>'
+                ]
             }]
         }, {
             xtype: 'container',

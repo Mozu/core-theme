@@ -24,11 +24,11 @@
                 root: 'items',
                 successProperty: 'success',
                 messageProperty: "message"
-            },   
+            }   
         },
         storeManagerConfig: {
             clearFilters: true,
             clearSort: true,
             autoLoad: true
-        },
+        }
     });

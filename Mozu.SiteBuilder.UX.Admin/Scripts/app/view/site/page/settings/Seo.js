@@ -54,7 +54,7 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                     },
                     {
                         xtype: 'box',
-                        autoEl: 'hr',
+                        autoEl: 'hr'
                     },
                     {
                         xtype: 'radiogroup',
@@ -77,7 +77,7 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                     },
                     {
                         xtype: 'box',
-                        autoEl: 'hr',
+                        autoEl: 'hr'
                     },
                     {
                         xtype: 'radiogroup',
@@ -100,7 +100,7 @@ Ext.define('Taco.view.site.page.settings.Seo', {
                     },
                     {
                         xtype: 'box',
-                        autoEl: 'hr',
+                        autoEl: 'hr'
                     },
                     {
                         xtype: 'checkboxgroup',

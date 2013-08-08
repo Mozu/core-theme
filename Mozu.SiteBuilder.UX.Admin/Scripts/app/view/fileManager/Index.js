@@ -92,7 +92,7 @@ Ext.define('Taco.view.fileManager.Index', {
             Ext.create('Ext.grid.plugin.CellEditing', {
                 clicksToEdit: 2
             })
-        ],
+        ]
     },
 
     initComponent: function () {

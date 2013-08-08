@@ -74,7 +74,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                         {
                             height: 400,
                             width: 300,
-                            html:  me.configureCopy,
+                            html:  me.configureCopy
                            
                         },
                         {
@@ -122,7 +122,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                         {
                             height: 400,
                             width: 300,
-                            html:me.ratesCopy,
+                            html:me.ratesCopy
                             
                         },
                         {

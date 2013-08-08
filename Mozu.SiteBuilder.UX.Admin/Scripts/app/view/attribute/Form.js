@@ -5,7 +5,8 @@
 
 Ext.define('Taco.view.attribute.Form', {
     extend: 'Taco.view.product.subform.Subform',
-    requires: ['Taco.view.option.valueEditor.MultiValue', 'Taco.core.ux.form.FlexBox'],
+    requires: ['Taco.view.option.valueEditor.MultiValue'],
+    requires: ['Taco.view.option.valueEditor.MultiValue'],
     createTitle: 'Create New Attribute',
 
     title: 'Attribute',
@@ -92,7 +93,7 @@ Ext.define('Taco.view.attribute.Form', {
                     attributeType,
                     dataType,
                 {
-                    xtype: 'formflexbox',
+                    xtype: 'container',
                     width: 308,
                     defaults: this.defaults,
                     items: [{
@@ -127,7 +128,7 @@ Ext.define('Taco.view.attribute.Form', {
                 return [
                     attributeType,
                 {
-                    xtype: 'formflexbox',
+                    xtype: 'container',
                     width: 308,
                     defaults: this.defaults,
                     items: [{
@@ -167,7 +168,7 @@ Ext.define('Taco.view.attribute.Form', {
                 },
                 attributeType,
                 {
-                    xtype: 'formflexbox',
+                    xtype: 'container',
                     width: 339,
                     fieldLabel: 'Range',
                     cls: 'taco-date-value-input',

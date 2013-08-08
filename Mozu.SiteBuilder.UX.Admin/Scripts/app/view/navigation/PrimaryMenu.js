@@ -6,11 +6,11 @@
 Ext.define('Taco.view.navigation.PrimaryMenu', {
     extend: 'Ext.container.Container',
     requires: ['Taco.view.navigation.PrimaryMenuView'],
-
-    autoEl: {
-        tag: 'div',
-        cls: 'taco-primary-menu-ct'
-    },
+    cls: 'taco-primary-menu-ct',
+    //autoEl: {
+    //    tag: 'div',
+    //    cls: 'taco-primary-menu-ct'
+    //},
     autoShow: true,
     border: false,
     floating: true,

@@ -16,7 +16,7 @@ Ext.define('Taco.view.site.widget.ColumnDivider', {
 
     initComponent: function () {
         var me = this;
-        this.fields = [Ext.create('Taco.core.ux.form.FlexBox', {
+        this.fields = [Ext.create('Ext.Container', {
             defaults: {
               //  xtype: 'combobox',
                 //editable: false,
