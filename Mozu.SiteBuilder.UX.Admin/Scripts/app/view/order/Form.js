@@ -16,7 +16,8 @@ Ext.define('Taco.view.order.Form', {
         'Taco.view.order.subform.Customer',
         'Taco.view.order.subform.Detail',
         'Taco.view.order.subform.Payment',
-        'Taco.view.order.subform.Shipping'
+        'Taco.view.order.subform.Shipping',
+        'Taco.view.order.subform.Return'
     ],
 
     model: 'Taco.model.Order',
@@ -49,6 +50,10 @@ Ext.define('Taco.view.order.Form', {
     },
 
     buildForm: function () {
+        
+   
+        
+
         var subformCfg = {
                 record: this.record
             },
@@ -72,7 +77,10 @@ Ext.define('Taco.view.order.Form', {
 
         if (this.isEdit()) {
             items.push(Ext.create('Taco.view.order.subform.Shipping', subformCfg));
+            items.push(Ext.create('Taco.view.order.subform.Return', subformCfg));
+           
         }
+        
 
         this.loadNavItems(items);
     },
