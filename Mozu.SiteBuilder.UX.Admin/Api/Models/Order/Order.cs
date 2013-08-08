@@ -161,5 +161,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         [DataMember(Name = "shippingAdjustment", EmitDefaultValue = false)]
         public Adjustment ShippingAdjustment { get; set; }
+
+        /// <summary>
+        /// Is this record a draft order.
+        /// </summary>
+        [DataMember(Name = "isDraft", EmitDefaultValue = false)]
+        public bool IsDraft { get; set; }
+
+        /// <summary>
+        /// Is this record an order that has an unsaved draft.
+        /// Note: Always false if IsDraft = true.
+        /// </summary>
+        [DataMember(Name = "hasDraft", EmitDefaultValue = false)]
+        public bool HasDraft { get; set; }
     }
 }
