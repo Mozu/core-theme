@@ -73,7 +73,9 @@ Ext.define('Taco.view.order.Form', {
             items.push(Ext.create('Taco.view.order.subform.ShippingSimple', subformCfg));
         }
 
+        items.push({ html: "hello thom", record: this.record, title: 'travis'/*, getEl: function() { return null } */});
         items.push(Ext.create('Taco.view.order.subform.Payment', subformCfg));
+        items.push({ html: "hello again", record: this.record, title: 'travis 2'/*, getEl: function() { return null } */});
 
         if (this.isEdit()) {
             items.push(Ext.create('Taco.view.order.subform.Shipping', subformCfg));
