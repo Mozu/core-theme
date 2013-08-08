@@ -52,22 +52,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal Subtotal { get; set; }
 
         /// <summary>
+        /// Active order-level discount, if one exists.
+        /// </summary>
+        [DataMember(Name = "activeOrderDiscount", EmitDefaultValue = false)]
+        public OrderDiscount ActiveOrderDiscount { get; set; }
+
+        /// <summary>
         /// List of all active and non-active order-level discounts.
         /// </summary>
         [DataMember(Name = "orderDiscounts", EmitDefaultValue = false)]
-        public List<object> OrderDiscounts { get; set; }
-
-        /// <summary>
-        /// Description of order-level discount, if one exists.
-        /// </summary>
-        [DataMember(Name="activeDiscountDescription", EmitDefaultValue = false)]
-        public string ActiveDiscountDescription { get; set; }
-
-        /// <summary>
-        /// Value order-level discount, if one exists.
-        /// </summary>
-        [DataMember(Name = "orderDiscountTotal", EmitDefaultValue = false)]
-        public decimal OrderDiscountTotal { get; set; }
+        public List<OrderDiscount> OrderDiscounts { get; set; }
 
         #region Shipping
         [DataMember(Name = "shippingMethodCode")]
@@ -82,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "activeShippingDiscount", EmitDefaultValue = false)]
         public ShippingDiscount ActiveShippingDiscount { get; set; }
 
-        [DataMember(Name = "shippingDiscount", EmitDefaultValue = false)]
+        [DataMember(Name = "shippingDiscounts", EmitDefaultValue = false)]
         public List<ShippingDiscount> ShippingDiscounts { get; set; }
 
         [DataMember(Name = "shippingTotal")]
@@ -165,14 +159,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// <summary>
         /// Is this record a draft order.
         /// </summary>
-        [DataMember(Name = "isDraft", EmitDefaultValue = false)]
+        [DataMember(Name = "isDraft", EmitDefaultValue = true)]
         public bool IsDraft { get; set; }
 
         /// <summary>
         /// Is this record an order that has an unsaved draft.
         /// Note: Always false if IsDraft = true.
         /// </summary>
-        [DataMember(Name = "hasDraft", EmitDefaultValue = false)]
+        [DataMember(Name = "hasDraft", EmitDefaultValue = true)]
         public bool HasDraft { get; set; }
     }
 }
