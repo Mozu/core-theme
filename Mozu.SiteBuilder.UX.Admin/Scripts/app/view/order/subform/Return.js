@@ -7,7 +7,9 @@ Ext.define('Taco.view.order.subform.Return', {
         'Taco.view.order.widget.CreateReturnPanel',
         'Taco.view.order.widget.ProcessReturnPanel'
     ],
+    title: 'RMA',
     config: {
+        
         // order model
         originalRecord: null,
         record: null,
