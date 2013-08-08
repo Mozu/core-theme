@@ -161,42 +161,43 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             // editMode:false
             
             // if there is a draft version of this order we need to show a warning toolbar
-            this.dockedItems = [
-                {
-                    xtype: "toolbar",
-                    doc: "top",
-                    componentCls: "title-toolbar",
-                    enableOverflow: false,
-                    weight: 1,
-                    style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
-                    items: [
-                        {
-                            xtype: "component",
-                            html: "Warning: You have unsaved changes to this order detail",
-                            style: "padding:0px 5px 0px 5px; font-size: 0.9 em;color:#990000",
-                            cls: "title",
-                            flex:1
-                        },{
-                            xtype: "taco.button",
-                            text:"Discard Changes",
-                            handler: function () {
-                                me.removeDraftOrder();
-                            },
-                            scope: this
-                        },{
-                            xtype: "taco.button",
-                            text: "Edit Details",
-                            style:"margin-left:5px;",
-                            handler: function (button,e) {
-                                var animationTarget = button.el;
-                                this.editOrder(animationTarget);
-                            },
-                            scope: this
-                        }
-                    ]
-                }
-            ];
-
+            if (this.record.get("hasDraft")) {
+                this.dockedItems = [
+                    {
+                        xtype: "toolbar",
+                        doc: "top",
+                        componentCls: "title-toolbar",
+                        enableOverflow: false,
+                        weight: 1,
+                        style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
+                        items: [
+                            {
+                                xtype: "component",
+                                html: "Warning: You have unsaved changes to this order detail",
+                                style: "padding:0px 5px 0px 5px; font-size: 0.9 em;color:#990000",
+                                cls: "title",
+                                flex:1
+                            },{
+                                xtype: "taco.button",
+                                text:"Discard Changes",
+                                handler: function () {
+                                    me.removeDraftOrder();
+                                },
+                                scope: this
+                            },{
+                                xtype: "taco.button",
+                                text: "Edit Details",
+                                style:"margin-left:5px;",
+                                handler: function (button,e) {
+                                    var animationTarget = button.el;
+                                    this.editOrder(animationTarget);
+                                },
+                                scope: this
+                            }
+                        ]
+                    }
+                ];
+            }
 
         };
    
@@ -218,11 +219,13 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     rowBodyTdCls: "x-grid-cell adjustment-cell",
                     getAdditionalData: function(data, rowIndex, record, orig) {
                         var colspan = 1,
-                            discount = record.get("discount"),
-                            rowBodyCls = (discount) ? "hasDiscount" : "noDiscount";
+                            discounts = record.get("discounts"),
+                            shippingDiscounts = record.get("shippingDiscounts"),
+                            rowBodyCls = (discounts.length || shippingDiscounts.length) ? "hasDiscount" : "noDiscount";
 
                         return {
-                            discountData: discount,
+                            discounts: discounts,
+                            shippingDiscounts: shippingDiscounts,
                             rowBodyCls: rowBodyCls,
                             rowBodyColspan: colspan
                         };
@@ -230,25 +233,46 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
                     getRowBody: function(values) {
                         return [
-                            '<tpl if="discountData">',
-                                '<tr class="' + this.rowBodyTrCls + ' {rowBodyCls}">',
-                                '<td  class="' + this.rowBodyTdCls + '" colspan="{rowBodyColspan}">',
-                                '<div class="' + this.rowBodyDivCls + '">Discount: {discountData.description}</div>',
-                                '</td>',
-                                '<td  class="' + this.rowBodyTdCls + '">',
-                                '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{discountData.unitPrice:usMoney}</div>',
-                                '</td>',
-                                '<td class="' + this.rowBodyTdCls + '">',
-                                '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{discountData.quantity}</div>',
-                                '</td>',
-                                '<td  class="' + this.rowBodyTdCls + '">',
-                                '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{discountData.total:usMoney}</div>',
-                                '</td>',
-                                '<td  class="' + this.rowBodyTdCls + '">',
-                                '<div class="' + this.rowBodyDivCls + '"></div>',
-                                '</td>',
-                                '</tr>',
-                            '</tpl>'
+                            
+                                '<tpl for="discounts">',
+                                    '<tr class="' + this.rowBodyTrCls + ' {rowBodyCls}">',
+                                    '<td  class="' + this.rowBodyTdCls + '" colspan="{rowBodyColspan}">',
+                                    '<div class="' + this.rowBodyDivCls + '">Discount: {description}</div>',
+                                    '</td>',
+                                    '<td  class="' + this.rowBodyTdCls + '">',
+                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{unitPrice:usMoney}</div>',
+                                    '</td>',
+                                    '<td class="' + this.rowBodyTdCls + '">',
+                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{quantity}</div>',
+                                    '</td>',
+                                    '<td  class="' + this.rowBodyTdCls + '">',
+                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{total:usMoney}</div>',
+                                    '</td>',
+                                    '<td  class="' + this.rowBodyTdCls + '">',
+                                    '<div class="' + this.rowBodyDivCls + '"></div>',
+                                    '</td>',
+                                    '</tr>',
+                                '</tpl>', 
+                                '<tpl for="shippingDiscounts">',
+                                    '<tr class="' + this.rowBodyTrCls + ' {rowBodyCls}">',
+                                    '<td  class="' + this.rowBodyTdCls + '" colspan="{rowBodyColspan}">',
+                                    '<div class="' + this.rowBodyDivCls + '">Discount: {description}</div>',
+                                    '</td>',
+                                    '<td  class="' + this.rowBodyTdCls + '">',
+                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{unitPrice:usMoney}</div>',
+                                    '</td>',
+                                    '<td class="' + this.rowBodyTdCls + '">',
+                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{quantity}</div>',
+                                    '</td>',
+                                    '<td  class="' + this.rowBodyTdCls + '">',
+                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{total:usMoney}</div>',
+                                    '</td>',
+                                    '<td  class="' + this.rowBodyTdCls + '">',
+                                    '<div class="' + this.rowBodyDivCls + '"></div>',
+                                    '</td>',
+                                    '</tr>',
+                                '</tpl>'
+                            
                         ].join('');
                     }
                 }
@@ -824,7 +848,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     tb.hide();
                     
                     // remove the toolbar from its owner container and destroy it.
-                    tb.ownerCt.removeDocked(tb,true);
+                    tb.ownerCt.removeDocked(tb, true);
                 },
                 scope: this
             }
@@ -1203,6 +1227,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     errorDialog.show();
                     return;
                 }
+                me.removeDocked(me.activeAddToolbar, true);
                 this.fireEvent('saveSuccess', json.items[0]);
             },
             failure: function (response) {
