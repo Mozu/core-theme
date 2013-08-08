@@ -14,7 +14,7 @@ Ext.define('Taco.view.order.subform.Return', {
         originalRecord: null,
         record: null,
         returnsStore:null,
-        itemId: "orderPayment",
+        itemId: "orderReturn",
         // title for the panel header
         title: 'RMA',
         // components to add to the panel header. typically used to add an actions menu button
