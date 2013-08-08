@@ -337,7 +337,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         '</tpl>',
                         '<div class="productOptions">',
                         '<tpl for="options">',
-                        '<span class="option">{.}, </span>',
+                            '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{Name}',
+                                //'{[ if (!Ext.isBoolean(values.Value)) ? values.Value : ""  ]}',
+                                ': {Value}',
+                        
+                            '</span>',
                         '</tpl>',
                         '</div>'
                     ],
