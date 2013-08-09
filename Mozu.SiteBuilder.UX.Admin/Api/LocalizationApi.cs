@@ -14,13 +14,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/localization", SuppressDescriptorGeneration = true)]
     public class LocalizationController : BaseController
     {
+        private readonly HttpContextBase _httpContext;
+
+        public LocalizationController(HttpContextBase httpContext)
+        {
+            _httpContext = httpContext;
+        }
+      
         [ApiAuthorize]
         [HttpGetRoute(UriTemplate = "read")]
-        public Response<List<KeyValuePair<string, string>>> GetStrings()
+        public Response<List<KeyValuePair<string, string>>> GetStringsService()
+        {
+            
+            var list = GetStrings();
+
+            return List2(list);
+        }
+
+        public List<KeyValuePair<string, string>> GetStrings()
         {
             var lang = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
             var list = new List<KeyValuePair<string, string>>();
-            var path = HttpContext.Current.Server.MapPath(@"/admin/scripts/app/locale/lang-" + lang + ".csv");
+
+            var path = _httpContext.Server.MapPath(@"/admin/scripts/app/locale/lang-" + lang + ".csv");
 
             // TODO: async-y reading magic
             using (var reader = new StreamReader(File.OpenRead(path)))
@@ -41,9 +57,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         list.Add(new KeyValuePair<string, string>(parts[0], parts[1]));
                     }
                 }
-            } 
+            }
 
-            return List2(list);
-        } 
+            return list;
+        }
     }
 }

@@ -16,19 +16,19 @@ Ext.define('Taco.view.productType.Index', {
 
     requiresContextOfType: ['c', 's'],
     
-    initComponent: function () {
-        var me = this;
-        me.header = {
-            actions: [{
-                xtype: 'primarybutton',
-                text: 'Create New Product type',
-                click: function () {
-                    me.launchEditor(Ext.create('Taco.model.ProductType'));
-                }
-            }]
-        };
-        this.callParent(arguments);
-    },
+    //initComponent: function () {
+    //    var me = this;
+    //    me.header = {
+    //        actions: [{
+    //            xtype: 'primarybutton',
+    //            text: 'Create New Product type',
+    //            click: function () {
+    //                me.launchEditor(Ext.create('Taco.model.ProductType'));
+    //            }
+    //        }]
+    //    };
+    //    this.callParent(arguments);
+    //},
     
     gridPanelConf: {
         columns: [{

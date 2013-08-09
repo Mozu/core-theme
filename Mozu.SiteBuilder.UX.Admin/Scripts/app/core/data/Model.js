@@ -7,7 +7,7 @@
 Ext.define('Taco.core.data.Model', {
     extend: 'Ext.data.Model',
     requires: ['Taco.core.data.AjaxProxy', 'Ext.data.BelongsToAssociation', 'Ext.data.HasManyAssociation'],
-
+    setPhantomOnIdChange: false,
     constructor: function () {
         var me = this;
 
@@ -61,6 +61,16 @@ Ext.define('Taco.core.data.Model', {
         return ret;
     },
     
+    changeId: function (oldId, newId) {
+        var me = this,
+            phantom = me.phantom;
+      
+        this.callParent(arguments);
+        if (this.setPhantomOnIdChange === false) {
+            me.phantom = phantom;
+        }
+        ;
+    },
 
     
     afterEdit: function (modifiedFieldNames) {

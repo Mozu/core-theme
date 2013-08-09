@@ -3,21 +3,23 @@
     idProperty: 'key',
     fields: [{
         name: 'key',
-        type: 'string'
+        type: 'string',
+        mapping:'Key'
     }, {
         name: 'value',
-        type: 'string'
+        type: 'string',
+        mapping: 'Value'
     }],
-    proxy: {
-        type: 'ajaxproxy',
-        api: {
-            read: '/admin/app/localization/read'
-        },
-        reader: {
-            type: 'json',
-            root: 'items',
-            successProperty: 'success',
-            messageProperty: "message"
-        }
-    }
+    //proxy: {
+    //    type: 'ajaxproxy',
+    //    api: {
+    //        read: '/admin/app/localization/read'
+    //    },
+    //    reader: {
+    //        type: 'json',
+    //        root: 'items',
+    //        successProperty: 'success',
+    //        messageProperty: "message"
+    //    }
+    //}
 });

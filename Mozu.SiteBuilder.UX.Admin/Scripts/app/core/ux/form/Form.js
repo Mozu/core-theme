@@ -144,6 +144,7 @@ Ext.define('Taco.core.ux.form.Form', {
         this.saveTasks.on({
             complete: function (tasks) {
                 if (!tasks.complete) {
+                    this.fireEvent('savablestatechange', this, true);
                     return;
                 }
                 this.resetOriginalValues();
@@ -298,7 +299,10 @@ Ext.define('Taco.core.ux.form.Form', {
             }
 
             this.relayEvents(cmp, ['savablestatechange']);
-
+            if (cmp.isTrackedForm) {
+                console.log('xxx', cmp);
+            }
+            cmp.isTrackedForm = true;
             this.isFormContainer = true;
             this.forms.push(cmp);
         }, this);
@@ -575,6 +579,7 @@ Ext.define('Taco.core.ux.form.Form', {
 
     validateModel: function () {
         var i,
+            me = this,
             model,
             validations,
             rules = {},
@@ -602,14 +607,15 @@ Ext.define('Taco.core.ux.form.Form', {
         fields = this.query('[isFormField]');
 
         Ext.each(fields, function (field) {
-            if(field.up('[isFormForm]') !== this) {
+            
+            if (field.up('[isFormForm]') !== me) {
                 return;
             }
-
+            
             if (!rules[field.name]) {
                 return;
             }
-
+            
             Ext.each(rules[field.name], function (rule) {
                 field.vtype = 'custom';
                 

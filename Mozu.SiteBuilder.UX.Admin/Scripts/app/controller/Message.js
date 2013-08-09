@@ -39,8 +39,4 @@ Ext.define('Taco.controller.Message', {
         this.displayMessages();
     }
 
-}, function(){
-    // modify-in-place the AbstractContainer and Component classes and making sure this event always bubbles in every component
-    Ext.Container.prototype.bubbleEvents.push('setmessage')
-    Ext.Component.prototype.bubbleEvents.push('setmessage');
 });

@@ -44,7 +44,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                     name: this.getFieldName(ptAttribute),
                     displayField: 'value',
                     valueField: 'id',
-                    allowBlank: !ptAttribute.get('isRequired'),
+                    allowBlank: ptAttribute.get('isRequired') === true ? false: true,
                     value: (values && values.length) ? values[0] : null,
                     store: Ext.create('Ext.data.Store', {
                         fields: [

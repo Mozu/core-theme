@@ -207,7 +207,7 @@
 
     doFinalCallback: function () {
         console.log('final callback');
-        this.complete = true;
+       
         this.fireEvent('complete', this);
         this.tasks.clear();
         if (!this.finalCallback) {
