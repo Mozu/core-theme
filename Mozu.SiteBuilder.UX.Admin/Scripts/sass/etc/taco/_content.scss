@@ -195,6 +195,16 @@
      }
   }
 
+.#{$vprefix}required-label-text{
+  .x-form-item-label{
+    color: black;
+  }
+
+  .x-form-item-label:before{
+    color: red;
+    content: '* ';
+  }
+}
 
 /*
 
