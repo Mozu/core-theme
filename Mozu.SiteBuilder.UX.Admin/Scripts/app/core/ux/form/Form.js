@@ -115,7 +115,7 @@ Ext.define('Taco.core.ux.form.Form', {
         this.trackedFields = [];
 
         this.trackFields();
-
+        this.markRequired();
         //this.forms = forms;
 
         this.loadForm();
@@ -274,7 +274,14 @@ Ext.define('Taco.core.ux.form.Form', {
         }
         this.trackFields();
     },
-
+    markRequired: function() {
+        Ext.each(this.query('[isFormForm],[isFormField]'), function (cmp) {
+            if (cmp.required === true && cmp.fieldLabel.toString().substring(0, 1) != '*') {
+                cmp.addCls('taco-required-label-text');
+            }
+        }, this);
+    },
+    
     trackFields: function () {
 
         Ext.each(this.query('[isFormForm],[isFormField]'), function (cmp) {
