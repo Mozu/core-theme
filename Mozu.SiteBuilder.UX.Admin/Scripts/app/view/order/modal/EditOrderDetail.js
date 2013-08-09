@@ -21,9 +21,9 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     maxHeight:1400,
     maxWidth: 1200,
     minWidth: 700,
-    minHeight: 600,
-    width: 900,
-    height: 700,
+    minHeight:500,
+    width: 800,
+    height: 600,
     
     
     style: "border-radius: 0.6em;border:1px solid #fff;background-color:#fff;box-shadow: 0 0.7em 3.5em rgba(0, 0, 0, 0.3);-webkit-box-shadow: 0 0.7em 3.5em rgba(0, 0, 0, 0.3);",
@@ -43,7 +43,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     
     afterRender: function () {
         this.callParent(arguments);
-        this.setHeight(1000);
+
     },
     
     initComponent: function (eOpts) {

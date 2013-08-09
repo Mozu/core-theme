@@ -88,7 +88,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     text: 'Quantity',
                     tdCls: "editableCell",
                     width: 200,
-                    dataIndex: 'quantity',
+                    dataIndex: 'quantity'
                 },
                 {
                     text: 'Recieved',
@@ -137,11 +137,11 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             columns: [
                 {
                     text: 'Payment Type',
-                    dataIndex: 'paymentType',
+                    dataIndex: 'paymentType'
                 },
                 {
                     text: 'Card Type',
-                    dataIndex: 'cardType',
+                    dataIndex: 'cardType'
                 },
                 {
                     text: 'Card Number',
@@ -152,9 +152,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     text: 'Amount Credited',
                     renderer: Ext.util.Format.usMoney,
                     width: 300,
-                    dataIndex: 'amountCredited',
+                    dataIndex: 'amountCredited'
                 }
-            ],
+            ]
         });
 
 
