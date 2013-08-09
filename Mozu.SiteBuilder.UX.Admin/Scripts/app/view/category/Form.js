@@ -4,8 +4,8 @@
  */
 Ext.define('Taco.view.category.Form', {
     extend: 'Taco.view.product.subform.Subform',
-    editTitle: 'Edit category',
-    createTitle: 'Create New category',
+    editTitle: 'Edit Category',
+    createTitle: 'Create New Category',
     layout: {
         type: 'vbox',
         align: 'stretch'
