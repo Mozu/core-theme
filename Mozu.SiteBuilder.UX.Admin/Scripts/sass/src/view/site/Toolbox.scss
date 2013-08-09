@@ -1,6 +1,4 @@
-@mixin taco-sites {
-
-  .#{$vprefix}toolbox {
+﻿  .#{$vprefix}toolbox {
     .#{$prefix}toolbar-default {
       // background-color: $color-neutral-white;
       // border: 0px none;
@@ -138,8 +136,8 @@
   }
 
   .#{$vprefix}toolbox-tabpanel {
-    &> .#{$prefix}tab-bar {
-      background-color: $tabbar-base-color;
+    &> .#{$prefix}tab-bar-plain {
+      background-color: $tabbar-base-color !important;
 
       .#{$prefix}tab-bar-body {
         text-align: center;
@@ -151,4 +149,3 @@
     }
   }
 
-}

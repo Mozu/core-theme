@@ -692,7 +692,9 @@
     <Content Include="Scripts\build\Taco-all.scss" />
     <Content Include="Scripts\build\Taco-example.scss" />
     <Content Include="Scripts\sass\src\view\dashboard\Index.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\tab\Tab.scss" />
     <Content Include="Scripts\sass\src\Application.scss" />
+    <Content Include="Scripts\sass\src\view\site\Toolbox.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -2730,7 +2732,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\resources\scss\taco\widgets\_window.scss" />
-    <Content Include="Views\Test\DecryptTicket.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
@@ -3128,7 +3129,6 @@
     <Content Include="Scripts\sass\etc\taco\_messages.scss" />
     <Content Include="Scripts\sass\etc\taco\_navmenu.scss" />
     <Content Include="Scripts\sass\etc\taco\_order.scss" />
-    <Content Include="Scripts\sass\etc\taco\_sites.scss" />
     <Content Include="Scripts\sass\etc\taco\_tinymce_fixes.scss" />
     <Content Include="Scripts\sass\etc\taco\_viewport.scss" />
     <Content Include="Scripts\sass\etc\taco\mixins\_css3.scss" />

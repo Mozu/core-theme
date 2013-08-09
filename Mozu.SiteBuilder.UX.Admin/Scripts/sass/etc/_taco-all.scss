@@ -11,20 +11,10 @@ $prefix: 'x-';
 @import 'taco/messages';
 @import 'taco/dashboard';
 @import 'taco/order';
-@import 'taco/sites';
 @import 'taco/errors';
 
 // tinyMCE fixes
 @import 'taco/tinymce_fixes';
-
-@import 'taco/content';
-@import 'taco/viewport';
-@import 'taco/navmenu';
-@import 'taco/messages';
-@import 'taco/dashboard';
-@import 'taco/order';
-@import 'taco/sites';
-@import 'taco/errors';
 
 // Import widgets
 @import 'taco/widgets/actions';
