@@ -35,7 +35,12 @@ Ext.define('Taco.view.order.subform.Detail', {
         
     initComponent: function (eOpts) {
         var me = this,
-            orderItemStore
+            orderItemStore;
+        
+        // after the record is reloaded we will need to refresh the ui
+        me.record.on("aftercommit", function () {
+            me.onRecordChange();
+        }, me);
         
         // var siteContext = Taco.app.context.getCurrent().urlToken;
         
@@ -90,25 +95,8 @@ Ext.define('Taco.view.order.subform.Detail', {
             listeners: {
                 'draftOrderRemoved': {
                     fn: function (data) {
-                        me.setLoading(false, this.body);
-                    },
-                    scope: me
-                },
-                'save': {
-                    fn: function () {
                         me.setLoading(true, this.body);
-                    },
-                    scope: me
-                },
-                'saveSuccess': {
-                    fn: function (data) {
-                        me.setLoading(false, this.body);
-                    },
-                    scope: me
-                },
-                'saveFailure': {
-                    fn: function () {
-                        me.setLoading(false, this.body);
+                        me.onRecordChange();
                     },
                     scope: me
                 }
@@ -168,9 +156,40 @@ Ext.define('Taco.view.order.subform.Detail', {
     editOrder: function (animationTarget) {
         var me = this;
         var win = Ext.create('Taco.view.order.modal.EditOrderDetail', {
-            record: this.record
+            record: this.record,
+            listeners: {
+                'draftOrderSaved': {
+                    fn: function () {
+                      
+                        me.setLoading(true, this.body);
+                        this.record.reload();
+                    },
+                    scope:me
+                },
+                'draftOrderRemoved': {
+                    fn: function (data) {
+                        me.setLoading(true, this.body);
+                        // hide the toolbar
+                        me.detailGrid.removeDocked(me.detailGrid.hasDraftToolbar, true);
+                    },
+                    scope: me
+                }
+            }
         });
         win.show(animationTarget);
+    },
+    
+
+    // when the record changes we will need to update the order details
+    onRecordChange: function () {
+        var me = this;
+       
+        Ext.suspendLayouts();
+        // need to reload the record;
+
+        Ext.resumeLayouts(true);
+        
+        me.setLoading(false, this.body);
     },
 
     /**

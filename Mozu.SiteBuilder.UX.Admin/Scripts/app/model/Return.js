@@ -426,7 +426,7 @@ Ext.define('Taco.model.Return', {
     issueCredit: function (config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/credit',
-            method: "POST",
+            method: "POST"
         });
         Ext.Ajax.request(config);
     },
@@ -435,7 +435,7 @@ Ext.define('Taco.model.Return', {
 
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/applycheck',
-            method: "POST",
+            method: "POST"
         });
         Ext.Ajax.request(config);
     },

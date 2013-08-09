@@ -62,7 +62,7 @@ Ext.define('Taco.model.ReturnItem', {
             defaultValue: 0
         }
     ],
-    idProperty: 'orderItemId',
+    idProperty: 'orderItemId'
 
 
 });

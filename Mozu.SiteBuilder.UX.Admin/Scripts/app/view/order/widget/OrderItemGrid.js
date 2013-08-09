@@ -160,42 +160,47 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         } else {
             // editMode:false
             
+            
             // if there is a draft version of this order we need to show a warning toolbar
             if (this.record.get("hasDraft")) {
+
+                this.hasDraftToolbar = Ext.create('Ext.toolbar.Toolbar', {
+                    //xtype: "toolbar",
+                    doc: "top",
+                    componentCls: "title-toolbar",
+                    enableOverflow: false,
+                    weight: 1,
+                    style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
+                    items: [
+                        {
+                            xtype: "component",
+                            html: "Warning: You have unsaved changes to this order detail",
+                            style: "padding:0px 5px 0px 5px; font-size: 0.9 em;color:#990000",
+                            cls: "title",
+                            flex: 1
+                        }, {
+                            xtype: "taco.button",
+                            text: "Discard Changes",
+                            handler: function() {
+                                me.removeDraftOrder();
+                            },
+                            scope: this
+                        }, {
+                            xtype: "taco.button",
+                            text: "Edit Details",
+                            style: "margin-left:5px;",
+                            handler: function(button, e) {
+                                var animationTarget = button.el;
+                                this.editOrder(animationTarget);
+                            },
+                            scope: this
+                        }
+                    ]
+                });
+
+
                 this.dockedItems = [
-                    {
-                        xtype: "toolbar",
-                        doc: "top",
-                        componentCls: "title-toolbar",
-                        enableOverflow: false,
-                        weight: 1,
-                        style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
-                        items: [
-                            {
-                                xtype: "component",
-                                html: "Warning: You have unsaved changes to this order detail",
-                                style: "padding:0px 5px 0px 5px; font-size: 0.9 em;color:#990000",
-                                cls: "title",
-                                flex:1
-                            },{
-                                xtype: "taco.button",
-                                text:"Discard Changes",
-                                handler: function () {
-                                    me.removeDraftOrder();
-                                },
-                                scope: this
-                            },{
-                                xtype: "taco.button",
-                                text: "Edit Details",
-                                style:"margin-left:5px;",
-                                handler: function (button,e) {
-                                    var animationTarget = button.el;
-                                    this.editOrder(animationTarget);
-                                },
-                                scope: this
-                            }
-                        ]
-                    }
+                    this.hasDraftToolbar
                 ];
             }
 
@@ -1311,6 +1316,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     errorDialog.show();
                     return;
                 }
+                
                 me.fireEvent("draftOrderSaved",json);
             },
             failure: function(response) {

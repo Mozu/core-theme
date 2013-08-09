@@ -58,7 +58,7 @@ Ext.define('Taco.view.dashboard.Index', {
                     width: 380,
                     height: 380,
                     margin: '0 0 0 20',
-                    layout: 'fit',
+                    layout: 'fit'
                 },
                 items: [{
                     margin: 0,
