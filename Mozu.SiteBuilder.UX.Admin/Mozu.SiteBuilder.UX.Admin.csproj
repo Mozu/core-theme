@@ -3356,7 +3356,7 @@
   </Target> -->
   <Target Name="AfterCompile">
 
-    <Exec Command="robocopy d:\software\ext\ext-4.2.1.883 $(ProjectDir)\ext-4.2.1.883 /e /xd docs examples resources locale welcome builds /xf ext-all*.js" WorkingDirectory="$(ProjectDir)\Scripts" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="robocopy d:\software\ext\ext-4.2.1.883 $(ProjectDir)\ext-4.2.1.883 /e /xd docs welcome builds /xf ext-all*.js" WorkingDirectory="$(ProjectDir)\Scripts" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
 
 
     <Exec Command="make.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
