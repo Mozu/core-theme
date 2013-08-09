@@ -137,34 +137,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     fn: function (view, record, item, index, e, eOpts) {
                         var isButtonClick = (e.target.localName == 'button'),
                             btnEl = isButtonClick ? Ext.get(e.target) : null;
-
-                        // handle Delete click.
-                        if (isButtonClick && btnEl.hasCls('orderform-transaction-delete-btn'))
-                        {
-                            Ext.Msg.show({
-                                title: 'Delete',
-                                cls: 'taco-orderform-delete-confirm',
-                                msg: 'Are you sure you want to delete this transaction?',
-                                buttons: Ext.Msg.OKCANCEL,
-                                fn: function (rec) {
-                                    if (rec === 'ok') {
-                                        //delete the rec
-                                    }
-                                }
-                            });
-                        }
-                        // handle Edit click
-                        else if (isButtonClick && btnEl.hasCls('orderform-transaction-edit-btn'))
-                        {
-                            var modal = Ext.create('Taco.view.order.modal.EditTransaction', {
-                                // record is the PaymentInteraction
-                                record: record,
-                                // payment is the payment that owns this transaction
-                                payment: me.record,
-                                // order is the order that owns this payment
-                                order: me.order
-                            });
-                        }
                     },
                     scope: me
                 }
@@ -185,12 +157,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         '<tpl if="gatewayTransactionId">',
                             '<span class="seperator">|</span>',
                                 ' Transaction ID: {gatewayTransactionId}',
-                        '</tpl>',
-                        '<tpl if="canEdit">',
-                            '<button class= "taco-action taco-action-secondary taco-action-default orderform-transaction-delete-btn">Delete</button>',
-                        '</tpl>',
-                        '<tpl if="canDelete">',
-                            '<button class= "taco-action taco-action-secondary taco-action-default orderform-transaction-edit-btn">Edit</button>',
                         '</tpl>',
                         '</div>',
                     '</div>',
@@ -307,7 +273,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
          *  'VoidPayment'
          *  'IssueCredit'
          */
-
         switch (me.getValue()) {
             case 'ApplyCheck':
                 me.parent.applyCheck();
@@ -333,9 +298,40 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             case 'ManualCreditPayment':
                 me.parent.creditPaymentManual();
                 break;
+            case 'RollbackCapture':
+            case 'ManualCapturePayment':
+            case 'ManualRollbackCapture':
+                me.parent.rollBackTransaction('capture', config.record.data.orderId, config.record.data.id);
+                break;
+            case 'RollbackCredit':
+            case 'ManualCreditPayment':
+            case 'ManualRollbackCredit':
+                me.parent.rollBackTransaction('credit', config.record.data.orderId, config.record.data.id);
+                break;
+            case 'RollbackVoid':
+            case 'ManualVoidPayment':
+            case 'ManualRollbackVoid':
+                me.parent.rollBackTransaction('void', config.record.data.orderId, config.record.data.id);
+                break;
         }
     },
-
+    rollBackTransaction: function (action, paymentId, transId) {
+        this.action = action;
+        this.paymentId = paymentId;
+        this.transId = transId;
+        
+        Ext.Msg.show({
+            title: 'Rollback',
+            cls: 'taco-orderform-delete-confirm',
+            msg: 'Are you sure you want to rollback this ' + action + ' transacion?',
+            buttons: Ext.Msg.OKCANCEL,
+            fn: Ext.bind(function (rec) {
+                if (rec === 'ok') {
+                    //rollback the rec bassed on the action 
+                }
+            },this)
+        });
+    },
     applyCheck: function() {
         var me = this;
 
