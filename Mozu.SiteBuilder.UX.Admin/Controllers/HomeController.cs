@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
@@ -12,6 +13,7 @@ using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
+using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.Tenant.Contracts.Clients;
@@ -30,9 +32,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IApiContext _apiContext;
         private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
         private readonly ISettings _settings;
+        private readonly HttpContextBase _httpContext;
         private ILogger _log;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext, ISettings settings)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext, ISettings settings, HttpContextBase httpContext)
         {
             _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authenticationHelper = authHelper;
@@ -41,6 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _tenantsWebApi = tenantsWebApi.CloneWithoutUserClaims();//  .CloneWithApiContext(x => x.UserClaims = LightweightUserClaims.CreateForSystemUser(UserScopeType.SystemAdmin));
             _currentUserHelper = currentUserHelper;
             _settings = settings;
+            _httpContext = httpContext;
 
             _log = LoggingService.LoggerFor<HomeController>();
         }
@@ -81,7 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             var taContext = AutoMapper.Mapper.Map<TaContext>(tenant);
 
-
+            this.ViewData["localizationValues"] = new LocalizationController(_httpContext).GetStrings();
             this.ViewData["taContext"] = taContext;
             this.ViewData["user"] = user;
             this.ViewData["siteRoles"] = roles;

@@ -16,6 +16,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             cls: 'taco-form-nav-container'
         });
 
+        this.relayEvents(this.formContainer, ['add']);
 
         this.navStore = Ext.create('Ext.data.Store', {
             fields: ['title']
@@ -46,7 +47,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         this.callParent(arguments);
 
         this.nav = this.down('#navFormNav');
-
+        
         this.on({
             afterrender: this.onAfterRender,
             scope: this
@@ -77,7 +78,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     },
 
     rebuildMap: function () {
-        console.log('rebuilding map');
+      
         this.locationMap = [];
         this.recordMap = [];
 
@@ -141,8 +142,12 @@ Ext.define('Taco.core.ux.form.NavForm2', {
 
     loadNavItems: function (items) {
         var components;
-
+        if ((Ext.isArray(this.formContainer.items) && this.formContainer.items.length > 0) || this.formContainer.items.getCount()) {
+            console.log("formcontainer", this.formContainer.items);
+        }
+        this.formContainer.autoDestroy = false;
         this.formContainer.removeAll();
+        this.formContainer.autoDestroy = true;
         components = this.formContainer.add(items);
         this.navStore.loadRawData(components);
     }

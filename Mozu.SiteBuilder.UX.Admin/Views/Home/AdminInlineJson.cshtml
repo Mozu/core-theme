@@ -16,23 +16,12 @@
             var taContext = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["taContext"]);
             var siteUsers = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["siteUsers"]);
             var extPath = WebConfigurationManager.AppSettings["extPath"];
-            var dashboardInstructionsLoc = WebConfigurationManager.AppSettings["admin.dashboardInstructions.loc"];
-
+          
             var paymentApiBaseUrl = MozuConfigurationManager.AppSettings("service-url-StorefrontCardsWebApi");
+
+        var locValues = Newtonsoft.Json.Linq.JArray.FromObject(ViewData["localizationValues"]);
             
-            var dashboardInstructions = "";
-            if ( !string.IsNullOrEmpty (dashboardInstructionsLoc ))
-            {
-                try{
-                    using ( var client = new System.Net.WebClient())
-                    {
-                        dashboardInstructions = Newtonsoft.Json.JsonConvert.ToString(client.DownloadString(dashboardInstructionsLoc));
-                    }
-                }
-                catch{
-                }
-            }
-        dashboardInstructions = dashboardInstructions ?? "";
+   
         }
     
         
@@ -44,9 +33,9 @@
         adminRelPath:'@Url.Content("~")',
         User : { id: '@user.Id'  , behaviors: @behaviors,  taContext: @Html.Raw(taContext) , email: '@user.EmailAddress', sites: @Html.Raw(siteRolesJson), name: '@user.FirstName @user.LastName'.trim() },
         apiVersion: '@ver.FileVersion',
-        dashBoardInstructions :  @Html.Raw(string.IsNullOrEmpty(dashboardInstructions) ? "'tbd'": dashboardInstructions) ,
         siteUsers:@Html.Raw(siteUsers),
         authDomain: "@ViewData["authCookieDomain"]",
+        localizationValues: @Html.Raw( locValues.ToString( )),
         paymentApiBaseUrl: '@Html.Raw(paymentApiBaseUrl)',
         buildDate : new Date ('@verDate')
 

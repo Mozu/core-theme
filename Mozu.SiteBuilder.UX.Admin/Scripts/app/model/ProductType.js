@@ -46,6 +46,10 @@ Ext.define('Taco.model.ProductType', {
         });
 
     },
+    validations: [
+     { type: 'length', name: 'name', min: 3, max: 100 },
+     { type: 'presence', name: 'name' }
+    ],
     proxy: {
         type: 'ajaxproxy',
         // api: {

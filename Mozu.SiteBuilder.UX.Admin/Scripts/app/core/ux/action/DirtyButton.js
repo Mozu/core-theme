@@ -36,11 +36,12 @@ Ext.define('Taco.core.ux.action.DirtyButton', {
 
     setDirty: function (dirty) {
         
+        this.setLoading(false);
+       
         if (this.dirtyState === dirty) {
+           
             return;
         }
-
-        this.setLoading(false);
 
         this.dirtyState = dirty;
 

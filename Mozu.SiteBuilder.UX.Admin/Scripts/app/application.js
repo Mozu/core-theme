@@ -608,20 +608,11 @@ Ext.define('Taco.Application',{
             };
         this.callParent([config]);
     },
-    doInit: function (app) {
-        if (!this._initialized) {
 
-            var stringStore = Ext.data.StoreManager.lookup('Taco.store.LocalizedStrings');
-
-            stringStore.load({
-                scope: this,
-                callback: function (records, operation, success) {
-                    this.init(app);
-                    this._initialized = true;
-                    // console.log(records);
-                }
-            });
-        }
+    init:function () {
+        var stringStore =Taco.core.data.StoreManager.getOrCreate('Taco.store.LocalizedStrings');
+        stringStore.loadRawData(Taco.localizationValues);
+        this.callParent(arguments);
     },
     setLoading: function (config) {
         if (config === false) {

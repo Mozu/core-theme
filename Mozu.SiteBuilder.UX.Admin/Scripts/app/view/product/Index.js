@@ -54,20 +54,20 @@ Ext.define('Taco.view.product.Index', {
         text: 'Description'
     }],
     
-    initComponent: function () {
-        var me = this;
-        me.header = {
-            title: 'Products',
-            actions: [{
-                xtype: 'primarybutton',
-                text: 'Create New Product',
-                click: function () {
-                    me.launchEditor(Ext.create('Taco.model.Product'));
-                }
-            }]
-        };
-        this.callParent(arguments);
-    },
+    //initComponent: function () {
+    //    var me = this;
+    //    me.header = {
+    //        title: 'Products',
+    //        actions: [{
+    //            xtype: 'primarybutton',
+    //            text: 'Create New Product',
+    //            click: function () {
+    //                me.launchEditor(Ext.create('Taco.model.Product'));
+    //            }
+    //        }]
+    //    };
+    //    this.callParent(arguments);
+    //},
     
     gridPanelConf: {
         columns: [{
