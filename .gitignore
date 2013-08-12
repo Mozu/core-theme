@@ -17,3 +17,9 @@ Mozu.SiteBuilder.UX.Admin/Scripts/resources/images/icons-*
 Mozu.SiteBuilder.UX.Admin/Scripts/resources/images/picker-*
 Mozu.SiteBuilder.UX.Admin/Scripts/resources/images/align-*
 Mozu.SiteBuilder.UX.Admin/Scripts/resources/images/card-*
+
+# DAMNIT SENCHA
+Mozu.SiteBuilder.UX.Admin/Scripts/build
+Mozu.SiteBuilder.UX.Admin/Scripts/.sencha/workspace/
+Mozu.SiteBuilder.UX.Admin/Scripts/bootstrap.css
+Mozu.SiteBuilder.UX.Admin/Scripts/sass/example/
