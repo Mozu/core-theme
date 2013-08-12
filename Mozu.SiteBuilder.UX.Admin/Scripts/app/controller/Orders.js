@@ -26,8 +26,15 @@ Ext.define('Taco.controller.Orders', {
     },
 
     create: function () {
-        var record;
+        var ctx = Taco.app.context.getCurrentContext(),
+            record;
 
+
+        if (ctx.contextType !== 's') {
+            Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', 's').raw );
+            return;
+        }
+        
         Taco.app.setLoading();
 
         record = Ext.create('Taco.model.Order');
