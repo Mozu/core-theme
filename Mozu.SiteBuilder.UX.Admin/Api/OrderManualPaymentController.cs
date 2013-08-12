@@ -131,20 +131,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(order.Map<Order>());
         }
 
-        public class EditTransactionManualArgs
+        public class RollbackTransactionArgs
         {
             public string OrderId { get; set; }
             public string PaymentId { get; set; }
-            public string TransactionId { get; set; }
-            public string GatewayInteractionId { get; set; }
-            public CardPaymentInformation BillingInfo { get; set; }
-            public decimal Amount { get; set; }
+            public string ActionName { get; set; }
         }
-        [HttpPostRoute(UriTemplate = "payment/manual/edittransaction")]
-        public async Task<Response<List<Order>>> EditTransactionManual(EditTransactionManualArgs args)
+        [HttpPostRoute(UriTemplate = "payment/manual/rollback")]
+        public async Task<Response<List<Order>>> RollbackTransaction(RollbackTransactionArgs args)
         {
-            // TODO: mozu service does not currently support edit transaction.
-            throw new NotImplementedException();
+            var action = new DCp.PaymentAction
+            {
+                ActionName = args.ActionName
+            };
+
+            var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
+
+            return List2(order.Map<Order>());
         }
     }
 }

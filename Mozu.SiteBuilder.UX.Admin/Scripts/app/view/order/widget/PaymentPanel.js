@@ -41,17 +41,14 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             'CreditPayment': 'Credit Payment',
             'VoidPayment': 'Void Payment',
 
-            'RollbackCapture': 'Rollback Credit',
+            'Rollback': 'Rollback',
+            'RollbackCapture': 'Rollback Capture',
             'RollbackCredit': 'Rollback Credit',
             'RollbackVoid': 'Rollback Void',
 
             'ManualCapturePayment': 'Capture Payment (Manual)',
             'ManualCreditPayment': 'Credit Payment (Manual)',
             'ManualVoidPayment': 'Void Payment (Manual)',
-
-            'ManualRollbackCapture': 'Rollback Capture (Manual)',
-            'ManualRollbackCredit': 'Rollback Credit (Manual)',
-            'ManualRollbackVoid': 'Rollback Void (Manual)'
         };
 
         var actionsWithLabels = Ext.Array.map(me.record.data.availableActions, function (action) {
@@ -298,38 +295,43 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             case 'ManualCreditPayment':
                 me.parent.creditPaymentManual();
                 break;
+            case 'Rollback':
             case 'RollbackCapture':
-            case 'ManualCapturePayment':
-            case 'ManualRollbackCapture':
-                me.parent.rollBackTransaction('capture', config.record.data.orderId, config.record.data.id);
-                break;
             case 'RollbackCredit':
-            case 'ManualCreditPayment':
-            case 'ManualRollbackCredit':
-                me.parent.rollBackTransaction('credit', config.record.data.orderId, config.record.data.id);
-                break;
             case 'RollbackVoid':
-            case 'ManualVoidPayment':
-            case 'ManualRollbackVoid':
-                me.parent.rollBackTransaction('void', config.record.data.orderId, config.record.data.id);
+                me.parent.rollBackTransaction(me.getValue());
                 break;
         }
     },
-    rollBackTransaction: function (action, paymentId, transId) {
-        this.action = action;
-        this.paymentId = paymentId;
-        this.transId = transId;
-        
+    rollBackTransaction: function (actionName) {
+        var me = this,
+            actionSimpleName = actionName.replace('Rollback', '');
+
         Ext.Msg.show({
             title: 'Rollback',
             cls: 'taco-orderform-delete-confirm',
-            msg: 'Are you sure you want to rollback this ' + action + ' transacion?',
+            msg: 'Are you sure you want to rollback this ' + actionSimpleName + ' transacion?',
             buttons: Ext.Msg.OKCANCEL,
-            fn: Ext.bind(function (rec) {
+            fn: function (rec) {
                 if (rec === 'ok') {
-                    //rollback the rec bassed on the action 
+                    me.setLoading(true);
+
+                    me.order.rollbackTransaction({
+                        jsonData: {
+                            actionName: actionName,
+                            orderId: me.order.getId(),
+                            paymentId: me.record.getId()
+                        },
+                        success: function(response) {
+                            me.setLoading(false);
+                            me.order.reload();
+                        },
+                        failure: function(response) {
+                            me.setLoading(false);
+                        }
+                    });
                 }
-            },this)
+            }
         });
     },
     applyCheck: function() {

@@ -90,7 +90,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// Only new manual interactions can be added.
         /// </summary>
         [DataMember(Name="isManual")]
-        public bool IsManual { get { return Interactions == null || Interactions.Count == 0 || Interactions.All(i => i.IsManual); } set { } }
+        public bool IsManual { get { return Interactions == null || Interactions.Count == 0 || Interactions.All(i => i.IsManual || i.InteractionType.StartsWith("Rollback")); } set { } }
 
         #endregion
 
