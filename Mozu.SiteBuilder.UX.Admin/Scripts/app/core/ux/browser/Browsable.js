@@ -24,11 +24,12 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         gridPanelDefaults: {
             enableColumnHide: true,
             paged: true,
-            selModel: Ext.create('Ext.selection.CheckboxModel', { // must pass instantiated selModel, config-only is bugged
+            selModel: {
                 selType: 'checkboxmodel',
                 checkOnly: true,
-                showHeaderCheckbox: true
-            })
+                showHeaderCheckbox: true,
+                ignoreRightMouseSelection: true
+            }
         },
 
         tilePanelDefaults: {
