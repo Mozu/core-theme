@@ -64,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     dcOrders = new DCo.OrderCollection { Items = new List<DCo.Order>() };
                 }

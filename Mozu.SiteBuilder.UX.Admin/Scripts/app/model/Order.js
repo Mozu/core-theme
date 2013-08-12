@@ -683,9 +683,9 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    editTransaction: function (config) {
+    rollbackTransaction: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/payment/manual/edittransaction',
+            url: '/admin/app/order/payment/manual/rollback',
             method: "POST"
         });
 
