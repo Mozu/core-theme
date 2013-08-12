@@ -25,14 +25,18 @@ Ext.define('Taco.view.order.Header', {
 //                '<div class="address">{[values.customer.address]}</div>',
                 '<h2>{billingContact.firstName} {billingContact.lastName}</h2>',
                 '<div class="company">{billingContact.companyName}</div>',
+            '<tpl if="billingContact.address1">',
                 '<div class="address">{billingContact.address1} {billingContact.cityOrTown}, {billingContact.state} {billingContact.zipCode} {billingContact.countryCode}</div>',
+            '</tpl>',
             '</div>',
             '<div class="taco-order-detail-header-section history-data">',
                 '<label>Customer Profile</label>',
+           // '<tpl if="orderCount &gt; 0">', orderCount isn't working that well
                 '<div>Customer since: <strong>{[this.convertDate(values.createDate)]}</strong></div>',
                 '<div>Total orders: <strong>{orderCount}</strong></div>',
                 '<div>Total spent: <strong>{totalSpent}</strong></div>',
 //                '<div>Groups: <strong>{groups}</strong></div>',
+          //  '</tpl>',
             '</div>',
             // {createDate:date("M j, Y")}
             '<div class="taco-order-detail-header-section origin-data">',
@@ -68,10 +72,14 @@ Ext.define('Taco.view.order.Header', {
                         for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
                         return (obj3);
                     }
-                    var renderDataObject = merge_options(rec[0].data, this.renderData)
+                    
+                    if (rec) {
+                        var renderDataObject = merge_options(rec[0].data, this.renderData)
 
-                    if (this.el)
-                        this.renderTpl.overwrite(this.el, renderDataObject);
+                        if (this.el)
+                            this.renderTpl.overwrite(this.el, renderDataObject);
+                    }
+                    
                     
                     
                 },this)
