@@ -8,7 +8,13 @@ Ext.define('Taco.shared.store.Files', {
     extend: 'Taco.store.shared.BaseStore',
     model: 'Taco.shared.model.File',
     pageSize: 100,
-    storeId: 'fileManagementFiles',
+    storeId: 'files',
     buffered: false,
-    remoteFilter: true
+    remoteFilter: true,
+    storeManagerConfig: {
+        clearFilters: true,
+        contextLevel: 'c',
+        clearSort: true,
+        autoLoad: true
+    }
 });

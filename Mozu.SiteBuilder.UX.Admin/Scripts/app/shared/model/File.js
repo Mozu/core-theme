@@ -98,7 +98,7 @@ Ext.define('Taco.shared.model.File', {
         }
     },
     proxy: {
-        type: 'readahead',
+        type: 'ajax',
         unfilteredParam: 'unfiltered',
         api: {
             read: '/admin/app/fileManagement/file/list',
