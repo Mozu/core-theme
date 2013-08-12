@@ -6,7 +6,7 @@
 Ext.define('Taco.controller.FileManager', {
     extend: 'Taco.core.Controller',
     views: ['fileManager.Index'],
-    modelName: 'FileManagementFile',
+    modelName: 'file', //tbd
 
     requiresContextOfType: ['c', 's']
     //contextPlaceholders: {

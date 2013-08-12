@@ -27,12 +27,7 @@ Ext.define('Taco.shared.view.field.Image', {
         this.selectedImages = Ext.create('Taco.shared.store.Files', {
             listeners: {
                 datachanged: this.onSelectedImagesDataChanged,
-                update: function (store, record, op, fields) {
-                    if (!fields) {
-                        return;
-                    }
-                    console.log('fields changed', fields.toString());
-                },
+               
                 scope:this
             }
 
@@ -83,6 +78,8 @@ Ext.define('Taco.shared.view.field.Image', {
             ],
             itemSelector: 'li.item'
         });
+
+        this.imageView.mon(Taco.core.util.UploadManager, 'complete', this.imageView.refresh, this.imageView);
 
         this.uploadAction = Ext.widget({
             xtype: 'action',
