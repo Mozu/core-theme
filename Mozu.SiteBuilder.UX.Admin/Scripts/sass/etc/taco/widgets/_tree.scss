@@ -20,6 +20,33 @@
     }
   }
 
+  
+  // tree grid styles
+  .#{$prefix}tree-arrows {
+    .#{$prefix}grid-cell-inner {
+      padding: 2px 0px;
+    }
+  }
+
+  .#{$prefix}tree-icon {
+    display: none;
+  }
+
+  // draghandle styles
+  .#{$vprefix}tree-knurling, .#{$vprefix}draghandle {
+    cursor: move;
+    display: block;
+    @include icon-font("\E022");
+    margin-top: 2px;
+  }
+
+  .#{$prefix}grid-cell-draghandlecolumn {
+    .#{$prefix}grid-cell-inner {
+      padding: 0px;
+    }
+  }
+
+
   .#{$vprefix}foldertree {
     .#{$prefix}panel-body {
       @include border-radius(0px 0px 3px 3px);

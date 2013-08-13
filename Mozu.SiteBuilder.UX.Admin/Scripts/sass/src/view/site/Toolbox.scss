@@ -37,14 +37,18 @@
     }
 
     .#{$vprefix}treelist {
+
       .#{$prefix}grid-row {
 
-        .#{$prefix}tree-icon-inline {
-          display: none;
-          height: 16px;
-          width: 16px;
+        .#{$prefix}grid-cell-inner {
+            padding-top: 3px !important;
+            padding-bottom: 3px !important;
+        }
 
-          &+ a {
+        .#{$prefix}tree-icon {
+          display: none;
+
+          &+span a {
             @include icon-font("\E017");
             display: inline-block;
             height: auto;
@@ -83,13 +87,13 @@
 
         .#{$vprefix}nav-node-folder,
         .#{$vprefix}nav-node-category {
-          &+ a::after {
+          &+span a::after {
             content: "\E017";
           }
         }
 
         .#{$vprefix}nav-node-blog {
-          &+ a::after {
+          &+span a::after {
             content: "\E016";
           }
         }
@@ -97,13 +101,13 @@
         .#{$vprefix}nav-node-page,
         .#{$vprefix}nav-node-systempage,
         .#{$vprefix}nav-node-product {
-          &+ a::after {
+          &+span a::after {
             content: "\E013";
           }
         }
 
         .#{$vprefix}nav-node-link {
-          &+ a::after {
+          &+span a::after {
             content: "\E014";
           }
         }
