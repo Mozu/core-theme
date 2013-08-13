@@ -10,6 +10,11 @@ Ext.define('Taco.view.order.Edit', {
     ],
     formCls: 'Taco.view.order.Form',
 
-    saveHidden: true,
-    cancelHidden: true
+    initComponent: function () {
+        this.saveHidden
+            = this.cancelHidden
+            = this.record.get('orderStatus') !== 'Created';
+
+        this.callParent(arguments);
+    }
 });

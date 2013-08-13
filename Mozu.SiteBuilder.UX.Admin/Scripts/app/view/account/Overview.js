@@ -4,7 +4,14 @@
 
 	Ext.define('Taco.view.account.Overview', {
 	    extend: 'Taco.core.ux.content.Container',
-	    requires: ['Taco.view.account.Navigation','Ext.panel.Panel','Taco.model.AccountInformation','Taco.view.address.AddressForm','Taco.view.account.AccountInformation','Taco.core.ux.modal.Helper','Taco.store.CountryComboBox'],
+	    requires: [
+	    	'Ext.panel.Panel',
+	    	'Taco.core.ux.modal.Helper',
+			'Taco.model.AccountInformation',
+			'Taco.store.CountryComboBox',
+	    	'Taco.view.account.AccountInformation',
+	    	'Taco.view.account.Navigation'
+	    ],
 
 		initComponent: function () {
 			var me = this;

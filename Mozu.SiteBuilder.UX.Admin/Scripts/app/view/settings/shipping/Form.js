@@ -3,9 +3,12 @@
  */
 Ext.define('Taco.view.settings.shipping.Form', {
     extend: 'Taco.core.ux.form.NavForm',
-    requires: ['Taco.view.settings.shipping.subform.ShippingFrom',
-               'Taco.view.settings.shipping.subform.MethodsAndRates',
-               'Taco.view.settings.shipping.subform.ShippingPreferences' ],
+    requires: [
+        'Taco.view.settings.shipping.subform.ShippingFrom',
+        'Taco.view.settings.shipping.subform.MethodsAndRates',
+        'Taco.view.settings.shipping.subform.ShippingPreferences'
+    ],
+    
     initComponent: function () {
         var me = this;
 

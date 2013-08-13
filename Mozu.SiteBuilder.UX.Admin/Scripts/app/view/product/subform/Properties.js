@@ -24,18 +24,18 @@ Ext.define('Taco.view.product.subform.Properties', {
                 return [{
                     xtype: 'textareafield',
                     name: this.getFieldName(ptAttribute),
-                    value:(values &&values.length)? values[0]:null,
+                    value:(values && values.length) ? values[0] : null,
                     width: '100%',
                     rows: 12,
                     resizable: true,
                     resizeHandles: 's'
                 }];
             },
-            'YesNo': function (ptAttribute,values) {
+            'YesNo': function (ptAttribute, values) {
                 return [{
                     xtype: 'checkboxfield',
                     name: this.getFieldName(ptAttribute),
-                    value:(values &&values.length)? values[0]:null
+                    value:(values && values.length) ? values[0] : null
                 }];
             },
             'List': function (ptAttribute, values) {

@@ -99,7 +99,7 @@ Ext.define('Taco.view.customers.Form', {
                         var modal;
 
                         if (e.getTarget('.edit', 10)) {
-                            modal = Ext.create('Taco.view.address.ModalEditor', {
+                            modal = Ext.create('Taco.shared.view.modal.Address', {
                                 record: record
                             });
                         }

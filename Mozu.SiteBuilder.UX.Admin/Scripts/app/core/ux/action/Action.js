@@ -35,6 +35,10 @@ Ext.define('Taco.core.ux.action.Action', {
         }
     },
 
+    /**
+     * @private
+     * Are you sure you weren't looking for "click" instead of onClicK?
+     */
     onClick: function (e) {
         if (e == this) {
             console.log('lord...');
