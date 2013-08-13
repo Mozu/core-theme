@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using AutoMapper;
+using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
-using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.Core.Api.Client.Exceptions;
-using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Discount;
+using Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers;
+using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -45,19 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(Mapper.Map<Discount>(singleDiscount));
             }
 
-            string filter = null;
-            string productCode;
-            if (extFilter.TryGetValue<string>("productCode", out productCode))
-            {
-                filter = string.Format("Target.Products.Code eq \"{0}\"", productCode);
-            }
-
-            string name;
-
-            if (extFilter.TryGetValue<string>("name", out name))
-            {
-                filter = string.Format("content.name cont \"{0}\"", name);
-            }
+            string filter = extFilter.ToFilterString();
 
             try
             {
