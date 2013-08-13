@@ -51,10 +51,15 @@
 			<!-- /ko -->
 		</div>
 	</div>
-	<div class="mz-not-purchasable-text" data-bind="ifnot: isPurchasable">Not Purchasable</div>
+	<div class="mz-not-purchasable-text" data-bind="ifnot: isPurchasable">
+		Not Purchasable:
+		<!-- ko foreach: PurchasableState().Messages -->
+			<span data-bind="text: Message"></span>
+		<!-- /ko -->
+	</div>
 	<section class="mz-conversion-wrap">
 			<span class="mz-qty-label">Qty</span>
-			<input class="mz-qty-input" type="number" min="1" value="1" data-bind="value: Quantity, css: { 'mz-invalid': Quantity.invalid() }" />
+			<input class="mz-qty-input" type="number" min="1" value="1" data-bind="value: Quantity, css: { 'mz-invalid': Quantity.invalid() }, enable: isPurchasable" />
 			<button class="mz-button mz-btn-cta mz-add-to-cart"
 				data-bind="click: submit, enable: isPurchasable, css: { invisible: submitting }">
 				Add To Cart
@@ -69,6 +74,7 @@
 			
 	</div>
 </div>
+
 {% endblock BodyContent %}
 
 
