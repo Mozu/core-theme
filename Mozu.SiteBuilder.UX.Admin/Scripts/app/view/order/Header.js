@@ -3,10 +3,10 @@
  */
 Ext.define('Taco.view.order.Header', {
     extend: 'Ext.Component',
-
+    requires:['Taco.model.CustomerAccount'],
     title: 'Overview',
 
-    renderTpl: [
+    tpl: [
         '<div class="taco-order-detail-header-section order-data">',
             '<label>Order Total</label>',
             '<h2>{total:usMoney}</h2>',
@@ -38,47 +38,18 @@ Ext.define('Taco.view.order.Header', {
     initComponent: function () {
         this.cls = [this.cls, Taco.baseCSSPrefix + 'order-detail-header'].join(' ');
 
-        if (this.record) this.renderData = this.record.getData();
+        if (this.record) this.data = this.record.getData();
 
-        console.log(this.renderData);
+       
 
-        var store= Ext.bind(Taco.core.data.StoreManager.getOrCreate({
-            model: 'Taco.model.CustomerAccount',
-            autoLoad: true,
-            proxy: {
-                type: 'ajax',
-                api: {
-                    read: '/admin/app/customer/list?id='+this.renderData.customerId
-                },
-                reader: {
-                    type: 'json',
-                    root: 'items',
-                    successProperty: 'success',
-                    messageProperty: "message"
-                }
-            },
-            listeners: {
-                load: Ext.bind(function(it, rec, successful) {
+        Taco.model.CustomerAccount.load(this.record.get('customerId'), {
+           success:function (record) {
+               var rederData = Ext.apply({}, record.getData(), this.record.getData());
+               this.update(rederData);
+           },
+           scope:this
+        });
 
-                    function merge_options(obj1, obj2) {
-                        var obj3 = {};
-                        for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
-                        for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
-                        return (obj3);
-                    }
-                    
-                    if (rec) {
-                        var renderDataObject = merge_options(rec[0].data, this.renderData)
-
-                        if (this.el)
-                            this.renderTpl.overwrite(this.el, renderDataObject);
-                    }
-                    
-                    
-                    
-                },this)
-            }
-        }),this);
         
         
 
