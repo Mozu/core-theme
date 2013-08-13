@@ -101,9 +101,8 @@ Ext.define('Taco.view.product.subform.General', {
                 fieldLabel: 'Short Description',
                 name: 'productShortDescription',
                 emptyText: 'Words',
-                width: '100%',
+                width: '100%'
                 //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
-                required: true
             }, {
                 xtype: 'htmleditor',
                 enableFont:false,
@@ -111,8 +110,7 @@ Ext.define('Taco.view.product.subform.General', {
                 name: 'productFullDescription',
                 emptyText: 'Words, words, and more words.  Also, with lists.',
                 //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
-                width: '100%',
-                required: true
+                width: '100%'
             }, {
                 fieldLabel: 'Product Image',
                 name: 'productImages',
@@ -130,8 +128,7 @@ Ext.define('Taco.view.product.subform.General', {
             items: [{
                 fieldLabel: 'Price',
                 name: 'price',
-                emptyText: '$10.00',
-                required: true
+                emptyText: '$10.00'
             }, {
                 fieldLabel: 'Sale Price',
                 name: 'salePrice',
