@@ -1150,6 +1150,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 orderItems: []
             };
 
+//        debugger;
+
         if (!config.data) {
             return;
         }
