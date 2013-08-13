@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.ServiceModel.Web;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.Core.Api.Routing;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using DCs = Mozu.CommerceRuntime.Contracts.Shipping;
@@ -29,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string SourcePackageId { get; set; }
         }
         [HttpPostRoute(UriTemplate="shipping/package/create")]
-        public async Task<Response<List<OrderPackage>>> CreatePackage(CreatePackageArgs args)
+        public async Task<Response<OrderPackage>> CreatePackage(CreatePackageArgs args)
         {
             // if there is a source package, remove the item from it first.
             if (!String.IsNullOrEmpty(args.SourcePackageId))
@@ -58,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
             var ret = (await _orderWebApiClient.CreatePackage(args.OrderId, dc)).ReadAsSync();
 
-            return List2( Mapper.Map<OrderPackage>(ret) );
+            return Single2( ret.Map<OrderPackage>() );
         }
 
         public class DeletePackageArgs
@@ -67,12 +65,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public List<string> PackageIds { get; set; }
         }
         [HttpPostRoute(UriTemplate = "shipping/package/delete")]
-        public async Task<Response<List<OrderPackage>>> DeletePackage(DeletePackageArgs args)
+        public async Task<Response<OrderPackage>> DeletePackage(DeletePackageArgs args)
         {
             var tasks = args.PackageIds.Select(pid => _orderWebApiClient.DeletePackage(args.OrderId, pid));
             await Task.WhenAll(tasks);
 
-            return SuccessWithTotal2<List<OrderPackage>>(args.PackageIds.Count);
+            return SuccessWithTotal2<OrderPackage>(args.PackageIds.Count);
         }
 
         public class MovePackageItemArgs
@@ -192,11 +190,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public List<string> PackageIds { get; set; }
         }
         [HttpPostRoute(UriTemplate = "shipping/package/markshipped")]
-        public async Task<Response<List<Order>>> MarkPackagesShipped(MarkPackagesShippedArgs args)
+        public async Task<Response<Order>> MarkPackagesShipped(MarkPackagesShippedArgs args)
         {
             var dcOrder = (await _orderWebApiClient.PerformShipmentAction(args.OrderId, new DCs.ShipmentAction { ActionName = "Ship", PackageIds = args.PackageIds })).ReadAsSync();
 
-            return List2(Mapper.Map<Order>(dcOrder));
+            return Single2( dcOrder.Map<Order>() );
         }
 
         [HttpPostRoute(UriTemplate = "shipping/package/edit")]
@@ -208,7 +206,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var ret = tasks.Select(t => t.Result.ReadAsSync());
 
-            return List2( Mapper.Map<List<OrderPackage>>( ret ));
+            return List2( ret.Map<List<OrderPackage>>() );
         }
 
         public class PrepareShipmentArgs {

@@ -76,14 +76,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "create")]
-        public async Task<Response<List<Order>>> CreateOrder()
+        public async Task<Response<Order>> CreateOrder()
         {
-            // TODO: this doesn't currently work. needs service updates.
             var emptyOrder = new DCo.Order();
             
             var order = (await _orderWebApiClient.CreateOrder(emptyOrder)).ReadAsSync();
 
-            return List2(order.Map<Order>());
+            return Single2( order.Map<Order>() );
         }
 
         public class OrderIdArgs
@@ -92,28 +91,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 		[HttpPostRoute(UriTemplate = "cancel")]
-        public async Task<Response<List<Order>>> CancelOrder(OrderIdArgs args)
+        public async Task<Response<Order>> CancelOrder(OrderIdArgs args)
         {
             var dc = (await _orderWebApiClient.PerformOrderAction(args.OrderId, new DCo.OrderAction { ActionName = "CancelOrder" })).ReadAsSync();
 
-            return List2( Mapper.Map<Order>(dc) );
+            return Single2( dc.Map<Order>() );
         }
 
         [HttpPostRoute(UriTemplate = "commitdraft")]
-        public async Task<Response<List<Order>>> CommitDraft(OrderIdArgs args)
+        public async Task<Response<Order>> CommitDraft(OrderIdArgs args)
         {
             var dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId, true)).ReadAsSync();
             dcOrder = (await _orderWebApiClient.UpdateOrder(args.OrderId, dcOrder, APPLY_AND_COMMIT)).ReadAsSync();
 
-            return SuccessWithTotal2<List<Order>>(1);
+            return Single2( dcOrder.Map<Order>() );
         }
 
         [HttpPostRoute(UriTemplate = "deletedraft")]
-        public async Task<Response<List<Order>>> DeleteDraft(OrderIdArgs args)
+        public async Task<Response<Order>> DeleteDraft(OrderIdArgs args)
         {
             await _orderWebApiClient.DeleteOrderDraft(args.OrderId);
 
-            return SuccessWithTotal2<List<Order>>(1);
+            return SuccessWithTotal2<Order>(1);
         }
 
         public class UpdateAdjustmentArgs
@@ -123,7 +122,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public Adjustment ShippingAdjustment { get; set; }
         }
         [HttpPostRoute(UriTemplate = "adjustment")]
-        public async Task<Response<List<Order>>> AddOrUpdateAdjustment(UpdateAdjustmentArgs args)
+        public async Task<Response<Order>> AddOrUpdateAdjustment(UpdateAdjustmentArgs args)
         {   
             DCo.Order dcOrder = null;
  
@@ -143,9 +142,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             if (dcOrder != null)
-                return List2( dcOrder.Map<Order>() );
+                return Single2( dcOrder.Map<Order>() );
             else
-                return FailureList2<Order>("You must provide an order adjustment or a shipping adjustment.");
+                return Message3<Order>(false, "You must provide an order adjustment or a shipping adjustment.");
+        }
+
+        public class AddCouponArgs
+        {
+            public string OrderId { get; set; }
+            public List<string> Coupons { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "addcoupon")]
+        public async Task<Response<Order>> AddCoupon(AddCouponArgs args)
+        {
+            DCo.Order dcOrder = null;
+            foreach (string couponCode in args.Coupons)
+            {
+                dcOrder = (await _orderWebApiClient.ApplyCoupon(args.OrderId, couponCode)).ReadAsSync();
+            }
+
+            if (dcOrder != null)
+                return Single2( dcOrder.Map<Order>() );
+            else
+                return Message3<Order>(false, "No coupons were applied.");
         }
     }
 }

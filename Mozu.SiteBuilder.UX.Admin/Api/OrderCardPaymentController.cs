@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Performs the "CapturePayment" action on an authorized payment.
         /// </summary>
         [HttpPostRoute(UriTemplate = "payment/capture")]
-        public async Task<Response<List<Order>>> CapturePayment(CapturePaymentArgs args)
+        public async Task<Response<Order>> CapturePayment(CapturePaymentArgs args)
         {
             // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
             var action = new DCp.PaymentAction
@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
 
             //_orderWebApiClient.GetPackageLabel
-            return List2( order.Map<Order>() );
+            return Single2( order.Map<Order>() );
         }
 
         public class CreditPaymentArgs
@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Performs the "CreditPayment" action on a payment where money has been captured.
         /// </summary>
         [HttpPostRoute(UriTemplate = "payment/credit")]
-        public async Task<Response<List<Order>>> CreditPayment(CreditPaymentArgs args)
+        public async Task<Response<Order>> CreditPayment(CreditPaymentArgs args)
         {
             // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
             var action = new DCp.PaymentAction
@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             // TODO: we don't currently do anything with the "reason"
 
-            return List2( order.Map<Order>() );
+            return Single2( order.Map<Order>() );
         }
 
         public class VoidPaymentArgs
@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Voids an authorized payment.
         /// </summary>
         [HttpPostRoute(UriTemplate = "payment/void")]
-        public async Task<Response<List<Order>>> VoidPayment(VoidPaymentArgs args)
+        public async Task<Response<Order>> VoidPayment(VoidPaymentArgs args)
         {
             // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
             var action = new DCp.PaymentAction
@@ -90,7 +90,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
 
-            return List2( order.Map<Order>() );
+            return Single2( order.Map<Order>() );
         }
 
         public class CreatePaymentArgs
@@ -104,10 +104,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Creates a new payment and performs the "AuthAndCapture" action.
         /// </summary>
         [HttpPostRoute(UriTemplate = "payment/create")]
-        public async Task<Response<List<Order>>> CreatePayment(CreatePaymentArgs args)
+        public async Task<Response<Order>> CreatePayment(CreatePaymentArgs args)
         {
             var action = new DCp.PaymentAction
             {
+                // TODO: should determine ActionName from store preferences
                 ActionName = /*"AuthAndCapture"*/ "AuthorizePayment",
                 ISOCurrencyCode = "USD",
                 NewBillingInfo = new DCp.BillingInfo
@@ -131,7 +132,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order = (await _orderWebApiClient.CreatePaymentAction(args.OrderId, action)).ReadAsSync();
 
-            return List2( order.Map<Order>() );
+            return Single2( order.Map<Order>() );
         }
     }
 }
