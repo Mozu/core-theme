@@ -5,6 +5,35 @@ Ext.define('Taco.view.order.Header', {
     extend: 'Ext.Component',
 
     title: 'Overview',
+
+    renderTpl: [
+        '<div class="taco-order-detail-header-section order-data">',
+            '<label>Order Total</label>',
+            '<h2>{total:usMoney}</h2>',
+            '<div class="status">{orderStatus}</div>',
+        '</div>',
+        '<div class="taco-order-detail-header-section customer-data">',
+            '<label>Customer</label>',
+            '<h2>{billingContact.firstName} {billingContact.lastName}</h2>',
+            '<div class="company">{billingContact.companyName}</div>',
+        '<tpl if="billingContact.address1">',
+            '<div class="address">{billingContact.address1} {billingContact.cityOrTown}, {billingContact.state} {billingContact.zipCode} {billingContact.countryCode}</div>',
+        '</tpl>',
+        '</div>',
+        '<div class="taco-order-detail-header-section history-data">',
+            '<label>Customer Profile</label>',
+            '<div>Customer since: <strong>{[this.convertDate(values.createDate)]}</strong></div>',
+            '<div>Total orders: <strong>{orderCount}</strong></div>',
+            '<div>Total spent: <strong>{totalSpent}</strong></div>',
+        '</div>',
+        '<div class="taco-order-detail-header-section origin-data">',
+            '{createDate:date("F j, Y | g:i a")}<!-- | IP address: {ipAddress} -->',
+        '</div>', {
+            convertDate: function(date) {
+                return Ext.Date.format(date, 'F j, Y, g:i a');
+            }
+        }
+    ],
     
     initComponent: function () {
         this.cls = [this.cls, Taco.baseCSSPrefix + 'order-detail-header'].join(' ');
@@ -12,41 +41,6 @@ Ext.define('Taco.view.order.Header', {
         if (this.record) this.renderData = this.record.getData();
 
         console.log(this.renderData);
-        this.renderTpl = new Ext.XTemplate(
-            '<div class="taco-order-detail-header-section order-data">',
-                '<label>Order Total</label>',
-                '<h2>{total:usMoney}</h2>',
-                '<div class="status">{orderStatus}</div>',
-            '</div>',
-            '<div class="taco-order-detail-header-section customer-data">',
-                '<label>Customer</label>',
-//                '<h2>{[values.customer.firstName]} {[values.customer.lastName]}</h2>',
-//                '<div class="company">{[values.customer.companyName]}</div>',
-//                '<div class="address">{[values.customer.address]}</div>',
-                '<h2>{billingContact.firstName} {billingContact.lastName}</h2>',
-                '<div class="company">{billingContact.companyName}</div>',
-            '<tpl if="billingContact.address1">',
-                '<div class="address">{billingContact.address1} {billingContact.cityOrTown}, {billingContact.state} {billingContact.zipCode} {billingContact.countryCode}</div>',
-            '</tpl>',
-            '</div>',
-            '<div class="taco-order-detail-header-section history-data">',
-                '<label>Customer Profile</label>',
-           // '<tpl if="orderCount &gt; 0">', orderCount isn't working that well
-                '<div>Customer since: <strong>{[this.convertDate(values.createDate)]}</strong></div>',
-                '<div>Total orders: <strong>{orderCount}</strong></div>',
-                '<div>Total spent: <strong>{totalSpent}</strong></div>',
-//                '<div>Groups: <strong>{groups}</strong></div>',
-          //  '</tpl>',
-            '</div>',
-            // {createDate:date("M j, Y")}
-            '<div class="taco-order-detail-header-section origin-data">',
-                '{createDate:date("F j, Y | g:i a")}<!-- | IP address: {ipAddress} -->',
-            '</div>', {
-                convertDate: function(date) {
-                    return Ext.Date.format(date, 'F j, Y, g:i a');
-                }
-            }
-        );
 
         var store= Ext.bind(Taco.core.data.StoreManager.getOrCreate({
             model: 'Taco.model.CustomerAccount',
