@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 //using Volusion.ProductAdmin.Contracts;
 //using DC = Volusion.ProductAdmin.Contracts;
+using Microsoft.FSharp.Math;
 using Mozu.Core.Api.Contracts;
 
 using System.Collections.Generic;
@@ -105,7 +106,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PackageLength, op => op.MapFrom(x => x.PackageLength == null ? null : new Measurement { Unit = "in", Value = x.PackageLength }))
                 .ForMember(x => x.PackageWidth, op => op.MapFrom(x => x.PackageWidth == null ? null : new Measurement { Unit = "in", Value = x.PackageWidth }))
                 .ForMember(x => x.PackageWeight, op => op.MapFrom(x => x.PackageWeight == null ? new Measurement { Unit = "lbs", Value = 0} : new Measurement { Unit = "lbs", Value = x.PackageWeight }))
+                 .AfterMap((x, y) =>
+                 {
+                     if (y.Properties  != null)
+                     {
+                         y.Properties = y.Properties.Where(p => p.Values != null && p.Values.Count > 0 && p.Values.Any( v=> v.Value != null )).ToList();
+
+                     }
+                 })
                 ;
+
 
             Mapper.CreateMap<DC.ProductProperty, ProductProperty>()
                   .ForMember(x => x.AttributeFQN, op => op.MapFrom(x => x.AttributeFQN))
