@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Creates a new payment and performs the "AuthAndCapture" action.
         /// </summary>
 		[HttpPostRoute(UriTemplate = "payment/manual/create")]
-        public async Task<Response<List<Order>>> CreatePaymentManual(CreatePaymentManualArgs args)
+        public async Task<Response<Order>> CreatePaymentManual(CreatePaymentManualArgs args)
         {
             var action = new DCp.PaymentAction
             {
@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order = (await _orderWebApiClient.CreatePaymentAction(args.OrderId, action)).ReadAsSync();
 
-            return List2(order.Map<Order>());
+            return Single2( order.Map<Order>() );
         }
 
         public class CapturePaymentManualArgs
@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public DateTime? InteractionDate { get; set; }
         }
         [HttpPostRoute(UriTemplate = "payment/manual/capture")]
-        public async Task<Response<List<Order>>> CapturePaymentManual(CapturePaymentManualArgs args)
+        public async Task<Response<Order>> CapturePaymentManual(CapturePaymentManualArgs args)
         {
             var action = new DCp.PaymentAction
             {
@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
 
-            return List2(order.Map<Order>());
+            return Single2( order.Map<Order>() );
         }
 
         public class CreditPaymentManualArgs
@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public DateTime? InteractionDate { get; set; }
         }
         [HttpPostRoute(UriTemplate = "payment/manual/credit")]
-        public async Task<Response<List<Order>>> CreditPaymentManual(CreditPaymentManualArgs args)
+        public async Task<Response<Order>> CreditPaymentManual(CreditPaymentManualArgs args)
         {
             var action = new DCp.PaymentAction
             {
@@ -103,7 +103,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
 
-            return List2(order.Map<Order>());
+            return Single2( order.Map<Order>() );
         }
 
         public class VoidPaymentManualArgs
@@ -114,7 +114,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public DateTime? InteractionDate { get; set; }
         }
         [HttpPostRoute(UriTemplate = "payment/manual/void")]
-        public async Task<Response<List<Order>>> VoidPaymentManual(CapturePaymentManualArgs args)
+        public async Task<Response<Order>> VoidPaymentManual(CapturePaymentManualArgs args)
         {
             var action = new DCp.PaymentAction
             {
@@ -128,7 +128,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
 
-            return List2(order.Map<Order>());
+            return Single2( order.Map<Order>() );
         }
 
         public class RollbackTransactionArgs
@@ -138,7 +138,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string ActionName { get; set; }
         }
         [HttpPostRoute(UriTemplate = "payment/manual/rollback")]
-        public async Task<Response<List<Order>>> RollbackTransaction(RollbackTransactionArgs args)
+        public async Task<Response<Order>> RollbackTransaction(RollbackTransactionArgs args)
         {
             var action = new DCp.PaymentAction
             {
@@ -147,7 +147,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
 
-            return List2(order.Map<Order>());
+            return Single2( order.Map<Order>() );
         }
     }
 }

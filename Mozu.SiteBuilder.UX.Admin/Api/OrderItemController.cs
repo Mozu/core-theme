@@ -29,9 +29,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
         [HttpPostRoute(UriTemplate = "items/add")]
-        public async Task<Response<List<OrderItem>>> AddOrderItem(AddOrderItemArgs args)
+        public async Task<Response<Order>> AddOrderItem(AddOrderItemArgs args)
         {
-            List<OrderItem> returnItems = new List<OrderItem>();
+            DC.Order dcOrder = null;
+
             foreach (var product in args.OrderItems)
             {
                 // scrub the product.
@@ -43,11 +44,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Product = product
                 };
 
-                var orderItem = (await _orderWebApiClient.CreateOrderItem(args.OrderId, dcOrderItem, APPLY_TO_DRAFT)).ReadAsSync();
-                returnItems.Add(orderItem.Map<OrderItem>());
+                dcOrder = (await _orderWebApiClient.CreateOrderItem(args.OrderId, dcOrderItem, APPLY_TO_DRAFT)).ReadAsSync();
             }
 
-            return List2( returnItems );
+            return Single2( dcOrder.Map<Order>() );
         }
 
         public class UpdateOrderItemArgs {
@@ -55,31 +55,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public List<OrderItem> OrderItems { get; set; }
         }
         [HttpPostRoute(UriTemplate = "items/editquantity")]
-        public async Task<Response<List<OrderItem>>> UpdateOrderItemQuantity(UpdateOrderItemArgs args)
+        public async Task<Response<Order>> UpdateOrderItemQuantity(UpdateOrderItemArgs args)
         {
-            List<OrderItem> returnItems = new List<OrderItem>();
+            DC.Order dcOrder = null;
             foreach (var product in args.OrderItems)
             {
-                var orderItem = (await _orderWebApiClient.UpdateItemQuantity(args.OrderId, product.Id, product.Quantity, APPLY_TO_DRAFT)).ReadAsSync();
-                returnItems.Add( orderItem.Map<OrderItem>() );
+                dcOrder = (await _orderWebApiClient.UpdateItemQuantity(args.OrderId, product.Id, product.Quantity, APPLY_TO_DRAFT)).ReadAsSync();
             }
         
-            return List2( returnItems );
+            return Single2( dcOrder.Map<Order>() );
         }
         
         [HttpPostRoute(UriTemplate = "items/editprice")]
-        public async Task<Response<List<OrderItem>>> UpdateOrderItemPrice(UpdateOrderItemArgs args)
+        public async Task<Response<Order>> UpdateOrderItemPrice(UpdateOrderItemArgs args)
         {
-            List<OrderItem> returnItems = new List<OrderItem>();
+            DC.Order dcOrder = null;
             foreach (var item in args.OrderItems)
             {
-                var orderItem = (await _orderWebApiClient.UpdateItemQuantity(args.OrderId, item.Id, item.Quantity, APPLY_TO_DRAFT)).ReadAsSync();
-                returnItems.Add(orderItem.Map<OrderItem>());
+                dcOrder = (await _orderWebApiClient.UpdateItemProductPrice(args.OrderId, item.Id, item.UnitPrice, APPLY_TO_DRAFT)).ReadAsSync();
             }
-        
-            return List2( returnItems );
-        }
 
+            return Single2( dcOrder.Map<Order>() );
+        }
 
         public class RemoveOrderItemArgs
         {
@@ -87,13 +84,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public List<string> OrderItemIds { get; set; }
         }
         [HttpPostRoute(UriTemplate = "items/remove")]
-        public async Task<Response<List<OrderItem>>> RemoveOrderItem(RemoveOrderItemArgs args)
+        public async Task<Response<Order>> RemoveOrderItem(RemoveOrderItemArgs args)
         {
-            await Task.WhenAll(
-                args.OrderItemIds.Select(oiid => _orderWebApiClient.DeleteOrderItem(args.OrderId, oiid, APPLY_TO_DRAFT))
-            );
+            DC.Order dcOrder = null;
 
-            return SuccessWithTotal2<List<OrderItem>>(args.OrderItemIds.Count);
+            foreach (var itemId in args.OrderItemIds)
+            {
+                dcOrder = (await _orderWebApiClient.DeleteOrderItem(args.OrderId, itemId, APPLY_TO_DRAFT)).ReadAsSync();
+            }
+
+            return Single2( dcOrder.Map<Order>() );
         }
     }
 }

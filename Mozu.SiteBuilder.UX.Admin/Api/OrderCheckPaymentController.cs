@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string LastName { get; set; }
         }
         [HttpPostRoute(UriTemplate = "payment/requestcheck")]
-        public async Task<Response<List<Order>>> RequestCheck(RequestCheckArgs args)
+        public async Task<Response<Order>> RequestCheck(RequestCheckArgs args)
         {
             var action = new DCp.PaymentAction { 
                 ActionName = "RequestCheck",
@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
             var order = (await _orderWebApiClient.CreatePaymentAction(args.OrderId, action)).ReadAsSync();
 
-            return List2(order.Map<Order>());
+            return Single2( order.Map<Order>() );
         }
 
         public class ApplyCheckArgs
@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public decimal Amount { get; set; }
         }
         [HttpPostRoute(UriTemplate = "payment/applycheck")]
-        public async Task<Response<List<Order>>> ApplyCheck(ApplyCheckArgs args)
+        public async Task<Response<Order>> ApplyCheck(ApplyCheckArgs args)
         {
             var action = new DCp.PaymentAction
             {
@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
 
-            return List2(order.Map<Order>());
+            return Single2( order.Map<Order>() );
         }
 
         public class DeclineCheckArgs
@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string CheckNumber { get; set; }
         }
         [HttpPostRoute(UriTemplate = "payment/declinecheck")]
-        public async Task<Response<List<Order>>> DeclineCheck(DeclineCheckArgs args)
+        public async Task<Response<Order>> DeclineCheck(DeclineCheckArgs args)
         {
             var action = new DCp.PaymentAction
             {
@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
 
-            return List2(order.Map<Order>());
+            return Single2( order.Map<Order>() );
         }
     }
 }
