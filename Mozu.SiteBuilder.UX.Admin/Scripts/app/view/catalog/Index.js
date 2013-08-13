@@ -3,7 +3,12 @@
  */
 Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
-    requires: ['Taco.core.ux.EditContainer', 'Ext.ux.form.field.BoxSelect', 'Taco.view.address.ModalEditor', 'Taco.model.Contact'],
+    requires: [
+        'Taco.core.ux.EditContainer',
+        'Ext.ux.form.field.BoxSelect',
+        'Taco.shared.view.modal.Address',
+        'Taco.model.Contact'
+    ],
 
     header: {
         title: 'Catalog Testing'
@@ -272,7 +277,7 @@ Ext.define('Taco.view.catalog.Index', {
                 var modal;
 
                 if (e.getTarget('.edit', 10)) {
-                    modal = Ext.create('Taco.view.address.ModalEditor', {
+                    modal = Ext.create('Taco.shared.view.modal.Address', {
                         record: record
                     });
                 }

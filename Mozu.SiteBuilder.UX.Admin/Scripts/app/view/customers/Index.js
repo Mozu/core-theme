@@ -4,7 +4,10 @@
 Ext.define('Taco.view.customers.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.taco.index.customer',
-    requires: ['Taco.model.CustomerAccount', 'Taco.store.Customers'],
+    requires: [
+        'Taco.model.CustomerAccount',
+        'Taco.store.Customers'
+    ],
 
     typeName: 'Customer',
     modelName: 'Taco.model.CustomerAccount',

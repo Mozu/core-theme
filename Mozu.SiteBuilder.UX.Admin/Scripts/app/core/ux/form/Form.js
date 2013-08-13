@@ -345,7 +345,8 @@ Ext.define('Taco.core.ux.form.Form', {
             tasks.add({
                 key: this.tasksKeyPrefix + 'update-record',
                 updateRecord: this.record,
-                updateForm: this
+                updateForm: this,
+                dependencies: this.updateRecordDependencies
             });
         }
         if (saveRecord !== false) {

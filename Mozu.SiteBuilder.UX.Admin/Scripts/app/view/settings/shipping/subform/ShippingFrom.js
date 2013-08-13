@@ -67,7 +67,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
     },
     editAddress: function () {
         var me = this,
-            modal = Ext.create('Taco.view.address.ModalEditor', {
+            modal = Ext.create('Taco.shared.view.modal.Address', {
             record: me.addressRecord,
             addressHasNames: false,
             listeners: {

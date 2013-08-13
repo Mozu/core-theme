@@ -2,7 +2,7 @@
 
 Ext.define('Taco.core.ux.window.WindowWithActions', {
     extend: 'Taco.core.ux.window.Window',
-    alias: 'widget.taco.windowwithactions',
+    alias: 'widget.taco-windowwithactions',
 
     /**
      * @cfg {String} primaryText

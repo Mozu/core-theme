@@ -3,7 +3,10 @@
  */
 Ext.define('Taco.view.order.Header', {
     extend: 'Ext.Component',
-    requires:['Taco.model.CustomerAccount'],
+    requires: [
+        'Taco.model.CustomerAccount'
+    ],
+    
     title: 'Overview',
 
     tpl: [
@@ -36,22 +39,17 @@ Ext.define('Taco.view.order.Header', {
     ],
     
     initComponent: function () {
-        this.cls = [this.cls, Taco.baseCSSPrefix + 'order-detail-header'].join(' ');
+        this.cls += ' ' + Taco.baseCSSPrefix + 'order-detail-header';
 
         if (this.record) this.data = this.record.getData();
 
-       
-
         Taco.model.CustomerAccount.load(this.record.get('customerId'), {
-           success:function (record) {
-               var rederData = Ext.apply({}, record.getData(), this.record.getData());
-               this.update(rederData);
+           success: function (record) {
+               var data = Ext.apply({}, record.getData(), this.record.getData());
+               this.update(data);
            },
-           scope:this
+           scope: this
         });
-
-        
-        
 
         this.callParent(arguments);
     }

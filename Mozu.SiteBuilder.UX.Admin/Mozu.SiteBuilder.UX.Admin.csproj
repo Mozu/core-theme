@@ -848,7 +848,7 @@
     <Content Include="Scripts\app\store\Attributes.js" />
     <Content Include="Scripts\app\store\shared\ContainerStore.js" />
     <Content Include="Scripts\app\store\WidgetInstances.js" />
-    <Content Include="Scripts\app\view\address\ModalEditor.js" />
+    <Content Include="Scripts\app\shared\view\modal\Address.js" />
     <Content Include="Scripts\app\view\attribute\Edit.js" />
     <Content Include="Scripts\app\view\attribute\Form.js" />
     <Content Include="Scripts\app\view\attribute\Index.js" />
@@ -1652,8 +1652,7 @@
     <Content Include="Scripts\app\view\account\Navigation.js" />
     <Content Include="Scripts\app\view\account\Overview.js" />
     <Content Include="Scripts\app\view\account\Users.js" />
-    <Content Include="Scripts\app\view\address\AddressForm.js" />
-    <Content Include="Scripts\app\view\customers\AddressPanel.js" />
+    <Content Include="Scripts\app\shared\view\form\Address.js" />
     <Content Include="Scripts\app\view\customers\Edit.js" />
     <Content Include="Scripts\app\view\customers\GroupsForm.js" />
     <Content Include="Scripts\app\view\customers\Index.js" />
@@ -3029,7 +3028,6 @@
     <Content Include="Scripts\app\view\site\widget\JasonImage.js" />
     <Content Include="Scripts\app\view\site\widget\RecentBlogPosts.js" />
     <Content Include="Scripts\app\view\site\widget\TagCollection.js" />
-    <Content Include="Scripts\app\view\testing\EditAddressTest.js" />
     <Content Include="Scripts\app\view\testing\Shim.js" />
     <Content Include="Scripts\app\view\testing\StandaloneOption.js" />
     <Content Include="Scripts\app\view\themeSettings\Index.js" />
@@ -3061,6 +3059,7 @@
     <Folder Include="Models\" />
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
+    <Folder Include="Scripts\app\view\address\" />
     <Folder Include="Scripts\overrides\" />
     <Folder Include="Scripts\sass\var\" />
     <Folder Include="Scripts\stylesheets\etc\" />

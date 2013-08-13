@@ -1,29 +1,27 @@
-﻿/**
- * @class Taco.view.order.address.ModalEditor
+/**
+ * @class Taco.shared.view.form.Address
+ * Encapsulates a Taco.model.Address and binds fields to a form. You can specify fields to hide with hiddenFields and insert
+ * additional fields, by putting them in extraFields.
  */
-Ext.define('Taco.view.address.ModalEditor', {
-    extend: 'Taco.core.ux.modal.Modal',
-    requires: ['Taco.model.Contact'],
+Ext.define('Taco.shared.view.form.Address', {
+	extend: 'Taco.core.ux.form.Form',
+	alias: 'widget.taco-addressform',
 
-    autoShow: true,
-    width: 700,
+	requires: [
+		'Taco.model.Contact',
+		'Taco.core.ux.form.SelectField',
+		'Taco.store.StateComboBox',
+		'Taco.store.CountryComboBox'
+	],
 
     addressHasNames: true,
-    record: null,
 
-    initComponent: function () {
-        var me = this,
-            record = this.record,
-            addressHasNames = this.addressHasNames,
-            fields, formpanel, dirtybutton;
+	initComponent: function () {
+		var fields;
 
-        this.cls = this.cls + ' ' + Taco.baseCSSPrefix + 'address-editor';
+		this.cls += ' ' + Taco.baseCSSPrefix + 'address-editor-fields';
 
-        if (!record.isModel) {
-            record = Ext.create('Taco.model.Contact', record);
-        }
-
-        fields = [{
+		fields = [{
             xtype: 'textfield',
             width: 315,
             name: 'companyName',
@@ -125,7 +123,7 @@ Ext.define('Taco.view.address.ModalEditor', {
                     style: { 'display': 'inline-table' }
         }];
 
-        if (addressHasNames) {
+        if (this.addressHasNames) {
             fields.unshift({
                 xtype: 'textfield',
                 width: 206,
@@ -150,61 +148,6 @@ Ext.define('Taco.view.address.ModalEditor', {
             });
         }
 
-        formpanel = Ext.create('Taco.core.ux.form.Form', {
-            manageHeight: false,
-            items: [{
-                xtype: 'container',
-                cls: Taco.baseCSSPrefix + 'address-editor-fields',
-                items: fields
-            }]
-        });
-
-        this.content = {
-            xtype: 'container',
-            items: [{
-                xtype: 'component',
-                autoEl: {
-                    tag: 'h2',
-                    cls: 'order-modal-title',
-                    html: 'Edit Address'
-                }
-            }, formpanel]
-        };
-
-        this.dirtybutton = Ext.create('Taco.core.ux.action.DirtyButton', {
-            xtype: 'dirtybutton',
-            text: 'Save',
-            onClick: function () {
-                formpanel.getForm().updateRecord(record);
-                console.log(record);
-
-                me.hide();
-                me.fireEvent('save', this, record);
-            }
-        });
-
-        this.actions = {
-            xtype: 'container',
-            items: [this.dirtybutton, {
-                xtype: 'action',
-                text: 'Cancel',
-                onClick: function () {
-                    me.hide();
-                }
-            }]
-        };
-
-        this.callParent(arguments);
-
-        formpanel.loadRecord(record);
-
-        formpanel.on({
-            dirtychange: {
-                fn: function (form, dirty) {
-                    this.dirtybutton.setDirty(true);
-                }
-            },
-            scope: this
-        });
-    }
+		this.callParent(arguments);
+	}
 });
