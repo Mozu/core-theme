@@ -702,6 +702,7 @@
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\form\Labelable.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\menu\Menu.scss" />
     <Content Include="Scripts\sass\etc\taco\mixins\_fonts.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\view\BoundList.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

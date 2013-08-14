@@ -124,7 +124,7 @@
           font-weight: bold;
         }
         &.context-type-c {
-          border-top: 5px solid $color-neutral-white;
+          border-top-width: 5px;
           font-weight: bold;
           margin-top: 7px;
           @include box-shadow(0px -1px border-for($color-neutral-white));
