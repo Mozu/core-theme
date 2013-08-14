@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
             if (extFilter == null || extFilter.Count == 0)
                 return null;
 
-            return String.Join(" and ", extFilter.Where(f => !String.Equals(f.property, "validondate", StringComparison.InvariantCultureIgnoreCase)).Select(GetFilter));
+            return String.Join(" and ", extFilter./*.Where(f => !String.Equals(f.property, "validondate", StringComparison.InvariantCultureIgnoreCase)).*/Select(GetFilter));
         }
 
         private static string GetFilter(FilterCollectionItem filter)
@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                 case "productcode":
                     return String.Format("{0} eq \"{1}\"", PRODUCT_CODE_PROPERTY, filter.value);
                 case "validondate":
-                    return String.Format("{0} lt \"{2}\" and {1} gt \"{2}\"", START_DATE_PROPERTY, END_DATE_PROPERTY, filter.value);
+                    return String.Format("{0} lt \"{2}\" and ({1} gt \"{2}\" or {1} eq null)", START_DATE_PROPERTY, END_DATE_PROPERTY, filter.value);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

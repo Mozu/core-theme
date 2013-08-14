@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -147,24 +148,75 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return Message3<Order>(false, "You must provide an order adjustment or a shipping adjustment.");
         }
 
-        public class AddCouponArgs
+        public class AddRemoveCouponArgs
         {
             public string OrderId { get; set; }
             public List<string> Coupons { get; set; }
         }
         [HttpPostRoute(UriTemplate = "addcoupon")]
-        public async Task<Response<Order>> AddCoupon(AddCouponArgs args)
+        public async Task<Response<Order>> AddCoupon(AddRemoveCouponArgs args)
         {
             DCo.Order dcOrder = null;
             foreach (string couponCode in args.Coupons)
             {
-                dcOrder = (await _orderWebApiClient.ApplyCoupon(args.OrderId, couponCode)).ReadAsSync();
+                dcOrder = (await _orderWebApiClient.ApplyCoupon(args.OrderId, couponCode, APPLY_TO_DRAFT)).ReadAsSync();
             }
 
             if (dcOrder != null)
                 return Single2( dcOrder.Map<Order>() );
             else
                 return Message3<Order>(false, "No coupons were applied.");
+        }
+
+        [HttpPostRoute(UriTemplate = "removecoupon")]
+        public async Task<Response<Order>> RemoveCoupon(AddRemoveCouponArgs args)
+        {
+            DCo.Order dcOrder = null;
+            foreach (string couponCode in args.Coupons)
+            {
+                dcOrder = (await _orderWebApiClient.RemoveCoupon(args.OrderId, couponCode, APPLY_TO_DRAFT)).ReadAsSync();
+            }
+            
+            if(dcOrder != null)
+                return Single2( dcOrder.Map<Order>() );
+            else
+                return Message3<Order>(false, "No coupons were removed.");
+        }
+
+        public class SuppressDiscountArgs {
+            public string OrderId { get; set; }
+            public string OrderItemId { get; set; }
+            public int DiscountId { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "suppressdiscount")]
+        public async Task<Response<Order>> SuppressDiscount(SuppressDiscountArgs args)
+        {
+            if (!String.IsNullOrEmpty(args.OrderItemId))
+                return await SuppressItemDiscount(args);
+
+            DCo.Order dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId, true)).ReadAsSync();
+
+            var orderDiscount = dcOrder.OrderDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId);
+            var shippingDiscount = dcOrder.ShippingDiscounts.Select(sd => sd.Discount).FirstOrDefault(d => d.Discount.Id == args.DiscountId);
+
+            if (orderDiscount != null)
+            {
+                orderDiscount.Excluded = true;
+                await _orderWebApiClient.UpdateOrderDiscount(args.OrderId, orderDiscount.Discount.Id, orderDiscount, APPLY_TO_DRAFT);
+            }
+            else if (shippingDiscount != null)
+            {
+                shippingDiscount.Excluded = true;
+                // TODO: no updateShippingDiscount method.
+                // await _orderWebApiClient. (args.OrderId, orderDiscount.Discount.Id, shippingDiscount, APPLY_TO_DRAFT);
+            }
+            else
+            {
+                return Message3<Order>(false, "No discount found with id: " + args.DiscountId);
+            }
+
+            dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId, true)).ReadAsSync();
+            return Single2( dcOrder.Map<Order>() );
         }
     }
 }
