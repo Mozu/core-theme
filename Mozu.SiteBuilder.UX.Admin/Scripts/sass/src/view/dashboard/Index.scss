@@ -82,7 +82,7 @@
       &.change {
         &::after {
           color: $color-theme-green;
-          content: "\E033";
+          content: $glyph-arrowup;
         }
       }
     }
@@ -92,7 +92,7 @@
 
       &::after {
         color: $color-theme-red-light;
-        content: "\E036"
+        content: $glyph-arrowdown
       }
     }
   }
@@ -145,7 +145,7 @@
         &::after {
           background-color: $color-neutral-white;
           border-radius: 100px;
-          content: "\E00E";
+          content: $glyph-user;
           font-family: mozicons;
           font-size: px-to-rem(40);
           height: 40px;
@@ -307,7 +307,7 @@
         &::after {
           background-color: $color-neutral-white;
           border-radius: 45px;
-          content: "\E00E";
+          content: $glyph-user;
           font-family: mozicons;
           font-size: px-to-rem(20);
           height: 20px;

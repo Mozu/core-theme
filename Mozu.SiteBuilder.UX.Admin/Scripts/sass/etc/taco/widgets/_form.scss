@@ -53,7 +53,7 @@
     overflow: visible;
     position: absolute;
     width: 0px;
-    @include icon-font("\E036");
+    @include icon-font($glyph-arrowdown);
   }
 
   // textarea styles
@@ -314,7 +314,7 @@
     .#{$prefix}form-date-trigger,
     .#{$prefix}form-trigger-click {
       background: none transparent;
-      @include icon-font("\E02C");
+      @include icon-font($glyph-calendar);
 
       &::after {
         -webkit-font-smoothing: none;

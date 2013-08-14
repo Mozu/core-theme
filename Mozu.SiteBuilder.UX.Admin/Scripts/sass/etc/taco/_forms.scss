@@ -104,7 +104,7 @@
     .invalidate {
       cursor: pointer;
       opacity: 0;
-      @include icon-font("\E023");
+      @include icon-font($glyph-cancel);
       @include transition(opacity 0.5s);
 
       &:hover {

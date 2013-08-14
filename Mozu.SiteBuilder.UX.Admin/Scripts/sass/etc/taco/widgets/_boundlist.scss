@@ -102,7 +102,7 @@
     overflow: hidden;
     padding-top: 16px;
     vertical-align: top;
-    @include icon-font("\E022");
+    @include icon-font($glyph-knurling);
 
     &::after {
       left: -2px;
@@ -147,7 +147,7 @@
     left: auto;
     right: 8px;
     top: 6px;
-    @include icon-font("\E011");
+    @include icon-font($glyph-close);
     position: absolute;
   }
 

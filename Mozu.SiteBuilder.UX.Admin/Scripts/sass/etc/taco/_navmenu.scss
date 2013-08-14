@@ -12,7 +12,7 @@
       display: block;
       overflow: hidden;
       @include box-shadow(1px 0px $color-neutral-white);
-      @include icon-font("\E01C", 32px);
+      @include icon-font($glyph-menu, 32px);
       @include single-transition(background-color, 0.4s);
 
       &::after {
@@ -34,7 +34,7 @@
         color: $color;
         display: inline-block;
         padding: 18px 15px 0px 50px;
-        @include icon-font("\E01F", 32px);
+        @include icon-font($glyph-dashboard, 32px);
         height: 51px;
         vertical-align: top;
         width: auto;
@@ -45,25 +45,25 @@
         }
       }
       .#{$vprefix}icon-nav-customers::after {
-        content: "\E020";
+        content: $glyph-customers;
       }
       .#{$vprefix}icon-nav-catalog::after {
-        content: "\E01A";
+        content: $glyph-catalog;
       }
       .#{$vprefix}icon-nav-orders::after {
-        content: "\E01B";
+        content: $glyph-orders;
       }
       .#{$vprefix}icon-nav-marketing::after {
-        content: "\E01D";
+        content: $glyph-marketing;
       }
       .#{$vprefix}icon-nav-sites::after {
-        content: "\E018";
+        content: $glyph-sitebuilder;
       }
       .#{$vprefix}icon-nav-publishing::after {
-        content: "\E019";
+        content: $glyph-publishing;
       }
       .#{$vprefix}icon-nav-files::after {
-        content: "\E01E";
+        content: $glyph-filemanager;
       }
 
       ul {
@@ -172,7 +172,7 @@
           font-weight: bold;
         }
         &.#{$vprefix}icon {
-          @include icon-font("\E01F", 32px, $color-neutral-75);
+          @include icon-font($glyph-dashboard, 32px, $color-neutral-75);
           height: auto;
           width: auto;
 
@@ -187,25 +187,25 @@
           }
         }
         &.#{$vprefix}icon-nav-customers::after {
-          content: "\E020";
+          content: $glyph-customers;
         }
         &.#{$vprefix}icon-nav-catalog::after {
-          content: "\E01A";
+          content: $glyph-catalog;
         }
         &.#{$vprefix}icon-nav-orders::after {
-          content: "\E01B";
+          content: $glyph-orders;
         }
         &.#{$vprefix}icon-nav-marketing::after {
-          content: "\E01D";
+          content: $glyph-marketing;
         }
         &.#{$vprefix}icon-nav-sites::after {
-          content: "\E018";
+          content: $glyph-sitebuilder;
         }
         &.#{$vprefix}icon-nav-publishing::after {
-          content: "\E019";
+          content: $glyph-publishing;
         }
         &.#{$vprefix}icon-nav-files::after {
-          content: "\E01E";
+          content: $glyph-filemanager;
         }
       }
 

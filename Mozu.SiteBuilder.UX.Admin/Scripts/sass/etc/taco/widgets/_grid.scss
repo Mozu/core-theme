@@ -100,7 +100,7 @@
         display: block !important;
         right: 12px;
         top: 12px;
-        @include icon-font("\E02D", 16px, $color-neutral-white);
+        @include icon-font($glyph-plus, 16px, $color-neutral-white);
         position: absolute;
       }
     }

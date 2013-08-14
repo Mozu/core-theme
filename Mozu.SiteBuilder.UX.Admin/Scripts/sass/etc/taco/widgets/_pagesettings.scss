@@ -39,6 +39,6 @@
     }
 
     .#{$vprefix}pagesettings-back-action {
-        @include icon-font("\E035");
+        @include icon-font($glyph-arrowleft);
     }
 }

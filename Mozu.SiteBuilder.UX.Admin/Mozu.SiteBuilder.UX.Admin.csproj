@@ -699,6 +699,7 @@
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\tab\Tab.scss" />
     <Content Include="Scripts\sass\src\Application.scss" />
     <Content Include="Scripts\sass\src\view\site\Toolbox.scss" />
+    <Content Include="Scripts\sass\etc\taco\mixins\_fonts.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

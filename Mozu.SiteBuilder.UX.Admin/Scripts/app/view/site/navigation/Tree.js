@@ -60,8 +60,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
                     allowBlank: false,
                     style: { marginTop: '10px' }
                 }
-            }],
-            viewConfig: { stripeRows: true }
+            }]
         });
 
 
