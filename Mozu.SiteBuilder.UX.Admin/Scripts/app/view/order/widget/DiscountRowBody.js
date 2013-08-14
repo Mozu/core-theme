@@ -32,22 +32,24 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
         if (me.grid.editMode && validTrigger) {
 
             //var tableRow = e.getTarget(me.eventSelector);
-
             var discountId = validTrigger.getAttribute("discountId"),
-                isActive = validTrigger.getAttribute("isActive");
+                isActive = validTrigger.getAttribute("isActive"),
+                orderItemId = validTrigger.getAttribute("orderItemId");
             
             if (!discountId) { return }
             
             if (isActive) {
                 me.grid.suppressDiscount({
                     jsonData: {
-                        discountId: discountId
+                        discountId: discountId,
+                        orderItemId: orderItemId
                     }
                 });
             } else {
                 me.grid.activateDiscount({
                     jsonData : {
-                        discountId: discountId
+                        discountId: discountId,
+                        orderItemId: orderItemId
                     }
                 });
             };
@@ -65,9 +67,11 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
     getAdditionalData: function (data, rowIndex, record, orig) {
         
         var discounts = record.get("discounts"),
+            orderItemId = record.get("id"),
             shippingDiscounts = record.get("shippingDiscounts"),
             rowBodyCls = (discounts.length || shippingDiscounts.length) ? "hasDiscount" : "noDiscount",
             rowBodyData = {
+                orderItemId:orderItemId,
                 discounts: record.get("discounts"),
                 shippingDiscounts: record.get("shippingDiscounts")
             },
@@ -163,7 +167,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                     '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{total:usMoney}</div>',
                 '</td>',
                 '<td role="gridcell"  class="x-action-col-cell taco-menu-col-cell x-action-col-cell' + this.rowBodyTdCls + '">',
-                    '<div unselectable="on" class="x-grid-cell-inner x-grid-cell-inner-action-col" isActive="{isActive}" discountId="{discountId}">',
+                    '<div unselectable="on" class="x-grid-cell-inner x-grid-cell-inner-action-col" isActive="{isActive}" discountId="{discountId}" orderItemId="{parent.orderItemId}">',
                         '<img role="button" alt="" src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="x-action-col-icon x-action-col-0 taco-grid-row-menu-trigger taco-grid-row-menu-trigger-',
                         '<tpl if="isActive">',
                             'suppress ',
