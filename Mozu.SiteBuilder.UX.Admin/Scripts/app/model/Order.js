@@ -154,7 +154,7 @@ Ext.define('Taco.model.Order', {
             "name": "orderAdjustment",
             "type": "object",
             "defaultValue": {
-                "amount":10,
+                "amount":0,
                 "description":"",
                 "internalComment":""
             }        
@@ -164,7 +164,7 @@ Ext.define('Taco.model.Order', {
             "name": "shippingAdjustment",
             "type": "object",
             "defaultValue": {
-                "amount": 8,
+                "amount": 0,
                 "description": "",
                 "internalComment": ""
             }
