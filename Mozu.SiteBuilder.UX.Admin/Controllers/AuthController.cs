@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
+using Mozu.AdminUser.Contracts;
 using Mozu.Core;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
@@ -16,6 +17,7 @@ using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Models.Admin;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -58,6 +60,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 ModelState.Clear();
             }
             base.OnActionExecuted(filterContext);
+        }
+
+        public ActionResult FedLogin(string returnUrl)
+        {
+           
+            var redir = _settings.LoginPath + "?redirectUrl=" + returnUrl;
+            if (_settings.AppSettings( "useTenantDomainNames") !=  "true")
+            {
+                string host = "http://" + HttpContext.Request.Headers["host"];
+                redir += "&postback=" + host;
+            }
+            return Redirect(redir);
+        }
+
+        [HttpPost]
+        public ActionResult Pants( string ticket, string redirect)
+        {
+            var multiAdminUserTicket = Newtonsoft.Json.JsonConvert.DeserializeObject<MultiScopeAdminUserAuthTicket>(ticket);
+            var user = LightweightUserClaims.Parse(multiAdminUserTicket.AccessToken);
+            _sbc.TenantId = user.GetUserScope().Id.Value;
+            _sbc.Save();
+            _apiContext.SetUser(user);
+            _authenticationHelper.SaveAuthTicket(multiAdminUserTicket);
+            redirect = string.IsNullOrEmpty(redirect) ? "/admin" : redirect;
+            return Redirect(redirect);
         }
 
         // GET: /Auth/
