@@ -43,7 +43,7 @@
     .#{$vprefix}mozulogo {
       display: block;
       overflow: hidden;
-      @include icon-font("\E037", 32px, $color-theme-base);
+      @include icon-font($glyph-mozulogo, 32px, $color-theme-base);
       width: 125px;
 
       &::after {

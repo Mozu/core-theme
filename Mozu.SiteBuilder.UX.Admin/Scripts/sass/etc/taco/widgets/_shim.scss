@@ -183,15 +183,15 @@
   .#{$vprefix}widget-drag {
     cursor: move;
     margin-right: auto;
-    @include icon-font("\E022", 16px, $color-neutral-white);
+    @include icon-font($glyph-knurling, 16px, $color-neutral-white);
   }
 
   .#{$vprefix}widget-edit {
     margin-right: 15px;
-   @include icon-font("\E025", 16px, $color-neutral-white);
+   @include icon-font($glyph-pencil, 16px, $color-neutral-white);
   }
 
   .#{$vprefix}widget-remove {
-    @include icon-font("\E02A", 16px, $color-neutral-white);
+    @include icon-font($glyph-trash, 16px, $color-neutral-white);
   }
 }

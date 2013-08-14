@@ -41,7 +41,7 @@
           right: 0px;
           top: 0px;
           @include border-radius(2px);
-          @include icon-font($glyph: "\E025", $size: 16px, $color: $color-neutral-white);
+          @include icon-font($glyph: $glyph-pencil, $size: 16px, $color: $color-neutral-white);
           height: 20px;
           position: absolute;
           width: 20px;
@@ -194,7 +194,7 @@
       line-height: px-to-rem(30);
     }
     .#{$vprefix}editcontainer-menu-button {
-      @include icon-font("\E02E");
+      @include icon-font($glyph-gear);
       height: 30px;
       width: 50px;
     }

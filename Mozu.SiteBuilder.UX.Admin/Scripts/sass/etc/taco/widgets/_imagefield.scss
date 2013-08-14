@@ -95,7 +95,7 @@
                     width: 3px;
                     height: 15px;
                     margin: 1px 108px 0 0;
-                    @include icon-font("\E022", 16px, $color-neutral-white);
+                    @include icon-font($glyph-knurling, 16px, $color-neutral-white);
                 }
 
                 .remove {
@@ -104,7 +104,7 @@
                     vertical-align: top;
                     width: 18px;
                     height: 18px;
-                    @include icon-font("\E011", 16px, $color-neutral-white);
+                    @include icon-font($glyph-trash, 16px, $color-neutral-white);
                     
                     &:before {
                         margin: 5px 0 0 8px;

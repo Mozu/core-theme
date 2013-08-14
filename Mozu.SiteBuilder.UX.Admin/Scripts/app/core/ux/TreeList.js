@@ -17,6 +17,10 @@ Ext.define('Taco.core.ux.TreeList', {
     preventHeader: true,
     sortableColumns: false,
     autoSync: true,
+    rowLines: true,
+    viewConfig: {
+        stripeRows: false
+    },
 
     initComponent: function () {
         var me = this;

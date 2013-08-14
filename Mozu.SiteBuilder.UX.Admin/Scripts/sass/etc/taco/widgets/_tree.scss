@@ -36,8 +36,8 @@
   .#{$vprefix}tree-knurling, .#{$vprefix}draghandle {
     cursor: move;
     display: block;
-    @include icon-font("\E022");
-    margin-top: 2px;
+    @include icon-font($glyph-knurling);
+    margin-top: 3px;
   }
 
   .#{$prefix}grid-cell-draghandlecolumn {

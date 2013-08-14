@@ -1,0 +1,82 @@
+$glyph-code: "\E000";
+$glyph-underline: "\E001";
+$glyph-smaller: "\E002";
+$glyph-larger: "\E003";
+$glyph-numberedlist: "\E004";
+$glyph-bulletedlist: "\E005";
+$glyph-link: "\E006";
+$glyph-italic: "\E007";
+$glyph-bold: "\E008";
+$glyph-rightaligh: "\E009";
+$glyph-leftalign: "\E00A";
+$glyph-centeralign: "\E00B";
+$glyph-list: "\E00C";
+$glyph-grid: "\E00D";
+$glyph-user: "\E00E";
+$glyph-plus: "\E02D";
+$glyph-minus: "\E00F";
+$glyph-search: "\E010";
+$glyph-close: "\E011";
+$glyph-key: "\E012";
+$glyph-pagesystem: "\E013";
+$glyph-externallink: "\E014";
+$glyph-blogpost: "\E015";
+$glyph-blog: "\E016";
+$glyph-category: "\E017";
+$glyph-knurling: "\E022";
+$glyph-cancel: "\E023";
+$glyph-home: "\E024";
+$glyph-pencil: "\E025";
+$glyph-dna: "\E026";
+$glyph-testtube: "\E027";
+$glyph-beaker: "\E028";
+$glyph-atom: "\E029";
+$glyph-trash: "\E02A";
+$glyph-checkmark: "\E02B";
+$glyph-calendar: "\E02C";
+$glyph-gear: "\E02E";
+$glyph-warning: "\E02F";
+$glyph-info: "\E030";
+$glyph-error: "\E031";
+$glyph-success: "\E032";
+$glyph-arrowup: "\E033";
+$glyph-arrowright: "\E034";
+$glyph-arrowleft: "\E035";
+$glyph-arrowdown: "\E036";
+
+
+// wayfinding icons are larger
+$glyph-sitebuilder: "\E018";
+$glyph-catalog: "\E01A";
+$glyph-publishing: "\E019";
+$glyph-orders: "\E01B";
+$glyph-menu: "\E01C";
+$glyph-marketing: "\E01D";
+$glyph-filemanager: "\E01E";
+$glyph-dashboard: "\E01F";
+$glyph-customers: "\E020";
+$glyph-back: "\E021";
+
+// mozu logo
+$glyph-mozulogo: "\E037";
+
+@mixin icon-font ($glyph, $size: 16px, $color: rgb(51, 51, 51)) {
+  height: $size;
+  position: relative;
+  width: $size;
+
+  &::after {
+    color: $color;
+    content: $glyph;
+    display: block;
+    font-family: mozicons;
+    font-size: $size;
+    font-weight: normal !important;
+    left: 0px;
+    line-height: 1.0;
+    position: absolute;
+    top: 0px;
+    vertical-align: baseline;
+    -webkit-font-smoothing: antialiased;
+  }
+}
