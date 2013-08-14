@@ -39,15 +39,13 @@ Ext.define('Taco.view.product.option.Modal', {
         }, this);
 
         this.form = Ext.create('Taco.core.ux.form.Form', {
-            items: [{
-                xtype: 'container',
-                autoScroll: true,
-                layout: {
-                    type: 'hbox',
-                    align: 'top'
-                },
-                items: fields
-            }],
+            autoScroll: true,
+            manageHeight: false,
+            layout: {
+                type: 'hbox',
+                defaultMargins: '0 10 0 0'
+            },
+            items: fields,
             isValid: function (a,b,c,d,e,f) {
                 var ret = false;
                 
