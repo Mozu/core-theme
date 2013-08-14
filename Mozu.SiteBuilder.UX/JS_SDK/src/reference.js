@@ -273,7 +273,7 @@ var ApiReference = (function () {
                 shortcutParam: 'cartId',
                 noBody: true
             },
-            "update-shipping-address": {
+            "update-shipping-info": {
                 template: '{+OrderService}{Id}/shippinginfo',
                 verb: 'PUT',
                 returnType: 'shipment',

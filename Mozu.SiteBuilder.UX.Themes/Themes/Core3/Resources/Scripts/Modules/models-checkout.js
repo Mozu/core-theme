@@ -92,7 +92,8 @@
                 this.stepStatus('submitting');
                 var self = this;
                 var parent = this.getParentModel();
-                parent.update().then(function () {
+                // have to manually create the payload here because a full order contains a blank BillingInfo, and a blank BillingInfo throws too-early validation errors
+                parent.update({ ShippingInfo: this.toJS() }).then(function () {
                     self.checkStepStatus();
                 });
             },

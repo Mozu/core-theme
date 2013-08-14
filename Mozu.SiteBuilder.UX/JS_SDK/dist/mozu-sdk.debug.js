@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-06-24
+ * Mozu JavaScript SDK - v0.1.0 - 2013-08-14
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1987,7 +1987,7 @@ var ApiReference = (function () {
                 shortcutParam: 'cartId',
                 noBody: true
             },
-            "update-shipping-address": {
+            "update-shipping-info": {
                 template: '{+OrderService}{Id}/shippinginfo',
                 verb: 'PUT',
                 returnType: 'shipment',
