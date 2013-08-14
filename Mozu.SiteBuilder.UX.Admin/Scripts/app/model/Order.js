@@ -95,6 +95,11 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         },
         {
+            "name": "orderDiscounts",
+            "type": "auto",
+            "default": []
+        },
+        {
             "name": "orderDiscountTotal",
             "type": "float",
             "useNull": true
@@ -1190,6 +1195,7 @@ Ext.define('Taco.model.Order', {
         {
             jsonData: {
                 orderId: "987654321",                
+                orderItemId: "98475",  // optional orderItemId when suppressing order item. not sent when suppressing order level discounts
                 discountIds: ["987654"]
             },
             success: function (response) {
@@ -1225,6 +1231,7 @@ Ext.define('Taco.model.Order', {
         {
             jsonData: {
                 orderId: "987654321",                
+                orderItemId: "98475",  // optional orderItemId when suppressing order item. not sent when suppressing order level discounts
                 discountIds: ["987654"]
             },
             success: function (response) {
