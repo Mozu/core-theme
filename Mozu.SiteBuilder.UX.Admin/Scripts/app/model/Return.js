@@ -212,7 +212,7 @@ Ext.define('Taco.model.Return', {
         });
 
         Ext.Ajax.request(config);
-    },
+    }
     
     
     

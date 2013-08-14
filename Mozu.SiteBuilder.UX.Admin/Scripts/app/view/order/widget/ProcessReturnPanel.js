@@ -69,7 +69,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         me.grid = Ext.create('Taco.core.ux.grid.Panel', {
             store: me.itemsStore,
             viewConfig: {
-                cls: 'editmode-enabled',
+                cls: 'editmode-enabled'
             },
             title: 'Items',
             columns: [
@@ -123,7 +123,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 Ext.create('Ext.grid.plugin.CellEditing', {
                     clicksToEdit: 1
                 })
-            ],
+            ]
         });
 
         me.paymentGrid = Ext.create('Taco.core.ux.grid.Panel', {

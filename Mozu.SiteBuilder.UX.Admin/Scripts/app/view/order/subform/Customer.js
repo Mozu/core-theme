@@ -13,7 +13,7 @@ Ext.define('Taco.view.order.subform.Customer', {
     title: 'Customer',
 
     config: {
-        record: null,
+        record: null
     },
 
     initComponent: function () {

@@ -216,7 +216,7 @@ Ext.define('Taco.view.order.subform.Return', {
                 ]
             }
         });
-    },
+    }
 
 
 });

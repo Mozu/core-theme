@@ -20,7 +20,7 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
         me.grid = Ext.create('Taco.core.ux.grid.Panel', {
             store: me.store,
             viewConfig: {
-                cls: 'editmode-enabled',
+                cls: 'editmode-enabled'
             },
             columns: [
                 {
@@ -54,7 +54,7 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
                 Ext.create('Ext.grid.plugin.CellEditing', {
                     clicksToEdit: 1
                 })
-            ],
+            ]
         });
 
         me.returnType = Ext.create('Taco.core.ux.form.SelectField', {
