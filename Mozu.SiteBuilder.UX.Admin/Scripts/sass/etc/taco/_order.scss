@@ -301,21 +301,52 @@
   
   }
   
-  .x-grid-row-adjustment{
-    .adjustment-cell {
-      font-size: px-to-rem(14);
-      line-height: px-to-rem(19);
+	.x-grid-row-adjustment{
+		.adjustment-cell {
+			font-size: px-to-rem(14);
+			line-height: px-to-rem(19);
         
-      border-color: #ededed;
-      border-bottom-width:1px;
-      border-bottom-style:dashed;
+			border-color: #ededed;
+			border-bottom-width:1px;
+			border-bottom-style:dashed;
 
-      // fixing font size for the adjustment row
-      .adjustment-cell-inner {
-        font-size: 1.4rem !important;
-      }
-    }     
+			// fixing font size for the adjustment row
+			.adjustment-cell-inner {
+				font-size: 1.4rem !important;
+				line-height: 0px;
+				.taco-grid-row-menu-trigger{					
+					height:20px
+				}
+			}
+		}     
+	}
+  
+
+  //@include icon-font($glyph: "\E025", $size: 16px, $color: $color-neutral-white);
+          //height: 20px;
+
+
+	// need to force the icon to be visible in the discountRowBody. Action Column doesn't work with rowBody;  	
+	.orderEditable .taco-grid-row-menu-trigger-suppress {
+		visibility:visible;
+		background-position: 0 -199px;
+	}
+
+	// need to force the icon to be visible in the discountRowBody. Action Column doesn't work with rowBody;  	
+	.orderEditable .taco-grid-row-menu-trigger-activate {
+		visibility:visible;
+		background-position: 0 -199px;
+	}
+
+
+  .isActive{	
+	text-decoration:none;	
   }
+
+  .isSuppressed{    
+	text-decoration:line-through;
+  }
+
 
   // rows without a discount should hide the row body row. Need to look at way to render rowbody dom selectively
   .noDiscount {

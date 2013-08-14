@@ -13,6 +13,7 @@ Ext.define('Taco.view.order.subform.Detail', {
     ],
     
     title: 'Order Details',
+    alias: 'widget.orderDetailSubform',
     
     config: {
         
@@ -152,15 +153,25 @@ Ext.define('Taco.view.order.subform.Detail', {
         //link to the editor
         //window.open("http://dev.mozu.com:8081/admin/c-1/products/edit/" + productId);
     //},
-
+    
     editOrder: function (animationTarget) {
         var me = this;
+        
         var win = Ext.create('Taco.view.order.modal.EditOrderDetail', {
             record: this.record,
             listeners: {
+                'close': {
+                    fn:function(view,e) {
+                        if (view.getHasDraft()) {
+                            me.record.set('hasDraft',true);
+                            me.updateHasDraftToolbar();
+                        }
+                        
+                    },
+                    scope:me
+                },
                 'draftOrderSaved': {
                     fn: function () {
-                      
                         me.setLoading(true, this.body);
                         this.record.reload();
                     },
@@ -175,27 +186,52 @@ Ext.define('Taco.view.order.subform.Detail', {
                     scope: me
                 }
             }
+            
         });
-        win.show(animationTarget);
+
+        win.show();
     },
     
 
     // when the record changes we will need to update the order details
     onRecordChange: function () {
         var me = this;
-       
+
         Ext.suspendLayouts();
         // need to reload the record;
-
+        me.updateUi();
         Ext.resumeLayouts(true);
         
         me.setLoading(false, this.body);
+    },
+    
+    updateHasDraftToolbar : function() {
+        var me = this;
+        //hide or show the toolbar accordingly
+        if (me.record.get("hasDraft")) {
+            me.detailGrid.showHasDraftToolbar();
+        } else {
+            me.detailGrid.removeDocked(me.detailGrid.hasDraftToolbar);
+        }
+    },
+    
+    updateUi: function () {
+        var me = this;
+        me.totalRow.setData(me.record.getData());
+        //me.detailGrid.getStore().loadRecords(me.record.itemsStore.getRange());
+        // itemStore not updating with new data
+
+        me.detailGrid.getStore().loadRawData(me.record.getData().items);
+
+
+        me.updateHasDraftToolbar();
     },
 
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
     */
     onDestroy: function () {
+       
         this.callParent(arguments);
     }
 });

@@ -7,7 +7,9 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         'Taco.view.order.modal.ProductConfigurator',
         'Taco.view.order.widget.ProductPickerField',
         'Taco.view.order.widget.DiscountPickerField',
-        'Taco.core.ux.grid.Pager'
+        'Taco.view.order.widget.DiscountRowBody',
+        'Taco.core.ux.grid.Pager',
+        'Taco.core.ux.modal.Confirmation'
     ],
     
     config: {
@@ -36,7 +38,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         activeAddToolbar : null,
 
         // width of the row total Column. used to align the grid total container
-        rowTotalColumnWidth: 100,
+        rowTotalColumnWidth: 110,
 
         // width of the actionColumn. used to align the grid total container
         actionColumnWidth: 60,
@@ -47,12 +49,14 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     
     initComponent: function(eOpts) {
         var me = this,
-            siteContext;
+            siteContext,
+              editModeCls = (this.getEditMode()) ? " orderEditable " : "";
         
         this.addEvents('save','saveFailure','saveSuccess');
 
+       
 
-        me.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping-orderitemgrid'].join(' ');
+        me.cls = [this.cls, editModeCls, Taco.baseCSSPrefix + 'orderform-shipping-orderitemgrid'].join(' ');
         
         siteContext = Taco.app.context.getCurrent().urlToken;
 
@@ -163,45 +167,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             
             // if there is a draft version of this order we need to show a warning toolbar
             if (this.record.get("hasDraft")) {
+                me.showHasDraftToolbar();
 
-                this.hasDraftToolbar = Ext.create('Ext.toolbar.Toolbar', {
-                    //xtype: "toolbar",
-                    doc: "top",
-                    componentCls: "title-toolbar",
-                    enableOverflow: false,
-                    weight: 1,
-                    style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
-                    items: [
-                        {
-                            xtype: "component",
-                            html: "Warning: You have unsaved changes to this order detail",
-                            style: "padding:0px 5px 0px 5px; font-size: 0.9 em;color:#990000",
-                            cls: "title",
-                            flex: 1
-                        }, {
-                            xtype: "taco.button",
-                            text: "Discard Changes",
-                            handler: function() {
-                                me.removeDraftOrder();
-                            },
-                            scope: this
-                        }, {
-                            xtype: "taco.button",
-                            text: "Edit Details",
-                            style: "margin-left:5px;",
-                            handler: function(button, e) {
-                                var animationTarget = button.el;
-                                this.editOrder(animationTarget);
-                            },
-                            scope: this
-                        }
-                    ]
-                });
-
-
-                this.dockedItems = [
-                    this.hasDraftToolbar
-                ];
             }
 
         };
@@ -216,70 +183,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         
         Ext.apply(this, {
             features: [
-                // This is the plugin for enabling the adding of an adustment row for each orderItem
                 {
-                    ftype: 'rowbody',
-                    rowBodyTrCls: "x-grid-row-adjustment",
-                    rowBodyDivCls: "x-grid-cell-inner adustment-cell-inner",
-                    rowBodyTdCls: "x-grid-cell adjustment-cell",
-                    getAdditionalData: function(data, rowIndex, record, orig) {
-                        var colspan = 1,
-                            discounts = record.get("discounts"),
-                            shippingDiscounts = record.get("shippingDiscounts"),
-                            rowBodyCls = (discounts.length || shippingDiscounts.length) ? "hasDiscount" : "noDiscount";
-
-                        return {
-                            discounts: discounts,
-                            shippingDiscounts: shippingDiscounts,
-                            rowBodyCls: rowBodyCls,
-                            rowBodyColspan: colspan
-                        };
-                    },
-
-                    getRowBody: function(values) {
-                        return [
-                            
-                                '<tpl for="discounts">',
-                                    '<tr class="' + this.rowBodyTrCls + ' {rowBodyCls}">',
-                                    '<td  class="' + this.rowBodyTdCls + '" colspan="{rowBodyColspan}">',
-                                    '<div class="' + this.rowBodyDivCls + '">Discount: {description}</div>',
-                                    '</td>',
-                                    '<td  class="' + this.rowBodyTdCls + '">',
-                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{unitPrice:usMoney}</div>',
-                                    '</td>',
-                                    '<td class="' + this.rowBodyTdCls + '">',
-                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{quantity}</div>',
-                                    '</td>',
-                                    '<td  class="' + this.rowBodyTdCls + '">',
-                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{total:usMoney}</div>',
-                                    '</td>',
-                                    '<td  class="' + this.rowBodyTdCls + '">',
-                                    '<div class="' + this.rowBodyDivCls + '"></div>',
-                                    '</td>',
-                                    '</tr>',
-                                '</tpl>', 
-                                '<tpl for="shippingDiscounts">',
-                                    '<tr class="' + this.rowBodyTrCls + ' {rowBodyCls}">',
-                                    '<td  class="' + this.rowBodyTdCls + '" colspan="{rowBodyColspan}">',
-                                    '<div class="' + this.rowBodyDivCls + '">Discount: {description}</div>',
-                                    '</td>',
-                                    '<td  class="' + this.rowBodyTdCls + '">',
-                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{unitPrice:usMoney}</div>',
-                                    '</td>',
-                                    '<td class="' + this.rowBodyTdCls + '">',
-                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{quantity}</div>',
-                                    '</td>',
-                                    '<td  class="' + this.rowBodyTdCls + '">',
-                                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{total:usMoney}</div>',
-                                    '</td>',
-                                    '<td  class="' + this.rowBodyTdCls + '">',
-                                    '<div class="' + this.rowBodyDivCls + '"></div>',
-                                    '</td>',
-                                    '</tr>',
-                                '</tpl>'
-                            
-                        ].join('');
-                    }
+                    ftype: 'discountrowbody'
                 }
             ],
 
@@ -292,21 +197,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 stripeRows: false,
                 disabled: false,  // disables the grid, prevents the field editors from opening. prevents default hover behavior. Makes text grey and background grey. TODOs, explore this as an option for making the grid readony.
                 disabledCls: "taco-order-shippingitemgrid-disabled", // css class to add when the order grid is disabledstripeRows: false,
-                //   enableTextSelection: true
-                listeners: {
-                    itemmouseenter: {
-                        fn: function(view, record, item, index, e, eOpts) {
-
-                        },
-                        scope: me
-                    },
-                    highlightitem: {
-                        fn: function(view, record, item, index, e, eOpts) {
-
-                        },
-                        scope: me
-                    }
-                },
+                
 
                 // provides selective row class addition based on record.
                 getRowClass: function(record) {
@@ -333,6 +224,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     xtype: 'templatecolumn',
                     flex: 1,
                     sortable: false,
+                    resizable: false,
                     menuDisabled: true,
                     tpl: [
                         '<tpl if="isDeleted">',
@@ -343,9 +235,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         '<div class="productOptions">',
                         '<tpl for="options">',
                             '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{Name}',
-                                //'{[ if (!Ext.isBoolean(values.Value)) ? values.Value : ""  ]}',
                                 ': {Value}',
-                        
                             '</span>',
                         '</tpl>',
                         '</div>'
@@ -355,6 +245,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 {
                     text: 'Price',
                     draggable: false,
+                    resizable: false,
                     width: 100,
                     sortable: false,
                     menuDisabled: true,
@@ -374,6 +265,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 {
                     text: 'Quantity',
                     draggable: false,
+                    resizable: false,
                     width: 100,
                     sortable: false,
                     menuDisabled: true,
@@ -390,6 +282,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 {
                     text: 'Row Total',
                     draggable: false,
+                    resizable: false,
                     menuDisabled: true,
                     width: this.getRowTotalColumnWidth(),
                     sortable: false,
@@ -400,6 +293,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 {
                     xtype: 'taco.menucolumn',
                     draggable: false,
+                    resizable:false,
                     text: '',
                     width: this.getActionColumnWidth(),
                     menuDisabled: true,
@@ -407,43 +301,18 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     menuItems: [],
                     handler: function(grid, rowIndex, colIndex, header, e, record, item) {
                         var order = me.record;
-
-                        Ext.Msg.alert('Remove Item', 'TODO: Confirm the removal of item.');
-
-                        this.fireEvent('save');
-        
-                        order.removeOrderItem({
+                        var confirm = Ext.create('Taco.core.ux.modal.Confirmation', {
+                            text: 'Are you certain you want to delete this item?',
+                            confirm: function() {
+                                confirm.hide();
+                                me.removeOrderItem({
                             jsonData: {
                                 orderId: order.getId(),
-                                orderItemIds: [ record.getId() ]
-                            },
-                            success: function(response) {
-                                // success handling here
-                                var json = Ext.decode(response.responseText, true);
-                                if (!json || !json.success) {
-                                    // service didnt' return data properly
-                                    this.fireEvent('saveFailure');
-                
-                                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
-                                        text: "Error removing order item."
-                                    });
-                                    errorDialog.show();
-                                    return;
+                                        orderItemIds: [record.getId()]
                                 }
-                                me.fireEvent("orderItemRemoved");
-                            },
-                            failure: function(response) {
-                                // error handling here
-                                var json = Ext.decode(response.responseText, true),
-                                    msg = (json && json.Message) ? json.Message : "Error removing order item";
-                                
-                                this.fireEvent('saveFailure');
-                                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
-                                    text: msg
                                 });
-                                errorDialog.show();
                             },
-                            scope: this
+                            autoShow: true
                         });
                     },
                     renderer: function(value, metaData, record) {
@@ -460,8 +329,58 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         me.callParent(arguments);
     },
     
+    showHasDraftToolbar: function () {
+        var me = this;
+        if (!this.hasDraftToolbar) {
+            
+            this.hasDraftToolbar = Ext.create('Ext.toolbar.Toolbar', {
+                //xtype: "toolbar",
+                doc: "top",
+                componentCls: "title-toolbar",
+                enableOverflow: false,
+                weight: 1,
+                style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
+                items: [
+                    {
+                        xtype: "component",
+                        html: "Warning: You have unsaved changes to this order detail",
+                        style: "padding:0px 5px 0px 5px; font-size: 0.9 em;color:#990000",
+                        cls: "title",
+                        flex: 1
+                    }, {
+                        xtype: "taco.button",
+                        text: "Discard Changes",
+                        handler: function () {
+                            me.removeDraftOrder();
+                        },
+                        scope: this
+                    }, {
+                        xtype: "taco.button",
+                        text: "Edit Details",
+                        style: "margin-left:5px;",
+                        handler: function (button, e) {
+                            var animationTarget = button.el;
+                            this.editOrder(animationTarget);
+                        },
+                        scope: this
+                    }
+                ]
+            });
+
+            if (me.rendered) {
+                this.addDocked(this.hasDraftToolbar);
+            } else {
+                this.dockedItems = [
+                    this.hasDraftToolbar
+                ];
+            }
+        }
+
+
+    },
+    
     onFieldEdit : function(editor, e) {
-        var me = this
+        var me = this;
         
         if (e.record && e.record.dirty) {
             me.editOrderItem(e.field, {
@@ -535,6 +454,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     xtype: 'taco.menucolumn',
                     draggable: false,
                     text: '',
+                    resizable:false,
                     width: this.getActionColumnWidth(),
                     menuDisabled: true,
                     iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger ' + Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
@@ -561,11 +481,15 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     },
     
     editOrder: function (animationTarget) {
+        
+        // to avoid duplication, bubble up the component hierarchy looking for 
+        // Taco.view.order.subform.Detail and call editOrder there;
+        
         var me = this;
-        var win = Ext.create('Taco.view.order.modal.EditOrderDetail', {
-            record: this.record
-        });
-        win.show(animationTarget);
+        var ct = this.up('orderDetailSubform');
+        if (ct) {
+            ct.editOrder(animationTarget);
+        }
     },
 
 
@@ -753,11 +677,15 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         orderAdjustmentValue = me.record.get("orderAdjustment").amount;
         shippingAdjustmentValue = me.record.get("shippingAdjustment").amount;
 
-        this.activeSearchField = Ext.create('Taco.core.ux.form.CurrencyField', {
+        //this.activeSearchField = Ext.create('Taco.core.ux.form.CurrencyField', {
+        this.activeSearchField = Ext.create('Ext.form.field.Number', {
             label: "Order Adjustment",
             itemId: "orderAdjustmentField",
             width: 80,
             fieldCls: "toolbar-field",
+            selectOnFocus: true,
+            hideTrigger:true,
+            decimalPrecision: 2,
             value: orderAdjustmentValue
         });
 
@@ -776,11 +704,14 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     style: "padding:0px 10px 0px 30px;"
                 },
                 {
-                    xtype: "currencyfield",
+                    xtype: "numberfield",
                     itemId: "shippingAdjustmentField",
                     width: 80,
                     style: "margin:0px 10px 0px 10px;top:0px;",
                     fieldCls: "toolbar-field",
+                    selectOnFocus: true,
+                    hideTrigger:true,
+                    decimalPrecision: 2,
                     value: shippingAdjustmentValue
                 },
                 {
@@ -901,108 +832,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             }
         ];
     },
-
-
-    /*
-
-    executeMoveItems: function (config) {
-        var me = this,
-            isCreate = false,
-            callConfig;
-
-        var orderId = me.record.get("id");
-        var sourcePackageId = config.sourcePackageId;
-        var destinationPackageId = config.destinationPackageId;
-        var items = config.items;
-
-
-        // determine if this is a create
-        if (destinationPackageId == -1) {
-            isCreate = true;
-        }
-        
-        callConfig = {
-            jsonData: {
-                orderId: orderId,
-                items: items,
-                sourcePackageId: sourcePackageId,
-                destinationPackageId: destinationPackageId
-            },
-            
-            success: function (response) {
-                // success handling here
-
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    // service didnt' return data properly
-                    this.setLoading(false);
-                    return;
-                }
-                // reload the record
-                this.record.reload();
-            },
-            failure: function (response) {
-                // error handling here
-                this.setLoading(false);
-            },
-            scope: this
-        };
-
-
-        
-        this.setLoading(true);
-        // call the model method to persist the change
-        if (isCreate) {
-            this.record.createPackage(callConfig);
-        } else {
-            this.record.movePackageItems(callConfig);
-        }
-    },
-    
-
-    // extract the json package data from the current grid selection and return it 
-    getSelectedDataItems: function () {
-        var items = [];
-        var selection = this.getSelectionModel().getSelection();
-        Ext.Array.forEach(selection,function (element, index, array) {
-            items.push(element.getData());
-        });
-
-        return items;
-    },
-
-    // process the grid selections and call the exectueMove
-    moveSelectedItems: function (menu, item, e, eOpts) {
-        var me = this;
-        
-        if (item) {
-            var items = me.getSelectedDataItems();
-            var sourcePackageId = (me.packageData) ? me.packageData.id : null;
-            var destinationPackageId = (item.moveTargetId) ? item.moveTargetId : null;
-            
-            // execute the call
-            me.executeMoveItems({
-                sourcePackageId: sourcePackageId,
-                destinationPackageId: destinationPackageId,
-                items: items
-            });
-        }
-    },
-    
-    // move the currently selected items and move them to the unshipped items 
-    removeSelectedItems: function () {
-        var me = this,
-            items = me.getSelectedDataItems(),
-            sourcePackageId = (me.packageData) ? me.packageData.id : null;
-        if (sourcePackageId && items.length) {
-            me.executeMoveItems({
-                sourcePackageId: sourcePackageId,
-                destinationPackageId: null,
-                items: items
-            });
-        }
-    },
-    */
     
     handleError : function() {
         
@@ -1142,7 +971,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         var me = this,
             fieldsToMethod = {
                 'quantity': 'editOrderItemQuantity',
-                'price': 'editOrderItemPrice'
+                'unitPrice': 'editOrderItemPrice'
             },
             updateMethodName = fieldsToMethod[field],
             jsonData = {
@@ -1150,7 +979,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 orderItems: []
             };
 
-//        debugger;
+//        
 
         if (!config.data) {
             return;
@@ -1164,6 +993,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
         this.fireEvent('save');
 
+        
         this.record[updateMethodName]({
             jsonData: jsonData,
             success: function (response) {
@@ -1258,6 +1088,120 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
     },
     
+    removeOrderItem: function (config) {
+        var me = this;
+
+        this.fireEvent('save');
+
+        this.record.removeOrderItem({
+            jsonData: config.jsonData,
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    this.fireEvent('saveFailure');
+
+                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                        text: "Error deleting order item"
+                    });
+                    errorDialog.show();
+                    return;
+                }
+                me.fireEvent("saveSuccess");
+            },
+            failure: function (response) {
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error deleting order item";
+
+                this.fireEvent('saveFailure');
+                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                    text: msg
+                });
+                errorDialog.show();
+            },
+            scope: this
+        });
+    },
+    
+    suppressDiscount: function (config) {
+        var me = this;
+        config.jsonData.orderId = me.record.get('id'),
+
+        me.fireEvent('save');
+
+        me.record.suppressDiscount({
+            jsonData: config.jsonData,
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    this.fireEvent('saveFailure');
+
+                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                        text: "Error suppressing order item discount"
+                    });
+                    errorDialog.show();
+                    return;
+                }
+                me.fireEvent("saveSuccess");
+            },
+            failure: function (response) {
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error suppressing order item discount";
+
+                this.fireEvent('saveFailure');
+                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                    text: msg
+                });
+                errorDialog.show();
+            },
+            scope: this
+        });
+    },
+    
+    activateDiscount: function (config) {
+        var me = this;
+        config.jsonData.orderId = me.record.get('id'),
+
+        me.fireEvent('save');
+
+        me.record.activateDiscount({
+            jsonData: config.jsonData,
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    this.fireEvent('saveFailure');
+
+                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                        text: "Error activating order item discount"
+                    });
+                    errorDialog.show();
+                    return;
+                }
+                me.fireEvent("saveSuccess");
+            },
+            failure: function (response) {
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error activating order item discount";
+
+                this.fireEvent('saveFailure');
+                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
+                    text: msg
+                });
+                errorDialog.show();
+            },
+            scope: this
+        });
+    },
+    
+
     removeDraftOrder: function () {
         var me = this;
         
@@ -1267,7 +1211,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             jsonData: {
                 orderId: this.record.get("id")
             },
-            success: function(response) {
+            success: function (response) {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
@@ -1282,7 +1226,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 }
                 me.fireEvent("draftOrderRemoved");
             },
-            failure: function(response) {
+            failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
                     msg = (json && json.Message) ? json.Message : "Error cancelling changes";

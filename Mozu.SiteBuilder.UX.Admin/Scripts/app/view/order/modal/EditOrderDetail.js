@@ -10,11 +10,13 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     //cls: Taco.baseCSSPrefix + 'order-modal',
     config : {
         record: null,
-        rowTotalColumnWidth:100,
+        rowTotalColumnWidth: 100,
+        hasDraft: true,
         actionColumnWidth: 60
     },
     autoShow: true,
-    destroyOnHide: true,
+    //destroyOnHide: true,
+    //closeAction:"destroy
     constrain: true,
     relativeHeight: 1,
     relativeWidth: 1,
@@ -102,7 +104,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                         xtype: "taco.button",
                         text: 'Close',
                         onClick: function (button) {
-                            me.hide();
+                            me.close();
                         },
                         scope: me
                     },
@@ -132,7 +134,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         var me = this;
         // reload with the data passed in.
         
-        if (data.items) {
+        if (data && data.items) {
             me.draftRecord.set(data);
             me.draftRecord.commit();
             me.onLoadRecord();
@@ -208,6 +210,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     fn: function (data) {
                         me.setLoading(false, me.body);
                         me.fireEvent('draftOrderSaved', data);
+                        me.setHasDraft(false);
                         me.hide();
                     },
                     scope: me
@@ -216,6 +219,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     fn: function (data) {
                         me.setLoading(false, me.body);
                         me.fireEvent('draftOrderRemoved', data);
+                        me.setHasDraft(false);
                         me.hide();
                     },
                     scope: me
@@ -223,6 +227,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                 'save': {
                     fn: function () {
                         me.setLoading(true, me.body);
+                        me.setHasDraft(true);
                     },
                     scope: me
                 },
@@ -230,6 +235,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     fn: function (data) {
                         me.setLoading(false, me.body);
                         me.fireEvent('saveSuccess', data);
+                        
                         me.reloadData(data);
                     },
                     scope: me
@@ -253,13 +259,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
 
 
 
-    hide: function () {
-        // fire an event with the draft record so anyone that spawned this editor will be able to react to any changes that have occurred.
-        // they will likely need to pull a new version of the order record;
-        // todo: need to decide how to communicate with the main order detail view. 
-        this.fireEvent("editorClose", this.record);
-        this.callParent();
-    },
+
 
     // save the draft order and close the editor;
     removeDraftOrder: function() {
@@ -271,5 +271,11 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     saveDraftOrder: function () {
         var me = this;
         me.detailGrid.saveDraftOrder();
+    },
+    /**
+    * Do any class level cleanup. Destroy and null any scoped refs.     
+    */
+    onDestroy : function (destroy) {
+        this.callParent(arguments);
     }
 });

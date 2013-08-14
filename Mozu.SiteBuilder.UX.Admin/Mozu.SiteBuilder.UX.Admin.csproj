@@ -552,6 +552,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
+    <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\build\all-classes.js" />
     <Content Include="Scripts\build\fonts\journal-webfont.eot" />
     <Content Include="Scripts\build\fonts\journal-webfont.ttf" />
