@@ -58,9 +58,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<Order>> UpdateOrderItemQuantity(UpdateOrderItemArgs args)
         {
             DC.Order dcOrder = null;
-            foreach (var product in args.OrderItems)
+            foreach (var item in args.OrderItems)
             {
-                dcOrder = (await _orderWebApiClient.UpdateItemQuantity(args.OrderId, product.Id, product.Quantity, APPLY_TO_DRAFT)).ReadAsSync();
+                dcOrder = (await _orderWebApiClient.UpdateItemQuantity(args.OrderId, item.Id, item.Quantity, APPLY_TO_DRAFT)).ReadAsSync();
             }
         
             return Single2( dcOrder.Map<Order>() );
@@ -95,5 +95,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return Single2( dcOrder.Map<Order>() );
         }
+
+        [HttpPostRoute(UriTemplate = "items/suppressdiscount")]
+        public async Task<Response<Order>> SuppressItemDiscount(SuppressDiscountArgs args)
+        {
+            DC.Order dcOrder = null;
+            DC.OrderItem dcOrderItem = (await _orderWebApiClient.GetOrderItem(args.OrderId, args.OrderItemId, true)).ReadAsSync();
+
+            var orderDiscount = dcOrderItem.ProductDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId);
+            var shippingDiscount = dcOrderItem.ShippingDiscounts.Select(sd => sd.Discount).FirstOrDefault(d => d.Discount.Id == args.DiscountId);
+
+            if (orderDiscount != null)
+            {
+                orderDiscount.Excluded = true;
+                dcOrder = (await _orderWebApiClient.UpdateOrderItemDiscount(args.OrderId, args.OrderItemId, orderDiscount.Discount.Id, orderDiscount, APPLY_TO_DRAFT)).ReadAsSync();
+            }
+            else if (shippingDiscount != null)
+            {
+                shippingDiscount.Excluded = true;
+                // TODO: no updateShippingDiscount method.
+                // await _orderWebApiClient. (args.OrderId, orderDiscount.Discount.Id, shippingDiscount, APPLY_TO_DRAFT);
+            }
+            else
+            {
+                return Message3<Order>(false, "No discount found with id: " + args.DiscountId);
+            }
+
+            return Single2( dcOrder.Map<Order>() );
+        }
+
     }
 }
