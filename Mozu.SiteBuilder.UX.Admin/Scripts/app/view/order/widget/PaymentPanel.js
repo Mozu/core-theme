@@ -48,7 +48,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
             'ManualCapturePayment': 'Capture Payment (Manual)',
             'ManualCreditPayment': 'Credit Payment (Manual)',
-            'ManualVoidPayment': 'Void Payment (Manual)',
+            'ManualVoidPayment': 'Void Payment (Manual)'
         };
 
         var actionsWithLabels = Ext.Array.map(me.record.data.availableActions, function (action) {

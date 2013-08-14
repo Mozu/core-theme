@@ -9,7 +9,7 @@
         name: 'value',
         type: 'string',
         mapping: 'Value'
-    }],
+    }]
     //proxy: {
     //    type: 'ajaxproxy',
     //    api: {

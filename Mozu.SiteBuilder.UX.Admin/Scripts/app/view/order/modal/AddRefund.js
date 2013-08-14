@@ -38,7 +38,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
         me.grid = Ext.create('Taco.core.ux.grid.Panel', {
             store: me.store,
             viewConfig: {
-                cls: 'editmode-enabled',
+                cls: 'editmode-enabled'
             },
             columns: [
                 {
@@ -75,7 +75,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                 Ext.create('Ext.grid.plugin.CellEditing', {
                     clicksToEdit: 1
                 })
-            ],
+            ]
         });
         
 
