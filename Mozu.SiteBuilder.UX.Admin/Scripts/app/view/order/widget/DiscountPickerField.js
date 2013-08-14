@@ -59,10 +59,10 @@ Ext.define('Taco.view.order.widget.DiscountPickerField', {
         if (queryText == "") {
             // need to force the load of the full list. just returning a value of "" causes the control to reload the last query;
             queryEvent.forceAll = true;
-            queryEvent.query = '[{ "property": "validOnDate", "value": "' + "asdf" + '" }]';
+            queryEvent.query = '[{ "property": "validOnDate", "value": "' + queryEvent.combo.validOnDate + '" },{ "property": "requireCoupon", "value": "true" }]';
         } else {
             queryEvent.forceAll = false;
-            queryEvent.query = '[{ "property": "name", "value": "' + queryText + '" },{ "property": "validOnDate", "value": "' + queryEvent.combo.validOnDate + '" }]';
+            queryEvent.query = '[{ "property": "name", "value": "' + queryText + '" },{ "property": "validOnDate", "value": "' + queryEvent.combo.validOnDate + '" },{ "property": "requireCoupon", "value": "true" }]';
         }
         
 

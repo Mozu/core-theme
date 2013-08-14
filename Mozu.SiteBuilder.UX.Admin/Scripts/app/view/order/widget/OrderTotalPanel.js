@@ -46,7 +46,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                     '<tpl if="activeDiscountDescription!=\'\'">',
                         '<div class="orderLevelCoupon">Discount ({activeDiscountDescription})</div>',
                     '</tpl>',
-                    '<tpl if="orderAdjustment.amount &gt; 0">',
+                    '<tpl if="orderAdjustment.amount !== 0">',
                         '<div class="orderAdjustment">Order Adjustment</div>',
                     '</tpl>',
                 '</div>',
@@ -56,12 +56,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                     '<tpl if="shippingDiscount">',
                         '<div class="shippingCoupon">{shippingDiscountDescription}:</div>',
                     '</tpl>',
-                    '<tpl if="shippingAdjustment.amount">',
+                    '<tpl if="shippingAdjustment.amount !==0">',
                         '<div class="shippingAdjustment">Shipping Adjustment</div>',
                     '</tpl>',
                 
                     // only show the shipping total if there is an adjustment or discount
-                    '<tpl if="shippingAdjustment.amount || shippingDiscount">',
+                    '<tpl if="shippingAdjustment.amount !==0 || shippingDiscount">',
                         '<div class="shippingTotal">Shipping Total</div>',
                     '</tpl>',
 
@@ -89,23 +89,23 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 '<div class="subTotalGroup">',
                 '<div class="subTotal">{subtotal:usMoney}</div>',
                 '<tpl if="orderDiscountTotal">',
-                    '<div class="discountTotalValue">-{orderDiscountTotal:usMoney}</div>',
+                    '<div class="discountTotalValue">{orderDiscountTotal:usMoney}</div>',
                 '</tpl>',
-                '<tpl if="orderAdjustment.amount &gt; 0">',
-                    '<div class="orderAdjustmentValue">-{orderAdjustment.amount:usMoney}</div>',
+                '<tpl if="orderAdjustment.amount !== 0">',
+                    '<div class="orderAdjustmentValue">{orderAdjustment.amount:usMoney}</div>',
                 '</tpl>',
                 '</div>',
                 '<div class="shippingGroup">',
                     '<div class="shipping">{shippingCost:usMoney}</div>',
                     '<tpl if="shippingDiscount">',
-                        '<div class="shippingCoupon">-{shippingDiscount:usMoney}</div>',
+                        '<div class="shippingCoupon">{shippingDiscount:usMoney}</div>',
                     '</tpl>',
-                    '<tpl if="shippingAdjustment.amount &gt; 0">',
-                        '<div class="shippingAdjustmentValue">-{shippingAdjustment.amount:usMoney}</div>',
+                    '<tpl if="shippingAdjustment.amount !== 0">',
+                        '<div class="shippingAdjustmentValue">{shippingAdjustment.amount:usMoney}</div>',
                     '</tpl>',
                 
                     // only show the shipping total if there is an adjustment or discount
-                    '<tpl if="shippingAdjustment.amount || shippingDiscount">',
+                    '<tpl if="shippingAdjustment.amount !==0 || shippingDiscount">',
                         '<div class="shipping">{shippingTotal:usMoney}</div>',
                     '</tpl>',
 
@@ -116,7 +116,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 '</tpl>',
                 '<div class="tax">{taxTotal:usMoney}</div>',
                 '<div class="total">{total:usMoney}</div>',
-                '</div>',
+                '</div>', 
                 '</div>'
             ],
             width: me.getTotalColumnWidth()

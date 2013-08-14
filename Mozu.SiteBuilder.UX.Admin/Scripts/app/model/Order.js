@@ -1183,14 +1183,14 @@ Ext.define('Taco.model.Order', {
     },
     
     /**
-     * service call to suppress an order coupon. This will cause the service to look for other coupons to fall back to. If another coupon exists, it will come back as active and the suppress coupon will be inactive;
+     * service call to suppress an order discount. This will cause the service to look for other discounts to fall back to. If another discount exists, it will come back as active and the suppressed discount will be inactive;
      * @param {Object} config  A configuration object     
      * config object:
      * 
         {
             jsonData: {
                 orderId: "987654321",                
-                coupons: ["987654"]
+                discountIds: ["987654"]
             },
             success: function (response) {
                 // success handling here
@@ -1208,9 +1208,44 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    suppressOrderCoupon: function (config) {
+    suppressDiscount: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/suppressordercoupon',
+            url: '/admin/app/order/suppressdiscount',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+    
+    /**
+     * service call to activate a previously suppressed order discount;
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId: "987654321",                
+                discountIds: ["987654"]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    activateDiscount: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/activatediscount',
             method: "POST"
         });
 

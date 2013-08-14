@@ -588,6 +588,9 @@ Ext.define('Taco.Application',{
                 Ext.resumeLayouts(true);
             }
         });
+        
+
+        
 
 
         Ext.util.Observable.prototype.removeOwnedListener =
