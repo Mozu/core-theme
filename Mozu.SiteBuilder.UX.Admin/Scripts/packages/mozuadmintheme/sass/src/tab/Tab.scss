@@ -4,7 +4,7 @@
     background-color: $color-action-background;
     border: 1px solid $color-action-outline;
     color: $color-action-foreground;
-    @include facade-transitions;
+    // @include facade-transitions; this mixin doesn't exist at this point
     @include text-shadow(1px 1px transparentize($color-neutral-white, 0.75));
     &:hover {
         text-decoration: none;

@@ -13,6 +13,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
         this.record = this.product;
         this.items = [{
             xtype: 'container',
+            width: '100%',
             layout: 'hbox',
             items: [{
                 xtype: 'unitfield',
