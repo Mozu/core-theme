@@ -1,0 +1,71 @@
+.#{$prefix}menu-body {
+    font-size: px-to-rem(14);
+    line-height: px-to-rem(16);
+}
+
+.#{$prefix}menu-item {
+    border-color: transparent;
+    border-style: solid;
+    border-width: $menu-item-border-width;
+    padding: 0px;
+}
+
+.#{$prefix}menu-item-link {
+    margin: 0px;
+    text-decoration: none;
+}
+
+.#{$prefix}menu-item-text {
+    font-size: 14px;
+    display: inline-block;
+    line-height: 1.0;
+    padding-top: 2px;
+    @include icon-font("\E034");
+    height: auto;
+    position: static;
+    width: auto;
+
+    &::after {
+        left: auto;
+        right: 0px;
+    }
+
+    &+ img {
+        background-color: $menu-background-color;
+        height: $menu-item-arrow-height;
+        right: 0px;
+        position: absolute;
+        top: 0px;
+        width: $menu-item-arrow-width;
+    }
+}
+
+.#{$prefix}menu-item-icon {
+    top: 0px;
+}
+
+.#{$prefix}menu-item-arrow {
+    display: none;
+}
+
+.#{$prefix}menu-item-active {
+    .#{$prefix}menu-item-link {
+        background-image: none;
+        border: 0px none;
+        margin: 0px;
+        @include border-radius(0px);
+    }
+
+    .#{$prefix}menu-item-text {
+        &+ img {
+            background-color: $menu-item-active-background-color;
+        }
+    }
+}
+
+.#{$prefix}menu-item-checked,
+.#{$prefix}menu-item-unchecked {
+    .#{$prefix}menu-item-link {
+        padding-left: $menu-item-indent;
+    }
+}

@@ -37,12 +37,10 @@ Ext.define('Taco.view.product.Edit', {
             xtype: 'button',
             itemId: 'moreButton',
             text: 'More',
+            frame: false,
             menu: {
                 plain: true,
                 shadow: false,
-                // defaults: {
-                //     plain: true
-                // },
                 items: [{
                     itemId: 'preview',
                     text: 'Preview in',
@@ -57,7 +55,7 @@ Ext.define('Taco.view.product.Edit', {
                 }, {
                     itemId: 'delete',
                     text: 'Delete',
-                    handler: function () { console.log(arguments); }
+                    handler: Ext.bind(me.destroyRecord, me)
                 }],
                 listeners: {
                     show: function (menu) {
