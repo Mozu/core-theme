@@ -121,7 +121,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             xtype: "component",
                             html: "Edit Order Details",
                             style: "padding:0px 0px 5px 0px; font-size: 1.25em",
-                            cls: "title",
+                            cls: "title"
                         },
                         "->",
                         {
