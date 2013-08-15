@@ -86,14 +86,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             return Redirect(redirect);
         }
 
+        public ActionResult Launchpad()
+        {
+            var redir = _settings.LoginPath;
+            if (_settings.AppSettings("useTenantDomainNames") != "true")
+            {
+                redir += "?postback=http://" + HttpContext.Request.Headers["host"];
+            }
+            return Redirect(redir);
+
+            //var userId = _apiContext.UserClaims.UserId;
+            //var res = _rolesHelper.SiteRolesList(userId);
+            //var contexts = Mapper.Map<List<TaContext>>(res);
+            //return View("Roles", contexts);
+        }
+
+
+
         // GET: /Auth/
         public ActionResult Index(LoginUser login)
         {
-            var cUser = _currentUserHelper.GetCurrentUser();
-            login = login ?? new LoginUser();
-            login.EmailAddress = (string.IsNullOrEmpty(login.EmailAddress) && cUser != null) ? cUser.EmailAddress : login.EmailAddress;
-         
-            return View(login);
+            return FedLogin("");
+            //login = login ?? new LoginUser();
+            //login.EmailAddress = (string.IsNullOrEmpty(login.EmailAddress) && cUser != null) ? cUser.EmailAddress : login.EmailAddress;
+
+            //return View(login);
         }
 
         [HttpPost]
@@ -294,13 +311,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             return View(user);
         }
 
-        public ActionResult Launchpad()
-        {
-            var userId = _apiContext.UserClaims.UserId;
-            var res = _rolesHelper.SiteRolesList(userId);
-            var contexts = Mapper.Map<List<TaContext>>(res);
-            return View("Roles", contexts);
-        }
+        
 
         [HttpPost]
         public async Task<ActionResult> ResetPassword(LoginUser user , FormCollection col)
