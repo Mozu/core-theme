@@ -65,11 +65,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         public ActionResult FedLogin(string returnUrl)
         {
            
-            var redir = _settings.LoginPath + "?redirectUrl=" + returnUrl;
+            var redir = _settings.LoginPath + "/Auth?redirectUrl=" + returnUrl;
             if (_settings.AppSettings( "useTenantDomainNames") !=  "true")
             {
-                string host = "http://" + HttpContext.Request.Headers["host"];
-                redir += "&postback=" + host;
+                redir += "&postback=http://" + HttpContext.Request.Headers["host"];
             }
             return Redirect(redir);
         }
