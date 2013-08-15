@@ -28,10 +28,17 @@ $color-neutral-05:              darken($color-neutral-white, 95%); /* #0d0d0d   
 
 $color-theme-red:               rgb(210, 70, 60);
 $color-theme-red-light:         rgb(221, 93, 84);
+$color-theme-red-darker:        rgb(196, 66, 57);
+$color-theme-red-darkest:       rgb(145, 49, 42);
+$color-theme-yellow:            rgb(252, 194, 0);
+$color-theme-yellow-light:      rgb(252, 240, 200);
 $color-theme-green:             rgb(37, 174, 144);
 $color-theme-green-darker:      rgb(26, 122, 101);
 $color-theme-blue:              rgb(46, 100, 158);
+$color-theme-blue-light:        rgb(228, 239, 255);
 $color-theme-blue-bright:       rgb(60, 134, 210);
+$color-theme-blue-darker:       rgb(31, 68, 107);
+$color-theme-purple:            rgb(114, 25, 133);
 
 $base-color: $color-neutral-90;
 
@@ -67,12 +74,12 @@ $color-action-outline-hover: $color-neutral-70;
 $color-action-outline-active: $color-neutral-75;
 
 $color-action-primary-foreground: $color-neutral-white;
-$color-action-primary-background: $color-theme-base;
-$color-action-primary-background-hover: $color-theme-base-dark;
-$color-action-primary-background-active: $color-theme-base-darkest;
-$color-action-primary-outline: $color-theme-base-darker;
-$color-action-primary-outline-hover: $color-theme-base-darkest;
-$color-action-primary-outline-active: $color-theme-base-darkest;
+$color-action-primary-background: $color-theme-red;
+$color-action-primary-background-hover: $color-theme-red-darker;
+$color-action-primary-background-active: $color-theme-red-darkest;
+$color-action-primary-outline: $color-theme-red-darker;
+$color-action-primary-outline-hover: $color-theme-red-darkest;
+$color-action-primary-outline-active: $color-theme-red-darkest;
 
 
 
