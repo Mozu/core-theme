@@ -37,6 +37,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         var labels = {
             'ApplyCheck': 'Receive Check',
             'DeclineCheck': 'Decline Check',
+            'DeclinePayment': 'Decline Payment',
             'CapturePayment': 'Capture Payment',
             'CreditPayment': 'Credit Payment',
             'VoidPayment': 'Void Payment',
@@ -275,6 +276,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 me.parent.applyCheck();
                 break;
             case 'DeclineCheck':
+            case 'DeclinePayment':
                 alert('todo: decline check.');
                 break;
             case 'VoidPayment':
