@@ -44,7 +44,10 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
         });
 
         this.addressForm = Ext.widget({
-            xtype: 'taco-addressform'
+            xtype: 'taco-addressform',
+            width: 700,
+            title: null,
+            addressHasNames: false
         });
 
         this.items = [
