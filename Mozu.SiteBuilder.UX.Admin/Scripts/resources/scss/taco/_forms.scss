@@ -1,0 +1,154 @@
+﻿@mixin taco-forms {
+
+  /* PRODUCT FORM */
+
+  .#{$vprefix}product-admin-form {
+    .#{$vprefix}product-admin-subform {
+      padding-top: 30px;
+    }
+  }
+
+  .#{$vprefix}override-form {
+    &.active {
+      margin-top: 30px;
+      position: relative;
+
+      & .#{$prefix}container {
+        border: 1px dashed border-for($color-neutral-white);
+        padding: 0px 20px 20px;
+      }
+
+      .#{$vprefix}override-checkbox {
+        display: block;
+      }
+    }
+
+    .#{$prefix}mask {
+      background-color: transparent;
+      background-image: -webkit-repeating-linear-gradient(-45deg, $color-neutral-white 0%, $color-neutral-white 25.5%, $color-neutral-black 25.5%, $color-neutral-black 51%, $color-neutral-white 51%, $color-neutral-white 76.5%, $color-neutral-black 76.5%, $color-neutral-black 100%);
+      background-size: 6px 6px;
+      opacity: 0.06;
+    }
+
+    .#{$vprefix}override-checkbox {
+      display: none;
+      position: absolute;
+      top: 0px;
+      right: 100px;
+      z-index: 101; // matches value of modal mask; this sits just under b/c mask comes later in the DOM
+
+      .#{$prefix}form-cb-wrap {
+        background-color: $color-neutral-white;
+        border-color: border-for($color-neutral-white);
+        border-style: dashed;
+        border-width: 0px 1px 1px;
+        padding: 4px 8px;
+      }
+
+      &.#{$vprefix}auto-z-index {
+        z-index: auto;
+      }
+    }
+  }
+
+  .#{$vprefix}attribute-form {
+    $color-extra: lighten($color-neutral-95, 4%);
+    $color-extra-border: border-for($color-extra);
+
+    background-color: $color-extra;
+    border-color: $color-extra-border;
+    border-style: solid;
+    border-width: px-to-rem(1);
+    margin: px-to-rem(15) px-to-rem(0);
+    padding: px-to-rem(12);
+
+    .extra-header {
+      border-color: $color-extra-border;
+      border-style: solid;
+      border-width: px-to-rem(0) px-to-rem(0) px-to-rem(1);
+      margin-bottom: px-to-rem(20);
+      padding-bottom: px-to-rem(12);
+    }
+
+    .extra-attribute {
+      text-transform: uppercase;
+    }
+
+    .extra-required {
+      border-color: $color-extra-border;
+      border-style: solid;
+      border-width: px-to-rem(1) px-to-rem(0) px-to-rem(0);
+      margin-top: px-to-rem(12);
+      padding-top: px-to-rem(12);
+      width: 100%;
+    }
+  }
+
+  /* PRODUCT TYPE FORM */
+
+  .#{$vprefix}producttype-attribute-panel {}
+
+  /* PRODUCT OPTION */
+
+  .#{$vprefix}product-options {
+
+    tr {
+      @include transition(opacity 0.5s);
+    }
+
+    .invalidate {
+      cursor: pointer;
+      opacity: 0;
+      @include icon-font("\E023");
+      @include transition(opacity 0.5s);
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .invalid-record {
+      opacity: 0.5;
+
+      .invalidate {
+        opacity: 1;
+      }
+    }
+
+    .edit-option {
+      margin-left: px-to-rem(6px);
+      color: $color-neutral-70;
+      font-size: px-to-rem(10px);
+    }
+
+  }
+
+  /* PRODUCT CONFIGURATOR */
+
+  .#{$vprefix}product-configurator {
+
+    .images {
+      margin: 10px 10px 0 0;
+
+      li {
+        background-position: center center;
+        background-repeat: no-repeat;
+        height: 150px;
+        width: 150px;
+      }
+    }
+
+    .price {
+      margin: px-to-rem(20) 0;
+    }
+
+    .description {
+      padding-top: px-to-rem(10);
+    }
+  }
+
+  .#{$vprefix}product-option-value-list .disabled {
+    color: $color-neutral-70;
+  }
+
+}

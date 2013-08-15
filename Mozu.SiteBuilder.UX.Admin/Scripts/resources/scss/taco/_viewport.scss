@@ -1,0 +1,94 @@
+@mixin taco-viewport {
+
+  /* DOCUMENT */
+
+  .#{$prefix}viewport {
+    font-size: 10px;
+  }
+
+  .#{$prefix}body {
+    background-color: $color-neutral-90;
+  }
+
+  // .#{$prefix}border-item {
+  //   @include transition-property(height, width, top, left);
+  //   @include transition-duration(1s);
+  //   @include transition-timing-function (ease-in-out);
+  // }
+
+  /* HEADER */
+
+  .#{$vprefix}viewport-header {
+    &.#{$prefix}hide-offsets {
+      left: 0px !important;
+      top: -106px !important;
+      visibility: visible !important;
+    }
+  }
+
+  .#{$vprefix}masthead {
+    background-color: $color-neutral-20;
+    border-top: 5px solid $color-theme-base;
+    bottom: 51px;
+    color: $color-neutral-white;
+    font-size: px-to-rem(14);
+    left: 0px;
+    line-height: px-to-rem(21);
+    position: absolute;
+
+    .#{$vprefix}action {
+      color: $color-neutral-lightest;
+    }
+
+    .#{$vprefix}mozulogo {
+      display: block;
+      overflow: hidden;
+      @include icon-font("\E037", 32px, $color-theme-base);
+      width: 125px;
+
+      &::after {
+        text-align: center;
+        width: 100%;
+      }
+    }
+  }
+
+  .#{$vprefix}secondary-nav {
+    .#{$vprefix}action {
+      margin-right: 21px;
+    }
+  }
+
+  /* BODY */
+
+  .#{$vprefix}content-view {
+    border-top: 1px solid border-for($color-neutral-95);
+  }
+
+  /* SCROLLBARS */
+
+  // let's get this party started
+  ::-webkit-scrollbar {
+    height: 5px;
+    width: 5px;
+  }
+   
+  // track
+  ::-webkit-scrollbar-track {
+    //-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+  }
+   
+  // handle
+  ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background: rgba(0,0,0,0.1);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+  }
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(255,0,0,0); 
+  }
+
+}

@@ -96,8 +96,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             this.ViewData["useGoogleAnalytics"] = System.Configuration.ConfigurationManager.AppSettings["useGoogleAnalytics"];
             this.ViewData["googleAnalyticsAccount"] = System.Configuration.ConfigurationManager.AppSettings["googleAnalyticsAccount"];
             this.ViewData["siteUsers"] = siteUsers.ReadAsSync().Items;
-
-            this.ViewData["extlib"] = (string)((_httpContext.Request.Cookies.Get("debugExt") != null && _httpContext.Request.Cookies.Get("debugExt").Value == "true") ? "ext-all-dev.js" : "ext-all.js");
          
             if (this.HttpContext.Request["testHarnessMode"] == "true")
             {

@@ -118,9 +118,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AjaxMin">
-      <HintPath>..\packages\AjaxMin.4.97.4951.28483\lib\net40\AjaxMin.dll</HintPath>
-    </Reference>
     <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.1.0\lib\net40\Autofac.dll</HintPath>
@@ -698,9 +695,6 @@
     <Content Include="Scripts\build\config.rb" />
     <Content Include="Scripts\build\Taco-all.scss" />
     <Content Include="Scripts\build\Taco-example.scss" />
-    <None Include="Scripts\resources\lib\Manifest.ajaxmin" />
-    <Content Include="Scripts\resources\lib\init.min.js" />
-    <Content Include="Scripts\resources\lib\polyfills.js" />
     <Content Include="Scripts\sass\src\view\dashboard\Index.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\tab\Tab.scss" />
     <Content Include="Scripts\sass\src\Application.scss" />
@@ -2745,6 +2739,7 @@
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\resources\scss\taco\widgets\_window.scss" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
@@ -3237,8 +3232,6 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
-  <Import Project="$(SolutionDir)\packages\AjaxMin.4.97.4951.28483\tools\net40\AjaxMin.targets" />
-  <!-- <UsingTask TaskName="AjaxMin" AssemblyFile="$(SolutionDir)\packages\AjaxMin.4.97.4951.28483\tools\net40\AjaxMinTask.dll" /> -->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -3246,15 +3239,10 @@
   <Target Name="BeforeBuild">
 
   </Target>
-  
+
   <Target Name="AfterBuild">
-    <Exec Command="attrib -r *.*" WorkingDirectory="$(ProjectDir)\Scripts\resources\lib\" />
-    <ItemGroup>
-      <JS Include="$(ProjectDir)\Scripts\resources\lib\*.js" Exclude="$(ProductDir)\Scripts\resources\lib\*.min.js" />
-    </ItemGroup>
-    <AjaxMin JsSourceFiles="@(JS)" JsSourceExtensionPattern="\.js$" JsTargetExtension=".min.js" />
-  </Target>
-  -->
+
+  </Target> -->
   <Target Name="AfterCompile">
     <Exec Command="robocopy d:\software\ext\ext-4.2.1.883 $(ProjectDir)\ext-4.2.1.883 /e /xd docs welcome builds /xf ext-all*.js" WorkingDirectory="$(ProjectDir)\Scripts" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="make.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />

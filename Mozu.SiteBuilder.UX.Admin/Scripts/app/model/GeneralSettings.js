@@ -17,10 +17,7 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "logoPath", "type": "string", "useNull": true },
         { "name": "logoText", "type": "string", "useNull": true },
         { "name": "favIconMobilePath", "type": "string", "useNull": true },
-        { "name": "favIconPath", "type": "string", "useNull": true },
-        { "name": "googleAnalyticsId", "type": "string", "useNull": true },
-        { "name": "googleAnalyticsEnabled", "type": "boolean", useNull: true },
-        { "name": "googleAnalyticsEcomEnabled", "type": "boolean", useNull: true }
+        { "name": "favIconPath", "type": "string", "useNull": true }
     ],
     proxy: {
         type: 'ajaxproxy',

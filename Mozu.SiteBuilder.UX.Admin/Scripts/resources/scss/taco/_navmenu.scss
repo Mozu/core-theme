@@ -1,0 +1,268 @@
+@mixin taco-navmenu {
+
+  .#{$vprefix}viewport-nav {
+    background-color: $color-neutral-white;
+    bottom: 0px;
+    left: 0px;
+    padding-right: 30px;
+    position: absolute;
+
+    .#{$vprefix}primary-menu-trigger {
+      border-right: 1px solid border-for($color-neutral-95);
+      display: block;
+      overflow: hidden;
+      @include box-shadow(1px 0px $color-neutral-white);
+      @include icon-font("\E01C", 32px);
+      @include single-transition(background-color, 0.4s);
+
+      &::after {
+        left: 12px;
+        top: 9px;
+      }
+      &.expanded {
+        background-color: $color-neutral-20;
+        
+        &::after {
+          color: $color-neutral-75;
+        }
+      }
+    }
+
+    .#{$vprefix}breadcrumb {
+      .#{$vprefix}icon {
+        border-right: 1px solid border-for($color-neutral-95);
+        color: $color;
+        display: inline-block;
+        padding: 18px 15px 0px 50px;
+        @include icon-font("\E01F", 32px);
+        height: 51px;
+        vertical-align: top;
+        width: auto;
+
+        &::after {
+          left: 9px;
+          top: 6px;
+        }
+      }
+      .#{$vprefix}icon-nav-customers::after {
+        content: "\E020";
+      }
+      .#{$vprefix}icon-nav-catalog::after {
+        content: "\E01A";
+      }
+      .#{$vprefix}icon-nav-orders::after {
+        content: "\E01B";
+      }
+      .#{$vprefix}icon-nav-marketing::after {
+        content: "\E01D";
+      }
+      .#{$vprefix}icon-nav-sites::after {
+        content: "\E018";
+      }
+      .#{$vprefix}icon-nav-publishing::after {
+        content: "\E019";
+      }
+      .#{$vprefix}icon-nav-files::after {
+        content: "\E01E";
+      }
+
+      ul {
+        display: inline-block;
+        height: 51px;
+        margin-left: 10px;
+        vertical-align: top;
+
+        li {
+          display: inline-block;
+          padding: 0px 8px;
+          position: relative;
+          vertical-align: top;
+
+          a {
+            color: $color;
+            display: inline-block;
+            font-size: px-to-rem(14);
+            height: 51px;
+            line-height: 1.5em;
+            padding: 18px 2px 12px;
+          }
+
+          &.#{$vprefix}breadcrumb-item-selected {
+            a {
+              border-bottom: 2px solid $color-theme-base;
+              color: $color-theme-base;
+            }
+          }
+
+          &::after {
+            background-color: border-for($color-neutral-70);
+            content: "";
+            display: block;
+            height: 14px;
+            position: absolute;
+            right: 0px;
+            top: 20px;
+            width: 1px;
+          }
+
+          &:nth-last-of-type(1) {
+            &::after {
+              content: none;
+            }
+          }
+        }
+      }
+    }
+
+    .#{$vprefix}context-switcher {
+      .#{$prefix}form-text {
+        background-color: $color-action-background;
+        @include facade-transitions;
+
+        &:hover:not(:disabled) {
+          background-color: $color-action-background-hover;
+          @include box-shadow(inset 0px -1px $color-action-outline-hover);
+        }
+      }
+    }
+  }
+
+  .#{$vprefix}context-switcher-menu {
+    ul {
+      .#{$prefix}boundlist-item {
+        &.context-type-t {
+          font-weight: bold;
+        }
+        &.context-type-c {
+          border-top: 5px solid $color-neutral-white;
+          font-weight: bold;
+          margin-top: 7px;
+          @include box-shadow(0px -1px border-for($color-neutral-white));
+          // padding-left: 28px;
+        }
+        &.context-type-s {
+          // padding-left: 42px;
+        }
+      }
+    }
+  }
+
+  .#{$vprefix}primary-menu-ct {
+    background-color: $color-neutral-20;
+    margin-top: 51px;
+    opacity: 1;
+    visibility: visible !important;
+    @include outer-shadow(0.4, 2px, 3px, 3px);
+    @include transition(margin 0.15s linear, opacity 0.15s linear, top 0s linear, left 0s linear);
+
+    &.#{$prefix}hide-offsets {
+      margin-top: 0px;
+      opacity: 0;
+      @include transition(margin 0.15s linear, opacity 0.15s linear, top 0s linear 0.15s, left 0s linear 0.15s);
+    }
+  }
+  .#{$vprefix}primary-menu {
+    font-size: px-to-rem(18);
+    line-height: px-to-rem(24);
+    
+    li.#{$vprefix}menu-item {
+      cursor: pointer;
+      padding: px-to-rem(13) 0px px-to-rem(13) 70px;
+      position: relative;
+      width: 325px;
+
+      a {
+        color: $color-neutral-75;
+        display: inline-block;
+
+        &:hover {
+          color: $color-neutral-white;
+        }
+        &.#{$vprefix}menu-item-link {
+          font-weight: bold;
+        }
+        &.#{$vprefix}icon {
+          @include icon-font("\E01F", 32px, $color-neutral-75);
+          height: auto;
+          width: auto;
+
+          &::after {
+            left: -51px;
+            top: -9px;
+          }
+          &:hover::after {
+            &::after {
+              color: $color-neutral-white;
+            }
+          }
+        }
+        &.#{$vprefix}icon-nav-customers::after {
+          content: "\E020";
+        }
+        &.#{$vprefix}icon-nav-catalog::after {
+          content: "\E01A";
+        }
+        &.#{$vprefix}icon-nav-orders::after {
+          content: "\E01B";
+        }
+        &.#{$vprefix}icon-nav-marketing::after {
+          content: "\E01D";
+        }
+        &.#{$vprefix}icon-nav-sites::after {
+          content: "\E018";
+        }
+        &.#{$vprefix}icon-nav-publishing::after {
+          content: "\E019";
+        }
+        &.#{$vprefix}icon-nav-files::after {
+          content: "\E01E";
+        }
+      }
+
+      &.#{$vprefix}menu-item-hover {
+        background-color: $color-neutral-30;
+
+        .#{$vprefix}icon {
+          color: $color-neutral-white;
+
+          &::after {
+            color: $color-neutral-white;
+          }
+        }
+      }
+
+      &.#{$vprefix}menu-item-active {
+        a.#{$vprefix}menu-item-link {
+          border-bottom: 2px solid $color-theme-base;
+          color: $color-neutral-white;
+        }
+      }
+
+      ul {
+        font-size: px-to-rem(13);
+        line-height: px-to-rem(16);
+        margin-left: -5px;
+
+        li {
+          display: inline-block;
+          margin: 4px 0px 1px;
+          padding: 0px 7px 0px 5px;
+          @include box-shadow(inset -1px 0px rgba(255, 255, 255, 0.4));
+
+          &.#{$vprefix}submenu-item-active {
+            a {
+              border-bottom: 2px solid $color-theme-base;
+              color: $color-neutral-white;
+              text-decoration: none;
+            }
+          }
+
+          &:nth-last-of-type(1),
+          &:nth-of-type(3n) {
+            @include box-shadow(none);
+          }
+        }
+      }
+    }
+  }
+}
