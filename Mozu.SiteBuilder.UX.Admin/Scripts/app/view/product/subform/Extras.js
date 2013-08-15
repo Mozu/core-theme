@@ -151,8 +151,33 @@ Ext.define('Taco.view.product.subform.Extras', {
                 html: ptAttribute.get('attributeName')
             }, {
                 xtype: 'action',
-                text: '',
-                hidden: ptAttribute.get('isRequired')
+                text: 'Remove',
+                hidden: ptAttribute.get('isRequired'),
+                attributeFQN: ptAttribute.get('attributeFQN'),
+                listeners: {
+                    click: Ext.bind(function (it) {
+                        
+                        this.remove(it.up().up());
+                        var initLength = this.extras.length;
+                        for (var x = 0; x < initLength; x++) {
+                            if (this.extras[x].ptAttribute.internalId == it.attributeFQN) {
+                                this.extras.splice(x, 1);
+                                x--;
+                                initLength--;
+                            }
+                        }
+                        
+                        initLength = this.product.data.extras.length;
+                        for (var x = 0; x < initLength; x++) {
+                            if (this.product.data.extras[x].attributeFQN == it.attributeFQN) {
+                                this.product.data.extras.splice(x, 1);
+                                x--;
+                                initLength--;
+                            }
+                        }
+
+                    }, this)
+                }
             }]
         }, 
         editorCfg, {
@@ -161,6 +186,8 @@ Ext.define('Taco.view.product.subform.Extras', {
             items: [checkbox]
         }];
         
+
+
         return Ext.widget({
             xtype: 'container',
             cls: 'taco-attribute-form',

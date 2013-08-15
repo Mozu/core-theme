@@ -90,6 +90,7 @@ Ext.define('Taco.view.product.subform.Properties', {
             properties = this.product.getProperties();
         
         this.productTypeProperties.each(function (record) {
+
             var fieldName = this.getFieldName(record),
                 values=null,
                 field = form.findField(fieldName),
@@ -148,7 +149,7 @@ Ext.define('Taco.view.product.subform.Properties', {
 
     buildContainer: function (ptAttribute) {
         var items = this.buildEditor(ptAttribute);
-
+        
         items.unshift({
             xtype: 'container',
             layout: {
@@ -162,7 +163,26 @@ Ext.define('Taco.view.product.subform.Properties', {
             }, {
                 xtype: 'action',
                 text: 'Remove',
-                hidden: ptAttribute.get('isRequired')
+                hidden: ptAttribute.get('isRequired'),
+                attributeFQN: ptAttribute.get('attributeFQN'),
+                listeners: {
+                    click: Ext.bind(function (it) {
+                        
+                        this.remove(it.up().up());
+                        var index = this.productTypeProperties.find('attributeFQN', it.attributeFQN);
+                        this.productTypeProperties.removeAt(index);
+                        this.productTypeProperties.commitChanges();
+
+                        var initLength = this.product.data.properties.length;
+                        for (var x = 0; x < initLength; x++) {
+                            if (this.product.data.properties[x].attributeFQN == it.attributeFQN) {
+                                this.product.data.properties.splice(x, 1);
+                                x--;
+                                initLength--;
+                            }
+                        }
+                    },this)
+                }
             }]
         });
         
