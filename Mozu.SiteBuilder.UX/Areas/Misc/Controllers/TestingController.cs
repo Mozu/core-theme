@@ -161,7 +161,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             
             string newHostname = (domainList.FirstOrDefault()) ;
-            bool doHostnameRedirect = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["gositeRedirectsHostname"]) && !String.IsNullOrEmpty(newHostname);
+            bool doHostnameRedirect = _settings.AppSettings("ReverseProxy") == "true" && !String.IsNullOrEmpty(newHostname);
             
             if (!String.IsNullOrEmpty(redir))
             {
