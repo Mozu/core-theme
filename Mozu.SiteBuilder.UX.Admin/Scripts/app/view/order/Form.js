@@ -40,12 +40,9 @@ Ext.define('Taco.view.order.Form', {
     initComponent: function () {        
 
         this.customerStore = Ext.create('Ext.data.Store', {
-            model: 'Taco.model.CustomerAccount',
-            //autoLoad: false
+            model: 'Taco.model.Contact',
             proxy: 'memory'
         });
-        debugger;
-        console.log('CUSTOMER STORE', this.customerStore);
 
         this.titleData = {
             number: this.record.get('orderNumber'),
@@ -90,7 +87,6 @@ Ext.define('Taco.view.order.Form', {
     },
 
     overwriteCustomer: function (record) {
-        debugger;
         this.customerStore.removeAll();
         
         if (record) {
@@ -108,5 +104,21 @@ Ext.define('Taco.view.order.Form', {
             this._isEdit = this.record.get('orderStatus') !== 'Created';
         }
         return this._isEdit;
+    },
+
+    isValid: function () {
+        
+        // Check basic form fields
+        if (!this.callParent(arguments)) return false;
+
+        // Is customer valid?
+        if (this.customerStore.count() !== 1) return false;
+
+        // Is Order Item valid?
+
+
+        // Is Payment valid?
+
+        // Is Shipping Valid?
     }
 })
