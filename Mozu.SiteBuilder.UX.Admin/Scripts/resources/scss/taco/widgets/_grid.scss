@@ -1,0 +1,973 @@
+@mixin taco-grid {
+
+  /* CORE GRID STYLES */
+
+  .#{$prefix}panel {
+    .#{$prefix}grid-body {
+      border-top-color: $panel-body-border-color; // defaults to header background-color
+
+      &~ .#{$prefix}docked-bottom {
+        border-top-color: $color-neutral-white;
+      }
+    }
+  }
+
+  // grid cells
+  .#{$prefix}grid-with-row-lines {
+    .#{$prefix}grid-cell-inner {
+      line-height: $grid-row-cell-line-height;
+      padding-bottom: $grid-cell-inner-padding-bottom;
+    }
+  }
+
+  .#{$prefix}grid-cell-selected {
+    background-color: $color-selected !important;
+  }
+
+  // grid rows
+  .#{$prefix}grid-row {
+    vertical-align: middle;
+
+    .#{$prefix}grid-cell {
+      border-top-color: transparentize($color-neutral-white, 0.9) !important;
+    }
+
+    .#{$prefix}grid-cell-special {
+      background-color: $grid-row-cell-background;
+      background-image: none;
+      border-right: 0px none;
+    }
+  }
+
+  .#{$prefix}grid-rowwrap-div {
+    border-top-color: transparentize($color-neutral-white, 0.9) !important;
+  }
+
+  .#{$prefix}grid-row-selected {
+    .#{$prefix}grid-rowwrap-div {
+      border-color: $color-theme-support-dark;
+    }
+  }
+
+  // even-numbered grid rows
+  .#{$prefix}grid-row-alt {
+    .#{$prefix}grid-cell-special {
+      background-color: $grid-row-cell-alt-background;
+    }
+  }
+
+  // grid row hover state
+  .#{$prefix}grid-row-over {
+    .#{$prefix}grid-cell-special {
+      background-color: $grid-row-cell-over-background-color;
+      border-color: $grid-row-cell-over-border-color;
+    }
+  }
+
+  // grid row focus state
+  .#{$prefix}grid-row-focused {
+    .#{$prefix}grid-cell-special {
+      background-color: $grid-row-cell-focus-background-color;
+      border-color: $grid-row-cell-focus-border-color;
+    }
+  }
+
+  .#{$prefix}grid-rowwrap-div {
+    .#{$prefix}grid-cell-special {
+      background-color: transparent;
+    }
+  }
+
+  // column headers
+  .#{$prefix}column-header {
+    border: 0px none;
+    font-size: $grid-header-font-size;
+    font-weight: bold;
+    line-height: $grid-header-line-height;
+    text-shadow: none;
+
+    &.#{$prefix}column-header-last {
+      .#{$prefix}column-header-inner {
+        padding-right: 40px;
+      }
+      .#{$prefix}column-header-text {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .#{$prefix}column-header-trigger {
+        background: none transparent;
+        display: block !important;
+        right: 12px;
+        top: 12px;
+        @include icon-font("\E02D", 16px, $color-neutral-white);
+        position: absolute;
+      }
+    }
+  }
+
+  .#{$prefix}column-header-inner {
+    padding-top: 15px !important;
+  }
+
+  .#{$prefix}column-header-over {
+    .#{$prefix}column-header-trigger {
+      display: none; // column menu trigger is not is not easily removed from cell template, so hide it
+    }
+  }
+
+  /* PLUGINS, MIXINS, COLUMNS, ETC. */
+
+  .#{$prefix}grid-cell-inner {
+    span.overridden {
+      background-color: $color-theme-support-darker;
+      display: inline-block;
+      font-size: 0px;
+      height: 8px;
+      line-height: 0px;
+      overflow: hidden;
+      text-indent: -9999px;
+      vertical-align: middle;
+      width: 8px;
+      @include border-radius(8px);
+      // @include box-shadow(inset 0px -1px rgba(255, 255, 255, 0.4), inset 0px 1px rgba(0, 0, 0, 0.4));
+    }
+  }
+
+  // checkbox overrides
+  .#{$prefix}column-header-checkbox {
+    .#{$prefix}column-header-inner {
+      padding-top: 11px !important;
+    }
+  }
+
+  // expandercollapser
+  .#{$vprefix}expandercollapser {
+    color: $color-action-link;
+    font-size: px-to-rem(14);
+    line-height: px-to-rem(14);
+
+    .#{$vprefix}action {
+      display: inline-block;
+      padding: 0px 5px;
+
+      &:not(:nth-of-type(1)) {
+        border-left: 1px solid $color-action-link;
+      }
+    }
+  }
+
+  // rowexpander overrides
+  .#{$prefix}grid-row-expander {
+    background-image: none;
+    border-bottom: 5px solid transparent;
+    border-left: 10px solid $color-neutral-dark;
+    border-right: 0px none;
+    border-top: 5px solid transparent;
+    height: 0px;
+    margin: 0px;
+    width: 0px;
+    @include transform(rotate(90deg));
+    @include single-transition(transform, 0.1s);
+
+    &.empty {
+      visibility: hidden;
+    }
+  }
+
+  .#{$prefix}grid-row-collapsed {
+    .#{$prefix}grid-row-expander {
+      background-image: none;
+      @include transform(rotate(0deg));
+    }
+    .#{$prefix}grid-row-body {
+      display: none;
+    }
+  }
+
+  // tree grid styles
+  .#{$prefix}tree-arrows {
+    .#{$prefix}grid-cell-inner {
+      padding: 2px 0px;
+    }
+  }
+
+  .#{$prefix}tree-icon {
+    margin-right: 5px;
+  }
+
+  // draghandle styles
+  .#{$vprefix}tree-knurling, .#{$vprefix}draghandle {
+    cursor: move;
+    display: block;
+    height: 20px;
+    width: 20px;
+    text-indent: -9999px;
+    @include icon-font("\E022");
+  }
+
+  .#{$prefix}grid-cell-draghandlecolumn {
+    .#{$prefix}grid-cell-inner {
+      padding: 0px;
+    }
+  }
+
+  // cellediting overrides
+  .#{$prefix}border-box {
+    .#{$prefix}grid-editor {
+      .#{$prefix}form-item-body {
+        padding: 2px;
+      }
+      .#{$prefix}form-text {
+        height: 30px;
+        padding-bottom: 5px;
+      }
+    }
+  }
+
+  // menucolumn styles
+  .#{$vprefix}menu-col-cell {
+    .#{$prefix}grid-cell-inner {
+      line-height: 0px;
+      padding-bottom: 1px;
+    }
+  }
+
+  .#{$vprefix}grid-row-menu-trigger {
+    cursor: pointer;
+    height: 30px;
+    visibility: hidden;
+    width: 50px;
+    @include icons-sprite(icon-rowactions); // icon is an <img>
+  }
+
+  // over ride of default menu trigger icon to make it a remove icon instead of a gear menu icon
+  .#{$vprefix}grid-row-menu-trigger-remove {    
+    @include icons-sprite(icon-remove); // icon is an <img>
+  }
+
+
+  .#{$prefix}grid-row-over {
+    .#{$vprefix}grid-row-menu-trigger {
+      visibility: visible;
+    }
+  }
+  .#{$prefix}grid-row-focused {
+    .#{$vprefix}grid-row-menu-trigger {
+      visibility: visible !important;
+    }
+  }
+
+  // over ride of default menu trigger focused and over behavior when the grid panel is readonly mode.
+  .#{$vprefix}grid-row-menu-trigger-disabled {    
+    visibility: hidden;
+  }
+
+
+  .#{$vprefix}grid-row-menu {
+    // .#{$prefix}menu-body {
+    //   border: 1px solid border-for($menu-background-color);
+    //   font-size: px-to-rem(13);
+    // }
+
+    // .#{$prefix}menu-item {
+    //   padding: px-to-rem(6);
+    // }
+
+    // &+ .#{$vprefix}grid-row-menu {
+    //   margin-top: -1px;
+    // }
+  }
+
+  /* CONTAINERS, TOOLBARS, ETC. */
+
+  // togglegroup styles
+  .#{$vprefix}togglegroup {
+    margin: 0px !important;
+
+    $card-map: sprite-map('card/*.png') /* syntax highlighting bug */;
+    $gradient-selected: linear-gradient(top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 20%);
+
+    .#{$prefix}form-radio-group {
+      .#{$prefix}form-radio {
+        background-image: none;
+        border: 1px solid border-for($color-neutral-95);
+        height: 30px;
+        width: 40px;
+        top: 0px;
+      }
+
+      &:nth-of-type(1) {
+        .#{$prefix}form-radio {
+          @include background(sprite($card-map, card-gridview));
+          background-color: $color-neutral-95;
+        }
+        .#{$prefix}form-cb-checked {
+          .#{$prefix}form-radio {
+            // @include background(sprite($card-map, card-gridview-selected), $gradient-selected);
+            background-color: border-for($color-neutral-95);
+          }
+        }
+      }
+      &:nth-of-type(2) {
+        .#{$prefix}form-radio {
+          @include background(sprite($card-map, card-tileview));
+          background-color: $color-neutral-95;
+        }
+        .#{$prefix}form-cb-checked {
+          .#{$prefix}form-radio {
+            // @include background(sprite($card-map, card-tileview-selected), $gradient-selected);
+            background-color: border-for($color-neutral-95);
+          }
+        }
+      }
+    }
+
+    .#{$prefix}form-item {
+      margin: 0px;
+    }
+    .#{$prefix}form-checkboxgroup-body,
+    .#{$prefix}form-cb-wrap,
+    .#{$prefix}form-item-label {
+      padding: 0px;
+    }
+  }
+
+  // pager styles
+  .#{$vprefix}pager {
+    background: none $color-neutral-95;
+    border: 1px solid border-for($color-neutral-95);
+    padding: 7px;
+
+    .#{$vprefix}action {
+      background-color: $color-neutral-90;
+      display: inline-block;
+      height: 28px;
+      margin: 2px;
+      min-width: 28px;
+      padding-top: 6px;
+      text-align: center;
+      @include border-radius(2px);
+      
+      &.active{
+        background-color: $color-theme-accent;
+        color: $color-neutral-white;
+      }
+    }
+  }
+
+}
+
+// @mixin taco-grid {
+
+
+
+//   .#{$prefix}toolbar-docked-top {
+//     background: none transparent;
+//     border: 0 none;
+//   }
+
+//   .#{$prefix}panel-body-default {
+//     border: 0 none;
+//     color: $color-neutral-darkest;
+//   }
+//   .#{$prefix}panel {
+//     .#{$prefix}grid-body {
+//       border-color: $color-grid-border;
+
+//       &:last-child {
+//         @include border-radius(0 0 3px 3px);
+//       }
+//     }
+//   }
+//   .#{$prefix}panel-default {
+//     border-color: $color-grid-border;
+//   }
+
+//   .#{$prefix}grid-row {
+//     .#{$prefix}grid-cell {
+//         background-color: $color-grid-row;
+//         font: $font-body-copy;
+//         vertical-align: middle;
+//         @include single-transition(background-color, 0.2s);
+
+//         &.#{$prefix}grid-cell-selected {
+//           background-color: $color-grid-row !important;
+//         }
+//     }
+
+//     &:hover {
+//       .#{$prefix}grid-cell {
+//         background-color: $color-neutral-white;
+
+//         &.#{$prefix}grid-cell-selected {
+//           background-color: $color-neutral-white !important;
+//         }
+//       }
+//     }
+//   }
+//   .#{$prefix}grid-row-alt {
+//     .#{$prefix}grid-cell, .#{$prefix}grid-rowwrap-div {
+//       background-color: $color-grid-row-alt;
+
+//       &.#{$prefix}grid-cell-selected {
+//         background-color: $color-grid-row-alt !important;
+//       }
+//     }
+//   }
+
+//   .#{$prefix}grid-cell-draghandlecolumn .#{$prefix}grid-cell-inner,
+//   .#{$prefix}grid-cell-selection .#{$prefix}grid-cell-inner {
+//     padding: 0;
+//   }
+
+//   .#{$prefix}column-header {
+//     background-color: $color-neutral-light;
+//     background-image: none;
+//     border-right: 1px solid $color-grid-border;
+//     color: $color-neutral-darkest;
+//     font: $font-control-label;
+//     font-weight: bold;
+//     @include box-shadow(0px 1px 0px #fff inset);
+
+//     .#{$prefix}column-header-over,
+//     .#{$prefix}column-header-sort-ASC,
+//     .#{$prefix}column-header-sort-DESC {
+//       background-color: transparent;
+//       background-image: none;
+//     }
+
+//     &:nth-of-type(1) {
+//       @include border-radius(3px 0px 0px 0px);
+//     }
+//     &:nth-last-of-type(1) {
+//       border-right: 0 none;
+//       @include border-radius(0px 3px 0px 0px);
+//     }
+//     &.#{$vprefix}column-header-empty, &.#{$vprefix}draghandlecolumn {
+//       border-right: 0 none;
+//     }
+//     .#{$prefix}column-header-inner {
+//       height: 3em !important;
+//       padding: 0.8em 0 1em !important;
+//       text-indent: 20px;
+//     }
+//     &.#{$prefix}column-header-align-center {
+//       .#{$prefix}column-header-inner {
+//         text-indent: 0;
+//       }
+//     }
+//     &.#{$prefix}column-header-align-right {
+//       .#{$prefix}column-header-text {
+//         padding-right: 0.5em;
+//       }
+//     }
+//   }
+
+//   .#{$vprefix}draghandle {
+//     cursor: move;
+//     display: block;
+//     height: 32px;
+//     width: 36px;
+//     margin: 2px 4px 0;
+//     text-indent: -9999px;
+//   }
+
+//   .#{$prefix}grid-row-selected {
+//     .#{$prefix}grid-cell, .#{$prefix}grid-rowwrap-div {
+//       background-color: $color-highlighted-background-light !important;
+//     }
+//     .#{$vprefix}datalist-selection {
+//       @include icons-sprite(icon-selectedoverlay);
+//       position: static;
+//       margin: 6px 0 0 10px;
+//     }
+//     .#{$vprefix}datalist-deselection {
+//       @include icons-sprite(icon-deselectedoverlay);
+//       position: static;
+//       margin: 6px 0 0 10px;
+//     }
+//   }
+
+//   .#{$vprefix}basegrid-thumbnail {
+//     border: 1px solid $color-neutral-white;
+//     max-height: 47px;
+//     overflow: hidden;
+//     width: 62px;
+//     @include box-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+//   }
+//   .#{$prefix}grid-cell .#{$vprefix}image-square {
+//     height: 47px;
+//     width: 62px;
+//   }
+
+//   .#{$prefix}action-col-cell img {
+//     height: 24px;
+//     width: 36px;
+//     margin: 2px 4px 0;
+//     border: 0px solid transparent;
+//     opacity: 0;
+//     @include border-radius(3px);
+//     @include single-transition(opacity, 0.2s);
+
+//     &.#{$vprefix}action-hide {
+//       @include icons-sprite(icon-jumpout);
+//     }
+//     &.#{$vprefix}action-addsub {
+//       @include icons-sprite(icon-newfile);
+//     }
+//     &.#{$vprefix}action-delete {
+//       @include icons-sprite(icon-trash);
+//     }
+//     &.#{$vprefix}action-remove {
+//       @include icons-sprite(icon-remove);
+//     }
+//   }
+//   .#{$prefix}grid-row-over .#{$prefix}action-col-cell img {
+//     opacity: 1;
+//   }
+//   .#{$prefix}grid-header-ct {
+//     background: $color-neutral-light;
+//     border-color: $color-grid-border;
+//     @include border-radius(3px 3px 0px 0px);
+//   }
+
+//   .#{$prefix}column-header-over {
+//     .#{$prefix}column-header-trigger {
+//       display: none !important;
+//     }
+//   }
+//   .#{$prefix}column-header-last.#{$vprefix}controls-column {
+//     .#{$prefix}column-header-trigger {
+//       display: block !important;
+//       width: 32px;
+//       @include icons-sprite(icon-gridsettings);
+//     }
+//     .#{$prefix}column-header-open .#{$prefix}column-header-trigger {
+//       @include icons-sprite(icon-gridsettings-selected);
+//     }
+//   }
+
+//   .#{$vprefix}treelist-add {
+//     display: block;
+//     height: 42px;
+//     position: absolute;
+//     right: 0px;
+//     top: 0px;
+//     width: 32px;
+//     @include icons-sprite(icon-addfolder);
+//   }
+
+//   .#{$vprefix}row-hidden {
+//   opacity: 0.4;
+//   }
+
+//   .#{$vprefix}filterabledataview {
+//     .#{$prefix}grid-header-ct, .#{$prefix}grid-body {
+//       border-width: 0 !important;
+//     }
+
+//     .#{$prefix}toolbar {
+//       padding: 5px;
+//       .#{$prefix}form-text {
+//         padding: 0.25em;
+//       }
+//     }
+//   }
+
+//   .#{$prefix}toolbar {
+//     .#{$prefix}toolbar-separator-horizontal {
+//       border-left-color: $color-neutral-darkest;
+//     }
+
+//     &.#{$vprefix}toolbar-form {
+//       background: none transparent;
+//       border-color: $color-grid-border;
+//       border-style: solid solid none;
+//       border-width: 1px 1px 0px;
+//       padding: 0px;
+//       @include box-shadow(0 1px 0 #fff inset);
+
+//       .#{$vprefix}toolbar-form-cell {
+//         padding: 6px 0 1px 8px;
+//       }
+//     }
+//   }
+
+//   .#{$prefix}slider-thumb {
+//     cursor: -webkit-grab;
+//     cursor: -moz-grab;
+//   }
+//   .#{$vprefix}slider-icon-small {
+//     @include icons-sprite(icon-slidersmall);
+//   }
+//   .#{$vprefix}slider-icon-big {
+//     @include icons-sprite(icon-sliderbig);
+//   }
+
+//   .#{$vprefix}togglegroup {
+
+//     $card-map: sprite-map('card/*.png'); /* syntax highlighting bug */
+//     $gradient-selected: linear-gradient(top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 20%);
+
+//     .#{$prefix}form-radio-group {
+
+//       .#{$prefix}form-radio {
+//         background-color: $color-neutral-light;
+//         background-image: none;
+//         border: 1px solid $color-neutral-darkest;
+//         height: 24px;
+//         opacity: 0.8;
+//         width: 26px;
+//         top: 0px;
+//         border-right: 0;
+//         @include box-shadow(0 1px 0 #FFF inset);
+//       }
+
+//       .#{$prefix}form-cb-checked {
+//         .#{$prefix}form-radio {
+//           @include box-shadow(none);
+//         }
+//       }
+
+//       &:nth-of-type(1) {
+//         .#{$prefix}form-radio {
+//           @include background(sprite($card-map, card-gridview));
+//           @include border-radius(3px 0px 0px 3px);
+//         }
+//         .#{$prefix}form-cb-checked {
+//           .#{$prefix}form-radio {
+//             @include background(sprite($card-map, card-gridview-selected), $gradient-selected);
+//             background-color: $color-highlighted-background;
+//           }
+//         }
+//       }
+//       &:nth-of-type(2) {
+//         .#{$prefix}form-radio {
+//           @include background(sprite($card-map, card-tileview));
+//         }
+//         .#{$prefix}form-cb-checked {
+//           .#{$prefix}form-radio {
+//             @include background(sprite($card-map, card-tileview-selected), $gradient-selected);
+//             background-color: $color-highlighted-background;
+//           }
+//         }
+//       }
+//       &:nth-last-of-type(1) {
+//         .#{$prefix}form-radio {
+//           border-right: 1px solid $color-neutral-darkest;
+//           @include border-radius(0px 3px 3px 0px);
+//         }
+//       }
+//     }
+//   }
+
+
+//   .#{$vprefix}inventorycontrolgrid {
+
+//     .#{$prefix}grid-header-ct, .#{$prefix}grid-body {
+//       border-color: $color-neutral-light;
+//       background-color: transparent;
+//     }
+
+//     .#{$prefix}column-header {
+//       font-weight: normal !important;
+//       font-size: 0.7em;
+//       color: $color-neutral-darker;
+//       text-shadow: none;
+//       background-color: transparent;
+      
+//       .#{$prefix}column-header-inner {
+//         text-indent: 6px;
+//         position: relative;
+
+//         .#{$prefix}column-header-text {
+//           float: left;
+//           padding-right: 16px;
+//         }
+
+//         .#{$vprefix}deleteoption {
+//           visibility: hidden;
+//           float: left;
+//           margin-left: 5px;
+//           color: #000;
+//           font-size: 1.2em;
+//         }
+//         &:hover .#{$vprefix}deleteoption {
+//           visibility: visible;
+//         }
+//       }
+//     }
+
+//     .#{$prefix}form-text {
+//       width: 100%;
+//       padding: 0.2em;
+//     }
+
+//     .#{$prefix}grid-table {
+//       border-collapse: collapse;
+      
+//       .#{$prefix}grid-row .#{$prefix}grid-cell {
+//         background: $color-neutral-light;
+//         border-color: $color-neutral-mid;
+//         border-style: dashed;
+
+//         .#{$prefix}grid-cell-inner {
+//           padding: 6px 8px;
+//           font-size: 0.8em;
+//         }
+//       }
+
+//       tr.#{$vprefix}inventorycontrolgrid-disabled td div {
+//         opacity: 0.75;
+//       }
+//     }
+
+//     .#{$vprefix}inventorycontrolgrid-available{
+//       border-right: 1px dashed $color-neutral-mid;
+//       border-left: 1px dashed $color-neutral-mid;
+//     }
+
+//     .#{$vprefix}infinitestock {
+//       display: block;
+//       margin: 0 auto;
+//       width: 25px;
+//       @include icons-sprite(icon-infinitybig);
+//       background-color: #ffffff;
+//     }
+
+//     .#{$vprefix}stock-container {
+//       position: relative;
+//       top: -9px;
+
+//       .#{$vprefix}stock-field {
+//         float: left;
+
+//         label {
+//           font-size: 9pt;
+//           color: $color-neutral-dark;
+//           display: block;
+//           margin: 3px 0;
+//           height: 12px;
+//         }
+
+//         .#{$prefix}form-field {
+//           width: 60px;
+//           display: block;
+//         }
+//       }
+
+//       .#{$vprefix}stock-operand {
+//         float: left;
+//         margin: 20px 5px 0;
+//       }
+
+//       .#{$vprefix}stock-makeinfinite {
+//         cursor: pointer;
+//         float: left;
+//         width: 20px;
+//         background-color: $color-neutral-mid-light;
+//         margin: 18px 2px 0;
+//         height: 22px;
+//         border: 1px solid $color-neutral-mid-light;
+//         @include icons-sprite(icon-infinitysmall);
+        
+//         &:hover {
+//           background-color: #ffffff;
+//         }
+//       }
+//     }
+
+//   }
+//   .#{$prefix}menu {
+//     background-color: rgb(255, 255, 255);
+//     overflow: visible;
+//     @include border-radius(3px);
+//     @include box-shadow(0 5px 10px rgba(0, 0, 0, 0.4));
+
+//     &:before,
+//     &:after {
+//       border-bottom: 6px solid rgba(0, 0, 0, 0.05);
+//       border-left: 6px solid transparent;
+//       border-right: 6px solid transparent;
+//       border-top: 0;
+//       content: ".";
+//       display: block;
+//       font-size: 0px;
+//       height: 0px;
+//       left: 0px;
+//       margin: -6px 0 0 122px;
+//       position: absolute;
+//       top: 0px;
+//       width: 0px;
+//       z-index: 19001;
+//     }
+//     &:after {
+//       border-bottom: 6px solid rgb(255, 255, 255);
+//       margin-top: -5px;
+//     }
+//     .#{$prefix}panel-header {
+//       border: 0 none;
+//       padding: 10px 5px 5px;
+
+//       &.#{$prefix}panel-header-default {
+//         background-color: transparent;
+//         background-image: none;
+//         @include box-shadow(none);
+//       }
+//     }
+//     .#{$prefix}panel-header-text-container {
+//       text-align: center !important;
+//     }
+//     .#{$prefix}panel-header-text-default {
+//       color: #444;
+//       font-size: 14px;
+//       font-weight: normal;
+//     }
+//     .#{$prefix}menu-item-link {
+//       padding-left: 36px;
+//     }
+//     .#{$prefix}menu-item-active .#{$prefix}menu-item-link {
+//       background: none transparent;
+//       border: 0 none;
+//       margin: 1px;
+//     }
+//     .#{$prefix}menu-item-icon {
+//       left: 12px;
+//     }
+//   }
+
+//   .#{$vprefix}card {
+//     background-color: transparent;
+//   }
+//   .#{$prefix}splitter-vertical {
+//     cursor: ew-resize;
+//   }
+
+//   .#{$vprefix}grid-droparea {
+//     border: 1px solid $color-grid-border;
+//     color: #929292;
+
+//     .#{$vprefix}grid-droparea-inner {
+//       background-color: #F5F5F5;
+//       border: 2px dashed #969696;
+//       padding: 20px;
+//       text-align: center;
+
+//       .droparea-instructions {
+//         font-size: 2em;
+//         margin-bottom: 1.5em;
+//       }
+//       .droparea-learn-more {
+//         font-size: 1.333em;
+//       }
+//       }
+//   }
+
+//   .#{$prefix}border-box {
+//     .#{$prefix}grid-editor {
+
+//       .#{$vprefix}grid-editor-textfield {
+//         margin-bottom: 0px;
+//         margin-top: 2px;
+
+//         &.#{$vprefix}grid-editor-numberfield {
+//           .#{$prefix}form-field {
+//             text-align: right;
+//           }
+//         }
+//         &.#{$vprefix}grid-editor-fixedwidth {
+//           margin-left: 8px;
+//           width: 140px !important;
+//         }
+//       }
+//       .#{$vprefix}grid-editor-checkbox {
+//         margin: 5px 0 0;
+//       }
+//       .#{$prefix}form-text {
+//         height: 33px;
+//         padding-bottom: 5px;
+//       }
+//     }
+//   }
+
+//   .#{$vprefix}grid-row-uploading {
+//     opacity: 0.5;
+//   }
+
+//   .#{$vprefix}removablecolumn {
+//     .#{$prefix}column-header-text {
+//       @include transition;
+//     }
+//     .#{$vprefix}removablecolumn-delete {
+//       display: block;
+//       height: 15px;
+//       opacity: 0;
+//       position: absolute;
+//       right: 5px;
+//       text-indent: -9999px;
+//       top: 14px;
+//       width: 15px;
+//       @include icons-sprite(icon-removecolumn);
+//       @include transition;
+//     }
+
+//     &:hover {
+//       background-color: $color-neutral-white;
+
+//       .#{$prefix}column-header-text {
+//         opacity: 0.2;
+//       }
+//       .#{$vprefix}removablecolumn-delete {
+//         opacity: 1;
+//       }
+//     }
+//   }
+
+//   .#{$prefix}grid-group-hd {
+//     padding: 0px;
+
+//     .#{$prefix}grid-cell-inner {
+//       background-color: transparent;
+//       border: 0px none;
+//       padding: 7px 14px;
+//     }
+//     .#{$prefix}grid-group-title {
+//       color: $color;
+//       font: $font-navigation-labels;
+//     }
+//   }
+
+//   .#{$vprefix}flextable {
+//     border: 1px solid $color-grid-border;
+//     table-layout: fixed;
+//     width: 100%;
+
+//     tr.row {
+//       > * {
+//         overflow: hidden;
+//         padding: 15px 14px 13px;
+//         text-overflow: ellipsis;
+//         vertical-align: top;
+//         white-space: nowrap;
+//       }
+//       > td {
+//         background-color: $color-neutral-white;
+//       }
+//       > th {
+//         background-color: $color-neutral-light;
+//         text-shadow: 0px 1px $color-neutral-white;
+//         @include box-shadow(0px 1px $color-neutral-white inset);
+//       }
+//       > [data-type="number"] {
+//         text-align: right;
+//       }
+
+//       &:nth-of-type(2n) {
+//         > td {
+//           background-color: $color-grid-row;
+//         }
+//       }
+//     }
+//   }
+// }
