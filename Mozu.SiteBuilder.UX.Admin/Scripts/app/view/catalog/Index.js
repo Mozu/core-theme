@@ -15,6 +15,26 @@ Ext.define('Taco.view.catalog.Index', {
 
         var me = this;
 
+        var uibtns = Ext.create('Ext.Container', {
+            layout: {
+                type: 'hbox',
+                defaultMargins: '5'
+            },
+            items: [{
+                xtype: 'button',
+                frame: false,
+                scale: 'medium',
+                ui: 'action',
+                text: 'Cancel'
+            }, {
+                xtype: 'button',
+                frame: false,
+                scale: 'medium',
+                ui: 'action-primary',
+                text: 'Save'
+            }]
+        });
+
         var store = Ext.create('Ext.data.Store', {
             autoLoad: true,
             fields: [{ name: 'productCode', type: 'string' }],
@@ -164,8 +184,9 @@ Ext.define('Taco.view.catalog.Index', {
         // put it all together
         Ext.apply(this.body, {
             cls: Taco.baseCSSPrefix + 'catalog',
-            layout: { type: 'vbox', align: 'stretch' },
-            items: [reactorShim, view]
+            // layout: { type: 'vbox', align: 'stretch' },
+            layout: 'auto',
+            items: [uibtns, reactorShim, view]
         });
 
         this.callParent(arguments);
