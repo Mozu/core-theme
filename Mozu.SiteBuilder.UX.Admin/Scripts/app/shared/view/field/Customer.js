@@ -5,10 +5,10 @@
 
 Ext.define('Taco.shared.view.field.Customer', {
     extend: 'Ext.form.field.ComboBox',
-    alias: 'widget.taco.customerfield',
+    alias: 'widget.taco-customerfield',
 
-    //displayTpl: '{primaryLastName}, {primaryFirstName} - {primaryEmail}',
     displayField: 'primaryEmail',
+    valueField: 'id',
 
     emptyText: 'Search',
 

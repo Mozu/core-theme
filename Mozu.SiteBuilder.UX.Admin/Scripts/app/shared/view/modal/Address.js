@@ -9,39 +9,26 @@ Ext.define('Taco.shared.view.modal.Address', {
     ],
 
     autoShow: true,
+
     width: 700,
 
     addressHasNames: true,
-    record: null,
 
     initComponent: function () {
-        var formPanel,
-            dirtyButton;
+        this.cls += ' ' + Taco.baseCSSPrefix + 'address-editor';
 
-        this.cls = this.cls + ' ' + Taco.baseCSSPrefix + 'address-editor';
-
-        if (!record.isModel) {
-            record = Ext.create('Taco.model.Contact', record);
+        if (!this.record || !this.record.isModel) {
+            this.record = Ext.create('Taco.model.Contact', this.record);
         }
 
-        formPanel = Ext.widget({
+        this.form = Ext.widget({
             xtype: 'taco-addressform',
-            record: record,
+            record: this.record,
             manageHeight: false
         });
 
-        this.content = {
-            xtype: 'container',
-            items: [{
-                xtype: 'component',
-                autoEl: {
-                    tag: 'h2',
-                    cls: 'order-modal-title',
-                    html: 'Edit Address'
-                }
-            }, formPanel]
-        };
-
+        this.items = [this.form];
+        
         this.callParent(arguments);
     }
 });

@@ -19,8 +19,8 @@ Ext.define('Taco.view.order.subform.Customer', {
     initComponent: function () {
 
         this.newCustomer = Ext.widget({
-            xtype: 'container',
-            hidden: 'true',
+            xtype: 'formform',
+            hidden: true,
             items: [{
                 xytpe: 'fieldcontainer',
                 defaultType: 'textfield',
@@ -30,13 +30,13 @@ Ext.define('Taco.view.order.subform.Customer', {
                 },
                 items: [{
                     emptyText: 'First Name',
-                    name: 'customerFirstName'
+                    name: 'firstName'
                 }, {
                     emptyText: 'Last Name',
-                    name: 'customerLastName'
+                    name: 'lastName'
                 }, {
                     emptyText: 'Email Address',
-                    name: 'customerEmail',
+                    name: 'email',
                     flex: 1
                 }]
             }, {
@@ -47,8 +47,7 @@ Ext.define('Taco.view.order.subform.Customer', {
         });
 
         this.customerField = Ext.widget({
-            xtype: 'taco.customerfield',
-            flex: 1,
+            xtype: 'taco-customerfield',
             width: 500
         });
 
@@ -60,14 +59,8 @@ Ext.define('Taco.view.order.subform.Customer', {
             checked: true,
             listeners: {
                 change: function (field, value) {
-                    console.log('change', value);
-                    if (value) {
-                        this.customerField.show();
-                        this.newCustomer.hide();
-                    } else {
-                        this.customerField.hide();
-                        this.newCustomer.show();
-                    }
+                    if (value) this.selectExisting();
+                    else this.createNew();
                 },
                 scope: this
             }
@@ -80,5 +73,32 @@ Ext.define('Taco.view.order.subform.Customer', {
         }, this.newCustomer];
 
         this.callParent(arguments);
+
+        this.selectExisting();
+    },
+
+    selectExisting: function () {
+        var value = this.customerField.getValue();
+
+        this.customerField.show();
+        this.newCustomer.hide();
+
+        if (value) {
+            Taco.model.CustomerAccount.load({
+                id: value
+            }, {
+                success: this.orderForm.overwriteCustomer,
+                scope: this.orderForm
+            })
+        } else {
+            this.orderForm.overwriteCustomer();
+        }
+    },
+
+    createNew: function () {
+        
+
+        this.customerField.hide();
+        this.newCustomer.show();
     }
 });

@@ -5,7 +5,7 @@
  */
 Ext.define('Taco.core.ux.EditContainer', {
     extend: 'Ext.container.Container',
-    alias: 'widget.taco.editcontainer',
+    alias: 'widget.taco-editcontainer',
     componentCls: Taco.baseCSSPrefix + 'editcontainer',
     isEditContainer: true,
 
