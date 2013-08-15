@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         public ActionResult Launchpad()
         {
             var redir = _settings.LoginPath;
-            if (_settings.AppSettings("useTenantDomainNames") != "true")
+            if (_settings.AppSettings("ReverseProxy") != "true")
             {
                 redir += "?postback=http://" + HttpContext.Request.Headers["host"];
             }
