@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @class Taco.view.order.Form
  */
 Ext.define('Taco.view.order.Form', {
@@ -39,8 +39,6 @@ Ext.define('Taco.view.order.Form', {
 
     initComponent: function () {
 
-        window.r = this.record;
-
         this.customer = {};
 
         this.titleData = {
@@ -60,6 +58,7 @@ Ext.define('Taco.view.order.Form', {
                 listeners: {
                     orderchange: function () {
                         this.savableStateCheck();
+                        this.shippingForm.loadShippingMethods();
                     },
                     scope: this
                 }
@@ -115,13 +114,11 @@ Ext.define('Taco.view.order.Form', {
         // Is Shipping Valid?
         if (!this.shippingForm.isValid()) return false;
 
-        return true;
-
         // Is Payment valid?
-        if (!this.paymentForm.isValid()) return false;
+        // if (!this.paymentForm.isValid()) return false;
 
         // Is Order Item valid?
-        if (!this.orderDetail.isValid()) return false;
+        // if (!this.orderDetail.isValid()) return false;
 
         return true;
     },

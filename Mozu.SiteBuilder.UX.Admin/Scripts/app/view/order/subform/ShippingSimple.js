@@ -23,6 +23,8 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             proxy: 'memory'
         });
 
+        this.shippingMethodsStore = this.record.getShippingMethods();
+
         this.contactsStore.add(this.contact);
 
         this.addresses = Ext.widget({
@@ -59,8 +61,29 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             }
         });
 
+        this.shippingMethods = Ext.widget({
+            xtype: 'selectfield',
+            width: 200,
+            fieldLabel: 'Shipping Methods',
+            valueField: 'ShippingMethodCode',
+            displayField: 'ShippingMethodName',
+            store: this.shippingMethodsStore,
+            listConfig: {
+                getInnerTpl: function () {
+                    return '{ShippingMethodName} {Price:currency}';
+                }
+            },
+            listeners: {
+                select: function () {
+                    this.sendShitToFoster();
+                },
+                scope: this
+            }
+        });
+
         this.items = [
-            this.addresses
+            this.addresses,
+            this.shippingMethods
         ];
 
         this.setTools({
@@ -100,20 +123,8 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             record: this.contact,
             listeners: {
                 savesuccess: function (modal, record) {
-                    Ext.Ajax.request({
-                        url: '/admin/app/order/setshippingcontact',
-                        method: 'POST',
-                        jsonData: {
-                            orderId: this.record.getId(),
-                            contact: record.data
-                        },
-                        success: function () {
-                            console.log('success!!');
-                        },
-                        failure: function () {
-                            alert('ooops');
-                        }
-                    });
+                    this.contactData = record.data;
+                    this.sendShitToFoster();
                     this.fireEvent('orderchange');
                 },
                 scope: this
@@ -121,7 +132,43 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
         });
     },
 
+    sendShitToFoster: function () {
+        Ext.Ajax.request({
+            url: '/admin/app/order/setshippinginfo',
+            method: 'POST',
+            jsonData: {
+                orderId: this.record.getId(),
+                contact: this.contactData,
+                shippingMehtodCode: this.shippingMethods.getValue()
+            },
+            success: function () {
+                console.log('success!!');
+                this.loadShippingMethods();
+            },
+            failure: function () {
+                alert('ooops');
+            },
+            scope: this
+        });
+    },
+
+    loadShippingMethods: function () {
+        var store = this.record.getShippingMethods();
+
+        this.shippingMethodsStore.load({
+            callback: function () {
+                //is.shippingMethodsStore
+                console.log('store', this.shippingMethodsStore.count());
+            },
+            scope: this
+        });
+    },
+
     isValid: function () {
+        return this.hasShippingContact();
+    },
+
+    hasShippingContact: function () {
         return !!this.contact.get('firstName');
     }
 });
