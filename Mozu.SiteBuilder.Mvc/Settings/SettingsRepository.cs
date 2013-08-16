@@ -7,6 +7,7 @@ using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.SiteSettings.Shipping.Contracts;
 using Mozu.SiteSettings.Shipping.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models;
+using Mozu.Core.Api.Client;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using GeneralSettings = Mozu.SiteSettings.General.Contracts.GeneralSettings;
@@ -36,10 +37,10 @@ namespace Mozu.SiteBuilder.Mvc.Settings
          public SettingsRepository(ISiteBuilderContext sbc, /*IReferenceDataWebApiClient refClient,*/ IGeneralSettingsWebApiClient genClient, IProvisioningWebApiClient provClient, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, IShippingSettingsWebApiClient shippingSettingsWebApiClient)
         {
             //_referenceDataWebApiClient = refClient;
-            _generalSettingsWebApiClient = genClient;
-            _provisioningWebApiClient = provClient;
-             _shippingSettingsWebApiClient = shippingSettingsWebApiClient;
-            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
+            _generalSettingsWebApiClient = genClient.CloneWithoutUserClaims();
+            _provisioningWebApiClient = provClient.CloneWithoutUserClaims();
+            _shippingSettingsWebApiClient = shippingSettingsWebApiClient.CloneWithoutUserClaims();
+            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
             _sbc = sbc;
             _genSettings = new Lazy<UX.Models.Settings.GeneralSettings>(() =>
             {
