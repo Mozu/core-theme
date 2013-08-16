@@ -709,6 +709,7 @@
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\button\Button.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\window\Window.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\var\window\Window.scss" />
+    <Content Include="Scripts\makecss.bat" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

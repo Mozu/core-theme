@@ -9,12 +9,13 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
     //    type: 'vbox'
       
     //},
+    cascadeChildTasks: true,
     padding: '0 0 20 0',
     //margin: '10,0,10,10',
 
     header: null,
 
-    initComponent: function() {
+    initComponent: function () {
         this.header = null;
         var credFieldDefs = this.gatewayDefinition.get('credentialDefinitions'),
             credentials = this.record.get('credentials') || {},
@@ -24,7 +25,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
             credentialsSet = this.record.get('credentialsSet');
         this.items = [];
         this.credFields = [];
-        Ext.Array.each(credFieldDefs, function(fieldDef) {
+        Ext.Array.each(credFieldDefs, function (fieldDef) {
             var credField = Ext.widget(
                 {
                     xtype: 'textfield',
@@ -42,17 +43,16 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
             supportedCardsCbs.push(
                 { boxLabel: card.Value, name: 'cards', inputValue: card.Key, checked: supportedCards.indexOf(card.Key) > -1 }
             );
-        });       
-        
-       
+        });
+
+
         this.supportedCardsCbg = Ext.widget({
             xtype: 'checkboxgroup',
             fieldLabel: 'Supported Cards',
             // Arrange checkboxes into two columns, distributed vertically
             columns: 2,
             vertical: true,
-            items: supportedCardsCbs
-       
+            items: supportedCardsCbs       
         });
 
         this.paymentProcessingFlowTypeRg = Ext.widget(
@@ -74,30 +74,21 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
         this.callParent(arguments);
     },
     initTitle: Ext.emptyFn,
-    addChildSaveTasks: function (tasks) {
+    beforeSave: function () {
         var me = this;
-        tasks.add({
-            key:'credentials-update-record',
-            fn:
-                function (task) {
-                    var isDirty = false, val = {};
-                    Ext.each(me.credFields, function (field) {
-                        if (field.isDirty()) {
-                            isDirty = true;
-                        }
-                        val[field.name] = field.getValue();
-                    });
-                    if (isDirty) {
-                        me.record.set('credentials', val);
-                    }
-                    me.record.set('supportedCards', me.supportedCardsCbg.getValue().cards);
-                    
-                    task.callback();
-                },
-            dependencies: 'update-record'
-        });
-        return tasks;
-    }
-    
 
+        var isDirty = false, val = {};
+        Ext.each(me.credFields, function (field) {
+            if (field.isDirty()) {
+                isDirty = true;
+            }
+            val[field.name] = field.getValue();
+        });
+        if (isDirty) {
+            me.record.set('credentials', val);
+        }
+        me.record.set('supportedCards', me.supportedCardsCbg.getValue().cards);
+
+
+    }
 });
