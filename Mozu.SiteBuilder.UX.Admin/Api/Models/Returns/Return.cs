@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public DateTime? RMADeadline { get; set; }
 
         [DataMember(EmitDefaultValue = false, Name = "type")]
-        public string Type { get; set; }
+        public string ReturnType { get; set; }
 
 
         [DataMember(EmitDefaultValue = false, Name = "refundAmount")]
