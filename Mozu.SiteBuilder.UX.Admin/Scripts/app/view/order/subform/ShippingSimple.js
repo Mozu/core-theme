@@ -139,7 +139,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             jsonData: {
                 orderId: this.record.getId(),
                 contact: this.contactData,
-                shippingMehtodCode: this.shippingMethods.getValue()
+                shippingMethodCode: this.shippingMethods.getValue()
             },
             success: function () {
                 console.log('success!!');

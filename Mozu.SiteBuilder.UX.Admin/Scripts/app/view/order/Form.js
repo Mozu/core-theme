@@ -127,14 +127,15 @@ Ext.define('Taco.view.order.Form', {
         var me = this;
 
         tasks.add({ 
+            key: 'submitorder',
             fn: function() {
                 Ext.Ajax.request({
                     url: '/admin/app/order/submit',
                     method: 'POST',
                     jsonData: { orderId: me.record.getId() },
                     success: function() {
-                        
-                        tasks.callback();
+                        alert("Your order was created! Yay! You should probably close this window now.");
+                        // tasks.callback();
                     },
                     failure: function() {
                         tasks.callback(true);

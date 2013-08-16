@@ -179,9 +179,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             public string OrderId { get; set; }
             public Contact Contact { get; set; }
+            public string ShippingMethodName { get; set; }
+            public string ShippingMethodCode { get; set; }
         }
-        [HttpPostRoute(UriTemplate = "setshippingcontact")]
-        public async Task<Response<Order>> SetShippingContact(SetShippingContactArgs args)
+        [HttpPostRoute(UriTemplate = "setshippinginfo")]
+        public async Task<Response<Order>> SetShippingInfo(SetShippingContactArgs args)
         {
             DCs.ShippingInfo shippingInfo;
             
@@ -196,6 +198,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             shippingInfo.ShippingContact = args.Contact.Map<DCcore.Contact>();
+            shippingInfo.ShippingMethodName = args.ShippingMethodName;
+            shippingInfo.ShippingMethodCode = args.ShippingMethodCode;
 
             await _orderWebApiClient.SetShippingInfo(args.OrderId, shippingInfo);
 
