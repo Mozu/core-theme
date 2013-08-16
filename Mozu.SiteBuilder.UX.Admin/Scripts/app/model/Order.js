@@ -2,7 +2,7 @@
  * @class Taco.model.Order
  */
 Ext.define('Taco.model.Order', {
-    requires: ['Taco.model.Return'],
+    requires: ['Taco.model.Return','Taco.model.ShippingMethod'],
     
     extend: 'Taco.core.data.Model',
     /**********************************************************
@@ -577,6 +577,26 @@ Ext.define('Taco.model.Order', {
 
      *
      */
+    
+    getShippingMethods:function () {
+        if (!this.shippingMethods) {
+            this.shippingMethods = Ext.create('Ext.data.Store', {
+                model: 'Taco.model.ShippingMethod',
+                proxy: {
+                    type: 'ajax',
+                    url: '/admin/app/order/shipping/runtimemethods?orderId='+ this.getId(),
+                    reader: {
+                        type: 'json',
+                        root: 'items',
+                        successProperty: 'success'
+                    }
+                },
+                autoLoad: true
+            });
+        }
+        return this.shippingMethods;
+    },
+
     capturePayment: function (config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/capture',
