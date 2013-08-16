@@ -53,6 +53,8 @@ Ext.define('Taco.view.order.subform.Customer', {
 
                     console.log('CHANGE', field.name, value);
                     this.customer[field.name] = value;
+
+                    console.log('CUSTOMER', this.customer);
                 },
                 scope: this
             }
@@ -63,10 +65,17 @@ Ext.define('Taco.view.order.subform.Customer', {
             width: 500,
             listeners: {
                 change: function (field, value) {
-                    this.customer.id = value;
+                    this.customer.customerAccountId = value;
                 },
                 scope: this
             }
+        });
+
+        this.setCustomer = Ext.widget({
+            xtype: 'dirtybutton',
+            text: 'Assign Customer',
+            click: this.assignCustomer,
+            scope: this
         });
 
         this.items = [{
@@ -88,7 +97,9 @@ Ext.define('Taco.view.order.subform.Customer', {
             name: 'customer',
             inputValue: 'new',
             checked: false
-        }, this.newCustomer];
+        }, this.newCustomer,
+            this.setCustomer
+        ];
 
         this.callParent(arguments);
 
@@ -111,7 +122,27 @@ Ext.define('Taco.view.order.subform.Customer', {
     },
 
     isValid: function () {
-        return this.customer.id
+        var valid = this.customer.customerAccountId
             || (this.customer.firstName && this.customer.lastName && this.customer.email);
+
+        this.setCustomer.setDirty(valid);
+
+        return valid;
+    },
+
+    assignCustomer: function () {
+        this.customer.orderId = this.record.getId();
+
+        Ext.Ajax({
+            url: '/admin/app/order/setcustomer',
+            method: 'POST',
+            jsonData: this.customer,
+            success: function (record) {
+                console.log('setcustomer - success', record);
+            },
+            failure: function () {
+                alert('ooops - setCustomer');
+            }
+        });
     }
 });
