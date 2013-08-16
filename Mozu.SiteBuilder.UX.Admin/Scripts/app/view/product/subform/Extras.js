@@ -235,7 +235,10 @@ Ext.define('Taco.view.product.subform.Extras', {
                 html: 'Store Label',
                 width: 300
             }, {
-                xtype: 'numberfield',
+                xtype: 'unitfield',
+                unitString: '$',
+                emptyText: '0',
+                unitAtEnd: false,
                 name: this.getFieldName(ptAttribute),
                 fieldLabel: 'Extra Cost',
                 value: pExtra ? pExtra.get('values')[0].delta : null
