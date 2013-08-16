@@ -29,6 +29,22 @@
     }
 }
 
+/* MULTISELECT LISTS */
+
+.#{$prefix}multiselectfield {
+    &.#{$prefix}form-invalid {
+        .#{$prefix}boundlist-item {
+            border-bottom-color: $color-theme-red;
+            border-left-color: $color-theme-red;
+            border-right-color: $color-theme-red;
+
+            &:first-child {
+                border-top-color: $color-theme-red;
+            }
+        }
+    }
+}
+
 /* FLOATING LISTS */
 
 .#{$prefix}boundlist-floating {

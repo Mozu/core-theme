@@ -19,9 +19,4 @@
         border: 0;
         padding: px-to-rem(14);
     }
-
-    .#{$prefix}mask {
-        background: $color-neutral-black;
-        @include background(radial-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)));
-    }
 }

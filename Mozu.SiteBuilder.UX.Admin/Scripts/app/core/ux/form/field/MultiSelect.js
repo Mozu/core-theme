@@ -7,6 +7,8 @@ Ext.define('Taco.core.ux.form.field.MultiSelect', {
     extend: 'Ext.ux.form.MultiSelect',
     alias: 'widget.taco.field.multiselect',
 
+    componentCls: Ext.baseCSSPrefix + 'form-fieldcontainer ' + Ext.baseCSSPrefix + 'multiselectfield',
+    invalidCls: Ext.baseCSSPrefix + 'form-invalid',
     listConfig: {
         selModel: { mode: 'SIMPLE' }
     },

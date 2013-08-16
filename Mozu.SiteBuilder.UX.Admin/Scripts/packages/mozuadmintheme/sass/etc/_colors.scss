@@ -42,17 +42,17 @@ $color-theme-purple:            rgb(114, 25, 133);
 
 $base-color: $color-neutral-90;
 
-$color-theme-base:              rgb(210, 70, 60);   // #D2463C red
-$color-theme-base-dark:         rgb(196, 66, 57);   // #C44239 red
-$color-theme-base-darker:       rgb(158, 53, 46);   // #9E352E red
-$color-theme-base-darkest:      rgb(145, 49, 42);   // #91312A red
+$color-theme-base:              $color-theme-red;
+$color-theme-base-dark:         $color-theme-red-darker;
+$color-theme-base-darker:       $color-theme-red-darker;
+$color-theme-base-darkest:      $color-theme-red-darkest;
 
-$color-theme-accent:            rgb(37, 174, 144);  // #25AE90 green
+$color-theme-accent:            $color-theme-green;
 
-$color-theme-support:           rgb(228, 239, 255); // #E4EFFF blue
+$color-theme-support:           $color-theme-blue-light;
 $color-theme-support-dark:      rgb(163, 184, 214); // #A3B8D6 blue
-$color-theme-support-darker:    rgb(55, 120, 213);  // #3778D5 blue
-$color-theme-support-darkest:   rgb(22, 69, 136);   // #164588 blue
+$color-theme-support-darker:    $color-theme-blue-bright;
+$color-theme-support-darkest:   $color-theme-blue-darker;
 
 // message colors
 $color-status:                  rgb(204, 255, 204); // #CCFFCC green
@@ -60,10 +60,10 @@ $color-warning:                 rgb(255, 255, 204); // #FFFFCC yellow
 $color-error:                   rgb(255, 204, 204); // #FFCCCC red
 
 // highlight colors
-$color-selected: $color-theme-support;
+$color-selected: $color-theme-blue-light;
 
 // action colors
-$color-action-link: $color-theme-support-darkest;
+$color-action-link: $color-theme-blue-darker;
 
 $color-action-foreground: $color-neutral-20;
 $color-action-background: $color-neutral-95;

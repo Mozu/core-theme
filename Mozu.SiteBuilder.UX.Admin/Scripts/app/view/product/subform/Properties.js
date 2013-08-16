@@ -152,6 +152,7 @@ Ext.define('Taco.view.product.subform.Properties', {
         
         items.unshift({
             xtype: 'container',
+            padding: '0 0 10',
             layout: {
                 type: 'hbox',
                 align: 'stretch'
