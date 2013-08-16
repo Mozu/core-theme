@@ -60,28 +60,43 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     },
                     amount = formValues.amount;
 
-                billingInfo.paymentServiceCardId = me._hiddenCardId;
+                    billingInfo.paymentServiceCardId = me._hiddenCardId;
 
-                order.addPayment({
-                    jsonData: {
-                        orderId: order.getId(),
-                        amount: amount,
-                        billingInfo: billingInfo,
-                        billingContact: contactInfo
-                    },
-                    success: function() {
-                        me.hide();
-                        order.reload();
+                    if (me.isCreateMode) {
+                        order.setBillingInfo({
+                            jsonData: {
+                                orderId: order.getId(),
+                                billingInfo: billingInfo,
+                                billingContact: contactInfo
+                            },
+                            success: function() {
+                                me.hide();
+                                order.reload();
+                            }
+                        });
                     }
-                });
+                    else {
+                        order.addPayment({
+                            jsonData: {
+                                orderId: order.getId(),
+                                amount: amount,
+                                billingInfo: billingInfo,
+                                billingContact: contactInfo
+                            },
+                            success: function() {
+                                me.hide();
+                                order.reload();
+                            }
+                        });
+                    }
                     // TODO: impl mask for our own form and also finish working.
                 }
             },
             settings: {
                 apiBase: Taco.paymentApiBaseUrl,
                 framePath: "/../../Assets/pci_receiver.html",
-                siteId: me.record.get('siteId'),
-                tenantId: me.record.get('tenantId')
+                siteId: me.record.get('siteId') || Taco.app.context.getSiteId(),
+                tenantId: me.record.get('tenantId') || Taco.app.context.getTenantId()
             }
         });
     },

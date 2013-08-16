@@ -652,6 +652,14 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
     
+    setBillingInfo: function(config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/setbillinginfo',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
 
     /**
      * service call to void an authorized payment transaction for an order     
