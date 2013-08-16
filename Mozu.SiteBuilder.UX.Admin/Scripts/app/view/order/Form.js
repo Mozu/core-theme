@@ -124,5 +124,27 @@ Ext.define('Taco.view.order.Form', {
         if (!this.orderDetail.isValid()) return false;
 
         return true;
+    },
+
+    addSaveTasks: function(tasks) {
+        var me = this;
+
+        tasks.add({ 
+            fn: function() {
+                Ext.Ajax.request({
+                    url: '/admin/app/order/submit',
+                    method: 'POST',
+                    jsonData: { orderId: me.record.getId() },
+                    success: function() {
+                        debugger;
+                        tasks.callback();
+                    },
+                    failure: function() {
+                        tasks.callback(true);
+                    }
+                });
+            }
+        });
+        return tasks;
     }
 })
