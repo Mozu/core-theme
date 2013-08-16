@@ -16,5 +16,9 @@ Ext.define('Taco.view.order.Edit', {
             = this.record.get('orderStatus') !== 'Created';
 
         this.callParent(arguments);
+
+        this.form.on('savesuccess', function() {
+            alert('yay');
+        });
     }
 });
