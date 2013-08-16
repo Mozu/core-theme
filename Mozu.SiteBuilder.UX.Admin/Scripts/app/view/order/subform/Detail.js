@@ -154,44 +154,41 @@ Ext.define('Taco.view.order.subform.Detail', {
     //},
     
     editOrder: function (animationTarget) {
-        var me = this;
-        
-        var win = Ext.create('Taco.view.order.modal.EditOrderDetail', {
-            record: this.record,
+        var me = this,
+            isDraft = me.orderForm.isEdit(),
+            win = Ext.create('Taco.view.order.modal.EditOrderDetail', {
+
+            // if we want to edit a draft only, pass recordId.
+            // otherwise, pass the record.
+            isDraftMode: isDraft, 
+            record: isDraft ? null : me.record,
+            recordId: isDraft ? me.record.getId() : null,
+
             listeners: {
-                'close': {
-                    fn: function (view, e) {
-                        if (view.getHasDraft()) {
-                            me.record.set('hasDraft',true);
-                            me.updateHasDraftToolbar();
-                        }
-                        me.fireEvent('orderchange');
-                    },
-                    scope:me
+                close: function(view, e) {
+                    if (isDraft && view.getHasDraft()) {
+                        me.record.set('hasDraft',true);
+                        me.updateHasDraftToolbar();
+                    }
+                    me.fireEvent('orderchange');
                 },
-                'draftOrderSaved': {
-                    fn: function (data) {
+
+                draftOrderSaved: function () {
                         me.record.reload();
                         me.setLoading(false, this.body);
-                    },
-                    scope:me
                 },
-                'draftOrderRemoved': {
-                    fn: function (data) {
+
+                draftOrderRemoved: function (data) {
                         //me.setLoading(true, this.body);
                         // hide the toolbar
                         me.detailGrid.removeDocked(me.detailGrid.hasDraftToolbar, true);
                         
                         //todo: need to determine if we need to reload the data object aftetr this operation;
-                        
-                    },
-                    scope: me
                 }
             }
-            
         });
 
-        win.show();
+        // now we sit back and let autoShow do the rest..
     },
 
     /*

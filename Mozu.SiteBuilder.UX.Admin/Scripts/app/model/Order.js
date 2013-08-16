@@ -505,6 +505,47 @@ Ext.define('Taco.model.Order', {
      */
 
 
+//     onAjaxSuccess: function(callback, response) {
+//        var me = this,
+//            reader = me.getProxy().getReader(),
+//            results = reader.read(response),
+//            newRecord = results && results.records ? results.records[0] : null;
+//
+//        debugger;
+//
+//        // set all the new data
+//        me.set(newRecord.data);
+//
+//        // for each of the associations, set all their new data
+//        me.items().loadData(me.get('items'));
+//        me.items().each(function(item) {
+//            item.discounts().loadData(item.get('discounts'));
+//            item.shippingDiscounts().loadData(item.get('shippingDiscounts'));
+//        });
+//
+//        me.payments().loadData(me.get('payments'));
+//        me.payments().each(function(payment) {
+//            payment.interactions().loadData(payment.get('interactions'));
+//        });
+//        me.shippingDiscounts().loadData(me.get('shippingDiscounts'));
+//
+//        // commit the changes.
+//        me.commit();
+//
+//        if (callback) {
+//            callback(response);
+//        }
+//     },
+//
+//     onAjaxFailure: function(callback, response) {
+//        var me = this,
+//            json = Ext.decode(response.responseText, true);
+//        debugger; 
+//        if (callback) {
+//            callback(response);
+//        }
+//     },
+
 
     /**
      * service call to capture payment for an order     
@@ -1019,8 +1060,11 @@ Ext.define('Taco.model.Order', {
      *
      */
     removeOrderItem: function (config) {
+        var me = this;
+
         Ext.apply(config, {
             url: '/admin/app/order/items/remove',
+            params: { 'draft': me.get('isDraft') },
             method: "POST"
         });
 
@@ -1059,8 +1103,11 @@ Ext.define('Taco.model.Order', {
      *
      */
     editOrderItemQuantity: function (config) {
+        var me = this;
+
         Ext.apply(config, {
             url: '/admin/app/order/items/editquantity',
+            params: { 'draft': me.get('isDraft') },
             method: "POST"
         });
 
@@ -1099,8 +1146,11 @@ Ext.define('Taco.model.Order', {
      *
      */
     editOrderItemPrice: function (config) {
+        var me = this;
+
         Ext.apply(config, {
             url: '/admin/app/order/items/editprice',
+            params: { 'draft': me.get('isDraft') },
             method: "POST"
         });
 
@@ -1145,13 +1195,38 @@ Ext.define('Taco.model.Order', {
      *
      */
     addOrderItem: function (config) {
+        var me = this;
+
         Ext.apply(config, {
             url: '/admin/app/order/items/add',
+            params: { 'draft': me.get('isDraft') },
             method: "POST"
         });
 
         Ext.Ajax.request(config);
     },
+//    addOrderItem: function (orderItems, config) {
+//        var me = this,
+//            isDraft = me.get('isDraft'), 
+//            baseUrl = '/admin/app/order/items/add',
+//            url = isDraft ? baseUrl + "?draft=true" : baseUrl,
+//            data = {
+//                orderId: me.getId(),
+//                orderItems: orderItems
+//            };
+//
+//        if (!config)
+//            config = {};
+//
+//        Ext.Ajax.request({
+//            url: url,
+//            method: 'POST',
+//            jsonData: data,
+//            success: Ext.Function.pass(me.onAjaxSuccess, config.success),
+//            failure: Ext.Function.pass(me.onAjaxFailure, config.failure),
+//            scope: me
+//        });
+//    },
     
     /**
      * service call to add coupon to the order

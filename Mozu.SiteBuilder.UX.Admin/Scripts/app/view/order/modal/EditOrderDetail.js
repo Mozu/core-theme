@@ -59,7 +59,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         );
 
         me.title = me.titleTemplate.apply({
-            orderNumber: this.record.get('orderNumber')
+            orderNumber: me.record ? me.record.get('orderNumber') : '<New>'
         });
 
         me.header = {
@@ -72,8 +72,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             text: 'Save & Close',
             onClick: function () {
                 me.saveDraftOrder();
-            },
-            scope: me
+            }
         });
 
         me.dirtyButton.setDirty(true);
@@ -99,27 +98,25 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                         },
                         scope: me
                     },
-                    { xtype: 'component', flex: 1 },
+                    { 
+                        xtype: 'component', 
+                        flex: 1 
+                    },
                     {
                         xtype: "taco.button",
                         text: 'Close',
                         onClick: function (button) {
                             me.close();
-                        },
-                        scope: me
+                        }
                     },
                     this.dirtyButton
                 ]
             }
         ];
         
-        me.orderModel = Ext.ModelManager.getModel('Taco.model.Order');
-        var extraParams = me.orderModel.getProxy().extraParams;
-        Ext.apply(extraParams, {
-            draft: true
-        });
-
-        me.loadRecord();
+        if (!me.record) {
+            me.loadRecord();
+        }
         this.callParent(arguments);
     },
     
@@ -127,7 +124,13 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     show : function() {
         var me = this;
         me.callParent(arguments);
-        this.setLoading(true, this.body);
+
+        if (!me.record) {
+            me.setLoading(true, me.body);
+        }
+        else {
+            me.onLoadRecord();
+        }
     },
     
     reloadData: function () {
@@ -139,23 +142,18 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     // call the service and get an updated record;
     loadRecord: function () {
         var me = this,
-            orderId = (me.record) ? me.record.get('id') : me.orderId;
-        
-        me.orderModel.load(orderId, {
-            scope: me,
+            orderId = me.record ? me.record.getId() : me.recordId,
+            orderModel = Ext.ModelManager.getModel('Taco.model.Order');
+
+        orderModel.load(orderId, {
+            params: { 'draft': me.isDraftMode },
             failure: function (record, operation) {
                 //do something if the load failed
-                this.setLoading(false, this.body);
+                me.setLoading(false, this.body);
             },
             success: function (record, operation) {
                 
-                if (me.draftRecord) {
-                     //this doesnt load the associations;
-                    //me.draftRecord.copyData(record);
-                    me.draftRecord = record;
-                } else {
-                    me.draftRecord = record;
-                }
+                me.record = record;
                 me.onLoadRecord();
             },
             callback: function (record, operation) {
@@ -180,8 +178,8 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     // reloads the ui using new data
     updateUi: function () {
         var me = this;
-        me.totalRow.setData(me.draftRecord.getData());
-        me.detailGrid.getStore().loadRecords(me.draftRecord.itemsStore.getRange());
+        me.totalRow.setData(me.record.getData());
+        me.detailGrid.getStore().loadRecords(me.record.itemsStore.getRange());
     },
     
     // initialize the header and grid when the data load the first time
@@ -190,7 +188,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
 
         me.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanel', {
             style: "margin: 0px 0px 0px 0px;border: 1px solid #cccccc !important; border-top-width:1px !important;padding-top:10px",
-            data: me.draftRecord.getData(),
+            data: me.record.getData(),
             totalColumnWidth: me.getRowTotalColumnWidth(),
             actionColumnWidth: me.getActionColumnWidth(),
             isEditable:true
@@ -199,49 +197,34 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         me.detailGrid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
             editMode: true,
             flex: 1,
-            record: me.draftRecord,
-            store: me.draftRecord.itemsStore,
+            record: me.record,
+            store: me.record.itemsStore,
             autoHeight: true,
             listeners: {
-                'draftOrderSaved': {
-                    fn: function (data) {
-                        me.setLoading(false, me.body);
-                        me.fireEvent('draftOrderSaved', data);
-                        me.setHasDraft(false);
-                        me.hide();
-                    },
-                    scope: me
+                'draftOrderSaved': function (data) {
+                    me.setLoading(false, me.body);
+                    me.fireEvent('draftOrderSaved', data);
+                    me.setHasDraft(false);
+                    me.hide();
                 },
-                'draftOrderRemoved': {
-                    fn: function (data) {
-                        me.setLoading(false, me.body);
-                        me.fireEvent('draftOrderRemoved', data);
-                        me.setHasDraft(false);
-                        me.hide();
-                    },
-                    scope: me
+                'draftOrderRemoved': function (data) {
+                    me.setLoading(false, me.body);
+                    me.fireEvent('draftOrderRemoved', data);
+                    me.setHasDraft(false);
+                    me.hide();
                 },
-                'save': {
-                    fn: function () {
-                        me.setLoading(true, me.body);
-                        me.setHasDraft(true);
-                    },
-                    scope: me
+                'save': function () {
+                    me.setLoading(true, me.body);
+                    me.setHasDraft(true);
                 },
-                'saveSuccess': {
-                    fn: function (data) {
-                        me.setLoading(false, me.body);
-                        me.fireEvent('saveSuccess', data);
-                        me.reloadData();
-                    },
-                    scope: me
+                'saveSuccess': function (data) {
+                    me.setLoading(false, me.body);
+                    me.fireEvent('saveSuccess', data);
+                    me.reloadData();
                 },
-                'saveFailure': {
-                    fn: function (error) {
-                        me.setLoading(false, me.body);
-                        me.fireEvent('saveFailure', error);
-                    },
-                    scope: me
+                'saveFailure': function (error) {
+                    me.setLoading(false, me.body);
+                    me.fireEvent('saveFailure', error);
                 }
             }
         });

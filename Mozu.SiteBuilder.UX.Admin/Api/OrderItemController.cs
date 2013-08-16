@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.Core.Api.Routing;
@@ -30,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
         [HttpPostRoute(UriTemplate = "items/add")]
-        public async Task<Response<Order>> AddOrderItem(AddOrderItemArgs args, [FromUri]bool draft = true)
+        public async Task<Response<Order>> AddOrderItem(AddOrderItemArgs args, [FromUri]bool draft = false)
         {
             DC.Order dcOrder = null;
 
@@ -56,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public List<OrderItem> OrderItems { get; set; }
         }
         [HttpPostRoute(UriTemplate = "items/editquantity")]
-        public async Task<Response<Order>> UpdateOrderItemQuantity(UpdateOrderItemArgs args, [FromUri]bool draft = true)
+        public async Task<Response<Order>> UpdateOrderItemQuantity(UpdateOrderItemArgs args, [FromUri]bool draft = false)
         {
             DC.Order dcOrder = null;
             foreach (var item in args.OrderItems)
@@ -68,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
         
         [HttpPostRoute(UriTemplate = "items/editprice")]
-        public async Task<Response<Order>> UpdateOrderItemPrice(UpdateOrderItemArgs args, [FromUri]bool draft = true)
+        public async Task<Response<Order>> UpdateOrderItemPrice(UpdateOrderItemArgs args, [FromUri]bool draft = false)
         {
             DC.Order dcOrder = null;
             foreach (var item in args.OrderItems)
@@ -85,13 +82,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public List<string> OrderItemIds { get; set; }
         }
         [HttpPostRoute(UriTemplate = "items/remove")]
-        public async Task<Response<Order>> RemoveOrderItem(RemoveOrderItemArgs args)
+        public async Task<Response<Order>> RemoveOrderItem(RemoveOrderItemArgs args, [FromUri]bool draft = false)
         {
             DC.Order dcOrder = null;
 
             foreach (var itemId in args.OrderItemIds)
             {
-                dcOrder = (await _orderWebApiClient.DeleteOrderItem(args.OrderId, itemId, APPLY_TO_DRAFT)).ReadAsSync();
+                dcOrder = (await _orderWebApiClient.DeleteOrderItem(args.OrderId, itemId, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
 
             return Single2( dcOrder.Map<Order>() );
