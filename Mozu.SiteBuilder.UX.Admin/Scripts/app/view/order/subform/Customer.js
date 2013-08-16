@@ -65,7 +65,8 @@ Ext.define('Taco.view.order.subform.Customer', {
             width: 500,
             listeners: {
                 change: function (field, value) {
-                    this.customer.customerAccountId = value;
+                    this.customer.customerAccountId = field.getValue();
+                    console.log('customer', this.customer);
                 },
                 scope: this
             }
@@ -133,16 +134,18 @@ Ext.define('Taco.view.order.subform.Customer', {
     assignCustomer: function () {
         this.customer.orderId = this.record.getId();
 
-        Ext.Ajax({
+        Ext.Ajax.request({
             url: '/admin/app/order/setcustomer',
             method: 'POST',
             jsonData: this.customer,
             success: function (record) {
+                this.setCustomer.setDirty(false);
                 console.log('setcustomer - success', record);
             },
             failure: function () {
                 alert('ooops - setCustomer');
-            }
+            },
+            scope: this
         });
     }
 });

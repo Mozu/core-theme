@@ -115,13 +115,13 @@ Ext.define('Taco.view.order.Form', {
         // Is Shipping Valid?
         if (!this.shippingForm.isValid()) return false;
 
-        // Is Order Item valid?
-        if (!this.orderDetail.isValid()) return false;
-
         return true;
 
         // Is Payment valid?
         if (!this.paymentForm.isValid()) return false;
+
+        // Is Order Item valid?
+        if (!this.orderDetail.isValid()) return false;
 
         return true;
     }
