@@ -11,7 +11,10 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
+using DCcore = Mozu.Core.Api.Contracts;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
+using DCp = Mozu.CommerceRuntime.Contracts.Payments;
+using DCs = Mozu.CommerceRuntime.Contracts.Shipping;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -114,6 +117,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             await _orderWebApiClient.DeleteOrderDraft(args.OrderId);
 
             return SuccessWithTotal2<Order>(1);
+        }
+
+        public class SetBillingShippingContactArgs
+        {
+            public string OrderId { get; set; }
+            public Contact Contact { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "setbillingcontact")]
+        public async Task<Response<Order>> SetBillingContact(SetBillingShippingContactArgs args)
+        {
+            DCp.BillingInfo billingInfo = (await _orderWebApiClient.GetBillingInfo(args.OrderId)).ReadAsSync();
+            billingInfo.BillingContact = args.Contact.Map<DCcore.Contact>();
+
+            await _orderWebApiClient.SetBillingInfo(args.OrderId, billingInfo);
+
+            DCo.Order dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
+
+            return Single2( dcOrder.Map<Order>() );
+        }
+
+        [HttpPostRoute(UriTemplate = "setshippingcontact")]
+        public async Task<Response<Order>> SetShippingContact(SetBillingShippingContactArgs args)
+        {
+            DCs.ShippingInfo shippingInfo = (await _orderWebApiClient.GetShippingInfo(args.OrderId)).ReadAsSync();
+            shippingInfo.ShippingContact = args.Contact.Map<DCcore.Contact>();
+
+            await _orderWebApiClient.SetShippingInfo(args.OrderId, shippingInfo);
+
+            DCo.Order dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
+
+            return Single2(dcOrder.Map<Order>());
         }
     }
 }
