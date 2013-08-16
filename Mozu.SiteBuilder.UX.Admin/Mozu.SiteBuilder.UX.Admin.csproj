@@ -555,6 +555,7 @@
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
+    <Content Include="Scripts\app\view\site\navigation\NavHeadings.js" />
     <Content Include="Scripts\build\all-classes.js" />
     <Content Include="Scripts\build\fonts\journal-webfont.eot" />
     <Content Include="Scripts\build\fonts\journal-webfont.ttf" />
@@ -3249,7 +3250,6 @@
   <Target Name="AfterBuild">
     <ItemGroup>
       <JS Include="$(ProjectDir)\Scripts\resources\lib\*.js" Exclude="$(ProjectDir)\Scripts\resources\lib\init.min.js" />
-      <JS Include="$(ProjectDir)\Scripts\resources\lib\tinymce\tinymce.min.js" />
     </ItemGroup>
     <AjaxMin JsSourceFiles="@(JS)" JsCombinedFileName="$(ProjectDir)\Scripts\resources\lib\init.min.js" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
   </Target>
