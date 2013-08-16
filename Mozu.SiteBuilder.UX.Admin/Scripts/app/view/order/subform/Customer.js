@@ -5,6 +5,7 @@
 
 Ext.define('Taco.view.order.subform.Customer', {
     extend: 'Taco.view.order.subform.Subform',
+    alias: 'widget.taco-ordercustomer',
 
     requires: [
         'Taco.shared.view.field.Customer'
@@ -17,6 +18,8 @@ Ext.define('Taco.view.order.subform.Customer', {
     },
 
     initComponent: function () {
+
+        this.customer = {};
 
         this.newCustomer = Ext.widget({
             xtype: 'formform',
@@ -42,13 +45,28 @@ Ext.define('Taco.view.order.subform.Customer', {
             }, {
                 xtype: 'checkbox',
                 boxLabel: 'Create an Account',
-                name: 'customerCreateAccount'
-            }]
+                name: 'createAccount'
+            }],
+            listeners: {
+                change: function (field, value) {
+                    if (!field || !field.name) return;
+
+                    console.log('CHANGE', field.name, value);
+                    this.customer[field.name] = value;
+                },
+                scope: this
+            }
         });
 
         this.customerField = Ext.widget({
             xtype: 'taco-customerfield',
-            width: 500
+            width: 500,
+            listeners: {
+                change: function (field, value) {
+                    this.customer.id = value;
+                },
+                scope: this
+            }
         });
 
         this.items = [{
@@ -78,27 +96,22 @@ Ext.define('Taco.view.order.subform.Customer', {
     },
 
     selectExisting: function () {
-        var value = this.customerField.getValue();
-
+        this.customer = {};
+        this.customerField.reset();
         this.customerField.show();
         this.newCustomer.hide();
-
-        if (value) {
-            Taco.model.CustomerAccount.load({
-                id: value
-            }, {
-                success: this.orderForm.overwriteCustomer,
-                scope: this.orderForm
-            })
-        } else {
-            this.orderForm.overwriteCustomer();
-        }
     },
 
     createNew: function () {
-        
+        this.customer = {};
+        this.newCustomer.getForm().reset();
 
         this.customerField.hide();
         this.newCustomer.show();
+    },
+
+    isValid: function () {
+        return this.customer.id
+            || (this.customer.firstName && this.customer.lastName && this.customer.email);
     }
 });

@@ -72,12 +72,12 @@ Ext.define('Taco.model.Order', {
         {
             "name": "billingContact",
             "type": "auto",
-            "default": []
+            "default": {}
         },
         {
             "name": "shippingContact",
             "type": "auto",
-            "default": []
+            "default": {}
         },
         {
             "name": "ipAddress",
