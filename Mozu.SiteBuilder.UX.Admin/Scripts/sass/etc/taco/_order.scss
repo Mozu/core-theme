@@ -356,15 +356,46 @@
 
 
   /*order total row*/
-  .orderform-detail-totalRow{ 
-        background-color:#fff;
+.orderform-detail-totalRow { 
+	background-color:#fff;
     border-width: 0px 1px 1px 1px;
     border-style:solid;
     border-color:#cccccc; 
     text-align:right;
     font-size: 1.4rem;
-    line-height: 1.9rem;    
-    
+    line-height: 1.9rem;
+
+	.x-grid-cell-inner {
+	    padding: 0px 5px 0px 5px;
+	}	
+
+	.discount-suppress {
+		@include icon-font($glyph-close);	    
+    }
+
+	.discount-activate {
+        @include icon-font($glyph-cancel);     
+    }
+
+	.order-action-icon {
+		height: 30px;
+		width: auto;
+		cursor:pointer;
+		&::after {
+			left: 15px;
+			top: 4px;
+			font-size: 22px;	  
+		}
+		visibility:hidden;
+	}
+		
+	.orderEditable {
+		.order-action-icon {
+			visibility: visible;
+		}
+	}
+
+		
 
     // groups of summary row values. used to add some padding between groups
     .subTotalGroup{padding-bottom:10px;}
@@ -385,16 +416,16 @@
 
     // values for summary row of order deteails
     .orderTotal-values{
-      padding:7px 5px 5px 5px;
-      .subTotal{}
-      .orderLevelCoupon{}
-      .shipping{}
-      .shippingCoupon{}
-      .orderLevelAdjustment{}
-      .tax{}
-      .total{}    
+		padding:7px 5px 5px 5px;
+        .subTotal{}
+        .orderLevelCoupon{}
+        .shipping{}
+        .shippingCoupon{}
+        .orderLevelAdjustment{}
+        .tax{}
+        .total{}    
     }        
-  }
+}
 
 
   // order customer notes row

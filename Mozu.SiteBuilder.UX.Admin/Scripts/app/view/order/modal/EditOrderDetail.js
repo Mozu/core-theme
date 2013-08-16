@@ -130,18 +130,10 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         this.setLoading(true, this.body);
     },
     
-    reloadData: function (data) {
+    reloadData: function () {
         var me = this;
-        // reload with the data passed in.
-        
-        if (data && data.items) {
-            me.draftRecord.set(data);
-            me.draftRecord.commit();
-            me.onLoadRecord();
-        } else {
-            //call the service to reload the data;
-            me.loadRecord();
-        }
+        //call the service to reload the data;
+        me.loadRecord();
     },
 
     // call the service and get an updated record;
@@ -156,9 +148,14 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                 this.setLoading(false, this.body);
             },
             success: function (record, operation) {
-                //do something if the load succeeded
                 
-                me.draftRecord = record;
+                if (me.draftRecord) {
+                     //this doesnt load the associations;
+                    //me.draftRecord.copyData(record);
+                    me.draftRecord = record;
+                } else {
+                    me.draftRecord = record;
+                }
                 me.onLoadRecord();
             },
             callback: function (record, operation) {
@@ -170,7 +167,6 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     // when the draft record has loaded create and add the total and grid and hide the loading mask;
     onLoadRecord : function() {
         var me = this;
-
         // initialize the ui when the record loads the first time.
         if (!this.totalRow) {
             me.initUi();
@@ -196,7 +192,8 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             style: "margin: 0px 0px 0px 0px;border: 1px solid #cccccc !important; border-top-width:1px !important;padding-top:10px",
             data: me.draftRecord.getData(),
             totalColumnWidth: me.getRowTotalColumnWidth(),
-            actionColumnWidth: me.getActionColumnWidth()
+            actionColumnWidth: me.getActionColumnWidth(),
+            isEditable:true
         });
 
         me.detailGrid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
@@ -235,8 +232,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     fn: function (data) {
                         me.setLoading(false, me.body);
                         me.fireEvent('saveSuccess', data);
-                        
-                        me.reloadData(data);
+                        me.reloadData();
                     },
                     scope: me
                 },
