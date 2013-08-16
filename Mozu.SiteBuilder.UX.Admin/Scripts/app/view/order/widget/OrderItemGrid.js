@@ -868,7 +868,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     errorDialog.show();
                     return;
                 }
-                this.fireEvent('saveSuccess',json.items[0]);
+                this.fireEvent('saveSuccess',json);
 
                 //this.record.reload();
             },
@@ -933,7 +933,9 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
                     return;
                 }
-                me.fireEvent('saveSuccess', json.items[0]);
+                
+                
+                me.fireEvent('saveSuccess', json);
                 // after a successful add, pass focus back to the searchfield;
                 me.focusActiveSearchField();
                 //this.record.reload();
@@ -998,6 +1000,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             jsonData: jsonData,
             success: function (response) {
                 // success handling here
+                
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
@@ -1009,7 +1012,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     errorDialog.show();
                     return;
                 }
-                this.fireEvent('saveSuccess', json.items[0]);
+                this.fireEvent('saveSuccess', json);
             },
             failure: function (response) {
                 // error handling here
@@ -1069,7 +1072,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     return;
                 }
                 me.removeDocked(me.activeAddToolbar, true);
-                this.fireEvent('saveSuccess', json.items[0]);
+                this.fireEvent('saveSuccess', json);
             },
             failure: function (response) {
                 // error handling here
@@ -1108,7 +1111,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     errorDialog.show();
                     return;
                 }
-                me.fireEvent("saveSuccess");
+                me.fireEvent("saveSuccess",json);
             },
             failure: function (response) {
                 // error handling here
@@ -1146,7 +1149,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     errorDialog.show();
                     return;
                 }
-                me.fireEvent("saveSuccess");
+                
+                me.fireEvent("saveSuccess",json);
             },
             failure: function (response) {
                 // error handling here
@@ -1184,7 +1188,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     errorDialog.show();
                     return;
                 }
-                me.fireEvent("saveSuccess");
+                me.fireEvent("saveSuccess",json);
             },
             failure: function (response) {
                 // error handling here

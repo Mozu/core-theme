@@ -80,7 +80,6 @@ Ext.define('Taco.view.order.subform.Detail', {
     
         // store that contains the orderItems for this order model
         orderItemStore = this.record.itemsStore;
-
         
         // plugin to add suppourt to the grid for editing the price and quantity columns
         var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
@@ -161,27 +160,29 @@ Ext.define('Taco.view.order.subform.Detail', {
             record: this.record,
             listeners: {
                 'close': {
-                    fn:function(view,e) {
+                    fn: function (view, e) {
                         if (view.getHasDraft()) {
                             me.record.set('hasDraft',true);
                             me.updateHasDraftToolbar();
                         }
-                        
                     },
                     scope:me
                 },
                 'draftOrderSaved': {
-                    fn: function () {
-                        me.setLoading(true, this.body);
-                        this.record.reload();
+                    fn: function (data) {
+                        me.record.reload();
+                        me.setLoading(false, this.body);
                     },
                     scope:me
                 },
                 'draftOrderRemoved': {
                     fn: function (data) {
-                        me.setLoading(true, this.body);
+                        //me.setLoading(true, this.body);
                         // hide the toolbar
                         me.detailGrid.removeDocked(me.detailGrid.hasDraftToolbar, true);
+                        
+                        //todo: need to determine if we need to reload the data object aftetr this operation;
+                        
                     },
                     scope: me
                 }
@@ -191,17 +192,47 @@ Ext.define('Taco.view.order.subform.Detail', {
 
         win.show();
     },
+
+    /*
+    loadRecord: function () {
+        var me = this,
+            orderId = (me.record) ? me.record.get('id') : me.orderId;
+        debugger;
+        me.orderModel.load(orderId, {
+            scope: me,
+            failure: function (record, operation) {
+                //do something if the load failed
+                this.setLoading(false, this.body);
+            },
+            success: function (record, operation) {
+                me.record = record;
+                me.onLoadRecord();
+            },
+            callback: function (record, operation) {
+                //do something whether the load succeeded or failed
+            }
+        });
+    },
+
+    // when the draft record has loaded create and add the total and grid and hide the loading mask;
+    onLoadRecord: function () {
+        var me = this;
+        // initialize the ui when the record loads the first time.
+        //me.updateUi();
+        //this.setLoading(false, this.body);
+        debugger;
+        me.record.reload();
+    },
     
+    */
 
     // when the record changes we will need to update the order details
     onRecordChange: function () {
         var me = this;
-
         Ext.suspendLayouts();
         // need to reload the record;
         me.updateUi();
-        Ext.resumeLayouts(true);
-        
+        Ext.resumeLayouts(true);        
         me.setLoading(false, this.body);
     },
     
@@ -215,15 +246,53 @@ Ext.define('Taco.view.order.subform.Detail', {
         }
     },
     
+    /*
+     * ExtJS doesn't handle reload of data with sub-stores well.
+     * So we manually re-populate the order.items()
+     */
+    rebuildItems: function() {
+        var me = this;
+        
+        me.record.items().removeAll();
+        var itemsToAdd = [];
+        Ext.each(me.record.data.items, function (itemRaw) {
+            var itemRecord = Ext.create('Taco.model.OrderItem', itemRaw);
+            
+            var discountsToAdd = [];
+            Ext.each(itemRecord.data.discounts, function (raw) {
+                var discountRecord = Ext.create('Taco.model.OrderItemDiscount', raw);
+                discountsToAdd.push(discountRecord);
+            });
+
+            // for some reason the discounts store is only present when the discounts:[] has values;
+            if (itemRecord.discounts) {
+                itemRecord.discounts().removeAll();
+                itemRecord.discounts().add(discountsToAdd);
+            }
+            
+            var shippingDiscountsToAdd = [];
+            Ext.each(itemRecord.data.shippingDiscounts, function (raw) {
+                var shippingDiscountRecord = Ext.create('Taco.model.OrderShippingDiscount', raw);
+                shippingDiscountsToAdd.push(shippingDiscountRecord);
+            });
+            
+            if (itemRecord.shippingDiscounts) {
+                itemRecord.shippingDiscounts().removeAll();
+                itemRecord.shippingDiscounts().add(shippingDiscountsToAdd);
+            }
+            
+            itemsToAdd.push(itemRecord);
+        });
+        
+        me.record.items().add(itemsToAdd);
+
+
+    },
+    
     updateUi: function () {
         var me = this;
         me.totalRow.setData(me.record.getData());
-        //me.detailGrid.getStore().loadRecords(me.record.itemsStore.getRange());
-        // itemStore not updating with new data
-
-        me.detailGrid.getStore().loadRawData(me.record.getData().items);
-
-
+        me.rebuildItems();
         me.updateHasDraftToolbar();
     },
 

@@ -461,7 +461,8 @@ Ext.define('Taco.model.Order', {
         {
             type: 'hasMany',
             model: 'Taco.model.OrderShippingDiscount',
-            name: 'shippingDiscounts'
+            name: 'shippingDiscounts',
+            reader:"json"
         }
     ],
 
