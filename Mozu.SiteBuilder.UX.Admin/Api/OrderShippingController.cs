@@ -16,6 +16,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     public partial class OrderController
     {
+        public async Task<Response<List<DCs.ShippingRate>>> GetAvailableShipmentMethods([FromUri]string orderId)
+        {
+            List<DCs.ShippingRate> rates = (await _orderWebApiClient.GetAvailableShipmentMethods(orderId)).ReadAsSync();
+
+            return List2(rates);
+        }
+
         // TODO: this should be more like the move arguments.
         // TODO: like CreatePackageArgs { public string OrderId; public List<OrderPackageItem> items; }
         public class CreatePackageArgs

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -29,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
         [HttpPostRoute(UriTemplate = "items/add")]
-        public async Task<Response<Order>> AddOrderItem(AddOrderItemArgs args)
+        public async Task<Response<Order>> AddOrderItem(AddOrderItemArgs args, [FromUri]bool draft = true)
         {
             DC.Order dcOrder = null;
 
@@ -44,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Product = product
                 };
 
-                dcOrder = (await _orderWebApiClient.CreateOrderItem(args.OrderId, dcOrderItem, APPLY_TO_DRAFT)).ReadAsSync();
+                dcOrder = (await _orderWebApiClient.CreateOrderItem(args.OrderId, dcOrderItem, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
 
             return Single2( dcOrder.Map<Order>() );
@@ -55,24 +56,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public List<OrderItem> OrderItems { get; set; }
         }
         [HttpPostRoute(UriTemplate = "items/editquantity")]
-        public async Task<Response<Order>> UpdateOrderItemQuantity(UpdateOrderItemArgs args)
+        public async Task<Response<Order>> UpdateOrderItemQuantity(UpdateOrderItemArgs args, [FromUri]bool draft = true)
         {
             DC.Order dcOrder = null;
             foreach (var item in args.OrderItems)
             {
-                dcOrder = (await _orderWebApiClient.UpdateItemQuantity(args.OrderId, item.Id, item.Quantity, APPLY_TO_DRAFT)).ReadAsSync();
+                dcOrder = (await _orderWebApiClient.UpdateItemQuantity(args.OrderId, item.Id, item.Quantity, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
         
             return Single2( dcOrder.Map<Order>() );
         }
         
         [HttpPostRoute(UriTemplate = "items/editprice")]
-        public async Task<Response<Order>> UpdateOrderItemPrice(UpdateOrderItemArgs args)
+        public async Task<Response<Order>> UpdateOrderItemPrice(UpdateOrderItemArgs args, [FromUri]bool draft = true)
         {
             DC.Order dcOrder = null;
             foreach (var item in args.OrderItems)
             {
-                dcOrder = (await _orderWebApiClient.UpdateItemProductPrice(args.OrderId, item.Id, item.UnitPrice, APPLY_TO_DRAFT)).ReadAsSync();
+                dcOrder = (await _orderWebApiClient.UpdateItemProductPrice(args.OrderId, item.Id, item.UnitPrice, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
 
             return Single2( dcOrder.Map<Order>() );
@@ -97,17 +98,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "items/suppressdiscount")]
-        public async Task<Response<Order>> SuppressItemDiscount(SuppressDiscountArgs args)
+        public async Task<Response<Order>> SuppressItemDiscount(SuppressDiscountArgs args, [FromUri]bool draft = true)
         {
             DC.Order dcOrder = null;
-            DC.OrderItem dcOrderItem = (await _orderWebApiClient.GetOrderItem(args.OrderId, args.OrderItemId, true)).ReadAsSync();
+            DC.OrderItem dcOrderItem = (await _orderWebApiClient.GetOrderItem(args.OrderId, args.OrderItemId, draft)).ReadAsSync();
 
             var discount = dcOrderItem.ProductDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId) ?? dcOrderItem.ShippingDiscounts.Select(sd => sd.Discount).FirstOrDefault(d => d.Discount.Id == args.DiscountId);
 
             if (discount != null)
             {
                 discount.Excluded = true;
-                dcOrder = (await _orderWebApiClient.UpdateOrderItemDiscount(args.OrderId, args.OrderItemId, discount.Discount.Id, discount, APPLY_TO_DRAFT)).ReadAsSync();
+                dcOrder = (await _orderWebApiClient.UpdateOrderItemDiscount(args.OrderId, args.OrderItemId, discount.Discount.Id, discount, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
             else
             {
