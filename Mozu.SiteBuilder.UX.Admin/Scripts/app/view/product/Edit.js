@@ -10,28 +10,13 @@
     initComponent: function () {
         var me = this;
 
-        // this.moreStore = Ext.create('Ext.data.Store', {
-        //         fields: [
-        //             'text',
-        //             { name: 'fn', type: 'string' },
-        //             { name: 'state', type: 'auto', defaultValue:[] },
-        //             { name: 'isPreview', type: 'boolean' }
-        //         ]
-        //     });
-
-        // this.moreStore.add([
-        //     { text: 'Preview In', id: 1},
-        //     { text: 'Delete', id: 2, fn: 'destroyRecord' }
-        // ]);
-
-        // this.updateMoreStore();
-
         this.additionalActions = [{
             xtype: 'button',
             itemId: 'moreButton',
             ui: 'action',
             scale: 'medium',
             text: 'More',
+            menuAlign: 'tr-br?',
             menu: {
                 plain: true,
                 shadow: false,
@@ -79,50 +64,10 @@
                 }
             }
         }];
-
-        // this.additionalActions = [{
-        //     xtype: 'selectfield',
-        //     displayField: 'text',
-        //     valueField: 'id',
-        //     queryMode: 'local',
-        //     style: { 'display': 'inline-table' },
-        //     value: 0,
-        //     store: this.moreStore,
-        //     listConfig : {
-        //         itemTpl: '<tpl if="isPreview">&nbsp;&nbsp;</tpl>{text}',
-        //         listeners: {
-        //             beforeitemclick: function (boundList, record) {
-        //                 var fn = record.get('fn'), state = record.get('state');
-        //                 if (fn) {
-        //                     return this[fn].apply(this, state);
-        //                 } else {
-        //                     return false;
-        //                 }
-        //             },
-        //             scope: this
-        //         }
-        //     },
-        //     displayTpl:'More'
-        // }];
         
         this.formCfg = Ext.apply(this.formCfg || {}, { options: this.options });
 
         this.callParent(arguments);
-
-        // this.mon(this.record.getProductInSites(), 'datachanged', this.updateMoreStore, this);
-    },
-    
-    updateMoreStore: function () {
-        var me = this;
-
-        // this.moreStore.filterBy(function(record) {
-        //     return record.get('isPreview') !== true;
-        // });
-
-        // Ext.each(me.record.getProductInSites().data.items,function (pis) {
-        //     var site = pis.get('site');
-        //     me.moreStore.insert(1, { text: '  '+  site.name, id: pis.id, fn: 'preview', state: [pis] , isPreview:true});
-        // });
     },
 
     preview: function (pis) {
