@@ -13,7 +13,7 @@ Ext.define('Taco.view.order.subform.Detail', {
     ],
     
     title: 'Order Details',
-    alias: 'widget.orderDetailSubform',
+    alias: 'widget.taco-orderdetail',
     
     config: {
         
@@ -165,6 +165,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                             me.record.set('hasDraft',true);
                             me.updateHasDraftToolbar();
                         }
+                        me.fireEvent('orderchange');
                     },
                     scope:me
                 },
@@ -302,5 +303,10 @@ Ext.define('Taco.view.order.subform.Detail', {
     onDestroy: function () {
        
         this.callParent(arguments);
+    },
+
+    isValid: function () {
+        var items = this.record.get('items');
+        return items && items.length;
     }
 });

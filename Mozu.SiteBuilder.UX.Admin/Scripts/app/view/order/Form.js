@@ -56,7 +56,13 @@ Ext.define('Taco.view.order.Form', {
     buildForm: function () {
         var subformCfg = {
                 record: this.record,
-                orderForm: this
+                orderForm: this,
+                listeners: {
+                    orderchange: function () {
+                        this.savableStateCheck();
+                    },
+                    scope: this
+                }
             },
             items = [];
 
@@ -83,8 +89,10 @@ Ext.define('Taco.view.order.Form', {
 
         this.loadNavItems(items);
 
-        this.shippingForm = this.down('taco-odershippingsimple');
+        this.shippingForm = this.down('taco-ordershippingsimple');
         this.customerForm = this.down('taco-ordercustomer');
+        this.orderDetail = this.down('taco-orderdetail');
+
     },
 
     isEdit: function () {
@@ -104,16 +112,16 @@ Ext.define('Taco.view.order.Form', {
         // Is customer valid?
         if (!this.customerForm.isValid()) return false;
 
-        return true;
+        // Is Shipping Valid?
+        if (!this.shippingForm.isValid()) return false;
 
-        // Is Order Item valid?
-        if (!this.orderDetail.isValid()) return false;
+        return true;
 
         // Is Payment valid?
         if (!this.paymentForm.isValid()) return false;
 
-        // Is Shipping Valid?
-        if (!this.shippingForm.isValid()) return false;
+        // Is Order Item valid?
+        if (!this.orderDetail.isValid()) return false;
 
         return true;
     }

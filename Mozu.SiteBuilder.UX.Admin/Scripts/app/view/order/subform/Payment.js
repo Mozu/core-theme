@@ -212,6 +212,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         me.destroyPaymentsUI();
         me.initPaymentsUI();
         Ext.resumeLayouts(true);
+        this.fireEvent('orderchange');
     },
 
     /*
@@ -231,6 +232,12 @@ Ext.define('Taco.view.order.subform.Payment', {
             });
             me.record.payments().add(paymentRecord);
         });
+    },
+
+    isValid: function () {
+        var payments = this.record.get('payments');
+
+        return payments && payments.length;
     }
 
 });
