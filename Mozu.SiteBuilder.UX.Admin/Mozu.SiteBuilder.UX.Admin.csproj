@@ -697,6 +697,8 @@
     <Content Include="Scripts\build\Taco-all.scss" />
     <Content Include="Scripts\build\Taco-example.scss" />
     <Content Include="Scripts\overrides\button\Button.js" />
+    <Content Include="Scripts\resources\lib\polyfills.js" />
+    <Content Include="Scripts\resources\lib\init.min.js" />
     <Content Include="Scripts\sass\src\view\dashboard\Index.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\tab\Tab.scss" />
     <Content Include="Scripts\sass\src\Application.scss" />
@@ -1725,7 +1727,6 @@
     <Content Include="Scripts\resources\images\icons\icon-toolbox-nav-product.png" />
     <Content Include="Scripts\resources\images\icons\icon-vee.png" />
     <Content Include="Scripts\resources\images\picker\date.png" />
-    <Content Include="Scripts\resources\lib\html9responsiveboilerstrap.js" />
     <Content Include="Scripts\resources\lib\pci-temp.js" />
     <Content Include="Scripts\resources\lib\tinymce\LICENSE.TXT" />
     <Content Include="Scripts\resources\lib\tinymce\plugins\advlist\plugin.min.js" />
@@ -2823,7 +2824,6 @@
     <Content Include="Scripts\resources\fonts\myriadwebpro-italic-webfont.svg" />
     <Content Include="Scripts\resources\fonts\myriadwebpro-webfont.svg" />
     <Content Include="Scripts\app\core\ux\picker\DateTime.js" />
-    <Content Include="Scripts\resources\lib\history-bundled.js" />
     <Content Include="Scripts\resources\lib\history.adapter.native.js" />
     <Content Include="Scripts\resources\lib\history.html4.js" />
     <Content Include="Scripts\resources\lib\history.js" />
@@ -3243,11 +3243,15 @@
 
   <Target Name="BeforeBuild">
 
-  </Target>
-
-  <Target Name="AfterBuild">
-
   </Target> -->
+  <UsingTask TaskName="AjaxMin" AssemblyFile="$(MSBuildExtensionsPath32)\Microsoft\MicrosoftAjax\AjaxMinTask.dll" />
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <JS Include="$(ProjectDir)\Scripts\resources\lib\*.js" Exclude="$(ProjectDir)\Scripts\resources\lib\init.min.js" />
+      <JS Include="$(ProjectDir)\Scripts\resources\lib\tinymce\tinymce.min.js" />
+    </ItemGroup>
+    <AjaxMin JsSourceFiles="@(JS)" JsCombinedFileName="$(ProjectDir)\Scripts\resources\lib\init.min.js" />
+  </Target>
   <Target Name="AfterCompile">
     <Exec Command="robocopy d:\software\ext\ext-4.2.1.883 $(ProjectDir)\ext-4.2.1.883 /e /xd docs welcome builds /xf ext-all*.js" WorkingDirectory="$(ProjectDir)\Scripts" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="make.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />

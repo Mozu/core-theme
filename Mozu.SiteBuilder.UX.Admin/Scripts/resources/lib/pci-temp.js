@@ -1,4 +1,11 @@
-﻿if (!window.JSON) {
+﻿/**
+ * PCI.js library for integrating HTML forms into PCIAAS.
+ * @author James Zetlen, Volusion, Inc. <james_zetlen@volusion.com>
+ * @copyright 2011-2013 Volusion, Inc.
+ *
+ */
+
+if (!window.JSON) {
     window.JSON = {};
     (function () {
         function k(a) { return a < 10 ? "0" + a : a } function o(a) { p.lastIndex = 0; return p.test(a) ? '"' + a.replace(p, function (a) { var c = r[a]; return typeof c === "string" ? c : "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4) }) + '"' : '"' + a + '"' } function l(a, j) {
