@@ -171,5 +171,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return Single2(dcOrder.Map<Order>());
         }
+
+        public class SetCustomerArgs
+        {
+            public string OrderId { get; set; }
+            public int? CustomerAccountId { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Email { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "setcustomer")]
+        public async Task<Response<Order>> SetCustomer(SetCustomerArgs args)
+        {
+            DCo.Order dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
+            
+            if (args.CustomerAccountId.HasValue)
+            {
+                dcOrder.CustomerAccountId = args.CustomerAccountId;
+                dcOrder = (await _orderWebApiClient.UpdateOrder(args.OrderId, dcOrder, APPLY_TO_ORIGINAL)).ReadAsSync();
+            }
+            else
+            {
+                return Message3<Order>(false, "Create customer is not currently supported.");
+            }
+
+            return Single2( dcOrder.Map<Order>() );
+        }
     }
 }
