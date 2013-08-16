@@ -133,7 +133,7 @@
         }),
 
         paymentTypeIsCreditCard = function () {
-            return this.getParentModel().PaymentType() === "Credit Card";
+            return this.getParentModel().PaymentType() === "CreditCard";
         },
         paymentTypeIsCheck = function () {
             return this.getParentModel().PaymentType() === "Check";
@@ -403,14 +403,21 @@
             return !isCreatingAccount.apply(this);
         },
 
-        Note = ViewModelPrototype.extend({
-            mozuType: 'ordernote',
-            statics: {
-                "Id": "",
-                "orderId": ""
-            },
+        //Note = ViewModelPrototype.extend({
+        //    mozuType: 'ordernote',
+        //    statics: {
+        //        "Id": "",
+        //        "orderId": ""
+        //    },
+        //    observables: {
+        //        "Text": {}
+        //    }
+        //}),
+
+        ShopperNotes = ViewModelPrototype.extend({
             observables: {
-                "Text": {}
+                "GiftMessage": {},
+                "Comments": {}
             }
         }),
 
@@ -424,7 +431,7 @@
             submodels: {
                 ShippingInfo: ShippingInfo,
                 BillingInfo: BillingInfo,
-                Note: Note,
+                ShopperNotes: ShopperNotes,
                 User: UserModels.User
             },
             observables: {
@@ -479,6 +486,9 @@
                 if (!this.validate()) return false;
                 this.submitting(true);
                 this.messages([]);
+
+                // build an array of sequential promises for all checkout tasks
+
                 if (this.createAccount()) {
                     apiSteps.push(function () {
                         return order.User.create();
@@ -493,9 +503,10 @@
                         return order.setUserId();
                     });
                 }
-                if (order.Note.Text()) {
+                if (order.ShopperNotes.Comments()) {
+                    // the above conditional should be extended for any other changes that were made
                     apiSteps.push(function () {
-                        return order.Note.create();
+                        return order.update();
                     });
                 }
                 apiSteps.push(function () {
@@ -508,6 +519,7 @@
 
                 var failHandler = function (error) {
                     console.log('noooo', error, error.message);
+                    order.endSubmit();
                     order.submitting(false);
                     $.each(error.Items, function (ix, errorItem) {
                         if (errorItem.ErrorCode === "MISSING_OR_INVALID_PARAMETER" && errorItem.AdditionalErrorData && errorItem.AdditionalErrorData[0] && errorItem.AdditionalErrorData[0].Value === "password" && errorItem.AdditionalErrorData[0].Name === "ParameterName") {
@@ -518,8 +530,6 @@
                         }
                     });
                 }, successHandler = function (completedOrder) {
-                    //$.cookie.raw = true;
-                    //$.cookie('order', 'lastorderid=' + completedOrder.Id + ';', { path: '/' });
                     return order.publish('complete');
                 };
 

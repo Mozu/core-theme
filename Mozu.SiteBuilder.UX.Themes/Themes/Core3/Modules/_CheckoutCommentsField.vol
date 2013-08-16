@@ -1,4 +1,4 @@
 ﻿<label>
     Comments
-    <textarea id="mz-order-comments" class="mz-order-comments" name="comments" data-bind="value: Note.Text"></textarea>
+    <textarea id="mz-order-comments" class="mz-order-comments" name="comments" data-bind="value: ShopperNotes.Comments"></textarea>
 </label>
