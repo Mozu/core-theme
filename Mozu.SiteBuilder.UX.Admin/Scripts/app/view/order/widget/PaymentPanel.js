@@ -49,7 +49,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
             'ManualCapturePayment': 'Capture Payment (Manual)',
             'ManualCreditPayment': 'Credit Payment (Manual)',
-            'ManualVoidPayment': 'Void Payment (Manual)'
+            'ManualVoidPayment': 'Void Payment (Manual)',
+            'ManualDeclinePayment': 'Decline Payment (Manual)'
         };
 
         var actionsWithLabels = Ext.Array.map(me.record.data.availableActions, function (action) {
@@ -296,6 +297,9 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 break;
             case 'ManualCreditPayment':
                 me.parent.creditPaymentManual();
+                break;
+            case 'ManualDeclinePayment':
+                alert('not implemented.');
                 break;
             case 'Rollback':
             case 'RollbackCapture':
