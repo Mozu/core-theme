@@ -127,7 +127,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "setbillingcontact")]
         public async Task<Response<Order>> SetBillingContact(SetBillingShippingContactArgs args)
         {
-            DCp.BillingInfo billingInfo = (await _orderWebApiClient.GetBillingInfo(args.OrderId)).ReadAsSync();
+            DCp.BillingInfo billingInfo;
+
+            var billingInfoResult = await _orderWebApiClient.GetBillingInfo(args.OrderId);
+            if (billingInfoResult.HasException && billingInfoResult.ResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                billingInfo = new DCp.BillingInfo();
+            }
+            else
+            {
+                billingInfo = billingInfoResult.ReadAsSync();
+            }
+
             billingInfo.BillingContact = args.Contact.Map<DCcore.Contact>();
 
             await _orderWebApiClient.SetBillingInfo(args.OrderId, billingInfo);
@@ -140,7 +151,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "setshippingcontact")]
         public async Task<Response<Order>> SetShippingContact(SetBillingShippingContactArgs args)
         {
-            DCs.ShippingInfo shippingInfo = (await _orderWebApiClient.GetShippingInfo(args.OrderId)).ReadAsSync();
+            DCs.ShippingInfo shippingInfo;
+            
+            var shippingInfoResult = await _orderWebApiClient.GetShippingInfo(args.OrderId);
+            if (shippingInfoResult.HasException && shippingInfoResult.ResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                shippingInfo = new DCs.ShippingInfo();
+            }
+            else
+            {
+                shippingInfo = shippingInfoResult.ReadAsSync();
+            }
+
             shippingInfo.ShippingContact = args.Contact.Map<DCcore.Contact>();
 
             await _orderWebApiClient.SetShippingInfo(args.OrderId, shippingInfo);
