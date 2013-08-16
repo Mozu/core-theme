@@ -4,7 +4,7 @@
 Ext.define('Taco.view.site.navigation.Tree', {
     // extend: 'Taco.view.site.ToolboxPanel',
     extend: 'Ext.panel.Panel',
-    requires: ['Taco.model.NavigationTreeNode', 'Taco.store.NavigationTreeNodes', 'Taco.view.site.navigation.PageCreator', 'Taco.view.site.navigation.ExternalLinkEditor'],
+    requires: ['Taco.model.NavigationTreeNode', 'Taco.store.NavigationTreeNodes', 'Taco.view.site.navigation.PageCreator', 'Taco.view.site.navigation.ExternalLinkEditor', 'Taco.view.site.navigation.NavHeadings'],
 
     layout: 'auto',
     overflowY: 'auto',
@@ -12,7 +12,8 @@ Ext.define('Taco.view.site.navigation.Tree', {
     initComponent: function() {
         var me = this,
             navigationTreeNodeModel,
-            cellEditing;
+            cellEditing,
+            navHeadings;
 
         navigationTreeNodeModel = Ext.ModelManager.getModel('Taco.model.NavigationTreeNode');
         navigationTreeNodeModel.prototype.initExpandable(navigationTreeNodeModel); // hack to get around cat expand when no children
@@ -20,6 +21,8 @@ Ext.define('Taco.view.site.navigation.Tree', {
         cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
             clicksToEdit: 2
         });
+
+        navHeadings = Ext.create('Taco.view.site.navigation.NavHeadings');
 
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes');
         
@@ -40,6 +43,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
             manageHeight: false,
             itemId: 'navigationTree',
             plugins: [cellEditing],
+            features: [navHeadings],
             store: this.store,
             columns: [{
                 xtype: 'treecolumn',
@@ -47,9 +51,7 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 dataIndex: 'name',
                 renderer: function(value, metaData, record) {
                     var id = record.getId();
-
-                    if (id == '_unlinked' || id == '_navigation') {
-                        metaData.tdCls = [metaData.tdCls, Taco.baseCSSPrefix + 'treelist-inline-header'].join(' ');
+                    if (record.parentNode.isRoot()) {
                         return '<span>' + value + '</span><a href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
                     } else {
                         return '<a href="#" class="taco-action-navigate">' + value + '</a>';
