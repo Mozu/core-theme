@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Settings;
+using Mozu.Customer.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
@@ -23,6 +24,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly ISettings _settings;
         private IOrderWebApiClient _orderWebApiClient;
+        private ICustomerAccountWebApiClient _customerAccountWebApiClient;
+        private ISiteBuilderApiContext _ctx;
 
         /*
          * All order item operations have an updateMode attribute.
@@ -35,10 +38,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public OrderController(IOrderWebApiClient orderWebApiClient, ISettings settings)
+        public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ISettings settings, ISiteBuilderApiContext ctx)
         {
             _settings = settings;
             _orderWebApiClient = orderWebApiClient;
+            _customerAccountWebApiClient = customerAccountWebApiClient;
+            _ctx = ctx;
         }
 
 		[HttpGetRoute(UriTemplate = "list")]
@@ -86,6 +91,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
             var order = (await _orderWebApiClient.CreateOrder(emptyOrder)).ReadAsSync();
 
+            order.TenantId = _ctx.TenantId;
+            order.SiteId = _ctx.SiteId;
+
             return Single2( order.Map<Order>() );
         }
 
@@ -101,6 +109,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return Single2( dc.Map<Order>() );
         }
+
+        [HttpPostRoute(UriTemplate = "submit")]
+        public async Task<Response<Order>> SubmitOrder(OrderIdArgs args)
+        {
+            var dc = (await _orderWebApiClient.PerformOrderAction(args.OrderId, new DCo.OrderAction { ActionName = "SubmitOrder" })).ReadAsSync();
+
+            return Single2( dc.Map<Order>() );
+        }
+
 
         [HttpPostRoute(UriTemplate = "commitdraft")]
         public async Task<Response<Order>> CommitDraft(OrderIdArgs args)
@@ -119,13 +136,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return SuccessWithTotal2<Order>(1);
         }
 
-        public class SetBillingShippingContactArgs
+        public class SetBillingInfoArgs
         {
             public string OrderId { get; set; }
-            public Contact Contact { get; set; }
+            public CardPaymentInformation BillingInfo { get; set; }
+            public Contact BillingContact { get; set; }
         }
-        [HttpPostRoute(UriTemplate = "setbillingcontact")]
-        public async Task<Response<Order>> SetBillingContact(SetBillingShippingContactArgs args)
+        [HttpPostRoute(UriTemplate = "setbillinginfo")]
+        public async Task<Response<Order>> SetBillingInfo(SetBillingInfoArgs args)
         {
             DCp.BillingInfo billingInfo;
 
@@ -139,17 +157,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 billingInfo = billingInfoResult.ReadAsSync();
             }
 
-            billingInfo.BillingContact = args.Contact.Map<DCcore.Contact>();
+            billingInfo.BillingContact = args.BillingContact.Map<DCcore.Contact>();
+            billingInfo.Card = new DCp.PaymentCard
+            {
+                CardNumberPartOrMask = args.BillingInfo.CardNumber,
+                ExpireMonth = args.BillingInfo.ExpireMonth,
+                ExpireYear = args.BillingInfo.ExpireYear,
+                NameOnCard = args.BillingInfo.NameOnCard,
+                PaymentOrCardType = args.BillingInfo.CardType,
+                PaymentServiceCardId = args.BillingInfo.PaymentServiceCardId
+            };
+            billingInfo.IsSameBillingShippingAddress = args.BillingInfo.IsSameBillingShippingAddress;
 
             await _orderWebApiClient.SetBillingInfo(args.OrderId, billingInfo);
-
             DCo.Order dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
 
             return Single2( dcOrder.Map<Order>() );
         }
 
+        public class SetShippingContactArgs
+        {
+            public string OrderId { get; set; }
+            public Contact Contact { get; set; }
+        }
         [HttpPostRoute(UriTemplate = "setshippingcontact")]
-        public async Task<Response<Order>> SetShippingContact(SetBillingShippingContactArgs args)
+        public async Task<Response<Order>> SetShippingContact(SetShippingContactArgs args)
         {
             DCs.ShippingInfo shippingInfo;
             
@@ -172,30 +204,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(dcOrder.Map<Order>());
         }
 
-        public class SetCustomerArgs
+        public class SetCustomerAccountIdArgs
         {
             public string OrderId { get; set; }
-            public int? CustomerAccountId { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string Email { get; set; }
+            public int CustomerAccountId { get; set; }
         }
         [HttpPostRoute(UriTemplate = "setcustomer")]
-        public async Task<Response<Order>> SetCustomer(SetCustomerArgs args)
+        public async Task<Response<Customer.Contracts.CustomerAccount>> SetCustomerAccountId(SetCustomerAccountIdArgs args)
         {
             DCo.Order dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
-            
-            if (args.CustomerAccountId.HasValue)
-            {
-                dcOrder.CustomerAccountId = args.CustomerAccountId;
-                dcOrder = (await _orderWebApiClient.UpdateOrder(args.OrderId, dcOrder, APPLY_TO_ORIGINAL)).ReadAsSync();
-            }
-            else
-            {
-                return Message3<Order>(false, "Create customer is not currently supported.");
-            }
+            Customer.Contracts.CustomerAccount dcCustomer;
 
-            return Single2( dcOrder.Map<Order>() );
+            dcOrder.CustomerAccountId = args.CustomerAccountId;
+            dcOrder = (await _orderWebApiClient.UpdateOrder(args.OrderId, dcOrder, APPLY_TO_ORIGINAL)).ReadAsSync();
+            dcCustomer = (await _customerAccountWebApiClient.GetAccount(args.CustomerAccountId)).ReadAsSync();
+
+            return Single2( dcCustomer );
         }
     }
 }
