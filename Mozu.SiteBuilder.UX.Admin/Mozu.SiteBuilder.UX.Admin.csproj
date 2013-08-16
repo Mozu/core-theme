@@ -696,6 +696,7 @@
     <Content Include="Scripts\build\config.rb" />
     <Content Include="Scripts\build\Taco-all.scss" />
     <Content Include="Scripts\build\Taco-example.scss" />
+    <Content Include="Scripts\overrides\button\Button.js" />
     <Content Include="Scripts\sass\src\view\dashboard\Index.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\tab\Tab.scss" />
     <Content Include="Scripts\sass\src\Application.scss" />
@@ -706,6 +707,8 @@
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\view\BoundList.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\var\button\Button.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\button\Button.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\window\Window.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\window\Window.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -3069,7 +3072,6 @@
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
     <Folder Include="Scripts\app\view\address\" />
-    <Folder Include="Scripts\overrides\" />
     <Folder Include="Scripts\sass\var\" />
     <Folder Include="Scripts\stylesheets\etc\" />
   </ItemGroup>

@@ -21,8 +21,8 @@
     $border-color-pressed: $color-action-outline-active,
     $border-color-disabled: $color-action-outline,
 
-    $padding: 7px 19px 5px,
-    $text-padding: null,
+    $padding: 7px 1px 5px 19px,
+    $text-padding: 18px 0px 0px,
 
     $background-color: $color-action-background,
     $background-color-over: $color-action-background-hover,
@@ -63,10 +63,10 @@
     $icon-size: 16px,
     $glyph-color: $color-action-foreground,
     $glyph-opacity: 1,
-    $arrow-width: null,
-    $arrow-height: null,
-    $split-width: null,
-    $split-height: null,
+    $arrow-width: 20px,
+    $arrow-height: 16px,
+    $split-width: 28px,
+    $split-height: 16px,
     $include-ui-menu-arrows: $button-include-ui-menu-arrows,
     $include-ui-split-arrows: $button-include-ui-split-arrows,
     $include-split-noline-arrows: false,
@@ -88,8 +88,8 @@
     $border-color-pressed: $color-action-primary-outline-active,
     $border-color-disabled: $color-action-primary-outline,
 
-    $padding: 7px 19px 5px,
-    $text-padding: null,
+    $padding: 7px 1px 5px 19px,
+    $text-padding: 18px 0px 0px,
 
     $background-color: $color-action-primary-background,
     $background-color-over: $color-action-primary-background-hover,
@@ -130,10 +130,10 @@
     $icon-size: 16px,
     $glyph-color: $color-action-primary-foreground,
     $glyph-opacity: 1,
-    $arrow-width: null,
-    $arrow-height: null,
-    $split-width: null,
-    $split-height: null,
+    $arrow-width: 20px,
+    $arrow-height: 16px,
+    $split-width: 28px,
+    $split-height: 16px,
     $include-ui-menu-arrows: $button-include-ui-menu-arrows,
     $include-ui-split-arrows: $button-include-ui-split-arrows,
     $include-split-noline-arrows: false,
@@ -144,6 +144,72 @@
 
 /* BUTTON UI RULES */
 
+// default state
+
+.#{$prefix}btn-action-medium {
+    .#{$prefix}btn-arrow-right,
+    .#{$prefix}btn-split-right {
+        background-image: none;
+        @include icon-font($glyph-arrowdown, 16px, $color-action-foreground);
+        height: auto;
+        width: auto;
+
+        &::after {
+            left: auto;
+            right: 5px;
+        }
+    }
+
+    .#{$prefix}btn-arrow-right {
+        padding-right: 38px;
+    }
+
+    .#{$prefix}btn-split-right {
+        &::after {
+            border-left: 1px solid $color-action-primary-outline;
+            height: 21px;
+            padding-top: 7px;
+            right: -1px;
+            text-align: center;
+            top: -7px;
+            width: 27px;
+        }
+    }
+}
+
+.#{$prefix}btn-action-primary-medium {
+    .#{$prefix}btn-arrow-right,
+    .#{$prefix}btn-split-right {
+        background-image: none;
+        @include icon-font($glyph-arrowdown, 16px, $color-action-primary-foreground);
+        height: auto;
+        width: auto;
+
+        &::after {
+            left: auto;
+            right: 5px;
+        }
+    }
+
+    .#{$prefix}btn-arrow-right {
+        padding-right: 38px;
+    }
+
+    .#{$prefix}btn-split-right {
+        &::after {
+            border-left: 1px solid $color-action-primary-outline;
+            height: 21px;
+            padding-top: 7px;
+            right: -1px;
+            text-align: center;
+            top: -7px;
+            width: 27px;
+        }
+    }
+}
+
+// over state
+
 .#{$prefix}btn-action-medium-over {
     @include box-shadow(inset 0px -1px $color-action-outline-hover);
 }
@@ -152,6 +218,9 @@
     @include box-shadow(inset 0px -1px $color-action-primary-outline-hover);
 }
 
-.#{$prefix}btn-disabled {
+.#{$prefix}btn-action-medium-pressed,
+.#{$prefix}btn-action-medium-disabled,
+.#{$prefix}btn-action-primary-medium-pressed
+.#{$prefix}btn-action-primary-medium-disabled {
     @include box-shadow(inset 0px -1px transparent);
 }
