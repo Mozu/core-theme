@@ -64,6 +64,9 @@ Ext.define('Taco.Application',{
     name: 'Taco',
     appFolder: '/admin/Scripts/app',
     autoCreateViewport: false,
+    paths: {
+        'Overrides': '/admin/Scripts/overrides'
+    },
     requires: [
             'Ext.data.association.HasOne',
             'Taco.core.data.RemoteException',
@@ -126,7 +129,7 @@ Ext.define('Taco.Application',{
             'FileManager'
            ],
     stores: ['Taco.store.LocalizedStrings'],
-    context:null,
+    context: null,
     constructor: function (config) {
 
         this.context = Ext.create('Taco.core.context.TaContext', Taco.User.taContext);
