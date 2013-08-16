@@ -71,13 +71,22 @@
           }
         }
 
-        .#{$vprefix}treelist-inline-header {
+        &.#{$vprefix}treelist-inline-header {
+          .#{$prefix}grid-cell-draghandlecolumn * {
+            display: none;
+          }
           .#{$prefix}grid-cell-inner {
             padding-right: 20px;
-
+            .#{$prefix}tree-node-text {
+                display: inline-block;
+                width: 100%;
+            }
             a {
               float: right;
               font-size: px-to-rem(12);
+              &::after {
+                display: none;
+              }
             }
 
             img {
