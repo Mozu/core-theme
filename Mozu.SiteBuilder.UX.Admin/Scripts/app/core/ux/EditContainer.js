@@ -1,10 +1,10 @@
 ﻿/**
  * @class Taco.core.ux.EditContainer
  * @author Jimmy Sanford
- * 
  */
 Ext.define('Taco.core.ux.EditContainer', {
     extend: 'Ext.container.Container',
+    //extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-editcontainer',
     componentCls: Taco.baseCSSPrefix + 'editcontainer',
     isEditContainer: true,

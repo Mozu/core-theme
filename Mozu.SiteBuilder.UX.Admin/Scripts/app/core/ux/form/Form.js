@@ -4,7 +4,10 @@
 Ext.define('Taco.core.ux.form.Form', {
     extend: 'Ext.form.Panel',
     alias: 'widget.formform',
-    requires: ['Taco.core.ux.form.Tasks', 'Taco.core.ux.form.StepContainer'],
+    requires: [
+        'Taco.core.ux.form.Tasks',
+        'Taco.core.ux.form.StepContainer'
+    ],
 
     componentCls: Taco.baseCSSPrefix + 'formform',
 

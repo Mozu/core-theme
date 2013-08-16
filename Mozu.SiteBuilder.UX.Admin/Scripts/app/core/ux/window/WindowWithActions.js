@@ -64,6 +64,7 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
          * @param {Boolean} isDirty
          */
         'dirtychange',
+        'savesuccess',
         /**
          * @event
          * Fired when the validity state changes
@@ -95,7 +96,7 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
                 text: this.secondaryText,
                 listeners: {
                     click: function() {
-                        if (!this.fireEvent('beforecancel')) {
+                    if (!this.fireEvent('beforecancel')) {
                             return;
                         }
                         this.hide();
@@ -119,11 +120,20 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
                 this.checkSavableButton();
             },
             afterrender: function() {
-                var form = this.down('form');
+                this.form = this.down('form');
 
-                if (form) {
-                    this.isValid = this.isDirty ||  form.getForm().isValid();
-                    this.isDirty = this.isDirty ||  form.getForm().isDirty();
+                if (this.form) {
+                    this.isValid = this.isDirty ||  this.form.getForm().isValid();
+                    this.isDirty = this.isDirty ||  this.form.getForm().isDirty();
+                    this.relayEvents(this.form, ['savablestatechange']);
+
+                    this.form.on({
+                        savesuccess: function () {
+                            this.fireEvent('savesuccess', this, this.form.record);
+                            this.hide();
+                        },
+                        scope: this
+                    });
                 }
                 this.checkSavableButton();
             },
@@ -142,6 +152,7 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
      * @private
      */
     checkSavableButton: function() {
+        console.log('checksavable');
         this.dirtyButton.setDirty(this.isDirty && this.isValid);
     }
-})
+});

@@ -37,12 +37,11 @@ Ext.define('Taco.view.order.Form', {
         '</span>'
     ],
 
-    initComponent: function () {        
+    initComponent: function () {
 
-        this.customerStore = Ext.create('Ext.data.Store', {
-            model: 'Taco.model.Contact',
-            proxy: 'memory'
-        });
+        window.r = this.record;
+
+        this.customer = {};
 
         this.titleData = {
             number: this.record.get('orderNumber'),
@@ -59,11 +58,11 @@ Ext.define('Taco.view.order.Form', {
                 record: this.record,
                 orderForm: this
             },
-            items;
+            items = [];
 
-        items = [
-            Ext.create('Taco.view.order.Header', subformCfg)
-        ];
+        if (this.isEdit()) {
+            items.push(Ext.create('Taco.view.order.Header', subformCfg));
+        }
 
         if (!this.isEdit()) {
             items.push(Ext.create('Taco.view.order.subform.Customer', subformCfg));
@@ -79,24 +78,13 @@ Ext.define('Taco.view.order.Form', {
       
         if (this.isEdit()) {
             items.push(Ext.create('Taco.view.order.subform.Shipping', subformCfg));
-            items.push(Ext.create('Taco.view.order.subform.Return', subformCfg));
-           
+            items.push(Ext.create('Taco.view.order.subform.Return', subformCfg)); 
         }
 
         this.loadNavItems(items);
-    },
 
-    overwriteCustomer: function (record) {
-        this.customerStore.removeAll();
-        
-        if (record) {
-            this.customerStore.add(record);
-            this.customer = record;
-        } else {
-            this.customer = null;
-        }
-
-        this.fireEvent('customerchanged', this, this.customer);
+        this.shippingForm = this.down('taco-odershippingsimple');
+        this.customerForm = this.down('taco-ordercustomer');
     },
 
     isEdit: function () {
@@ -107,18 +95,26 @@ Ext.define('Taco.view.order.Form', {
     },
 
     isValid: function () {
+        // Only validate when in create mode
+        if (this.isEdit()) return false;
         
         // Check basic form fields
         if (!this.callParent(arguments)) return false;
 
         // Is customer valid?
-        if (this.customerStore.count() !== 1) return false;
+        if (!this.customerForm.isValid()) return false;
+
+        return true;
 
         // Is Order Item valid?
-
+        if (!this.orderDetail.isValid()) return false;
 
         // Is Payment valid?
+        if (!this.paymentForm.isValid()) return false;
 
         // Is Shipping Valid?
+        if (!this.shippingForm.isValid()) return false;
+
+        return true;
     }
 })

@@ -14,6 +14,8 @@ Ext.define('Taco.shared.view.modal.Address', {
 
     addressHasNames: true,
 
+    formCfg: null,
+
     initComponent: function () {
         this.cls += ' ' + Taco.baseCSSPrefix + 'address-editor';
 
@@ -21,14 +23,21 @@ Ext.define('Taco.shared.view.modal.Address', {
             this.record = Ext.create('Taco.model.Contact', this.record);
         }
 
-        this.form = Ext.widget({
+        this.form = Ext.widget(Ext.apply({
             xtype: 'taco-addressform',
             record: this.record,
             manageHeight: false
-        });
+        }, this.formCfg));
 
         this.items = [this.form];
         
         this.callParent(arguments);
+
+        this.on({
+            save: function () {
+                this.form.save();
+            },
+            scope: this
+        });
     }
 });

@@ -133,6 +133,7 @@ Ext.define('Taco.shared.view.form.Address', {
                 name: 'firstName',
                 fieldLabel: 'First Name',
                 margin: '0 13 5 0',
+                allowBlank: false,
                 style: { 'display': 'inline-table' }
             }, {
                 xtype: 'textfield',
@@ -146,6 +147,7 @@ Ext.define('Taco.shared.view.form.Address', {
                 width: 206,
                 name: 'lastName',
                 fieldLabel: 'Last Name',
+                allowBlank: false,
                 margin: '0 0 5 0',
                 style: { 'display': 'inline-table' }
             });
@@ -154,5 +156,13 @@ Ext.define('Taco.shared.view.form.Address', {
         this.items = fields;
 
 		this.callParent(arguments);
-	}
+	},
+
+    addSaveTasks: function (tasks) {
+        tasks.add({
+            key: 'update-contact',
+            updateRecord: this.record,
+            updateForm: this
+        });
+    }
 });
