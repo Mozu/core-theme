@@ -903,6 +903,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         var me = this;
         
         me.fireEvent('save');
+
         me.record.addOrderItem({
             jsonData: {
                 orderId: me.record.get('id'),
