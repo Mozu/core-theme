@@ -590,8 +590,7 @@ Ext.define('Taco.model.Order', {
                         root: 'items',
                         successProperty: 'success'
                     }
-                },
-                autoLoad: true
+                }
             });
         }
         return this.shippingMethods;
