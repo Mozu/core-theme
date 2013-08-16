@@ -1,7 +1,7 @@
 Ext.define('Overrides.button.Button', {
     override: 'Ext.button.Button',
 
-    frame: false,
+    frame: false
     // scale: 'medium',
     // ui: 'action'
 });
