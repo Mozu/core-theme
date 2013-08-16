@@ -70,7 +70,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         me.dirtyButton = Ext.create('Taco.core.ux.action.DirtyButton', {
             xtype: 'primarybutton',
             text: 'Save & Close',
-            hidden: !me.isDraft,
+            hidden: !me.isDraftMode,
             onClick: function () {
                 me.saveDraftOrder();
             }
@@ -93,7 +93,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     {
                         xtype: "taco.button",
                         text: 'Discard Changes',
-                        hidden: !me.isDraft,
+                        hidden: !me.isDraftMode,
                         margin: "0px 0px 0px 0px",
                         onClick: function () {
                             me.removeDraftOrder();
