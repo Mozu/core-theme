@@ -1,16 +1,9 @@
-﻿/**
- * @class Taco.view.product.Edit
- * @author Michael Speed Elder
- * Date: 1/21/13
- * Time: 3:02 PM
- *
- *
- */
-
-Ext.define('Taco.view.product.Edit', {
+﻿Ext.define('Taco.view.product.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
     requires: [
-        'Taco.view.product.Form'
+        'Taco.view.product.Form',
+        'Ext.button.Button',
+        'Overrides.button.Button'
     ],
     formCls: 'Taco.view.product.Form',
 
@@ -36,8 +29,9 @@ Ext.define('Taco.view.product.Edit', {
         this.additionalActions = [{
             xtype: 'button',
             itemId: 'moreButton',
+            ui: 'action',
+            scale: 'medium',
             text: 'More',
-            frame: false,
             menu: {
                 plain: true,
                 shadow: false,
