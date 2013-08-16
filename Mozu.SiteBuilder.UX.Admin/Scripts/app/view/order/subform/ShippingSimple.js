@@ -33,21 +33,29 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             tpl: [
                 '<tpl for=".">',
                     '<div class="address">',
-                    '<div class="name">{firstName} {middleName} {lastName}</div>',
-                    '<div class="address-line-1">{address1}</div>',
-                    '<div class="address-line-2">{address2}</div>',
-                    '<div class="address-line-3">{address3}</div>',
-                    '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
-                    '<div class="country">{email}</div>',
-                    '<div class="phone">{homePhone}</div>',
-                    '<div class="edit">E</div>',
+                    '<tpl if="firstName">',
+                        '<div class="name">{firstName} {middleName} {lastName}</div>',
+                        '<div class="address-line-1">{address1}</div>',
+                        '<div class="address-line-2">{address2}</div>',
+                        '<div class="address-line-3">{address3}</div>',
+                        '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
+                        '<div class="country">{email}</div>',
+                        '<div class="phone">{homePhone}</div>',
+                    '<tplelse>',
+                        '<div class="no-address">No Address<br>Click to add one.</div>',
+                    '</tpl>',
                     '</div>',
                 '</tpl>'
             ],
             listeners: {
-                itemclick: function (view, record, item, index) {
+                itemclick: function (view, record, item, index, e) {
+                    var el = Ext.get(e.getTarget());
                     
-                }
+                    if (el.hasCls('no-address')) {
+                        this.launchEditor();
+                    }
+                },
+                scope: this
             }
         });
 
@@ -70,30 +78,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
                 items: [
                     new Ext.Action({
                         text: 'Edit Address',
-                        handler: function () {
-                            Ext.create('Taco.shared.view.modal.Address', {
-                                record: this.contact,
-                                listeners: {
-                                    savesuccess: function (modal, record) {
-                                        Ext.Ajax.request({
-                                            url: '/admin/app/order/setshippingcontact',
-                                            method: 'POST',
-                                            jsonData: {
-                                                orderId: this.record.getId(),
-                                                contact: record.data
-                                            },
-                                            success: function () {
-                                                console.log('success!!');
-                                            },
-                                            failure: function () {
-                                                alert('ooops');
-                                            }
-                                        })
-                                    },
-                                    scope: this
-                                }
-                            });
-                        },
+                        handler: this.launchEditor,
                         scope: this
                     })
                 ]
@@ -110,7 +95,33 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
         this.addresses.bindStore(this.contacts);
     },
 
-    checkContactState: function () {
+    launchEditor: function () {
+        Ext.create('Taco.shared.view.modal.Address', {
+            record: this.contact,
+            listeners: {
+                savesuccess: function (modal, record) {
+                    Ext.Ajax.request({
+                        url: '/admin/app/order/setshippingcontact',
+                        method: 'POST',
+                        jsonData: {
+                            orderId: this.record.getId(),
+                            contact: record.data
+                        },
+                        success: function () {
+                            console.log('success!!');
+                        },
+                        failure: function () {
+                            alert('ooops');
+                        }
+                    });
+                    this.fireEvent('orderchange');
+                },
+                scope: this
+            }
+        });
+    },
 
+    isValid: function () {
+        return !!this.contact.get('firstName');
     }
 });
