@@ -102,19 +102,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             DC.Order dcOrder = null;
             DC.OrderItem dcOrderItem = (await _orderWebApiClient.GetOrderItem(args.OrderId, args.OrderItemId, true)).ReadAsSync();
 
-            var orderDiscount = dcOrderItem.ProductDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId);
-            var shippingDiscount = dcOrderItem.ShippingDiscounts.Select(sd => sd.Discount).FirstOrDefault(d => d.Discount.Id == args.DiscountId);
+            var discount = dcOrderItem.ProductDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId) ?? dcOrderItem.ShippingDiscounts.Select(sd => sd.Discount).FirstOrDefault(d => d.Discount.Id == args.DiscountId);
 
-            if (orderDiscount != null)
+            if (discount != null)
             {
-                orderDiscount.Excluded = true;
-                dcOrder = (await _orderWebApiClient.UpdateOrderItemDiscount(args.OrderId, args.OrderItemId, orderDiscount.Discount.Id, orderDiscount, APPLY_TO_DRAFT)).ReadAsSync();
-            }
-            else if (shippingDiscount != null)
-            {
-                shippingDiscount.Excluded = true;
-                // TODO: no updateShippingDiscount method.
-                // await _orderWebApiClient. (args.OrderId, orderDiscount.Discount.Id, shippingDiscount, APPLY_TO_DRAFT);
+                discount.Excluded = true;
+                dcOrder = (await _orderWebApiClient.UpdateOrderItemDiscount(args.OrderId, args.OrderItemId, discount.Discount.Id, discount, APPLY_TO_DRAFT)).ReadAsSync();
             }
             else
             {
