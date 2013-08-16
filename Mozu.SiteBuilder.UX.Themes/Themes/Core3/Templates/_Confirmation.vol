@@ -146,10 +146,14 @@
 	    <tfoot>
 	        <tr>
 	            <td colspan="3">
+                {% if Model.ShopperNotes.Comments %}
 	                Comments:<br>
-                    {% for note in Model.Notes %}
-                        <p>{{ note.Text }}</p>
-                    {% endfor %}
+                        <p>{{ Model.ShopperNotes.Comments }}</p>
+                {% endif %}
+                {% if Model.ShopperNotes.GiftMessage %}
+                    Gift Message:<br>
+                        <p>{{ Model.ShopperNotes.GiftMessage }}</p>
+                {% endif %}
                 </td>
 	            <td colspan="2">
 	                <table>
