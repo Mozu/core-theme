@@ -3250,7 +3250,7 @@
       <JS Include="$(ProjectDir)\Scripts\resources\lib\*.js" Exclude="$(ProjectDir)\Scripts\resources\lib\init.min.js" />
       <JS Include="$(ProjectDir)\Scripts\resources\lib\tinymce\tinymce.min.js" />
     </ItemGroup>
-    <AjaxMin JsSourceFiles="@(JS)" JsCombinedFileName="$(ProjectDir)\Scripts\resources\lib\init.min.js" />
+    <AjaxMin JsSourceFiles="@(JS)" JsCombinedFileName="$(ProjectDir)\Scripts\resources\lib\init.min.js" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
   </Target>
   <Target Name="AfterCompile">
     <Exec Command="robocopy d:\software\ext\ext-4.2.1.883 $(ProjectDir)\ext-4.2.1.883 /e /xd docs welcome builds /xf ext-all*.js" WorkingDirectory="$(ProjectDir)\Scripts" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
