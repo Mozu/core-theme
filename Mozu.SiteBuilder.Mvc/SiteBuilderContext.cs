@@ -30,6 +30,7 @@ using Mozu.Tenant.Contracts;
 using Newtonsoft.Json.Linq;
 using APIConstants = Mozu.Core.Api.Contracts.Constants;
 using IApiContext = Mozu.Core.IApiContext;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -85,7 +86,7 @@ namespace Mozu.SiteBuilder.Mvc
             _catContext = catContext;
             _themeSettingsRepo = themeRepo;
             _apiContext = apiContext;
-	        _generalSettings = generalSettings;
+            _generalSettings = generalSettings.CloneWithoutUserClaims();
 	        _configSettings = configSettings;
             _lifetimeScope = lifetimeScope;
             _authenticationHelper = authenticationHelper;
