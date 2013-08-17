@@ -2750,7 +2750,6 @@
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\resources\scss\taco\widgets\_window.scss" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
@@ -3077,6 +3076,7 @@
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
     <Folder Include="Scripts\app\view\address\" />
+    <Folder Include="Scripts\resources\scss\taco\widgets\" />
     <Folder Include="Scripts\sass\var\" />
     <Folder Include="Scripts\stylesheets\etc\" />
   </ItemGroup>
