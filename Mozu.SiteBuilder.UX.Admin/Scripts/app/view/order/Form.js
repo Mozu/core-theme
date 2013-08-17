@@ -133,7 +133,7 @@ Ext.define('Taco.view.order.Form', {
                     method: 'POST',
                     jsonData: { orderId: me.record.getId() },
                     success: function() {
-                        debugger;
+                        
                         tasks.callback();
                     },
                     failure: function() {
