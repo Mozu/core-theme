@@ -699,6 +699,7 @@
     <Content Include="Scripts\build\Taco-all.scss" />
     <Content Include="Scripts\build\Taco-example.scss" />
     <Content Include="Scripts\overrides\button\Button.js" />
+    <Content Include="Scripts\overrides\panel\Tool.js" />
     <Content Include="Scripts\resources\lib\polyfills.js" />
     <Content Include="Scripts\resources\lib\init.min.js" />
     <Content Include="Scripts\sass\src\view\dashboard\Index.scss" />
