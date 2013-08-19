@@ -73,7 +73,7 @@ Ext.define('Taco.view.productType.Index', {
             text: 'Modified Date',
             width: 120,
             renderer: function (value) {
-                return !Ext.isEmpty(value) ? value : '--';
+                return !Ext.isEmpty(value) ? Ext.Date.format(value, 'm/d/y') : '--';
             }
         }, {
             xtype: 'taco.menucolumn',
