@@ -28,6 +28,8 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
      */
     isValid: false,
 
+    modal: true,
+
     initComponent: function () {
 
         this.addEvents(
@@ -91,6 +93,13 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
             xtype: 'container',
             cls: 'action-bar',
             dock: 'bottom',
+            padding: '19 19 0',
+            layout: {
+                type: 'hbox',
+                align: 'middle',
+                pack: 'end',
+                defaultMargins: '0 0 0 10'
+            },
             items: [{
                 xtype: 'secondaryaction',
                 text: this.secondaryText,
@@ -99,7 +108,7 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
                     if (!this.fireEvent('beforecancel')) {
                             return;
                         }
-                        this.hide();
+                        this.close();
                         this.fireEvent('cancel');
                     },
                     scope: this
@@ -130,7 +139,7 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
                     this.form.on({
                         savesuccess: function () {
                             this.fireEvent('savesuccess', this, this.form.record);
-                            this.hide();
+                            this.close();
                         },
                         scope: this
                     });

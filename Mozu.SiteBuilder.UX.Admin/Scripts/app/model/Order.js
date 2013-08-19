@@ -511,7 +511,6 @@ Ext.define('Taco.model.Order', {
 //            results = reader.read(response),
 //            newRecord = results && results.records ? results.records[0] : null;
 //
-//        debugger;
 //
 //        // set all the new data
 //        me.set(newRecord.data);
@@ -540,7 +539,6 @@ Ext.define('Taco.model.Order', {
 //     onAjaxFailure: function(callback, response) {
 //        var me = this,
 //            json = Ext.decode(response.responseText, true);
-//        debugger; 
 //        if (callback) {
 //            callback(response);
 //        }

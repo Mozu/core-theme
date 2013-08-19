@@ -195,7 +195,6 @@ Ext.define('Taco.view.order.subform.Detail', {
     loadRecord: function () {
         var me = this,
             orderId = (me.record) ? me.record.get('id') : me.orderId;
-        debugger;
         me.orderModel.load(orderId, {
             scope: me,
             failure: function (record, operation) {
@@ -218,7 +217,6 @@ Ext.define('Taco.view.order.subform.Detail', {
         // initialize the ui when the record loads the first time.
         //me.updateUi();
         //this.setLoading(false, this.body);
-        debugger;
         me.record.reload();
     },
     

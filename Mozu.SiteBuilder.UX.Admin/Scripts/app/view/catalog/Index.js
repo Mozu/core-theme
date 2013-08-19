@@ -4,7 +4,8 @@
 Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
     requires: [
-        'Taco.core.ux.window.WindowWithActions'
+        'Taco.core.ux.window.WindowWithActions',
+        'Overrides.panel.Tool'
     ],
 
     header: {
@@ -13,18 +14,25 @@ Ext.define('Taco.view.catalog.Index', {
 
     initComponent: function () {
         var me = this,
-            modal, uibtns;
+            modal, modaless, uibtns, bodyScrollListener;
 
         modal = Ext.create('Taco.core.ux.window.WindowWithActions', {
-            autoShow: false,
-            height: 400,
-            width: 400,
-            title: 'More Actions',
-            primaryText: 'Go',
-            secondaryText: 'Don\'t Go',
+            title: 'Shipping Settings',
+            primaryText: 'Yes, save changes',
+            secondaryText: 'No, don\'t save',
             items: [{
                 xtype: 'component',
+                height: 1200,
                 html: 'This is where more text would go.'
+            }]
+        });
+
+        modaless = Ext.create('Taco.core.ux.window.Window', {
+            title: 'Shipping Settings',
+            scale: 'small',
+            items: [{
+                xtype: 'component',
+                html: 'Hello world! Lorem ipsum dolor sit amet...'
             }]
         });
 
@@ -45,7 +53,7 @@ Ext.define('Taco.view.catalog.Index', {
                 scale: 'medium',
                 ui: 'action-primary',
                 text: 'Save',
-                handler: Ext.bind(me.launchModal, me)
+                handler: Ext.bind(me.launchModal, me, ['modal'])
             }, {
                 xtype: 'button',
                 frame: false,
@@ -57,7 +65,8 @@ Ext.define('Taco.view.catalog.Index', {
                     plain: true,
                     shadow: false,
                     items: [{
-                        text: 'Preview'
+                        text: 'Preview',
+                        handler: Ext.bind(me.launchModal, me, ['modaless'])
                     }, {
                         text: 'Delete'
                     }]
@@ -91,10 +100,11 @@ Ext.define('Taco.view.catalog.Index', {
         this.callParent(arguments);
 
         this.modal = modal;
+        this.modaless = modaless;
     },
 
-    launchModal: function () {
-        var modal = this.modal;
+    launchModal: function (type) {
+        var modal = this[type];
 
         modal.show();
     }
