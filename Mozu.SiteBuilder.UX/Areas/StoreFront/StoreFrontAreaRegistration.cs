@@ -6,10 +6,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
     {
         public override string AreaName
         {
-            get
-            {
-                return "StoreFront";
-            }
+            get { return "StoreFront"; }
         }
 
         public override void RegisterArea(AreaRegistrationContext context)
@@ -17,121 +14,125 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
             context.MapRoute(
                 "Storefront_MyAccount2",
                 "user/myaccount",
-                new { controller = "MyAccount", action = "Index" });
+                new {controller = "MyAccount", action = "Index"});
 
 
             context.MapRoute(
-              "StoreFront_home",
-              "",
-              new { controller = "Home", action = "Index" });
+                "StoreFront_home_pages",
+                "pages",
+                new {controller = "Home", action = "Index"});
+
+
+            context.MapRoute(
+                "StoreFront_home",
+                "",
+                new {controller = "Home", action = "Index"});
 
             context.MapRoute(
                 "StoreFront_404",
                 "404",
-               new { controller = "Home", action = "NotFound", });
-
+                new {controller = "Home", action = "NotFound",});
 
 
             context.MapRoute(
-               "StoreFront_pages",
-               "pages/{pageName}",
-               new { controller = "CmsPages", action = "Page", collection = "pages" });
+                "StoreFront_pages",
+                "pages/{pageName}",
+                new {controller = "CmsPages", action = "Page", collection = "pages"});
 
             context.MapRoute(
-              "StoreFront_pages_create",
-              "pages/create/{pageName}",
-              new { controller = "CmsPages", action = "Create", collection = "pages" });
+                "StoreFront_pages_create",
+                "pages/create/{pageName}",
+                new {controller = "CmsPages", action = "Create", collection = "pages"});
 
             context.MapRoute(
-            "StoreFront_rss",
-            "blogs/rss",
-            new { controller = "Blogs", action = "Rss" });
+                "StoreFront_rss",
+                "blogs/rss",
+                new {controller = "Blogs", action = "Rss"});
 
             context.MapRoute(
-            "StoreFront_blogs",
-            "blogs/{post}",
-            new { controller = "Blogs", action = "Post" });
+                "StoreFront_blogs",
+                "blogs/{post}",
+                new {controller = "Blogs", action = "Post"});
 
             context.MapRoute(
-            "StoreFront_feeds_categories",
-            "feeds/category/{categoryId}",
-            new { controller = "Catalog", action = "CategoryFeed" });
+                "StoreFront_feeds_categories",
+                "feeds/category/{categoryId}",
+                new {controller = "Catalog", action = "CategoryFeed"});
 
             context.MapRoute(
-            "StoreFront_categories",
-            "category/{categoryId}",
-            new { controller = "Catalog", action = "Category" });
+                "StoreFront_categories",
+                "category/{categoryId}",
+                new {controller = "Catalog", action = "Category"});
 
             context.MapRoute(
-            "StoreFront_ajax_Configure",
-            "product/configure",
-            new { controller = "Catalog", action = "Configure" });
+                "StoreFront_ajax_Configure",
+                "product/configure",
+                new {controller = "Catalog", action = "Configure"});
 
             context.MapRoute(
-            "StoreFront_productDetails",
-            "product/{productCode}",
-            new { controller = "Catalog", action = "ProductDetail" });
+                "StoreFront_productDetails",
+                "product/{productCode}",
+                new {controller = "Catalog", action = "ProductDetail"});
 
             context.MapRoute(
-            "StoreFront_checkout",
-            "checkout/{orderId}/{action}",
-            new { controller = "Checkout", action = "Index" });
+                "StoreFront_checkout",
+                "checkout/{orderId}/{action}",
+                new {controller = "Checkout", action = "Index"});
 
             context.MapRoute(
-            "StoreFront_cart",
-            "cart/{action}",
-            new { controller = "Cart", action = "Index" });
+                "StoreFront_cart",
+                "cart/{action}",
+                new {controller = "Cart", action = "Index"});
 
             context.MapRoute(
-            "StoreFront_Store",
-            "store",
-            new { controller = "Catalog", action = "Store" });
+                "StoreFront_Store",
+                "store",
+                new {controller = "Catalog", action = "Store"});
 
             context.MapRoute(
-            "StoreFront_Localization",
-            "localization/{colKey}/{key}",
-            new { controller = "Localization", action = "Index" });
+                "StoreFront_Localization",
+                "localization/{colKey}/{key}",
+                new {controller = "Localization", action = "Index"});
 
             context.MapRoute(
-            "StoreFront_LocCollection",
-            "localization/collections/{keys}",
-            new { controller = "Localization", action = "collections" });
+                "StoreFront_LocCollection",
+                "localization/collections/{keys}",
+                new {controller = "Localization", action = "collections"});
 
             context.MapRoute(
-            "StoreFront_Sitemap",
-            "sitemap.xml",
-            new { controller = "Sitemap", action = "Index" });
+                "StoreFront_Sitemap",
+                "sitemap.xml",
+                new {controller = "Sitemap", action = "Index"});
 
             context.MapRoute(
-            "Widgets",
-            "widgets/{action}",
-            new { controller = "Widgets", action = "Index" });
+                "Widgets",
+                "widgets/{action}",
+                new {controller = "Widgets", action = "Index"});
 
-            context.MapRoute( 
+            context.MapRoute(
                 "templates",
                 "templates/{templateId}",
-                new { controller = "Templates", action = "Index" });
+                new {controller = "Templates", action = "Index"});
 
             context.MapRoute(
-              "StoreFront_Prefixed_default",
-              "storefront/{controller}/{action}/{id}",
-              new { action = "Index", id = UrlParameter.Optional },
-              new { controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget" }
-          );
+                "StoreFront_Prefixed_default",
+                "storefront/{controller}/{action}/{id}",
+                new {action = "Index", id = UrlParameter.Optional},
+                new {controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget"}
+                );
             //removing default... add a matching route above
             context.MapRoute(
                 "StoreFront_default",
                 "{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional },
-                new { controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget" }
-            );
+                new {action = "Index", id = UrlParameter.Optional},
+                new {controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget"}
+                );
 
-            
+
             //context.MapRoute(
             //    "Storefront_SignIn",
             //    "user/{action}",
             //    new { controller = "Auth", action = "SignIn" });
-
         }
     }
 }
