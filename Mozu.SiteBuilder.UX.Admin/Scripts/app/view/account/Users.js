@@ -128,13 +128,13 @@
 			        }
 			    }
 			});
-           
 
 			me.basegrid = Ext.create('Taco.core.ux.BaseGrid', {
 				store: me.store,
 				layout: 'fit',
 				width: 942,
-                hiddenColumns: ['name','siteName'],
+			    //hiddenColumns: ['name','siteName'],
+				enableColumnHide: true,
 				columns: [{
                     xtype: 'gridcolumn',
                     dataIndex: 'email',
@@ -158,9 +158,8 @@
                     	return value == "Pending" ? value + ' <a href="#" class="resend-user-invite">Resend</a>' : value;
                     }
                 }, {
-                	xtype: 'actioncolumn',
-                	iconCls: 'taco-action-delete',
-                	width: 40
+                    xtype: 'actioncolumn',
+                	iconCls: 'taco-action-delete'
                 }],
 
             	plugins: [cellEditing],
@@ -199,8 +198,8 @@
 	            	scope: me
 	            }
 	        });
-            basegridview = me.basegrid.view;
-            basegridview.mon(basegridview, 'itemclick', me.onItemClick, me);
+           // basegridview = me.basegrid.view;
+           // basegridview.mon(basegridview, 'itemclick', me.onItemClick, me);
 	    },
 
 	    updateUserAccountRole: function (updateInfo) {
@@ -251,7 +250,8 @@
             });
 	    },
 
-        onItemClick: function (view, record, elm, index, e) {
+	    onItemClick: function (view, record, elm, index, e) {
+	        console.log('ere');
             if (e.target.className === 'resend-user-invite') {
                 e.preventDefault();
 
