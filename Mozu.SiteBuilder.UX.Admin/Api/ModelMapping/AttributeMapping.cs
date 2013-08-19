@@ -66,7 +66,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.NumberOfProducts, opt => opt.MapFrom(dc => -1))
                 .ForMember(x => x.Options, opt => opt.ResolveUsing(dc => MapDCAttributeToAttribute(dc.Options, dc.Id)))
                 .ForMember(x => x.Properties, opt => opt.ResolveUsing(dc => MapDCAttributeToAttribute(dc.Properties, dc.Id)))
-              .ForMember(x => x.Extras, opt => opt.ResolveUsing(dc => MapDCAttributeToAttribute(dc.Extras, dc.Id)))
+                .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(dc => dc.AuditInfo.UpdateDate))
+                .ForMember(x => x.Extras, opt => opt.ResolveUsing(dc => MapDCAttributeToAttribute(dc.Extras, dc.Id)))
                 ;
 
             Mapper.CreateMap<ProductType, DC.ProductType>()
