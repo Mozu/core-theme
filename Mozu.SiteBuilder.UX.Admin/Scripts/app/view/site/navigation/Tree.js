@@ -266,7 +266,17 @@ Ext.define('Taco.view.site.navigation.Tree', {
                 e.record.set('editAction', 'rename');
                 e.record.save();
             },
+            itemmousedown: function (view, record, item, index, e, eOpts) {
+                var cmp = Ext.fly(e.target);
+                e.preventDefault();
 
+                if (e.target.dataset.pageCreator) { //data-page-creator
+                    this.isNewSelection = false;
+                    this.pageCreator.reset(e.target.dataset);
+                    this.pageCreator.show();
+
+                }
+            },
             itemclick: function(view, record, item, index, e, eOpts) {
                 var cmp = Ext.fly(e.target);
                 e.preventDefault();

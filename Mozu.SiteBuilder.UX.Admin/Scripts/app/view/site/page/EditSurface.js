@@ -318,6 +318,7 @@
                         //editor.destroyEditor();
                         this.resizeIframe();
                     },
+                    
                     cancel: function() {
                        // console.log('cancel it');
                         me.fireEvent('cancelwidgetedit', eventData);
@@ -380,14 +381,11 @@
            
             var me = this;
             Ext.Function.defer(function () {
-                console.log('onRecalcShim');
+               
                 var isVis = me.shim.isVisible();
                 var doc = this.iframe.getDoc();
                 me.shim.show();
-                if ( !doc ){
-                   console.log ( 'try again');
-                   return;
-                }
+               
                 
                 
                 me.resizeIframe();
