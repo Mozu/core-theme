@@ -28,6 +28,8 @@ using Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers;
 using Mozu.SiteBuilder.UX.Admin.App_Start;
 using Mozu.SiteBuilder.UX.Admin.Configuration;
 using Mozu.Tenant.Contracts.Clients;
+using System.Web;
+using System.Diagnostics;
 
 
 namespace Mozu.SiteBuilder.UX.Admin
@@ -36,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin
     {
         private BootStrapperAdmin _bsa;
 
-
+        
         protected void Application_Start()
         {
             if (_bsa != null)
@@ -58,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin
             DependencyResolver.SetResolver(resolver);
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(_bsa.Container);
 
-           
+          
             AreaRegistration.RegisterAllAreas();
             WebApiConfig.Register(GlobalConfiguration.Configuration);
 
@@ -69,6 +71,41 @@ namespace Mozu.SiteBuilder.UX.Admin
             }
 
         }
+        //public void Application_End()
+        //{
+
+        //    HttpRuntime runtime =
+        //       (HttpRuntime)typeof(System.Web.HttpRuntime).InvokeMember("_theRuntime",
+        //          BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetField,
+        //          null, null, null);
+
+        //    if (runtime == null)
+        //        return;
+
+        //    string shutDownMessage =
+        //       (string)runtime.GetType().InvokeMember("_shutDownMessage",
+        //           BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField,
+        //           null, runtime, null);
+
+        //    string shutDownStack =
+        //       (string)runtime.GetType().InvokeMember("_shutDownStack",
+        //           BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField,
+        //           null, runtime, null);
+
+        //    if (!EventLog.SourceExists(".NET Runtime"))
+        //    {
+        //        EventLog.CreateEventSource(".NET Runtime", "Application");
+        //    }
+
+        //    EventLog log = new EventLog();
+        //    log.Source = ".NET Runtime";
+
+        //    log.WriteEntry(String.Format(
+        //          "\r\n\r\n_shutDownMessage={0}\r\n\r\n_shutDownStack={1}",
+        //          shutDownMessage, shutDownStack),
+        //       EventLogEntryType.Error);
+        //}
+
 
         private void RegisterMvcRoutes(RouteCollection routes)
         {
