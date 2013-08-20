@@ -49,6 +49,7 @@ Ext.define('Taco.view.productType.Index', {
             text: 'Attributes',
             width: 240,
             sortable: false,
+            allowNavigation: true,
             tpl: new Ext.XTemplate(
                 '<tpl if="this.hasAttributes(options)"><div>',
                     '<span class="label">Options: </span>',
