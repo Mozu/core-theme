@@ -128,6 +128,7 @@
           position: absolute;
           top: 0px;
           width: 180px;
+          @include transition(transform 1s ease-in-out);
 
           &::after {
             background-color: $color-theme-green-darker;
@@ -290,6 +291,7 @@
           position: absolute;
           top: 0px;
           width: 90px;
+          @include transition(transform 1s ease-in-out);
 
           &::after {
             background-color: $color-theme-blue;
@@ -442,6 +444,8 @@
         top: 30px;
         width: 8px;
         @include transform-origin(50%, 100%);
+        @include transform(rotate(-90deg));
+        @include transition(transform 1s ease-in-out);
 
         &::before,
         &::after {
@@ -483,6 +487,7 @@
       margin: 0px auto 20px;
       position: relative;
       width: 120px;
+      @include transform(rotate(270deg));
 
       .piece {
         height: 120px;
@@ -490,6 +495,7 @@
         position: absolute;
         top: 0px;
         width: 120px;
+        @include transition(transform 1s ease-in-out);
 
         &::after {
           background-color: $color-neutral-75;

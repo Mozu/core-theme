@@ -28,6 +28,7 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
      */
     isValid: false,
 
+    closable: false,
     modal: true,
 
     initComponent: function () {

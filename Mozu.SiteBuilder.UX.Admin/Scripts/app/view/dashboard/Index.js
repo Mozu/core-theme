@@ -73,22 +73,38 @@ Ext.define('Taco.view.dashboard.Index', {
                     cls: 'customers',
                     items: [{
                         xtype: 'component',
+                        renderSelectors: {
+                            slice0: 'div.legend-item-0'
+                        },
+                        renderData: {
+                            slice0: '80'
+                        },
                         renderTpl: [
                             '<div class="pie">',
                                 '<div class="piece legend-item-1" data-angle="0"></div>',
-                                '<div class="piece" data-angle="80" style="',
-                                    '-webkit-transform: rotate(80deg); ',
-                                    '-moz-transform: rotate(80deg); ',
-                                    '-ms-transform: rotate(80deg); ',
-                                    'transform: rotate(80deg);',
-                                '"></div>',
+                                '<div class="piece legend-item-0" data-angle="{slice0}"></div>',
                             '</div>',
                             '<div class="legend">',
                                 '<span class="key">New</span>',
                                 '<span class="key legend-item-1">Returning</span>',
                                 '<span class="change positive">1.03%</span>',
                             '</div>'
-                        ]
+                        ],
+                        listeners: {
+                            afterrender: function (cmp) {
+                                var angle = cmp.slice0.getAttribute('data-angle'),
+                                    rotation = 'rotate(' + angle + 'deg)';
+
+                                Ext.defer(function () {
+                                    Ext.fly(cmp.slice0).setStyle({
+                                        '-webkit-transform': rotation,
+                                        '-moz-transform': rotation,
+                                        '-ms-transform': rotation,
+                                        'transform': rotation
+                                    });
+                                }, 2000);
+                            }
+                        }
                     }]
                 }, {
                     title: 'Quick Links',
@@ -171,22 +187,38 @@ Ext.define('Taco.view.dashboard.Index', {
                     cls: 'new-returning-visitors',
                     items: [{
                         xtype: 'component',
+                        renderSelectors: {
+                            slice0: 'div.legend-item-0'
+                        },
+                        renderData: {
+                            slice0: '135'
+                        },
                         renderTpl: [
                             '<div class="pie">',
                                 '<div class="piece legend-item-1" data-angle="0"></div>',
-                                '<div class="piece" data-angle="135" style="',
-                                    '-webkit-transform: rotate(135deg); ',
-                                    '-moz-transform: rotate(135deg); ',
-                                    '-ms-transform: rotate(135deg); ',
-                                    'transform: rotate(135deg);',
-                                '"></div>',
+                                '<div class="piece legend-item-0" data-angle="{slice0}"></div>',
                             '</div>',
                             '<div class="legend">',
                                 '<span class="key">New</span>',
                                 '<span class="key legend-item-1">Returning</span>',
                                 '<span class="change positive">1.03%</span>',
                             '</div>'
-                        ]
+                        ],
+                        listeners: {
+                            afterrender: function (cmp) {
+                                var angle = cmp.slice0.getAttribute('data-angle'),
+                                    rotation = 'rotate(' + angle + 'deg)';
+
+                                Ext.defer(function () {
+                                    Ext.fly(cmp.slice0).setStyle({
+                                        '-webkit-transform': rotation,
+                                        '-moz-transform': rotation,
+                                        '-ms-transform': rotation,
+                                        'transform': rotation
+                                    });
+                                }, 2000);
+                            }
+                        }
                     }]
                 }]
             }, {
@@ -229,30 +261,52 @@ Ext.define('Taco.view.dashboard.Index', {
                     cls: 'live-visitors',
                     items: [{
                         xtype: 'component',
+                        renderSelectors: {
+                            slice0: 'div.legend-item-0',
+                            needle: 'span.needle'
+                        },
+                        renderData: {
+                            slice0: '130',
+                            needle: '-90'
+                        },
                         renderTpl: [
                             '<div class="meter">',
                                 '<div class="pie">',
                                     '<div class="piece legend-item-1" data-angle="0"></div>',
-                                    '<div class="piece" data-angle="130" style="',
-                                        '-webkit-transform: rotate(130deg); ',
-                                        '-moz-transform: rotate(130deg); ',
-                                        '-ms-transform: rotate(130deg); ',
-                                        'transform: rotate(130deg);',
-                                    '"></div>',
+                                    '<div class="piece legend-item-0" data-angle="{slice0}"></div>',
                                 '</div>',
                                 '<span class="meter-value">72</span>',
                                 '<span class="meter-min-label">30 day min</span>',
                                 '<span class="meter-min-value">0</span>',
                                 '<span class="meter-max-label">30 day max</span>',
                                 '<span class="meter-max-value">100</span>',
-                                '<span class="needle" style="',
-                                    '-webkit-transform: rotate(40deg); ',
-                                    '-moz-transform: rotate(40deg); ',
-                                    '-ms-transform: rotate(40deg); ',
-                                    'transform: rotate(40deg); ',
-                                '"></span>',
+                                '<span class="needle" data-angle="{needle}"></span>',
                             '</div>'
-                        ]
+                        ],
+                        listeners: {
+                            afterrender: function (cmp) {
+                                var angle = parseInt(cmp.slice0.getAttribute('data-angle'), 10),
+                                    needleAngle = parseInt(cmp.needle.getAttribute('data-angle'), 10),
+                                    rotation = 'rotate(' + angle + 'deg)',
+                                    needleRotation = 'rotate(' + (angle + needleAngle) + 'deg)';
+
+                                console.log(angle);
+                                Ext.defer(function () {
+                                    Ext.fly(cmp.slice0).setStyle({
+                                        '-webkit-transform': rotation,
+                                        '-moz-transform': rotation,
+                                        '-ms-transform': rotation,
+                                        'transform': rotation
+                                    });
+                                    Ext.fly(cmp.needle).setStyle({
+                                        '-webkit-transform': needleRotation,
+                                        '-moz-transform': needleRotation,
+                                        '-ms-transform': needleRotation,
+                                        'transform': needleRotation
+                                    });
+                                }, 2000);
+                            }
+                        }
                     }]
                 }, {
                     title: 'Conversion Rate',

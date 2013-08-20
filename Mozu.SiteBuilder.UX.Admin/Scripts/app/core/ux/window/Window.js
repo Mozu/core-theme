@@ -35,8 +35,25 @@ Ext.define('Taco.core.ux.window.Window', {
         }
     },
 
+    statics: {
+        scales: {
+            'small': {
+                'width': 400,
+                'height': 270
+            },
+            'medium': {
+                'width': 600,
+                'height': 400
+            },
+            'large': {
+                'width': 800,
+                'height': 600
+            }
+        }
+    },
+
     initComponent: function () {
-        var scales = this.getScales(),
+        var scales = this.statics().scales,
             scale = this.scale || null;
 
         if (Ext.Array.contains(['small', 'medium', 'large'], scale)) {
@@ -52,7 +69,7 @@ Ext.define('Taco.core.ux.window.Window', {
     attachBodyListeners: function () {
         this.on({
             // constraintInsets config is buggy, so we set the constraints manually
-            boxready: {
+            show: {
                 scope: this,
                 fn: function (cmp) {
                     var region = Ext.getBody().getRegion().adjust(100, 0, -100, 0);
@@ -73,22 +90,5 @@ Ext.define('Taco.core.ux.window.Window', {
                 }
             }
         });
-    },
-
-    getScales: function () {
-        return {
-            'small': {
-                'width': 400,
-                'height': 270
-            },
-            'medium': {
-                'width': 600,
-                'height': 400
-            },
-            'large': {
-                'width': 800,
-                'height': 600
-            }
-        };
     }
 });

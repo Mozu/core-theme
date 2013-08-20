@@ -21,6 +21,7 @@ Ext.define('Taco.view.catalog.Index', {
 
         modal = Ext.create('Taco.core.ux.window.WindowWithActions', {
             title: 'Shipping Settings',
+            draggable: true,
             primaryText: 'Yes, save changes',
             secondaryText: 'No, don\'t save',
             items: [{
