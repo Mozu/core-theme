@@ -104,7 +104,14 @@ Ext.define('Taco.view.catalog.Index', {
                                 text: 'Select all but this'
                             }]
                     }
-                    
+                }, {
+                    xtype: 'datetime',
+                    fieldLabel: 'Datetime',
+                    value: new Date()
+                }, {
+                    xtype: 'datefield',
+                    fieldLabel: 'Datefield',
+                    value: new Date()
                 }]
         });
 
