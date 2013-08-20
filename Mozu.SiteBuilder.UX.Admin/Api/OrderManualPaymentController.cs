@@ -16,7 +16,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             public string OrderId { get; set; }
             public string GatewayTransactionId { get; set; }
-            public string GatewayInteractionId { get; set; }
+            public int? GatewayInteractionId { get; set; }
             public string ActionName { get; set; }
             public decimal? Amount { get; set; }
             public CardPaymentInformation BillingInfo { get; set; }
@@ -45,8 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         ExpireYear = args.BillingInfo.ExpireYear
                     }
                 },
-                // TODO: We should fill in GatewayTransactionId AND GatewayInteractionId, but the contract does not support it.
-                ManualGatewayInteraction = new DCp.PaymentGatewayInteraction { GatewayTransactionId = args.GatewayTransactionId }
+                ManualGatewayInteraction = new DCp.PaymentGatewayInteraction { GatewayTransactionId = args.GatewayTransactionId, GatewayInteractionId = args.GatewayInteractionId }
             };
 
             var order = (await _orderWebApiClient.CreatePaymentAction(args.OrderId, action)).ReadAsSync();
@@ -58,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             public string OrderId { get; set; }
             public string PaymentId { get; set; }
-            public string GatewayInteractionId { get; set; }
+            public int? GatewayInteractionId { get; set; }
             public decimal Amount { get; set; }
             public DateTime? InteractionDate { get; set; }
         }
@@ -72,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Amount = args.Amount,
                 InteractionDate = args.InteractionDate,
                 // TODO: We should fill in GatewayInteractionId, but the contract does not support it.
-                ManualGatewayInteraction = new DCp.PaymentGatewayInteraction { GatewayTransactionId = args.GatewayInteractionId }
+                ManualGatewayInteraction = new DCp.PaymentGatewayInteraction { GatewayInteractionId = args.GatewayInteractionId }
             };
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
@@ -84,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             public string OrderId { get; set; }
             public string PaymentId { get; set; }
-            public string GatewayInteractionId { get; set; }
+            public int? GatewayInteractionId { get; set; }
             public decimal Amount { get; set; }
             public DateTime? InteractionDate { get; set; }
         }
@@ -98,7 +97,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Amount = args.Amount,
                 InteractionDate = args.InteractionDate,
                 // TODO: We should fill in GatewayInteractionId, but the contract does not support it.
-                ManualGatewayInteraction = new DCp.PaymentGatewayInteraction { GatewayTransactionId = args.GatewayInteractionId },
+                ManualGatewayInteraction = new DCp.PaymentGatewayInteraction { GatewayInteractionId = args.GatewayInteractionId },
             };
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
@@ -110,20 +109,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             public string OrderId { get; set; }
             public string PaymentId { get; set; }
-            public string GatewayInteractionId { get; set; }
+            public int? GatewayInteractionId { get; set; }
             public DateTime? InteractionDate { get; set; }
         }
         [HttpPostRoute(UriTemplate = "payment/manual/void")]
-        public async Task<Response<Order>> VoidPaymentManual(CapturePaymentManualArgs args)
+        public async Task<Response<Order>> VoidPaymentManual(VoidPaymentManualArgs args)
         {
             var action = new DCp.PaymentAction
             {
                 ActionName = "VoidPayment",
                 ISOCurrencyCode = "USD",
-                Amount = args.Amount,
                 InteractionDate = args.InteractionDate,
                 // TODO: We should fill in GatewayInteractionId, but the contract does not support it.
-                ManualGatewayInteraction = new DCp.PaymentGatewayInteraction { GatewayTransactionId = args.GatewayInteractionId },
+                ManualGatewayInteraction = new DCp.PaymentGatewayInteraction { GatewayInteractionId = args.GatewayInteractionId },
             };
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();

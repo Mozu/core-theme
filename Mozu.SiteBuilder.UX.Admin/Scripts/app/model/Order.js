@@ -727,13 +727,32 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    
+    /**
+     * ensures that a date property is formatted correctly if it exists
+     */
+    ensureDate: function(config, propertyName)
+    {
+        var d;
+
+        if (config && config[propertyName])
+        {
+            try {
+                d = new Date( config[propertyName] );
+                config[propertyName] = Ext.Date.format(d, 'c');
+            }
+            catch(e) {
+                delete config[propertyName];
+            }
+        }
+    },
+
     capturePaymentManual: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/payment/manual/capture',
             method: "POST"
         });
 
+        me.ensureDate(config, 'interactionDate');
         Ext.Ajax.request(config);
     },
 
@@ -743,6 +762,7 @@ Ext.define('Taco.model.Order', {
             method: "POST"
         });
 
+        me.ensureDate(config, 'interactionDate');
         Ext.Ajax.request(config);
     },
 
@@ -752,6 +772,7 @@ Ext.define('Taco.model.Order', {
             method: "POST"
         });
 
+        me.ensureDate(config, 'interactionDate');
         Ext.Ajax.request(config);
     },
 
@@ -770,6 +791,7 @@ Ext.define('Taco.model.Order', {
             method: "POST"
         });
 
+        me.ensureDate(config, 'interactionDate');
         Ext.Ajax.request(config);
     },
     /**
