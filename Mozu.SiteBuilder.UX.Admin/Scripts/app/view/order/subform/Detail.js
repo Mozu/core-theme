@@ -133,25 +133,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         this.callParent(arguments);
     },
         
-    // handler for when user clicks on an order item product link
-    //viewProductDetail: function (productId) {
-    //    
-    //    return;
-        // disabled this method and made and used link instead;
-        // leaving this code temporarily in case I need to add some logic to inhibit the link
-
-
-    //    if (!productId) {
-    //        return;
-    //    }
-        //link to the store front version
-        //window.open('/_gosite/' + record.getId() + '?environment=preview&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
-    //    window.open("/product/" + productId);
-
-
-        //link to the editor
-        //window.open("http://dev.mozu.com:8081/admin/c-1/products/edit/" + productId);
-    //},
+    
     
     editOrder: function (animationTarget) {
         var me = this,

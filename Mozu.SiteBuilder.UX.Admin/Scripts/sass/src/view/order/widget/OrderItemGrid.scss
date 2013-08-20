@@ -1,0 +1,170 @@
+﻿
+
+// title toolbar in the order detail editor
+.title-toolbar{
+  .taco-toolbar-link{
+    .x-btn-inner{
+        font-size: px-to-rem(15);
+      color:blue;
+      font-weight:bold;
+
+    }
+  }
+
+  .taco-toolbar-link.x-btn-default-toolbar-small-over{
+    background:#fff !important;
+    border-color:#fff !important;
+    text-decoration:underline;
+  }
+}
+
+
+
+
+// view specific scss for order detail. 
+// todos: move this to a view specific scss file 
+.#{$vprefix}orderform-detail {  
+
+    background-color:#fff;
+  //margin-bottom: 20px;
+    
+    
+
+  
+  .emptyGridMessage{
+    padding:10px;
+    color:#990000
+  }
+
+  
+
+
+  .#{$prefix}panel .#{$prefix}grid-body {
+    border-bottom-width:0px;
+  }
+
+  // link to the product in the order detail product column
+  .productLink{   
+    color:blue;
+    white-space: normal;    
+  }
+
+  // product in the order detail product column but link is disabled since the product was deleted and is no longer linkable
+  .productLinkDisabled{   
+    white-space: normal;    
+  }
+
+  // descriptive options for the product in the order detail product column
+  // forces the content to wrap in the cell
+  .productOptions{
+    white-space: normal;
+  } 
+
+  // border that matches background color to keep the container height from changing on mouseover 
+  .#{$prefix}grid-cell {
+    vertical-align:top;   
+
+    // border that matches background color to keep the container height from changing on mouseover 
+    .#{$prefix}grid-cell-inner {
+      border: 1px solid transparent;
+    }     
+  } 
+
+  .editmode-enabled {
+      .#{$vprefix}orderItem-grid-row-over {
+      .#{$vprefix}grid-row-menu-trigger {
+        visibility: visible;
+      }
+    }
+
+    .editableCell {
+      // highlight editable cell when mouseover
+      .#{$prefix}grid-cell-inner:hover {
+        border: 1px dashed #cccccc;
+      }
+    } 
+  }
+
+
+
+  // disabling default background color when cell is selected
+  // fixing the background color will require changes to other css overrides and other grids.
+  //
+  //.#{$prefix}grid-cell-selected{
+  //  background-color: transparent !important;
+  //}
+  //
+  
+
+  .#{$prefix}mask {
+      background-color:#ffffff;
+  }
+
+  .x-grid-cell-selected {
+    background-color: transparent !important;
+  }
+
+  .x-grid-row{
+    .x-grid-cell {
+      border-bottom-style:dashed;   
+    }
+  }
+  
+  .taco-order-orderItem-hasDiscount{
+    .x-grid-cell{
+      border-bottom-width:0px;
+    }
+  
+  }
+  
+	.x-grid-row-adjustment{
+		.adjustment-cell {
+			font-size: px-to-rem(14);
+			line-height: px-to-rem(19);
+        
+			border-color: #ededed;
+			border-bottom-width:1px;
+			border-bottom-style:dashed;
+
+			// fixing font size for the adjustment row
+			.adjustment-cell-inner {
+				font-size: 1.4rem !important;
+				line-height: 0px;
+				.taco-grid-row-menu-trigger{					
+					height:20px
+				}
+			}
+		}     
+	}
+  
+   
+
+
+	// need to force the icon to be visible in the discountRowBody. Action Column doesn't work with rowBody;  	
+	.orderEditable .taco-grid-row-menu-trigger-suppress {
+		visibility:visible;
+		background-position: 0 -199px;
+	}
+
+	// need to force the icon to be visible in the discountRowBody. Action Column doesn't work with rowBody;  	
+	.orderEditable .taco-grid-row-menu-trigger-activate {
+		visibility:visible;
+		background-position: 0 -199px;
+	}
+
+
+  .isActive{	
+	text-decoration:none;	
+  }
+
+  .isSuppressed{    
+	text-decoration:line-through;
+  }
+
+
+  // rows without a discount should hide the row body row. Need to look at way to render rowbody dom selectively
+  .noDiscount {
+    display:none;   
+  }
+  
+}

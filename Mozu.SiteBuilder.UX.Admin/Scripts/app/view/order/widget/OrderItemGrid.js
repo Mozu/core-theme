@@ -50,27 +50,15 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     initComponent: function(eOpts) {
         var me = this,
             siteContext,
-              editModeCls = (this.getEditMode()) ? " orderEditable " : "";
+            editModeCls = (this.getEditMode()) ? " orderEditable " : "";
         
         this.addEvents('save','saveFailure','saveSuccess');
 
        
 
-        me.cls = [this.cls, editModeCls, Taco.baseCSSPrefix + 'orderform-shipping-orderitemgrid'].join(' ');
+        me.cls = [this.cls, editModeCls, Taco.baseCSSPrefix + 'orderform-orderitemgrid'].join(' ');
         
         siteContext = Taco.app.context.getCurrent().urlToken;
-
-        var actions = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'middle'
-            },
-            items: [
-
-            ]
-        });
-
-
 
         // todo: need to create a custome bound list to have the ability to replace the paging toolbar. Will also need to figure out why the paging toolbar has issues. 
         /*
@@ -339,7 +327,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 componentCls: "title-toolbar",
                 enableOverflow: false,
                 weight: 1,
-                style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
+                style: "border-color:#CCC;background-color:#f1f1f1;padding:10px;border-width:1px;",
                 items: [
                     {
                         xtype: "component",
@@ -348,21 +336,27 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         cls: "title",
                         flex: 1
                     }, {
-                        xtype: "taco.button",
+                        //xtype: "taco.button",
+                        xtype: "button",
+                        ui: "action",
+                        scale:"small",
                         text: "Discard Changes",
                         handler: function () {
                             me.removeDraftOrder();
                         },
                         scope: this
                     }, {
-                        xtype: "taco.button",
+                        //xtype: "taco.button",
+                        xtype: "button",
+                        ui: "action",
+                        scale: "small",
                         text: "Edit Details",
                         style: "margin-left:5px;",
                         handler: function (button, e) {
                             var animationTarget = button.el;
-                            this.editOrder(animationTarget);
+                            me.editOrder(animationTarget);
                         },
-                        scope: this
+                        scope: me
                     }
                 ]
             });
@@ -486,7 +480,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         // Taco.view.order.subform.Detail and call editOrder there;
         
         var me = this;
-        var ct = this.up('orderDetailSubform');
+        var ct = this.up('taco-orderdetail');
         if (ct) {
             ct.editOrder(animationTarget);
         }

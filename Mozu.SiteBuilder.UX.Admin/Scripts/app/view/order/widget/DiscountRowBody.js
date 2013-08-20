@@ -6,6 +6,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
     alias: "feature.discountrowbody",
     config: {
     
+
     },
     
     // This is the plugin for displaying product specific discounts (product and shipping)

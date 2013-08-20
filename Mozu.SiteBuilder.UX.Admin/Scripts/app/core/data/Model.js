@@ -198,6 +198,29 @@ Ext.define('Taco.core.data.Model', {
 
     },
 
+
+    // method that allows you to set the data for a model.
+    // typically this is done after the model has already loaded its data and this is an attempt to update that data.
+    // Will set the data and its associations unlike calling the set()  on model which doesn't does not update the associations;
+    setRawData : function(data) {
+        if (data && data.success && data.items) {
+            // need to pluck the data out of the wrapped response data object
+            if (data.items.length) {
+                //items is an array with a single entity data json
+                data = data.items[0];
+            } else {
+                // items is a single object
+                data = data.items;
+            }
+        }
+
+        var me = this;
+        me.set(data);
+        // do some associations fixing
+        
+        me.proxy.reader.readAssociated(me, data);
+    },
+    
     copyData: function (sourceModel,add) {
 
         this.copyFrom(sourceModel);

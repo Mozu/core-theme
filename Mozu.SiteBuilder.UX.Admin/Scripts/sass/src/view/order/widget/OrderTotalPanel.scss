@@ -1,0 +1,65 @@
+
+.orderform-detail-totalRow { 
+	margin: 0px 0px 0px 0px;
+	border: 1px solid #cccccc !important; 
+	border-top-width:1px !important;
+	padding-top:10px;
+
+	background-color:#fff;	
+    border-width: 0px 1px 1px 1px;
+    border-style:solid;
+    border-color:#cccccc; 
+    text-align:right;
+    font-size: 1.4rem;
+    line-height: 1.4rem;
+
+	.x-grid-cell-inner {		
+	    padding: 0px 5px 0px 5px;
+	}	
+
+	.discount-suppress {
+		@include icon-font($glyph-close);
+    }
+
+	.discount-activate {
+        @include icon-font($glyph-cancel);     
+    }
+
+	.cancel-adjustment{
+	    @include icon-font($glyph-close);				
+	}
+
+	.order-action-icon {
+		height: 16px;
+		width: 30px;
+		cursor:pointer;
+
+		&::after {
+			left: 8px;
+			top: 0px;
+			font-size: 1.4rem;
+			line-height: 1.4rem;
+		}
+		visibility:hidden;
+	}
+		
+	.orderEditable {
+		.order-action-icon {
+			visibility: visible;
+		}
+	}
+
+	// thinning out the padding and borders for total grid rows;
+	.x-grid-with-row-lines .x-grid-cell-inner{
+		padding: 0px 5px 0px 5px;
+	}    
+
+	.x-grid-with-row-lines .x-grid-table {
+		border-top: 0px;
+	}
+
+	// add a little padding to seperate groups within the total panel
+	.row-group-start .x-grid-table{
+		padding-top:10px;
+	}
+}

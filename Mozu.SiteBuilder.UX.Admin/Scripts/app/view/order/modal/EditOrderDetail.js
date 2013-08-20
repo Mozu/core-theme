@@ -57,10 +57,12 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         me.titleTemplate = new Ext.XTemplate(
             "Order No. {orderNumber}"
         );
+        
 
         me.title = me.titleTemplate.apply({
             orderNumber: me.record ? me.record.get('orderNumber') : '<New>'
         });
+        
 
         me.header = {
             xtype: "header",
@@ -68,7 +70,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         };
 
         me.dirtyButton = Ext.create('Taco.core.ux.action.DirtyButton', {
-            xtype: 'primarybutton',
+            //xtype: 'primarybutton',
             text: 'Save & Close',
             hidden: !me.isDraftMode,
             onClick: function () {
@@ -91,7 +93,8 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                 },
                 items: [
                     {
-                        xtype: "taco.button",
+                        xtype: "button",
+                        ui: "action",
                         text: 'Discard Changes',
                         hidden: !me.isDraftMode,
                         margin: "0px 0px 0px 0px",
@@ -105,7 +108,8 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                         flex: 1 
                     },
                     {
-                        xtype: "taco.button",
+                        xtype: "button",
+                        ui: "action",
                         text: 'Close',
                         onClick: function (button) {
                             me.close();
@@ -154,7 +158,6 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                 me.setLoading(false, this.body);
             },
             success: function (record, operation) {
-                
                 me.record = record;
                 me.onLoadRecord();
             },
@@ -174,6 +177,12 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             // update the ui after the record has been reloaded
             me.updateUi();
         }
+        
+        
+        me.setTitle(me.titleTemplate.apply({
+            orderNumber: me.record.get('orderNumber') || '<New>'
+        }));
+
         this.setLoading(false, this.body);
     },
     
@@ -189,11 +198,55 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         var me = this;
 
         me.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanel', {
-            style: "margin: 0px 0px 0px 0px;border: 1px solid #cccccc !important; border-top-width:1px !important;padding-top:10px",
+            //style: "margin: 0px 0px 0px 0px;border: 1px solid #cccccc !important; border-top-width:1px !important;padding-top:10px",
             data: me.record.getData(),
             totalColumnWidth: me.getRowTotalColumnWidth(),
             actionColumnWidth: me.getActionColumnWidth(),
-            isEditable:true
+            isEditable: true,
+            listeners: {
+                "clearShippingAdjustment":{
+                    fn:function() {
+                        me.detailGrid.updateOrderAdjustment({
+                            data: {
+                                shippingAdjustment: {
+                                    amount: 0
+                                }
+                            }
+                        });
+                    },
+                    scope:me
+                },
+                "clearOrderAdjustment": {
+                    fn: function () {
+                        me.detailGrid.updateOrderAdjustment({
+                            data: {
+                                orderAdjustment: {
+                                    amount: 0
+                                }
+                            }
+                        })
+                    },
+                    scope: me
+                },
+                "processDiscount": {
+                    fn: function (data) {
+                        if (data.isActive) {
+                            me.detailGrid.suppressDiscount({
+                                jsonData: {
+                                    discountId: data.discountId
+                                }
+                            });
+                        } else {
+                            me.detailGrid.activateDiscount({
+                                jsonData: {
+                                    discountId: data.discountId
+                                }
+                            });
+                        }
+                    },
+                    scope: me
+                }
+            }
         });
 
         me.detailGrid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
