@@ -58,7 +58,9 @@ Ext.define('Taco.view.order.Form', {
                 listeners: {
                     orderchange: function () {
                         this.savableStateCheck();
-                        this.shippingForm.loadShippingMethods();
+                        if (this.shippingForm) {
+                            this.shippingForm.loadShippingMethods();
+                        }
                     },
                     scope: this
                 }

@@ -1,0 +1,100 @@
+﻿.#{$vprefix}orderform-delete-confirm {  
+	background-color: #eaeaea;
+	.x-window-body{
+		padding: 0px;
+	}
+}
+
+
+
+// order payment 
+
+
+
+.#{$vprefix}orderform-payment { 
+    background-color:#fff;  
+  border-color:#bfbfbf;
+  border-style:solid;
+  border-width:1px;
+  margin-bottom: 20px;
+  padding:7px 7px 0px 7px;
+
+
+  .seperator{
+    color:#cccccc;
+    padding:0px 7px 0px 7px;    
+  }
+  .orderform-transaction-edit-btn, .orderform-transaction-delete-btn{
+    float: right; padding: 0px;
+
+  }
+  .orderform-payment-statusRow{
+    .statusField{
+      font-size: 1.9rem;
+      line-height: 2.9rem;    
+    }
+  }
+
+  .orderform-payment-transaction{
+    border: 1px; 
+    border-style: solid; 
+    margin-bottom: 5px; 
+    padding: 3px;
+  }
+
+  .orderform-payment-paymentDetails{
+        .authorizedCreditCard{        
+      .creditCard{}
+            .authorization{}
+    }
+                    
+        .orderSummary{
+      .orderTotal{}
+            .Received{}
+            .balance{}
+    }
+            
+        .billingInformation{
+        padding:7px 0px 7px 0px ;
+
+      .fullName{}
+            .address{}
+            .country{}
+            .phoneNumber{}
+    }
+  }
+
+  .orderform-payment-transactionlist{   
+    
+    .payment-transaction{   
+      background-color:#f2f2f2;
+      border-color:#bfbfbf;
+      border-style:solid;
+      border-width:1px;
+      font-size: 1.4rem;
+      line-height: 1.9rem;
+      margin-bottom:5px;
+      padding:7px;
+      position:relative;
+
+
+        
+      .details{     
+        .creditCard{
+          white-space:nowrap
+        }
+
+      }
+
+      .paymentAction{
+        display:block;
+        float:right;
+        padding-left:30px;          
+        text-align:right;         
+        color:blue;
+        cursor:pointer;
+      }
+
+    }
+  }
+}

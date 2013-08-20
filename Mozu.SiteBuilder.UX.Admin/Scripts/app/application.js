@@ -517,13 +517,14 @@ Ext.define('Taco.Application',{
             }
         });
         
+        
         // Added by simeon; let me know if you encounter any issues with this enhancement;
         // Adds support to the Ext.Window Class so that it can size itself relative to the users browser size.
         Ext.override(Ext.window.Window, {
            
             // Number of pixels to remove from the relative height.
             // defaults to 60 pixels. If relativeHeight is 1 then the calculated height would be 100% of browser height - 60 pixels
-            relativeOffSetHeight: 60,
+            relativeOffSetHeight: 100,
 
             // Number of pixels to remove from the relative width.
             // defaults to 60 pixels. If relativeWidth is 1 then the calculated width would be 100% of browser width - 60 pixels
@@ -553,7 +554,6 @@ Ext.define('Taco.Application',{
 
             // Sets the width of the Ext.Window after the window's afterShow event fires.
             setRelativeWidth: function () {
-
                 var rw = Ext.Number.constrain(parseFloat(this.relativeWidth), .1, 1);
                 var ro = Ext.Number.constrain(parseFloat(this.relativeOffSetWidth), 0);
 
@@ -577,7 +577,7 @@ Ext.define('Taco.Application',{
               
                 // call the superclass to get the default behavior
                 this.callParent(arguments);
-                Ext.suspendLayouts();
+                
                 if (this.relativeHeight) {
                     this.setRelativeHeight();
                 }
@@ -585,7 +585,6 @@ Ext.define('Taco.Application',{
                 if (this.relativeWidth) {
                     this.setRelativeWidth();
                 }
-                Ext.resumeLayouts(true);
             }
         });
         
