@@ -635,7 +635,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         
                         // the product doesn't require configuration so just add it and skip opening the dialog;
                         this.addOrderCoupon([
-                           record.get("id")
+                           record.get("couponCode")
                         ]);
 
                         // cancel the selection so that the same product can be reselected again;
