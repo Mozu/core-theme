@@ -3076,7 +3076,6 @@
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
     <Folder Include="Scripts\app\view\address\" />
-    <Folder Include="Scripts\overrides\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />
     <Folder Include="Scripts\sass\var\" />
     <Folder Include="Scripts\stylesheets\etc\" />
