@@ -64,9 +64,6 @@ Ext.define('Taco.Application',{
     name: 'Taco',
     appFolder: '/admin/Scripts/app',
     autoCreateViewport: false,
-    paths: {
-        'Overrides': '/admin/Scripts/overrides'
-    },
     requires: [
             'Ext.data.association.HasOne',
             'Taco.core.data.RemoteException',
