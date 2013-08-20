@@ -1,0 +1,34 @@
+.#{$prefix}trigger-cell {
+    background-color: transparent;
+}
+
+.#{$prefix}form-trigger {
+    background: none transparent;
+    border-width: $form-trigger-border-width;
+    font-size: 16px;
+    height: 16px;
+    line-height: 1.0;
+    width: 16px;
+}
+
+.#{$prefix}form-arrow-trigger {
+    @include icon-font($glyph-arrowdown);
+}
+
+.#{$prefix}form-date-trigger {
+    @include icon-font($glyph-calendar);
+}
+
+.#{$prefix}form-date-trigger-over {
+    &::after {
+        color: $color-neutral-40;
+    }
+}
+
+.#{$prefix}pickerfield-open {
+    .#{$prefix}form-date-trigger {
+        &::after {
+            color: $color-neutral-20;
+        }
+    }
+}
