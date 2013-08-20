@@ -25,29 +25,14 @@ Ext.define('Taco.view.site.page.settings.General', {
                 name: 'link_title'
             },
             {
-                xtype: 'label',
-                cls: 'taco-sublabel-text',
-                text: 'This is explanitaion copy...'
-            },
-            {
                 xtype: 'checkboxfield',
                 boxLabel: 'Show in Navigation',
                 name: 'show_in_nav'
             },
             {
-                xtype: 'label',
-                cls: 'taco-sublabel-text',
-                text: 'This is explanitaion copy...'
-            },
-            {
                 xtype: 'checkboxfield',
                 boxLabel: 'Use this page only to group other pages',
                 name: 'is_group_page'
-            },
-            {
-                xtype: 'label',
-                cls: 'taco-sublabel-text',
-                text: 'This is explanitaion copy...'
             },
             {
                 xtype: 'checkboxfield',
@@ -58,11 +43,6 @@ Ext.define('Taco.view.site.page.settings.General', {
                 xtype: 'textfield',
                 width: '95%',
                 name: 'redirect_url'
-            },
-            {
-                xtype: 'label',
-                cls: 'taco-sublabel-text-last',
-                text: 'This is explanitaion copy...'
             }
         
         ]
