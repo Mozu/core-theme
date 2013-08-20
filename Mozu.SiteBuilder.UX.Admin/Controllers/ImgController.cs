@@ -130,7 +130,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         Tuple<string,Stream > GetFromFSCache(string collection, string documentId)
         {
             byte[] header = new byte[100];
-            var dir = System.IO.Path.GetTempPath()+ "\\" + _appCtx.SiteId + "\\"+ collection;
+            var dir = System.IO.Path.GetTempPath()+ "\\" + _appCtx.TenantId +"-"+ _appCtx.SiteGroupId.Value   + "\\"+ collection;
             var file  = dir + "\\"+ documentId ;
             if ( System.IO.File.Exists ( file ))
             {
@@ -151,9 +151,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var sw = new StreamWriter (ms, System.Text.Encoding.UTF8 );
             sw.WriteLine ( ct ?? "");
             sw.Flush ();
-            
 
-            var dir = System.IO.Path.GetTempPath()+ "\\" + _appCtx.SiteId + "\\"+ collection;
+
+            var dir = System.IO.Path.GetTempPath() + "\\" + _appCtx.TenantId + "-" + _appCtx.SiteGroupId.Value + "\\" + collection;
             var file  = dir + "\\"+ documentId ;
             System.IO.Directory.CreateDirectory(dir);
             using (var fs = System.IO.File.Create(file))

@@ -299,7 +299,10 @@ Ext.define('Taco.core.ux.form.Form', {
     trackFields: function () {
 
         Ext.each(this.query('[isFormForm],[isFormField]'), function (cmp) {
-            if(cmp.ignoreParentFormTracking || cmp.isTrackedField || cmp.up('[isFormForm]') !== this) {
+            if (cmp.ignoreParentFormTracking
+                || cmp.isTrackedField
+                || cmp.up('[isFormForm]') !== this
+                || cmp.isTrackedForm) {
                 return;
             }
 
@@ -312,9 +315,6 @@ Ext.define('Taco.core.ux.form.Form', {
             }
 
             this.relayEvents(cmp, ['savablestatechange']);
-            if (cmp.isTrackedForm) {
-                console.log('xxx', cmp);
-            }
             cmp.isTrackedForm = true;
             this.isFormContainer = true;
             this.forms.push(cmp);
