@@ -1302,8 +1302,11 @@ Ext.define('Taco.model.Order', {
      *
      */
     addOrderCoupon: function (config) {
+        var me = this;
+
         Ext.apply(config, {
             url: '/admin/app/order/addcoupon',
+            params: { 'draft': me.get('isDraft') },
             method: "POST"
         });
 
@@ -1338,8 +1341,11 @@ Ext.define('Taco.model.Order', {
      *
      */
     suppressDiscount: function (config) {
+        var me = this;
+
         Ext.apply(config, {
             url: '/admin/app/order/suppressdiscount',
+            params: { 'draft': me.get('isDraft') },
             method: "POST"
         });
 
@@ -1374,8 +1380,11 @@ Ext.define('Taco.model.Order', {
      *
      */
     activateDiscount: function (config) {
+        var me = this;
+
         Ext.apply(config, {
             url: '/admin/app/order/activatediscount',
+            params: { 'draft': me.get('isDraft') },
             method: "POST"
         });
 

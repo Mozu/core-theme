@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public Adjustment ShippingAdjustment { get; set; }
         }
         [HttpPostRoute(UriTemplate = "adjustment")]
-        public async Task<Response<Order>> AddOrUpdateAdjustment(UpdateAdjustmentArgs args, [FromUri] bool draft = true)
+        public async Task<Response<Order>> AddOrUpdateAdjustment(UpdateAdjustmentArgs args, [FromUri] bool draft = false)
         {
             DC.Order dcOrder = null;
 
@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public List<string> Coupons { get; set; }
         }
         [HttpPostRoute(UriTemplate = "addcoupon")]
-        public async Task<Response<Order>> AddCoupon(AddRemoveCouponArgs args, [FromUri]bool draft = true)
+        public async Task<Response<Order>> AddCoupon(AddRemoveCouponArgs args, [FromUri]bool draft = false)
         {
             DC.Order dcOrder = null;
             foreach (string couponCode in args.Coupons)
@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "removecoupon")]
-        public async Task<Response<Order>> RemoveCoupon(AddRemoveCouponArgs args, [FromUri]bool draft = true)
+        public async Task<Response<Order>> RemoveCoupon(AddRemoveCouponArgs args, [FromUri]bool draft = false)
         {
             DC.Order dcOrder = null;
             foreach (string couponCode in args.Coupons)
@@ -87,10 +87,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public int DiscountId { get; set; }
         }
         [HttpPostRoute(UriTemplate = "suppressdiscount")]
-        public async Task<Response<Order>> SuppressDiscount(SuppressDiscountArgs args, [FromUri]bool draft = true)
+        public async Task<Response<Order>> SuppressDiscount(SuppressDiscountArgs args, [FromUri]bool draft = false)
         {
             if (!String.IsNullOrEmpty(args.OrderItemId))
-                return await SuppressItemDiscount(args);
+                return await SuppressItemDiscount(args, draft);
 
             DC.Order dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId, draft)).ReadAsSync();
 
