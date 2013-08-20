@@ -137,6 +137,7 @@ Ext.define('Taco.core.ux.form.Form', {
             validitychange: this.savableStateCheck,
             dirtychange: this.savableStateCheck,
             add: this.checkFields,
+            added:this.onFormAdded,
             scope: this
         });
 
@@ -271,7 +272,16 @@ Ext.define('Taco.core.ux.form.Form', {
             this.loadSingleValue(kvp.key, kvp.value);
         }, this);
     },
-
+    onFormAdded:function ( me , container, pos, eOpts) {
+        var parentFormForm;
+        if (container.isFormForm) {
+            return;
+        }
+        parentFormForm = me.up('[isFormForm]');
+        if (parentFormForm) {
+            parentFormForm.trackFields();
+        }
+    },
     checkFields: function (container, cmp) {
         if (container !== this && container.up('[isFormForm]') !== this) {
             return;
