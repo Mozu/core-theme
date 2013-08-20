@@ -95,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "items/suppressdiscount")]
-        public async Task<Response<Order>> SuppressItemDiscount(SuppressDiscountArgs args, [FromUri]bool draft = true)
+        public async Task<Response<Order>> SuppressItemDiscount(SuppressDiscountArgs args, [FromUri]bool draft = false)
         {
             DC.Order dcOrder = null;
             DC.OrderItem dcOrderItem = (await _orderWebApiClient.GetOrderItem(args.OrderId, args.OrderItemId, draft)).ReadAsSync();
