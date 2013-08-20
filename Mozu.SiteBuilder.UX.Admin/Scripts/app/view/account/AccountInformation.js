@@ -62,7 +62,7 @@ Ext.define('Taco.view.account.AccountInformation', {
 
     update: function () {
     	var me = this;
-
+        
     	Ext.Ajax.request({
             url: '/admin/app/account/information/update',
             method: 'POST',
@@ -72,7 +72,7 @@ Ext.define('Taco.view.account.AccountInformation', {
         	},
             failure: function (response) {
         	},
-            jsonData: me.record.data
+            jsonData: me.getValues()
         });
     }
 });

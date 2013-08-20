@@ -8,8 +8,18 @@ Ext.define('Taco.core.ux.modal.Helper', {
     width: 600,
 
     initComponent: function () {
+        
+        var record = this.form.record;
+        var editors = this.form.editors;
 
-        this.form = Ext.create('Taco.core.ux.form.Form', this.form);
+        if (this.form.editors.length > 0) {
+            this.form = Ext.create(this.form.editors[0]);
+            for (x = 1; x < editors.length; x++) {
+                this.form.add(Ext.create(this.form.editors[x]));
+            }
+        }
+        
+        this.form.loadRecord(record);
 
         Ext.apply(this, {
             content: {
