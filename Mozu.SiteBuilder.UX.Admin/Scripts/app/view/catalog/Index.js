@@ -5,7 +5,7 @@ Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
     requires: [
         'Taco.core.ux.window.WindowWithActions',
-        'Overrides.panel.Tool'
+        'Taco.overrides.panel.Tool'
     ],
 
     header: {
