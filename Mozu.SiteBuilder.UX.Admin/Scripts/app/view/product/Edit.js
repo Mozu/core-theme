@@ -2,9 +2,9 @@
     extend: 'Taco.core.ux.form.FullEditor',
     requires: [
         'Taco.view.product.Form',
-        'Ext.button.Button',
-        'Overrides.button.Button'
+        'Ext.button.Button'
     ],
+    
     formCls: 'Taco.view.product.Form',
 
     initComponent: function () {

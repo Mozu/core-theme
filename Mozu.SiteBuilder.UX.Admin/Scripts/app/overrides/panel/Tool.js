@@ -1,4 +1,4 @@
-Ext.define('Overrides.panel.Tool', {
+Ext.define('Taco.overrides.panel.Tool', {
     override: 'Ext.panel.Tool',
 
     height: 16,

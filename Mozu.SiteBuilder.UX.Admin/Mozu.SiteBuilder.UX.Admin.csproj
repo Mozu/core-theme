@@ -698,8 +698,7 @@
     <Content Include="Scripts\build\config.rb" />
     <Content Include="Scripts\build\Taco-all.scss" />
     <Content Include="Scripts\build\Taco-example.scss" />
-    <Content Include="Scripts\overrides\button\Button.js" />
-    <Content Include="Scripts\overrides\panel\Tool.js" />
+    <Content Include="Scripts\app\overrides\panel\Tool.js" />
     <Content Include="Scripts\resources\lib\polyfills.js" />
     <Content Include="Scripts\resources\lib\init.min.js" />
     <Content Include="Scripts\sass\src\view\dashboard\Index.scss" />
@@ -3077,6 +3076,7 @@
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
     <Folder Include="Scripts\app\view\address\" />
+    <Folder Include="Scripts\overrides\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />
     <Folder Include="Scripts\sass\var\" />
     <Folder Include="Scripts\stylesheets\etc\" />
