@@ -27,9 +27,9 @@ Ext.define('Taco.core.ux.form.Form', {
     trackResetOnLoad: true,
     createTitle: 'Create',
     editTitle: 'Edit',
-   // header: { layout: 'auto' },
+    // header: { layout: 'auto' },
     persistChangesToModel: false,
-    enableStoreSyncTasks:false,
+    enableStoreSyncTasks: false,
     tasksKeyPrefix: '',
     cascadeChildTasks: true,
     cascadeRecordLoad: true,
@@ -58,7 +58,6 @@ Ext.define('Taco.core.ux.form.Form', {
              * @param {Boolean} value The new Savable State
              */
             'savablestatechange',
-
             /**
              * @event beforeload
              * Fired before the record loads into the form
@@ -66,7 +65,6 @@ Ext.define('Taco.core.ux.form.Form', {
              * @param {Ext.data.Model} record The record that will be loaded into the form
              */
             'beforeload',
-
             /**
              * @event afterloadg
              * Fired after the record has been successfully loaded for this form
@@ -137,7 +135,7 @@ Ext.define('Taco.core.ux.form.Form', {
             validitychange: this.savableStateCheck,
             dirtychange: this.savableStateCheck,
             add: this.checkFields,
-            added:this.onFormAdded,
+            added: this.onFormAdded,
             scope: this
         });
 
@@ -152,10 +150,10 @@ Ext.define('Taco.core.ux.form.Form', {
                     return;
                 }
                 this.resetOriginalValues();
-                Ext.defer(function() {
+                Ext.defer(function () {
                     this.fireEvent('savesuccess', this);
-                },1, this);
-               
+                }, 1, this);
+
             },
             scope: this
         });
@@ -173,7 +171,7 @@ Ext.define('Taco.core.ux.form.Form', {
                 Ext.Error.raise("A record is required.");
                 return this;
             }
-        
+
             var fields = record.fields.items,
                 values = this.getFieldValues(),
                 obj = {},
@@ -181,7 +179,7 @@ Ext.define('Taco.core.ux.form.Form', {
                 j = 0,
                 len = fields.length,
                 dlen,
-                dict = Ext.clone(record.get(fieldName)||[]),
+                dict = Ext.clone(record.get(fieldName) || []),
                 dictTuple,
                 existing,
                 name;
@@ -200,9 +198,9 @@ Ext.define('Taco.core.ux.form.Form', {
                 }
                 existing = false;
             }
-                    
+
             for (; i < len; ++i) {
-                name  = fields[i].name;
+                name = fields[i].name;
 
                 if (values.hasOwnProperty(name) && name !== fieldName) {
                     obj[name] = values[name];
@@ -216,17 +214,17 @@ Ext.define('Taco.core.ux.form.Form', {
             record.endEdit();
 
             return this;
-            
+
         };
     },
 
     resetOriginalValues: function (tasks) {
-        
+
         Ext.each(this.forms, function (form) {
             form.resetOriginalValues();
         });
 
-        Ext.each(this.trackedFields, function(field) {
+        Ext.each(this.trackedFields, function (field) {
             if (!field.resetOriginalValue) {
                 return;
             }
@@ -235,8 +233,8 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     loadSingleValue: function (fieldName, value) {
-        var me=this,field;
-        
+        var me = this, field;
+
         Ext.each(this.trackedFields, function (trackedField) {
             if (trackedField && trackedField.name === fieldName) {
                 field = trackedField;
@@ -248,31 +246,29 @@ Ext.define('Taco.core.ux.form.Form', {
             return;
         }
 
-        field.batchChanges(function() {
+        field.batchChanges(function () {
             field.setValue(value);
             field.initValue();
             if (me.getForm().trackResetOnLoad) {
                 field.resetOriginalValue();
             }
         });
-        
-        
-        
     },
 
-
-    loadRecord: function(record, cascade) {
+    loadRecord: function (record, cascade) {
         if (cascade) {
             return this.callParent([record]);
         }
 
         Ext.iterate(record.data, this.loadSingleValue, this);
 
-        if (record.dictField) Ext.iterate(record.get(record.dictField), function (kvp) {
-            this.loadSingleValue(kvp.key, kvp.value);
-        }, this);
+        if (record.dictField)
+            Ext.iterate(record.get(record.dictField), function (kvp) {
+                this.loadSingleValue(kvp.key, kvp.value);
+            }, this);
     },
-    onFormAdded:function ( me , container, pos, eOpts) {
+
+    onFormAdded: function (me, container) {
         var parentFormForm;
         if (container.isFormForm) {
             return;
@@ -282,20 +278,22 @@ Ext.define('Taco.core.ux.form.Form', {
             parentFormForm.trackFields();
         }
     },
+
     checkFields: function (container, cmp) {
         if (container !== this && container.up('[isFormForm]') !== this) {
             return;
         }
         this.trackFields();
     },
-    markRequired: function() {
+
+    markRequired: function () {
         Ext.each(this.query('[isFormForm],[isFormField]'), function (cmp) {
             if (cmp.required === true && cmp.fieldLabel.toString().substring(0, 1) != '*') {
                 cmp.addCls('taco-required-label-text');
             }
         }, this);
     },
-    
+
     trackFields: function () {
 
         Ext.each(this.query('[isFormForm],[isFormField]'), function (cmp) {
@@ -374,13 +372,12 @@ Ext.define('Taco.core.ux.form.Form', {
         }
         this.addStoreSaveTasks(tasks);
         return tasks;
-    },
-    
+    },    
 
     addStoreSaveTasks: function (tasks) {
         var recordKey = this.tasksKeyPrefix + 'save-record';
         if (this.enableStoreSyncTasks && this.stores) {
-            Ext.each(this.stores, function(store) {
+            Ext.each(this.stores, function (store) {
                 var saveTask = {
                     key: store.$className,
                     store: store
@@ -398,9 +395,9 @@ Ext.define('Taco.core.ux.form.Form', {
     buildTaskKey: function (key) {
         return (this.savePrefix || this.getId()) + key;
     },
-    beforeSave: function() {
+    beforeSave: function () {
         var res = true;
-        Ext.each(this.forms, function(form) {
+        Ext.each(this.forms, function (form) {
             if (form.beforeSave() === false) {
                 res = false;
                 return false;
@@ -418,12 +415,12 @@ Ext.define('Taco.core.ux.form.Form', {
         this.addSaveTasks(this.saveTasks);
         this.saveTasks.execute();
     },
-    
+
     updateForm: function () {
         if (this.beforeSave() === false) {
             return;
         }
-        this.addSaveTasks(this.saveTasks, true, false );
+        this.addSaveTasks(this.saveTasks, true, false);
         this.saveTasks.execute();
     },
 
@@ -463,7 +460,7 @@ Ext.define('Taco.core.ux.form.Form', {
     initTitle: function () {
         var tplInput, data, tpl;
 
-        
+
         if (this.originalTitle) {
             return;
         }
@@ -491,7 +488,6 @@ Ext.define('Taco.core.ux.form.Form', {
 
         this.setTitle(tpl.apply(data));
     },
-
 
     findField: function (id) {
         return this.getForm().findField(id);
@@ -539,7 +535,7 @@ Ext.define('Taco.core.ux.form.Form', {
 
     savableStateCheck: function () {
         var oldState = this.savableState,
-            newState = this.isValid() && (!this.isEdit() ||  this.isDirty());
+            newState = this.isValid() && (!this.isEdit() || this.isDirty());
 
         if (oldState === newState) {
             return;
@@ -566,7 +562,7 @@ Ext.define('Taco.core.ux.form.Form', {
     isEdit: function () {
         if (!this.isCreate) {
             this.isCreate = this.record && this.record.phantom;
-                //!(this.record && !this.record.phantom);
+            //!(this.record && !this.record.phantom);
         }
         return !this.isCreate;
     },
@@ -621,38 +617,38 @@ Ext.define('Taco.core.ux.form.Form', {
         fields = this.query('[isFormField]');
 
         Ext.each(fields, function (field) {
-            
+
             if (field.up('[isFormForm]') !== me) {
                 return;
             }
-            
+
             if (!rules[field.name]) {
                 return;
             }
-            
+
             Ext.each(rules[field.name], function (rule) {
                 field.vtype = 'custom';
-                
-                switch(rule.type) {
-                    case 'format':
-                        field.filter = rule.matcher;
-                        field.filterType = 'format';
-                        break;
-                    case 'exclusion':
-                        field.filter = rule.list;
-                        field.filterType = 'exclusion';
-                        break;
-                    case 'inclusion':
-                        field.filter = rule.list;
-                        field.filterType = 'inclusion';
-                        break;
-                    case 'length':
-                        field.minLength = rule.min;
-                        field.maxLength = rule.max;
-                        break;
-                    case 'presence':
-                        field.allowBlank = false;
-                        break;
+
+                switch (rule.type) {
+                case 'format':
+                    field.filter = rule.matcher;
+                    field.filterType = 'format';
+                    break;
+                case 'exclusion':
+                    field.filter = rule.list;
+                    field.filterType = 'exclusion';
+                    break;
+                case 'inclusion':
+                    field.filter = rule.list;
+                    field.filterType = 'inclusion';
+                    break;
+                case 'length':
+                    field.minLength = rule.min;
+                    field.maxLength = rule.max;
+                    break;
+                case 'presence':
+                    field.allowBlank = false;
+                    break;
                 }
             });
         });
@@ -671,7 +667,7 @@ Ext.define('Taco.core.ux.form.Form', {
                     value = field.getValue();
 
                 if (field.filterType === 'format') {
-                   result = field.filter.test(value) ? result : false;
+                    result = field.filter.test(value) ? result : false;
                 }
                 if (field.filterType === 'exclusion') {
                     result = !fnAllowedValues(field.filter).test(value) ? result : false;
