@@ -34,6 +34,7 @@ Ext.define('Taco.view.order.modal.VoidPaymentManual', {
                 },
                 {
                     xtype: 'datetime',
+                    name: 'interactionDate',
                     fieldLabel: 'Transaction Date'
                 }]
             }],
@@ -66,7 +67,8 @@ Ext.define('Taco.view.order.modal.VoidPaymentManual', {
                     data = {
                         orderId: me.order.getId(),
                         paymentId: me.record.getId(),
-                        gatewayInteractionId: me.formpanel.getValues()['gatewayInteractionId']
+                        gatewayInteractionId: me.formpanel.getValues()['gatewayInteractionId'],
+                        interactionDate: me.formpanel.getValues()['interactionDate']
                     },
 
                     // pacakage up the data for the model to persist

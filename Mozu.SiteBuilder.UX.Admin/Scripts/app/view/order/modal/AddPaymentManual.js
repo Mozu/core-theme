@@ -150,6 +150,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                         },
                         {
                             xtype: 'datetime',
+                            name: 'interactionDate',
                             fieldLabel: 'Transaction Date'
                         }]
                     }, {
@@ -241,6 +242,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                     jsonData: {
                         orderId: me.record.getId(),
                         billingInfo: cardInfo,
+                        interactionDate: me.formpanel.getValues()['interactionDate'],
                         amount: amount,
                         gatewayTransactionId: transactionId,
                         gatewayInteractionId: interactionId,
