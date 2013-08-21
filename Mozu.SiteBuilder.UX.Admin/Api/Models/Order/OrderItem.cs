@@ -25,6 +25,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "unitPrice")]
         public decimal UnitPrice { get; set; }
 
+        [DataMember(Name = "listPrice")]
+        public decimal ListPrice { get; set; }
+
         [DataMember(Name = "unitWeight")]
         public decimal? UnitWeight { get; set; }
 

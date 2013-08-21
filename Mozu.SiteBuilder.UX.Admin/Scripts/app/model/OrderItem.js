@@ -49,6 +49,11 @@ Ext.define('Taco.model.OrderItem', {
             "defaultValue": []
         },
         {
+            "name": "listPrice",
+            "type": "auto",
+            "defaultValue": []
+        },
+        {
             "name": "quantity",
             "type": "int",
             "useNull": true
