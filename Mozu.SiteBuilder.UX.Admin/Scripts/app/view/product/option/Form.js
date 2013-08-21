@@ -71,11 +71,18 @@ Ext.define('Taco.view.product.option.Form', {
         
         this.productType = this.productTypeStore.getById(productTypeId);
 
-        if (!this.productType) return;
+        if (!this.productType) {
+            this.hide();
+            return;
+        }
 
         this.productTypeOptions = this.productType.getOptions();
 
-
+        if (this.productTypeOptions.count() === 0) {
+            this.hide();
+        } else {
+            this.show();
+        }
 
         this.buildOptions();
         this.buildVariations();
