@@ -17,9 +17,9 @@ Ext.define('Taco.core.data.Model', {
 
         return me.callParent(arguments);
     },
-    
+
     inheritableStatics: {
-        allowMethod:function (method) {
+        allowMethod: function (method) {
             if (this.prototype.behaviors && this.prototype.behaviors[method]) {
                 return Taco.User.behaviors.indexOf(this.prototype.behaviors[method]) != -1;
             }
@@ -43,41 +43,38 @@ Ext.define('Taco.core.data.Model', {
     },
 
     isEqual: function (a, b) {
-        
+
         if (Ext.isDate(a) && Ext.isDate(b)) {
             return Ext.Date.isEqual(a, b);
         }
-        
-
 
 
         var ret = this.callParent(arguments);
         if (!ret && Ext.isObject(a) && Ext.isObject(b) && a.$className == undefined && b.$className == undefined) {
             return Ext.encode(a) == Ext.encode(b);
         }
-        if (!ret && Ext.isArray(a) && Ext.isArray(b) ) {
+        if (!ret && Ext.isArray(a) && Ext.isArray(b)) {
             return Ext.encode(a) == Ext.encode(b);
         }
         return ret;
     },
-    
+
     changeId: function (oldId, newId) {
         var me = this,
             phantom = me.phantom;
-      
+
         this.callParent(arguments);
         if (this.setPhantomOnIdChange === false) {
             me.phantom = phantom;
         }
-        ;
+        
     },
-
     
     afterEdit: function (modifiedFieldNames) {
         this.callParent(arguments);
         this.fireEvent('afteredit', this, modifiedFieldNames);
     },
-    
+
     afterCommit: function () {
         this.callParent(arguments);
         this.fireEvent('aftercommit', this);
@@ -86,7 +83,7 @@ Ext.define('Taco.core.data.Model', {
         this.callParent(arguments);
         this.callStore("afterreject", this);
     },
-     
+
     getData2: function (record, includeAssociated) {
         var me = this,
             fields = me.fields.items,
@@ -94,7 +91,7 @@ Ext.define('Taco.core.data.Model', {
             data = {},
             name, f;
 
-        record.fields.each(function(field) {
+        record.fields.each(function (field) {
             if (field.persist) {
                 data[field.name] = record.get(field.name);
             }
@@ -105,7 +102,7 @@ Ext.define('Taco.core.data.Model', {
         //}
         return data;
     },
-    
+
     getOrCreateHasManyStore: function (config) {
         var me = this,
             store,
@@ -116,7 +113,7 @@ Ext.define('Taco.core.data.Model', {
             associationKey = config.associationKey,
             foreignKey = config.foreignKey || null,
             modelClass = Ext.ModelManager.getModel(model),
-            data=  this.get(associationKey),
+            data = this.get(associationKey),
             foreignProperty = config.foreignProperty || this.model;
 
         this.hasManyStores = this.hasManyStores || {};
@@ -129,14 +126,12 @@ Ext.define('Taco.core.data.Model', {
         config = Ext.apply({}, storeConfig, {
             model: model,
             remoteFilter: false,
-            modelDefaults: modelDefaults
-            
-        });
-        
+            modelDefaults: modelDefaults            
+        });        
         
 
         this.hasManyStores[storeName] = store = new Ext.data.Store(config);
-        
+
 
         store.on('add', function (store, records, index, eOpts) {
             Ext.each(store.records, function (record) {
@@ -169,18 +164,18 @@ Ext.define('Taco.core.data.Model', {
                 this.setThruStore = null;
             }
         }, this);
-        this.on('afteredit', function (record,modifiedFieldNames) {
+        this.on('afteredit', function (record, modifiedFieldNames) {
             if (!this.setThruStore && modifiedFieldNames && Ext.Array.contains(modifiedFieldNames, associationKey)) {
                 var associationData = me.get(associationKey) || [],
                     idProp = modelClass && modelClass.prototype.idProperty ? modelClass.prototype.idProperty : 'id',
                     newRrecords = [],
                     recordsToRemove = [];
-                
-                
+
+
                 Ext.Array.each(associationData, function (associationDataItem) {
                     var record = store.getById(associationDataItem[idProp]);
                     if (record) {
-                        record.set(associationDataItem );
+                        record.set(associationDataItem);
                         //record.commit();
                     } else {
                         newRrecords.push(associationDataItem);
@@ -195,17 +190,17 @@ Ext.define('Taco.core.data.Model', {
                         recordsToRemove.push(record);
                     }
                 });
-                
+
                 if (recordsToRemove.length) {
                     store.remove(recordsToRemove);
-                }               
+                }
 
 
                 if (newRrecords.length) {
                     store.loadData(newRrecords);
                 }
-                
-               
+
+
                 //store.loadData(me.get(associationKey));
                 store.commitChanges();
             }
@@ -216,12 +211,11 @@ Ext.define('Taco.core.data.Model', {
         this.on('afterreject', function (model) {
             this.hasManyStores[storeName].rejectChanges();
         }, this);
-        
+
         store.add(data);
         return store;
 
     },
-
 
     getMessage: function () {
         var proxy = this.getProxy(),
@@ -239,7 +233,7 @@ Ext.define('Taco.core.data.Model', {
     // method that allows you to set the data for a model.
     // typically this is done after the model has already loaded its data and this is an attempt to update that data.
     // Will set the data and its associations unlike calling the set()  on model which doesn't does not update the associations;
-    setRawData : function(data) {
+    setRawData: function (data) {
         if (data && data.success && data.items) {
             // need to pluck the data out of the wrapped response data object
             if (data.items.length) {
@@ -254,20 +248,20 @@ Ext.define('Taco.core.data.Model', {
         var me = this;
         me.set(data);
         // do some associations fixing
-        
+
         me.proxy.reader.readAssociated(me, data);
     },
-    
-    copyData: function (sourceModel,add) {
+
+    copyData: function (sourceModel, add) {
 
         this.copyFrom(sourceModel);
         this.commit();
 
     },
-    reload : function(){
+    reload: function () {
         var me = this;
         this.self.load(me.getId(), {
-            bypassCache:true,
+            bypassCache: true,
             success: function (record, operation) {
 
                 me.copyFrom(record);
@@ -358,7 +352,7 @@ Ext.define('Taco.core.data.Model', {
     * @return {Ext.data.Model} The Model instance
     */
     duplicate: function (config) {
-        
+
         config = Ext.apply({}, config);
         config = Ext.applyIf(config, {
             action: 'duplicate',
@@ -366,9 +360,9 @@ Ext.define('Taco.core.data.Model', {
         });
 
         var operation = new Ext.data.Operation(config),
-                scope = config.scope || this,
-                record = null,
-                callback;
+            scope = config.scope || this,
+            record = null,
+            callback;
 
         callback = function (operation) {
             if (operation.wasSuccessful()) {
