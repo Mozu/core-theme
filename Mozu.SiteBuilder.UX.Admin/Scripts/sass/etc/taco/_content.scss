@@ -195,12 +195,21 @@
      }
   }
 
+.#{$vprefix}sidebar-modal-facets{
+  .#{$prefix}boundlist-item-settings{
+    width: 55px;
+  }
+  .#{$prefix}boundlist-item-close{
+    top: 8px;
+  }
+}
+  
 .#{$vprefix}required-label-text{
-  .x-form-item-label{
+  .#{$prefix}form-item-label{
     color: black;
   }
 
-  .x-form-item-label:before{
+  .#{$prefix}form-item-label:before{
     color: red;
     content: '* ';
   }
