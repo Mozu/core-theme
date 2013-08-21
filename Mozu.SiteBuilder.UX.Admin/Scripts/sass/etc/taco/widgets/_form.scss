@@ -139,9 +139,10 @@
       padding-right: 0px;
       text-indent: -99999px;
       width: 45px;
+      @include transition(background-color 0.3s);
 
-      &.list-open {
-        border-radius: 0 3px 0 0;
+      &.active {
+        background-color: $color-neutral-75;
       }
 
       &::before {
@@ -201,6 +202,13 @@
 
   .#{$vprefix}form-tab-active {
     background-color: $color-neutral-white;
+  }
+
+  .#{$vprefix}tab-picker {
+    background-color: $color-neutral-95;
+    border: 1px solid border-for($color-neutral-95);
+    border-top: 0;
+    padding: px-to-rem(7) px-to-rem(21);
   }
 
   // form navigation

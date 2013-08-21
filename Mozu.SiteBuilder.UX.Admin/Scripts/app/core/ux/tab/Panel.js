@@ -62,9 +62,13 @@ Ext.define('Taco.core.ux.tab.Panel', {
             html: 'Add',
             listeners: {
                 boxready: function () {
-                    this.addButton.getEl().on({
+                    var addEl = this.addButton.getEl();
+
+                    addEl.on({
                         click: function () {
-                            this.picker.toggle();
+                            if (this.picker.isHidden()) {
+                                this.showPicker();
+                            }
                         },
                         scope: this
                     });
@@ -121,6 +125,20 @@ Ext.define('Taco.core.ux.tab.Panel', {
             selectionchange: this.onTabSelectionChange,
             scope: this
         });
+    },
+
+    showPicker: function () {
+        this.picker.show();
+        this.addButton.addCls('active');
+        Ext.defer(function () {
+            Ext.getBody().addListener('click', this.hidePicker, this);
+        }, 10, this);
+    },
+
+    hidePicker: function () {
+        this.picker.hide();
+        this.addButton.removeCls('active');
+        Ext.getBody().removeListener('click', this.hidePicker, this);
     },
 
     onTabSelectionChange: function (picker, newValues, oldValues) {
