@@ -115,6 +115,7 @@ Ext.define('Taco.core.data.Model', {
             storeName = config.storeName || config.associationKey + 'Store',
             associationKey = config.associationKey,
             foreignKey = config.foreignKey || null,
+            modelClass = Ext.ModelManager.getModel(model),
             data=  this.get(associationKey),
             foreignProperty = config.foreignProperty || this.model;
 
@@ -170,7 +171,43 @@ Ext.define('Taco.core.data.Model', {
         }, this);
         this.on('afteredit', function (record,modifiedFieldNames) {
             if (!this.setThruStore && modifiedFieldNames && Ext.Array.contains(modifiedFieldNames, associationKey)) {
-                store.loadData(me.get(associationKey));
+                var associationData = me.get(associationKey) || [],
+                    idProp = modelClass && modelClass.prototype.idProperty ? modelClass.prototype.idProperty : 'id',
+                    newRrecords = [],
+                    recordsToRemove = [];
+                
+                
+                Ext.Array.each(associationData, function (associationDataItem) {
+                    var record = store.getById(associationDataItem[idProp]);
+                    if (record) {
+                        record.set(associationDataItem );
+                        //record.commit();
+                    } else {
+                        newRrecords.push(associationDataItem);
+                    }
+                });
+                store.each(function (record) {
+                    var id = record.getId(),
+                        foundRecord = Ext.Array.findBy(associationData, function (associationDataItem) {
+                            return associationDataItem[idProp] === id;
+                        });
+                    if (!foundRecord) {
+                        recordsToRemove.push(record);
+                    }
+                });
+                
+                if (recordsToRemove.length) {
+                    store.remove(recordsToRemove);
+                }               
+
+
+                if (newRrecords.length) {
+                    store.loadData(newRrecords);
+                }
+                
+               
+                //store.loadData(me.get(associationKey));
+                store.commitChanges();
             }
         });
         this.on('aftercommit', function (model) {
