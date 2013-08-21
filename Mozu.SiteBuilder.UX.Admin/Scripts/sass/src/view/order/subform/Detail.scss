@@ -10,3 +10,12 @@
 	.customerNote{}
 	.label{}
 }
+
+
+.#{$prefix}orderform-detail{
+	.#{$prefix}panel .#{$prefix}grid-body {
+		border-bottom-width:0px;
+	}
+}
+
+

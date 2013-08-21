@@ -9,7 +9,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         'Taco.view.order.widget.DiscountPickerField',
         'Taco.view.order.widget.DiscountRowBody',
         'Taco.core.ux.grid.Pager',
-        'Taco.core.ux.modal.Confirmation'
+        'Taco.core.ux.modal.Confirmation',
+        'Taco.core.ux.grid.ActionColumn'
     ],
     
     config: {
@@ -113,10 +114,9 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         },
                         "->",
                         {
-                            //xtype: 'taco.button',
-                            //   autoEl: 'a',
+                            xtype: "button",
+                            scale:"small",
                             cls: "taco-toolbar-link",
-                            style: "font-size: 1.0em;color:blue",
                             text: "Order Level Adjustment",
                             handler: function() {
                                 this.toggleAddToolbar("orderAdjustment");
@@ -124,9 +124,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             scope: this
                         },
                         {
-                            //xtype: 'taco.button',
-                            // autoEl: 'a',
-                            //style: "padding:5px; margin-left:10px;font-size: 1.0em;cursor:pointer;color:blue",
+                            xtype: "button",
+                            scale: "small",
                             cls: "taco-toolbar-link",
                             text: "Add Coupon",
                             handler: function() {
@@ -135,13 +134,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             scope: this
                         },
                         {
-                            //xtype: 'taco.button',
-                            //autoEl: 'a',
-                            //style: "padding:5px;margin-left:10px; font-size: 1.0em;cursor:pointer;color:blue",
+                            xtype: "button",
+                            scale: "small",
                             cls: "taco-toolbar-link",
                             text: "Add Product",
                             handler: function() {
-
                                 this.toggleAddToolbar("product");
                             },
                             scope: this
@@ -178,14 +175,15 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
             viewConfig: {
                 cls: (this.getEditMode()) ? "editmode-enabled" : "",
+                trackOver: (this.getEditMode()),
                 // changing the hover class to get rid of taco overrides of grid
                 overItemCls: 'taco-orderItem-grid-row-over',
                 emptyText: '<div class="emptyGridMessage">No order items to display</div>',
                 deferEmptyText: false,
                 stripeRows: false,
                 disabled: false,  // disables the grid, prevents the field editors from opening. prevents default hover behavior. Makes text grey and background grey. TODOs, explore this as an option for making the grid readony.
-                disabledCls: "taco-order-shippingitemgrid-disabled", // css class to add when the order grid is disabledstripeRows: false,
-                
+                //disabledCls: "taco-order-shippingitemgrid-disabled", // css class to add when the order grid is disabledstripeRows: false,
+                disableSelection: (!this.getEditMode()),
 
                 // provides selective row class addition based on record.
                 getRowClass: function(record) {
@@ -279,15 +277,24 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     dataIndex: 'subtotal'
                 },
                 {
-                    xtype: 'taco.menucolumn',
+                    //xtype: 'taco.menucolumn',
+                    //xtype:"templatecolumn",
+                    xtype: 'taco.actioncolumn',
+                    disabled:(!this.getEditMode()),
                     draggable: false,
-                    resizable:false,
+                    resizable: false,
+                    menuDisabled: true,
                     text: '',
                     width: this.getActionColumnWidth(),
-                    menuDisabled: true,
-                    iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger ' + Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
-                    menuItems: [],
-                    handler: function(grid, rowIndex, colIndex, header, e, record, item) {
+                    // note: "x-action-col-icon" is required for the action column to call the handler;
+                    //innerCls: "x-grid-cell-inner-action-col x-action-col-icon",
+                    iconCls: Taco.baseCSSPrefix + 'grid-row-action-trigger ' + Taco.baseCSSPrefix + 'grid-row-action-trigger-remove',
+                    //tdCls: "remove-order-item-cell",
+                    actionIconTpl: [
+                        '<div roles="button" alt="{altText}" class="{cls}" {tooltip} ></div>'
+                    ],
+                    handler: function (grid, rowIndex, colIndex, header, e, record, item) {
+
                         var order = me.record;
                         var confirm = Ext.create('Taco.core.ux.modal.Confirmation', {
                             text: 'Are you certain you want to delete this item?',
@@ -303,12 +310,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             autoShow: true
                         });
                     },
-                    renderer: function(value, metaData, record) {
-
-                    },
-                    onMenuShow: function(menu, eventData) {
-                        // todos: remove item from grid
-
+                    renderer: function (value, metaData, record) {
+                        
                     }
                 }
             ]

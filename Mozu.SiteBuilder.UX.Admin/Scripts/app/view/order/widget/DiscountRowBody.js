@@ -21,13 +21,12 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
         var me = this;       
                         
         var validTrigger = null;
-
-        if (Ext.fly(e.target).hasCls("x-grid-cell-inner-action-col")) {
+        
+        if (Ext.fly(e.target).hasCls("order-action-icon")) {
             // click on div.
-            validTrigger = Ext.fly(e.target);            
-        } else if (Ext.fly(e.target).hasCls("taco-grid-row-menu-trigger")) {            
-            // click on image. loop up to the div;            
-            validTrigger = Ext.fly(e.target).up(".x-grid-cell-inner-action-col");
+            validTrigger = Ext.fly(e.target);
+        } else {
+            return;
         }
 
         if (me.grid.editMode && validTrigger) {
@@ -39,7 +38,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
             
             if (!discountId) { return }
             
-            if (isActive) {
+            if (isActive=="true") {
                 me.grid.suppressDiscount({
                     jsonData: {
                         discountId: discountId,
@@ -168,14 +167,20 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                     '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{total:usMoney}</div>',
                 '</td>',
                 '<td role="gridcell"  class="x-action-col-cell taco-menu-col-cell x-action-col-cell' + this.rowBodyTdCls + '">',
-                    '<div unselectable="on" class="x-grid-cell-inner x-grid-cell-inner-action-col" isActive="{isActive}" discountId="{discountId}" orderItemId="{parent.orderItemId}">',
-                        '<img role="button" alt="" src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="x-action-col-icon x-action-col-0 taco-grid-row-menu-trigger taco-grid-row-menu-trigger-',
+                    
+                    //'<div unselectable="on" class="x-grid-cell-inner x-grid-cell-inner-action-col" style="text-align:left;">',
+                    //    '<div roles="button" alt="" class="x-action-col-icon x-action-col-0   taco-grid-row-action-trigger taco-grid-row-action-trigger-remove"></div>',
+                    //'</div>',
+                        
+                    '<div unselectable="on" class="x-grid-cell-inner x-grid-cell-inner-action-col">',
+                    '<div unselectable="on" class="order-action-icon discount-',
                         '<tpl if="isActive">',
                             'suppress ',
                         '<tpl else>',
-                            'activate',
-                        '</tpl>',
-                    '"></div>',
+                            'activate ',
+                        '</tpl>', 
+                        '" isActive="{isActive}" discountId="{discountId}"  orderItemId="{parent.orderItemId}"></div>',
+                    '</div>',
                 '</td>',
                 '</tr>',
             '</tpl>', 
@@ -193,8 +198,16 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
                     '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">-{total:usMoney}</div>',
                 '</td>',
-                '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div class="' + this.rowBodyDivCls + '"></div>',
+                '<td role="gridcell"  class="x-action-col-cell taco-menu-col-cell x-action-col-cell' + this.rowBodyTdCls + '">',
+                    '<div unselectable="on" class="x-grid-cell-inner x-grid-cell-inner-action-col">',
+                    '<div unselectable="on" class="order-action-icon discount-',
+                        '<tpl if="isActive">',
+                            'suppress ',
+                        '<tpl else>',
+                            'activate ',
+                        '</tpl>',
+                        '" isActive="{isActive}" discountId="{discountId}"  orderItemId="{parent.orderItemId}"></div>',
+                    '</div>',
                 '</td>',
                 '</tr>',
             '</tpl>'
