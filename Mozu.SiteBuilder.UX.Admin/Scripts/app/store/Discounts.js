@@ -6,5 +6,11 @@
         extend: 'Ext.data.Store',
         model: 'Taco.model.Discount',
         remoteFilter: true,
-        pageSize: 25
+        pageSize: 25,
+        storeManagerConfig: {
+            clearFilters: true,
+            contextLevel: 's',
+            clearSort: true,
+            autoLoad: true
+        }
     });
