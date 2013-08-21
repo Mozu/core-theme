@@ -354,7 +354,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         public ActionResult Logout()
         {
             _authenticationHelper.LogOut(_apiContext );
-            return Redirect("/admin/auth");
+
+            var redir = _settings.LoginPath + "/Auth/Logout";
+            if (_settings.AppSettings("ReverseProxy") != "true")
+            {
+                redir += "?postback=http://" + HttpContext.Request.Headers["host"];
+            }
+            return Redirect(redir);
         }
     }
 }
