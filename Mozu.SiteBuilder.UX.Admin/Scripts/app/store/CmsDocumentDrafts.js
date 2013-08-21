@@ -12,6 +12,10 @@
         pageSize: 25,
         remoteSort: true,
         remoteFilter: true,
+        storeManagerConfig: {
+            createOnly:true,
+            autoLoad: true
+        },
         
         publishAll: function (type, cb) {
             var me  = this,
