@@ -46,9 +46,13 @@ Ext.define('Taco.view.site.page.FacetRangeQueryForm', {
             width: 160,
             value: 5,
             setValue: function (v) {
-                var args = Array.prototype.slice.call(arguments, 1);
-                args.unshift(!v || v < 3 ? 5 : v);
-                this.self.prototype.setValue.apply(this, args);
+                
+                if (Object.prototype.toString.call(v) === '[object Array]' || Number(v)) {
+                    var args = Array.prototype.slice.call(arguments, 1);
+                    args.unshift(!v || v < 3 ? 5 : v);
+                    this.self.prototype.setValue.apply(this, args);
+                }
+                
             }
         });
         me.rangeQueries = Ext.widget('taco.rangequerygroup', {
