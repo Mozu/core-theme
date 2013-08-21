@@ -205,9 +205,8 @@
   }
 
   .#{$vprefix}tab-picker {
-    background-color: $color-neutral-95;
-    border: 1px solid border-for($color-neutral-95);
-    border-top: 0;
+    background-color: $color-neutral-white;
+    border: 1px solid border-for($color-neutral-white);
     padding: px-to-rem(7) px-to-rem(21);
   }
 
