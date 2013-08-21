@@ -1,4 +1,5 @@
 ﻿Ext.define('Taco.view.site.navigation.PageCreator', {
+    requires:['Taco.core.ux.window.MessageBox'],
     extend: 'Taco.core.ux.modal.SidebarModal',
     title: 'Add Page',
     layout: {
@@ -39,6 +40,7 @@
                 items: [{
                     name: 'title',
                     xtype: 'textfield',
+                    allowBlank:false,
                     fieldLabel: 'Page Name',
                     regex: /^[^&^/\^//^#^+%]+$/,
                     labelAlign: 'top',
@@ -48,6 +50,7 @@
                     name: 'docInfo',
                     xtype: 'selectfield',
                     labelAlign: 'top',
+                    allowBlank: false,
                     fieldLabel: 'Choose type',
                     mode: 'local',
                     valueField: 'id',
@@ -97,6 +100,7 @@
                 items: [{
                     xtype: 'primarybutton',
                     text: 'save',
+                    
                     listeners: {
                         click: function () {
                             me.superSaver();
@@ -126,8 +130,14 @@
     superSaver: function () {
         var me = this,
             values = this.form.getValues(),
+            titleField = this.form.getForm().findField('title'),
+            docInfoField = this.form.getForm().findField('docInfo'),
             record;
         if (me.pageType == 'page') {
+            if (!titleField.isValid() || !docInfoField.isValid()) {
+                Ext.Taco.MessageBox.alert('error', 'missing required fields');
+                return;
+            }
             record = Ext.create('Taco.model.CmsDocument', {
                 documentType: values.docInfo.documentType,
                 collectionName: values.docInfo.collectionName,

@@ -27,7 +27,7 @@ Ext.define('Taco.core.ux.window.Window', {
     closeAction: 'hide',
     componentCls: Taco.baseCSSPrefix + 'window',
     ui: 'modal',
-    
+
     header: {
         layout: {
             type: 'hbox',
@@ -65,7 +65,14 @@ Ext.define('Taco.core.ux.window.Window', {
 
         this.attachBodyListeners();
     },
-
+    setScale: function (scale) {
+        var size = this.statics().scales[scale || 'na'];
+        if (size) {
+            this.width = size.width;
+            this.height = size.height;
+            this.setSize(this.width, this.height);
+        }
+    },
     attachBodyListeners: function () {
         this.on({
             // constraintInsets config is buggy, so we set the constraints manually
