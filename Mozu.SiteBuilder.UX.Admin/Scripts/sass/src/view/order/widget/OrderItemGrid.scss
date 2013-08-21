@@ -1,121 +1,200 @@
-﻿
+﻿// title toolbar in the order detail editor
 
-// title toolbar in the order detail editor
+
 .title-toolbar{
-  .taco-toolbar-link{
-    .x-btn-inner{
-        font-size: px-to-rem(15);
-      color:blue;
-      font-weight:bold;
+	.taco-toolbar-link{
+		.x-btn-inner{
+			font-size: px-to-rem(14);
+			//color:blue;
+			//font-weight:normal;
+		}
+	}
 
+    .taco-toolbar-link.x-btn-default-toolbar-small-over{
+	    .x-btn-inner{
+			//background:#fff !important;
+			//border-color:#fff !important;	
+			//text-decoration:underline;
+		}
     }
-  }
-
-  .taco-toolbar-link.x-btn-default-toolbar-small-over{
-    background:#fff !important;
-    border-color:#fff !important;
-    text-decoration:underline;
-  }
 }
 
 
 
 
+
+.taco-orderform-orderitemgrid{
+	.x-column-header-align-right .x-column-header-text {
+		margin-right: 0px;
+	}
+
+	// hide the column actions icon triggers when the column is disabled;  this will be the case when the grid is readonly mode;
+	.taco-grid-row-action-trigger.x-item-disabled{
+		visibility:hidden
+	}
+}
+
+
+
 // view specific scss for order detail. 
 // todos: move this to a view specific scss file 
-.#{$vprefix}orderform-detail {  
+.#{$vprefix}orderform-editor {  
 
-    background-color:#fff;
-  //margin-bottom: 20px;
-    
-    
+	.taco-grid-row-action-trigger-remove{
+	    
+		@include icon-font($glyph-close);				
+
+		height: 20px;
+		width: 30px;
+		cursor:pointer;				
+		
+		&::after {
+			left: 8px;
+			top:2px;
+			font-size: 1.4rem;
+			line-height: 1.4rem;			
+		}			
+
+		&:hover{				
+			color:red !important;	
+		}
+	}
+
+
+
+
+
+	/*
+	.remove-order-item-cell{
+		background-color:blue;
+
+		.x-grid-cell-inner{
+			@include icon-font($glyph-close);				
+			height: 20px;
+			width: 30px;
+			cursor:pointer;	
+			
+			background-color:red;
+			&::after {
+				left: 8px;
+				top:2px;
+				font-size: 1.4rem;
+				line-height: 1.4rem;			
+			}
+			
+
+			&:hover{				
+				color:red !important;	
+			}
+		}
+
+		.taco-grid-row-menu-trigger-remove{
+		    display:none;
+		}
+
+	}
+	*/
+
+
+
+
+	background-color:#fff;    
+     
+	.emptyGridMessage{
+		padding:10px;
+		color:#990000
+	} 
+
+	.#{$prefix}panel .#{$prefix}grid-body {
+		border-bottom-width:1px;
+	}
+
+	// link to the product in the order detail product column
+	.productLink{   
+		color:blue;
+		white-space: normal;
+	}
+
+	// product in the order detail product column but link is disabled since the product was deleted and is no longer linkable
+	.productLinkDisabled{   
+		white-space: normal;    
+	}
+
+	// descriptive options for the product in the order detail product column
+	// forces the content to wrap in the cell
+	.productOptions{
+		white-space: normal;
+	} 
+
+	// border that matches background color to keep the container height from changing on mouseover 
+	.#{$prefix}grid-cell {
+		vertical-align:top;   
+		// border that matches background color to keep the container height from changing on mouseover 
+		.#{$prefix}grid-cell-inner {
+			border: 1px solid transparent;
+		}     
+	} 
+
+	.x-grid-with-row-lines .x-grid-table-over-first {
+		//border-top-style: solid;
+		border-top-color: #ededed;
+	}
+	/* line 130, ../../../ext/packages/ext-theme-neutral/sass/src/panel/Table.scss */
+	.x-grid-with-row-lines .x-grid-table-selected-first {
+		//border-top-style: dotted;
+		border-top-color: #ededed;
+	}
+
+	// overriding some default ext behavior that changes the border color of the first row when the second row is hovered;
+	.x-grid-row-before-over .x-grid-td {	 
+	    border-bottom-color: #ededed;
+	}
+
+	.editmode-enabled {
+
+		// force the action icon to be visible;
+		.#{$vprefix}grid-row-menu-trigger {
+			visibility: visible;
+		}
+
+
+		// make the action icon visible on row mouseover
+		.#{$vprefix}orderItem-grid-row-over {
+			.#{$vprefix}grid-row-menu-trigger {
+				visibility: visible;
+			}
+		}
+
+		.editableCell {
+			// highlight editable cell when mouseover
+			.#{$prefix}grid-cell-inner:hover {
+				border: 1px dashed #cccccc;
+			}
+		} 
+	}
+
 
   
-  .emptyGridMessage{
-    padding:10px;
-    color:#990000
-  }
 
-  
-
-
-  .#{$prefix}panel .#{$prefix}grid-body {
-    border-bottom-width:0px;
-  }
-
-  // link to the product in the order detail product column
-  .productLink{   
-    color:blue;
-    white-space: normal;    
-  }
-
-  // product in the order detail product column but link is disabled since the product was deleted and is no longer linkable
-  .productLinkDisabled{   
-    white-space: normal;    
-  }
-
-  // descriptive options for the product in the order detail product column
-  // forces the content to wrap in the cell
-  .productOptions{
-    white-space: normal;
-  } 
-
-  // border that matches background color to keep the container height from changing on mouseover 
-  .#{$prefix}grid-cell {
-    vertical-align:top;   
-
-    // border that matches background color to keep the container height from changing on mouseover 
-    .#{$prefix}grid-cell-inner {
-      border: 1px solid transparent;
-    }     
-  } 
-
-  .editmode-enabled {
-      .#{$vprefix}orderItem-grid-row-over {
-      .#{$vprefix}grid-row-menu-trigger {
-        visibility: visible;
-      }
+    .#{$prefix}mask {
+    //    background-color:#ffffff;
     }
 
-    .editableCell {
-      // highlight editable cell when mouseover
-      .#{$prefix}grid-cell-inner:hover {
-        border: 1px dashed #cccccc;
-      }
-    } 
-  }
-
-
-
-  // disabling default background color when cell is selected
-  // fixing the background color will require changes to other css overrides and other grids.
-  //
-  //.#{$prefix}grid-cell-selected{
-  //  background-color: transparent !important;
-  //}
-  //
-  
-
-  .#{$prefix}mask {
-      background-color:#ffffff;
-  }
-
-  .x-grid-cell-selected {
-    background-color: transparent !important;
-  }
-
-  .x-grid-row{
-    .x-grid-cell {
-      border-bottom-style:dashed;   
+    .x-grid-cell-selected {
+      //  background-color: transparent !important;
     }
-  }
-  
-  .taco-order-orderItem-hasDiscount{
-    .x-grid-cell{
-      border-bottom-width:0px;
+
+    .x-grid-row{
+        .x-grid-cell {
+         //    border-bottom-style:solid;   
+        }
     }
   
-  }
+    .taco-order-orderItem-hasDiscount{
+	    .x-grid-cell{
+		//	border-bottom-width:0px;
+		}
+	}
   
 	.x-grid-row-adjustment{
 		.adjustment-cell {
@@ -124,7 +203,7 @@
         
 			border-color: #ededed;
 			border-bottom-width:1px;
-			border-bottom-style:dashed;
+			border-bottom-style:solid;
 
 			// fixing font size for the adjustment row
 			.adjustment-cell-inner {

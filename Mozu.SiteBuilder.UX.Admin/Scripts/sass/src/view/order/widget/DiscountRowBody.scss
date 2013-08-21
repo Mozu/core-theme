@@ -1,1 +1,42 @@
 ﻿
+.orderEditable{
+	.x-grid-row-adjustment{
+
+		.x-action-col-cell{
+		    padding:7px 5px 7px 0px
+		}
+
+		.discount-suppress {
+			@include icon-font($glyph-close);
+			&:hover{				
+				color:red !important;	
+			}
+		}
+
+		.discount-activate {
+			@include icon-font($glyph-cancel);     
+		}
+
+		.cancel-adjustment{
+			@include icon-font($glyph-close);				
+		}
+
+		.order-action-icon {
+			height: 20px;
+			width: 30px;
+			cursor:pointer;	
+						
+			&::after {
+				left: 8px;
+				top:2px;
+				font-size: 1.4rem;
+				line-height: 1.4rem;			
+			}
+			
+
+			&:hover{				
+				color:red !important;	
+			}
+		}
+	}
+}

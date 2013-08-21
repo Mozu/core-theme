@@ -553,6 +553,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
+    <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />

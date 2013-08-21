@@ -7,7 +7,6 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         'Taco.view.order.widget.OrderItemGrid',
         'Taco.view.order.widget.OrderTotalPanel'
     ],
-    //cls: Taco.baseCSSPrefix + 'order-modal',
     config : {
         record: null,
         rowTotalColumnWidth: 100,
@@ -15,8 +14,6 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         actionColumnWidth: 60
     },
     autoShow: true,
-    //destroyOnHide: true,
-    //closeAction:"destroy
     constrain: true,
     relativeHeight: 1,
     relativeWidth: 1,
@@ -26,22 +23,21 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     minHeight:500,
     width: 800,
     height: 600,
-    
-    
-    style: "border-radius: 0.6em;border:1px solid #fff;background-color:#fff;box-shadow: 0 0.7em 3.5em rgba(0, 0, 0, 0.3);-webkit-box-shadow: 0 0.7em 3.5em rgba(0, 0, 0, 0.3);",
     border: false,
     layout: {
         type:"vbox",
         align: 'stretch'
     },
-    cls: Taco.baseCSSPrefix + 'orderform-detail',
+    cls: Taco.baseCSSPrefix + 'orderform-editor',
     ghost: false,
-    modal:true,
+    modal: true,
+    /*
     bodyStyle: {
         border: '0px',
         padding: '28px 28px 0px 28px',
         backgroundColor:"#fff"
     },
+    */
     
     afterRender: function () {
         this.callParent(arguments);
@@ -65,8 +61,9 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         
 
         me.header = {
-            xtype: "header",
-            style: "padding:28px;border-bottom: 1px dashed #999691 !important;font-size: 1.25em;font-weight: normal;"
+            xtype: "header"
+            //,
+            //style: "padding:28px;border-bottom: 1px dashed #999691 !important;font-size: 1.25em;font-weight: normal;"
         };
 
         me.dirtyButton = Ext.create('Taco.core.ux.action.DirtyButton', {
@@ -86,7 +83,6 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                 dock: 'bottom',
                 weight: 1,
                 ui: 'footer',
-                style: "padding:28px 28px 28px 28px;",
                 defaults: {
                     minWidth: 100,
                     margin: "0px 0px 0px 10px"
@@ -198,7 +194,6 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         var me = this;
 
         me.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanel', {
-            //style: "margin: 0px 0px 0px 0px;border: 1px solid #cccccc !important; border-top-width:1px !important;padding-top:10px",
             data: me.record.getData(),
             totalColumnWidth: me.getRowTotalColumnWidth(),
             actionColumnWidth: me.getActionColumnWidth(),

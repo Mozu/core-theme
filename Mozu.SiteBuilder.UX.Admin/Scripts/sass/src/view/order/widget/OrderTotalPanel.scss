@@ -1,14 +1,19 @@
 
 .orderform-detail-totalRow { 
 	margin: 0px 0px 0px 0px;
-	border: 1px solid #cccccc !important; 
-	border-top-width:1px !important;
-	padding-top:10px;
+	
+	border: 1px solid $color-neutral-75 !important; 
 
-	background-color:#fff;	
-    border-width: 0px 1px 1px 1px;
-    border-style:solid;
-    border-color:#cccccc; 
+	border-top-width:0px !important;
+
+	border-width: 0px 1px 1px 1px;
+	border-style:solid;
+    border-color:$color-neutral-75; 
+
+
+	padding-top:10px;
+	padding-bottom:10px;
+	background-color:$color-neutral-95;	        
     text-align:right;
     font-size: 1.4rem;
     line-height: 1.4rem;
@@ -16,9 +21,12 @@
 	.x-grid-cell-inner {		
 	    padding: 0px 5px 0px 5px;
 	}	
-
+	
 	.discount-suppress {
 		@include icon-font($glyph-close);
+		&:hover{				
+			color:red !important;	
+		}
     }
 
 	.discount-activate {
@@ -32,15 +40,19 @@
 	.order-action-icon {
 		height: 16px;
 		width: 30px;
-		cursor:pointer;
+		cursor:pointer;	
 
 		&::after {
 			left: 8px;
 			top: 0px;
 			font-size: 1.4rem;
-			line-height: 1.4rem;
+			line-height: 1.4rem;			
 		}
-		visibility:hidden;
+		visibility:hidden;	
+
+		&:hover{				
+			color:red !important;	
+		}
 	}
 		
 	.orderEditable {
