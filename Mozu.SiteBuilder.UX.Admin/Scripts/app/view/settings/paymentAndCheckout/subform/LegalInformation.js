@@ -31,7 +31,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.LegalInformation', {
                 },
                 {
                     xtype: 'checkboxgroup',
-                    fieldLabel: 'Send in email order notiﬁcation',
+                    fieldLabel: 'Send in email order notification',
                     // Arrange checkboxes into two columns, distributed vertically
                     columns: 1,
                     vertical: true,
