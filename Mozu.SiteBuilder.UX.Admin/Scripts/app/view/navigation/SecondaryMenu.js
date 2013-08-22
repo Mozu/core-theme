@@ -4,21 +4,25 @@
 Ext.define('Taco.view.navigation.SecondaryMenu', {
     extend: 'Ext.container.Container',
     alias: 'widget.secondarymenu',
-    requires: ['Taco.core.ux.action.Button', 'Taco.view.navigation.GlobalSearchBox'],
+    requires: ['Taco.view.navigation.GlobalSearchBox'],
 
     cls: Taco.baseCSSPrefix + 'secondary-nav',
     layout: {
         type: 'hbox',
         align: 'middle',
-        pack: 'end'
+        pack: 'end',
+        defaultMargins: '0 10 0 0'
     },
 
     initComponent: function () {
         var me = this;
+
         this.searchBox = Ext.create('Taco.view.navigation.GlobalSearchBox');
+
         this.items = [{
-            xtype: 'taco.button',
-            autoEl: 'a',
+            xtype: 'button',
+            ui: 'link',
+            scale: 'medium',
             text: Taco.User.name || Taco.User.email || '[user]',
             menuAlign: 'tr-br?',
             menu: {
@@ -38,8 +42,9 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                 }]
             }
         }, {
-            xtype: 'taco.button',
-            autoEl: 'a',
+            xtype: 'button',
+            ui: 'link',
+            scale: 'medium',
             text: 'Settings',
             menuAlign: 'tr-br?',
             menu: {
@@ -49,31 +54,17 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                 items: []
             }
         }, {
-            xtype: 'action',
+            xtype: 'button',
+            ui: 'link',
+            scale: 'medium',
             text: 'Help',
-            click: function () {
+            handler: function () {
                 Taco.app.refreshStyle();
             }
         }, 
-            this.searchBox 
-           
-        
-        /*, {
-            xtype: 'action',
-            text: 'View Storefront',
-            click: function () {
-                window.open('/_gosite/' + Taco.app.context.getSiteId());
-            },
-            listeners: {
-                afterrender: function() {
-                    this.mon(Taco.app.context, 'contextchange', function (cfg) {
-                        this[cfg.contextType === "s" ? 'show' : 'hide']();
-                    }, this)
-                }
-            }
-        }
-        */
+            this.searchBox
         ];
+
         this.navStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Navigation');
         
         this.callParent(arguments);

@@ -237,7 +237,6 @@
           display: inline-block;
           margin: 4px 0px 1px;
           padding: 0px 7px 0px 5px;
-          @include box-shadow(inset -1px 0px rgba(255, 255, 255, 0.4));
 
           &.#{$vprefix}submenu-item-active {
             a {
@@ -245,11 +244,6 @@
               color: $color-neutral-white;
               text-decoration: none;
             }
-          }
-
-          &:nth-last-of-type(1),
-          &:nth-of-type(3n) {
-            @include box-shadow(none);
           }
         }
       }

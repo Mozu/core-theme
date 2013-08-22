@@ -38,7 +38,7 @@
                     '<tpl for=".">', 
                         '<div class="taco-option-value-row">',
                             '<input class="taco-option-value-input" type="text" value="{value}" placeholder="{placeholder}">',
-                            '<span class="remove">x</span>',
+                            '<span class="remove"></span>',
                         '</div>',
                     '</tpl>'
                 ];

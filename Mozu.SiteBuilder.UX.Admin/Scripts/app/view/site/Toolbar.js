@@ -3,15 +3,18 @@
  */
 Ext.define('Taco.view.site.Toolbar', {
     extend: 'Ext.container.Container',
-    requires: ['Taco.core.ux.action.Button', 'Taco.core.ux.action.SplitButton'],
 
     cls: Taco.baseCSSPrefix + 'inline-editor-tools',
     layout: {
         type: 'hbox',
-        align: 'middle'
+        align: 'middle',
+        pack: 'end',
+        defaultMargins: '0 0 0 10'
     },
     defaults: {
-        xtype: 'taco.button'
+        xtype: 'button',
+        ui: 'action',
+        scale: 'medium'
     },
 
     inMoreMenu: {
@@ -20,25 +23,18 @@ Ext.define('Taco.view.site.Toolbar', {
     },
 
     initComponent: function () {
-        var self = this;
+        var me = this;
 
         this.items = [{
-            text: 'Preview',
-            itemId: 'preview',
-            onClick: function () {
-                self.editor.viewPage();
-            }
-        }, {
-            text: 'More',
-            xtype: 'taco.splitbutton',
             itemId: 'more',
+            text: 'More',
             menu: {
                 plain: true,
                 items: [{
                     text: 'Delete',
                     itemId: 'destroy',
                     handler: function () {
-                        self.editor.deleteRecord();
+                        me.editor.deleteRecord();
                     }
                 }, {
                     text: 'Duplicate',
@@ -48,33 +44,32 @@ Ext.define('Taco.view.site.Toolbar', {
                     }
                 }]
             }
-        },
-        {
-            text: 'Publish',
-            xtype: 'taco.splitbutton',
+        }, {
+            itemId: 'preview',
+            text: 'Preview',
+            handler: function () {
+                me.editor.viewPage();
+            }
+        }, {
             itemId: 'publish',
+            text: 'Publish',
             menu: {
                 plain: true,
                 items: [{
                     text: 'Page',
                     itemId: 'publishPage',
                     handler: function () {
-                        self.editor.adapter.publish();
+                        me.editor.adapter.publish();
                     }
                 }, {
                     text: 'All Items',
                     itemId: 'publishAll',
                     handler: function () {
-                       
-                        self.editor.publishAll();
+                        me.editor.publishAll();
                     }
                 }]
             }
-        }
-
-
-
-        ];
+        }];
 
         this.callParent(arguments);
 
@@ -86,7 +81,7 @@ Ext.define('Taco.view.site.Toolbar', {
     },
 
     getButton: function (key) {
-       return  this.down('#'+key);
+       return this.down('#'+key);
     },
 
     populate: function (adapter) {
@@ -97,7 +92,6 @@ Ext.define('Taco.view.site.Toolbar', {
         this.enableButtons({
             copy: false,
             more: false,
-           // preview: false,
             destroy: false,
             publishPage: false
         });
@@ -105,6 +99,7 @@ Ext.define('Taco.view.site.Toolbar', {
 
     enableButtons: function (config) {
         var enableMoreMenu = false;
+
         Ext.Object.each(config, function (key, value) {
             if (value && (key in this.inMoreMenu)) enableMoreMenu = true;
             var button = this.getButton(key);
