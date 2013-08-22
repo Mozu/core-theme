@@ -1,28 +1,46 @@
-﻿// title toolbar in the order detail editor
+﻿
+// title toolbar in the order detail editor
+.title-toolbar {	
+	padding:2px 10px 2px 10px; 
+	background-color:#fff;
 
-
-.title-toolbar{
-	.taco-toolbar-link{
-		.x-btn-inner{
-			font-size: px-to-rem(14);
-			//color:blue;
-			//font-weight:normal;
-		}
+	.title{
+		padding:0px 5px 0px 0px; 
+		font-size: px-to-rem(18);
 	}
 
-    .taco-toolbar-link.x-btn-default-toolbar-small-over{
-	    .x-btn-inner{
-			//background:#fff !important;
-			//border-color:#fff !important;	
-			//text-decoration:underline;
+	// fixing the font size for the buttons in the toolbar. 
+	// todo: remove this when the theme is stable;
+	.x-btn {
+		.x-btn-inner {
+		    font-size: px-to-rem(14);
 		}
-    }
+	}
 }
 
 
+// add to the title-toolbar for the draft toolbar - only visible in the readonly version of the grid
+.draft-toolbar{
+	border-color:#CCC;
+	background-color:#f1f1f1;	
+	border-width:1px;
+	
+	.title{	
+		color:#990000;
+		font-size: px-to-rem(14);
+	}
+}
 
 
+.additem-toolbar{
+    border-color:#CCC;
+	background-color:#f1f1f1;
+	padding:5px;
+	border-width:1px;
+}
 
+
+// this is the default readonly grid;
 .taco-orderform-orderitemgrid{
 	.x-column-header-align-right .x-column-header-text {
 		margin-right: 0px;
@@ -32,70 +50,6 @@
 	.taco-grid-row-action-trigger.x-item-disabled{
 		visibility:hidden
 	}
-}
-
-
-
-// view specific scss for order detail. 
-// todos: move this to a view specific scss file 
-.#{$vprefix}orderform-editor {  
-
-	.taco-grid-row-action-trigger-remove{
-	    
-		@include icon-font($glyph-close);				
-
-		height: 20px;
-		width: 30px;
-		cursor:pointer;				
-		
-		&::after {
-			left: 8px;
-			top:2px;
-			font-size: 1.4rem;
-			line-height: 1.4rem;			
-		}			
-
-		&:hover{				
-			color:red !important;	
-		}
-	}
-
-
-
-
-
-	/*
-	.remove-order-item-cell{
-		background-color:blue;
-
-		.x-grid-cell-inner{
-			@include icon-font($glyph-close);				
-			height: 20px;
-			width: 30px;
-			cursor:pointer;	
-			
-			background-color:red;
-			&::after {
-				left: 8px;
-				top:2px;
-				font-size: 1.4rem;
-				line-height: 1.4rem;			
-			}
-			
-
-			&:hover{				
-				color:red !important;	
-			}
-		}
-
-		.taco-grid-row-menu-trigger-remove{
-		    display:none;
-		}
-
-	}
-	*/
-
-
 
 
 	background-color:#fff;    
@@ -104,10 +58,6 @@
 		padding:10px;
 		color:#990000
 	} 
-
-	.#{$prefix}panel .#{$prefix}grid-body {
-		border-bottom-width:1px;
-	}
 
 	// link to the product in the order detail product column
 	.productLink{   
@@ -134,14 +84,50 @@
 			border: 1px solid transparent;
 		}     
 	} 
+	
+	
+}
 
-	.x-grid-with-row-lines .x-grid-table-over-first {
-		//border-top-style: solid;
+
+
+//this is the overrides of the default read only grid. ie the editor version
+.#{$vprefix}orderform-editor {  
+
+	// the remove icon in the right hand action column
+	.taco-grid-row-action-trigger-remove{
+	    
+		@include icon-font($glyph-close);				
+
+		height: 20px;
+		width: 30px;
+		cursor:pointer;				
+		
+		&::after {
+			left: 8px;
+			top:2px;
+			font-size: 1.4rem;
+			line-height: 1.4rem;			
+		}			
+
+		&:hover{				
+			color:red !important;	
+		}
+	}
+
+	
+	
+	// override of some inherited snerst
+	.#{$prefix}panel .#{$prefix}grid-body {
+		border-bottom-width:1px;
+	}
+		
+	// override of some inherited snerst
+	.x-grid-with-row-lines .x-grid-table-over-first {		
 		border-top-color: #ededed;
 	}
-	/* line 130, ../../../ext/packages/ext-theme-neutral/sass/src/panel/Table.scss */
-	.x-grid-with-row-lines .x-grid-table-selected-first {
-		//border-top-style: dotted;
+	
+	// override of some inherited snerst
+	.x-grid-with-row-lines .x-grid-table-selected-first {	
 		border-top-color: #ededed;
 	}
 
@@ -152,19 +138,6 @@
 
 	.editmode-enabled {
 
-		// force the action icon to be visible;
-		.#{$vprefix}grid-row-menu-trigger {
-			visibility: visible;
-		}
-
-
-		// make the action icon visible on row mouseover
-		.#{$vprefix}orderItem-grid-row-over {
-			.#{$vprefix}grid-row-menu-trigger {
-				visibility: visible;
-			}
-		}
-
 		.editableCell {
 			// highlight editable cell when mouseover
 			.#{$prefix}grid-cell-inner:hover {
@@ -172,78 +145,42 @@
 			}
 		} 
 	}
-
-
-  
-
-    .#{$prefix}mask {
-    //    background-color:#ffffff;
-    }
-
-    .x-grid-cell-selected {
-      //  background-color: transparent !important;
-    }
-
-    .x-grid-row{
-        .x-grid-cell {
-         //    border-bottom-style:solid;   
-        }
-    }
-  
-    .taco-order-orderItem-hasDiscount{
-	    .x-grid-cell{
-		//	border-bottom-width:0px;
-		}
-	}
-  
+	 
+	// not sure if this is still used. todo:remove after testing;      
 	.x-grid-row-adjustment{
 		.adjustment-cell {
-			font-size: px-to-rem(14);
-			line-height: px-to-rem(19);
+			//font-size: px-to-rem(14);
+			//line-height: px-to-rem(19);
         
-			border-color: #ededed;
-			border-bottom-width:1px;
-			border-bottom-style:solid;
+			//border-color: #ededed;
+			//border-bottom-width:1px;
+			//border-bottom-style:solid;
 
 			// fixing font size for the adjustment row
 			.adjustment-cell-inner {
-				font-size: 1.4rem !important;
-				line-height: 0px;
+				//font-size: 1.4rem !important;
+				//line-height: 0px;
 				.taco-grid-row-menu-trigger{					
-					height:20px
+					//height:20px
 				}
 			}
 		}     
 	}
+	  
+	
   
    
+    .isActive{	
+	    text-decoration:none;	
+    }
+
+    .isSuppressed{    
+	    text-decoration:line-through;
+    }
 
 
-	// need to force the icon to be visible in the discountRowBody. Action Column doesn't work with rowBody;  	
-	.orderEditable .taco-grid-row-menu-trigger-suppress {
-		visibility:visible;
-		background-position: 0 -199px;
-	}
-
-	// need to force the icon to be visible in the discountRowBody. Action Column doesn't work with rowBody;  	
-	.orderEditable .taco-grid-row-menu-trigger-activate {
-		visibility:visible;
-		background-position: 0 -199px;
-	}
-
-
-  .isActive{	
-	text-decoration:none;	
-  }
-
-  .isSuppressed{    
-	text-decoration:line-through;
-  }
-
-
-  // rows without a discount should hide the row body row. Need to look at way to render rowbody dom selectively
-  .noDiscount {
-    display:none;   
-  }
-  
+    // rows without a discount should hide the row body row. Need to look at way to render rowbody dom selectively
+    .noDiscount {
+	    //display:none;   
+    }    
 }

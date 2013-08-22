@@ -54,42 +54,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             editModeCls = (this.getEditMode()) ? " orderEditable " : "";
         
         this.addEvents('save','saveFailure','saveSuccess');
-
-       
-
+        
         me.cls = [this.cls, editModeCls, Taco.baseCSSPrefix + 'orderform-orderitemgrid'].join(' ');
         
         siteContext = Taco.app.context.getCurrent().urlToken;
-
-        // todo: need to create a custome bound list to have the ability to replace the paging toolbar. Will also need to figure out why the paging toolbar has issues. 
-        /*
-        var pager = Ext.create('Taco.core.ux.grid.Pager', {
-            store: me.productStore
-        });
-        */
-
-        /*
-        var productFilterProperties = [{
-                property: 'all',
-                text: 'All',
-                isDefault: true
-            }, {
-                property: 'productName',
-                text: 'Name'
-            }, {
-                property: 'productCode',
-                text: 'Code'
-            }, {
-                property: 'producttypeid',
-                text: 'Product Type'
-            }, {
-                property: 'productFullDescription',
-                text: 'Description'
-            }
-        ];
-        */
-        
-        
 
         // if the grid is editable show the edit toolbar;
         if (this.getEditMode()) {
@@ -104,18 +72,16 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     componentCls: "title-toolbar",
                     enableOverflow: true,
                     weight: 1,
-                    style: "margin:5px 0px 5px 0px; border:0px;background-color:#fff;",
                     items: [
                         {
                             xtype: "component",
                             html: "Edit Order Details",
-                            style: "padding:0px 0px 5px 0px; font-size: 1.25em",
                             cls: "title"
                         },
                         "->",
                         {
                             xtype: "button",
-                            scale:"small",
+                            scale: "medium",
                             cls: "taco-toolbar-link",
                             text: "Order Level Adjustment",
                             handler: function() {
@@ -125,7 +91,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         },
                         {
                             xtype: "button",
-                            scale: "small",
+                            scale: "medium",
                             cls: "taco-toolbar-link",
                             text: "Add Coupon",
                             handler: function() {
@@ -135,7 +101,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         },
                         {
                             xtype: "button",
-                            scale: "small",
+                            scale: "medium",
                             cls: "taco-toolbar-link",
                             text: "Add Product",
                             handler: function() {
@@ -147,24 +113,18 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 }
             ];
         } else {
-            // editMode:false
-            
-            
             // if there is a draft version of this order we need to show a warning toolbar
             if (this.record.get("hasDraft")) {
                 me.showHasDraftToolbar();
-
             }
-
         };
    
-
 
         this.on('beforeedit', function(plugin, edit) {
             // disable editing when the grid is not editMode:true
             return this.editMode;
-        },this);
-
+        }, this);
+        
         
         Ext.apply(this, {
             features: [
@@ -182,9 +142,13 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 deferEmptyText: false,
                 stripeRows: false,
                 disabled: false,  // disables the grid, prevents the field editors from opening. prevents default hover behavior. Makes text grey and background grey. TODOs, explore this as an option for making the grid readony.
-                //disabledCls: "taco-order-shippingitemgrid-disabled", // css class to add when the order grid is disabledstripeRows: false,
                 disableSelection: (!this.getEditMode()),
-
+                listeners: {
+                    beforecellmousedown: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+                        //prevent the column from being selected unless its an editor column
+                        return me.columns[cellIndex].hasEditor();
+                    }
+                },
                 // provides selective row class addition based on record.
                 getRowClass: function(record) {
                     if (!record) return '';
@@ -294,7 +258,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         '<div roles="button" alt="{altText}" class="{cls}" {tooltip} ></div>'
                     ],
                     handler: function (grid, rowIndex, colIndex, header, e, record, item) {
-
+                        // confirm the removal of the order item;
                         var order = me.record;
                         var confirm = Ext.create('Taco.core.ux.modal.Confirmation', {
                             text: 'Are you certain you want to delete this item?',
@@ -311,7 +275,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         });
                     },
                     renderer: function (value, metaData, record) {
-                        
+                        // if you need to message the data or dom cls. you can do it here;
                     }
                 }
             ]
@@ -325,24 +289,21 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         if (!this.hasDraftToolbar) {
             
             this.hasDraftToolbar = Ext.create('Ext.toolbar.Toolbar', {
-                //xtype: "toolbar",
                 doc: "top",
-                componentCls: "title-toolbar",
+                componentCls: "title-toolbar draft-toolbar",
                 enableOverflow: false,
                 weight: 1,
-                style: "border-color:#CCC;background-color:#f1f1f1;padding:10px;border-width:1px;",
                 items: [
                     {
                         xtype: "component",
                         html: "Warning: You have unsaved changes to this order detail",
-                        style: "padding:0px 5px 0px 5px; font-size: 0.9 em;color:#990000",
                         cls: "title",
                         flex: 1
                     }, {
                         //xtype: "taco.button",
                         xtype: "button",
-                        ui: "action",
-                        scale:"small",
+                        //ui: "action",
+                        scale:"medium",
                         text: "Discard Changes",
                         handler: function () {
                             me.removeDraftOrder();
@@ -351,8 +312,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     }, {
                         //xtype: "taco.button",
                         xtype: "button",
-                        ui: "action",
-                        scale: "small",
+                        //ui: "action",
+                        scale: "medium",
                         text: "Edit Details",
                         style: "margin-left:5px;",
                         handler: function (button, e) {
@@ -755,7 +716,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             
             weight:2,
             cls: "additem-toolbar",
-            style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
+            //style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
             items: [],
             listeners: {
                 afterlayout: {
@@ -774,7 +735,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         tbConfig.items.push(
             {
                 text: "X",
-                xtype: "taco.button",
+                xtype: "button",
+                scale:"medium",
                 style: "min-width:30px;margin-left:10px",
                 handler: function(button, evt) {
                     var tb = button.up('toolbar');
@@ -1206,7 +1168,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
     removeDraftOrder: function () {
         var me = this;
-        
         this.fireEvent('save');
         
         this.record.removeDraftOrder({
