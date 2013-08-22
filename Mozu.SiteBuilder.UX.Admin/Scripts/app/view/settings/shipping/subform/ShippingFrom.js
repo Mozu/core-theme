@@ -26,7 +26,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
                 '<div class="address-line-3">{address3}</div>',
                 '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
                 '<div class="country">{countryCode}</div>',
-                '<div class="country">{[ values.workPhone ? values.workPhone : values.homePhone ]}</div>'
+                '<div class="phone">{[ values.workPhone ? values.workPhone : values.homePhone ]}</div>'
             
             ]
             
