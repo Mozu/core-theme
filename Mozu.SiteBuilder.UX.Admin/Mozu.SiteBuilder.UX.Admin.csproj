@@ -755,6 +755,7 @@
     <Content Include="Scripts\sass\src\view\order\widget\ShippingItemGrid.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\UnpackagedItems.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\form\field\Trigger.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Panel.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
