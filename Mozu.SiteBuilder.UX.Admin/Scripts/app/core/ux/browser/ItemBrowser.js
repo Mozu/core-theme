@@ -76,7 +76,6 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                     count: 0,
                     totalCount: 0,
                     unit: 'records'
-                    
                 }
             }]
         };
@@ -193,12 +192,14 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
 
         me.createItemStore().on({
             load: me.onItemStoreUpdate,
-            datachanged: me.onItemStoreUpdate,
+            bulkremove: me.onItemStoreUpdate,
+            // datachanged: me.onItemStoreUpdate,
             scope: me
         });
+
         this.on('afterrender', this.onItemStoreUpdate, this);
+
         this.callParent(arguments);
-        
 
         this.relayActionEvents();
     },
@@ -209,23 +210,32 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         });
     },
 
-    onItemStoreUpdate: function () {
+    onItemStoreUpdate: function (store, records, indexesOrSuccess, isMove) {
         var me = this,
             rc = me.down('#recordCount'),
-        data = {
-            count: me.itemStore.getCount(),
+            netChange, data;
 
-            totalCount: me.itemStore.getTotalCount(),
+        // if the component has not been rendered yet, we can't update it
+        if (!rc) return;
+
+        // if afterrender triggered this function, the first argument is not a store
+        store = store.isStore ? store : me.itemStore;
+
+        // if bulkremove triggered this function, totalCount will be out of sync
+        netChange = (isMove === false) ? records.length * -1 : 0;
+
+        data = {
+            count: store.getCount(),
+            totalCount: store.getTotalCount() + netChange,
             unit: me.itemType
         };
-        if (!rc) {
-            return;
-        }
-        
+
+        console.log(isMove, data.count, data.totalCount, netChange);
+
         data.totalCount = data.totalCount > data.count ? data.totalCount : data.count;
+
         rc.update(data);
         rc.renderData = data;
-       
     },
 
     onKeyUp: function (field) {
