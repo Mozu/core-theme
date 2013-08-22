@@ -74,8 +74,9 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
         this.items = [
             me.startField,
             {
-                html: 'to',
-                margin: '0 10px',
+                xtype: 'label',
+                text: 'to',
+                margin: '8px 10px',
                 flex: 1
             },
             me.endField
