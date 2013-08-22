@@ -1430,8 +1430,11 @@ Ext.define('Taco.model.Order', {
      *
      */
     updateOrderAdjustment: function (config) {
+        var me = this;
+
         Ext.apply(config, {
             url: '/admin/app/order/adjustment',
+            params: { 'draft': me.get('isDraft') },
             method: "POST"
         });
 

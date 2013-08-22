@@ -27,14 +27,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (args.OrderAdjustment != null && args.OrderAdjustment.Amount.HasValue)
             {
                 if (args.OrderAdjustment.Amount == 0)
-                    dcOrder = (await _orderWebApiClient.RemoveAdjustment(args.OrderId, APPLY_TO_DRAFT)).ReadAsSync();
+                    dcOrder = (await _orderWebApiClient.RemoveAdjustment(args.OrderId, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
                 else
                     dcOrder = (await _orderWebApiClient.ApplyAdjustment(args.OrderId, args.OrderAdjustment.Map<Mozu.CommerceRuntime.Contracts.Commerce.Adjustment>(), draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
             if (args.ShippingAdjustment != null && args.ShippingAdjustment.Amount.HasValue)
             {
                 if (args.ShippingAdjustment.Amount == 0)
-                    dcOrder = (await _orderWebApiClient.RemoveShippingAdjustment(args.OrderId, APPLY_TO_DRAFT)).ReadAsSync();
+                    dcOrder = (await _orderWebApiClient.RemoveShippingAdjustment(args.OrderId, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
                 else
                     dcOrder = (await _orderWebApiClient.ApplyShippingAdjustment(args.OrderId, args.ShippingAdjustment.Map<Mozu.CommerceRuntime.Contracts.Commerce.Adjustment>(), draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
