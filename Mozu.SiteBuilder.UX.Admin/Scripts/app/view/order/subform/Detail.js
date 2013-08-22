@@ -95,7 +95,9 @@ Ext.define('Taco.view.order.subform.Detail', {
             listeners: {
                 'draftOrderRemoved': {
                     fn: function (data) {
+                        
                         me.setLoading(true, this.body);
+                        
                         me.onRecordChange();
                     },
                     scope: me
