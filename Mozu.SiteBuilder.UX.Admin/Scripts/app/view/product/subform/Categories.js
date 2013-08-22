@@ -6,16 +6,23 @@
 
 Ext.define('Taco.view.product.subform.Categories', {
     extend: 'Taco.view.product.subform.Subform',
-    requires: ['Taco.view.category.Modal', 'Taco.core.ux.form.field.MultiSelect'],
-   // width: '100%',
+    requires: [
+        'Taco.view.category.Modal',
+        'Taco.core.ux.form.field.MultiSelect'
+    ],
+    
     title: 'Categories',
+    
     flex: 1,
     layout: {
         type:'vbox',
         align:'stretch'
     },
+
     initComponent: function () {
-        var list, listStore, me=this;
+        var me = this,
+            list,
+            listStore;
 
         // categories are not global, we're only operating on the productInSiteInfo
         this.record = this.productInSiteInfo;
@@ -26,50 +33,33 @@ Ext.define('Taco.view.product.subform.Categories', {
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         list = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'categoryIds',
-           // width: '100%',
             store: listStore,
-            flex:1,
+            flex: 1,
             getStore: function () { return listStore; },
             displayField: 'name',
             valueField: 'id',
             value: this.record.get('categoryIds'),
             queryMode: 'local',
-            onTriggerClick:function () {
+            onTriggerClick: function () {
                 me.launchModal();
             }
-            //listConfig: {
-            //    disableSelection: true,
-            //    itemTpl: [
-            //        '<span class="x-boundlist-item-content">{name}</span>',
-            //        '<span class="x-boundlist-item-close"> </span>'
-            //    ],
-            //    listeners: {
-            //        itemclick: this.onListItemClick,
-            //        scope: this
-            //    }
-            //}
         });
+
         this.listStore = listStore;
         list.parentThing = this;
-
-        //this.tools = [{
-        //    xtype: 'secondarybutton',
-        //    text: 'Add Categories',
-        //    click: this.launchModal,
-        //    scope: this
-        //}];
        
         this.items = [list];
 
         this.callParent(arguments);
 
-        // reset the list's dirty state when its store first loads
-        //listStore.on({
-        //    load: function () { list.resetOriginalValue(); },
-        //    single: true,
-        //    scope: this
-        //});
         this.mon(listStore, 'load', function () { list.resetOriginalValue(); }, this);
+
+        this.on({
+            beforedestroy: function () {
+                if (this.modal && this.modal.hide) this.modal.hide();
+            },
+            scope: this
+        });
     },
 
     /**
@@ -130,7 +120,6 @@ Ext.define('Taco.view.product.subform.Categories', {
         var list = this.getForm().findField('categoryIds'),
             value = Ext.Array.clone(list.getValue() || []);
 
-        //store.remove(store.getRange());
         Ext.each(newRecords, function (record) {
             if (value.indexOf(record.getId() > -1)) {
                 value.push(record.getId());
