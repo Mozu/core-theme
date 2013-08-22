@@ -331,12 +331,7 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     bindStore: function (store) {
-        store.on({
-            dirtychange: function () {
-                this.savableStateCheck();
-            },
-            scope: this
-        });
+        this.mon(store, 'dirtychange', this.savableStateCheck, this);
     },
 
     addChildSaveTasks: function (tasks) {
