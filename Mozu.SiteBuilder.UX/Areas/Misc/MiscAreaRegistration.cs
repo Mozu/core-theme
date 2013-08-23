@@ -21,6 +21,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
             );
 
             context.MapRoute(
+               "Misc_content",
+               "files/{tenant}/{sitegroup}/{documentId}",
+               new { action = "index", controller = "content", collection = "files", site = ""}
+           );
+
+
+            context.MapRoute(
                 "Set Site Context",
                 "_gosite/{siteId}",
                 new { action = "GoSite", controller = "Testing" }

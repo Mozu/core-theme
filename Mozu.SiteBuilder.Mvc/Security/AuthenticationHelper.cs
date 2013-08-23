@@ -36,162 +36,92 @@ namespace Mozu.SiteBuilder.Mvc.Security
         {
             _settings = settings;
             CookieName = _settings.AppSettings("authCookieName");
+            RefershCookieName = "mzrt-" + settings.AppSettings("Environment");
             CookieProvider = provider;
         }
 
 
         public string CookieName { get; set; }
 
+
+        public string RefershCookieName { get; set; }
+
         public ICookieProvider CookieProvider { get; set; }
 
-        //public void SetCurrentUser(UserAuthTicket ticket)
+      
+
+
+
+
+        //public void LogOut(IApiContext context)
         //{
-        //    LightweightUserClaims id;
-        //    UserProfile pt = null;
-        //    if (ticket == null || String.IsNullOrEmpty(ticket.AccessToken))
-        //    {
-        //        id = LightweightUserClaims.CreateAnonymous(scopeType : UserScopeType.Tenant);
-        //        ticket = ticket ?? new UserAuthTicket();
-        //        ticket.AccessToken  = id.ToAccessToken();
-        //    }
-        //    else
-        //    {
-        //        id = LightweightUserClaims.Parse(ticket.AccessToken);
-               
-        //        //if ( !string.IsNullOrEmpty( ticket.User ) )
-        //        //{
-        //        //    pt = ticket.User;
-        //        //}
-        //    }
-           
-        //    Thread.CurrentPrincipal = id;
-        //    if (_httpContext != null)
-        //    {
-        //        _httpContext.Items["ticket"] = ticket;
-        //        _httpContext.User = id;
-        //        _httpContext.Items["UserProfile"] = ticket.User ;
-        //    }
+        //    ((ISiteBuilderApiContext) context).SetUser(null);
+        //    SaveAuthTicket(null);
 
+        //}
 
+        //public void SaveAuthTicket(UserAuthTicket ticket)
+        //{
+        //    var cookie = ticket.ToCookie(CookieName);
+        //    CookieProvider.SaveResponseCookie(CookieName , cookie );
             
-        //    SetCookie(ticket);
         //}
 
-        ///// <summary>
-        ///// Allows current user to be set with just an accesstoken.
-        ///// </summary>
-        ///// <param name="accessToken"></param>
-        //public void SetCurrentUser(string accessToken)
-        //{
-        //    if (!String.IsNullOrEmpty(accessToken))
-        //    {
-        //        var claim = LightweightUserClaims.Parse(accessToken);
-        //        SetCurrentUser(new UserAuthTicket { AccessToken = accessToken, AccessTokenExpiration = claim.Expiration });
-        //    }
-        //    else
-        //    {
-        //        SetCurrentUser((UserAuthTicket)null);
-        //    }
-        //}
-     
-
-
-        //public UserAuthTicket GetCurrentTicket ()
-        //{
-        //    UserAuthTicket ticket = null;
-        //    if (_httpContext != null)
-        //    {
-        //        ticket = (UserAuthTicket) _httpContext.Items["ticket"];
-        //    }
-        //    return ticket ?? GetTicketFromRequest();
-
-        //}
-
-        //public Mozu.Core.Api.Contracts.UserProfile GetCurrentProfileToken()
-        //{
-
-        //    return _httpContext.Items["UserProfile"] as Mozu.Core.Api.Contracts.UserProfile;
-        //}
-
-        //public LightweightUserClaims GetCurrentUser()
-        //{
-        //    IPrincipal principal = null;
-
-        //    var context = _httpContext;
-        //    if (context != null)
-        //        principal = context.User;
-
-        //    return principal as LightweightUserClaims
-        //           ?? Thread.CurrentPrincipal as LightweightUserClaims
-        //           ?? LightweightUserClaims.CreateAnonymous(scopeType: UserScopeType.Tenant);
-        //}
-
-        //public void SetCookie(UserAuthTicket ticket)
-        //{
-        //    var cookie = ticket.ToCookie(CookieName );
-        //    CookieProvider.SaveResponseCookie(CookieName, cookie);
-        //}
-
-        //public UserAuthTicket GetTicketFromRequest()
+        //public UserAuthTicket GetAuthTicket()
         //{
         //    var cookie = CookieProvider.GetRequestCookie(CookieName);
-
-        //    if (cookie != null && cookie["AccessToken"] !=null)
+        //    if (cookie != null)
         //    {
         //        return cookie.ToTicket();
         //    }
-
         //    return null;
         //}
-        //public UserAuthTicket CreateAnonymousTicket()
-        //{
-        //    var user = LightweightUserClaims.CreateAnonymous(scopeType: UserScopeType.Tenant);
 
+        void IAuthenticationHelper.SaveAccessToken(string accessToken)
+        {
+            var cookie = new HttpCookie(CookieName);
+            cookie["accessToken"] = accessToken;
+
+            CookieProvider.SaveResponseCookie(CookieName, cookie);
            
-        //    return new UserAuthTicket()
-        //    {
-        //        AccessToken = user.ToAccessToken(),
-        //        User = new Core.Api.Contracts.UserProfile()
-        //                   {
-        //                       UserId = user.UserId 
-        //                   },
-        //        AccessTokenExpiration = user.Expiration
-        //    };
-        //}
-        //public void LogOut()
-        //{
-        //    SetCurrentUser((UserAuthTicket)null);
-        //    var cookie = new HttpCookie("")
-        //    {
-        //        Expires = DateTime.MinValue,
-        //    };
-        //    CookieProvider.SaveResponseCookie(CookieName, cookie);
-        //}
-
-
-
-        public void LogOut(IApiContext context)
-        {
-            ((ISiteBuilderApiContext) context).SetUser(null);
-            SaveAuthTicket(null);
-
         }
 
-        public void SaveAuthTicket(UserAuthTicket ticket)
-        {
-            var cookie = ticket.ToCookie(CookieName);
-            CookieProvider.SaveResponseCookie(CookieName , cookie );
-            
-        }
-
-        public UserAuthTicket GetAuthTicket()
+        string IAuthenticationHelper.GetAccessToken()
         {
             var cookie = CookieProvider.GetRequestCookie(CookieName);
-            if (cookie != null)
+            if (cookie != null && cookie.HasKeys)
             {
-                return cookie.ToTicket();
+                return cookie["accessToken"];
             }
             return null;
         }
+
+        string IAuthenticationHelper.GetRefreshToken()
+        {
+            var cookie = CookieProvider.GetRequestCookie(RefershCookieName);
+            if (cookie != null && cookie.HasKeys)
+            {
+                return cookie["Token"];
+            }
+            return null;
+            
+        }
+
+
+        void IAuthenticationHelper.SaveAuthTicket(UserAuthTicket ticket)
+        {
+            var cookie = new HttpCookie(CookieName);
+            cookie["accessToken"] = ticket.AccessToken ;
+            CookieProvider.SaveResponseCookie(CookieName, cookie);
+
+
+            cookie = new HttpCookie(RefershCookieName);
+            cookie["Token"] = ticket.RefreshToken;
+            CookieProvider.SaveResponseCookie(RefershCookieName, cookie);
+         
+        }
+
+
+    
     }
 }

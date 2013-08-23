@@ -56,9 +56,9 @@ namespace Mozu.SiteBuilder.Mvc
 
         public void LoadUser(HttpContextBase ctx, ICookieProvider cookieProvider)
         {
-            var ticket = _authenticationHelper.GetAuthTicket();
+            var accessToken = _authenticationHelper.GetAccessToken();
             LightweightUserClaims claims;
-            if (ticket != null && LightweightUserClaims.TryParse(ticket.AccessToken, out claims))
+            if (LightweightUserClaims.TryParse(accessToken, out claims))
             {
                 //todo validate tenant and site 
                 this.UserClaims = claims;

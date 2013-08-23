@@ -64,7 +64,7 @@ Ext.define('Taco.view.catalog.Index', {
                 defaultMargins: '5'
             },
             items: [{
-                    xtype: 'button',
+                xtype: 'button',
                     frame: false,
                     scale: 'medium',
                     ui: 'action',
@@ -132,7 +132,25 @@ Ext.define('Taco.view.catalog.Index', {
         this.modal = modal;
         this.modaless = modaless;
     },
+        
+        this.thomStore.loadData(window.theData);
+        window.model1 = this.thomStore.getAt(0);
+        window.model2Store = this.thomStore.getAt(0).getModel2s();
+        window.model3Store = window.model2Store.getAt(0).getModel3s();
+        window.model3s = window.model3Store.getAt(0);
 
+    },
+    doIt: function (senario) {
+        var newData = Ext.clone(window.theData);
+        if (senario == 1) {
+            newData[0].model2s[0].name = theData[0].model2s[0].name + new Date().getTime();
+        }
+        if (senario == 2) {
+            newData[0].model2s[0].model3s[0].name = theData[0].model2s[0].model3s[0].name + new Date().getTime();
+        }
+        window.model1.set(newData[0]);
+        //this.thomStore.loadData(newData);
+    },
     launchModal: function (type) {
         var modal = this[type];
 

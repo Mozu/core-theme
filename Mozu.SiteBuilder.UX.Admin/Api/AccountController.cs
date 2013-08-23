@@ -45,11 +45,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private IInvitationWebApiClient _invitationWebApiClient;
         private readonly  IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
         private readonly ISettings _settings;
-        private readonly IContextSwitcher _contextSwitcher;
+      
         private readonly IUserHelper _userHelper;
         private readonly IApiContext _apiContext;
 
-        public AccountController(IMultiScopeAdminUserWebApiClient user, IMultiScopeRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient , IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings, IContextSwitcher contextSwitcher, IUserHelper userHelper, IApiContext apiContext)
+        public AccountController(IMultiScopeAdminUserWebApiClient user, IMultiScopeRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient , IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings,  IUserHelper userHelper, IApiContext apiContext)
         {
             _usersRepo = user;
             _rolesRepo = role;
@@ -58,19 +58,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _adminUserWebApiClient = adminUserWebApiClient;
             _invitationWebApiClient = invitationWebApiClient;
             _settings = settings;
-            _contextSwitcher = contextSwitcher;
+     
             _userHelper = userHelper;
             _apiContext = apiContext;
         }
 
-        [HttpPostRoute(UriTemplate = "logoff")]
-        public Response<List<AdminUser2>> Logoff()
-        {
-            //var ticket = _authHelper.GetCurrentTicket();
-            //_authTicketRepo.DeleteUserAuthTicket(ticket.RefreshToken).Result.ReadAsSync();
-            _authHelper.LogOut(_apiContext);
-            return EmptyList2<AdminUser2>();
-        }
+    
         
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<AdminUser2>>> GetUsers([FromUri]PagingParamaters pagingParams, FilterCollection extFilter)
@@ -153,12 +146,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return _roles = roles.Items;
         }
 
-        public async Task<Response<Tenant.Contracts.Tenant>> ChangeTenant(int tenantId)
-        {
-            var tenant = await _contextSwitcher.ChangeTenant(tenantId);
+        //public async Task<Response<Tenant.Contracts.Tenant>> ChangeTenant(int tenantId)
+        //{
+        //    var tenant = await _contextSwitcher.ChangeTenant(tenantId);
 
-            return Single2(tenant);
-        }
+        //    return Single2(tenant);
+        //}
 
         //public async Task<Site> ChangeSite(int siteId)
         //{

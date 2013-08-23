@@ -28,23 +28,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
         private readonly ITenantsWebApiClient _tenantsWebApi;
-        private readonly ICurrentUserHelper _currentUserHelper;
+        
         private readonly IApiContext _apiContext;
         private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
         private readonly ISettings _settings;
         private readonly HttpContextBase _httpContext;
+        private readonly IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
         private ILogger _log;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, ICurrentUserHelper currentUserHelper, IApiContext apiContext, ISettings settings, HttpContextBase httpContext)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient)
         {
             _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authenticationHelper = authHelper;
             _sbc = sbc;
             _apiContext = apiContext;
             _tenantsWebApi = tenantsWebApi.CloneWithoutUserClaims();//  .CloneWithApiContext(x => x.UserClaims = LightweightUserClaims.CreateForSystemUser(UserScopeType.SystemAdmin));
-            _currentUserHelper = currentUserHelper;
+            
             _settings = settings;
             _httpContext = httpContext;
+            _adminUserWebApiClient = adminUserWebApiClient;
 
             _log = LoggingService.LoggerFor<HomeController>();
         }
@@ -52,14 +54,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         // GET: /Home/
         public async Task<ActionResult> Index()
         {
-        
-            var user = _currentUserHelper.GetCurrentUser();
+
+            var userDC = (await _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId  )).ReadAsSync();
+            var user = new Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User()
+                           {
+                               BehaviorIds = _apiContext.UserClaims.BehaviorIds,
+                               EmailAddress = userDC.EmailAddress,
+                               FirstName = userDC.FirstName,
+                               LastName = userDC.LastName,
+                               Id = _apiContext.UserClaims.UserId
+                           };
           
-            if (user == null || _apiContext.TenantId <0 )
-            {
-                _authenticationHelper.LogOut(_apiContext );
-             
-            }
+           
            
             var roles = GetUserSitesRoles(_apiContext.UserClaims.UserId );
             var tenantRes = await _tenantsWebApi.GetTenant( _apiContext.TenantId);
@@ -68,10 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var siteUsers = await _usersRepo.GetUsers(scopeType :UserScopeType.Tenant.ToString(),scopeId : _apiContext.TenantId,pageSize: 200, startIndex:0);
 
 
-            if (tenantRes.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-            {
-                _authenticationHelper.LogOut(_apiContext );
-            }
+           
 
             var tenant = tenantRes.ReadAsSync();
 

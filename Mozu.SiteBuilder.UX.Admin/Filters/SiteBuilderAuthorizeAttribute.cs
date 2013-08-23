@@ -133,33 +133,31 @@ public class SiteBuilderAuthorizeAttribute : AuthorizeAttribute
         }
 
 
-
+        //if refresh token is missing it means they've logged out of the log out app.
+        var refreshToken = authHelper.GetRefreshToken();
+        if (string.IsNullOrEmpty(refreshToken))
+        {
+            return false;
+        }
         if (context.UserClaims.Expiration < DateTime.UtcNow.AddMinutes(-1))
         {
-            var ticket = authHelper.GetAuthTicket();
-            if (ticket != null && ticket.RefreshTokenExpiration > DateTime.UtcNow)
+            //var ticket = authHelper.GetAuthTicket();
+            //if (ticket != null && ticket.RefreshTokenExpiration > DateTime.UtcNow)
             {
+                
+                
                 var res = AdminUserWebApiClient.RefreshAuthTicket(
                     existingAuthTicket: new TenantAdminUserAuthTicket()
                                             {
-                                                RefreshToken = ticket.RefreshToken
+                                                RefreshToken = refreshToken
                                             },
                     tenantId: context.TenantId).Result;
 
                 if (res.ResponseMessage.IsSuccessStatusCode)
                 {
-                    var ticket2 = res.ReadAsSync();
-                    ticket = new UserAuthTicket()
-                                 {
-
-                                     AccessToken = ticket2.AccessToken,
-                                     AccessTokenExpiration = ticket2.AccessTokenExpiration,
-                                     User = ticket2.User,
-                                     GrantedBehaviors = ticket2.GrantedBehaviors,
-                                     RefreshTokenExpiration = ticket2.RefreshTokenExpiration,
-                                     RefreshToken = ticket2.RefreshToken
-                                 };
-                    authHelper.SaveAuthTicket(ticket);
+                    var ticket = res.ReadAsSync();
+                    
+                    authHelper.SaveAccessToken( ticket.AccessToken );
 
                     context.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
 
@@ -169,10 +167,10 @@ public class SiteBuilderAuthorizeAttribute : AuthorizeAttribute
                     return false;
                 }
             }
-            else
-            {
-                return false;
-            }
+            //else
+            //{
+            //    return false;
+            //}
         }
 
 
