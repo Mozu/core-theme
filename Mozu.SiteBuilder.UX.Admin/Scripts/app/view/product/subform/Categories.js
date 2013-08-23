@@ -40,9 +40,13 @@ Ext.define('Taco.view.product.subform.Categories', {
             valueField: 'id',
             value: this.record.get('categoryIds'),
             queryMode: 'local',
+            //editable: false,
+            //typeAhead: false,
+            //readOnly: true,
+            enableKeyEvents: true/*,
             onTriggerClick: function () {
                 me.launchModal();
-            }
+            }*/
         });
 
         this.listStore = listStore;
