@@ -1,11 +1,11 @@
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 
-namespace Mozu.SiteBuilder.UX.Admin.Helpers
-{
-    public interface IContextSwitcher
-    {
-        Task<Tenant.Contracts.Tenant> ChangeTenant(int tenantId);
+//namespace Mozu.SiteBuilder.UX.Admin.Helpers
+//{
+//    public interface IContextSwitcher
+//    {
+//        Task<Tenant.Contracts.Tenant> ChangeTenant(int tenantId);
 
-       // Task<Site> ChangeSite(int siteId);
-    }
-}
+//       // Task<Site> ChangeSite(int siteId);
+//    }
+//}

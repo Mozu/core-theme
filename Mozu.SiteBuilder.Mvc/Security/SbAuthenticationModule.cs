@@ -89,11 +89,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
                 
                 var user = LightweightUserClaims.CreateForAnonymousShopper(apiContext.TenantId, apiContext.SiteId ?? -1);
                 apiContext.SetUser(user);
-                authHelper.SaveAuthTicket(new UserAuthTicket()
-                                             {
-                                                 AccessToken = user.ToAccessToken(),
-                                                 AccessTokenExpiration = user.Expiration 
-                                             });
+                authHelper.SaveAccessToken(  user.ToAccessToken());
             }
 
           

@@ -36,7 +36,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public JsonDCResult LogOut()
         {
-            _authenticationHelper.LogOut(_apiContext);
+
+            //_authenticationHelper.LogOut(_apiContext);
             //_cookieProvider.SaveResponseCookie("order", new HttpCookie("")); // uggh, but it works
             return new JsonDCResult()
             {

@@ -469,14 +469,7 @@ namespace Mozu.SiteBuilder.Mvc
         {
             get
             {
-                if (_userProfile == null)
-                {
-                    var ticket = _authenticationHelper.GetAuthTicket();
-                    if (ticket != null)
-                    {
-                        _userProfile = ticket.User;
-                    }
-                }
+              
                 if (_userProfile == null)
                 {
                     _userProfile = new UserProfile()

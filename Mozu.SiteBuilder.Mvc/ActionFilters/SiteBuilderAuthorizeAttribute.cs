@@ -96,17 +96,17 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                 //    return false;
                 //}
 
-
+                 
                 if (context.UserClaims.Expiration < DateTime.UtcNow.AddMinutes(-1))
                 {
-                    var ticket = authHelper.GetAuthTicket();
-                    if ( ticket != null && ticket.RefreshTokenExpiration > DateTime.UtcNow )
+                    var refreshToken = authHelper.GetRefreshToken() ;
+                    //if ( ticket != null && ticket.RefreshTokenExpiration > DateTime.UtcNow )
                     {
-                        var res = TicketAPI.RefreshUserAuthTicket(ticket.RefreshToken).Result;
+                        var res = TicketAPI.RefreshUserAuthTicket(refreshToken).Result;
                         if (res.ResponseMessage.IsSuccessStatusCode)
                         {
-                            ticket = res.ReadAsSync();
-                            authHelper.SaveAuthTicket(ticket);
+                            var ticket = res.ReadAsSync();
+                            authHelper.SaveAccessToken( ticket.AccessToken);
                           
                         }
                         else
@@ -114,10 +114,10 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                             return false;
                         }
                     }
-                    else
-                    {
-                        return false;
-                    }
+                    //else
+                    //{
+                    //    return false;
+                    //}
                 }
                 
 
