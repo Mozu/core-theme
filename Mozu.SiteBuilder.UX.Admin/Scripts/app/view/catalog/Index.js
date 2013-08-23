@@ -12,7 +12,7 @@ Ext.define('Taco.view.catalog.Index', {
         title: 'Catalog Testing'
     },
 
-    initComponent: function () {        
+    initComponent: function () {
 
 
         var me = this,
@@ -64,7 +64,7 @@ Ext.define('Taco.view.catalog.Index', {
                 defaultMargins: '5'
             },
             items: [{
-                xtype: 'button',
+                    xtype: 'button',
                     frame: false,
                     scale: 'medium',
                     ui: 'action',
@@ -131,8 +131,8 @@ Ext.define('Taco.view.catalog.Index', {
 
         this.modal = modal;
         this.modaless = modaless;
-    },
-        
+
+
         this.thomStore.loadData(window.theData);
         window.model1 = this.thomStore.getAt(0);
         window.model2Store = this.thomStore.getAt(0).getModel2s();
