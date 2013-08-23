@@ -49,6 +49,7 @@
                 cls: 'taco-option-value-view',
                 tpl: tpl,
                 itemSelector: 'div.taco-option-value-row',
+                disableSelection: true,
                 loadMask: false,
                 store: this.store
             }, {

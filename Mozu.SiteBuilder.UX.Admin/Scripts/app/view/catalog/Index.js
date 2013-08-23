@@ -61,6 +61,7 @@ Ext.define('Taco.view.catalog.Index', {
         uibtns = Ext.create('Ext.Container', {
             layout: {
                 type: 'hbox',
+                align: 'bottom',
                 defaultMargins: '5'
             },
             items: [{
