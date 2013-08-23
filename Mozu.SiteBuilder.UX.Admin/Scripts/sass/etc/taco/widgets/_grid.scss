@@ -199,7 +199,12 @@
   }
 
   // pseudo-actioncolumn styles
+  .#{$vprefix}actioncolumn {
+    vertical-align: middle;
+  }
+
   .#{$vprefix}actioncolumn-icon-remove {
+    cursor: pointer;
     @include icon-font($glyph-close);
   }
 
