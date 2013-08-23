@@ -122,7 +122,7 @@ Ext.define('Taco.model.Discount', {
         type: 'ajaxproxy',
         api: {
             //read: '/admin/Scripts/app/mocks/discounts.json',
-            read: '/admin/app/discount/read',
+            read: '/admin/app/discount/list',
             create: '/admin/app/discount/create',
             update: '/admin/app/discount/edit',
             destroy: '/admin/app/discount/delete'

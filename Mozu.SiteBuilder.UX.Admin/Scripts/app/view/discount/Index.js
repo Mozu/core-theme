@@ -133,12 +133,18 @@ Ext.define('Taco.view.discount.Index', {
             text: 'Used',
             width: 80,
             hidden: false
+        }, {
+            xtype: 'taco.menucolumn',
+            text: 'Actions',
+            menuItems:[{
+                text: 'Delete',
+                requiredBehaviors: {
+                    model: 'Taco.model.Discount',
+                    behavior:'destroy'
+                },
+                menuColumnHandler: 'destroyMenuColumnHandler'
+            }]
         }],
-        actions: [{
-            tooltip: 'Delete',
-            iconCls: 'taco-action-delete',
-            eventName: 'deletediscount'
-        }]
     },
     //ToDo: WTF is this used for
     initComponent2: function (eOpts) {

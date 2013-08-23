@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using AutoMapper;
 using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.Api.Routing;
@@ -31,8 +32,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Get a list of discounts.
         /// </summary>
-		[HttpGetRoute(UriTemplate = "read")]
-        public async Task<Response<List<Discount>>> ReadDiscount(PagingParamaters pagingParams, FilterCollection extFilter)
+		[HttpGetRoute(UriTemplate = "list")]
+        public async Task<Response<List<Discount>>> ListDiscounts(PagingParamaters pagingParams, FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {
@@ -112,6 +113,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             return List2(retList);
+        }
+
+        [HttpPostRoute(UriTemplate = "delete")]
+        public async Task<Response<Discount>> DeleteDiscount(List<Discount> discounts)
+        {
+            var tasks = discounts.Select(d => _discountWebClient.DeleteDiscount(d.Id));
+            await Task.WhenAll(tasks);
+
+            return SuccessWithTotal2<Discount>(discounts.Count);
         }
     }
 }
