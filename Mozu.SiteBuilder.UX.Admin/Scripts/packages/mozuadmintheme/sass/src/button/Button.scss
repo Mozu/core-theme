@@ -213,7 +213,9 @@
 
 // default state
 
-.#{$prefix}btn {
+.#{$prefix}btn-link-medium,
+.#{$prefix}btn-action-medium,
+.#{$prefix}btn-action-primary-medium {
     .#{$prefix}btn-arrow-right,
     .#{$prefix}btn-split-right {
         background-image: none;
