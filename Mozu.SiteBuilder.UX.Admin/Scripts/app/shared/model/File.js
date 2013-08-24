@@ -27,7 +27,7 @@ Ext.define('Taco.shared.model.File', {
             useNull: true,
             persist: false,
             convert: function fullName(v, record) {
-                return record.get('localthumbnail') || '/admin/img/files/' + record.getId();
+                return record.get('localthumbnail') || '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getSiteGroupId() + '/' + record.getId();
             }
         }, {
             name: 'alt',
@@ -71,7 +71,7 @@ Ext.define('Taco.shared.model.File', {
             useNull: true,
             persist: false,
             convert: function fullName(v, record) {
-                return record.raw.url || '/admin/img/files/' + record.getId();
+                return record.raw.url || '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getSiteGroupId() + '/' + record.getId();
             }
         }
     ],

@@ -71,6 +71,38 @@ public class SiteBuilderAuthorizeAttribute : AuthorizeAttribute
 
         }
 
+    private ISettings _settings;
+        
+        public ISettings Settings
+        {
+            get
+            {
+                if (_settings == null)
+                {
+                    return (ISettings)System.Web.Mvc.DependencyResolver.Current.GetService(typeof(ISettings));
+                }
+                return _settings;
+            }
+            set { _settings = value; }
+
+        }
+
+    private static string _environment;
+    public string Environment
+    {
+        get
+        {
+            if (_environment == null)
+            {
+                _environment = Settings.AppSettings("Environment");
+            }
+            return _environment;
+        }
+        set { _environment = value; }
+
+        
+    }
+
         public ISiteBuilderApiContext ApiContext
         {
             get
@@ -128,6 +160,12 @@ public class SiteBuilderAuthorizeAttribute : AuthorizeAttribute
 
 
         if (context.UserClaims.ScopeType != UserScopeType.Tenant.ToString())
+        {
+            return false;
+        }
+
+
+        if (!String.Equals(context.UserClaims.Environment, Environment))
         {
             return false;
         }

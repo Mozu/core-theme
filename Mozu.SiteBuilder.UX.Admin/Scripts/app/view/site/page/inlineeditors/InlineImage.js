@@ -34,7 +34,7 @@ Ext.define('Taco.view.site.page.inlineeditors.InlineImage', {
         }
         fmf = me.getSelectedRecords().getAt(0);
         args = {
-            src: '/admin/img/files/' + fmf.getId(),
+            src: '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getSiteGroupId() + '/' +  fmf.getId(),
             alt: fmf.get('alt'),
             height: fmf.get('height'),
             width: fmf.get('width')
@@ -55,10 +55,6 @@ Ext.define('Taco.view.site.page.inlineeditors.InlineImage', {
     beforeCompleteEdit: function () { return true; },
     attemptCompleteEdit: function () { return true; }
 
-    //    editableElement: editableElement,
-    //                        metaData: metaData,
-
-    //    <img data-editing-element="{&quot;documentId&quot;:&quot;4fdfa18b77b3c723d47148c3&quot;,&quot;collection&quot;:&quot;widgets&quot;,&quot;fieldName&quot;:&quot;image_url&quot;,&quot;isShadow&quot;:false,&quot;entityType&quot;:&quot;cms&quot;,&quot;fieldType&quot;:&quot;image&quot;,&quot;editDefault&quot;:&quot;{ \&quot;src\&quot;:\&quot;\/admin\/scripts\/resources\/images\/AddPhotos.png\&quot;, \&quot;alt\&quot;:\&quot;food is good\&quot; }&quot;,&quot;definitionId&quot;:&quot;image&quot;,&quot;sequence&quot;:0}" src="/admin/img/files/4fda4d5e77b3c7167467eff7" alt="" width="528" height="396">
-
+  
 });
    

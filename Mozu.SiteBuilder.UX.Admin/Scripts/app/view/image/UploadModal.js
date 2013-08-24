@@ -24,7 +24,7 @@
             var me = this,
                 uploader = me.down('imageuploader');
             if (uploader.uploadRequests.items && uploader.uploadRequests.items.length > 0) {
-                var path = '/admin/img/images/' + uploader.uploadRequests.items[0].docId;
+                var path = '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getSiteGroupId() + '/' +  uploader.uploadRequests.items[0].docId;
 
                 if (me.createData) {
 
