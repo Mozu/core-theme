@@ -22,6 +22,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         IApiContext _appCtx;
         public ContentController(IDocumentListWebApiClient docRepo, IApiContext appCtx)
         {
+            SuppressMissingContextRedirect = true;
             _docRepo = docRepo.CloneWith(x => { x.SiteId = null; });
            
             _appCtx =appCtx;

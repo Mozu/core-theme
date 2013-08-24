@@ -112,11 +112,11 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             items: [{
                 xtype: 'action',
                 text: 'Expand All',
-                click: function () { me.gridPanel.expandAllRows(true); }
+                click: function () { me.gridPanel.findPlugin('rowexpander').expandAllRows(true); }
             }, {
                 xtype: 'action',
                 text: 'Collapse All',
-                click: function () { me.gridPanel.expandAllRows(false); }
+                click: function () { me.gridPanel.findPlugin('rowexpander').expandAllRows(false); }
             }]
         });
 
