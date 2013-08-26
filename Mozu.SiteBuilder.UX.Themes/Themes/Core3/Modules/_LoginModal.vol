@@ -8,7 +8,7 @@
                     <input name="password" placeholder="Password" type="password" />
                     <div class="mz-last-row">
                         (<a data-mz-action="forgotpassword" href="javascrip
-                        t:;">forgot username or password?</a>) <button data-mz-role="ajaxform-submit">Log In</button>
+                        t:;">forgot email or password?</a>) <button data-mz-role="ajaxform-submit">Log In</button>
                     </div>
                 </section>
                 <section data-mz-role="forgotpassword-form" class="mz-forgot-password">
