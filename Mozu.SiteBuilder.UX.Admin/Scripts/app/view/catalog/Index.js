@@ -5,7 +5,8 @@ Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
     requires: [
         'Taco.core.ux.window.WindowWithActions',
-        'Taco.overrides.panel.Tool'
+        'Taco.overrides.panel.Tool',
+        'Taco.core.ux.form.field.MultiSelect'
     ],
 
     header: {
@@ -45,6 +46,11 @@ Ext.define('Taco.view.catalog.Index', {
             title: 'Subform',
             closable: true,
             bodyPadding: '20 0',
+            layout: {
+                type: 'hbox',
+                align: 'top',
+                defaultMargins: '0 20 0 0'
+            },
             header: {
                 layout: {
                     type: 'hbox',
@@ -53,8 +59,16 @@ Ext.define('Taco.view.catalog.Index', {
                 }
             },
             items: [{
-                xtype: 'component',
-                html: 'Hello world'
+                xtype: 'taco.field.multiselect',
+                height: 300,
+                minWidth: 250,
+                fieldLabel: 'Multiselect One Hundred Thousand',
+                store: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
+            }, {
+                xtype: 'taco.field.multiselect',
+                height: 300,
+                fieldLabel: 'Multiselect Two',
+                store: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
             }]
         });
 
