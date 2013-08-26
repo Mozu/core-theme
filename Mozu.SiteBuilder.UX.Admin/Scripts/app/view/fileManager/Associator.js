@@ -29,7 +29,7 @@ Ext.define('Taco.view.fileManager.Associator', {
     useTilePanel: true,
 
     title: 'Associator',
-
+    gridHeaderLabel: 'File',
     allowNavigation: false,
 
     gridPanelConf: {

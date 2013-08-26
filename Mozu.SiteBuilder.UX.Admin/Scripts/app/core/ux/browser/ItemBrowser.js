@@ -196,7 +196,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             // datachanged: me.onItemStoreUpdate,
             scope: me
         });
-
+        
         this.on('afterrender', this.onItemStoreUpdate, this);
 
         this.callParent(arguments);
@@ -213,8 +213,9 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
     onItemStoreUpdate: function (store, records, indexesOrSuccess, isMove) {
         var me = this,
             rc = me.down('#recordCount'),
-            netChange, data;
-
+            netChange, data,
+            unitLabel;
+        
         // if the component has not been rendered yet, we can't update it
         if (!rc) return;
 
@@ -223,11 +224,20 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
 
         // if bulkremove triggered this function, totalCount will be out of sync
         netChange = (isMove === false) ? records.length * -1 : 0;
-
+        if (me.gridHeaderLabel) {
+            if (records && records.length > 0) {
+                unitLabel = Ext.util.Inflector.pluralize(me.gridHeaderLabel);
+            } else {
+                unitLabel = me.gridHeaderLabel;
+            }
+            
+        } else {
+            unitLabel = me.itemType;
+        }
         data = {
             count: store.getCount(),
             totalCount: store.getTotalCount() + netChange,
-            unit: me.itemType
+            unit: unitLabel
         };
 
         console.log(isMove, data.count, data.totalCount, netChange);
