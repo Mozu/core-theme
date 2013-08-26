@@ -5,7 +5,9 @@
   <section id="mz-layout-container" class="mz-layout-container mz-content-inner-wrap mz-category-wrapper">
     <div class="mz-layout-main">
       <div class="mz-paging-info">
+        <!-- ko if: TotalCount -->
         Showing <span data-bind="text: StartIndex() + 1"></span> - <span data-bind="text: lastIndex()"></span> of <span data-bind="text: TotalCount"></span> results
+        <!-- /ko -->
         <span class="mz-paging-pagesize-wrap">
           <label for="mz-paging-pagesize">
             Show
