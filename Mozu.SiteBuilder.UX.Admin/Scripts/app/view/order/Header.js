@@ -30,7 +30,10 @@ Ext.define('Taco.view.order.Header', {
             '<div>Total spent: <strong>{totalSpent}</strong></div>',
         '</div>',
         '<div class="taco-order-detail-header-section origin-data">',
-            '{createDate:date("F j, Y | g:i a")}<!-- | IP address: {ipAddress} -->',
+            '{createDate:date("F j, Y | g:i a")}',
+                '<tpl if="ipAddress">',
+                    ' | IP address: {ipAddress}',
+                '</tpl>',
         '</div>', {
             convertDate: function(date) {
                 return Ext.Date.format(date, 'F j, Y, g:i a');
@@ -44,11 +47,11 @@ Ext.define('Taco.view.order.Header', {
         if (this.record) this.data = this.record.getData();
 
         Taco.model.CustomerAccount.load(this.record.get('customerId'), {
-           success: function (record) {
-               var data = Ext.apply({}, record.getData(), this.record.getData());
-               this.update(data);
-           },
-           scope: this
+            success: function (record) {
+                var data = Ext.apply({}, record.getData(), this.record.getData());
+                this.update(data);
+            },
+            scope: this
         });
 
         this.callParent(arguments);
