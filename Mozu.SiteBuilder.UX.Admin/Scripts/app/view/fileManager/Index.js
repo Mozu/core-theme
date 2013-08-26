@@ -21,6 +21,7 @@ Ext.define('Taco.view.fileManager.Index', {
 
     requiresContextOfType: ['c','s'],
     typeName: 'File Manager',
+    gridHeaderLabel: 'File',
     plural: false,
     modelName: 'Taco.shared.model.File',
     store: {
@@ -96,7 +97,6 @@ Ext.define('Taco.view.fileManager.Index', {
     },
 
     initComponent: function () {
-
         this.header = {
             actions: [
 

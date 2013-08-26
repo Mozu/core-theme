@@ -227,6 +227,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             options: this.options,
             itemType: this.token,
             typeName: this.typeName,
+            gridHeaderLabel: this.gridHeaderLabel,
             filterFormConf: this.filterFormConf,
             filterProperties: this.filterProperties,
             isCollectionContext: Taco.app.context.getCurrent().contextType === "c",
