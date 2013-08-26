@@ -3,12 +3,11 @@
     alias: 'widget.taco.producttype.attributeform',
     requires: ['Taco.store.Attributes'],
 
-    height: 400,
     layout: {
         type: 'hbox',
-        align: 'top'
+        align: 'top',
+        defaultMargins: '0 20 0 0'
     },
-    autoScroll: true,
     bodyPadding: 20,
     containerWidth: 150,
     ignoreParentFormTracking: true,
@@ -83,7 +82,12 @@
         });
 
         this.buttonContainer = Ext.create('Ext.container.Container', {
-            width: this.containerWidth,
+            minWidth: this.containerWidth,
+            layout: {
+                type: 'hbox',
+                align: 'top',
+                defaultMargins: '0 0 0 10'
+            },
             items: [this.cancelButton, this.saveButton]
         });
 
@@ -119,10 +123,9 @@
             name: 'attribute',
             fieldLabel: 'Attribute',
             store: this.attributeStore,
-            width: this.containerWidth,
+            minWidth: this.containerWidth,
             displayField: 'name',
-            height: 325,
-            layout: 'auto',
+            height: 300,
             valueField: 'id',
             value: attribute ? attribute.getId() : null,
             maxSelections: 1,
@@ -185,14 +188,14 @@
 
         valuesField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'values',
-            height: 360,
+            height: 300,
             fieldLabel: 'Values',
             removeOnAttributeChange: true,
             store: valuesStore,
             displayField: 'value',
             valueField: 'id',
             value: Ext.Array.pluck(this.record.get('selectedValues'), 'id'),
-            width: this.containerWidth,
+            minWidth: this.containerWidth,
             listConfig: {
                 cls: Ext.baseCSSPrefix + 'boundlist-with-hidden-selections',
                 selModel: { 
@@ -215,15 +218,14 @@
 
         selectionsField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'selections',
-            height: 360,
+            height: 300,
             removeOnAttributeChange: true,
             fieldLabel: 'Selections',
             store: this.selectionStore,
             ddReorder: true,
-            width: this.containerWidth,
+            minWidth: this.containerWidth,
             displayField: 'value',
             valueField: 'id',
-            margin: '0 40',
            
             listConfig: {
                
