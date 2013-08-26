@@ -87,6 +87,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                         '</td>',
                     '</tr>',
                 '</tpl>',
+                
+                '<tr>',
+                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">Tax</div></td>',
+                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{taxTotal:usMoney}</div></td>',
+                '</tr>',
+
 
                 '<tr class="row-group-start">',
                     '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">Shipping ({shippingMethodName}):</div></td>',
@@ -132,14 +138,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 '</tpl>',
                 
                 
-                
                 '<tr class="row-group-start">',
-                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">Tax</div></td>',
-                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{taxTotal:usMoney}</div></td>',
-                '</tr>',
-                
-                
-                '<tr>',
                     '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">Total</div></td>',
                     '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{total:usMoney}</div></td>',
                 '</tr>',
