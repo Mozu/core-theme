@@ -6,7 +6,6 @@
 Ext.define('Taco.view.attribute.Form', {
     extend: 'Taco.view.product.subform.Subform',
     requires: ['Taco.view.option.valueEditor.MultiValue'],
-    requires: ['Taco.view.option.valueEditor.MultiValue'],
     createTitle: 'Create New Attribute',
 
     title: 'Attribute',
@@ -52,7 +51,18 @@ Ext.define('Taco.view.attribute.Form', {
                 store: [
                     ['String', 'Text'],
                     ['Number', 'Number']
-                ]
+                ],
+                listeners: {
+                    change: function (field, newValue, oldValue) {
+                        var form = field.up('formform').getForm(),
+                            stringField = form.findField('addValueString'),
+                            numberField = form.findField('addValueNumber'),
+                            isNumber = (newValue === 'Number');
+
+                        stringField.setVisible(!isNumber);
+                        numberField.setVisible(isNumber);
+                    }
+                }
             }
         },
         subformCfg: {
@@ -73,13 +83,118 @@ Ext.define('Taco.view.attribute.Form', {
                         {boxLabel: 'Extra', name: 'isExtra', inputValue: true, readOnly: this.isEdit()}
                     ]
                 },
-                dataType, 
+                dataType,
                 {
-                    xtype: 'optionvalueeditor',
-                    getDataType:function () {
-                        return me.form.findField('dataType').getValue() == 'String' ?'string' :'number';
+                    xtype: 'textfield',
+                    name: 'addValueString',
+                    enableKeyEvents: true,
+                    submitValue: false,
+                    width: 300,
+                    hideMode: 'display',
+                    fieldLabel: 'Values',
+                    emptyText: 'Add another',
+                    listeners: {
+                        boxready: function (field) {
+                            this.setVisible(me.getForm().findField('dataType').getValue() === 'String');
+                        },
+                        keydown: function (field, e) {
+                            if (e.getKey() === e.ENTER && field.isValid()) {
+                                var value = field.getValue(),
+                                    attributeId = me.record.getId(),
+                                    record;
+
+                                if (!Ext.isEmpty(value)) {
+                                    record = Ext.create('Taco.model.AttributeValue', {
+                                        attributeId: attributeId,
+                                        id: value,
+                                        value: value
+                                    });
+
+                                    field.reset();
+                                    me.valuesStore.add([record]);
+                                }
+                            }
+                        }
+                    }
+                }, {
+                    xtype: 'numberfield',
+                    name: 'addValueNumber',
+                    enableKeyEvents: true,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
+                    submitValue: false,
+                    width: 300,
+                    hideMode: 'display',
+                    fieldLabel: 'Values',
+                    emptyText: 'Add another',
+                    listeners: {
+                        boxready: function (field) {
+                            this.setVisible(me.getForm().findField('dataType').getValue() === 'Number');
+                        },
+                        keydown: function (field, e) {
+                            if (e.getKey() === e.ENTER && field.isValid()) {
+                                var value = field.getValue(),
+                                    attributeId = me.record.getId(),
+                                    record;
+
+                                if (!Ext.isEmpty(value)) {
+                                    record = Ext.create('Taco.model.AttributeValue', {
+                                        attributeId: attributeId,
+                                        id: value.toString(),
+                                        value: value
+                                    });
+
+                                    field.reset();
+                                    me.valuesStore.add([record]);
+                                }
+                            }
+                        }
+                    }
+                }, {
+                    xtype: 'grid',
+                    width: 300,
+                    disableSelection: true,
+                    hideHeaders: true,
+                    store: this.valuesStore,
+                    plugins: [{
+                        ptype: 'cellediting',
+                        clicksToEdit: 1
+                    }],
+                    viewConfig: {
+                        stripeRows: false,
+                        onRowFocus: Ext.emptyFn
                     },
-                    store: this.valuesStore
+                    columns: [{
+                        dataIndex: 'value',
+                        text: 'Value',
+                        flex: 1,
+                        editor: me.isEdit() ? {
+                            xtype: me.record.get('dataType') === 'Number' ? 'numberfield' : 'textfield',
+                            hideTrigger: true,
+                            keyNavEnabled: false,
+                            mouseWheelEnabled: false
+                        } : undefined
+                    }, {
+                        xtype: 'templatecolumn',
+                        text: 'Actions',
+                        tdCls: 'taco-actioncolumn',
+                        width: 26,
+                        tpl: ['<div class="taco-actioncolumn-icon taco-actioncolumn-icon-remove"></div>']
+                    }],
+                    listeners: {
+                        cellclick: function (view, td, cellIndex, record, tr, rowIndex, e) {
+                            if (cellIndex === 1 && e.getTarget('.taco-actioncolumn-icon-remove', 10)) {
+                                view.getStore().remove(record);
+                            }
+                        }
+                    }
+                // }, {
+                //     xtype: 'optionvalueeditor',
+                //     getDataType:function () {
+                //         return me.form.findField('dataType').getValue() == 'String' ?'string' :'number';
+                //     },
+                //     store: this.valuesStore
                 }];
             },
 
