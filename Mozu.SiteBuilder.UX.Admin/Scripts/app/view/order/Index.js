@@ -16,7 +16,7 @@ Ext.define('Taco.view.order.Index', {
     modelName: 'Taco.model.Order',
     store: { type: 'Taco.store.Orders' },
     editorName: 'Taco.view.order.Edit',
-    filterProperty: 'orderNumber',
+    //filterProperty: 'orderNumber',
     useTilePanel: false,
     //todo:  changing to s until orders support site id in resource
    // requiresContextOfType: ['s'],
@@ -35,15 +35,19 @@ Ext.define('Taco.view.order.Index', {
                 name: 'orderNumber',
                 fieldLabel: 'Order Number',
                 width: 160
-            }
-            /*
-            {
-                name: 'productName',
-                fieldLabel: 'Name'
-            }
-            */
-
-            ]
+            }, {
+                name: 'billingContactFirstName',
+                fieldLabel: 'First Name',
+                width: 160
+            }, {
+                name: 'billingContactLastName',
+                fieldLabel: 'Last Name',
+                width: 160
+            },  {
+                name: 'billingContactAddress',
+                fieldLabel: 'Address',
+                width: 160
+            }]
         }]
     },
 
@@ -51,19 +55,20 @@ Ext.define('Taco.view.order.Index', {
         property: 'all',
         text: 'All',
         isDefault: true
-    }, {
-        property: 'productName',
-        text: 'Abandoned'
-    }, {
-        property: 'productCode',
-        text: 'Awaiting Payment'
-    }, {
-        property: 'producttypeid',
-        text: 'Awaiting Shipment'
-    }, {
-        property: 'productFullDescription',
-        text: 'Shipped'
-    }],
+        }, {
+            property: 'orderNumber',
+            text: 'Order Number'
+        }, {
+            property: 'billingContactFirstName',
+            text: 'First Name'
+        }, {
+            property: 'billingContactLastName',
+            text: 'Last Name'
+        }, {
+            property: 'billingContactAddress',
+            text: 'Address'
+        }
+    ],
 
 
     gridPanelConf: {
