@@ -103,7 +103,7 @@ Ext.define('Taco.view.attribute.Form', {
                                     attributeId = me.record.getId(),
                                     record;
 
-                                if (!Ext.isEmpty(value)) {
+                                if (!Ext.isEmpty(Ext.String.trim(value))) {
                                     record = Ext.create('Taco.model.AttributeValue', {
                                         attributeId: attributeId,
                                         id: value,
