@@ -108,82 +108,82 @@
   }
 
   // file button
-  .#{$prefix}form-file-wrap {
-    width: auto !important;
+  // .#{$prefix}form-file-wrap {
+  //   width: auto !important;
 
-    .#{$prefix}form-trigger-wrap {
-      width: auto !important;
+  //   .#{$prefix}form-trigger-wrap {
+  //     width: auto !important;
 
-      td {
-        text-align: right;
-        width: auto !important;
-      }
-    }
-  }
+  //     td {
+  //       text-align: right;
+  //       width: auto !important;
+  //     }
+  //   }
+  // }
 
-  .#{$prefix}form-file-input {
-    top: 0px !important;
-  }
+  // .#{$prefix}form-file-input {
+  //   top: 0px !important;
+  // }
 
-  .#{$prefix}form-file-btn {
-    background: none transparent;
-    border: 0px none;
-    padding: 0px;
+  // .#{$prefix}form-file-btn {
+  //   background: none transparent;
+  //   border: 0px none;
+  //   padding: 0px;
 
-    em {
-      display: block;
-      min-height: 30px;
-    }
+  //   em {
+  //     display: block;
+  //     min-height: 30px;
+  //   }
 
-    .#{$prefix}btn-center {
-      background-color: $color-action-primary-background;
-      border: 1px solid $color-action-primary-outline;
-      color: $color-action-primary-foreground;
-      font-size: px-to-rem(16);
-      line-height: px-to-rem(16);
-      margin: 0px;
-      min-height: 30px;
-      min-width: 86px;
-      padding: 7px $button-padding 5px;
-      text-align: center;
-      vertical-align: middle;
-      white-space: nowrap;
-      @include border-radius(2px);
-      @include facade-transitions;
-      @include no-select;
-      @include text-shadow(1px 1px transparentize($color-neutral-black, 0.75));
-      cursor: pointer; // overrides no-select
-    }
+  //   .#{$prefix}btn-center {
+  //     background-color: $color-action-primary-background;
+  //     border: 1px solid $color-action-primary-outline;
+  //     color: $color-action-primary-foreground;
+  //     font-size: px-to-rem(16);
+  //     line-height: px-to-rem(16);
+  //     margin: 0px;
+  //     min-height: 30px;
+  //     min-width: 86px;
+  //     padding: 7px $button-padding 5px;
+  //     text-align: center;
+  //     vertical-align: middle;
+  //     white-space: nowrap;
+  //     @include border-radius(2px);
+  //     @include facade-transitions;
+  //     @include no-select;
+  //     @include text-shadow(1px 1px transparentize($color-neutral-black, 0.75));
+  //     cursor: pointer; // overrides no-select
+  //   }
 
-    &.#{$prefix}over:not(.#{$prefix}disabled) {
-      .#{$prefix}btn-center {
-        background-color: $color-action-primary-background-hover;
-        border-color: $color-action-primary-outline-hover;
-        @include box-shadow(inset 0px -1px $color-action-primary-outline-hover);
-      }
-    }
+  //   &.#{$prefix}over:not(.#{$prefix}disabled) {
+  //     .#{$prefix}btn-center {
+  //       background-color: $color-action-primary-background-hover;
+  //       border-color: $color-action-primary-outline-hover;
+  //       @include box-shadow(inset 0px -1px $color-action-primary-outline-hover);
+  //     }
+  //   }
 
-    &.#{$prefix}pressed:not(.#{$prefix}disabled) {
-      .#{$prefix}btn-center {
-        background-color: $color-action-primary-background-active;
-        border-color: $color-action-primary-outline-active;
-      }
-    }
+  //   &.#{$prefix}pressed:not(.#{$prefix}disabled) {
+  //     .#{$prefix}btn-center {
+  //       background-color: $color-action-primary-background-active;
+  //       border-color: $color-action-primary-outline-active;
+  //     }
+  //   }
 
-    &.#{$prefix}disabled {
-      .#{$prefix}btn-center {
-        opacity: 0.4;
-      }
+  //   &.#{$prefix}disabled {
+  //     .#{$prefix}btn-center {
+  //       opacity: 0.4;
+  //     }
 
-      .#{$prefix}btn-inner {
-        color: transparentize($color-action-primary-foreground, 0.2);
-      }
-    }
+  //     .#{$prefix}btn-inner {
+  //       color: transparentize($color-action-primary-foreground, 0.2);
+  //     }
+  //   }
 
-    .#{$prefix}btn-inner {
-      color: $color-action-primary-foreground;
-      font-size: px-to-rem(16);
-      line-height: px-to-rem(16);
-    }
-  }
+  //   .#{$prefix}btn-inner {
+  //     color: $color-action-primary-foreground;
+  //     font-size: px-to-rem(16);
+  //     line-height: px-to-rem(16);
+  //   }
+  // }
 }
