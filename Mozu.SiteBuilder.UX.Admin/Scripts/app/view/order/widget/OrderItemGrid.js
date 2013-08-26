@@ -673,7 +673,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     value: shippingAdjustmentValue
                 },
                 {
-                    xtype: "taco.button",
+                    xtype: "button",
+                    scale:"medium",
                     text:"Apply",
                     itemId: "applyadjustmentField",
                     style: "margin:0px 20px 0px 10px;",

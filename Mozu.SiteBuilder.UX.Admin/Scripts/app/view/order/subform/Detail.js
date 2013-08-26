@@ -95,10 +95,8 @@ Ext.define('Taco.view.order.subform.Detail', {
             listeners: {
                 'draftOrderRemoved': {
                     fn: function (data) {
-                        
-                        me.setLoading(true, this.body);
-                        
-                        me.onRecordChange();
+                        me.detailGrid.removeDocked(me.detailGrid.hasDraftToolbar, true);
+                        me.detailGrid.hasDraftToolbar = null;
                     },
                     scope: me
                 }
@@ -149,7 +147,8 @@ Ext.define('Taco.view.order.subform.Detail', {
             recordId: isDraft ? me.record.getId() : null,
 
             listeners: {
-                close: function(view, e) {
+                close: function (view, e) {
+                    
                     if (isDraft && view.getHasDraft()) {
                         me.record.set('hasDraft',true);
                         me.updateHasDraftToolbar();
@@ -165,9 +164,10 @@ Ext.define('Taco.view.order.subform.Detail', {
                 draftOrderRemoved: function (data) {
                         //me.setLoading(true, this.body);
                         // hide the toolbar
-                        me.detailGrid.removeDocked(me.detailGrid.hasDraftToolbar, true);
-                        
-                        //todo: need to determine if we need to reload the data object aftetr this operation;
+                    me.detailGrid.removeDocked(me.detailGrid.hasDraftToolbar, true);
+                    me.detailGrid.hasDraftToolbar = null;
+
+                    //todo: need to determine if we need to reload the data object aftetr this operation;
                 }
             }
         });
@@ -223,6 +223,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             me.detailGrid.showHasDraftToolbar();
         } else {
             me.detailGrid.removeDocked(me.detailGrid.hasDraftToolbar);
+            me.detailGrid.hasDraftToolbar = null;
         }
     },
     

@@ -37,6 +37,14 @@
 	background-color:#f1f1f1;
 	padding:5px;
 	border-width:1px;
+
+	// fixing the font size for the buttons in the toolbar. 
+	// todo: remove this when the theme is stable;
+	.x-btn {
+		.x-btn-inner {
+		    font-size: px-to-rem(14);
+		}
+	}
 }
 
 
@@ -85,7 +93,15 @@
 		}     
 	} 
 	
-	
+	// formatting for active discounts;
+	.isActive{	
+	    text-decoration:none;	
+    }
+
+	// formatting for inactive or suppressed discounts
+    .isSuppressed{    
+	    text-decoration:line-through;
+    }	
 }
 
 
@@ -170,13 +186,7 @@
 	
   
    
-    .isActive{	
-	    text-decoration:none;	
-    }
-
-    .isSuppressed{    
-	    text-decoration:line-through;
-    }
+    
 
 
     // rows without a discount should hide the row body row. Need to look at way to render rowbody dom selectively

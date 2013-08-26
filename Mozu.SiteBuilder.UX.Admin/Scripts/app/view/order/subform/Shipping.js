@@ -34,6 +34,25 @@ Ext.define('Taco.view.order.subform.Shipping', {
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping'].join(' ');
         
 
+        // load the shipping rates data for use in the shipping packages
+        Ext.namespace('Taco.properties');
+        Taco.properties.shippingRates = Taco.core.data.StoreManager.getOrCreate({
+            model: 'Taco.model.KeyValuePair',
+            autoLoad: true,
+            proxy: {
+                type: 'ajax',
+                api: {
+                    read: '/admin/app/shipping/carrierRates'
+                },
+                reader: {
+                    type: 'json',
+                    root: 'items',
+                    successProperty: 'success',
+                    messageProperty: 'message'
+                }
+            }
+        });
+
         // after the record is reloaded we will need to refresh the ui
         this.record.on("aftercommit", function () {
             this.onRecordChange();
@@ -199,7 +218,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                     title: "Package",
                     shipmentStatus: dataItem.status,
                     itemTotal: dataItem.totalQuantity,
-                    weight: dataItem.totalWeight,
+                    weight: dataItem.weight,
                     shippingMethod: dataItem.shippingMethod,
                     trackingNumber: dataItem.trackingNumber,
                     shipDate: dataItem.shipDate,
