@@ -5,9 +5,7 @@ Ext.define('Taco.model.Order', {
     requires: ['Taco.model.Return','Taco.model.ShippingMethod'],
     
     extend: 'Taco.core.data.Model',
-    /**********************************************************
-    *   missing shipping discount object
-    *   missing shipping method...
+    /**********************************************************    
     *   
     *
     *
@@ -258,109 +256,25 @@ Ext.define('Taco.model.Order', {
             "name": "payments",
             "type": "auto",
             "useNull": true,
-            //convert: function (v, record) {
-            //    return v;
-            //},
             "defaultValue": []
         }, {
             "name": "unpackagedItems",
-
             "type": "array",
             convert: function (v, record) {
                 return v;
             },
-            "defaultValue": [
-                /*                
-                {
-                    "productName": "product 6",
-                    "productCode": "xyz123",
-                    "weight": "2.3",
-                    "quantity": "3"
-                }, {
-                    "productName": "product 7",
-                    "productCode": "xyz123",
-                    "weight": "2.3",
-                    "quantity": "3"
-                }
-                */
-            ]
+            "defaultValue": []
         }, {
             "name": "packages",
             "type": "array",
             convert: function (v, record) {
-
                 if (!Ext.isArray(v)) {
                     v = [];
                 }
-                // adding test data;
-                var shippedPackageCount = 0;
-                var unShippedPackageCount = 0;
-
-
-                for (var i = 0; i < shippedPackageCount; i++) {
-
-                    v.push({
-                        "orderId": "3216598",
-                        "id": "o1004-p" + i,
-                        "status": "Shipped",
-                        "shippingMethod": "FedEx 2nd Day Air",
-                        "trackingNumber": "",
-                        "hasShippingLabel": false,
-                        "totalWeight": "23.4",
-                        "totalQuantity": "6",
-                        "items": [
-                            {
-                                "orderItemId": "i123",
-                                "productName": "product 1",
-                                "productCode": "xyz123",
-                                "weight": "2.3",
-                                "quantity": "3"
-                            }, {
-                                "productName": "product 2",
-                                "orderItemId": "i123",
-                                "productCode": "xyz123",
-                                "weight": "2.3",
-                                "quantity": "3"
-                            }
-                        ]
-                    });
-                }
-
-                for (var i = 0; i < unShippedPackageCount; i++) {
-
-                    v.push({
-                        "orderId": "3216598",
-                        "id": "o1004-p" + i,
-                        "status": "NotShipped",
-                        "shippingMethod": "FedEx 2nd Day Air",
-                        "trackingNumber": "",
-                        "hasShippingLabel": false,
-                        "totalWeight": "23.4",
-                        "totalQuantity": "6",
-                        "items": [
-                            {
-                                "orderItemId": "i123",
-                                "productName": "product 1",
-                                "productCode": "xyz123",
-                                "weight": "2.3",
-                                "quantity": "3"
-                            }, {
-                                "productName": "product 2",
-                                "orderItemId": "i123",
-                                "productCode": "xyz123",
-                                "weight": "2.3",
-                                "quantity": "3"
-                            }
-                        ]
-                    });
-                }
-
-
                 return v;
-
-
             }
-        },        
+        },
+        
         // helper field. ui iterates on unshipped packages in multiple places
         {
             "name": "unShippedPackages",

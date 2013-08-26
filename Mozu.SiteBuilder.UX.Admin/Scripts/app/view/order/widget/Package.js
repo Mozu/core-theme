@@ -59,18 +59,18 @@ Ext.define('Taco.view.order.widget.Package', {
             shipmentStatus: "Not Shipped",
             itemTotal: 0,
             weight: 0,
-            shippingMethod: "Shipping method here",
+            shippingMethod: "",
             trackingNumber: null,
-            shippedDate: "shipped date here",
+            shippedDate: "",
             
             // billing contact info
-            firstName: "John",
-            lastName: "Smith",
-            address1: "321654 horseback hollow, Austin, Tx 78954",
-            zipCode: "78757",
-            state: "Tx",
-            phoneNumber: "542.654.6543",
-            email: "noone@sopmwhere.com"
+            firstName: "",
+            lastName: "",
+            address1: "",
+            zipCode: "",
+            state: "",
+            phoneNumber: "",
+            email: ""
         }
     },
     
@@ -81,8 +81,6 @@ Ext.define('Taco.view.order.widget.Package', {
 
         // initialize the header;
         me.header = me.getHeaderTemplate();
-
-        this.getHeaderData();
         
         me.grid = Ext.create('Taco.view.order.widget.ShippingItemGrid', {
             record: this.record,
@@ -143,7 +141,7 @@ Ext.define('Taco.view.order.widget.Package', {
                         ' {shipmentStatus} ',
                         '<tpl if="values.shipmentStatus==\'Shipped\'">',
                             '<span class="seperator">|</span>',
-                            'Shipped Date Hre{shippedDate}',
+                            'Shipped Date: {shippedDate}',
                         '<tpl else>',
                             '<span class="seperator">|</span>',
                             '<a class="shipmentAction" shipmentAction="deletePackage">Delete</a>',
@@ -163,8 +161,10 @@ Ext.define('Taco.view.order.widget.Package', {
                         '</tpl>',
                     '</div>',
                     '<div class="orderCountRow">',
-                        ' Products: {itemTotal} ',
-                        '<span class="seperator">|</span>',
+                        '<tpl if="values.itemTotal">',
+                            ' Products: {itemTotal} ',
+                            '<span class="seperator">|</span>',
+                        '</tpl>',
                         'Weight: {weight} lbs',
                     '</div>',
                     '<div class="shipTo">',

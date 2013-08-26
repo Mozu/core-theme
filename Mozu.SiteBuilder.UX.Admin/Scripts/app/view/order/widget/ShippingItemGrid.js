@@ -239,6 +239,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         var me = this,
             tb = {
                 plain: true,
+                cls:"shipping-toolbar",
                 enableOverflow:true,
                 items:[]
             };
@@ -256,7 +257,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             var menuXtype = "Ext.button.Split";
             if (!me.isUnShippedItems) {
                 moveMenuText = "Move to";
-                menuXtype = "Ext.Button";
+                menuXtype = "Ext.button.Button";
                 // note that the taco button doesn't support being enabled and disabled
             }
             
@@ -265,8 +266,10 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
             //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
             me.moveMenuAction = Ext.create(menuXtype, {
+                scale: "medium",
+                //ui:"action",
                 menuAlign: 'tr-br',
-                cls: "taco-splitbutton",
+                //cls: "taco-splitbutton",
                 text: moveMenuText,
                 itemId: "moveMenuTrigger",
                 
@@ -311,7 +314,8 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         if (me.enableShippingMethodMenu) {
             // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
             //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
-            me.shippingMethodMenu = Ext.create("Taco.core.ux.action.Button", {
+            me.shippingMethodMenu = Ext.create("Ext.button.Button", {
+                scale: "medium",
                 menuAlign: 'tr-br',
                 //cls: "taco-splitbutton",
                 text: "Change Shipping Method",
@@ -347,8 +351,9 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         
         if (me.enableShippingLabelButton &&  me.packageData.shippingMethodCode) {
             
-            me.shippingLabelButton = Ext.create("Taco.core.ux.action.Button", {
+            me.shippingLabelButton = Ext.create("Ext.button.Button", {
                 text: "View Shipping Label",
+                scale:"medium",
                 handler: me.viewShippingLabel,
                 scope:me
             });
@@ -358,8 +363,9 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         }
         
         if (me.enabledPackingSlipButton  &&  me.packageData.shippingMethodCode) {
-            me.packingSlipButton = Ext.create("Taco.core.ux.action.Button", {
+            me.packingSlipButton = Ext.create("Ext.button.Button", {
                 text: "View Packing Slip",
+                scale: "medium",
                 handler: me.viewPackingSlip,
                 scope: me
             });
@@ -368,8 +374,9 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         }
         
         if (me.enabledRemoveButton) {
-            me.removeButton = Ext.create("Taco.core.ux.action.Button", {
+            me.removeButton = Ext.create("Ext.button.Button", {
                 text: "Remove",
+                scale: "medium",
                 handler: me.removeSelectedItems,
                 scope: me
             });
@@ -378,8 +385,9 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         }
         
         if (me.enabledMarkAsShippedButton) {
-            me.markAsShippedButton = Ext.create("Taco.core.ux.action.Button", {
+            me.markAsShippedButton = Ext.create("Ext.button.Button", {
                 text: "Mark As Shipped",
+                scale: "medium",
                 handler: me.markAsShipped,
                 scope: me
             });
