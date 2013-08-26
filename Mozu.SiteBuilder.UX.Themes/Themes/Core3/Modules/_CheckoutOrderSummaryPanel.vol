@@ -59,6 +59,12 @@
                                     <td>Shipping &amp; Handling:</td>
                                     <td><span data-bind="currencyText: ShippingTotal"></span></td>
                                 </tr>
+                            <!-- ko if: HandlingAmount -->
+                                <tr>
+                                    <td>Additional Handling:</td>
+                                    <td><span data-bind="currencyText: HandlingAmount"></span></td>
+                                </tr>
+                            <!-- /ko -->
                                 <tr>
                                     <td>Tax:</td>
                                     <td><span data-bind="currencyText: TaxTotal"></span></td>
