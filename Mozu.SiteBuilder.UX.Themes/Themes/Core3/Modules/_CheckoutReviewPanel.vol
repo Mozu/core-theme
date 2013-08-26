@@ -18,7 +18,7 @@
 
                 <div id="mz-create-account-fields" class="mz-create-account-fields" data-bind="visible: createAccount">
                     <label>
-                        Username
+                        Email
                         <input type="text" name="new-account-email" data-bind="value: email, css: {'mz-invalid': email.invalid() }">
                         <span class="mz-validation-message" data-bind="text: email.validationMessage() || '&nbsp;'"></span>
                     </label>
