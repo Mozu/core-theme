@@ -53,9 +53,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                     {
                         return string.Format("( {1} cont \"{0}\" or {2} sw \"{0}\" or {3} sw \"{0}\" or {4} sw \"{0}\" )", filter.value, BILLINGCONTACTADDRESS, BILLINGCONTACTFIRSTNAME, BILLINGCONTACTFIRSTNAME, BILLINGCONTACTLASTNAMEORSURNAME);   
                     }
-                      
-                    
-
+                case "ordernumber":
+                    return string.Format("({1} eq {0})", filter.value, ORDERNUMBER);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);
