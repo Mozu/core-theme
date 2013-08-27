@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Mozu.Core;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
@@ -56,7 +57,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public ActionResult SignIn(string email, string password, string returnUrl, FormCollection collection)
         {
-            var res = _userWebApiClient.Login( new Mozu.Core.Api.Contracts.UserAuthInfo()
+
+            var res = _userWebApiClient.CloneWithoutUserClaims().Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
             {
                 
                 EmailAddress = email,
@@ -69,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
-                var user = _userWebApiClient.GetUserByEmail(email).Result.ReadAsSync();
+                var user = _userWebApiClient.CloneWithoutUserClaims().GetUserByEmail(email).Result.ReadAsSync();
                 //if (user.IsAdminUser)
                 //{
                 //    return Redirect("/admin");
@@ -95,7 +97,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
         public JsonDCResult SignIn(string email, string password)
         {
-            var res = _userWebApiClient.Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
+            var res = _userWebApiClient.CloneWithoutUserClaims().Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
             {
 
                 EmailAddress = email,
@@ -105,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var answer = new JsonDCResult();
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
-                var user = _userWebApiClient.GetUserByEmail(email).Result.ReadAsSync();
+                var user = _userWebApiClient.CloneWithoutUserClaims().GetUserByEmail(email).Result.ReadAsSync();
                 //if (user.IsAdminUser)
                 //{
                 //    answer.Data = new
@@ -181,7 +183,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var info = new Core.Api.Contracts.UserAuthInfo { EmailAddress = email, Password = password };
 
-            var res = _authTicketWebApiClient.CreateUserAuthTicket(info).Result;
+            var res = _authTicketWebApiClient.CloneWithoutUserClaims().CreateUserAuthTicket(info).Result;
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
 

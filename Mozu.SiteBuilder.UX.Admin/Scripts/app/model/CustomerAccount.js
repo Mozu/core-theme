@@ -9,7 +9,7 @@ Ext.define('Taco.model.CustomerAccount', {
         update: 42,
         destroy: 43
     },
-    requires: ['Taco.model.Contact'],
+    requires: ['Taco.model.Contact', 'Taco.model.Order', 'Taco.store.Orders'],
     fields: [{
             name: 'id',
             type: 'int'
@@ -51,6 +51,20 @@ Ext.define('Taco.model.CustomerAccount', {
     ],
     
    
+    getOrders:function () {
+        
+        if (!this.orders) {
+            this.orders = Ext.create('Taco.store.Orders', {
+                filters: [
+                    {
+                        property: 'customerId',
+                        value: this.getId()
+                    }
+                ]
+            });
+        }
+        return this.orders;
+    },
     getContacts: function () {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.Contact',

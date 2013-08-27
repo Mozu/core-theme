@@ -472,10 +472,27 @@ namespace Mozu.SiteBuilder.Mvc
               
                 if (_userProfile == null)
                 {
+                    var ptoken = _authenticationHelper.GetProfileToken();
+                    
                     _userProfile = new UserProfile()
                                        {
                                            UserId = _apiContext.UserClaims != null ? _apiContext.UserClaims.UserId : null
                                        } ;
+
+                    if (!string.IsNullOrEmpty(ptoken))
+                    {
+                        try
+                        {
+                            var pt = Mozu.Core.UserProfile.Parse(ptoken);
+                            ((UserProfile) _userProfile).EmailAddress = pt.EmailAddress;
+                            ((UserProfile)_userProfile).FirstName = pt.FirstName;
+                            ((UserProfile)_userProfile).LastName = pt.LastName;
+                        }
+                        catch
+                        {
+                            
+                        }
+                    }
                 }
                 return _userProfile as UserProfile;
             }
