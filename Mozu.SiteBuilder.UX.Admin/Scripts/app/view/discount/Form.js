@@ -320,9 +320,9 @@ Ext.define('Taco.view.discount.Form', {
             listeners: {
                 change: function(cb, newValue) {
                     if (newValue) {
-                        me.couponCodeInput.show();
+                        me.couponCodeBox.show();
                     } else {
-                        me.couponCodeInput.hide();
+                        me.couponCodeBox.hide();
                     }
                 },
                 scope: me
@@ -330,8 +330,28 @@ Ext.define('Taco.view.discount.Form', {
         });
         me.couponCodeInput = Ext.create('Ext.form.field.Text', {
             name: 'couponCode',
-            width: 600,
-            hidden: !(me.record.get('couponCode') || me.record.get('requiresCoupon'))
+            width: 500,
+        });
+        me.couponCodeBox = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            hidden: !(me.record.get('couponCode') || me.record.get('requiresCoupon')),
+            items: [
+                me.couponCodeInput,
+                {
+                    xtype: 'secondarybutton',
+                    hidden: !(me.record.get('couponCode') || me.record.get('requiresCoupon')),
+                    text: 'Random',
+                    click: function() {
+                        var randomizer = Ext.data.IdGenerator.get('uuid'),
+                            code = randomizer.generate().replace(/[^0-9a-z]/g, "").substr(0, 8).toUpperCase();
+    
+                        me.couponCodeInput.setValue( code );
+                    }
+                }
+            ]
         });
 
         me.items = [
@@ -359,7 +379,7 @@ Ext.define('Taco.view.discount.Form', {
             me.datesContainer,
             //createHr(),
             me.requiresCouponInput,
-            me.couponCodeInput
+            me.couponCodeBox
         ];
 
 
