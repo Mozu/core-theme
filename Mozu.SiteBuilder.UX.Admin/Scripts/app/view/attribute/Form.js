@@ -88,11 +88,23 @@ Ext.define('Taco.view.attribute.Form', {
                     xtype: 'textfield',
                     name: 'addValueString',
                     enableKeyEvents: true,
+                    ignoreParentFormTracking: true,
                     submitValue: false,
+                    maxLength: 50,
                     width: 300,
                     hideMode: 'display',
                     fieldLabel: 'Values',
                     emptyText: 'Add another',
+                    checkDirty: Ext.emptyFn,
+                    isDirty: function () { return false; },
+                    validate: function() {
+                        var me = this,
+                            isValid = me.isValid();
+                        if (isValid !== me.wasValid) {
+                            me.wasValid = isValid;
+                        }
+                        return isValid;
+                    },
                     listeners: {
                         boxready: function (field) {
                             this.setVisible(me.getForm().findField('dataType').getValue() === 'String');
@@ -104,14 +116,14 @@ Ext.define('Taco.view.attribute.Form', {
                                     record;
 
                                 if (!Ext.isEmpty(Ext.String.trim(value))) {
-                                    record = Ext.create('Taco.model.AttributeValue', {
-                                        attributeId: attributeId,
-                                        id: value,
-                                        value: value
-                                    });
-
                                     field.reset();
-                                    me.valuesStore.add([record]);
+
+                                    record = me.valuesStore.add({
+                                        attributeId: attributeId,
+                                        value: value
+                                    })[0];
+
+                                    record.set('id', value);
                                 }
                             }
                         }
@@ -121,13 +133,25 @@ Ext.define('Taco.view.attribute.Form', {
                     name: 'addValueNumber',
                     enableKeyEvents: true,
                     hideTrigger: true,
+                    ignoreParentFormTracking: true,
                     keyNavEnabled: false,
                     mouseWheelEnabled: false,
                     submitValue: false,
+                    maxLength: 50,
                     width: 300,
                     hideMode: 'display',
                     fieldLabel: 'Values',
                     emptyText: 'Add another',
+                    checkDirty: Ext.emptyFn,
+                    isDirty: function () { return false; },
+                    validate: function() {
+                        var me = this,
+                            isValid = me.isValid();
+                        if (isValid !== me.wasValid) {
+                            me.wasValid = isValid;
+                        }
+                        return isValid;
+                    },
                     listeners: {
                         boxready: function (field) {
                             this.setVisible(me.getForm().findField('dataType').getValue() === 'Number');
@@ -139,14 +163,14 @@ Ext.define('Taco.view.attribute.Form', {
                                     record;
 
                                 if (!Ext.isEmpty(value)) {
-                                    record = Ext.create('Taco.model.AttributeValue', {
-                                        attributeId: attributeId,
-                                        id: value.toString(),
-                                        value: value
-                                    });
-
                                     field.reset();
-                                    me.valuesStore.add([record]);
+
+                                    record = me.valuesStore.add({
+                                        attributeId: attributeId,
+                                        value: value
+                                    })[0];
+
+                                    record.set('id', value.toString());
                                 }
                             }
                         }
@@ -172,8 +196,19 @@ Ext.define('Taco.view.attribute.Form', {
                         editor: me.isEdit() ? {
                             xtype: me.record.get('dataType') === 'Number' ? 'numberfield' : 'textfield',
                             hideTrigger: true,
+                            ignoreParentFormTracking: true,
                             keyNavEnabled: false,
-                            mouseWheelEnabled: false
+                            mouseWheelEnabled: false,
+                            checkDirty: Ext.emptyFn,
+                            isDirty: function () { return false; },
+                            validate: function() {
+                                var me = this,
+                                    isValid = me.isValid();
+                                if (isValid !== me.wasValid) {
+                                    me.wasValid = isValid;
+                                }
+                                return isValid;
+                            }
                         } : undefined
                     }, {
                         xtype: 'templatecolumn',
@@ -315,6 +350,7 @@ Ext.define('Taco.view.attribute.Form', {
 
 
         this.valuesStore = this.record.getAttributeValues();
+        this.valuesStore.rejectChanges();
 
         this.stores = [this.valuesStore];
 

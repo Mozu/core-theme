@@ -55,8 +55,8 @@
         });
 
         this.listContainer = Ext.create('Ext.container.Container', {
-            height: 300,
-            autoScroll: true,
+            // height: 300,
+            // autoScroll: true,
             items: this.buildAttributeList()
         });
 
