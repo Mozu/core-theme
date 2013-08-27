@@ -212,7 +212,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             await Task.WhenAll(tasks);
 
-            var ret = tasks.Select(t => t.Result.ReadAsSync());
+            var ret = tasks.Select(t => t.Result.ReadAsSync()).ToList();
 
             return List2( ret.Map<List<OrderPackage>>() );
         }

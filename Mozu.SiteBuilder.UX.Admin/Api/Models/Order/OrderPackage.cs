@@ -51,6 +51,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name="items", EmitDefaultValue = true)]
         public List<OrderPackageItem> Items { get; set; }
 
+        [DataMember(Name = "totalQuantity", EmitDefaultValue = true)]
+        public int TotalQuantity { get; set; }
+
         #region workflow
         [DataMember(Name="availableActions", EmitDefaultValue = true)]
         public object AvailableActions { get; set; }
@@ -58,5 +61,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name="createDate")]
         public DateTime CreateDate { get; set; }
+
+        [DataMember(Name = "shipDate")]
+        public DateTime? ShipDate { get; set; }
     }
 }
