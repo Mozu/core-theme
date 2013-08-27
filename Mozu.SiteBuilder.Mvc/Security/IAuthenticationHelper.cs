@@ -10,6 +10,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
        // void SaveAuthTicket(UserAuthTicket ticket );
         void SaveAccessToken(string accessToken);
         string GetAccessToken();
+        string GetProfileToken();
         string GetRefreshToken();
 
 

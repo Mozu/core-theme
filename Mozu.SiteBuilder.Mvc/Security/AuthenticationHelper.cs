@@ -48,6 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
         public ICookieProvider CookieProvider { get; set; }
 
+
       
 
 
@@ -96,6 +97,16 @@ namespace Mozu.SiteBuilder.Mvc.Security
             return null;
         }
 
+        string IAuthenticationHelper.GetProfileToken()
+        {
+            var cookie = CookieProvider.GetRequestCookie(CookieName);
+            if (cookie != null && cookie.HasKeys)
+            {
+                return cookie["profileToken"];
+            }
+            return null;
+        }
+
         string IAuthenticationHelper.GetRefreshToken()
         {
             var cookie = CookieProvider.GetRequestCookie(RefershCookieName);
@@ -112,6 +123,12 @@ namespace Mozu.SiteBuilder.Mvc.Security
         {
             var cookie = new HttpCookie(CookieName);
             cookie["accessToken"] = ticket.AccessToken ;
+            cookie["profileToken"] = new Mozu.Core.UserProfile()
+                                    {
+                                        EmailAddress = ticket.User.EmailAddress,
+                                        FirstName = ticket.User.FirstName,
+                                        LastName = ticket.User.LastName
+                                    }.ToToken();
             CookieProvider.SaveResponseCookie(CookieName, cookie);
 
 

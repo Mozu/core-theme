@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.Mvc.Catalog
 {
@@ -18,7 +19,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
 
         public RuntimeCategoryTreeProvider(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient)
         {
-            _productCategoryRuntimeWebApiClient = productCategoryRuntimeWebApiClient;
+            _productCategoryRuntimeWebApiClient = productCategoryRuntimeWebApiClient.CloneWithoutUserClaims();
         }
 
         public Task<List<Category>> GetAllCategories()
