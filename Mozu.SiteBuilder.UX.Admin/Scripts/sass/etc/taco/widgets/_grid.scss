@@ -32,7 +32,7 @@
       border-top-color: transparentize($color-neutral-white, 0.9) !important;
     }
 
-    .#{$prefix}grid-cell-special {
+    .#{$prefix}grid-cell-special { 
       background-color: $grid-row-cell-background;
       background-image: none;
       border-right: 0px none;
@@ -253,7 +253,7 @@
   .#{$vprefix}togglegroup {
     margin: 0px !important;
 
-    //$card-map: sprite-map('card/*.png') /* syntax highlighting bug */;
+    $card-map: sprite-map('card/*.png') /* syntax highlighting bug */;
     $gradient-selected: linear-gradient(top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 20%);
 
     .#{$prefix}form-radio-group {
@@ -267,24 +267,24 @@
 
       &:nth-of-type(1) {
         .#{$prefix}form-radio {
-          //@include background(sprite($card-map, card-gridview));
+          @include background(sprite($card-map, card-gridview));
           background-color: $color-neutral-95;
         }
         .#{$prefix}form-cb-checked {
           .#{$prefix}form-radio {
-            // @include background(sprite($card-map, card-gridview-selected), $gradient-selected);
+            @include background(sprite($card-map, card-gridview-selected), $gradient-selected);
             background-color: border-for($color-neutral-95);
           }
         }
       }
       &:nth-of-type(2) {
         .#{$prefix}form-radio {
-          //@include background(sprite($card-map, card-tileview));
+          @include background(sprite($card-map, card-tileview));
           background-color: $color-neutral-95;
         }
         .#{$prefix}form-cb-checked {
           .#{$prefix}form-radio {
-            // @include background(sprite($card-map, card-tileview-selected), $gradient-selected);
+            @include background(sprite($card-map, card-tileview-selected), $gradient-selected);
             background-color: border-for($color-neutral-95);
           }
         }
