@@ -175,13 +175,13 @@ Ext.define('Taco.view.order.subform.Payment', {
             tpl: [
                 '<div class="statusField">',
                     //'<span class="orderTotal">Partially Collected</span>',
-                    '<tpl if="authorizationInfo.amountCollected &gt; 0 && authorizationInfo.amountCollected != total">',
+                    '<tpl if="authorizationInfo.amountCollected &gt; 0 && authorizationInfo.amountCollected &lt; total">',
                         '<span class="orderTotal">Partially Collected</span>',
                     '</tpl>',
                     '<tpl if="authorizationInfo.amountCollected == 0">',
                         '<span class="orderTotal">None Collected</span>',
                     '</tpl>',
-                    '<tpl if="authorizationInfo.amountCollected == total">',
+                    '<tpl if="authorizationInfo.amountCollected &gt;= total">',
                         '<span class="orderTotal">Fully Collected</span>',
                     '</tpl>',
                 '</div>',
@@ -198,6 +198,16 @@ Ext.define('Taco.view.order.subform.Payment', {
 
         me.bodyCont.add(me.headerDetails);
     },
+
+    destroyHeader: function() {
+        var me = this;
+
+        if (me.headerDetails) {
+            me.headerDetails.destroy();
+            delete me.headerDetails;
+        }
+    },
+
     // called when the record has been updated
     onRecordChange : function() {
         var me = this;
@@ -210,6 +220,8 @@ Ext.define('Taco.view.order.subform.Payment', {
 
         
         //re-build the ui components
+        me.destroyHeader();
+        me.initHeader();
         me.destroyPaymentsUI();
         me.initPaymentsUI();
         Ext.resumeLayouts(true);
