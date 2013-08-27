@@ -181,6 +181,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Mozu.BuildSupport.GetAssemblyFileVersionTask">
+      <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts">
       <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.0.13237.2\lib\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
