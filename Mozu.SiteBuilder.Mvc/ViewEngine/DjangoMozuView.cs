@@ -5,6 +5,7 @@ using System.Runtime.Caching;
 using System.Web;
 using System.Web.Mvc;
 using Autofac;
+using Mozu.CommerceRuntime.Contracts.Payments;
 using NDjango;
 using NDjango.Interfaces;
 using Mozu.SiteBuilder.Mvc.Security;
@@ -159,8 +160,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             requestContext["viewPath"] = viewPath;
             requestContext["PaymentTypes"] = new
             {
-                CreditCard = Mozu.CommerceRuntime.Contracts.Payments.PaymentType.CreditCard,
-                Check = Mozu.CommerceRuntime.Contracts.Payments.PaymentType.Check
+                CreditCard = PaymentTypeConst.CREDIT_CARD,
+                Check = PaymentTypeConst.CHECK
             };
 
           //  this.

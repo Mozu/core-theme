@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.ServiceModel;
 //using Volusion.ProductAdmin.Contracts.Clients;
 using System.Web.Http;
@@ -171,13 +173,44 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             using(var fs = fileinfo.OpenRead())
             {
+               var nvc = new NameValueCollection();
+                nvc["Content-Type"] =  streamProvider.FileData.SingleOrDefault().Headers.ContentType.MediaType;
+
+                var client = _documentWebApiClient.CloneWithConfigOptions(x => x.ContentType = streamProvider.FileData.SingleOrDefault().Headers.ContentType );
+
+                if (stuff)
+                {
+                    //hack to work around bug in api....sent to roeder.
+                    client.Handler = new MyServiceClientMessageHandler((ServiceClientMessageHandler)client.Handler, streamProvider.FileData.SingleOrDefault().Headers.ContentType );
+                }
+                
+                
+
                 //result = _docClient.UpdateDocumentContent("files", docid , fs).Result.ResponseMessage;                
-                result = (await _documentWebApiClient.UpdateDocumentContent("files", docid, fs)).ResponseMessage;                
+                result = (await client.UpdateDocumentContent("files", docid, fs)).ResponseMessage;                
             }
 
             return Message3<string>(result.IsSuccessStatusCode, "File uploaded");
         }
 
+        public class MyServiceClientMessageHandler : ServiceClientMessageHandler, IServiceClientMessageHandler
+        {
+            private readonly MediaTypeHeaderValue _contentType;
+
+            public MyServiceClientMessageHandler(ServiceClientMessageHandler innerClient, MediaTypeHeaderValue contentType)
+                : base(innerClient.ApiContext, innerClient.Settings, innerClient.CacheFactory)
+            {
+                _contentType = contentType;
+            }
+
+            public override void InitRequest(HttpRequestMessage request)
+            {
+                request.Content.Headers.ContentType = _contentType;
+                base.InitRequest(request);
+            }
+        }
+
+    
 
 
         // [HttpGetRoute(UriTemplate = "folder/list")]

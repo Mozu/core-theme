@@ -214,7 +214,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AmountCredited, op => op.MapFrom(dc => dc.AmountCredited))
                 .ForMember(x => x.AmountAuthorized, op => op.ResolveUsing(dc =>
                 {
-                    if (dc.PaymentType == PaymentsDC.PaymentType.Check && dc.Status == "Pending" && dc.Interactions.Any(i => i.Status == "CheckRequested"))
+                    if (dc.PaymentType == PaymentsDC.PaymentTypeConst.CHECK && dc.Status == "Pending" && dc.Interactions.Any(i => i.Status == "CheckRequested"))
                         return dc.Interactions.First(i => i.Status == "CheckRequested").Amount.GetValueOrDefault(0);
                     else if (dc.Status == "Authorized" && dc.Interactions.Any(i => i.Status == "Authorized"))
                         return dc.Interactions.First(i => i.Status == "Authorized").Amount.GetValueOrDefault(0);

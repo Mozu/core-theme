@@ -176,7 +176,7 @@ namespace Mozu.SiteBuilder.Mvc
         Site LookupSiteByDomain(string host )
         {
             var client = new SitesWebApiClient(new ServiceClientMessageHandler(new ApiContext(), _settings ));
-            var sites = client.GetSites(0, 1, null, "domainname eq " + host).Result.ReadAsSync();
+            var sites = client.GetSites(filter: "domainname eq " + host).Result.ReadAsSync();
             return sites.Items.FirstOrDefault();
 
         }

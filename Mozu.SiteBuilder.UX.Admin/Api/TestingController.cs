@@ -332,84 +332,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(returnedThemesList.ToList());
         }
 
-        [HttpGetRoute(UriTemplate = "tenant/list")]
-        public async Task<Response<List<Tenant.Contracts.Tenant>>> GetTenantList([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
-        {
-            string filter = null;
-            TenantCollection tenants = null;
-            
-            foreach (var f in extFilter)
-            {
-                int tenantId;
-                if (int.TryParse(f.value.ToString (), out tenantId))
-                {
-                    var tentant = (await _tenantClient.GetTenant(tenantId)).ReadAsSync();
-                    tenants = new TenantCollection()
-                    {
-                        TotalCount = 1,
-                        Items = new List<Mozu.Tenant.Contracts.Tenant>()
-                        {
-                            tentant 
-                        }
-                    };
-                    filter = "Id eq " + tenantId;
-                }
-                else
-                {
-                    filter = string.Format("Name cont \"{0}\"", f.value);
-                }
-            }
-            if (tenants == null)
-            {
-
-                tenants = _tenantClient.GetTenants(pagingParams.startIndex, pagingParams.pageSize, "CreateDate desc", filter).Result.ReadAsSync();
-
-            }
-
-            return List2(tenants.Items, (int) tenants.TotalCount);
-        }
-
+        
 
         ITenantsWebApiClient _tenantClient;
-		[HttpPostRoute(UriTemplate = "changeSiteList")]
-        public async Task<Response<List<Site>>> GetChangeSiteList(Site site)
-        {
-            int? tenantId = site.tenantId;
-            var res = (await _tenantClient.GetSites(tenantId)).ReadAsSync();
-            var sites = new List<Site>(res.Items.Select(x => new Site() {id = x.Id, tenantId = tenantId, name = x.Name}));
-            return List2(sites);
-        }
+		
 
 
 
-		[HttpPostRoute(UriTemplate = "setSiteContextFromTenant")]
-        public async Task<Response<List<Site>>> SetSiteContextFromTenant(Mozu.Tenant.Contracts.Tenant tenant)
-        {
-            var sites = (await _tenantClient.GetSites(tenant.Id)).ReadAsSync();
-            var site = sites.Items.First();
-            var ctx = _siteBuilderContext;
-
-            ctx.TenantId = tenant.Id;
-            ctx.SiteId = site.Id;
-         
-            ctx.Save();
-
-            return EmptyList2<Site>();
-            //ctx.SiteName = site.name;
-        }
-
-        [HttpPostRoute(UriTemplate = "setSiteContext")]
-        public Response<List<Site>> SetSiteContext(Site site)
-        {
-            var ctx = _siteBuilderContext;
-
-            ctx.TenantId = site.tenantId.Value;
-            ctx.SiteId = site.id.Value;
-         
-            ctx.Save();
-
-            return EmptyList2<Site>();
-            //ctx.SiteName = site.name;
-        }
     }
 }

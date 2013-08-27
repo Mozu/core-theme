@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.Mvc.Orders
 
         public OrderService( IShippingSettingsWebApiClient shippingSettingsWebApiClient)
         {
-
+            
             _shippingSettingsWebApiClient = shippingSettingsWebApiClient.CloneWithoutUserClaims();
 
         }
