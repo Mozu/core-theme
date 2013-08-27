@@ -178,7 +178,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 var client = _documentWebApiClient.CloneWithConfigOptions(x => x.ContentType = streamProvider.FileData.SingleOrDefault().Headers.ContentType );
 
-                if (stuff)
+             
                 {
                     //hack to work around bug in api....sent to roeder.
                     client.Handler = new MyServiceClientMessageHandler((ServiceClientMessageHandler)client.Handler, streamProvider.FileData.SingleOrDefault().Headers.ContentType );
