@@ -135,6 +135,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="FiftyOne.Foundation">
+      <HintPath>..\packages\51Degrees.mobi.2.1.15.1\lib\NET40\FiftyOne.Foundation.dll</HintPath>
+    </Reference>
     <Reference Include="FluentValidation, Version=3.4.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\FluentValidation.3.4.6.0\lib\Net40\FluentValidation.dll</HintPath>
@@ -150,6 +153,9 @@
     <Reference Include="FSharp.PowerPack.Compatibility, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.22\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Core">
+      <HintPath>..\packages\Glimpse.0.87\lib\net40\Glimpse.Core.dll</HintPath>
     </Reference>
     <Reference Include="Jolt">
       <HintPath>..\packages\Jolt.1.0.0\lib\net40\Jolt.dll</HintPath>
@@ -409,6 +415,11 @@
     <Compile Include="Customers\User.cs" />
     <Compile Include="IStartUpTask.cs" />
     <Compile Include="Messages.cs" />
+    <Compile Include="Mobile\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mobile\Default.aspx.designer.cs" />
     <Compile Include="Navigation\NavigationNode.cs" />
     <Compile Include="Navigation\NavigationNodeType.cs" />
     <Compile Include="Navigation\NavigationRuntimeExtensions.cs" />
@@ -478,9 +489,14 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Admin\ThemeSettings\mockcorethemesettingsconfig.json" />
+    <None Include="51Degrees.mobi.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Readme\glimpse.readme.txt" />
+    <Content Include="Mobile\Default.aspx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

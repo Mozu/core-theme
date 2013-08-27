@@ -30,7 +30,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Collections;
 
-namespace Mozu.SiteBuilder.UX.Mobile
+namespace Mozu.SiteBuilder.IntegrationTests.Mobile
 {
     public partial class Default : System.Web.UI.Page
     {
