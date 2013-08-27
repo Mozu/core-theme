@@ -81,7 +81,18 @@
         }
         vm.unknownError = function () {
             vm.messages.push({ message: genericMsg.UnexpectedError });
-        };
+        };
+        vm.on('error', function (e, errors) {
+            // TODO: get better consistency from the error messages as they come out!
+            if (errors.Message && (!errors.Items || errors.Items.length === 0)) {
+                vm.messages([errors]);
+            } else {
+                vm.messages(errors.Items);
+            }
+        });
+        vm.on('update', function (newJSON) {
+            vm.messages(newJSON.Messages || []);
+        });
     },
 
     deepExtendProps = ['statics','observables','observableArrays','submodels','submodelArrays'],
@@ -264,19 +275,6 @@
                     me.publish.apply(me, ['error',arguments]);
                 });
 
-                if (me.hasMessages) {
-                    me.on('error', function (e, errors) {
-                        // TODO: get better consistency from the error messages as they come out!
-                        if (errors.Message && (!errors.Items || errors.Items.length === 0)) {
-                            me.messages.push(errors);
-                        } else {
-                            me.messages(errors.Items);
-                        }
-                    });
-                    me.on('update', function (newJSON) {
-                        me.messages(newJSON.Messages || []);
-                    });
-                }
             });
         },
         publish: function () {
