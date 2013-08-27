@@ -130,6 +130,9 @@ Ext.define('Taco.model.CustomerAccount', {
                }, {
                    name: 'lastOrderDate',
                    type: 'date'
+               }, {
+                   name: 'createDate',
+                   type: 'date'
                }];
                 if (!Taco.model.CustomerAccount.contactFieldsAdded) {
                     Taco.model.CustomerAccount.contactFieldsAdded = true;
