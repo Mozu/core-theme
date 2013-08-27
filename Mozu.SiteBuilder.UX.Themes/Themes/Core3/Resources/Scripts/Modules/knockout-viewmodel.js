@@ -259,10 +259,19 @@
                     me.publish('update', data);
                 });
 
+                apiModel.on('error', function () {
+                    me.submitting(false);
+                    me.publish.apply(me, ['error',arguments]);
+                });
+
                 if (me.hasMessages) {
-                    me.apiModel.on('error', function (errors) {
-                        me.submitting(false);
-                        me.messages(errors.Items);
+                    me.on('error', function (e, errors) {
+                        // TODO: get better consistency from the error messages as they come out!
+                        if (errors.Message && (!errors.Items || errors.Items.length === 0)) {
+                            me.messages.push(errors);
+                        } else {
+                            me.messages(errors.Items);
+                        }
                     });
                     me.on('update', function (newJSON) {
                         me.messages(newJSON.Messages || []);
@@ -299,7 +308,6 @@
         }
 
         child = function() {
-            this.superInit = $.proxy(parent.prototype.initialize,this);
             parent.apply(this, arguments);
         };
 
@@ -332,6 +340,10 @@
         // Set a convenience property in case the parent's prototype is needed
         // later.
         child.__super__ = parent.prototype;
+
+        child.prototype.superInit = function () {
+            return child.__super__.initialize.apply(this, arguments);
+        }
 
         // make extendable!
         child.extend = extend;

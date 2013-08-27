@@ -118,26 +118,21 @@ var utils = {
     },
 
     pipeline: function (tasks /* initialArgs... */) {
-        var initialArgs, runTask;
-
-        initialArgs = Array.prototype.slice.call(arguments, 1);
-
         // Self-optimizing function to run first task with multiple
         // args using apply, but subsequence tasks via direct invocation
-        runTask = function (task, args) {
-            runTask = function(task, arg) {
+        var runTask = function (args, task) {
+            runTask = function (arg, task) {
                 return task(arg);
             };
 
             return task.apply(null, args);
         };
 
-        return utils.when.reduce(tasks,
-            function(args, task) {
-                return runTask(task, args);
-            },
-            initialArgs
-        );
+        return when.all(Array.prototype.slice.call(arguments, 1)).then(function (args) {
+            return when.reduce(tasks, function (arg, task) {
+                return runTask(arg, task);
+            }, args);
+        });
     },
     // TODO: the below is horrible. request that all types include their type parameter.
     areSameType: function(ljson, rjson) {
