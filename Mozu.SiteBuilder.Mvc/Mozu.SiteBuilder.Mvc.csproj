@@ -129,9 +129,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="FiftyOne.Foundation, Version=2.1.19.4, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="FiftyOne.Foundation, Version=2.1.15.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\51Degrees.mobi.2.1.19.4\lib\NET40\FiftyOne.Foundation.dll</HintPath>
+      <HintPath>..\packages\51Degrees.mobi.2.1.15.1\lib\NET40\FiftyOne.Foundation.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=3.4.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -148,6 +148,9 @@
     <Reference Include="FSharp.PowerPack.Compatibility, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.22\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Core">
+      <HintPath>..\packages\Glimpse.0.87\lib\net40\Glimpse.Core.dll</HintPath>
     </Reference>
     <Reference Include="Jolt">
       <HintPath>..\packages\Jolt.1.0.0\lib\net40\Jolt.dll</HintPath>
@@ -561,6 +564,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Mobile\Default.aspx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
