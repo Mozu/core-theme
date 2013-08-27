@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction { 
                 ActionName = "RequestCheck",
                 NewBillingInfo = new DCp.BillingInfo {
-                    PaymentType = DCp.PaymentType.Check,
+                    PaymentType = DCp.PaymentTypeConst.CHECK,
                     BillingContact = new DCcore.Contact {
                         FirstName = args.FirstName,
                         LastNameOrSurname = args.LastName

@@ -55,59 +55,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return View();
         }
 
-        /// <summary>
-        /// Returns a hyperlinked list of all available sites.
-        /// GET: /Misc/Testing/SiteList
-        /// </summary>
-        public async Task<ActionResult> SiteList()
-        {
-
-            //_checkoutSettingsWebApiClient.UpdateCheckoutSettings(new CheckoutSettings()
-            //                                                         {
-            //                                                             PaymentSettings = new PaymentSettings()
-            //                                                                                   {
-            //                                                                                       SupportedCards= new List<string>( ),
-            //                                                                                       Gateway = new GatewayAccount()
-            //                                                                                                     {
-            //                                                                                                         GatewayDefinitionId = "authorize.net",
-            //                                                                                                         CountryCode = "US",
-            //                                                                                                         IsActive = true,
-            //                                                                                                         CredentialFields = new List<GatewayCredentialFieldValue>()
-            //                                                                                                                                {
-            //                                                                                                                                    new GatewayCredentialFieldValue()
-            //                                                                                                                                        {
-            //                                                                                                                                            Name = "x_login",
-            //                                                                                                                                            Value = "5HdBRVtf2j46"
-            //                                                                                                                                        },
-            //                                                                                                                                    new GatewayCredentialFieldValue()
-            //                                                                                                                                        {
-            //                                                                                                                                            Name = "x_tran_key",
-            //                                                                                                                                            Value = "92F9yx5aX89tXX9s"
-            //                                                                                                                                        },
-            //                                                                                                                                }
-
-            //                                                                                                     }
-            //                                                                                   },
-            //                                                             CustomerCheckoutSettings = new CustomerCheckoutSettings()
-            //                                                                                            {
-            //                                                                                                CustomerCheckoutType = "LoginOptional"
-            //                                                                                            },
-            //                                                             OrderProcessingSettings = new OrderProcessingSettings()
-            //                                                                                           {
-            //                                                                                               PaymentProcessingFlowType = "AuthorizeOnOrderPlacementAndCaptureOnOrderShipment"
-            //                                                                                           }
-            //                                                         }).Result.ReadAsSync();
-
-
-
-
-
-            var tRes = await _tRepo.GetTenants(0, 200, null, null);
-
-            TenantCollection tenants = tRes.ReadAsAsync().Result;
-
-            return View(tenants);
-        }
+       
 
         public ActionResult ForceTheme(string themeType = "", string redir = null)
         {
