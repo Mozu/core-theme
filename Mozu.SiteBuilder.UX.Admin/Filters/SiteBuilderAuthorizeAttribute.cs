@@ -165,7 +165,7 @@ public class SiteBuilderAuthorizeAttribute : AuthorizeAttribute
         }
 
 
-        if (!String.Equals(context.UserClaims.Environment, Environment))
+        if (!String.Equals(context.UserClaims.Environment, Environment, StringComparison.OrdinalIgnoreCase ))
         {
             return false;
         }
