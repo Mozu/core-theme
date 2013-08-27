@@ -45,6 +45,11 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         this.onStateChange(Taco.core.StateManager.getCurrentState());
     },
 
+    compareController: function(address, controllerName) {
+        address = (address || '').toLowerCase();
+        return address === controllerName || Ext.util.Inflector.singularize(address) === Ext.util.Inflector.singularize(controllerName);
+    },
+
     /**
      * Method to manage awareness of when the global application state changes.
      *
@@ -53,7 +58,8 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
      * @template
      */
     onStateChange: function (appState) {
-        var controller = appState.metaData.controller,
+        var self = this,
+            controller = appState.metaData.controller,
             appStateAddress = appState.getUri().toLowerCase(),
        parentRecord, selectedRecord;
         
@@ -65,12 +71,12 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         
         this.store.each(function (topParent) {
             
-            if ((topParent.data.address || '').toLowerCase() == controller) {
+            if (self.compareController(topParent.data.address, controller)) {
                 parentRecord = topParent;
                 selectedRecord = topParent;
             }
             topParent.items().each(function (subItem) {
-                if ((subItem.data.address || '').toLowerCase() == controller) {
+                if (self.compareController(subItem.data.address, controller)) {
                     parentRecord = topParent;
                     selectedRecord = subItem;
                 }
