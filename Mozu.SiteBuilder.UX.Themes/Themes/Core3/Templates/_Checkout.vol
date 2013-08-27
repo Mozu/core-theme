@@ -21,7 +21,7 @@
     data-mz-shippingmethods="{% json_attribute ViewData.availableShippingMethods %}"
     data-bind="css: { 'mz-submitting': submitting }">
     <h1 class="mz-page-header">
-        Checkout{% if not user.email %}
+        Checkout{% if not user.isAuthenticated %}
         <span class="mz-page-headernote mz-auxiliary-text mz-mini-modal-parent">Registered Customer? <a class="mz-utility-link mz-login" data-mz-action="login" href="javascript:;">Sign in</a>
             {% include "Modules/LoginModal" %}
         </span>
