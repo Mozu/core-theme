@@ -375,6 +375,13 @@
                         }), function () {
                             self.stepStatus("invalid");
                         };
+                    },
+                    error: function (messages) {
+                        for (var i = 0; i < messages.length; i++) {
+                            messages[i].Message = messages[i].message;
+                        }
+                        self.messages(messages);
+                        self.stepStatus("invalid");
                     }
                 },
                 settings: {
@@ -382,8 +389,7 @@
                     siteId: api.context.Site(),
                     tenantId: api.context.Tenant()
                 }
-            });
-
+            });
             // expose some of the helper functions to templates
             this.billingAddressRequired = ko.computed(function () {
                 return self.PaymentType() === "CreditCard" && !self.IsSameBillingShippingAddress();
@@ -403,17 +409,6 @@
         isNotCreatingAccount = function () {
             return !isCreatingAccount.apply(this);
         },
-
-        //Note = ViewModelPrototype.extend({
-        //    mozuType: 'ordernote',
-        //    statics: {
-        //        "Id": "",
-        //        "orderId": ""
-        //    },
-        //    observables: {
-        //        "Text": {}
-        //    }
-        //}),
 
         ShopperNotes = ViewModelPrototype.extend({
             observables: {
@@ -562,11 +557,6 @@
             this.unknownError = function () {
                 this.messages.push({ Message: genericMsg.UnexpectedError });
                 this.submitting(false);
-            };
-
-            this.BillingInfo.pciProcessor.events.error = function (messages) {
-                self.messages(messages);
-                self.BillingInfo.stepStatus("invalid");
             };
 
             this.BillingInfo.pciProcessor.settings.set({
