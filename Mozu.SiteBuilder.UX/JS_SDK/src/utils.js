@@ -128,8 +128,8 @@ var utils = {
             return task.apply(null, args);
         };
 
-        return when.all(Array.prototype.slice.call(arguments, 1)).then(function (args) {
-            return when.reduce(tasks, function (arg, task) {
+        return utils.when.all(Array.prototype.slice.call(arguments, 1)).then(function (args) {
+            return utils.when.reduce(tasks, function (arg, task) {
                 return runTask(arg, task);
             }, args);
         });

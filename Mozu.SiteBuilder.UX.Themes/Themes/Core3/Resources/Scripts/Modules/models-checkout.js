@@ -45,30 +45,27 @@
             nextStep: function () {
                 if (!this.validate()) return false;
                 this.stepStatus('submitting');
+                this.messages([]);
                 var self = this;
                 var parent = this.getParentModel();
                 parent.update().then(function () {
-                //parent.update({ ShippingContact: self.toJS() }).then(function () {
                     self.stepStatus('submitting');
                     parent.getShippingMethods().then(function (methodsJSON) {
                         self.stepStatus('complete');
                         parent.availableShippingMethods(methodsJSON);
                     });
                 }, function (e) {
-                    parent.getParentModel().messages.push(e.message);
+                    self.messages.push(e.Message);
                     self.stepStatus('invalid')
                 });
             },
             checkStepStatus: function () {
-                if (!this.stepStatus) this.stepStatus = ko.observable();
                 var newStepStatus = this.validate(false) ? 'complete' : 'invalid';
                 this.stepStatus(newStepStatus);
-                return newStepStatus;
             }
 
         }, function constructShippingAddress() {
             this.superInit();
-            this.stepStatus = ko.observable("incomplete");
             this.checkStepStatus();
         }),
 
@@ -99,6 +96,7 @@
             nextStep: function () {
                 if (!this.validate()) return false;
                 this.stepStatus('submitting');
+                this.messages([]);
                 var self = this;
                 var parent = this.getParentModel();
                 // have to manually create the payload here because a full order contains a blank BillingInfo, and a blank BillingInfo throws too-early validation errors
@@ -110,8 +108,6 @@
                 var st = "new", available = this.availableShippingMethods();
                 if (available && available.length) st = this.chosenMethod() ? "complete" : "invalid";
                 this.stepStatus(st);
-                var parent = this.getParentModel();
-                return st;
             }
         }, function (conf) {
             var self = this;
@@ -317,8 +313,6 @@
         }),
 
         BillingInfo = Step.extend({
-            //endpoint: "/resources/scripts/fixtures/checkout-updatepaymentsection.json",
-            //endpoint: "/checkout/updatepayment",
             mozuType: 'payment',
             observables: {
                 "PaymentType": { required: msg.PaymentMethodMissing },

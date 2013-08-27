@@ -1,5 +1,5 @@
 ﻿<div class="mz-messages">
-    <ul data-bind="visible: messages().length > 0, foreach: messages" class="mz-errors">
+    <ul data-bind="visible: messages().length > 0, css: { 'is-showing': messages().length > 0 }, foreach: messages" class="mz-errors">
         <li data-bind="text: $data.Message || 'Unknown error!'"></li>
     </ul>
 </div>

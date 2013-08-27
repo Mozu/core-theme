@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-08-26
+ * Mozu JavaScript SDK - v0.1.0 - 2013-08-27
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -996,8 +996,8 @@
                         };
                         return task.apply(null, args);
                     };
-                    return when.all(Array.prototype.slice.call(arguments, 1)).then(function(args) {
-                        return when.reduce(tasks, function(arg, task) {
+                    return utils.when.all(Array.prototype.slice.call(arguments, 1)).then(function(args) {
+                        return utils.when.reduce(tasks, function(arg, task) {
                             return runTask(arg, task);
                         }, args);
                     });
