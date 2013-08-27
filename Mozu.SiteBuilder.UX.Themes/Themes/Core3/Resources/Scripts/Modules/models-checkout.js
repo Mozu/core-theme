@@ -2,13 +2,24 @@
     ["modules/jquery-plus", "modules/knockout-plus", "pciaas", "modules/knockout-viewmodel", "i18n!nls/messages-checkout", "i18n!nls/messages", "modules/api", "modules/models-user", "modules/models-address"],
     function ($, ko, PCIaaS, ViewModelPrototype, msg, genericMsg, api, UserModels, AddressModels) {
 
-        function submitStep() {
-            if (this.submit()) this.stepStatus("submitting");
-        }
+        var Step = ViewModelPrototype.extend({
+            hasMessages: true,
+            observables: {
+                "stepStatus": {}
+            },
+            edit: function () {
+                this.stepStatus("incomplete")
+            },
+            nextStep: function() {
+                if (this.submit()) this.stepStatus("submitting");
+            },
+        }, function () {
+            var self = this;
+            this.getParentModel().on('error', function () {
+                if (self.stepStatus() === "submitting") self.stepStatus("invalid");
+            });
+        });
 
-        function editStep() {
-            this.stepStatus("incomplete");
-        }
 
         var ShippingPhone = AddressModels.PhoneNumbers.extend({
             observables: {
@@ -18,21 +29,19 @@
             }
         });
         
-        var ShippingAddress = ViewModelPrototype.extend({
+        var ShippingAddress = Step.extend({
             statics: {
                 "Id": ""
             },
             observables: {
                 "FirstName": { required: msg.FirstNameMissing },
                 "LastNameOrSurname": { required: msg.LastNameMissing },
-                "CompanyOrOrganization": {},
-                "stepStatus": {}
+                "CompanyOrOrganization": {}
             },
             submodels: {
                 "Address": AddressModels.StreetAddress,
                 "PhoneNumbers": ShippingPhone
             },
-            edit: editStep,
             nextStep: function () {
                 if (!this.validate()) return false;
                 this.stepStatus('submitting');
@@ -58,6 +67,7 @@
             }
 
         }, function constructShippingAddress() {
+            this.superInit();
             this.stepStatus = ko.observable("incomplete");
             this.checkStepStatus();
         }),
@@ -70,7 +80,7 @@
             }
         }),
 
-        ShippingInfo = ViewModelPrototype.extend({
+        ShippingInfo = Step.extend({
             mozuType: 'shipment',
             statics: {
                 "OrderId": ""
@@ -86,7 +96,6 @@
                 ShippingContact: ShippingAddress,
                 Price: Price
             },
-            edit: editStep,
             nextStep: function () {
                 if (!this.validate()) return false;
                 this.stepStatus('submitting');
@@ -107,6 +116,7 @@
         }, function (conf) {
             var self = this;
             
+            this.superInit();
 
             // calculating this observable has side effects, namely, autoselecting the first shipping method in a list if no available method is selected
             this.chosenMethod = ko.computed(function () {
@@ -127,7 +137,6 @@
                 return chosen;
             });
 
-            this.stepStatus = ko.observable('new');
             this.checkStepStatus();
             this.availableShippingMethods.subscribe($.proxy(this.checkStepStatus, this));
         }),
@@ -307,7 +316,7 @@
             }
         }),
 
-        BillingInfo = ViewModelPrototype.extend({
+        BillingInfo = Step.extend({
             //endpoint: "/resources/scripts/fixtures/checkout-updatepaymentsection.json",
             //endpoint: "/checkout/updatepayment",
             mozuType: 'payment',
@@ -320,7 +329,6 @@
                 "Check": Check,
                 "BillingContact": BillingAddress
             },
-            edit: editStep,
             submit: function () {
                 var self = this,
                     parent = this.getParentModel();
@@ -335,12 +343,11 @@
                 } else {
                     return false;
                 }
-            },
-            nextStep: submitStep
+            }
         }, function () {
             var self = this,
                 parent = this.getParentModel();
-            this.stepStatus = ko.observable();
+            this.superInit();
             var shipmentStatus = parent.ShippingInfo.stepStatus,
                 checkStatus = function (newValue) {
                     self.stepStatus(newValue === "complete" ? "incomplete" : "new");
@@ -519,7 +526,6 @@
 
                 var failHandler = function (error) {
                     console.log('noooo', error, error.message);
-                    order.endSubmit();
                     order.submitting(false);
                     $.each(error.Items, function (ix, errorItem) {
                         if (errorItem.ErrorCode === "MISSING_OR_INVALID_PARAMETER" && errorItem.AdditionalErrorData && errorItem.AdditionalErrorData[0] && errorItem.AdditionalErrorData[0].Value === "password" && errorItem.AdditionalErrorData[0].Name === "ParameterName") {
@@ -533,7 +539,7 @@
                     return order.publish('complete');
                 };
 
-                api.steps.apply(api, apiSteps).then(function (completedOrder) {
+                api.steps(apiSteps).then(function (completedOrder) {
                     order.submitting(false);
                     if (completedOrder.data.Status === "Submitted") {
                         successHandler(completedOrder.data);
@@ -545,21 +551,23 @@
             editCart: function () {
                 window.location = "/cart";
             },
-            endSubmit: function () {
-                var self = this;
-                // clean up models that weren't unsubmitted by the populate
-                $.each(this.submodels, function (smName) {
-                    if (self[smName].stepStatus && self[smName].stepStatus() == "submitting") self[smName].stepStatus("invalid");
-                });
-            },
             errorTimeout: 30000
         }, function (conf) {
 
             var self = this;
 
+            this.submitting.subscribe(function (yes) {
+                if (!yes) {
+                    // clean up models that weren't unsubmitted by the populate
+                    $.each(self.submodels, function (smName) {
+                        if (self[smName].stepStatus && self[smName].stepStatus() == "submitting") self[smName].stepStatus("invalid");
+                    });
+                }
+            });
+
             this.unknownError = function () {
                 this.messages.push({ Message: genericMsg.UnexpectedError });
-                this.endSubmit();
+                this.submitting(false);
             };
 
             this.BillingInfo.pciProcessor.events.error = function (messages) {
@@ -574,6 +582,9 @@
             $.each(this.submodels, function (smName) {
                 self[smName].orderId = self.Id;
                 if (self[smName].apiModel && self[smName].apiModel.data) self[smName].apiModel.data.orderId = self.Id;
+
+                // consolidate messaging
+                self[smName].messages = self.messages;
             });
 
             this.User.EmailAddress = this.email;

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-08-14
+ * Mozu JavaScript SDK - v0.1.0 - 2013-08-26
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -990,17 +990,17 @@
                     return xhr;
                 },
                 pipeline: function(tasks) {
-                    var initialArgs, runTask;
-                    initialArgs = Array.prototype.slice.call(arguments, 1);
-                    runTask = function(task, args) {
-                        runTask = function(task, arg) {
+                    var runTask = function(args, task) {
+                        runTask = function(arg, task) {
                             return task(arg);
                         };
                         return task.apply(null, args);
                     };
-                    return utils.when.reduce(tasks, function(args, task) {
-                        return runTask(task, args);
-                    }, initialArgs);
+                    return when.all(Array.prototype.slice.call(arguments, 1)).then(function(args) {
+                        return when.reduce(tasks, function(arg, task) {
+                            return runTask(arg, task);
+                        }, args);
+                    });
                 },
                 areSameType: function(ljson, rjson) {
                     return Object.keys(ljson).join() === Object.keys(rjson).join();

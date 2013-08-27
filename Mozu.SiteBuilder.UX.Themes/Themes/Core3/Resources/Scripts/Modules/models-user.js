@@ -4,6 +4,7 @@
 
         var User = ViewModelPrototype.extend({
             mozuType: 'user',
+            hasMessages: true,
             observables: {
                 "EmailAddress": {
                     required: {
