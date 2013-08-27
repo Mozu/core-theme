@@ -190,9 +190,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13237.3\lib\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.BuildSupport.GetAssemblyFileVersionTask">
-      <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
-    </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.0.13237.2\lib\Mozu.CommerceRuntime.Contracts.dll</HintPath>
@@ -656,6 +653,13 @@
     <Content Include="Scripts\build\fonts\SourceSansPro-SemiboldIt-webfont.eot" />
     <Content Include="Scripts\build\fonts\SourceSansPro-SemiboldIt-webfont.ttf" />
     <Content Include="Scripts\build\fonts\SourceSansPro-SemiboldIt-webfont.woff" />
+    <Content Include="Scripts\build\images\card-s41366a1f4b.png" />
+    <Content Include="Scripts\build\images\card-s45eb4789fc.png" />
+    <Content Include="Scripts\build\images\card-s5ce8972ad2.png" />
+    <Content Include="Scripts\build\images\card-s8858c83bcb.png" />
+    <Content Include="Scripts\build\images\card-s88713318b6.png" />
+    <Content Include="Scripts\build\images\card-sd6d3433d2f.png" />
+    <Content Include="Scripts\build\images\card-sd7c19700b9.png" />
     <Content Include="Scripts\build\index.html" />
     <Content Include="Scripts\build\resources\fonts\journal-webfont.svg" />
     <Content Include="Scripts\build\resources\fonts\mozicons.svg" />
@@ -1674,7 +1678,6 @@
     <Content Include="Scripts\resources\fonts\SourceSansPro-Regular-webfont.svg" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-Semibold-webfont.svg" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-SemiboldIt-webfont.svg" />
-    <Content Include="Scripts\resources\images\card-sd7c19700b9.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-bounce-rate.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-conversion-rate.png" />
     <Content Include="Scripts\resources\images\dashboard\dashboard-customers.png" />
