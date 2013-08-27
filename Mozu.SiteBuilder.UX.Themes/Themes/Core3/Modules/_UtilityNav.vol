@@ -1,6 +1,7 @@
 ﻿ <nav class="mz-utility-nav-wrap">
  	<ul class="mz-utility-nav">
- 		{%if user.email %}
+ 		{%if user.isAuthenticated %}
+        {% dump user %}
  		<li class="mz-utility-nav-item">
  			<div id="mz-logged-in-notice">
  				Welcome, <a href="/myaccount" class="mz-utility-link">{{user.firstName|default:user.email}}</a>! (<a href="javascript:;" data-mz-action="logout" class="mz-utility-link mz-logout">Log Out</a>)
