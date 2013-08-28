@@ -1,65 +1,61 @@
 /**
- * @class Taco.view.order.modal.PaymentAction
+ * @class Taco.view.order.modal.CapturePayment
  */
 Ext.define('Taco.view.order.modal.CapturePayment', {
-    extend: 'Taco.core.ux.modal.Modal',
+    extend: 'Ext.window.Window',
     requires: ['Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField'],
-    cls: Taco.baseCSSPrefix + 'order-modal',
+    cls: Taco.baseCSSPrefix + 'order-modal ' + Taco.baseCSSPrefix + 'window-plain',
+    title: "Collect Payment",
     autoShow: true,
     width: 400,
     data: {},
+    ghost:false,
     field: '',
-
+    resizeable: false,
+    modal:true,
     initComponent: function (eOpts) {
         var me = this;
 
         this.formpanel = Ext.create('Ext.form.Panel', {
             xtype: 'formpanel',
-            bodyCls: Taco.baseCSSPrefix + 'flexform',
             layout: { type: 'hbox' },
-            items: [{
-                xtype: 'container',
-                style: 'padding-right: 10px;',
-                defaults: {
-                    xtype: 'textfield',
-                    labelSeparator: '',
-                    labelAlign: 'top',
-                    width: 300
-                },
-                items: [
+            defaults: {
+                xtype: 'textfield',
+                labelSeparator: '',
+                labelAlign: 'top',
+                width: 300
+            },
+            items: [
                 {
                     xtype: 'currencyfield',
+                    labelClsExtra: "taco-firstField",
+                    selectOnFocus:true,
                     name: 'amount',
+                    width:150,
                     fieldLabel: 'Amount to Capture',
                     value: me.record.data.amountAuthorized
-                }]
-            }],
-            listeners: {
-                afterrender: function (panel) {
-                    Ext.destroy(panel.getLayout().clearEl);
                 }
-            }
-        });
-
-        this.content = {
-            xtype: 'container',
-            items: [{
-                xtype: 'component',
-                autoEl: {
-                    tag: 'h2',
-                    cls: 'order-modal-title',
-                    html: 'Collect Payment'
-                }
-            }, 
-            this.formpanel
             ]
-        };
+        });
+        
+        
 
-        this.primaryButton = Ext.widget('primarybutton', {
+        this.items = [
+            this.formpanel
+        ];
+        
+
+        this.primaryButton = Ext.create('Ext.button.Button', {
+            ui: "action-primary",
+            scale:"medium",
             text: 'Save',
-            click: function () {
+            handler: function () {
                 var me = this,
-                    amount = me.formpanel.getValues()
+                    fm = me.formpanel.getForm();
+                
+                if (!fm.findField("amount").isValid()) {
+                    return;
+                }
                 
                 // add the capture Amount
                 data = {
@@ -77,33 +73,50 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
                             // service didnt' return data properly
                             return;
                         }
+                        me.setLoading(false, me.body);
+                        me.hide();
                         me.order.reload();
                     },
                     failure: function (response) {
-
+                        me.setLoading(false, me.body);
                     },
                     scope: this
                 };
 
-        // call the model method to persist the change
-        this.order.capturePayment(cfg);
+                me.setLoading({
+                    msg: "Saving"
+                }, me.body);
                 
-                me.hide();
+                // call the model method to persist the change
+                this.order.capturePayment(cfg);
             },
             scope: this
         });
 
-        this.actions = {
-            xtype: 'container',
-            items: [this.primaryButton, {
-                xtype: 'action',
+        this.buttons = [
+            {
+                xtype: 'button',
+                ui: "action",
+                scale: "medium",
                 text: 'Cancel',
-                click: function () {
+                margin: {
+                    right: 10
+                },
+                handler: function() {
                     me.hide();
-                }
-            }]
-        };
+                },
+                scope: me
+            },
+            this.primaryButton
+        ];
 
+
+        // make the save button the default focus item so the user can just hit enter key to save the dialog;
+        this.defaultFocus = me.primaryButton;
+        
+        this.callParent(arguments);
+    },
+    onDestroy: function () {
         this.callParent(arguments);
     }
 });

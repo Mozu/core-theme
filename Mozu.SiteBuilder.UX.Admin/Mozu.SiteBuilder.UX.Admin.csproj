@@ -596,6 +596,8 @@
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
+    <Content Include="Scripts\app\overrides\window\MessageBox.js" />
+    <Content Include="Scripts\app\overrides\window\Window.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\app\view\site\navigation\NavHeadings.js" />
     <Content Include="Scripts\build\all-classes.js" />
@@ -804,6 +806,8 @@
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\form\field\Trigger.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Panel.scss" />
     <Content Include="51Degrees.mobi.config" />
+    <Content Include="Scripts\sass\src\overrides\window\MessageBox.scss" />
+    <Content Include="Scripts\sass\src\overrides\window\Window.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -3164,6 +3168,7 @@
     <Folder Include="Scripts\app\model\Context\" />
     <Folder Include="Scripts\app\view\address\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />
+    <Folder Include="Scripts\sass\src\core\ux\window\" />
     <Folder Include="Scripts\sass\var\" />
     <Folder Include="Scripts\stylesheets\etc\" />
   </ItemGroup>

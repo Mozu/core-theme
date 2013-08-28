@@ -11,7 +11,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.CapturePaymentManual',
         'Taco.view.order.modal.VoidPaymentManual',
         'Taco.view.order.modal.CreditPaymentManual',
-        'Taco.view.order.modal.EditTransaction'
+        'Taco.view.order.modal.EditTransaction',
+        'Ext.window.MessageBox'
     ],
     cls: 'orderform-payment-transaction',
     initComponent: function (eOpts) {
@@ -102,6 +103,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     disabled: !(me.record.data.availableActions.length > 0),
                     displayField: 'lbl',
                     valueField: 'val',
+                    forceSelection: true,
+                    editable:false,
                     emptyText: 'Actions',
                     handler: me.addTransaction,
                     transId: 1,
@@ -235,9 +238,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         // call the model method to persist the change
         me.order.voidTransaction(config);
     },
-    applyCheck: function (config) {
-        alert('create check');
-    },
+    
     issueCredit: function (config) {
         var me = this,
             amountCollected = me.record.get('amountCollected');
@@ -308,31 +309,36 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 me.parent.rollBackTransaction(me.getValue());
                 break;
         }
+
+        me.clearValue();
     },
     rollBackTransaction: function (actionName) {
         var me = this,
             actionSimpleName = actionName.replace('Rollback', '');
-
-        Ext.Msg.show({
+        
+        Ext.MessageBox.show({
             title: 'Rollback',
-            cls: 'taco-orderform-delete-confirm',
+            // pushes the buttons to the right to be consistant with our dialog ux.
+            rightJustifyButtons: true,
+            // reverses the order of the buttons
+            reverseOrder: true,
             msg: 'Are you sure you want to rollback this ' + actionSimpleName + ' transacion?',
+            closable:false,
             buttons: Ext.Msg.OKCANCEL,
             fn: function (rec) {
                 if (rec === 'ok') {
                     me.setLoading(true);
-
                     me.order.rollbackTransaction({
                         jsonData: {
                             actionName: actionName,
                             orderId: me.order.getId(),
                             paymentId: me.record.getId()
                         },
-                        success: function(response) {
+                        success: function (response) {
                             me.setLoading(false);
                             me.order.reload();
                         },
-                        failure: function(response) {
+                        failure: function (response) {
                             me.setLoading(false);
                         }
                     });
@@ -340,6 +346,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             }
         });
     },
+    
     applyCheck: function() {
         var me = this;
 
