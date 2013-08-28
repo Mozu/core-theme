@@ -10,17 +10,18 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
     mixins: ['Ext.form.field.Field'],
 
     isDescending: function(rqs) {
-        rqs = rqs || this.getValue(),
-        allNull = true,
-        isDesc = Ext.Array.every(rqs, function(rq, ix) {
-            if (rq.start === null && rq.end === null) return true;
-            allNull = false;
-            var nextrq = rqs[ix+1], prevrq = rqs[ix-1];
-            if (!nextrq) return rq.end === null || rq.start > rq.end;
-            if (!prevrq) return rq.start === null || rq.start > rq.end;
-            return rq.start > rq.end && rq.end >= nextrq.start;
-        });
-        return !allNull && isDesc;
+        return false;
+        //rqs = rqs || this.getValue(),
+        //allNull = true,
+        //isDesc = Ext.Array.every(rqs, function(rq, ix) {
+        //    if (rq.start === null && rq.end === null) return true;
+        //    allNull = false;
+        //    var nextrq = rqs[ix+1], prevrq = rqs[ix-1];
+        //    if (!nextrq) return rq.end === null || rq.start > rq.end;
+        //    if (!prevrq) return rq.start === null || rq.start > rq.end;
+        //    return rq.start > rq.end && rq.end >= nextrq.start;
+        //});
+        //return !allNull && isDesc;
     },
 
     isAscending: function(rqs) {
@@ -92,15 +93,15 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
                 if (newNum != this.numRanges)
                     this.setNumRanges(newNum);
             },
-            'change': function () {
-                if (this.isDescending()) {
-                    this.firstField.setEmptyText("startField", "Above");
-                    this.lastField.setEmptyText("endField", "Below");
-                } else {
-                    this.firstField.setEmptyText("startField", "Below");
-                    this.lastField.setEmptyText("endField", "Above");
-                }
-            },
+            //'change': function () {
+            //    if (this.isDescending()) {
+            //        this.firstField.setEmptyText("startField", "Above");
+            //        this.lastField.setEmptyText("endField", "Below");
+            //    } else {
+            //        this.firstField.setEmptyText("startField", "Below");
+            //        this.lastField.setEmptyText("endField", "Above");
+            //    }
+            //},
             scope: this
         });
         this.items.each(function (item) {
@@ -109,6 +110,8 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
         this.enableBubble('heightchange');
         this.firstField = this.items.first();
         this.lastField = this.items.last();
+        this.firstField.setEmptyText("startField", "Below");
+        this.lastField.setEmptyText("endField", "Above");
     },
     items: [
         {},
