@@ -79,15 +79,21 @@
 			</tr>
 			<tr>
 				<td class="mz-field-label"><strong>Mail check to:</strong></td>
-				<td>{{ ViewData.MailCheckTo.SenderName }}</td>
+				<td>
+					{% if ViewData.MailCheckTo.CompanyOrOrganization %}
+					{{ ViewData.MailCheckTo.CompanyOrOrganization }}
+					{% else %}
+					{{ ViewData.MailCheckTo.FirstName }} {{ ViewData.MailCheckTo.LastNameOrSurname }}
+					{% endif %}
+				</td>
 			</tr>
 			<tr>
 				<td></td>
-				<td>{{ ViewData.MailCheckTo.Address1 }}</td>
+				<td>{{ ViewData.MailCheckTo.Address.Address1 }}</td>
 			</tr>
 			<tr>
 				<td></td>
-				<td>{{ ViewData.MailCheckTo.CityOrTown }}, {{ ViewData.MailCheckTo.StateOrProvince }} {{ ViewData.MailCheckTo.PostalOrZipCode }} </td>
+				<td>{{ ViewData.MailCheckTo.Address.CityOrTown }}, {{ ViewData.MailCheckTo.Address.StateOrProvince }} {{ ViewData.MailCheckTo.Address.PostalOrZipCode }} </td>
 			</tr>
 			{% endif %}
 			<tr>
