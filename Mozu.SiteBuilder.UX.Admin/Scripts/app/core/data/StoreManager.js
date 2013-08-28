@@ -131,13 +131,8 @@ Ext.define('Taco.core.data.StoreManager', {
         return this.getOrCreate({
             type: 'Taco.store.CategoriesTree',
             id: 'Taco.store.CategoriesTree-' + siteId,
-            createOnly:true,
-            filters: [
-                {
-                    property: 'siteId',
-                    value: siteId
-                }
-            ]
+            createOnly: true,
+            siteId:siteId
         });
 
     }
