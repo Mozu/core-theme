@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.pendingchange.Cms', {
     extend: 'Taco.core.ux.browser.BrowserPage',
-    requires: ['Taco.model.CmsDocumentDraft', 'Taco.store.CmsDocumentDrafts', 'Taco.core.ux.action.PrimarySplitButton'],
+    requires: ['Taco.model.CmsDocumentDraft', 'Taco.store.CmsDocumentDrafts', 'Taco.core.ux.action.PrimarySplitButton', 'Taco.core.ux.grid.MenuColumn'],
 
     typeName: 'Pending Changes',
     modelName: 'Taco.model.CmsDocumentDraft',
@@ -155,7 +155,25 @@ Ext.define('Taco.view.pendingchange.Cms', {
                 text: 'Last Published',
                 xtype: 'datecolumn',
                 width: 100
+            },
+            {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuItems:[],
+                onMenuShow: function(menu, e) {
+                    menu.removeAll();
+                    if (e.record.get('draftType') === 'Page') {
+                        menu.add({
+                            xtype: "secondarybutton",
+                            text: 'Preview',
+                            click: function() {
+                                var r = e.record;
+                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent('/pages/' + r.get('name')), 'taco-preview');
+                            }
+                        });
+                    }
+                }
             }
-        ]
-    }
+        ],
+    },
 });
