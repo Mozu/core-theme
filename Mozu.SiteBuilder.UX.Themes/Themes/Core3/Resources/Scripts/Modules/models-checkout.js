@@ -430,6 +430,9 @@
                 ShopperNotes: ShopperNotes,
                 User: UserModels.User
             },
+            observableArrays: {
+                OrderDiscounts: {}
+            },
             observables: {
                 couponCode: {},
                 Subtotal: { numeric: 2 },
@@ -471,7 +474,7 @@
                 this.submittingCoupon(true);
                 this.applyCoupon(this.couponCode()).then(function() {
                     return self.get();
-                }).then(function() {
+                }).then(function () {
                     self.submittingCoupon(false);
                     self.couponCode('');
                 });

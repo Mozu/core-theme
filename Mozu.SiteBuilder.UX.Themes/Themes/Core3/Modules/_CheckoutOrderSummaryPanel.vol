@@ -55,6 +55,10 @@
                                     <td>Sub-Total:</td>
                                     <td><span data-bind="currencyText: DiscountedTotal"></span></td>
                                 </tr>
+                                <tr>
+                                    <td>Tax:</td>
+                                    <td><span data-bind="currencyText: TaxTotal"></span></td>
+                                </tr>
                                 <tr class="mz-shipping-total-row">
                                     <td>Shipping &amp; Handling:</td>
                                     <td><span data-bind="currencyText: ShippingTotal"></span></td>
@@ -65,10 +69,6 @@
                                     <td><span data-bind="currencyText: HandlingAmount"></span></td>
                                 </tr>
                             <!-- /ko -->
-                                <tr>
-                                    <td>Tax:</td>
-                                    <td><span data-bind="currencyText: TaxTotal"></span></td>
-                                </tr>
                             </tbody>
                         </table>
                     </td>
