@@ -70,7 +70,10 @@
       padding-bottom: px-to-rem(12);
     }
 
+
     .extra-attribute {
+      font-size: px-to-rem(16);
+      font-weight: bold;
       text-transform: uppercase;
     }
 
@@ -81,6 +84,14 @@
       margin-top: px-to-rem(12);
       padding-top: px-to-rem(12);
       width: 100%;
+    }
+
+    .options-list {
+      padding: 0;
+    }
+
+    .option-item {
+      padding: px-to-rem(7) 0;
     }
 
     .#{$prefix}boundlist {
@@ -96,6 +107,8 @@
   /* PRODUCT OPTION */
 
   .#{$vprefix}product-options {
+
+    background-color: red;
 
     tr {
       @include transition(opacity 0.5s);
