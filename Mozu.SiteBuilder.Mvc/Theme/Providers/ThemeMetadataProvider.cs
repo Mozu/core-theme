@@ -119,13 +119,25 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                    {
                        using (var stream = File.OpenText(x.FullPath ))
                        {
-                           var ret= jSerializer.Deserialize<WidgetDefinition>(new JsonTextReader(stream));
-                           if (ret != null)
+                           try
                            {
-                               ret.FullPath = Path.GetDirectoryName(x.FullPath);
+                               
+
+                               var ret = jSerializer.Deserialize<WidgetDefinition>(new JsonTextReader(stream));
+                               if (ret != null)
+                               {
+                                   ret.FullPath = Path.GetDirectoryName(x.FullPath);
+                               }
+
+                               return ret;
                            }
-                           
-                           return ret;
+                           catch (Exception ex)
+                           {
+                              
+                               Mozu.Core.Logging.LoggingService.LoggerFor<ThemeMetadataProvider>().Error("error parsing  "+ x.FullPath, ex );
+                               return null;
+                               
+                           }
                        }
                    }).Where(x => x != null && x.Enabled.GetValueOrDefault(true)).ToList();
 
@@ -134,12 +146,23 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                {
                    using (var stream = File.OpenText(x.FullPath))
                    {
-                       var ret = jSerializer.Deserialize<PageTemplateDefinition>(new JsonTextReader(stream));
-                       if (ret != null)
+                       try
                        {
-                           ret.FullPath = Path.GetDirectoryName(x.FullPath);
+                           var ret = jSerializer.Deserialize<PageTemplateDefinition>(new JsonTextReader(stream));
+                           if (ret != null)
+                           {
+                               ret.FullPath = Path.GetDirectoryName(x.FullPath);
+                           }
+                           return ret;
+
                        }
-                       return ret;
+                       catch (Exception ex)
+                       {
+                            Mozu.Core.Logging.LoggingService.LoggerFor<ThemeMetadataProvider>().Error("error parsing  " + x.FullPath, ex);
+                           return null;
+
+                       }
+                      
                    }
                }).Where(x => x != null).ToList();
 
