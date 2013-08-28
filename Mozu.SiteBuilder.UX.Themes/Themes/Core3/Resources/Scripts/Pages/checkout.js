@@ -61,5 +61,33 @@
             }
         });
 
+
+        //handle enter key in different focus areas
+        $checkoutView
+            .on('keypress', '#mz-shipping-address-panel input', function (e) {
+                if (e.which === 13) {
+                    checkoutViewModel.ShippingInfo.ShippingContact.nextStep();
+                    return false;
+                }
+            })
+            .on('keypress', '#mz-shipping-method-panel input', function (e) {
+                if (e.which === 13) {
+                    checkoutViewModel.ShippingInfo.nextStep();
+                    return false;
+                }
+            })
+            .on('keypress', '#mz-payment-information-panel input', function (e) {
+                if (e.which === 13) {
+                    checkoutViewModel.BillingInfo.nextStep();
+                    return false;
+                }
+            })
+            .on('keypress', '#mz-coupon-code, #mz-coupon-submit', function (e) {
+                if (e.which === 13) {
+                    checkoutViewModel.addCoupon();
+                    return false;
+                }
+            });
+
     });
 });

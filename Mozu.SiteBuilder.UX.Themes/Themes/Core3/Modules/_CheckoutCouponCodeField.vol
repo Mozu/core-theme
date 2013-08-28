@@ -1,6 +1,6 @@
 ﻿<div id="mz-coupon-code-container" class="mz-coupon-code-container" data-bind="css: { 'mz-submitting-coupon': submittingCoupon }">
     <label for="coupon-code">Coupon Code</label>
     <input type="text" id="mz-coupon-code" name="coupon-code" data-bind="value: couponCode, valueUpdate: 'afterkeydown'">
-    <button type="button" class="mz-submit-button" data-bind="click: addCoupon, enable: couponCode">Apply</button>
+    <button type="button" id="mz-coupon-submit" class="mz-submit-button" data-bind="click: addCoupon, enable: couponCode">Apply</button>
     {% include "Modules/LoadingBar" %}
 </div>
