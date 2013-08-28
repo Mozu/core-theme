@@ -428,7 +428,6 @@
   <ItemGroup>
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Mobile\Default.aspx" />
-    <None Include="51Degrees.mobi.config" />
     <None Include="App.config" />
     <Content Include="appSettings.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

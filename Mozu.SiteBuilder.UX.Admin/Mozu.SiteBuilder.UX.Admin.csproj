@@ -583,7 +583,6 @@
     <Compile Include="Navigation\CategoryNavigationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="App_Readme\glimpse.readme.txt" />
-    <Content Include="Mobile\Default.aspx" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
@@ -798,7 +797,6 @@
     <Content Include="Scripts\sass\src\view\order\widget\UnpackagedItems.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\form\field\Trigger.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Panel.scss" />
-    <Content Include="51Degrees.mobi.config" />
     <Content Include="Scripts\sass\src\overrides\window\MessageBox.scss" />
     <Content Include="Scripts\sass\src\overrides\window\Window.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />

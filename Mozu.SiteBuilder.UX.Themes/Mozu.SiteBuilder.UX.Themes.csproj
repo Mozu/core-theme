@@ -379,9 +379,7 @@
     </Compile>
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="buildcore.bat" />
-    <Content Include="51Degrees.mobi.config" />
     <None Include="Docs\Mozu_Themeing_Concepts.md" />
-    <Content Include="Mobile\Default.aspx" />
     <Content Include="Morrissey\src\tasks\buildtemptheme.js" />
     <Content Include="Morrissey\src\tasks\removeuntouchedfiles.js" />
     <Content Include="SampleThemes\helloWorld\MetaData\thumb.png" />
