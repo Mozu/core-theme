@@ -18,7 +18,9 @@
                         </label>
                     </div>
                 <!-- /ko -->
-
+                <!-- ko if: availableShippingMethods().length === 0 -->
+                    <p>Sorry, no shipping methods are available.</p>
+                <!-- /ko -->
                 <div class="mz-next-step">
                     {% include "Modules/LoadingBar" %}
                     <button type="button" class="mz-submit-button" data-bind="click: nextStep, text: nextButtonText">Next</button>
