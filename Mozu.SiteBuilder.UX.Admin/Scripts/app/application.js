@@ -95,7 +95,8 @@ Ext.define('Taco.Application',{
             'Ext.layout.container.Column',
             'Ext.layout.container.Accordion',
             'Ext.layout.container.Absolute',
-            'Ext.form.field.Radio'
+            'Ext.form.field.Radio',
+            'Taco.overrides.menu.Item'
     ],
     controllers: [
             'Analytics',

@@ -20,24 +20,9 @@
     display: inline-block;
     line-height: 1.0;
     padding-top: 2px;
-    @include icon-font("\E034");
     height: auto;
     position: static;
     width: auto;
-
-    &::after {
-        left: auto;
-        right: 0px;
-    }
-
-    &+ img {
-        background-color: $menu-background-color;
-        height: $menu-item-arrow-height;
-        right: 0px;
-        position: absolute;
-        top: 0px;
-        width: $menu-item-arrow-width;
-    }
 }
 
 .#{$prefix}menu-item-icon {
@@ -45,7 +30,11 @@
 }
 
 .#{$prefix}menu-item-arrow {
-    display: none;
+    background-image: none;
+    @include icon-font($glyph-arrowright);
+    left: auto;
+    position: absolute;
+    right: 0px;
 }
 
 .#{$prefix}menu-item-active {

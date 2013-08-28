@@ -588,6 +588,7 @@
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
+    <Content Include="Scripts\app\overrides\menu\Item.js" />
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
