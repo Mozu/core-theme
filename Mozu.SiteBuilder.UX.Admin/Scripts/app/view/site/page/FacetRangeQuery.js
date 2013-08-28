@@ -9,7 +9,14 @@ Ext.define('Taco.view.site.page.FacetRangeQuery', {
         this.startField.resetOriginalValue();
         this.endField.resetOriginalValue();
     },
-    getValue: function() {
+    setEmptyText: function (field, newText) {
+        this[field].emptyText = newText;
+        if (this[field].inputEl) {
+            this[field].inputEl.set({ 'placeholder': newText });
+            if (document.activeElement !== this[field].inputEl.dom) this[field].blur();
+        }
+    },
+    getValue: function () {
         var rqS = parseInt(this.startField.getValue()),
             rqE = parseInt(this.endField.getValue());
         if (isNaN(rqS) && isNaN(rqE)) return null;
