@@ -174,6 +174,6 @@ Ext.define('Taco.view.pendingchange.Cms', {
                     }
                 }
             }
-        ],
-    },
+        ]
+    }
 });
