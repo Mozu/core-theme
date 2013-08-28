@@ -16,7 +16,7 @@
         var product = new ProductModels.Product(productData);
 
         product.on('addedtocart', function (event, cartitem) {
-            if (cartitem && cartitem.data && cartitem.data.CartItemId) {
+            if (cartitem && cartitem.data && cartitem.data.Id) {
                 product.submitting(true);
                 window.location.href = "/cart";
             } else {

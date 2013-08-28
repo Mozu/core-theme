@@ -3,7 +3,7 @@
     var CartItem = KnockoutVM.extend({
         mozuType: 'cartitem',
         statics: {
-            CartItemId: '',
+            Id: '',
             Product: ''
         },
         observables: {
