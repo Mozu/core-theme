@@ -25,7 +25,7 @@ Ext.define('Taco.view.customers.Form', {
         });
 
         this.cls = this.cls + ' ' + Taco.baseCSSPrefix + 'customer-editor';
-        console.log(data);
+
         profile = Ext.create('Ext.panel.Panel', {
             width: 960,
             ui: 'subform',
@@ -40,18 +40,15 @@ Ext.define('Taco.view.customers.Form', {
                     cls: 'customer-info',
                     items: [{
                         xtype: 'component',
-                        id: 'tere2',
                         width: 320,
-                        //cls: 'customer-history',
                         renderData: data,
                         renderTpl: [
-                            '<div><h2>{[values.primaryFirstName]} {[values.primaryLastName]}</h2></div>',
-                            '<div><span><h2>{[values.primaryEmail]}</h2></span></div>'
+                            '<div class="info-name">{[values.primaryFirstName]} {[values.primaryLastName]}</div>',
+                            '<div class="info-email"><span><a href="">{[values.primaryEmail]}</a></span></div>'
                         ]
                     }, {
                             xtype: 'checkboxfield',
                             name: 'acceptsMarketing',
-                            //fieldLabel: 'Marketing',
                             boxLabel: 'Yes, keep me up to date on store news and specials'
                         }]
             }, {
@@ -60,7 +57,6 @@ Ext.define('Taco.view.customers.Form', {
                 cls: 'customer-settings',
                 items: [{
                     xtype: 'component',
-                    id: 'tere',
                     width: 320,
                     cls: 'customer-history',
                     renderData: data,
@@ -109,19 +105,24 @@ Ext.define('Taco.view.customers.Form', {
             }]
         });
 
-        contacts = Ext.create(/*'Ext.panel.Panel'*/'Taco.core.ux.EditContainer', {
+        contacts = Ext.create('Ext.panel.Panel', {
             width: 960,
             ui: 'subform',
             bodyPadding: '19 0',
             margin: '0 0 20 0',
             title: 'Billing Information',
+            cls: Taco.baseCSSPrefix + 'customer-billingInfo',
             items: [{
                 xtype: 'dataview',
                 cls: 'addresses',
                 itemSelector: '.address',
                 store: contactsStore,
+                width: 300,
                 tpl: [
-                    '<tpl for="."><div class="address">',
+                    '<tpl for=".">' +
+                    '<div class="address">',
+                    '<div class="edit"><a>Edit</a></div>',
+                    '<hr>',
                     '<div class="name">{firstName} {middleName} {lastName}</div>',
                     '<div class="address-line-1">{address1}</div>',
                     '<div class="address-line-2">{address2}</div>',
@@ -129,7 +130,6 @@ Ext.define('Taco.view.customers.Form', {
                     '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
                     '<div class="country">{email}</div>',
                     '<div class="phone">{homePhone}</div>',
-                    '<div class="edit">E</div>',
                     '</div></tpl>'
                 ],
                 listeners: {
@@ -146,19 +146,23 @@ Ext.define('Taco.view.customers.Form', {
             }]
         });
 
-        shippingInfo = Ext.create(/*'Ext.panel.Panel'*/'Taco.core.ux.EditContainer', {
+        shippingInfo = Ext.create('Ext.panel.Panel', {
             width: 960,
             ui: 'subform',
             bodyPadding: '19 0',
             margin: '0 0 20 0',
             title: 'Shipping Information',
+            cls: Taco.baseCSSPrefix + 'customer-shippingInfo',
             items: [{
                 xtype: 'dataview',
                 cls: 'addresses',
                 itemSelector: '.address',
+                width: 300,
                 store: contactsStore,
                 tpl: [
                     '<tpl for="."><div class="address">',
+                    '<div class="edit"><a>Edit</a></div>',
+                    '<hr>',
                     '<div class="name">{firstName} {middleName} {lastName}</div>',
                     '<div class="address-line-1">{address1}</div>',
                     '<div class="address-line-2">{address2}</div>',
@@ -166,7 +170,6 @@ Ext.define('Taco.view.customers.Form', {
                     '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
                     '<div class="country">{email}</div>',
                     '<div class="phone">{homePhone}</div>',
-                    '<div class="edit">E</div>',
                     '</div></tpl>'
                 ],
                 listeners: {
@@ -196,14 +199,14 @@ Ext.define('Taco.view.customers.Form', {
                 name: 'productName',
                 emptyText: 'Add a note',
                 width: '100%'
-            }, {
+            }/*, {
                 xtype: 'container',
                 cls: 'notes',
                 html: '<div class="date">March 19, 2012</div>'+
                     '<div><div class="time">08:50 am</div><div class="description">"Oh also... Make sure they get super customer service!"</div><div class="name">Palev Water</div></div>' +
                     '<div class="date"></div>'+
                     '<div><div class="time">08:45 pm</div><div class="description">"They actually hate birds."</div><div class="name">Palev Water</div></div>'
-            }]
+            }*/]
         });
 
         this.items = [profile, contacts, shippingInfo, orderGrid, notes];

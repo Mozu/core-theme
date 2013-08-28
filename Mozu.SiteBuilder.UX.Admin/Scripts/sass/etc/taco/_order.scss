@@ -15,7 +15,7 @@
       .#{$vprefix}editcontainer-header {
         border-bottom: 1px solid border-for($color-neutral-95); 
         margin-bottom: 30px;
-        padding-bottom: 20px;
+        padding-bottom: 20px; 
       }
       .#{$vprefix}editcontainer-title {
         font-size: px-to-rem(24);
@@ -70,6 +70,9 @@
       .customer-info {
         float: left;
         padding-top: 8px;
+        .info-name, .info-email{
+          margin-bottom: 11px;
+        }
       }
 
       .customer-history {
@@ -98,8 +101,7 @@
           font-size: px-to-rem(21);
           font-weight: normal;
           line-height: px-to-rem(30);
-          padding-bottom: 5px;
-          padding-left: 10px;
+          padding-bottom: 28px;
         }
       }
     }
@@ -127,6 +129,14 @@
     }
   }
 
+.#{$vprefix}customer-billingInfo,  .#{$vprefix}customer-shippingInfo{
+    .edit, hr{
+      margin-bottom: 10px;
+    }
+    .edit{
+      cursor: pointer;
+    }
+  }
   .#{$vprefix}order-status {
     color: $color-theme-base;
     font-size: px-to-rem(18);

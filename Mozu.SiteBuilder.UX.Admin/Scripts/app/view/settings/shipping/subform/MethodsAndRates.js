@@ -104,8 +104,8 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
             record: this.store.getById('ups'),
             title: 'UPS',
             providerId: 'ups',
-            configureCopy: '<img src="http://www.ups.com/img/glo_ups_brandmark.gif"/> <div>Please provide your UPS account credentials.</div>',
-            ratesCopy: '<img src="http://www.ups.com/img/glo_ups_brandmark.gif"/> <div>Please provide your UPS account credentials.</div>',
+            configureCopy: '<img src="http://www.ups.com/img/glo_ups_brandmark.gif"/>',
+            ratesCopy: '<img src="http://www.ups.com/img/glo_ups_brandmark.gif"/>',
             customFileds: [
                 {
                     xtype: 'textfield',
