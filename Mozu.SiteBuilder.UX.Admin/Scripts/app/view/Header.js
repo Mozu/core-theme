@@ -12,9 +12,9 @@ Ext.define('Taco.view.Header', {
 
     autoEl: { tag: 'header' },
     componentCls: Taco.baseCSSPrefix + 'viewport-header',
-    height: 106,
+    height: 105,
     hideMode: 'offsets',
-    layout: { type: 'anchor' },
+    layout: { type: 'vbox', align: 'stretch' },
 
     initComponent: function () {
         var me = this,
@@ -24,7 +24,7 @@ Ext.define('Taco.view.Header', {
             xtype: 'action',
             text: '',
             width: 56,
-            height: 51,
+            height: 50,
             cls: Taco.baseCSSPrefix + 'primary-menu-trigger',
             click: function () {
                 if (me.primaryMenu.isHidden() || !me.primaryMenu.rendered) {
@@ -77,7 +77,7 @@ Ext.define('Taco.view.Header', {
         }, {
             xtype: 'container',
             anchor: '100%',
-            height: 51,
+            height: 50,
             cls: Taco.baseCSSPrefix + 'viewport-nav',
             autoEl: { tag: 'nav' },
             layout: {

@@ -18,18 +18,9 @@
 
   /* HEADER */
 
-  .#{$vprefix}viewport-header {
-    &.#{$prefix}hide-offsets {
-      left: 0px !important;
-      top: -106px !important;
-      visibility: visible !important;
-    }
-  }
-
   .#{$vprefix}masthead {
     background-color: $color-neutral-20;
     border-top: 5px solid $color-theme-base;
-    bottom: 51px;
     color: $color-neutral-white;
     font-size: px-to-rem(14);
     left: 0px;

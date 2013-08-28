@@ -58,17 +58,37 @@ Ext.define('Taco.view.catalog.Index', {
                     alignRoundingMethod: 'ceil'
                 }
             },
+            dockedItems: [{
+                xtype: 'toolbar',
+                dock: 'bottom',
+                layout: {
+                    type: 'hbox',
+                    defaultMargins: '0 10'
+                },
+                items: [{
+                    xtype: 'component',
+                    html: 'this is a component'
+                }, {
+                    xtype: 'button',
+                    text: 'Ext Button'
+                }, {
+                    xtype: 'button',
+                    scale: 'medium',
+                    text: 'Medium button'
+                }, {
+                    xtype: 'button',
+                    ui: 'action-primary',
+                    scale: 'medium',
+                    text: 'Mozu Button'
+                }]
+            }],
             items: [{
-                xtype: 'taco.field.multiselect',
-                height: 300,
-                minWidth: 250,
-                fieldLabel: 'Multiselect One Hundred Thousand',
-                store: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
-            }, {
-                xtype: 'taco.field.multiselect',
-                height: 300,
-                fieldLabel: 'Multiselect Two',
-                store: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
+                xtype: 'component',
+                height: 240,
+                html: 'hello',
+                style: {
+                    backgroundColor: 'aliceblue'
+                }
             }]
         });
 

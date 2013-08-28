@@ -2,10 +2,7 @@
 
   .#{$vprefix}viewport-nav {
     background-color: $color-neutral-white;
-    bottom: 0px;
-    left: 0px;
     padding-right: 30px;
-    position: absolute;
 
     .#{$vprefix}primary-menu-trigger {
       border-right: 1px solid border-for($color-neutral-95);
@@ -33,9 +30,9 @@
         border-right: 1px solid border-for($color-neutral-95);
         color: $color;
         display: inline-block;
-        padding: 18px 15px 0px 50px;
+        padding: 20px 15px 0px 50px;
         @include icon-font($glyph-dashboard, 32px);
-        height: 51px;
+        height: 50px;
         vertical-align: top;
         width: auto;
 
@@ -68,7 +65,7 @@
 
       ul {
         display: inline-block;
-        height: 51px;
+        height: 50px;
         margin-left: 10px;
         vertical-align: top;
 
@@ -82,9 +79,9 @@
             color: $color;
             display: inline-block;
             font-size: px-to-rem(14);
-            height: 51px;
-            line-height: 1.5em;
-            padding: 18px 2px 12px;
+            height: 50px;
+            line-height: 1.0;
+            padding: 21px 2px 15px;
           }
 
           &.#{$vprefix}breadcrumb-item-selected {
@@ -139,7 +136,7 @@
 
   .#{$vprefix}primary-menu-ct {
     background-color: $color-neutral-20;
-    margin-top: 51px;
+    margin-top: 50px;
     opacity: 1;
     visibility: visible !important;
     @include outer-shadow(0.4, 2px, 3px, 3px);
