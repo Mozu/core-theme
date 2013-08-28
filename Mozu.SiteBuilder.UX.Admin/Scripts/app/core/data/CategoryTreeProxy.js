@@ -39,7 +39,8 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
                 }
                 operation.filters = filters;
                 if (callback) {
-                    me.read2(op.response.responseText, operation, callback, scope);
+                    
+                    me.read2( op.resopnse &&  op.response.responseText ? op.response.responseText: null, operation, callback, scope);
                 }
 
             };
@@ -61,27 +62,29 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
         var me = this,
             request = this.buildRequest(operation),
             fn = function () {
-                var response = {
-                        responseText: data
-                    },
+                var response = undefined  ,
                     hasSiteIdFilter = false,
                     jsonData,
                     siteId;
-                
-                Ext.each(operation.filters, function(filter) {
-                    if (filter.property == 'siteId') {
-                        siteId = filter.value;
+                if (data) {
+                    response = {
+                        responseText: data
+                    };
+                    Ext.each(operation.filters, function (filter) {
+                        if (filter.property == 'siteId') {
+                            siteId = filter.value;
+                        }
+                    });
+                    if (!siteId) {
+                        siteId = Taco.app.context.getSiteId();
                     }
-                });
-                if (!siteId) {
-                    siteId = Taco.app.context.getSiteId();
-                }
-                if (siteId) {
-                    jsonData = Ext.JSON.decode(data);
-                    jsonData.items = Ext.Array.filter(jsonData.items, function (item) { return item.siteId == siteId; });
-                    jsonData.items.sort(function(a, b) { return (a.sequence || 99) - (b.sequence || 99); });
-                    response.responseText = Ext.JSON.encode(jsonData);
+                    if (siteId) {
+                        jsonData = Ext.JSON.decode(data);
+                        jsonData.items = Ext.Array.filter(jsonData.items, function (item) { return item.siteId == siteId; });
+                        jsonData.items.sort(function (a, b) { return (a.sequence || 99) - (b.sequence || 99); });
+                        response.responseText = Ext.JSON.encode(jsonData);
 
+                    }
                 }
                 me.processResponse(true, operation, request, response, callback, scope);
         };

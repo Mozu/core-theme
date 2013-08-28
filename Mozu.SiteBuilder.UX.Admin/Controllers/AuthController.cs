@@ -62,8 +62,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public ActionResult FedLogin(string returnUrl)
         {
-        
-            var redir = _settings.LoginPath + "/to?redirectUrl=" + returnUrl;
+
+            var redir = _settings.LoginPath + "/to?scopeType=Tenant&redirectUrl=" + returnUrl;
             if (_settings.AppSettings( "useTenantDomainNames") !=  "true")
             {
                 redir += "&postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
@@ -85,10 +85,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public ActionResult Launchpad()
         {
-            var redir = _settings.LoginPath + "/to";
+            var redir = _settings.LoginPath + "/to?scopeType=Tenant";
             if (_settings.AppSettings("ReverseProxy") != "true")
             {
-                redir += "?postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
+                redir += "&postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
             }
             return Redirect(redir);
 
