@@ -418,11 +418,6 @@
     <Compile Include="Customers\User.cs" />
     <Compile Include="IStartUpTask.cs" />
     <Compile Include="Messages.cs" />
-    <Compile Include="Mobile\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Mobile\Default.aspx.designer.cs" />
     <Compile Include="Navigation\NavigationNode.cs" />
     <Compile Include="Navigation\NavigationNodeType.cs" />
     <Compile Include="Navigation\NavigationRuntimeExtensions.cs" />

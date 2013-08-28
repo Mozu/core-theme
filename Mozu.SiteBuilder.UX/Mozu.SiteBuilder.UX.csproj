@@ -423,13 +423,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Mobile\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Mobile\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Navigation\CategoryNavigationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tags\CMS\FieldTag.cs" />

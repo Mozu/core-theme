@@ -407,11 +407,6 @@
     <Compile Include="ClientRepositories\RestServiceClientTests.cs" />
     <Compile Include="ClientRepositories\UserRepositoryTests.cs" />
     <Compile Include="MappingTestFixture.cs" />
-    <Compile Include="Mobile\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Mobile\Default.aspx.designer.cs" />
     <Compile Include="Mvc\CMS\CmsServiceWrapperTests.cs" />
     <Compile Include="Mvc\CMS\ProvisionHelperTests.cs" />
     <Compile Include="Admin\Controllers\AuthControllerTests.cs" />
