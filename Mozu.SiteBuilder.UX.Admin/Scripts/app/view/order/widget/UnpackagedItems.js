@@ -136,7 +136,12 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
                     '</div>',
 
                     '<div class="shippingMethodRow">',
-                        ' Shipping Method: {shippingMethod} ',
+                        ' Shipping Method: ',
+                        '<tpl if="values.shippingMethod">',
+                            '{shippingMethod}',
+                        '<tpl else>',
+                            'Uses default for order',
+                        '</tpl>',
                     '</div>',
                 '</div>'
             
