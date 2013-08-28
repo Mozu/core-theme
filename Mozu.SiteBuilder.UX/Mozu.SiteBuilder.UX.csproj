@@ -435,7 +435,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="JS_SDK\banner.tpl" />
-    <Content Include="51Degrees.mobi.config" />
     <None Include="JS_SDK\README.md" />
     <None Include="JS_SDK\definewrapper.tpl" />
     <None Include="JS_SDK\package.json" />
@@ -453,7 +452,6 @@
     <Content Include="JS_SDK\src\context.js" />
     <Content Include="JS_SDK\src\init.js" />
     <Content Include="JS_SDK\tests\SDKSpec.js" />
-    <Content Include="Mobile\Default.aspx" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
