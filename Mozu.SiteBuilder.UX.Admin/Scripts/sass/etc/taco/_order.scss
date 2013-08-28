@@ -13,7 +13,7 @@
       padding: 39px;
 
       .#{$vprefix}editcontainer-header {
-        border-bottom: 1px solid border-for($color-neutral-95);
+        border-bottom: 1px solid border-for($color-neutral-95); 
         margin-bottom: 30px;
         padding-bottom: 20px;
       }
@@ -67,11 +67,25 @@
         vertical-align: top;
       }
 
+      .customer-info {
+        float: left;
+        padding-top: 8px;
+      }
+
       .customer-history {
         display: inline-block;
         margin-left: 230px;
         vertical-align: top;
-
+        .total-spent{
+          float: left;
+        }
+        .total-orders{
+          float: right;
+        }
+        .customer-since{
+          margin-top: px-to-rem(14);
+          clear: both;
+        }
         label {
           display: block;
           font-size: px-to-rem(14);
@@ -88,6 +102,28 @@
           padding-left: 10px;
         }
       }
+    }
+  }
+
+  .#{$vprefix}customer-notes {
+    .notes{
+      margin-top: 10px;
+
+      .date{
+        clear: both;
+      }
+      .time{
+        width: 20%;
+        float: left;
+      }
+      .description{
+        width: 65%;
+        float: left;
+      }
+      .name{
+        float: left;
+      }
+
     }
   }
 
