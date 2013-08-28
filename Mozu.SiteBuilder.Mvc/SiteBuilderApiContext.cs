@@ -58,7 +58,7 @@ namespace Mozu.SiteBuilder.Mvc
         {
             var accessToken = _authenticationHelper.GetAccessToken();
             LightweightUserClaims claims;
-            if (LightweightUserClaims.TryParse(accessToken, out claims))
+            if (!string.IsNullOrEmpty(accessToken) && LightweightUserClaims.TryParse(accessToken, out claims))
             {
                 //todo validate tenant and site 
                 this.UserClaims = claims;
