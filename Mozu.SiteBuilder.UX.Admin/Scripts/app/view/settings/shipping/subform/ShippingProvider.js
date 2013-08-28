@@ -69,11 +69,11 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                 this.configFields,
                 {
                     xtype: 'container',
-                    padding: '10 10 10 10',
+                    padding: '40 40 40 40',
                     items: [
                         {
-                            height: 400,
-                            width: 300,
+                            height: 340,
+                            width: 240,
                             html:  me.configureCopy
                            
                         },
@@ -117,11 +117,11 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                 this.ratesSelect,
                 {
                     xtype: 'container',
-                    padding: '10 10 10 10',
+                    padding: '40 40 40 40',
                     items: [
                         {
-                            height: 400,
-                            width: 300,
+                            height: 340,
+                            width: 240,
                             html:me.ratesCopy
                             
                         },
