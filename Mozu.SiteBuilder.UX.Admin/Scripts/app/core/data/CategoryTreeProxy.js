@@ -40,7 +40,7 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
                 operation.filters = filters;
                 if (callback) {
                     
-                    me.read2( op.resopnse &&  op.response.responseText ? op.response.responseText: null, operation, callback, scope);
+                    me.read2(op.response && op.response.responseText ? op.response.responseText : null, operation, callback, scope);
                 }
 
             };
