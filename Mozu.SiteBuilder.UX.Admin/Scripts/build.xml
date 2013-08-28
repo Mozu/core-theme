@@ -46,6 +46,16 @@
           <arg value="icons/*.png" />
         </exec>
       </target>
+
+      <target name="-after-build">
+        <local name="build.localepath" />
+        <property name="build.localepath" location="${build.dir}/locale"/>
+        <echo>Copying locale files into the locale path</echo>
+        <mkdir dir="${build.localepath}" />
+        <copy todir="${build.localepath}" overwrite="true">
+          <fileset dir="${basedir}/ext/locale" includes="**/*" />
+        </copy>
+      </target>
   
     <!--
     The following targets can be provided to inject logic before and/or after key steps
