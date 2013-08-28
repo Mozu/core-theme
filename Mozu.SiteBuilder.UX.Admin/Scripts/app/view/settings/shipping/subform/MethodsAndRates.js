@@ -14,7 +14,7 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
     enableStoreSyncTasks: true,
     initComponent: function () {
         var me = this;
-
+        
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingCarrierSettings');
 
 
@@ -53,8 +53,8 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
 
             title: 'FedEx',
             providerId: 'fedex',
-            configureCopy: '<img src="http://images.fedex.com/images/c/t1/gh/logo-header-fedex.png"/> <div>Please provide your FedEx account credentials.Fusce accumsan aliquet erat, vel bibendum erat luctus in. Vivamus vulputate mollis nibh, at auctor dui condimentum at. Donec sem diam, accumsan non venenatis a, mattis at neque. Morbi hendrerit elementum quam sed congue. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas</div>',
-            ratesCopy: '<img src="http://images.fedex.com/images/c/t1/gh/logo-header-fedex.png"/> <div>Please provide your FedEx account credentials.Fusce accumsan aliquet erat, vel bibendum erat luctus in. Vivamus vulputate mollis nibh, at auctor dui condimentum at. Donec sem diam, accumsan non venenatis a, mattis at neque. Morbi hendrerit elementum quam sed congue. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas</div>',
+            configureCopy: '<img src="http://images.fedex.com/images/c/t1/gh/logo-header-fedex.png"/> <div>Please provide your FedEx account credentials.</div>',
+            ratesCopy: '<img src="http://images.fedex.com/images/c/t1/gh/logo-header-fedex.png"/> <div>Please provide your FedEx account credentials.</div>',
             customFileds: [
                 {
                     xtype: 'textfield',
@@ -104,8 +104,8 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
             record: this.store.getById('ups'),
             title: 'UPS',
             providerId: 'ups',
-            configureCopy: '<img src="http://www.ups.com/img/glo_ups_brandmark.gif"/> <div>Please provide your UPS account credentials.Fusce accumsan aliquet erat, vel bibendum erat luctus in. Vivamus vulputate mollis nibh, at auctor dui condimentum at. Donec sem diam, accumsan non venenatis a, mattis at neque. Morbi hendrerit elementum quam sed congue. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas</div>',
-            ratesCopy: '<img src="http://www.ups.com/img/glo_ups_brandmark.gif"/> <div>Please provide your UPS account credentials.Fusce accumsan aliquet erat, vel bibendum erat luctus in. Vivamus vulputate mollis nibh, at auctor dui condimentum at. Donec sem diam, accumsan non venenatis a, mattis at neque. Morbi hendrerit elementum quam sed congue. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas</div>',
+            configureCopy: '<img src="http://www.ups.com/img/glo_ups_brandmark.gif"/> <div>Please provide your UPS account credentials.</div>',
+            ratesCopy: '<img src="http://www.ups.com/img/glo_ups_brandmark.gif"/> <div>Please provide your UPS account credentials.</div>',
             customFileds: [
                 {
                     xtype: 'textfield',
@@ -137,8 +137,8 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
             record: this.store.getById('usps'),
             title: 'USPS',
             providerId: 'usps',
-            configureCopy: '<img src="https://www.usps.com/ContentTemplates/assets/images/global/usps_logo.gif"/> <div>Please provide your USPS account credentials.Fusce accumsan aliquet erat, vel bibendum erat luctus in. Vivamus vulputate mollis nibh, at auctor dui condimentum at. Donec sem diam, accumsan non venenatis a, mattis at neque. Morbi hendrerit elementum quam sed congue. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas</div>',
-            ratesCopy: '<img src="https://www.usps.com/ContentTemplates/assets/images/global/usps_logo.gif"/> <div>Please provide your USPS account credentials.Fusce accumsan aliquet erat, vel bibendum erat luctus in. Vivamus vulputate mollis nibh, at auctor dui condimentum at. Donec sem diam, accumsan non venenatis a, mattis at neque. Morbi hendrerit elementum quam sed congue. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas</div>',
+            configureCopy: '<img src="https://www.usps.com/ContentTemplates/assets/images/global/usps_logo.gif"/> <div>Please provide your USPS account credentials.</div>',
+            ratesCopy: '<img src="https://www.usps.com/ContentTemplates/assets/images/global/usps_logo.gif"/> <div>Please provide your USPS account credentials.</div>',
             customFileds: [
                 {
                     xtype: 'textfield',
