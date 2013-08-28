@@ -6,8 +6,10 @@
 Ext.define('Taco.view.product.option.Form', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.optionproductform',
-    cls: 'taco-product-options',
+    cls: 'taco-attribute-form',
     width: '100%',
+
+    ui: 'subform-subform',
 
     requires: [
         'Taco.view.product.option.VariationGrid',
@@ -91,11 +93,27 @@ Ext.define('Taco.view.product.option.Form', {
     buildOptions: function () {
         var items = [];
 
-        this.productTypeOptions.each(function (ptAttribute) {
-            items.push({
-                xtype: 'component',
-                html: ptAttribute.get('attributeName')
-            });
+        // this.productTypeOptions.each(function (ptAttribute) {
+        //     items.push({
+        //         xtype: 'component',
+        //         html: ptAttribute.get('attributeName')
+        //     });
+        // });
+
+        items.push({
+            xtype: 'dataview',
+            store: this.productTypeOptions,
+            disableSelection: true,
+            autoEl: {
+                tag: 'ul',
+                cls: 'options-list'
+            },
+            itemSelector: '.option-item',
+            tpl: [
+                '<tpl for=".">',
+                    '<li class="option-item">{attributeName}</li>',
+                '</tpl>'
+            ]
         });
 
         items.push({

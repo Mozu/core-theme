@@ -1,4 +1,4 @@
-/* PANEL UI DEFINITIONS */
+/* SUBFORM PANEL UI DEFINITIONS */
 
 @include extjs-panel-ui(
     $ui-label: 'subform',
@@ -52,7 +52,7 @@
     $ui-wrap-border-width: 0px
 );
 
-/* PANEL UI RULES */
+/* SUBFORM PANEL UI RULES */
 
 .#{$prefix}panel-header-subform {
     line-height: 1.0;
@@ -60,4 +60,78 @@
 
 .#{$prefix}panel-body-subform {
     border-top-color: $color-neutral-75;
+}
+
+
+/* SUBFORM SUBFORM PANEL UI */
+
+@include extjs-panel-ui(
+    $ui-label: 'subform-subform',
+
+    $ui-border-color: $color-neutral-white,
+    $ui-border-radius: 0px,
+    $ui-border-width: 1px,
+    $ui-padding: 0px 19px 19px,
+
+    $ui-header-color: $color-neutral-20,
+    $ui-header-font-family: $font-family,
+    $ui-header-font-size: 16px,
+    $ui-header-font-weight: bold,
+    $ui-header-line-height: 24px,
+    $ui-header-border-color: $color-neutral-75,
+    $ui-header-border-width: 0px,
+    $ui-header-border-style: solid,
+    $ui-header-background-color: $color-neutral-white,
+    $ui-header-background-gradient: null,
+    $ui-header-inner-border-color: $color-neutral-75,
+    $ui-header-inner-border-width: 0px,
+    $ui-header-text-padding: 0px,
+    $ui-header-text-transform: uppercase,
+    $ui-header-padding: 5px 0px 11px,
+    $ui-header-icon-width: 16px,
+    $ui-header-icon-height: 16px,
+    $ui-header-icon-spacing: 16px,
+    $ui-header-icon-background-position: 0px 0px,
+    $ui-header-glyph-color: $color-neutral-20,
+    $ui-header-glyph-opacity: 1,
+
+    $ui-tool-spacing: 16px,
+    $ui-tool-background-image: $panel-tool-background-image,
+
+    $ui-body-color: $color-neutral-20,
+    $ui-body-border-color: $color-neutral-white,
+    $ui-body-border-width: 1px 0px,
+    $ui-body-border-style: solid,
+    $ui-body-background-color: $color-neutral-white,
+    $ui-body-font-size: 16px,
+    $ui-body-font-weight: normal,
+
+    $ui-background-stretch-top: $panel-background-stretch-top,
+    $ui-background-stretch-bottom: $panel-background-stretch-bottom,
+    $ui-background-stretch-right: $panel-background-stretch-right,
+    $ui-background-stretch-left: $panel-background-stretch-left,
+
+    // See the docs above
+    $ui-include-border-management-rules: false,
+    $ui-wrap-border-color: $color-neutral-75,
+    $ui-wrap-border-width: 0px
+);
+
+/* SUBFORM SUBFORM PANEL UI RULES */
+
+.#{$prefix}panel-header-subform-subform {
+    line-height: 1.0;
+
+    .#{$prefix}panel-header-text-container {
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+}
+
+.#{$prefix}panel-body-subform-subform {
+
+    $color-subform-subform: lighten($color-neutral-95, 4%);
+
+    background-color: $color-subform-subform;
+    border-top-color: border-for($color-subform-subform);
 }
