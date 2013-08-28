@@ -91,6 +91,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     {
                         xtype: "button",
                         ui: "action",
+                        scale: "medium",
                         text: 'Discard Changes',
                         hidden: !me.isDraftMode,
                         margin: "0px 0px 0px 0px",
@@ -106,6 +107,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     {
                         xtype: "button",
                         ui: "action",
+                        scale: "medium",
                         text: 'Close',
                         onClick: function (button) {
                             me.close();

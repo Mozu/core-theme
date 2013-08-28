@@ -50,6 +50,11 @@
 
 // this is the default readonly grid;
 .taco-orderform-orderitemgrid{
+	background-color:#fff;    
+
+
+
+
 	.x-column-header-align-right .x-column-header-text {
 		margin-right: 0px;
 	}
@@ -58,9 +63,17 @@
 	.taco-grid-row-action-trigger.x-item-disabled{
 		visibility:hidden
 	}
+	
+
+	// adding a temporary hover state for the link buttons since they don't have one currently
+	.taco-toolbar-link.x-btn-link-medium-over, .taco-toolbar-link.x-btn-link-toolbar-medium-over {
+		.x-btn-inner{
+			text-decoration:underline;		
+		}	    
+	}
 
 
-	background-color:#fff;    
+	
      
 	.emptyGridMessage{
 		padding:10px;
