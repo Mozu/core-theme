@@ -12,11 +12,13 @@ Ext.define('Taco.view.site.Toolbox', {
     layout: { type: 'fit' },
     
     disableTabs: function() {
-        this.tabPanel.tabBar.disable();
+        //disable the settings toolbar button
+        this.tabPanel.down('[isTabBar]').items.getAt(2).disable();
     },
 
-    enableTabs: function() {
-        this.tabPanel.tabBar.enable();
+    enableTabs: function () {
+        //enable the settings toolbar button
+        this.tabPanel.down('[isTabBar]').items.getAt(2).enable();
     },
 
     initComponent: function () {
@@ -30,7 +32,7 @@ Ext.define('Taco.view.site.Toolbox', {
             manageHeight: false,
             cls: Taco.baseCSSPrefix + 'toolbox-tabpanel',
             tabBar: {
-                disabled: true,
+                disabled: false,
                 plain: true
             }
         });
@@ -47,6 +49,7 @@ Ext.define('Taco.view.site.Toolbox', {
             toolbox: this,
             parentPanel: this.tabPanel,
             index: 2,
+            steve:3,
             title: 'Settings',
             manageHeight: false
         });
