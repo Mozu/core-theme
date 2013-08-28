@@ -35,6 +35,11 @@
         line-height: 16px;
       }
 
+      .#{$prefix}btn-glyph {
+        color: $color-neutral-75;
+        -webkit-font-smoothing: antialiased;
+      }
+
       .#{$prefix}btn-arrow-right,
       .#{$prefix}btn-split-right {
         &::after {

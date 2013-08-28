@@ -17,7 +17,9 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
     initComponent: function () {
         var me = this;
 
-        this.searchBox = Ext.create('Taco.view.navigation.GlobalSearchBox');
+        this.searchBox = Ext.create('Taco.view.navigation.GlobalSearchBox', {
+            hidden: true
+        });
 
         this.items = [{
             xtype: 'button',
@@ -61,7 +63,17 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             handler: function () {
                 Taco.app.refreshStyle();
             }
-        }, 
+        }, {
+            xtype: 'button',
+            ui: 'link',
+            scale: 'medium',
+            text: '',
+            glyph: 'XE010@mozicons',
+            handler: Ext.bind(function (btn) {
+                this.searchBox.show();
+                btn.hide();
+            }, this)
+        },
             this.searchBox
         ];
 
