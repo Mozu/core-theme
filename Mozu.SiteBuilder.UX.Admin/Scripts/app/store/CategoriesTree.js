@@ -20,5 +20,41 @@ Ext.define('Taco.store.CategoriesTree', {
         //clearFilters: true,
         //clearSort: true,
         //autoLoad: true
+    },
+    load: function (options) {
+        var me = this;
+
+        options = options || {};
+
+        if (typeof options == 'function') {
+            options = {
+                callback: options
+            };
+        }
+
+        options = Ext.apply({
+            siteId: me.siteId
+        }, options);
+
+        return me.callParent([options]);
+    },
+    reload: function (options) {
+
+        var me = this;
+
+        options = options || {};
+
+        if (typeof options == 'function') {
+            options = {
+                callback: options
+            };
+        }
+
+
+        options = Ext.apply({
+            siteId: siteId
+        }, options);
+
+        return me.callParent([options]);
     }
    });

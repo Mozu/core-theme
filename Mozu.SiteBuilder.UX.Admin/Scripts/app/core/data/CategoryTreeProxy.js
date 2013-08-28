@@ -62,10 +62,10 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
         var me = this,
             request = this.buildRequest(operation),
             fn = function () {
-                var response = undefined  ,
+                var response = undefined,
                     hasSiteIdFilter = false,
                     jsonData,
-                    siteId;
+                    siteId = operation.siteId;
                 if (data) {
                     response = {
                         responseText: data
