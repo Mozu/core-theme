@@ -37,10 +37,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     
     initComponent: function(eOpts) {
         var me = this;
-
         
-
-
         me.cls = 'orderform-detail-totalRow x-grid-row';
         
         var tdCls = "x-grid-table x-grid-with-row-lines";
@@ -95,8 +92,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
 
                 '<tr class="row-group-start">',
-                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">Shipping ({shippingMethodName}):</div></td>',
-                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{shippingCost:usMoney}</div></td>',
+                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">Shipping & Handling ({shippingMethodName}):</div></td>',
+                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{shippingTotal:usMoney}</div></td>',
                 '</tr>',
                 
                 
