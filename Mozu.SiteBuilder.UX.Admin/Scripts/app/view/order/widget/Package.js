@@ -61,7 +61,7 @@ Ext.define('Taco.view.order.widget.Package', {
             weight: 0,
             shippingMethod: "",
             trackingNumber: null,
-            shippedDate: "",
+            shipDate: "",
             
             // billing contact info
             firstName: "",
@@ -78,7 +78,7 @@ Ext.define('Taco.view.order.widget.Package', {
         var me = this;        
         
         me.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping-package'].join(' ');
-
+        
         // initialize the header;
         me.header = me.getHeaderTemplate();
         
@@ -141,7 +141,7 @@ Ext.define('Taco.view.order.widget.Package', {
                         ' {shipmentStatus} ',
                         '<tpl if="values.shipmentStatus==\'Shipped\'">',
                             '<span class="seperator">|</span>',
-                            'Shipped Date: {shippedDate}',
+                            'Shipped Date: {shipDate:date("F d Y g:ia")}',
                         '<tpl else>',
                             '<span class="seperator">|</span>',
                             '<a class="shipmentAction" shipmentAction="deletePackage">Delete</a>',
@@ -181,7 +181,12 @@ Ext.define('Taco.view.order.widget.Package', {
                         '</tpl>',
                     '</div>',
                     '<div class="shippingMethodRow">',
-                        ' Shipping Method: {shippingMethod} ',
+                        ' Shipping Method: ',
+                        '<tpl if="values.shippingMethod">',
+                            '{shippingMethod}',
+                        '<tpl else>',
+                            'Order default',
+                        '</tpl>',
                     '</div>',
                 '<tpl if="values.showVisibilityToggle">',
                     '<div class="visibilityToggle">',
