@@ -1,6 +1,6 @@
 
 
-function Update-ScaleUnit-In-AppSettings ([string]$ConfigFilePath, [int] $scaleUnitId )
+function Update-ScaleUnit-In-AppSettings ([string]$ConfigFilePath, [string] $scaleUnitId )
 {
 	$xml = New-Object XML
 	$xml.Load($ConfigFilePath)
