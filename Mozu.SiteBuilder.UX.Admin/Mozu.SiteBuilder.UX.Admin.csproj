@@ -573,13 +573,6 @@
     <Compile Include="Helpers\ProductHelpers\PropertyGuy.cs" />
     <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
-    <Compile Include="Mobile\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Mobile\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
     <Compile Include="MockServices\AbstractInMemoryResourceApiClient.cs" />
     <Compile Include="MockServices\InMemoryProductTypeApiClient.cs" />
     <Compile Include="MockServices\InMemoryAttributeWebApiClient.cs" />
