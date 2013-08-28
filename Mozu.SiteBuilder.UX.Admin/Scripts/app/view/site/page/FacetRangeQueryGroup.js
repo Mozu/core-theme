@@ -8,6 +8,44 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
     xtype: 'taco.rangequerygroup',
     defaultType: 'taco.rangequery',
     mixins: ['Ext.form.field.Field'],
+
+    isDescending: function(rqs) {
+        rqs = rqs || this.getValue(),
+        allNull = true,
+        isDesc = Ext.Array.every(rqs, function(rq, ix) {
+            if (rq.start === null && rq.end === null) return true;
+            allNull = false;
+            var nextrq = rqs[ix+1], prevrq = rqs[ix-1];
+            if (!nextrq) return rq.end === null || rq.start > rq.end;
+            if (!prevrq) return rq.start === null || rq.start > rq.end;
+            return rq.start > rq.end && rq.end >= nextrq.start;
+        });
+        return !allNull && isDesc;
+    },
+
+    isAscending: function(rqs) {
+        rqs = rqs || this.getValue(),
+        allNull = true,
+        isAsc = Ext.Array.every(rqs, function(rq, ix) {
+            if (rq.start === null && rq.end === null) return true;
+            allNull = false;
+            var nextrq = rqs[ix+1], prevrq = rqs[ix-1];
+            if (!nextrq) return rq.end === null || rq.start < rq.end;
+            if (!prevrq) return rq.start === null || rq.start < rq.end;
+            return rq.start < rq.end && rq.end <= nextrq.start;
+        });
+        return !allNull && isAsc;
+    },
+
+    isValid: function() {
+        var rqs = this.getValue(),
+            lastIndex = rqs.length - 1;
+        return Ext.Array.every(rqs, function (rq, ix) {
+            return (ix === 0 || !isNaN(rq.start))
+                && (ix === lastIndex || !isNaN(rq.end));
+        }) && (this.isDescending(rqs) || this.isAscending(rqs))
+    },
+
     getValue: function() {
         var ret = [];
         this.getVisibleFields().each(function (rq, i) {
@@ -48,23 +86,37 @@ Ext.define('Taco.view.site.page.FacetRangeQueryGroup', {
         this.callParent(arguments);
         this.numRanges = 5;
         this.itemsToShowOrHide = this.items.getRange(2, 5); // the four middle ones.
-        this.on('select', function (numRangesPicker) {
-            var newNum = numRangesPicker.getValue();
-            if (newNum != this.numRanges)
-                this.setNumRanges(newNum);
-        }, this);
+        this.on({
+            'select': function (numRangesPicker) {
+                var newNum = numRangesPicker.getValue();
+                if (newNum != this.numRanges)
+                    this.setNumRanges(newNum);
+            },
+            'change': function () {
+                if (this.isDescending()) {
+                    this.firstField.setEmptyText("startField", "Above");
+                    this.lastField.setEmptyText("endField", "Below");
+                } else {
+                    this.firstField.setEmptyText("startField", "Below");
+                    this.lastField.setEmptyText("endField", "Above");
+                }
+            },
+            scope: this
+        });
         this.items.each(function (item) {
             me.relayEvents(item, ['change']);
         });
         this.enableBubble('heightchange');
+        this.firstField = this.items.first();
+        this.lastField = this.items.last();
     },
     items: [
-        {startFieldEmptyText: 'Below', isEnd: true},
+        {},
         {},
         {hidden: true},
         {hidden: true},
         {},
         {},
-        {endFieldEmptyText: 'Above', isEnd: true}
+        {}
     ]
 });
