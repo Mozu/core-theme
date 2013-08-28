@@ -36,14 +36,19 @@ Ext.define('Taco.view.customers.Form', {
             items: [{
                     xtype: 'container',
                     width: 340,
-                    cls: 'customer-settings',
+                    bodyPadding: '19 0',
+                    cls: 'customer-info',
                     items: [{
-                            xtype: 'textfield',
-                            width: 320,
-                            readOnly: true,
-                            name: 'userId',
-                            fieldLabel: 'User ID'
-                        }, {
+                        xtype: 'component',
+                        id: 'tere2',
+                        width: 320,
+                        //cls: 'customer-history',
+                        renderData: data,
+                        renderTpl: [
+                            '<div><h2>{[values.primaryFirstName]} {[values.primaryLastName]}</h2></div>',
+                            '<div><span><h2>{[values.primaryEmail]}</h2></span></div>'
+                        ]
+                    }, {
                             xtype: 'checkboxfield',
                             name: 'acceptsMarketing',
                             //fieldLabel: 'Marketing',
@@ -184,34 +189,20 @@ Ext.define('Taco.view.customers.Form', {
             bodyPadding: '19 0',
             margin: '0 0 20 0',
             title: 'Notes',
+            cls: Taco.baseCSSPrefix + 'customer-notes',
             items: [{
-                xtype: 'dataview',
-                cls: 'addresses',
-                itemSelector: '.address',
-                store: contactsStore,
-                tpl: [
-                    '<tpl for="."><div class="address">',
-                    '<div class="name">{firstName} {middleName} {lastName}</div>',
-                    '<div class="address-line-1">{address1}</div>',
-                    '<div class="address-line-2">{address2}</div>',
-                    '<div class="address-line-3">{address3}</div>',
-                    '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
-                    '<div class="country">{email}</div>',
-                    '<div class="phone">{homePhone}</div>',
-                    '<div class="edit">E</div>',
-                    '</div></tpl>'
-                ],
-                listeners: {
-                    itemclick: function (view, record, item, index, e) {
-                        var modal;
-
-                        if (e.getTarget('.edit', 10)) {
-                            modal = Ext.create('Taco.shared.view.modal.Address', {
-                                record: record
-                            });
-                        }
-                    }
-                }
+                xtype: 'textfield',
+                minLength: 3,
+                name: 'productName',
+                emptyText: 'Add a note',
+                width: '100%'
+            }, {
+                xtype: 'container',
+                cls: 'notes',
+                html: '<div class="date">March 19, 2012</div>'+
+                    '<div><div class="time">08:50 am</div><div class="description">"Oh also... Make sure they get super customer service!"</div><div class="name">Palev Water</div></div>' +
+                    '<div class="date"></div>'+
+                    '<div><div class="time">08:45 pm</div><div class="description">"They actually hate birds."</div><div class="name">Palev Water</div></div>'
             }]
         });
 
