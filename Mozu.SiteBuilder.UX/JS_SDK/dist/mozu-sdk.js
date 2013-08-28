@@ -1200,12 +1200,12 @@
                     },
                     cartitem: {
                         defaults: {
-                            template: "{+CartService}current/items/{CartItemId}",
-                            shortcutParam: "CartItemId"
+                            template: "{+CartService}current/items/{Id}",
+                            shortcutParam: "Id"
                         },
                         "update-quantity": {
                             verb: "PUT",
-                            template: "{+CartService}current/items{/CartItemId,quantity}",
+                            template: "{+CartService}current/items{/Id,quantity}",
                             shortcutParam: "quantity",
                             includeSelf: true,
                             noBody: true
