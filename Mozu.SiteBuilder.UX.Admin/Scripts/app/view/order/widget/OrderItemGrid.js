@@ -82,6 +82,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         {
                             xtype: "button",
                             scale: "medium",
+                            ui:"link",
                             cls: "taco-toolbar-link",
                             text: "Order Level Adjustment",
                             handler: function() {
@@ -92,6 +93,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         {
                             xtype: "button",
                             scale: "medium",
+                            ui: "link",
                             cls: "taco-toolbar-link",
                             text: "Add Coupon",
                             handler: function() {
@@ -102,6 +104,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         {
                             xtype: "button",
                             scale: "medium",
+                            ui: "link",
                             cls: "taco-toolbar-link",
                             text: "Add Product",
                             handler: function() {
@@ -302,7 +305,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     }, {
                         //xtype: "taco.button",
                         xtype: "button",
-                        //ui: "action",
+                        ui: "action",
                         scale:"medium",
                         text: "Discard Changes",
                         handler: function () {
@@ -312,7 +315,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     }, {
                         //xtype: "taco.button",
                         xtype: "button",
-                        //ui: "action",
+                        ui: "action",
                         scale: "medium",
                         text: "Edit Details",
                         style: "margin-left:5px;",
@@ -674,7 +677,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 },
                 {
                     xtype: "button",
-                    scale:"medium",
+                    scale: "medium",
+                    ui:"action",
                     text:"Apply",
                     itemId: "applyadjustmentField",
                     style: "margin:0px 20px 0px 10px;",
@@ -737,7 +741,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             {
                 text: "X",
                 xtype: "button",
-                scale:"medium",
+                scale: "medium",
+                ui:"action",
                 style: "min-width:30px;margin-left:10px",
                 handler: function(button, evt) {
                     var tb = button.up('toolbar');
