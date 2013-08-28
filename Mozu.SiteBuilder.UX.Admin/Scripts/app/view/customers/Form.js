@@ -109,7 +109,7 @@ Ext.define('Taco.view.customers.Form', {
             }]
         });
 
-        contacts = Ext.create('Ext.panel.Panel', {
+        contacts = Ext.create(/*'Ext.panel.Panel'*/'Taco.core.ux.EditContainer', {
             width: 960,
             ui: 'subform',
             bodyPadding: '19 0',
@@ -146,7 +146,7 @@ Ext.define('Taco.view.customers.Form', {
             }]
         });
 
-        shippingInfo = Ext.create('Ext.panel.Panel', {
+        shippingInfo = Ext.create(/*'Ext.panel.Panel'*/'Taco.core.ux.EditContainer', {
             width: 960,
             ui: 'subform',
             bodyPadding: '19 0',
