@@ -37,7 +37,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public JsonDCResult LogOut()
         {
-
+            var user = LightweightUserClaims.CreateForAnonymousShopper(_apiContext.TenantId, _apiContext.SiteId.Value);
+            _authenticationHelper.SaveAuthTicket(new UserAuthTicket()
+                                                     {
+                                                         AccessToken= user.ToAccessToken(),
+                                                         User = new Mozu.Core.Api.Contracts.UserProfile() ,
+                                                         RefreshToken = null
+                                                     });
+            _apiContext.SetUser(user);
             //_authenticationHelper.LogOut(_apiContext);
             //_cookieProvider.SaveResponseCookie("order", new HttpCookie("")); // uggh, but it works
             return new JsonDCResult()

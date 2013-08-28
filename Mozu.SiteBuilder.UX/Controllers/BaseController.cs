@@ -12,10 +12,13 @@ using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using System.Web.Routing;
 using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Autofac;
+using Mozu.Core.Api.Client;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Checkout;
+using Mozu.User.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Controllers
 {
@@ -23,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
     {
         private ILifetimeScope _lifetimeScope;
         protected bool  SuppressMissingContextRedirect = false;
-
+        private IAuthenticationHelper _authenticationHelper;
 
         public BaseController() //( IComponentContext container)
         {
@@ -34,7 +37,12 @@ namespace Mozu.SiteBuilder.UX.Controllers
         //tbd move to an action filter
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-           
+            if (!filterContext.IsChildAction && this.NeedsTokenRefresh())
+            {
+                AsyncRefreshToken().Wait();
+            }
+
+
             if (!SuppressMissingContextRedirect && !filterContext.IsChildAction && (this.ApiContext.TenantId < 0 || !this.ApiContext.SiteId.HasValue))
             {
                 var settings = LifetimeScope.Resolve<ISettings>();
@@ -51,23 +59,66 @@ namespace Mozu.SiteBuilder.UX.Controllers
             get { return _lifetimeScope; }
             set { _lifetimeScope = value; }
         }
-        
-    //public IComponentContext ServiceLocator
-        //{
-        //    get;
-        //    set;
-        //}
 
 
+
+      
      
+        public IAuthenticationHelper AuthHelper
+        {
+            get
+            {
+                if (_authenticationHelper == null)
+                {
+                    _authenticationHelper = LifetimeScope.Resolve<IAuthenticationHelper>();
+                }
+                return _authenticationHelper;
+            }
+        } 
 
         public async Task<bool> AsyncInitData()
         {
             
             CmsHelper helper = new CmsHelper(this.CmsService);
             var ret =await helper.InitCmsPageContext(SiteContext.PageContext.CmsContext);
+
+            
             return ret;
 
+        }
+
+        //public virtual Task<ServiceClientResponse<Mozu.Core.Api.Contracts.UserAuthTicket>> RefreshUserAuthTicket(string refreshToken)
+        //{
+        //    var relpath = "refresh";
+        //    return Handler.SendAsync<Mozu.Core.Api.Contracts.UserAuthTicket, System.String>("PUT", relpath, refreshToken, ServiceId, Options);
+        //}
+        public Task<bool> AsyncRefreshToken()
+        {
+
+            string token = AuthHelper.GetAuthTicket().RefreshToken;
+            var ticketClient = LifetimeScope.Resolve<Mozu.User.Contracts.Clients.IAuthTicketWebApiClient>().CloneWithoutUserClaims();
+            //var task = ticketClient.RefreshUserAuthTicket(token);
+            var task = ticketClient.Handler.SendAsync<Mozu.Core.Api.Contracts.UserAuthTicket>("PUT", "refresh?refreshToken=" + token, ((AuthTicketWebApiClient)ticketClient).ServiceId, ticketClient.Options);
+
+            task.ConfigureAwait(false);
+            var retTask =task.ContinueWith(serviceClientResponse =>
+                {
+                    var resp = serviceClientResponse.Result;
+                    if (resp.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        var ticket = resp.ReadAsSync();
+                        var lwuc = LightweightUserClaims.Parse(ticket.AccessToken);
+                        this.AuthHelper.SaveAuthTicket(ticket);
+                        this.ApiContext.SetUser(lwuc);
+                    }
+                    return true;
+                });
+            return retTask;
+
+        }
+        public bool NeedsTokenRefresh()
+        {
+            return this.ApiContext != null && this.ApiContext.UserClaims != null && !this.ApiContext.UserClaims.IsAnonymous && ( this.ApiContext.UserClaims.Expiration- DateTime.Now  ).TotalMinutes < 5 && AuthHelper.GetAuthTicket() != null ;
         }
 
 
@@ -88,9 +139,13 @@ namespace Mozu.SiteBuilder.UX.Controllers
 
         protected override void Execute(RequestContext requestContext)
         {
+           
            // var isEditMode = ;
             bool isEditModeFlg;
             
+
+
+
             if ( requestContext.HttpContext!= null  &&
                 bool.TryParse(requestContext.HttpContext.Request ["isEditMode"] as string, out isEditModeFlg) && isEditModeFlg)
             {
@@ -115,15 +170,15 @@ namespace Mozu.SiteBuilder.UX.Controllers
             }
         }
 
-        private IApiContext _apiContext;
+        private ISiteBuilderApiContext _apiContext;
 
-        public IApiContext ApiContext
+        public ISiteBuilderApiContext ApiContext
         {
             get
             {
                 if (_apiContext == null)
                 {
-                    _apiContext = LifetimeScope.Resolve<IApiContext>();
+                    _apiContext = LifetimeScope.Resolve<ISiteBuilderApiContext >();
                 }
                 return _apiContext;
             }

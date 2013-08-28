@@ -17,6 +17,6 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
         void SaveAuthTicket(UserAuthTicket ticket);
 
-      
+        UserAuthTicket GetAuthTicket();
     }
 }

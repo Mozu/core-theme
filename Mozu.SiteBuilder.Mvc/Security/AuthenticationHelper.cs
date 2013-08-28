@@ -54,29 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
 
 
-        //public void LogOut(IApiContext context)
-        //{
-        //    ((ISiteBuilderApiContext) context).SetUser(null);
-        //    SaveAuthTicket(null);
-
-        //}
-
-        //public void SaveAuthTicket(UserAuthTicket ticket)
-        //{
-        //    var cookie = ticket.ToCookie(CookieName);
-        //    CookieProvider.SaveResponseCookie(CookieName , cookie );
-            
-        //}
-
-        //public UserAuthTicket GetAuthTicket()
-        //{
-        //    var cookie = CookieProvider.GetRequestCookie(CookieName);
-        //    if (cookie != null)
-        //    {
-        //        return cookie.ToTicket();
-        //    }
-        //    return null;
-        //}
+        
 
         void IAuthenticationHelper.SaveAccessToken(string accessToken)
         {
@@ -123,6 +101,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         {
             var cookie = new HttpCookie(CookieName);
             cookie["accessToken"] = ticket.AccessToken ;
+            cookie["refreshToekn"] = ticket.RefreshToken;
             cookie["profileToken"] = new Mozu.Core.UserProfile()
                                     {
                                         EmailAddress = ticket.User.EmailAddress,
@@ -132,13 +111,29 @@ namespace Mozu.SiteBuilder.Mvc.Security
             CookieProvider.SaveResponseCookie(CookieName, cookie);
 
 
-            cookie = new HttpCookie(RefershCookieName);
-            cookie["Token"] = ticket.RefreshToken;
-            CookieProvider.SaveResponseCookie(RefershCookieName, cookie);
+          
          
         }
 
 
-    
+
+
+
+        UserAuthTicket IAuthenticationHelper.GetAuthTicket()
+        {
+            var cookie = CookieProvider.GetRequestCookie(CookieName);
+           
+            if (cookie != null && cookie.HasKeys)
+            {
+                
+                return new UserAuthTicket()
+                                            {
+                                                AccessToken = cookie["accessToken"] ,
+                                                RefreshToken = cookie["refreshToekn"]
+                                            };
+               
+            }
+            return null;
+        }
     }
 }
