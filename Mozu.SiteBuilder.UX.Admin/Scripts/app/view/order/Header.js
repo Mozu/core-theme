@@ -17,7 +17,7 @@ Ext.define('Taco.view.order.Header', {
         '</div>',
         '<div class="taco-order-detail-header-section customer-data">',
             '<label>Customer</label>',
-            '<h2>{billingContact.firstName} {billingContact.lastName}</h2>',
+            '<h2><a href="\#customers/edit/{customerId}\">{billingContact.firstName} {billingContact.lastName}</a></h2>',
             '<div class="company">{billingContact.companyName}</div>',
         '<tpl if="billingContact.address1">',
             '<div class="address">{billingContact.address1} {billingContact.cityOrTown}, {billingContact.state} {billingContact.zipCode} {billingContact.countryCode}</div>',
@@ -55,5 +55,18 @@ Ext.define('Taco.view.order.Header', {
         });
 
         this.callParent(arguments);
+        
+        this.on({
+            click: {
+                fn: function (e) {
+                    if (e.target.href && e.target.href > 2 && e.target.href.indexOf('#') > -1) {
+                        Taco.core.StateManager.attemptNavigate(e.target.href.substring(e.target.href.indexOf('#')+1));
+                        e.stopEvent();
+                    }
+                },
+                element: 'el',
+                scope: this
+            }
+        })
     }
 });

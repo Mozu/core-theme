@@ -82,7 +82,7 @@ Ext.define('Taco.view.customers.Form', {
                 }]
             }]
         });
-        
+       
         
         var orders = this.record.getOrders();
         orders.load();
@@ -91,10 +91,15 @@ Ext.define('Taco.view.customers.Form', {
             ui: 'subform',
             bodyPadding: '19 0',
             margin: '0 0 20 0',
+            disableSelection: true,
             title: 'Order History',
             items: [{
                 xtype: 'grid',
-                //store: Taco.store.OrderHistory,
+                listeners: {
+                    itemclick:function (grid,record) {
+                        Taco.core.StateManager.attemptNavigate('/orders/edit/' + record.getId());
+                    }
+                },
                 store: orders,
                 columns: [
                     { text: 'Order Id', dataIndex: 'orderNumber', flex: 1 },
@@ -102,6 +107,7 @@ Ext.define('Taco.view.customers.Form', {
                     { text: 'Order Amount', dataIndex: 'total', flex: 1 },
                     { text: 'Status', dataIndex: 'paymentStatus', flex: 1 }
                 ],
+                
             }]
         });
 
