@@ -1,4 +1,4 @@
-﻿define(["jquery", "modules/knockout-plus", "modules/knockout-viewmodel", "modules/models-product", "modules/function-throttler"], function ($, ko, KnockoutVM, ProductModels, throttle) {
+﻿define(["jquery", "modules/knockout-plus", "modules/knockout-viewmodel", "modules/models-product"], function ($, ko, KnockoutVM, ProductModels) {
 
     function sanitize(str) {
         return str ? str.replace(/[\s~'":]+/g, '-') : '';

@@ -420,7 +420,7 @@
     <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\pci-temp.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\cart-monitor.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-faceting.js" />
-    <Content Include="Themes\Core3\Resources\Scripts\Modules\function-throttler.js" />
+    <Content Include="Themes\Core3\Resources\Scripts\Modules\function-debouncer.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-myaccount.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-address.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\models-customer.js" />

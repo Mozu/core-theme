@@ -1,4 +1,4 @@
-﻿define(["shim!vendor/jquery-cookie[jquery=jQuery]>jQuery", "knockout", "modules/knockout-viewmodel", "i18n!nls/messages", "modules/function-throttler"], function ($, ko, KnockoutVM, genericMsg, throttle) {
+﻿define(["shim!vendor/jquery-cookie[jquery=jQuery]>jQuery", "knockout", "modules/knockout-viewmodel", "i18n!nls/messages", "modules/function-debouncer"], function ($, ko, KnockoutVM, genericMsg, debounce) {
 
     var CartItem = KnockoutVM.extend({
         mozuType: 'cartitem',
@@ -32,7 +32,17 @@
             self.parentCart.submitting(false);
         });
         var origQuantity = this.Quantity(), newValue;
-        this.Quantity.subscribe(throttle(function (val) {
+
+        var syncQuantity = debounce(function (val) {
+                self.updateQuantity(newValue).then(function () {
+                    return self.parentCart.get();
+                }).then(function () {
+                    self.parentCart.submitting(false);
+                });
+                origQuantity = newValue;
+        }, 900);
+
+        this.Quantity.subscribe(function (val) {
             newValue = val;
             if (parseInt(val) === 0) {
                 self.Quantity(origQuantity);
@@ -40,14 +50,9 @@
             }
             if (origQuantity !== newValue) {
                 self.parentCart.submitting(true);
-                self.updateQuantity(newValue).then(function () {
-                    return self.parentCart.get();
-                }).then(function () {
-                    self.parentCart.submitting(false);
-                });
-                origQuantity = newValue;
+                syncQuantity(val);
             }
-        }, 500, false));
+        });
     });
 
     var Cart = KnockoutVM.extend({
