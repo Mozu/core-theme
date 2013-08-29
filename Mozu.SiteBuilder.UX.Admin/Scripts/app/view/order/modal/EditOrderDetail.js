@@ -152,7 +152,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         orderModel.load(orderId, {
             params: { 'draft': me.isDraftMode },
             failure: function (record, operation) {
-                //do something if the load failed
+                Taco.app.fireEvent('setmessage', "Error loading order", 'error');
                 me.setLoading(false, this.body);
             },
             success: function (record, operation) {

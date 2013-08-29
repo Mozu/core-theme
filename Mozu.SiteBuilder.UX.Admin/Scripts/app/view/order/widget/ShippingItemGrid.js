@@ -635,11 +635,10 @@ weight: 2
             },
             
             success: function (response) {
-                // success handling here
-
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
+                    Taco.app.fireEvent('setmessage', "Error moving items", 'error');
                     Taco.app.viewPort.setLoading(false);
                     return;
                 }
@@ -647,7 +646,9 @@ weight: 2
                 this.record.reload();
             },
             failure: function (response) {
-                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error moving items";
+                Taco.app.fireEvent('setmessage', msg, 'error');
                 Taco.app.viewPort.setLoading(false);
             },
             scope: this
@@ -708,16 +709,17 @@ weight: 2
                     Taco.app.viewPort.setLoading(false);
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {
-                        // service didnt' return data properly
+                        Taco.app.fireEvent('setmessage', "Error changing shipping method", 'error');
                         return;
                     }
                     // reload the record
                     this.record.reload();
                 },
                 failure: function (response) {
-                    // error handling here
+                    var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error changing shipping method";
+                    Taco.app.fireEvent('setmessage', msg, 'error');
                     Taco.app.viewPort.setLoading(false);
-
                 },
                 scope: this
             };
@@ -762,10 +764,9 @@ weight: 2
 
             success: function (response) {
                 // success handling here
-
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    // service didnt' return data properly
+                    Taco.app.fireEvent('setmessage', "Error marking as shipped", 'error');
                     Taco.app.viewPort.setLoading(false);
                     return;
                 }
@@ -773,7 +774,9 @@ weight: 2
                 this.record.reload();
             },
             failure: function (response) {
-                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error marking as shipped";
+                Taco.app.fireEvent('setmessage', msg, 'error');
                 Taco.app.viewPort.setLoading(false);
             },
             scope: this
@@ -804,7 +807,6 @@ weight: 2
         if (data.shipmentId === null || data.shipmentId === undefined)
         {
             me.setLoading(true);
-            newWindow = window.open('/admin/Scripts/ext/resources/themes/images/default/grid/loading.gif');
             Ext.Ajax.request( {
                 url: '/admin/app/order/shipping/package/prepareshipment',
                 method: 'POST',
@@ -812,13 +814,22 @@ weight: 2
                     orderId: data.orderId,
                     packageIds: [ data.id ]
                 },
-                success: function(data) {
+                success: function (response) {
                     me.setLoading(false);
-                    me.record.reload();
-                    newWindow.location = labelUrl;
                     
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        Taco.app.fireEvent('setmessage', "Error viweing shipping label", 'error');
+                        return;
+                    }
+                    me.record.reload();
+                    newWindow = window.open('/admin/Scripts/ext/resources/themes/images/default/grid/loading.gif');
+                    newWindow.location = labelUrl;
                 },
-                failure:function(){
+                failure: function (response) {
+                    var json = Ext.decode(response.responseText, true),
+                      msg = (json && json.Message) ? json.Message : "Error moving items";
+                    Taco.app.fireEvent('setmessage', msg, 'error');
                     me.setLoading(false);
                 }
             });

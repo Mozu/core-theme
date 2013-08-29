@@ -89,7 +89,7 @@ Ext.define('Taco.model.OrderItem', {
             "useNull": true
         },
         
-        
+
         
         // not currently in json
         {
