@@ -144,8 +144,22 @@
 	        <tr class="mz-item-row">
 	            <td>{{ item.Product.Name }}</td>
 	            <td>{{ item.Quantity }}</td>
-	            <td>{{ item.Product.Price.Price|currency }}</td>
-	            <td>{{ item.Total|currency }}</td>
+	            <td>
+					{% if item.UnitPrice.BaseAmount != item.UnitPrice.DiscountedAmount %}
+					<div class="mz-price-amt mz-strikethrough">
+					{{ item.UnitPrice.BaseAmount|currency }}
+					</div>
+					{% endif %}
+					{{ item.UnitPrice.DiscountedAmount|currency }}
+				</td>
+	            <td>
+					{% if item.Subtotal != item.Total %}
+					<div class="mz-price-amt mz-strikethrough">
+					{{ item.Subtotal|currency }}
+					</div>
+					{% endif %}
+					{{ item.Total|currency }}
+				</td>
 	        </tr>
             {% endfor %}
 	    </tbody>
@@ -163,22 +177,39 @@
                 </td>
 	            <td colspan="2">
 	                <table>
+						{% for discount in Model.OrderDiscounts %}
+						{% if not discount.Excluded %}
+                        <tr>
+                            <td>{{ discount.Discount.Name }}:</td>
+	                        <td>-{{ discount.Impact|currency }}</td>
+                        </tr>
+						{% endif %}
+						{% endfor %}
 	                    <tr>
-	                        <td>Subtotal:</td>
-	                        <td>{{ Model.Subtotal|currency }}</td>
-	                    </tr>
-	                    <tr>
-	                        <td>Coupon/Discount:</td>
-	                        <td>{{ Model.DiscountTotal|currency }}</td>
+	                        <td>Sub-Total:</td>
+	                        <td>{{ Model.DiscountedTotal|currency }}</td>
 	                    </tr>
 	                    <tr>
 	                        <td>Tax:</td>
 	                        <td>{{ Model.TaxTotal|currency }}</td>
 	                    </tr>
+						{% for discount in Model.ShippingDiscounts %}
+						{% if not discount.Excluded %}
+	                    <tr>
+							<td>{{ discount.Discount.Discount.Name }} (Save {{ discount.Discount.Impact|currency }})</td>
+						</tr>
+						{% endif %}
+						{% endfor %}
 	                    <tr>
 	                        <td>Shipping & Handling:</td>
 	                        <td>{{ Model.ShippingTotal|currency }}</td>
 	                    </tr>
+						{% if Model.HandlingAmount != 0 %}
+	                    <tr>
+	                        <td>Additional Handling:</td>
+	                        <td>{{ Model.HandlingAmount|currency }}</td>
+	                    </tr>
+						{% endif %}
 	                    <tr>
 	                        <td>Total:</td>
 	                        <td>{{ Model.Total|currency }}</td>
