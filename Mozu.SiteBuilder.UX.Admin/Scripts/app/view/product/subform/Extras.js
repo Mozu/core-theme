@@ -71,7 +71,7 @@ Ext.define('Taco.view.product.subform.Extras', {
     },
 
     addSaveTasks: function (tasks) {
-        console.log('shit fuck');
+        console.log('error on addSaveTasks');
         this.callParent(arguments);
     },
 
