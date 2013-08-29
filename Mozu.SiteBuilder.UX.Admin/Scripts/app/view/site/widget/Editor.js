@@ -2,8 +2,9 @@
  * @class Taco.view.site.widget.Editor
  */
 Ext.define('Taco.view.site.widget.Editor', {
-    extend: 'Taco.core.ux.modal.ContentWithActions',
+    extend: 'Taco.core.ux.window.WindowWithActions',
     autoSize: true,
+    scale: 'large',
     /**
      * @cfg {String} configName
      * The name of the widget config on the CMS Document
