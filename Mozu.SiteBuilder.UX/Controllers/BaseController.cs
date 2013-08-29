@@ -38,11 +38,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
         //tbd move to an action filter
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (!filterContext.IsChildAction && this.NeedsTokenRefresh())
-            {
-                AsyncRefreshToken().Wait();
-            }
-
+         
 
             if (!SuppressMissingContextRedirect && !filterContext.IsChildAction && (this.ApiContext.TenantId < 0 || !this.ApiContext.SiteId.HasValue))
             {
@@ -88,53 +84,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
 
         }
 
-        //public virtual Task<ServiceClientResponse<Mozu.Core.Api.Contracts.UserAuthTicket>> RefreshUserAuthTicket(string refreshToken)
-        //{
-        //    var relpath = "refresh";
-        //    return Handler.SendAsync<Mozu.Core.Api.Contracts.UserAuthTicket, System.String>("PUT", relpath, refreshToken, ServiceId, Options);
-        //}
-        public Task<bool> AsyncRefreshToken()
-        {
-
-            string token = AuthHelper.GetAuthTicket().RefreshToken;
-            var ticketClient = LifetimeScope.Resolve<Mozu.User.Contracts.Clients.IAuthTicketWebApiClient>().CloneWithoutUserClaims();
-            //var task = ticketClient.RefreshUserAuthTicket(token);
-            var task = ticketClient.Handler.SendAsync<Mozu.Core.Api.Contracts.UserAuthTicket>("PUT", "refresh?refreshToken=" + token, ((AuthTicketWebApiClient)ticketClient).ServiceId, ticketClient.Options);
-
-            task.ConfigureAwait(false);
-            var retTask =task.ContinueWith(serviceClientResponse =>
-                {
-                    var resp = serviceClientResponse.Result;
-                    if (resp.ResponseMessage.IsSuccessStatusCode)
-                    {
-                        var ticket = resp.ReadAsSync();
-                        var lwuc = LightweightUserClaims.Parse(ticket.AccessToken);
-                        this.AuthHelper.SaveAuthTicket(ticket);
-                        this.ApiContext.SetUser(lwuc);
-                    }
-                    else
-                    {
-                        ClearAccessToken();
-                    }
-                    return true;
-                });
-            return retTask;
-
-        }
-        public void ClearAccessToken()
-        {
-            var uc = LightweightUserClaims.CreateForAnonymousShopper(this.ApiContext.TenantId, this.ApiContext.SiteId.Value );
-            var extingTicket = AuthHelper.GetAuthTicket() ?? new UserAuthTicket();
-            extingTicket.AccessToken = uc.ToAccessToken();
-
-            this.AuthHelper.SaveAuthTicket(extingTicket);
-            this.ApiContext.SetUser(uc);
-        }
-        
-        public bool NeedsTokenRefresh()
-        {
-            return this.ApiContext != null && this.ApiContext.UserClaims != null && !this.ApiContext.UserClaims.IsAnonymous && ( this.ApiContext.UserClaims.Expiration- DateTime.Now  ).TotalMinutes < 5 && AuthHelper.GetAuthTicket() != null ;
-        }
+    
 
 
         protected override IAsyncResult BeginExecute(RequestContext requestContext, AsyncCallback callback, object state)
