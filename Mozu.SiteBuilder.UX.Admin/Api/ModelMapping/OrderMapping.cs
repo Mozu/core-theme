@@ -284,7 +284,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ShippingMethodName, op => op.MapFrom(dc => dc.ShippingMethodName))
                 .ForMember(x => x.TrackingNumber, op => op.MapFrom(dc => dc.TrackingNumber))
 
-                .ForMember(x => x.PackagingType, op => op.MapFrom(dc => dc.PackagingType))
+                .ForMember(x => x.PackagingType, op => op.MapFrom(dc => String.IsNullOrEmpty(dc.PackagingType) ? "CUSTOM" : dc.PackagingType))
                 .ForMember(x => x.Height, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Height : null))
                 .ForMember(x => x.Length, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Length : null))
                 .ForMember(x => x.Width, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Width : null))
