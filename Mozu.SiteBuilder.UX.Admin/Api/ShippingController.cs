@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/shipping", SuppressDescriptorGeneration = true)]
     public class ShippingController : BaseController
     {
-        private readonly IShippingClassWebApiClient _shippingClassClient;
+        
 
         private readonly ICarrierConfigurationWebApiClient _carrierConfigurationWebApiClient;
         private readonly IShippingSettingsWebApiClient _siteShippingSettingsClient;
