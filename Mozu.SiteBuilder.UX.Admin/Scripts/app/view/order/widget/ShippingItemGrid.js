@@ -801,9 +801,10 @@ weight: 2
             data = grid.packageData;
             
             labelUrl = '/admin/app/order/shipping/package/label?orderId=' + data.orderId + '&packageId=' + data.id;
-        
+            
+            // need to open the window immediately after the click so the popup blocker doesn't suppress it. 
+            newWindow = window.open('/admin/Scripts/ext/resources/themes/images/default/grid/loading.gif');
        
-
         if (data.shipmentId === null || data.shipmentId === undefined)
         {
             me.setLoading(true);
@@ -823,7 +824,7 @@ weight: 2
                         return;
                     }
                     me.record.reload();
-                    newWindow = window.open('/admin/Scripts/ext/resources/themes/images/default/grid/loading.gif');
+                    
                     newWindow.location = labelUrl;
                 },
                 failure: function (response) {
