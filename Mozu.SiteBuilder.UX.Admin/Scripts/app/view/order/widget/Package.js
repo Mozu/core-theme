@@ -250,7 +250,7 @@ Ext.define('Taco.view.order.widget.Package', {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    // service didnt' return data properly
+                    Taco.app.fireEvent('setmessage', "error deleting package", 'error');
                     Taco.app.viewPort.setLoading(false);
                     return;
                 }
@@ -258,7 +258,9 @@ Ext.define('Taco.view.order.widget.Package', {
                 this.record.reload();
             },
             failure: function (response) {
-                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error deleting package";
+                Taco.app.fireEvent('setmessage', msg, 'error');
                 Taco.app.viewPort.setLoading(false);
             },
             scope: this
