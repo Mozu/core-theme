@@ -97,6 +97,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                     // add item name, etc to packageItems
                     order.Packages.SelectMany(p => p.Items).Each(packageItem => FillPackageItemDetails(packageItem, order));
+
+                    // add weight to each package
+                    order.Packages.Each(p => { if (p.Weight == null) p.Weight = p.Items.Sum(i => i.Weight.HasValue ? i.Weight : 0); });
                 })
                 .AfterMap((dc, order) =>
                 {
@@ -290,11 +293,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
                 .ForMember(x => x.ShipDate, op => op.MapFrom(dc => dc.AuditInfo.UpdateDate))
-                .AfterMap((dc, package) => {
-                    package.TotalQuantity = package.Items.Sum(i => i.Quantity);
-                    if (package.Weight == null)
-                        package.Weight = package.Items.Sum(i => i.Weight.HasValue ? i.Weight : 0);
-                })
+                .ForMember(x => x.TotalQuantity, op => op.MapFrom(dc => dc.Items.Sum(i => i.Quantity)))
                 ;
         }
 
