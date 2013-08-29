@@ -221,6 +221,7 @@ Ext.define('Taco.core.ux.form.Form', {
     resetOriginalValues: function (tasks) {
 
         Ext.each(this.forms, function (form) {
+            if (form.isDestroyed) return;
             form.resetOriginalValues();
         });
 
@@ -336,6 +337,7 @@ Ext.define('Taco.core.ux.form.Form', {
 
     addChildSaveTasks: function (tasks) {
         Ext.each(this.forms, function (form) {
+            if (form.isDestroyed) return;
             form.addSaveTasks(tasks);
         }, this);
 
@@ -393,6 +395,7 @@ Ext.define('Taco.core.ux.form.Form', {
     beforeSave: function () {
         var res = true;
         Ext.each(this.forms, function (form) {
+            if (form.isDestroyed) return;
             if (form.beforeSave() === false) {
                 res = false;
                 return false;
@@ -443,6 +446,7 @@ Ext.define('Taco.core.ux.form.Form', {
 
         if (!noCascade) {
             Ext.each(this.forms, function (form) {
+                if (form.isDestroyed) return;
                 form.loadForm(recordArg, noCascadeArg);
             });
         }
@@ -496,6 +500,7 @@ Ext.define('Taco.core.ux.form.Form', {
         this.getForm().updateRecord(this.record);
 
         Ext.each(this.forms, function (form) {
+            if (form.isDestroyed) return;
             form.update();
         });
     },
@@ -508,6 +513,8 @@ Ext.define('Taco.core.ux.form.Form', {
         }
 
         Ext.each(this.forms, function (form) {
+            if (form.isDestroyed) return;
+
             if (form.isDirty()) {
                 isDirty = true;
                 return false;
