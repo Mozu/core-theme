@@ -229,25 +229,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcPackages = dcPackageTasks.Select(t => t.Result.ReadAsSync()).ToList();
 
             // ensure the packages are in a valid state
-            foreach (var packageDc in dcPackages)
-            {
-                // do not operate on already-shipped packages
-                if (!String.IsNullOrEmpty(packageDc.ShipmentId))
-                    continue;
-
-                // hard-code a packaging type
-                packageDc.PackagingType = "CARRIER_BOX_SMALL";
-                
-                // hard-code package dimensions
-                packageDc.Measurements = new CommerceRuntime.Contracts.Commerce.PackageMeasurements { 
-                    Weight = new Core.Api.Contracts.Measurement { Unit = "lbs", Value = 2m },
-                    Height = null,
-                    Length = null,
-                    Width = null
-                };
-
-                await _orderWebApiClient.UpdatePackage(args.OrderId, packageDc.Id, packageDc);
-            }
+            // foreach (var packageDc in dcPackages)
+            // {
+            //     // do not operate on already-shipped packages
+            //     if (!String.IsNullOrEmpty(packageDc.ShipmentId))
+            //         continue;
+            // 
+            //     // hard-code a packaging type
+            //     packageDc.PackagingType = "CUSTOM";
+            //     
+            //     // hard-code package dimensions
+            //     packageDc.Measurements = new CommerceRuntime.Contracts.Commerce.PackageMeasurements { 
+            //         Weight = packageDc.Measurements.Weight,
+            //         Height = null,
+            //         Length = null,
+            //         Width = null
+            //     };
+            // 
+            //     await _orderWebApiClient.UpdatePackage(args.OrderId, packageDc.Id, packageDc);
+            // }
 
             var unshippedPackageIds = dcPackages.Where(p => String.IsNullOrEmpty(p.ShipmentId)).Select(p => p.Id).ToList();
             if (unshippedPackageIds.Count == 0)
