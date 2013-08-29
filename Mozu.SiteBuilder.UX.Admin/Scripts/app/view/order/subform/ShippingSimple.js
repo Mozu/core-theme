@@ -75,7 +75,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             },
             listeners: {
                 select: function () {
-                    this.sendShitToFoster();
+                    this.setShippingInfo();
                 },
                 scope: this
             }
@@ -124,7 +124,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             listeners: {
                 savesuccess: function (modal, record) {
                     this.contactData = record.data;
-                    this.sendShitToFoster();
+                    this.setShippingInfo();
                     this.fireEvent('orderchange');
                 },
                 scope: this
@@ -132,7 +132,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
         });
     },
 
-    sendShitToFoster: function () {
+    setShippingInfo: function () {
         Ext.Ajax.request({
             url: '/admin/app/order/setshippinginfo',
             method: 'POST',
