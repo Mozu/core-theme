@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using Mozu.Content.Contracts;
 using Mozu.Core;
+using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
@@ -111,11 +112,25 @@ namespace Mozu.SiteBuilder.UX.Controllers
                         this.AuthHelper.SaveAuthTicket(ticket);
                         this.ApiContext.SetUser(lwuc);
                     }
+                    else
+                    {
+                        ClearAccessToken();
+                    }
                     return true;
                 });
             return retTask;
 
         }
+        public void ClearAccessToken()
+        {
+            var uc = LightweightUserClaims.CreateForAnonymousShopper(this.ApiContext.TenantId, this.ApiContext.SiteId.Value );
+            var extingTicket = AuthHelper.GetAuthTicket() ?? new UserAuthTicket();
+            extingTicket.AccessToken = uc.ToAccessToken();
+
+            this.AuthHelper.SaveAuthTicket(extingTicket);
+            this.ApiContext.SetUser(uc);
+        }
+        
         public bool NeedsTokenRefresh()
         {
             return this.ApiContext != null && this.ApiContext.UserClaims != null && !this.ApiContext.UserClaims.IsAnonymous && ( this.ApiContext.UserClaims.Expiration- DateTime.Now  ).TotalMinutes < 5 && AuthHelper.GetAuthTicket() != null ;
