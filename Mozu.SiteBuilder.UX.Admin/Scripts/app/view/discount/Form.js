@@ -56,7 +56,11 @@ Ext.define('Taco.view.discount.Form', {
                     ["LineItem", "LineItem"],
                     ["Order", "Order"]
                 ]
-            })
+            }),
+            listeners: {
+                change: me.setFieldVisibility,
+                scope: me
+            }
         });
 
         me.amountTypeInput = Ext.create('Ext.form.field.ComboBox', {
@@ -301,16 +305,16 @@ Ext.define('Taco.view.discount.Form', {
                 labelSeparator: ''
             },
             items: [{
-                    name: 'startDate',
-                    fieldLabel: "Starts",
-                    emptyText: 'Now',
-                    value: this.record.get('startDate')
-                }, {
-                    name: 'expirationDate',
-                    fieldLabel: "Ends",
-                    emptyText: 'Never',
-                    value: this.record.get('expirationDate')
-                }
+                name: 'startDate',
+                fieldLabel: "Starts",
+                emptyText: 'Now',
+                value: this.record.get('startDate')
+            }, {
+                name: 'expirationDate',
+                fieldLabel: "Ends",
+                emptyText: 'Never',
+                value: this.record.get('expirationDate')
+            }
             ]
         });
         me.requiresCouponInput = Ext.create('Ext.form.field.Checkbox', {
@@ -342,6 +346,7 @@ Ext.define('Taco.view.discount.Form', {
                 me.couponCodeInput,
                 {
                     xtype: 'secondarybutton',
+                    hidden: !(me.record.get('couponCode') || me.record.get('requiresCoupon')),
                     text: 'Random',
                     click: function() {
                         var randomizer = Ext.data.IdGenerator.get('uuid'),
@@ -437,11 +442,14 @@ Ext.define('Taco.view.discount.Form', {
 
 
     setFieldVisibility:function () {
-        var me = this;
-        me.includeAllProductsInput.setVisible(me.targetTypeInput.getValue() != 'Shipping');
+        var me = this,
+            nonOrderScope = me.scoptTypeInput.getValue() != 'Order';
+
+        me.includeAllProductsInput.setVisible(me.targetTypeInput.getValue() != 'Shipping' && nonOrderScope);
+//        console.log(me.scoptTypeInput.
         me.shippingList.setVisible(me.targetTypeInput.getValue() == 'Shipping');
-        me.categoriesBox.setVisible(!me.includeAllProductsInput.getValue());
-        me.productsBox.setVisible(!me.includeAllProductsInput.getValue());
+        me.categoriesBox.setVisible(!me.includeAllProductsInput.getValue() && nonOrderScope);
+        me.productsBox.setVisible(!me.includeAllProductsInput.getValue() && nonOrderScope);
         
     },
     
