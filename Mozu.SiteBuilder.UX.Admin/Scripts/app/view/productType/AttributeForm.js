@@ -8,7 +8,6 @@
         align: 'top',
         defaultMargins: '0 20 0 0'
     },
-    bodyPadding: 20,
     containerWidth: 150,
     ignoreParentFormTracking: true,
 

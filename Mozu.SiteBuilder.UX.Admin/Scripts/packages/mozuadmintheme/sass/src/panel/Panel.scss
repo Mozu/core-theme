@@ -65,10 +65,12 @@
 
 /* SUBFORM SUBFORM PANEL UI */
 
+$color-neutral-98: rgb(249, 249, 249);
+
 @include extjs-panel-ui(
     $ui-label: 'subform-subform',
 
-    $ui-border-color: $color-neutral-white,
+    $ui-border-color: $color-neutral-75,
     $ui-border-radius: 0px,
     $ui-border-width: 1px,
     $ui-padding: 0px 19px 19px,
@@ -81,7 +83,7 @@
     $ui-header-border-color: $color-neutral-75,
     $ui-header-border-width: 0px,
     $ui-header-border-style: solid,
-    $ui-header-background-color: $color-neutral-white,
+    $ui-header-background-color: $color-neutral-98,
     $ui-header-background-gradient: null,
     $ui-header-inner-border-color: $color-neutral-75,
     $ui-header-inner-border-width: 0px,
@@ -99,10 +101,10 @@
     $ui-tool-background-image: $panel-tool-background-image,
 
     $ui-body-color: $color-neutral-20,
-    $ui-body-border-color: $color-neutral-white,
+    $ui-body-border-color: $color-neutral-98,
     $ui-body-border-width: 1px 0px,
     $ui-body-border-style: solid,
-    $ui-body-background-color: $color-neutral-white,
+    $ui-body-background-color: $color-neutral-98,
     $ui-body-font-size: 16px,
     $ui-body-font-weight: normal,
 
@@ -126,12 +128,4 @@
         font-weight: bold;
         text-transform: uppercase;
     }
-}
-
-.#{$prefix}panel-body-subform-subform {
-
-    $color-subform-subform: lighten($color-neutral-95, 4%);
-
-    background-color: $color-subform-subform;
-    border-top-color: border-for($color-subform-subform);
 }
