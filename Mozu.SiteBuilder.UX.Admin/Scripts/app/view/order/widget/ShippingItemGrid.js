@@ -803,7 +803,7 @@ weight: 2
             labelUrl = '/admin/app/order/shipping/package/label?orderId=' + data.orderId + '&packageId=' + data.id;
             
             // need to open the window immediately after the click so the popup blocker doesn't suppress it. 
-            newWindow = window.open('/admin/Scripts/ext/resources/themes/images/default/grid/loading.gif');
+            newWindow = window.open('/admin/Scripts/resources/images/legacy/loading.gif');
        
         if (data.shipmentId === null || data.shipmentId === undefined)
         {
