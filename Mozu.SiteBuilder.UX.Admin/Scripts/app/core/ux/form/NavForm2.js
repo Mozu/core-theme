@@ -116,6 +116,8 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             else return false;
         }, this);
 
+        if (!this.nav.rendered) return;
+
         active = this.nav.getEl().down('.active');
 
         if (active) active.removeCls('active');

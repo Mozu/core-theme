@@ -197,7 +197,11 @@ Ext.define('Taco.Application',{
                     return me.value ;
                 }
                 if (!me.sourceEditMode) {
-                    me.syncValue();
+                    if (document.getElementById(me.iframeEl.id)) {
+                        me.syncValue();
+                    } else {
+                        console.log('damn');
+                    }
                 }
                 value =  me.textareaEl.dom.value ;
                 me.value = value;
