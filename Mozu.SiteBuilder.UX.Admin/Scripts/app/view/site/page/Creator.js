@@ -40,7 +40,6 @@
                 }, {
                     name: 'docInfo',
                     xtype: 'selectfield',
-                    do_dumb_shit: false,
                     fieldLabel: 'Choose type',
                     mode: 'local',
                     valueField: 'id',
