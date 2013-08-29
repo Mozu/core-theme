@@ -102,12 +102,16 @@ namespace Mozu.SiteBuilder.Mvc.Security
             var cookie = new HttpCookie(CookieName);
             cookie["accessToken"] = ticket.AccessToken ;
             cookie["refreshToekn"] = ticket.RefreshToken;
-            cookie["profileToken"] = new Mozu.Core.UserProfile()
-                                    {
-                                        EmailAddress = ticket.User.EmailAddress,
-                                        FirstName = ticket.User.FirstName,
-                                        LastName = ticket.User.LastName
-                                    }.ToToken();
+            if (ticket.User != null)
+            {
+                cookie["profileToken"] = new Mozu.Core.UserProfile()
+                                             {
+                                                 EmailAddress = ticket.User.EmailAddress,
+                                                 FirstName = ticket.User.FirstName,
+                                                 LastName = ticket.User.LastName
+                                             }.ToToken();
+            }
+            
             CookieProvider.SaveResponseCookie(CookieName, cookie);
 
 

@@ -80,11 +80,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             get { return viewPath; }
         }
 
-        //public ITemplateManager TemplateManager
-        //{
-        //    get;
-        //    private set;
-        //}
+   
         private static object _managerContextKey = new Object();
         public ITemplateManager GetManager(HttpContextBase ctx)
         {
@@ -142,7 +138,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 FirstName = siteBuilderContext.UserProfile.FirstName ,// profile != null ? profile.FirstName : null,
                 LastName = siteBuilderContext.UserProfile.LastName,// profile != null ? profile.LastName : null,
                 UserId =siteBuilderContext.ApiContext.UserClaims.UserId ,// gcu.UserId,
-                IsAuthenticated = siteBuilderContext.ApiContext.UserClaims.IsAuthenticated,//!gcu.IsAnonymous && gcu.IsAuthenticated,
+                IsAuthenticated = !siteBuilderContext.ApiContext.UserClaims.IsAnonymous && siteBuilderContext.ApiContext.UserClaims.IsAuthenticated,//!gcu.IsAnonymous && gcu.IsAuthenticated,
                 IsAnonymous = siteBuilderContext.ApiContext.UserClaims.IsAnonymous 
             };
             requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"] = (System.Collections.Hashtable)viewContext.HttpContext.Items["templateVariables"] ?? new System.Collections.Hashtable(StringComparer.OrdinalIgnoreCase);

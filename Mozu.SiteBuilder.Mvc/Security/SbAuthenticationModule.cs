@@ -4,10 +4,14 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using Autofac.Core.Lifetime;
 using Mozu.Core;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
+using Mozu.User.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.Mvc.Security
 {
@@ -29,8 +33,76 @@ namespace Mozu.SiteBuilder.Mvc.Security
         public void Init(HttpApplication context )
         {
             context.AuthenticateRequest += new EventHandler(this.OnAuthenticate);
+            context.AddOnAuthenticateRequestAsync( BeginRequestHandler, EndRequestHandler);
         }
 
+        private IAsyncResult BeginRequestHandler(object sender, EventArgs e, AsyncCallback cb, object extraData)
+        {
+
+            var tcs = new TaskCompletionSource<bool>(extraData);
+
+            if (!IsAdmin)
+            {
+
+
+
+                var apiContext = DependencyResolver.Current.GetService<ISiteBuilderApiContext>();
+                var authHelper = DependencyResolver.Current.GetService<IAuthenticationHelper>();
+                var settnigs = DependencyResolver.Current.GetService<ISettings>();
+
+                if (apiContext != null && apiContext.UserClaims != null && !apiContext.UserClaims.IsAnonymous && (apiContext.UserClaims.Expiration - DateTime.Now).TotalMinutes < 5 && authHelper.GetAuthTicket() != null)
+                {
+
+
+
+                    string token = authHelper.GetAuthTicket().RefreshToken;
+                    var ticketClient = DependencyResolver.Current.GetService<Mozu.User.Contracts.Clients.IAuthTicketWebApiClient>().CloneWithoutUserClaims();
+                    //var task = ticketClient.RefreshUserAuthTicket(token);
+                    var task = ticketClient.Handler.SendAsync<Mozu.Core.Api.Contracts.UserAuthTicket>("PUT", "refresh?refreshToken=" + token, ((AuthTicketWebApiClient) ticketClient).ServiceId, ticketClient.Options);
+
+                    task.ConfigureAwait(false);
+                    var retTask = task.ContinueWith(serviceClientResponse =>
+                        {
+                            var resp = serviceClientResponse.Result;
+                            if (resp.ResponseMessage.IsSuccessStatusCode)
+                            {
+                                var ticket = resp.ReadAsSync();
+                                var lwuc = LightweightUserClaims.Parse(ticket.AccessToken);
+                                authHelper.SaveAuthTicket(ticket);
+                                apiContext.SetUser(lwuc);
+                            }
+                            else
+                            {
+                                var uc = LightweightUserClaims.CreateForAnonymousShopper(apiContext.TenantId, apiContext.SiteId.Value);
+                                var extingTicket = authHelper.GetAuthTicket() ?? new UserAuthTicket();
+                                extingTicket.AccessToken = uc.ToAccessToken();
+
+                                authHelper.SaveAuthTicket(extingTicket);
+                                apiContext.SetUser(uc);
+                            }
+
+                            tcs.SetResult(true);
+                            cb(tcs.Task);
+                        });
+
+                    return task;
+
+                }
+            }
+            tcs.SetResult(true);
+            cb(tcs.Task);
+            return tcs.Task;
+
+        }
+
+        private void EndRequestHandler (IAsyncResult ar)
+        {
+            var t = (Task<bool>) ar;
+            t.Wait();
+        }
+
+   
+        //refactor out ... this class shouldnt really be shared between admin and storefront.
         private static object _isAdmin = null;
         public static bool IsAdmin
         {
