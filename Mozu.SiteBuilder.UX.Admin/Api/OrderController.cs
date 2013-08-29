@@ -53,35 +53,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? pageSize = pagingParams.pageSize ?? 20;
             string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
 
-            DCo.OrderCollection dcOrders = null;
-            
             // get single order
             if (!string.IsNullOrEmpty(pagingParams.id))
             {
-                dcOrders = new DCo.OrderCollection() { Items = new List<DCo.Order>() };
                 var order = (await _orderWebApiClient.GetOrder(pagingParams.id, draft)).ReadAsSync();
                 if (order != null)
-                {
-                    dcOrders.Items.Add(order);
-                }
+                    return List2<Order>( order.Map<Order>() );
+                else
+                    throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
+
             }
             // get list of orders
             else
             {
                 var filter = extFilter.ToFilterString();
-                try
-                {
-                    dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
-                }
-                catch (Exception ex)
-                {
-                    dcOrders = new DCo.OrderCollection { Items = new List<DCo.Order>() };
-                }
+                var dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
+                return List2(Mapper.Map<List<Order>>(dcOrders.Items), (int)dcOrders.TotalCount);
             }
-
-            var orders = dcOrders != null ? Mapper.Map<List<Order>>(dcOrders.Items) : new List<Order>();
-
-            return List2(orders,(int) dcOrders.TotalCount );
         }
 
         [HttpPostRoute(UriTemplate = "create")]
