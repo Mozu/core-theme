@@ -101,37 +101,40 @@
   }
 
   // product type attribute panel
-  .#{$vprefix}producttype-attribute-panel {
-    &> .#{$prefix}panel-header {
-      .#{$prefix}panel-header-body {
-        border-bottom: 1px dashed $color-grid-border;
-        margin-bottom: 10px;
-      }
-    }
+  // .#{$vprefix}producttype-attribute-panel {
+  //   &> .#{$prefix}panel-header {
+  //     .#{$prefix}panel-header-body {
+  //       border-bottom: 1px dashed $color-grid-border;
+  //       margin-bottom: 10px;
+  //     }
+  //   }
 
-    &> .#{$prefix}panel-body {
-      background-color: $color-neutral-lightest;
-    }
+  //   &> .#{$prefix}panel-body {
+  //     background-color: $color-neutral-lightest;
+  //   }
 
-    .#{$vprefix}draghandle {
-      display: inline-block;
-      margin: 0px;
-      vertical-align: middle;
-    }
-    .#{$vprefix}attribute-item-header-text {
-      display: inline-block;
-      font-size: px-to-rem(15);
-      font-weight: bold;
-      line-height: 1em;
-      padding-top: 0.5em;
-      vertical-align: middle;
-    }
-    .#{$vprefix}attribute-item-body {
-      border-top: 1px solid $color-neutral-white;
-      font-size: px-to-rem(14);
-      padding: 0.5em 0.5em 0.5em 36px;
-      @include inner-shadow(0.1, 0px, 0px, 1px);
-    }
+  //   .#{$vprefix}draghandle {
+  //     display: inline-block;
+  //     margin: 0px;
+  //     vertical-align: middle;
+  //   }
+  //   .#{$vprefix}attribute-item-header-text {
+  //     display: inline-block;
+  //     font-size: px-to-rem(15);
+  //     font-weight: bold;
+  //     line-height: 1em;
+  //     padding-top: 0.5em;
+  //     vertical-align: middle;
+  //   }
+  //   .#{$vprefix}attribute-item-body {
+  //     border-top: 1px solid $color-neutral-white;
+  //     font-size: px-to-rem(14);
+  //     padding: 0.5em 0.5em 0.5em 36px;
+  //     @include inner-shadow(0.1, 0px, 0px, 1px);
+  //   }
+  // }
+  .#{$vprefix}attribute-item {
+    padding-top: 14px;
   }
 
   // inventory quantity editing menu

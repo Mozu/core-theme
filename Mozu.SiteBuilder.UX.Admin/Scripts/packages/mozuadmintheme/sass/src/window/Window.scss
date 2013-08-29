@@ -1,8 +1,3 @@
-.#{$prefix}tool-close {
-    background: none transparent;
-    @include icon-font($glyph-close);
-}
-
 /* WINDOW UI DEFINITIONS */
 
 @include extjs-window-ui(

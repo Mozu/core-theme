@@ -3,7 +3,13 @@
     alias: 'widget.taco.producttype.attributegroup',
     requires: ['Taco.view.productType.AttributeForm'],
 
-    layout: 'card',
+    bodyPadding: '19 0 0',
+    margin: '0 0 10',
+    ui: 'subform',
+
+    layout: {
+        type: 'card'
+    },
 
     attributeItemTpl: [
         '<tpl for=".">',
@@ -13,7 +19,7 @@
     ],
 
     initComponent: function () {
-        this.cls = [this.cls, Taco.baseCSSPrefix + 'producttype-attribute-panel', Taco.baseCSSPrefix + 'form-section'].join(' ').trim();
+        this.cls = [this.cls, Taco.baseCSSPrefix + 'producttype-attribute-panel'].join(' ');
 
         this.tools = [{
             xtype: 'primarybutton',
@@ -101,38 +107,43 @@
             }])
         }
 
-        attributeView = Ext.create('Ext.container.Container', {
+        attributeView = Ext.create('Ext.panel.Panel', {
             reorderable: true,
+            ui: 'subform-subform',
             cls: Taco.baseCSSPrefix + 'attribute-item',
-            items: [{
-                xtype: 'container',
-                itemId: 'header',
-                cls: Taco.baseCSSPrefix + 'attribute-item-header',
-                layout: {
-                    type: 'hbox',
-                    align: 'middle'
-                },
-                items: items
+            margin: '0 0 10',
+            title: ptAttribute.get('attributeName'),
+            tools: [{
+                type: 'delete',
+                hidden: ptAttribute.get('isLocked'),
+                scope: this,
+                handler: function () {
+                    console.log('delete');
+                    this.removeAttribute(ptAttribute, attributeView);
+                }
             }, {
-                xtype: 'container',
-                itemId: 'body',
-                minHeight: 50,
-                cls: Taco.baseCSSPrefix + 'attribute-item-body',
-                items: [{
-                    xtype: 'component',
-                    itemId: 'placeholder',
-                    data: ptAttribute.data,
-                    tpl: [
-                        '<tpl if="this.isList(inputType)">',
-                            '{[Ext.Array.pluck(values.selectedValues, "value").join(", ")]}',
-                        '<tpl else>',
-                            '{inputType}',
-                        '</tpl>',
-                        {
-                            isList: function (inputType) { return inputType === 'List'; }
-                        }
-                    ]
-                }]
+                type: 'edit',
+                hidden: ptAttribute.get('isLocked'),
+                scope: this,
+                handler: function () {
+                    console.log('edit');
+                    this.edit(ptAttribute);
+                }
+            }],
+            items: [{
+                xtype: 'component',
+                itemId: 'placeholder',
+                data: ptAttribute.data,
+                tpl: [
+                    '<tpl if="this.isList(inputType)">',
+                        '{[Ext.Array.pluck(values.selectedValues, "value").join(", ")]}',
+                    '<tpl else>',
+                        '{inputType}',
+                    '</tpl>',
+                    {
+                        isList: function (inputType) { return inputType === 'List'; }
+                    }
+                ]
             }]
         });
         

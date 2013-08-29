@@ -1,0 +1,15 @@
+.#{$prefix}tool-img {
+    background: none transparent;
+}
+
+.#{$prefix}tool-close {
+    @include icon-font($glyph-close);
+}
+
+.#{$prefix}tool-delete {
+    @include icon-font($glyph-trash);
+}
+
+.#{$prefix}tool-edit {
+    @include icon-font($glyph-pencil);
+}
