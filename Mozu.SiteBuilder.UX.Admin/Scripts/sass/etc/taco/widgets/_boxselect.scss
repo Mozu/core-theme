@@ -91,8 +91,16 @@
 
   .#{$prefix}boxselect-item-close {
     cursor: pointer;
-    right: 3px !important;
-    top: 5px !important;
+    font-size: px-to-rem(13);
+    line-height: px-to-rem(18);
+    height: 16px;
+    width: 15px;
+    background: transparent;
+    top: 2px;
+    right: 0;
+    //right: 3px !important;
+    //@include icon-font($glyph-close);
+    //top: 5px !important;
   }
 
   .#{$prefix}boxselect-hideselections {
