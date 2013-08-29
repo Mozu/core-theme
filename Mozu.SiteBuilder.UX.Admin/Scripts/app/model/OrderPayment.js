@@ -95,8 +95,8 @@ Ext.define('Taco.model.OrderPayment', {
             model: 'Taco.model.Order'
         }
     ],
-    setProxy:function(){
-        console.log('wtf');
+    setProxy: function () {
+        console.log('setProxy');
     },
     proxy: {
         type: 'ajax',
