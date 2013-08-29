@@ -1,4 +1,4 @@
-﻿define(["jquery", "modules/knockout-plus", "modules/knockout-viewmodel", "modules/models-price", "modules/function-throttler"], function ($, ko, KnockoutVM, PriceModels, throttle) {
+﻿define(["jquery", "modules/knockout-plus", "modules/knockout-viewmodel", "modules/models-price", "modules/function-debouncer"], function ($, ko, KnockoutVM, PriceModels, debounce) {
 
     function sanitize(str) {
         return str.replace(/[\s~'"]+/g, '-');
@@ -28,7 +28,7 @@
         },
         beginLiveUpdate: function () {
             var me = this, parent = this.getParentModel();
-            me.Value.subscribe(throttle(function (newVal) {
+            me.Value.subscribe(debounce(function (newVal) {
                 var newValObj;
                 newVal = $.trim(newVal);
                 if (newVal) newValObj = ko.utils.arrayFirst(me.Values(), function (v) {
@@ -37,7 +37,7 @@
                 if (newValObj && !newValObj.IsEnabled) parent.configuredOptions = {};
                 parent.configuredOptions[me.id] = !!(newVal || newVal === 0);
                 parent.updateConfiguration();
-            }, 300, false));
+            }, 300));
         }
     }, function () {
         var me = this,

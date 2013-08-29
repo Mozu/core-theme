@@ -10,7 +10,7 @@ modules/animatemodals.js
 shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
 modules/jquery-plus.js
 modules/cart-monitor.js
-modules/function-throttler.js
+modules/function-debouncer.js
 modules/loading-bars.js
 i18n.js
 nls/messages.js

@@ -22,7 +22,7 @@
                 'modules/api',
                 'modules/animatemodals',
                 'modules/cart-monitor',
-                'modules/function-throttler',
+                'modules/function-debouncer',
                 'modules/jquery-plus',
                 'modules/loading-bars',
                 'modules/login-links',
