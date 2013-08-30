@@ -723,6 +723,7 @@
     <Content Include="Scripts\build\resources\fonts\SourceSansPro-Regular-webfont.svg" />
     <Content Include="Scripts\build\resources\fonts\SourceSansPro-Semibold-webfont.svg" />
     <Content Include="Scripts\build\resources\fonts\SourceSansPro-SemiboldIt-webfont.svg" />
+    <Content Include="Scripts\build\resources\images\error-shipping-label.gif" />
     <Content Include="Scripts\build\resources\images\icons\Thumbs.db" />
     <Content Include="Scripts\build\resources\fonts\journal-webfont.eot" />
     <Content Include="Scripts\build\resources\fonts\journal-webfont.ttf" />
@@ -778,6 +779,8 @@
     <Content Include="Scripts\build\resources\fonts\SourceSansPro-SemiboldIt-webfont.eot" />
     <Content Include="Scripts\build\resources\fonts\SourceSansPro-SemiboldIt-webfont.ttf" />
     <Content Include="Scripts\build\resources\fonts\SourceSansPro-SemiboldIt-webfont.woff" />
+    <Content Include="Scripts\build\resources\images\loading-shipping-label-m.gif" />
+    <Content Include="Scripts\build\resources\images\loading-shipping-label-spinner.gif" />
     <Content Include="Scripts\build\resources\lib\tinymce\langs\readme.md" />
     <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\fonts\icomoon-small.eot" />
     <Content Include="Scripts\build\resources\lib\tinymce\skins\lightgray\fonts\icomoon-small.ttf" />

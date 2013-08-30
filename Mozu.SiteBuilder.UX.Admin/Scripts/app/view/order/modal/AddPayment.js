@@ -2,136 +2,29 @@
  * @class Taco.view.order.modal.AddPayment
  */
 Ext.define('Taco.view.order.modal.AddPayment', {
-    extend: 'Taco.core.ux.modal.Modal',
+    //extend: 'Taco.core.ux.modal.Modal',
+    extend: 'Ext.window.Window',
     requires: ['Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField'],
-    cls: Taco.baseCSSPrefix + 'order-modal',
+    cls: Taco.baseCSSPrefix + 'order-modal ' + Taco.baseCSSPrefix + 'window-plain',
     autoShow: true,
+    
+    ghost: false,
+    resizeable: false,
+    modal: true,
+    
+    title: "Add Payment",
+    
     width: 700,
-    height: 500,
-    style: 'overflow-y: scroll;overflow-x: hidden;',
+    height: 530,
+    //style: 'overflow-y: scroll;overflow-x: hidden;',
     data: {},
     field: '',
-
-    getPCIaaS: function() {
-        return this.self.PCIaaS;
-    },
-
-    createPciProcessor: function() {
-        var me = this,
-            PCI = me.getPCIaaS();
-
-        if (!PCI)
-        {
-            return me.mon(Taco.app, 'pciloaded', me.createPciProcessor, me);
-        }
-
-        me.pciProcessor = PCI({
-            fields: me.getPciFieldsAdapter(),
-            events: {
-                success: function () {
-                    me.pciProcessor.applyMask();
-                    var order = me.record,
-                    formValues = me.formpanel.getValues(),
-                    billingInfo = {
-                        isSameBillingShippingAddress: !!formValues.sameAsBilling,
-                        paymentServiceCardId: formValues.paymentServiceCardId,
-                        nameOnCard: formValues.nameOnCard,
-                        cardType: formValues.cardType,
-                        cardNumber: formValues.cardNumber,
-                        expireMonth: formValues.expireMonth,
-                        expireYear: formValues.expireYear
-                    },
-                    contactInfo = {
-                        email: formValues.email,
-                        firstName: formValues.firstName,
-                        middleName: formValues.middleName,
-                        lastName: formValues.lastName,
-                        address1: formValues.address1, 
-                        address2: formValues.address2,
-                        address3: formValues.address3,
-                        address4: formValues.address4,
-                        cityOrTown: formValues.cityOrTown,
-                        countryCode: formValues.countryCode,
-                        zipCode: formValues.zipCode,
-                        state: formValues.state,
-                        homePhone: formValues.homePhone,
-                        mobilePhone: formValues.mobilePhone,
-                        workPhone: formValues.workPhone
-                    },
-                    amount = formValues.amount;
-
-                    billingInfo.paymentServiceCardId = me._hiddenCardId;
-
-                    if (me.isCreateMode) {
-                        order.setBillingInfo({
-                            jsonData: {
-                                orderId: order.getId(),
-                                billingInfo: billingInfo,
-                                billingContact: contactInfo
-                            },
-                            success: function() {
-                                me.hide();
-                                order.reload();
-                            }
-                        });
-                    }
-                    else {
-                        order.addPayment({
-                            jsonData: {
-                                orderId: order.getId(),
-                                amount: amount,
-                                billingInfo: billingInfo,
-                                billingContact: contactInfo
-                            },
-                            success: function() {
-                                me.hide();
-                                order.reload();
-                            }
-                        });
-                    }
-                    // TODO: impl mask for our own form and also finish working.
-                }
-            },
-            settings: {
-                apiBase: Taco.paymentApiBaseUrl,
-                framePath: "/../../Assets/pci_receiver.html",
-                siteId: me.record.get('siteId') || Taco.app.context.getSiteId(),
-                tenantId: me.record.get('tenantId') || Taco.app.context.getTenantId()
-            }
-        });
-    },
-
-    /*
-     * returns a nice adapter that the PCI-as-a-service lib can use to read all our form fields 
-     */
-    getPciFieldsAdapter: function() {
-        var me = this;
-        return {
-            CardType: this.createPciFormField(this.down('#cardType')),
-            CardNumber: this.createPciFormField(this.down('#cardNumber')),
-            CVV: this.createPciFormField(this.down('#cvv')),
-            PersistCard: function() { return false; },
-            HiddenCardID: function(id) {
-                if (id) me._hiddenCardId = id;
-                return me._hiddenCardId;
-            }
-        }
-    },
-
-    createPciFormField: function(field) {
-        return function(val) {
-            if (val)
-            {
-                return field.setValue(val);
-            }
-            return field.getValue();
-        }
-    },
-
+    autoScroll:true,
+    
     initComponent: function (eOpts) {
         var me = this;
 
-         me.extraInfoCont = Ext.create('Ext.form.Panel', {
+        me.extraInfoCont = Ext.create('Ext.form.Panel', {
             xtype: 'formpanel',
             bodyCls: Taco.baseCSSPrefix + 'flexform',
             layout: { type: 'hbox' },
@@ -189,10 +82,10 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 },
                 items: [
                  {
-                    xtype: 'textfield',
-                    name: 'cityOrTown',
-                    fieldLabel: 'City'
-                },
+                     xtype: 'textfield',
+                     name: 'cityOrTown',
+                     fieldLabel: 'City'
+                 },
                 {
                     xtype: 'textfield',
                     name: 'state',
@@ -232,72 +125,72 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             layout: { type: 'vbox' },
             items: [{
                 xtype: 'panel',
-            layout: { type: 'hbox' },
-            items: [{
-                xtype: 'container',
-                style: 'padding-right: 10px;',
-                defaults: {
-                    xtype: 'textfield',
-                    labelSeparator: '',
-                    labelAlign: 'top',
-                    width: 300
-                },
-                items: [
-                {
-                    name: 'nameOnCard',
-                    fieldLabel: 'Name on Card',
-                    value: 'Bob Boberson'
+                layout: { type: 'hbox' },
+                items: [{
+                    xtype: 'container',
+                    style: 'padding-right: 10px;',
+                    defaults: {
+                        xtype: 'textfield',
+                        labelSeparator: '',
+                        labelAlign: 'top',
+                        width: 300
+                    },
+                    items: [
+                    {
+                        name: 'nameOnCard',
+                        fieldLabel: 'Name on Card',
+                        value: 'Bob Boberson'
+                    }, {
+                        xtype: 'currencyfield',
+                        name: 'amount',
+                        fieldLabel: 'Amount',
+                        emptyText: '0',
+                        value: '223'
+                    }, {
+                        xtype: 'numberfield',
+                        name: 'expireMonth',
+                        fieldLabel: 'Exp Month',
+                        minValue: 1,
+                        maxValue: 12,
+                        value: 3
+                    }, {
+                        xtype: 'numberfield',
+                        name: 'expireYear',
+                        fieldLabel: 'Exp Year',
+                        value: 2015
+                    }]
                 }, {
-                    xtype: 'currencyfield',
-                    name: 'amount',
-                    fieldLabel: 'Amount',
-                    emptyText: '0',
-                    value: '223'
-                }, {
-                    xtype: 'numberfield',
-                    name: 'expireMonth',
-                    fieldLabel: 'Exp Month',
-                    minValue: 1,
-                    maxValue: 12,
-                    value: 3
-                }, {
-                    xtype: 'numberfield',
-                    name: 'expireYear',
-                    fieldLabel: 'Exp Year',
-                    value: 2015
-                }]
-            }, {
-                xtype: 'container',
-                defaults: {
-                    xtype: 'textfield',
-                    labelSeparator: '',
-                    labelAlign: 'top',
-                    width: 300
-                },
-                items: [
-                {
-                    xtype: 'combobox',
-                    name: 'cardType',
-                    itemId: 'cardType',
-                    fieldLabel: 'Card Type',
-                    allowBlank: false,
-//                    editable: false,
-                    forceSelection: true,
-//                    listConfig: { shadow: false },
-//                    shrinkWrap: 3,
-                    store: [['Visa', 'Visa'], ['NotVisa', 'Something that is not Visa']],
-                    value: 'Visa'
-                }, {
-                    name: 'cardNumber',
-                    itemId: 'cardNumber',
-                    fieldLabel: 'Card Number',
-                    value: '4111111111111111'
-                }, {
-                    name: 'cvv',
-                    itemId: 'cvv',
-                    fieldLabel: 'CVV',
-                    value: '255',
-                    width: 100
+                    xtype: 'container',
+                    defaults: {
+                        xtype: 'textfield',
+                        labelSeparator: '',
+                        labelAlign: 'top',
+                        width: 300
+                    },
+                    items: [
+                    {
+                        xtype: 'combobox',
+                        name: 'cardType',
+                        itemId: 'cardType',
+                        fieldLabel: 'Card Type',
+                        allowBlank: false,
+                        //                    editable: false,
+                        forceSelection: true,
+                        //                    listConfig: { shadow: false },
+                        //                    shrinkWrap: 3,
+                        store: [['Visa', 'Visa'], ['NotVisa', 'Something that is not Visa']],
+                        value: 'Visa'
+                    }, {
+                        name: 'cardNumber',
+                        itemId: 'cardNumber',
+                        fieldLabel: 'Card Number',
+                        value: '4111111111111111'
+                    }, {
+                        name: 'cvv',
+                        itemId: 'cvv',
+                        fieldLabel: 'CVV',
+                        value: '255',
+                        width: 100
                     }, {
                         xtype: 'checkboxfield',
                         boxLabel: 'Address Same as billing',
@@ -306,7 +199,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                         style: 'margin-top:50px;',
                         handler: function (it, status) {
                             console.log(status);
-                           // me.extraInfoCont.show(!status);
+                            // me.extraInfoCont.show(!status);
                             if (!status) {
                                 me.extraInfoCont.show();
                             } else {
@@ -325,43 +218,196 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
         me.formpanel.add(me.extraInfoCont);
 
-        this.content = {
-            xtype: 'container',
-            items: [{
-                xtype: 'component',
-                autoEl: {
-                    tag: 'h2',
-                    cls: 'order-modal-title',
-                    html: 'Add Payment'
-                }
-            },
+        
+        this.items = [
             this.formpanel
-            ]
-        };
+        ];
 
         this.primaryButton = Ext.widget('primarybutton', {
             text: 'Save',
             click: function () {
+                me.setLoading(true, me.body);
                 this.pciProcessor.process();
             },
             scope: this
         });
 
-        this.actions = {
-            xtype: 'container',
-            items: [this.primaryButton, {
-                xtype: 'action',
+        this.buttons = [
+            {
+                xtype: 'button',
+                ui: "action",
+                scale: "medium",
                 text: 'Cancel',
-                onClick: function () {
+                margin: {
+                    right: 10
+                },
+                handler: function () {
                     me.hide();
-                }
-            }]
-        };
+                },
+                scope: me
+            },
+            this.primaryButton
+        ];
+
+
 
         this.callParent(arguments);
 
         me.createPciProcessor();
 
+    },
+
+    getPCIaaS: function() {
+        return this.self.PCIaaS;
+    },
+
+    createPciProcessor: function() {
+        var me = this,
+            PCI = me.getPCIaaS();
+
+        if (!PCI)
+        {
+            return me.mon(Taco.app, 'pciloaded', me.createPciProcessor, me);
+        }
+
+        me.pciProcessor = PCI({
+            fields: me.getPciFieldsAdapter(),
+            events: {
+                //replacing the default error handling that thows js error with one that uses our error handling pattern and closes the loading indicator
+                error: function (errorObj) {
+                    var errors = []
+                    for (var i = 0; i < errorObj.length; i++) {
+                        errors.push("PCIaaS Error " + errorObj[i].majorCode + ': ' + errorObj[i].minorCode + ': ' + errorObj[i].message);
+                    };
+                    Taco.app.fireEvent('setmessage', errors.join(), 'error');
+                    me.setLoading(false,me.body);
+                },
+                success: function () {
+                    me.pciProcessor.applyMask();
+                    var order = me.record,
+                    formValues = me.formpanel.getValues(),
+                    billingInfo = {
+                        isSameBillingShippingAddress: !!formValues.sameAsBilling,
+                        paymentServiceCardId: formValues.paymentServiceCardId,
+                        nameOnCard: formValues.nameOnCard,
+                        cardType: formValues.cardType,
+                        cardNumber: formValues.cardNumber,
+                        expireMonth: formValues.expireMonth,
+                        expireYear: formValues.expireYear
+                    },
+                    contactInfo = {
+                        email: formValues.email,
+                        firstName: formValues.firstName,
+                        middleName: formValues.middleName,
+                        lastName: formValues.lastName,
+                        address1: formValues.address1, 
+                        address2: formValues.address2,
+                        address3: formValues.address3,
+                        address4: formValues.address4,
+                        cityOrTown: formValues.cityOrTown,
+                        countryCode: formValues.countryCode,
+                        zipCode: formValues.zipCode,
+                        state: formValues.state,
+                        homePhone: formValues.homePhone,
+                        mobilePhone: formValues.mobilePhone,
+                        workPhone: formValues.workPhone
+                    },
+                    amount = formValues.amount;
+
+                    billingInfo.paymentServiceCardId = me._hiddenCardId;
+
+                    me.setLoading(true,me.body);
+                    
+                    if (me.isCreateMode) {
+                        order.setBillingInfo({
+                            jsonData: {
+                                orderId: order.getId(),
+                                billingInfo: billingInfo,
+                                billingContact: contactInfo
+                            },
+                            success: function (response) {
+                                me.setLoading(false, me.body);
+                                var json = Ext.decode(response.responseText, true);
+                                if (!json || !json.success) {
+                                    Taco.app.fireEvent('setmessage', "Error saving billing information", 'error');
+                                    return;
+                                }
+                                
+                                me.hide();
+                                order.reload();
+                            },
+                            failure: function (response) {
+                                var json = Ext.decode(response.responseText, true),
+                                  msg = (json && json.Message) ? json.Message : "Error saving billing information";
+                                Taco.app.fireEvent('setmessage', msg, 'error');
+                                me.setLoading(false, me.body);
+                            }
+                        });
+                    }
+                    else {
+                        order.addPayment({
+                            jsonData: {
+                                orderId: order.getId(),
+                                amount: amount,
+                                billingInfo: billingInfo,
+                                billingContact: contactInfo
+                            },
+                            success: function (response) {
+                                me.setLoading(false, me.body);
+                                var json = Ext.decode(response.responseText, true);
+                                if (!json || !json.success) {
+                                    Taco.app.fireEvent('setmessage', "Error adding payment", 'error');
+                                    return;
+                                }
+
+                                me.hide();
+                                order.reload();
+                            },
+                            failure: function (response) {
+                                var json = Ext.decode(response.responseText, true),
+                                  msg = (json && json.Message) ? json.Message : "Error adding payment";
+                                Taco.app.fireEvent('setmessage', msg, 'error');
+                                me.setLoading(false, me.body);
+                            }
+                        });
+                    }
+                    // TODO: impl mask for our own form and also finish working.
+                }
+            },
+            settings: {
+                apiBase: Taco.paymentApiBaseUrl,
+                framePath: "/../../Assets/pci_receiver.html",
+                siteId: me.record.get('siteId') || Taco.app.context.getSiteId(),
+                tenantId: me.record.get('tenantId') || Taco.app.context.getTenantId()
+            }
+        });
+    },
+
+    /*
+     * returns a nice adapter that the PCI-as-a-service lib can use to read all our form fields 
+     */
+    getPciFieldsAdapter: function() {
+        var me = this;
+        return {
+            CardType: this.createPciFormField(this.down('#cardType')),
+            CardNumber: this.createPciFormField(this.down('#cardNumber')),
+            CVV: this.createPciFormField(this.down('#cvv')),
+            PersistCard: function() { return false; },
+            HiddenCardID: function(id) {
+                if (id) me._hiddenCardId = id;
+                return me._hiddenCardId;
+            }
+        }
+    },
+
+    createPciFormField: function(field) {
+        return function(val) {
+            if (val)
+            {
+                return field.setValue(val);
+            }
+            return field.getValue();
+        }
     }
 },
 /* class definition-time function */
