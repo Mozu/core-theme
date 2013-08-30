@@ -8,7 +8,8 @@ Ext.define('Taco.view.order.subform.Shipping', {
     requires: [
         'Taco.view.order.widget.ShippingItemGrid',
         'Taco.view.order.widget.Package',
-        'Taco.view.order.widget.UnpackagedItems'
+        'Taco.view.order.widget.UnpackagedItems',
+        'Taco.store.PackagingTypes'
     ],
     
     title: 'Shipment & Shipping Information',
@@ -32,7 +33,15 @@ Ext.define('Taco.view.order.subform.Shipping', {
     initComponent: function (eOpts) {
         var me = this;
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping'].join(' ');
+
+        me.packagingTypeStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.PackagingTypes'
+        });
         
+        
+
+
+
 
         // load the shipping rates data for use in the shipping packages
         Ext.namespace('Taco.properties');
@@ -120,12 +129,13 @@ Ext.define('Taco.view.order.subform.Shipping', {
             packages=[];
 
         data = this.record.get("unShippedPackages");
-
         
         for (var i = data.length; i > 0; i--) {
             
             var dataItem = data[i-1];
             var billingContact = me.record.get("billingContact");
+            var packagingType = dataItem.packagingType;
+            var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
             
             packages.push(Ext.create('Taco.view.order.widget.Package', {
                     record: this.record,
@@ -139,6 +149,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                         title: "Package " + i,
                         shipmentStatus: dataItem.status,
                         itemTotal: dataItem.totalQuantity,
+                        packagingType: packagingTypeText,
                         weight: dataItem.weight,
                         shippingMethod: dataItem.shippingMethodName || dataItem.ShippingMethodCode,
                         trackingNumber: dataItem.trackingNumber,
@@ -178,7 +189,8 @@ Ext.define('Taco.view.order.subform.Shipping', {
             
             var dataItem = data[i];
             var billingContact = me.record.get("billingContact");
-
+            var packagingType = dataItem.packagingType;
+            var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
                 
             packages.push( Ext.create('Taco.view.order.widget.Package', {
                 record: this.record,
@@ -222,6 +234,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                     shippingMethod: dataItem.shippingMethod,
                     trackingNumber: dataItem.trackingNumber,
                     shipDate: dataItem.shipDate,
+                    packagingType : packagingTypeText,
                         
                     // billing contact info
                     firstName: billingContact.firstName,

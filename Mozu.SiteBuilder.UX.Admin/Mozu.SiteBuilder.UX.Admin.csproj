@@ -592,6 +592,7 @@
     <Content Include="Scripts\app\overrides\menu\Item.js" />
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
+    <Content Include="Scripts\app\store\PackagingTypes.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\app\view\site\navigation\NavHeadings.js" />
     <Content Include="Scripts\build\all-classes.js" />
@@ -791,6 +792,9 @@
     <Content Include="Scripts\build\Taco-all.scss" />
     <Content Include="Scripts\build\Taco-example.scss" />
     <Content Include="Scripts\app\overrides\panel\Tool.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\error-shipping-label.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-m.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-spinner.gif" />
     <Content Include="Scripts\resources\lib\polyfills.js" />
     <Content Include="Scripts\resources\lib\init.min.js" />
     <Content Include="Scripts\sass\src\view\dashboard\Index.scss" />
