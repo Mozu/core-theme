@@ -336,10 +336,19 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         },
                         success: function (response) {
                             me.setLoading(false);
+                            var json = Ext.decode(response.responseText, true);
+                            if (!json || !json.success) {
+                                Taco.app.fireEvent('setmessage', "Error rolling back.", 'error');
+                                return;
+                            }
+                            
                             me.order.reload();
                         },
                         failure: function (response) {
                             me.setLoading(false);
+                            var json = Ext.decode(response.responseText, true),
+                                msg = (json && json.Message) ? json.Message : "Error rolling back.";
+                            Taco.app.fireEvent('setmessage', msg, 'error');
                         }
                     });
                 }
