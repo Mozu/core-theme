@@ -133,7 +133,14 @@ Ext.define('Taco.view.discount.Index', {
             text: 'Used',
             width: 80,
             hidden: false
-        }, {
+        }
+        /*
+
+        // BUG:  15695
+        // http://tfs.ads.volusion.com:8080/tfs/VNext/Mozu/_workitems/edit/15695
+        // (Simeon K.) delete of discounts causes orders that had that discount to spontaneously combust. Poof! Removing delete action trigger until we have a better solution;
+
+        , {
             xtype: 'taco.menucolumn',
             text: 'Actions',
             menuItems:[{
@@ -144,7 +151,11 @@ Ext.define('Taco.view.discount.Index', {
                 },
                 menuColumnHandler: 'destroyMenuColumnHandler'
             }]
-        }],
+        }
+        */
+        
+        
+        ],
     },
     //ToDo: WTF is this used for
     initComponent2: function (eOpts) {
