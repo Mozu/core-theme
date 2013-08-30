@@ -1,18 +1,14 @@
 ﻿require(["modules/jquery-plus", "knockout", "modules/models-cart"], function ($, ko, CartModels) {
     $(document).ready(function () {
-        var $cartForm = $('#mz-cart-form')
+        var $cartForm = $('#mz-cart-form');
 
         var cart = new CartModels.Cart($cartForm.mozuData('cart'));
 
         window.cartVM = cart;
 
-        cart.get().then(function () {
-            ko.applyBindings(cart, $cartForm[0]);
-            //display view
-            $cartForm.noFlickerFadeIn();
-        }).otherwise(function (e) {
-            console.error(e);
-        });
+        ko.applyBindings(cart, $cartForm[0]);
+        //display view
+        $cartForm.noFlickerFadeIn();
 
         cart.on('ordercreated', function (e, order) {
             window.location = "/checkout/" + order.data.Id;
