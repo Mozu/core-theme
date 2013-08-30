@@ -1,4 +1,4 @@
-﻿define(["jquery", "modules/knockout-plus", "modules/api", "i18n!nls/messages"], function ($, ko, api, genericMsg) {
+﻿define(["jquery", "modules/knockout-plus", "modules/api", "i18n!nls/messages", "shim!vendor/json2>JSON"], function ($, ko, api, genericMsg, JSON) {
 
     var traverseObjectForFunctionsAndBind = function (obj, newContext, depth) {
         depth = depth || 0;

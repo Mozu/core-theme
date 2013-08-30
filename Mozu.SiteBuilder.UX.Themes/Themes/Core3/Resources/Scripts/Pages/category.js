@@ -1,4 +1,4 @@
-define(['modules/jquery-plus', 'knockout', 'shim!vendor/jquery.history[jquery=jQuery]>History', "modules/models-faceting"], function($, ko, History, FacetingModels){
+define(['modules/jquery-plus', 'knockout', 'shim!vendor/jquery.history[jquery=jQuery,shim!vendor/json2>JSON=JSON]>History', "modules/models-faceting"], function($, ko, History, FacetingModels){
 
     $(document).ready(function () {
         

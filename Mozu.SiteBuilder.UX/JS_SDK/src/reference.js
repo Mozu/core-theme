@@ -292,7 +292,7 @@ var ApiReference = (function () {
                 shortcutParam: 'couponCode',
                 includeSelf: true,
                 noBody: true,
-                returnType: 'coupon',
+                returnType: 'coupon'
             },
             'remove-coupon': {
                 verb: 'DELETE',
@@ -322,12 +322,12 @@ var ApiReference = (function () {
                 template: '{+OrderService}{Id}/notes',
                 includeSelf: true,
                 returnType: 'ordernote'
-            },
+            }
         },
         'shipment': {
             defaults: {
                 template: '{+OrderService}{orderId}/shippinginfo',
-                includeSelf: true,
+                includeSelf: true
             },
             "get-shipping-methods": {
                 template: '{+OrderService}{orderId}/shipments/methods',

@@ -12,4 +12,6 @@
     };
 </script>
 <script src="/resources/scripts/require.js"></script>
-<script type="text/javascript">require([{{Model}}]);</script>
+<script type="text/javascript">
+  try {  require([{{Model}}]); } catch(e) { alert(e) }
+</script>
