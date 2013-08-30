@@ -216,8 +216,7 @@
             observables: {
                 "Email": {
                     required: {
-                        onlyIf: parentBillingAddressRequired,
-                        pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i,
+                        pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i
                     }
                 },
                 "FirstName": {
