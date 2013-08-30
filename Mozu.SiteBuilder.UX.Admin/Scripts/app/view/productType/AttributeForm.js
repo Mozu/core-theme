@@ -125,6 +125,7 @@
             minWidth: this.containerWidth,
             displayField: 'name',
             height: 300,
+            ignoreParentFormTracking: true,
             valueField: 'id',
             value: attribute ? attribute.getId() : null,
             maxSelections: 1,
@@ -188,6 +189,7 @@
         valuesField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'values',
             height: 300,
+            ignoreParentFormTracking: true,
             fieldLabel: 'Values',
             removeOnAttributeChange: true,
             store: valuesStore,
@@ -218,6 +220,7 @@
         selectionsField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'selections',
             height: 300,
+            ignoreParentFormTracking: true,
             removeOnAttributeChange: true,
             fieldLabel: 'Selections',
             store: this.selectionStore,
@@ -258,7 +261,8 @@
             removeOnAttributeChange: true,
             defaults: {
                 xtype: 'checkbox',
-                inputValue: true
+                inputValue: true,
+                ignoreParentFormTracking: true
             },
             items: [{
                 name: 'isRequired',

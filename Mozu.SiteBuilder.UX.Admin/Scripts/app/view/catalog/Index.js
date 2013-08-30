@@ -24,6 +24,38 @@ Ext.define('Taco.view.catalog.Index', {
             data: [{ color: 'red' }]
         });
 
+        inner = Ext.create('Ext.form.Panel', {
+            itemId: 'inner',
+            ui: 'subform-subform',
+            title: 'Inner Form',
+            margin: '0 0 20',
+            items: [{
+                xtype: 'textfield',
+                name: 'colorEditor',
+                fieldLabel: 'Color Editor',
+                margin: '0 0 20',
+                allowBlank: false,
+                isIndependent: true
+            }, {
+                xtype: 'button',
+                itemId: 'saveButton',
+                ui: 'action-primary',
+                scale: 'medium',
+                text: 'inner button',
+                disabled: true,
+                formBind: true,
+                scope: this,
+                handler: function (btn) {
+                    var form = btn.up('form').getForm(),
+                        record = this.record;
+
+                    record.set('color', form.findField('colorEditor').getValue());
+
+                    this.outer.loadRecord(record);
+                }
+            }]
+        });
+
         outer = Ext.create('Ext.form.Panel', {
             ui: 'subform',
             title: 'Outer Form',
@@ -33,32 +65,15 @@ Ext.define('Taco.view.catalog.Index', {
                 fieldLabel: 'Color',
                 margin: '0 0 20',
                 allowBlank: false
-            }, {
-                xtype: 'form',
-                ui: 'subform-subform',
-                title: 'Inner Form',
-                margin: '0 0 20',
-                items: [{
-                    xtype: 'textfield',
-                    name: 'colorEditor',
-                    fieldLabel: 'Color Editor',
-                    margin: '0 0 20',
-                    allowBlank: false,
-                    isIndependent: true
-                }, {
-                    xtype: 'button',
-                    itemId: 'innerButton',
-                    ui: 'action-primary',
-                    scale: 'medium',
-                    text: 'inner button',
-                    formBind: true
-                }]
-            }, {
+            },
+            inner,
+            {
                 xtype: 'button',
-                itemId: 'outerButton',
+                itemId: 'saveButton',
                 ui: 'action-primary',
                 scale: 'medium',
                 text: 'outer button',
+                disabled: true,
                 formBind: true
             }]
         });
@@ -72,6 +87,36 @@ Ext.define('Taco.view.catalog.Index', {
 
         this.callParent(arguments);
 
-        outer.loadRecord(store.first());
+        this.record = store.first();
+        this.inner = inner;
+        this.outer = outer;
+
+        // Ext.util.Observable.capture(this.outer.down('#inner'), function (eventName, e) { console.log(eventName, e); });
+
+        this.replaceMonitor(outer);
+
+        this.outer.loadRecord(this.record);
+        this.outer.getForm().getFields().each(function (item) {
+            if (item.isFormField) {
+                item.resetOriginalValue();
+            }
+        });
+
+        this.inner.getForm().findField('colorEditor').setValue(this.record.get('color')).resetOriginalValue();
+    },
+
+    replaceMonitor: function (form) {
+        var basic = form.getForm();
+
+        basic.monitor.unbind();
+
+        basic.monitor = new Ext.container.Monitor({
+            selector: '[isFormField]:not([isIndependent])',
+            scope: basic,
+            addHandler: basic.onFieldAdd,
+            removeHandler: basic.onFieldRemove
+        });
+
+        basic.monitor.bind(form);
     }
 });
