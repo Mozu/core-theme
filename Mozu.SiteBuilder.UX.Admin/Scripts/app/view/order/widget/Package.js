@@ -9,7 +9,8 @@ Ext.define('Taco.view.order.widget.Package', {
     extend: 'Ext.panel.Panel',
     requires: [
         'Taco.view.order.widget.ShippingItemGrid',
-        'Taco.view.order.modal.EditTrackingNumber'
+        'Taco.view.order.modal.EditTrackingNumber',
+        'Taco.store.PackagingTypes'
     ],
     config: {
         
@@ -62,6 +63,8 @@ Ext.define('Taco.view.order.widget.Package', {
             shippingMethod: "",
             trackingNumber: null,
             shipDate: "",
+            
+            packagingType: "",
             
             // billing contact info
             firstName: "",
@@ -123,7 +126,7 @@ Ext.define('Taco.view.order.widget.Package', {
 
         
         // load the package items
-       // me.loadData(me.packageData.items);
+        // me.loadData(me.packageData.items);
         
         
         me.callParent(arguments);
@@ -187,6 +190,14 @@ Ext.define('Taco.view.order.widget.Package', {
                         '<tpl else>',
                             'Order default',
                         '</tpl>',
+                        '<span class="seperator">|</span>',
+                        'Packaging Type: ',
+                
+                        '<tpl if="values.shipmentStatus==\'Shipped\'">',
+                            '{packagingType}',
+                        '<tpl else>',
+                            '<a class="shipmentAction" shipmentAction="packagingType">{packagingType}</a>',
+                        '</tpl>',
                     '</div>',
                 '<tpl if="values.showVisibilityToggle">',
                     '<div class="visibilityToggle">',
@@ -212,6 +223,9 @@ Ext.define('Taco.view.order.widget.Package', {
                                 case "deletePackage":
                                     this.deletePackage()
                                     break;
+                                case "packagingType":
+                                    this.showPackagingTypeMenu(e, dom, eOpt);
+                                    break;
                             }
                         },
                         scope: this
@@ -236,6 +250,80 @@ Ext.define('Taco.view.order.widget.Package', {
         Ext.fly(dom).update(txt);
     },
     
+    changePackagingType: function (packagingType) {
+        var me = this;
+        
+        if (packagingType && me.packageData.packagingType !== packagingType) {
+
+            var data = Ext.clone(me.packageData);
+
+            data.packagingType = packagingType;
+
+            config = {
+                jsonData: [data],
+                success: function (response) {
+                    // success handling here
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        Taco.app.fireEvent('setmessage', "Error updating packaging type", 'error');
+                        Taco.app.viewPort.setLoading(false);
+                        return;
+                    }
+                    // reload the record
+                    this.record.reload();
+                },
+                failure: function (response) {
+                    var json = Ext.decode(response.responseText, true),
+                        msg = (json && json.Message) ? json.Message : "Error updating packaging type";
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                    Taco.app.viewPort.setLoading(false);
+                },
+                scope: this
+            };
+
+            Taco.app.viewPort.setLoading(true);
+
+            // call the model method to persist the change
+            this.record.changePackagingType(config);
+        }
+    },
+
+    showPackagingTypeMenu: function (e, dom, eOpt) {
+        var me = this;
+
+        
+        
+        var packagingStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.PackagingTypes'
+        });
+
+        var menuData = [];
+        packagingStore.each(function (rec) {
+            var record = Ext.clone(rec.data);
+            //need to `lete the id from the data or opening the menu twice will cause it to blow up;
+            delete record.id;
+            menuData.push(record);
+        });
+        
+        var menu = new Ext.menu.Menu({
+            plain: true,
+            listeners: {
+                click: function (menu, item, e, eOpts) {
+                    
+                    var packagingType = item.packagingType;
+                    if (packagingType) {
+                        me.changePackagingType(packagingType);
+                    }
+                },
+                //delegate: "x-menu-item-link",
+                scope: me
+            },
+            items: menuData
+        });
+        
+        menu.showBy(e.target);
+    },
+
     deletePackage: function() {
         var me = this;
         // get package json

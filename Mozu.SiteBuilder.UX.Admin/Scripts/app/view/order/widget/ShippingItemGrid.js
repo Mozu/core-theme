@@ -803,7 +803,11 @@ weight: 2
             labelUrl = '/admin/app/order/shipping/package/label?orderId=' + data.orderId + '&packageId=' + data.id;
             
             // need to open the window immediately after the click so the popup blocker doesn't suppress it. 
-            newWindow = window.open('/admin/Scripts/resources/images/legacy/loading.gif');
+        //newWindow = window.open('/admin/Scripts/resources/images/legacy/loading.gif');
+            newWindow = window.open('/admin/Scripts/build/resources/images/loading-shipping-label-m.gif');
+
+        var errorIcon = "/admin/Scripts/build/resources/images/error-shipping-label.gif";
+
        
         if (data.shipmentId === null || data.shipmentId === undefined)
         {
@@ -821,6 +825,7 @@ weight: 2
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {
                         Taco.app.fireEvent('setmessage', "Error viweing shipping label", 'error');
+                        newWindow.location = errorIcon;
                         return;
                     }
                     me.record.reload();
@@ -831,6 +836,7 @@ weight: 2
                     var json = Ext.decode(response.responseText, true),
                       msg = (json && json.Message) ? json.Message : "Error moving items";
                     Taco.app.fireEvent('setmessage', msg, 'error');
+                    newWindow.location = errorIcon;
                     me.setLoading(false);
                 }
             });
