@@ -60,11 +60,12 @@ define(['text'], function (text) {
 
         },
 
-        namedTmpl = 'define(\'{4}\',{0}, function({1}) { {2} ; return {3} });\n\n\n//@ sourceURL={4}.js\n\n',
+        namedTmpl = 'define(\'{4}\',[{0}], function({1}) { {2} ; return {3} });\n\n\n//@ sourceURL={4}.js\n\n',
         anonTmpl = namedTmpl.replace('\'{4}\',', ''),
         createTextModule = function (parsedConf, body, named) {
+            var stringDeps = parsedConf.deps.length > 0 ? "'" + parsedConf.deps.join("','") + "'" : '';
             return (named ? namedTmpl : anonTmpl)
-                    .replace('{0}', JSON.stringify(parsedConf.deps))
+                    .replace('{0}', stringDeps)
                     .replace('{1}', parsedConf.args.join(","))
                     .replace('{3}', parsedConf.toExport)
                     .split('{4}').join(parsedConf.name)

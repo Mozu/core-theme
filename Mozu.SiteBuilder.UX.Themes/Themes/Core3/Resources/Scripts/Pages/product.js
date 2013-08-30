@@ -38,7 +38,7 @@
                 $newDateOptionInput.dateinput({
                     format: 'mm/dd/yyyy',
                     max: option.maxDate,
-                    min: option.minDate,
+                    min: option.minDate
                 });
                 $newDateOptionInput.css('color', '#333');
             }

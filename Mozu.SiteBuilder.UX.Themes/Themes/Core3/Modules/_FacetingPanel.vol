@@ -12,7 +12,7 @@
                 <!-- ko foreach: Values -->
                     <li>
                         <input type="checkbox" class="mz-faceting-option" data-bind="checked: IsApplied, attr: { id: id }, disable: $root.submitting">
-                        <label data-bind="attr: { for: id }, text: Label"></label>
+                        <label data-bind="attr: { 'for': id }, text: Label"></label>
                     </li>
                 <!-- /ko -->
             </ul>

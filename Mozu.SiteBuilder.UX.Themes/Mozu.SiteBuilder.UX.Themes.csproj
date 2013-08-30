@@ -414,6 +414,7 @@
     <Content Include="Themes\Core3\MetaData\PageTypes\catalog\product\definition.json" />
     <Content Include="Themes\Core3\Resources\Scripts-Built\Modules\common.js" />
     <Content Include="Themes\Core3\Resources\Scripts-Built\Pages\category.js" />
+    <Content Include="Themes\Core3\Resources\Scripts\Vendor\json2.js" />
     <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\jquery.history.js" />
     <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\jquery.tools.dateinput.js" />
     <Content Include="Themes\Core3\Resources\Scripts-Built\Vendor\jquery.tools.rangeinput.js" />

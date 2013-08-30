@@ -3,8 +3,8 @@
  *
  */
 
-define(['sdk'], function (Mozu) {
-    var apiConfig = JSON.parse(document.getElementsByTagName('head')[0].getAttribute('data-api-config'));
+define(['sdk', 'jquery'], function (Mozu, $) {
+    var apiConfig = $.parseJSON(document.getElementsByTagName('head')[0].getAttribute('data-api-config'));
     Mozu.setServiceUrls(apiConfig.urls);
     var headers = apiConfig.header,
         api = Mozu.Tenant(headers['x-vol-tenant'])
