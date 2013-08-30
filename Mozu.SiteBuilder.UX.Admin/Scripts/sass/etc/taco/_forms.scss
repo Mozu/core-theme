@@ -106,9 +106,7 @@
 
   /* PRODUCT OPTION */
 
-  .#{$vprefix}product-options {
-
-    background-color: red;
+  .#{$vprefix}product-options-grid {
 
     tr {
       @include transition(opacity 0.5s);
