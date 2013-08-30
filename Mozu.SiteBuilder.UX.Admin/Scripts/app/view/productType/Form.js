@@ -54,8 +54,23 @@ Ext.define('Taco.view.productType.Form', {
        
         this.callParent(arguments);
         
+        this.replaceMonitor();
     },
 
+    replaceMonitor: function () {
+        var basic = this.getForm();
+
+        basic.monitor.unbind();
+
+        basic.monitor = new Ext.container.Monitor({
+            selector: '[isFormField]:not([ignoreParentFormTracking])',
+            scope: basic,
+            addHandler: basic.onFieldAdd,
+            removeHandler: basic.onFieldRemove
+        });
+
+        basic.monitor.bind(this);
+    },
 
     buildAttributeList: function (attributeType, store) {
         var panel = this.items.get(attributeType).items.get('attributes'),
