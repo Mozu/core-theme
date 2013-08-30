@@ -240,8 +240,6 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             unit: unitLabel
         };
 
-        console.log(isMove, data.count, data.totalCount, netChange);
-
         data.totalCount = data.totalCount > data.count ? data.totalCount : data.count;
 
         rc.update(data);

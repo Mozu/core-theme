@@ -11,13 +11,6 @@
         type: 'card'
     },
 
-    attributeItemTpl: [
-        '<tpl for=".">',
-            '<span class="', Taco.baseCSSPrefix, 'draghandle"></span>',
-            '<span class="', Taco.baseCSSPrefix, 'attribute-item-header-text">{attributeName}</span>',
-        '</tpl>'
-    ],
-
     initComponent: function () {
         this.cls = [this.cls, Taco.baseCSSPrefix + 'producttype-attribute-panel'].join(' ');
 
@@ -61,8 +54,6 @@
         });
 
         this.listContainer = Ext.create('Ext.container.Container', {
-            // height: 300,
-            // autoScroll: true,
             items: this.buildAttributeList()
         });
 
@@ -84,31 +75,8 @@
     buildAttribute: function (ptAttribute) {
         var attributeView, items;
 
-        items = [{
-            xtype: 'component',
-            flex: 1,
-            data: ptAttribute.data,
-            tpl: this.attributeItemTpl
-        }];
-
-        if (!ptAttribute.get('isLocked')) {
-            items = items.concat([{
-                xtype: 'secondarybutton',
-                itemId: 'delete',
-                text: 'Delete',
-                click: function () { this.removeAttribute(ptAttribute, attributeView); },
-                scope: this
-            }, {
-                xtype: 'secondarybutton',
-                itemId: 'edit',
-                text: 'Edit',
-                click: function () { this.edit(ptAttribute); },
-                scope: this
-            }])
-        }
-
         attributeView = Ext.create('Ext.panel.Panel', {
-            reorderable: true,
+            itemId: ptAttribute.get('attributeName'),
             ui: 'subform-subform',
             cls: Taco.baseCSSPrefix + 'attribute-item',
             margin: '0 0 10',
@@ -181,11 +149,19 @@
             this.store.add(record);
             this.listContainer.add(this.buildAttribute(record));
         }
-        this.onCancel();
+        this.onCancel(record);
     },
 
-    onCancel: function () {
+    onCancel: function (record) {
+        var listCt, name;
+
         this.down('[itemId=add]').enable();
-        this.getLayout().setActiveItem(0);
+
+        listCt = this.getLayout().setActiveItem(0);
+
+        if (record && record.isModel) {
+            name = record.get('attributeName');
+            listCt.down('#' + name).down('#placeholder').update(record.getData());
+        }
     }
 });

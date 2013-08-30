@@ -14,163 +14,64 @@ Ext.define('Taco.view.catalog.Index', {
     },
 
     initComponent: function () {
-
-
         var me = this,
-            modal, modaless, uibtns, bodyScrollListener;
+            outer, store;
 
-
-        modal = Ext.create('Taco.core.ux.window.WindowWithActions', {
-            title: 'Shipping Settings',
-            draggable: true,
-            primaryText: 'Yes, save changes',
-            secondaryText: 'No, don\'t save',
-            items: [{
-                xtype: 'component',
-                height: 1200,
-                html: 'This is where more text would go.'
-            }]
+        store = Ext.create('Ext.data.Store', {
+            autoLoad: true,
+            proxy: 'memory',
+            fields: ['color'],
+            data: [{ color: 'red' }]
         });
 
-        modaless = Ext.create('Taco.core.ux.window.Window', {
-            title: 'Shipping Settings',
-            scale: 'small',
-            items: [{
-                xtype: 'component',
-                html: 'Hello world! Lorem ipsum dolor sit amet...'
-            }]
-        });
-
-        panel = Ext.create('Ext.panel.Panel', {
+        outer = Ext.create('Ext.form.Panel', {
             ui: 'subform',
-            title: 'Subform',
-            closable: true,
-            bodyPadding: '20 0',
-            layout: {
-                type: 'hbox',
-                align: 'top',
-                defaultMargins: '0 20 0 0'
-            },
-            header: {
-                layout: {
-                    type: 'hbox',
-                    align: 'middle',
-                    alignRoundingMethod: 'ceil'
-                }
-            },
-            dockedItems: [{
-                xtype: 'toolbar',
-                dock: 'bottom',
-                layout: {
-                    type: 'hbox',
-                    defaultMargins: '0 10'
-                },
+            title: 'Outer Form',
+            items: [{
+                xtype: 'textfield',
+                name: 'color',
+                fieldLabel: 'Color',
+                margin: '0 0 20',
+                allowBlank: false
+            }, {
+                xtype: 'form',
+                ui: 'subform-subform',
+                title: 'Inner Form',
+                margin: '0 0 20',
                 items: [{
-                    xtype: 'component',
-                    html: 'this is a component'
+                    xtype: 'textfield',
+                    name: 'colorEditor',
+                    fieldLabel: 'Color Editor',
+                    margin: '0 0 20',
+                    allowBlank: false,
+                    isIndependent: true
                 }, {
                     xtype: 'button',
-                    text: 'Ext Button'
-                }, {
-                    xtype: 'button',
-                    scale: 'medium',
-                    text: 'Medium button'
-                }, {
-                    xtype: 'button',
+                    itemId: 'innerButton',
                     ui: 'action-primary',
                     scale: 'medium',
-                    text: 'Mozu Button'
+                    text: 'inner button',
+                    formBind: true
                 }]
-            }],
-            items: [{
-                xtype: 'component',
-                height: 240,
-                html: 'hello',
-                style: {
-                    backgroundColor: 'aliceblue'
-                }
+            }, {
+                xtype: 'button',
+                itemId: 'outerButton',
+                ui: 'action-primary',
+                scale: 'medium',
+                text: 'outer button',
+                formBind: true
             }]
-        });
-
-        uibtns = Ext.create('Ext.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom',
-                defaultMargins: '5'
-            },
-            items: [{
-                    xtype: 'button',
-                    frame: false,
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Cancel'
-                }, {
-                    xtype: 'button',
-                    frame: false,
-                    scale: 'medium',
-                    ui: 'action-primary',
-                    text: 'Save',
-                    handler: Ext.bind(me.launchModal, me, ['modal'])
-                }, {
-                    xtype: 'button',
-                    frame: false,
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'More',
-                    menuAlign: 'tr-br?',
-                    menu: {
-                        plain: true,
-                        shadow: false,
-                        items: [{
-                                text: 'Preview',
-                                handler: Ext.bind(me.launchModal, me, ['modaless'])
-                            }, {
-                                text: 'Delete'
-                            }]
-                    }
-                }, {
-                    xtype: 'splitbutton',
-                    frame: false,
-                    scale: 'medium',
-                    ui: 'action-primary',
-                    text: 'Select',
-                    menuAlign: 'tr-br?',
-                    menu: {
-                        plain: true,
-                        shadow: false,
-                        items: [{
-                                text: 'Select all'
-                            }, {
-                                text: 'Select all but this'
-                            }]
-                    }
-                }, {
-                    xtype: 'datetime',
-                    fieldLabel: 'Datetime',
-                    value: new Date()
-                }, {
-                    xtype: 'datefield',
-                    fieldLabel: 'Datefield',
-                    value: new Date()
-                }]
         });
 
         // put it all together
         Ext.apply(this.body, {
             cls: Taco.baseCSSPrefix + 'catalog',
             layout: 'auto',
-            items: [uibtns, panel]
+            items: [outer]
         });
 
         this.callParent(arguments);
 
-        this.modal = modal;
-        this.modaless = modaless;
-    },
-
-    launchModal: function (type) {
-        var modal = this[type];
-
-        modal.show();
+        outer.loadRecord(store.first());
     }
 });
