@@ -6,6 +6,7 @@
 
 Ext.define('Taco.view.product.option.VariationGrid', {
     extend: 'Ext.grid.Panel',
+    cls: 'taco-product-options-grid',
 
     requires: ['Ext.grid.plugin.CellEditing'],
 
