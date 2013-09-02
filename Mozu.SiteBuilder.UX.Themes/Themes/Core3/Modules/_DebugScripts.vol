@@ -13,5 +13,5 @@
 </script>
 <script src="/resources/scripts/require.js"></script>
 <script type="text/javascript">
-  try {  require([{{Model}}]); } catch(e) { alert(e) }
+  require([{{Model}}]);
 </script>
