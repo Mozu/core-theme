@@ -200,7 +200,7 @@
     </Reference>
     <Reference Include="Mozu.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.1.0.13240.3\lib\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.1.0.13246.3\lib\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
