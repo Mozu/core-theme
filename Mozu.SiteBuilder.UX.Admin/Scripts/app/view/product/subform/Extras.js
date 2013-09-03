@@ -149,7 +149,7 @@ Ext.define('Taco.view.product.subform.Extras', {
                 xtype: 'component',
                 cls: 'extra-attribute',
                 html: ptAttribute.get('attributeName')
-            }, {
+            }/*, {  uncomment when the time comes from the larger story of things 
                 xtype: 'action',
                 text: 'Remove',
                 hidden: ptAttribute.get('isRequired'),
@@ -178,7 +178,7 @@ Ext.define('Taco.view.product.subform.Extras', {
 
                     }, this)
                 }
-            }]
+            }*/]
         }, 
         editorCfg, {
             xtype: 'container',

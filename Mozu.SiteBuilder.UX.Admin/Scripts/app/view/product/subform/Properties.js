@@ -104,7 +104,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                     pRecord = properties.add({ attributeFQN: record.getId() })[0];
                 }
                 pRecord.set('values', values);
-                
+                debugger
             }
 
         }, this);
@@ -161,14 +161,13 @@ Ext.define('Taco.view.product.subform.Properties', {
                 xtype: 'component',
                 flex: 1,
                 html: ptAttribute.get('attributeName')
-            }, {
+            }/*, { part of a larger story; uncomment when that time comes
                 xtype: 'action',
                 text: 'Remove',
                 hidden: ptAttribute.get('isRequired'),
                 attributeFQN: ptAttribute.get('attributeFQN'),
                 listeners: {
                     click: Ext.bind(function (it) {
-                        
                         this.remove(it.up().up());
                         var index = this.productTypeProperties.find('attributeFQN', it.attributeFQN);
                         this.productTypeProperties.removeAt(index);
@@ -184,7 +183,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                         }
                     },this)
                 }
-            }]
+            }*/]
         });
         
         return Ext.widget({
