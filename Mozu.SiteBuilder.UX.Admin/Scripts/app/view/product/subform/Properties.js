@@ -104,7 +104,6 @@ Ext.define('Taco.view.product.subform.Properties', {
                     pRecord = properties.add({ attributeFQN: record.getId() })[0];
                 }
                 pRecord.set('values', values);
-                debugger
             }
 
         }, this);
