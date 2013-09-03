@@ -20,11 +20,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         IProductWebApiClient   _productClient;
         IProductSearchWebApiClient _searchClient;
         ISiteBuilderContext _ctx;
-        public CatalogController(ISiteBuilderContext ctx , IProductWebApiClient productClient, IProductSearchWebApiClient searchClient)
+        ISiteBuilderApiContext _apiCtx;
+
+        public CatalogController(ISiteBuilderContext ctx , ISiteBuilderApiContext apiCtx, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient)
         {
             _ctx = ctx;
             _searchClient = searchClient;
             _productClient = productClient;
+            _apiCtx = apiCtx;
 
         }
 
@@ -36,6 +39,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 if (res.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
+                    // show detailed error message if previewing from Admin
+                    if (_apiCtx.CmsDraftState == Mozu.Content.Contracts.PublishStates.Latest)
+                    {
+                        if (res.HasException)
+                        {
+                            var ex = res.ReadException();
+                            throw ex;
+                        }
+                    }
                     return new HttpNotFoundResult();
                 }
                
