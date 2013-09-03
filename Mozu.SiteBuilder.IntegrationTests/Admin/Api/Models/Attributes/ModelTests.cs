@@ -97,7 +97,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                 Name = "Buckets",
                 Id = id,
                 IsBase = true,
-                NumberOfProducts = 12,
+                ProductCount = 12,
                 ModifiedDate = DateTime.Now 
             };
 
