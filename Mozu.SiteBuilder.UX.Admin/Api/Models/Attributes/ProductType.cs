@@ -17,7 +17,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         public bool IsBase { get; set; }
 
         [DataMember(Name = "numberOfProducts")]
-        public int? NumberOfProducts { get; set; }
+        public int? ProductCount { get; set; }
 
         [DataMember(Name = "options")]
         public List<ProductTypeAttribute> Options { get; set; }
