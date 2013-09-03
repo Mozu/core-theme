@@ -118,11 +118,6 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         },
         {
-            "name": "shippingCost",
-            "type": "float",
-            "useNull": true
-        },
-        {
             "name": "shippingDescription",
             "type": "string",
             "useNull": true
@@ -136,6 +131,11 @@ Ext.define('Taco.model.Order', {
             "name": "shippingDiscounts",
             "type": "auto",
             "default": []
+        },
+        {
+            "name": "shippingSubtotal",
+            "type": "float",
+            "useNull": true
         },
         {
             "name": "shippingTotal",

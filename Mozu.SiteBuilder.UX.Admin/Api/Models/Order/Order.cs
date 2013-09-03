@@ -70,8 +70,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "shippingMethodName")]
         public string ShippingMethodName { get; set; }
 
-        [DataMember(Name = "shippingCost")]
-        public decimal ShippingCost;
+        [DataMember(Name = "shippingSubtotal")]
+        public decimal ShippingSubtotal;
 
         [DataMember(Name = "activeShippingDiscount", EmitDefaultValue = false)]
         public ShippingDiscount ActiveShippingDiscount { get; set; }
