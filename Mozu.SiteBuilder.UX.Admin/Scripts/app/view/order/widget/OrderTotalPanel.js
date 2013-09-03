@@ -96,7 +96,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
                 '<tr class="row-group-start">',
                     '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">Shipping ({shippingMethodName}):</div></td>',
-                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{shippingCost:usMoney}</div></td>',
+                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{shippingSubtotal:usMoney}</div></td>',
                 '</tr>',
                 
                 

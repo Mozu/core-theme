@@ -70,6 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 .ForMember(x => x.ActiveShippingDiscount, op => op.MapFrom(dc => dc.ShippingDiscounts != null ? dc.ShippingDiscounts.FirstOrDefault(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) : null))
                 .ForMember(x => x.ShippingDiscounts, op => op.MapFrom(dc => dc.ShippingDiscounts))
+                .ForMember(x => x.ShippingSubtotal, op => op.MapFrom(dc => dc.ShippingSubTotal))
                 .ForMember(x => x.ShippingTotal, op => op.MapFrom(dc => dc.ShippingTotal))
                 .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Total))
                 .ForMember(x => x.CustomerNote, op => op.MapFrom(dc => dc.ShopperNotes != null ? dc.ShopperNotes.Comments : null))
