@@ -47,7 +47,7 @@
     window.Taco.adminAppPath = window.location.protocol + "//" + window.location.host + '@Url.Content("~")';
     @if (ViewData["useGoogleAnalytics"] as string == "true")
     {
-        @Html.Raw("window.Tacco.googleAnalyticsAccountId = \"" + @ViewData["googleAnalyticsAccount"] + "\";")
+        @Html.Raw("window.Taco.googleAnalyticsAccountId = \"" + @ViewData["googleAnalyticsAccount"] + "\";")
         ;
     };
     window.History = {
