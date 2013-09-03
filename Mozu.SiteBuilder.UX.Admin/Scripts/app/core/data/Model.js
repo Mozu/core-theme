@@ -260,6 +260,8 @@ Ext.define('Taco.core.data.Model', {
     },
     reload: function () {
         var me = this;
+        me.fireEvent("reload", me);
+        
         this.self.load(me.getId(), {
             bypassCache: true,
             success: function (record, operation) {

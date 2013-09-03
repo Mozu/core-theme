@@ -38,7 +38,18 @@ Ext.define('Taco.view.order.Form', {
     ],
 
     initComponent: function () {
-
+        var me = this;
+        
+        // after the record is reloaded we will need to refresh the ui
+        me.record.on("aftercommit", function () {
+            me.onRecordChange();
+        }, this);
+        
+        // after the record is reloaded we will need to refresh the ui
+        me.record.on("reload", function () {
+            me.onBeforeReload();
+        }, this);
+        
         this.customer = {};
 
         this.titleData = {
@@ -49,6 +60,22 @@ Ext.define('Taco.view.order.Form', {
         this.callParent(arguments);
 
         this.buildForm();
+    },
+    
+    onBeforeReload : function() {
+        //save the scrollTop position so that the main form container will be able to restore the scroll position
+        var scrollPanel = this.el.up(".taco-content-body").el.dom;
+        this.record.scrollTopTarget = scrollPanel.scrollTop;
+        
+    },
+    onRecordChange: function () {
+        var me = this;
+        // try and re-establish the scrollTop position after the record reloads;
+        if (this.record.scrollTopTarget) {
+            Ext.Function.defer(function () {
+                me.el.up('.taco-content-body').dom.scrollTop = me.record.scrollTopTarget;
+            }, 1000, me);
+        }
     },
 
     buildForm: function () {
