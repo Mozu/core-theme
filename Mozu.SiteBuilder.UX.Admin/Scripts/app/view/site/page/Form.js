@@ -25,14 +25,19 @@ Ext.define('Taco.view.site.page.Form', {
     type: 'product',
     enableStoreSyncTasks: true,
 
+    reloadSurface: function() {
+        this.editSurface.iframe.getDoc().location.reload();
+    },
+
     initComponent: function () {
         var me = this;
 
-        this.mon (Taco.core.StateManager, 'navigate',  me.onNavigate, this);
+        this.mon(Taco.core.StateManager, 'navigate', me.onNavigate, this);
+
        
         this.toolBox.on({
             themechange: function () {
-                this.editSurface.iframe.getDoc().location.reload();
+                this.reloadSurface();
             }, 
             navigationchange: function (store, record) {
                 //  pants
@@ -134,20 +139,14 @@ Ext.define('Taco.view.site.page.Form', {
             this.editSurface
         ];
         
-        
-      
-
-
-
         this.callParent(arguments);
-
-     
 
         this.pagesSelectField = this.down('#pagesSelectField');
 
         this.cmsDocumentDrafts = Taco.core.data.StoreManager.getOrCreate('Taco.store.CmsDocumentDrafts');
         //this.body.addCls('taco-site-editor');
 
+        this.saveTasks.on('complete', me.reloadSurface, me);
 
     },
     publishAll:function() {
