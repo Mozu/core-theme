@@ -1,50 +1,55 @@
-﻿@using System.Web.Configuration;
+﻿@using System.Diagnostics
+@using System.Web.Configuration
+@using Mozu.Core.Api.Contracts
+@using Mozu.SiteBuilder.UX.Admin.Api
+@using Newtonsoft.Json
 @using Mozu.Core.Settings;
+@using User = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User
 <script>
     @{
-            
-            var debugLayouts = WebConfigurationManager.AppSettings["extDebugLayout"] == "true";
-            var assFile = typeof(Mozu.SiteBuilder.UX.Admin.Api.AccountController ).Assembly.Location;
-            var verDate = System.IO.File.GetCreationTime(assFile);
-            var ver = System.Diagnostics.FileVersionInfo.GetVersionInfo(assFile);
-           
-            var user = (Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User)ViewData["user"];
-            var behaviors = Newtonsoft.Json.JsonConvert.SerializeObject(user.BehaviorIds);
-            var siteRoles = (List<Mozu.Core.Api.Contracts.UserRole>)ViewData["siteRoles"];
-            var siteRolesJson = Newtonsoft.Json.JsonConvert.SerializeObject(siteRoles);
-            
-            var taContext = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["taContext"]);
-            var siteUsers = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["siteUsers"]);
-            var extPath = WebConfigurationManager.AppSettings["extPath"];
-          
-            var paymentApiBaseUrl = MozuConfigurationManager.AppSettings("service-url-StorefrontCardsWebApi");
 
-        var locValues = Newtonsoft.Json.Linq.JArray.FromObject(ViewData["localizationValues"]);
-            
-   
-        }
-    
-        
-      
-    window.Taco = {
-        baseCSSPrefix :'taco-',
-        testHarnessMode:@((Context.Request["testHarnessMode"]=="true").ToString().ToLowerInvariant() ),
-        adminAppPath: window.location.protocol + "//" + window.location.host + '@Url.Content("~")',
-        adminRelPath:'@Url.Content("~")',
-        User : { id: '@user.Id'  , behaviors: @behaviors,  taContext: @Html.Raw(taContext) , email: '@user.EmailAddress', sites: @Html.Raw(siteRolesJson), name: '@user.FirstName @user.LastName'.trim() },
-        apiVersion: '@ver.FileVersion',
-        siteUsers:@Html.Raw(siteUsers),
-        authDomain: "@ViewData["authCookieDomain"]",
-        localizationValues: @Html.Raw( locValues.ToString( )),
-        paymentApiBaseUrl: '@Html.Raw(paymentApiBaseUrl)',
-        buildDate : new Date ('@verDate')
+        bool debugLayouts = WebConfigurationManager.AppSettings["extDebugLayout"] == "true";
+        string assFile = typeof (AccountController).Assembly.Location;
+        DateTime verDate = File.GetCreationTime(assFile);
+        FileVersionInfo ver = FileVersionInfo.GetVersionInfo(assFile);
 
-        @if (Convert.ToBoolean(ViewData["useGoogleAnalytics"])) {
-            <text>,googleAnalyticsAccountId: "@ViewData["googleAnalyticsAccount"]"</text>
-        }
+        var user = (User) ViewData["user"];
+        int[] behaviors = user.BehaviorIds;
+        var siteRoles = (List<UserRole>) ViewData["siteRoles"];
+        List<UserRole> siteRolesJson = siteRoles;
 
+        object taContext = ViewData["taContext"];
+        object siteUsers = ViewData["siteUsers"];
+        string extPath = WebConfigurationManager.AppSettings["extPath"];
+
+        var paymentApiBaseUrl = MozuConfigurationManager.AppSettings("service-url-StorefrontCardsWebApi");
+
+        object locValues = ViewData["localizationValues"];
+
+        var windowTaco = new
+                             {
+                                 baseCSSPrefix = "taco-",
+                                 testHarnessMode = Context.Request["testHarnessMode"] == "true",
+                                 adminRelPath = @Url.Content("~"),
+                                 User = new
+                                            {
+                                                id = user.Id, behaviors, taContext,
+                                                email = user.EmailAddress,
+                                                sites = siteRolesJson,
+                                                name = (user.FirstName + " " + user.LastName).Trim()
+                                            },
+                                 apiVersion = ver.FileVersion,
+                                 localizationValues = locValues, paymentApiBaseUrl,
+                                 buildDate = verDate
+                             };
     };
-        
+    window.Taco = @Html.Raw(JsonConvert.SerializeObject(windowTaco));
+    window.Taco.adminAppPath = window.location.protocol + "//" + window.location.host + '@Url.Content("~")';
+    @if (ViewData["useGoogleAnalytics"] as string == "true")
+    {
+        @Html.Raw("window.Tacco.googleAnalyticsAccountId = \"" + @ViewData["googleAnalyticsAccount"] + "\";")
+        ;
+    };
     window.History = {
         baseHrefOverride: Taco.adminAppPath
     };
