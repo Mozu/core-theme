@@ -37,16 +37,10 @@ Ext.define('Taco.view.site.page.settings.Facets', {
     },
 
     initComponent: function () {
+
         var me = this;
 
-        this.facetSetStore = this.record.getFacetSets();
-
-
-        window.facets = this;
-
-        this.rangeQueryForms = {};
-
-        this.facetSetStore.on('load', function () {
+        function setUp() {
             var facetSet = me.facetSetStore.getAt(0);
             if (!facetSet) {
                 Taco.app.fireEvent('setmessage', 'No facet set found!', 'error')
@@ -198,8 +192,14 @@ Ext.define('Taco.view.site.page.settings.Facets', {
             });
             me.configuredFacetsView.boundList.selectedItemCls = me.inheritedFacetsView.boundList.selectedItemCls = me.inheritedFacetsView.boundList.overItemCls = 'dummy';
             me.form.add([me.availableFacetsDropdown, me.inheritedFacetsView, me.configuredFacetsView]);
-        });
-            
+        }
+
+        this.facetSetStore = this.record.getFacetSets();
+
+        window.facets = this;
+
+        this.rangeQueryForms = {};
+
         this.form = {
             layout: 'vbox',            autoScroll: true,            beforeSave: function () {
                 Ext.iterate(me.rangeQueryForms, function (sourceId, form) {
@@ -208,7 +208,12 @@ Ext.define('Taco.view.site.page.settings.Facets', {
             }
         };
 
-        this.callParent(arguments);
+        this.callParent(arguments);
+        if (this.facetSetStore.isLoading()) {
+            this.facetSetStore.on('load', setUp);
+        } else {
+            setUp();
+        }
 
         this.form.on('heightchange', this.form.updateLayout, this.form);
 
