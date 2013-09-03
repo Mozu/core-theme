@@ -249,20 +249,11 @@ namespace Mozu.SiteBuilder.Mvc
 	        }
 	    }
 
-	    private static string g_appId;
+	    private  readonly Lazy<string> _appId= new Lazy<string>(()=> LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
 
-	    private static string AppIdToken
+	    private  string AppIdToken
 	    {
-	        get
-	        {
-	            if (g_appId == null)
-	            {
-	                //must have userclaim set to true of else creates a gawd appclaim 
-                    var claims =  LightweightAppClaims.CreateForSystemApp(  ConfigurationManager.AppSettings["ZuulAppId"] , true ) ;
-	                g_appId = claims.ToAccessToken();
-	            }
-	            return g_appId;
-	        }
+	        get { return _appId.Value; }
 	    }
 
 
