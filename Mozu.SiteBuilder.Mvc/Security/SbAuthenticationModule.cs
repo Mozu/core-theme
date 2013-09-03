@@ -73,12 +73,20 @@ namespace Mozu.SiteBuilder.Mvc.Security
                             }
                             else
                             {
-                                var uc = LightweightUserClaims.CreateForAnonymousShopper(apiContext.TenantId, apiContext.SiteId.Value);
-                                var extingTicket = authHelper.GetAuthTicket() ?? new UserAuthTicket();
-                                extingTicket.AccessToken = uc.ToAccessToken();
+                                if (apiContext.SiteId.HasValue)
+                                {
+                                    var uc = LightweightUserClaims.CreateForAnonymousShopper(apiContext.TenantId, apiContext.SiteId.Value);
+                                    var extingTicket = authHelper.GetAuthTicket() ?? new UserAuthTicket();
+                                    extingTicket.AccessToken = uc.ToAccessToken();
 
-                                authHelper.SaveAuthTicket(extingTicket);
-                                apiContext.SetUser(uc);
+                                    authHelper.SaveAuthTicket(extingTicket);
+                                    apiContext.SetUser(uc);
+                                }
+                                else
+                                {
+                                    authHelper.SaveAuthTicket(null);
+                                }
+                                
                             }
 
                             tcs.SetResult(true);
