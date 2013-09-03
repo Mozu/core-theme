@@ -100,6 +100,11 @@ namespace Mozu.SiteBuilder.Mvc.Security
         void IAuthenticationHelper.SaveAuthTicket(UserAuthTicket ticket)
         {
             var cookie = new HttpCookie(CookieName);
+            if (ticket == null)
+            {
+                CookieProvider.SaveResponseCookie(CookieName, cookie);
+                return;
+            }
             cookie["accessToken"] = ticket.AccessToken ;
             cookie["refreshToekn"] = ticket.RefreshToken;
             if (ticket.User != null)
