@@ -25,8 +25,7 @@ Ext.define('Taco.view.fileManager.Index', {
     plural: false,
     modelName: 'Taco.shared.model.File',
     store: {
-        type: 'Taco.shared.store.Files',
-        autoSync: true
+        type: 'Taco.shared.store.Files'
     },
     useTilePanel: true,
 
@@ -40,7 +39,7 @@ Ext.define('Taco.view.fileManager.Index', {
                 '<div class="taco-basegrid-thumbnail">',
                     '<tpl if="localthumbnail">',
                         '<img height="60" src="{localthumbnail}">',
-                    '<tpl else>',
+                    '<tpl elseif="thumbnail && fileSize">',
                         '<img height="60" src="{thumbnail}?size=60" />',
                     '</tpl>',
                 '</div>'
@@ -87,11 +86,31 @@ Ext.define('Taco.view.fileManager.Index', {
             text: 'Size',
             dataIndex: 'fileSize',
             align: 'right'
+        },
+        {
+            xtype: 'taco.menucolumn',
+            text: 'Actions',
+            menuItems: [{
+                    text: 'Delete',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Product',
+                        behavior: 'destroy'
+                    },
+                    menuColumnHandler: 'destroyMenuColumnHandler'
+                }
+            ]
         }],
+        
         selType: 'cellmodel',
         plugins: [
             Ext.create('Ext.grid.plugin.CellEditing', {
-                clicksToEdit: 2
+                clicksToEdit: 2,
+                listeners: {
+                    edit: function (editor, e) {
+                        this.grid.store.sync();
+                    }
+                    
+                }
             })
         ]
     },
@@ -119,8 +138,10 @@ Ext.define('Taco.view.fileManager.Index', {
         this.callParent(arguments);
 
         this.mon(this.store, 'beforesync', this.onBeforeSyncStore, this);
+        
 
     },
+   
     //removes create operations and returns false if 
     onBeforeSyncStore: function (operations) {
         delete operations.create;

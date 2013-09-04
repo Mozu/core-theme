@@ -68,6 +68,7 @@ Ext.define('Taco.shared.util.Uploadable', {
                     doc.set('fileType', 'image');
                     doc.set('localthumbnail', e.target.result);
                     img = new Image();
+                    
                     img.onload = function () {
                         doc.set('width', img.width);
                         doc.set('height', img.height);
