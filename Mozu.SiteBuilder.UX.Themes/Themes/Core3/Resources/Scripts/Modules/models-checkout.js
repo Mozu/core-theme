@@ -480,14 +480,15 @@
             },
             submit: function() {
                 var order = this,
-                    apiSteps = [];
+                    apiSteps = [],
+                    createAccount = this.createAccount();
                 if (!this.validate()) return false;
                 this.submitting(true);
                 this.messages([]);
 
                 // build an array of sequential promises for all checkout tasks
 
-                if (this.createAccount()) {
+                if (createAccount) {
                     apiSteps.push(function () {
                         return order.User.create();
                     }, function () {
@@ -527,7 +528,16 @@
                         }
                     });
                 }, successHandler = function (completedOrder) {
-                    return order.publish('complete');
+                    if (createAccount) {
+                        $.post('/auth/AjaxSignIn', {
+                            email: order.email(),
+                            password: order.password()
+                        }).then(function () {
+                            return order.publish('complete');
+                        });
+                    } else {
+                        order.publish('complete');
+                    }
                 };
 
                 api.steps(apiSteps).then(function (completedOrder) {
