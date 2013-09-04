@@ -138,34 +138,29 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     items: [
                     {
                         name: 'nameOnCard',
-                        fieldLabel: 'Name on Card',
-                        value: 'Bob Boberson'
+                        fieldLabel: 'Name on Card'
                     }, {
                         xtype: 'currencyfield',
                         name: 'amount',
                         fieldLabel: 'Amount',
-                        emptyText: '0',
-                        value: '223'
+                        emptyText: '0'
                     }, {
                         xtype: 'numberfield',
                         name: 'expireMonth',
                         fieldLabel: 'Exp Month',
                         minValue: 1,
-                        maxValue: 12,
-                        value: 3
+                        maxValue: 12
                     }, {
                         xtype: 'numberfield',
                         name: 'expireYear',
-                        fieldLabel: 'Exp Year',
-                        value: 2015
+                        fieldLabel: 'Exp Year'
                     }]
                 }, {
                     xtype: 'container',
                     defaults: {
                         xtype: 'textfield',
                         labelSeparator: '',
-                        labelAlign: 'top',
-                        width: 300
+                        labelAlign: 'top'
                     },
                     items: [
                     {
@@ -178,18 +173,15 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                         forceSelection: true,
                         //                    listConfig: { shadow: false },
                         //                    shrinkWrap: 3,
-                        store: [['Visa', 'Visa'], ['NotVisa', 'Something that is not Visa']],
-                        value: 'Visa'
+                        store: [['Visa', 'Visa'], ['NotVisa', 'Something that is not Visa']]
                     }, {
                         name: 'cardNumber',
                         itemId: 'cardNumber',
-                        fieldLabel: 'Card Number',
-                        value: '4111111111111111'
+                        fieldLabel: 'Card Number'
                     }, {
                         name: 'cvv',
                         itemId: 'cvv',
                         fieldLabel: 'CVV',
-                        value: '255',
                         width: 100
                     }, {
                         xtype: 'checkboxfield',
