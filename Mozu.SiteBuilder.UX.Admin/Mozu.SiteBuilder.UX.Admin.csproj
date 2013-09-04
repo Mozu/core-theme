@@ -188,7 +188,7 @@
     </Reference>
     <Reference Include="Mozu.AdminUser.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13240.1\lib\Mozu.AdminUser.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13246.1\lib\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -294,7 +294,7 @@
     </Reference>
     <Reference Include="Mozu.User.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.User.Contracts.1.0.13240.1\lib\Mozu.User.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.User.Contracts.1.0.13246.1\lib\Mozu.User.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.UspsShippingAdmin.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
