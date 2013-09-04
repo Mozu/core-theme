@@ -177,7 +177,7 @@ public class SiteBuilderAuthorizeAttribute : AuthorizeAttribute
         {
             return false;
         }
-        if (context.UserClaims.Expiration < DateTime.UtcNow.AddMinutes(-1))
+        if (context.UserClaims.Expiration < DateTime.UtcNow.AddMinutes(5))
         {
             //var ticket = authHelper.GetAuthTicket();
             //if (ticket != null && ticket.RefreshTokenExpiration > DateTime.UtcNow)

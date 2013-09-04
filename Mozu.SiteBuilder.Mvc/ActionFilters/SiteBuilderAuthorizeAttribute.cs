@@ -97,7 +97,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                 //}
 
                  
-                if (context.UserClaims.Expiration < DateTime.UtcNow.AddMinutes(-1))
+                if (context.UserClaims.Expiration < DateTime.UtcNow.AddMinutes(5))
                 {
                     var refreshToken = authHelper.GetRefreshToken() ;
                     //if ( ticket != null && ticket.RefreshTokenExpiration > DateTime.UtcNow )
