@@ -23,3 +23,9 @@
 @include taco-phoneOrders;
 @include taco-order;
 //@include taco-contextSwitcher;
+
+body[data-current-user="travis_johnson"] {
+    .x-border-layout-ct {
+        background-image: url('http://i.imgur.com/igIUXoR.png');
+    }
+}
