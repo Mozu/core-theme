@@ -7,7 +7,7 @@
 Ext.define('Taco.shared.store.Files', {
     extend: 'Taco.store.shared.BaseStore',
     model: 'Taco.shared.model.File',
-    pageSize: 100,
+    pageSize: 20,
     storeId: 'files',
     buffered: false,
     remoteFilter: true,

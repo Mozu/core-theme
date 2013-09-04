@@ -323,5 +323,14 @@
       }
     }
   }
-
+  .#{$vprefix}basegrid-thumbnail{
+	@include icon-font($glyph-category);
+	height:auto;
+	width:auto;
+	min-height: 20px;
+	img{
+		position: relative;
+		z-index: 2;
+	}
+  }
 }

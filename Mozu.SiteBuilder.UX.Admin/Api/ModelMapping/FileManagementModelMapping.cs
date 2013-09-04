@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.fileType, op => op.MapFrom(x => x.Extension))
                 .ForMember(x => x.id, op => op.MapFrom(x => x.Id))
                 .ForMember(x => x.name, op => op.MapFrom(x => x.Name))
-                .ForMember(x => x.thumbnail, op => op.ResolveUsing(DoThumb))
+                //.ForMember(x => x.thumbnail, op => op.ResolveUsing(DoThumb))
                 .ForMember(x => x.isUploaded, op => op.ResolveUsing(x => x.ContentLength.GetValueOrDefault(0) > 0))
                 .ForMember(x => x.width, op => op.ResolveUsing(_ => _.Properties.Where(_p => _p.PropertyType == "width").Select(_p => (double)_p.Value).FirstOrDefault()))
                 .ForMember(x => x.height, op => op.ResolveUsing(_ => _.Properties.Where(_p => _p.PropertyType == "height").Select(_p => (double)_p.Value).FirstOrDefault()))
@@ -75,24 +75,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             
             
         //}
-        static string DoThumb(Document doc)
-        {
-            switch ((doc.Extension ?? "").ToLower())
-            {
-                case "gif":
-                case "jpg":
-                case "jpeg":
-                case "png": {
-                    if (doc.ContentLength .GetValueOrDefault (0) < 1)
-                    {
-                        return "/admin/Scripts/resources/images/legacy/AddPhotos.png";
-                    }
-                    return "/admin/img/files/" + doc.Id;
-                }
-            }
-            return "/admin/Scripts/resources/images/file-icon.png";
+        //static string DoThumb(Document doc)
+        //{
+        //    switch ((doc.Extension ?? "").ToLower())
+        //    {
+        //        case "gif":
+        //        case "jpg":
+        //        case "jpeg":
+        //        case "png": {
+        //            if (doc.ContentLength .GetValueOrDefault (0) < 1)
+        //            {
+        //                return "/admin/Scripts/resources/images/legacy/AddPhotos.png";
+        //            }
+        //            return "/admin/img/files/" + doc.Id;
+        //        }
+        //    }
+        //    return "/admin/Scripts/resources/images/file-icon.png";
 
             
-        }
+        //}
     }
 }
