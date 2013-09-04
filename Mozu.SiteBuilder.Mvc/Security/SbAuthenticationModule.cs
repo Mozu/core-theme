@@ -57,8 +57,8 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
                     string token = authHelper.GetAuthTicket().RefreshToken;
                     var ticketClient = DependencyResolver.Current.GetService<Mozu.User.Contracts.Clients.IAuthTicketWebApiClient>().CloneWithoutUserClaims();
-                    //var task = ticketClient.RefreshUserAuthTicket(token);
-                    var task = ticketClient.Handler.SendAsync<Mozu.Core.Api.Contracts.UserAuthTicket>("PUT", "refresh?refreshToken=" + token, ((AuthTicketWebApiClient) ticketClient).ServiceId, ticketClient.Options);
+                    var task = ticketClient.RefreshUserAuthTicket(token);
+                    //var task = ticketClient.Handler.SendAsync<Mozu.Core.Api.Contracts.UserAuthTicket>("PUT", "refresh?refreshToken=" + token, ((AuthTicketWebApiClient) ticketClient).ServiceId, ticketClient.Options);
 
                     task.ConfigureAwait(false);
                     var retTask = task.ContinueWith(serviceClientResponse =>
