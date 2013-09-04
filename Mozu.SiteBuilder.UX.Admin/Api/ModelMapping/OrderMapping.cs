@@ -64,15 +64,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ShippingMethodName, op => op.MapFrom(dc => dc.ShippingInfo.ShippingMethodName))
                 .ForMember(x => x.IpAddress, op => op.MapFrom(dc => dc.IPAddress))
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
-                .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
                 .ForMember(x => x.ActiveOrderDiscount, op => op.MapFrom(dc => dc.OrderDiscounts != null ? dc.OrderDiscounts.FirstOrDefault(d => d.Excluded.HasValue && !d.Excluded.Value) : null))
                 .ForMember(x => x.OrderDiscounts, op => op.MapFrom(dc => dc.OrderDiscounts))
 
                 .ForMember(x => x.ActiveShippingDiscount, op => op.MapFrom(dc => dc.ShippingDiscounts != null ? dc.ShippingDiscounts.FirstOrDefault(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) : null))
                 .ForMember(x => x.ShippingDiscounts, op => op.MapFrom(dc => dc.ShippingDiscounts))
-                .ForMember(x => x.ShippingSubtotal, op => op.MapFrom(dc => dc.ShippingSubTotal))
-                .ForMember(x => x.ShippingTotal, op => op.MapFrom(dc => dc.ShippingTotal))
-                .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Total))
                 .ForMember(x => x.CustomerNote, op => op.MapFrom(dc => dc.ShopperNotes != null ? dc.ShopperNotes.Comments : null))
                 .ForMember(x => x.OrderStatus, op => op.MapFrom(dc => dc.Status))
                 .ForMember(x => x.ShippingStatus, op => op.MapFrom(dc => dc.ShipmentStatus))
@@ -82,6 +78,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 .ForMember(x => x.OrderAdjustment, op => op.MapFrom(dc => dc.Adjustment))
                 .ForMember(x => x.ShippingAdjustment, op => op.MapFrom(dc => dc.ShippingAdjustment))
+
+                .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
+                .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.DiscountTotal))
+                .ForMember(x => x.DiscountedTotal, op => op.MapFrom(dc => dc.DiscountedTotal))
+                .ForMember(x => x.HandlingTotal, op => op.MapFrom(dc => dc.HandlingAmount))
+                .ForMember(x => x.FeeTotal, op => op.MapFrom(dc => dc.FeeTotal))
+                .ForMember(x => x.ShippingSubtotal, op => op.MapFrom(dc => dc.ShippingSubTotal))
+                .ForMember(x => x.ShippingTotal, op => op.MapFrom(dc => dc.ShippingTotal))
+                .ForMember(x => x.TaxTotal, op => op.MapFrom(dc => dc.TaxTotal))
+                .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Total))
 
                 .ForMember(x => x.IsDraft, op => op.MapFrom(dc => dc.IsDraft.HasValue ? dc.IsDraft.Value : false))
                 .ForMember(x => x.HasDraft, op => op.MapFrom(dc => dc.HasDraft.HasValue ? dc.HasDraft.Value : false))
