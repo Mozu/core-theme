@@ -51,8 +51,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             editableCls = " orderEditable";
         }
 
-        debugger;
-        
         this.totalTable = Ext.create("Ext.Component", {
             data: me.getData(),
             cls: editableCls,
