@@ -98,11 +98,6 @@ Ext.define('Taco.model.Order', {
             "default": []
         },
         {
-            "name": "orderDiscountTotal",
-            "type": "float",
-            "useNull": true
-        },
-        {
             "name": "activeDiscountDescription",
             "type": "string",
             "useNull": true
@@ -142,6 +137,18 @@ Ext.define('Taco.model.Order', {
             "type": "float",
             "useNull": true
         },
+        /* sum of all discounts */
+        {
+            "name": "discountTotal",
+            "type": "float",
+            "useNull": true
+        },
+        /* subtotal of order with discounts applied */
+        {
+            "name": "discountedTotal",
+            "type": "float",
+            "useNull": true
+        },
         {
             "name": "taxTotal",
             "type": "float",
@@ -152,7 +159,11 @@ Ext.define('Taco.model.Order', {
             "type": "float",
             "useNull": true
         },
-
+        {
+            "name": "handlingTotal",
+            "type": "float",
+            "useNull": true
+        },
         {
             "name": "orderAdjustment",
             "type": "object",

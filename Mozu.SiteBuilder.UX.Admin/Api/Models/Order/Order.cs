@@ -48,9 +48,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "items")]
         public List<OrderItem> Items { get; set; }
 
-        [DataMember(Name = "subtotal")]
-        public decimal Subtotal { get; set; }
-
         /// <summary>
         /// Active order-level discount, if one exists.
         /// </summary>
@@ -70,29 +67,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "shippingMethodName")]
         public string ShippingMethodName { get; set; }
 
-        [DataMember(Name = "shippingSubtotal")]
-        public decimal ShippingSubtotal;
-
         [DataMember(Name = "activeShippingDiscount", EmitDefaultValue = false)]
         public ShippingDiscount ActiveShippingDiscount { get; set; }
 
         [DataMember(Name = "shippingDiscounts", EmitDefaultValue = false)]
         public List<ShippingDiscount> ShippingDiscounts { get; set; }
-
-        [DataMember(Name = "shippingTotal")]
-        public decimal ShippingTotal { get; set; }
         #endregion
-
-        #region Taxes, fees, and adjustments
-        [DataMember(Name = "taxTotal", EmitDefaultValue = true)]
-        public decimal TaxTotal { get; set; }
-
-        [DataMember(Name = "feeTotal", EmitDefaultValue = false)]
-        public decimal FeeTotal { get; set; }
-        #endregion
-
-        [DataMember(Name = "total")]
-        public decimal Total { get; set; }
 
         [DataMember(Name = "customerNote", EmitDefaultValue = false)]
         public string CustomerNote { get; set; }
@@ -168,5 +148,63 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         [DataMember(Name = "hasDraft", EmitDefaultValue = true)]
         public bool HasDraft { get; set; }
+
+        #region Totals
+
+        /// <summary>
+        /// Price without shipping, discounts, or anything.
+        /// </summary>
+        [DataMember(Name = "subtotal")]
+        public decimal Subtotal { get; set; }
+
+        /// <summary>
+        /// Sum of all applied discounts.
+        /// </summary>
+        [DataMember(Name="discountTotal")]
+        public decimal DiscountTotal { get; set; }
+
+        /// <summary>
+        /// Order cost after all discounts are applied but before shipping, handling, and taxes.
+        /// </summary>
+        [DataMember(Name="discountedTotal")]
+        public decimal DiscountedTotal { get; set; }
+
+        /// <summary>
+        /// Price of shipping before fees and adjustments.
+        /// </summary>
+        [DataMember(Name = "shippingSubtotal")]
+        public decimal ShippingSubtotal;
+
+        /// <summary>
+        /// Final cost of shipping.
+        /// </summary>
+        [DataMember(Name = "shippingTotal")]
+        public decimal ShippingTotal { get; set; }
+
+        /// <summary>
+        /// Cost of handling.
+        /// </summary>
+        [DataMember(Name = "handlingTotal")]
+        public decimal HandlingTotal { get; set; }
+
+        /// <summary>
+        /// Sum of any fees.
+        /// </summary>
+        [DataMember(Name = "feeTotal")]
+        public decimal FeeTotal { get; set; }
+
+        /// <summary>
+        /// Final cost of taxes.
+        /// </summary>
+        [DataMember(Name = "taxTotal", EmitDefaultValue = true)]
+        public decimal TaxTotal { get; set; }
+
+        /// <summary>
+        /// Final price of the order.
+        /// </summary>
+        [DataMember(Name = "total")]
+        public decimal Total { get; set; }
+
+        #endregion
     }
 }
