@@ -133,15 +133,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 Task removeTask;
                 if (source.Items.Count == 0)
+                {
                     removeTask = DeletePackageInternal(args.OrderId, source);
+                }
                 else
+                {
+                    if (source.Measurements != null) source.Measurements.Weight = null;
                     removeTask = _orderWebApiClient.UpdatePackage(args.OrderId, args.SourcePackageId, source);
+                }
 
                 // and save the destination package.
                 updateTasks.Add( 
-                    removeTask.ContinueWith<Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<DCs.Package>>>(t => 
-                        _orderWebApiClient.UpdatePackage(args.OrderId, args.DestinationPackageId, dest)
-                    ).Unwrap()
+                    removeTask.ContinueWith<Task<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<DCs.Package>>>(t => {
+                        if (dest.Measurements != null) dest.Measurements.Weight = null;
+                        return _orderWebApiClient.UpdatePackage(args.OrderId, args.DestinationPackageId, dest);
+                    }).Unwrap()
                 );
             }
             // case 2: removing item from a package
@@ -163,9 +169,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 // if we removed the last or only item from the package, delete the package.
                 if (source.Items.Count == 0)
+                {
                     await DeletePackageInternal(args.OrderId, source);
+                }
                 else
+                {
+                    if (source.Measurements != null) source.Measurements.Weight = null;
                     updateTasks.Add( _orderWebApiClient.UpdatePackage(args.OrderId, args.SourcePackageId, source) );
+                }
             }
             // case 3: adding item to a package
             else if (String.IsNullOrEmpty(args.SourcePackageId) && !String.IsNullOrEmpty(args.DestinationPackageId))
@@ -182,6 +193,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     }
                     destPackageItem.Quantity += argItem.Quantity;
                 }
+                if (dest.Measurements != null) dest.Measurements.Weight = null;
                 updateTasks.Add( _orderWebApiClient.UpdatePackage(args.OrderId, args.DestinationPackageId, dest) );
             }
             else
