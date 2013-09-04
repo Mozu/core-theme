@@ -798,19 +798,18 @@ weight: 2
         var newWindow,
             me = this,
             grid = button.up("gridpanel"),
-            data = grid.packageData;
-            
-            labelUrl = '/admin/app/order/shipping/package/label?orderId=' + data.orderId + '&packageId=' + data.id;
-            
-            // need to open the window immediately after the click so the popup blocker doesn't suppress it. 
-        //newWindow = window.open('/admin/Scripts/resources/images/legacy/loading.gif');
-            newWindow = window.open('/admin/Scripts/build/resources/images/loading-shipping-label-m.gif');
-
-        var errorIcon = "/admin/Scripts/build/resources/images/error-shipping-label.gif";
-
+            data = grid.packageData,
+            labelUrl = '/admin/app/order/shipping/package/label?orderId=' + data.orderId + '&packageId=' + data.id,
+            windowName = "shippingLabel-" + data.orderId + "-" + data.id;
        
         if (data.shipmentId === null || data.shipmentId === undefined)
         {
+            // need to open the window immediately after the click so the popup blocker doesn't suppress it. 
+            //newWindow = window.open('/admin/Scripts/resources/images/legacy/loading.gif');
+            
+            newWindow = window.open('/admin/Scripts/build/resources/images/loading-shipping-label-m.gif', windowName);
+            var errorIcon = "/admin/Scripts/build/resources/images/error-shipping-label.gif";
+
             me.setLoading(true);
             Ext.Ajax.request( {
                 url: '/admin/app/order/shipping/package/prepareshipment',
@@ -828,9 +827,8 @@ weight: 2
                         newWindow.location = errorIcon;
                         return;
                     }
-                    me.record.reload();
-                    
                     newWindow.location = labelUrl;
+                    me.record.reload();
                 },
                 failure: function (response) {
                     var json = Ext.decode(response.responseText, true),
@@ -842,9 +840,8 @@ weight: 2
             });
       
         }
-        else
-        {
-            window.open(labelUrl);
+        else {
+            window.open(labelUrl, windowName);
         }
     },
 
