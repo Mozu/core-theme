@@ -51,6 +51,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             editableCls = " orderEditable";
         }
 
+        debugger;
         
         this.totalTable = Ext.create("Ext.Component", {
             data: me.getData(),
@@ -65,7 +66,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
                 '<tr>',
                     '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">SubTotal</div></td>',
-                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{subtotal:usMoney}</div></td>',
+                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{discountedTotal:usMoney}</div></td>',
                 '</tr>',
                 
                 '<tpl for="orderDiscounts">',
@@ -98,6 +99,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                     '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">Shipping ({shippingMethodName}):</div></td>',
                     '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{shippingSubtotal:usMoney}</div></td>',
                 '</tr>',
+                
+                '<tpl if="handlingTotal !== 0">',
+                    '<tr>',
+                        '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">Additional Handling</div></td>',
+                        '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{handlingTotal:usMoney}</div></td>',
+                    '</tr>',
+                '</tpl>',
                 
                 
                 '<tpl for="shippingDiscounts">',
