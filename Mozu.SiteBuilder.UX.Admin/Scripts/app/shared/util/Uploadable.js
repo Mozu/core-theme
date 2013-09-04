@@ -55,7 +55,6 @@ Ext.define('Taco.shared.util.Uploadable', {
                 name: file.name,
                 fileType: file.type,
                 isUploaded: false,
-                thumbnail: '/admin/Scripts/resources/images/file-icon.png',
                 file: file
             });
 

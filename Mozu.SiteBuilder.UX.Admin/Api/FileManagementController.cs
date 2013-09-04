@@ -91,6 +91,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             List<FileManagementFile> vmList = new List<FileManagementFile>();
             foreach (var file in files)
             {
+                string nameWoExt = System.IO.Path.GetFileNameWithoutExtension(file.name );
+                string ext = System.IO.Path.GetExtension(file.name);
+                var t = _documentWebApiClient.GetDocuments(documentListName: "files",pageSize:200,  filter: string.Format("name sw \"{0}\"", nameWoExt));
+               
+                var existingFiles = (await _documentWebApiClient.GetDocuments(documentListName: "files", filter: string.Format("name sw \"{0}\"", nameWoExt))).ReadAsSync().Items;
+               // if ( existingFiles.Count > 0 || existingFiles.Any())
+                if (existingFiles.Count > 0 || existingFiles.Any(x => x.Name.Equals(file.name, StringComparison.OrdinalIgnoreCase)))
+                {
+                   
+                    for (int i = 1; i < 200; i++)
+                    {
+                        file.name = nameWoExt + "_" + i + ext;
+                        if (!existingFiles.Any(x => x.Name.Equals(file.name, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            break;
+                        }
+                    }
+                    
+                }
                 var dm = new Mozu.Content.Contracts.Document()
                  {
                      Name = file.name,
