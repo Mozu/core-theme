@@ -193,17 +193,28 @@
 	                        <td>Tax:</td>
 	                        <td>{{ Model.TaxTotal|currency }}</td>
 	                    </tr>
+					
+	                    <tr>
+	                        <td>Shipping({{Model.ShippingInfo.ShippingMethodName}})</td>
+	                        <td>{{ Model.ShippingSubTotal|currency }}</td>
+
+	                    </tr>
+					
 						{% for discount in Model.ShippingDiscounts %}
 						{% if not discount.Excluded %}
 	                    <tr>
-							<td>{{ discount.Discount.Discount.Name }} (Save {{ discount.Discount.Impact|currency }})</td>
+	                        <td>{{ discount.Discount.Discount.Name }} </td>
+							<td>-{{ discount.Discount.Impact|currency }}</td>
 						</tr>
 						{% endif %}
-						{% endfor %}
+	                    {% endfor %}
+						
+						{% if   Model.ShippingTotal != Model.ShippingSubTotal %}
 	                    <tr>
 	                        <td>Shipping & Handling:</td>
 	                        <td>{{ Model.ShippingTotal|currency }}</td>
 	                    </tr>
+						{% endif %}
 						{% if Model.HandlingAmount != 0 %}
 	                    <tr>
 	                        <td>Additional Handling:</td>
