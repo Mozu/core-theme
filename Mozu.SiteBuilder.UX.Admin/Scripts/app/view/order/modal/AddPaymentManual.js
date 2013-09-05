@@ -175,7 +175,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                             fieldLabel: 'Card Type',
                             allowBlank: false,
                             forceSelection: true,
-                            store: [['Visa', 'Visa'], ['NotVisa', 'Something that is not Visa']],
+                            store: [['Visa', 'Visa'], ['Mastercard', 'Mastercard']],
                             value: 'Visa'
                         },
                         {
