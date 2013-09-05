@@ -158,6 +158,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal Subtotal { get; set; }
 
         /// <summary>
+        /// Cost of all items in the order, after item-level discounts are applied.
+        /// </summary>
+        [DataMember(Name="discountedSubtotal")]
+        public decimal DiscountedSubtotal { get; set; }
+
+        /// <summary>
         /// Sum of all applied discounts.
         /// </summary>
         [DataMember(Name="discountTotal")]

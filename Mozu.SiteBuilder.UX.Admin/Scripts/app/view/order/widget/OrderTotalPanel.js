@@ -64,7 +64,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
                 '<tr>',
                     '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">SubTotal</div></td>',
-                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{discountedTotal:usMoney}</div></td>',
+                    '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">{discountedSubtotal:usMoney}</div></td>',
                 '</tr>',
                 
                 '<tpl for="orderDiscounts">',
