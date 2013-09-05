@@ -1,8 +1,5 @@
 Ext.define('Taco.view.customers.subform.Information', {
     extend: 'Taco.view.customers.subform.Subform',
-    requires: [
-        'Taco.shared.view.field.Image'
-    ],
     title: 'Shopper ID',
     cls: Taco.baseCSSPrefix + 'customer-profile',
     initComponent: function () {

@@ -1,11 +1,6 @@
 Ext.define('Taco.view.customers.subform.OrderHistory', {
     extend: 'Taco.view.customers.subform.Subform',
-    requires: [
-        'Taco.shared.view.field.Image'
-    ],
-
     title: 'Order History',
-
     initComponent: function () {
 
         var record = this.record;
