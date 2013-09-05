@@ -27,12 +27,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
             displayField: 'name',
             triggerOnClick:true,
             valueField: 'id',
-            listeners: {
-                change: this.onPaymentTypesChange,
-                scope: this
-
-
-            }
+            
 
         });
         this.gateWayContainer = Ext.widget({
@@ -56,6 +51,12 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
         this.items = [this.paymentTypes];
 
         this.callParent(arguments);
+
+        this.gateWayDefinitionsCombo.on(
+            {
+                change: this.onPaymentTypesChange,
+                scope: this
+            });
         
         if (this.record.get('gatewayDefinitionId')) {
             this.on('boxready', this.onPaymentTypesChange, this);
