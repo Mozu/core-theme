@@ -1,6 +1,6 @@
 ﻿<script>
     var require = {
-        urlArgs: "?theme={{SiteContext.Theme.Id}}",
+        urlArgs: "theme={{SiteContext.Theme.Id}}",
         baseUrl: "/resources/scripts",
         paths: {
             sdk: "../../sdk/debug",

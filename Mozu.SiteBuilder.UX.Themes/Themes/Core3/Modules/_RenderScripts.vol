@@ -2,7 +2,7 @@
 <script src="/resources/scripts/require.js"></script>
 <script>
     require.config({
-        urlArgs: "?theme={{SiteContext.Theme.Id}}",
+        urlArgs: "theme={{SiteContext.Theme.Id}}",
         baseUrl: "/resources/scriptsbuilt",
         paths: {
             sdk: "../../sdk/min",
