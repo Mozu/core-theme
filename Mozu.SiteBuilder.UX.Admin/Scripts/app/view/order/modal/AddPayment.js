@@ -173,7 +173,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                         forceSelection: true,
                         //                    listConfig: { shadow: false },
                         //                    shrinkWrap: 3,
-                        store: [['Visa', 'Visa'], ['NotVisa', 'Something that is not Visa']]
+                        store: [['Visa', 'Visa'], ['Mastercard', 'Mastercard']]
                     }, {
                         name: 'cardNumber',
                         itemId: 'cardNumber',
