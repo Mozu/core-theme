@@ -61,6 +61,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                     dataIndex: 'amountToRefund',
                     editor: {
                         xtype: 'numberfield',
+                        hideTrigger: true,
                         minValue: 0
                     },
                     renderer: Ext.util.Format.usMoney
