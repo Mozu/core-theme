@@ -135,6 +135,8 @@
         this.quantity = Ext.widget({
             xtype: 'numberfield',
             labelAlign: 'left',
+            mouseWheelEnabled: false,
+            hideTrigger:true,
             fieldLabel: 'Quantity',
             allowBlank: false,
             minValue: 1,

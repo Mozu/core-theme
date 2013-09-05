@@ -135,6 +135,8 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                         {
                             xtype: 'numberfield',
                             /* two of three required field */
+                            mouseWheelEnabled: false,
+                            hideTrigger:true,
                             name: 'gatewayInteractionId',
                             fieldLabel: 'Gateway Interaction Id'
                         },

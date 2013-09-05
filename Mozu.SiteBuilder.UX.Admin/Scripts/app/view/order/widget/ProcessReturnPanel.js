@@ -97,6 +97,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     width: 200,
                     editor: {
                         xtype: 'numberfield',
+                        hideTrigger: true,
                         minValue: 0
                     }
                 },
@@ -107,6 +108,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     dataIndex: 'quantityRestockable',
                     editor: {
                         xtype: 'numberfield',
+                        hideTrigger: true,
                         minValue: 0
                     }
                 }

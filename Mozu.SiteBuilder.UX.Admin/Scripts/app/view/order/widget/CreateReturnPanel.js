@@ -41,6 +41,7 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
                     dataIndex: 'returnQuantity',
                     editor: {
                         xtype: 'numberfield',
+                        hideTrigger: true,
                         minValue: 0
                     }
                 }
