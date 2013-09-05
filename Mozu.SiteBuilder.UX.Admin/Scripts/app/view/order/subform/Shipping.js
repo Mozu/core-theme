@@ -48,12 +48,14 @@ Ext.define('Taco.view.order.subform.Shipping', {
         Taco.properties.shippingRates = Taco.core.data.StoreManager.getOrCreate({
             model: 'Taco.model.KeyValuePair',
             autoLoad: true,
+            pageSize: 500,
             proxy: {
                 type: 'ajax',
                 api: {
                     read: '/admin/app/shipping/carrierRates'
                 },
                 reader: {
+                    
                     type: 'json',
                     root: 'items',
                     successProperty: 'success',
