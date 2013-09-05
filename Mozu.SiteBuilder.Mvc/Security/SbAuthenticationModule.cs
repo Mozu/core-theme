@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
                 var authHelper = DependencyResolver.Current.GetService<IAuthenticationHelper>();
                 var settnigs = DependencyResolver.Current.GetService<ISettings>();
 
-                if (apiContext != null && apiContext.UserClaims != null && !apiContext.UserClaims.IsAnonymous && (apiContext.UserClaims.Expiration - DateTime.Now).TotalMinutes < 5 && authHelper.GetAuthTicket() != null)
+                if (apiContext != null && apiContext.UserClaims != null && !apiContext.UserClaims.IsAnonymous && (apiContext.UserClaims.Expiration - DateTime.UtcNow).TotalMinutes < 5 && authHelper.GetAuthTicket() != null)
                 {
 
 
