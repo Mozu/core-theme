@@ -88,11 +88,6 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         },
         {
-            "name": "subtotal",
-            "type": "float",
-            "useNull": true
-        },
-        {
             "name": "orderDiscounts",
             "type": "auto",
             "default": []
@@ -136,6 +131,17 @@ Ext.define('Taco.model.Order', {
             "name": "shippingTotal",
             "type": "float",
             "useNull": true
+        },
+        /* sum cost of all products (no discounts applied) */
+        {
+            "name": "subtotal",
+            "type": "float",
+            "useNull": true
+        },
+        /* sum cost of all products with line-item discounts applied */
+        {
+            "name": "discountedSubtotal",
+            "type": "float",
         },
         /* sum of all discounts */
         {

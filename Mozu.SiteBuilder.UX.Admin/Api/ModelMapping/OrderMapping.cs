@@ -80,6 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ShippingAdjustment, op => op.MapFrom(dc => dc.ShippingAdjustment))
 
                 .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
+                .ForMember(x => x.DiscountedSubtotal, op => op.MapFrom(dc => dc.DiscountedSubtotal))
                 .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.DiscountTotal))
                 .ForMember(x => x.DiscountedTotal, op => op.MapFrom(dc => dc.DiscountedTotal))
                 .ForMember(x => x.HandlingTotal, op => op.MapFrom(dc => dc.HandlingAmount))
