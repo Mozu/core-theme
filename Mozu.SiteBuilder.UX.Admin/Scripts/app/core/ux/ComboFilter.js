@@ -36,6 +36,7 @@ Ext.define('Taco.core.ux.ComboFilter', {
         this.on({
             beforequery: function () { return false; },
             change: this.onValueChange,
+          //  keypress: function(){console.log('ere')},
             scope: this
         });
     },
@@ -48,6 +49,7 @@ Ext.define('Taco.core.ux.ComboFilter', {
      * @private
      */
     buildFilter: function (record, data, filterFn) {
+
         var cfg, filter;
 
         record.beginEdit();
@@ -76,8 +78,12 @@ Ext.define('Taco.core.ux.ComboFilter', {
      * @private
      */
     filterItemStore: function (filters) {
-        
         this.itemStore.clearFilter(true);
+        if (filters == '') {
+            //need to not surpress the reload event when removing the filter
+            this.itemStore.clearFilter();
+            return;
+        }
         this.itemStore.filter(filters);
     },
 
@@ -278,6 +284,7 @@ Ext.define('Taco.core.ux.ComboFilter', {
      * @private
      */
     onFilterFormSubmit: function () {
+        
         var values = this.filterForm.items.get('form').getValues(),
             model = this.valueStore.getProxy().getModel(),
             filters;
@@ -345,7 +352,6 @@ Ext.define('Taco.core.ux.ComboFilter', {
      */
     onValueChange: function (field, newValue, oldValue) {
         var records, filters;
-
         if (!newValue && !oldValue) return;
 
         records = this.valueStore.getRange();
