@@ -346,7 +346,6 @@ Ext.define('Taco.view.discount.Form', {
                 me.couponCodeInput,
                 {
                     xtype: 'secondarybutton',
-                    hidden: !(me.record.get('couponCode') || me.record.get('requiresCoupon')),
                     text: 'Random',
                     click: function() {
                         var randomizer = Ext.data.IdGenerator.get('uuid'),
