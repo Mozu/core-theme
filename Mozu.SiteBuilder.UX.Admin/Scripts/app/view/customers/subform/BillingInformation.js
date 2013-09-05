@@ -1,8 +1,5 @@
 Ext.define('Taco.view.customers.subform.BillingInformation', {
     extend: 'Taco.view.customers.subform.Subform',
-    requires: [
-        'Taco.shared.view.field.Image'
-    ],
     title: 'Billing Information',
     cls: Taco.baseCSSPrefix + 'customer-billingInfo',
     initComponent: function () {

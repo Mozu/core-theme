@@ -1,8 +1,5 @@
 Ext.define('Taco.view.customers.subform.ShippingInformation', {
     extend: 'Taco.view.customers.subform.Subform',
-    requires: [
-        'Taco.shared.view.field.Image'
-    ],
     title: 'Shipping Information',
     cls: Taco.baseCSSPrefix + 'customer-shippingInfo',
     initComponent: function () {

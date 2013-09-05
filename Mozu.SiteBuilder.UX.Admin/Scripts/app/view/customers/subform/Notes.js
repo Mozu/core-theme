@@ -1,8 +1,5 @@
 Ext.define('Taco.view.customers.subform.Notes', {
     extend: 'Taco.view.customers.subform.Subform',
-    requires: [
-        'Taco.shared.view.field.Image'
-    ],
     title: 'Notes',
     cls: Taco.baseCSSPrefix + 'customer-notes',
     initComponent: function () {
