@@ -9,7 +9,7 @@ Ext.define('Taco.core.data.StoreManager', {
     },
     singleton: true,
     stores: null,
-    constructor: function(config) {
+    constructor: function (config) {
         var me = this;
         me.stores = new Ext.util.MixedCollection();
         me.mixins.observable.constructor.call(me, config);
@@ -17,7 +17,7 @@ Ext.define('Taco.core.data.StoreManager', {
         me.on('afterproxyrequest', me.afterProxyRequest, me);
     },
 
-    getOrCreate: function(config, contextSuffix) {
+    getOrCreate: function (config, contextSuffix) {
         var me = this, store, needsRefresh, ctxLvl, id;
         if (Ext.isString(config)) {
             config = { type: config };
@@ -39,7 +39,7 @@ Ext.define('Taco.core.data.StoreManager', {
         if (!store) {
             config.type = config.type || 'Ext.data.Store';
             var cc = Ext.apply({ runtimeContext: contextSuffix }, config);
-            delete(cc.autoLoad);
+            delete (cc.autoLoad);
             store = Ext.create(config.type, cc);
             if (store.storeManagerConfig) {
                 config = Ext.applyIf(config, store.storeManagerConfig);
@@ -78,6 +78,9 @@ Ext.define('Taco.core.data.StoreManager', {
                 needsRefresh = true;
                 store.currentPage = 1;
             }
+            if (store.lastOptions && store.lastOptions.params && store.lastOptions.params.filter) {
+                needsRefresh = true;
+            }
 
         }
         if (config.clearSort) {
@@ -108,14 +111,14 @@ Ext.define('Taco.core.data.StoreManager', {
         }
         return store;
     },
-    afterProxyRequest: function(request, success, model) {
+    afterProxyRequest: function (request, success, model) {
 
-        this.stores.each(function(store) {
+        this.stores.each(function (store) {
             if (model.$className != store.model.$className) {
                 return true;
             }
-            
-            if (request.records && request.records[0].stores && Ext.Array.indexOf(request.records[0].stores,store) > -1 ) {
+
+            if (request.records && request.records[0].stores && Ext.Array.indexOf(request.records[0].stores, store) > -1) {
                 return true;
             }
             store.hasUpdates = true;
@@ -132,7 +135,7 @@ Ext.define('Taco.core.data.StoreManager', {
             type: 'Taco.store.CategoriesTree',
             id: 'Taco.store.CategoriesTree-' + siteId,
             createOnly: true,
-            siteId:siteId
+            siteId: siteId
         });
 
     }
