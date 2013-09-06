@@ -3,7 +3,10 @@
         urlArgs: "theme={{SiteContext.Theme.Id}}",
         baseUrl: "/resources/scripts",
         paths: {
-            sdk: "../../sdk/debug",
+            text: "../../js/requireplugins/text",
+            i18n: "../../js/requireplugins/i18n",
+            shim: "../../js/requireplugins/shim",
+            sdk: "../../js/sdk/debug",
             jquery: "http://code.jquery.com/jquery",
             knockout: "vendor/knockout-latest.debug",
             pciaas: "vendor/pci-temp",
@@ -12,7 +15,7 @@
         priority: ['jquery']
     };
 </script>
-<script src="/resources/scripts/require.js"></script>
+<script src="/js/require/debug.js"></script>
 <script type="text/javascript">
   require([{{Model}}]);
 </script>

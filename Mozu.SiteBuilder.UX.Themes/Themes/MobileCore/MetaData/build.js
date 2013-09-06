@@ -17,8 +17,6 @@
             name: "modules/common",
             include: [
                 'knockout',
-                'text',
-                'shim',
                 'modules/api',
                 'modules/animatemodals',
                 'modules/cart-monitor',
@@ -36,7 +34,7 @@
                 'modules/models-faceting',
                 'modules/tagcloud'
             ],
-            exclude: ['jquery', 'sdk', 'pciaas']
+            exclude: ['jquery', 'sdk', 'pciaas', 'text', 'i18n', 'shim']
         },
         {
             name: "pages/product",
