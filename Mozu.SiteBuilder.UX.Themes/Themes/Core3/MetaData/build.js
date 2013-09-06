@@ -2,9 +2,6 @@
     paths: {
         jquery: "empty:",
         sdk: "empty:",
-        text: 'empty:',
-        shim: 'empty:',
-        i18n: 'empty:',
         knockout: "vendor/knockout-latest",
         pciaas: "vendor/pci-temp"
     },

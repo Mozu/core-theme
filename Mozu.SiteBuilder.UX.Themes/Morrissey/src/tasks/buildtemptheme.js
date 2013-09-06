@@ -3,7 +3,14 @@ var grunt = require('grunt'),
     Theme = require('../theme'),
     Lyrically = require('../lyrically');
 
-var THEME_CONFIG_FILENAME = "theme.xml";
+var THEME_CONFIG_FILENAME = "theme.xml",
+    requiredExtensions = ["text", "shim", "i18n"];
+
+function copyRequiredExtensions(theme) {
+    requiredExtensions.forEach(function (ext) {
+        grunt.file.copy(path.resolve(__dirname, '../plugins/', 'browser_' + ext + '.js'), theme.getPath('scripts'));
+    });
+}
 
 module.exports = function () {
     var self = require('../optimizer').current,
@@ -15,6 +22,7 @@ module.exports = function () {
         tmpDirPath = path.resolve(path.join(self.program.themesDir, tmpThemeName));
     if (!self.program.inheritance || !self.theme.getBaseTheme()) {
         Lyrically.note("No inheritance, no temp theme necessary.");
+        copyRequiredExtensions(self.theme);
         return true;
     }
     if (self.program.verbose) Lyrically.note("Building temporary theme.");
@@ -25,6 +33,7 @@ module.exports = function () {
             });
         });
         self.tempTheme = new Theme(tmpThemeName, self.program);
+        copyRequiredExtensions(self.tempTheme);
         if (self.program.verbose) Lyrically.admit("Temporary theme built.");
         return true;
     } catch (e) {
