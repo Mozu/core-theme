@@ -284,7 +284,6 @@ var requirejs, require, define;
                 starMap = map && map['*'];
 
             if (notSpecial(name)) {
-                console.log('lowercasing ' + name);
                 name = name.toLowerCase();
             }
 

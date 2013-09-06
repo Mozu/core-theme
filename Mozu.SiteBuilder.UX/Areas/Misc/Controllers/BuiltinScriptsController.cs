@@ -66,18 +66,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return File(System.IO.Path.Combine(MozuConfigurationManager.AppSettings("require-js-build-dir"), fileName), "text/javascript");
         }
 
-        private enum RequirePluginNames
+        private static HashSet<string> RequirePluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            Text = 1,
-            I18n = 2,
-            Shim = 3
-        }
+            "text",
+            "i18n",
+            "shim"
+        };
 
         [ClientCacheHeaders(ConfigKey = "requireplugins")]
         public ActionResult RequirePlugins(string mode)
         {
-
-            if (!Enum.IsDefined(typeof(RequirePluginNames), mode))
+            if (!RequirePluginNames.Contains(mode))
             {
                 throw new FileNotFoundException();
             }

@@ -15,6 +15,10 @@ requirejs.define('node/print', [], function () {
     };
 });
 
+require('../plugins/text');
+require('../plugins/shim');
+require('../plugins/i18n');
+
 
 module.exports = function() {
     var self = require('../optimizer').current,
@@ -34,6 +38,7 @@ module.exports = function() {
             done(true);
         });
     } catch (e) {
+        Lyrically.lament(e);
         Lyrically.lament("JavaScript compilation failed!");
         done(false);
     }
