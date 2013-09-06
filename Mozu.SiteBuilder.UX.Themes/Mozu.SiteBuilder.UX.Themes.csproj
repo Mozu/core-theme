@@ -496,6 +496,7 @@
     <Content Include="Themes\Core3\Resources\Scripts\Modules\login-links.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\tagcloud.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Pages\error.js" />
+    <None Include="Themes\Core3\Templates\Documentation\Tags.vol" />
     <Content Include="Themes\Core3\theme.xml" />
     <Content Include="Themes\Core3\MetaData\ThemeSettings.xml" />
     <Content Include="Themes\Core3\Resources\Images\Bootstrap\glyphicons-halflings-white.png" />
