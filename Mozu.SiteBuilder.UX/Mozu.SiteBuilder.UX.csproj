@@ -391,7 +391,7 @@
     <Compile Include="Areas\Misc\Controllers\CacheFlushController.cs" />
     <Compile Include="Areas\Misc\Controllers\ContentController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
-    <Compile Include="Areas\Misc\Controllers\SDKResourceController.cs" />
+    <Compile Include="Areas\Misc\Controllers\BuiltinScriptsController.cs" />
     <Compile Include="Areas\Misc\Controllers\DeveloperDocumentationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\TemplateController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocalizationController.cs" />
@@ -433,31 +433,33 @@
   <ItemGroup>
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Areas\Misc\Views\Testing\SiteList.aspx" />
+    <Content Include="BuiltinScripts\RequireJS\dist\require.min.js" />
+    <Content Include="BuiltinScripts\RequireJS\plugins\i18n.js" />
+    <Content Include="BuiltinScripts\RequireJS\plugins\shim.js" />
+    <Content Include="BuiltinScripts\RequireJS\plugins\text.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="JS_SDK\banner.tpl" />
-    <None Include="JS_SDK\README.md" />
-    <None Include="JS_SDK\definewrapper.tpl" />
-    <None Include="JS_SDK\package.json" />
-    <Content Include="JS_SDK\dist\mozu-sdk.debug.js" />
-    <Content Include="JS_SDK\dist\mozu-sdk.js" />
-    <Content Include="JS_SDK\dist\mozu-sdk.min.js" />
-    <Content Include="JS_SDK\Gruntfile.js" />
-    <Content Include="JS_SDK\init_debug.js" />
-    <Content Include="JS_SDK\SDK_README.html" />
-    <Content Include="JS_SDK\src\collection.js" />
-    <Content Include="JS_SDK\src\object.js" />
-    <Content Include="JS_SDK\src\utils.js" />
-    <Content Include="JS_SDK\src\interface.js" />
-    <Content Include="JS_SDK\src\reference.js" />
-    <Content Include="JS_SDK\src\context.js" />
-    <Content Include="JS_SDK\src\init.js" />
-    <Content Include="JS_SDK\tests\SDKSpec.js" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="BuiltinScripts\RequireJS\dist\require.js" />
+    <Content Include="BuiltinScripts\SDK\dist\mozu-sdk.debug.js" />
+    <Content Include="BuiltinScripts\SDK\dist\mozu-sdk.js" />
+    <Content Include="BuiltinScripts\SDK\dist\mozu-sdk.min.js" />
+    <Content Include="BuiltinScripts\SDK\Gruntfile.js" />
+    <Content Include="BuiltinScripts\SDK\init_debug.js" />
+    <Content Include="BuiltinScripts\SDK\SDK_README.html" />
+    <Content Include="BuiltinScripts\SDK\src\collection.js" />
+    <Content Include="BuiltinScripts\SDK\src\context.js" />
+    <Content Include="BuiltinScripts\SDK\src\init.js" />
+    <Content Include="BuiltinScripts\SDK\src\interface.js" />
+    <Content Include="BuiltinScripts\SDK\src\object.js" />
+    <Content Include="BuiltinScripts\SDK\src\reference.js" />
+    <Content Include="BuiltinScripts\SDK\src\utils.js" />
+    <Content Include="BuiltinScripts\SDK\tests\SDKSpec.js" />
+    <Content Include="BuiltinScripts\SDK\_SpecRunner.html" />
     <Content Include="SetParameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -496,6 +498,11 @@
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="BuiltinScripts\SDK\banner.tpl" />
+    <Content Include="BuiltinScripts\SDK\definewrapper.tpl" />
+    <Content Include="BuiltinScripts\SDK\package.json" />
+    <Content Include="BuiltinScripts\SDK\README.md" />
+    <Content Include="BuiltinScripts\RequireJS\Manifest.ajaxmin" />
     <None Include="Web.QA.config">
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -506,7 +513,7 @@
     <Folder Include="Areas\Misc\Views\Shared\" />
     <Folder Include="Areas\StoreFront\Models\" />
     <Folder Include="Areas\StoreFront\Views\Shared\" />
-    <Folder Include="JS_SDK\docs\" />
+    <Folder Include="BuiltinScripts\SDK\docs\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -617,6 +624,14 @@
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
+  <!--<UsingTask TaskName="AjaxMin" AssemblyFile="$(MSBuildExtensionsPath32)\Microsoft\MicrosoftAjax\AjaxMinTask.dll" />-->
+  <!--<Import Project="$(MSBuildExtensionsPath)\Microsoft\MicrosoftAjax\AjaxMinTask.targets" />-->
+  <!--<Target Name="AfterBuild">
+    <ItemGroup>
+      <JS Include="$(ProjectDir)\BuiltinScripts\RequireJS\dist\require.js" />
+    </ItemGroup>
+    <AjaxMin JsSourceFiles="@(JS)" JsSourceExtensionPattern="\.js$" JsTargetExtension=".min.js" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+  </Target>-->
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>

@@ -2,6 +2,9 @@
     paths: {
         jquery: "empty:",
         sdk: "empty:",
+        text: 'empty:',
+        shim: 'empty:',
+        i18n: 'empty:',
         knockout: "vendor/knockout-latest",
         pciaas: "vendor/pci-temp"
     },
@@ -17,8 +20,6 @@
             name: "modules/common",
             include: [
                 'knockout',
-                'text',
-                'shim',
                 'modules/api',
                 'modules/animatemodals',
                 'modules/cart-monitor',
@@ -34,7 +35,7 @@
                 'modules/models-faceting',
                 'modules/tagcloud'
             ],
-            exclude: ['jquery', 'sdk', 'pciaas'],
+            exclude: ['jquery', 'sdk', 'pciaas', 'text', 'i18n', 'shim'],
         },
         {
             name: "pages/product",

@@ -43,9 +43,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
                "resources/{action}/{*pathInfo}",
                new { controller = "Resource", Action = "script", pathInfo = UrlParameter.Optional });
 
-            context.MapRoute("sdkdist",
-               "sdk/{action}.js",
-               new { controller = "SDKResource", Action = "all", pathInfo = UrlParameter.Optional });
+            context.MapRoute("builtinscripts",
+               "js/{action}/{mode}.js",
+               new { controller = "BuiltinScripts", mode = "min", pathInfo = UrlParameter.Optional });
         }
     }
 }
