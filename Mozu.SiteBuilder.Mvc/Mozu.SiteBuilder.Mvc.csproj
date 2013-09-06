@@ -415,6 +415,7 @@
     <Compile Include="Filters\CurrencyFilter.cs" />
     <Compile Include="Filters\DefaultEdit.cs" />
     <Compile Include="Filters\EscapeJs.cs" />
+    <Compile Include="Filters\ImageUrlFilter.cs" />
     <Compile Include="Filters\LtFilter.cs" />
     <Compile Include="Filters\Stylesheet.cs" />
     <Compile Include="Filters\Template.cs" />

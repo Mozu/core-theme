@@ -1,0 +1,34 @@
+﻿<html>
+    
+    <ul>
+        {%for item in Model %}
+        <li>
+            <div>
+                <h4>
+					{{item.TagName}}
+                {%if item.DocUrl %}<a href="{{item.DocUrl}}" target="_blank">external info</a>{%endif%}
+                <h4>
+                {%if item.Description %}
+                <div>
+                    {{item.Description}}
+                </div>
+				{%endif%}
+                {%if item.Examples %}
+            
+				 <ul>
+				     <i>examples</i>
+				     {%for example in item.Examples %}
+				     <li>
+				         {{example}}
+				     </li>
+				     {%endfor%}
+				 </ul>
+				{%endif%}
+				
+            </div>
+
+        </li>
+		{%endfor%}
+    </ul>
+
+</html>

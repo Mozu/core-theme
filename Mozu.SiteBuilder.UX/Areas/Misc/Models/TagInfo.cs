@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Models
 {
-    public class TagInfo
+    public class DjangoItemInfo
     {
         public string TagName
         {
@@ -19,5 +19,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Models
             set;
         }
 
+
+        public string Description { get; set; }
     }
 }
