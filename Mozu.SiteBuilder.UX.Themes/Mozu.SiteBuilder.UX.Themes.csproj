@@ -382,9 +382,9 @@
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="buildcore.bat" />
     <None Include="Docs\Mozu_Themeing_Concepts.md" />
-    <Content Include="Morrissey\src\plugins\i18n.js" />
-    <Content Include="Morrissey\src\plugins\shim.js" />
-    <Content Include="Morrissey\src\plugins\text.js" />
+    <Content Include="Morrissey\src\plugins\node_i18n.js" />
+    <Content Include="Morrissey\src\plugins\node_shim.js" />
+    <Content Include="Morrissey\src\plugins\node_text.js" />
     <Content Include="Morrissey\src\tasks\buildtemptheme.js" />
     <Content Include="Morrissey\src\tasks\removeuntouchedfiles.js" />
     <Content Include="SampleThemes\helloWorld\MetaData\thumb.png" />
