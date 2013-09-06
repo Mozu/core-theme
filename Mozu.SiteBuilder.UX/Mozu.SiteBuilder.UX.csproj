@@ -434,12 +434,9 @@
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Areas\Misc\Views\Testing\SiteList.aspx" />
     <Content Include="BuiltinScripts\RequireJS\dist\require.min.js" />
-    <Content Include="BuiltinScripts\RequireJS\plugins\node_i18n.js" />
-    <Content Include="BuiltinScripts\RequireJS\plugins\browser_i18n.js" />
-    <Content Include="BuiltinScripts\RequireJS\plugins\browser_shim.js" />
-    <Content Include="BuiltinScripts\RequireJS\plugins\browser_text.js" />
-    <Content Include="BuiltinScripts\RequireJS\plugins\node_shim.js" />
-    <Content Include="BuiltinScripts\RequireJS\plugins\node_text.js" />
+    <Content Include="BuiltinScripts\RequireJS\plugins\i18n.js" />
+    <Content Include="BuiltinScripts\RequireJS\plugins\shim.js" />
+    <Content Include="BuiltinScripts\RequireJS\plugins\text.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
