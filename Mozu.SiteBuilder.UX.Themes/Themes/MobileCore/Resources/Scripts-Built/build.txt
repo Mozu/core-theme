@@ -3,8 +3,6 @@ modules/common.js
 ----------------
 modules/common.js
 vendor/knockout-latest.js
-text.js
-shim.js
 modules/api.js
 modules/animatemodals.js
 shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
@@ -17,10 +15,10 @@ modules/jquery-mobileevents.js
 modules/loading-bars.js
 modules/login-links.js
 modules/message-dismisser.js
-i18n.js
 nls/messages.js
 i18n!nls/messages
 modules/knockout-plus.js
+shim!vendor/json2>JSON
 modules/knockout-viewmodel.js
 modules/models-user.js
 modules/models-address.js
@@ -38,7 +36,7 @@ pages/product.js
 
 pages/category.js
 ----------------
-shim!vendor/jquery.history[jquery=jQuery]>History
+shim!vendor/jquery.history[jquery=jQuery,shim!vendor/json2>JSON=JSON]>History
 pages/category.js
 
 pages/cart.js

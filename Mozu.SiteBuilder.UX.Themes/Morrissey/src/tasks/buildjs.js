@@ -15,9 +15,9 @@ requirejs.define('node/print', [], function () {
     };
 });
 
-require('../plugins/text');
-require('../plugins/shim');
-require('../plugins/i18n');
+//require('../plugins/node_text');
+//require('../plugins/node_shim');
+//require('../plugins/node_i18n');
 
 
 module.exports = function() {

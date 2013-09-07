@@ -34,27 +34,27 @@
                 'modules/models-faceting',
                 'modules/tagcloud'
             ],
-            exclude: ['jquery', 'sdk', 'pciaas', 'text', 'i18n', 'shim']
+            exclude: ['jquery', 'sdk', 'pciaas', 'text', 'shim', 'i18n']
         },
         {
             name: "pages/product",
-            exclude: ["modules/common"]
+            exclude: ["modules/common", 'text', 'shim', 'i18n']
         },
         {
             name: "pages/category",
-            exclude: ["modules/common"]
+            exclude: ["modules/common", 'text', 'shim', 'i18n']
         },
         {
             name: "pages/cart",
-            exclude: ["modules/common"]
+            exclude: ["modules/common", 'text', 'shim', 'i18n']
         },
         {
             name: "pages/checkout",
-            exclude: ["modules/common", 'pciaas']
+            exclude: ["modules/common", 'pciaas', 'text', 'shim', 'i18n']
         },
         {
             name: "pages/myaccount",
-            exclude: ["modules/common"]
+            exclude: ["modules/common", 'text', 'shim', 'i18n']
         }
     ]
 });
