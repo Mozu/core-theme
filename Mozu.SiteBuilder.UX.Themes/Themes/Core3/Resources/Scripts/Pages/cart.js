@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-plus", "knockout", "modules/models-cart"], function ($, ko, CartModels) {
+﻿define(["modules/jquery-plus", "knockout", "modules/models-cart"], function ($, ko, CartModels) {
     $(document).ready(function () {
         var $cartForm = $('#mz-cart-form');
 

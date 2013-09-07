@@ -8,7 +8,7 @@ var THEME_CONFIG_FILENAME = "theme.xml",
 
 function copyRequiredExtensions(theme) {
     requiredExtensions.forEach(function (ext) {
-        grunt.file.copy(path.resolve(__dirname, '../plugins/', 'browser_' + ext + '.js'), theme.getPath('scripts'));
+        grunt.file.copy(path.resolve(__dirname, '../plugins/', ext + '.js'), path.resolve(theme.getPath('scripts'), ext + '.js'));
     });
 }
 

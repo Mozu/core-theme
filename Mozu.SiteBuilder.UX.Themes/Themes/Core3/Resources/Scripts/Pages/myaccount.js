@@ -1,4 +1,4 @@
-﻿require(['shim!vendor/jquery-colorbox[jquery=jQuery]>jQuery', 'modules/knockout-plus', 'modules/animatemodals', 'modules/models-myaccount'], function ($, ko, animateModals, MyAccountModels) {
+﻿define(['shim!vendor/jquery-colorbox[jquery=jQuery]>jQuery', 'modules/knockout-plus', 'modules/animatemodals', 'modules/models-myaccount'], function ($, ko, animateModals, MyAccountModels) {
 
     $(document).ready(function () {
 
