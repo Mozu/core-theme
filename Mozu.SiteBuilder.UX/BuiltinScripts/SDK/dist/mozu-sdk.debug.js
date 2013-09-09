@@ -1,12 +1,10 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-08-30
+ * Mozu JavaScript SDK - v0.1.0 - 2013-09-09
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
  */
-
-
-(function() {	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
+ (function() {	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
     // this allows us to cleanly vendor AMD-compatible scripts without polluting scope.
     // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.
 	var amds = [],
@@ -17,7 +15,9 @@
 	internalDefine.amd = true;
 	(function (define, exportFn) {
 		exportFn(function () {
-			/**
+/** @license MIT License (c) copyright 2011-2013 original author or authors */
+
+/**
  * A lightweight CommonJS Promises/A and when() implementation
  * when is part of the cujo.js family of libraries (http://cujojs.com/)
  *
@@ -26,34 +26,30 @@
  *
  * @author Brian Cavalier
  * @author John Hann
- *
- * @version 1.8.1
+ * @version 2.4.0
  */
+(function(define, global) { 'use strict';
+define(function (require) {
 
-(function(define) { 'use strict';
-define(function () {
-	var reduceArray, slice, undef;
-
-	//
 	// Public API
-	//
 
-	when.defer     = defer;     // Create a deferred
-	when.resolve   = resolve;   // Create a resolved promise
-	when.reject    = reject;    // Create a rejected promise
+	when.promise   = promise;    // Create a pending promise
+	when.resolve   = resolve;    // Create a resolved promise
+	when.reject    = reject;     // Create a rejected promise
+	when.defer     = defer;      // Create a {promise, resolver} pair
 
-	when.join      = join;      // Join 2 or more promises
+	when.join      = join;       // Join 2 or more promises
 
-	when.all       = all;       // Resolve a list of promises
-	when.map       = map;       // Array.map() for promises
-	when.reduce    = reduce;    // Array.reduce() for promises
+	when.all       = all;        // Resolve a list of promises
+	when.map       = map;        // Array.map() for promises
+	when.reduce    = reduce;     // Array.reduce() for promises
+	when.settle    = settle;     // Settle a list of promises
 
-	when.any       = any;       // One-winner race
-	when.some      = some;      // Multi-winner race
+	when.any       = any;        // One-winner race
+	when.some      = some;       // Multi-winner race
 
-	when.chain     = chain;     // Make a promise trigger another resolver
-
-	when.isPromise = isPromise; // Determine if a thing is a promise
+	when.isPromise = isPromiseLike;  // DEPRECATED: use isPromiseLike
+	when.isPromiseLike = isPromiseLike; // Is something promise-like, aka thenable
 
 	/**
 	 * Register an observer for a promise or immediate value.
@@ -77,98 +73,37 @@ define(function () {
 	}
 
 	/**
-	 * Returns promiseOrValue if promiseOrValue is a {@link Promise}, a new Promise if
-	 * promiseOrValue is a foreign promise, or a new, already-fulfilled {@link Promise}
-	 * whose value is promiseOrValue if promiseOrValue is an immediate value.
-	 *
-	 * @param {*} promiseOrValue
-	 * @returns {Promise} Guaranteed to return a trusted Promise.  If promiseOrValue
-	 *   is trusted, returns promiseOrValue, otherwise, returns a new, already-resolved
-	 *   when.js promise whose resolution value is:
-	 *   * the resolution value of promiseOrValue if it's a foreign promise, or
-	 *   * promiseOrValue if it's a value
-	 */
-	function resolve(promiseOrValue) {
-		var promise;
-
-		if(promiseOrValue instanceof Promise) {
-			// It's a when.js promise, so we trust it
-			promise = promiseOrValue;
-
-		} else if(isPromise(promiseOrValue)) {
-			// Assimilate foreign promises
-			promise = assimilate(promiseOrValue);
-		} else {
-			// It's a value, create a fulfilled promise for it.
-			promise = fulfilled(promiseOrValue);
-		}
-
-		return promise;
-	}
-
-	/**
-	 * Assimilate an untrusted thenable by introducing a trusted middle man.
-	 * Not a perfect strategy, but possibly the best we can do.
-	 * IMPORTANT: This is the only place when.js should ever call an untrusted
-	 * thenable's then() on an. Don't expose the return value to the untrusted thenable
-	 *
-	 * @param {*} thenable
-	 * @param {function} thenable.then
-	 * @returns {Promise}
-	 */
-	function assimilate(thenable) {
-		var d = defer();
-
-		// TODO: Enqueue this for future execution in 2.0
-		try {
-			thenable.then(
-				function(value)  { d.resolve(value); },
-				function(reason) { d.reject(reason); },
-				function(update) { d.progress(update); }
-			);
-		} catch(e) {
-			d.reject(e);
-		}
-
-		return d.promise;
-	}
-
-	/**
-	 * Returns a rejected promise for the supplied promiseOrValue.  The returned
-	 * promise will be rejected with:
-	 * - promiseOrValue, if it is a value, or
-	 * - if promiseOrValue is a promise
-	 *   - promiseOrValue's value after it is fulfilled
-	 *   - promiseOrValue's reason after it is rejected
-	 * @param {*} promiseOrValue the rejected value of the returned {@link Promise}
-	 * @return {Promise} rejected {@link Promise}
-	 */
-	function reject(promiseOrValue) {
-		return when(promiseOrValue, rejected);
-	}
-
-	/**
 	 * Trusted Promise constructor.  A Promise created from this constructor is
 	 * a trusted when.js promise.  Any other duck-typed promise is considered
 	 * untrusted.
 	 * @constructor
+	 * @param {function} sendMessage function to deliver messages to the promise's handler
+	 * @param {function?} inspect function that reports the promise's state
 	 * @name Promise
 	 */
-	function Promise(then) {
-		this.then = then;
+	function Promise(sendMessage, inspect) {
+		this._message = sendMessage;
+		this.inspect = inspect;
 	}
 
 	Promise.prototype = {
 		/**
-		 * Register a callback that will be called when a promise is
-		 * fulfilled or rejected.  Optionally also register a progress handler.
-		 * Shortcut for .then(onFulfilledOrRejected, onFulfilledOrRejected, onProgress)
-		 * @param {function?} [onFulfilledOrRejected]
-		 * @param {function?} [onProgress]
-		 * @return {Promise}
+		 * Register handlers for this promise.
+		 * @param [onFulfilled] {Function} fulfillment handler
+		 * @param [onRejected] {Function} rejection handler
+		 * @param [onProgress] {Function} progress handler
+		 * @return {Promise} new Promise
 		 */
-		always: function(onFulfilledOrRejected, onProgress) {
-			return this.then(onFulfilledOrRejected, onFulfilledOrRejected, onProgress);
+		then: function(onFulfilled, onRejected, onProgress) {
+			/*jshint unused:false*/
+			var args, sendMessage;
+
+			args = arguments;
+			sendMessage = this._message;
+
+			return _promise(function(resolve, reject, notify) {
+				sendMessage('when', args, resolve, notify);
+			}, this._status && this._status.observed());
 		},
 
 		/**
@@ -178,6 +113,24 @@ define(function () {
 		 */
 		otherwise: function(onRejected) {
 			return this.then(undef, onRejected);
+		},
+
+		/**
+		 * Ensures that onFulfilledOrRejected will be called regardless of whether
+		 * this promise is fulfilled or rejected.  onFulfilledOrRejected WILL NOT
+		 * receive the promises' value or reason.  Any returned value will be disregarded.
+		 * onFulfilledOrRejected may throw or return a rejected promise to signal
+		 * an additional error.
+		 * @param {function} onFulfilledOrRejected handler to be called regardless of
+		 *  fulfillment or rejection
+		 * @returns {Promise}
+		 */
+		ensure: function(onFulfilledOrRejected) {
+			return this.then(injectHandler, injectHandler)['yield'](this);
+
+			function injectHandler() {
+				return resolve(onFulfilledOrRejected());
+			}
 		},
 
 		/**
@@ -195,6 +148,16 @@ define(function () {
 		},
 
 		/**
+		 * Runs a side effect when this promise fulfills, without changing the
+		 * fulfillment value.
+		 * @param {function} onFulfilledSideEffect
+		 * @returns {Promise}
+		 */
+		tap: function(onFulfilledSideEffect) {
+			return this.then(onFulfilledSideEffect)['yield'](this);
+		},
+
+		/**
 		 * Assumes that this promise will fulfill with an array, and arranges
 		 * for the onFulfilled to be called with the array as its argument list
 		 * i.e. onFulfilled.apply(undefined, array).
@@ -208,207 +171,367 @@ define(function () {
 					return onFulfilled.apply(undef, array);
 				});
 			});
+		},
+
+		/**
+		 * Shortcut for .then(onFulfilledOrRejected, onFulfilledOrRejected)
+		 * @deprecated
+		 */
+		always: function(onFulfilledOrRejected, onProgress) {
+			return this.then(onFulfilledOrRejected, onFulfilledOrRejected, onProgress);
 		}
 	};
 
 	/**
-	 * Create an already-resolved promise for the supplied value
-	 * @private
-	 *
-	 * @param {*} value
-	 * @return {Promise} fulfilled promise
+	 * Returns a resolved promise. The returned promise will be
+	 *  - fulfilled with promiseOrValue if it is a value, or
+	 *  - if promiseOrValue is a promise
+	 *    - fulfilled with promiseOrValue's value after it is fulfilled
+	 *    - rejected with promiseOrValue's reason after it is rejected
+	 * @param  {*} value
+	 * @return {Promise}
 	 */
-	function fulfilled(value) {
-		var p = new Promise(function(onFulfilled) {
-			try {
-				return resolve(typeof onFulfilled == 'function' ? onFulfilled(value) : value);
-			} catch(e) {
-				return rejected(e);
-			}
+	function resolve(value) {
+		return promise(function(resolve) {
+			resolve(value);
 		});
-
-		return p;
 	}
 
 	/**
-	 * Create an already-rejected {@link Promise} with the supplied
-	 * rejection reason.
-	 * @private
-	 *
-	 * @param {*} reason
-	 * @return {Promise} rejected promise
+	 * Returns a rejected promise for the supplied promiseOrValue.  The returned
+	 * promise will be rejected with:
+	 * - promiseOrValue, if it is a value, or
+	 * - if promiseOrValue is a promise
+	 *   - promiseOrValue's value after it is fulfilled
+	 *   - promiseOrValue's reason after it is rejected
+	 * @param {*} promiseOrValue the rejected value of the returned {@link Promise}
+	 * @return {Promise} rejected {@link Promise}
 	 */
-	function rejected(reason) {
-		var p = new Promise(function(_, onRejected) {
-			try {
-				return resolve(typeof onRejected == 'function' ? onRejected(reason) : rejected(reason));
-			} catch(e) {
-				return rejected(e);
-			}
-		});
-
-		return p;
+	function reject(promiseOrValue) {
+		return when(promiseOrValue, rejected);
 	}
 
 	/**
-	 * Creates a new, Deferred with fully isolated resolver and promise parts,
-	 * either or both of which may be given out safely to consumers.
-	 * The Deferred itself has the full API: resolve, reject, progress, and
-	 * then. The resolver has resolve, reject, and progress.  The promise
-	 * only has then.
+	 * Creates a {promise, resolver} pair, either or both of which
+	 * may be given out safely to consumers.
+	 * The resolver has resolve, reject, and progress.  The promise
+	 * has then plus extended promise API.
 	 *
-	 * @return {Deferred}
+	 * @return {{
+	 * promise: Promise,
+	 * resolve: function:Promise,
+	 * reject: function:Promise,
+	 * notify: function:Promise
+	 * resolver: {
+	 *	resolve: function:Promise,
+	 *	reject: function:Promise,
+	 *	notify: function:Promise
+	 * }}}
 	 */
 	function defer() {
-		var deferred, promise, handlers, progressHandlers,
-			_then, _notify, _resolve;
+		var deferred, pending, resolved;
 
-		/**
-		 * The promise for the new deferred
-		 * @type {Promise}
-		 */
-		promise = new Promise(then);
-
-		/**
-		 * The full Deferred object, with {@link Promise} and {@link Resolver} parts
-		 * @class Deferred
-		 * @name Deferred
-		 */
+		// Optimize object shape
 		deferred = {
-			then:     then, // DEPRECATED: use deferred.promise.then
-			resolve:  promiseResolve,
-			reject:   promiseReject,
-			progress: promiseNotify, // DEPRECATED: use deferred.notify
-			notify:   promiseNotify,
-
-			promise:  promise,
-
-			resolver: {
-				resolve:  promiseResolve,
-				reject:   promiseReject,
-				progress: promiseNotify, // DEPRECATED: use deferred.notify
-				notify:   promiseNotify
-			}
+			promise: undef, resolve: undef, reject: undef, notify: undef,
+			resolver: { resolve: undef, reject: undef, notify: undef }
 		};
 
-		handlers = [];
-		progressHandlers = [];
-
-		/**
-		 * Pre-resolution then() that adds the supplied callback, errback, and progback
-		 * functions to the registered listeners
-		 * @private
-		 *
-		 * @param {function?} [onFulfilled] resolution handler
-		 * @param {function?} [onRejected] rejection handler
-		 * @param {function?} [onProgress] progress handler
-		 */
-		_then = function(onFulfilled, onRejected, onProgress) {
-			var deferred, progressHandler;
-
-			deferred = defer();
-
-			progressHandler = typeof onProgress === 'function'
-				? function(update) {
-					try {
-						// Allow progress handler to transform progress event
-						deferred.notify(onProgress(update));
-					} catch(e) {
-						// Use caught value as progress
-						deferred.notify(e);
-					}
-				}
-				: function(update) { deferred.notify(update); };
-
-			handlers.push(function(promise) {
-				promise.then(onFulfilled, onRejected)
-					.then(deferred.resolve, deferred.reject, progressHandler);
-			});
-
-			progressHandlers.push(progressHandler);
-
-			return deferred.promise;
-		};
-
-		/**
-		 * Issue a progress event, notifying all progress listeners
-		 * @private
-		 * @param {*} update progress event payload to pass to all listeners
-		 */
-		_notify = function(update) {
-			processQueue(progressHandlers, update);
-			return update;
-		};
-
-		/**
-		 * Transition from pre-resolution state to post-resolution state, notifying
-		 * all listeners of the resolution or rejection
-		 * @private
-		 * @param {*} value the value of this deferred
-		 */
-		_resolve = function(value) {
-			// Replace _then with one that directly notifies with the result.
-			_then = value.then;
-			// Replace _resolve so that this Deferred can only be resolved once
-			_resolve = resolve;
-			// Make _progress a noop, to disallow progress for the resolved promise.
-			_notify = identity;
-
-			// Notify handlers
-			processQueue(handlers, value);
-
-			// Free progressHandlers array since we'll never issue progress events
-			progressHandlers = handlers = undef;
-
-			return value;
-		};
+		deferred.promise = pending = promise(makeDeferred);
 
 		return deferred;
 
-		/**
-		 * Wrapper to allow _then to be replaced safely
-		 * @param {function?} [onFulfilled] resolution handler
-		 * @param {function?} [onRejected] rejection handler
-		 * @param {function?} [onProgress] progress handler
-		 * @return {Promise} new promise
-		 */
-		function then(onFulfilled, onRejected, onProgress) {
-			// TODO: Promises/A+ check typeof onFulfilled, onRejected, onProgress
-			return _then(onFulfilled, onRejected, onProgress);
-		}
+		function makeDeferred(resolvePending, rejectPending, notifyPending) {
+			deferred.resolve = deferred.resolver.resolve = function(value) {
+				if(resolved) {
+					return resolve(value);
+				}
+				resolved = true;
+				resolvePending(value);
+				return pending;
+			};
 
-		/**
-		 * Wrapper to allow _resolve to be replaced
-		 */
-		function promiseResolve(val) {
-			return _resolve(resolve(val));
-		}
+			deferred.reject  = deferred.resolver.reject  = function(reason) {
+				if(resolved) {
+					return resolve(rejected(reason));
+				}
+				resolved = true;
+				rejectPending(reason);
+				return pending;
+			};
 
-		/**
-		 * Wrapper to allow _reject to be replaced
-		 */
-		function promiseReject(err) {
-			return _resolve(rejected(err));
-		}
-
-		/**
-		 * Wrapper to allow _notify to be replaced
-		 */
-		function promiseNotify(update) {
-			return _notify(update);
+			deferred.notify  = deferred.resolver.notify  = function(update) {
+				notifyPending(update);
+				return update;
+			};
 		}
 	}
 
 	/**
-	 * Determines if promiseOrValue is a promise or not.  Uses the feature
-	 * test from http://wiki.commonjs.org/wiki/Promises/A to determine if
-	 * promiseOrValue is a promise.
-	 *
-	 * @param {*} promiseOrValue anything
-	 * @returns {boolean} true if promiseOrValue is a {@link Promise}
+	 * Creates a new promise whose fate is determined by resolver.
+	 * @param {function} resolver function(resolve, reject, notify)
+	 * @returns {Promise} promise whose fate is determine by resolver
 	 */
-	function isPromise(promiseOrValue) {
-		return promiseOrValue && typeof promiseOrValue.then === 'function';
+	function promise(resolver) {
+		return _promise(resolver, monitorApi.PromiseStatus && monitorApi.PromiseStatus());
+	}
+
+	/**
+	 * Creates a new promise, linked to parent, whose fate is determined
+	 * by resolver.
+	 * @param {function} resolver function(resolve, reject, notify)
+	 * @param {Promise?} status promise from which the new promise is begotten
+	 * @returns {Promise} promise whose fate is determine by resolver
+	 * @private
+	 */
+	function _promise(resolver, status) {
+		var self, value, consumers = [];
+
+		self = new Promise(_message, inspect);
+		self._status = status;
+
+		// Call the provider resolver to seal the promise's fate
+		try {
+			resolver(promiseResolve, promiseReject, promiseNotify);
+		} catch(e) {
+			promiseReject(e);
+		}
+
+		// Return the promise
+		return self;
+
+		/**
+		 * Private message delivery. Queues and delivers messages to
+		 * the promise's ultimate fulfillment value or rejection reason.
+		 * @private
+		 * @param {String} type
+		 * @param {Array} args
+		 * @param {Function} resolve
+		 * @param {Function} notify
+		 */
+		function _message(type, args, resolve, notify) {
+			consumers ? consumers.push(deliver) : enqueue(function() { deliver(value); });
+
+			function deliver(p) {
+				p._message(type, args, resolve, notify);
+			}
+		}
+
+		/**
+		 * Returns a snapshot of the promise's state at the instant inspect()
+		 * is called. The returned object is not live and will not update as
+		 * the promise's state changes.
+		 * @returns {{ state:String, value?:*, reason?:* }} status snapshot
+		 *  of the promise.
+		 */
+		function inspect() {
+			return value ? value.inspect() : toPendingState();
+		}
+
+		/**
+		 * Transition from pre-resolution state to post-resolution state, notifying
+		 * all listeners of the ultimate fulfillment or rejection
+		 * @param {*|Promise} val resolution value
+		 */
+		function promiseResolve(val) {
+			if(!consumers) {
+				return;
+			}
+
+			value = coerce(val);
+			scheduleConsumers(consumers, value);
+			consumers = undef;
+
+			if(status) {
+				updateStatus(value, status);
+			}
+		}
+
+		/**
+		 * Reject this promise with the supplied reason, which will be used verbatim.
+		 * @param {*} reason reason for the rejection
+		 */
+		function promiseReject(reason) {
+			promiseResolve(rejected(reason));
+		}
+
+		/**
+		 * Issue a progress event, notifying all progress listeners
+		 * @param {*} update progress event payload to pass to all listeners
+		 */
+		function promiseNotify(update) {
+			if(consumers) {
+				scheduleConsumers(consumers, progressed(update));
+			}
+		}
+	}
+
+	/**
+	 * Creates a fulfilled, local promise as a proxy for a value
+	 * NOTE: must never be exposed
+	 * @param {*} value fulfillment value
+	 * @returns {Promise}
+	 */
+	function fulfilled(value) {
+		return near(
+			new NearFulfilledProxy(value),
+			function() { return toFulfilledState(value); }
+		);
+	}
+
+	/**
+	 * Creates a rejected, local promise with the supplied reason
+	 * NOTE: must never be exposed
+	 * @param {*} reason rejection reason
+	 * @returns {Promise}
+	 */
+	function rejected(reason) {
+		return near(
+			new NearRejectedProxy(reason),
+			function() { return toRejectedState(reason); }
+		);
+	}
+
+	/**
+	 * Creates a near promise using the provided proxy
+	 * NOTE: must never be exposed
+	 * @param {object} proxy proxy for the promise's ultimate value or reason
+	 * @param {function} inspect function that returns a snapshot of the
+	 *  returned near promise's state
+	 * @returns {Promise}
+	 */
+	function near(proxy, inspect) {
+		return new Promise(function (type, args, resolve) {
+			try {
+				resolve(proxy[type].apply(proxy, args));
+			} catch(e) {
+				resolve(rejected(e));
+			}
+		}, inspect);
+	}
+
+	/**
+	 * Create a progress promise with the supplied update.
+	 * @private
+	 * @param {*} update
+	 * @return {Promise} progress promise
+	 */
+	function progressed(update) {
+		return new Promise(function (type, args, _, notify) {
+			var onProgress = args[2];
+			try {
+				notify(typeof onProgress === 'function' ? onProgress(update) : update);
+			} catch(e) {
+				notify(e);
+			}
+		});
+	}
+
+	/**
+	 * Coerces x to a trusted Promise
+	 *
+	 * @private
+	 * @param {*} x thing to coerce
+	 * @returns {*} Guaranteed to return a trusted Promise.  If x
+	 *   is trusted, returns x, otherwise, returns a new, trusted, already-resolved
+	 *   Promise whose resolution value is:
+	 *   * the resolution value of x if it's a foreign promise, or
+	 *   * x if it's a value
+	 */
+	function coerce(x) {
+		if (x instanceof Promise) {
+			return x;
+		}
+
+		if (!(x === Object(x) && 'then' in x)) {
+			return fulfilled(x);
+		}
+
+		return promise(function(resolve, reject, notify) {
+			enqueue(function() {
+				try {
+					// We must check and assimilate in the same tick, but not the
+					// current tick, careful only to access promiseOrValue.then once.
+					var untrustedThen = x.then;
+
+					if(typeof untrustedThen === 'function') {
+						fcall(untrustedThen, x, resolve, reject, notify);
+					} else {
+						// It's a value, create a fulfilled wrapper
+						resolve(fulfilled(x));
+					}
+
+				} catch(e) {
+					// Something went wrong, reject
+					reject(e);
+				}
+			});
+		});
+	}
+
+	/**
+	 * Proxy for a near, fulfilled value
+	 * @param {*} value
+	 * @constructor
+	 */
+	function NearFulfilledProxy(value) {
+		this.value = value;
+	}
+
+	NearFulfilledProxy.prototype.when = function(onResult) {
+		return typeof onResult === 'function' ? onResult(this.value) : this.value;
+	};
+
+	/**
+	 * Proxy for a near rejection
+	 * @param {*} reason
+	 * @constructor
+	 */
+	function NearRejectedProxy(reason) {
+		this.reason = reason;
+	}
+
+	NearRejectedProxy.prototype.when = function(_, onError) {
+		if(typeof onError === 'function') {
+			return onError(this.reason);
+		} else {
+			throw this.reason;
+		}
+	};
+
+	/**
+	 * Schedule a task that will process a list of handlers
+	 * in the next queue drain run.
+	 * @private
+	 * @param {Array} handlers queue of handlers to execute
+	 * @param {*} value passed as the only arg to each handler
+	 */
+	function scheduleConsumers(handlers, value) {
+		enqueue(function() {
+			var handler, i = 0;
+			while (handler = handlers[i++]) {
+				handler(value);
+			}
+		});
+	}
+
+	function updateStatus(value, status) {
+		value.then(statusFulfilled, statusRejected);
+
+		function statusFulfilled() { status.fulfilled(); }
+		function statusRejected(r) { status.rejected(r); }
+	}
+
+	/**
+	 * Determines if x is promise-like, i.e. a thenable object
+	 * NOTE: Will return true for *any thenable object*, and isn't truly
+	 * safe, since it may attempt to access the `then` property of x (i.e.
+	 *  clever/malicious getters may do weird things)
+	 * @param {*} x anything
+	 * @returns {boolean} true if x is promise-like
+	 */
+	function isPromiseLike(x) {
+		return x && typeof x.then === 'function';
 	}
 
 	/**
@@ -420,75 +543,67 @@ define(function () {
 	 * @param {Array} promisesOrValues array of anything, may contain a mix
 	 *      of promises and values
 	 * @param howMany {number} number of promisesOrValues to resolve
-	 * @param {function?} [onFulfilled] resolution handler
-	 * @param {function?} [onRejected] rejection handler
-	 * @param {function?} [onProgress] progress handler
+	 * @param {function?} [onFulfilled] DEPRECATED, use returnedPromise.then()
+	 * @param {function?} [onRejected] DEPRECATED, use returnedPromise.then()
+	 * @param {function?} [onProgress] DEPRECATED, use returnedPromise.then()
 	 * @returns {Promise} promise that will resolve to an array of howMany values that
-	 * resolved first, or will reject with an array of (promisesOrValues.length - howMany) + 1
-	 * rejection reasons.
+	 *  resolved first, or will reject with an array of
+	 *  (promisesOrValues.length - howMany) + 1 rejection reasons.
 	 */
 	function some(promisesOrValues, howMany, onFulfilled, onRejected, onProgress) {
 
-		checkCallbacks(2, arguments);
-
 		return when(promisesOrValues, function(promisesOrValues) {
 
-			var toResolve, toReject, values, reasons, deferred, fulfillOne, rejectOne, notify, len, i;
+			return promise(resolveSome).then(onFulfilled, onRejected, onProgress);
 
-			len = promisesOrValues.length >>> 0;
+			function resolveSome(resolve, reject, notify) {
+				var toResolve, toReject, values, reasons, fulfillOne, rejectOne, len, i;
 
-			toResolve = Math.max(0, Math.min(howMany, len));
-			values = [];
+				len = promisesOrValues.length >>> 0;
 
-			toReject = (len - toResolve) + 1;
-			reasons = [];
+				toResolve = Math.max(0, Math.min(howMany, len));
+				values = [];
 
-			deferred = defer();
+				toReject = (len - toResolve) + 1;
+				reasons = [];
 
-			// No items in the input, resolve immediately
-			if (!toResolve) {
-				deferred.resolve(values);
+				// No items in the input, resolve immediately
+				if (!toResolve) {
+					resolve(values);
 
-			} else {
-				notify = deferred.notify;
+				} else {
+					rejectOne = function(reason) {
+						reasons.push(reason);
+						if(!--toReject) {
+							fulfillOne = rejectOne = identity;
+							reject(reasons);
+						}
+					};
 
-				rejectOne = function(reason) {
-					reasons.push(reason);
-					if(!--toReject) {
-						fulfillOne = rejectOne = noop;
-						deferred.reject(reasons);
-					}
-				};
+					fulfillOne = function(val) {
+						// This orders the values based on promise resolution order
+						values.push(val);
+						if (!--toResolve) {
+							fulfillOne = rejectOne = identity;
+							resolve(values);
+						}
+					};
 
-				fulfillOne = function(val) {
-					// This orders the values based on promise resolution order
-					// Another strategy would be to use the original position of
-					// the corresponding promise.
-					values.push(val);
-
-					if (!--toResolve) {
-						fulfillOne = rejectOne = noop;
-						deferred.resolve(values);
-					}
-				};
-
-				for(i = 0; i < len; ++i) {
-					if(i in promisesOrValues) {
-						when(promisesOrValues[i], fulfiller, rejecter, notify);
+					for(i = 0; i < len; ++i) {
+						if(i in promisesOrValues) {
+							when(promisesOrValues[i], fulfiller, rejecter, notify);
+						}
 					}
 				}
+
+				function rejecter(reason) {
+					rejectOne(reason);
+				}
+
+				function fulfiller(val) {
+					fulfillOne(val);
+				}
 			}
-
-			return deferred.promise.then(onFulfilled, onRejected, onProgress);
-
-			function rejecter(reason) {
-				rejectOne(reason);
-			}
-
-			function fulfiller(val) {
-				fulfillOne(val);
-			}
-
 		});
 	}
 
@@ -499,9 +614,9 @@ define(function () {
 	 *
 	 * @param {Array|Promise} promisesOrValues array of anything, may contain a mix
 	 *      of {@link Promise}s and values
-	 * @param {function?} [onFulfilled] resolution handler
-	 * @param {function?} [onRejected] rejection handler
-	 * @param {function?} [onProgress] progress handler
+	 * @param {function?} [onFulfilled] DEPRECATED, use returnedPromise.then()
+	 * @param {function?} [onRejected] DEPRECATED, use returnedPromise.then()
+	 * @param {function?} [onProgress] DEPRECATED, use returnedPromise.then()
 	 * @returns {Promise} promise that will resolve to the value that resolved first, or
 	 * will reject with an array of all rejected inputs.
 	 */
@@ -522,14 +637,13 @@ define(function () {
 	 *
 	 * @param {Array|Promise} promisesOrValues array of anything, may contain a mix
 	 *      of {@link Promise}s and values
-	 * @param {function?} [onFulfilled] resolution handler
-	 * @param {function?} [onRejected] rejection handler
-	 * @param {function?} [onProgress] progress handler
+	 * @param {function?} [onFulfilled] DEPRECATED, use returnedPromise.then()
+	 * @param {function?} [onRejected] DEPRECATED, use returnedPromise.then()
+	 * @param {function?} [onProgress] DEPRECATED, use returnedPromise.then()
 	 * @returns {Promise}
 	 */
 	function all(promisesOrValues, onFulfilled, onRejected, onProgress) {
-		checkCallbacks(1, arguments);
-		return map(promisesOrValues, identity).then(onFulfilled, onRejected, onProgress);
+		return _map(promisesOrValues, identity).then(onFulfilled, onRejected, onProgress);
 	}
 
 	/**
@@ -538,58 +652,80 @@ define(function () {
 	 * have fulfilled, or will reject when *any one* of the input promises rejects.
 	 */
 	function join(/* ...promises */) {
-		return map(arguments, identity);
+		return _map(arguments, identity);
 	}
 
 	/**
-	 * Traditional map function, similar to `Array.prototype.map()`, but allows
-	 * input to contain {@link Promise}s and/or values, and mapFunc may return
-	 * either a value or a {@link Promise}
-	 *
-	 * @param {Array|Promise} promise array of anything, may contain a mix
-	 *      of {@link Promise}s and values
-	 * @param {function} mapFunc mapping function mapFunc(value) which may return
-	 *      either a {@link Promise} or value
-	 * @returns {Promise} a {@link Promise} that will resolve to an array containing
-	 *      the mapped output values.
+	 * Settles all input promises such that they are guaranteed not to
+	 * be pending once the returned promise fulfills. The returned promise
+	 * will always fulfill, except in the case where `array` is a promise
+	 * that rejects.
+	 * @param {Array|Promise} array or promise for array of promises to settle
+	 * @returns {Promise} promise that always fulfills with an array of
+	 *  outcome snapshots for each input promise.
 	 */
-	function map(promise, mapFunc) {
-		return when(promise, function(array) {
-			var results, len, toResolve, resolve, i, d;
+	function settle(array) {
+		return _map(array, toFulfilledState, toRejectedState);
+	}
 
-			// Since we know the resulting length, we can preallocate the results
-			// array to avoid array expansions.
-			toResolve = len = array.length >>> 0;
-			results = [];
-			d = defer();
+	/**
+	 * Promise-aware array map function, similar to `Array.prototype.map()`,
+	 * but input array may contain promises or values.
+	 * @param {Array|Promise} array array of anything, may contain promises and values
+	 * @param {function} mapFunc map function which may return a promise or value
+	 * @returns {Promise} promise that will fulfill with an array of mapped values
+	 *  or reject if any input promise rejects.
+	 */
+	function map(array, mapFunc) {
+		return _map(array, mapFunc);
+	}
 
-			if(!toResolve) {
-				d.resolve(results);
-			} else {
+	/**
+	 * Internal map that allows a fallback to handle rejections
+	 * @param {Array|Promise} array array of anything, may contain promises and values
+	 * @param {function} mapFunc map function which may return a promise or value
+	 * @param {function?} fallback function to handle rejected promises
+	 * @returns {Promise} promise that will fulfill with an array of mapped values
+	 *  or reject if any input promise rejects.
+	 */
+	function _map(array, mapFunc, fallback) {
+		return when(array, function(array) {
 
-				resolve = function resolveOne(item, i) {
-					when(item, mapFunc).then(function(mapped) {
-						results[i] = mapped;
+			return _promise(resolveMap);
 
-						if(!--toResolve) {
-							d.resolve(results);
-						}
-					}, d.reject);
-				};
+			function resolveMap(resolve, reject, notify) {
+				var results, len, toResolve, i;
+
+				// Since we know the resulting length, we can preallocate the results
+				// array to avoid array expansions.
+				toResolve = len = array.length >>> 0;
+				results = [];
+
+				if(!toResolve) {
+					resolve(results);
+					return;
+				}
 
 				// Since mapFunc may be async, get all invocations of it into flight
 				for(i = 0; i < len; i++) {
 					if(i in array) {
-						resolve(array[i], i);
+						resolveOne(array[i], i);
 					} else {
 						--toResolve;
 					}
 				}
 
+				function resolveOne(item, i) {
+					when(item, mapFunc, fallback).then(function(mapped) {
+						results[i] = mapped;
+						notify(mapped);
+
+						if(!--toResolve) {
+							resolve(results);
+						}
+					}, reject);
+				}
 			}
-
-			return d.promise;
-
 		});
 	}
 
@@ -607,7 +743,7 @@ define(function () {
 	 * @returns {Promise} that will resolve to the final reduced value
 	 */
 	function reduce(promise, reduceFunc /*, initialValue */) {
-		var args = slice.call(arguments, 1);
+		var args = fcall(slice, arguments, 1);
 
 		return when(promise, function(array) {
 			var total;
@@ -628,102 +764,137 @@ define(function () {
 		});
 	}
 
-	/**
-	 * Ensure that resolution of promiseOrValue will trigger resolver with the
-	 * value or reason of promiseOrValue, or instead with resolveValue if it is provided.
-	 *
-	 * @param promiseOrValue
-	 * @param {Object} resolver
-	 * @param {function} resolver.resolve
-	 * @param {function} resolver.reject
-	 * @param {*} [resolveValue]
-	 * @returns {Promise}
-	 */
-	function chain(promiseOrValue, resolver, resolveValue) {
-		var useResolveValue = arguments.length > 2;
+	// Snapshot states
 
-		return when(promiseOrValue,
-			function(val) {
-				val = useResolveValue ? resolveValue : val;
-				resolver.resolve(val);
-				return val;
-			},
-			function(reason) {
-				resolver.reject(reason);
-				return rejected(reason);
-			},
-			function(update) {
-				typeof resolver.notify === 'function' && resolver.notify(update);
-				return update;
-			}
-		);
+	/**
+	 * Creates a fulfilled state snapshot
+	 * @private
+	 * @param {*} x any value
+	 * @returns {{state:'fulfilled',value:*}}
+	 */
+	function toFulfilledState(x) {
+		return { state: 'fulfilled', value: x };
+	}
+
+	/**
+	 * Creates a rejected state snapshot
+	 * @private
+	 * @param {*} x any reason
+	 * @returns {{state:'rejected',reason:*}}
+	 */
+	function toRejectedState(x) {
+		return { state: 'rejected', reason: x };
+	}
+
+	/**
+	 * Creates a pending state snapshot
+	 * @private
+	 * @returns {{state:'pending'}}
+	 */
+	function toPendingState() {
+		return { state: 'pending' };
 	}
 
 	//
-	// Utility functions
+	// Internals, utilities, etc.
 	//
 
-	/**
-	 * Apply all functions in queue to value
-	 * @param {Array} queue array of functions to execute
-	 * @param {*} value argument passed to each function
-	 */
-	function processQueue(queue, value) {
-		var handler, i = 0;
+	var reduceArray, slice, fcall, nextTick, handlerQueue,
+		setTimeout, funcProto, call, arrayProto, monitorApi,
+		cjsRequire, undef;
 
-		while (handler = queue[i++]) {
-			handler(value);
+	cjsRequire = require;
+
+	//
+	// Shared handler queue processing
+	//
+	// Credit to Twisol (https://github.com/Twisol) for suggesting
+	// this type of extensible queue + trampoline approach for
+	// next-tick conflation.
+
+	handlerQueue = [];
+
+	/**
+	 * Enqueue a task. If the queue is not currently scheduled to be
+	 * drained, schedule it.
+	 * @param {function} task
+	 */
+	function enqueue(task) {
+		if(handlerQueue.push(task) === 1) {
+			nextTick(drainQueue);
 		}
 	}
 
 	/**
-	 * Helper that checks arrayOfCallbacks to ensure that each element is either
-	 * a function, or null or undefined.
-	 * @private
-	 * @param {number} start index at which to start checking items in arrayOfCallbacks
-	 * @param {Array} arrayOfCallbacks array to check
-	 * @throws {Error} if any element of arrayOfCallbacks is something other than
-	 * a functions, null, or undefined.
+	 * Drain the handler queue entirely, being careful to allow the
+	 * queue to be extended while it is being processed, and to continue
+	 * processing until it is truly empty.
 	 */
-	function checkCallbacks(start, arrayOfCallbacks) {
-		// TODO: Promises/A+ update type checking and docs
-		var arg, i = arrayOfCallbacks.length;
+	function drainQueue() {
+		var task, i = 0;
 
-		while(i > start) {
-			arg = arrayOfCallbacks[--i];
+		while(task = handlerQueue[i++]) {
+			task();
+		}
 
-			if (arg != null && typeof arg != 'function') {
-				throw new Error('arg '+i+' must be a function');
-			}
+		handlerQueue = [];
+	}
+
+	// capture setTimeout to avoid being caught by fake timers
+	// used in time based tests
+	setTimeout = global.setTimeout;
+
+	// Allow attaching the monitor to when() if env has no console
+	monitorApi = typeof console != 'undefined' ? console : when;
+
+	// Prefer setImmediate or MessageChannel, cascade to node,
+	// vertx and finally setTimeout
+	/*global setImmediate,MessageChannel,process*/
+	if (typeof setImmediate === 'function') {
+		nextTick = setImmediate.bind(global);
+	} else if(typeof MessageChannel !== 'undefined') {
+		var channel = new MessageChannel();
+		channel.port1.onmessage = drainQueue;
+		nextTick = function() { channel.port2.postMessage(0); };
+	} else if (typeof process === 'object' && process.nextTick) {
+		nextTick = process.nextTick;
+	} else {
+		try {
+			// vert.x 1.x || 2.x
+			nextTick = cjsRequire('vertx').runOnLoop || cjsRequire('vertx').runOnContext;
+		} catch(ignore) {
+			nextTick = function(t) { setTimeout(t, 0); };
 		}
 	}
 
-	/**
-	 * No-Op function used in method replacement
-	 * @private
-	 */
-	function noop() {}
+	//
+	// Capture/polyfill function and array utils
+	//
 
-	slice = [].slice;
+	// Safe function calls
+	funcProto = Function.prototype;
+	call = funcProto.call;
+	fcall = funcProto.bind
+		? call.bind(call)
+		: function(f, context) {
+			return f.apply(context, slice.call(arguments, 2));
+		};
+
+	// Safe array ops
+	arrayProto = [];
+	slice = arrayProto.slice;
 
 	// ES5 reduce implementation if native not available
 	// See: http://es5.github.com/#x15.4.4.21 as there are many
-	// specifics and edge cases.
-	reduceArray = [].reduce ||
+	// specifics and edge cases.  ES5 dictates that reduce.length === 1
+	// This implementation deviates from ES5 spec in the following ways:
+	// 1. It does not check if reduceFunc is a Callable
+	reduceArray = arrayProto.reduce ||
 		function(reduceFunc /*, initialValue */) {
 			/*jshint maxcomplexity: 7*/
-
-			// ES5 dictates that reduce.length === 1
-
-			// This implementation deviates from ES5 spec in the following ways:
-			// 1. It does not check if reduceFunc is a Callable
-
 			var arr, args, reduced, len, i;
 
 			i = 0;
-			// This generates a jshint warning, despite being valid
-			// "Missing 'new' prefix when invoking a constructor."
-			// See https://github.com/jshint/jshint/issues/392
 			arr = Object(this);
 			len = arr.length >>> 0;
 			args = arguments;
@@ -751,7 +922,6 @@ define(function () {
 
 			// Do the actual reduce
 			for(;i < len; ++i) {
-				// Skip holes
 				if(i in arr) {
 					reduced = reduceFunc(reduced, arr[i], i, arr);
 				}
@@ -766,14 +936,7 @@ define(function () {
 
 	return when;
 });
-})(typeof define == 'function' && define.amd
-	? define
-	: function (factory) { typeof exports === 'object'
-		? (module.exports = factory())
-		: (this.when      = factory());
-	}
-	// Boilerplate for AMD, Node, and browser global
-);
+})(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }, this);
 
 /*global unescape, module, define, window, global*/
 
@@ -784,39 +947,79 @@ define(function () {
 
 (function (exportCallback) {
     "use strict";
+
+var UriTemplateError = (function () {
+
+    function UriTemplateError (options) {
+        this.options = options;
+    }
+
+    UriTemplateError.prototype.toString = function () {
+        if (JSON && JSON.stringify) {
+            return JSON.stringify(this.options);
+        }
+        else {
+            return this.options;
+        }
+    };
+
+    return UriTemplateError;
+}());
+
 var objectHelper = (function () {
     function isArray (value) {
         return Object.prototype.toString.apply(value) === '[object Array]';
     }
 
-    // performs an array.reduce for objects
-    // TODO handling if initialValue is undefined
-    function objectReduce (object, callback, initialValue) {
+    function isString (value) {
+        return Object.prototype.toString.apply(value) === '[object String]';
+    }
+    
+    function isNumber (value) {
+        return Object.prototype.toString.apply(value) === '[object Number]';
+    }
+    
+    function isBoolean (value) {
+        return Object.prototype.toString.apply(value) === '[object Boolean]';
+    }
+    
+    function join (arr, separator) {
         var
-            propertyName,
-            currentValue = initialValue;
-        for (propertyName in object) {
-            if (object.hasOwnProperty(propertyName)) {
-                currentValue = callback(currentValue, object[propertyName], propertyName, object);
+            result = '',
+            first = true,
+            index;
+        for (index = 0; index < arr.length; index += 1) {
+            if (first) {
+                first = false;
+            }
+            else {
+                result += separator;
+            }
+            result += arr[index];
+        }
+        return result;
+    }
+
+    function map (arr, mapper) {
+        var
+            result = [],
+            index = 0;
+        for (; index < arr.length; index += 1) {
+            result.push(mapper(arr[index]));
+        }
+        return result;
+    }
+
+    function filter (arr, predicate) {
+        var
+            result = [],
+            index = 0;
+        for (; index < arr.length; index += 1) {
+            if (predicate(arr[index])) {
+                result.push(arr[index]);
             }
         }
-        return currentValue;
-    }
-
-    // performs an array.reduce, if reduce is not present (older browser...)
-    // TODO handling if initialValue is undefined
-    function arrayReduce (array, callback, initialValue) {
-        var
-            index,
-            currentValue = initialValue;
-        for (index = 0; index < array.length; index += 1) {
-            currentValue = callback(currentValue, array[index], index, array);
-        }
-        return currentValue;
-    }
-
-    function reduce (arrayOrObject, callback, initialValue) {
-        return isArray(arrayOrObject) ? arrayReduce(arrayOrObject, callback, initialValue) : objectReduce(arrayOrObject, callback, initialValue);
+        return result;
     }
 
     function deepFreezeUsingObjectFreeze (object) {
@@ -847,22 +1050,27 @@ var objectHelper = (function () {
 
     return {
         isArray: isArray,
-        reduce: reduce,
+        isString: isString,
+        isNumber: isNumber,
+        isBoolean: isBoolean,
+        join: join,
+        map: map,
+        filter: filter,
         deepFreeze: deepFreeze
     };
 }());
 
 var charHelper = (function () {
 
-    function isAlpha(chr) {
+    function isAlpha (chr) {
         return (chr >= 'a' && chr <= 'z') || ((chr >= 'A' && chr <= 'Z'));
     }
 
-    function isDigit(chr) {
+    function isDigit (chr) {
         return chr >= '0' && chr <= '9';
     }
 
-    function isHexDigit(chr) {
+    function isHexDigit (chr) {
         return isDigit(chr) || (chr >= 'a' && chr <= 'f') || (chr >= 'A' && chr <= 'F');
     }
 
@@ -913,7 +1121,7 @@ var pctEncoder = (function () {
             index;
         for (index = 0; index < octets.length; index += 1) {
             octet = octets.charCodeAt(index);
-            result += '%' + octet.toString(16).toUpperCase();
+            result += '%' + (octet < 0x10 ? '0' : '') + octet.toString(16).toUpperCase();
         }
         return result;
     }
@@ -925,7 +1133,7 @@ var pctEncoder = (function () {
      * @return {boolean|*|*}
      */
     function isPercentDigitDigit (text, start) {
-        return text[start] === '%' && charHelper.isHexDigit(text[start + 1]) && charHelper.isHexDigit(text[start + 2]);
+        return text.charAt(start) === '%' && charHelper.isHexDigit(text.charAt(start + 1)) && charHelper.isHexDigit(text.charAt(start + 2));
     }
 
     /**
@@ -967,7 +1175,7 @@ var pctEncoder = (function () {
      * @return the character or pct-string of the text at startIndex
      */
     function pctCharAt(text, startIndex) {
-        var chr = text[startIndex];
+        var chr = text.charAt(startIndex);
         if (!isPercentDigitDigit(text, startIndex)) {
             return chr;
         }
@@ -1054,9 +1262,38 @@ var encodingHelper = (function () {
         return encode(text, true);
     }
 
+    function encodeLiteralCharacter (literal, index) {
+        var chr = pctEncoder.pctCharAt(literal, index);
+        if (chr.length > 1) {
+            return chr;
+        }
+        else {
+            return rfcCharHelper.isReserved(chr) || rfcCharHelper.isUnreserved(chr) ? chr : pctEncoder.encodeCharacter(chr);
+        }
+    }
+
+    function encodeLiteral (literal) {
+        var
+            result = '',
+            index,
+            chr = '';
+        for (index = 0; index < literal.length; index += chr.length) {
+            chr = pctEncoder.pctCharAt(literal, index);
+            if (chr.length > 1) {
+                result += chr;
+            }
+            else {
+                result += rfcCharHelper.isReserved(chr) || rfcCharHelper.isUnreserved(chr) ? chr : pctEncoder.encodeCharacter(chr);
+            }
+        }
+        return result;
+    }
+
     return {
         encode: encode,
-        encodePassReserved: encodePassReserved
+        encodePassReserved: encodePassReserved,
+        encodeLiteral: encodeLiteral,
+        encodeLiteralCharacter: encodeLiteralCharacter
     };
 
 }());
@@ -1068,7 +1305,7 @@ var operators = (function () {
     var
         bySymbol = {};
 
-    function create(symbol) {
+    function create (symbol) {
         bySymbol[symbol] = {
             symbol: symbol,
             separator: (symbol === '?') ? '&' : (symbol === '' || symbol === '+' || symbol === '#') ? ',' : symbol,
@@ -1090,15 +1327,17 @@ var operators = (function () {
     create(';');
     create('?');
     create('&');
-    return {valueOf: function (chr) {
-        if (bySymbol[chr]) {
-            return bySymbol[chr];
+    return {
+        valueOf: function (chr) {
+            if (bySymbol[chr]) {
+                return bySymbol[chr];
+            }
+            if ("=,!@|".indexOf(chr) >= 0) {
+                return null;
+            }
+            return bySymbol[''];
         }
-        if ("=,!@|".indexOf(chr) >= 0) {
-            throw new Error('Illegal use of reserved operator "' + chr + '"');
-        }
-        return bySymbol[''];
-    }};
+    };
 }());
 
 
@@ -1107,25 +1346,20 @@ var operators = (function () {
  * Section 2.3 of the RFC makes clear defintions:
  * * undefined and null are not defined.
  * * the empty string is defined
- * * an array ("list") is defined, if it contains at least one defined element
- * * an object ("map") is defined, if it contains at least one defined property
+ * * an array ("list") is defined, if it is not empty (even if all elements are not defined)
+ * * an object ("map") is defined, if it contains at least one property with defined value
  * @param object
  * @return {Boolean}
  */
 function isDefined (object) {
     var
-        index,
         propertyName;
     if (object === null || object === undefined) {
         return false;
     }
     if (objectHelper.isArray(object)) {
-        for (index = 0; index < object.length; index += 1) {
-            if (isDefined(object[index])) {
-                return true;
-            }
-        }
-        return false;
+        // Section 2.3: A variable defined as a list value is considered undefined if the list contains zero members
+        return object.length > 0;
     }
     if (typeof object === "string" || typeof object === "number" || typeof object === "boolean") {
         // falsy values like empty strings, false or 0 are "defined"
@@ -1142,27 +1376,8 @@ function isDefined (object) {
 
 var LiteralExpression = (function () {
     function LiteralExpression (literal) {
-        this.literal = LiteralExpression.encodeLiteral(literal);
+        this.literal = encodingHelper.encodeLiteral(literal);
     }
-
-    LiteralExpression.encodeLiteral = function (literal) {
-        var
-            result = '',
-            index,
-            chr = '';
-        for (index = 0; index < literal.length; index += chr.length) {
-            chr = pctEncoder.pctCharAt(literal, index);
-            if (chr.length > 1) {
-                result += chr;
-            }
-            else {
-                result += rfcCharHelper.isReserved(chr) || rfcCharHelper.isUnreserved(chr) ? chr : pctEncoder.encodeCharacter(chr);
-            }
-            // chr = literal.charAt(index);
-            // result += rfcCharHelper.isReserved(chr) || rfcCharHelper.isUnreserved(chr) ? chr : pctEncoder.encodeCharacter(chr);
-        }
-        return result;
-    };
 
     LiteralExpression.prototype.expand = function () {
         return this.literal;
@@ -1174,9 +1389,9 @@ var LiteralExpression = (function () {
 }());
 
 var parse = (function () {
-    function parseExpression (outerText) {
+
+    function parseExpression (expressionText) {
         var
-            text,
             operator,
             varspecs = [],
             varspec = null,
@@ -1186,34 +1401,42 @@ var parse = (function () {
             chr = '';
 
         function closeVarname () {
-            varspec = {varname: text.substring(varnameStart, index), exploded: false, maxLength: null};
+            var varname = expressionText.substring(varnameStart, index);
+            if (varname.length === 0) {
+                throw new UriTemplateError({expressionText: expressionText, message: "a varname must be specified", position: index});
+            }
+            varspec = {varname: varname, exploded: false, maxLength: null};
             varnameStart = null;
         }
 
         function closeMaxLength () {
             if (maxLengthStart === index) {
-                throw new Error("after a ':' you have to specify the length. position = " + index);
+                throw new UriTemplateError({expressionText: expressionText, message: "after a ':' you have to specify the length", position: index});
             }
-            varspec.maxLength = parseInt(text.substring(maxLengthStart, index), 10);
+            varspec.maxLength = parseInt(expressionText.substring(maxLengthStart, index), 10);
             maxLengthStart = null;
         }
 
-        // remove outer braces
-        text = outerText.substr(1, outerText.length - 2);
+        operator = (function (operatorText) {
+            var op = operators.valueOf(operatorText);
+            if (op === null) {
+                throw new UriTemplateError({expressionText: expressionText, message: "illegal use of reserved operator", position: index, operator: operatorText});
+            }
+            return op;
+        }(expressionText.charAt(0)));
+        index = operator.symbol.length;
 
-        // determine operator
-        operator = operators.valueOf(text.charAt(0));
-        index = (operator.symbol === '') ? 0 : 1;
         varnameStart = index;
 
-        for (; index < text.length; index += chr.length) {
-            chr = pctEncoder.pctCharAt(text, index);
+        for (; index < expressionText.length; index += chr.length) {
+            chr = pctEncoder.pctCharAt(expressionText, index);
+
             if (varnameStart !== null) {
                 // the spec says: varname =  varchar *( ["."] varchar )
                 // so a dot is allowed except for the first char
                 if (chr === '.') {
                     if (varnameStart === index) {
-                        throw new Error('a varname MUST NOT start with a dot -- see position ' + index);
+                        throw new UriTemplateError({expressionText: expressionText, message: "a varname MUST NOT start with a dot", position: index});
                     }
                     continue;
                 }
@@ -1224,11 +1447,11 @@ var parse = (function () {
             }
             if (maxLengthStart !== null) {
                 if (index === maxLengthStart && chr === '0') {
-                    throw new Error('A :prefix must not start with digit 0 -- see position ' + index);
+                    throw new UriTemplateError({expressionText: expressionText, message: "A :prefix must not start with digit 0", position: index});
                 }
                 if (charHelper.isDigit(chr)) {
                     if (index - maxLengthStart >= 4) {
-                        throw new Error('A :prefix must max 4 digits -- see position ' + index);
+                        throw new UriTemplateError({expressionText: expressionText, message: "A :prefix must have max 4 digits", position: index});
                     }
                     continue;
                 }
@@ -1236,20 +1459,23 @@ var parse = (function () {
             }
             if (chr === ':') {
                 if (varspec.maxLength !== null) {
-                    throw new Error('only one :maxLength is allowed per varspec at position ' + index);
+                    throw new UriTemplateError({expressionText: expressionText, message: "only one :maxLength is allowed per varspec", position: index});
+                }
+                if (varspec.exploded) {
+                    throw new UriTemplateError({expressionText: expressionText, message: "an exploeded varspec MUST NOT be varspeced", position: index});
                 }
                 maxLengthStart = index + 1;
                 continue;
             }
             if (chr === '*') {
                 if (varspec === null) {
-                    throw new Error('explode exploded at position ' + index);
+                    throw new UriTemplateError({expressionText: expressionText, message: "exploded without varspec", position: index});
                 }
                 if (varspec.exploded) {
-                    throw new Error('explode exploded twice at position ' + index);
+                    throw new UriTemplateError({expressionText: expressionText, message: "exploded twice", position: index});
                 }
                 if (varspec.maxLength) {
-                    throw new Error('an explode (*) MUST NOT follow to a prefix, see position ' + index);
+                    throw new UriTemplateError({expressionText: expressionText, message: "an explode (*) MUST NOT follow to a prefix", position: index});
                 }
                 varspec.exploded = true;
                 continue;
@@ -1261,7 +1487,7 @@ var parse = (function () {
                 varnameStart = index + 1;
                 continue;
             }
-            throw new Error("illegal character '" + chr + "' at position " + index + ' of "' + text + '"');
+            throw new UriTemplateError({expressionText: expressionText, message: "illegal character", character: chr, position: index});
         } // for chr
         if (varnameStart !== null) {
             closeVarname();
@@ -1270,10 +1496,10 @@ var parse = (function () {
             closeMaxLength();
         }
         varspecs.push(varspec);
-        return new VariableExpression(outerText, operator, varspecs);
+        return new VariableExpression(expressionText, operator, varspecs);
     }
 
-    function parseTemplate (uriTemplateText) {
+    function parse (uriTemplateText) {
         // assert filled string
         var
             index,
@@ -1285,7 +1511,7 @@ var parse = (function () {
             chr = uriTemplateText.charAt(index);
             if (literalStart !== null) {
                 if (chr === '}') {
-                    throw new Error('brace was closed in position ' + index + " but never opened");
+                    throw new UriTemplateError({templateText: uriTemplateText, message: "unopened brace closed", position: index});
                 }
                 if (chr === '{') {
                     if (literalStart < index) {
@@ -1300,13 +1526,21 @@ var parse = (function () {
             if (braceOpenIndex !== null) {
                 // here just { is forbidden
                 if (chr === '{') {
-                    throw new Error('brace was opened in position ' + braceOpenIndex + " and cannot be reopened in position " + index);
+                    throw new UriTemplateError({templateText: uriTemplateText, message: "brace already opened", position: index});
                 }
                 if (chr === '}') {
                     if (braceOpenIndex + 1 === index) {
-                        throw new Error("empty braces on position " + braceOpenIndex);
+                        throw new UriTemplateError({templateText: uriTemplateText, message: "empty braces", position: braceOpenIndex});
                     }
-                    expressions.push(parseExpression(uriTemplateText.substring(braceOpenIndex, index + 1)));
+                    try {
+                        expressions.push(parseExpression(uriTemplateText.substring(braceOpenIndex + 1, index)));
+                    }
+                    catch (error) {
+                        if (error.prototype === UriTemplateError.prototype) {
+                            throw new UriTemplateError({templateText: uriTemplateText, message: error.options.message, position: braceOpenIndex + error.options.position, details: error.options});
+                        }
+                        throw error;
+                    }
                     braceOpenIndex = null;
                     literalStart = index + 1;
                 }
@@ -1315,7 +1549,7 @@ var parse = (function () {
             throw new Error('reached unreachable code');
         }
         if (braceOpenIndex !== null) {
-            throw new Error("brace was opened on position " + braceOpenIndex + ", but never closed");
+            throw new UriTemplateError({templateText: uriTemplateText, message: "unclosed brace", position: braceOpenIndex});
         }
         if (literalStart < uriTemplateText.length) {
             expressions.push(new LiteralExpression(uriTemplateText.substr(literalStart)));
@@ -1323,13 +1557,46 @@ var parse = (function () {
         return new UriTemplate(uriTemplateText, expressions);
     }
 
-    return parseTemplate;
+    return parse;
 }());
 
 var VariableExpression = (function () {
     // helper function if JSON is not available
     function prettyPrint (value) {
-        return JSON ? JSON.stringify(value) : value;
+        return (JSON && JSON.stringify) ? JSON.stringify(value) : value;
+    }
+
+    function isEmpty (value) {
+        if (!isDefined(value)) {
+            return true;
+        }
+        if (objectHelper.isString(value)) {
+            return value === '';
+        }
+        if (objectHelper.isNumber(value) || objectHelper.isBoolean(value)) {
+            return false;
+        }
+        if (objectHelper.isArray(value)) {
+            return value.length === 0;
+        }
+        for (var propertyName in value) {
+            if (value.hasOwnProperty(propertyName)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function propertyArray (object) {
+        var
+            result = [],
+            propertyName;
+        for (propertyName in object) {
+            if (object.hasOwnProperty(propertyName)) {
+                result.push({name: propertyName, value: object[propertyName]});
+            }
+        }
+        return result;
     }
 
     function VariableExpression (templateText, operator, varspecs) {
@@ -1342,121 +1609,167 @@ var VariableExpression = (function () {
         return this.templateText;
     };
 
+    function expandSimpleValue(varspec, operator, value) {
+        var result = '';
+        value = value.toString();
+        if (operator.named) {
+            result += encodingHelper.encodeLiteral(varspec.varname);
+            if (value === '') {
+                result += operator.ifEmpty;
+                return result;
+            }
+            result += '=';
+        }
+        if (varspec.maxLength !== null) {
+            value = value.substr(0, varspec.maxLength);
+        }
+        result += operator.encode(value);
+        return result;
+    }
+
+    function valueDefined (nameValue) {
+        return isDefined(nameValue.value);
+    }
+
+    function expandNotExploded(varspec, operator, value) {
+        var
+            arr = [],
+            result = '';
+        if (operator.named) {
+            result += encodingHelper.encodeLiteral(varspec.varname);
+            if (isEmpty(value)) {
+                result += operator.ifEmpty;
+                return result;
+            }
+            result += '=';
+        }
+        if (objectHelper.isArray(value)) {
+            arr = value;
+            arr = objectHelper.filter(arr, isDefined);
+            arr = objectHelper.map(arr, operator.encode);
+            result += objectHelper.join(arr, ',');
+        }
+        else {
+            arr = propertyArray(value);
+            arr = objectHelper.filter(arr, valueDefined);
+            arr = objectHelper.map(arr, function (nameValue) {
+                return operator.encode(nameValue.name) + ',' + operator.encode(nameValue.value);
+            });
+            result += objectHelper.join(arr, ',');
+        }
+        return result;
+    }
+
+    function expandExplodedNamed (varspec, operator, value) {
+        var
+            isArray = objectHelper.isArray(value),
+            arr = [];
+        if (isArray) {
+            arr = value;
+            arr = objectHelper.filter(arr, isDefined);
+            arr = objectHelper.map(arr, function (listElement) {
+                var tmp = encodingHelper.encodeLiteral(varspec.varname);
+                if (isEmpty(listElement)) {
+                    tmp += operator.ifEmpty;
+                }
+                else {
+                    tmp += '=' + operator.encode(listElement);
+                }
+                return tmp;
+            });
+        }
+        else {
+            arr = propertyArray(value);
+            arr = objectHelper.filter(arr, valueDefined);
+            arr = objectHelper.map(arr, function (nameValue) {
+                var tmp = encodingHelper.encodeLiteral(nameValue.name);
+                if (isEmpty(nameValue.value)) {
+                    tmp += operator.ifEmpty;
+                }
+                else {
+                    tmp += '=' + operator.encode(nameValue.value);
+                }
+                return tmp;
+            });
+        }
+        return objectHelper.join(arr, operator.separator);
+    }
+
+    function expandExplodedUnnamed (operator, value) {
+        var
+            arr = [],
+            result = '';
+        if (objectHelper.isArray(value)) {
+            arr = value;
+            arr = objectHelper.filter(arr, isDefined);
+            arr = objectHelper.map(arr, operator.encode);
+            result += objectHelper.join(arr, operator.separator);
+        }
+        else {
+            arr = propertyArray(value);
+            arr = objectHelper.filter(arr, function (nameValue) {
+                return isDefined(nameValue.value);
+            });
+            arr = objectHelper.map(arr, function (nameValue) {
+                return operator.encode(nameValue.name) + '=' + operator.encode(nameValue.value);
+            });
+            result += objectHelper.join(arr, operator.separator);
+        }
+        return result;
+    }
+
+
     VariableExpression.prototype.expand = function (variables) {
         var
-            result = '',
+            expanded = [],
             index,
             varspec,
             value,
             valueIsArr,
-            isFirstVarspec = true,
+            oneExploded = false,
             operator = this.operator;
-
-        // callback to be used within array.reduce
-        function reduceUnexploded (result, currentValue, currentKey) {
-            if (isDefined(currentValue)) {
-                if (result.length > 0) {
-                    result += ',';
-                }
-                if (!valueIsArr) {
-                    result += operator.encode(currentKey) + ',';
-                }
-                result += operator.encode(currentValue);
-            }
-            return result;
-        }
-
-        function reduceNamedExploded (result, currentValue, currentKey) {
-            if (isDefined(currentValue)) {
-                if (result.length > 0) {
-                    result += operator.separator;
-                }
-                result += (valueIsArr) ? LiteralExpression.encodeLiteral(varspec.varname) : operator.encode(currentKey);
-                result += '=' + operator.encode(currentValue);
-            }
-            return result;
-        }
-
-        function reduceUnnamedExploded (result, currentValue, currentKey) {
-            if (isDefined(currentValue)) {
-                if (result.length > 0) {
-                    result += operator.separator;
-                }
-                if (!valueIsArr) {
-                    result += operator.encode(currentKey) + '=';
-                }
-                result += operator.encode(currentValue);
-            }
-            return result;
-        }
 
         // expand each varspec and join with operator's separator
         for (index = 0; index < this.varspecs.length; index += 1) {
             varspec = this.varspecs[index];
             value = variables[varspec.varname];
-            if (!isDefined(value)) {
-                 continue;
+            // if (!isDefined(value)) {
+            // if (variables.hasOwnProperty(varspec.name)) {
+            if (value === null || value === undefined) {
+                continue;
             }
-            if (isFirstVarspec) {
-                result += operator.first;
-                isFirstVarspec = false;
-            }
-            else {
-                result += operator.separator;
+            if (varspec.exploded) {
+                oneExploded = true;
             }
             valueIsArr = objectHelper.isArray(value);
             if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-                value = value.toString();
-                if (operator.named) {
-                    result += LiteralExpression.encodeLiteral(varspec.varname);
-                    if (value === '') {
-                        result += operator.ifEmpty;
-                        continue;
-                    }
-                    result += '=';
-                }
-                if (varspec.maxLength !== null) {
-                    value = value.substr(0, varspec.maxLength);
-                }
-                result += operator.encode(value);
+                expanded.push(expandSimpleValue(varspec, operator, value));
             }
-            else if (varspec.maxLength) {
+            else if (varspec.maxLength && isDefined(value)) {
                 // 2.4.1 of the spec says: "Prefix modifiers are not applicable to variables that have composite values."
                 throw new Error('Prefix modifiers are not applicable to variables that have composite values. You tried to expand ' + this + " with " + prettyPrint(value));
             }
             else if (!varspec.exploded) {
+                if (operator.named || !isEmpty(value)) {
+                    expanded.push(expandNotExploded(varspec, operator, value));
+                }
+            }
+            else if (isDefined(value)) {
                 if (operator.named) {
-                    result += LiteralExpression.encodeLiteral(varspec.varname);
-                    if (!isDefined(value)) {
-                        result += operator.ifEmpty;
-                        continue;
-                    }
-                    result += '=';
+                    expanded.push(expandExplodedNamed(varspec, operator, value));
                 }
-                result += objectHelper.reduce(value, reduceUnexploded, '');
-            }
-            else {
-                // exploded and not string
-                result += objectHelper.reduce(value, operator.named ? reduceNamedExploded : reduceUnnamedExploded, '');
+                else {
+                    expanded.push(expandExplodedUnnamed(operator, value));
+                }
             }
         }
 
-        if (isFirstVarspec) {
-            // so no varspecs produced output.
-            var oneExploded = false;
-            for (index = 0; index < this.varspecs.length; index += 1) {
-                if (this.varspecs[index].exploded) {
-                    oneExploded = true;
-                    break;
-                }
-            }
-            if (operator.named && !oneExploded) {
-                result += operator.symbol;
-                result += varspec.varname + operator.ifEmpty;
-            }
+        if (expanded.length === 0) {
+            return "";
         }
-
-        return result;
+        else {
+            return operator.first + objectHelper.join(expanded, operator.separator);
+        }
     };
 
     return VariableExpression;
@@ -1485,6 +1798,7 @@ var UriTemplate = (function () {
     };
 
     UriTemplate.parse = parse;
+    UriTemplate.UriTemplateError = UriTemplateError;
     return UriTemplate;
 }());
 
@@ -1510,7 +1824,18 @@ var UriTemplate = (function () {
     }
 ));
 
-var MicroEvent	= function(){}
+/**
+ * MicroEvent - to make any js object an event emitter (server or browser)
+ *
+ * - pure javascript - server compatible, browser compatible
+ * - dont rely on the browser doms
+ * - super simple - you get it immediatly, no mistery, no magic involved
+ *
+ * - create a MicroEventDebug with goodies to debug
+ *   - make it safer to use
+*/
+
+var MicroEvent	= function(){};
 MicroEvent.prototype	= {
 	bind	: function(event, fct){
 		this._events = this._events || {};
@@ -1520,13 +1845,18 @@ MicroEvent.prototype	= {
 	unbind	: function(event, fct){
 		this._events = this._events || {};
 		if( event in this._events === false  )	return;
-		this._events[event].splice(this._events[event].indexOf(fct), 1);
+		var indexOfFunc = this._events[event].indexOf(fct);
+		if(indexOfFunc !== -1) {
+			this._events[event].splice(indexOfFunc, 1);
+		} else {
+			this._events[event] = [];
+		}
 	},
 	trigger	: function(event /* , args... */){
 		this._events = this._events || {};
 		if( event in this._events === false  )	return;
 		for(var i = 0; i < this._events[event].length; i++){
-			this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1))
+			this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1));
 		}
 	}
 };
@@ -1541,13 +1871,24 @@ MicroEvent.prototype	= {
 MicroEvent.mixin	= function(destObject){
 	var props	= ['bind', 'unbind', 'trigger'];
 	for(var i = 0; i < props.length; i ++){
-		destObject.prototype[props[i]]	= MicroEvent.prototype[props[i]];
+		if( typeof destObject === 'function' ){
+			destObject.prototype[props[i]]	= MicroEvent.prototype[props[i]];
+		}else{
+			destObject[props[i]] = MicroEvent.prototype[props[i]];
+		}
 	}
 }
 
 // export in common js
 if( typeof module !== "undefined" && ('exports' in module)){
-	module.exports	= MicroEvent
+	module.exports	= MicroEvent;
+}
+
+// AMD support
+if( typeof define !== "undefined"){
+		define([], function(){
+				return MicroEvent;
+		});
 }
 
 // BEGIN UTILS
@@ -1707,6 +2048,17 @@ var utils = {
 // END UTILS
 
 /*********/
+// BEGIN POSTPROCESSORS
+
+var ApiPostProcessors = {
+    login: function (obj) {
+        var newClaims = obj.prop('AuthTicket');
+        if (newClaims && newClaims.AccessToken) {
+            obj.api.context.UserClaims(newClaims.AccessToken);
+            obj.api.fire('login', newClaims);
+        }
+    }
+};
 // BEGIN REFERENCE
 var ApiReference = (function () {
 
@@ -2084,6 +2436,10 @@ var ApiObject = (function () {
         this.data = data;
         this.api = iapi;
         this.type = type;
+        if (ApiPostProcessors[this.type]) {
+            this.postProcessor = ApiPostProcessors[this.type];
+            this.postProcessor(this);
+        }
     }
 
     ApiObjectConstructor.prototype = {
@@ -2101,6 +2457,7 @@ var ApiObject = (function () {
                     return returnObj;
                 } else {
                     utils.extend(me.data, rawJSON);
+                    if (me.postProcessor) me.postProcessor(me);
                     delete me.unsynced;
                     me.fire('sync', rawJSON, me.data);
                     me.api.fire('sync', me, rawJSON, me.data);
@@ -2299,17 +2656,19 @@ var ApiInterface = (function () {
         },
         action: function (type, actionName, conf, isRemote) {
             var me = this,
+                requestConf = {},
                 fulfill = function (rawJSON) {
                     var unsynced = rawJSON.__unsynced__;
                     if (unsynced) delete rawJSON.__unsynced__;
-                    var newApiObject = ApiReference.tryCreateApiObject(type, rawJSON, me);
+                    var newApiObject = ApiReference.tryCreateApiObject(requestConf.returnType || type, rawJSON, me);
                     if (unsynced) newApiObject.unsynced = true;
                     me.fire('spawn', newApiObject);
                     return newApiObject;
                 };
             isRemote = isRemote === false ? false : true;
             if (isRemote) {
-                return this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf).then(fulfill);
+                requestConf = ApiReference.getRequestConfig(actionName, type, conf, this.context);
+                return this.request(ApiReference.basicOps[actionName], requestConf, conf).then(fulfill);
             } else {
                 conf.__unsynced__ = true;
                 return utils.when(conf, fulfill);
@@ -2418,8 +2777,7 @@ Mozu._expose = function (r) {
 
 Mozu.ApiObject.prototype.inspect = function () {
     return JSON.stringify(this.data, true, 2);
-};
-			return Mozu;
+};			return Mozu;
 		});
 		// boilerplate below makes this library compatible with AMD, CJS, and a plain browser environment
 	})(internalDefine,

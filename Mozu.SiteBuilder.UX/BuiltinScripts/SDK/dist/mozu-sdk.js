@@ -1,10 +1,3 @@
-/*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-08-30
- *
- * Copyright (c) 2013 Volusion, Inc.
- *
- */
-
 (function() {
     var amds = [], internalDefine = function(deps, fn) {
         if (typeof deps === "function") fn = deps;
@@ -13,67 +6,54 @@
     internalDefine.amd = true;
     (function(define, exportFn) {
         exportFn(function() {
-            (function(define) {
+            (function(define, global) {
                 "use strict";
-                define(function() {
-                    var reduceArray, slice, undef;
-                    when.defer = defer;
+                define(function(require) {
+                    when.promise = promise;
                     when.resolve = resolve;
                     when.reject = reject;
+                    when.defer = defer;
                     when.join = join;
                     when.all = all;
                     when.map = map;
                     when.reduce = reduce;
+                    when.settle = settle;
                     when.any = any;
                     when.some = some;
-                    when.chain = chain;
-                    when.isPromise = isPromise;
+                    when.isPromise = isPromiseLike;
+                    when.isPromiseLike = isPromiseLike;
                     function when(promiseOrValue, onFulfilled, onRejected, onProgress) {
                         return resolve(promiseOrValue).then(onFulfilled, onRejected, onProgress);
                     }
-                    function resolve(promiseOrValue) {
-                        var promise;
-                        if (promiseOrValue instanceof Promise) {
-                            promise = promiseOrValue;
-                        } else if (isPromise(promiseOrValue)) {
-                            promise = assimilate(promiseOrValue);
-                        } else {
-                            promise = fulfilled(promiseOrValue);
-                        }
-                        return promise;
-                    }
-                    function assimilate(thenable) {
-                        var d = defer();
-                        try {
-                            thenable.then(function(value) {
-                                d.resolve(value);
-                            }, function(reason) {
-                                d.reject(reason);
-                            }, function(update) {
-                                d.progress(update);
-                            });
-                        } catch (e) {
-                            d.reject(e);
-                        }
-                        return d.promise;
-                    }
-                    function reject(promiseOrValue) {
-                        return when(promiseOrValue, rejected);
-                    }
-                    function Promise(then) {
-                        this.then = then;
+                    function Promise(sendMessage, inspect) {
+                        this._message = sendMessage;
+                        this.inspect = inspect;
                     }
                     Promise.prototype = {
-                        always: function(onFulfilledOrRejected, onProgress) {
-                            return this.then(onFulfilledOrRejected, onFulfilledOrRejected, onProgress);
+                        then: function(onFulfilled, onRejected, onProgress) {
+                            var args, sendMessage;
+                            args = arguments;
+                            sendMessage = this._message;
+                            return _promise(function(resolve, reject, notify) {
+                                sendMessage("when", args, resolve, notify);
+                            }, this._status && this._status.observed());
                         },
                         otherwise: function(onRejected) {
                             return this.then(undef, onRejected);
+                        },
+                        ensure: function(onFulfilledOrRejected) {
+                            return this.then(injectHandler, injectHandler)["yield"](this);
+                            function injectHandler() {
+                                return resolve(onFulfilledOrRejected());
+                            }
                         },
                         yield: function(value) {
                             return this.then(function() {
                                 return value;
                             });
+                        },
+                        tap: function(onFulfilledSideEffect) {
+                            return this.then(onFulfilledSideEffect)["yield"](this);
                         },
                         spread: function(onFulfilled) {
                             return this.then(function(array) {
@@ -81,134 +61,227 @@
                                     return onFulfilled.apply(undef, array);
                                 });
                             });
+                        },
+                        always: function(onFulfilledOrRejected, onProgress) {
+                            return this.then(onFulfilledOrRejected, onFulfilledOrRejected, onProgress);
                         }
                     };
-                    function fulfilled(value) {
-                        var p = new Promise(function(onFulfilled) {
-                            try {
-                                return resolve(typeof onFulfilled == "function" ? onFulfilled(value) : value);
-                            } catch (e) {
-                                return rejected(e);
-                            }
+                    function resolve(value) {
+                        return promise(function(resolve) {
+                            resolve(value);
                         });
-                        return p;
                     }
-                    function rejected(reason) {
-                        var p = new Promise(function(_, onRejected) {
-                            try {
-                                return resolve(typeof onRejected == "function" ? onRejected(reason) : rejected(reason));
-                            } catch (e) {
-                                return rejected(e);
-                            }
-                        });
-                        return p;
+                    function reject(promiseOrValue) {
+                        return when(promiseOrValue, rejected);
                     }
                     function defer() {
-                        var deferred, promise, handlers, progressHandlers, _then, _notify, _resolve;
-                        promise = new Promise(then);
+                        var deferred, pending, resolved;
                         deferred = {
-                            then: then,
-                            resolve: promiseResolve,
-                            reject: promiseReject,
-                            progress: promiseNotify,
-                            notify: promiseNotify,
-                            promise: promise,
+                            promise: undef,
+                            resolve: undef,
+                            reject: undef,
+                            notify: undef,
                             resolver: {
-                                resolve: promiseResolve,
-                                reject: promiseReject,
-                                progress: promiseNotify,
-                                notify: promiseNotify
+                                resolve: undef,
+                                reject: undef,
+                                notify: undef
                             }
                         };
-                        handlers = [];
-                        progressHandlers = [];
-                        _then = function(onFulfilled, onRejected, onProgress) {
-                            var deferred, progressHandler;
-                            deferred = defer();
-                            progressHandler = typeof onProgress === "function" ? function(update) {
-                                try {
-                                    deferred.notify(onProgress(update));
-                                } catch (e) {
-                                    deferred.notify(e);
-                                }
-                            } : function(update) {
-                                deferred.notify(update);
-                            };
-                            handlers.push(function(promise) {
-                                promise.then(onFulfilled, onRejected).then(deferred.resolve, deferred.reject, progressHandler);
-                            });
-                            progressHandlers.push(progressHandler);
-                            return deferred.promise;
-                        };
-                        _notify = function(update) {
-                            processQueue(progressHandlers, update);
-                            return update;
-                        };
-                        _resolve = function(value) {
-                            _then = value.then;
-                            _resolve = resolve;
-                            _notify = identity;
-                            processQueue(handlers, value);
-                            progressHandlers = handlers = undef;
-                            return value;
-                        };
+                        deferred.promise = pending = promise(makeDeferred);
                         return deferred;
-                        function then(onFulfilled, onRejected, onProgress) {
-                            return _then(onFulfilled, onRejected, onProgress);
+                        function makeDeferred(resolvePending, rejectPending, notifyPending) {
+                            deferred.resolve = deferred.resolver.resolve = function(value) {
+                                if (resolved) {
+                                    return resolve(value);
+                                }
+                                resolved = true;
+                                resolvePending(value);
+                                return pending;
+                            };
+                            deferred.reject = deferred.resolver.reject = function(reason) {
+                                if (resolved) {
+                                    return resolve(rejected(reason));
+                                }
+                                resolved = true;
+                                rejectPending(reason);
+                                return pending;
+                            };
+                            deferred.notify = deferred.resolver.notify = function(update) {
+                                notifyPending(update);
+                                return update;
+                            };
+                        }
+                    }
+                    function promise(resolver) {
+                        return _promise(resolver, monitorApi.PromiseStatus && monitorApi.PromiseStatus());
+                    }
+                    function _promise(resolver, status) {
+                        var self, value, consumers = [];
+                        self = new Promise(_message, inspect);
+                        self._status = status;
+                        try {
+                            resolver(promiseResolve, promiseReject, promiseNotify);
+                        } catch (e) {
+                            promiseReject(e);
+                        }
+                        return self;
+                        function _message(type, args, resolve, notify) {
+                            consumers ? consumers.push(deliver) : enqueue(function() {
+                                deliver(value);
+                            });
+                            function deliver(p) {
+                                p._message(type, args, resolve, notify);
+                            }
+                        }
+                        function inspect() {
+                            return value ? value.inspect() : toPendingState();
                         }
                         function promiseResolve(val) {
-                            return _resolve(resolve(val));
+                            if (!consumers) {
+                                return;
+                            }
+                            value = coerce(val);
+                            scheduleConsumers(consumers, value);
+                            consumers = undef;
+                            if (status) {
+                                updateStatus(value, status);
+                            }
                         }
-                        function promiseReject(err) {
-                            return _resolve(rejected(err));
+                        function promiseReject(reason) {
+                            promiseResolve(rejected(reason));
                         }
                         function promiseNotify(update) {
-                            return _notify(update);
+                            if (consumers) {
+                                scheduleConsumers(consumers, progressed(update));
+                            }
                         }
                     }
-                    function isPromise(promiseOrValue) {
-                        return promiseOrValue && typeof promiseOrValue.then === "function";
+                    function fulfilled(value) {
+                        return near(new NearFulfilledProxy(value), function() {
+                            return toFulfilledState(value);
+                        });
+                    }
+                    function rejected(reason) {
+                        return near(new NearRejectedProxy(reason), function() {
+                            return toRejectedState(reason);
+                        });
+                    }
+                    function near(proxy, inspect) {
+                        return new Promise(function(type, args, resolve) {
+                            try {
+                                resolve(proxy[type].apply(proxy, args));
+                            } catch (e) {
+                                resolve(rejected(e));
+                            }
+                        }, inspect);
+                    }
+                    function progressed(update) {
+                        return new Promise(function(type, args, _, notify) {
+                            var onProgress = args[2];
+                            try {
+                                notify(typeof onProgress === "function" ? onProgress(update) : update);
+                            } catch (e) {
+                                notify(e);
+                            }
+                        });
+                    }
+                    function coerce(x) {
+                        if (x instanceof Promise) {
+                            return x;
+                        }
+                        if (!(x === Object(x) && "then" in x)) {
+                            return fulfilled(x);
+                        }
+                        return promise(function(resolve, reject, notify) {
+                            enqueue(function() {
+                                try {
+                                    var untrustedThen = x.then;
+                                    if (typeof untrustedThen === "function") {
+                                        fcall(untrustedThen, x, resolve, reject, notify);
+                                    } else {
+                                        resolve(fulfilled(x));
+                                    }
+                                } catch (e) {
+                                    reject(e);
+                                }
+                            });
+                        });
+                    }
+                    function NearFulfilledProxy(value) {
+                        this.value = value;
+                    }
+                    NearFulfilledProxy.prototype.when = function(onResult) {
+                        return typeof onResult === "function" ? onResult(this.value) : this.value;
+                    };
+                    function NearRejectedProxy(reason) {
+                        this.reason = reason;
+                    }
+                    NearRejectedProxy.prototype.when = function(_, onError) {
+                        if (typeof onError === "function") {
+                            return onError(this.reason);
+                        } else {
+                            throw this.reason;
+                        }
+                    };
+                    function scheduleConsumers(handlers, value) {
+                        enqueue(function() {
+                            var handler, i = 0;
+                            while (handler = handlers[i++]) {
+                                handler(value);
+                            }
+                        });
+                    }
+                    function updateStatus(value, status) {
+                        value.then(statusFulfilled, statusRejected);
+                        function statusFulfilled() {
+                            status.fulfilled();
+                        }
+                        function statusRejected(r) {
+                            status.rejected(r);
+                        }
+                    }
+                    function isPromiseLike(x) {
+                        return x && typeof x.then === "function";
                     }
                     function some(promisesOrValues, howMany, onFulfilled, onRejected, onProgress) {
-                        checkCallbacks(2, arguments);
                         return when(promisesOrValues, function(promisesOrValues) {
-                            var toResolve, toReject, values, reasons, deferred, fulfillOne, rejectOne, notify, len, i;
-                            len = promisesOrValues.length >>> 0;
-                            toResolve = Math.max(0, Math.min(howMany, len));
-                            values = [];
-                            toReject = len - toResolve + 1;
-                            reasons = [];
-                            deferred = defer();
-                            if (!toResolve) {
-                                deferred.resolve(values);
-                            } else {
-                                notify = deferred.notify;
-                                rejectOne = function(reason) {
-                                    reasons.push(reason);
-                                    if (!--toReject) {
-                                        fulfillOne = rejectOne = noop;
-                                        deferred.reject(reasons);
-                                    }
-                                };
-                                fulfillOne = function(val) {
-                                    values.push(val);
-                                    if (!--toResolve) {
-                                        fulfillOne = rejectOne = noop;
-                                        deferred.resolve(values);
-                                    }
-                                };
-                                for (i = 0; i < len; ++i) {
-                                    if (i in promisesOrValues) {
-                                        when(promisesOrValues[i], fulfiller, rejecter, notify);
+                            return promise(resolveSome).then(onFulfilled, onRejected, onProgress);
+                            function resolveSome(resolve, reject, notify) {
+                                var toResolve, toReject, values, reasons, fulfillOne, rejectOne, len, i;
+                                len = promisesOrValues.length >>> 0;
+                                toResolve = Math.max(0, Math.min(howMany, len));
+                                values = [];
+                                toReject = len - toResolve + 1;
+                                reasons = [];
+                                if (!toResolve) {
+                                    resolve(values);
+                                } else {
+                                    rejectOne = function(reason) {
+                                        reasons.push(reason);
+                                        if (!--toReject) {
+                                            fulfillOne = rejectOne = identity;
+                                            reject(reasons);
+                                        }
+                                    };
+                                    fulfillOne = function(val) {
+                                        values.push(val);
+                                        if (!--toResolve) {
+                                            fulfillOne = rejectOne = identity;
+                                            resolve(values);
+                                        }
+                                    };
+                                    for (i = 0; i < len; ++i) {
+                                        if (i in promisesOrValues) {
+                                            when(promisesOrValues[i], fulfiller, rejecter, notify);
+                                        }
                                     }
                                 }
-                            }
-                            return deferred.promise.then(onFulfilled, onRejected, onProgress);
-                            function rejecter(reason) {
-                                rejectOne(reason);
-                            }
-                            function fulfiller(val) {
-                                fulfillOne(val);
+                                function rejecter(reason) {
+                                    rejectOne(reason);
+                                }
+                                function fulfiller(val) {
+                                    fulfillOne(val);
+                                }
                             }
                         });
                     }
@@ -219,42 +292,49 @@
                         return some(promisesOrValues, 1, unwrapSingleResult, onRejected, onProgress);
                     }
                     function all(promisesOrValues, onFulfilled, onRejected, onProgress) {
-                        checkCallbacks(1, arguments);
-                        return map(promisesOrValues, identity).then(onFulfilled, onRejected, onProgress);
+                        return _map(promisesOrValues, identity).then(onFulfilled, onRejected, onProgress);
                     }
                     function join() {
-                        return map(arguments, identity);
+                        return _map(arguments, identity);
                     }
-                    function map(promise, mapFunc) {
-                        return when(promise, function(array) {
-                            var results, len, toResolve, resolve, i, d;
-                            toResolve = len = array.length >>> 0;
-                            results = [];
-                            d = defer();
-                            if (!toResolve) {
-                                d.resolve(results);
-                            } else {
-                                resolve = function resolveOne(item, i) {
-                                    when(item, mapFunc).then(function(mapped) {
-                                        results[i] = mapped;
-                                        if (!--toResolve) {
-                                            d.resolve(results);
-                                        }
-                                    }, d.reject);
-                                };
+                    function settle(array) {
+                        return _map(array, toFulfilledState, toRejectedState);
+                    }
+                    function map(array, mapFunc) {
+                        return _map(array, mapFunc);
+                    }
+                    function _map(array, mapFunc, fallback) {
+                        return when(array, function(array) {
+                            return _promise(resolveMap);
+                            function resolveMap(resolve, reject, notify) {
+                                var results, len, toResolve, i;
+                                toResolve = len = array.length >>> 0;
+                                results = [];
+                                if (!toResolve) {
+                                    resolve(results);
+                                    return;
+                                }
                                 for (i = 0; i < len; i++) {
                                     if (i in array) {
-                                        resolve(array[i], i);
+                                        resolveOne(array[i], i);
                                     } else {
                                         --toResolve;
                                     }
                                 }
+                                function resolveOne(item, i) {
+                                    when(item, mapFunc, fallback).then(function(mapped) {
+                                        results[i] = mapped;
+                                        notify(mapped);
+                                        if (!--toResolve) {
+                                            resolve(results);
+                                        }
+                                    }, reject);
+                                }
                             }
-                            return d.promise;
                         });
                     }
                     function reduce(promise, reduceFunc) {
-                        var args = slice.call(arguments, 1);
+                        var args = fcall(slice, arguments, 1);
                         return when(promise, function(array) {
                             var total;
                             total = array.length;
@@ -268,38 +348,67 @@
                             return reduceArray.apply(array, args);
                         });
                     }
-                    function chain(promiseOrValue, resolver, resolveValue) {
-                        var useResolveValue = arguments.length > 2;
-                        return when(promiseOrValue, function(val) {
-                            val = useResolveValue ? resolveValue : val;
-                            resolver.resolve(val);
-                            return val;
-                        }, function(reason) {
-                            resolver.reject(reason);
-                            return rejected(reason);
-                        }, function(update) {
-                            typeof resolver.notify === "function" && resolver.notify(update);
-                            return update;
-                        });
+                    function toFulfilledState(x) {
+                        return {
+                            state: "fulfilled",
+                            value: x
+                        };
                     }
-                    function processQueue(queue, value) {
-                        var handler, i = 0;
-                        while (handler = queue[i++]) {
-                            handler(value);
+                    function toRejectedState(x) {
+                        return {
+                            state: "rejected",
+                            reason: x
+                        };
+                    }
+                    function toPendingState() {
+                        return {
+                            state: "pending"
+                        };
+                    }
+                    var reduceArray, slice, fcall, nextTick, handlerQueue, setTimeout, funcProto, call, arrayProto, monitorApi, cjsRequire, undef;
+                    cjsRequire = require;
+                    handlerQueue = [];
+                    function enqueue(task) {
+                        if (handlerQueue.push(task) === 1) {
+                            nextTick(drainQueue);
                         }
                     }
-                    function checkCallbacks(start, arrayOfCallbacks) {
-                        var arg, i = arrayOfCallbacks.length;
-                        while (i > start) {
-                            arg = arrayOfCallbacks[--i];
-                            if (arg != null && typeof arg != "function") {
-                                throw new Error("arg " + i + " must be a function");
-                            }
+                    function drainQueue() {
+                        var task, i = 0;
+                        while (task = handlerQueue[i++]) {
+                            task();
+                        }
+                        handlerQueue = [];
+                    }
+                    setTimeout = global.setTimeout;
+                    monitorApi = typeof console != "undefined" ? console : when;
+                    if (typeof setImmediate === "function") {
+                        nextTick = setImmediate.bind(global);
+                    } else if (typeof MessageChannel !== "undefined") {
+                        var channel = new MessageChannel();
+                        channel.port1.onmessage = drainQueue;
+                        nextTick = function() {
+                            channel.port2.postMessage(0);
+                        };
+                    } else if (typeof process === "object" && process.nextTick) {
+                        nextTick = process.nextTick;
+                    } else {
+                        try {
+                            nextTick = cjsRequire("vertx").runOnLoop || cjsRequire("vertx").runOnContext;
+                        } catch (ignore) {
+                            nextTick = function(t) {
+                                setTimeout(t, 0);
+                            };
                         }
                     }
-                    function noop() {}
-                    slice = [].slice;
-                    reduceArray = [].reduce || function(reduceFunc) {
+                    funcProto = Function.prototype;
+                    call = funcProto.call;
+                    fcall = funcProto.bind ? call.bind(call) : function(f, context) {
+                        return f.apply(context, slice.call(arguments, 2));
+                    };
+                    arrayProto = [];
+                    slice = arrayProto.slice;
+                    reduceArray = arrayProto.reduce || function(reduceFunc) {
                         var arr, args, reduced, len, i;
                         i = 0;
                         arr = Object(this);
@@ -330,33 +439,64 @@
                     }
                     return when;
                 });
-            })(typeof define == "function" && define.amd ? define : function(factory) {
-                typeof exports === "object" ? module.exports = factory() : this.when = factory();
-            });
+            })(typeof define === "function" && define.amd ? define : function(factory) {
+                module.exports = factory(require);
+            }, this);
             (function(exportCallback) {
                 "use strict";
+                var UriTemplateError = function() {
+                    function UriTemplateError(options) {
+                        this.options = options;
+                    }
+                    UriTemplateError.prototype.toString = function() {
+                        if (JSON && JSON.stringify) {
+                            return JSON.stringify(this.options);
+                        } else {
+                            return this.options;
+                        }
+                    };
+                    return UriTemplateError;
+                }();
                 var objectHelper = function() {
                     function isArray(value) {
                         return Object.prototype.toString.apply(value) === "[object Array]";
                     }
-                    function objectReduce(object, callback, initialValue) {
-                        var propertyName, currentValue = initialValue;
-                        for (propertyName in object) {
-                            if (object.hasOwnProperty(propertyName)) {
-                                currentValue = callback(currentValue, object[propertyName], propertyName, object);
+                    function isString(value) {
+                        return Object.prototype.toString.apply(value) === "[object String]";
+                    }
+                    function isNumber(value) {
+                        return Object.prototype.toString.apply(value) === "[object Number]";
+                    }
+                    function isBoolean(value) {
+                        return Object.prototype.toString.apply(value) === "[object Boolean]";
+                    }
+                    function join(arr, separator) {
+                        var result = "", first = true, index;
+                        for (index = 0; index < arr.length; index += 1) {
+                            if (first) {
+                                first = false;
+                            } else {
+                                result += separator;
+                            }
+                            result += arr[index];
+                        }
+                        return result;
+                    }
+                    function map(arr, mapper) {
+                        var result = [], index = 0;
+                        for (;index < arr.length; index += 1) {
+                            result.push(mapper(arr[index]));
+                        }
+                        return result;
+                    }
+                    function filter(arr, predicate) {
+                        var result = [], index = 0;
+                        for (;index < arr.length; index += 1) {
+                            if (predicate(arr[index])) {
+                                result.push(arr[index]);
                             }
                         }
-                        return currentValue;
-                    }
-                    function arrayReduce(array, callback, initialValue) {
-                        var index, currentValue = initialValue;
-                        for (index = 0; index < array.length; index += 1) {
-                            currentValue = callback(currentValue, array[index], index, array);
-                        }
-                        return currentValue;
-                    }
-                    function reduce(arrayOrObject, callback, initialValue) {
-                        return isArray(arrayOrObject) ? arrayReduce(arrayOrObject, callback, initialValue) : objectReduce(arrayOrObject, callback, initialValue);
+                        return result;
                     }
                     function deepFreezeUsingObjectFreeze(object) {
                         if (typeof object !== "object" || object === null) {
@@ -382,7 +522,12 @@
                     }
                     return {
                         isArray: isArray,
-                        reduce: reduce,
+                        isString: isString,
+                        isNumber: isNumber,
+                        isBoolean: isBoolean,
+                        join: join,
+                        map: map,
+                        filter: filter,
                         deepFreeze: deepFreeze
                     };
                 }();
@@ -427,12 +572,12 @@
                         var result = "", octets = utf8.encode(chr), octet, index;
                         for (index = 0; index < octets.length; index += 1) {
                             octet = octets.charCodeAt(index);
-                            result += "%" + octet.toString(16).toUpperCase();
+                            result += "%" + (octet < 16 ? "0" : "") + octet.toString(16).toUpperCase();
                         }
                         return result;
                     }
                     function isPercentDigitDigit(text, start) {
-                        return text[start] === "%" && charHelper.isHexDigit(text[start + 1]) && charHelper.isHexDigit(text[start + 2]);
+                        return text.charAt(start) === "%" && charHelper.isHexDigit(text.charAt(start + 1)) && charHelper.isHexDigit(text.charAt(start + 2));
                     }
                     function parseHex2(text, start) {
                         return parseInt(text.substr(start, 2), 16);
@@ -454,7 +599,7 @@
                         return true;
                     }
                     function pctCharAt(text, startIndex) {
-                        var chr = text[startIndex];
+                        var chr = text.charAt(startIndex);
                         if (!isPercentDigitDigit(text, startIndex)) {
                             return chr;
                         }
@@ -507,9 +652,31 @@
                     function encodePassReserved(text) {
                         return encode(text, true);
                     }
+                    function encodeLiteralCharacter(literal, index) {
+                        var chr = pctEncoder.pctCharAt(literal, index);
+                        if (chr.length > 1) {
+                            return chr;
+                        } else {
+                            return rfcCharHelper.isReserved(chr) || rfcCharHelper.isUnreserved(chr) ? chr : pctEncoder.encodeCharacter(chr);
+                        }
+                    }
+                    function encodeLiteral(literal) {
+                        var result = "", index, chr = "";
+                        for (index = 0; index < literal.length; index += chr.length) {
+                            chr = pctEncoder.pctCharAt(literal, index);
+                            if (chr.length > 1) {
+                                result += chr;
+                            } else {
+                                result += rfcCharHelper.isReserved(chr) || rfcCharHelper.isUnreserved(chr) ? chr : pctEncoder.encodeCharacter(chr);
+                            }
+                        }
+                        return result;
+                    }
                     return {
                         encode: encode,
-                        encodePassReserved: encodePassReserved
+                        encodePassReserved: encodePassReserved,
+                        encodeLiteral: encodeLiteral,
+                        encodeLiteralCharacter: encodeLiteralCharacter
                     };
                 }();
                 var operators = function() {
@@ -541,24 +708,19 @@
                                 return bySymbol[chr];
                             }
                             if ("=,!@|".indexOf(chr) >= 0) {
-                                throw new Error('Illegal use of reserved operator "' + chr + '"');
+                                return null;
                             }
                             return bySymbol[""];
                         }
                     };
                 }();
                 function isDefined(object) {
-                    var index, propertyName;
+                    var propertyName;
                     if (object === null || object === undefined) {
                         return false;
                     }
                     if (objectHelper.isArray(object)) {
-                        for (index = 0; index < object.length; index += 1) {
-                            if (isDefined(object[index])) {
-                                return true;
-                            }
-                        }
-                        return false;
+                        return object.length > 0;
                     }
                     if (typeof object === "string" || typeof object === "number" || typeof object === "boolean") {
                         return true;
@@ -572,20 +734,8 @@
                 }
                 var LiteralExpression = function() {
                     function LiteralExpression(literal) {
-                        this.literal = LiteralExpression.encodeLiteral(literal);
+                        this.literal = encodingHelper.encodeLiteral(literal);
                     }
-                    LiteralExpression.encodeLiteral = function(literal) {
-                        var result = "", index, chr = "";
-                        for (index = 0; index < literal.length; index += chr.length) {
-                            chr = pctEncoder.pctCharAt(literal, index);
-                            if (chr.length > 1) {
-                                result += chr;
-                            } else {
-                                result += rfcCharHelper.isReserved(chr) || rfcCharHelper.isUnreserved(chr) ? chr : pctEncoder.encodeCharacter(chr);
-                            }
-                        }
-                        return result;
-                    };
                     LiteralExpression.prototype.expand = function() {
                         return this.literal;
                     };
@@ -593,11 +743,19 @@
                     return LiteralExpression;
                 }();
                 var parse = function() {
-                    function parseExpression(outerText) {
-                        var text, operator, varspecs = [], varspec = null, varnameStart = null, maxLengthStart = null, index, chr = "";
+                    function parseExpression(expressionText) {
+                        var operator, varspecs = [], varspec = null, varnameStart = null, maxLengthStart = null, index, chr = "";
                         function closeVarname() {
+                            var varname = expressionText.substring(varnameStart, index);
+                            if (varname.length === 0) {
+                                throw new UriTemplateError({
+                                    expressionText: expressionText,
+                                    message: "a varname must be specified",
+                                    position: index
+                                });
+                            }
                             varspec = {
-                                varname: text.substring(varnameStart, index),
+                                varname: varname,
                                 exploded: false,
                                 maxLength: null
                             };
@@ -605,21 +763,39 @@
                         }
                         function closeMaxLength() {
                             if (maxLengthStart === index) {
-                                throw new Error("after a ':' you have to specify the length. position = " + index);
+                                throw new UriTemplateError({
+                                    expressionText: expressionText,
+                                    message: "after a ':' you have to specify the length",
+                                    position: index
+                                });
                             }
-                            varspec.maxLength = parseInt(text.substring(maxLengthStart, index), 10);
+                            varspec.maxLength = parseInt(expressionText.substring(maxLengthStart, index), 10);
                             maxLengthStart = null;
                         }
-                        text = outerText.substr(1, outerText.length - 2);
-                        operator = operators.valueOf(text.charAt(0));
-                        index = operator.symbol === "" ? 0 : 1;
+                        operator = function(operatorText) {
+                            var op = operators.valueOf(operatorText);
+                            if (op === null) {
+                                throw new UriTemplateError({
+                                    expressionText: expressionText,
+                                    message: "illegal use of reserved operator",
+                                    position: index,
+                                    operator: operatorText
+                                });
+                            }
+                            return op;
+                        }(expressionText.charAt(0));
+                        index = operator.symbol.length;
                         varnameStart = index;
-                        for (;index < text.length; index += chr.length) {
-                            chr = pctEncoder.pctCharAt(text, index);
+                        for (;index < expressionText.length; index += chr.length) {
+                            chr = pctEncoder.pctCharAt(expressionText, index);
                             if (varnameStart !== null) {
                                 if (chr === ".") {
                                     if (varnameStart === index) {
-                                        throw new Error("a varname MUST NOT start with a dot -- see position " + index);
+                                        throw new UriTemplateError({
+                                            expressionText: expressionText,
+                                            message: "a varname MUST NOT start with a dot",
+                                            position: index
+                                        });
                                     }
                                     continue;
                                 }
@@ -630,11 +806,19 @@
                             }
                             if (maxLengthStart !== null) {
                                 if (index === maxLengthStart && chr === "0") {
-                                    throw new Error("A :prefix must not start with digit 0 -- see position " + index);
+                                    throw new UriTemplateError({
+                                        expressionText: expressionText,
+                                        message: "A :prefix must not start with digit 0",
+                                        position: index
+                                    });
                                 }
                                 if (charHelper.isDigit(chr)) {
                                     if (index - maxLengthStart >= 4) {
-                                        throw new Error("A :prefix must max 4 digits -- see position " + index);
+                                        throw new UriTemplateError({
+                                            expressionText: expressionText,
+                                            message: "A :prefix must have max 4 digits",
+                                            position: index
+                                        });
                                     }
                                     continue;
                                 }
@@ -642,20 +826,43 @@
                             }
                             if (chr === ":") {
                                 if (varspec.maxLength !== null) {
-                                    throw new Error("only one :maxLength is allowed per varspec at position " + index);
+                                    throw new UriTemplateError({
+                                        expressionText: expressionText,
+                                        message: "only one :maxLength is allowed per varspec",
+                                        position: index
+                                    });
+                                }
+                                if (varspec.exploded) {
+                                    throw new UriTemplateError({
+                                        expressionText: expressionText,
+                                        message: "an exploeded varspec MUST NOT be varspeced",
+                                        position: index
+                                    });
                                 }
                                 maxLengthStart = index + 1;
                                 continue;
                             }
                             if (chr === "*") {
                                 if (varspec === null) {
-                                    throw new Error("explode exploded at position " + index);
+                                    throw new UriTemplateError({
+                                        expressionText: expressionText,
+                                        message: "exploded without varspec",
+                                        position: index
+                                    });
                                 }
                                 if (varspec.exploded) {
-                                    throw new Error("explode exploded twice at position " + index);
+                                    throw new UriTemplateError({
+                                        expressionText: expressionText,
+                                        message: "exploded twice",
+                                        position: index
+                                    });
                                 }
                                 if (varspec.maxLength) {
-                                    throw new Error("an explode (*) MUST NOT follow to a prefix, see position " + index);
+                                    throw new UriTemplateError({
+                                        expressionText: expressionText,
+                                        message: "an explode (*) MUST NOT follow to a prefix",
+                                        position: index
+                                    });
                                 }
                                 varspec.exploded = true;
                                 continue;
@@ -666,7 +873,12 @@
                                 varnameStart = index + 1;
                                 continue;
                             }
-                            throw new Error("illegal character '" + chr + "' at position " + index + ' of "' + text + '"');
+                            throw new UriTemplateError({
+                                expressionText: expressionText,
+                                message: "illegal character",
+                                character: chr,
+                                position: index
+                            });
                         }
                         if (varnameStart !== null) {
                             closeVarname();
@@ -675,15 +887,19 @@
                             closeMaxLength();
                         }
                         varspecs.push(varspec);
-                        return new VariableExpression(outerText, operator, varspecs);
+                        return new VariableExpression(expressionText, operator, varspecs);
                     }
-                    function parseTemplate(uriTemplateText) {
+                    function parse(uriTemplateText) {
                         var index, chr, expressions = [], braceOpenIndex = null, literalStart = 0;
                         for (index = 0; index < uriTemplateText.length; index += 1) {
                             chr = uriTemplateText.charAt(index);
                             if (literalStart !== null) {
                                 if (chr === "}") {
-                                    throw new Error("brace was closed in position " + index + " but never opened");
+                                    throw new UriTemplateError({
+                                        templateText: uriTemplateText,
+                                        message: "unopened brace closed",
+                                        position: index
+                                    });
                                 }
                                 if (chr === "{") {
                                     if (literalStart < index) {
@@ -696,13 +912,33 @@
                             }
                             if (braceOpenIndex !== null) {
                                 if (chr === "{") {
-                                    throw new Error("brace was opened in position " + braceOpenIndex + " and cannot be reopened in position " + index);
+                                    throw new UriTemplateError({
+                                        templateText: uriTemplateText,
+                                        message: "brace already opened",
+                                        position: index
+                                    });
                                 }
                                 if (chr === "}") {
                                     if (braceOpenIndex + 1 === index) {
-                                        throw new Error("empty braces on position " + braceOpenIndex);
+                                        throw new UriTemplateError({
+                                            templateText: uriTemplateText,
+                                            message: "empty braces",
+                                            position: braceOpenIndex
+                                        });
                                     }
-                                    expressions.push(parseExpression(uriTemplateText.substring(braceOpenIndex, index + 1)));
+                                    try {
+                                        expressions.push(parseExpression(uriTemplateText.substring(braceOpenIndex + 1, index)));
+                                    } catch (error) {
+                                        if (error.prototype === UriTemplateError.prototype) {
+                                            throw new UriTemplateError({
+                                                templateText: uriTemplateText,
+                                                message: error.options.message,
+                                                position: braceOpenIndex + error.options.position,
+                                                details: error.options
+                                            });
+                                        }
+                                        throw error;
+                                    }
                                     braceOpenIndex = null;
                                     literalStart = index + 1;
                                 }
@@ -711,18 +947,54 @@
                             throw new Error("reached unreachable code");
                         }
                         if (braceOpenIndex !== null) {
-                            throw new Error("brace was opened on position " + braceOpenIndex + ", but never closed");
+                            throw new UriTemplateError({
+                                templateText: uriTemplateText,
+                                message: "unclosed brace",
+                                position: braceOpenIndex
+                            });
                         }
                         if (literalStart < uriTemplateText.length) {
                             expressions.push(new LiteralExpression(uriTemplateText.substr(literalStart)));
                         }
                         return new UriTemplate(uriTemplateText, expressions);
                     }
-                    return parseTemplate;
+                    return parse;
                 }();
                 var VariableExpression = function() {
                     function prettyPrint(value) {
-                        return JSON ? JSON.stringify(value) : value;
+                        return JSON && JSON.stringify ? JSON.stringify(value) : value;
+                    }
+                    function isEmpty(value) {
+                        if (!isDefined(value)) {
+                            return true;
+                        }
+                        if (objectHelper.isString(value)) {
+                            return value === "";
+                        }
+                        if (objectHelper.isNumber(value) || objectHelper.isBoolean(value)) {
+                            return false;
+                        }
+                        if (objectHelper.isArray(value)) {
+                            return value.length === 0;
+                        }
+                        for (var propertyName in value) {
+                            if (value.hasOwnProperty(propertyName)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                    function propertyArray(object) {
+                        var result = [], propertyName;
+                        for (propertyName in object) {
+                            if (object.hasOwnProperty(propertyName)) {
+                                result.push({
+                                    name: propertyName,
+                                    value: object[propertyName]
+                                });
+                            }
+                        }
+                        return result;
                     }
                     function VariableExpression(templateText, operator, varspecs) {
                         this.templateText = templateText;
@@ -732,99 +1004,132 @@
                     VariableExpression.prototype.toString = function() {
                         return this.templateText;
                     };
+                    function expandSimpleValue(varspec, operator, value) {
+                        var result = "";
+                        value = value.toString();
+                        if (operator.named) {
+                            result += encodingHelper.encodeLiteral(varspec.varname);
+                            if (value === "") {
+                                result += operator.ifEmpty;
+                                return result;
+                            }
+                            result += "=";
+                        }
+                        if (varspec.maxLength !== null) {
+                            value = value.substr(0, varspec.maxLength);
+                        }
+                        result += operator.encode(value);
+                        return result;
+                    }
+                    function valueDefined(nameValue) {
+                        return isDefined(nameValue.value);
+                    }
+                    function expandNotExploded(varspec, operator, value) {
+                        var arr = [], result = "";
+                        if (operator.named) {
+                            result += encodingHelper.encodeLiteral(varspec.varname);
+                            if (isEmpty(value)) {
+                                result += operator.ifEmpty;
+                                return result;
+                            }
+                            result += "=";
+                        }
+                        if (objectHelper.isArray(value)) {
+                            arr = value;
+                            arr = objectHelper.filter(arr, isDefined);
+                            arr = objectHelper.map(arr, operator.encode);
+                            result += objectHelper.join(arr, ",");
+                        } else {
+                            arr = propertyArray(value);
+                            arr = objectHelper.filter(arr, valueDefined);
+                            arr = objectHelper.map(arr, function(nameValue) {
+                                return operator.encode(nameValue.name) + "," + operator.encode(nameValue.value);
+                            });
+                            result += objectHelper.join(arr, ",");
+                        }
+                        return result;
+                    }
+                    function expandExplodedNamed(varspec, operator, value) {
+                        var isArray = objectHelper.isArray(value), arr = [];
+                        if (isArray) {
+                            arr = value;
+                            arr = objectHelper.filter(arr, isDefined);
+                            arr = objectHelper.map(arr, function(listElement) {
+                                var tmp = encodingHelper.encodeLiteral(varspec.varname);
+                                if (isEmpty(listElement)) {
+                                    tmp += operator.ifEmpty;
+                                } else {
+                                    tmp += "=" + operator.encode(listElement);
+                                }
+                                return tmp;
+                            });
+                        } else {
+                            arr = propertyArray(value);
+                            arr = objectHelper.filter(arr, valueDefined);
+                            arr = objectHelper.map(arr, function(nameValue) {
+                                var tmp = encodingHelper.encodeLiteral(nameValue.name);
+                                if (isEmpty(nameValue.value)) {
+                                    tmp += operator.ifEmpty;
+                                } else {
+                                    tmp += "=" + operator.encode(nameValue.value);
+                                }
+                                return tmp;
+                            });
+                        }
+                        return objectHelper.join(arr, operator.separator);
+                    }
+                    function expandExplodedUnnamed(operator, value) {
+                        var arr = [], result = "";
+                        if (objectHelper.isArray(value)) {
+                            arr = value;
+                            arr = objectHelper.filter(arr, isDefined);
+                            arr = objectHelper.map(arr, operator.encode);
+                            result += objectHelper.join(arr, operator.separator);
+                        } else {
+                            arr = propertyArray(value);
+                            arr = objectHelper.filter(arr, function(nameValue) {
+                                return isDefined(nameValue.value);
+                            });
+                            arr = objectHelper.map(arr, function(nameValue) {
+                                return operator.encode(nameValue.name) + "=" + operator.encode(nameValue.value);
+                            });
+                            result += objectHelper.join(arr, operator.separator);
+                        }
+                        return result;
+                    }
                     VariableExpression.prototype.expand = function(variables) {
-                        var result = "", index, varspec, value, valueIsArr, isFirstVarspec = true, operator = this.operator;
-                        function reduceUnexploded(result, currentValue, currentKey) {
-                            if (isDefined(currentValue)) {
-                                if (result.length > 0) {
-                                    result += ",";
-                                }
-                                if (!valueIsArr) {
-                                    result += operator.encode(currentKey) + ",";
-                                }
-                                result += operator.encode(currentValue);
-                            }
-                            return result;
-                        }
-                        function reduceNamedExploded(result, currentValue, currentKey) {
-                            if (isDefined(currentValue)) {
-                                if (result.length > 0) {
-                                    result += operator.separator;
-                                }
-                                result += valueIsArr ? LiteralExpression.encodeLiteral(varspec.varname) : operator.encode(currentKey);
-                                result += "=" + operator.encode(currentValue);
-                            }
-                            return result;
-                        }
-                        function reduceUnnamedExploded(result, currentValue, currentKey) {
-                            if (isDefined(currentValue)) {
-                                if (result.length > 0) {
-                                    result += operator.separator;
-                                }
-                                if (!valueIsArr) {
-                                    result += operator.encode(currentKey) + "=";
-                                }
-                                result += operator.encode(currentValue);
-                            }
-                            return result;
-                        }
+                        var expanded = [], index, varspec, value, valueIsArr, oneExploded = false, operator = this.operator;
                         for (index = 0; index < this.varspecs.length; index += 1) {
                             varspec = this.varspecs[index];
                             value = variables[varspec.varname];
-                            if (!isDefined(value)) {
+                            if (value === null || value === undefined) {
                                 continue;
                             }
-                            if (isFirstVarspec) {
-                                result += operator.first;
-                                isFirstVarspec = false;
-                            } else {
-                                result += operator.separator;
+                            if (varspec.exploded) {
+                                oneExploded = true;
                             }
                             valueIsArr = objectHelper.isArray(value);
                             if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-                                value = value.toString();
-                                if (operator.named) {
-                                    result += LiteralExpression.encodeLiteral(varspec.varname);
-                                    if (value === "") {
-                                        result += operator.ifEmpty;
-                                        continue;
-                                    }
-                                    result += "=";
-                                }
-                                if (varspec.maxLength !== null) {
-                                    value = value.substr(0, varspec.maxLength);
-                                }
-                                result += operator.encode(value);
-                            } else if (varspec.maxLength) {
+                                expanded.push(expandSimpleValue(varspec, operator, value));
+                            } else if (varspec.maxLength && isDefined(value)) {
                                 throw new Error("Prefix modifiers are not applicable to variables that have composite values. You tried to expand " + this + " with " + prettyPrint(value));
                             } else if (!varspec.exploded) {
+                                if (operator.named || !isEmpty(value)) {
+                                    expanded.push(expandNotExploded(varspec, operator, value));
+                                }
+                            } else if (isDefined(value)) {
                                 if (operator.named) {
-                                    result += LiteralExpression.encodeLiteral(varspec.varname);
-                                    if (!isDefined(value)) {
-                                        result += operator.ifEmpty;
-                                        continue;
-                                    }
-                                    result += "=";
-                                }
-                                result += objectHelper.reduce(value, reduceUnexploded, "");
-                            } else {
-                                result += objectHelper.reduce(value, operator.named ? reduceNamedExploded : reduceUnnamedExploded, "");
-                            }
-                        }
-                        if (isFirstVarspec) {
-                            var oneExploded = false;
-                            for (index = 0; index < this.varspecs.length; index += 1) {
-                                if (this.varspecs[index].exploded) {
-                                    oneExploded = true;
-                                    break;
+                                    expanded.push(expandExplodedNamed(varspec, operator, value));
+                                } else {
+                                    expanded.push(expandExplodedUnnamed(operator, value));
                                 }
                             }
-                            if (operator.named && !oneExploded) {
-                                result += operator.symbol;
-                                result += varspec.varname + operator.ifEmpty;
-                            }
                         }
-                        return result;
+                        if (expanded.length === 0) {
+                            return "";
+                        } else {
+                            return operator.first + objectHelper.join(expanded, operator.separator);
+                        }
                     };
                     return VariableExpression;
                 }();
@@ -845,6 +1150,7 @@
                         return result;
                     };
                     UriTemplate.parse = parse;
+                    UriTemplate.UriTemplateError = UriTemplateError;
                     return UriTemplate;
                 }();
                 exportCallback(UriTemplate);
@@ -872,7 +1178,12 @@
                 unbind: function(event, fct) {
                     this._events = this._events || {};
                     if (event in this._events === false) return;
-                    this._events[event].splice(this._events[event].indexOf(fct), 1);
+                    var indexOfFunc = this._events[event].indexOf(fct);
+                    if (indexOfFunc !== -1) {
+                        this._events[event].splice(indexOfFunc, 1);
+                    } else {
+                        this._events[event] = [];
+                    }
                 },
                 trigger: function(event) {
                     this._events = this._events || {};
@@ -885,11 +1196,20 @@
             MicroEvent.mixin = function(destObject) {
                 var props = [ "bind", "unbind", "trigger" ];
                 for (var i = 0; i < props.length; i++) {
-                    destObject.prototype[props[i]] = MicroEvent.prototype[props[i]];
+                    if (typeof destObject === "function") {
+                        destObject.prototype[props[i]] = MicroEvent.prototype[props[i]];
+                    } else {
+                        destObject[props[i]] = MicroEvent.prototype[props[i]];
+                    }
                 }
             };
             if (typeof module !== "undefined" && "exports" in module) {
                 module.exports = MicroEvent;
+            }
+            if (typeof define !== "undefined") {
+                define([], function() {
+                    return MicroEvent;
+                });
             }
             var utils = {
                 extend: function() {
@@ -1012,6 +1332,15 @@
                     ctor.prototype.on = ctor.prototype.bind;
                     ctor.prototype.off = ctor.prototype.unbind;
                     ctor.prototype.fire = ctor.prototype.trigger;
+                }
+            };
+            var ApiPostProcessors = {
+                login: function(obj) {
+                    var newClaims = obj.prop("AuthTicket");
+                    if (newClaims && newClaims.AccessToken) {
+                        obj.api.context.UserClaims(newClaims.AccessToken);
+                        obj.api.fire("login", newClaims);
+                    }
                 }
             };
             var ApiReference = function() {
@@ -1345,6 +1674,10 @@
                     this.data = data;
                     this.api = iapi;
                     this.type = type;
+                    if (ApiPostProcessors[this.type]) {
+                        this.postProcessor = ApiPostProcessors[this.type];
+                        this.postProcessor(this);
+                    }
                 };
                 ApiObjectConstructor.prototype = {
                     constructor: ApiObjectConstructor,
@@ -1361,6 +1694,7 @@
                                 return returnObj;
                             } else {
                                 utils.extend(me.data, rawJSON);
+                                if (me.postProcessor) me.postProcessor(me);
                                 delete me.unsynced;
                                 me.fire("sync", rawJSON, me.data);
                                 me.api.fire("sync", me, rawJSON, me.data);
@@ -1521,17 +1855,18 @@
                         return deferred.promise;
                     },
                     action: function(type, actionName, conf, isRemote) {
-                        var me = this, fulfill = function(rawJSON) {
+                        var me = this, requestConf = {}, fulfill = function(rawJSON) {
                             var unsynced = rawJSON.__unsynced__;
                             if (unsynced) delete rawJSON.__unsynced__;
-                            var newApiObject = ApiReference.tryCreateApiObject(type, rawJSON, me);
+                            var newApiObject = ApiReference.tryCreateApiObject(requestConf.returnType || type, rawJSON, me);
                             if (unsynced) newApiObject.unsynced = true;
                             me.fire("spawn", newApiObject);
                             return newApiObject;
                         };
                         isRemote = isRemote === false ? false : true;
                         if (isRemote) {
-                            return this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf).then(fulfill);
+                            requestConf = ApiReference.getRequestConfig(actionName, type, conf, this.context);
+                            return this.request(ApiReference.basicOps[actionName], requestConf, conf).then(fulfill);
                         } else {
                             conf.__unsynced__ = true;
                             return utils.when(conf, fulfill);
@@ -1602,7 +1937,6 @@
                 return ApiContextConstructor;
             }();
             var Mozu = new ApiContext();
-            return Mozu;
         });
     })(internalDefine, typeof define === "function" && define.amd ? define : function(fn) {
         typeof exports === "object" && typeof module === "object" ? module.exports = fn() : this.Mozu = fn();

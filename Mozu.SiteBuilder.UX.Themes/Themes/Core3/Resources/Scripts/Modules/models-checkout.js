@@ -497,8 +497,6 @@
                             Password: order.password()
                         });
                     }, function (login) {
-                        // TODO: add a cool api login method
-                        api.context.UserClaims(login.data.AuthTicket.AccessToken);
                         return order.setUserId();
                     });
                 }
@@ -576,9 +574,11 @@
             });
 
             $.each(this.submodels, function (smName) {
-                self[smName].orderId = self.Id;
-                if (self[smName].apiModel && self[smName].apiModel.data) self[smName].apiModel.data.orderId = self.Id;
-
+                var submodel = self[smName];
+                submodel.orderId = self.Id;
+                if (submodel.apiPromise) submodel.apiPromise.then(function (apiModel) {
+                    apiModel.prop('orderId',self.Id);
+                });
                 // consolidate messaging
                 self[smName].messages = self.messages;
             });

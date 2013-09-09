@@ -56,17 +56,19 @@ var ApiInterface = (function () {
         },
         action: function (type, actionName, conf, isRemote) {
             var me = this,
+                requestConf = {},
                 fulfill = function (rawJSON) {
                     var unsynced = rawJSON.__unsynced__;
                     if (unsynced) delete rawJSON.__unsynced__;
-                    var newApiObject = ApiReference.tryCreateApiObject(type, rawJSON, me);
+                    var newApiObject = ApiReference.tryCreateApiObject(requestConf.returnType || type, rawJSON, me);
                     if (unsynced) newApiObject.unsynced = true;
                     me.fire('spawn', newApiObject);
                     return newApiObject;
                 };
             isRemote = isRemote === false ? false : true;
             if (isRemote) {
-                return this.request(ApiReference.basicOps[actionName], ApiReference.getRequestConfig(actionName, type, conf, this.context), conf).then(fulfill);
+                requestConf = ApiReference.getRequestConfig(actionName, type, conf, this.context);
+                return this.request(ApiReference.basicOps[actionName], requestConf, conf).then(fulfill);
             } else {
                 conf.__unsynced__ = true;
                 return utils.when(conf, fulfill);

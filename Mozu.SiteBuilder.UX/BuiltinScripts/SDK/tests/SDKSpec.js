@@ -10,10 +10,19 @@
         "CmsService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Content.WebApi/content/documents/",
         "ReferenceService": "http://aus01pdweb001.ads.volusion.com:9090/Mozu.reference.WebApi/platform/reference/"
     };
-
+    
     var existingProductCode = "quux";
-
+    
     Mozu.setServiceUrls(serviceUrls);
+
+    beforeEach(function () {
+        spyOn(Mozu.Utils, 'ajax').andCallFake(function (method, url, headers, data, success, failure) {
+            setTimeout(function () {
+                success(data || {});
+            }, 1);
+            
+        });
+    });
 
     it("should expose a Mozu object", function () {
         expect(Mozu).toBeDefined();
@@ -104,7 +113,6 @@
         describe("has an api.request method, that", function () {
             var req;
             it("should run an ajax request", function () {
-                spyOn(Mozu.Utils, 'ajax').andCallThrough();
 
                 req = api.request('GET', serviceUrls.ProductService);
 
@@ -127,7 +135,7 @@
 
                 waitsFor(function () {
                     return res;
-                }, 'The api request has returnes a truthy response', 20000);
+                }, 'The api request has returnes a truthy response', 3000);
 
                 runs(function () {
                     expect(JSON.stringify(res)).toBeTruthy();
@@ -148,7 +156,7 @@
 
                 waitsFor(function() {
                     return xhr;
-                }, 20000);
+                }, 3000);
 
                 runs(function () {
                     api.off('request',onRequest);
@@ -193,7 +201,7 @@
 
                 waitsFor(function () {
                     return res;
-                }, 20000);
+                }, 3000);
 
                 runs(function () {
                     expect(res instanceof Mozu.ApiObject).toBeTruthy();
@@ -211,7 +219,7 @@
 
                 waitsFor(function () {
                     return res;
-                }, 20000);
+                }, 3000);
 
                 runs(function () {
                     expect(res.data.ProductCode).toBe(existingProductCode);
@@ -230,7 +238,7 @@
 
                 waitsFor(function () {
                     return res;
-                }, 20000);
+                }, 3000);
 
                 runs(function () {
                     expect(res.data.ProductCode).toBe(existingProductCode);
@@ -256,7 +264,7 @@
 
                 waitsFor(function () {
                     return error;
-                }, 20000);
+                }, 3000);
 
                 runs(function () {
                     api.off('error', onError);
@@ -284,7 +292,7 @@
 
                 waitsFor(function () {
                     return foo && cart;
-                }), 20000;
+                }), 3000;
 
                 runs(function () {
                     expect(foo.type).toBe("product");
@@ -322,7 +330,7 @@
 
                 });
 
-                waitsFor(function () { return res; }, 20000);
+                waitsFor(function () { return res; }, 3000);
 
                 runs(function () {
                     expect(res.data.Items.length).toBe(1);
@@ -349,7 +357,7 @@
                 });
                 waitsFor(function () {
                     return p;
-                }, 20000);
+                }, 3000);
                 runs(function () {
                     api.off('success', getJSON);
                     expect(p.data).toEqual(rawJSON);
@@ -418,7 +426,7 @@
 
                 waitsFor(function () {
                     return res;
-                }, 20000);
+                }, 3000);
 
                 runs(function () {
                     expect(res.data.Items.length).toBe(1);
@@ -432,8 +440,7 @@
             });
 
             it("should create dummy ApiObjects with no data if you set the third 'isRemote' argument to false", function () {
-                var p, dummyProduct, m;                spyOn(Mozu.Utils, 'ajax').andCallThrough();
-
+                var p, dummyProduct, m;
                 p = api.get('product', existingProductCode, false).then(function (product) {
                     m = "promise resolves immediately";
                     dummyProduct = product;
@@ -458,7 +465,7 @@
                 p.get();
                 waitsFor(function () {
                     return syncEventCalled;
-                }, 20000);
+                }, 3000);
                 runs(function () {
                     expect(actionName).toBe('get');
                     expect(requestConf).not.toBeTruthy();
@@ -480,7 +487,7 @@
                     });
                 });
 
-                waitsFor(function () { return res; }, 20000);
+                waitsFor(function () { return res; }, 3000);
 
                 runs(function () {
                     cart.off('spawn', onSpawn);

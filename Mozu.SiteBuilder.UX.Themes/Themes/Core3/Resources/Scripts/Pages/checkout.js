@@ -1,4 +1,4 @@
-﻿define(["shim!vendor/bootstrap/bootstrap-affix[modules/jquery-plus=jQuery]>jQuery", "modules/knockout-plus", "modules/models-checkout"], function ($, ko, CheckoutModels) {
+﻿define(["shim!vendor/bootstrap/bootstrap-affix[modules/jquery-plus=jQuery]>jQuery", "modules/knockout-plus", "modules/models-checkout", "modules/api"], function ($, ko, CheckoutModels, api) {
     $(document).ready(function () {
 
         var $checkoutView = $('#mz-checkout-form'),
@@ -21,6 +21,18 @@
         });
 
         ko.applyBindings(checkoutViewModel, $checkoutView[0]);
+
+
+        // make sure that any logins get applied to this checkout
+        api.on('login', function () {
+            if (!checkoutViewModel.submitting()) {
+                checkoutViewModel.setUserId().then(function () {
+                    window.location.reload();
+                });
+            // throwing an exception in this event handler ought to stop the promise chain
+            throw "Must apply logged-in user to order before reloading page.";
+            }
+        });
 
         // once applybindings is done, hide the loader and show the checkout view
         $('#mz-checkout-loading').remove();
